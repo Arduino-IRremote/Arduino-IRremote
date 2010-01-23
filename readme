@@ -1,0 +1,11 @@
+This is the IRremote library for the Arduino.
+
+To install, move this directory to:
+arduino-00nn/hardware/libraries/IRremote
+
+I.e. after installation you should have files such as:
+arduino-00nn/hardware/libraries/IRremote/IRremote.cpp
+
+For details see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
+
+Copyright 2009 Ken Shirriff
