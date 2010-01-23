@@ -56,6 +56,9 @@ private:
   long decodeSony(decode_results *results);
   long decodeRC5(decode_results *results);
   long decodeRC6(decode_results *results);
+  long decodeHash(decode_results *results);
+  int compare(unsigned int oldval, unsigned int newval);
+
 } 
 ;
 
