@@ -59,6 +59,24 @@
 #define RC6_T1		444
 #define RC6_RPT_LENGTH	46000
 
+#define SHARP_BIT_MARK 245
+#define SHARP_ONE_SPACE 1805
+#define SHARP_ZERO_SPACE 795
+#define SHARP_GAP 600000
+#define SHARP_TOGGLE_MASK 0x3FF
+#define SHARP_RPT_SPACE 3000
+
+#define DISH_HDR_MARK 400
+#define DISH_HDR_SPACE 6100
+#define DISH_BIT_MARK 400
+#define DISH_ONE_SPACE 1700
+#define DISH_ZERO_SPACE 2800
+#define DISH_RPT_SPACE 6200
+#define DISH_TOP_BIT 0x8000
+
+#define SHARP_BITS 15
+#define DISH_BITS 16
+
 #define TOLERANCE 25  // percent tolerance in measurements
 #define LTOL (1.0 - TOLERANCE/100.) 
 #define UTOL (1.0 + TOLERANCE/100.) 

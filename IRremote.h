@@ -35,6 +35,8 @@ public:
 #define SONY 2
 #define RC5 3
 #define RC6 4
+#define DISH 5
+#define SHARP 6
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -78,6 +80,8 @@ public:
   void sendRaw(unsigned int buf[], int len, int hz);
   void sendRC5(unsigned long data, int nbits);
   void sendRC6(unsigned long data, int nbits);
+  void sendDISH(unsigned long data, int nbits);
+  void sendSharp(unsigned long data, int nbits);
   // private:
   void enableIROut(int khz);
   VIRTUAL void mark(int usec);
