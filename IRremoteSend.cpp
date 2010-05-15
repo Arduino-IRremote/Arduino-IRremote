@@ -11,6 +11,29 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
+void IRsend::sendSpaceEnc(unsigned long data, int nbits, space_enc_data *spaceEncData)
+{
+  enableIROut(spaceEncData->frequency);
+  mark(spaceEncData->headerMark);
+  space(spaceEncData->headerSpace);
+  data <<= (32 - nbits);
+  for (int i = 0; i < nbits; i++) {
+    if (data & TOPBIT) {
+      mark(spaceEncData->mark1);
+      space(spaceEncData->space1);
+    } 
+    else {
+      mark(spaceEncData->mark0);
+      space(spaceEncData->space0);
+    }
+    data <<= 1;
+  }
+  if (spaceEncData->trailer > 0) {
+    mark(spaceEncData->trailer);
+    space(0);
+  }
+}
+
 void IRsend::sendNEC(unsigned long data, int nbits)
 {
   enableIROut(38);
