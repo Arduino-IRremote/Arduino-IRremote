@@ -125,5 +125,17 @@ extern volatile irparams_t irparams;
 #define MIN_RC5_SAMPLES 11
 #define MIN_RC6_SAMPLES 1
 
+// Define the IRremoteHw.cpp "API"
+
+void IRremoteEnablePwm();
+
+void IRremoteDisablePwm();
+
+void IRremoteEnableIRoutput(int khz);
+
+void IRremoteEnableIRinput();
+
+void IRremoteRegisterHandler(void (*newhandle)());
+
 #endif
 
