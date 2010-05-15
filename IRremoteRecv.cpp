@@ -155,6 +155,12 @@ int IRrecv::decode(decode_results *results) {
     return ERR;
   }
 #ifdef DEBUG
+  Serial.println("Attempting SPACE_ENC decode");
+#endif
+  if (decodeSpaceEnc(results)) {
+    return DECODED;
+  }
+#ifdef DEBUG
   Serial.println("Attempting NEC decode");
 #endif
   if (decodeNEC(results)) {
@@ -187,6 +193,191 @@ int IRrecv::decode(decode_results *results) {
   // Throw away and start over
   resume();
   return ERR;
+}
+
+// Decoding a generic space encoded signal is a bit tricky.
+// We assume one of two cases:
+// a) a 0 is a mark and a short space, and a 1 is a mark and a long space (spaceVaries), or
+// b) a 0 is a short mark and a space, and a 1 is a long mark and a space (markVaries)
+// The NEC code is an example of varying space, and the Sony code is an example of varying mark.
+//
+// We assume that if the space varies, there is a trailing mark (so you can tell when the last space ends),
+// but if the mark varies then the last mark is part of the last bit, but the last space is very long.
+//
+// To decode, the first step is to find the shortest and longest marks and spaces (excluding headers and trailers). 
+// Then see if the marks or spaces vary.  (If both, probably RC5/6 so quit.)
+// Loop through all the mark/space pairs to see if it is a 1 or a 0.
+// Finally, fill in the results.
+//
+// The code is somewhat long and confusing because it is generic and handles both cases.
+//
+long IRrecv::decodeSpaceEnc(decode_results *results) {
+  if (irparams.rawlen < 10) {
+    // Don't have a reasonable number of bits to decode.
+    return ERR;
+  }
+  unsigned int minMark = 999999;
+  unsigned int maxMark = 0;
+  unsigned int minSpace = 999999;
+  unsigned int maxSpace = 0;
+  // Compute the minimum and maximum mark and space durations, ignoring
+  // header and trailer.
+  // start with entry 3, skipping first space and two header elements
+  // skip the last space and mark in case they are a trailer
+  for (int i = 3; i < irparams.rawlen-2; i += 2) {
+    if (results->rawbuf[i] < minMark) {
+      minMark = results->rawbuf[i];
+    } else if (results->rawbuf[i] > maxMark) {
+      maxMark = results->rawbuf[i];
+    }
+    if (results->rawbuf[i+1] < minSpace) {
+      minSpace = results->rawbuf[i+1];
+    } else if (results->rawbuf[i+1] > maxSpace) {
+      maxSpace = results->rawbuf[i+1];
+    }
+  }
+  maxMark *= USECPERTICK;
+  maxSpace *= USECPERTICK;
+  // The second argument is us, the first is ticks, so need to multiply the second
+  // markVaries is true if there are two different mark values
+  // spaceVaries is true if there are two different space values
+  int markVaries = !MATCH(minMark, maxMark);
+  int spaceVaries = !MATCH(minSpace, maxSpace);
+  minMark *= USECPERTICK;
+  minSpace *= USECPERTICK;
+#ifdef DEBUG
+  Serial.print("min mark: ");
+  Serial.println(minMark, DEC);
+  Serial.print("max mark: ");
+  Serial.println(maxMark, DEC);
+  Serial.print("min space: ");
+  Serial.println(minSpace, DEC);
+  Serial.print("max space: ");
+  Serial.println(maxSpace, DEC);
+#endif
+  // Only one of these can vary for SPACE_ENC
+  if (markVaries == spaceVaries) {
+    return ERR;
+  }
+  // Subtract 4 entries: space, 2 for header, 1 for trailer
+  int nbits = (irparams.rawlen-4) / 2; 
+  // Clean up the non-varying value by averaging the min and max
+  // They will probably be slightly different due to random fluctuations
+  // so the average is probably best to use.
+  if (markVaries) {
+    minSpace = (minSpace + maxSpace) / 2;
+    maxSpace = minSpace;
+    nbits += 1; // Last mark is a bit, not a trailer 
+    results->spaceEncData.trailer = 0;
+  } else {
+    minMark = (minMark + maxMark) / 2;
+    maxMark = minMark;
+    // If space varies, need a trailer to delimit the last space
+    results->spaceEncData.trailer = results->rawbuf[irparams.rawlen-1] * USECPERTICK;
+  }
+#ifdef DEBUG
+  Serial.print("nbits: ");
+  Serial.println(nbits);
+  Serial.print("markVaries: ");
+  Serial.println(markVaries);
+  Serial.print("spaceVaries: ");
+  Serial.println(spaceVaries);
+  Serial.print("rawlen: ");
+  Serial.println(irparams.rawlen);
+#endif
+
+  // Now loop through the data and determine the bit values.
+
+  long data = 0;
+  int offset = 3; // Offset into rawbuf; skip the header
+  if (markVaries) {
+    // The decode loop where the mark width determines the bit value
+    for (int i=0; i < nbits-1; i++) {
+      data <<= 1;
+      // Check the mark and determine the bit
+      unsigned int markVal = results->rawbuf[offset++];
+      if (MATCH(markVal, minMark)) {
+        // 0 bit
+      } else if (MATCH(markVal, maxMark)) {
+        data |= 1; // 1 bit
+      } else {
+        // The mark is no good.
+        return ERR;
+      }
+      // Check that the space is okay
+      unsigned int spaceVal = results->rawbuf[offset++];
+      if (!MATCH(spaceVal, minSpace)) {
+        // The space is no good
+  	return ERR;
+      }
+    }
+    // Process the last bit specially because it's just a mark without a space
+    // (because the transmission has to end with a mark).
+    // If it makes sense as a bit, treat it as a bit, otherwise treat it as a
+    // trailer.
+    unsigned int markVal = results->rawbuf[offset++];
+    if (MATCH(markVal, minMark)) {
+      // 0 bit
+      data <<= 1;
+    } else if (MATCH(markVal, maxMark)) {
+      data <<= 1;
+      data |= 1; // 1 bit
+    } else {
+      // Guess the last mark was just a trailer after all
+      nbits--;
+      results->spaceEncData.trailer = results->rawbuf[irparams.rawlen-1] * USECPERTICK;
+    }
+  } else {
+
+    // The decode loop where the space width determines the bit value
+    for (int i=0; i < nbits; i++) {
+      data <<= 1; // Shift the data over for the next bit
+      // Check that the mark is okay
+      unsigned int markVal = results->rawbuf[offset++];
+      if (!MATCH(markVal, minMark)) {
+	return ERR;
+      }
+      // Check the space and determine the bit
+      unsigned int spaceVal = results->rawbuf[offset++];
+      if (MATCH(spaceVal, minSpace)) {
+        // 0 bit
+      } else if (MATCH(spaceVal, maxSpace)) {
+        data |= 1; // 1 bit
+      } else {
+        return ERR;
+      }
+    }
+  }
+
+  // Finally, save the results
+
+  results->spaceEncData.headerMark = results->rawbuf[1] * USECPERTICK;
+  results->spaceEncData.headerSpace = results->rawbuf[2] * USECPERTICK;
+  results->spaceEncData.mark0 = minMark;
+  results->spaceEncData.space0 = minSpace;
+  results->spaceEncData.mark1 = maxMark;
+  results->spaceEncData.space1 = maxSpace;
+  results->spaceEncData.frequency = 0; // Don't know
+  results->bits = nbits;
+  results->value = data;
+  results->decode_type = SPACE_ENC;
+#ifdef DEBUG
+  Serial.print("headerMark: ");
+  Serial.println(results->spaceEncData.headerMark, DEC);
+  Serial.print("headerSpace: ");
+  Serial.println(results->spaceEncData.headerSpace, DEC);
+  Serial.print("mark0: ");
+  Serial.println(results->spaceEncData.mark0, DEC);
+  Serial.print("space0: ");
+  Serial.println(results->spaceEncData.space0, DEC);
+  Serial.print("mark1: ");
+  Serial.println(results->spaceEncData.mark1, DEC);
+  Serial.print("space1: ");
+  Serial.println(results->spaceEncData.space1, DEC);
+  Serial.print("trailer: ");
+  Serial.println(results->spaceEncData.trailer, DEC);
+#endif
+  return SPACE_ENC;
 }
 
 long IRrecv::decodeNEC(decode_results *results) {

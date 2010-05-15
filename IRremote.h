@@ -20,7 +20,21 @@
 // #define DEBUG
 // #define TEST
 
+// Information on a generic space encoding code
+class space_enc_data {
+public:
+  int headerMark; // Mark time for header in us
+  int headerSpace; // Space time for header in us
+  int mark0; // Mark time in us for 0 bit
+  int space0; // Space time in us for 0 bit
+  int mark1; // Mark time in us for 1 bit
+  int space1; // Space time in us for 1 bit
+  int trailer; // Trailer mark time in us or 0
+  int frequency; // Not used by IRrecv
+};
+
 // Results returned from the decoder
+
 class decode_results {
 public:
   int decode_type; // NEC, SONY, RC5, UNKNOWN
@@ -28,6 +42,7 @@ public:
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
   int rawlen; // Number of records in rawbuf.
+  class space_enc_data spaceEncData;
 };
 
 // Values for decode_type
@@ -37,6 +52,7 @@ public:
 #define RC6 4
 #define DISH 5
 #define SHARP 6
+#define SPACE_ENC 7 // Generic space encoding
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -53,6 +69,7 @@ public:
 private:
   // These are called by decode
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
+  long decodeSpaceEnc(decode_results *results);
   long decodeNEC(decode_results *results);
   long decodeSony(decode_results *results);
   long decodeRC5(decode_results *results);
