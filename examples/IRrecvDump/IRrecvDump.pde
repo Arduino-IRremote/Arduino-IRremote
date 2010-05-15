@@ -7,6 +7,7 @@
  */
 
 #include <IRremote.h>
+#include <IRremoteInt.h>
 
 int RECV_PIN = 11;
 
@@ -20,6 +21,38 @@ void setup()
   irrecv.enableIRIn(); // Start the receiver
 }
 
+int close(long  val1, long val2) {
+  if (val1 - val2 < 900 && val2 - val1 < 900) {
+    return 1;
+  } 
+  else {
+    return 0;
+  }
+}
+
+void printSpaceEncDetails(decode_results *results) {
+  if (results->bits == 32 && close(results->spaceEncData.headerMark, NEC_HDR_MARK)) {
+    Serial.println("NEC code");
+  } 
+  else if ((results->bits == 12 || results->bits == 15 || results->bits == 20) &&
+    close(results->spaceEncData.headerMark, SONY_HDR_MARK)) {
+    Serial.println("Sony code");
+    printSonyData(results);
+  } 
+  else if (results->bits == 14 && close(results->spaceEncData.headerSpace, 5000)) {
+    Serial.println("Zenith code");
+  }
+  else if (results->bits == 24 && close(results->spaceEncData.headerMark, 3500)) {
+    Serial.println("Philips code"); // maybe?
+  }
+    else if (results->bits == 16 && close(results->spaceEncData.headerSpace, 6100)) {
+    Serial.println("Dish code");
+  }  
+  else {
+    Serial.println("Unknown type");
+  } 
+}
+
 // Dumps out the decode_results structure.
 // Call this after IRrecv::decode()
 // void * to work around compiler issue
@@ -30,11 +63,8 @@ void dump(decode_results *results) {
   if (results->decode_type == UNKNOWN) {
     Serial.print("Unknown encoding: ");
   } 
-  else if (results->decode_type == NEC) {
+  else if (results->decode_type == NEC_REPEAT) {
     Serial.print("Decoded NEC: ");
-  } 
-  else if (results->decode_type == SONY) {
-    Serial.print("Decoded SONY: ");
   } 
   else if (results->decode_type == RC5) {
     Serial.print("Decoded RC5: ");
@@ -44,6 +74,7 @@ void dump(decode_results *results) {
   }
   else if (results->decode_type == SPACE_ENC) {
     Serial.print("Decoded SPACE_ENC: ");
+    printSpaceEncDetails(results);
   }
   Serial.print(results->value, HEX);
   Serial.print(" (");
@@ -52,7 +83,6 @@ void dump(decode_results *results) {
   Serial.print("Raw (");
   Serial.print(count, DEC);
   Serial.print("): ");
-  printSonyData(results);
 
   for (int i = 0; i < count; i++) {
     if ((i % 2) == 1) {
@@ -96,13 +126,15 @@ void printSonyData(decode_results *results) {
     Serial.print(reverseBits(results->value, 5), DEC);
     Serial.print(", command: ");
     Serial.println(reverseBits(results->value >> 5, 7), DEC);
-  } else if (results->bits == 15) {
+  } 
+  else if (results->bits == 15) {
     // 7 command bits, 8 device bits
     Serial.print("device: ");
     Serial.print(reverseBits(results->value, 8), DEC);
     Serial.print(", command: ");
     Serial.println(reverseBits(results->value >> 8, 7), DEC);
-  } else if (results->bits == 20) {
+  } 
+  else if (results->bits == 20) {
     // 7 command bits, 5 device bits, 8 extended device bits
     Serial.print("device: ");
     Serial.print(reverseBits(results->value >> 8, 5), DEC);

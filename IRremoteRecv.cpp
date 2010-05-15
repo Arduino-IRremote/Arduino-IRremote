@@ -11,6 +11,8 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
+#define DEBUG
+
 volatile irparams_t irparams;
 
 // These versions of MATCH, MATCH_MARK, and MATCH_SPACE are only for debugging.
@@ -143,8 +145,6 @@ void IRrecv::resume() {
   irparams.rawlen = 0;
 }
 
-
-
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
@@ -158,36 +158,37 @@ int IRrecv::decode(decode_results *results) {
   Serial.println("Attempting SPACE_ENC decode");
 #endif
   if (decodeSpaceEnc(results)) {
+    // Don't resume until decoding is done because we don't
+    // want the data to change in the middle of decoding.
+    resume();
     return DECODED;
   }
 #ifdef DEBUG
   Serial.println("Attempting NEC decode");
 #endif
   if (decodeNEC(results)) {
-    return DECODED;
-  }
-#ifdef DEBUG
-  Serial.println("Attempting Sony decode");
-#endif
-  if (decodeSony(results)) {
+    resume();
     return DECODED;
   }
 #ifdef DEBUG
   Serial.println("Attempting RC5 decode");
 #endif  
   if (decodeRC5(results)) {
+    resume();
     return DECODED;
   }
 #ifdef DEBUG
   Serial.println("Attempting RC6 decode");
 #endif 
   if (decodeRC6(results)) {
+    resume();
     return DECODED;
   }
   // decodeHash returns a hash on any input.
   // Thus, it needs to be last in the list.
   // If you add any decodes, add them before this.
   if (decodeHash(results)) {
+    resume();
     return DECODED;
   }
   // Throw away and start over
@@ -380,6 +381,7 @@ long IRrecv::decodeSpaceEnc(decode_results *results) {
   return SPACE_ENC;
 }
 
+// Just handle the repeat code; decodeSpaceEnc can handle the rest
 long IRrecv::decodeNEC(decode_results *results) {
   long data = 0;
   int offset = 1; // Skip first space
@@ -394,78 +396,11 @@ long IRrecv::decodeNEC(decode_results *results) {
     MATCH_MARK(results->rawbuf[offset+1], NEC_BIT_MARK)) {
     results->bits = 0;
     results->value = REPEAT;
-    results->decode_type = NEC;
+    results->decode_type = NEC_REPEAT;
     return DECODED;
-  }
-  if (irparams.rawlen < 2 * NEC_BITS + 4) {
+  } else {
     return ERR;
   }
-  // Initial space  
-  if (!MATCH_SPACE(results->rawbuf[offset], NEC_HDR_SPACE)) {
-    return ERR;
-  }
-  offset++;
-  for (int i = 0; i < NEC_BITS; i++) {
-    if (!MATCH_MARK(results->rawbuf[offset], NEC_BIT_MARK)) {
-      return ERR;
-    }
-    offset++;
-    if (MATCH_SPACE(results->rawbuf[offset], NEC_ONE_SPACE)) {
-      data = (data << 1) | 1;
-    } 
-    else if (MATCH_SPACE(results->rawbuf[offset], NEC_ZERO_SPACE)) {
-      data <<= 1;
-    } 
-    else {
-      return ERR;
-    }
-    offset++;
-  }
-  // Success
-  results->bits = NEC_BITS;
-  results->value = data;
-  results->decode_type = NEC;
-  return DECODED;
-}
-
-long IRrecv::decodeSony(decode_results *results) {
-  long data = 0;
-  if (irparams.rawlen < 2 * SONY_BITS + 2) {
-    return ERR;
-  }
-  int offset = 1; // Skip first space
-  // Initial mark
-  if (!MATCH_MARK(results->rawbuf[offset], SONY_HDR_MARK)) {
-    return ERR;
-  }
-  offset++;
-
-  while (offset + 1 < irparams.rawlen) {
-    if (!MATCH_SPACE(results->rawbuf[offset], SONY_HDR_SPACE)) {
-      break;
-    }
-    offset++;
-    if (MATCH_MARK(results->rawbuf[offset], SONY_ONE_MARK)) {
-      data = (data << 1) | 1;
-    } 
-    else if (MATCH_MARK(results->rawbuf[offset], SONY_ZERO_MARK)) {
-      data <<= 1;
-    } 
-    else {
-      return ERR;
-    }
-    offset++;
-  }
-
-  // Success
-  results->bits = (offset - 1) / 2;
-  if (results->bits < 12) {
-    results->bits = 0;
-    return ERR;
-  }
-  results->value = data;
-  results->decode_type = SONY;
-  return DECODED;
 }
 
 // Gets one undecoded level at a time from the raw buffer.

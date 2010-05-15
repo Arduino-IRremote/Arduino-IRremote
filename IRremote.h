@@ -17,10 +17,12 @@
 // If DEBUG is defined, a lot of debugging output will be printed during decoding.
 // TEST must be defined for the IRtest unittests to work.  It will make some
 // methods virtual, which will be slightly slower, which is why it is optional.
-// #define DEBUG
+#define DEBUG
 // #define TEST
 
-// Information on a generic space encoding code
+// Information on a generic space encoding code.
+// This is a code that varies the mark width (or the space
+// width) to distingish bits.
 class space_enc_data {
 public:
   int headerMark; // Mark time for header in us
@@ -46,12 +48,9 @@ public:
 };
 
 // Values for decode_type
-#define NEC 1
-#define SONY 2
+#define NEC_REPEAT 1
 #define RC5 3
 #define RC6 4
-#define DISH 5
-#define SHARP 6
 #define SPACE_ENC 7 // Generic space encoding
 #define UNKNOWN -1
 
@@ -71,12 +70,10 @@ private:
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
   long decodeSpaceEnc(decode_results *results);
   long decodeNEC(decode_results *results);
-  long decodeSony(decode_results *results);
   long decodeRC5(decode_results *results);
   long decodeRC6(decode_results *results);
   long decodeHash(decode_results *results);
   int compare(unsigned int oldval, unsigned int newval);
-
 } 
 ;
 
@@ -91,13 +88,12 @@ class IRsend
 {
 public:
   IRsend() {}
-  void sendNEC(unsigned long data, int nbits);
-  void sendSony(unsigned long data, int nbits);
+  void sendSpaceEnc(unsigned long data, int nbits, space_enc_data *spaceEncData);
+  void sendNEC(unsigned long data, int nbits); // deprecated
+  void sendSony(unsigned long data, int nbits); // deprecated
   void sendRaw(unsigned int buf[], int len, int hz);
   void sendRC5(unsigned long data, int nbits);
   void sendRC6(unsigned long data, int nbits);
-  void sendDISH(unsigned long data, int nbits);
-  void sendSharp(unsigned long data, int nbits);
   // private:
   void enableIROut(int khz);
   VIRTUAL void mark(int usec);

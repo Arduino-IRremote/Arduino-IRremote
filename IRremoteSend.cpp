@@ -11,6 +11,28 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
+class space_enc_data necEnc = {9000 /* headerMark */ , 4500 /* headerSpace */,
+	560 /* mark0 */, 560 /* space0 */, 560 /* mark1 */, 1600 /* space1 */,
+	560 /* trailer */, 38 /* frequency */};
+
+class space_enc_data sonyEnc = {2400 /* headerMark */ , 600 /* headerSpace */,
+	600 /* mark0 */, 600 /* space0 */, 1200 /* mark1 */, 600 /* space1 */,
+	0 /* trailer */, 40 /* frequency */};
+
+class space_enc_data sharpEnc = {2400 /* headerMark */ , 600 /* headerSpace */,
+	600 /* mark0 */, 600 /* space0 */, 1200 /* mark1 */, 600 /* space1 */,
+	0 /* trailer */, 40 /* frequency */};
+
+#define RC5_T1		889
+#define RC5_RPT_LENGTH	46000
+
+#define RC6_HDR_MARK	2666
+#define RC6_HDR_SPACE	889
+#define RC6_T1		444
+#define RC6_RPT_LENGTH	46000
+
+// Send a generic space encoded code
+// The timings and frequency are in spaceEncData
 void IRsend::sendSpaceEnc(unsigned long data, int nbits, space_enc_data *spaceEncData)
 {
   enableIROut(spaceEncData->frequency);
@@ -36,40 +58,11 @@ void IRsend::sendSpaceEnc(unsigned long data, int nbits, space_enc_data *spaceEn
 
 void IRsend::sendNEC(unsigned long data, int nbits)
 {
-  enableIROut(38);
-  mark(NEC_HDR_MARK);
-  space(NEC_HDR_SPACE);
-  for (int i = 0; i < nbits; i++) {
-    if (data & TOPBIT) {
-      mark(NEC_BIT_MARK);
-      space(NEC_ONE_SPACE);
-    } 
-    else {
-      mark(NEC_BIT_MARK);
-      space(NEC_ZERO_SPACE);
-    }
-    data <<= 1;
-  }
-  mark(NEC_BIT_MARK);
-  space(0);
+  sendSpaceEnc(data, nbits, &necEnc);
 }
 
 void IRsend::sendSony(unsigned long data, int nbits) {
-  enableIROut(40);
-  mark(SONY_HDR_MARK);
-  space(SONY_HDR_SPACE);
-  data = data << (32 - nbits);
-  for (int i = 0; i < nbits; i++) {
-    if (data & TOPBIT) {
-      mark(SONY_ONE_MARK);
-      space(SONY_HDR_SPACE);
-    } 
-    else {
-      mark(SONY_ZERO_MARK);
-      space(SONY_HDR_SPACE);
-    }
-    data <<= 1;
-  }
+  sendSpaceEnc(data, nbits, &sonyEnc);
 }
 
 void IRsend::sendRaw(unsigned int buf[], int len, int hz)
@@ -157,76 +150,4 @@ void IRsend::space(int time) {
 
 void IRsend::enableIROut(int khz) {
   IRremoteEnableIRoutput(khz);
-}
-
-/* Sharp and DISH support by Todd Treece
-
-The Dish send function needs to be repeated 4 times and the Sharp function
-has the necessary repeats built in. I know that it's not consistent,
-but I don't have the time to update my code.
-
-Here are the LIRC files that I found that seem to match the remote codes
-from the oscilloscope:
-
-Sharp LCD TV:
-http://lirc.sourceforge.net/remotes/sharp/GA538WJSA
-
-DISH NETWORK (echostar 301):
-http://lirc.sourceforge.net/remotes/echostar/301_501_3100_5100_58xx_59xx
-
-For the DISH codes, only send the last for characters of the hex.
-i.e. use 0x1C10 instead of 0x0000000000001C10 which is listed in the
-linked LIRC file.
-*/
-
-void IRsend::sendSharp(unsigned long data, int nbits) {
-  unsigned long invertdata = data ^ SHARP_TOGGLE_MASK;
-  enableIROut(38);
-  for (int i = 0; i < nbits; i++) {
-    if (data & 0x4000) {
-      mark(SHARP_BIT_MARK);
-      space(SHARP_ONE_SPACE);
-    }
-    else {
-      mark(SHARP_BIT_MARK);
-      space(SHARP_ZERO_SPACE);
-    }
-    data <<= 1;
-  }
-  
-  mark(SHARP_BIT_MARK);
-  space(SHARP_ZERO_SPACE);
-  delay(46);
-  for (int i = 0; i < nbits; i++) {
-    if (invertdata & 0x4000) {
-      mark(SHARP_BIT_MARK);
-      space(SHARP_ONE_SPACE);
-    }
-    else {
-      mark(SHARP_BIT_MARK);
-      space(SHARP_ZERO_SPACE);
-    }
-    invertdata <<= 1;
-  }
-  mark(SHARP_BIT_MARK);
-  space(SHARP_ZERO_SPACE);
-  delay(46);
-}
-
-void IRsend::sendDISH(unsigned long data, int nbits)
-{
-  enableIROut(56);
-  mark(DISH_HDR_MARK);
-  space(DISH_HDR_SPACE);
-  for (int i = 0; i < nbits; i++) {
-    if (data & DISH_TOP_BIT) {
-      mark(DISH_BIT_MARK);
-      space(DISH_ONE_SPACE);
-    }
-    else {
-      mark(DISH_BIT_MARK);
-      space(DISH_ZERO_SPACE);
-    }
-    data <<= 1;
-  }
 }
