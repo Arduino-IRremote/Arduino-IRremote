@@ -33,12 +33,12 @@ class space_enc_data sharpEnc = {2400 /* headerMark */ , 600 /* headerSpace */,
 
 // Send a generic space encoded code
 // The timings and frequency are in spaceEncData
-void IRsend::sendSpaceEnc(unsigned long data, int nbits, space_enc_data *spaceEncData)
+void IRsend::sendSpaceEnc(unsigned long long data, int nbits, space_enc_data *spaceEncData)
 {
   enableIROut(spaceEncData->frequency);
   mark(spaceEncData->headerMark);
   space(spaceEncData->headerSpace);
-  data <<= (32 - nbits);
+  data <<= (64 - nbits);
   for (int i = 0; i < nbits; i++) {
     if (data & TOPBIT) {
       mark(spaceEncData->mark1);

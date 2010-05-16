@@ -40,7 +40,7 @@ public:
 class decode_results {
 public:
   int decode_type; // NEC, SONY, RC5, UNKNOWN
-  unsigned long value; // Decoded value
+  unsigned long long value; // Decoded value
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
   int rawlen; // Number of records in rawbuf.
@@ -64,7 +64,8 @@ public:
   IRrecv(int recvpin);
   int decode(decode_results *results);
   void enableIRIn();
-  void resume();
+  void pause();
+  void resume(); // deprecated
 private:
   // These are called by decode
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
@@ -88,7 +89,7 @@ class IRsend
 {
 public:
   IRsend() {}
-  void sendSpaceEnc(unsigned long data, int nbits, space_enc_data *spaceEncData);
+  void sendSpaceEnc(unsigned long long data, int nbits, space_enc_data *spaceEncData);
   void sendNEC(unsigned long data, int nbits); // deprecated
   void sendSony(unsigned long data, int nbits); // deprecated
   void sendRaw(unsigned int buf[], int len, int hz);

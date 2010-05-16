@@ -118,7 +118,7 @@ extern volatile irparams_t irparams;
 #define MARK  0
 #define SPACE 1
 
-#define TOPBIT 0x80000000
+#define TOPBIT 0x8000000000000000ull
 
 #define NEC_BITS 32
 #define SONY_BITS 12

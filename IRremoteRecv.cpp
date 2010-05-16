@@ -145,6 +145,11 @@ void IRrecv::resume() {
   irparams.rawlen = 0;
 }
 
+void IRrecv::pause() {
+  irparams.rcvstate = STATE_STOP;
+  irparams.rawlen = 0;
+}
+
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
@@ -289,7 +294,7 @@ long IRrecv::decodeSpaceEnc(decode_results *results) {
 
   // Now loop through the data and determine the bit values.
 
-  long data = 0;
+  unsigned long long data = 0;
   int offset = 3; // Offset into rawbuf; skip the header
   if (markVaries) {
     // The decode loop where the mark width determines the bit value
