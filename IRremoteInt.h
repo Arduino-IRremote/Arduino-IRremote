@@ -33,14 +33,14 @@
 #define NEC_RPT_SPACE	2250
 
 #define TOLERANCE 25  // percent tolerance in measurements
-#define LTOL (1.0 - TOLERANCE/100.) 
-#define UTOL (1.0 + TOLERANCE/100.) 
+#define LTOL (100 - TOLERANCE) 
+#define UTOL (100 + TOLERANCE) 
 
 #define _GAP 5000 // Minimum map between transmissions
 #define GAP_TICKS (_GAP/USECPERTICK)
 
-#define TICKS_LOW(us) (int) (((us)*LTOL/USECPERTICK))
-#define TICKS_HIGH(us) (int) (((us)*UTOL/USECPERTICK + 1))
+#define TICKS_LOW(us) (((us)*(long)LTOL/USECPERTICK/100))
+#define TICKS_HIGH(us) ((us)*(long)UTOL/USECPERTICK/100 + 1)
 
 #ifndef DEBUG
 #define MATCH(measured_ticks, desired_us) ((measured_ticks) >= TICKS_LOW(desired_us) && (measured_ticks) <= TICKS_HIGH(desired_us))
