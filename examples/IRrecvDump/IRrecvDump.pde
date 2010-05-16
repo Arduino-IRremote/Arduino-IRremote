@@ -21,6 +21,7 @@ void setup()
   irrecv.enableIRIn(); // Start the receiver
 }
 
+// Test if two time values are close to each other.
 int close(long  val1, long val2) {
   if (val1 - val2 < 900 && val2 - val1 < 900) {
     return 1;
@@ -30,6 +31,9 @@ int close(long  val1, long val2) {
   }
 }
 
+#define SONY_HDR_MARK	2400
+
+// Give some details about the type of code, based on heuristics
 void printSpaceEncDetails(decode_results *results) {
   if (results->bits == 32 && close(results->spaceEncData.headerMark, NEC_HDR_MARK)) {
     Serial.println("NEC code");
@@ -55,9 +59,6 @@ void printSpaceEncDetails(decode_results *results) {
 
 // Dumps out the decode_results structure.
 // Call this after IRrecv::decode()
-// void * to work around compiler issue
-//void dump(void *v) {
-//  decode_results *results = (decode_results *)v
 void dump(decode_results *results) {
   int count = results->rawlen;
   if (results->decode_type == UNKNOWN) {
@@ -84,6 +85,7 @@ void dump(decode_results *results) {
   Serial.print(count, DEC);
   Serial.print("): ");
 
+  // Dump raw data in microseconds; marks are positive, spaces are negative
   for (int i = 0; i < count; i++) {
     if ((i % 2) == 1) {
       Serial.print(results->rawbuf[i]*USECPERTICK, DEC);
@@ -147,6 +149,8 @@ void printSonyData(decode_results *results) {
 
 void loop() {
   if (irrecv.decode(&results)) {
+    irrecv.pause(); // Stop receiving while dumping data so buffer won't get clobbered
+    Serial.println("");
     Serial.println(results.value, HEX);
     dump(&results);
     irrecv.resume(); // Receive the next value
