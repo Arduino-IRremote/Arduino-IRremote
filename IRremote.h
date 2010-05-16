@@ -17,7 +17,7 @@
 // If DEBUG is defined, a lot of debugging output will be printed during decoding.
 // TEST must be defined for the IRtest unittests to work.  It will make some
 // methods virtual, which will be slightly slower, which is why it is optional.
-#define DEBUG
+// #define DEBUG
 // #define TEST
 
 // Information on a generic space encoding code.
@@ -70,7 +70,7 @@ private:
   // These are called by decode
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
   long decodeSpaceEnc(decode_results *results);
-  long decodeNEC(decode_results *results);
+  long decodeNecRepeat(decode_results *results);
   long decodeRC5(decode_results *results);
   long decodeRC6(decode_results *results);
   long decodeHash(decode_results *results);

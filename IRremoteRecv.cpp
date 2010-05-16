@@ -11,7 +11,10 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
-#define DEBUG
+#define RC5_T1		889
+#define RC6_HDR_MARK	2666
+#define RC6_HDR_SPACE	889
+#define RC6_T1		444
 
 volatile irparams_t irparams;
 
@@ -171,7 +174,7 @@ int IRrecv::decode(decode_results *results) {
 #ifdef DEBUG
   Serial.println("Attempting NEC decode");
 #endif
-  if (decodeNEC(results)) {
+  if (decodeNecRepeat(results)) {
     resume();
     return DECODED;
   }
@@ -387,7 +390,7 @@ long IRrecv::decodeSpaceEnc(decode_results *results) {
 }
 
 // Just handle the repeat code; decodeSpaceEnc can handle the rest
-long IRrecv::decodeNEC(decode_results *results) {
+long IRrecv::decodeNecRepeat(decode_results *results) {
   long data = 0;
   int offset = 1; // Skip first space
   // Initial mark
@@ -593,3 +596,46 @@ long IRrecv::decodeHash(decode_results *results) {
   results->decode_type = UNKNOWN;
   return DECODED;
 }
+
+// These versions of MATCH, MATCH_MARK, and MATCH_SPACE are only for debugging.
+// To use them, set DEBUG in IRremoteInt.h
+// Normally macros are used for efficiency
+#ifdef DEBUG
+int MATCH(int measured, int desired) {
+  Serial.print("Testing: ");
+  Serial.print(TICKS_LOW(desired), DEC);
+  Serial.print(" <= ");
+  Serial.print(measured, DEC);
+  Serial.print(" <= ");
+  Serial.println(TICKS_HIGH(desired), DEC);
+  return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);
+}
+
+int MATCH_MARK(int measured_ticks, int desired_us) {
+  Serial.print("Testing mark ");
+  Serial.print(measured_ticks * USECPERTICK, DEC);
+  Serial.print(" vs ");
+  Serial.print(desired_us, DEC);
+  Serial.print(": ");
+  Serial.print(TICKS_LOW(desired_us + MARK_EXCESS), DEC);
+  Serial.print(" <= ");
+  Serial.print(measured_ticks, DEC);
+  Serial.print(" <= ");
+  Serial.println(TICKS_HIGH(desired_us + MARK_EXCESS), DEC);
+  return measured_ticks >= TICKS_LOW(desired_us + MARK_EXCESS) && measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS);
+}
+
+int MATCH_SPACE(int measured_ticks, int desired_us) {
+  Serial.print("Testing space ");
+  Serial.print(measured_ticks * USECPERTICK, DEC);
+  Serial.print(" vs ");
+  Serial.print(desired_us, DEC);
+  Serial.print(": ");
+  Serial.print(TICKS_LOW(desired_us - MARK_EXCESS), DEC);
+  Serial.print(" <= ");
+  Serial.print(measured_ticks, DEC);
+  Serial.print(" <= ");
+  Serial.println(TICKS_HIGH(desired_us - MARK_EXCESS), DEC);
+  return measured_ticks >= TICKS_LOW(desired_us - MARK_EXCESS) && measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS);
+}
+#endif
