@@ -12,6 +12,8 @@
 #ifndef IRremote_h
 #define IRremote_h
 
+#include "IRremoteInt.h"
+
 // The following are compile-time library options.
 // If you change them, recompile the library.
 // If DEBUG is defined, a lot of debugging output will be printed during decoding.
@@ -39,7 +41,7 @@ public:
 
 class decode_results {
 public:
-  int decode_type; // NEC, SONY, RC5, UNKNOWN
+  int decode_type; // SPACE_ENC, RC5, RC6, NEC_REPEAT, HASH
   unsigned long long value; // Decoded value
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
@@ -52,7 +54,7 @@ public:
 #define RC5 3
 #define RC6 4
 #define SPACE_ENC 7 // Generic space encoding
-#define UNKNOWN -1
+#define HASH -1
 
 // Decoded value for NEC when a repeat code is received
 #define REPEAT 0xffffffff
@@ -75,6 +77,7 @@ private:
   long decodeRC6(decode_results *results);
   long decodeHash(decode_results *results);
   int compare(unsigned int oldval, unsigned int newval);
+  volatile irparams_t irparams; // Receive state information
 } 
 ;
 
@@ -105,7 +108,6 @@ public:
 // Some useful constants
 
 #define USECPERTICK 50  // microseconds per clock interrupt tick
-#define RAWBUF 76 // Length of raw duration buffer
 
 // Marks tend to be 100us too long, and spaces 100us too short
 // when received due to sensor lag.

@@ -14,6 +14,8 @@
 
 #include <WProgram.h>
 
+#define RAWBUF 76 // Length of raw duration buffer
+
 #define CLKFUDGE 5      // fudge factor for clock interrupt overhead
 #define CLK 256      // max value for clock (timer 2)
 #define PRESCALE 8      // timer2 clock prescale
@@ -56,18 +58,18 @@
 #define STATE_STOP     5
 
 // information for the interrupt handler
-typedef struct {
+typedef struct irparams {
   uint8_t recvpin;           // pin for IR data from detector
   uint8_t rcvstate;          // state machine
-  uint8_t blinkflag;         // TRUE to enable blinking of pin 13 on IR processing
-  unsigned int timer;     // state timer, counts 50uS ticks.
+  unsigned int timer;        // state timer, counts 50uS ticks.
   unsigned int rawbuf[RAWBUF]; // raw data
-  uint8_t rawlen;         // counter of entries in rawbuf
+  uint8_t rawlen;            // counter of entries in rawbuf
+  volatile struct irparams *next;   // Link together multiple inputs
 } 
 irparams_t;
 
 // Defined in IRremote.cpp
-extern volatile irparams_t irparams;
+extern volatile irparams_t *irparamsList;
 
 // IR detector output is active low
 #define MARK  0

@@ -16,7 +16,7 @@
 #define RC6_HDR_SPACE	889
 #define RC6_T1		444
 
-volatile irparams_t irparams;
+volatile irparams_t *irparamsList = NULL;
 
 // These versions of MATCH, MATCH_MARK, and MATCH_SPACE are only for debugging.
 // To use them, set DEBUG in IRremoteInt.h
@@ -65,6 +65,9 @@ static void interrupt_handler(); // forward definition
 
 IRrecv::IRrecv(int recvpin)
 {
+  // Add this irparams to the list
+  irparams.next = irparamsList;
+  irparamsList = &irparams;
   irparams.recvpin = recvpin;
   IRremoteRegisterHandler(&interrupt_handler);
 }
@@ -89,57 +92,59 @@ void IRrecv::enableIRIn() {
 // As soon as a SPACE gets long, ready is set, state switches to IDLE, timing of SPACE continues.
 // As soon as first MARK arrives, gap width is recorded, ready is cleared, and new logging starts
 static void interrupt_handler() {
-  uint8_t irdata = (uint8_t)digitalRead(irparams.recvpin);
+  for (volatile irparams_t *irparams = irparamsList; irparams; irparams = irparams->next) {
+    uint8_t irdata = (uint8_t)digitalRead(irparams->recvpin);
 
-  irparams.timer++; // One more 50us tick
-  if (irparams.rawlen >= RAWBUF) {
-    // Buffer overflow
-    irparams.rcvstate = STATE_STOP;
-  }
-  switch(irparams.rcvstate) {
-  case STATE_IDLE: // In the middle of a gap
-    if (irdata == MARK) {
-      if (irparams.timer < GAP_TICKS) {
-        // Not big enough to be a gap.
-        irparams.timer = 0;
-      } 
-      else {
-        // gap just ended, record duration and start recording transmission
-        irparams.rawlen = 0;
-        irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-        irparams.timer = 0;
-        irparams.rcvstate = STATE_MARK;
+    irparams->timer++; // One more 50us tick
+    if (irparams->rawlen >= RAWBUF) {
+      // Buffer overflow
+      irparams->rcvstate = STATE_STOP;
+    }
+    switch(irparams->rcvstate) {
+    case STATE_IDLE: // In the middle of a gap
+      if (irdata == MARK) {
+	if (irparams->timer < GAP_TICKS) {
+	  // Not big enough to be a gap.
+	  irparams->timer = 0;
+	} 
+	else {
+	  // gap just ended, record duration and start recording transmission
+	  irparams->rawlen = 0;
+	  irparams->rawbuf[irparams->rawlen++] = irparams->timer;
+	  irparams->timer = 0;
+	  irparams->rcvstate = STATE_MARK;
+	}
       }
-    }
-    break;
-  case STATE_MARK: // timing MARK
-    if (irdata == SPACE) {   // MARK ended, record time
-      irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-      irparams.timer = 0;
-      irparams.rcvstate = STATE_SPACE;
-    }
-    break;
-  case STATE_SPACE: // timing SPACE
-    if (irdata == MARK) { // SPACE just ended, record it
-      irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-      irparams.timer = 0;
-      irparams.rcvstate = STATE_MARK;
-    } 
-    else { // SPACE
-      if (irparams.timer > GAP_TICKS) {
-        // big SPACE, indicates gap between codes
-        // Mark current code as ready for processing
-        // Switch to STOP
-        // Don't reset timer; keep counting space width
-        irparams.rcvstate = STATE_STOP;
+      break;
+    case STATE_MARK: // timing MARK
+      if (irdata == SPACE) {   // MARK ended, record time
+	irparams->rawbuf[irparams->rawlen++] = irparams->timer;
+	irparams->timer = 0;
+	irparams->rcvstate = STATE_SPACE;
+      }
+      break;
+    case STATE_SPACE: // timing SPACE
+      if (irdata == MARK) { // SPACE just ended, record it
+	irparams->rawbuf[irparams->rawlen++] = irparams->timer;
+	irparams->timer = 0;
+	irparams->rcvstate = STATE_MARK;
       } 
+      else { // SPACE
+	if (irparams->timer > GAP_TICKS) {
+	  // big SPACE, indicates gap between codes
+	  // Mark current code as ready for processing
+	  // Switch to STOP
+	  // Don't reset timer; keep counting space width
+	  irparams->rcvstate = STATE_STOP;
+	} 
+      }
+      break;
+    case STATE_STOP: // waiting, measuring gap
+      if (irdata == MARK) { // reset gap timer
+	irparams->timer = 0;
+      }
+      break;
     }
-    break;
-  case STATE_STOP: // waiting, measuring gap
-    if (irdata == MARK) { // reset gap timer
-      irparams.timer = 0;
-    }
-    break;
   }
 }
 
@@ -581,8 +586,8 @@ int IRrecv::compare(unsigned int oldval, unsigned int newval) {
  * This isn't a "real" decoding, just an arbitrary value.
  */
 long IRrecv::decodeHash(decode_results *results) {
-  // Require at least 6 samples to prevent triggering on noise
-  if (results->rawlen < 6) {
+  // Require at least 10 samples to prevent triggering on noise
+  if (results->rawlen < 10) {
     return ERR;
   }
   long hash = FNV_BASIS_32;
@@ -593,7 +598,7 @@ long IRrecv::decodeHash(decode_results *results) {
   }
   results->value = hash;
   results->bits = 32;
-  results->decode_type = UNKNOWN;
+  results->decode_type = HASH;
   return DECODED;
 }
 
