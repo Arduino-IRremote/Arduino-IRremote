@@ -37,6 +37,7 @@ void setup()
 // Storage for the recorded code
 int codeType = -1; // The type of code
 unsigned long codeValue; // The code value if not raw
+space_enc_data spaceEncData;
 unsigned int rawCodes[RAWBUF]; // The durations if raw
 int codeLen; // The length of the code
 int toggle = 0; // The RC5/6 toggle state
@@ -69,16 +70,14 @@ void storeCode(decode_results *results) {
     Serial.println("");
   }
   else {
-    if (codeType == NEC) {
-      Serial.print("Received NEC: ");
-      if (results->value == REPEAT) {
+    if (codeType == SPACE_ENC) {
+      Serial.print("Received space enc: ");
+      if (results->value == NEC_REPEAT) {
         // Don't record a NEC repeat value as that's useless.
         Serial.println("repeat; ignoring.");
         return;
       }
-    } 
-    else if (codeType == SONY) {
-      Serial.print("Received SONY: ");
+      spaceEncData = results->spaceEncData;
     } 
     else if (codeType == RC5) {
       Serial.print("Received RC5: ");
@@ -98,20 +97,15 @@ void storeCode(decode_results *results) {
 }
 
 void sendCode(int repeat) {
-  if (codeType == NEC) {
-    if (repeat) {
+  if (codeType == SPACE_ENC) {
+    if (repeat) { // TODO: fix repeat handling for NEC vs non-NEC
       irsend.sendNEC(REPEAT, codeLen);
       Serial.println("Sent NEC repeat");
     } 
-    else {
-      irsend.sendNEC(codeValue, codeLen);
-      Serial.print("Sent NEC ");
-      Serial.println(codeValue, HEX);
-    }
   } 
-  else if (codeType == SONY) {
-    irsend.sendSony(codeValue, codeLen);
-    Serial.print("Sent Sony ");
+  else if (codeType == SPACE_ENC) {
+    irsend.sendSpaceEnc(codeValue, codeLen, &spaceEncData);
+    Serial.print("Sent space enc ");
     Serial.println(codeValue, HEX);
   } 
   else if (codeType == RC5 || codeType == RC6) {

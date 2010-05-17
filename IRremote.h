@@ -41,7 +41,7 @@ public:
 
 class decode_results {
 public:
-  int decode_type; // SPACE_ENC, RC5, RC6, NEC_REPEAT, HASH
+  int decode_type; // SPACE_ENC, RC5, RC6, NEC_REPEAT, UNKNOWN
   unsigned long long value; // Decoded value
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
@@ -54,7 +54,7 @@ public:
 #define RC5 3
 #define RC6 4
 #define SPACE_ENC 7 // Generic space encoding
-#define HASH -1
+#define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
 #define REPEAT 0xffffffff

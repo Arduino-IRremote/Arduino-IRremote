@@ -598,7 +598,7 @@ long IRrecv::decodeHash(decode_results *results) {
   }
   results->value = hash;
   results->bits = 32;
-  results->decode_type = HASH;
+  results->decode_type = UNKNOWN;
   return DECODED;
 }
 
