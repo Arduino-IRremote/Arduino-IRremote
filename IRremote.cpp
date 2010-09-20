@@ -653,11 +653,13 @@ long IRrecv::decodeHash(decode_results *results) {
   return DECODED;
 }
 
-/* Sharp and DISH support by Todd Treece
+/* Sharp and DISH support by Todd Treece (http://www.toddtreece.com)
 
 The Dish send function needs to be repeated 4 times and the Sharp function
-has the necessary repeats built in. I know that it's not consistent,
-but I don't have the time to update my code.
+has the necessary repeat built in due to the need to invert the signal.
+
+Sharp protocol documentation:
+http://www.sbprojects.com/knowledge/ir/sharp.htm
 
 Here are the LIRC files that I found that seem to match the remote codes
 from the oscilloscope:
