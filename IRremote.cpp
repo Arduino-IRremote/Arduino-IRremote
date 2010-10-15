@@ -756,8 +756,8 @@ long IRrecv::decodeSamsung(decode_results *results) {
         return ERR;
     }
     offset++;
-    Serial.println("OFFSET");
-    Serial.println(offset);
+    //Serial.println("OFFSET");
+    //Serial.println(offset);
 
     for (int i = 0; i < SAMSUNG_BITS; i++) {
         if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_BIT_MARK)) {
