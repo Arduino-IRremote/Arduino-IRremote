@@ -142,6 +142,7 @@ extern volatile irparams_t irparams;
 
 #define NEC_BITS 32
 #define SONY_BITS 12
+#define PANASONIC_BITS 48
 #define JVC_BITS 16
 #define MIN_RC5_SAMPLES 11
 #define MIN_RC6_SAMPLES 1

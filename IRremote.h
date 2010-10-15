@@ -24,7 +24,7 @@
 class decode_results {
 public:
   int decode_type; // NEC, SONY, RC5, UNKNOWN
-  unsigned long value; // Decoded value
+  unsigned long long value; // Decoded value
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
   int rawlen; // Number of records in rawbuf.
@@ -88,7 +88,7 @@ public:
   void sendRC6(unsigned long data, int nbits);
   void sendDISH(unsigned long data, int nbits);
   void sendSharp(unsigned long data, int nbits);
-  void sendPanasonic(unsigned long address, unsigned long data);
+  void sendPanasonic(unsigned long long data, int nbits);
   void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
   void sendSamsung(unsigned long data, int nbits);
   // private:

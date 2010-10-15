@@ -186,22 +186,13 @@ void IRsend::sendSamsung(unsigned long data, int nbits)
     space(0);
 }
 
-void IRsend::sendPanasonic(unsigned long address, unsigned long data) {
+void IRsend::sendPanasonic(unsigned long long data, int nbits) {
     enableIROut(38);
     mark(PANASONIC_HDR_MARK);
     space(PANASONIC_HDR_SPACE);
-    for (int i=0; i < 32; i++) {
+    for (int i=0; i < nbits; i++) {
         mark(PANASONIC_BIT_MARK);
-        if (address & 0x80000000) {
-            space(PANASONIC_ONE_SPACE);
-        } else {
-            space(PANASONIC_ZERO_SPACE);
-        }
-        address <<= 1;
-    }
-    for (int i=0; i < 16; i++) {
-        mark(PANASONIC_BIT_MARK);
-        if (data & 0x8000) {
+        if (data & 0x800000000000LL) {
             space(PANASONIC_ONE_SPACE);
         } else {
             space(PANASONIC_ZERO_SPACE);
@@ -689,7 +680,7 @@ long IRrecv::decodeRC6(decode_results *results) {
 }
 
 long IRrecv::decodePanasonic(decode_results *results) {
-    unsigned long data = 0;
+    unsigned long long data = 0;
     int offset = 1;
 
     if (!MATCH_MARK(results->rawbuf[offset], PANASONIC_HDR_MARK)) {
@@ -716,7 +707,7 @@ long IRrecv::decodePanasonic(decode_results *results) {
         offset++;
     }
     //results->address = data;
-    data = 0;
+    //data = 0;
     for (int i = 0; i < 16; i++) {
         if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_BIT_MARK)) {
             return ERR;
@@ -733,7 +724,7 @@ long IRrecv::decodePanasonic(decode_results *results) {
     results->value = data;
 
     results->decode_type = PANASONIC;
-    results->bits = 48;
+    results->bits = PANASONIC_BITS;
     return DECODED;
 }
 
