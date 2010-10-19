@@ -4,6 +4,8 @@
  * Copyright 2009 Ken Shirriff
  * For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
  *
+ * Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
+ *
  * Interrupt code based on NECIRrcv by Joe Knapp
  * http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
  * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
@@ -169,7 +171,7 @@ void IRsend::sendRC6(unsigned long data, int nbits)
 void IRsend::mark(int time) {
   // Sends an IR mark for the specified number of microseconds.
   // The mark output is modulated at the PWM frequency.
-  TCCR2A |= _BV(COM2B1); // Enable pin 3 PWM output
+  TIMER_ENABLE_PWM; // Enable pin 3 PWM output
   delayMicroseconds(time);
 }
 
@@ -177,7 +179,7 @@ void IRsend::mark(int time) {
 void IRsend::space(int time) {
   // Sends an IR space for the specified number of microseconds.
   // A space is no output, so the PWM output is disabled.
-  TCCR2A &= ~(_BV(COM2B1)); // Disable pin 3 PWM output
+  TIMER_DISABLE_PWM; // Disable pin 3 PWM output
   delayMicroseconds(time);
 }
 
@@ -195,21 +197,17 @@ void IRsend::enableIROut(int khz) {
 
   
   // Disable the Timer2 Interrupt (which is used for receiving IR)
-  TIMSK2 &= ~_BV(TOIE2); //Timer2 Overflow Interrupt
+  TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
   
-  pinMode(3, OUTPUT);
-  digitalWrite(3, LOW); // When not sending PWM, we want it low
+  pinMode(TIMER_PWM_PIN, OUTPUT);
+  digitalWrite(TIMER_PWM_PIN, LOW); // When not sending PWM, we want it low
   
   // COM2A = 00: disconnect OC2A
   // COM2B = 00: disconnect OC2B; to send signal set to 10: OC2B non-inverted
   // WGM2 = 101: phase-correct PWM with OCRA as top
   // CS2 = 000: no prescaling
-  TCCR2A = _BV(WGM20);
-  TCCR2B = _BV(WGM22) | _BV(CS20);
-
   // The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
-  OCR2A = SYSCLOCK / 2 / khz / 1000;
-  OCR2B = OCR2A / 3; // 33% duty cycle
+  TIMER_CONFIG_KHZ(khz);
 }
 
 IRrecv::IRrecv(int recvpin)
@@ -220,27 +218,23 @@ IRrecv::IRrecv(int recvpin)
 
 // initialization
 void IRrecv::enableIRIn() {
+  cli();
   // setup pulse clock timer interrupt
-  TCCR2A = 0;  // normal mode
-
   //Prescale /8 (16M/8 = 0.5 microseconds per tick)
   // Therefore, the timer interval can range from 0.5 to 128 microseconds
   // depending on the reset value (255 to 0)
-  cbi(TCCR2B,CS22);
-  sbi(TCCR2B,CS21);
-  cbi(TCCR2B,CS20);
+  TIMER_CONFIG_NORMAL();
 
   //Timer2 Overflow Interrupt Enable
-  sbi(TIMSK2,TOIE2);
+  TIMER_ENABLE_INTR;
 
-  RESET_TIMER2;
+  TIMER_RESET;
 
   sei();  // enable interrupts
 
   // initialize state machine variables
   irparams.rcvstate = STATE_IDLE;
   irparams.rawlen = 0;
-
 
   // set pin modes
   pinMode(irparams.recvpin, INPUT);
@@ -261,9 +255,9 @@ void IRrecv::blink13(int blinkflag)
 // First entry is the SPACE between transmissions.
 // As soon as a SPACE gets long, ready is set, state switches to IDLE, timing of SPACE continues.
 // As soon as first MARK arrives, gap width is recorded, ready is cleared, and new logging starts
-ISR(TIMER2_OVF_vect)
+ISR(TIMER_INTR_NAME)
 {
-  RESET_TIMER2;
+  TIMER_RESET;
 
   uint8_t irdata = (uint8_t)digitalRead(irparams.recvpin);
 
@@ -320,10 +314,10 @@ ISR(TIMER2_OVF_vect)
 
   if (irparams.blinkflag) {
     if (irdata == MARK) {
-      PORTB |= B00100000;  // turn pin 13 LED on
+      BLINKLED_ON();  // turn pin 13 LED on
     } 
     else {
-      PORTB &= B11011111;  // turn pin 13 LED off
+      BLINKLED_OFF();  // turn pin 13 LED off
     }
   }
 }
