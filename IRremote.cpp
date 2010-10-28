@@ -693,22 +693,7 @@ long IRrecv::decodePanasonic(decode_results *results) {
     offset++;
 
     // decode address
-    for (int i = 0; i < 32; i++) {
-        if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_BIT_MARK)) {
-            return ERR;
-        }
-        if (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ONE_SPACE)) {
-            data = (data << 1) | 1;
-        } else if (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ZERO_SPACE)) {
-            data <<= 1;
-        } else {
-            return ERR;
-        }
-        offset++;
-    }
-    //results->address = data;
-    //data = 0;
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < PANASONIC_BITS; i++) {
         if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_BIT_MARK)) {
             return ERR;
         }
