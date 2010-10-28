@@ -768,7 +768,7 @@ long IRrecv::decodeSamsung(decode_results *results) {
     }
     // Success
     results->bits = SAMSUNG_BITS;
-    results->value = data;
+    results->value = data & 0xffffffff;
     results->decode_type = SAMSUNG;
     return DECODED;
 }
