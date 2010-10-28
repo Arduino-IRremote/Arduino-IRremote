@@ -502,7 +502,7 @@ long IRrecv::decodeNEC(decode_results *results) {
   }
   // Success
   results->bits = NEC_BITS;
-  results->value = data;
+  results->value = data & 0xffffffff;
   results->decode_type = NEC;
   return DECODED;
 }
