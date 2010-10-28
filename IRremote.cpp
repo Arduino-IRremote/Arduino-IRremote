@@ -192,7 +192,7 @@ void IRsend::sendPanasonic(unsigned long long data, int nbits) {
     space(PANASONIC_HDR_SPACE);
     for (int i=0; i < nbits; i++) {
         mark(PANASONIC_BIT_MARK);
-        if (data & 0x800000000000LL) {
+        if (data & (0x1LL << (nbits - 1))) {
             space(PANASONIC_ONE_SPACE);
         } else {
             space(PANASONIC_ZERO_SPACE);
