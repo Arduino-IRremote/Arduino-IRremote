@@ -75,6 +75,29 @@ void waitForGap(int gap) {
   }
 }
 
+// based on Print::printNumber
+void printHex64(unsigned long long n)
+{
+  unsigned char buf[sizeof(unsigned long long) * 2];
+  unsigned long i = 0;
+
+  if (n == 0) {
+    Serial.print('0');
+    return;
+  } 
+
+  while (n > 0) {
+    buf[i++] = n & 0xf;
+    n >>= 4;
+  }
+
+  for (; i > 0; i--) {
+    Serial.print((char) (buf[i - 1] < 10 ?
+      '0' + buf[i - 1] :
+      'A' + buf[i - 1] - 10));
+  }
+}
+
 // Dumps out the decode_results structure.
 // Call this after IRrecv::decode()
 void dump(decode_results *results) {
@@ -95,7 +118,7 @@ void dump(decode_results *results) {
     else if (results->decode_type == RC6) {
       Serial.print("Decoded RC6: ");
     }
-    Serial.print(results->value, HEX);
+    printHex64(results->value);
     Serial.print(" (");
     Serial.print(results->bits, DEC);
     Serial.println(" bits)");
@@ -116,7 +139,6 @@ void dump(decode_results *results) {
   Serial.println("");
 }
 
-
 // Test send or receive.
 // If mode is SENDER, send a code of the specified type, value, and bits
 // If mode is RECEIVER, receive a code and verify that it is of the
@@ -125,7 +147,7 @@ void dump(decode_results *results) {
 // The motivation behind this method is that the sender and the receiver
 // can do the same test calls, and the mode variable indicates whether
 // to send or receive.
-void test(char *label, int type, unsigned long value, int bits) {
+void test(char *label, int type, unsigned long long value, int bits) {
   if (mode == SENDER) {
     Serial.println(label);
     if (type == NEC) {
@@ -273,6 +295,7 @@ void loop() {
   test("RC61", RC6, 0x12345678, 32);
   test("RC62", RC6, 0x0, 32);
   test("RC63", RC6, 0xffffffff, 32);
+  test("RC64", RC6, 0x1234567887654321LL, 64);
 
   // Tests of raw sending and receiving.
   // First test sending raw and receiving raw.

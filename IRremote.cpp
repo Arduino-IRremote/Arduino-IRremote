@@ -374,7 +374,7 @@ int IRrecv::decode(decode_results *results) {
 }
 
 long IRrecv::decodeNEC(decode_results *results) {
-  long data = 0;
+  unsigned long long data = 0;
   int offset = 1; // Skip first space
   // Initial mark
   if (!MATCH_MARK(results->rawbuf[offset], NEC_HDR_MARK)) {
@@ -422,7 +422,7 @@ long IRrecv::decodeNEC(decode_results *results) {
 }
 
 long IRrecv::decodeSony(decode_results *results) {
-  long data = 0;
+  unsigned long long data = 0;
   if (irparams.rawlen < 2 * SONY_BITS + 2) {
     return ERR;
   }
@@ -512,7 +512,7 @@ long IRrecv::decodeRC5(decode_results *results) {
     return ERR;
   }
   int offset = 1; // Skip gap space
-  long data = 0;
+  unsigned long long data = 0;
   int used = 0;
   // Get start bits
   if (getRClevel(results, &offset, &used, RC5_T1) != MARK) return ERR;

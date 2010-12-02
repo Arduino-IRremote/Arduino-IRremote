@@ -89,7 +89,6 @@ void dump(decode_results *results) {
 
 void loop() {
   if (irrecv.decode(&results)) {
-    Serial.println(results.value, HEX);
     dump(&results);
     irrecv.resume(); // Receive the next value
   }
