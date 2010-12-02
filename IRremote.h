@@ -24,7 +24,7 @@
 class decode_results {
 public:
   int decode_type; // NEC, SONY, RC5, UNKNOWN
-  unsigned long value; // Decoded value
+  unsigned long long value; // Decoded value
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
   int rawlen; // Number of records in rawbuf.
@@ -79,7 +79,7 @@ public:
   void sendSony(unsigned long data, int nbits);
   void sendRaw(unsigned int buf[], int len, int hz);
   void sendRC5(unsigned long data, int nbits);
-  void sendRC6(unsigned long data, int nbits);
+  void sendRC6(unsigned long long data, int nbits);
   void sendDISH(unsigned long data, int nbits);
   void sendSharp(unsigned long data, int nbits);
   // private:

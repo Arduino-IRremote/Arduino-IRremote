@@ -137,10 +137,10 @@ void IRsend::sendRC5(unsigned long data, int nbits)
 }
 
 // Caller needs to take care of flipping the toggle bit
-void IRsend::sendRC6(unsigned long data, int nbits)
+void IRsend::sendRC6(unsigned long long data, int nbits)
 {
   enableIROut(36);
-  data = data << (32 - nbits);
+  data = data << (64 - nbits);
   mark(RC6_HDR_MARK);
   space(RC6_HDR_SPACE);
   mark(RC6_T1); // start bit
@@ -154,7 +154,7 @@ void IRsend::sendRC6(unsigned long data, int nbits)
     else {
       t = RC6_T1;
     }
-    if (data & TOPBIT) {
+    if (data & 0x8000000000000000LL) {
       mark(t);
       space(t);
     } 
@@ -556,7 +556,7 @@ long IRrecv::decodeRC6(decode_results *results) {
     return ERR;
   }
   offset++;
-  long data = 0;
+  unsigned long long data = 0;
   int used = 0;
   // Get start bit (1)
   if (getRClevel(results, &offset, &used, RC6_T1) != MARK) return ERR;
