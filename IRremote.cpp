@@ -653,10 +653,10 @@ long IRrecv::decodeHash(decode_results *results) {
   return DECODED;
 }
 
-/* Sharp and DISH support by Todd Treece (http://www.toddtreece.com)
+/* Sharp and DISH support by Todd Treece ( http://unionbridge.org/design/ircommand )
 
-The Dish send function needs to be repeated 4 times and the Sharp function
-has the necessary repeat built in due to the need to invert the signal.
+The Dish send function needs to be repeated 4 times, and the Sharp function
+has the necessary repeat built in because of the need to invert the signal.
 
 Sharp protocol documentation:
 http://www.sbprojects.com/knowledge/ir/sharp.htm
