@@ -1,3 +1,7 @@
+Fixed to be used with Arduino 1.0.
+
+- Ashish Mody
+
 This is the IRremote library for the Arduino.
 
 To install on Arduino 0018 or later, move this directory to:
