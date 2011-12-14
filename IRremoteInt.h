@@ -14,7 +14,7 @@
 #ifndef IRremoteint_h
 #define IRremoteint_h
 
-#include <WProgram.h>
+#include <Arduino.h>
 
 // define which timer to use
 //
