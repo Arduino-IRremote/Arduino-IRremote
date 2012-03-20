@@ -170,7 +170,7 @@ void IRsend::sendRC6(unsigned long data, int nbits)
   space(0); // Turn off at end
 }
 void IRsend::sendPanasonic(unsigned int address, unsigned long data) {
-    enableIROut(38);
+    enableIROut(35);
     mark(PANASONIC_HDR_MARK);
     space(PANASONIC_HDR_SPACE);
     
