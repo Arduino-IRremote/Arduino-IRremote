@@ -29,7 +29,7 @@
 // to switch IRremote to use a different timer.
 
 // Arduino Mega
-#if defined(__AVR_ATmega1280__)
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   //#define IR_USE_TIMER1   // tx = pin 11
   #define IR_USE_TIMER2     // tx = pin 9
   //#define IR_USE_TIMER3   // tx = pin 5
@@ -223,7 +223,7 @@ extern volatile irparams_t irparams;
 #endif
 #if defined(CORE_OC2B_PIN)
 #define TIMER_PWM_PIN        CORE_OC2B_PIN  /* Teensy */
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        9  /* Arduino Mega */
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 #define TIMER_PWM_PIN        14 /* Sanguino */
@@ -255,7 +255,7 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC1A_PIN)
 #define TIMER_PWM_PIN        CORE_OC1A_PIN  /* Teensy */
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        11  /* Arduino Mega */
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 #define TIMER_PWM_PIN        13 /* Sanguino */
@@ -287,7 +287,7 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC3A_PIN)
 #define TIMER_PWM_PIN        CORE_OC3A_PIN  /* Teensy */
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        5  /* Arduino Mega */
 #else
 #error "Please add OC3A pin number here\n"
@@ -355,7 +355,7 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC4A_PIN)
 #define TIMER_PWM_PIN        CORE_OC4A_PIN
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        6  /* Arduino Mega */
 #else
 #error "Please add OC4A pin number here\n"
@@ -385,7 +385,7 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC5A_PIN)
 #define TIMER_PWM_PIN        CORE_OC5A_PIN
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        46  /* Arduino Mega */
 #else
 #error "Please add OC5A pin number here\n"
@@ -402,7 +402,7 @@ extern volatile irparams_t irparams;
 #define BLINKLED       CORE_LED0_PIN
 #define BLINKLED_ON()  (digitalWrite(CORE_LED0_PIN, HIGH))
 #define BLINKLED_OFF() (digitalWrite(CORE_LED0_PIN, LOW))
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define BLINKLED       13
 #define BLINKLED_ON()  (PORTB |= B10000000)
 #define BLINKLED_OFF() (PORTB &= B01111111)
