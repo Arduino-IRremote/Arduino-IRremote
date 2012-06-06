@@ -9,12 +9,18 @@
  * Interrupt code based on NECIRrcv by Joe Knapp
  * http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
  * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
+ *
+ * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  */
 
 #ifndef IRremoteint_h
 #define IRremoteint_h
 
-#include <WProgram.h>
+#if defined(ARDUINO) && ARDUINO >= 100
+#include "Arduino.h"
+#else
+#include "WProgram.h"
+#endif
 
 // define which timer to use
 //
@@ -23,7 +29,7 @@
 // to switch IRremote to use a different timer.
 
 // Arduino Mega
-#if defined(__AVR_ATmega1280__)
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   //#define IR_USE_TIMER1   // tx = pin 11
   #define IR_USE_TIMER2     // tx = pin 9
   //#define IR_USE_TIMER3   // tx = pin 5
@@ -115,6 +121,19 @@
 #define DISH_RPT_SPACE 6200
 #define DISH_TOP_BIT 0x8000
 
+#define PANASONIC_HDR_MARK 3502
+#define PANASONIC_HDR_SPACE 1750
+#define PANASONIC_BIT_MARK 502
+#define PANASONIC_ONE_SPACE 1244
+#define PANASONIC_ZERO_SPACE 400
+
+#define JVC_HDR_MARK 8000
+#define JVC_HDR_SPACE 4000
+#define JVC_BIT_MARK 600
+#define JVC_ONE_SPACE 1600
+#define JVC_ZERO_SPACE 550
+#define JVC_RPT_LENGTH 60000
+
 #define SHARP_BITS 15
 #define DISH_BITS 16
 
@@ -129,9 +148,9 @@
 #define TICKS_HIGH(us) (int) (((us)*UTOL/USECPERTICK + 1))
 
 #ifndef DEBUG
-#define MATCH(measured_ticks, desired_us) ((measured_ticks) >= TICKS_LOW(desired_us) && (measured_ticks) <= TICKS_HIGH(desired_us))
-#define MATCH_MARK(measured_ticks, desired_us) MATCH(measured_ticks, (desired_us) + MARK_EXCESS)
-#define MATCH_SPACE(measured_ticks, desired_us) MATCH((measured_ticks), (desired_us) - MARK_EXCESS)
+int MATCH(int measured, int desired) {return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);}
+int MATCH_MARK(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us + MARK_EXCESS));}
+int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us - MARK_EXCESS));}
 // Debugging versions are in IRremote.cpp
 #endif
 
@@ -165,6 +184,8 @@ extern volatile irparams_t irparams;
 #define SONY_BITS 12
 #define MIN_RC5_SAMPLES 11
 #define MIN_RC6_SAMPLES 1
+#define PANASONIC_BITS 48
+#define JVC_BITS 16
 
 
 
@@ -202,7 +223,7 @@ extern volatile irparams_t irparams;
 #endif
 #if defined(CORE_OC2B_PIN)
 #define TIMER_PWM_PIN        CORE_OC2B_PIN  /* Teensy */
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        9  /* Arduino Mega */
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 #define TIMER_PWM_PIN        14 /* Sanguino */
@@ -234,7 +255,7 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC1A_PIN)
 #define TIMER_PWM_PIN        CORE_OC1A_PIN  /* Teensy */
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        11  /* Arduino Mega */
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 #define TIMER_PWM_PIN        13 /* Sanguino */
@@ -266,7 +287,7 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC3A_PIN)
 #define TIMER_PWM_PIN        CORE_OC3A_PIN  /* Teensy */
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        5  /* Arduino Mega */
 #else
 #error "Please add OC3A pin number here\n"
@@ -334,7 +355,7 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC4A_PIN)
 #define TIMER_PWM_PIN        CORE_OC4A_PIN
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        6  /* Arduino Mega */
 #else
 #error "Please add OC4A pin number here\n"
@@ -364,7 +385,7 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC5A_PIN)
 #define TIMER_PWM_PIN        CORE_OC5A_PIN
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define TIMER_PWM_PIN        46  /* Arduino Mega */
 #else
 #error "Please add OC5A pin number here\n"
@@ -381,7 +402,7 @@ extern volatile irparams_t irparams;
 #define BLINKLED       CORE_LED0_PIN
 #define BLINKLED_ON()  (digitalWrite(CORE_LED0_PIN, HIGH))
 #define BLINKLED_OFF() (digitalWrite(CORE_LED0_PIN, LOW))
-#elif defined(__AVR_ATmega1280__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define BLINKLED       13
 #define BLINKLED_ON()  (PORTB |= B10000000)
 #define BLINKLED_OFF() (PORTB &= B01111111)

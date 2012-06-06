@@ -7,6 +7,8 @@
  * Interrupt code based on NECIRrcv by Joe Knapp
  * http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
  * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
+ *
+ * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  */
 
 #ifndef IRremote_h
@@ -24,6 +26,7 @@
 class decode_results {
 public:
   int decode_type; // NEC, SONY, RC5, UNKNOWN
+  unsigned int panasonicAddress; // This is only used for decoding Panasonic data
   unsigned long value; // Decoded value
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
@@ -37,6 +40,8 @@ public:
 #define RC6 4
 #define DISH 5
 #define SHARP 6
+#define PANASONIC 7
+#define JVC 8
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -58,6 +63,8 @@ private:
   long decodeSony(decode_results *results);
   long decodeRC5(decode_results *results);
   long decodeRC6(decode_results *results);
+  long decodePanasonic(decode_results *results);
+  long decodeJVC(decode_results *results);
   long decodeHash(decode_results *results);
   int compare(unsigned int oldval, unsigned int newval);
 
@@ -82,6 +89,8 @@ public:
   void sendRC6(unsigned long data, int nbits);
   void sendDISH(unsigned long data, int nbits);
   void sendSharp(unsigned long data, int nbits);
+  void sendPanasonic(unsigned int address, unsigned long data);
+  void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
   // private:
   void enableIROut(int khz);
   VIRTUAL void mark(int usec);
@@ -92,7 +101,7 @@ public:
 // Some useful constants
 
 #define USECPERTICK 50  // microseconds per clock interrupt tick
-#define RAWBUF 76 // Length of raw duration buffer
+#define RAWBUF 100 // Length of raw duration buffer
 
 // Marks tend to be 100us too long, and spaces 100us too short
 // when received due to sensor lag.
