@@ -4,6 +4,7 @@
  * Version 0.1 July, 2009
  * Copyright 2009 Ken Shirriff
  * http://arcfn.com
+ * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  */
 
 #include <IRremote.h>
@@ -41,6 +42,14 @@ void dump(decode_results *results) {
   } 
   else if (results->decode_type == RC6) {
     Serial.print("Decoded RC6: ");
+  }
+  else if (results->decode_type == PANASONIC) {	
+    Serial.print("Decoded PANASONIC - Address: ");
+    Serial.print(results->panasonicAddress,HEX);
+    Serial.print(" Value: ");
+  }
+  else if (results->decode_type == JVC) {
+     Serial.print("Decoded JVC: ");
   }
   Serial.print(results->value, HEX);
   Serial.print(" (");
