@@ -17,9 +17,9 @@
 #define IRremoteint_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
+#include <Arduino.h>
 #else
-#include "WProgram.h"
+#include <WProgram.h>
 #endif
 
 // define which timer to use
@@ -56,6 +56,10 @@
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
   //#define IR_USE_TIMER1   // tx = pin 13
   #define IR_USE_TIMER2     // tx = pin 14
+
+// Atmega8
+#elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
+  #define IR_USE_TIMER1   // tx = pin 9
 
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
 #else
@@ -237,8 +241,13 @@ extern volatile irparams_t irparams;
 #define TIMER_RESET
 #define TIMER_ENABLE_PWM     (TCCR1A |= _BV(COM1A1))
 #define TIMER_DISABLE_PWM    (TCCR1A &= ~(_BV(COM1A1)))
-#define TIMER_ENABLE_INTR    (TIMSK1 = _BV(OCIE1A))
-#define TIMER_DISABLE_INTR   (TIMSK1 = 0)
+#if defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
+  #define TIMER_ENABLE_INTR    (TIMSK = _BV(OCIE1A))
+  #define TIMER_DISABLE_INTR   (TIMSK = 0)
+#else
+  #define TIMER_ENABLE_INTR    (TIMSK1 = _BV(OCIE1A))
+  #define TIMER_DISABLE_INTR   (TIMSK1 = 0)
+#endif
 #define TIMER_INTR_NAME      TIMER1_COMPA_vect
 #define TIMER_CONFIG_KHZ(val) ({ \
   const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
