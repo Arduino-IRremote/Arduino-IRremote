@@ -3,6 +3,7 @@
  * Version 0.1 July, 2009
  * Copyright 2009 Ken Shirriff
  * For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.htm http://arcfn.com
+ * Edited by Mitra to add new controller SANYO
  *
  * Interrupt code based on NECIRrcv by Joe Knapp
  * http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
@@ -42,6 +43,8 @@ public:
 #define SHARP 6
 #define PANASONIC 7
 #define JVC 8
+#define SANYO 9
+#define MITSUBISHI 10
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -61,6 +64,8 @@ private:
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
   long decodeNEC(decode_results *results);
   long decodeSony(decode_results *results);
+  long decodeSanyo(decode_results *results);
+  long decodeMitsubishi(decode_results *results);
   long decodeRC5(decode_results *results);
   long decodeRC6(decode_results *results);
   long decodePanasonic(decode_results *results);
@@ -84,6 +89,9 @@ public:
   IRsend() {}
   void sendNEC(unsigned long data, int nbits);
   void sendSony(unsigned long data, int nbits);
+  // Neither Sanyo nor Mitsubishi send is implemented yet
+  //  void sendSanyo(unsigned long data, int nbits);
+  //  void sendMitsubishi(unsigned long data, int nbits);
   void sendRaw(unsigned int buf[], int len, int hz);
   void sendRC5(unsigned long data, int nbits);
   void sendRC6(unsigned long data, int nbits);

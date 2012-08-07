@@ -87,7 +87,8 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
-
+// Pulse parms are *50-100 for the Mark and *50+100 for the space
+// First MARK is the one after the long gap
 // pulse parameters in usec
 #define NEC_HDR_MARK	9000
 #define NEC_HDR_SPACE	4500
@@ -101,6 +102,26 @@
 #define SONY_ONE_MARK	1200
 #define SONY_ZERO_MARK	600
 #define SONY_RPT_LENGTH 45000
+#define SONY_DOUBLE_SPACE_USECS  500  // usually ssee 713 - not using ticks as get number wrapround
+
+// SA 8650B
+#define SANYO_HDR_MARK	3500  // seen range 3500
+#define SANYO_HDR_SPACE	950 //  seen 950
+#define SANYO_ONE_MARK	2400 // seen 2400  
+#define SANYO_ZERO_MARK 700 //  seen 700
+#define SANYO_DOUBLE_SPACE_USECS  800  // usually ssee 713 - not using ticks as get number wrapround
+#define SANYO_RPT_LENGTH 45000
+
+// Mitsubishi RM 75501
+// 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7 
+
+// #define MITSUBISHI_HDR_MARK	250  // seen range 3500
+#define MITSUBISHI_HDR_SPACE	350 //  7*50+100
+#define MITSUBISHI_ONE_MARK	1950 // 41*50-100
+#define MITSUBISHI_ZERO_MARK  750 // 17*50-100
+// #define MITSUBISHI_DOUBLE_SPACE_USECS  800  // usually ssee 713 - not using ticks as get number wrapround
+// #define MITSUBISHI_RPT_LENGTH 45000
+
 
 #define RC5_T1		889
 #define RC5_RPT_LENGTH	46000
@@ -186,6 +207,8 @@ extern volatile irparams_t irparams;
 
 #define NEC_BITS 32
 #define SONY_BITS 12
+#define SANYO_BITS 12
+#define MITSUBISHI_BITS 16
 #define MIN_RC5_SAMPLES 11
 #define MIN_RC6_SAMPLES 1
 #define PANASONIC_BITS 48
