@@ -1,14 +1,14 @@
 This is the IRremote library for the Arduino.
 
-To install on Arduino 0018 or later, move this directory to:
-arduino-00nn/libraries/IRremote
-For earlier releases, install into arduino-00nn/hardware/libraries/IRremote
+To download from github (http://github.com/shirriff/Arduino-IRremote), click on the "Downloads" link in the upper right, click "Download as zip", and get a zip file.  Unzip it and rename the directory shirriff-Arduino-IRremote-nnn to IRremote
 
-I.e. after installation you should have files such as:
-arduino-00nn/hardware/libraries/IRremote/IRremote.cpp
+To install, move the downloaded IRremote directory to:
+arduino-1.x/libraries/IRremote
+where arduino-1.x is your Arduino installation directory
 
-If you're downloading from github (http://github.com/shirriff/Arduino-IRremote), click on the Download Source button in the upper right and get a zip file.  Unzip it, copy and rename the directory shirriff-Arduino-IRremote-nnn to arduino-00nn/libraries/IRremote.  Your directory structure should have arduino-00nn/libraries/IRremote/IRremote.cpp, etc.
+After installation you should have files such as:
+arduino-1.x/libraries/IRremote/IRremote.cpp
 
-For details see the Wiki on github or the blog post http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
+For details on the library see the Wiki on github or the blog post http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
 
-Copyright 2009-2010 Ken Shirriff
+Copyright 2009-2012 Ken Shirriff
