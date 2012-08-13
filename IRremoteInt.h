@@ -327,6 +327,8 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC4A_PIN)
 #define TIMER_PWM_PIN        CORE_OC4A_PIN  /* Teensy */
+#elif defined(__AVR_ATmega32U4__)
+#define TIMER_PWM_PIN        13  /* Leonardo */
 #else
 #error "Please add OC4A pin number here\n"
 #endif
