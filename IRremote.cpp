@@ -221,6 +221,30 @@ void IRsend::sendJVC(int32_t data, int16_t nbits, int16_t repeat)
     mark(JVC_BIT_MARK);
     space(0);
 }
+
+void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude)
+{
+  magiquest data;
+  //data.cmd.scrap = 0x00;
+  data.cmd.padding = 0x00;
+  data.cmd.magnitude = magnitude;
+  data.cmd.wand_id = wand_id;
+  
+  enableIROut(38);
+  for (uint16_t i = 0; i < 56; i++) {
+    data.llword <<= 1;
+    if (((int8_t) data.byte[6]) < 0) { // if negative then MSBit is one.
+      mark(MAGIQUEST_MARK_ONE);
+      space(MAGIQUEST_SPACE_ONE);
+    }
+    else {
+      mark(MAGIQUEST_MARK_ZERO);
+      space(MAGIQUEST_SPACE_ZERO);
+    }
+  }
+  Serial.println();
+}
+
 void IRsend::mark(int time) {
   // Sends an IR mark for the specified number of microseconds.
   // The mark output is modulated at the PWM frequency.
@@ -437,6 +461,12 @@ int16_t IRrecv::decode(decode_results *results) {
     Serial.println("Attempting JVC decode");
 #endif 
     if (decodeJVC(results)) {
+        return DECODED;
+    }
+#ifdef DEBUG
+  Serial.println("Attempting MagiQuest decode");
+#endif
+  if (decodeMagiQuest(results)) {
         return DECODED;
     }
   // decodeHash returns a hash on any input.
@@ -894,6 +924,66 @@ int32_t  IRrecv::decodeJVC(decode_results *results) {
     results->value = data;
     results->decode_type = JVC;
     return DECODED;
+}
+
+int32_t  IRrecv::decodeMagiQuest(decode_results *results) {
+  magiquest data;
+  data.llword = 0;
+
+  int16_t offset = 1;
+  uint16_t mark_;
+  uint16_t space_;
+  uint8_t multiple_;
+
+  if (irparams.rawlen < 2 * MAGIQUEST_BITS) {
+    return ERR;
+  }
+
+  while (offset + 1 < irparams.rawlen) {
+    mark_ = results->rawbuf[offset];
+    space_ = results->rawbuf[offset+1];
+    multiple_ = space_ / mark_;
+    // it is either 25% + 75% or 50% + 50%
+
+#ifdef DEBUG
+        Serial.print("mark=");
+        Serial.print(mark_ * USECPERTICK);
+        Serial.print(" space=");
+        Serial.print(space_ * USECPERTICK);
+        Serial.print(" mult=");
+        Serial.print(multiple_);
+        Serial.print("  ");
+#endif
+    if (MATCH_MARK(space_ + mark_, MAGIQUEST_PERIOD)) {
+      if (multiple_ > 1) {
+#ifdef DEBUG
+        Serial.print("0-MPF ");
+        MATCH_MARK(results->rawbuf[offset], MAGIQUEST_MARK_ZERO);
+#endif
+        data.llword <<= 1;
+      } else {
+#ifdef DEBUG
+        Serial.print("1-MPF ");
+        MATCH_MARK(results->rawbuf[offset], MAGIQUEST_MARK_ONE);
+#endif
+        data.llword = (data.llword << 1) | 1;
+      }
+    } else {
+      return ERR;
+    }
+    offset++;
+    offset++;
+  }
+  // Success
+  results->bits = (offset + 1) / 2;
+  if (results->bits < 12) {
+    results->bits = 0;
+    return ERR;
+  }
+  results->magiquestMagnitude = data.cmd.magnitude;
+  results->value = data.cmd.wand_id;
+  results->decode_type = MAGIQUEST;
+  return DECODED;
 }
 
 /* -----------------------------------------------------------------------

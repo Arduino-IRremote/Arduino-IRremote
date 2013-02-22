@@ -37,6 +37,9 @@ void dump(decode_results *results) {
     else if (results->decode_type == RC6) {
       Serial.print("Decoded RC6: ");
     }
+    else if (results->decode_type == MAGIQUEST) {
+      Serial.print("Decoded MAGIQUEST: ");
+    }
     Serial.print(results->value, HEX);
     Serial.print(" (");
     Serial.print(results->bits, DEC);

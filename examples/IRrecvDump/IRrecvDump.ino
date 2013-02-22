@@ -37,6 +37,11 @@ void dump(decode_results *results) {
   else if (results->decode_type == SONY) {
     Serial.print("Decoded SONY: ");
   } 
+  else if (results->decode_type == MAGIQUEST) {
+    Serial.print("Decoded MAGIQUEST - Magnitude=");
+    Serial.print(results->magiquestMagnitude, HEX);
+    Serial.print(", wand_id=");
+  }
   else if (results->decode_type == RC5) {
     Serial.print("Decoded RC5: ");
   } 

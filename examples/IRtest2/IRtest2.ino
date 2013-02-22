@@ -95,6 +95,9 @@ void dump(decode_results *results) {
     else if (results->decode_type == RC6) {
       Serial.print("Decoded RC6: ");
     }
+    else if (results->decode_type == MAGIQUEST) {
+      Serial.print("Decoded MAGIQUEST: ");
+    }
     Serial.print(results->value, HEX);
     Serial.print(" (");
     Serial.print(results->bits, DEC);
@@ -139,6 +142,9 @@ void test(char *label, int type, unsigned long value, int bits) {
     } 
     else if (type == RC6) {
       irsend.sendRC6(value, bits);
+    } 
+    else if (type == MAGIQUEST) {
+      irsend.sendMagiQuest(value, bits);
     } 
     else {
       Serial.print(label);
@@ -273,6 +279,7 @@ void loop() {
   test("RC61", RC6, 0x12345678, 32);
   test("RC62", RC6, 0x0, 32);
   test("RC63", RC6, 0xffffffff, 32);
+  test("MAGIQUEST", MAGIQUEST, 0x12345678, 56);
 
   // Tests of raw sending and receiving.
   // First test sending raw and receiving raw.

@@ -86,6 +86,9 @@ void storeCode(decode_results *results) {
     else if (codeType == RC6) {
       Serial.print("Received RC6: ");
     } 
+    else if (codeType == MAGIQUEST) {
+      Serial.print("Received MAGIQUEST: ");
+    } 
     else {
       Serial.print("Unexpected codeType ");
       Serial.print(codeType, DEC);
@@ -132,6 +135,11 @@ void sendCode(int repeat) {
       Serial.print("Sent RC6 ");
       Serial.println(codeValue, HEX);
     }
+  } 
+  else if (codeType == MAGIQUEST) {
+    irsend.sendSony(codeValue, codeLen);
+    Serial.print("Sent MAGIQUEST ");
+    Serial.println(codeValue, HEX);
   } 
   else if (codeType == UNKNOWN /* i.e. raw */) {
     // Assume 38 KHz

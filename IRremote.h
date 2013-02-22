@@ -24,11 +24,26 @@
 // #define DEBUG
 // #define TEST
 
+// MagiQuest packet is both Wand ID and magnitude of swish and flick
+union magiquest {
+  uint64_t llword;
+  uint8_t    byte[8];
+//  uint16_t   word[4];
+//  uint32_t  lword[2];
+  struct {
+    uint16_t magnitude;
+    uint32_t wand_id;
+    uint8_t  padding;
+    uint8_t  scrap;
+  } cmd ;
+} ;
+
 // Results returned from the decoder
 class decode_results {
 public:
   int16_t decode_type; // NEC, SONY, RC5, UNKNOWN
   uint16_t panasonicAddress; // This is only used for decoding Panasonic data
+  uint16_t magiquestMagnitude; // This is only used for MagiQuest
   int32_t value; // Decoded value //mpf need to make unsigned.
   int16_t bits; // Number of bits in decoded value
   volatile uint16_t *rawbuf; // Raw intervals in .5 us ticks
@@ -46,6 +61,7 @@ public:
 #define JVC 8
 #define SANYO 9
 #define MITSUBISHI 10
+#define MAGIQUEST 11
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -71,6 +87,7 @@ private:
   int32_t  decodeRC6(decode_results *results);
   int32_t  decodePanasonic(decode_results *results);
   int32_t  decodeJVC(decode_results *results);
+  int32_t  decodeMagiQuest(decode_results *results);
   int32_t decodeHash(decode_results *results);
   int16_t compare(uint16_t oldval, uint16_t newval);
 
@@ -100,6 +117,7 @@ public:
   void sendSharp(int32_t data, int16_t nbits);
   void sendPanasonic(uint16_t address, int32_t data);
   void sendJVC(int32_t data, int16_t nbits, int16_t repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
+  void sendMagiQuest(uint32_t wand_id, uint16_t magitude);
   // private:
   void enableIROut(int16_t khz);
   VIRTUAL void mark(int16_t usec);
@@ -110,7 +128,7 @@ public:
 // Some useful constants
 
 #define USECPERTICK 50  // microseconds per clock interrupt tick
-#define RAWBUF 100 // Length of raw duration buffer
+#define RAWBUF 112 // Length of raw duration buffer
 
 // Marks tend to be 100us too long, and spaces 100us too short
 // when received due to sensor lag.

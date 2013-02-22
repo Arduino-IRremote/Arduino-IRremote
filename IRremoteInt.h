@@ -162,6 +162,11 @@
 #define SHARP_BITS 15
 #define DISH_BITS 16
 
+#define MAGIQUEST_PERIOD     1150
+#define MAGIQUEST_MARK_ZERO  280
+#define MAGIQUEST_SPACE_ZERO 850
+#define MAGIQUEST_MARK_ONE   580
+#define MAGIQUEST_SPACE_ONE  600
 #define TOLERANCE 25  // percent tolerance in measurements
 #define LTOL (1.0 - TOLERANCE/100.) 
 #define UTOL (1.0 + TOLERANCE/100.) 
@@ -213,7 +218,7 @@ extern volatile irparams_t irparams;
 #define MIN_RC6_SAMPLES 1
 #define PANASONIC_BITS 48
 #define JVC_BITS 16
-
+#define MAGIQUEST_BITS 56
 
 
 
