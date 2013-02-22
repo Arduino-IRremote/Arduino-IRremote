@@ -9,7 +9,7 @@
 
 #include <IRremote.h>
 
-int RECV_PIN = 11;
+uint8_t RECV_PIN = 11;
 
 IRrecv irrecv(RECV_PIN);
 
@@ -27,7 +27,7 @@ void setup()
 //void dump(void *v) {
 //  decode_results *results = (decode_results *)v
 void dump(decode_results *results) {
-  int count = results->rawlen;
+  int16_t count = results->rawlen;
   if (results->decode_type == UNKNOWN) {
     Serial.print("Unknown encoding: ");
   } 
