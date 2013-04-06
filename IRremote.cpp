@@ -242,10 +242,82 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude)
       space(MAGIQUEST_SPACE_ZERO);
     }
   }
-  Serial.println();
 }
-
-void IRsend::mark(int time) {
+void IRsend::sendSymaR5(uint32_t data)
+{
+  enableIROut(38);
+  mark(SYMA_HDR_MARK);   // SYMA_HDR_MARK 
+  space(SYMA_HDR_SPACE); // SYMA_HDR_SPACE
+  for (uint8_t i = 0; i < SYMA_R5_BITS+1; i++) {
+    mark(SYMA_BIT_MARK); // SYMA_BIT_MARK
+    if (((int32_t)data) < 0) { // if negative then MSBit is one.
+      space(SYMA_ONE_SPACE); // SYMA_ONE_SPACE
+   } 
+    else {
+      space(SYMA_ZERO_SPACE); // SYMA_ZERO_SPACE
+    }
+    data <<= 1;
+  }
+}
+void IRsend::sendSymaR3(uint32_t data)
+{
+  enableIROut(38);
+  mark(SYMA_HDR_MARK);
+  space(SYMA_HDR_SPACE);
+  data <<= 8;
+  for (uint8_t i = 0; i < SYMA_R3_BITS+1; i++) {
+    mark(SYMA_BIT_MARK);
+    if (((int32_t)data) < 0) { // if negative then MSBit is one.
+      space(SYMA_ONE_SPACE);
+   } 
+    else {
+      space(SYMA_ZERO_SPACE);
+    }
+    data <<= 1;
+  }
+}
+void IRsend::sendUseries(uint32_t data)
+{
+  enableIROut(38);
+  mark(USERIES_HDR_MARK);
+  for (int16_t i = 0; i < USERIES_BITS+1; i++) {
+    space(USERIES_BIT_SPACE);
+    if (((int32_t)data) < 0) { // if negative then MSBit is one.
+      mark(USERIES_ZERO_MARK);
+   } 
+    else {
+      mark(USERIES_ONE_MARK);
+    }
+    data <<= 1;
+  }
+  space(0); // Just to be sure
+}
+void IRsend::sendFastLane(uint32_t data)
+{
+  enableIROut(38);
+  mark(FASTLANE_HDR_MARK);
+  data <<= (32 - FASTLANE_BITS); // upshift to start point of data.
+  for (int16_t i = 0; i < FASTLANE_BITS+1; i++) {
+    if (i%2) {
+      if (((int32_t)data) < 0) { // if negative then MSBit is one.
+        mark(FASTLANE_ONE);
+      } 
+      else {
+        mark(FASTLANE_ZERO);
+      }
+    } else {
+      if (((int32_t)data) < 0) { // if negative then MSBit is one.
+        space(FASTLANE_ONE);
+      } 
+      else {
+        space(FASTLANE_ZERO);
+      }
+    }
+    data <<= 1;
+  }
+  space(0); // Just to be sure
+}
+void IRsend::mark(int16_t time) {
   // Sends an IR mark for the specified number of microseconds.
   // The mark output is modulated at the PWM frequency.
   TIMER_ENABLE_PWM; // Enable pin 3 PWM output
@@ -455,6 +527,24 @@ int16_t IRrecv::decode(decode_results *results) {
     Serial.println("Attempting Panasonic decode");
 #endif 
     if (decodePanasonic(results)) {
+        return DECODED;
+    }
+#ifdef DEBUG
+    Serial.println("Attempting Syma decode");
+#endif
+    if (decodeSyma(results)) {
+        return DECODED;
+    }
+#ifdef DEBUG
+    Serial.println("Attempting Useries decode");
+#endif
+    if (decodeUseries(results)) {
+        return DECODED;
+    }
+#ifdef DEBUG
+    Serial.println("Attempting FastLane decode");
+#endif
+    if (decodeFastLane(results)) {
         return DECODED;
     }
 #ifdef DEBUG
@@ -874,6 +964,109 @@ int32_t  IRrecv::decodePanasonic(decode_results *results) {
     results->bits = PANASONIC_BITS;
     return DECODED;
 }
+int32_t  IRrecv::decodeSyma(decode_results *results) {
+    uint32_t data = 0;
+    int16_t offset = 1;
+    uint8_t syma_len;
+
+    if (irparams.rawlen == 2 * (SYMA_R5_BITS + 2)) {
+      syma_len = SYMA_R5_BITS;
+    } 
+    else if (irparams.rawlen == 2 * (SYMA_R3_BITS + 2)) {
+      syma_len = SYMA_R3_BITS;
+    } 
+    else {
+      return ERR;
+    }
+    if (!MATCH_MARK(results->rawbuf[offset], SYMA_HDR_MARK)) {
+      return ERR;
+    }
+    offset++;
+    if (!MATCH_MARK(results->rawbuf[offset], SYMA_HDR_SPACE)) {
+      return ERR;
+    }
+    offset++;
+    for (uint8_t i = 0; i < syma_len; i++) {
+        if (!MATCH_MARK(results->rawbuf[offset++], SYMA_BIT_MARK)) {
+          return ERR;
+        }
+        if (MATCH_SPACE(results->rawbuf[offset], SYMA_ONE_SPACE)) {
+          data = (data << 1) | 1;
+        } else if (MATCH_SPACE(results->rawbuf[offset], SYMA_ZERO_SPACE)) {
+          data <<= 1;
+        } else {
+          return ERR;
+        }
+        offset++;
+    }
+    results->value = data;
+    if (syma_len == SYMA_R5_BITS) {
+      results->decode_type = SYMA_R5;
+    } 
+    else if (syma_len == SYMA_R3_BITS) {
+      results->decode_type = SYMA_R3;
+    }
+    results->bits = syma_len;
+    results->helicopter.dword = data;
+    return DECODED;
+}
+int32_t  IRrecv::decodeUseries(decode_results *results) {
+    uint32_t data = 0;
+    int16_t offset = 1;
+    if (irparams.rawlen < 2 * (USERIES_BITS + 2)) {
+      return ERR;
+    }
+    if (!MATCH_MARK(results->rawbuf[offset], USERIES_HDR_MARK)) {
+        return ERR;
+    }
+    offset++;
+    for (int16_t i = 0; i < USERIES_BITS; i++) {
+        if (!MATCH_SPACE(results->rawbuf[offset++], USERIES_BIT_SPACE)) {
+            return ERR;
+        }
+        if (MATCH_MARK(results->rawbuf[offset],USERIES_ONE_MARK)) {
+            data <<= 1;
+        } else if (MATCH_MARK(results->rawbuf[offset],USERIES_ZERO_MARK)) {
+            data = (data << 1) | 1;
+        } else {
+            return ERR;
+        }
+        offset++;
+    }
+    results->value = data;
+    results->helicopter.dword = data;
+    results->parity = UseriesChecksum(data);
+    results->decode_type = USERIES;
+    results->bits = USERIES_BITS;
+    return DECODED;
+}
+int32_t  IRrecv::decodeFastLane(decode_results *results) {
+    helicopter data;
+    data.dword = 0;
+    int16_t offset = 1;
+    if (irparams.rawlen < (FASTLANE_BITS + 2)) {
+      return ERR;
+    }
+    if (!MATCH_MARK(results->rawbuf[offset], FASTLANE_HDR_MARK)) {
+        return ERR;
+    }
+    offset++;
+    for (int16_t i = 0; i < FASTLANE_BITS; i++) {
+        if (MATCH_MARK(results->rawbuf[offset],FASTLANE_ZERO)) {
+            data.dword <<= 1;
+        } else if (MATCH_MARK(results->rawbuf[offset],FASTLANE_ONE)) {
+            data.dword = (data.dword << 1) | 1;
+        } else {
+            return ERR;
+        }
+        offset++;
+    }
+    results->value = data.dword;
+    results->helicopter.dword = data.dword;
+    results->decode_type = FASTLANE;
+    results->bits = FASTLANE_BITS;
+    return DECODED;
+}
 int32_t  IRrecv::decodeJVC(decode_results *results) {
     int32_t  data = 0;
     int16_t offset = 1; // Skip first space
@@ -1112,4 +1305,15 @@ void IRsend::sendDISH(int32_t data, int16_t nbits)
     }
     data <<= 1;
   }
+}
+uint8_t UseriesChecksum(uint32_t val)
+{
+  const uint8_t map[8] = { 0, 1, 3, 2, 6, 7, 5, 4 };
+  uint32_t x = val & 0xFFFFFFF8;
+  uint32_t p = x;
+  while ((x >>= 7) != 0) {
+    p ^= x;
+  }
+  p = (p ^ (p >> 1) ^ (p >> 2) ^ (p >> 4)) & 7;
+  return(map[p]);
 }
