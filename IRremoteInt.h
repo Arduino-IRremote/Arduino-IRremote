@@ -16,11 +16,7 @@
 #ifndef IRremoteint_h
 #define IRremoteint_h
 
-#if defined(ARDUINO) && ARDUINO >= 100
-#include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
+#include "Arduino.h"
 
 // define which timer to use
 //
@@ -30,44 +26,38 @@
 
 // Arduino Mega
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-  //#define IR_USE_TIMER1   // tx = pin 11
-  #define IR_USE_TIMER2     // tx = pin 9
-  //#define IR_USE_TIMER3   // tx = pin 5
-  //#define IR_USE_TIMER4   // tx = pin 6
-  //#define IR_USE_TIMER5   // tx = pin 46
+//#define IR_USE_TIMER1   // tx = pin 11
+#define IR_USE_TIMER2     // tx = pin 9
+//#define IR_USE_TIMER3   // tx = pin 5
+//#define IR_USE_TIMER4   // tx = pin 6
+//#define IR_USE_TIMER5   // tx = pin 46
 
 // Teensy 1.0
 #elif defined(__AVR_AT90USB162__)
-  #define IR_USE_TIMER1     // tx = pin 17
-
+#define IR_USE_TIMER1     // tx = pin 17
 // Teensy 2.0
 #elif defined(__AVR_ATmega32U4__)
-  //#define IR_USE_TIMER1   // tx = pin 14
-  //#define IR_USE_TIMER3   // tx = pin 9
-  #define IR_USE_TIMER4_HS  // tx = pin 10
-
+//#define IR_USE_TIMER1   // tx = pin 14
+//#define IR_USE_TIMER3   // tx = pin 9
+#define IR_USE_TIMER4_HS  // tx = pin 10
 // Teensy++ 1.0 & 2.0
 #elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
-  //#define IR_USE_TIMER1   // tx = pin 25
-  #define IR_USE_TIMER2     // tx = pin 1
-  //#define IR_USE_TIMER3   // tx = pin 16
+//#define IR_USE_TIMER1   // tx = pin 25
+#define IR_USE_TIMER2     // tx = pin 1
+//#define IR_USE_TIMER3   // tx = pin 16
 
 // Sanguino
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
-  //#define IR_USE_TIMER1   // tx = pin 13
-  #define IR_USE_TIMER2     // tx = pin 14
-
+//#define IR_USE_TIMER1   // tx = pin 13
+#define IR_USE_TIMER2     // tx = pin 14
 // Atmega8
 #elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
-  #define IR_USE_TIMER1   // tx = pin 9
-
+#define IR_USE_TIMER1   // tx = pin 9
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
 #else
-  //#define IR_USE_TIMER1   // tx = pin 9
-  #define IR_USE_TIMER2     // tx = pin 3
+//#define IR_USE_TIMER1   // tx = pin 9
+#define IR_USE_TIMER2     // tx = pin 3
 #endif
-
-
 
 #ifdef F_CPU
 #define SYSCLOCK F_CPU     // main Arduino clock
@@ -77,7 +67,6 @@
 
 #define ERR 0
 #define DECODED 1
-
 
 // defines for setting and clearing register bits
 #ifndef cbi
@@ -103,7 +92,6 @@
 #define SONY_ZERO_MARK	600
 #define SONY_RPT_LENGTH 45000
 #define SONY_DOUBLE_SPACE_USECS  500  // usually ssee 713 - not using ticks as get number wrapround
-
 // SA 8650B
 #define SANYO_HDR_MARK	3500  // seen range 3500
 #define SANYO_HDR_SPACE	950 //  seen 950
@@ -121,7 +109,6 @@
 #define MITSUBISHI_ZERO_MARK  750 // 17*50-100
 // #define MITSUBISHI_DOUBLE_SPACE_USECS  800  // usually ssee 713 - not using ticks as get number wrapround
 // #define MITSUBISHI_RPT_LENGTH 45000
-
 
 #define RC5_T1		889
 #define RC5_RPT_LENGTH	46000
@@ -173,9 +160,15 @@
 #define TICKS_HIGH(us) (int) (((us)*UTOL/USECPERTICK + 1))
 
 #ifndef DEBUG
-int MATCH(int measured, int desired) {return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);}
-int MATCH_MARK(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us + MARK_EXCESS));}
-int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us - MARK_EXCESS));}
+int MATCH(int measured, int desired) {
+	return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired) ;
+}
+int MATCH_MARK(int measured_ticks, int desired_us) {
+	return MATCH(measured_ticks, (desired_us + MARK_EXCESS));
+}
+int MATCH_SPACE(int measured_ticks, int desired_us) {
+	return MATCH(measured_ticks, (desired_us - MARK_EXCESS));
+}
 // Debugging versions are in IRremote.cpp
 #endif
 
@@ -187,14 +180,13 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks
 
 // information for the interrupt handler
 typedef struct {
-  uint8_t recvpin;           // pin for IR data from detector
-  uint8_t rcvstate;          // state machine
-  uint8_t blinkflag;         // TRUE to enable blinking of pin 13 on IR processing
-  unsigned int timer;     // state timer, counts 50uS ticks.
-  unsigned int rawbuf[RAWBUF]; // raw data
-  uint8_t rawlen;         // counter of entries in rawbuf
-} 
-irparams_t;
+	uint8_t recvpin;           // pin for IR data from detector
+	uint8_t rcvstate;          // state machine
+	uint8_t blinkflag;     // TRUE to enable blinking of pin 13 on IR processing
+	unsigned int timer;     // state timer, counts 50uS ticks.
+	unsigned int rawbuf[RAWBUF]; // raw data
+	uint8_t rawlen;         // counter of entries in rawbuf
+} irparams_t;
 
 // Defined in IRremote.cpp
 extern volatile irparams_t irparams;
@@ -213,9 +205,6 @@ extern volatile irparams_t irparams;
 #define MIN_RC6_SAMPLES 1
 #define PANASONIC_BITS 48
 #define JVC_BITS 16
-
-
-
 
 // defines for timer2 (8 bits)
 #if defined(IR_USE_TIMER2)
@@ -258,18 +247,17 @@ extern volatile irparams_t irparams;
 #define TIMER_PWM_PIN        3  /* Arduino Duemilanove, Diecimila, LilyPad, etc */
 #endif
 
-
 // defines for timer1 (16 bits)
 #elif defined(IR_USE_TIMER1)
 #define TIMER_RESET
 #define TIMER_ENABLE_PWM     (TCCR1A |= _BV(COM1A1))
 #define TIMER_DISABLE_PWM    (TCCR1A &= ~(_BV(COM1A1)))
 #if defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
-  #define TIMER_ENABLE_INTR    (TIMSK = _BV(OCIE1A))
-  #define TIMER_DISABLE_INTR   (TIMSK = 0)
+#define TIMER_ENABLE_INTR    (TIMSK = _BV(OCIE1A))
+#define TIMER_DISABLE_INTR   (TIMSK = 0)
 #else
-  #define TIMER_ENABLE_INTR    (TIMSK1 = _BV(OCIE1A))
-  #define TIMER_DISABLE_INTR   (TIMSK1 = 0)
+#define TIMER_ENABLE_INTR    (TIMSK1 = _BV(OCIE1A))
+#define TIMER_DISABLE_INTR   (TIMSK1 = 0)
 #endif
 #define TIMER_INTR_NAME      TIMER1_COMPA_vect
 #define TIMER_CONFIG_KHZ(val) ({ \
@@ -294,7 +282,6 @@ extern volatile irparams_t irparams;
 #else
 #define TIMER_PWM_PIN        9  /* Arduino Duemilanove, Diecimila, LilyPad, etc */
 #endif
-
 
 // defines for timer3 (16 bits)
 #elif defined(IR_USE_TIMER3)
@@ -324,7 +311,6 @@ extern volatile irparams_t irparams;
 #else
 #error "Please add OC3A pin number here\n"
 #endif
-
 
 // defines for timer4 (10 bits, high speed option)
 #elif defined(IR_USE_TIMER4_HS)
@@ -365,7 +351,6 @@ extern volatile irparams_t irparams;
 #error "Please add OC4A pin number here\n"
 #endif
 
-
 // defines for timer4 (16 bits)
 #elif defined(IR_USE_TIMER4)
 #define TIMER_RESET
@@ -394,7 +379,6 @@ extern volatile irparams_t irparams;
 #else
 #error "Please add OC4A pin number here\n"
 #endif
-
 
 // defines for timer5 (16 bits)
 #elif defined(IR_USE_TIMER5)
@@ -425,11 +409,9 @@ extern volatile irparams_t irparams;
 #error "Please add OC5A pin number here\n"
 #endif
 
-
 #else // unknown timer
 #error "Internal code configuration error, no known IR_USE_TIMER# defined\n"
 #endif
-
 
 // defines for blinking the LED
 #if defined(CORE_LED0_PIN)
