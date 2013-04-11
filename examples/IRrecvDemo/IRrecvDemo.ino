@@ -17,7 +17,7 @@ decode_results results;
 void setup()
 {
   Serial.begin(9600);
-  irrecv.setDecode(NEC);
+  irrecv.setDecoder(NEC);
   // specific about the decode type, default is NULL, which would run through all decoders.
 
   irrecv.enableIRIn(); // Start the receiver

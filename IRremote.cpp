@@ -260,7 +260,7 @@ IRrecv::IRrecv(int recvpin) {
 // And decoding would be much more efficient.
 // decode_typed determined by macro definations
 // edited by aGuegu, 04/11/2013
-void IRrecv::setDecode(char decode_type) {
+void IRrecv::setDecoder(char decode_type) {
 	switch (decode_type) {
 	case NEC:
 		_decode_function = &decodeNEC;

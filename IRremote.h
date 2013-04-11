@@ -58,7 +58,7 @@ public:
 	int decode(decode_results *results);
 	void enableIRIn();
 	void resume();
-	void setDecode(char decode_type);
+	void setDecoder(char decode_type);
 
 private:
 	// These are called by decode
