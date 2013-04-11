@@ -252,6 +252,44 @@ void IRsend::enableIROut(int khz) {
 IRrecv::IRrecv(int recvpin) {
 	irparams.recvpin = recvpin;
 	irparams.blinkflag = 0;
+	_decode_function = NULL;
+}
+
+// set specific decode_type to IRrecv,
+// so it would not be interfered by other senders.
+// And decoding would be much more efficient.
+// decode_typed determined by macro definations
+// edited by aGuegu, 04/11/2013
+void IRrecv::setDecode(char decode_type) {
+	switch (decode_type) {
+	case NEC:
+		_decode_function = &decodeNEC;
+		break;
+	case SONY:
+		_decode_function = &decodeSony;
+		break;
+	case RC5:
+		_decode_function = &decodeRC5;
+		break;
+	case RC6:
+		_decode_function = &decodeRC6;
+		break;
+	case PANASONIC:
+		_decode_function = &decodePanasonic;
+		break;
+	case JVC:
+		_decode_function = &decodeJVC;
+		break;
+	case SANYO:
+		_decode_function = &decodeSanyo;
+		break;
+	case MITSUBISHI:
+		_decode_function = &decodeMitsubishi;
+		break;
+	default:
+		_decode_function = NULL;
+		break;
+	}
 }
 
 // initialization
@@ -370,6 +408,15 @@ int IRrecv::decode(decode_results *results) {
 	if (irparams.rcvstate != STATE_STOP) {
 		return ERR;
 	}
+
+	if (_decode_function) {
+		if ((*_decode_function)(results)) {
+			return DECODED;
+		} else
+			resume();
+		return ERR;
+	}
+
 #ifdef DEBUG
 	Serial.println("Attempting NEC decode");
 #endif
@@ -418,13 +465,13 @@ int IRrecv::decode(decode_results *results) {
 	if (decodeJVC(results)) {
 		return DECODED;
 	}
-	// decodeHash returns a hash on any input.
-	// Thus, it needs to be last in the list.
-	// If you add any decodes, add them before this.
+// decodeHash returns a hash on any input.
+// Thus, it needs to be last in the list.
+// If you add any decodes, add them before this.
 	if (decodeHash(results)) {
 		return DECODED;
 	}
-	// Throw away and start over
+// Throw away and start over
 	resume();
 	return ERR;
 }
@@ -433,12 +480,12 @@ int IRrecv::decode(decode_results *results) {
 long IRrecv::decodeNEC(decode_results *results) {
 	long data = 0;
 	int offset = 1; // Skip first space
-	// Initial mark
+// Initial mark
 	if (!MATCH_MARK(results->rawbuf[offset], NEC_HDR_MARK)) {
 		return ERR;
 	}
 	offset++;
-	// Check for repeat
+// Check for repeat
 	if (irparams.rawlen == 4
 			&& MATCH_SPACE(results->rawbuf[offset], NEC_RPT_SPACE)
 			&& MATCH_MARK(results->rawbuf[offset + 1], NEC_BIT_MARK)) {
@@ -450,7 +497,7 @@ long IRrecv::decodeNEC(decode_results *results) {
 	if (irparams.rawlen < 2 * NEC_BITS + 4) {
 		return ERR;
 	}
-	// Initial space
+// Initial space
 	if (!MATCH_SPACE(results->rawbuf[offset], NEC_HDR_SPACE)) {
 		return ERR;
 	}
@@ -469,7 +516,7 @@ long IRrecv::decodeNEC(decode_results *results) {
 		}
 		offset++;
 	}
-	// Success
+// Success
 	results->bits = NEC_BITS;
 	results->value = data;
 	results->decode_type = NEC;
@@ -483,8 +530,8 @@ long IRrecv::decodeSony(decode_results *results) {
 	}
 	int offset = 0; // Dont skip first space, check its size
 
-	// Some Sony's deliver repeats fast after first
-	// unfortunately can't spot difference from of repeat from two fast clicks
+// Some Sony's deliver repeats fast after first
+// unfortunately can't spot difference from of repeat from two fast clicks
 	if (results->rawbuf[offset] < SONY_DOUBLE_SPACE_USECS) {
 		// Serial.print("IR Gap found: ");
 		results->bits = 0;
@@ -494,7 +541,7 @@ long IRrecv::decodeSony(decode_results *results) {
 	}
 	offset++;
 
-	// Initial mark
+// Initial mark
 	if (!MATCH_MARK(results->rawbuf[offset], SONY_HDR_MARK)) {
 		return ERR;
 	}
@@ -515,7 +562,7 @@ long IRrecv::decodeSony(decode_results *results) {
 		offset++;
 	}
 
-	// Success
+// Success
 	results->bits = (offset - 1) / 2;
 	if (results->bits < 12) {
 		results->bits = 0;
@@ -534,7 +581,7 @@ long IRrecv::decodeSanyo(decode_results *results) {
 		return ERR;
 	}
 	int offset = 0; // Skip first space
-	// Initial space
+// Initial space
 	/* Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
 	 Serial.print("IR Gap: ");
 	 Serial.println( results->rawbuf[offset]);
@@ -550,13 +597,13 @@ long IRrecv::decodeSanyo(decode_results *results) {
 	}
 	offset++;
 
-	// Initial mark
+// Initial mark
 	if (!MATCH_MARK(results->rawbuf[offset], SANYO_HDR_MARK)) {
 		return ERR;
 	}
 	offset++;
 
-	// Skip Second Mark
+// Skip Second Mark
 	if (!MATCH_MARK(results->rawbuf[offset], SANYO_HDR_MARK)) {
 		return ERR;
 	}
@@ -577,7 +624,7 @@ long IRrecv::decodeSanyo(decode_results *results) {
 		offset++;
 	}
 
-	// Success
+// Success
 	results->bits = (offset - 1) / 2;
 	if (results->bits < 12) {
 		results->bits = 0;
@@ -590,13 +637,13 @@ long IRrecv::decodeSanyo(decode_results *results) {
 
 // Looks like Sony except for timings, 48 chars of data and time/space different
 long IRrecv::decodeMitsubishi(decode_results *results) {
-	// Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
+// Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
 	long data = 0;
 	if (irparams.rawlen < 2 * MITSUBISHI_BITS + 2) {
 		return ERR;
 	}
 	int offset = 0; // Skip first space
-	// Initial space
+// Initial space
 	/* Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
 	 Serial.print("IR Gap: ");
 	 Serial.println( results->rawbuf[offset]);
@@ -614,10 +661,10 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
 	 */
 	offset++;
 
-	// Typical
-	// 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7
+// Typical
+// 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7
 
-	// Initial Space
+// Initial Space
 	if (!MATCH_MARK(results->rawbuf[offset], MITSUBISHI_HDR_SPACE)) {
 		return ERR;
 	}
@@ -639,7 +686,7 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
 		offset++;
 	}
 
-	// Success
+// Success
 	results->bits = (offset - 1) / 2;
 	if (results->bits < MITSUBISHI_BITS) {
 		results->bits = 0;
@@ -701,7 +748,7 @@ long IRrecv::decodeRC5(decode_results *results) {
 	int offset = 1; // Skip gap space
 	long data = 0;
 	int used = 0;
-	// Get start bits
+// Get start bits
 	if (getRClevel(results, &offset, &used, RC5_T1) != MARK)
 		return ERR;
 	if (getRClevel(results, &offset, &used, RC5_T1) != SPACE)
@@ -723,7 +770,7 @@ long IRrecv::decodeRC5(decode_results *results) {
 		}
 	}
 
-	// Success
+// Success
 	results->bits = nbits;
 	results->value = data;
 	results->decode_type = RC5;
@@ -735,7 +782,7 @@ long IRrecv::decodeRC6(decode_results *results) {
 		return ERR;
 	}
 	int offset = 1; // Skip first space
-	// Initial mark
+// Initial mark
 	if (!MATCH_MARK(results->rawbuf[offset], RC6_HDR_MARK)) {
 		return ERR;
 	}
@@ -746,7 +793,7 @@ long IRrecv::decodeRC6(decode_results *results) {
 	offset++;
 	long data = 0;
 	int used = 0;
-	// Get start bit (1)
+// Get start bit (1)
 	if (getRClevel(results, &offset, &used, RC6_T1) != MARK)
 		return ERR;
 	if (getRClevel(results, &offset, &used, RC6_T1) != SPACE)
@@ -776,7 +823,7 @@ long IRrecv::decodeRC6(decode_results *results) {
 			return ERR; // Error
 		}
 	}
-	// Success
+// Success
 	results->bits = nbits;
 	results->value = data;
 	results->decode_type = RC6;
@@ -795,7 +842,7 @@ long IRrecv::decodePanasonic(decode_results *results) {
 	}
 	offset++;
 
-	// decode address
+// decode address
 	for (int i = 0; i < PANASONIC_BITS; i++) {
 		if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_BIT_MARK)) {
 			return ERR;
@@ -818,7 +865,7 @@ long IRrecv::decodePanasonic(decode_results *results) {
 long IRrecv::decodeJVC(decode_results *results) {
 	long data = 0;
 	int offset = 1; // Skip first space
-	// Check for repeat
+// Check for repeat
 	if (irparams.rawlen - 1 == 33
 			&& MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK)
 			&& MATCH_MARK(results->rawbuf[irparams.rawlen - 1], JVC_BIT_MARK)) {
@@ -827,7 +874,7 @@ long IRrecv::decodeJVC(decode_results *results) {
 		results->decode_type = JVC;
 		return DECODED;
 	}
-	// Initial mark
+// Initial mark
 	if (!MATCH_MARK(results->rawbuf[offset], JVC_HDR_MARK)) {
 		return ERR;
 	}
@@ -835,7 +882,7 @@ long IRrecv::decodeJVC(decode_results *results) {
 	if (irparams.rawlen < 2 * JVC_BITS + 1) {
 		return ERR;
 	}
-	// Initial space
+// Initial space
 	if (!MATCH_SPACE(results->rawbuf[offset], JVC_HDR_SPACE)) {
 		return ERR;
 	}
@@ -854,11 +901,11 @@ long IRrecv::decodeJVC(decode_results *results) {
 		}
 		offset++;
 	}
-	//Stop bit
+//Stop bit
 	if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK)) {
 		return ERR;
 	}
-	// Success
+// Success
 	results->bits = JVC_BITS;
 	results->value = data;
 	results->decode_type = JVC;
@@ -901,7 +948,7 @@ int IRrecv::compare(unsigned int oldval, unsigned int newval) {
  * This isn't a "real" decoding, just an arbitrary value.
  */
 long IRrecv::decodeHash(decode_results *results) {
-	// Require at least 6 samples to prevent triggering on noise
+// Require at least 6 samples to prevent triggering on noise
 	if (results->rawlen < 6) {
 		return ERR;
 	}
