@@ -120,14 +120,15 @@ void IRsend::sendRaw(unsigned int buf[], int len, int hz)
 }
 
 // Note: first bit must be a one (start bit)
-void IRsend::sendRC5(unsigned long data, int nbits)
+void IRsend::sendRC5(int field, unsigned long data, int nbits)
 {
   enableIROut(36);
-  data = data << (32 - nbits);
+  data = data << (31 - nbits);
+  // Set field as second start bit
+  if(field)
+    data |= TOPBIT;
   mark(RC5_T1); // First start bit
-  space(RC5_T1); // Second start bit
-  mark(RC5_T1); // Second start bit
-  for (int i = 0; i < nbits; i++) {
+  for (int i = 0; i <= nbits; i++) {
     if (data & TOPBIT) {
       space(RC5_T1); // 1 is space, then mark
       mark(RC5_T1);
@@ -139,6 +140,11 @@ void IRsend::sendRC5(unsigned long data, int nbits)
     data <<= 1;
   }
   space(0); // Turn off at end
+}
+
+void IRsend::sendRC5(unsigned long data, int nbits)
+{
+  IRsend::sendRC5(1, data, nbits);
 }
 
 // Caller needs to take care of flipping the toggle bit

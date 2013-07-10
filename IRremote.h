@@ -94,6 +94,7 @@ public:
   //  void sendMitsubishi(unsigned long data, int nbits);
   void sendRaw(unsigned int buf[], int len, int hz);
   void sendRC5(unsigned long data, int nbits);
+  void sendRC5(int field, unsigned long data, int nbits);
   void sendRC6(unsigned long data, int nbits);
   void sendDISH(unsigned long data, int nbits);
   void sendSharp(unsigned long data, int nbits);
