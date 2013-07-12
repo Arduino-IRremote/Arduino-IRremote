@@ -202,13 +202,13 @@
 #define _GAP 5000 // Minimum map between transmissions
 #define GAP_TICKS (_GAP/USECPERTICK)
 
-#define TICKS_LOW(us) (int16_t) (((us)*LTOL/USECPERTICK))
-#define TICKS_HIGH(us) (int16_t) (((us)*UTOL/USECPERTICK + 1))
+#define TICKS_LOW(us) (int) (((us)*LTOL/USECPERTICK))
+#define TICKS_HIGH(us) (int) (((us)*UTOL/USECPERTICK + 1))
 
 #ifndef DEBUG
-int16_t MATCH(int16_t measured, int16_t desired) {return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);}
-int16_t MATCH_MARK(int16_t measured_ticks, int16_t desired_us) {return MATCH(measured_ticks, (desired_us + MARK_EXCESS));}
-int16_t MATCH_SPACE(int16_t measured_ticks, int16_t desired_us) {return MATCH(measured_ticks, (desired_us - MARK_EXCESS));}
+int MATCH(int measured, int desired) {return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);}
+int MATCH_MARK(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us + MARK_EXCESS));}
+int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us - MARK_EXCESS));}
 // Debugging versions are in IRremote.cpp
 #endif
 
@@ -223,8 +223,8 @@ typedef struct {
   uint8_t recvpin;           // pin for IR data from detector
   uint8_t rcvstate;          // state machine
   uint8_t blinkflag;         // TRUE to enable blinking of pin 13 on IR processing
-  uint16_t timer;     // state timer, counts 50uS ticks.
-  uint16_t rawbuf[RAWBUF]; // raw data
+  unsigned int timer;     // state timer, counts 50uS ticks.
+  unsigned int rawbuf[RAWBUF]; // raw data
   uint8_t rawlen;         // counter of entries in rawbuf
 } 
 irparams_t;

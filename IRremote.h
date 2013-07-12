@@ -91,10 +91,10 @@ public:
   uint16_t magiquestMagnitude; // This is only used for MagiQuest
   int32_t value; // Decoded value //mpf need to make unsigned.
   union helicopter helicopter;
-  uint16_t parity;
-  int16_t bits; // Number of bits in decoded value
-  volatile uint16_t *rawbuf; // Raw intervals in .5 us ticks
-  int16_t rawlen; // Number of records in rawbuf.
+  unsigned int parity;
+  int bits; // Number of bits in decoded value
+  volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
+  int rawlen; // Number of records in rawbuf.
 };
 
 // Values for decode_type
@@ -124,26 +124,26 @@ class IRrecv
 public:
   IRrecv(int recvpin);
   void blink13(int blinkflag);
-  int16_t decode(decode_results *results);
+  int decode(decode_results *results);
   void enableIRIn();
   void resume();
 private:
   // These are called by decode
-  int16_t getRClevel(decode_results *results, int16_t *offset, int16_t *used, int16_t t1);
-  int32_t  decodeNEC(decode_results *results);
-  int32_t  decodeSony(decode_results *results);
-  int32_t  decodeSanyo(decode_results *results);
-  int32_t  decodeMitsubishi(decode_results *results);
-  int32_t  decodeRC5(decode_results *results);
-  int32_t  decodeRC6(decode_results *results);
-  int32_t  decodePanasonic(decode_results *results);
-  int32_t  decodeSyma(decode_results *results);
-  int32_t  decodeUseries(decode_results *results);
-  int32_t  decodeFastLane(decode_results *results);
-  int32_t  decodeJVC(decode_results *results);
-  int32_t  decodeMagiQuest(decode_results *results);
-  int32_t decodeHash(decode_results *results);
-  int16_t compare(uint16_t oldval, uint16_t newval);
+  int getRClevel(decode_results *results, int *offset, int *used, int t1);
+  long decodeNEC(decode_results *results);
+  long decodeSony(decode_results *results);
+  long decodeSanyo(decode_results *results);
+  long decodeMitsubishi(decode_results *results);
+  long decodeRC5(decode_results *results);
+  long decodeRC6(decode_results *results);
+  long decodePanasonic(decode_results *results);
+  long decodeJVC(decode_results *results);
+  long decodeHash(decode_results *results);
+  long  decodeSyma(decode_results *results);
+  long  decodeUseries(decode_results *results);
+  long  decodeFastLane(decode_results *results);
+  long  decodeMagiQuest(decode_results *results);
+  int compare(unsigned int oldval, unsigned int newval);
 
 }
 ;
@@ -161,27 +161,27 @@ class IRsend
 {
 public:
   IRsend() {}
-  void sendNEC(int32_t data, int16_t nbits);
-  void sendSony(int32_t data, int16_t nbits);
+  void sendNEC(unsigned long data, int nbits);
+  void sendSony(unsigned long data, int nbits);
   // Neither Sanyo nor Mitsubishi send is implemented yet
-  //  void sendSanyo(int32_t data, int16_t nbits);
-  //  void sendMitsubishi(int32_t data, int16_t nbits);
-  void sendRaw(uint16_t buf[], int16_t len, int16_t hz);
-  void sendRC5(int32_t data, int16_t nbits);
-  void sendRC6(int32_t data, int16_t nbits);
-  void sendDISH(int32_t data, int16_t nbits);
-  void sendSharp(int32_t data, int16_t nbits);
-  void sendPanasonic(uint16_t address, int32_t data);
-  void sendJVC(int32_t data, int16_t nbits, int16_t repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
-  void sendMagiQuest(uint32_t wand_id, uint16_t magitude);
-  void sendSymaR5(uint32_t data);
-  void sendSymaR3(uint32_t data);
-  void sendUseries(uint32_t data);
-  void sendFastLane(uint32_t data);
+  //  void sendSanyo(unsigned long data, int nbits);
+  //  void sendMitsubishi(unsigned long data, int nbits);
+  void sendRaw(unsigned int buf[], int len, int hz);
+  void sendRC5(unsigned long data, int nbits);
+  void sendRC6(unsigned long data, int nbits);
+  void sendDISH(unsigned long data, int nbits);
+  void sendSharp(unsigned long data, int nbits);
+  void sendPanasonic(unsigned int address, unsigned long data);
+  void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
+  void sendMagiQuest(unsigned long wand_id, unsigned magitude);
+  void sendSymaR5(unsigned long data);
+  void sendSymaR3(unsigned long data);
+  void sendUseries(unsigned long data);
+  void sendFastLane(unsigned long data);
   // private:
-  void enableIROut(int16_t khz);
-  VIRTUAL void mark(int16_t usec);
-  VIRTUAL void space(int16_t usec);
+  void enableIROut(int khz);
+  VIRTUAL void mark(int usec);
+  VIRTUAL void space(int usec);
 }
 ;
 
