@@ -5,6 +5,7 @@
  * Copyright 2009 Ken Shirriff
  * http://arcfn.com
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
+ * RCMM protocol added by Matthias Neeracher
  */
 
 #include <IRremote.h>
@@ -139,6 +140,9 @@ void dump(decode_results *results) {
   else if (results->decode_type == JVC) {
      Serial.print("Decoded JVC: ");
   }
+  else if (results->decode_type == RCMM) {
+     Serial.print("Decoded RCMM: ");
+  }
   Serial.print(" value=");
   Serial.print(results->value, HEX);
   Serial.print(" (");
@@ -153,7 +157,7 @@ void dump(decode_results *results) {
       Serial.print(results->rawbuf[i]*USECPERTICK, DEC);
     } 
     else {
-      Serial.print(-(int)results->rawbuf[i]*USECPERTICK, DEC);
+      Serial.print(-(long)results->rawbuf[i]*USECPERTICK, DEC);
     }
     Serial.print(" ");
   }

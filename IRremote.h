@@ -10,6 +10,8 @@
  * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
  *
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
+ *
+ * RCMM protocol added by Matthias Neeracher.
  */
 
 #ifndef IRremote_h
@@ -22,7 +24,7 @@
 // TEST must be defined for the IRtest unittests to work.  It will make some
 // methods virtual, which will be slightly slower, which is why it is optional.
 // #define DEBUG
-// #define TEST
+//#define TEST
 
 // MagiQuest packet is both Wand ID and magnitude of swish and flick
 union magiquest {
@@ -113,6 +115,7 @@ public:
 #define SYMA_R5 13
 #define USERIES 14
 #define FASTLANE 15
+#define RCMM 16
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -138,6 +141,7 @@ private:
   long decodeRC6(decode_results *results);
   long decodePanasonic(decode_results *results);
   long decodeJVC(decode_results *results);
+  long decodeRCMM(decode_results *results);
   long decodeHash(decode_results *results);
   long  decodeSyma(decode_results *results);
   long  decodeUseries(decode_results *results);
@@ -178,6 +182,7 @@ public:
   void sendSymaR3(unsigned long data);
   void sendUseries(unsigned long data);
   void sendFastLane(unsigned long data);
+  void sendRCMM(unsigned long data, int nbits);
   // private:
   void enableIROut(int khz);
   VIRTUAL void mark(int usec);
@@ -192,6 +197,6 @@ public:
 
 // Marks tend to be 100us too long, and spaces 100us too short
 // when received due to sensor lag.
-#define MARK_EXCESS 100
+#define MARK_EXCESS 50
 #endif
 

@@ -21,8 +21,38 @@
 
 // Provides ISR
 #include <avr/interrupt.h>
+#include <util/delay_basic.h>
+
+#if defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+#define IS_AVTINY
+#endif
+
+#define MIN(x,y) (x < y ? x : y)
+#define UINT16_MAX	0xFFFFUL
 
 volatile irparams_t irparams;
+
+#if SYSCLOCK != 8000000L && SYSCLOCK != 16000000L
+//
+// Built-in delayMicroseconds only works for 16MHz and 8MHz.
+//
+#define USE_CYCLE_BASED_TIMINGS
+void IRsend::mark(int time) {
+  // Sends an IR mark for the specified number of microseconds.
+  // The mark output is modulated at the PWM frequency.
+  TIMER_ENABLE_PWM; // Enable pin 3 PWM output
+}
+
+/* Leave pin off for time (given in microseconds) */
+void IRsend::space(int time) {
+  // Sends an IR space for the specified number of microseconds.
+  // A space is no output, so the PWM output is disabled.
+  TIMER_DISABLE_PWM; // Disable pin 3 PWM output
+}
+#define US_TO_ITER(x) uint16_t(((x)*(SYSCLOCK/1000))/4000)
+#define mark(x)  do { this->mark ((x)); _delay_loop_2(US_TO_ITER(x)); } while (0)
+#define space(x) do { this->space ((x)); _delay_loop_2(US_TO_ITER(x)); } while (0)
+#endif
 
 // These versions of MATCH, MATCH_MARK, and MATCH_SPACE are only for debugging.
 // To use them, set DEBUG in IRremoteInt.h
@@ -222,6 +252,22 @@ void IRsend::sendJVC(unsigned long data, int nbits, int repeat)
     space(0);
 }
 
+// Caller needs to take care of flipping the toggle bit
+void IRsend::sendRCMM(unsigned long data, int nbits)
+{
+	enableIROut(36);
+    data = data << (32 - nbits);
+	mark(RCMM_HDR_MARK);
+	space(RCMM_SPACE);
+	for (int i = 0; i < nbits; i += 2) {
+		mark(RCMM_MARK);
+		space(RCMM_SPACE+(data >> 30)*RCMM_INCREMENT);
+		data <<= 2;
+	}
+	mark(RCMM_MARK);
+	space(0);
+}
+
 void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude)
 {
   magiquest data;
@@ -317,6 +363,8 @@ void IRsend::sendFastLane(uint32_t data)
   }
   space(0); // Just to be sure
 }
+
+#ifndef USE_CYCLE_BASED_TIMINGS
 void IRsend::mark(int16_t time) {
   // Sends an IR mark for the specified number of microseconds.
   // The mark output is modulated at the PWM frequency.
@@ -331,6 +379,7 @@ void IRsend::space(int time) {
   TIMER_DISABLE_PWM; // Disable pin 3 PWM output
   if (time > 0) delayMicroseconds(time);
 }
+#endif
 
 void IRsend::enableIROut(int khz) {
   // Enables IR output.  The khz value controls the modulation frequency in kilohertz.
@@ -368,22 +417,17 @@ IRrecv::IRrecv(int recvpin)
 // initialization
 void IRrecv::enableIRIn() {
   cli();
-  // setup pulse clock timer interrupt
-  //Prescale /8 (16M/8 = 0.5 microseconds per tick)
-  // Therefore, the timer interval can range from 0.5 to 128 microseconds
-  // depending on the reset value (255 to 0)
-  TIMER_CONFIG_NORMAL();
-
-  //Timer2 Overflow Interrupt Enable
-  TIMER_ENABLE_INTR;
-
-  TIMER_RESET;
-
-  sei();  // enable interrupts
+  if (digitalPinToPCICR(irparams.recvpin))
+  {
+      *digitalPinToPCICR(irparams.recvpin) |= _BV(digitalPinToPCICRbit(irparams.recvpin));
+      *digitalPinToPCMSK(irparams.recvpin) |= _BV(digitalPinToPCMSKbit(irparams.recvpin));
+  }
 
   // initialize state machine variables
-  irparams.rcvstate = STATE_IDLE;
-  irparams.rawlen = 0;
+  irparams.rcvstate 	= STATE_IDLE;
+  irparams.rawlen 		= 0;
+  irparams.startTime	= micros();
+  sei();  // enable interrupts
 
   // set pin modes
   pinMode(irparams.recvpin, INPUT);
@@ -404,13 +448,16 @@ void IRrecv::blink13(int blinkflag)
 // First entry is the SPACE between transmissions.
 // As soon as a SPACE gets long, ready is set, state switches to IDLE, timing of SPACE continues.
 // As soon as first MARK arrives, gap width is recorded, ready is cleared, and new logging starts
-ISR(TIMER_INTR_NAME)
+void handle_interrupt()
 {
-  TIMER_RESET;
-
-  uint8_t irdata = (uint8_t)digitalRead(irparams.recvpin);
-
-  irparams.timer++; // One more 50us tick
+  uint8_t 	irdata = (uint8_t)digitalRead(irparams.recvpin);
+  uint32_t	now    = micros();
+  uint32_t	elapsed;
+  if (now < irparams.startTime)
+	  elapsed = now+1+(0xFFFFFFFF-irparams.startTime);
+  else
+	  elapsed = now-irparams.startTime;
+  elapsed /= USECPERTICK;
   if (irparams.rawlen >= RAWBUF) {
     // Buffer overflow
     irparams.rcvstate = STATE_STOP;
@@ -418,34 +465,33 @@ ISR(TIMER_INTR_NAME)
   switch(irparams.rcvstate) {
   case STATE_IDLE: // In the middle of a gap
     if (irdata == MARK) {
-      if (irparams.timer < GAP_TICKS) {
-        // Not big enough to be a gap.
-        irparams.timer = 0;
-      } 
-      else {
+	  if (elapsed < GAP_TICKS) {
+		// Not big enough to be a gap.
+		irparams.startTime = now;
+	  } else {
         // gap just ended, record duration and start recording transmission
         irparams.rawlen = 0;
-        irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-        irparams.timer = 0;
+        irparams.rawbuf[irparams.rawlen++] = MIN(elapsed, UINT16_MAX);
+        irparams.startTime = now;
         irparams.rcvstate = STATE_MARK;
       }
     }
     break;
   case STATE_MARK: // timing MARK
     if (irdata == SPACE) {   // MARK ended, record time
-      irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-      irparams.timer = 0;
+      irparams.rawbuf[irparams.rawlen++] = MIN(elapsed, UINT16_MAX);
+      irparams.startTime = now;
       irparams.rcvstate = STATE_SPACE;
     }
     break;
   case STATE_SPACE: // timing SPACE
     if (irdata == MARK) { // SPACE just ended, record it
-      irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-      irparams.timer = 0;
+      irparams.rawbuf[irparams.rawlen++] = MIN(elapsed, UINT16_MAX);
+      irparams.startTime = now;
       irparams.rcvstate = STATE_MARK;
     } 
     else { // SPACE
-      if (irparams.timer > GAP_TICKS) {
+      if (elapsed > GAP_TICKS) {
         // big SPACE, indicates gap between codes
         // Mark current code as ready for processing
         // Switch to STOP
@@ -456,7 +502,7 @@ ISR(TIMER_INTR_NAME)
     break;
   case STATE_STOP: // waiting, measuring gap
     if (irdata == MARK) { // reset gap timer
-      irparams.timer = 0;
+      irparams.startTime = now;
     }
     break;
   }
@@ -476,29 +522,68 @@ void IRrecv::resume() {
   irparams.rawlen = 0;
 }
 
+#if defined(PCINT0_vect)
+ISR(PCINT0_vect)
+{
+  handle_interrupt();
+}
+#endif
+
+#if defined(PCINT1_vect)
+ISR(PCINT1_vect)
+{
+  handle_interrupt();
+}
+#endif
+
+#if defined(PCINT2_vect)
+ISR(PCINT2_vect)
+{
+  handle_interrupt();
+}
+#endif
+
+#if defined(PCINT3_vect)
+ISR(PCINT3_vect)
+{
+  handle_interrupt();
+}
+#endif
 
 
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
 int IRrecv::decode(decode_results *results) {
+  cli();
+  handle_interrupt();
+  sei();
   results->rawbuf = irparams.rawbuf;
   results->rawlen = irparams.rawlen;
   if (irparams.rcvstate != STATE_STOP) {
     return ERR;
   }
+#ifndef IS_AVTINY
+#ifdef DEBUG
+  Serial.println("Attempting MagiQuest decode");
+#endif
+  if (decodeMagiQuest(results)) {
+        return DECODED;
+    }
 #ifdef DEBUG
   Serial.println("Attempting NEC decode");
 #endif
   if (decodeNEC(results)) {
     return DECODED;
   }
+#endif
 #ifdef DEBUG
   Serial.println("Attempting Sony decode");
 #endif
   if (decodeSony(results)) {
     return DECODED;
   }
+#ifndef IS_AVTINY
 #ifdef DEBUG
   Serial.println("Attempting Sanyo decode");
 #endif
@@ -512,23 +597,25 @@ int IRrecv::decode(decode_results *results) {
     return DECODED;
   }
 #ifdef DEBUG
+    Serial.println("Attempting Panasonic decode");
+#endif 
+    if (decodePanasonic(results)) {
+        return DECODED;
+    }
+#ifdef DEBUG
   Serial.println("Attempting RC5 decode");
 #endif  
   if (decodeRC5(results)) {
     return DECODED;
   }
+#endif
 #ifdef DEBUG
   Serial.println("Attempting RC6 decode");
 #endif 
   if (decodeRC6(results)) {
     return DECODED;
   }
-#ifdef DEBUG
-    Serial.println("Attempting Panasonic decode");
-#endif 
-    if (decodePanasonic(results)) {
-        return DECODED;
-    }
+#ifndef IS_AVTINY
 #ifdef DEBUG
     Serial.println("Attempting Syma decode");
 #endif
@@ -554,11 +641,12 @@ int IRrecv::decode(decode_results *results) {
         return DECODED;
     }
 #ifdef DEBUG
-  Serial.println("Attempting MagiQuest decode");
-#endif
-  if (decodeMagiQuest(results)) {
+    Serial.println("Attempting RCMM decode");
+#endif 
+    if (decodeRCMM(results)) {
         return DECODED;
     }
+#endif
   // decodeHash returns a hash on any input.
   // Thus, it needs to be last in the list.
   // If you add any decodes, add them before this.
@@ -820,13 +908,13 @@ int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) 
   if (MATCH(width, t1 + correction)) {
     avail = 1;
   } 
-  else if (MATCH(width, 2*t1 + correction)) {
+  if (((avail < 0) || (val == MARK)) && MATCH(width, 2*t1 + correction)) {
     avail = 2;
   } 
-  else if (MATCH(width, 3*t1 + correction)) {
+  if (((avail < 0) || (val == MARK)) && MATCH(width, 3*t1 + correction)) {
     avail = 3;
   } 
-  else {
+  if (avail < 0) {
     return -1;
   }
 
@@ -1117,6 +1205,59 @@ long IRrecv::decodeJVC(decode_results *results) {
     results->value = data;
     results->decode_type = JVC;
     return DECODED;
+}
+
+long IRrecv::decodeRCMM(decode_results *results) {
+  long data = 0;
+  if (irparams.rawlen < RCMM_BITS + 4) {
+    return ERR;
+  }
+  int offset = 1; // Skip first space
+  // Initial mark
+  if (!MATCH_MARK(results->rawbuf[offset], RCMM_HDR_MARK)) {
+    return ERR;
+  }
+  offset++;
+  if (!MATCH_SPACE(results->rawbuf[offset], RCMM_SPACE)) {
+    return ERR;
+  }
+  offset++;
+
+  while (offset + 1 < irparams.rawlen) {
+    if (!MATCH_MARK(results->rawbuf[offset], RCMM_MARK)) {
+      return ERR;
+    }
+    offset++;
+    if (MATCH_SPACE(results->rawbuf[offset], RCMM_SPACE)) {
+		data = (data << 2) | 0;
+    } 
+    else if (MATCH_SPACE(results->rawbuf[offset], RCMM_SPACE+RCMM_INCREMENT)) {
+		data = (data << 2) | 1;
+    } 
+    else if (MATCH_SPACE(results->rawbuf[offset], RCMM_SPACE+2*RCMM_INCREMENT)) {
+		data = (data << 2) | 2;
+    } 
+    else if (MATCH_SPACE(results->rawbuf[offset], RCMM_SPACE+3*RCMM_INCREMENT)) {
+		data = (data << 2) | 3;
+    } 
+    else {
+      return ERR;
+    }
+    offset++;
+  }
+  if (!MATCH_MARK(results->rawbuf[offset], RCMM_MARK)) {
+    return ERR;
+  }
+
+  // Success
+  results->bits = (offset - 3);
+  if (results->bits < RCMM_BITS) {
+    results->bits = 0;
+    return ERR;
+  }
+  results->value = data;
+  results->decode_type = RCMM;
+  return DECODED;
 }
 
 int32_t  IRrecv::decodeMagiQuest(decode_results *results) {

@@ -136,6 +136,11 @@ void sendCode(int repeat) {
       Serial.println(codeValue, HEX);
     }
   } 
+  else if (codeType == RCMM) {
+    irsend.sendRCMM(codeValue, codeLen);
+    Serial.print("Sent RCMM ");
+    Serial.println(codeValue, HEX);
+  } 
   else if (codeType == MAGIQUEST) {
     irsend.sendSony(codeValue, codeLen);
     Serial.print("Sent MAGIQUEST ");

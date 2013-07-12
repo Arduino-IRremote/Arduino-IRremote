@@ -4,13 +4,15 @@
  * Copyright 2009 Ken Shirriff
  * For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
  *
- * Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
+ * Modified by Paul Stoffregen <paul@pjrc.com> and Matthias Neeracher <neeracher@mac.com> to support other boards and timers
  *
  * Interrupt code based on NECIRrcv by Joe Knapp
  * http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
  * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
  *
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
+ *
+ * RC-MM protocol added by Matthias Neeracher.
  */
 
 #ifndef IRremoteint_h
@@ -65,6 +67,16 @@
 #elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
   #define IR_USE_TIMER1   // tx = pin 9
 
+// Tested with ATtiny85, presumably works with ATtiny45, possibly with ATtiny25
+// The attiny core uses Timer 0 for millis() etc., so using timer 1 is advisable
+// for IR out. Pin 4 also conveniently is not used in any role for ISP.
+// The Arduino-tiny core uses Timer 1 for millis(), so using timer 0 is advisable
+// for IR out. Pin 0 is used by default for IR out in the Tinyspark IR shield, but 
+// is not usable for PWM waveforms where the frequency, not just the duty cycle,
+// needs to be controlled.
+#elif defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+// #define IR_USE_TIMER1_TINY	// tx = pin 4 (OC1B)
+  #define IR_USE_TIMER0			// tx = pin 1 (OC0B)
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
 #else
   //#define IR_USE_TIMER1   // tx = pin 9
@@ -163,6 +175,11 @@
 #define JVC_ZERO_SPACE 550
 #define JVC_RPT_LENGTH 60000
 
+#define RCMM_HDR_MARK 	417
+#define RCMM_MARK		149 // Protocol says 167, but in practice we often seem to be short
+#define RCMM_SPACE  	277
+#define RCMM_INCREMENT	167
+
 #define SHARP_BITS 15
 #define DISH_BITS 16
 
@@ -223,7 +240,7 @@ typedef struct {
   uint8_t recvpin;           // pin for IR data from detector
   uint8_t rcvstate;          // state machine
   uint8_t blinkflag;         // TRUE to enable blinking of pin 13 on IR processing
-  unsigned int timer;     // state timer, counts 50uS ticks.
+  unsigned long startTime;   // state timer, counts 50uS ticks.
   unsigned int rawbuf[RAWBUF]; // raw data
   uint8_t rawlen;         // counter of entries in rawbuf
 } 
@@ -236,7 +253,7 @@ extern volatile irparams_t irparams;
 #define MARK  0
 #define SPACE 1
 
-#define TOPBIT 0x80000000
+#define TOPBIT 	 0x80000000
 
 #define NEC_BITS 32
 #define SONY_BITS 12
@@ -246,6 +263,7 @@ extern volatile irparams_t irparams;
 #define MIN_RC6_SAMPLES 1
 #define PANASONIC_BITS 48
 #define JVC_BITS 16
+#define RCMM_BITS 12
 #define MAGIQUEST_BITS 56
 #define SYMA_R5_BITS 32
 #define SYMA_R3_BITS 24
@@ -330,6 +348,91 @@ extern volatile irparams_t irparams;
 #define TIMER_PWM_PIN        13 /* Sanguino */
 #else
 #define TIMER_PWM_PIN        9  /* Arduino Duemilanove, Diecimila, LilyPad, etc */
+#endif
+
+
+// defines for timer1 on ATtiny (8 bits), no phase-correct PWM
+#elif defined(IR_USE_TIMER1_TINY)
+#define TIMER_RESET
+#define TIMER_ENABLE_PWM   (GTCCR |= _BV(COM1B1))
+#define TIMER_DISABLE_PWM  (GTCCR &= ~_BV(COM1B1))
+#define TIMER_ENABLE_INTR  (TIMSK |= _BV(OCIE1B))
+#define TIMER_DISABLE_INTR (TIMSK &= ~_BV(OCIE1B))
+#define TIMER_INTR_NAME    TIMER1_COMPB_vect
+#if SYSCLOCK <= 8000000
+#define TIMER_CONFIG_KHZ(val) ({ \
+  const uint8_t pwmval = SYSCLOCK / 1000 / (val); \
+  TCCR1	= _BV(CS10);							  \
+  GTCCR = _BV(PWM1B); \
+  OCR1C = pwmval; \
+  OCR1B = pwmval / 3; \
+})
+#else
+#define TIMER_CONFIG_KHZ(val) ({ \
+  const uint8_t pwmval = SYSCLOCK / 4000 / (val); \
+  TCCR1	= _BV(CS11) | _BV(CS10); \
+  GTCCR = _BV(PWM1B); \
+  OCR1C = pwmval; \
+  OCR1B = pwmval / 3; \
+})
+#endif
+#define TIMER_COUNT_TOP      (SYSCLOCK * USECPERTICK / 1000000)
+#if (TIMER_COUNT_TOP < 256)
+#define TIMER_CONFIG_NORMAL() ({ \
+  TCCR1	= _BV(CTC1) | _BV(CS10);	 \
+  GTCCR = 0; \
+  OCR1C = TIMER_COUNT_TOP; \
+  OCR1B = TIMER_COUNT_TOP; \
+  TCNT1 = 0; \
+})
+#else
+#define TIMER_CONFIG_NORMAL() ({ \
+  TCCR1	= _BV(CTC1) | _BV(CS12);	\
+  GTCCR = 0; \
+  OCR1C = TIMER_COUNT_TOP / 8; \
+  OCR1B = TIMER_COUNT_TOP / 8; \
+  TCNT1 = 0; \
+})
+#endif
+#define TIMER_PWM_PIN        4  
+
+
+// defines for timer0 (8 bits). Tested on ATtiny85, may also work on other 
+// processors, but most of them use Timer 0 to keep system time
+#elif defined(IR_USE_TIMER0)
+#define TIMER_RESET
+#define TIMER_ENABLE_PWM     (TCCR0A |= _BV(COM0B1))
+#define TIMER_DISABLE_PWM    (TCCR0A &= ~(_BV(COM0B1)))
+#define TIMER_ENABLE_INTR    (TIMSK = _BV(OCIE0A))
+#define TIMER_DISABLE_INTR   (TIMSK = 0)
+#define TIMER_INTR_NAME      TIMER0_COMPA_vect
+#define TIMER_CONFIG_KHZ(val) ({ \
+  const uint8_t pwmval = SYSCLOCK / 2000 / (val); \
+  TCCR0A = _BV(WGM00); \
+  TCCR0B = _BV(WGM02) | _BV(CS00); \
+  OCR0A = pwmval; \
+  OCR0B = pwmval / 3; \
+})
+#define TIMER_COUNT_TOP      (SYSCLOCK * USECPERTICK / 1000000)
+#if (TIMER_COUNT_TOP < 256)
+#define TIMER_CONFIG_NORMAL() ({ \
+  TCCR2A = _BV(WGM01); \
+  TCCR2B = _BV(CS00); \
+  OCR2A = TIMER_COUNT_TOP; \
+  TCNT2 = 0; \
+})
+#else
+#define TIMER_CONFIG_NORMAL() ({ \
+  TCCR2A = _BV(WGM01); \
+  TCCR2B = _BV(CS01); \
+  OCR2A = TIMER_COUNT_TOP / 8; \
+  TCNT2 = 0; \
+})
+#endif
+#if defined(CORE_OC0A_PIN)
+#define TIMER_PWM_PIN        CORE_OC0B_PIN 
+#else
+#define TIMER_PWM_PIN        1  /* Attiny core */
 #endif
 
 
@@ -529,6 +632,10 @@ extern volatile irparams_t irparams;
 #define BLINKLED       0
 #define BLINKLED_ON()  (PORTD |= B00000001)
 #define BLINKLED_OFF() (PORTD &= B11111110)
+#elif defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+#define BLINKLED       4
+#define BLINKLED_ON()  (PORTB |= B00001000)
+#define BLINKLED_OFF() (PORTB &= B11110110)
 #else
 #define BLINKLED       13
 #define BLINKLED_ON()  (PORTB |= B00100000)

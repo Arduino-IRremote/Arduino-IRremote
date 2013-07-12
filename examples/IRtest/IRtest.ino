@@ -35,6 +35,9 @@ void dump(decode_results *results) {
     else if (results->decode_type == RC6) {
       Serial.print("Decoded RC6: ");
     }
+    else if (results->decode_type == RCMM) {
+      Serial.print("Decoded RCMM: ");
+    }
     Serial.print(results->value, HEX);
     Serial.print(" (");
     Serial.print(results->bits, DEC);
@@ -152,6 +155,11 @@ void testRC6(unsigned long val, int bits) {
   irsenddummy.sendRC6(val, bits);
   verify(val, bits, RC6);
 }
+void testRCMM(unsigned long val, int bits) {
+  irsenddummy.reset();
+  irsenddummy.sendRCMM(val, bits);
+  verify(val, bits, RCMM);
+}
 
 void test() {
   Serial.println("NEC tests");
@@ -178,6 +186,12 @@ void test() {
   testRC6(0xaaaaa, 20);
   testRC6(0x55555, 20);
   testRC6(0x12345, 20);
+  Serial.println("RCMM tests");
+  testNEC(0x00000000, 32);
+  testNEC(0xffffffff, 32);
+  testNEC(0xaaaaaaaa, 32);
+  testNEC(0x55555555, 32);
+  testNEC(0x12345678, 32);
 }
 
 void setup()
