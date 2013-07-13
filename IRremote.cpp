@@ -389,6 +389,12 @@ int IRrecv::decodeStart(decode_results *results)
   return DECODED;
 }
 
+#ifdef DEBUG
+#define debug_println Serial.println
+#else
+#define debug_println (void)
+#endif
+
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
@@ -396,54 +402,46 @@ int IRrecv::decode(decode_results *results) {
   if (decodeStart(results) == ERR)
     return ERR;
 
-#ifdef DEBUG
-  Serial.println("Attempting NEC decode");
-#endif
+  debug_println("Attempting NEC decode");
   if (decodeNEC(results)) {
     return DECODED;
   }
-#ifdef DEBUG
-  Serial.println("Attempting Sony decode");
-#endif
+
+  debug_println("Attempting Sony decode");
   if (decodeSony(results)) {
     return DECODED;
   }
-#ifdef DEBUG
-  Serial.println("Attempting Sanyo decode");
-#endif
+
+  debug_println("Attempting Sanyo decode");
   if (decodeSanyo(results)) {
     return DECODED;
   }
-#ifdef DEBUG
-  Serial.println("Attempting Mitsubishi decode");
-#endif
+
+  debug_println("Attempting Mitsubishi decode");
   if (decodeMitsubishi(results)) {
     return DECODED;
   }
-#ifdef DEBUG
-  Serial.println("Attempting RC5 decode");
-#endif  
+
+  debug_println("Attempting RC5 decode");
   if (decodeRC5(results)) {
     return DECODED;
   }
-#ifdef DEBUG
-  Serial.println("Attempting RC6 decode");
-#endif 
+
+  debug_println("Attempting RC6 decode");
   if (decodeRC6(results)) {
     return DECODED;
   }
-#ifdef DEBUG
-    Serial.println("Attempting Panasonic decode");
-#endif 
-    if (decodePanasonic(results)) {
-        return DECODED;
-    }
-#ifdef DEBUG
-    Serial.println("Attempting JVC decode");
-#endif 
-    if (decodeJVC(results)) {
-        return DECODED;
-    }
+
+  debug_println("Attempting Panasonic decode");
+  if (decodePanasonic(results)) {
+    return DECODED;
+  }
+
+  debug_println("Attempting JVC decode");
+  if (decodeJVC(results)) {
+    return DECODED;
+  }
+
   // decodeHash returns a hash on any input.
   // Thus, it needs to be last in the list.
   // If you add any decodes, add them before this.
@@ -720,14 +718,14 @@ int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) 
     *used = 0;
     (*offset)++;
   }
-#ifdef DEBUG
+
   if (val == MARK) {
-    Serial.println("MARK");
+    debug_println("MARK");
   } 
   else {
-    Serial.println("SPACE");
+    debug_println("SPACE");
   }
-#endif
+
   return val;   
 }
 
