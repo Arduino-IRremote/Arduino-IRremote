@@ -380,17 +380,22 @@ void IRrecv::resume() {
   irparams.rawlen = 0;
 }
 
-
+int IRrecv::decodeStart(decode_results *results)
+{
+  results->rawbuf = irparams.rawbuf;
+  results->rawlen = irparams.rawlen;
+  if (irparams.rcvstate != STATE_STOP)
+    return ERR;
+  return DECODED;
+}
 
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
 int IRrecv::decode(decode_results *results) {
-  results->rawbuf = irparams.rawbuf;
-  results->rawlen = irparams.rawlen;
-  if (irparams.rcvstate != STATE_STOP) {
+  if (decodeStart(results) == ERR)
     return ERR;
-  }
+
 #ifdef DEBUG
   Serial.println("Attempting NEC decode");
 #endif

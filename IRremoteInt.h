@@ -75,10 +75,6 @@
 #define SYSCLOCK 16000000  // main Arduino clock
 #endif
 
-#define ERR 0
-#define DECODED 1
-
-
 // defines for setting and clearing register bits
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
