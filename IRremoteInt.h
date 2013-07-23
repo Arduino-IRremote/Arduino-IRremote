@@ -274,7 +274,13 @@ extern volatile irparams_t irparams;
   #define TIMER_ENABLE_INTR    (TIMSK1 = _BV(OCIE1A))
   #define TIMER_DISABLE_INTR   (TIMSK1 = 0)
 #endif
-#define TIMER_INTR_NAME      TIMER1_COMPA_vect
+
+#if defined(__AVR_ATtinyX4__)
+  #define TIMER_INTR_NAME      TIM1_COMPA_vect
+#else
+  #define TIMER_INTR_NAME      TIMER1_COMPA_vect
+#endif
+
 #define TIMER_CONFIG_KHZ(val) ({ \
   const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
   TCCR1A = _BV(WGM11); \
