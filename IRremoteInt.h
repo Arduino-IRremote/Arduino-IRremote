@@ -14,7 +14,11 @@
 #ifndef IRremoteint_h
 #define IRremoteint_h
 
-#include <WProgram.h>
+#if defined(ARDUINO) && ARDUINO >= 100
+    #include "Arduino.h"
+#else
+    #include "WProgram.h"
+#endif
 
 // define which timer to use
 //
@@ -306,6 +310,8 @@ extern volatile irparams_t irparams;
 })
 #if defined(CORE_OC4A_PIN)
 #define TIMER_PWM_PIN        CORE_OC4A_PIN  /* Teensy */
+#elif defined(__AVR_ATmega32U4__) 
+#define TIMER_PWM_PIN        13  /* Leonardo */ 
 #else
 #error "Please add OC4A pin number here\n"
 #endif
