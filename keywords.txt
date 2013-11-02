@@ -9,6 +9,8 @@
 decode_results	KEYWORD1
 IRrecv	KEYWORD1
 IRsend	KEYWORD1
+magiquest KEYWORD1
+helicopter  KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -31,6 +33,12 @@ sendSharp KEYWORD2
 sendPanasonic KEYWORD2
 sendJVC KEYWORD2
 sendMagiQuest KEYWORD2
+sendSymaR5 KEYWORD2
+sendSymaR3 KEYWORD2
+sendUseries KEYWORD2
+sendFastLane KEYWORD2
+sendRCMM KEYWORD2
+
 
 #
 #######################################
@@ -48,5 +56,10 @@ SHARP LITERAL1
 PANASONIC LITERAL1
 JVC LITERAL1
 MAGIQUEST	LITERAL1
+SYMA_R3 LITERAL1
+SYMA_R5 LITERAL1
+USERIES LITERAL1
+FASTLANE LITERAL1
+RCMM LITERAL1
 UNKNOWN	LITERAL1
 REPEAT	LITERAL1

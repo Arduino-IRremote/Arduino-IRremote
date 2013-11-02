@@ -75,8 +75,8 @@
 // is not usable for PWM waveforms where the frequency, not just the duty cycle,
 // needs to be controlled.
 #elif defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-// #define IR_USE_TIMER1_TINY	// tx = pin 4 (OC1B)
-  #define IR_USE_TIMER0			// tx = pin 1 (OC0B)
+ #define IR_USE_TIMER1_TINY	// tx = pin 4 (OC1B)
+//  #define IR_USE_TIMER0			// tx = pin 1 (OC0B)
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
 #else
   //#define IR_USE_TIMER1   // tx = pin 9

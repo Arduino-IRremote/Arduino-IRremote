@@ -187,6 +187,8 @@ public:
   void enableIROut(int khz);
   VIRTUAL void mark(int usec);
   VIRTUAL void space(int usec);
+  void on(unsigned int freq);
+  void off(void);
 }
 ;
 

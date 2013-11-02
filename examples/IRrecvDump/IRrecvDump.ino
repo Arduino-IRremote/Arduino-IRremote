@@ -9,7 +9,30 @@
  */
 
 #include <IRremote.h>
-int RECV_PIN = 11;
+
+#if defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+  #define IS_AVTINY
+  int RECV_PIN = 2;
+  #define ENABLE_MagiQuest 
+  // add others as to fit in Tiny
+#else
+  int RECV_PIN = 11;
+  #define ENABLE_MagiQuest
+  #define ENABLE_NEC
+  #define ENABLE_SONY
+  #define ENABLE_Sanyo
+  #define ENABLE_Mitsubishi
+  #define ENABLE_Panasonic
+  #define ENABLE_RC5
+  #define ENABLE_RC6
+  #define ENABLE_SymaR3
+  #define ENABLE_SymaR5
+  #define ENABLE_Useries
+  #define ENABLE_FastLane
+  #define ENABLE_JVC
+  #define ENABLE_RCMM
+#endif
+
 
 IRrecv irrecv(RECV_PIN);
 
@@ -20,6 +43,18 @@ void setup()
   Serial.begin(9600);
   Serial.println("starting...");
   irrecv.enableIRIn(); // Start the receiver
+#ifdef IS_AVTINY
+  pinMode(1, OUTPUT); //LED on Model A   
+
+
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(1, HIGH);
+    delay(125);               // wait for a second
+    digitalWrite(1, LOW); 
+    delay(125);               // wait for a second
+  }
+
+#endif //IS_AVTINY
 }
 
 // Dumps out the decode_results structure.
@@ -28,32 +63,66 @@ void setup()
 //void dump(void *v) {
 //  decode_results *results = (decode_results *)v
 void dump(decode_results *results) {
+
   int count = results->rawlen;
+
+//#ifndef IS_AVTINY
   if (results->decode_type == UNKNOWN) {
     Serial.print("Unknown encoding: ");
   } 
+//#endif //IS_AVTINY
+
+#ifdef ENABLE_NEC
   else if (results->decode_type == NEC) {
     Serial.print("Decoded NEC: ");
   } 
   else if (results->decode_type == SONY) {
     Serial.print("Decoded SONY: ");
   } 
+#endif //ENABLE_NEC
+
+#ifdef ENABLE_MagiQuest
   else if (results->decode_type == MAGIQUEST) {
+  #ifndef IS_AVTINY
     Serial.print("Decoded MAGIQUEST - Magnitude=");
     Serial.print(results->magiquestMagnitude, HEX);
     Serial.print(", wand_id=");
+  #endif //IS_AVTINY
+    if (results->value == 0x4FAB881) {
+      for (int i = 0; i < 2; i++) {
+        digitalWrite(1, HIGH);
+        delay(250);               // wait for a second
+        digitalWrite(1, LOW); 
+        delay(125);               // wait for a second
+      }
+    }
   }
+#endif //ENABLE_MagiQuest
+
+#ifdef ENABLE_RC5
   else if (results->decode_type == RC5) {
     Serial.print("Decoded RC5: ");
   } 
   else if (results->decode_type == RC6) {
     Serial.print("Decoded RC6: ");
   }
+#endif //ENABLE_RC5
+
+#ifdef ENABLE_Panasonic
   else if (results->decode_type == PANASONIC) {	
     Serial.print("Decoded PANASONIC - Address: ");
     Serial.print(results->panasonicAddress,HEX);
     Serial.print(", Value: ");
+    for (int i = 0; i < 3; i++) {
+      digitalWrite(1, HIGH);
+      delay(250);               // wait for a second
+      digitalWrite(1, LOW); 
+      delay(125);               // wait for a second
+    }
   }
+#endif //ENABLE_Panasonic
+
+#ifdef ENABLE_Syma
   else if (results->decode_type == SYMA_R5) {
     Serial.print("Decoded SYMA_R5 - ");
     Serial.print(" C="); Serial.print(results->helicopter.symaR5.Channel);
@@ -63,6 +132,9 @@ void dump(decode_results *results) {
     Serial.print(" Y="); Serial.print(results->helicopter.symaR5.Yaw,DEC);
     Serial.print(" t="); Serial.print(results->helicopter.symaR5.Trim,DEC);
   }
+#endif //ENABLE_Syma
+
+#ifdef ENABLE_Syma
   else if (results->decode_type == SYMA_R3) {
     Serial.print("Decoded SYMA_R3 - ");
     Serial.print(" C="); Serial.print(results->helicopter.symaR3.Channel);
@@ -71,6 +143,9 @@ void dump(decode_results *results) {
     Serial.print(" P="); Serial.print(results->helicopter.symaR3.Pitch,DEC);
     Serial.print(" Y="); Serial.print(results->helicopter.symaR3.Yaw,DEC);
   }
+#endif //ENABLE_Syma
+
+#ifdef ENABLE_Useries
   else if (results->decode_type == USERIES) {
     // temp variables to hold Channel from propietary format. 
     uint8_t Channel = results->helicopter.uSeries.Channel;
@@ -99,6 +174,9 @@ void dump(decode_results *results) {
     Serial.print(" Leftover="); Serial.print(results->helicopter.uSeries.cksum,DEC);
     Serial.print(" Parity="); Serial.print(results->parity,DEC);
   }
+#endif //ENABLE_Useries
+
+#ifdef ENABLE_FastLane
   else if (results->decode_type == FASTLANE) {
     // temp variables to hold FastLane's unsigned integers from propietary magnitude and direction bits. 
     uint8_t Yaw;
@@ -137,9 +215,15 @@ void dump(decode_results *results) {
     Serial.print(" F="); Serial.print(results->helicopter.fastlane.Fire,DEC);
 
   }
+#endif //ENABLE_FastLane
+
+#ifdef ENABLE_JVC
   else if (results->decode_type == JVC) {
      Serial.print("Decoded JVC: ");
   }
+#endif //ENABLE_JVC
+
+#ifdef ENABLE_RCMM
   else if (results->decode_type == RCMM) {
      Serial.print("Decoded RCMM: ");
   }
@@ -162,6 +246,7 @@ void dump(decode_results *results) {
     Serial.print(" ");
   }
   Serial.println("");
+#endif //ENABLE_RCMM
 }
 
 

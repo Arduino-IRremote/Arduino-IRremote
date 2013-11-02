@@ -24,7 +24,24 @@
 #include <util/delay_basic.h>
 
 #if defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-#define IS_AVTINY
+  #define IS_AVTINY
+  #define ENABLE_MagiQuest
+  // add others as to fit in Tiny
+#else
+  #define ENABLE_MagiQuest
+  #define ENABLE_NEC
+  #define ENABLE_SONY
+  #define ENABLE_Sanyo
+  #define ENABLE_Mitsubishi
+  #define ENABLE_Panasonic
+  #define ENABLE_RC5
+  #define ENABLE_RC6
+  #define ENABLE_SymaR3
+  #define ENABLE_SymaR5
+  #define ENABLE_Useries
+  #define ENABLE_FastLane
+  #define ENABLE_JVC
+  #define ENABLE_RCMM
 #endif
 
 #define MIN(x,y) (x < y ? x : y)
@@ -52,6 +69,21 @@ void IRsend::space(int time) {
 #define US_TO_ITER(x) uint16_t(((x)*(SYSCLOCK/1000))/4000)
 #define mark(x)  do { this->mark ((x)); _delay_loop_2(US_TO_ITER(x)); } while (0)
 #define space(x) do { this->space ((x)); _delay_loop_2(US_TO_ITER(x)); } while (0)
+
+void IRsend::on(unsigned int freq) {
+  // Sends an IR mark 
+  // The mark output is modulated at the PWM frequency.
+  enableIROut(freq);
+  TIMER_ENABLE_PWM; // Enable pin 3 PWM output
+}
+void IRsend::off() {
+  // Sends an IR mark 
+  // The mark output is modulated at the PWM frequency.
+  TIMER_DISABLE_PWM; // Enable pin 3 PWM output
+}
+
+
+
 #endif
 
 // These versions of MATCH, MATCH_MARK, and MATCH_SPACE are only for debugging.
@@ -563,96 +595,131 @@ int IRrecv::decode(decode_results *results) {
   if (irparams.rcvstate != STATE_STOP) {
     return ERR;
   }
-#ifndef IS_AVTINY
+#ifdef ENABLE_MagiQuest
 #ifdef DEBUG
   Serial.println("Attempting MagiQuest decode");
 #endif
   if (decodeMagiQuest(results)) {
         return DECODED;
     }
+#endif //ENABLE_MagiQuest
+
+#ifndef ENABLE_NEC
 #ifdef DEBUG
   Serial.println("Attempting NEC decode");
 #endif
   if (decodeNEC(results)) {
     return DECODED;
   }
-#endif
+#endif //ENABLE_NEC
+
+#ifdef ENABLE_SONY
 #ifdef DEBUG
   Serial.println("Attempting Sony decode");
 #endif
   if (decodeSony(results)) {
     return DECODED;
   }
-#ifndef IS_AVTINY
+#endif //ENABLE_SONY
+
+#ifdef ENABLE_Sanyo
 #ifdef DEBUG
   Serial.println("Attempting Sanyo decode");
 #endif
   if (decodeSanyo(results)) {
     return DECODED;
   }
+#endif //ENABLE_Sanyo
+
+#ifdef ENABLE_Mitsubishi
 #ifdef DEBUG
   Serial.println("Attempting Mitsubishi decode");
 #endif
   if (decodeMitsubishi(results)) {
     return DECODED;
   }
+#endif //ENABLE_Mitsubishi
+
+#ifdef ENABLE_Panasonic
 #ifdef DEBUG
     Serial.println("Attempting Panasonic decode");
-#endif 
+#endif
     if (decodePanasonic(results)) {
         return DECODED;
     }
+#endif //ENABLE_Panasonic
+
+#ifdef ENABLE_RC5
 #ifdef DEBUG
   Serial.println("Attempting RC5 decode");
-#endif  
+#endif
   if (decodeRC5(results)) {
     return DECODED;
   }
-#endif
+#endif //ENABLE_RC5
+
+#ifdef ENABLE_RC6
 #ifdef DEBUG
   Serial.println("Attempting RC6 decode");
-#endif 
+#endif
   if (decodeRC6(results)) {
     return DECODED;
   }
-#ifndef IS_AVTINY
+#endif //ENABLE_RC6
+
+#ifdef ENABLE_Syma
 #ifdef DEBUG
     Serial.println("Attempting Syma decode");
 #endif
     if (decodeSyma(results)) {
         return DECODED;
     }
+#endif //ENABLE_Syma
+
+#ifdef ENABLE_Useries
 #ifdef DEBUG
     Serial.println("Attempting Useries decode");
 #endif
     if (decodeUseries(results)) {
         return DECODED;
     }
+#endif //ENABLE_Useries
+
+#ifdef ENABLE_FastLane
 #ifdef DEBUG
     Serial.println("Attempting FastLane decode");
 #endif
     if (decodeFastLane(results)) {
         return DECODED;
     }
+#endif //ENABLE_FastLane
+
+#ifdef ENABLE_JVC
 #ifdef DEBUG
     Serial.println("Attempting JVC decode");
-#endif 
+#endif
     if (decodeJVC(results)) {
         return DECODED;
     }
+#endif //ENABLE_JVC
+
+#ifdef ENABLE_RCMM
 #ifdef DEBUG
     Serial.println("Attempting RCMM decode");
 #endif 
     if (decodeRCMM(results)) {
         return DECODED;
     }
-#endif
+#endif //ENABLE_RCMM
+
+#ifndef IS_AVTINY
   // decodeHash returns a hash on any input.
   // Thus, it needs to be last in the list.
   // If you add any decodes, add them before this.
   if (decodeHash(results)) {
     return DECODED;
   }
+#endif //IS_AVTINY
   // Throw away and start over
   resume();
   return ERR;
