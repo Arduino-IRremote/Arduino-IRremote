@@ -196,15 +196,12 @@ typedef struct {
   unsigned int timer;     // state timer, counts 50uS ticks.
   unsigned int rawbuf[RAWBUF]; // raw data
   uint8_t rawlen;         // counter of entries in rawbuf
+  uint8_t mark_val;       // 0 = active-low, 1 = active-high
 } 
 irparams_t;
 
 // Defined in IRremote.cpp
 extern volatile irparams_t irparams;
-
-// IR detector output is active low
-#define MARK  0
-#define SPACE 1
 
 #define TOPBIT 0x80000000
 

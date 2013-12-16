@@ -267,6 +267,14 @@ IRrecv::IRrecv(int recvpin)
 {
   irparams.recvpin = recvpin;
   irparams.blinkflag = 0;
+  irparams.mark_val = 0;
+}
+
+IRrecv::IRrecv(int recvpin, int mark_val)
+{
+  irparams.recvpin = recvpin;
+  irparams.blinkflag = 0;
+  irparams.mark_val = mark_val;
 }
 
 // initialization
@@ -321,7 +329,7 @@ ISR(TIMER_INTR_NAME)
   }
   switch(irparams.rcvstate) {
   case STATE_IDLE: // In the middle of a gap
-    if (irdata == MARK) {
+    if (irdata == irparams.mark_val) {
       if (irparams.timer < GAP_TICKS) {
         // Not big enough to be a gap.
         irparams.timer = 0;
@@ -336,14 +344,14 @@ ISR(TIMER_INTR_NAME)
     }
     break;
   case STATE_MARK: // timing MARK
-    if (irdata == SPACE) {   // MARK ended, record time
+    if (irdata == !irparams.mark_val) {   // MARK ended, record time
       irparams.rawbuf[irparams.rawlen++] = irparams.timer;
       irparams.timer = 0;
       irparams.rcvstate = STATE_SPACE;
     }
     break;
   case STATE_SPACE: // timing SPACE
-    if (irdata == MARK) { // SPACE just ended, record it
+    if (irdata == irparams.mark_val) { // SPACE just ended, record it
       irparams.rawbuf[irparams.rawlen++] = irparams.timer;
       irparams.timer = 0;
       irparams.rcvstate = STATE_MARK;
@@ -359,14 +367,14 @@ ISR(TIMER_INTR_NAME)
     }
     break;
   case STATE_STOP: // waiting, measuring gap
-    if (irdata == MARK) { // reset gap timer
+    if (irdata == irparams.mark_val) { // reset gap timer
       irparams.timer = 0;
     }
     break;
   }
 
   if (irparams.blinkflag) {
-    if (irdata == MARK) {
+    if (irdata == irparams.mark_val) {
       BLINKLED_ON();  // turn pin 13 LED on
     } 
     else {
@@ -690,11 +698,11 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
 int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) {
   if (*offset >= results->rawlen) {
     // After end of recorded buffer, assume SPACE.
-    return SPACE;
+    return !irparams.mark_val;
   }
   int width = results->rawbuf[*offset];
-  int val = ((*offset) % 2) ? MARK : SPACE;
-  int correction = (val == MARK) ? MARK_EXCESS : - MARK_EXCESS;
+  int val = ((*offset) % 2) ? irparams.mark_val : !irparams.mark_val;
+  int correction = (val == irparams.mark_val) ? MARK_EXCESS : - MARK_EXCESS;
 
   int avail;
   if (MATCH(width, t1 + correction)) {
@@ -716,7 +724,7 @@ int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) 
     (*offset)++;
   }
 #ifdef DEBUG
-  if (val == MARK) {
+  if (val == irparams.mark_val) {
     Serial.println("MARK");
   } 
   else {
@@ -734,18 +742,18 @@ long IRrecv::decodeRC5(decode_results *results) {
   long data = 0;
   int used = 0;
   // Get start bits
-  if (getRClevel(results, &offset, &used, RC5_T1) != MARK) return ERR;
-  if (getRClevel(results, &offset, &used, RC5_T1) != SPACE) return ERR;
-  if (getRClevel(results, &offset, &used, RC5_T1) != MARK) return ERR;
+  if (getRClevel(results, &offset, &used, RC5_T1) != irparams.mark_val) return ERR;
+  if (getRClevel(results, &offset, &used, RC5_T1) != !irparams.mark_val) return ERR;
+  if (getRClevel(results, &offset, &used, RC5_T1) != irparams.mark_val) return ERR;
   int nbits;
   for (nbits = 0; offset < irparams.rawlen; nbits++) {
     int levelA = getRClevel(results, &offset, &used, RC5_T1); 
     int levelB = getRClevel(results, &offset, &used, RC5_T1);
-    if (levelA == SPACE && levelB == MARK) {
+    if (levelA == !irparams.mark_val && levelB == irparams.mark_val) {
       // 1 bit
       data = (data << 1) | 1;
     } 
-    else if (levelA == MARK && levelB == SPACE) {
+    else if (levelA == irparams.mark_val && levelB == !irparams.mark_val) {
       // zero bit
       data <<= 1;
     } 
@@ -778,8 +786,8 @@ long IRrecv::decodeRC6(decode_results *results) {
   long data = 0;
   int used = 0;
   // Get start bit (1)
-  if (getRClevel(results, &offset, &used, RC6_T1) != MARK) return ERR;
-  if (getRClevel(results, &offset, &used, RC6_T1) != SPACE) return ERR;
+  if (getRClevel(results, &offset, &used, RC6_T1) != irparams.mark_val) return ERR;
+  if (getRClevel(results, &offset, &used, RC6_T1) != !irparams.mark_val) return ERR;
   int nbits;
   for (nbits = 0; offset < results->rawlen; nbits++) {
     int levelA, levelB; // Next two levels
@@ -793,11 +801,11 @@ long IRrecv::decodeRC6(decode_results *results) {
       // T bit is double wide; make sure second half matches
       if (levelB != getRClevel(results, &offset, &used, RC6_T1)) return ERR;
     } 
-    if (levelA == MARK && levelB == SPACE) { // reversed compared to RC5
+    if (levelA == irparams.mark_val && levelB == !irparams.mark_val) { // reversed compared to RC5
       // 1 bit
       data = (data << 1) | 1;
     } 
-    else if (levelA == SPACE && levelB == MARK) {
+    else if (levelA == !irparams.mark_val && levelB == irparams.mark_val) {
       // zero bit
       data <<= 1;
     } 

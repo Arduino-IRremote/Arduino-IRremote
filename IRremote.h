@@ -20,7 +20,7 @@
 // If DEBUG is defined, a lot of debugging output will be printed during decoding.
 // TEST must be defined for the IRtest unittests to work.  It will make some
 // methods virtual, which will be slightly slower, which is why it is optional.
-// #define DEBUG
+//#define DEBUG
 // #define TEST
 
 // Results returned from the decoder
@@ -55,6 +55,7 @@ class IRrecv
 {
 public:
   IRrecv(int recvpin);
+  IRrecv(int recvpin, int mark_val);
   void blink13(int blinkflag);
   int decode(decode_results *results);
   void enableIRIn();
