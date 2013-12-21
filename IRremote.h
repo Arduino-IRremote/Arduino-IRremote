@@ -58,6 +58,7 @@ public:
   void blink13(int blinkflag);
   int decode(decode_results *results);
   void enableIRIn();
+  bool isIdle();
   void resume();
 private:
   // These are called by decode
