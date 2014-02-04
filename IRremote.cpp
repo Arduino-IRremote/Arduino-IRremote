@@ -105,9 +105,11 @@ void IRsend::sendSony(unsigned long data, int nbits) {
   }
 }
 
-void IRsend::sendRaw(unsigned int buf[], int len, int hz)
+// buf is alternating mark and space durations (in microseconds), starting with
+// a mark at index 0.
+void IRsend::sendRaw(unsigned int buf[], int len, int khz)
 {
-  enableIROut(hz);
+  enableIROut(khz);
   for (int i = 0; i < len; i++) {
     if (i & 1) {
       space(buf[i]);
@@ -221,11 +223,24 @@ void IRsend::sendJVC(unsigned long data, int nbits, int repeat)
     mark(JVC_BIT_MARK);
     space(0);
 }
+
+// This works around a deficiency in Arduino's delayMicroseconds where it
+// is unreliable for values over 16383.
+static void delayMicrosecondsCorrectly(int micros) {
+  if (micros > 16383) {
+    int millis = micros - (micros % 16000);
+    micros -= millis;
+    millis /= 1000;
+    delay(millis);
+  }
+  delayMicroseconds(micros);
+}
+
 void IRsend::mark(int time) {
   // Sends an IR mark for the specified number of microseconds.
   // The mark output is modulated at the PWM frequency.
   TIMER_ENABLE_PWM; // Enable pin 3 PWM output
-  delayMicroseconds(time);
+  delayMicrosecondsCorrectly(time);
 }
 
 /* Leave pin off for time (given in microseconds) */
@@ -233,7 +248,7 @@ void IRsend::space(int time) {
   // Sends an IR space for the specified number of microseconds.
   // A space is no output, so the PWM output is disabled.
   TIMER_DISABLE_PWM; // Disable pin 3 PWM output
-  delayMicroseconds(time);
+  delayMicrosecondsCorrectly(time);
 }
 
 void IRsend::enableIROut(int khz) {
