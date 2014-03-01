@@ -64,6 +64,9 @@
 #elif defined( __AVR_ATtinyX4__ )
   #define IR_USE_TIMER1   // tx = pin 6
 
+#elif defined( __AVR_ATtinyX5__ )
+  #define IR_USE_TIMER1   // OCR1A, pin 6
+
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
 #else
   //#define IR_USE_TIMER1   // tx = pin 9
@@ -277,7 +280,7 @@ extern volatile irparams_t irparams;
 
 #if defined(__AVR_ATtinyX4__)
   #define TIMER_INTR_NAME      TIM1_COMPA_vect
-#else
+#else // for attiny85
   #define TIMER_INTR_NAME      TIMER1_COMPA_vect
 #endif
 
@@ -302,6 +305,9 @@ extern volatile irparams_t irparams;
 #define TIMER_PWM_PIN        13 /* Sanguino */
 #elif defined(__AVR_ATtinyX4__)
 #define TIMER_PWM_PIN        6 /* ATTiny84 */
+#else
+#elif defined(__AVR_ATtinyX5__)
+#define TIMER_PWM_PIN        6 /* OCR1A is 6 on ATTiny85  */
 #else
 #define TIMER_PWM_PIN        9  /* Arduino Duemilanove, Diecimila, LilyPad, etc */
 #endif
