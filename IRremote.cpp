@@ -392,6 +392,8 @@ int IRrecv::decode(decode_results *results) {
     return ERR;
   }
 #ifdef DEBUG
+  Serial.println("Received results");
+  Serial.println(irparams.rawlen, DEC);
   Serial.println("Attempting NEC decode");
 #endif
   if (decodeNEC(results)) {
@@ -437,6 +439,12 @@ int IRrecv::decode(decode_results *results) {
     Serial.println("Attempting JVC decode");
 #endif 
     if (decodeJVC(results)) {
+        return DECODED;
+    }
+#ifdef DEBUG
+    Serial.println("Attempting Fujitsu decode");
+#endif
+    if (decodeFujitsu(results)) {
         return DECODED;
     }
   // decodeHash returns a hash on any input.
@@ -893,6 +901,65 @@ long IRrecv::decodeJVC(decode_results *results) {
     results->bits = JVC_BITS;
     results->value = data;
     results->decode_type = JVC;
+    return DECODED;
+}
+
+long IRrecv::decodeFujitsu(decode_results *results) {
+    int offset = 1;
+
+    if (!MATCH_MARK(results->rawbuf[offset++], FUJITSU_HDR_MARK)) {
+        return ERR;
+    }
+    if (!MATCH_MARK(results->rawbuf[offset++], FUJITSU_HDR_SPACE)) {
+        return ERR;
+    }
+
+    int temp = 0;
+
+    for(int i=0; i<4; i++) results->data[i] = 0;
+
+    // decode address
+    for (int i = 0; i < FUJITSU_BITS; i++) {
+        if (!MATCH_MARK(results->rawbuf[offset++],FUJITSU_MARK)) {
+            return ERR;
+        }
+
+        if (MATCH_SPACE(results->rawbuf[offset],FUJITSU_ONE_SPACE)) {
+            if(i == 68){
+              Serial.print("*");
+            }
+            Serial.print("1");
+            if(i == 71){
+              Serial.print("*");
+            }
+            if(i >= 68 && i <= 71){
+              temp += (1<<(i - 68));
+            }
+            results->data[i/32] = (results->data[i/32] << 1) | 1;
+        } else if (MATCH_SPACE(results->rawbuf[offset],FUJITSU_ZERO_SPACE)) {
+            if(i == 68){
+              Serial.print("*");
+            }
+            Serial.print("0");
+            if(i == 71){
+              Serial.print("*");
+            }
+            results->data[i/32] <<= 1;
+        } else {
+            Serial.print("ERR");
+            Serial.print(i, DEC);
+            return ERR;
+        }
+        offset++;
+    }
+
+    Serial.println("");
+    Serial.print("Temp: ");
+    Serial.println(temp + 16, DEC);
+
+    results->value = (unsigned long) 0;
+    results->decode_type = PANASONIC;
+    results->bits = 0;
     return DECODED;
 }
 

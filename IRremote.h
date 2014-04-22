@@ -28,6 +28,7 @@ class decode_results {
 public:
   int decode_type; // NEC, SONY, RC5, UNKNOWN
   unsigned int panasonicAddress; // This is only used for decoding Panasonic data
+  unsigned long data[4]; // This is only used for storing the data from Fujitsu remotes
   unsigned long value; // Decoded value
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
@@ -70,6 +71,7 @@ private:
   long decodeRC6(decode_results *results);
   long decodePanasonic(decode_results *results);
   long decodeJVC(decode_results *results);
+  long decodeFujitsu(decode_results *results);
   long decodeHash(decode_results *results);
   int compare(unsigned int oldval, unsigned int newval);
 
@@ -109,7 +111,7 @@ public:
 // Some useful constants
 
 #define USECPERTICK 50  // microseconds per clock interrupt tick
-#define RAWBUF 100 // Length of raw duration buffer
+#define RAWBUF 300 // Length of raw duration buffer
 
 // Marks tend to be 100us too long, and spaces 100us too short
 // when received due to sensor lag.
