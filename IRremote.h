@@ -23,12 +23,14 @@
 // #define DEBUG
 // #define TEST
 
+#define DATA_SIZE 16
+
 // Results returned from the decoder
 class decode_results {
 public:
   int decode_type; // NEC, SONY, RC5, UNKNOWN
   unsigned int panasonicAddress; // This is only used for decoding Panasonic data
-  unsigned long data[4]; // This is only used for storing the data from Fujitsu remotes
+  unsigned char data[DATA_SIZE]; // This is currently only used for storing the data from Fujitsu remotes
   unsigned long value; // Decoded value
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks

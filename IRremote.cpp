@@ -914,37 +914,20 @@ long IRrecv::decodeFujitsu(decode_results *results) {
         return ERR;
     }
 
-    int temp = 0;
-
-    for(int i=0; i<4; i++) results->data[i] = 0;
+    for(int i=0; i<DATA_SIZE; i++) results->data[i] = 0;
+    int bits = (results->rawlen - 4) / 2;
 
     // decode address
-    for (int i = 0; i < FUJITSU_BITS; i++) {
+    for (int i = 0; i < bits; i++) {
         if (!MATCH_MARK(results->rawbuf[offset++],FUJITSU_MARK)) {
             return ERR;
         }
 
+        int index = i / (sizeof(char) * 8);
         if (MATCH_SPACE(results->rawbuf[offset],FUJITSU_ONE_SPACE)) {
-            if(i == 68){
-              Serial.print("*");
-            }
-            Serial.print("1");
-            if(i == 71){
-              Serial.print("*");
-            }
-            if(i >= 68 && i <= 71){
-              temp += (1<<(i - 68));
-            }
-            results->data[i/32] = (results->data[i/32] << 1) | 1;
+            results->data[index] = (results->data[index] << 1) | 1;
         } else if (MATCH_SPACE(results->rawbuf[offset],FUJITSU_ZERO_SPACE)) {
-            if(i == 68){
-              Serial.print("*");
-            }
-            Serial.print("0");
-            if(i == 71){
-              Serial.print("*");
-            }
-            results->data[i/32] <<= 1;
+            results->data[index] <<= 1;
         } else {
             Serial.print("ERR");
             Serial.print(i, DEC);
@@ -953,13 +936,8 @@ long IRrecv::decodeFujitsu(decode_results *results) {
         offset++;
     }
 
-    Serial.println("");
-    Serial.print("Temp: ");
-    Serial.println(temp + 16, DEC);
-
-    results->value = (unsigned long) 0;
     results->decode_type = PANASONIC;
-    results->bits = 0;
+    results->bits = bits;
     return DECODED;
 }
 
