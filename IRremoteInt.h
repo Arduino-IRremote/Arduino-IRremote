@@ -22,6 +22,8 @@
 #include <WProgram.h>
 #endif
 
+//#define DEBUG
+
 // define which timer to use
 //
 // Uncomment the timer you wish to use on your board.  If you
@@ -162,6 +164,13 @@
 #define JVC_ZERO_SPACE 550
 #define JVC_RPT_LENGTH 60000
 
+#define FUJITSU_HDR_MARK 3300
+#define FUJITSU_HDR_SPACE 1600
+#define FUJITSU_MARK 400
+#define FUJITSU_ZERO_SPACE 400
+#define FUJITSU_ONE_SPACE 1400
+#define FUJITSU_BITS 128
+
 #define SHARP_BITS 15
 #define DISH_BITS 16
 
@@ -195,7 +204,7 @@ typedef struct {
   uint8_t blinkflag;         // TRUE to enable blinking of pin 13 on IR processing
   unsigned int timer;     // state timer, counts 50uS ticks.
   unsigned int rawbuf[RAWBUF]; // raw data
-  uint8_t rawlen;         // counter of entries in rawbuf
+  uint16_t rawlen;         // counter of entries in rawbuf
 } 
 irparams_t;
 

@@ -23,11 +23,14 @@
 // #define DEBUG
 // #define TEST
 
+#define DATA_SIZE 16
+
 // Results returned from the decoder
 class decode_results {
 public:
   int decode_type; // NEC, SONY, RC5, UNKNOWN
   unsigned int panasonicAddress; // This is only used for decoding Panasonic data
+  unsigned char data[DATA_SIZE]; // This is currently only used for storing the data from Fujitsu remotes
   unsigned long value; // Decoded value
   int bits; // Number of bits in decoded value
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
@@ -45,6 +48,7 @@ public:
 #define JVC 8
 #define SANYO 9
 #define MITSUBISHI 10
+#define FUJITSU 11
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -70,6 +74,7 @@ private:
   long decodeRC6(decode_results *results);
   long decodePanasonic(decode_results *results);
   long decodeJVC(decode_results *results);
+  long decodeFujitsu(decode_results *results);
   long decodeHash(decode_results *results);
   int compare(unsigned int oldval, unsigned int newval);
 
@@ -99,6 +104,7 @@ public:
   void sendSharp(unsigned long data, int nbits);
   void sendPanasonic(unsigned int address, unsigned long data);
   void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
+  void sendFujitsu(unsigned char data[], int nbits);
   // private:
   void enableIROut(int khz);
   VIRTUAL void mark(int usec);
@@ -109,7 +115,7 @@ public:
 // Some useful constants
 
 #define USECPERTICK 50  // microseconds per clock interrupt tick
-#define RAWBUF 100 // Length of raw duration buffer
+#define RAWBUF 300 // Length of raw duration buffer
 
 // Marks tend to be 100us too long, and spaces 100us too short
 // when received due to sensor lag.

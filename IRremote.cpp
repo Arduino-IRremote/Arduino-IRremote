@@ -392,6 +392,8 @@ int IRrecv::decode(decode_results *results) {
     return ERR;
   }
 #ifdef DEBUG
+  Serial.println("Received results");
+  Serial.println(irparams.rawlen, DEC);
   Serial.println("Attempting NEC decode");
 #endif
   if (decodeNEC(results)) {
@@ -437,6 +439,12 @@ int IRrecv::decode(decode_results *results) {
     Serial.println("Attempting JVC decode");
 #endif 
     if (decodeJVC(results)) {
+        return DECODED;
+    }
+#ifdef DEBUG
+    Serial.println("Attempting Fujitsu decode");
+#endif
+    if (decodeFujitsu(results)) {
         return DECODED;
     }
   // decodeHash returns a hash on any input.
@@ -894,6 +902,65 @@ long IRrecv::decodeJVC(decode_results *results) {
     results->value = data;
     results->decode_type = JVC;
     return DECODED;
+}
+
+long IRrecv::decodeFujitsu(decode_results *results) {
+    int offset = 1;
+
+    if (!MATCH_MARK(results->rawbuf[offset++], FUJITSU_HDR_MARK)) {
+        return ERR;
+    }
+    if (!MATCH_MARK(results->rawbuf[offset++], FUJITSU_HDR_SPACE)) {
+        return ERR;
+    }
+
+    for(int i=0; i<DATA_SIZE; i++) results->data[i] = 0;
+    int bits = (results->rawlen - 4) / 2;
+
+    // decode address
+    for (int i = 0; i < bits; i++) {
+        if (!MATCH_MARK(results->rawbuf[offset++],FUJITSU_MARK)) {
+            return ERR;
+        }
+
+        int index = i / (sizeof(char) * 8);
+        if (MATCH_SPACE(results->rawbuf[offset],FUJITSU_ONE_SPACE)) {
+            bitWrite(results->data[index], i % 8, 1);
+        } else if (MATCH_SPACE(results->rawbuf[offset],FUJITSU_ZERO_SPACE)) {
+            bitWrite(results->data[index], i % 8, 0);
+        } else {
+            Serial.print("ERR");
+            Serial.print(i, DEC);
+            return ERR;
+        }
+        offset++;
+    }
+
+    results->decode_type = FUJITSU;
+    results->bits = bits;
+    return DECODED;
+}
+
+void IRsend::sendFujitsu(unsigned char data[16], int nbits) {
+    enableIROut(38);
+    mark(FUJITSU_HDR_MARK);
+    space(FUJITSU_HDR_SPACE);
+
+    for (int i = 0; i < nbits; i++) {
+        mark(FUJITSU_MARK);
+
+        int index = i / (sizeof(char) * 8);
+        int bitVal = bitRead(data[index], i % 8);
+        if(bitVal == 1){
+          space(FUJITSU_ONE_SPACE);
+        }
+        else{
+          space(FUJITSU_ZERO_SPACE);
+        }
+    }
+
+    mark(FUJITSU_MARK);
+    space(0);
 }
 
 /* -----------------------------------------------------------------------
