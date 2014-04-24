@@ -941,6 +941,28 @@ long IRrecv::decodeFujitsu(decode_results *results) {
     return DECODED;
 }
 
+void IRsend::sendFujitsu(unsigned char data[16], int nbits) {
+    enableIROut(38);
+    mark(FUJITSU_HDR_MARK);
+    space(FUJITSU_HDR_SPACE);
+
+    for (int i = 0; i < nbits; i++) {
+        mark(FUJITSU_MARK);
+
+        int index = i / (sizeof(char) * 8);
+        int bitVal = bitRead(data[index], i % 8);
+        if(bitVal == 1){
+          space(FUJITSU_ONE_SPACE);
+        }
+        else{
+          space(FUJITSU_ZERO_SPACE);
+        }
+    }
+
+    mark(FUJITSU_MARK);
+    space(0);
+}
+
 /* -----------------------------------------------------------------------
  * hashdecode - decode an arbitrary IR code.
  * Instead of decoding using a standard encoding scheme

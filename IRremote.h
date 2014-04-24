@@ -104,6 +104,7 @@ public:
   void sendSharp(unsigned long data, int nbits);
   void sendPanasonic(unsigned int address, unsigned long data);
   void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
+  void sendFujitsu(unsigned char data[], int nbits);
   // private:
   void enableIROut(int khz);
   VIRTUAL void mark(int usec);
