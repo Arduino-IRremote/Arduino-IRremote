@@ -48,6 +48,7 @@ public:
 #define JVC 8
 #define SANYO 9
 #define MITSUBISHI 10
+#define FUJITSU 11
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received

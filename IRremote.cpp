@@ -936,7 +936,7 @@ long IRrecv::decodeFujitsu(decode_results *results) {
         offset++;
     }
 
-    results->decode_type = PANASONIC;
+    results->decode_type = FUJITSU;
     results->bits = bits;
     return DECODED;
 }
