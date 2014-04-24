@@ -925,9 +925,9 @@ long IRrecv::decodeFujitsu(decode_results *results) {
 
         int index = i / (sizeof(char) * 8);
         if (MATCH_SPACE(results->rawbuf[offset],FUJITSU_ONE_SPACE)) {
-            results->data[index] = (results->data[index] << 1) | 1;
+            bitWrite(results->data[index], i % 8, 1);
         } else if (MATCH_SPACE(results->rawbuf[offset],FUJITSU_ZERO_SPACE)) {
-            results->data[index] <<= 1;
+            bitWrite(results->data[index], i % 8, 0);
         } else {
             Serial.print("ERR");
             Serial.print(i, DEC);
