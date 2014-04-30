@@ -54,6 +54,10 @@ void dump(decode_results *results) {
   }
   else if (results->decode_type == JVC) {
      Serial.print("Decoded JVC: ");
+  
+  }
+  else if (results->decode_type == AIWA_RC_T501) {
+    Serial.print("Decoded AIWA RC T501: ");
   }
   else if (results->decode_type == WHYNTER) {
      Serial.print("Decoded Whynter: ");
