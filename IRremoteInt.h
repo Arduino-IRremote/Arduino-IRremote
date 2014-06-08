@@ -28,6 +28,8 @@
 // are using another library which uses timer2, you have options
 // to switch IRremote to use a different timer.
 
+ #define __AVR_ATtinyX5__
+
 // Arduino Mega
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   //#define IR_USE_TIMER1   // tx = pin 11
@@ -298,9 +300,6 @@ extern volatile irparams_t irparams;
 #define TIMER_PWM_PIN        13 /* Sanguino */
 #elif defined(__AVR_ATtinyX4__)
 #define TIMER_PWM_PIN        6 /* ATTiny84 */
-#else
-#elif defined(__AVR_ATtinyX5__)
-#define TIMER_PWM_PIN        6 /* OCR1A is 6 on ATTiny85  */
 #else
 #define TIMER_PWM_PIN        9  /* Arduino Duemilanove, Diecimila, LilyPad, etc */
 #endif
