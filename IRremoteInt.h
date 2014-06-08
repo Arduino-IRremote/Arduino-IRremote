@@ -65,7 +65,7 @@
   #define IR_USE_TIMER1   // tx = pin 6
 
 #elif defined( __AVR_ATtinyX5__ )
-  #define IR_USE_TIMER1   // OCR1A, pin 6
+  #define IR_ATTINY_85   // OCR1A, pin 6
 
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
 #else
@@ -435,6 +435,28 @@ extern volatile irparams_t irparams;
 #error "Please add OC5A pin number here\n"
 #endif
 
+// defines for timer5 (16 bits)
+#elif defined(IR_ATTINY_85)
+#define TIMER_RESET
+#define TIMER_ENABLE_PWM     (TCCR0A |= _BV(COM1A1))
+#define TIMER_DISABLE_PWM    (TCCR0A &= ~(_BV(COM1A1)))
+#define TIMER_ENABLE_INTR    (TIMSK = _BV(OCIE1A))
+#define TIMER_DISABLE_INTR   (TIMSK = 0)
+#define TIMER_INTR_NAME      TIMER1_COMPA_vect
+
+#define TIMER_CONFIG_KHZ(val) ({ \
+  const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
+  TCCR0A = _BV(WGM00); \
+  TCCR0B = _BV(WGM02) | _BV(CS00); \
+  OCR1A = pwmval / 3; \
+})
+#define TIMER_CONFIG_NORMAL() ({ \
+  TCCR0A = 0; \
+  TCCR0B = _BV(WGM02) | _BV(CS00); \
+  OCR0A = SYSCLOCK * USECPERTICK / 1000000; \
+  TCNT1 = 0; \
+})
+#define TIMER_PWM_PIN        1 /* ATTiny85 */
 
 #else // unknown timer
 #error "Internal code configuration error, no known IR_USE_TIMER# defined\n"
