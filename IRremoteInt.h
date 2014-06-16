@@ -67,7 +67,19 @@
   #define IR_USE_TIMER1   // tx = pin 6
 
 #elif defined( __AVR_ATtinyX5__ )
-  #define F_CPU
+
+  #ifndef cbi
+    #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+  #endif
+  #ifndef sbi
+    #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+  #endif
+
+ #define CLKFUDGE 5      // fudge factor for clock interrupt overhead
+#define CLK 256      // max value for clock (timer 2)
+#define PRESCALE 8      // timer2 clock prescale
+ #define CLKSPERUSEC (SYSCLOCK/PRESCALE/1000000)   // timer clocks per microsecond
+
   #define IR_ATTINY_85   // OCR1A, pin 6
 
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
@@ -437,33 +449,24 @@ extern volatile irparams_t irparams;
 
 // defines for timer5 (16 bits)
 #elif defined(IR_ATTINY_85)
-#define RESET_TIMER2 TCNT0 = (CLK - USECPERTICK*CLKSPERUSEC + CLKFUDGE)
-#define TIMER_ENABLE_PWM     TCCR0A |= _BV(COM0B1); // Enable pin 3 PWM output
-#define TIMER_DISABLE_PWM    TCCR0A &= ~(_BV(COM0B1)); // Disable pin 3 PWM output
-#define TIMER_ENABLE_INTR    0 //sbi(TIMSK,TOIE0); //Timer2 Overflow Interrupt Enable
-#define TIMER_DISABLE_INTR   TIMSK &= ~_BV(TOIE0); //Timer2 Overflow Interrupt
-#define TIMER_INTR_NAME      TIMER0_OVF_vect
+
+#define TIMER_RESET          TCNT1 = (CLK - USECPERTICK*CLKSPERUSEC + CLKFUDGE)
+#define TIMER_ENABLE_PWM     TCCR1 |= _BV(COM0B1) // Enable pin 3 PWM output
+#define TIMER_DISABLE_PWM    TCCR1 &= ~(_BV(COM0B1)) // Disable pin 3 PWM output
+#define TIMER_ENABLE_INTR    //sbi(TIMSK,TOIE0); //Timer2 Overflow Interrupt Enable
+#define TIMER_DISABLE_INTR   TIMSK &= ~_BV(TOIE0) //Timer2 Overflow Interrupt
+#define TIMER_INTR_NAME      TIMER1_OVF_vect
 
 #define TIMER_CONFIG_KHZ(val) ({ \
-  TCCR0A = _BV(WGM00); \
-  TCCR0B = _BV(WGM02) | _BV(CS00); \
-
-  // The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
-  OCR0A = SYSCLOCK / 2 / val / 1000; \
-  OCR0B = OCR0A / 3; // 33% duty cycle
+  const uint16_t pwmval = SYSCLOCK / 1000 / (val); \
+  TCCR1 = _BV(CTC1) | _BV(CS13); \
+  OCR1C = SYSCLOCK / 2 / pwmval / 1000; \
+  OCR1A = OCR1A / 3; \
 })
 #define TIMER_CONFIG_NORMAL() ({ \
-  TCCR0A = 0;  \ // normal mode
-
-  //Prescale /8 (16M/8 = 0.5 microseconds per tick)
-  // Therefore, the timer interval can range from 0.5 to 128 microseconds
-  // depending on the reset value (255 to 0)
-  cbi(TCCR0B,CS02); \
-  sbi(TCCR0B,CS01); \
-  cbi(TCCR0B,CS00); \
-
-  //Timer2 Overflow Interrupt Enable
-  sbi(TIMSK,TOIE0);
+  TCCR1 = _BV(CTC1) | _BV(CS13); \
+  OCR1C = 24; \
+  OCR1A = 0; \
 })
 #define TIMER_PWM_PIN        3 /* ATTiny85 */
 
