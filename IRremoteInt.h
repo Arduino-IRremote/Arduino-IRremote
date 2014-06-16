@@ -28,6 +28,8 @@
 // are using another library which uses timer2, you have options
 // to switch IRremote to use a different timer.
 
+ #define __AVR_ATtinyX5__
+
 // Arduino Mega
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   //#define IR_USE_TIMER1   // tx = pin 11
@@ -65,6 +67,7 @@
   #define IR_USE_TIMER1   // tx = pin 6
 
 #elif defined( __AVR_ATtinyX5__ )
+  #define F_CPU
   #define IR_ATTINY_85   // OCR1A, pin 6
 
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
@@ -299,9 +302,6 @@ extern volatile irparams_t irparams;
 #elif defined(__AVR_ATtinyX4__)
 #define TIMER_PWM_PIN        6 /* ATTiny84 */
 #else
-#elif defined(__AVR_ATtinyX5__)
-#define TIMER_PWM_PIN        6 /* OCR1A is 6 on ATTiny85  */
-#else
 #define TIMER_PWM_PIN        9  /* Arduino Duemilanove, Diecimila, LilyPad, etc */
 #endif
 
@@ -437,26 +437,35 @@ extern volatile irparams_t irparams;
 
 // defines for timer5 (16 bits)
 #elif defined(IR_ATTINY_85)
-#define TIMER_RESET
-#define TIMER_ENABLE_PWM     (TCCR0A |= _BV(COM1A1))
-#define TIMER_DISABLE_PWM    (TCCR0A &= ~(_BV(COM1A1)))
-#define TIMER_ENABLE_INTR    (TIMSK = _BV(OCIE1A))
-#define TIMER_DISABLE_INTR   (TIMSK = 0)
-#define TIMER_INTR_NAME      TIMER1_COMPA_vect
+#define RESET_TIMER2 TCNT0 = (CLK - USECPERTICK*CLKSPERUSEC + CLKFUDGE)
+#define TIMER_ENABLE_PWM     TCCR0A |= _BV(COM0B1); // Enable pin 3 PWM output
+#define TIMER_DISABLE_PWM    TCCR0A &= ~(_BV(COM0B1)); // Disable pin 3 PWM output
+#define TIMER_ENABLE_INTR    0 //sbi(TIMSK,TOIE0); //Timer2 Overflow Interrupt Enable
+#define TIMER_DISABLE_INTR   TIMSK &= ~_BV(TOIE0); //Timer2 Overflow Interrupt
+#define TIMER_INTR_NAME      TIMER0_OVF_vect
 
 #define TIMER_CONFIG_KHZ(val) ({ \
-  const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
   TCCR0A = _BV(WGM00); \
   TCCR0B = _BV(WGM02) | _BV(CS00); \
-  OCR1A = pwmval / 3; \
+
+  // The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
+  OCR0A = SYSCLOCK / 2 / val / 1000; \
+  OCR0B = OCR0A / 3; // 33% duty cycle
 })
 #define TIMER_CONFIG_NORMAL() ({ \
-  TCCR0A = 0; \
-  TCCR0B = _BV(WGM02) | _BV(CS00); \
-  OCR0A = SYSCLOCK * USECPERTICK / 1000000; \
-  TCNT1 = 0; \
+  TCCR0A = 0;  \ // normal mode
+
+  //Prescale /8 (16M/8 = 0.5 microseconds per tick)
+  // Therefore, the timer interval can range from 0.5 to 128 microseconds
+  // depending on the reset value (255 to 0)
+  cbi(TCCR0B,CS02); \
+  sbi(TCCR0B,CS01); \
+  cbi(TCCR0B,CS00); \
+
+  //Timer2 Overflow Interrupt Enable
+  sbi(TIMSK,TOIE0);
 })
-#define TIMER_PWM_PIN        1 /* ATTiny85 */
+#define TIMER_PWM_PIN        3 /* ATTiny85 */
 
 #else // unknown timer
 #error "Internal code configuration error, no known IR_USE_TIMER# defined\n"
