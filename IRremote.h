@@ -50,6 +50,9 @@ public:
 // Decoded value for NEC when a repeat code is received
 #define REPEAT 0xffffffff
 
+#define ERR 0
+#define DECODED 1
+
 // main class for receiving IR
 class IRrecv
 {
@@ -59,6 +62,29 @@ public:
   int decode(decode_results *results);
   void enableIRIn();
   void resume();
+
+  // "always_inline" to force compiling out all encodings other than "type"
+  int decode(int type, decode_results *results) __attribute__((always_inline)) {
+    if (decodeStart(results) == ERR)
+      return ERR;
+
+    switch (type)
+    {
+    case NEC:        if (decodeNEC(results))        return DECODED; break;
+    case SONY:       if (decodeSony(results))       return DECODED; break;
+    case RC5:        if (decodeRC5(results))        return DECODED; break;
+    case RC6:        if (decodeRC6(results))        return DECODED; break;
+    case PANASONIC:  if (decodePanasonic(results))  return DECODED; break;
+    case JVC:        if (decodeJVC(results))        return DECODED; break;
+    case SANYO:      if (decodeSanyo(results))      return DECODED; break;
+    case MITSUBISHI: if (decodeMitsubishi(results)) return DECODED; break;
+    case UNKNOWN:    if (decodeHash(results))       return DECODED; break;
+    }
+
+    resume();
+    return ERR;
+  }
+
 private:
   // These are called by decode
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
@@ -72,7 +98,7 @@ private:
   long decodeJVC(decode_results *results);
   long decodeHash(decode_results *results);
   int compare(unsigned int oldval, unsigned int newval);
-
+  int decodeStart(decode_results *results);
 } 
 ;
 
