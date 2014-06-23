@@ -61,9 +61,6 @@
 #elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
   #define IR_USE_TIMER1   // tx = pin 9
 
-#elif defined( __AVR_ATtinyX4__ )
-  #define IR_USE_TIMER1   // tx = pin 6
-
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
 #else
   //#define IR_USE_TIMER1   // tx = pin 9
@@ -93,24 +90,24 @@
 // Pulse parms are *50-100 for the Mark and *50+100 for the space
 // First MARK is the one after the long gap
 // pulse parameters in usec
-#define NEC_HDR_MARK  9000
-#define NEC_HDR_SPACE 4500
-#define NEC_BIT_MARK  560
-#define NEC_ONE_SPACE 1600
-#define NEC_ZERO_SPACE  560
-#define NEC_RPT_SPACE 2250
+#define NEC_HDR_MARK	9000
+#define NEC_HDR_SPACE	4500
+#define NEC_BIT_MARK	560
+#define NEC_ONE_SPACE	1600
+#define NEC_ZERO_SPACE	560
+#define NEC_RPT_SPACE	2250
 
-#define SONY_HDR_MARK 2400
-#define SONY_HDR_SPACE  600
-#define SONY_ONE_MARK 1200
-#define SONY_ZERO_MARK  600
+#define SONY_HDR_MARK	2400
+#define SONY_HDR_SPACE	600
+#define SONY_ONE_MARK	1200
+#define SONY_ZERO_MARK	600
 #define SONY_RPT_LENGTH 45000
 #define SONY_DOUBLE_SPACE_USECS  500  // usually ssee 713 - not using ticks as get number wrapround
 
 // SA 8650B
-#define SANYO_HDR_MARK  3500  // seen range 3500
-#define SANYO_HDR_SPACE 950 //  seen 950
-#define SANYO_ONE_MARK  2400 // seen 2400  
+#define SANYO_HDR_MARK	3500  // seen range 3500
+#define SANYO_HDR_SPACE	950 //  seen 950
+#define SANYO_ONE_MARK	2400 // seen 2400  
 #define SANYO_ZERO_MARK 700 //  seen 700
 #define SANYO_DOUBLE_SPACE_USECS  800  // usually ssee 713 - not using ticks as get number wrapround
 #define SANYO_RPT_LENGTH 45000
@@ -118,21 +115,21 @@
 // Mitsubishi RM 75501
 // 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7 
 
-// #define MITSUBISHI_HDR_MARK  250  // seen range 3500
-#define MITSUBISHI_HDR_SPACE  350 //  7*50+100
-#define MITSUBISHI_ONE_MARK 1950 // 41*50-100
+// #define MITSUBISHI_HDR_MARK	250  // seen range 3500
+#define MITSUBISHI_HDR_SPACE	350 //  7*50+100
+#define MITSUBISHI_ONE_MARK	1950 // 41*50-100
 #define MITSUBISHI_ZERO_MARK  750 // 17*50-100
 // #define MITSUBISHI_DOUBLE_SPACE_USECS  800  // usually ssee 713 - not using ticks as get number wrapround
 // #define MITSUBISHI_RPT_LENGTH 45000
 
 
-#define RC5_T1    889
-#define RC5_RPT_LENGTH  46000
+#define RC5_T1		889
+#define RC5_RPT_LENGTH	46000
 
-#define RC6_HDR_MARK  2666
-#define RC6_HDR_SPACE 889
-#define RC6_T1    444
-#define RC6_RPT_LENGTH  46000
+#define RC6_HDR_MARK	2666
+#define RC6_HDR_SPACE	889
+#define RC6_T1		444
+#define RC6_RPT_LENGTH	46000
 
 #define SHARP_BIT_MARK 245
 #define SHARP_ONE_SPACE 1805
@@ -161,6 +158,14 @@
 #define JVC_ONE_SPACE 1600
 #define JVC_ZERO_SPACE 550
 #define JVC_RPT_LENGTH 60000
+
+#define SAMSUNG_HDR_MARK  5000
+#define SAMSUNG_HDR_SPACE 5000
+#define SAMSUNG_BIT_MARK  560
+#define SAMSUNG_ONE_SPACE 1600
+#define SAMSUNG_ZERO_SPACE  560
+#define SAMSUNG_RPT_SPACE 2250
+
 
 #define SHARP_BITS 15
 #define DISH_BITS 16
@@ -209,6 +214,7 @@ extern volatile irparams_t irparams;
 #define MIN_RC6_SAMPLES 1
 #define PANASONIC_BITS 48
 #define JVC_BITS 16
+#define SAMSUNG_BITS 32
 
 
 
@@ -267,13 +273,7 @@ extern volatile irparams_t irparams;
   #define TIMER_ENABLE_INTR    (TIMSK1 = _BV(OCIE1A))
   #define TIMER_DISABLE_INTR   (TIMSK1 = 0)
 #endif
-
-#if defined(__AVR_ATtinyX4__)
-  #define TIMER_INTR_NAME      TIM1_COMPA_vect
-#else
-  #define TIMER_INTR_NAME      TIMER1_COMPA_vect
-#endif
-
+#define TIMER_INTR_NAME      TIMER1_COMPA_vect
 #define TIMER_CONFIG_KHZ(val) ({ \
   const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
   TCCR1A = _BV(WGM11); \
@@ -293,8 +293,6 @@ extern volatile irparams_t irparams;
 #define TIMER_PWM_PIN        11  /* Arduino Mega */
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 #define TIMER_PWM_PIN        13 /* Sanguino */
-#elif defined(__AVR_ATtinyX4__)
-#define TIMER_PWM_PIN        6 /* ATTiny84 */
 #else
 #define TIMER_PWM_PIN        9  /* Arduino Duemilanove, Diecimila, LilyPad, etc */
 #endif
