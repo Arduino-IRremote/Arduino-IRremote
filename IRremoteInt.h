@@ -214,6 +214,7 @@ extern volatile irparams_t irparams;
 #define MIN_RC6_SAMPLES 1
 #define PANASONIC_BITS 48
 #define JVC_BITS 16
+#define LG_BITS 28
 #define SAMSUNG_BITS 32
 
 
