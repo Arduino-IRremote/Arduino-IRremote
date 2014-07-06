@@ -878,6 +878,7 @@ long IRrecv::decodePanasonic(decode_results *results) {
 }
 long IRrecv::decodeJVC(decode_results *results) {
     long data = 0;
+    int bits = JVC_BITS; // LG has 28 bits rather than 16
     int offset = 1; // Skip first space
     // Check for repeat
     if (irparams.rawlen - 1 == 33 &&
@@ -896,12 +897,15 @@ long IRrecv::decodeJVC(decode_results *results) {
     if (irparams.rawlen < 2 * JVC_BITS + 1 ) {
         return ERR;
     }
+    if (irparams.rawlen >= 2 * LG_BITS + 1 ) {
+    	bits = 28;
+    }
     // Initial space 
     if (!MATCH_SPACE(results->rawbuf[offset], JVC_HDR_SPACE)) {
         return ERR;
     }
     offset++;
-    for (int i = 0; i < JVC_BITS; i++) {
+    for (int i = 0; i < bits; i++) {
         if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK)) {
             return ERR;
         }
@@ -922,11 +926,12 @@ long IRrecv::decodeJVC(decode_results *results) {
         return ERR;
     }
     // Success
-    results->bits = JVC_BITS;
+    results->bits = bits;
     results->value = data;
     results->decode_type = JVC;
     return DECODED;
 }
+
 
 // SAMSUNGs have a repeat only 4 items long
 long IRrecv::decodeSAMSUNG(decode_results *results) {
