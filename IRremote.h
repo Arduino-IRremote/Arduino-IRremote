@@ -10,6 +10,7 @@
  * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
  *
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
+* LG added by Darryl Smith (based on the JVC protocol)
  */
 
 #ifndef IRremote_h
@@ -46,6 +47,7 @@ public:
 #define SANYO 9
 #define MITSUBISHI 10
 #define SAMSUNG 11
+#define LG 12
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -70,6 +72,7 @@ private:
   long decodeRC5(decode_results *results);
   long decodeRC6(decode_results *results);
   long decodePanasonic(decode_results *results);
+  long decodeLG(decode_results *results);
   long decodeJVC(decode_results *results);
   long decodeSAMSUNG(decode_results *results);
   long decodeHash(decode_results *results);

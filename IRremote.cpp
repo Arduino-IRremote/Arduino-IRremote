@@ -14,6 +14,7 @@
  * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
  *
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
+ * LG added by Darryl Smith (based on the JVC protocol)
  */
 
 #include "IRremote.h"
@@ -460,6 +461,12 @@ int IRrecv::decode(decode_results *results) {
         return DECODED;
     }
 #ifdef DEBUG
+    Serial.println("Attempting LG decode");
+#endif 
+    if (decodeLG(results)) {
+        return DECODED;
+    }
+#ifdef DEBUG
     Serial.println("Attempting JVC decode");
 #endif 
     if (decodeJVC(results)) {
@@ -876,6 +883,52 @@ long IRrecv::decodePanasonic(decode_results *results) {
     results->bits = PANASONIC_BITS;
     return DECODED;
 }
+
+long IRrecv::decodeLG(decode_results *results) {
+    long data = 0;
+    int offset = 1; // Skip first space
+  
+    // Initial mark
+    if (!MATCH_MARK(results->rawbuf[offset], LG_HDR_MARK)) {
+        return ERR;
+    }
+    offset++; 
+    if (irparams.rawlen < 2 * LG_BITS + 1 ) {
+        return ERR;
+    }
+    // Initial space 
+    if (!MATCH_SPACE(results->rawbuf[offset], LG_HDR_SPACE)) {
+        return ERR;
+    }
+    offset++;
+    for (int i = 0; i < LG_BITS; i++) {
+        if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK)) {
+            return ERR;
+        }
+        offset++;
+        if (MATCH_SPACE(results->rawbuf[offset], LG_ONE_SPACE)) {
+            data = (data << 1) | 1;
+        } 
+        else if (MATCH_SPACE(results->rawbuf[offset], LG_ZERO_SPACE)) {
+            data <<= 1;
+        } 
+        else {
+            return ERR;
+        }
+        offset++;
+    }
+    //Stop bit
+    if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK)){
+        return ERR;
+    }
+    // Success
+    results->bits = LG_BITS;
+    results->value = data;
+    results->decode_type = LG;
+    return DECODED;
+}
+
+
 long IRrecv::decodeJVC(decode_results *results) {
     long data = 0;
     int offset = 1; // Skip first space
