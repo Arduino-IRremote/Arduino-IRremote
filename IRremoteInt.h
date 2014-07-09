@@ -159,6 +159,13 @@
 #define JVC_ZERO_SPACE 550
 #define JVC_RPT_LENGTH 60000
 
+#define LG_HDR_MARK 8000
+#define LG_HDR_SPACE 4000
+#define LG_BIT_MARK 600
+#define LG_ONE_SPACE 1600
+#define LG_ZERO_SPACE 550
+#define LG_RPT_LENGTH 60000
+
 #define SAMSUNG_HDR_MARK  5000
 #define SAMSUNG_HDR_SPACE 5000
 #define SAMSUNG_BIT_MARK  560
@@ -214,6 +221,7 @@ extern volatile irparams_t irparams;
 #define MIN_RC6_SAMPLES 1
 #define PANASONIC_BITS 48
 #define JVC_BITS 16
+#define LG_BITS 28
 #define SAMSUNG_BITS 32
 
 
