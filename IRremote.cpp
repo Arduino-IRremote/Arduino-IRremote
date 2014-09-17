@@ -604,7 +604,7 @@ long IRrecv::decodeSharp(decode_results *results) {
 
   int offset = 0; // Dont skip first space, check its size
   
-  if (results->rawbuf[offset] < SHARP_RPT_SPACE) { // 40ms
+  if (results->rawbuf[offset] < SHARP_RPT_SPACE) {
     // Serial.print("IR Gap found: ");
     results->bits = 0;
     results->value = REPEAT;
