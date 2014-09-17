@@ -437,6 +437,12 @@ int IRrecv::decode(decode_results *results) {
     return DECODED;
   }
 #ifdef DEBUG
+  Serial.println("Attempting Sharp decode");
+#endif
+  if (decodeSharp(results)) {
+    return DECODED;
+  }
+#ifdef DEBUG
   Serial.println("Attempting Mitsubishi decode");
 #endif
   if (decodeMitsubishi(results)) {
@@ -587,6 +593,58 @@ long IRrecv::decodeSony(decode_results *results) {
   }
   results->value = data;
   results->decode_type = SONY;
+  return DECODED;
+}
+
+long IRrecv::decodeSharp(decode_results *results) {
+  long data = 0;
+  if (irparams.rawlen < 32) {
+    return ERR;
+  }
+
+  int offset = 0; // Dont skip first space, check its size
+  
+  if (results->rawbuf[offset] < SHARP_RPT_SPACE) { // 40ms
+    // Serial.print("IR Gap found: ");
+    results->bits = 0;
+    results->value = REPEAT;
+    results->decode_type = SHARP;
+    return DECODED;
+  }
+  
+  offset++;
+  
+  while (offset + 1 < irparams.rawlen) {
+    if (!MATCH_MARK(results->rawbuf[offset], SHARP_BIT_MARK)) {
+      break;
+    }
+    offset++;
+    if (MATCH_SPACE(results->rawbuf[offset], SHARP_ONE_SPACE)) {
+      data |= (1 << ((offset - 1) / 2));
+    } 
+    else if (MATCH_SPACE(results->rawbuf[offset], SHARP_ZERO_SPACE)) {
+      // do nothing
+    } 
+    else {
+      return ERR;
+    }
+    offset++;
+  }
+
+  if (data & (1 << 14) || !(data & (1 << 13))) {
+    return ERR;
+  }
+
+  // Success
+  results->bits = (offset - 1) / 2;
+  if (results->bits < 15) {
+    results->bits = 0;
+    return ERR;
+  }
+  
+  results->sharpAddress = data & 0b11111;
+  results->value = (data >> 5) & 0xff;
+  results->decode_type = SHARP;
   return DECODED;
 }
 
