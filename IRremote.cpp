@@ -620,10 +620,10 @@ long IRrecv::decodeSharp(decode_results *results) {
     }
     offset++;
     if (MATCH_SPACE(results->rawbuf[offset], SHARP_ONE_SPACE)) {
-      data |= (1 << ((offset - 1) / 2));
+      data = (data << 1) | 1;
     } 
     else if (MATCH_SPACE(results->rawbuf[offset], SHARP_ZERO_SPACE)) {
-      // do nothing
+      data <<= 1;
     } 
     else {
       return ERR;
@@ -631,7 +631,7 @@ long IRrecv::decodeSharp(decode_results *results) {
     offset++;
   }
 
-  if (data & (1 << 14) || !(data & (1 << 13))) {
+  if (data & 1 || !(data & 2)) {
     return ERR;
   }
 
@@ -642,8 +642,8 @@ long IRrecv::decodeSharp(decode_results *results) {
     return ERR;
   }
   
-  results->sharpAddress = data & 0b11111;
-  results->value = (data >> 5) & 0xff;
+  results->sharpAddress = (data >> 10) & 0b11111;
+  results->value = (data >> 2) & 0xff;
   results->decode_type = SHARP;
   return DECODED;
 }
