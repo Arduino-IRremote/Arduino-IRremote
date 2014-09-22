@@ -1106,42 +1106,37 @@ i.e. use 0x1C10 instead of 0x0000000000001C10 which is listed in the
 linked LIRC file.
 */
 
-void IRsend::sendSharp(unsigned long data, int nbits) {
-  unsigned long invertdata = data ^ SHARP_TOGGLE_MASK;
+void IRsend::sendSharpRaw(unsigned long data, int nbits) {
   enableIROut(38);
-  for (int i = 0; i < nbits; i++) {
-    if (data & 0x4000) {
-      mark(SHARP_BIT_MARK);
-      space(SHARP_ONE_SPACE);
+
+  // Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
+  // much more reliable. That's the exact behaviour of CD-S6470 remote control.
+  for (int n = 0; n < 3; n++) {
+    for (int i = 1 << (nbits-1); i > 0; i>>=1) {
+      if (data & i) {
+        mark(SHARP_BIT_MARK);
+        space(SHARP_ONE_SPACE);
+      }
+      else {
+        mark(SHARP_BIT_MARK);
+        space(SHARP_ZERO_SPACE);
+      }
     }
-    else {
-      mark(SHARP_BIT_MARK);
-      space(SHARP_ZERO_SPACE);
-    }
-    data <<= 1;
+    
+    mark(SHARP_BIT_MARK);
+    space(SHARP_ZERO_SPACE);
+    delay(40);
+
+    data = data ^ SHARP_TOGGLE_MASK;
   }
-  
-  mark(SHARP_BIT_MARK);
-  space(SHARP_ZERO_SPACE);
-  delay(46);
-  for (int i = 0; i < nbits; i++) {
-    if (invertdata & 0x4000) {
-      mark(SHARP_BIT_MARK);
-      space(SHARP_ONE_SPACE);
-    }
-    else {
-      mark(SHARP_BIT_MARK);
-      space(SHARP_ZERO_SPACE);
-    }
-    invertdata <<= 1;
-  }
-  mark(SHARP_BIT_MARK);
-  space(SHARP_ZERO_SPACE);
-  delay(46);
 }
 
-void IRsend::sendDISH(unsigned long data, int nbits)
-{
+// Sharp send compatible with data obtained through decodeSharp
+void IRsend::sendSharp(unsigned int address, unsigned int command) {
+  sendSharpRaw((address << 10) | (command << 2) | 2, 15);
+}
+
+void IRsend::sendDISH(unsigned long data, int nbits) {
   enableIROut(56);
   mark(DISH_HDR_MARK);
   space(DISH_HDR_SPACE);

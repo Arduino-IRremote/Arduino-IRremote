@@ -28,6 +28,7 @@ sendRC5	KEYWORD2
 sendRC6	KEYWORD2
 sendDISH KEYWORD2
 sendSharp KEYWORD2
+sendSharpRaw KEYWORD2
 sendPanasonic KEYWORD2
 sendJVC KEYWORD2
 
