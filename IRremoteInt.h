@@ -46,6 +46,10 @@
   //#define IR_USE_TIMER3   // tx = pin 9
   #define IR_USE_TIMER4_HS  // tx = pin 10
 
+// Teensy 3.0
+#elif defined(__MK20DX128__)
+  #define IR_USE_TIMER_CMT  // tx = pin 5
+
 // Teensy++ 1.0 & 2.0
 #elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
   //#define IR_USE_TIMER1   // tx = pin 25
@@ -434,6 +438,54 @@ extern volatile irparams_t irparams;
 #else
 #error "Please add OC5A pin number here\n"
 #endif
+
+
+// defines for special carrier modulator timer
+#elif defined(IR_USE_TIMER_CMT)
+#define TIMER_RESET ({			\
+	uint8_t tmp = CMT_MSC;		\
+	CMT_CMD2 = 30;			\
+})
+#define TIMER_ENABLE_PWM     CORE_PIN5_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_DSE|PORT_PCR_SRE
+#define TIMER_DISABLE_PWM    CORE_PIN5_CONFIG = PORT_PCR_MUX(1)|PORT_PCR_DSE|PORT_PCR_SRE
+#define TIMER_ENABLE_INTR    NVIC_ENABLE_IRQ(IRQ_CMT)
+#define TIMER_DISABLE_INTR   NVIC_DISABLE_IRQ(IRQ_CMT)
+#define TIMER_INTR_NAME      cmt_isr
+#ifdef ISR
+#undef ISR
+#endif
+#define ISR(f) void f(void)
+#if F_BUS == 48000000
+#define CMT_PPS_VAL 5
+#else
+#define CMT_PPS_VAL 2
+#endif
+#define TIMER_CONFIG_KHZ(val) ({ 	\
+	SIM_SCGC4 |= SIM_SCGC4_CMT;	\
+	SIM_SOPT2 |= SIM_SOPT2_PTD7PAD;	\
+	CMT_PPS = CMT_PPS_VAL;		\
+	CMT_CGH1 = 2667 / val;		\
+	CMT_CGL1 = 5333 / val;		\
+	CMT_CMD1 = 0;			\
+	CMT_CMD2 = 30;			\
+	CMT_CMD3 = 0;			\
+	CMT_CMD4 = 0;			\
+	CMT_OC = 0x60;			\
+	CMT_MSC = 0x01;			\
+})
+#define TIMER_CONFIG_NORMAL() ({	\
+	SIM_SCGC4 |= SIM_SCGC4_CMT;	\
+	CMT_PPS = CMT_PPS_VAL;		\
+	CMT_CGH1 = 1;			\
+	CMT_CGL1 = 1;			\
+	CMT_CMD1 = 0;			\
+	CMT_CMD2 = 30;			\
+	CMT_CMD3 = 0;			\
+	CMT_CMD4 = 19;			\
+	CMT_OC = 0;			\
+	CMT_MSC = 0x03;			\
+})
+#define TIMER_PWM_PIN        5
 
 
 #else // unknown timer
