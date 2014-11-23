@@ -45,12 +45,12 @@ int MATCH_MARK(int measured_ticks, int desired_us) {
   Serial.print(" vs ");
   Serial.print(desired_us, DEC);
   Serial.print(": ");
-  Serial.print(TICKS_LOW(desired_us + MARK_EXCESS), DEC);
+  Serial.print(TICKS_LOW(desired_us + IRrecv::gMarkExcess), DEC);
   Serial.print(" <= ");
   Serial.print(measured_ticks, DEC);
   Serial.print(" <= ");
-  Serial.println(TICKS_HIGH(desired_us + MARK_EXCESS), DEC);
-  return measured_ticks >= TICKS_LOW(desired_us + MARK_EXCESS) && measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS);
+  Serial.println(TICKS_HIGH(desired_us + IRrecv::gMarkExcess), DEC);
+  return measured_ticks >= TICKS_LOW(desired_us + IRrecv::gMarkExcess) && measured_ticks <= TICKS_HIGH(desired_us + IRrecv::gMarkExcess);
 }
 
 int MATCH_SPACE(int measured_ticks, int desired_us) {
@@ -59,17 +59,17 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {
   Serial.print(" vs ");
   Serial.print(desired_us, DEC);
   Serial.print(": ");
-  Serial.print(TICKS_LOW(desired_us - MARK_EXCESS), DEC);
+  Serial.print(TICKS_LOW(desired_us - IRrecv::gMarkExcess), DEC);
   Serial.print(" <= ");
   Serial.print(measured_ticks, DEC);
   Serial.print(" <= ");
-  Serial.println(TICKS_HIGH(desired_us - MARK_EXCESS), DEC);
-  return measured_ticks >= TICKS_LOW(desired_us - MARK_EXCESS) && measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS);
+  Serial.println(TICKS_HIGH(desired_us - IRrecv::gMarkExcess), DEC);
+  return measured_ticks >= TICKS_LOW(desired_us - IRrecv::gMarkExcess) && measured_ticks <= TICKS_HIGH(desired_us - IRrecv::gMarkExcess);
 }
 #else
 int MATCH(int measured, int desired) {return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);}
-int MATCH_MARK(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us + MARK_EXCESS));}
-int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us - MARK_EXCESS));}
+int MATCH_MARK(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us + IRrecv::gMarkExcess));}
+int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us - IRrecv::gMarkExcess));}
 // Debugging versions are in IRremote.cpp
 #endif
 
@@ -290,10 +290,24 @@ void IRsend::enableIROut(int khz) {
   TIMER_CONFIG_KHZ(khz);
 }
 
+unsigned int IRrecv::gMarkExcess = MARK_EXCESS;
+bool IRrecv::gAtomicRead = false;
+
 IRrecv::IRrecv(int recvpin)
 {
   irparams.recvpin = recvpin;
   irparams.blinkflag = 0;
+  irparams.rcvstate = STATE_IDLE;
+}
+
+IRrecv::IRrecv(int recvpin, unsigned int senzorLag) : IRrecv(recvpin)
+{
+	gMarkExcess = senzorLag;
+}
+
+bool IRrecv::setAtomicRead(bool readAllTransmission)
+{
+	gAtomicRead = readAllTransmission;
 }
 
 // initialization
@@ -339,67 +353,72 @@ ISR(TIMER_INTR_NAME)
 {
   TIMER_RESET;
 
-  uint8_t irdata = (uint8_t)digitalRead(irparams.recvpin);
+  do {
 
-  irparams.timer++; // One more 50us tick
-  if (irparams.rawlen >= RAWBUF) {
-    // Buffer overflow
-    irparams.rcvstate = STATE_STOP;
-  }
-  switch(irparams.rcvstate) {
-  case STATE_IDLE: // In the middle of a gap
-    if (irdata == MARK) {
-      if (irparams.timer < GAP_TICKS) {
-        // Not big enough to be a gap.
+    uint8_t irdata = (uint8_t) digitalRead(irparams.recvpin);
+
+    irparams.timer++; // One more 50us tick
+    if (irparams.rawlen >= RAWBUF) {
+      // Buffer overflow
+      irparams.rcvstate = STATE_STOP;
+    }
+    switch (irparams.rcvstate) {
+    case STATE_IDLE: // In the middle of a gap
+      if (irdata == MARK) {
+        if (irparams.timer < GAP_TICKS) {
+          // Not big enough to be a gap.
+          irparams.timer = 0;
+        } else {
+          // gap just ended, record duration and start recording transmission
+          irparams.rawlen = 0;
+          irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+          irparams.timer = 0;
+          irparams.rcvstate = STATE_MARK;
+        }
+      }
+      break;
+    case STATE_MARK: // timing MARK
+      if (irdata == SPACE) {   // MARK ended, record time
+        irparams.rawbuf[irparams.rawlen++] = irparams.timer;
         irparams.timer = 0;
-      } 
-      else {
-        // gap just ended, record duration and start recording transmission
-        irparams.rawlen = 0;
+        irparams.rcvstate = STATE_SPACE;
+      }
+      break;
+    case STATE_SPACE: // timing SPACE
+      if (irdata == MARK) { // SPACE just ended, record it
         irparams.rawbuf[irparams.rawlen++] = irparams.timer;
         irparams.timer = 0;
         irparams.rcvstate = STATE_MARK;
+      } else { // SPACE
+        if (irparams.timer > GAP_TICKS) {
+          // big SPACE, indicates gap between codes
+          // Mark current code as ready for processing
+          // Switch to STOP
+          // Don't reset timer; keep counting space width
+          irparams.rcvstate = STATE_STOP;
+        }
+      }
+      break;
+    case STATE_STOP: // waiting, measuring gap
+      if (irdata == MARK) { // reset gap timer
+        irparams.timer = 0;
+      }
+      break;
+    }
+
+    if (irparams.blinkflag) {
+      if (irdata == MARK) {
+        BLINKLED_ON();  // turn pin 13 LED on
+      } else {
+        BLINKLED_OFF();  // turn pin 13 LED off
       }
     }
-    break;
-  case STATE_MARK: // timing MARK
-    if (irdata == SPACE) {   // MARK ended, record time
-      irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-      irparams.timer = 0;
-      irparams.rcvstate = STATE_SPACE;
-    }
-    break;
-  case STATE_SPACE: // timing SPACE
-    if (irdata == MARK) { // SPACE just ended, record it
-      irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-      irparams.timer = 0;
-      irparams.rcvstate = STATE_MARK;
-    } 
-    else { // SPACE
-      if (irparams.timer > GAP_TICKS) {
-        // big SPACE, indicates gap between codes
-        // Mark current code as ready for processing
-        // Switch to STOP
-        // Don't reset timer; keep counting space width
-        irparams.rcvstate = STATE_STOP;
-      } 
-    }
-    break;
-  case STATE_STOP: // waiting, measuring gap
-    if (irdata == MARK) { // reset gap timer
-      irparams.timer = 0;
-    }
-    break;
-  }
 
-  if (irparams.blinkflag) {
-    if (irdata == MARK) {
-      BLINKLED_ON();  // turn pin 13 LED on
-    } 
-    else {
-      BLINKLED_OFF();  // turn pin 13 LED off
-    }
-  }
+    // Wait for 50us before the next read
+    if (IRrecv::gAtomicRead && irparams.rcvstate != STATE_STOP && irparams.rawlen > 1)
+      delayMicroseconds(50);
+
+  } while(IRrecv::gAtomicRead && irparams.rcvstate != STATE_STOP && irparams.rawlen > 1);
 }
 
 void IRrecv::resume() {
@@ -407,7 +426,7 @@ void IRrecv::resume() {
   irparams.rawlen = 0;
 }
 
-
+//#define DEBUG_32bits
 
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
@@ -418,6 +437,31 @@ int IRrecv::decode(decode_results *results) {
   if (irparams.rcvstate != STATE_STOP) {
     return ERR;
   }
+  // Check the signal shape (copy raw data into signal.dat and use gnuplot)
+  // Use gnuplot> plot "signal.dat" using 1:2 with lines
+  #ifdef DEBUG_32bits
+    unsigned int time;
+    unsigned int signal = 0;
+
+    time = 0;
+    Serial.println("0\t0");
+    for(int i = 1; i < irparams.rawlen; i++) {
+  	time += rawbuf[i]*50; // 50us
+  	Serial.print(time, DEC);
+  	Serial.print("\t");
+  	Serial.print(signal, DEC);
+  	Serial.println();
+
+  	Serial.print(time, DEC);
+  	Serial.print("\t");
+  	Serial.print(!signal, DEC);
+  	Serial.println();
+
+  	signal = !signal;
+    }
+
+  #endif
+
 #ifdef DEBUG
   Serial.println("Attempting NEC decode");
 #endif
@@ -733,7 +777,7 @@ int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) 
   }
   int width = results->rawbuf[*offset];
   int val = ((*offset) % 2) ? MARK : SPACE;
-  int correction = (val == MARK) ? MARK_EXCESS : - MARK_EXCESS;
+  int correction = (val == MARK) ? IRrecv::gMarkExcess : - IRrecv::gMarkExcess;
 
   int avail;
   if (MATCH(width, t1 + correction)) {
