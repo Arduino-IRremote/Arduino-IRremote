@@ -305,7 +305,7 @@ IRrecv::IRrecv(int recvpin, unsigned int senzorLag) : IRrecv(recvpin)
 	gMarkExcess = senzorLag;
 }
 
-bool IRrecv::setAtomicRead(bool readAllTransmission)
+void IRrecv::setAtomicRead(bool readAllTransmission)
 {
 	gAtomicRead = readAllTransmission;
 }

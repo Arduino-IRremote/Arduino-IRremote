@@ -66,7 +66,7 @@ public:
   int decode(decode_results *results);
   void enableIRIn();
   void resume();
-  bool setAtomicRead(bool readAllTransmission);
+  void setAtomicRead(bool readAllTransmission);
   static unsigned int gMarkExcess;
   static bool gAtomicRead;
 
