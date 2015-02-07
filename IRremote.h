@@ -10,7 +10,8 @@
  * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
  *
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
-* LG added by Darryl Smith (based on the JVC protocol)
+ * LG added by Darryl Smith (based on the JVC protocol)
+ * Whynter A/C ARC-110WD added by Francesco Meschia
  */
 
 #ifndef IRremote_h
@@ -21,7 +22,7 @@
 // If DEBUG is defined, a lot of debugging output will be printed during decoding.
 // TEST must be defined for the IRtest unittests to work.  It will make some
 // methods virtual, which will be slightly slower, which is why it is optional.
-// #define DEBUG
+//#define DEBUG
 // #define TEST
 
 // Results returned from the decoder
@@ -51,6 +52,7 @@ public:
 #define MITSUBISHI 10
 #define SAMSUNG 11
 #define LG 12
+#define WHYNTER 13
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -78,11 +80,11 @@ private:
   long decodeLG(decode_results *results);
   long decodeJVC(decode_results *results);
   long decodeSAMSUNG(decode_results *results);
+  long decodeWhynter(decode_results *results);
   long decodeHash(decode_results *results);
   int compare(unsigned int oldval, unsigned int newval);
 
-} 
-;
+} ;
 
 // Only used for testing; can remove virtual for shorter code
 #ifdef TEST
@@ -95,6 +97,7 @@ class IRsend
 {
 public:
   IRsend() {}
+  void sendWhynter(unsigned long data, int nbits);
   void sendNEC(unsigned long data, int nbits);
   void sendSony(unsigned long data, int nbits);
   // Neither Sanyo nor Mitsubishi send is implemented yet
@@ -113,8 +116,7 @@ public:
   void enableIROut(int khz);
   VIRTUAL void mark(int usec);
   VIRTUAL void space(int usec);
-}
-;
+} ;
 
 // Some useful constants
 

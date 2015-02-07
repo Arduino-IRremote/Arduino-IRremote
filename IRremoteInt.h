@@ -11,6 +11,7 @@
  * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
  *
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
+ * Whynter A/C ARC-110WD added by Francesco Meschia
  */
 
 #ifndef IRremoteint_h
@@ -94,6 +95,14 @@
 // Pulse parms are *50-100 for the Mark and *50+100 for the space
 // First MARK is the one after the long gap
 // pulse parameters in usec
+#define WHYNTER_HDR_MARK	2850
+#define WHYNTER_HDR_SPACE	2850
+#define WHYNTER_BIT_MARK	750
+#define WHYNTER_ONE_MARK	750
+#define WHYNTER_ONE_SPACE	2150
+#define WHYNTER_ZERO_MARK	750
+#define WHYNTER_ZERO_SPACE	750
+
 #define NEC_HDR_MARK	9000
 #define NEC_HDR_SPACE	4500
 #define NEC_BIT_MARK	560
@@ -227,6 +236,7 @@ extern volatile irparams_t irparams;
 #define JVC_BITS 16
 #define LG_BITS 28
 #define SAMSUNG_BITS 32
+#define WHYNTER_BITS 32
 
 
 
