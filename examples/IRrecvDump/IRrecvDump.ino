@@ -55,6 +55,9 @@ void dump(decode_results *results) {
   else if (results->decode_type == JVC) {
      Serial.print("Decoded JVC: ");
   }
+  else if (results->decode_type == WHYNTER) {
+     Serial.print("Decoded Whynter: ");
+  }
   Serial.print(results->value, HEX);
   Serial.print(" (");
   Serial.print(results->bits, DEC);

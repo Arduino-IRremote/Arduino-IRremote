@@ -15,6 +15,7 @@
  *
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  * LG added by Darryl Smith (based on the JVC protocol)
+ * Whynter A/C ARC-110WD added by Francesco Meschia
  */
 
 #include "IRremote.h"
@@ -91,6 +92,27 @@ void IRsend::sendNEC(unsigned long data, int nbits)
   }
   mark(NEC_BIT_MARK);
   space(0);
+}
+
+void IRsend::sendWhynter(unsigned long data, int nbits) {
+	enableIROut(38);
+	mark(WHYNTER_ZERO_MARK);
+	space(WHYNTER_ZERO_SPACE);
+	mark(WHYNTER_HDR_MARK);
+	space(WHYNTER_HDR_SPACE);
+    for (int i = 0; i < nbits; i++) {
+      if (data & TOPBIT) {
+        mark(WHYNTER_ONE_MARK);
+        space(WHYNTER_ONE_SPACE);
+      } 
+      else {
+        mark(WHYNTER_ZERO_MARK);
+        space(WHYNTER_ZERO_SPACE);
+      }
+      data <<= 1;
+    }
+	mark(WHYNTER_ZERO_MARK);
+	space(WHYNTER_ZERO_SPACE);
 }
 
 void IRsend::sendSony(unsigned long data, int nbits) {
@@ -478,6 +500,12 @@ int IRrecv::decode(decode_results *results) {
   if (decodeSAMSUNG(results)) {
     return DECODED;
   }
+#ifdef DEBUG
+  Serial.println("Attempting Whynter decode");
+#endif
+  if (decodeWhynter(results)) {
+    return DECODED;
+  }
   // decodeHash returns a hash on any input.
   // Thus, it needs to be last in the list.
   // If you add any decodes, add them before this.
@@ -589,6 +617,65 @@ long IRrecv::decodeSony(decode_results *results) {
   results->decode_type = SONY;
   return DECODED;
 }
+
+long IRrecv::decodeWhynter(decode_results *results) {
+  long data = 0;
+  
+  if (irparams.rawlen < 2 * WHYNTER_BITS + 6) {
+     return ERR;
+  }
+  
+  int offset = 1; // skip initial space
+
+  // sequence begins with a bit mark and a zero space
+  if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {
+    return ERR;
+  }
+  offset++;
+  if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE)) {
+    return ERR;
+  }
+  offset++;
+
+  // header mark and space
+  if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_HDR_MARK)) {
+    return ERR;
+  }
+  offset++;
+  if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_HDR_SPACE)) {
+    return ERR;
+  }
+  offset++;
+
+  // data bits
+  for (int i = 0; i < WHYNTER_BITS; i++) {
+    if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {
+      return ERR;
+    }
+    offset++;
+    if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE)) {
+      data = (data << 1) | 1;
+    } 
+    else if (MATCH_SPACE(results->rawbuf[offset],WHYNTER_ZERO_SPACE)) {
+      data <<= 1;
+    } 
+    else {
+      return ERR;
+    }
+    offset++;
+  }
+  
+  // trailing mark
+  if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {
+    return ERR;
+  }
+  // Success
+  results->bits = WHYNTER_BITS;
+  results->value = data;
+  results->decode_type = WHYNTER;
+  return DECODED;
+}
+
 
 // I think this is a Sanyo decoder - serial = SA 8650B
 // Looks like Sony except for timings, 48 chars of data and time/space different
