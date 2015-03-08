@@ -24,7 +24,11 @@
 // Provides ISR
 #include <avr/interrupt.h>
 
-volatile irparams_t irparams;
+// Neco (2015-03-08): moved irparams into private instance members
+//volatile irparams_t irparams;
+// Neco (2015-03-08): adding global variable - list of irparams_t to go thru in interruption cycle
+#include "CppList.h"
+CppList lst_of_irparams;
 
 // These versions of MATCH, MATCH_MARK, and MATCH_SPACE are only for debugging.
 // To use them, set DEBUG in IRremoteInt.h
@@ -312,11 +316,19 @@ void IRsend::enableIROut(int khz) {
   TIMER_CONFIG_KHZ(khz);
 }
 
-IRrecv::IRrecv(int recvpin)
+IRrecv::IRrecv(int recvpin):
+	irparams() // Neco (2015-03-08): initializing irparams
 {
   irparams.recvpin = recvpin;
   irparams.blinkflag = 0;
+  lst_of_irparams.Add(&irparams); // Neco (2015-03-08): adding our instance to global list
 }
+// Neco (2015-03-08): adding destructor to remove instance of irparams from global list
+IRrecv::~IRrecv()
+{
+	lst_of_irparams.Delete(&irparams);
+}
+
 
 // initialization
 void IRrecv::enableIRIn() {
@@ -350,17 +362,8 @@ void IRrecv::blink13(int blinkflag)
     pinMode(BLINKLED, OUTPUT);
 }
 
-// TIMER2 interrupt code to collect raw data.
-// Widths of alternating SPACE, MARK are recorded in rawbuf.
-// Recorded in ticks of 50 microseconds.
-// rawlen counts the number of entries recorded so far.
-// First entry is the SPACE between transmissions.
-// As soon as a SPACE gets long, ready is set, state switches to IDLE, timing of SPACE continues.
-// As soon as first MARK arrives, gap width is recorded, ready is cleared, and new logging starts
-ISR(TIMER_INTR_NAME)
-{
-  TIMER_RESET;
-
+// Neco (2015-03-08): extracting original body of interruption to leave code without changes
+void ProcessOneIRParam(irparams_t &irparams){
   uint8_t irdata = (uint8_t)digitalRead(irparams.recvpin);
 
   irparams.timer++; // One more 50us tick
@@ -421,6 +424,24 @@ ISR(TIMER_INTR_NAME)
     else {
       BLINKLED_OFF();  // turn pin 13 LED off
     }
+  }
+}
+// TIMER2 interrupt code to collect raw data.
+// Widths of alternating SPACE, MARK are recorded in rawbuf.
+// Recorded in ticks of 50 microseconds.
+// rawlen counts the number of entries recorded so far.
+// First entry is the SPACE between transmissions.
+// As soon as a SPACE gets long, ready is set, state switches to IDLE, timing of SPACE continues.
+// As soon as first MARK arrives, gap width is recorded, ready is cleared, and new logging starts
+ISR(TIMER_INTR_NAME)
+{
+  TIMER_RESET;
+
+  // Neco (2015-03-08): going thru the collection of irparams
+  int count_of_irparams = lst_of_irparams.GetCount();
+  for (int i=0;i<count_of_irparams;++i){
+	  irparams_t *irparams = (irparams_t*)lst_of_irparams.GetItem(i);
+	  ProcessOneIRParam(*irparams);
   }
 }
 
