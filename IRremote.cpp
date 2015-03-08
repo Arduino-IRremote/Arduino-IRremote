@@ -459,6 +459,12 @@ int IRrecv::decode(decode_results *results) {
     return DECODED;
   }
 #ifdef DEBUG
+  Serial.println("Attempting Sharp decode");
+#endif
+  if (decodeSharp(results)) {
+    return DECODED;
+  }
+#ifdef DEBUG
   Serial.println("Attempting Mitsubishi decode");
 #endif
   if (decodeMitsubishi(results)) {
@@ -618,6 +624,7 @@ long IRrecv::decodeSony(decode_results *results) {
   return DECODED;
 }
 
+<<<<<<< HEAD
 long IRrecv::decodeWhynter(decode_results *results) {
   long data = 0;
   
@@ -657,14 +664,7 @@ long IRrecv::decodeWhynter(decode_results *results) {
       data = (data << 1) | 1;
     } 
     else if (MATCH_SPACE(results->rawbuf[offset],WHYNTER_ZERO_SPACE)) {
-      data <<= 1;
-    } 
-    else {
-      return ERR;
-    }
-    offset++;
-  }
-  
+ 
   // trailing mark
   if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {
     return ERR;
@@ -677,6 +677,61 @@ long IRrecv::decodeWhynter(decode_results *results) {
 }
 
 
+=======
+long IRrecv::decodeSharp(decode_results *results) {
+  long data = 0;
+  if (irparams.rawlen < 32) {
+    return ERR;
+  }
+
+  int offset = 0; // Dont skip first space, check its size
+  
+  if (results->rawbuf[offset] < SHARP_RPT_SPACE) {
+    // Serial.print("IR Gap found: ");
+    results->bits = 0;
+    results->value = REPEAT;
+    results->decode_type = SHARP;
+    return DECODED;
+  }
+  
+  offset++;
+  
+  while (offset + 1 < irparams.rawlen) {
+    if (!MATCH_MARK(results->rawbuf[offset], SHARP_BIT_MARK)) {
+      break;
+    }
+    offset++;
+    if (MATCH_SPACE(results->rawbuf[offset], SHARP_ONE_SPACE)) {
+      data = (data << 1) | 1;
+    } 
+    else if (MATCH_SPACE(results->rawbuf[offset], SHARP_ZERO_SPACE)) {
+      data <<= 1;
+    } 
+    else {
+      return ERR;
+    }
+    offset++;
+  }
+ 
+
+  if (data & 1 || !(data & 2)) {
+    return ERR;
+  }
+
+  // Success
+  results->bits = (offset - 1) / 2;
+  if (results->bits < 15) {
+    results->bits = 0;
+    return ERR;
+  }
+  
+  results->sharpAddress = (data >> 10) & 0b11111;
+  results->value = (data >> 2) & 0xff;
+  results->decode_type = SHARP;
+  return DECODED;
+}
+
+>>>>>>> 0b9d907da992bbb56493164e79d37006ec52e777
 // I think this is a Sanyo decoder - serial = SA 8650B
 // Looks like Sony except for timings, 48 chars of data and time/space different
 long IRrecv::decodeSanyo(decode_results *results) {

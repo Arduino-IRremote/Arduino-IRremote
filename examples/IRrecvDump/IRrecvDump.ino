@@ -49,6 +49,11 @@ void dump(decode_results *results) {
     Serial.print(results->panasonicAddress,HEX);
     Serial.print(" Value: ");
   }
+  else if (results->decode_type == SHARP) {	
+    Serial.print("Decoded SHARP - Address: ");
+    Serial.print(results->sharpAddress,HEX);
+    Serial.print(" Value: ");
+  }
   else if (results->decode_type == LG) {
      Serial.print("Decoded LG: ");
   }

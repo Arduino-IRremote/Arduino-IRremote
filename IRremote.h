@@ -29,9 +29,9 @@
 class decode_results {
 public:
   int decode_type; // NEC, SONY, RC5, UNKNOWN
-  union { // This is used for decoding Panasonic and Sharp data
-    unsigned int panasonicAddress;
-    unsigned int sharpAddress;
+ union {
+    unsigned int panasonicAddress; // This is only used for decoding Panasonic data
+    unsigned int sharpAddress; // This is only used for decoding Panasonic data
   };
   unsigned long value; // Decoded value
   int bits; // Number of bits in decoded value
@@ -52,7 +52,11 @@ public:
 #define MITSUBISHI 10
 #define SAMSUNG 11
 #define LG 12
+<<<<<<< HEAD
 #define WHYNTER 13
+=======
+#define SHARP 13
+>>>>>>> 0b9d907da992bbb56493164e79d37006ec52e777
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -72,6 +76,7 @@ private:
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
   long decodeNEC(decode_results *results);
   long decodeSony(decode_results *results);
+  long decodeSharp(decode_results *results);
   long decodeSanyo(decode_results *results);
   long decodeMitsubishi(decode_results *results);
   long decodeRC5(decode_results *results);
