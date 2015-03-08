@@ -218,7 +218,7 @@ typedef struct {
 irparams_t;
 
 // Defined in IRremote.cpp
-// extern volatile irparams_t irparams; // Neco (2015-03-08): removing this global variable for multiple receivers support
+extern volatile irparams_t irparams;
 
 // IR detector output is active low
 #define MARK  0
