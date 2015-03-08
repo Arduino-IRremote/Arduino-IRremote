@@ -17,6 +17,21 @@
 #ifndef IRremote_h
 #define IRremote_h
 
+// =================
+// Neco (2015-03-08): moving constants up and add adding reference to IRremoteInt.h
+
+// Some useful constants
+
+#define USECPERTICK 50  // microseconds per clock interrupt tick
+#define RAWBUF 100 // Length of raw duration buffer
+
+// Marks tend to be 100us too long, and spaces 100us too short
+// when received due to sensor lag.
+#define MARK_EXCESS 100
+
+#include "IRremoteInt.h"
+// =================
+
 // The following are compile-time library options.
 // If you change them, recompile the library.
 // If DEBUG is defined, a lot of debugging output will be printed during decoding.
@@ -63,11 +78,13 @@ class IRrecv
 {
 public:
   IRrecv(int recvpin);
+  ~IRrecv(); // Neco (2015-03-08): adding destructor to remove instance of irparams from global list
   void blink13(int blinkflag);
   int decode(decode_results *results);
   void enableIRIn();
   void resume();
 private:
+  irparams_t irparams; // Neco (2015-03-08): adding private instance member
   // These are called by decode
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
   long decodeNEC(decode_results *results);
@@ -118,13 +135,5 @@ public:
   VIRTUAL void space(int usec);
 } ;
 
-// Some useful constants
-
-#define USECPERTICK 50  // microseconds per clock interrupt tick
-#define RAWBUF 100 // Length of raw duration buffer
-
-// Marks tend to be 100us too long, and spaces 100us too short
-// when received due to sensor lag.
-#define MARK_EXCESS 100
 
 #endif
