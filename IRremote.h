@@ -52,11 +52,8 @@ public:
 #define MITSUBISHI 10
 #define SAMSUNG 11
 #define LG 12
-<<<<<<< HEAD
 #define WHYNTER 13
-=======
-#define SHARP 13
->>>>>>> 0b9d907da992bbb56493164e79d37006ec52e777
+#define SHARP 14
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
