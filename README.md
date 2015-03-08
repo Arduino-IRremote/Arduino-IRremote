@@ -2,7 +2,7 @@
 This library enables you to send and receive using infra-red signals on an arduino
 
 ## Version - 1.00
-This is the experimental branch and includes the latest features and updates.
+
  
 ## Installation
 1. Click "Download ZIP" 
