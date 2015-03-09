@@ -730,7 +730,6 @@ long IRrecv::decodeSharp(decode_results *results) {
   return DECODED;
 }
 
->>>>>>> 0b9d907da992bbb56493164e79d37006ec52e777
 // I think this is a Sanyo decoder - serial = SA 8650B
 // Looks like Sony except for timings, 48 chars of data and time/space different
 long IRrecv::decodeSanyo(decode_results *results) {
