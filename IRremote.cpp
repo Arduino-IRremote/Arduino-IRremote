@@ -677,7 +677,6 @@ long IRrecv::decodeWhynter(decode_results *results) {
 }
 
 
-=======
 long IRrecv::decodeSharp(decode_results *results) {
   long data = 0;
   if (irparams.rawlen < 32) {
