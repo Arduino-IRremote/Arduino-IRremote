@@ -53,7 +53,8 @@ public:
 #define SAMSUNG 11
 #define LG 12
 #define WHYNTER 13
-#define AIWA_RC_T501 14
+#define Sharp 14
+#define AIWA_RC_T501 15
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
