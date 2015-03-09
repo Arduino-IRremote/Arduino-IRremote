@@ -190,6 +190,20 @@
 #define SHARP_BITS 15
 #define DISH_BITS 16
 
+// AIWA RC T501
+// Lirc file http://lirc.sourceforge.net/remotes/aiwa/RC-T501 
+#define AIWA_RC_T501_HZ 38
+#define AIWA_RC_T501_BITS 15
+#define AIWA_RC_T501_PRE_BITS 26
+#define AIWA_RC_T501_POST_BITS 1
+#define AIWA_RC_T501_SUM_BITS AIWA_RC_T501_PRE_BITS+AIWA_RC_T501_BITS+AIWA_RC_T501_POST_BITS
+#define AIWA_RC_T501_HDR_MARK 8800
+#define AIWA_RC_T501_HDR_SPACE 4500
+#define AIWA_RC_T501_BIT_MARK 500
+#define AIWA_RC_T501_ONE_SPACE 600
+#define AIWA_RC_T501_ZERO_SPACE 1700
+
+
 #define TOLERANCE 25  // percent tolerance in measurements
 #define LTOL (1.0 - TOLERANCE/100.) 
 #define UTOL (1.0 + TOLERANCE/100.) 

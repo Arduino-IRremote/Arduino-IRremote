@@ -17,5 +17,8 @@ If you want to contribute to this project:
 - Create issues and pull requests
 - Tell other people about this library
 
+## Contributors
+Check [here](Contributors.md)
+
 ## Copyright
 Copyright 2009-2012 Ken Shirriff
