@@ -631,7 +631,6 @@ long IRrecv::decodeSony(decode_results *results) {
   return DECODED;
 }
 
-<<<<<<< HEAD
 long IRrecv::decodeWhynter(decode_results *results) {
   long data = 0;
   

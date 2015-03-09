@@ -55,7 +55,6 @@ public:
 #define WHYNTER 13
 #define Sharp 14
 #define AIWA_RC_T501 15
->>>>>>> crash7-master
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
