@@ -17,6 +17,13 @@
 #ifndef IRremote_h
 #define IRremote_h
 
+#if defined(ARDUINO) && ARDUINO >= 100
+#include <Arduino.h>
+#else
+#include <WProgram.h>
+#endif
+
+
 // The following are compile-time library options.
 // If you change them, recompile the library.
 // If DEBUG is defined, a lot of debugging output will be printed during decoding.
@@ -28,13 +35,15 @@
 // Results returned from the decoder
 class decode_results {
 public:
-  int decode_type; // NEC, SONY, RC5, UNKNOWN
+  int8_t decode_type; 	// NEC, SONY, RC5, UNKNOWN
+  int8_t bits; 			// Number of bits in decoded value
+  unsigned long value; 	// Decoded value
+
   union { // This is used for decoding Panasonic and Sharp data
     unsigned int panasonicAddress;
     unsigned int sharpAddress;
   };
-  unsigned long value; // Decoded value
-  int bits; // Number of bits in decoded value
+
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
   int rawlen; // Number of records in rawbuf.
 };

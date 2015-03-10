@@ -17,7 +17,6 @@
  * LG added by Darryl Smith (based on the JVC protocol)
  * Whynter A/C ARC-110WD added by Francesco Meschia
  */
-
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
@@ -31,39 +30,39 @@ volatile irparams_t irparams;
 // Normally macros are used for efficiency
 #ifdef DEBUG
 int MATCH(int measured, int desired) {
-  Serial.print("Testing: ");
+  Serial.print(F("Testing: "));
   Serial.print(TICKS_LOW(desired), DEC);
-  Serial.print(" <= ");
+  Serial.print(F(" <= "));
   Serial.print(measured, DEC);
-  Serial.print(" <= ");
+  Serial.print(F(" <= "));
   Serial.println(TICKS_HIGH(desired), DEC);
   return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);
 }
 
 int MATCH_MARK(int measured_ticks, int desired_us) {
-  Serial.print("Testing mark ");
+  Serial.print(F("Testing mark "));
   Serial.print(measured_ticks * USECPERTICK, DEC);
-  Serial.print(" vs ");
+  Serial.print(F(" vs "));
   Serial.print(desired_us, DEC);
-  Serial.print(": ");
+  Serial.print(F(": "));
   Serial.print(TICKS_LOW(desired_us + MARK_EXCESS), DEC);
-  Serial.print(" <= ");
+  Serial.print(F(" <= "));
   Serial.print(measured_ticks, DEC);
-  Serial.print(" <= ");
+  Serial.print(F(" <= "));
   Serial.println(TICKS_HIGH(desired_us + MARK_EXCESS), DEC);
   return measured_ticks >= TICKS_LOW(desired_us + MARK_EXCESS) && measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS);
 }
 
 int MATCH_SPACE(int measured_ticks, int desired_us) {
-  Serial.print("Testing space ");
+  Serial.print(F("Testing space "));
   Serial.print(measured_ticks * USECPERTICK, DEC);
-  Serial.print(" vs ");
+  Serial.print(F(" vs "));
   Serial.print(desired_us, DEC);
-  Serial.print(": ");
+  Serial.print(F(": "));
   Serial.print(TICKS_LOW(desired_us - MARK_EXCESS), DEC);
-  Serial.print(" <= ");
+  Serial.print(F(" <= "));
   Serial.print(measured_ticks, DEC);
-  Serial.print(" <= ");
+  Serial.print(F(" <= "));
   Serial.println(TICKS_HIGH(desired_us - MARK_EXCESS), DEC);
   return measured_ticks >= TICKS_LOW(desired_us - MARK_EXCESS) && measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS);
 }
@@ -311,6 +310,74 @@ void IRsend::enableIROut(int khz) {
   // The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
   TIMER_CONFIG_KHZ(khz);
 }
+/* Sharp and DISH support by Todd Treece ( http://unionbridge.org/design/ircommand )
+
+The Dish send function needs to be repeated 4 times, and the Sharp function
+has the necessary repeat built in because of the need to invert the signal.
+
+Sharp protocol documentation:
+http://www.sbprojects.com/knowledge/ir/sharp.htm
+
+Here are the LIRC files that I found that seem to match the remote codes
+from the oscilloscope:
+
+Sharp LCD TV:
+http://lirc.sourceforge.net/remotes/sharp/GA538WJSA
+
+DISH NETWORK (echostar 301):
+http://lirc.sourceforge.net/remotes/echostar/301_501_3100_5100_58xx_59xx
+
+For the DISH codes, only send the last for characters of the hex.
+i.e. use 0x1C10 instead of 0x0000000000001C10 which is listed in the
+linked LIRC file.
+*/
+
+void IRsend::sendSharpRaw(unsigned long data, int nbits) {
+  enableIROut(38);
+
+  // Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
+  // much more reliable. That's the exact behaviour of CD-S6470 remote control.
+  for (int n = 0; n < 3; n++) {
+    for (int i = 1 << (nbits-1); i > 0; i>>=1) {
+      if (data & i) {
+        mark(SHARP_BIT_MARK);
+        space(SHARP_ONE_SPACE);
+      }
+      else {
+        mark(SHARP_BIT_MARK);
+        space(SHARP_ZERO_SPACE);
+      }
+    }
+    
+    mark(SHARP_BIT_MARK);
+    space(SHARP_ZERO_SPACE);
+    delay(40);
+
+    data = data ^ SHARP_TOGGLE_MASK;
+  }
+}
+
+// Sharp send compatible with data obtained through decodeSharp
+void IRsend::sendSharp(unsigned int address, unsigned int command) {
+  sendSharpRaw((address << 10) | (command << 2) | 2, 15);
+}
+
+void IRsend::sendDISH(unsigned long data, int nbits) {
+  enableIROut(56);
+  mark(DISH_HDR_MARK);
+  space(DISH_HDR_SPACE);
+  for (int i = 0; i < nbits; i++) {
+    if (data & DISH_TOP_BIT) {
+      mark(DISH_BIT_MARK);
+      space(DISH_ONE_SPACE);
+    }
+    else {
+      mark(DISH_BIT_MARK);
+      space(DISH_ZERO_SPACE);
+    }
+    data <<= 1;
+  }
+}
 
 IRrecv::IRrecv(int recvpin)
 {
@@ -441,67 +508,67 @@ int IRrecv::decode(decode_results *results) {
     return ERR;
   }
 #ifdef DEBUG
-  Serial.println("Attempting NEC decode");
+  Serial.println(F("Attempting NEC decode"));
 #endif
   if (decodeNEC(results)) {
     return DECODED;
   }
 #ifdef DEBUG
-  Serial.println("Attempting Sony decode");
+  Serial.println(F("Attempting Sony decode"));
 #endif
   if (decodeSony(results)) {
     return DECODED;
   }
 #ifdef DEBUG
-  Serial.println("Attempting Sanyo decode");
+  Serial.println(F("Attempting Sanyo decode"));
 #endif
   if (decodeSanyo(results)) {
     return DECODED;
   }
 #ifdef DEBUG
-  Serial.println("Attempting Mitsubishi decode");
+  Serial.println(F("Attempting Mitsubishi decode"));
 #endif
   if (decodeMitsubishi(results)) {
     return DECODED;
   }
 #ifdef DEBUG
-  Serial.println("Attempting RC5 decode");
+  Serial.println(F("Attempting RC5 decode"));
 #endif  
   if (decodeRC5(results)) {
     return DECODED;
   }
 #ifdef DEBUG
-  Serial.println("Attempting RC6 decode");
+  Serial.println(F("Attempting RC6 decode"));
 #endif 
   if (decodeRC6(results)) {
     return DECODED;
   }
 #ifdef DEBUG
-    Serial.println("Attempting Panasonic decode");
+    Serial.println(F("Attempting Panasonic decode"));
 #endif 
     if (decodePanasonic(results)) {
         return DECODED;
     }
 #ifdef DEBUG
-    Serial.println("Attempting LG decode");
+    Serial.println(F("Attempting LG decode"));
 #endif 
     if (decodeLG(results)) {
         return DECODED;
     }
 #ifdef DEBUG
-    Serial.println("Attempting JVC decode");
+    Serial.println(F("Attempting JVC decode"));
 #endif 
     if (decodeJVC(results)) {
         return DECODED;
     }
 #ifdef DEBUG
-  Serial.println("Attempting SAMSUNG decode");
+  Serial.println(F("Attempting SAMSUNG decode"));
 #endif
   if (decodeSAMSUNG(results)) {
     return DECODED;
   }
 #ifdef DEBUG
-  Serial.println("Attempting Whynter decode");
+  Serial.println(F("Attempting Whynter decode"));
 #endif
   if (decodeWhynter(results)) {
     return DECODED;
@@ -576,7 +643,7 @@ long IRrecv::decodeSony(decode_results *results) {
   // Some Sony's deliver repeats fast after first
   // unfortunately can't spot difference from of repeat from two fast clicks
   if (results->rawbuf[offset] < SONY_DOUBLE_SPACE_USECS) {
-    // Serial.print("IR Gap found: ");
+    // Serial.print(F("IR Gap found: "));
     results->bits = 0;
     results->value = REPEAT;
     results->decode_type = SANYO;
@@ -687,13 +754,13 @@ long IRrecv::decodeSanyo(decode_results *results) {
   int offset = 0; // Skip first space
   // Initial space  
   /* Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
-  Serial.print("IR Gap: ");
+  Serial.print(F("IR Gap: "));
   Serial.println( results->rawbuf[offset]);
-  Serial.println( "test against:");
+  Serial.println(F("test against:"));
   Serial.println(results->rawbuf[offset]);
   */
   if (results->rawbuf[offset] < SANYO_DOUBLE_SPACE_USECS) {
-    // Serial.print("IR Gap found: ");
+    // Serial.print(F("IR Gap found: "));
     results->bits = 0;
     results->value = REPEAT;
     results->decode_type = SANYO;
@@ -743,7 +810,7 @@ long IRrecv::decodeSanyo(decode_results *results) {
 
 // Looks like Sony except for timings, 48 chars of data and time/space different
 long IRrecv::decodeMitsubishi(decode_results *results) {
-  // Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
+  // Serial.print(F("?!? decoding Mitsubishi:"));Serial.print(irparams.rawlen); Serial.print(F(" want ")); Serial.println( 2 * MITSUBISHI_BITS + 2);
   long data = 0;
   if (irparams.rawlen < 2 * MITSUBISHI_BITS + 2) {
     return ERR;
@@ -751,14 +818,14 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
   int offset = 0; // Skip first space
   // Initial space  
   /* Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
-  Serial.print("IR Gap: ");
+  Serial.print(F("IR Gap: "));
   Serial.println( results->rawbuf[offset]);
-  Serial.println( "test against:");
+  Serial.println(F("test against:"));
   Serial.println(results->rawbuf[offset]);
   */
   /* Not seeing double keys from Mitsubishi
   if (results->rawbuf[offset] < MITSUBISHI_DOUBLE_SPACE_USECS) {
-    // Serial.print("IR Gap found: ");
+    // Serial.print(F("IR Gap found: "));
     results->bits = 0;
     results->value = REPEAT;
     results->decode_type = MITSUBISHI;
@@ -783,12 +850,12 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
       data <<= 1;
     } 
     else {
-      // Serial.println("A"); Serial.println(offset); Serial.println(results->rawbuf[offset]);
+      // Serial.println(F("A")); Serial.println(offset); Serial.println(results->rawbuf[offset]);
       return ERR;
     }
     offset++;
     if (!MATCH_SPACE(results->rawbuf[offset], MITSUBISHI_HDR_SPACE)) {
-      // Serial.println("B"); Serial.println(offset); Serial.println(results->rawbuf[offset]);
+      // Serial.println(F("B")); Serial.println(offset); Serial.println(results->rawbuf[offset]);
       break;
     }
     offset++;
@@ -843,10 +910,10 @@ int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) 
   }
 #ifdef DEBUG
   if (val == MARK) {
-    Serial.println("MARK");
+    Serial.println(F("MARK"));
   } 
   else {
-    Serial.println("SPACE");
+    Serial.println(F("SPACE"));
   }
 #endif
   return val;   
@@ -1171,71 +1238,4 @@ long IRrecv::decodeHash(decode_results *results) {
   return DECODED;
 }
 
-/* Sharp and DISH support by Todd Treece ( http://unionbridge.org/design/ircommand )
 
-The Dish send function needs to be repeated 4 times, and the Sharp function
-has the necessary repeat built in because of the need to invert the signal.
-
-Sharp protocol documentation:
-http://www.sbprojects.com/knowledge/ir/sharp.htm
-
-Here are the LIRC files that I found that seem to match the remote codes
-from the oscilloscope:
-
-Sharp LCD TV:
-http://lirc.sourceforge.net/remotes/sharp/GA538WJSA
-
-DISH NETWORK (echostar 301):
-http://lirc.sourceforge.net/remotes/echostar/301_501_3100_5100_58xx_59xx
-
-For the DISH codes, only send the last for characters of the hex.
-i.e. use 0x1C10 instead of 0x0000000000001C10 which is listed in the
-linked LIRC file.
-*/
-
-void IRsend::sendSharpRaw(unsigned long data, int nbits) {
-  enableIROut(38);
-
-  // Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
-  // much more reliable. That's the exact behaviour of CD-S6470 remote control.
-  for (int n = 0; n < 3; n++) {
-    for (int i = 1 << (nbits-1); i > 0; i>>=1) {
-      if (data & i) {
-        mark(SHARP_BIT_MARK);
-        space(SHARP_ONE_SPACE);
-      }
-      else {
-        mark(SHARP_BIT_MARK);
-        space(SHARP_ZERO_SPACE);
-      }
-    }
-    
-    mark(SHARP_BIT_MARK);
-    space(SHARP_ZERO_SPACE);
-    delay(40);
-
-    data = data ^ SHARP_TOGGLE_MASK;
-  }
-}
-
-// Sharp send compatible with data obtained through decodeSharp
-void IRsend::sendSharp(unsigned int address, unsigned int command) {
-  sendSharpRaw((address << 10) | (command << 2) | 2, 15);
-}
-
-void IRsend::sendDISH(unsigned long data, int nbits) {
-  enableIROut(56);
-  mark(DISH_HDR_MARK);
-  space(DISH_HDR_SPACE);
-  for (int i = 0; i < nbits; i++) {
-    if (data & DISH_TOP_BIT) {
-      mark(DISH_BIT_MARK);
-      space(DISH_ONE_SPACE);
-    }
-    else {
-      mark(DISH_BIT_MARK);
-      space(DISH_ZERO_SPACE);
-    }
-    data <<= 1;
-  }
-}
