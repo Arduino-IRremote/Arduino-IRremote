@@ -6,3 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Support for Sharp Decoding
 - Support for Aiwa Decoding
+- Changelog documentation
+
+### Changed
+- Improved memory management in debugging
+- Use of F() macro saves RAM
