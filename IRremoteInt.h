@@ -213,7 +213,7 @@ typedef struct {
   uint8_t blinkflag;         // TRUE to enable blinking of pin 13 on IR processing
   unsigned int timer;     // state timer, counts 50uS ticks.
   unsigned int rawbuf[RAWBUF]; // raw data
-  uint8_t rawlen;         // counter of entries in rawbuf
+  uint16_t rawlen;         // counter of entries in rawbuf
 } 
 irparams_t;
 
