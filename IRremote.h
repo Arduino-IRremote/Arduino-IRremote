@@ -63,10 +63,15 @@ class IRrecv
 {
 public:
   IRrecv(int recvpin);
+  IRrecv(int recvpin, unsigned int markExcess);
   void blink13(int blinkflag);
   int decode(decode_results *results);
   void enableIRIn();
   void resume();
+  void setAtomicRead(bool readAllTransmission);
+  static unsigned int gMarkExcess;
+  static bool gAtomicRead;
+
 private:
   // These are called by decode
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
