@@ -53,6 +53,7 @@ public:
 #define SAMSUNG 11
 #define LG 12
 #define WHYNTER 13
+#define AIWA_RC_T501 14
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received
@@ -81,6 +82,7 @@ private:
   long decodeJVC(decode_results *results);
   long decodeSAMSUNG(decode_results *results);
   long decodeWhynter(decode_results *results);
+  long decodeAiwaRCT501(decode_results *results);
   long decodeHash(decode_results *results);
   int compare(unsigned int oldval, unsigned int newval);
 
@@ -111,6 +113,7 @@ public:
   void sendSharpRaw(unsigned long data, int nbits);
   void sendPanasonic(unsigned int address, unsigned long data);
   void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
+  void sendAiwaRCT501(int code);
   // private:
   void sendSAMSUNG(unsigned long data, int nbits);
   void enableIROut(int khz);
