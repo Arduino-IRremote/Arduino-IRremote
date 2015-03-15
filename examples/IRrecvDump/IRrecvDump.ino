@@ -5,6 +5,7 @@
  * Copyright 2009 Ken Shirriff
  * http://arcfn.com
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
+ * LG added by Darryl Smith (based on the JVC protocol)
  */
 
 #include <IRremote.h>
@@ -48,8 +49,18 @@ void dump(decode_results *results) {
     Serial.print(results->panasonicAddress,HEX);
     Serial.print(" Value: ");
   }
+  else if (results->decode_type == LG) {
+     Serial.print("Decoded LG: ");
+  }
   else if (results->decode_type == JVC) {
      Serial.print("Decoded JVC: ");
+  
+  }
+  else if (results->decode_type == AIWA_RC_T501) {
+    Serial.print("Decoded AIWA RC T501: ");
+  }
+  else if (results->decode_type == WHYNTER) {
+     Serial.print("Decoded Whynter: ");
   }
   Serial.print(results->value, HEX);
   Serial.print(" (");
