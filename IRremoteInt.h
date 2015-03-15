@@ -29,8 +29,6 @@
 // are using another library which uses timer2, you have options
 // to switch IRremote to use a different timer.
 
- #define __AVR_ATtinyX5__
-
 // Arduino Mega
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   //#define IR_USE_TIMER1   // tx = pin 11
@@ -67,26 +65,6 @@
 // Atmega8
 #elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
   #define IR_USE_TIMER1   // tx = pin 9
-
-#elif defined( __AVR_ATtinyX4__ )
-  #define IR_USE_TIMER1   // tx = pin 6
-
-#elif defined( __AVR_ATtinyX5__ )
-
-  #ifndef cbi
-    #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-  #endif
-  #ifndef sbi
-    #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
-  #endif
-
- #define CLKFUDGE 5      // fudge factor for clock interrupt overhead
-#define CLK 256      // max value for clock (timer 2)
-#define PRESCALE 8      // timer2 clock prescale
- #define CLKSPERUSEC (SYSCLOCK/PRESCALE/1000000)   // timer clocks per microsecond
-
-  #define IR_ATTINY_85   // OCR1A, pin 6
-
 
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
 #else
@@ -331,17 +309,7 @@ extern volatile irparams_t irparams;
   #define TIMER_ENABLE_INTR    (TIMSK1 = _BV(OCIE1A))
   #define TIMER_DISABLE_INTR   (TIMSK1 = 0)
 #endif
-<<<<<<< HEAD
-
-#if defined(__AVR_ATtinyX4__)
-  #define TIMER_INTR_NAME      TIM1_COMPA_vect
-#else // for attiny85
-  #define TIMER_INTR_NAME      TIMER1_COMPA_vect
-#endif
-
-=======
 #define TIMER_INTR_NAME      TIMER1_COMPA_vect
->>>>>>> ce1c79baa5be03387e136d64795c05dc2f0b2bb1
 #define TIMER_CONFIG_KHZ(val) ({ \
   const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
   TCCR1A = _BV(WGM11); \
@@ -495,28 +463,6 @@ extern volatile irparams_t irparams;
 #error "Please add OC5A pin number here\n"
 #endif
 
-// defines for timer5 (16 bits)
-#elif defined(IR_ATTINY_85)
-
-#define TIMER_RESET          TCNT1 = (CLK - USECPERTICK*CLKSPERUSEC + CLKFUDGE)
-#define TIMER_ENABLE_PWM     TCCR1 |= _BV(COM0B1) // Enable pin 3 PWM output
-#define TIMER_DISABLE_PWM    TCCR1 &= ~(_BV(COM0B1)) // Disable pin 3 PWM output
-#define TIMER_ENABLE_INTR    //sbi(TIMSK,TOIE0); //Timer2 Overflow Interrupt Enable
-#define TIMER_DISABLE_INTR   TIMSK &= ~_BV(TOIE0) //Timer2 Overflow Interrupt
-#define TIMER_INTR_NAME      TIMER1_OVF_vect
-
-#define TIMER_CONFIG_KHZ(val) ({ \
-  const uint16_t pwmval = SYSCLOCK / 1000 / (val); \
-  TCCR1 = _BV(CTC1) | _BV(CS13); \
-  OCR1C = SYSCLOCK / 2 / pwmval / 1000; \
-  OCR1A = OCR1A / 3; \
-})
-#define TIMER_CONFIG_NORMAL() ({ \
-  TCCR1 = _BV(CTC1) | _BV(CS13); \
-  OCR1C = 24; \
-  OCR1A = 0; \
-})
-#define TIMER_PWM_PIN        3 /* ATTiny85 */
 
 // defines for special carrier modulator timer
 #elif defined(IR_USE_TIMER_CMT)
