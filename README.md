@@ -11,6 +11,14 @@ Check [here](http://shirriff.github.io/Arduino-IRremote/) for tutorials and more
 3. Extract the zip file
 4. Move the "IRremote" folder that has been extracted to your libraries directory.
 
+## Usage
+
+We get a lot of support for different device types. To keep the size of the library manageable we're moving to a model where different device types use a #define statement, for instance:
+
+```#define SHARP```
+
+You'd put this at the top of your sketch to include the sendSharp() and decodeSharp() methods in your code. This way your sketch only uses the Sharp functions but not the LG, JVC, Sony, etc functions, thus saving you program space that you might want to use for other things. This allows us to support lots of devices without making the library too big.
+
 ## Contributing
 If you want to contribute to this project:
 - Report bugs and errors
