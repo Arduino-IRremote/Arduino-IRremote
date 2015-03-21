@@ -75,8 +75,7 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks
 #endif
 
 #ifdef NEC
-void IRsend::sendNEC(unsigned long data, int nbits)
-{
+void IRsend::sendNEC(unsigned long data, int nbits) {
   enableIROut(38);
   mark(NEC_HDR_MARK);
   space(NEC_HDR_SPACE);
@@ -139,8 +138,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 }
 #endif
 
-void IRsend::sendRaw(unsigned int buf[], int len, int hz)
-{
+void IRsend::sendRaw(unsigned int buf[], int len, int hz) {
   enableIROut(hz);
   for (int i = 0; i < len; i++) {
     if (i & 1) {
@@ -153,9 +151,9 @@ void IRsend::sendRaw(unsigned int buf[], int len, int hz)
   space(0); // Just to be sure
 }
 
+#ifdef RC5
 // Note: first bit must be a one (start bit)
-void IRsend::sendRC5(unsigned long data, int nbits)
-{
+void IRsend::sendRC5(unsigned long data, int nbits) {
   enableIROut(36);
   data = data << (32 - nbits);
   mark(RC5_T1); // First start bit
@@ -174,10 +172,11 @@ void IRsend::sendRC5(unsigned long data, int nbits)
   }
   space(0); // Turn off at end
 }
+#endif
 
+#ifdef RC6
 // Caller needs to take care of flipping the toggle bit
-void IRsend::sendRC6(unsigned long data, int nbits)
-{
+void IRsend::sendRC6(unsigned long data, int nbits) {
   enableIROut(36);
   data = data << (32 - nbits);
   mark(RC6_HDR_MARK);
@@ -206,6 +205,7 @@ void IRsend::sendRC6(unsigned long data, int nbits)
   }
   space(0); // Turn off at end
 }
+#endif
 
 #ifdef PANASONIC
 void IRsend::sendPanasonic(unsigned int address, unsigned long data) {
@@ -238,8 +238,7 @@ void IRsend::sendPanasonic(unsigned int address, unsigned long data) {
 #endif
 
 #ifdef JVC
-void IRsend::sendJVC(unsigned long data, int nbits, int repeat)
-{
+void IRsend::sendJVC(unsigned long data, int nbits, int repeat) {
     enableIROut(38);
     data = data << (32 - nbits);
     if (!repeat){
@@ -263,8 +262,7 @@ void IRsend::sendJVC(unsigned long data, int nbits, int repeat)
 #endif
 
 #ifdef SAMSUNG
-void IRsend::sendSAMSUNG(unsigned long data, int nbits)
-{
+void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
   enableIROut(38);
   mark(SAMSUNG_HDR_MARK);
   space(SAMSUNG_HDR_SPACE);
@@ -326,8 +324,7 @@ void IRsend::enableIROut(int khz) {
   TIMER_CONFIG_KHZ(khz);
 }
 
-IRrecv::IRrecv(int recvpin)
-{
+IRrecv::IRrecv(int recvpin) {
   irparams.recvpin = recvpin;
   irparams.blinkflag = 0;
 }
@@ -357,8 +354,7 @@ void IRrecv::enableIRIn() {
 }
 
 // enable/disable blinking of pin 13 on IR processing
-void IRrecv::blink13(int blinkflag)
-{
+void IRrecv::blink13(int blinkflag) {
   irparams.blinkflag = blinkflag;
   if (blinkflag)
     pinMode(BLINKLED, OUTPUT);
@@ -371,8 +367,7 @@ void IRrecv::blink13(int blinkflag)
 // First entry is the SPACE between transmissions.
 // As soon as a SPACE gets long, ready is set, state switches to IDLE, timing of SPACE continues.
 // As soon as first MARK arrives, gap width is recorded, ready is cleared, and new logging starts
-ISR(TIMER_INTR_NAME)
-{
+ISR(TIMER_INTR_NAME) {
   TIMER_RESET;
 
   uint8_t irdata = (uint8_t)digitalRead(irparams.recvpin);
@@ -442,8 +437,6 @@ void IRrecv::resume() {
   irparams.rcvstate = STATE_IDLE;
   irparams.rawlen = 0;
 }
-
-
 
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
@@ -520,10 +513,12 @@ int IRrecv::decode(decode_results *results) {
 #ifdef JVC
 #ifdef DEBUG
     Serial.println("Attempting LG decode");
-#endif 
+#endif
+#ifdef LG
     if (decodeLG(results)) {
         return DECODED;
     }
+#endif
 #ifdef DEBUG
     Serial.println("Attempting JVC decode");
 #endif 
@@ -539,12 +534,17 @@ int IRrecv::decode(decode_results *results) {
   if (decodeSAMSUNG(results)) {
     return DECODED;
   }
+#endif
+
+#ifdef WHYNTER
 #ifdef DEBUG
   Serial.println("Attempting Whynter decode");
 #endif
   if (decodeWhynter(results)) {
     return DECODED;
   }
+#endif
+
 // Aiwa RC-T501
 #ifdef AIWA_RC_T501
 #ifdef DEBUG
@@ -675,6 +675,7 @@ long IRrecv::decodeSony(decode_results *results) {
 }
 #endif
 
+#ifdef WHYNTER
 long IRrecv::decodeWhynter(decode_results *results) {
   long data = 0;
   
@@ -732,7 +733,7 @@ long IRrecv::decodeWhynter(decode_results *results) {
   results->decode_type = WHYNTER;
   return DECODED;
 }
-
+#endif
 
 #ifdef SANYO
 // I think this is a Sanyo decoder - serial = SA 8650B
@@ -866,6 +867,7 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
 }
 #endif
 
+#if defined(RC5) || defined(RC6)
 // Gets one undecoded level at a time from the raw buffer.
 // The RC5/6 decoding is easier if the data is broken into time intervals.
 // E.g. if the buffer has MARK for 2 time intervals and SPACE for 1,
@@ -913,6 +915,7 @@ int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) 
 }
 #endif
 
+#ifdef RC5
 long IRrecv::decodeRC5(decode_results *results) {
   if (irparams.rawlen < MIN_RC5_SAMPLES + 2) {
     return ERR;
@@ -947,7 +950,9 @@ long IRrecv::decodeRC5(decode_results *results) {
   results->decode_type = RC5;
   return DECODED;
 }
+#endif
 
+#ifdef RC6
 long IRrecv::decodeRC6(decode_results *results) {
   if (results->rawlen < MIN_RC6_SAMPLES) {
     return ERR;
@@ -998,6 +1003,7 @@ long IRrecv::decodeRC6(decode_results *results) {
   results->decode_type = RC6;
   return DECODED;
 }
+#endif
 
 #ifdef PANASONIC
 long IRrecv::decodePanasonic(decode_results *results) {
@@ -1079,8 +1085,6 @@ long IRrecv::decodeLG(decode_results *results) {
     results->decode_type = LG;
     return DECODED;
 }
-
-
 #endif
 
 #ifdef JVC
@@ -1352,15 +1356,16 @@ void IRsend::sendSharp(unsigned long data, int nbits) {
     data = data ^ SHARP_TOGGLE_MASK;
   }
 }
+#endif
 
+#ifdef SHARP
 // Sharp send compatible with data obtained through decodeSharp
 void IRsend::sendSharp(unsigned int address, unsigned int command) {
   sendSharpRaw((address << 10) | (command << 2) | 2, 15);
 }
-
 #endif
 
-#ifdef IRsendDISH
+#ifdef DISH
 void IRsend::sendDISH(unsigned long data, int nbits)
 {
   enableIROut(56);

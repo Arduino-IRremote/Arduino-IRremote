@@ -84,7 +84,9 @@ public:
   void resume();
 private:
   // These are called by decode
+#if defined(RC5) || defined(RC6)
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
+#endif
 #ifdef NEC
   long decodeNEC(decode_results *results);
 #endif
@@ -141,9 +143,12 @@ class IRsend
 public:
   IRsend() {}
   void sendRaw(unsigned int buf[], int len, int hz);
+#ifdef RC5
   void sendRC5(unsigned long data, int nbits);
+#endif
+#ifdef RC6
   void sendRC6(unsigned long data, int nbits);
-
+#endif
 #ifdef WHYNTER
   void sendWhynter(unsigned long data, int nbits);
 #endif
@@ -172,8 +177,9 @@ public:
 #endif
 #ifdef JVC
   void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
-  void sendAiwaRCT501(int code);
-  // private:
+#endif  
+#ifdef AIWA_RC_T501
+  void sendAiwaRCT501(int code);  
 #endif
 #ifdef SAMSUNG 
   void sendSAMSUNG(unsigned long data, int nbits);
