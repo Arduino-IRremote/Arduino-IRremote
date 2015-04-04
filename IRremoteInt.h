@@ -303,8 +303,8 @@ extern volatile irparams_t irparams;
 #define TIMER_ENABLE_PWM     (TCCR1A |= _BV(COM1A1))
 #define TIMER_DISABLE_PWM    (TCCR1A &= ~(_BV(COM1A1)))
 #if defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
-  #define TIMER_ENABLE_INTR    (TIMSK = _BV(OCIE1A))
-  #define TIMER_DISABLE_INTR   (TIMSK = 0)
+  #define TIMER_ENABLE_INTR    (TIMSK |= _BV(OCIE1A))
+  #define TIMER_DISABLE_INTR   (TIMSK &= ~_BV(OCIE1A))
 #else
   #define TIMER_ENABLE_INTR    (TIMSK1 = _BV(OCIE1A))
   #define TIMER_DISABLE_INTR   (TIMSK1 = 0)
