@@ -25,10 +25,29 @@
 //#define DEBUG
 // #define TEST
 
+enum decode_type_t {
+  NEC = 1,
+  SONY = 2,
+  RC5 = 3,
+  RC6 = 4,
+  DISH = 5,
+  SHARP = 6,
+  PANASONIC = 7,
+  JVC = 8,
+  SANYO = 9,
+  MITSUBISHI = 10,
+  SAMSUNG = 11,
+  LG = 12,
+  WHYNTER = 13,
+  AIWA_RC_T501 = 14,
+
+  UNKNOWN = -1
+};
+
 // Results returned from the decoder
 class decode_results {
 public:
-  int decode_type; // NEC, SONY, RC5, UNKNOWN
+  decode_type_t decode_type; // NEC, SONY, RC5, UNKNOWN
   union { // This is used for decoding Panasonic and Sharp data
     unsigned int panasonicAddress;
     unsigned int sharpAddress;
@@ -53,23 +72,6 @@ public:
 #define IRsendSAMSUNG
 #define IRsendRAW
 
-// Values for decode_type
-#define NEC 1
-#define SONY 2
-#define RC5 3
-#define RC6 4
-#define DISH 5
-#define SHARP 6
-#define PANASONIC 7
-#define JVC 8
-#define SANYO 9
-#define MITSUBISHI 10
-#define SAMSUNG 11
-#define LG 12
-#define WHYNTER 13
-#define AIWA_RC_T501 14
-#define UNKNOWN -1
-
 // Decoded value for NEC when a repeat code is received
 #define REPEAT 0xffffffff
 
@@ -85,42 +87,42 @@ public:
 private:
   // These are called by decode
   int getRClevel(decode_results *results, int *offset, int *used, int t1);
-#ifdef NEC
+#ifdef DECODE_NEC
   long decodeNEC(decode_results *results);
 #endif
-#ifdef SONY
+#ifdef DECODE_SONY
   long decodeSony(decode_results *results);
 #endif
-#ifdef SANYO
+#ifdef DECODE_SANYO
   long decodeSanyo(decode_results *results);
 #endif
-#ifdef MITSUBISHI
+#ifdef DECODE_MITSUBISHI
   long decodeMitsubishi(decode_results *results);
 #endif
-#ifdef RC5
+#ifdef DECODE_RC5
   long decodeRC5(decode_results *results);
 #endif
-#ifdef RC6
+#ifdef DECODE_RC6
   long decodeRC6(decode_results *results);
 #endif
-#ifdef PANASONIC
+#ifdef DECODE_PANASONIC
   long decodePanasonic(decode_results *results);
 #endif
-#ifdef LG
+#ifdef DECODE_LG
   long decodeLG(decode_results *results);
 #endif
-#ifdef JVC
+#ifdef DECODE_JVC
   long decodeJVC(decode_results *results);
 #endif
-#ifdef SAMSUNG
+#ifdef DECODE_SAMSUNG
   long decodeSAMSUNG(decode_results *results);
 #endif
 
-#ifdef WHYNTER
+#ifdef DECODE_WHYNTER
   long decodeWhynter(decode_results *results);
 #endif
 
-#ifdef AIWA_RC_T501
+#ifdef DECODE_AIWA_RC_T501
   long decodeAiwaRCT501(decode_results *results);
 #endif
 
@@ -141,41 +143,44 @@ class IRsend
 public:
   IRsend() {}
   void sendRaw(unsigned int buf[], int len, int hz);
+#ifdef SEND_RC5
   void sendRC5(unsigned long data, int nbits);
+#endif
+#ifdef SEND_RC6
   void sendRC6(unsigned long data, int nbits);
-
-#ifdef WHYNTER
+#endif
+#ifdef SEND_WHYNTER
   void sendWhynter(unsigned long data, int nbits);
 #endif
-#ifdef NEC 
+#ifdef SEND_NEC 
   void sendNEC(unsigned long data, int nbits);
 #endif
-#ifdef SONY 
+#ifdef SEND_SONY 
   void sendSony(unsigned long data, int nbits);
   // Neither Sanyo nor Mitsubishi send is implemented yet
   //  void sendSanyo(unsigned long data, int nbits);
   //  void sendMitsubishi(unsigned long data, int nbits);
 #endif
-
-#ifdef DISH 
+#ifdef SEND_DISH 
   void sendDISH(unsigned long data, int nbits);
 #endif
-#ifdef SHARP
+#ifdef SEND_SHARP
   void sendSharp(unsigned int address, unsigned int command);
   void sendSharpRaw(unsigned long data, int nbits);
 #endif
-#ifdef IRsendSHARP
+#ifdef SEND_IRsendSHARP
   void sendSharp(unsigned long data, int nbits);
 #endif
-#ifdef PANASONIC
+#ifdef SEND_PANASONIC
   void sendPanasonic(unsigned int address, unsigned long data);
 #endif
-#ifdef JVC
+#ifdef SEND_JVC
   void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
-  void sendAiwaRCT501(int code);
-  // private:
 #endif
-#ifdef SAMSUNG 
+#ifdef SEND_AIWA_RC_T501
+  void sendAiwaRCT501(int code);
+#endif
+#ifdef SEND_SAMSUNG 
   void sendSAMSUNG(unsigned long data, int nbits);
 #endif
   void enableIROut(int khz);
