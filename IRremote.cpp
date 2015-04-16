@@ -1445,4 +1445,449 @@ void IRsend::sendAiwaRCT501(int code) {
   mark(AIWA_RC_T501_BIT_MARK);
   space(0);
 }
+
+/*
+duplicated functions with multiple classes to support multiple pins (added by khaireddine hlali)
+ 
+*/
+void IRsend1::sendNEC(unsigned long data, int nbits)
+{
+  enableIROut1(38);
+  mark1(NEC_HDR_MARK);
+  space1(NEC_HDR_SPACE);
+  for (int i = 0; i < nbits; i++) {
+    if (data & TOPBIT) {
+      mark1(NEC_BIT_MARK);
+      space1(NEC_ONE_SPACE);
+    } 
+    else {
+      mark1(NEC_BIT_MARK);
+      space1(NEC_ZERO_SPACE);
+    }
+    data <<= 1;
+  }
+  mark1(NEC_BIT_MARK);
+  space1(0);
+}
+
+void IRsend2::sendNEC(unsigned long data, int nbits)
+{
+  enableIROut2(38);
+  mark2(NEC_HDR_MARK);
+  space2(NEC_HDR_SPACE);
+  for (int i = 0; i < nbits; i++) {
+    if (data & TOPBIT) {
+      mark2(NEC_BIT_MARK);
+      space2(NEC_ONE_SPACE);
+    } 
+    else {
+      mark2(NEC_BIT_MARK);
+      space2(NEC_ZERO_SPACE);
+    }
+    data <<= 1;
+  }
+  mark2(NEC_BIT_MARK);
+  space2(0);
+}
+
+void IRsend1::sendWhynter(unsigned long data, int nbits) {
+	enableIROut1(38);
+	mark1(WHYNTER_ZERO_MARK);
+	space1(WHYNTER_ZERO_SPACE);
+	mark1(WHYNTER_HDR_MARK);
+	space1(WHYNTER_HDR_SPACE);
+    for (int i = 0; i < nbits; i++) {
+      if (data & TOPBIT) {
+        mark1(WHYNTER_ONE_MARK);
+        space1(WHYNTER_ONE_SPACE);
+      } 
+      else {
+        mark1(WHYNTER_ZERO_MARK);
+        space1(WHYNTER_ZERO_SPACE);
+      }
+      data <<= 1;
+    }
+	mark1(WHYNTER_ZERO_MARK);
+	space1(WHYNTER_ZERO_SPACE);
+}
+
+void IRsend2::sendWhynter(unsigned long data, int nbits) {
+	enableIROut2(38);
+	mark2(WHYNTER_ZERO_MARK);
+	space2(WHYNTER_ZERO_SPACE);
+	mark2(WHYNTER_HDR_MARK);
+	space2(WHYNTER_HDR_SPACE);
+    for (int i = 0; i < nbits; i++) {
+      if (data & TOPBIT) {
+        mark2(WHYNTER_ONE_MARK);
+        space2(WHYNTER_ONE_SPACE);
+      } 
+      else {
+        mark2(WHYNTER_ZERO_MARK);
+        space2(WHYNTER_ZERO_SPACE);
+      }
+      data <<= 1;
+    }
+	mark2(WHYNTER_ZERO_MARK);
+	space2(WHYNTER_ZERO_SPACE);
+}
+
+void IRsend1::sendSony(unsigned long data, int nbits) {
+  enableIROut1(40);
+  mark1(SONY_HDR_MARK);
+  space1(SONY_HDR_SPACE);
+  data = data << (32 - nbits);
+  for (int i = 0; i < nbits; i++) {
+    if (data & TOPBIT) {
+      mark1(SONY_ONE_MARK);
+      space1(SONY_HDR_SPACE);
+    } 
+    else {
+      mark1(SONY_ZERO_MARK);
+      space1(SONY_HDR_SPACE);
+    }
+    data <<= 1;
+  }
+}
+
+void IRsend2::sendSony(unsigned long data, int nbits) {
+  enableIROut2(40);
+  mark2(SONY_HDR_MARK);
+  space2(SONY_HDR_SPACE);
+  data = data << (32 - nbits);
+  for (int i = 0; i < nbits; i++) {
+    if (data & TOPBIT) {
+      mark2(SONY_ONE_MARK);
+      space2(SONY_HDR_SPACE);
+    } 
+    else {
+      mark2(SONY_ZERO_MARK);
+      space2(SONY_HDR_SPACE);
+    }
+    data <<= 1;
+  }
+}
+
+void IRsend1::sendRaw(unsigned int buf[], int len, int hz)
+{
+  enableIROut1(hz);
+  for (int i = 0; i < len; i++) {
+    if (i & 1) {
+      space1(buf[i]);
+    } 
+    else {
+      mark1(buf[i]);
+    }
+  }
+  space1(0); // Just to be sure
+}
+
+void IRsend2::sendRaw(unsigned int buf[], int len, int hz)
+{
+  enableIROut2(hz);
+  for (int i = 0; i < len; i++) {
+    if (i & 1) {
+      space2(buf[i]);
+    } 
+    else {
+      mark2(buf[i]);
+    }
+  }
+  space2(0); // Just to be sure
+}
+void IRsend1::sendRC6(unsigned long data, int nbits)
+{
+  enableIROut1(36);
+  data = data << (32 - nbits);
+  mark1(RC6_HDR_MARK);
+  space1(RC6_HDR_SPACE);
+  mark1(RC6_T1); // start bit
+  space1(RC6_T1);
+  int t;
+  for (int i = 0; i < nbits; i++) {
+    if (i == 3) {
+      // double-wide trailer bit
+      t = 2 * RC6_T1;
+    } 
+    else {
+      t = RC6_T1;
+    }
+    if (data & TOPBIT) {
+      mark1(t);
+      space1(t);
+    } 
+    else {
+      space1(t);
+      mark1(t);
+    }
+
+    data <<= 1;
+  }
+  space1(0); // Turn off at end
+}
+void IRsend2::sendRC6(unsigned long data, int nbits)
+{
+  enableIROut2(36);
+  data = data << (32 - nbits);
+  mark2(RC6_HDR_MARK);
+  space2(RC6_HDR_SPACE);
+  mark2(RC6_T1); // start bit
+  space2(RC6_T1);
+  int t;
+  for (int i = 0; i < nbits; i++) {
+    if (i == 3) {
+      // double-wide trailer bit
+      t = 2 * RC6_T1;
+    } 
+    else {
+      t = RC6_T1;
+    }
+    if (data & TOPBIT) {
+      mark2(t);
+      space2(t);
+    } 
+    else {
+      space2(t);
+      mark2(t);
+    }
+
+    data <<= 1;
+  }
+  space2(0); // Turn off at end
+}
+
+void IRsend1::sendRC5(unsigned long data, int nbits)
+{
+  enableIROut1(36);
+  data = data << (32 - nbits);
+  mark1(RC5_T1); // First start bit
+  space1(RC5_T1); // Second start bit
+  mark1(RC5_T1); // Second start bit
+  for (int i = 0; i < nbits; i++) {
+    if (data & TOPBIT) {
+      space1(RC5_T1); // 1 is space, then mark
+      mark1(RC5_T1);
+    } 
+    else {
+      mark1(RC5_T1);
+      space1(RC5_T1);
+    }
+    data <<= 1;
+  }
+  space1(0); // Turn off at end
+}
+
+void IRsend2::sendRC5(unsigned long data, int nbits)
+{
+  enableIROut2(36);
+  data = data << (32 - nbits);
+  mark2(RC5_T1); // First start bit
+  space2(RC5_T1); // Second start bit
+  mark2(RC5_T1); // Second start bit
+  for (int i = 0; i < nbits; i++) {
+    if (data & TOPBIT) {
+      space2(RC5_T1); // 1 is space, then mark
+      mark2(RC5_T1);
+    } 
+    else {
+      mark2(RC5_T1);
+      space2(RC5_T1);
+    }
+    data <<= 1;
+  }
+  space2(0); // Turn off at end
+}
+
+void IRsend1::sendPanasonic(unsigned int address, unsigned long data) {
+    enableIROut1(35);
+    mark1(PANASONIC_HDR_MARK);
+    space1(PANASONIC_HDR_SPACE);
+    
+    for(int i=0;i<16;i++)
+    {
+        mark1(PANASONIC_BIT_MARK);
+        if (address & 0x8000) {
+            space1(PANASONIC_ONE_SPACE);
+        } else {
+            space1(PANASONIC_ZERO_SPACE);
+        }
+        address <<= 1;        
+    }    
+    for (int i=0; i < 32; i++) {
+        mark1(PANASONIC_BIT_MARK);
+        if (data & TOPBIT) {
+            space1(PANASONIC_ONE_SPACE);
+        } else {
+            space1(PANASONIC_ZERO_SPACE);
+        }
+        data <<= 1;
+    }
+    mark1(PANASONIC_BIT_MARK);
+    space1(0);
+}
+
+void IRsend2::sendPanasonic(unsigned int address, unsigned long data) {
+    enableIROut2(35);
+    mark2(PANASONIC_HDR_MARK);
+    space2(PANASONIC_HDR_SPACE);
+    
+    for(int i=0;i<16;i++)
+    {
+        mark2(PANASONIC_BIT_MARK);
+        if (address & 0x8000) {
+            space2(PANASONIC_ONE_SPACE);
+        } else {
+            space2(PANASONIC_ZERO_SPACE);
+        }
+        address <<= 1;        
+    }    
+    for (int i=0; i < 32; i++) {
+        mark2(PANASONIC_BIT_MARK);
+        if (data & TOPBIT) {
+            space2(PANASONIC_ONE_SPACE);
+        } else {
+            space2(PANASONIC_ZERO_SPACE);
+        }
+        data <<= 1;
+    }
+    mark2(PANASONIC_BIT_MARK);
+    space2(0);
+}
+
+void IRsend1::sendJVC(unsigned long data, int nbits, int repeat)
+{
+    enableIROut1(38);
+    data = data << (32 - nbits);
+    if (!repeat){
+        mark1(JVC_HDR_MARK);
+        space1(JVC_HDR_SPACE); 
+    }
+    for (int i = 0; i < nbits; i++) {
+        if (data & TOPBIT) {
+            mark1(JVC_BIT_MARK);
+            space1(JVC_ONE_SPACE); 
+        } 
+        else {
+            mark1(JVC_BIT_MARK);
+            space1(JVC_ZERO_SPACE); 
+        }
+        data <<= 1;
+    }
+    mark1(JVC_BIT_MARK);
+    space1(0);
+}
+
+void IRsend2::sendJVC(unsigned long data, int nbits, int repeat)
+{
+    enableIROut2(38);
+    data = data << (32 - nbits);
+    if (!repeat){
+        mark2(JVC_HDR_MARK);
+        space2(JVC_HDR_SPACE); 
+    }
+    for (int i = 0; i < nbits; i++) {
+        if (data & TOPBIT) {
+            mark2(JVC_BIT_MARK);
+            space2(JVC_ONE_SPACE); 
+        } 
+        else {
+            mark2(JVC_BIT_MARK);
+            space2(JVC_ZERO_SPACE); 
+        }
+        data <<= 1;
+    }
+    mark2(JVC_BIT_MARK);
+    space2(0);
+}
+
+void IRsend1::sendSAMSUNG(unsigned long data, int nbits)
+{
+  enableIROut1(38);
+  mark1(SAMSUNG_HDR_MARK);
+  space1(SAMSUNG_HDR_SPACE);
+  for (int i = 0; i < nbits; i++) {
+    if (data & TOPBIT) {
+      mark1(SAMSUNG_BIT_MARK);
+      space1(SAMSUNG_ONE_SPACE);
+    } 
+    else {
+      mark1(SAMSUNG_BIT_MARK);
+      space1(SAMSUNG_ZERO_SPACE);
+    }
+    data <<= 1;
+  }
+  mark1(SAMSUNG_BIT_MARK);
+  space1(0);
+}
+void IRsend2::sendSAMSUNG(unsigned long data, int nbits)
+{
+  enableIROut2(38);
+  mark2(SAMSUNG_HDR_MARK);
+  space2(SAMSUNG_HDR_SPACE);
+  for (int i = 0; i < nbits; i++) {
+    if (data & TOPBIT) {
+      mark2(SAMSUNG_BIT_MARK);
+      space2(SAMSUNG_ONE_SPACE);
+    } 
+    else {
+      mark2(SAMSUNG_BIT_MARK);
+      space2(SAMSUNG_ZERO_SPACE);
+    }
+    data <<= 1;
+  }
+  mark2(SAMSUNG_BIT_MARK);
+  space2(0);
+}
+
+void IRsend1::mark1(int time) {
+  // Sends an IR mark for the specified number of microseconds.
+  // The mark output is modulated at the PWM frequency.
+
+ 
+ 
+   TIMER_ENABLE_PWM3;
+  if (time > 0) delayMicroseconds(time);
+}
+void IRsend2::mark2(int time) {
+  // Sends an IR mark for the specified number of microseconds.
+  // The mark output is modulated at the PWM frequency.
+
+
+
+  TIMER_ENABLE_PWM4;
+  
+  if (time > 0) delayMicroseconds(time);
+}
+
+
+void IRsend1::space1(int time) {
+  // Sends an IR space for the specified number of microseconds.
+  // A space is no output, so the PWM output is disabled.
+
+  TIMER_DISABLE_PWM3;
+  if (time > 0) delayMicroseconds(time);
+}
+
+void IRsend2::space2(int time) {
+  // Sends an IR space for the specified number of microseconds.
+  // A space is no output, so the PWM output is disabled.
+  TIMER_DISABLE_PWM4;
+
+  if (time > 0) delayMicroseconds(time);
+}
+
+ 
+void IRsend1::enableIROut1(int khz) {
+pinMode(TIMER_PWM_PIN4, OUTPUT);
+  digitalWrite(TIMER_PWM_PIN4, LOW);
+ 
+ TIMER_CONFIG_KHZ(khz);
+}
+void IRsend2::enableIROut2(int khz) {
+
+  pinMode(TIMER_PWM_PIN3, OUTPUT);
+  digitalWrite(TIMER_PWM_PIN3, LOW);
+  TIMER_CONFIG_KHZ(khz);
+}
+
 #endif
