@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/shirriff/Arduino-IRremote.svg)](https://travis-ci.org/shirriff/Arduino-IRremote)
+__________
 NOTE: THIS NEEDS TO BE FIXED.... PLEASE JUST USE THE LATEST RELEASE AND NOT THE MASTER BRANCH!!!!
 # IRremote Arduino Library
 This library enables you to send and receive using infra-red signals on an arduino.
