@@ -106,7 +106,7 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
   enableIROut(38);
   mark(NEC_HDR_MARK);
   space(NEC_HDR_SPACE);
-  for (int i = 0; i < nbits; i++) {
+  for (int i = 0;  i < nbits;  i++) {
     if (data & TOPBIT) {
       mark(NEC_BIT_MARK);
       space(NEC_ONE_SPACE);
@@ -131,7 +131,7 @@ void  IRsend::sendWhynter (unsigned long data,  int nbits)
 	space(WHYNTER_ZERO_SPACE);
 	mark(WHYNTER_HDR_MARK);
 	space(WHYNTER_HDR_SPACE);
-    for (int i = 0; i < nbits; i++) {
+    for (int i = 0;  i < nbits;  i++) {
       if (data & TOPBIT) {
         mark(WHYNTER_ONE_MARK);
         space(WHYNTER_ONE_SPACE);
@@ -155,7 +155,7 @@ void  IRsend::sendSony (unsigned long data,  int nbits)
   mark(SONY_HDR_MARK);
   space(SONY_HDR_SPACE);
   data = data << (32 - nbits);
-  for (int i = 0; i < nbits; i++) {
+  for (int i = 0;  i < nbits;  i++) {
     if (data & TOPBIT) {
       mark(SONY_ONE_MARK);
       space(SONY_HDR_SPACE);
@@ -173,7 +173,7 @@ void  IRsend::sendSony (unsigned long data,  int nbits)
 void  IRsend::sendRaw (unsigned int buf[],  int len,  int hz)
 {
   enableIROut(hz);
-  for (int i = 0; i < len; i++) {
+  for (int i = 0;  i < len;  i++) {
     if (i & 1)  space(buf[i]) ;
     else        mark (buf[i]) ;
   }
@@ -191,7 +191,7 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
   mark(RC5_T1); // First start bit
   space(RC5_T1); // Second start bit
   mark(RC5_T1); // Second start bit
-  for (int i = 0; i < nbits; i++) {
+  for (int i = 0;  i < nbits;  i++) {
     if (data & TOPBIT) {
       space(RC5_T1); // 1 is space, then mark
       mark(RC5_T1);
@@ -219,7 +219,7 @@ void  IRsend::sendRC6 (unsigned long data,  int nbits)
   mark(RC6_T1); // start bit
   space(RC6_T1);
   int t;
-  for (int i = 0; i < nbits; i++) {
+  for (int i = 0;  i < nbits;  i++) {
     if (i == 3)  t = RC6_T1 * 2 ;  // double-wide trailer bit
     else         t = RC6_T1 ;
     if (data & TOPBIT) {
@@ -245,14 +245,14 @@ void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
     mark(PANASONIC_HDR_MARK);
     space(PANASONIC_HDR_SPACE);
 
-    for(int i=0;i<16;i++)
+    for (int i = 0;  i < 16;  i++)
     {
         mark(PANASONIC_BIT_MARK);
         if (address & 0x8000)  space(PANASONIC_ONE_SPACE) ;
         else                   space(PANASONIC_ZERO_SPACE) ;
         address <<= 1;
     }
-    for (int i=0; i < 32; i++) {
+    for (int i = 0;  i < 32;  i++) {
         mark(PANASONIC_BIT_MARK);
         if (data & TOPBIT)  space(PANASONIC_ONE_SPACE) ;
         else                space(PANASONIC_ZERO_SPACE) ;
@@ -273,7 +273,7 @@ void  IRsend::sendJVC (unsigned long data,  int nbits, int repeat)
         mark(JVC_HDR_MARK);
         space(JVC_HDR_SPACE);
     }
-    for (int i = 0; i < nbits; i++) {
+    for (int i = 0;  i < nbits;  i++) {
         if (data & TOPBIT) {
             mark(JVC_BIT_MARK);
             space(JVC_ONE_SPACE);
@@ -296,7 +296,7 @@ void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
   enableIROut(38);
   mark(SAMSUNG_HDR_MARK);
   space(SAMSUNG_HDR_SPACE);
-  for (int i = 0; i < nbits; i++) {
+  for (int i = 0;  i < nbits;  i++) {
     if (data & TOPBIT) {
       mark(SAMSUNG_BIT_MARK);
       space(SAMSUNG_ONE_SPACE);
@@ -580,7 +580,7 @@ long  IRrecv::decodeNEC (decode_results *results)
   // Initial space
   if (!MATCH_SPACE(results->rawbuf[offset], NEC_HDR_SPACE))  return ERR ;
   offset++;
-  for (int i = 0; i < NEC_BITS; i++) {
+  for (int i = 0;  i < NEC_BITS;  i++) {
     if (!MATCH_MARK(results->rawbuf[offset], NEC_BIT_MARK))  return ERR ;
     offset++;
     if      (MATCH_SPACE(results->rawbuf[offset], NEC_ONE_SPACE))   data = (data << 1) | 1 ;
@@ -667,7 +667,7 @@ long  IRrecv::decodeWhynter (decode_results *results)
   offset++;
 
   // data bits
-  for (int i = 0; i < WHYNTER_BITS; i++) {
+  for (int i = 0;  i < WHYNTER_BITS;  i++) {
     if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK))  return ERR ;
     offset++;
     if      (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE))  data = (data << 1) | 1 ;
@@ -849,7 +849,7 @@ long  IRrecv::decodeRC5 (decode_results *results)
   if (getRClevel(results, &offset, &used, RC5_T1) != SPACE)  return ERR ;
   if (getRClevel(results, &offset, &used, RC5_T1) != MARK)   return ERR ;
   int nbits;
-  for (nbits = 0; offset < irparams.rawlen; nbits++) {
+  for (nbits = 0;  offset < irparams.rawlen;  nbits++) {
     int levelA = getRClevel(results, &offset, &used, RC5_T1);
     int levelB = getRClevel(results, &offset, &used, RC5_T1);
     if      (levelA == SPACE && levelB == MARK)  data = (data << 1) | 1 ;  // 1 bit
@@ -882,7 +882,7 @@ long  IRrecv::decodeRC6 (decode_results *results)
   if (getRClevel(results, &offset, &used, RC6_T1) != MARK)   return ERR ;
   if (getRClevel(results, &offset, &used, RC6_T1) != SPACE)  return ERR ;
   int nbits;
-  for (nbits = 0; offset < results->rawlen; nbits++) {
+  for (nbits = 0;  offset < results->rawlen;  nbits++) {
     int levelA, levelB; // Next two levels
     levelA = getRClevel(results, &offset, &used, RC6_T1);
     if (nbits == 3) {
@@ -919,7 +919,7 @@ long  IRrecv::decodePanasonic (decode_results *results)
     offset++;
 
     // decode address
-    for (int i = 0; i < PANASONIC_BITS; i++) {
+    for (int i = 0;  i < PANASONIC_BITS;  i++) {
         if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_BIT_MARK))  return ERR ;
         if      (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ONE_SPACE))   data = (data << 1) | 1 ;
         else if (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ZERO_SPACE))  data <<= 1 ;
@@ -948,7 +948,7 @@ long  IRrecv::decodeLG (decode_results *results)
     // Initial space
     if (!MATCH_SPACE(results->rawbuf[offset], LG_HDR_SPACE))  return ERR ;
     offset++;
-    for (int i = 0; i < LG_BITS; i++) {
+    for (int i = 0;  i < LG_BITS;  i++) {
         if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK))  return ERR ;
         offset++;
         if      (MATCH_SPACE(results->rawbuf[offset], LG_ONE_SPACE))   data = (data << 1) | 1 ;
@@ -990,7 +990,7 @@ long  IRrecv::decodeJVC (decode_results *results)
     // Initial space
     if (!MATCH_SPACE(results->rawbuf[offset], JVC_HDR_SPACE))  return ERR ;
     offset++;
-    for (int i = 0; i < JVC_BITS; i++) {
+    for (int i = 0;  i < JVC_BITS;  i++) {
         if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK))  return ERR ;
         offset++;
         if      (MATCH_SPACE(results->rawbuf[offset], JVC_ONE_SPACE))   data = (data << 1) | 1 ;
@@ -1032,7 +1032,7 @@ long  IRrecv::decodeSAMSUNG (decode_results *results)
   // Initial space
   if (!MATCH_SPACE(results->rawbuf[offset], SAMSUNG_HDR_SPACE))  return ERR ;
   offset++;
-  for (int i = 0; i < SAMSUNG_BITS; i++) {
+  for (int i = 0;  i < SAMSUNG_BITS;   i++) {
     if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_BIT_MARK))  return ERR ;
     offset++;
     if      (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ONE_SPACE))   data = (data << 1) | 1 ;
@@ -1129,7 +1129,7 @@ long  IRrecv::decodeHash (decode_results *results)
   // Require at least 6 samples to prevent triggering on noise
   if (results->rawlen < 6)  return ERR ;
   long hash = FNV_BASIS_32;
-  for (int i = 1; i+2 < results->rawlen; i++) {
+  for (int i = 1;  (i + 2) < results->rawlen;  i++) {
     int value =  compare(results->rawbuf[i], results->rawbuf[i+2]);
     // Add value into the hash
     hash = (hash * FNV_PRIME_32) ^ value;
@@ -1170,8 +1170,8 @@ void  IRsend::sendSharp (unsigned long data,  int nbits)
 
   // Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
   // much more reliable. That's the exact behaviour of CD-S6470 remote control.
-  for (int n = 0; n < 3; n++) {
-    for (int i = 1 << (nbits-1); i > 0; i>>=1) {
+  for (int n = 0;  n < 3;  n++) {
+    for (int i = 1 << (nbits - 1);  i > 0;  i >>= 1) {
       if (data & i) {
         mark(SHARP_BIT_MARK);
         space(SHARP_ONE_SPACE);
@@ -1207,7 +1207,7 @@ void  IRsend::sendDISH (unsigned long data,  int nbits)
   enableIROut(56);
   mark(DISH_HDR_MARK);
   space(DISH_HDR_SPACE);
-  for (int i = 0; i < nbits; i++) {
+  for (int i = 0;  i < nbits;  i++) {
     if (data & DISH_TOP_BIT) {
       mark(DISH_BIT_MARK);
       space(DISH_ONE_SPACE);
@@ -1242,7 +1242,7 @@ void  IRsend::sendAiwaRCT501 (int code)
   // Skip leading zero's
   pre <<= 6;
   // Send pre-data
-  for(i=0; i < 26; i++) {
+  for (i = 0;  i < 26;  i++) {
     mark(AIWA_RC_T501_BIT_MARK);
     if (pre & TOPBIT)  space(AIWA_RC_T501_ONE_SPACE) ;
     else               space(AIWA_RC_T501_ZERO_SPACE) ;
@@ -1252,7 +1252,7 @@ void  IRsend::sendAiwaRCT501 (int code)
   // Skip firts code bit
   code <<= 1;
   // Send code
-  for(i=0; i < 15; i++) {
+  for (i = 0;  i < 15;  i++) {
     mark(AIWA_RC_T501_BIT_MARK);
     if (code & TOPBIT)  space(AIWA_RC_T501_ONE_SPACE) ;
     else                space(AIWA_RC_T501_ZERO_SPACE) ;
