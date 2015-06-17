@@ -30,7 +30,8 @@ volatile irparams_t irparams;
 // To use them, set DEBUG in IRremoteInt.h
 // Normally macros are used for efficiency
 #ifdef DEBUG
-int MATCH(int measured, int desired) {
+int  MATCH (int measured,  int desired)
+{
   Serial.print("Testing: ");
   Serial.print(TICKS_LOW(desired), DEC);
   Serial.print(" <= ");
@@ -40,7 +41,8 @@ int MATCH(int measured, int desired) {
   return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);
 }
 
-int MATCH_MARK(int measured_ticks, int desired_us) {
+int  MATCH_MARK (int measured_ticks,  int desired_us)
+{
   Serial.print("Testing mark ");
   Serial.print(measured_ticks * USECPERTICK, DEC);
   Serial.print(" vs ");
@@ -54,7 +56,8 @@ int MATCH_MARK(int measured_ticks, int desired_us) {
   return measured_ticks >= TICKS_LOW(desired_us + MARK_EXCESS) && measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS);
 }
 
-int MATCH_SPACE(int measured_ticks, int desired_us) {
+int  MATCH_SPACE (int measured_ticks,  int desired_us)
+{
   Serial.print("Testing space ");
   Serial.print(measured_ticks * USECPERTICK, DEC);
   Serial.print(" vs ");
@@ -67,16 +70,30 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {
   Serial.println(TICKS_HIGH(desired_us - MARK_EXCESS), DEC);
   return measured_ticks >= TICKS_LOW(desired_us - MARK_EXCESS) && measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS);
 }
+
 #else
-int MATCH(int measured, int desired) {return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);}
-int MATCH_MARK(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us + MARK_EXCESS));}
-int MATCH_SPACE(int measured_ticks, int desired_us) {return MATCH(measured_ticks, (desired_us - MARK_EXCESS));}
+
+int  MATCH (int measured,  int desired)
+{
+  return measured >= TICKS_LOW(desired) && measured <= TICKS_HIGH(desired);
+}
+
+int  MATCH_MARK (int measured_ticks,  int desired_us)
+{
+  return MATCH(measured_ticks, (desired_us + MARK_EXCESS));
+}
+
+int  MATCH_SPACE (int measured_ticks,  int desired_us)
+{
+  return MATCH(measured_ticks, (desired_us - MARK_EXCESS));
+}
 // Debugging versions are in IRremote.cpp
+
 #endif
 
 //+=============================================================================
 #ifdef SEND_NEC
-void IRsend::sendNEC(unsigned long data, int nbits)
+void  IRsend::sendNEC (unsigned long data,  int nbits)
 {
   enableIROut(38);
   mark(NEC_HDR_MARK);
@@ -99,7 +116,8 @@ void IRsend::sendNEC(unsigned long data, int nbits)
 
 //+=============================================================================
 #ifdef SEND_WHYNTER
-void IRsend::sendWhynter(unsigned long data, int nbits) {
+void  IRsend::sendWhynter (unsigned long data,  int nbits)
+{
 	enableIROut(38);
 	mark(WHYNTER_ZERO_MARK);
 	space(WHYNTER_ZERO_SPACE);
@@ -123,7 +141,8 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 
 //+=============================================================================
 #ifdef SEND_SONY
-void IRsend::sendSony(unsigned long data, int nbits) {
+void  IRsend::sendSony (unsigned long data,  int nbits)
+{
   enableIROut(40);
   mark(SONY_HDR_MARK);
   space(SONY_HDR_SPACE);
@@ -143,7 +162,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 #endif
 
 //+=============================================================================
-void IRsend::sendRaw(unsigned int buf[], int len, int hz)
+void  IRsend::sendRaw (unsigned int buf[],  int len,  int hz)
 {
   enableIROut(hz);
   for (int i = 0; i < len; i++) {
@@ -161,7 +180,7 @@ void IRsend::sendRaw(unsigned int buf[], int len, int hz)
 // Note: first bit must be a one (start bit)
 //
 #ifdef SEND_RC5
-void IRsend::sendRC5(unsigned long data, int nbits)
+void  IRsend::sendRC5 (unsigned long data,  int nbits)
 {
   enableIROut(36);
   data = data << (32 - nbits);
@@ -187,7 +206,7 @@ void IRsend::sendRC5(unsigned long data, int nbits)
 // Caller needs to take care of flipping the toggle bit
 //
 #ifdef SEND_RC6
-void IRsend::sendRC6(unsigned long data, int nbits)
+void  IRsend::sendRC6 (unsigned long data,  int nbits)
 {
   enableIROut(36);
   data = data << (32 - nbits);
@@ -221,7 +240,8 @@ void IRsend::sendRC6(unsigned long data, int nbits)
 
 //+=============================================================================
 #ifdef SEND_PANASONIC
-void IRsend::sendPanasonic(unsigned int address, unsigned long data) {
+void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
+{
     enableIROut(35);
     mark(PANASONIC_HDR_MARK);
     space(PANASONIC_HDR_SPACE);
@@ -252,7 +272,7 @@ void IRsend::sendPanasonic(unsigned int address, unsigned long data) {
 
 //+=============================================================================
 #ifdef SEND_JVC
-void IRsend::sendJVC(unsigned long data, int nbits, int repeat)
+void  IRsend::sendJVC (unsigned long data,  int nbits, int repeat)
 {
     enableIROut(38);
     data = data << (32 - nbits);
@@ -278,7 +298,7 @@ void IRsend::sendJVC(unsigned long data, int nbits, int repeat)
 
 //+=============================================================================
 #ifdef SEND_SAMSUNG
-void IRsend::sendSAMSUNG(unsigned long data, int nbits)
+void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
 {
   enableIROut(38);
   mark(SAMSUNG_HDR_MARK);
@@ -303,7 +323,8 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits)
 // Sends an IR mark for the specified number of microseconds.
 // The mark output is modulated at the PWM frequency.
 //
-void IRsend::mark(int time) {
+void  IRsend::mark (int time)
+{
   TIMER_ENABLE_PWM; // Enable pin 3 PWM output
   if (time > 0) delayMicroseconds(time);
 }
@@ -313,7 +334,8 @@ void IRsend::mark(int time) {
 // Sends an IR space for the specified number of microseconds.
 // A space is no output, so the PWM output is disabled.
 //
-void IRsend::space(int time) {
+void  IRsend::space (int time)
+{
   TIMER_DISABLE_PWM; // Disable pin 3 PWM output
   if (time > 0) delayMicroseconds(time);
 }
@@ -330,7 +352,8 @@ void IRsend::space(int time) {
 // A few hours staring at the ATmega documentation and this will all make sense.
 // See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
 //
-void IRsend::enableIROut(int khz) {
+void  IRsend::enableIROut (int khz)
+{
   // Disable the Timer2 Interrupt (which is used for receiving IR)
   TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
 
@@ -346,7 +369,7 @@ void IRsend::enableIROut(int khz) {
 }
 
 //+=============================================================================
-IRrecv::IRrecv(int recvpin)
+IRrecv::IRrecv (int recvpin)
 {
   irparams.recvpin = recvpin;
   irparams.blinkflag = 0;
@@ -355,7 +378,8 @@ IRrecv::IRrecv(int recvpin)
 //+=============================================================================
 // initialization
 //
-void IRrecv::enableIRIn() {
+void  IRrecv::enableIRIn ( )
+{
   cli();
   // setup pulse clock timer interrupt
   //Prescale /8 (16M/8 = 0.5 microseconds per tick)
@@ -381,7 +405,7 @@ void IRrecv::enableIRIn() {
 //+=============================================================================
 // enable/disable blinking of pin 13 on IR processing
 //
-void IRrecv::blink13(int blinkflag)
+void  IRrecv::blink13 (int blinkflag)
 {
   irparams.blinkflag = blinkflag;
   if (blinkflag)
@@ -397,7 +421,7 @@ void IRrecv::blink13(int blinkflag)
 // As soon as a SPACE gets long, ready is set, state switches to IDLE, timing of SPACE continues.
 // As soon as first MARK arrives, gap width is recorded, ready is cleared, and new logging starts
 //
-ISR(TIMER_INTR_NAME)
+ISR (TIMER_INTR_NAME)
 {
   TIMER_RESET;
 
@@ -465,7 +489,8 @@ ISR(TIMER_INTR_NAME)
 }
 
 //+=============================================================================
-void IRrecv::resume() {
+void  IRrecv::resume ( )
+{
   irparams.rcvstate = STATE_IDLE;
   irparams.rawlen = 0;
 }
@@ -474,7 +499,8 @@ void IRrecv::resume() {
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
-int IRrecv::decode(decode_results *results) {
+int  IRrecv::decode (decode_results *results)
+{
   results->rawbuf = irparams.rawbuf;
   results->rawlen = irparams.rawlen;
   if (irparams.rcvstate != STATE_STOP) {
@@ -602,7 +628,8 @@ int IRrecv::decode(decode_results *results) {
 //+=============================================================================
 #ifdef DECODE_NEC
 // NECs have a repeat only 4 items long
-long IRrecv::decodeNEC(decode_results *results) {
+long  IRrecv::decodeNEC (decode_results *results)
+{
   long data = 0;
   int offset = 1; // Skip first space
   // Initial mark
@@ -653,7 +680,8 @@ long IRrecv::decodeNEC(decode_results *results) {
 
 //+=============================================================================
 #ifdef DECODE_SONY
-long IRrecv::decodeSony(decode_results *results) {
+long  IRrecv::decodeSony (decode_results *results)
+{
   long data = 0;
   if (irparams.rawlen < 2 * SONY_BITS + 2) {
     return ERR;
@@ -712,7 +740,8 @@ long IRrecv::decodeSony(decode_results *results) {
 
 //+=============================================================================
 #ifdef DECODE_WHYNTER
-long IRrecv::decodeWhynter(decode_results *results) {
+long  IRrecv::decodeWhynter (decode_results *results)
+{
   long data = 0;
 
   if (irparams.rawlen < 2 * WHYNTER_BITS + 6) {
@@ -776,7 +805,8 @@ long IRrecv::decodeWhynter(decode_results *results) {
 // Looks like Sony except for timings, 48 chars of data and time/space different
 //
 #ifdef DECODE_SANYO
-long IRrecv::decodeSanyo(decode_results *results) {
+long  IRrecv::decodeSanyo (decode_results *results)
+{
   long data = 0;
   if (irparams.rawlen < 2 * SANYO_BITS + 2) {
     return ERR;
@@ -846,7 +876,8 @@ long IRrecv::decodeSanyo(decode_results *results) {
 // Looks like Sony except for timings, 48 chars of data and time/space different
 //
 #ifdef DECODE_MITSUBISHI
-long IRrecv::decodeMitsubishi(decode_results *results) {
+long  IRrecv::decodeMitsubishi (decode_results *results)
+{
   // Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
   long data = 0;
   if (irparams.rawlen < 2 * MITSUBISHI_BITS + 2) {
@@ -925,7 +956,8 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
 // t1 is the time interval for a single bit in microseconds.
 // Returns -1 for error (measured time interval is not a multiple of t1).
 //
-int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) {
+int  IRrecv::getRClevel (decode_results *results,  int *offset,  int *used,  int t1)
+{
   if (*offset >= results->rawlen) {
     // After end of recorded buffer, assume SPACE.
     return SPACE;
@@ -966,7 +998,8 @@ int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) 
 
 //+=============================================================================
 #ifdef DECODE_RC5
-long IRrecv::decodeRC5(decode_results *results) {
+long  IRrecv::decodeRC5 (decode_results *results)
+{
   if (irparams.rawlen < MIN_RC5_SAMPLES + 2) {
     return ERR;
   }
@@ -1004,7 +1037,8 @@ long IRrecv::decodeRC5(decode_results *results) {
 
 //+=============================================================================
 #ifdef DECODE_RC6
-long IRrecv::decodeRC6(decode_results *results) {
+long  IRrecv::decodeRC6 (decode_results *results)
+{
   if (results->rawlen < MIN_RC6_SAMPLES) {
     return ERR;
   }
@@ -1058,7 +1092,8 @@ long IRrecv::decodeRC6(decode_results *results) {
 
 //+=============================================================================
 #ifdef DECODE_PANASONIC
-long IRrecv::decodePanasonic(decode_results *results) {
+long  IRrecv::decodePanasonic (decode_results *results)
+{
     unsigned long long data = 0;
     int offset = 1;
 
@@ -1095,7 +1130,8 @@ long IRrecv::decodePanasonic(decode_results *results) {
 
 //+=============================================================================
 #ifdef DECODE_LG
-long IRrecv::decodeLG(decode_results *results) {
+long  IRrecv::decodeLG (decode_results *results)
+{
     long data = 0;
     int offset = 1; // Skip first space
 
@@ -1144,7 +1180,8 @@ long IRrecv::decodeLG(decode_results *results) {
 
 //+=============================================================================
 #ifdef DECODE_JVC
-long IRrecv::decodeJVC(decode_results *results) {
+long  IRrecv::decodeJVC (decode_results *results)
+{
     long data = 0;
     int offset = 1; // Skip first space
     // Check for repeat
@@ -1198,9 +1235,11 @@ long IRrecv::decodeJVC(decode_results *results) {
 #endif
 
 //+=============================================================================
-#ifdef DECODE_SAMSUNG
 // SAMSUNGs have a repeat only 4 items long
-long IRrecv::decodeSAMSUNG(decode_results *results) {
+//
+#ifdef DECODE_SAMSUNG
+long  IRrecv::decodeSAMSUNG (decode_results *results)
+{
   long data = 0;
   int offset = 1; // Skip first space
   // Initial mark
@@ -1255,7 +1294,8 @@ long IRrecv::decodeSAMSUNG(decode_results *results) {
 // Lirc file http://lirc.sourceforge.net/remotes/aiwa/RC-T501
 //
 #ifdef DECODE_AIWA_RC_T501
-long IRrecv::decodeAiwaRCT501(decode_results *results) {
+long  IRrecv::decodeAiwaRCT501 (decode_results *results)
+{
   int data = 0;
   int offset = 1; // skip first garbage read
 
@@ -1327,7 +1367,8 @@ long IRrecv::decodeAiwaRCT501(decode_results *results) {
 // 1 if newval is equal, and 2 if newval is longer
 // Use a tolerance of 20%
 //
-int IRrecv::compare(unsigned int oldval, unsigned int newval) {
+int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
+{
   if (newval < oldval * .8) {
     return 0;
   }
@@ -1348,7 +1389,8 @@ int IRrecv::compare(unsigned int oldval, unsigned int newval) {
 #define FNV_PRIME_32 16777619
 #define FNV_BASIS_32 2166136261
 
-long IRrecv::decodeHash(decode_results *results) {
+long  IRrecv::decodeHash (decode_results *results)
+{
   // Require at least 6 samples to prevent triggering on noise
   if (results->rawlen < 6) {
     return ERR;
@@ -1388,7 +1430,8 @@ long IRrecv::decodeHash(decode_results *results) {
 // linked LIRC file.
 //
 #ifdef SEND_SHARP
-void IRsend::sendSharp(unsigned long data, int nbits) {
+void  IRsend::sendSharp (unsigned long data,  int nbits)
+{
   unsigned long invertdata = data ^ SHARP_TOGGLE_MASK;
   enableIROut(38);
 
@@ -1417,7 +1460,8 @@ void IRsend::sendSharp(unsigned long data, int nbits) {
 //+=============================================================================
 // Sharp send compatible with data obtained through decodeSharp
 //
-void IRsend::sendSharp(unsigned int address, unsigned int command) {
+void  IRsend::sendSharp (unsigned int address,  unsigned int command)
+{
   sendSharpRaw((address << 10) | (command << 2) | 2, 15);
 }
 
@@ -1425,7 +1469,7 @@ void IRsend::sendSharp(unsigned int address, unsigned int command) {
 
 //+=============================================================================
 #ifdef SEND_DISH
-void IRsend::sendDISH(unsigned long data, int nbits)
+void  IRsend::sendDISH (unsigned long data,  int nbits)
 {
   enableIROut(56);
   mark(DISH_HDR_MARK);
@@ -1450,7 +1494,8 @@ void IRsend::sendDISH(unsigned long data, int nbits)
 // Lirc file http://lirc.sourceforge.net/remotes/aiwa/RC-T501
 //
 #ifdef SEND_AIWA_RC_T501
-void IRsend::sendAiwaRCT501(int code) {
+void  IRsend::sendAiwaRCT501 (int code)
+{
   // PRE-DATA, 26 bits, 0x227EEC0
   long int pre = 0x227EEC0;
   int i;
