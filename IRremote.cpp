@@ -24,6 +24,15 @@
 // Provides ISR
 #include <avr/interrupt.h>
 
+//------------------------------------------------------------------------------
+// Debug directives
+#ifdef DEBUG
+#	define DBG_PRINTLN(s)  Serial.println(s);
+#else
+#	define DBG_PRINTLN(s)
+#endif
+
+//------------------------------------------------------------------------------
 volatile irparams_t irparams;
 
 // These versions of MATCH, MATCH_MARK, and MATCH_SPACE are only for debugging.
@@ -87,7 +96,6 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 {
   return MATCH(measured_ticks, (desired_us - MARK_EXCESS));
 }
-// Debugging versions are in IRremote.cpp
 
 #endif
 
@@ -481,86 +489,62 @@ int  IRrecv::decode (decode_results *results)
   results->rawlen = irparams.rawlen;
   if (irparams.rcvstate != STATE_STOP)  return ERR ;
 #ifdef DECODE_NEC
-#ifdef DEBUG
-  Serial.println("Attempting NEC decode");
-#endif
+  DBG_PRINTLN("Attempting NEC decode");
   if (decodeNEC(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_SONY
-#ifdef DEBUG
-  Serial.println("Attempting Sony decode");
-#endif
+  DBG_PRINTLN("Attempting Sony decode");
   if (decodeSony(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_SANYO
-#ifdef DEBUG
-  Serial.println("Attempting Sanyo decode");
-#endif
+  DBG_PRINTLN("Attempting Sanyo decode");
   if (decodeSanyo(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_MITSUBISHI
-#ifdef DEBUG
-  Serial.println("Attempting Mitsubishi decode");
-#endif
+  DBG_PRINTLN("Attempting Mitsubishi decode");
   if (decodeMitsubishi(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_RC5
-#ifdef DEBUG
-  Serial.println("Attempting RC5 decode");
-#endif
+  DBG_PRINTLN("Attempting RC5 decode");
   if (decodeRC5(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_RC6
-#ifdef DEBUG
-  Serial.println("Attempting RC6 decode");
-#endif
+  DBG_PRINTLN("Attempting RC6 decode");
   if (decodeRC6(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_PANASONIC
-#ifdef DEBUG
-    Serial.println("Attempting Panasonic decode");
-#endif
-    if (decodePanasonic(results))  return DECODED ;
+  DBG_PRINTLN("Attempting Panasonic decode");
+  if (decodePanasonic(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_LG
-#ifdef DEBUG
-    Serial.println("Attempting LG decode");
-#endif
-    if (decodeLG(results))  return DECODED ;
+  DBG_PRINTLN("Attempting LG decode");
+  if (decodeLG(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_JVC
-#ifdef DEBUG
-    Serial.println("Attempting JVC decode");
-#endif
-    if (decodeJVC(results))  return DECODED ;
+  DBG_PRINTLN("Attempting JVC decode");
+  if (decodeJVC(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_SAMSUNG
-#ifdef DEBUG
-  Serial.println("Attempting SAMSUNG decode");
-#endif
+  DBG_PRINTLN("Attempting SAMSUNG decode");
   if (decodeSAMSUNG(results))  return DECODED ;
 #endif
 
 #ifdef DECODE_WHYNTER
-#ifdef DEBUG
-  Serial.println("Attempting Whynter decode");
-#endif
+  DBG_PRINTLN("Attempting Whynter decode");
   if (decodeWhynter(results))  return DECODED ;
 #endif
 
 #ifdef AIWA_RC_T501
-#ifdef DEBUG
-  Serial.println("Attempting Aiwa RC-T501 decode");
-#endif
+  DBG_PRINTLN("Attempting Aiwa RC-T501 decode");
   if (decodeAiwaRCT501(results))  return DECODED ;
 #endif
 
@@ -848,14 +832,7 @@ int  IRrecv::getRClevel (decode_results *results,  int *offset,  int *used,  int
     *used = 0;
     (*offset)++;
   }
-#ifdef DEBUG
-  if (val == MARK) {
-    Serial.println("MARK");
-  }
-  else {
-    Serial.println("SPACE");
-  }
-#endif
+  DBG_PRINTLN( (val == MARK) ? "MARK" : "SPACE" );
   return val;
 }
 
