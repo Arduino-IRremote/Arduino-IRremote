@@ -1,22 +1,22 @@
-/*
- * IRremote
- * Version 0.11 August, 2009
- * Copyright 2009 Ken Shirriff
- * For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
- *
- * Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
- * Modified  by Mitra Ardron <mitra@mitra.biz>
- * Added Sanyo and Mitsubishi controllers
- * Modified Sony to spot the repeat codes that some Sony's send
- *
- * Interrupt code based on NECIRrcv by Joe Knapp
- * http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
- * Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
- *
- * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
- * LG added by Darryl Smith (based on the JVC protocol)
- * Whynter A/C ARC-110WD added by Francesco Meschia
- */
+//******************************************************************************
+// IRremote
+// Version 0.11 August, 2009
+// Copyright 2009 Ken Shirriff
+// For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
+//
+// Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
+// Modified  by Mitra Ardron <mitra@mitra.biz>
+// Added Sanyo and Mitsubishi controllers
+// Modified Sony to spot the repeat codes that some Sony's send
+//
+// Interrupt code based on NECIRrcv by Joe Knapp
+// http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
+// Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
+//
+// JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
+// LG added by Darryl Smith (based on the JVC protocol)
+// Whynter A/C ARC-110WD added by Francesco Meschia
+//******************************************************************************
 
 #include "IRremote.h"
 #include "IRremoteInt.h"
@@ -158,8 +158,9 @@ void IRsend::sendRaw(unsigned int buf[], int len, int hz)
 }
 
 //+=============================================================================
-#ifdef SEND_RC5
 // Note: first bit must be a one (start bit)
+//
+#ifdef SEND_RC5
 void IRsend::sendRC5(unsigned long data, int nbits)
 {
   enableIROut(36);
@@ -183,8 +184,9 @@ void IRsend::sendRC5(unsigned long data, int nbits)
 #endif
 
 //+=============================================================================
-#ifdef SEND_RC6
 // Caller needs to take care of flipping the toggle bit
+//
+#ifdef SEND_RC6
 void IRsend::sendRC6(unsigned long data, int nbits)
 {
   enableIROut(36);
@@ -298,36 +300,37 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits)
 #endif
 
 //+=============================================================================
+// Sends an IR mark for the specified number of microseconds.
+// The mark output is modulated at the PWM frequency.
+//
 void IRsend::mark(int time) {
-  // Sends an IR mark for the specified number of microseconds.
-  // The mark output is modulated at the PWM frequency.
   TIMER_ENABLE_PWM; // Enable pin 3 PWM output
   if (time > 0) delayMicroseconds(time);
 }
 
 //+=============================================================================
-/* Leave pin off for time (given in microseconds) */
+// Leave pin off for time (given in microseconds)
+// Sends an IR space for the specified number of microseconds.
+// A space is no output, so the PWM output is disabled.
+//
 void IRsend::space(int time) {
-  // Sends an IR space for the specified number of microseconds.
-  // A space is no output, so the PWM output is disabled.
   TIMER_DISABLE_PWM; // Disable pin 3 PWM output
   if (time > 0) delayMicroseconds(time);
 }
 
 //+=============================================================================
+// Enables IR output.  The khz value controls the modulation frequency in kilohertz.
+// The IR output will be on pin 3 (OC2B).
+// This routine is designed for 36-40KHz; if you use it for other values, it's up to you
+// to make sure it gives reasonable results.  (Watch out for overflow / underflow / rounding.)
+// TIMER2 is used in phase-correct PWM mode, with OCR2A controlling the frequency and OCR2B
+// controlling the duty cycle.
+// There is no prescaling, so the output frequency is 16MHz / (2 * OCR2A)
+// To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin.
+// A few hours staring at the ATmega documentation and this will all make sense.
+// See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
+//
 void IRsend::enableIROut(int khz) {
-  // Enables IR output.  The khz value controls the modulation frequency in kilohertz.
-  // The IR output will be on pin 3 (OC2B).
-  // This routine is designed for 36-40KHz; if you use it for other values, it's up to you
-  // to make sure it gives reasonable results.  (Watch out for overflow / underflow / rounding.)
-  // TIMER2 is used in phase-correct PWM mode, with OCR2A controlling the frequency and OCR2B
-  // controlling the duty cycle.
-  // There is no prescaling, so the output frequency is 16MHz / (2 * OCR2A)
-  // To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin.
-  // A few hours staring at the ATmega documentation and this will all make sense.
-  // See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
-
-
   // Disable the Timer2 Interrupt (which is used for receiving IR)
   TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
 
@@ -351,6 +354,7 @@ IRrecv::IRrecv(int recvpin)
 
 //+=============================================================================
 // initialization
+//
 void IRrecv::enableIRIn() {
   cli();
   // setup pulse clock timer interrupt
@@ -376,6 +380,7 @@ void IRrecv::enableIRIn() {
 
 //+=============================================================================
 // enable/disable blinking of pin 13 on IR processing
+//
 void IRrecv::blink13(int blinkflag)
 {
   irparams.blinkflag = blinkflag;
@@ -391,6 +396,7 @@ void IRrecv::blink13(int blinkflag)
 // First entry is the SPACE between transmissions.
 // As soon as a SPACE gets long, ready is set, state switches to IDLE, timing of SPACE continues.
 // As soon as first MARK arrives, gap width is recorded, ready is cleared, and new logging starts
+//
 ISR(TIMER_INTR_NAME)
 {
   TIMER_RESET;
@@ -766,9 +772,10 @@ long IRrecv::decodeWhynter(decode_results *results) {
 #endif
 
 //+=============================================================================
-#ifdef DECODE_SANYO
 // I think this is a Sanyo decoder - serial = SA 8650B
 // Looks like Sony except for timings, 48 chars of data and time/space different
+//
+#ifdef DECODE_SANYO
 long IRrecv::decodeSanyo(decode_results *results) {
   long data = 0;
   if (irparams.rawlen < 2 * SANYO_BITS + 2) {
@@ -776,12 +783,15 @@ long IRrecv::decodeSanyo(decode_results *results) {
   }
   int offset = 0; // Skip first space
   // Initial space
-  /* Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
+
+#if 0
+  // Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
   Serial.print("IR Gap: ");
   Serial.println( results->rawbuf[offset]);
   Serial.println( "test against:");
   Serial.println(results->rawbuf[offset]);
-  */
+#endif
+
   if (results->rawbuf[offset] < SANYO_DOUBLE_SPACE_USECS) {
     // Serial.print("IR Gap found: ");
     results->bits = 0;
@@ -833,8 +843,9 @@ long IRrecv::decodeSanyo(decode_results *results) {
 #endif
 
 //+=============================================================================
-#ifdef DECODE_MITSUBISHI
 // Looks like Sony except for timings, 48 chars of data and time/space different
+//
+#ifdef DECODE_MITSUBISHI
 long IRrecv::decodeMitsubishi(decode_results *results) {
   // Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
   long data = 0;
@@ -843,13 +854,17 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
   }
   int offset = 0; // Skip first space
   // Initial space
-  /* Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
+
+#if 0
+  // Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
   Serial.print("IR Gap: ");
   Serial.println( results->rawbuf[offset]);
   Serial.println( "test against:");
   Serial.println(results->rawbuf[offset]);
-  */
-  /* Not seeing double keys from Mitsubishi
+#endif
+
+#if 0
+  // Not seeing double keys from Mitsubishi
   if (results->rawbuf[offset] < MITSUBISHI_DOUBLE_SPACE_USECS) {
     // Serial.print("IR Gap found: ");
     results->bits = 0;
@@ -857,7 +872,9 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
     results->decode_type = MITSUBISHI;
     return DECODED;
   }
-  */
+#endif
+
+
   offset++;
 
   // Typical
@@ -907,6 +924,7 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
 // offset and used are updated to keep track of the current position.
 // t1 is the time interval for a single bit in microseconds.
 // Returns -1 for error (measured time interval is not a multiple of t1).
+//
 int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) {
   if (*offset >= results->rawlen) {
     // After end of recorded buffer, assume SPACE.
@@ -1232,13 +1250,11 @@ long IRrecv::decodeSAMSUNG(decode_results *results) {
 #endif
 
 //+=============================================================================
-/**
- * Aiwa system
- * Remote control RC-T501
- * Lirc file http://lirc.sourceforge.net/remotes/aiwa/RC-T501
- *
- */
- #ifdef DECODE_AIWA_RC_T501
+// Aiwa system
+// Remote control RC-T501
+// Lirc file http://lirc.sourceforge.net/remotes/aiwa/RC-T501
+//
+#ifdef DECODE_AIWA_RC_T501
 long IRrecv::decodeAiwaRCT501(decode_results *results) {
   int data = 0;
   int offset = 1; // skip first garbage read
@@ -1295,23 +1311,22 @@ long IRrecv::decodeAiwaRCT501(decode_results *results) {
 #endif
 
 //+=============================================================================
-/* -----------------------------------------------------------------------
- * hashdecode - decode an arbitrary IR code.
- * Instead of decoding using a standard encoding scheme
- * (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
- *
- * The algorithm: look at the sequence of MARK signals, and see if each one
- * is shorter (0), the same length (1), or longer (2) than the previous.
- * Do the same with the SPACE signals.  Hszh the resulting sequence of 0's,
- * 1's, and 2's to a 32-bit value.  This will give a unique value for each
- * different code (probably), for most code systems.
- *
- * http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
- */
-
+// hashdecode - decode an arbitrary IR code.
+// Instead of decoding using a standard encoding scheme
+// (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
+//
+// The algorithm: look at the sequence of MARK signals, and see if each one
+// is shorter (0), the same length (1), or longer (2) than the previous.
+// Do the same with the SPACE signals.  Hszh the resulting sequence of 0's,
+// 1's, and 2's to a 32-bit value.  This will give a unique value for each
+// different code (probably), for most code systems.
+//
+// http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
+//
 // Compare two tick values, returning 0 if newval is shorter,
 // 1 if newval is equal, and 2 if newval is longer
 // Use a tolerance of 20%
+//
 int IRrecv::compare(unsigned int oldval, unsigned int newval) {
   if (newval < oldval * .8) {
     return 0;
@@ -1326,13 +1341,13 @@ int IRrecv::compare(unsigned int oldval, unsigned int newval) {
 
 //+=============================================================================
 // Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
+// Converts the raw code values into a 32-bit hash code.
+// Hopefully this code is unique for each button.
+// This isn't a "real" decoding, just an arbitrary value.
+//
 #define FNV_PRIME_32 16777619
 #define FNV_BASIS_32 2166136261
 
-/* Converts the raw code values into a 32-bit hash code.
- * Hopefully this code is unique for each button.
- * This isn't a "real" decoding, just an arbitrary value.
- */
 long IRrecv::decodeHash(decode_results *results) {
   // Require at least 6 samples to prevent triggering on noise
   if (results->rawlen < 6) {
@@ -1351,28 +1366,27 @@ long IRrecv::decodeHash(decode_results *results) {
 }
 
 //+=============================================================================
-/* Sharp and DISH support by Todd Treece ( http://unionbridge.org/design/ircommand )
-
-The Dish send function needs to be repeated 4 times, and the Sharp function
-has the necessary repeat built in because of the need to invert the signal.
-
-Sharp protocol documentation:
-http://www.sbprojects.com/knowledge/ir/sharp.htm
-
-Here are the LIRC files that I found that seem to match the remote codes
-from the oscilloscope:
-
-Sharp LCD TV:
-http://lirc.sourceforge.net/remotes/sharp/GA538WJSA
-
-DISH NETWORK (echostar 301):
-http://lirc.sourceforge.net/remotes/echostar/301_501_3100_5100_58xx_59xx
-
-For the DISH codes, only send the last for characters of the hex.
-i.e. use 0x1C10 instead of 0x0000000000001C10 which is listed in the
-linked LIRC file.
-*/
-
+// Sharp and DISH support by Todd Treece ( http://unionbridge.org/design/ircommand )
+//
+// The Dish send function needs to be repeated 4 times, and the Sharp function
+// has the necessary repeat built in because of the need to invert the signal.
+//
+// Sharp protocol documentation:
+// http://www.sbprojects.com/knowledge/ir/sharp.htm
+//
+// Here are the LIRC files that I found that seem to match the remote codes
+// from the oscilloscope:
+//
+// Sharp LCD TV:
+// http://lirc.sourceforge.net/remotes/sharp/GA538WJSA
+//
+// DISH NETWORK (echostar 301):
+// http://lirc.sourceforge.net/remotes/echostar/301_501_3100_5100_58xx_59xx
+//
+// For the DISH codes, only send the last for characters of the hex.
+// i.e. use 0x1C10 instead of 0x0000000000001C10 which is listed in the
+// linked LIRC file.
+//
 #ifdef SEND_SHARP
 void IRsend::sendSharp(unsigned long data, int nbits) {
   unsigned long invertdata = data ^ SHARP_TOGGLE_MASK;
@@ -1402,6 +1416,7 @@ void IRsend::sendSharp(unsigned long data, int nbits) {
 
 //+=============================================================================
 // Sharp send compatible with data obtained through decodeSharp
+//
 void IRsend::sendSharp(unsigned int address, unsigned int command) {
   sendSharpRaw((address << 10) | (command << 2) | 2, 15);
 }
@@ -1430,13 +1445,11 @@ void IRsend::sendDISH(unsigned long data, int nbits)
 #endif
 
 //+=============================================================================
-/**
- * Aiwa system
- * Remote control RC-T501
- * Lirc file http://lirc.sourceforge.net/remotes/aiwa/RC-T501
- *
- */
- #ifdef SEND_AIWA_RC_T501
+// Aiwa system
+// Remote control RC-T501
+// Lirc file http://lirc.sourceforge.net/remotes/aiwa/RC-T501
+//
+#ifdef SEND_AIWA_RC_T501
 void IRsend::sendAiwaRCT501(int code) {
   // PRE-DATA, 26 bits, 0x227EEC0
   long int pre = 0x227EEC0;
