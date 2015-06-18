@@ -103,19 +103,22 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 #ifdef SEND_NEC
 void  IRsend::sendNEC (unsigned long data,  int nbits)
 {
+  // Set IR carrier frequency
   enableIROut(38);
+
   mark(NEC_HDR_MARK);
   space(NEC_HDR_SPACE);
+
   for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
     if (data & mask) {
       mark(NEC_BIT_MARK);
       space(NEC_ONE_SPACE);
-    }
-    else {
+    } else {
       mark(NEC_BIT_MARK);
       space(NEC_ZERO_SPACE);
     }
   }
+
   mark(NEC_BIT_MARK);
   space(0);
 }
@@ -125,21 +128,24 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
 #ifdef SEND_WHYNTER
 void  IRsend::sendWhynter (unsigned long data,  int nbits)
 {
+	// Set IR carrier frequency
 	enableIROut(38);
+
 	mark(WHYNTER_ZERO_MARK);
 	space(WHYNTER_ZERO_SPACE);
 	mark(WHYNTER_HDR_MARK);
 	space(WHYNTER_HDR_SPACE);
+
 	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
       if (data & mask) {
         mark(WHYNTER_ONE_MARK);
         space(WHYNTER_ONE_SPACE);
-      }
-      else {
+      } else {
         mark(WHYNTER_ZERO_MARK);
         space(WHYNTER_ZERO_SPACE);
       }
     }
+
 	mark(WHYNTER_ZERO_MARK);
 	space(WHYNTER_ZERO_SPACE);
 }
@@ -149,15 +155,17 @@ void  IRsend::sendWhynter (unsigned long data,  int nbits)
 #ifdef SEND_SONY
 void  IRsend::sendSony (unsigned long data,  int nbits)
 {
+  // Set IR carrier frequency
   enableIROut(40);
+
   mark(SONY_HDR_MARK);
   space(SONY_HDR_SPACE);
+
   for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
     if (data & mask) {
       mark(SONY_ONE_MARK);
       space(SONY_HDR_SPACE);
-    }
-    else {
+    } else {
       mark(SONY_ZERO_MARK);
       space(SONY_HDR_SPACE);
     }
@@ -168,11 +176,14 @@ void  IRsend::sendSony (unsigned long data,  int nbits)
 //+=============================================================================
 void  IRsend::sendRaw (unsigned int buf[],  int len,  int hz)
 {
+  // Set IR carrier frequency
   enableIROut(hz);
+
   for (int i = 0;  i < len;  i++) {
     if (i & 1)  space(buf[i]) ;
     else        mark (buf[i]) ;
   }
+
   space(0); // Just to be sure
 }
 
@@ -182,20 +193,23 @@ void  IRsend::sendRaw (unsigned int buf[],  int len,  int hz)
 #ifdef SEND_RC5
 void  IRsend::sendRC5 (unsigned long data,  int nbits)
 {
+  // Set IR carrier frequency
   enableIROut(36);
+
   mark(RC5_T1); // First start bit
   space(RC5_T1); // Second start bit
   mark(RC5_T1); // Second start bit
+
   for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
     if (data & mask) {
       space(RC5_T1); // 1 is space, then mark
       mark(RC5_T1);
-    }
-    else {
+    } else {
       mark(RC5_T1);
       space(RC5_T1);
     }
   }
+
   space(0); // Turn off at end
 }
 #endif
@@ -206,24 +220,25 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
 #ifdef SEND_RC6
 void  IRsend::sendRC6 (unsigned long data,  int nbits)
 {
+  // Set IR carrier frequency
   enableIROut(36);
+
   mark(RC6_HDR_MARK);
   space(RC6_HDR_SPACE);
   mark(RC6_T1); // start bit
   space(RC6_T1);
+
   for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
-    int  t;
-    if (i == 3)  t = RC6_T1 * 2 ;  // double-wide trailer bit
-    else         t = RC6_T1 ;
+    int  t = (i == 3) ? (RC6_T1 * 2) : (RC6_T1) ;
     if (data & mask) {
       mark(t);
       space(t);
-    }
-    else {
+    } else {
       space(t);
       mark(t);
     }
   }
+
   space(0); // Turn off at end
 }
 #endif
@@ -232,7 +247,9 @@ void  IRsend::sendRC6 (unsigned long data,  int nbits)
 #ifdef SEND_PANASONIC
 void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 {
+	// Set IR carrier frequency
     enableIROut(35);
+
     mark(PANASONIC_HDR_MARK);
     space(PANASONIC_HDR_SPACE);
 
@@ -242,11 +259,13 @@ void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
         if (address & mask)  space(PANASONIC_ONE_SPACE) ;
         else                 space(PANASONIC_ZERO_SPACE) ;
     }
+
 	for (unsigned long  mask = 1 << (32 - 1);  mask;  mask >>= 1) {
         mark(PANASONIC_BIT_MARK);
         if (data & mask)  space(PANASONIC_ONE_SPACE) ;
         else              space(PANASONIC_ZERO_SPACE) ;
     }
+
     mark(PANASONIC_BIT_MARK);
     space(0);
 }
@@ -256,11 +275,14 @@ void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 #ifdef SEND_JVC
 void  IRsend::sendJVC (unsigned long data,  int nbits, int repeat)
 {
+	// Set IR carrier frequency
     enableIROut(38);
+
     if (!repeat){
         mark(JVC_HDR_MARK);
         space(JVC_HDR_SPACE);
     }
+
 	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
         if (data & mask) {
             mark(JVC_BIT_MARK);
@@ -271,6 +293,7 @@ void  IRsend::sendJVC (unsigned long data,  int nbits, int repeat)
             space(JVC_ZERO_SPACE);
         }
     }
+
     mark(JVC_BIT_MARK);
     space(0);
 }
@@ -280,19 +303,22 @@ void  IRsend::sendJVC (unsigned long data,  int nbits, int repeat)
 #ifdef SEND_SAMSUNG
 void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
 {
+  // Set IR carrier frequency
   enableIROut(38);
+
   mark(SAMSUNG_HDR_MARK);
   space(SAMSUNG_HDR_SPACE);
+
   for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
-  if (data & mask) {
-      mark(SAMSUNG_BIT_MARK);
-      space(SAMSUNG_ONE_SPACE);
-    }
-    else {
-      mark(SAMSUNG_BIT_MARK);
-      space(SAMSUNG_ZERO_SPACE);
-    }
+    if (data & mask) {
+        mark(SAMSUNG_BIT_MARK);
+        space(SAMSUNG_ONE_SPACE);
+      } else {
+        mark(SAMSUNG_BIT_MARK);
+        space(SAMSUNG_ZERO_SPACE);
+      }
   }
+
   mark(SAMSUNG_BIT_MARK);
   space(0);
 }
@@ -407,48 +433,52 @@ ISR (TIMER_INTR_NAME)
 
   irparams.timer++; // One more 50us tick
   if (irparams.rawlen >= RAWBUF)  irparams.rcvstate = STATE_STOP ;  // Buffer overflow
+
   switch(irparams.rcvstate) {
-  case STATE_IDLE: // In the middle of a gap
-    if (irdata == MARK) {
-      if (irparams.timer < GAP_TICKS) {
-        // Not big enough to be a gap.
-        irparams.timer = 0;
+    case STATE_IDLE: // In the middle of a gap
+      if (irdata == MARK) {
+        if (irparams.timer < GAP_TICKS) {
+          // Not big enough to be a gap.
+          irparams.timer = 0;
+        }
+        else {
+          // gap just ended, record duration and start recording transmission
+          irparams.rawlen = 0;
+          irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+          irparams.timer = 0;
+          irparams.rcvstate = STATE_MARK;
+        }
       }
-      else {
-        // gap just ended, record duration and start recording transmission
-        irparams.rawlen = 0;
+      break;
+
+    case STATE_MARK: // timing MARK
+      if (irdata == SPACE) {   // MARK ended, record time
+        irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+        irparams.timer = 0;
+        irparams.rcvstate = STATE_SPACE;
+      }
+      break;
+
+    case STATE_SPACE: // timing SPACE
+      if (irdata == MARK) { // SPACE just ended, record it
         irparams.rawbuf[irparams.rawlen++] = irparams.timer;
         irparams.timer = 0;
         irparams.rcvstate = STATE_MARK;
       }
-    }
-    break;
-  case STATE_MARK: // timing MARK
-    if (irdata == SPACE) {   // MARK ended, record time
-      irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-      irparams.timer = 0;
-      irparams.rcvstate = STATE_SPACE;
-    }
-    break;
-  case STATE_SPACE: // timing SPACE
-    if (irdata == MARK) { // SPACE just ended, record it
-      irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-      irparams.timer = 0;
-      irparams.rcvstate = STATE_MARK;
-    }
-    else { // SPACE
-      if (irparams.timer > GAP_TICKS) {
-        // big SPACE, indicates gap between codes
-        // Mark current code as ready for processing
-        // Switch to STOP
-        // Don't reset timer; keep counting space width
-        irparams.rcvstate = STATE_STOP;
+      else { // SPACE
+        if (irparams.timer > GAP_TICKS) {
+          // big SPACE, indicates gap between codes
+          // Mark current code as ready for processing
+          // Switch to STOP
+          // Don't reset timer; keep counting space width
+          irparams.rcvstate = STATE_STOP;
+        }
       }
-    }
-    break;
-  case STATE_STOP: // waiting, measuring gap
-    if (irdata == MARK)  irparams.timer = 0 ;  // reset gap timer
-    break;
+      break;
+
+    case STATE_STOP: // waiting, measuring gap
+      if (irdata == MARK)  irparams.timer = 0 ;  // reset gap timer
+      break;
   }
 
   if (irparams.blinkflag) {
@@ -473,7 +503,9 @@ int  IRrecv::decode (decode_results *results)
 {
   results->rawbuf = irparams.rawbuf;
   results->rawlen = irparams.rawlen;
+
   if (irparams.rcvstate != STATE_STOP)  return ERR ;
+
 #ifdef DECODE_NEC
   DBG_PRINTLN("Attempting NEC decode");
   if (decodeNEC(results))  return DECODED ;
@@ -550,9 +582,11 @@ long  IRrecv::decodeNEC (decode_results *results)
 {
   long data = 0;
   int offset = 1; // Skip first space
+
   // Initial mark
   if (!MATCH_MARK(results->rawbuf[offset], NEC_HDR_MARK))  return ERR ;
   offset++;
+
   // Check for repeat
   if (irparams.rawlen == 4 &&
     MATCH_SPACE(results->rawbuf[offset], NEC_RPT_SPACE) &&
@@ -563,9 +597,11 @@ long  IRrecv::decodeNEC (decode_results *results)
     return DECODED;
   }
   if (irparams.rawlen < 2 * NEC_BITS + 4)  return ERR ;
+
   // Initial space
   if (!MATCH_SPACE(results->rawbuf[offset], NEC_HDR_SPACE))  return ERR ;
   offset++;
+
   for (int i = 0;  i < NEC_BITS;  i++) {
     if (!MATCH_MARK(results->rawbuf[offset], NEC_BIT_MARK))  return ERR ;
     offset++;
@@ -574,10 +610,12 @@ long  IRrecv::decodeNEC (decode_results *results)
     else                                                            return ERR ;
     offset++;
   }
+
   // Success
-  results->bits = NEC_BITS;
-  results->value = data;
+  results->bits        = NEC_BITS;
+  results->value       = data;
   results->decode_type = NEC;
+
   return DECODED;
 }
 #endif
@@ -596,11 +634,13 @@ long  IRrecv::decodeSony (decode_results *results)
     // Serial.print("IR Gap found: ");
     results->bits = 0;
     results->value = REPEAT;
-#ifdef DECODE_SANYO
-    results->decode_type = SANYO;
-#else
-    results->decode_type = UNKNOWN;
-#endif
+
+#   ifdef DECODE_SANYO
+      results->decode_type = SANYO;
+#   else
+      results->decode_type = UNKNOWN;
+#   endif
+
     return DECODED;
   }
   offset++;
@@ -624,7 +664,7 @@ long  IRrecv::decodeSony (decode_results *results)
     results->bits = 0;
     return ERR;
   }
-  results->value = data;
+  results->value       = data;
   results->decode_type = SONY;
   return DECODED;
 }
@@ -656,6 +696,7 @@ long  IRrecv::decodeWhynter (decode_results *results)
   for (int i = 0;  i < WHYNTER_BITS;  i++) {
     if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK))  return ERR ;
     offset++;
+
     if      (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE))  data = (data << 1) | 1 ;
     else if (MATCH_SPACE(results->rawbuf[offset],WHYNTER_ZERO_SPACE))  data <<= 1 ;
     else                                                               return ERR ;
@@ -664,6 +705,7 @@ long  IRrecv::decodeWhynter (decode_results *results)
 
   // trailing mark
   if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK))  return ERR ;
+
   // Success
   results->bits = WHYNTER_BITS;
   results->value = data;
@@ -724,7 +766,8 @@ long  IRrecv::decodeSanyo (decode_results *results)
     results->bits = 0;
     return ERR;
   }
-  results->value = data;
+
+  results->value       = data;
   results->decode_type = SANYO;
   return DECODED;
 }
@@ -761,7 +804,6 @@ long  IRrecv::decodeMitsubishi (decode_results *results)
   }
 #endif
 
-
   offset++;
 
   // Typical
@@ -770,11 +812,13 @@ long  IRrecv::decodeMitsubishi (decode_results *results)
   // Initial Space
   if (!MATCH_MARK(results->rawbuf[offset], MITSUBISHI_HDR_SPACE))  return ERR ;
   offset++;
+
   while (offset + 1 < irparams.rawlen) {
     if      (MATCH_MARK(results->rawbuf[offset], MITSUBISHI_ONE_MARK))   data = (data << 1) | 1 ;
     else if (MATCH_MARK(results->rawbuf[offset], MITSUBISHI_ZERO_MARK))  data <<= 1 ;
     else                                                                 return ERR ;
     offset++;
+
     if (!MATCH_SPACE(results->rawbuf[offset], MITSUBISHI_HDR_SPACE))  break ;
     offset++;
   }
@@ -785,7 +829,8 @@ long  IRrecv::decodeMitsubishi (decode_results *results)
     results->bits = 0;
     return ERR;
   }
-  results->value = data;
+
+  results->value       = data;
   results->decode_type = MITSUBISHI;
   return DECODED;
 }
@@ -818,6 +863,7 @@ int  IRrecv::getRClevel (decode_results *results,  int *offset,  int *used,  int
     *used = 0;
     (*offset)++;
   }
+
   DBG_PRINTLN( (val == MARK) ? "MARK" : "SPACE" );
   return val;
 }
@@ -838,14 +884,15 @@ long  IRrecv::decodeRC5 (decode_results *results)
   for (nbits = 0;  offset < irparams.rawlen;  nbits++) {
     int levelA = getRClevel(results, &offset, &used, RC5_T1);
     int levelB = getRClevel(results, &offset, &used, RC5_T1);
+
     if      (levelA == SPACE && levelB == MARK)  data = (data << 1) | 1 ;  // 1 bit
     else if (levelA == MARK && levelB == SPACE)  data <<= 1 ;              // zero bit
     else                                         return ERR ;
   }
 
   // Success
-  results->bits = nbits;
-  results->value = data;
+  results->bits        = nbits;
+  results->value       = data;
   results->decode_type = RC5;
   return DECODED;
 }
@@ -857,13 +904,17 @@ long  IRrecv::decodeRC6 (decode_results *results)
 {
   if (results->rawlen < MIN_RC6_SAMPLES)  return ERR ;
   int offset = 1; // Skip first space
+
   // Initial mark
   if (!MATCH_MARK(results->rawbuf[offset], RC6_HDR_MARK))  return ERR ;
   offset++;
+
   if (!MATCH_SPACE(results->rawbuf[offset], RC6_HDR_SPACE))  return ERR ;
   offset++;
-  long data = 0;
-  int used = 0;
+
+  long  data = 0;
+  int   used = 0;
+
   // Get start bit (1)
   if (getRClevel(results, &offset, &used, RC6_T1) != MARK)   return ERR ;
   if (getRClevel(results, &offset, &used, RC6_T1) != SPACE)  return ERR ;
@@ -884,6 +935,7 @@ long  IRrecv::decodeRC6 (decode_results *results)
     else if (levelA == SPACE && levelB == MARK)  data <<= 1 ;             // zero bit
     else                                         return ERR ;             // Error
   }
+
   // Success
   results->bits = nbits;
   results->value = data;
@@ -907,15 +959,18 @@ long  IRrecv::decodePanasonic (decode_results *results)
     // decode address
     for (int i = 0;  i < PANASONIC_BITS;  i++) {
         if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_BIT_MARK))  return ERR ;
+
         if      (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ONE_SPACE))   data = (data << 1) | 1 ;
         else if (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ZERO_SPACE))  data <<= 1 ;
         else                                                                 return ERR ;
         offset++;
     }
-    results->value = (unsigned long)data;
+
+    results->value            = (unsigned long)data;
     results->panasonicAddress = (unsigned int)(data >> 32);
-    results->decode_type = PANASONIC;
-    results->bits = PANASONIC_BITS;
+    results->decode_type      = PANASONIC;
+    results->bits             = PANASONIC_BITS;
+
     return DECODED;
 }
 #endif
@@ -924,8 +979,8 @@ long  IRrecv::decodePanasonic (decode_results *results)
 #ifdef DECODE_LG
 long  IRrecv::decodeLG (decode_results *results)
 {
-    long data = 0;
-    int offset = 1; // Skip first space
+    long  data   = 0;
+    int   offset = 1; // Skip first space
 
     // Initial mark
     if (!MATCH_MARK(results->rawbuf[offset], LG_HDR_MARK))  return ERR ;
@@ -942,24 +997,25 @@ long  IRrecv::decodeLG (decode_results *results)
         else                                                           return ERR ;
         offset++;
     }
-    //Stop bit
+
+    // Stop bit
     if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK))   return ERR ;
+
     // Success
     results->bits = LG_BITS;
     results->value = data;
     results->decode_type = LG;
     return DECODED;
 }
-
-
 #endif
 
 //+=============================================================================
 #ifdef DECODE_JVC
 long  IRrecv::decodeJVC (decode_results *results)
 {
-    long data = 0;
-    int offset = 1; // Skip first space
+    long  data   = 0;
+    int   offset = 1; // Skip first space
+
     // Check for repeat
     if (irparams.rawlen - 1 == 33 &&
         MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK) &&
@@ -969,13 +1025,17 @@ long  IRrecv::decodeJVC (decode_results *results)
         results->decode_type = JVC;
         return DECODED;
     }
+
     // Initial mark
     if (!MATCH_MARK(results->rawbuf[offset], JVC_HDR_MARK))  return ERR ;
     offset++;
+
     if (irparams.rawlen < 2 * JVC_BITS + 1 )  return ERR ;
+
     // Initial space
     if (!MATCH_SPACE(results->rawbuf[offset], JVC_HDR_SPACE))  return ERR ;
     offset++;
+
     for (int i = 0;  i < JVC_BITS;  i++) {
         if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK))  return ERR ;
         offset++;
@@ -984,12 +1044,15 @@ long  IRrecv::decodeJVC (decode_results *results)
         else                                                            return ERR ;
         offset++;
     }
-    //Stop bit
+
+    // Stop bit
     if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK))  return ERR ;
+
     // Success
-    results->bits = JVC_BITS;
-    results->value = data;
+    results->bits        = JVC_BITS;
+    results->value       = data;
     results->decode_type = JVC;
+
     return DECODED;
 }
 #endif
@@ -1000,11 +1063,13 @@ long  IRrecv::decodeJVC (decode_results *results)
 #ifdef DECODE_SAMSUNG
 long  IRrecv::decodeSAMSUNG (decode_results *results)
 {
-  long data = 0;
-  int offset = 1; // Skip first space
+  long  data   = 0;
+  int   offset = 1; // Skip first space
+
   // Initial mark
   if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_HDR_MARK))   return ERR ;
   offset++;
+
   // Check for repeat
   if (irparams.rawlen == 4 &&
     MATCH_SPACE(results->rawbuf[offset], SAMSUNG_RPT_SPACE) &&
@@ -1015,20 +1080,25 @@ long  IRrecv::decodeSAMSUNG (decode_results *results)
     return DECODED;
   }
   if (irparams.rawlen < 2 * SAMSUNG_BITS + 4)  return ERR ;
+
   // Initial space
   if (!MATCH_SPACE(results->rawbuf[offset], SAMSUNG_HDR_SPACE))  return ERR ;
   offset++;
+
   for (int i = 0;  i < SAMSUNG_BITS;   i++) {
     if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_BIT_MARK))  return ERR ;
+
     offset++;
+
     if      (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ONE_SPACE))   data = (data << 1) | 1 ;
     else if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ZERO_SPACE))  data <<= 1 ;
     else                                                                return ERR ;
     offset++;
   }
+
   // Success
-  results->bits = SAMSUNG_BITS;
-  results->value = data;
+  results->bits        = SAMSUNG_BITS;
+  results->value       = data;
   results->decode_type = SAMSUNG;
   return DECODED;
 }
@@ -1042,8 +1112,8 @@ long  IRrecv::decodeSAMSUNG (decode_results *results)
 #ifdef DECODE_AIWA_RC_T501
 long  IRrecv::decodeAiwaRCT501 (decode_results *results)
 {
-  int data = 0;
-  int offset = 1; // skip first garbage read
+  int  data   = 0;
+  int  offset = 1; // skip first garbage read
 
   // Check SIZE
   if (irparams.rawlen < 2 * (AIWA_RC_T501_SUM_BITS) + 4)  return ERR ;
@@ -1070,11 +1140,10 @@ long  IRrecv::decodeAiwaRCT501 (decode_results *results)
 
   results->bits = (offset - 1) / 2;
   if (results->bits < 42)  return ERR ;
-  results->value = data;
+  results->value       = data;
   results->decode_type = AIWA_RC_T501;
   return DECODED;
 }
-
 #endif
 
 //+=============================================================================
@@ -1120,9 +1189,11 @@ long  IRrecv::decodeHash (decode_results *results)
     // Add value into the hash
     hash = (hash * FNV_PRIME_32) ^ value;
   }
-  results->value = hash;
-  results->bits = 32;
+
+  results->value       = hash;
+  results->bits        = 32;
   results->decode_type = UNKNOWN;
+
   return DECODED;
 }
 
@@ -1151,7 +1222,7 @@ long  IRrecv::decodeHash (decode_results *results)
 #ifdef SEND_SHARP
 void  IRsend::sendSharp (unsigned long data,  int nbits)
 {
-  unsigned long invertdata = data ^ SHARP_TOGGLE_MASK;
+  unsigned long  invertdata = data ^ SHARP_TOGGLE_MASK;
   enableIROut(38);
 
   // Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
@@ -1161,8 +1232,7 @@ void  IRsend::sendSharp (unsigned long data,  int nbits)
       if (data & mask) {
         mark(SHARP_BIT_MARK);
         space(SHARP_ONE_SPACE);
-      }
-      else {
+      } else {
         mark(SHARP_BIT_MARK);
         space(SHARP_ZERO_SPACE);
       }
@@ -1190,15 +1260,17 @@ void  IRsend::sendSharp (unsigned int address,  unsigned int command)
 #ifdef SEND_DISH
 void  IRsend::sendDISH (unsigned long data,  int nbits)
 {
+  // Set IR carrier frequency
   enableIROut(56);
+
   mark(DISH_HDR_MARK);
   space(DISH_HDR_SPACE);
+
   for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
     if (data & mark) {
       mark(DISH_BIT_MARK);
       space(DISH_ONE_SPACE);
-    }
-    else {
+    } else {
       mark(DISH_BIT_MARK);
       space(DISH_ZERO_SPACE);
     }
@@ -1215,25 +1287,27 @@ void  IRsend::sendDISH (unsigned long data,  int nbits)
 void  IRsend::sendAiwaRCT501 (int code)
 {
   // PRE-DATA, 26 bits, 0x227EEC0
-  long int pre = 0x227EEC0;
-  int i;
+  unsigned long  pre = 0x227EEC0;
+  int            mask;
 
+  // Set IR carrier frequency
   enableIROut(AIWA_RC_T501_HZ);
 
   // HDR mark + HDR space
   mark(AIWA_RC_T501_HDR_MARK);
   space(AIWA_RC_T501_HDR_SPACE);
 
-  // Skip leading zero's
-  pre <<= 6;
   // Send pre-data
-  for (i = 0;  i < 26;  i++) {
+  for (unsigned long  mask = 1 << (26 - 1);  mask;  mask >>= 1) {
     mark(AIWA_RC_T501_BIT_MARK);
-    if (pre & TOPBIT)  space(AIWA_RC_T501_ONE_SPACE) ;
-    else               space(AIWA_RC_T501_ZERO_SPACE) ;
-    pre <<= 1;
+    if (pre & mask)  space(AIWA_RC_T501_ONE_SPACE) ;
+    else             space(AIWA_RC_T501_ZERO_SPACE) ;
   }
 
+//-v- THIS CODE LOOKS LIKE IT MIGHT BE WRONG - CHECK!
+//    it only send 15bits and ignores the top bit
+//    then uses TOPBIT which is bit-31 to check the bit code
+//    I suspect TOPBIT should be changed to 0x00008000
   // Skip firts code bit
   code <<= 1;
   // Send code
@@ -1243,6 +1317,8 @@ void  IRsend::sendAiwaRCT501 (int code)
     else                space(AIWA_RC_T501_ZERO_SPACE) ;
     code <<= 1;
   }
+//-^- THIS CODE LOOKS LIKE IT MIGHT BE WRONG - CHECK!
+
   // POST-DATA, 1 bit, 0x0
   mark(AIWA_RC_T501_BIT_MARK);
   space(AIWA_RC_T501_ZERO_SPACE);
