@@ -106,8 +106,8 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
   enableIROut(38);
   mark(NEC_HDR_MARK);
   space(NEC_HDR_SPACE);
-  for (int i = 0;  i < nbits;  i++) {
-    if (data & TOPBIT) {
+  for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+    if (data & mask) {
       mark(NEC_BIT_MARK);
       space(NEC_ONE_SPACE);
     }
@@ -115,7 +115,6 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
       mark(NEC_BIT_MARK);
       space(NEC_ZERO_SPACE);
     }
-    data <<= 1;
   }
   mark(NEC_BIT_MARK);
   space(0);
@@ -131,8 +130,8 @@ void  IRsend::sendWhynter (unsigned long data,  int nbits)
 	space(WHYNTER_ZERO_SPACE);
 	mark(WHYNTER_HDR_MARK);
 	space(WHYNTER_HDR_SPACE);
-    for (int i = 0;  i < nbits;  i++) {
-      if (data & TOPBIT) {
+	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+      if (data & mask) {
         mark(WHYNTER_ONE_MARK);
         space(WHYNTER_ONE_SPACE);
       }
@@ -140,7 +139,6 @@ void  IRsend::sendWhynter (unsigned long data,  int nbits)
         mark(WHYNTER_ZERO_MARK);
         space(WHYNTER_ZERO_SPACE);
       }
-      data <<= 1;
     }
 	mark(WHYNTER_ZERO_MARK);
 	space(WHYNTER_ZERO_SPACE);
@@ -154,9 +152,8 @@ void  IRsend::sendSony (unsigned long data,  int nbits)
   enableIROut(40);
   mark(SONY_HDR_MARK);
   space(SONY_HDR_SPACE);
-  data = data << (32 - nbits);
-  for (int i = 0;  i < nbits;  i++) {
-    if (data & TOPBIT) {
+  for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+    if (data & mask) {
       mark(SONY_ONE_MARK);
       space(SONY_HDR_SPACE);
     }
@@ -164,7 +161,6 @@ void  IRsend::sendSony (unsigned long data,  int nbits)
       mark(SONY_ZERO_MARK);
       space(SONY_HDR_SPACE);
     }
-    data <<= 1;
   }
 }
 #endif
@@ -187,12 +183,11 @@ void  IRsend::sendRaw (unsigned int buf[],  int len,  int hz)
 void  IRsend::sendRC5 (unsigned long data,  int nbits)
 {
   enableIROut(36);
-  data = data << (32 - nbits);
   mark(RC5_T1); // First start bit
   space(RC5_T1); // Second start bit
   mark(RC5_T1); // Second start bit
-  for (int i = 0;  i < nbits;  i++) {
-    if (data & TOPBIT) {
+  for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+    if (data & mask) {
       space(RC5_T1); // 1 is space, then mark
       mark(RC5_T1);
     }
@@ -200,7 +195,6 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
       mark(RC5_T1);
       space(RC5_T1);
     }
-    data <<= 1;
   }
   space(0); // Turn off at end
 }
@@ -213,16 +207,15 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
 void  IRsend::sendRC6 (unsigned long data,  int nbits)
 {
   enableIROut(36);
-  data = data << (32 - nbits);
   mark(RC6_HDR_MARK);
   space(RC6_HDR_SPACE);
   mark(RC6_T1); // start bit
   space(RC6_T1);
-  int t;
-  for (int i = 0;  i < nbits;  i++) {
+  for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+    int  t;
     if (i == 3)  t = RC6_T1 * 2 ;  // double-wide trailer bit
     else         t = RC6_T1 ;
-    if (data & TOPBIT) {
+    if (data & mask) {
       mark(t);
       space(t);
     }
@@ -230,8 +223,6 @@ void  IRsend::sendRC6 (unsigned long data,  int nbits)
       space(t);
       mark(t);
     }
-
-    data <<= 1;
   }
   space(0); // Turn off at end
 }
@@ -245,18 +236,16 @@ void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
     mark(PANASONIC_HDR_MARK);
     space(PANASONIC_HDR_SPACE);
 
-    for (int i = 0;  i < 16;  i++)
+	for (unsigned long  mask = 1 << (16 - 1);  mask;  mask >>= 1) {
     {
         mark(PANASONIC_BIT_MARK);
-        if (address & 0x8000)  space(PANASONIC_ONE_SPACE) ;
-        else                   space(PANASONIC_ZERO_SPACE) ;
-        address <<= 1;
+        if (address & mask)  space(PANASONIC_ONE_SPACE) ;
+        else                 space(PANASONIC_ZERO_SPACE) ;
     }
-    for (int i = 0;  i < 32;  i++) {
+	for (unsigned long  mask = 1 << (32 - 1);  mask;  mask >>= 1) {
         mark(PANASONIC_BIT_MARK);
-        if (data & TOPBIT)  space(PANASONIC_ONE_SPACE) ;
-        else                space(PANASONIC_ZERO_SPACE) ;
-        data <<= 1;
+        if (data & mask)  space(PANASONIC_ONE_SPACE) ;
+        else              space(PANASONIC_ZERO_SPACE) ;
     }
     mark(PANASONIC_BIT_MARK);
     space(0);
@@ -268,13 +257,12 @@ void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 void  IRsend::sendJVC (unsigned long data,  int nbits, int repeat)
 {
     enableIROut(38);
-    data = data << (32 - nbits);
     if (!repeat){
         mark(JVC_HDR_MARK);
         space(JVC_HDR_SPACE);
     }
-    for (int i = 0;  i < nbits;  i++) {
-        if (data & TOPBIT) {
+	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+        if (data & mask) {
             mark(JVC_BIT_MARK);
             space(JVC_ONE_SPACE);
         }
@@ -282,7 +270,6 @@ void  IRsend::sendJVC (unsigned long data,  int nbits, int repeat)
             mark(JVC_BIT_MARK);
             space(JVC_ZERO_SPACE);
         }
-        data <<= 1;
     }
     mark(JVC_BIT_MARK);
     space(0);
@@ -296,8 +283,8 @@ void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
   enableIROut(38);
   mark(SAMSUNG_HDR_MARK);
   space(SAMSUNG_HDR_SPACE);
-  for (int i = 0;  i < nbits;  i++) {
-    if (data & TOPBIT) {
+  for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+  if (data & mask) {
       mark(SAMSUNG_BIT_MARK);
       space(SAMSUNG_ONE_SPACE);
     }
@@ -305,7 +292,6 @@ void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
       mark(SAMSUNG_BIT_MARK);
       space(SAMSUNG_ZERO_SPACE);
     }
-    data <<= 1;
   }
   mark(SAMSUNG_BIT_MARK);
   space(0);
@@ -1171,8 +1157,8 @@ void  IRsend::sendSharp (unsigned long data,  int nbits)
   // Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
   // much more reliable. That's the exact behaviour of CD-S6470 remote control.
   for (int n = 0;  n < 3;  n++) {
-    for (int i = 1 << (nbits - 1);  i > 0;  i >>= 1) {
-      if (data & i) {
+	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+      if (data & mask) {
         mark(SHARP_BIT_MARK);
         space(SHARP_ONE_SPACE);
       }
@@ -1207,8 +1193,8 @@ void  IRsend::sendDISH (unsigned long data,  int nbits)
   enableIROut(56);
   mark(DISH_HDR_MARK);
   space(DISH_HDR_SPACE);
-  for (int i = 0;  i < nbits;  i++) {
-    if (data & DISH_TOP_BIT) {
+  for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+    if (data & mark) {
       mark(DISH_BIT_MARK);
       space(DISH_ONE_SPACE);
     }
@@ -1216,7 +1202,6 @@ void  IRsend::sendDISH (unsigned long data,  int nbits)
       mark(DISH_BIT_MARK);
       space(DISH_ZERO_SPACE);
     }
-    data <<= 1;
   }
 }
 #endif
