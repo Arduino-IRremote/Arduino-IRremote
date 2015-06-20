@@ -46,15 +46,15 @@ void  IRsend::sendAiwaRCT501 (int code)
 
 //-v- THIS CODE LOOKS LIKE IT MIGHT BE WRONG - CHECK!
 //    it only send 15bits and ignores the top bit
-//    then uses TOPBIT which is bit-31 to check the bit code
+//    then uses TOPBIT which is 0x80000000 to check the bit code
 //    I suspect TOPBIT should be changed to 0x00008000
 	// Skip firts code bit
 	code <<= 1;
 	// Send code
 	for (int  i = 0;  i < 15;  i++) {
 		mark(AIWA_RC_T501_BIT_MARK);
-		if (code & TOPBIT)  space(AIWA_RC_T501_ONE_SPACE) ;
-		else                space(AIWA_RC_T501_ZERO_SPACE) ;
+		if (code & 0x80000000)  space(AIWA_RC_T501_ONE_SPACE) ;
+		else                    space(AIWA_RC_T501_ZERO_SPACE) ;
 		code <<= 1;
 	}
 //-^- THIS CODE LOOKS LIKE IT MIGHT BE WRONG - CHECK!
