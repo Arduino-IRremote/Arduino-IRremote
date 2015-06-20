@@ -24,24 +24,18 @@
 #	include "IRremoteInt.h"
 #undef IR_GLOBAL
 
-//------------------------------------------------------------------------------
-// These versions of MATCH, MATCH_MARK, and MATCH_SPACE are only for debugging.
-// To use them, set DEBUG to 1 in IRremoteInt.h
-// (Normally macros are used for efficiency)
-//  ...but every time i reduce these functions down to macros, the decoders stop working!!??
-
 //+=============================================================================
 // The match functions were (apparently) originally MACROs to improve code speed
-// (although this would have bloated the code size) hence the names being CAPS
+//   (although this would have bloated the code) hence the names being CAPS
 // A later release implemented debug output and so they needed to be converted
-// to functions.
+//   to functions.
 // I tried to implement a dual-compile mode (DEBUG/non-DEBUG) but for some
-// reason, no matter what I did I could not get them to function as macros again.
+//   reason, no matter what I did I could not get them to function as macros again.
 // I have found a *lot* of bugs in the Arduino compiler over the last few weeks,
-// and I am currently assuming that one of these bugs is my problem.
+//   and I am currently assuming that one of these bugs is my problem.
 // I may revisit this code at a later date and look at the assembler produced
-// in a hope of finding out what is going on, but for now they will remain as
-// functions even in non-DEBUG mode
+//   in a hope of finding out what is going on, but for now they will remain as
+//   functions even in non-DEBUG mode
 //
 int  MATCH (int measured,  int desired)
 {
@@ -56,7 +50,7 @@ int  MATCH (int measured,  int desired)
 }
 
 //+========================================================
-// Marks tend to be 100us too long when received due to sensor lag.
+// Due to sensor lag, when received, Marks tend to be 100us too long
 //
 int  MATCH_MARK (int measured_ticks,  int desired_us)
 {
@@ -76,7 +70,7 @@ int  MATCH_MARK (int measured_ticks,  int desired_us)
 }
 
 //+========================================================
-// Spaces tend to be 100us too short when received due to sensor lag.
+// Due to sensor lag, when received, Spaces tend to be 100us too short
 //
 int  MATCH_SPACE (int measured_ticks,  int desired_us)
 {
