@@ -262,6 +262,7 @@ extern volatile irparams_t irparams;
 #define TIMER_DISABLE_PWM    (TCCR2A &= ~(_BV(COM2B1)))
 #define TIMER_ENABLE_INTR    (TIMSK2 = _BV(OCIE2A))
 #define TIMER_DISABLE_INTR   (TIMSK2 = 0)
+#define IS_TIMER_INTR_ENABLED() (TIMSK2 == _BV(OCIE2A))
 #define TIMER_INTR_NAME      TIMER2_COMPA_vect
 #define TIMER_CONFIG_KHZ(val) ({ \
   const uint8_t pwmval = SYSCLOCK / 2000 / (val); \
@@ -303,11 +304,14 @@ extern volatile irparams_t irparams;
 #define TIMER_ENABLE_PWM     (TCCR1A |= _BV(COM1A1))
 #define TIMER_DISABLE_PWM    (TCCR1A &= ~(_BV(COM1A1)))
 #if defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
-  #define TIMER_ENABLE_INTR    (TIMSK |= _BV(OCIE1A))
-  #define TIMER_DISABLE_INTR   (TIMSK &= ~_BV(OCIE1A))
+  #define TIMER_ENABLE_INTR       (TIMSK |= _BV(OCIE1A))
+  #define TIMER_DISABLE_INTR      (TIMSK &= ~_BV(OCIE1A))
+  #define IS_TIMER_INTR_ENABLED() (TIMSK == _BV(OCIE1A))
+  
 #else
-  #define TIMER_ENABLE_INTR    (TIMSK1 = _BV(OCIE1A))
-  #define TIMER_DISABLE_INTR   (TIMSK1 = 0)
+  #define TIMER_ENABLE_INTR       (TIMSK1 = _BV(OCIE1A))
+  #define TIMER_DISABLE_INTR      (TIMSK1 = 0)
+  #define IS_TIMER_INTR_ENABLED() (TIMSK1 == _BV(OCIE1A))
 #endif
 #define TIMER_INTR_NAME      TIMER1_COMPA_vect
 #define TIMER_CONFIG_KHZ(val) ({ \
@@ -337,11 +341,12 @@ extern volatile irparams_t irparams;
 // defines for timer3 (16 bits)
 #elif defined(IR_USE_TIMER3)
 #define TIMER_RESET
-#define TIMER_ENABLE_PWM     (TCCR3A |= _BV(COM3A1))
-#define TIMER_DISABLE_PWM    (TCCR3A &= ~(_BV(COM3A1)))
-#define TIMER_ENABLE_INTR    (TIMSK3 = _BV(OCIE3A))
-#define TIMER_DISABLE_INTR   (TIMSK3 = 0)
-#define TIMER_INTR_NAME      TIMER3_COMPA_vect
+#define TIMER_ENABLE_PWM        (TCCR3A |= _BV(COM3A1))
+#define TIMER_DISABLE_PWM       (TCCR3A &= ~(_BV(COM3A1)))
+#define TIMER_ENABLE_INTR       (TIMSK3 = _BV(OCIE3A))
+#define TIMER_DISABLE_INTR      (TIMSK3 = 0)
+#define IS_TIMER_INTR_ENABLED() (TIMSK3 == _BV(OCIE3A))
+#define TIMER_INTR_NAME         TIMER3_COMPA_vect
 #define TIMER_CONFIG_KHZ(val) ({ \
   const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
   TCCR3A = _BV(WGM31); \
@@ -367,11 +372,12 @@ extern volatile irparams_t irparams;
 // defines for timer4 (10 bits, high speed option)
 #elif defined(IR_USE_TIMER4_HS)
 #define TIMER_RESET
-#define TIMER_ENABLE_PWM     (TCCR4A |= _BV(COM4A1))
-#define TIMER_DISABLE_PWM    (TCCR4A &= ~(_BV(COM4A1)))
-#define TIMER_ENABLE_INTR    (TIMSK4 = _BV(TOIE4))
-#define TIMER_DISABLE_INTR   (TIMSK4 = 0)
-#define TIMER_INTR_NAME      TIMER4_OVF_vect
+#define TIMER_ENABLE_PWM        (TCCR4A |= _BV(COM4A1))
+#define TIMER_DISABLE_PWM       (TCCR4A &= ~(_BV(COM4A1)))
+#define TIMER_ENABLE_INTR       (TIMSK4 = _BV(TOIE4))
+#define TIMER_DISABLE_INTR      (TIMSK4 = 0)
+#define IS_TIMER_INTR_ENABLED() (TIMSK4 == _BV(TOIE4))
+#define TIMER_INTR_NAME         TIMER4_OVF_vect
 #define TIMER_CONFIG_KHZ(val) ({ \
   const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
   TCCR4A = (1<<PWM4A); \
@@ -407,11 +413,12 @@ extern volatile irparams_t irparams;
 // defines for timer4 (16 bits)
 #elif defined(IR_USE_TIMER4)
 #define TIMER_RESET
-#define TIMER_ENABLE_PWM     (TCCR4A |= _BV(COM4A1))
-#define TIMER_DISABLE_PWM    (TCCR4A &= ~(_BV(COM4A1)))
-#define TIMER_ENABLE_INTR    (TIMSK4 = _BV(OCIE4A))
-#define TIMER_DISABLE_INTR   (TIMSK4 = 0)
-#define TIMER_INTR_NAME      TIMER4_COMPA_vect
+#define TIMER_ENABLE_PWM        (TCCR4A |= _BV(COM4A1))
+#define TIMER_DISABLE_PWM       (TCCR4A &= ~(_BV(COM4A1)))
+#define TIMER_ENABLE_INTR       (TIMSK4 = _BV(OCIE4A))
+#define TIMER_DISABLE_INTR      (TIMSK4 = 0)
+#define IS_TIMER_INTR_ENABLED() (TIMSK4 == _BV(OCIE4A))
+#define TIMER_INTR_NAME         TIMER4_COMPA_vect
 #define TIMER_CONFIG_KHZ(val) ({ \
   const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
   TCCR4A = _BV(WGM41); \
@@ -437,11 +444,12 @@ extern volatile irparams_t irparams;
 // defines for timer5 (16 bits)
 #elif defined(IR_USE_TIMER5)
 #define TIMER_RESET
-#define TIMER_ENABLE_PWM     (TCCR5A |= _BV(COM5A1))
-#define TIMER_DISABLE_PWM    (TCCR5A &= ~(_BV(COM5A1)))
-#define TIMER_ENABLE_INTR    (TIMSK5 = _BV(OCIE5A))
-#define TIMER_DISABLE_INTR   (TIMSK5 = 0)
-#define TIMER_INTR_NAME      TIMER5_COMPA_vect
+#define TIMER_ENABLE_PWM        (TCCR5A |= _BV(COM5A1))
+#define TIMER_DISABLE_PWM       (TCCR5A &= ~(_BV(COM5A1)))
+#define TIMER_ENABLE_INTR       (TIMSK5 = _BV(OCIE5A))
+#define TIMER_DISABLE_INTR      (TIMSK5 = 0)
+#define IS_TIMER_INTR_ENABLED() (TIMSK5 == _BV(OCIE5A))
+#define TIMER_INTR_NAME         TIMER5_COMPA_vect
 #define TIMER_CONFIG_KHZ(val) ({ \
   const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
   TCCR5A = _BV(WGM51); \
@@ -470,11 +478,12 @@ extern volatile irparams_t irparams;
 	uint8_t tmp = CMT_MSC;		\
 	CMT_CMD2 = 30;			\
 })
-#define TIMER_ENABLE_PWM     CORE_PIN5_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_DSE|PORT_PCR_SRE
-#define TIMER_DISABLE_PWM    CORE_PIN5_CONFIG = PORT_PCR_MUX(1)|PORT_PCR_DSE|PORT_PCR_SRE
-#define TIMER_ENABLE_INTR    NVIC_ENABLE_IRQ(IRQ_CMT)
-#define TIMER_DISABLE_INTR   NVIC_DISABLE_IRQ(IRQ_CMT)
-#define TIMER_INTR_NAME      cmt_isr
+#define TIMER_ENABLE_PWM        CORE_PIN5_CONFIG = PORT_PCR_MUX(2)|PORT_PCR_DSE|PORT_PCR_SRE
+#define TIMER_DISABLE_PWM       CORE_PIN5_CONFIG = PORT_PCR_MUX(1)|PORT_PCR_DSE|PORT_PCR_SRE
+#define TIMER_ENABLE_INTR       NVIC_ENABLE_IRQ(IRQ_CMT)
+#define TIMER_DISABLE_INTR      NVIC_DISABLE_IRQ(IRQ_CMT)
+#define IS_TIMER_INTR_ENABLED() NVIC_GET_IRQ_ENABLED(IRQ_CMT)
+#define TIMER_INTR_NAME         cmt_isr
 #ifdef ISR
 #undef ISR
 #endif
