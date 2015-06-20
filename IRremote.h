@@ -19,6 +19,11 @@
 #define IRremote_h
 
 //------------------------------------------------------------------------------
+// The ISR header contains several useful macros the user may wish to use
+//
+#include "IRremoteInt.h"
+
+//------------------------------------------------------------------------------
 // Supported IR protocols
 // Each protocol you include costs memory and, during decode, costs time
 // Disable (set to 0) all the protocols you do not need/want!
