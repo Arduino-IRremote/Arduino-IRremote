@@ -21,35 +21,33 @@
 //   DISH NETWORK (echostar 301):
 //   http://lirc.sourceforge.net/remotes/echostar/301_501_3100_5100_58xx_59xx
 
-#define DISH_BITS 16
-
-#define DISH_HDR_MARK 400
-#define DISH_HDR_SPACE 6100
-#define DISH_BIT_MARK 400
-#define DISH_ONE_SPACE 1700
-#define DISH_ZERO_SPACE 2800
-#define DISH_RPT_SPACE 6200
-#define DISH_TOP_BIT 0x8000
+#define DISH_BITS          16
+#define DISH_HDR_MARK     400
+#define DISH_HDR_SPACE   6100
+#define DISH_BIT_MARK     400
+#define DISH_ONE_SPACE   1700
+#define DISH_ZERO_SPACE  2800
+#define DISH_RPT_SPACE   6200
 
 //+=============================================================================
-#ifdef SEND_DISH
+#if SEND_DISH
 void  IRsend::sendDISH (unsigned long data,  int nbits)
 {
-  // Set IR carrier frequency
-  enableIROut(56);
+	// Set IR carrier frequency
+	enableIROut(56);
 
-  mark(DISH_HDR_MARK);
-  space(DISH_HDR_SPACE);
+	mark(DISH_HDR_MARK);
+	space(DISH_HDR_SPACE);
 
-  for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
-    if (data & mask) {
-      mark(DISH_BIT_MARK);
-      space(DISH_ONE_SPACE);
-    } else {
-      mark(DISH_BIT_MARK);
-      space(DISH_ZERO_SPACE);
-    }
-  }
+	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+		if (data & mask) {
+			mark(DISH_BIT_MARK);
+			space(DISH_ONE_SPACE);
+		} else {
+			mark(DISH_BIT_MARK);
+			space(DISH_ZERO_SPACE);
+		}
+	}
 }
 #endif
 

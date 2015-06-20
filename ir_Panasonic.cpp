@@ -9,15 +9,15 @@
 //       P      A   A  N   N  A   A  SSSS    OOO   N   N  IIIII   CCCC
 //==============================================================================
 
-#define PANASONIC_BITS         48
-#define PANASONIC_HDR_MARK   3502
-#define PANASONIC_HDR_SPACE  1750
-#define PANASONIC_BIT_MARK    502
-#define PANASONIC_ONE_SPACE  1244
-#define PANASONIC_ZERO_SPACE  400
+#define PANASONIC_BITS          48
+#define PANASONIC_HDR_MARK    3502
+#define PANASONIC_HDR_SPACE   1750
+#define PANASONIC_BIT_MARK     502
+#define PANASONIC_ONE_SPACE   1244
+#define PANASONIC_ZERO_SPACE   400
 
 //+=============================================================================
-#ifdef SEND_PANASONIC
+#if SEND_PANASONIC
 void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 {
 	// Set IR carrier frequency
@@ -48,16 +48,14 @@ void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 #endif
 
 //+=============================================================================
-#ifdef DECODE_PANASONIC
-long  IRrecv::decodePanasonic (decode_results *results)
+#if DECODE_PANASONIC
+bool  IRrecv::decodePanasonic (decode_results *results)
 {
-    unsigned long long data = 0;
-    int offset = 1;
+    unsigned long long  data   = 0;
+    int                 offset = 1;
 
-    if (!MATCH_MARK(results->rawbuf[offset], PANASONIC_HDR_MARK))  return false ;
-    offset++;
-    if (!MATCH_MARK(results->rawbuf[offset], PANASONIC_HDR_SPACE))  return false ;
-    offset++;
+    if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_HDR_MARK ))  return false ;
+    if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_HDR_SPACE))  return false ;
 
     // decode address
     for (int i = 0;  i < PANASONIC_BITS;  i++) {

@@ -18,7 +18,7 @@
 #define NEC_RPT_SPACE   2250
 
 //+=============================================================================
-#ifdef SEND_NEC
+#if SEND_NEC
 void  IRsend::sendNEC (unsigned long data,  int nbits)
 {
 	// Set IR carrier frequency
@@ -48,8 +48,8 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
 //+=============================================================================
 // NECs have a repeat only 4 items long
 //
-#ifdef DECODE_NEC
-long  IRrecv::decodeNEC (decode_results *results)
+#if DECODE_NEC
+bool  IRrecv::decodeNEC (decode_results *results)
 {
 	long  data   = 0;  // We decode in to here; Start with nothing
 	int   offset = 1;  // Index in to results; Skip first entry!?

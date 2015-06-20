@@ -19,7 +19,7 @@
 #define WHYNTER_ZERO_SPACE   750
 
 //+=============================================================================
-#ifdef SEND_WHYNTER
+#if SEND_WHYNTER
 void  IRsend::sendWhynter (unsigned long data,  int nbits)
 {
 	// Set IR carrier frequency
@@ -51,35 +51,30 @@ void  IRsend::sendWhynter (unsigned long data,  int nbits)
 #endif
 
 //+=============================================================================
-#ifdef DECODE_WHYNTER
-long  IRrecv::decodeWhynter (decode_results *results)
+#if DECODE_WHYNTER
+bool  IRrecv::decodeWhynter (decode_results *results)
 {
-	long data = 0;
+	long  data   = 0;
+	int   offset = 1;  // skip initial space
 
-	if (irparams.rawlen < 2 * WHYNTER_BITS + 6)  return false ;
+	// Check we have the right amount of data
+	if (irparams.rawlen < (2 * WHYNTER_BITS) + 6)  return false ;
 
-	int offset = 1; // skip initial space
-
-	// sequence begins with a bit mark and a zero space
-	if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK))  return false ;
-	offset++;
-	if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE))  return false ;
-	offset++;
+	// Sequence begins with a bit mark and a zero space
+	if (!MATCH_MARK (results->rawbuf[offset++], WHYNTER_BIT_MARK  ))  return false ;
+	if (!MATCH_SPACE(results->rawbuf[offset++], WHYNTER_ZERO_SPACE))  return false ;
 
 	// header mark and space
-	if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_HDR_MARK))  return false ;
-	offset++;
-	if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_HDR_SPACE))  return false ;
-	offset++;
+	if (!MATCH_MARK (results->rawbuf[offset++], WHYNTER_HDR_MARK ))  return false ;
+	if (!MATCH_SPACE(results->rawbuf[offset++], WHYNTER_HDR_SPACE))  return false ;
 
 	// data bits
 	for (int i = 0;  i < WHYNTER_BITS;  i++) {
-		if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK))  return false ;
-		offset++;
+		if (!MATCH_MARK(results->rawbuf[offset++], WHYNTER_BIT_MARK))  return false ;
 
-		if      (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE))  data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset],WHYNTER_ZERO_SPACE))  data <<= 1 ;
-		else                                                               return false ;
+		if      (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE ))  data = (data << 1) | 1 ;
+		else if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE))  data = (data << 1) | 0 ;
+		else                                                                return false ;
 		offset++;
 	}
 

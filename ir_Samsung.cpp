@@ -18,7 +18,7 @@
 #define SAMSUNG_RPT_SPACE   2250
 
 //+=============================================================================
-#ifdef SEND_SAMSUNG
+#if SEND_SAMSUNG
 void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
 {
 	// Set IR carrier frequency
@@ -48,38 +48,36 @@ void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
 //+=============================================================================
 // SAMSUNGs have a repeat only 4 items long
 //
-#ifdef DECODE_SAMSUNG
-long  IRrecv::decodeSAMSUNG (decode_results *results)
+#if DECODE_SAMSUNG
+bool  IRrecv::decodeSAMSUNG (decode_results *results)
 {
 	long  data   = 0;
-	int   offset = 1; // Skip first space
+	int   offset = 1;  // Skip first space
 
 	// Initial mark
 	if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_HDR_MARK))   return false ;
 	offset++;
 
 	// Check for repeat
-	if (irparams.rawlen == 4 &&
-		MATCH_SPACE(results->rawbuf[offset], SAMSUNG_RPT_SPACE) &&
-		MATCH_MARK(results->rawbuf[offset+1], SAMSUNG_BIT_MARK)) {
-		results->bits = 0;
-		results->value = REPEAT;
+	if (    (irparams.rawlen == 4)
+	     && MATCH_SPACE(results->rawbuf[offset], SAMSUNG_RPT_SPACE)
+	     && MATCH_MARK(results->rawbuf[offset+1], SAMSUNG_BIT_MARK)
+	   ) {
+		results->bits        = 0;
+		results->value       = REPEAT;
 		results->decode_type = SAMSUNG;
 		return true;
 	}
-	if (irparams.rawlen < 2 * SAMSUNG_BITS + 4)  return false ;
+	if (irparams.rawlen < (2 * SAMSUNG_BITS) + 4)  return false ;
 
 	// Initial space
-	if (!MATCH_SPACE(results->rawbuf[offset], SAMSUNG_HDR_SPACE))  return false ;
-	offset++;
+	if (!MATCH_SPACE(results->rawbuf[offset++], SAMSUNG_HDR_SPACE))  return false ;
 
 	for (int i = 0;  i < SAMSUNG_BITS;   i++) {
-		if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_BIT_MARK))  return false ;
-
-		offset++;
+		if (!MATCH_MARK(results->rawbuf[offset++], SAMSUNG_BIT_MARK))  return false ;
 
 		if      (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ONE_SPACE))   data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ZERO_SPACE))  data <<= 1 ;
+		else if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ZERO_SPACE))  data = (data << 1) | 0 ;
 		else                                                                return false ;
 		offset++;
 	}

@@ -24,7 +24,7 @@
 #define AIWA_RC_T501_ZERO_SPACE  1700
 
 //+=============================================================================
-#ifdef SEND_AIWA_RC_T501
+#if SEND_AIWA_RC_T501
 void  IRsend::sendAiwaRCT501 (int code)
 {
 	unsigned long  pre = 0x0227EEC0;  // 26-bits
@@ -48,7 +48,8 @@ void  IRsend::sendAiwaRCT501 (int code)
 //    it only send 15bits and ignores the top bit
 //    then uses TOPBIT which is 0x80000000 to check the bit code
 //    I suspect TOPBIT should be changed to 0x00008000
-	// Skip firts code bit
+
+	// Skip first code bit
 	code <<= 1;
 	// Send code
 	for (int  i = 0;  i < 15;  i++) {
@@ -57,6 +58,7 @@ void  IRsend::sendAiwaRCT501 (int code)
 		else                    space(AIWA_RC_T501_ZERO_SPACE) ;
 		code <<= 1;
 	}
+
 //-^- THIS CODE LOOKS LIKE IT MIGHT BE WRONG - CHECK!
 
 	// POST-DATA, 1 bit, 0x0
@@ -69,40 +71,36 @@ void  IRsend::sendAiwaRCT501 (int code)
 #endif
 
 //+=============================================================================
-#ifdef DECODE_AIWA_RC_T501
-long  IRrecv::decodeAiwaRCT501 (decode_results *results)
+#if DECODE_AIWA_RC_T501
+bool  IRrecv::decodeAiwaRCT501 (decode_results *results)
 {
-  int  data   = 0;
-  int  offset = 1; // skip first garbage read
+	int  data   = 0;
+	int  offset = 1;
 
-  // Check SIZE
-  if (irparams.rawlen < 2 * (AIWA_RC_T501_SUM_BITS) + 4)  return false ;
+	// Check SIZE
+	if (irparams.rawlen < 2 * (AIWA_RC_T501_SUM_BITS) + 4)  return false ;
 
-  // Check HDR
-  if (!MATCH_MARK(results->rawbuf[offset], AIWA_RC_T501_HDR_MARK))  return false ;
-  offset++;
+	// Check HDR Mark/Space
+	if (!MATCH_MARK (results->rawbuf[offset++], AIWA_RC_T501_HDR_MARK ))  return false ;
+	if (!MATCH_SPACE(results->rawbuf[offset++], AIWA_RC_T501_HDR_SPACE))  return false ;
 
-  // Check HDR space
-  if (!MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_HDR_SPACE))  return false ;
-  offset++;
+	offset += 26;  // skip pre-data - optional
+	while(offset < irparams.rawlen - 4) {
+		if (MATCH_MARK(results->rawbuf[offset], AIWA_RC_T501_BIT_MARK))  offset++ ;
+		else                                                             return false ;
 
-  offset += 26; // skip pre-data - optional
-  while(offset < irparams.rawlen - 4) {
-    if (MATCH_MARK(results->rawbuf[offset], AIWA_RC_T501_BIT_MARK))  offset++ ;
-    else                                                             return false ;
+		// ONE & ZERO
+		if      (MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_ONE_SPACE))   data = (data << 1) | 1 ;
+		else if (MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_ZERO_SPACE))  data = (data << 1) | 0 ;
+		else                                                                     break ;  // End of one & zero detected
+		offset++;
+	}
 
-    // ONE & ZERO
-    if      (MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_ONE_SPACE))   data = (data << 1) | 1 ;
-    else if (MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_ZERO_SPACE))  data <<= 1 ;
-    else                                                                     break ;  // End of one & zero detected
-    offset++;
-  }
+	results->bits = (offset - 1) / 2;
+	if (results->bits < 42)  return false ;
 
-  results->bits = (offset - 1) / 2;
-  if (results->bits < 42)  return false ;
-  results->value       = data;
-  results->decode_type = AIWA_RC_T501;
-  return true;
+	results->value       = data;
+	results->decode_type = AIWA_RC_T501;
+	return true;
 }
 #endif
-

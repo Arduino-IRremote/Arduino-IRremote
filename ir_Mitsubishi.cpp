@@ -23,8 +23,8 @@
 // #define MITSUBISHI_RPT_LENGTH 45000
 
 //+=============================================================================
-#ifdef DECODE_MITSUBISHI
-long  IRrecv::decodeMitsubishi (decode_results *results)
+#if DECODE_MITSUBISHI
+bool  IRrecv::decodeMitsubishi (decode_results *results)
 {
   // Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
   long data = 0;

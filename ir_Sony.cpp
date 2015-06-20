@@ -18,7 +18,7 @@
 #define SONY_DOUBLE_SPACE_USECS    500  // usually ssee 713 - not using ticks as get number wrapround
 
 //+=============================================================================
-#ifdef SEND_SONY
+#if SEND_SONY
 void  IRsend::sendSony (unsigned long data,  int nbits)
 {
 	// Set IR carrier frequency
@@ -44,12 +44,13 @@ void  IRsend::sendSony (unsigned long data,  int nbits)
 #endif
 
 //+=============================================================================
-#ifdef DECODE_SONY
-long  IRrecv::decodeSony (decode_results *results)
+#if DECODE_SONY
+bool  IRrecv::decodeSony (decode_results *results)
 {
-	long data = 0;
-	if (irparams.rawlen < 2 * SONY_BITS + 2)  return false ;
-	int offset = 0; // Dont skip first space, check its size
+	long  data   = 0;
+	int   offset = 0;  // Dont skip first space, check its size
+
+	if (irparams.rawlen < (2 * SONY_BITS) + 2)  return false ;
 
 	// Some Sony's deliver repeats fast after first
 	// unfortunately can't spot difference from of repeat from two fast clicks
@@ -69,14 +70,13 @@ long  IRrecv::decodeSony (decode_results *results)
 	offset++;
 
 	// Initial mark
-	if (!MATCH_MARK(results->rawbuf[offset], SONY_HDR_MARK))  return false ;
-	offset++;
+	if (!MATCH_MARK(results->rawbuf[offset++], SONY_HDR_MARK))  return false ;
 
 	while (offset + 1 < irparams.rawlen) {
-		if (!MATCH_SPACE(results->rawbuf[offset], SONY_HDR_SPACE))  break ;
-		offset++;
+		if (!MATCH_SPACE(results->rawbuf[offset++], SONY_HDR_SPACE))  break ;
+
 		if      (MATCH_MARK(results->rawbuf[offset], SONY_ONE_MARK))   data = (data << 1) | 1 ;
-		else if (MATCH_MARK(results->rawbuf[offset], SONY_ZERO_MARK))  data <<= 1 ;
+		else if (MATCH_MARK(results->rawbuf[offset], SONY_ZERO_MARK))  data = (data << 1) | 0 ;
 		else                                                           return false ;
 		offset++;
 	}
