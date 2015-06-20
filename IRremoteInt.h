@@ -17,18 +17,21 @@
 #ifndef IRremoteint_h
 #define IRremoteint_h
 
+//------------------------------------------------------------------------------
 #ifdef IR_GLOBAL
 #	define EXTERN
 #else
 #	define EXTERN extern
 #endif
 
+//------------------------------------------------------------------------------
 #if defined(ARDUINO) && ARDUINO >= 100
 #include <Arduino.h>
 #else
 #include <WProgram.h>
 #endif
 
+//------------------------------------------------------------------------------
 // define which timer to use
 //
 // Uncomment the timer you wish to use on your board.  If you
@@ -78,18 +81,18 @@
   #define IR_USE_TIMER2     // tx = pin 3
 #endif
 
-
-
+//------------------------------------------------------------------------------
 #ifdef F_CPU
 #define SYSCLOCK F_CPU     // main Arduino clock
 #else
 #define SYSCLOCK 16000000  // main Arduino clock
 #endif
 
+//------------------------------------------------------------------------------
 #define ERR 0
 #define DECODED 1
 
-
+//------------------------------------------------------------------------------
 // defines for setting and clearing register bits
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
@@ -98,6 +101,7 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
+//------------------------------------------------------------------------------
 // Pulse parms are *50-100 for the Mark and *50+100 for the space
 // First MARK is the one after the long gap
 // pulse parameters in usec

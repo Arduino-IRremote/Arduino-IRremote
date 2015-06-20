@@ -51,18 +51,6 @@ void  IRrecv::resume ( )
 	irparams.rawlen = 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 //+=============================================================================
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
@@ -162,9 +150,9 @@ int  IRrecv::decode (decode_results *results)
 //
 int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
 {
-  if      (newval < oldval * .8)  return 0 ;
-  else if (oldval < newval * .8)  return 2 ;
-  else                            return 1 ;
+	if      (newval < oldval * .8)  return 0 ;
+	else if (oldval < newval * .8)  return 2 ;
+	else                            return 1 ;
 }
 
 //+=============================================================================
@@ -178,18 +166,18 @@ int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
 
 long  IRrecv::decodeHash (decode_results *results)
 {
-  // Require at least 6 samples to prevent triggering on noise
-  if (results->rawlen < 6)  return false ;
-  long hash = FNV_BASIS_32;
-  for (int i = 1;  (i + 2) < results->rawlen;  i++) {
-    int value =  compare(results->rawbuf[i], results->rawbuf[i+2]);
-    // Add value into the hash
-    hash = (hash * FNV_PRIME_32) ^ value;
-  }
+	// Require at least 6 samples to prevent triggering on noise
+	if (results->rawlen < 6)  return false ;
+	long hash = FNV_BASIS_32;
+	for (int i = 1;  (i + 2) < results->rawlen;  i++) {
+		int value =  compare(results->rawbuf[i], results->rawbuf[i+2]);
+		// Add value into the hash
+		hash = (hash * FNV_PRIME_32) ^ value;
+	}
 
-  results->value       = hash;
-  results->bits        = 32;
-  results->decode_type = UNKNOWN;
+	results->value       = hash;
+	results->bits        = 32;
+	results->decode_type = UNKNOWN;
 
-  return true;
+	return true;
 }

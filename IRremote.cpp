@@ -31,50 +31,66 @@
 //  ...but every time i reduce these functions down to macros, the decoders stop working!!??
 
 //+=============================================================================
+// The match functions were (apparently) originally MACROs to improve code speed
+// (although this would have bloated the code size) hence the names being CAPS
+// A later release implemented debug output and so they needed to be converted
+// to functions.
+// I tried to implement a dual-compile mode (DEBUG/non-DEBUG) but for some
+// reason, no matter what I did I could not get them to function as macros again.
+// I have found a *lot* of bugs in the Arduino compiler over the last few weeks,
+// and I am currently assuming that one of these bugs is my problem.
+// I may revisit this code at a later date and look at the assembler produced
+// in a hope of finding out what is going on, but for now they will remain as
+// functions even in non-DEBUG mode
+//
 int  MATCH (int measured,  int desired)
 {
-  DBG_PRINT("Testing: ");
-  DBG_PRINT(TICKS_LOW(desired), DEC);
-  DBG_PRINT(" <= ");
-  DBG_PRINT(measured, DEC);
-  DBG_PRINT(" <= ");
-  DBG_PRINTLN(TICKS_HIGH(desired), DEC);
+ 	DBG_PRINT("Testing: ");
+ 	DBG_PRINT(TICKS_LOW(desired), DEC);
+ 	DBG_PRINT(" <= ");
+ 	DBG_PRINT(measured, DEC);
+ 	DBG_PRINT(" <= ");
+ 	DBG_PRINTLN(TICKS_HIGH(desired), DEC);
 
-  return ((measured >= TICKS_LOW(desired)) && (measured <= TICKS_HIGH(desired)));
+ 	return ((measured >= TICKS_LOW(desired)) && (measured <= TICKS_HIGH(desired)));
 }
 
-//+=============================================================================
+//+========================================================
+// Marks tend to be 100us too long when received due to sensor lag.
+//
 int  MATCH_MARK (int measured_ticks,  int desired_us)
 {
-  DBG_PRINT("Testing mark ");
-  DBG_PRINT(measured_ticks * USECPERTICK, DEC);
-  DBG_PRINT(" vs ");
-  DBG_PRINT(desired_us, DEC);
-  DBG_PRINT(": ");
-  DBG_PRINT(TICKS_LOW(desired_us + MARK_EXCESS), DEC);
-  DBG_PRINT(" <= ");
-  DBG_PRINT(measured_ticks, DEC);
-  DBG_PRINT(" <= ");
-  DBG_PRINTLN(TICKS_HIGH(desired_us + MARK_EXCESS), DEC);
+	DBG_PRINT("Testing mark ");
+	DBG_PRINT(measured_ticks * USECPERTICK, DEC);
+	DBG_PRINT(" vs ");
+	DBG_PRINT(desired_us, DEC);
+	DBG_PRINT(": ");
+	DBG_PRINT(TICKS_LOW(desired_us + MARK_EXCESS), DEC);
+	DBG_PRINT(" <= ");
+	DBG_PRINT(measured_ticks, DEC);
+	DBG_PRINT(" <= ");
+	DBG_PRINTLN(TICKS_HIGH(desired_us + MARK_EXCESS), DEC);
 
-  return ((measured_ticks >= TICKS_LOW (desired_us + MARK_EXCESS))
-       && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS)));
+	return ((measured_ticks >= TICKS_LOW (desired_us + MARK_EXCESS))
+	     && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS)));
 }
 
-//+=============================================================================
+//+========================================================
+// Spaces tend to be 100us too short when received due to sensor lag.
+//
 int  MATCH_SPACE (int measured_ticks,  int desired_us)
 {
-  DBG_PRINT("Testing space ");
-  DBG_PRINT(measured_ticks * USECPERTICK, DEC);
-  DBG_PRINT(" vs ");
-  DBG_PRINT(desired_us, DEC);
-  DBG_PRINT(": ");
-  DBG_PRINT(TICKS_LOW(desired_us - MARK_EXCESS), DEC);
-  DBG_PRINT(" <= ");
-  DBG_PRINT(measured_ticks, DEC);
-  DBG_PRINT(" <= ");
-  DBG_PRINTLN(TICKS_HIGH(desired_us - MARK_EXCESS), DEC);
+	DBG_PRINT("Testing space ");
+	DBG_PRINT(measured_ticks * USECPERTICK, DEC);
+	DBG_PRINT(" vs ");
+	DBG_PRINT(desired_us, DEC);
+	DBG_PRINT(": ");
+	DBG_PRINT(TICKS_LOW(desired_us - MARK_EXCESS), DEC);
+	DBG_PRINT(" <= ");
+	DBG_PRINT(measured_ticks, DEC);
+	DBG_PRINT(" <= ");
+	DBG_PRINTLN(TICKS_HIGH(desired_us - MARK_EXCESS), DEC);
 
-  return ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS))
-       && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS)));
+	return ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS))
+	     && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS)));
 }

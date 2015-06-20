@@ -1,3 +1,6 @@
+#ifndef IRremote_h
+#define IRremote_h
+
 #define DEBUG
 #undef DEBUG
 
@@ -16,10 +19,7 @@ int  MATCH       (int measured, int desired) ;
 #	define DBG_PRINTLN(...)
 #endif
 
-///int  MATCH (int measured,  int desired);
-///int  MATCH_MARK (int measured_ticks,  int desired_us);
-///int  MATCH_SPACE (int measured_ticks,  int desired_us);
-
+//------------------------------------------------------------------------------
 #define SEND_NEC
 #define DECODE_NEC
 #define SEND_WHYNTER
@@ -60,9 +60,6 @@ int  MATCH       (int measured, int desired) ;
  * Whynter A/C ARC-110WD added by Francesco Meschia
  */
 
-#ifndef IRremote_h
-#define IRremote_h
-
 // The following are compile-time library options.
 // If you change them, recompile the library.
 // If DEBUG is defined, a lot of debugging output will be printed during decoding.
@@ -71,6 +68,7 @@ int  MATCH       (int measured, int desired) ;
 //#define DEBUG
 // #define TEST
 
+//------------------------------------------------------------------------------
 enum decode_type_t {
 	UNKNOWN      = -1,
 	UNUSED       =  0,
@@ -90,6 +88,7 @@ enum decode_type_t {
 	AIWA_RC_T501 = 14,
 };
 
+//------------------------------------------------------------------------------
 // Results returned from the decoder
 class decode_results {
 public:
@@ -104,9 +103,11 @@ public:
   int rawlen; // Number of records in rawbuf.
 };
 
+//------------------------------------------------------------------------------
 // Decoded value for NEC when a repeat code is received
 #define REPEAT 0xffffffff
 
+//------------------------------------------------------------------------------
 // main class for receiving IR
 class IRrecv
 {
@@ -163,6 +164,7 @@ private:
 
 } ;
 
+//------------------------------------------------------------------------------
 // Only used for testing; can remove virtual for shorter code
 #ifdef TEST
 #define VIRTUAL virtual
@@ -170,6 +172,7 @@ private:
 #define VIRTUAL
 #endif
 
+//------------------------------------------------------------------------------
 class IRsend
 {
 public:
@@ -217,6 +220,7 @@ public:
   VIRTUAL void space(int usec);
 } ;
 
+//------------------------------------------------------------------------------
 // Some useful constants
 
 #define USECPERTICK 50  // microseconds per clock interrupt tick

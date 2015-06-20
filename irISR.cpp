@@ -14,63 +14,61 @@
 //
 ISR (TIMER_INTR_NAME)
 {
-  TIMER_RESET;
+	TIMER_RESET;
 
-  uint8_t irdata = (uint8_t)digitalRead(irparams.recvpin);
+	uint8_t irdata = (uint8_t)digitalRead(irparams.recvpin);
 
-  irparams.timer++; // One more 50us tick
-  if (irparams.rawlen >= RAWBUF)  irparams.rcvstate = STATE_STOP ;  // Buffer overflow
+	irparams.timer++;  // One more 50us tick
+	if (irparams.rawlen >= RAWBUF)  irparams.rcvstate = STATE_STOP ;  // Buffer overflow
 
-  switch(irparams.rcvstate) {
-    case STATE_IDLE: // In the middle of a gap
-      if (irdata == MARK) {
-        if (irparams.timer < GAP_TICKS) {
-          // Not big enough to be a gap.
-          irparams.timer = 0;
-        }
-        else {
-          // gap just ended, record duration and start recording transmission
-          irparams.rawlen = 0;
-          irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-          irparams.timer = 0;
-          irparams.rcvstate = STATE_MARK;
-        }
-      }
-      break;
+	switch(irparams.rcvstate) {
+		case STATE_IDLE: // In the middle of a gap
+			if (irdata == MARK) {
+				if (irparams.timer < GAP_TICKS) {
+					// Not big enough to be a gap.
+					irparams.timer = 0;
 
-    case STATE_MARK: // timing MARK
-      if (irdata == SPACE) {   // MARK ended, record time
-        irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-        irparams.timer = 0;
-        irparams.rcvstate = STATE_SPACE;
-      }
-      break;
+				} else {
+					// gap just ended, record duration and start recording transmission
+					irparams.rawlen                    = 0;
+					irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+					irparams.timer                     = 0;
+					irparams.rcvstate                  = STATE_MARK;
+				}
+			}
+			break;
 
-    case STATE_SPACE: // timing SPACE
-      if (irdata == MARK) { // SPACE just ended, record it
-        irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-        irparams.timer = 0;
-        irparams.rcvstate = STATE_MARK;
-      }
-      else { // SPACE
-        if (irparams.timer > GAP_TICKS) {
-          // big SPACE, indicates gap between codes
-          // Mark current code as ready for processing
-          // Switch to STOP
-          // Don't reset timer; keep counting space width
-          irparams.rcvstate = STATE_STOP;
-        }
-      }
-      break;
+		case STATE_MARK: // timing MARK
+			if (irdata == SPACE) {   // MARK ended, record time
+				irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+				irparams.timer                     = 0;
+				irparams.rcvstate                  = STATE_SPACE;
+			}
+			break;
 
-    case STATE_STOP: // waiting, measuring gap
-      if (irdata == MARK)  irparams.timer = 0 ;  // reset gap timer
-      break;
-  }
+		case STATE_SPACE: // timing SPACE
+			if (irdata == MARK) { // SPACE just ended, record it
+				irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+				irparams.timer                     = 0;
+				irparams.rcvstate                  = STATE_MARK;
 
-  if (irparams.blinkflag) {
-    if (irdata == MARK)  BLINKLED_ON() ;   // turn pin 13 LED on
-    else                 BLINKLED_OFF() ;  // turn pin 13 LED off
-  }
+			} else if (irparams.timer > GAP_TICKS) { // SPACE
+					// big SPACE, indicates gap between codes
+					// Mark current code as ready for processing
+					// Switch to STOP
+					// Don't reset timer; keep counting space width
+					irparams.rcvstate = STATE_STOP;
+			}
+			break;
+
+		case STATE_STOP: // waiting, measuring gap
+		 	if (irdata == MARK)  irparams.timer = 0 ;  // reset gap timer
+		 	break;
+	}
+
+	if (irparams.blinkflag) {
+		if (irdata == MARK)  BLINKLED_ON() ;   // turn pin 13 LED on
+		else                 BLINKLED_OFF() ;  // turn pin 13 LED off
+	}
 }
 
