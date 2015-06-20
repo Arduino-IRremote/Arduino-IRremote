@@ -1,8 +1,7 @@
 //------------------------------------------------------------------------------
-// Include the IRremote library headers
+// Include the IRremote library header
 //
 #include <IRremote.h>
-#include <IRremoteInt.h>
 
 //------------------------------------------------------------------------------
 // Tell IRremote which Arduino pin is connected to the IR Receiver (TSOP4838)
@@ -28,7 +27,7 @@ void  ircode (decode_results *results)
     Serial.print(results->address, HEX);
     Serial.print(":");
   }
-  
+
   // Print Code
   Serial.print(results->value, HEX);
 }
@@ -68,12 +67,12 @@ void  dumpInfo (decode_results *results)
     Serial.println("IR code too long. Edit IRremoteInt.h and increase RAWLEN");
     return;
   }
-  
+
   // Show Encoding standard
   Serial.print("Encoding  : ");
   encoding(results);
   Serial.println("");
-  
+
   // Show Code & length
   Serial.print("Code      : ");
   ircode(results);
@@ -123,25 +122,25 @@ void  dumpCode (decode_results *results)
   Serial.print("rawData[");                // array name
   Serial.print(results->rawlen + 1, DEC);  // array size
   Serial.print("] = {");                   // Start declaration
-  
+
   // Dump data
   for (int i = 0;  i < results->rawlen;  i++) {
     Serial.print(results->rawbuf[i], DEC);
     Serial.print(",");
     if (!(i&1))  Serial.print(" ");
   }
-  
+
   // End declaration
   Serial.print("0};");  // Turn LED off at the end
-  
+
   // Comment
-  Serial.print("  // ");                 
+  Serial.print("  // ");
   encoding(results);
   Serial.print(" ");
   ircode(results);
-  
+
   // Newline
-  Serial.println("");                    
+  Serial.println("");
 }
 
 //+=============================================================================

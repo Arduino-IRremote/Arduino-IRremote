@@ -66,6 +66,13 @@ Now you must do a few things to add it to the IRremote system:
 
    B. Save your changes and close the file
 
+You will probably want to add your new protocol to the example sketch
+
+3. Open MyDocuments\Arduino\libraries\IRremote\examples\IRrecvDumpV2.ino
+
+   A. In the encoding() function, add:
+      case SHUZU:    Serial.print("SHUZU");     break ;
+
 Now open the Arduino IDE, load up the rawDump.ino sketch, and run it.
 Hopefully it will compile and upload.
 If it doesn't, you've done something wrong. Check your work.
