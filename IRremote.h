@@ -73,20 +73,20 @@ typedef
 	enum {
 		UNKNOWN      = -1,
 		UNUSED       =  0,
-		RC5          =  1,
-		RC6          =  2,
-		NEC          =  3,
-		SONY         =  4,
-		PANASONIC    =  5,
-		JVC          =  6,
-		SAMSUNG      =  7,
-		WHYNTER      =  8,
-		AIWA_RC_T501 =  9,
-		LG           = 10,
-		SANYO        = 11,
-		MITSUBISHI   = 12,
-		DISH         = 13,
-		SHARP        = 14,
+		RC5,
+		RC6
+		NEC,
+		SONY,
+		PANASONIC,
+		JVC,
+		SAMSUNG,
+		WHYNTER,
+		AIWA_RC_T501,
+		LG,
+		SANYO,
+		MITSUBISHI,
+		DISH,
+		SHARP,
 	}
 decode_type_t;
 
@@ -212,6 +212,8 @@ class IRrecv
 } ;
 
 //------------------------------------------------------------------------------
+// Main class for sending IR
+//
 class IRsend
 {
 	public:
