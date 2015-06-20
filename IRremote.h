@@ -26,22 +26,23 @@
 // #define TEST
 
 enum decode_type_t {
-  NEC = 1,
-  SONY = 2,
-  RC5 = 3,
-  RC6 = 4,
-  DISH = 5,
-  SHARP = 6,
-  PANASONIC = 7,
-  JVC = 8,
-  SANYO = 9,
-  MITSUBISHI = 10,
-  SAMSUNG = 11,
-  LG = 12,
-  WHYNTER = 13,
-  AIWA_RC_T501 = 14,
+	UNKNOWN      = -1,
+	UNUSED       =  0,
+	NEC          =  1,
+	SONY         =  2,
+	RC5          =  3,
+	RC6          =  4,
+	DISH         =  5,
+	SHARP        =  6,
+	PANASONIC    =  7,
+	JVC          =  8,
+	SANYO        =  9,
+	MITSUBISHI   = 10,
+	SAMSUNG      = 11,
+	LG           = 12,
+	WHYNTER      = 13,
+	AIWA_RC_T501 = 14,
 
-  UNKNOWN = -1
 };
 
 // Results returned from the decoder
@@ -57,20 +58,6 @@ public:
   volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
   int rawlen; // Number of records in rawbuf.
 };
-
-// Send types
-#define IRsendNEC
-#define IRsendSONY
-#define IRsendRC5
-#define IRsendRC6
-#define IRsendDISH
-#define IRsendSHARP
-#define IRsendPANASONIC
-#define IRsendJVC
-#define IRsendSANYO
-#define IRsendMITSUBISHI
-#define IRsendSAMSUNG
-#define IRsendRAW
 
 // Decoded value for NEC when a repeat code is received
 #define REPEAT 0xffffffff
@@ -152,24 +139,21 @@ public:
 #ifdef SEND_WHYNTER
   void sendWhynter(unsigned long data, int nbits);
 #endif
-#ifdef SEND_NEC 
+#ifdef SEND_NEC
   void sendNEC(unsigned long data, int nbits);
 #endif
-#ifdef SEND_SONY 
+#ifdef SEND_SONY
   void sendSony(unsigned long data, int nbits);
   // Neither Sanyo nor Mitsubishi send is implemented yet
   //  void sendSanyo(unsigned long data, int nbits);
   //  void sendMitsubishi(unsigned long data, int nbits);
 #endif
-#ifdef SEND_DISH 
+#ifdef SEND_DISH
   void sendDISH(unsigned long data, int nbits);
 #endif
 #ifdef SEND_SHARP
-  void sendSharp(unsigned int address, unsigned int command);
   void sendSharpRaw(unsigned long data, int nbits);
-#endif
-#ifdef SEND_IRsendSHARP
-  void sendSharp(unsigned long data, int nbits);
+  void sendSharp(unsigned int address,  unsigned int command);
 #endif
 #ifdef SEND_PANASONIC
   void sendPanasonic(unsigned int address, unsigned long data);
@@ -180,7 +164,7 @@ public:
 #ifdef SEND_AIWA_RC_T501
   void sendAiwaRCT501(int code);
 #endif
-#ifdef SEND_SAMSUNG 
+#ifdef SEND_SAMSUNG
   void sendSAMSUNG(unsigned long data, int nbits);
 #endif
   void enableIROut(int khz);
