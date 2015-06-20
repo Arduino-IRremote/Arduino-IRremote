@@ -17,6 +17,12 @@
 #ifndef IRremoteint_h
 #define IRremoteint_h
 
+#ifdef IR_GLOBAL
+#	define EXTERN
+#else
+#	define EXTERN extern
+#endif
+
 #if defined(ARDUINO) && ARDUINO >= 100
 #include <Arduino.h>
 #else
@@ -141,7 +147,7 @@ typedef struct {
 irparams_t;
 
 // Defined in IRremote.cpp
-extern volatile irparams_t irparams;
+EXTERN volatile irparams_t irparams;
 
 // IR detector output is active low
 #define MARK  0

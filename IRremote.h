@@ -1,3 +1,49 @@
+#define DEBUG
+#undef DEBUG
+
+//------------------------------------------------------------------------------
+int  MATCH_SPACE (int measured_ticks, int desired_us) ;
+int  MATCH_MARK  (int measured_ticks, int desired_us) ;
+int  MATCH       (int measured, int desired) ;
+
+//------------------------------------------------------------------------------
+// Debug directives
+#ifdef DEBUG
+#	define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
+#	define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
+#else
+#	define DBG_PRINT(...)
+#	define DBG_PRINTLN(...)
+#endif
+
+///int  MATCH (int measured,  int desired);
+///int  MATCH_MARK (int measured_ticks,  int desired_us);
+///int  MATCH_SPACE (int measured_ticks,  int desired_us);
+
+#define SEND_NEC
+#define DECODE_NEC
+#define SEND_WHYNTER
+#define DECODE_WHYNTER
+#define SEND_SONY
+#define DECODE_SONY
+#define DECODE_SANYO
+#define SEND_RC5
+#define DECODE_RC5
+#define SEND_RC6
+#define DECODE_RC6
+#define SEND_PANASONIC
+#define DECODE_PANASONIC
+#define SEND_JVC
+#define DECODE_JVC
+#define SEND_SAMSUNG
+#define DECODE_SAMSUNG
+#define DECODE_LG
+#define DECODE_MITSUBISHI
+#define SEND_AIWA_RC_T501
+#define DECODE_AIWA_RC_T501
+#define SEND_SHARP
+#define SEND_DISH
+
 /*
  * IRremote
  * Version 0.1 July, 2009
@@ -42,7 +88,6 @@ enum decode_type_t {
 	LG           = 12,
 	WHYNTER      = 13,
 	AIWA_RC_T501 = 14,
-
 };
 
 // Results returned from the decoder
