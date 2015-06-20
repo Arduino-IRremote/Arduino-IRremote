@@ -57,8 +57,10 @@ void  IRrecv::resume ( )
 // Results of decoding are stored in results
 int  IRrecv::decode (decode_results *results)
 {
-	results->rawbuf = irparams.rawbuf;
-	results->rawlen = irparams.rawlen;
+	results->rawbuf   = irparams.rawbuf;
+	results->rawlen   = irparams.rawlen;
+
+	results->overflow = irparams.overflow;
 
 	if (irparams.rcvstate != STATE_STOP)  return false ;
 

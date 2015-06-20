@@ -4,22 +4,27 @@
 #include "IRremoteInt.h"
 
 //+=============================================================================
+// Interrupt Service Routine - Fires every 50uS
 // TIMER2 interrupt code to collect raw data.
 // Widths of alternating SPACE, MARK are recorded in rawbuf.
-// Recorded in ticks of 50 microseconds.
-// rawlen counts the number of entries recorded so far.
+// Recorded in ticks of 50uS [microseconds, 0.000050 seconds]
+// 'rawlen' counts the number of entries recorded so far.
 // First entry is the SPACE between transmissions.
-// As soon as a SPACE gets long, ready is set, state switches to IDLE, timing of SPACE continues.
-// As soon as first MARK arrives, gap width is recorded, ready is cleared, and new logging starts
+// As soon as a the first [SPACE] entry gets long:
+//   Ready is set; State switches to IDLE; Timing of SPACE continues.
+// As soon as first MARK arrives:
+//   Gap width is recorded; Ready is cleared; New logging starts
 //
 ISR (TIMER_INTR_NAME)
 {
 	TIMER_RESET;
 
-	uint8_t irdata = (uint8_t)digitalRead(irparams.recvpin);
+	// Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
+	// digitalRead() is very slow. Optimisation is possible, but makes the code unportable
+	uint8_t  irdata = (uint8_t)digitalRead(irparams.recvpin);
 
-	irparams.timer++;  // One more 50us tick
-	if (irparams.rawlen >= RAWBUF)  irparams.rcvstate = STATE_STOP ;  // Buffer overflow
+	irparams.timer++;  // One more 50uS tick
+	if (irparams.rawlen >= RAWBUF)  irparams.rcvstate = STATE_OVERFLOW ;  // Buffer overflow
 
 	switch(irparams.rcvstate) {
 		case STATE_IDLE: // In the middle of a gap
@@ -30,6 +35,7 @@ ISR (TIMER_INTR_NAME)
 
 				} else {
 					// gap just ended, record duration and start recording transmission
+					irparams.overflow                  = false;
 					irparams.rawlen                    = 0;
 					irparams.rawbuf[irparams.rawlen++] = irparams.timer;
 					irparams.timer                     = 0;
@@ -63,6 +69,11 @@ ISR (TIMER_INTR_NAME)
 
 		case STATE_STOP: // waiting, measuring gap
 		 	if (irdata == MARK)  irparams.timer = 0 ;  // reset gap timer
+		 	break;
+
+		case STATE_OVERFLOW:  // Flag up a read overflow
+			irparams.overflow = true;
+			irparams.rcvstate = STATE_STOP;
 		 	break;
 	}
 
