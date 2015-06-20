@@ -69,42 +69,47 @@ int  MATCH       (int measured, int desired) ;
 // #define TEST
 
 //------------------------------------------------------------------------------
-enum decode_type_t {
-	UNKNOWN      = -1,
-	UNUSED       =  0,
-	NEC          =  1,
-	SONY         =  2,
-	RC5          =  3,
-	RC6          =  4,
-	DISH         =  5,
-	SHARP        =  6,
-	PANASONIC    =  7,
-	JVC          =  8,
-	SANYO        =  9,
-	MITSUBISHI   = 10,
-	SAMSUNG      = 11,
-	LG           = 12,
-	WHYNTER      = 13,
-	AIWA_RC_T501 = 14,
-};
+// An enumerated list of all supported formats
+//
+typedef
+	enum {
+		UNKNOWN      = -1,
+		UNUSED       =  0,
+		NEC          =  1,
+		SONY         =  2,
+		RC5          =  3,
+		RC6          =  4,
+		DISH         =  5,
+		SHARP        =  6,
+		PANASONIC    =  7,
+		JVC          =  8,
+		SANYO        =  9,
+		MITSUBISHI   = 10,
+		SAMSUNG      = 11,
+		LG           = 12,
+		WHYNTER      = 13,
+		AIWA_RC_T501 = 14,
+	}
+decode_type_t;
 
 //------------------------------------------------------------------------------
 // Results returned from the decoder
-class decode_results {
-public:
-  decode_type_t decode_type; // NEC, SONY, RC5, UNKNOWN
-  union { // This is used for decoding Panasonic and Sharp data
-    unsigned int panasonicAddress;
-    unsigned int sharpAddress;
-  };
-  unsigned long value; // Decoded value
-  int bits; // Number of bits in decoded value
-  volatile unsigned int *rawbuf; // Raw intervals in .5 us ticks
-  int rawlen; // Number of records in rawbuf.
+//
+class decode_results
+{
+	public:
+		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
+		unsigned int           address;      // Used by Panasonic & Sharp
+		unsigned long          value;        // Decoded value
+		int                    bits;         // Number of bits in decoded value
+		volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
+		int                    rawlen;       // Number of records in rawbuf.
+		int                    overflow;     // true iff IR raw code too long
 };
 
 //------------------------------------------------------------------------------
 // Decoded value for NEC when a repeat code is received
+//
 #define REPEAT 0xffffffff
 
 //------------------------------------------------------------------------------

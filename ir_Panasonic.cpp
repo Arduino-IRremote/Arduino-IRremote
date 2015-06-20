@@ -69,10 +69,10 @@ long  IRrecv::decodePanasonic (decode_results *results)
         offset++;
     }
 
-    results->value            = (unsigned long)data;
-    results->panasonicAddress = (unsigned int)(data >> 32);
-    results->decode_type      = PANASONIC;
-    results->bits             = PANASONIC_BITS;
+    results->value       = (unsigned long)data;
+    results->address     = (unsigned int)(data >> 32);
+    results->decode_type = PANASONIC;
+    results->bits        = PANASONIC_BITS;
 
     return true;
 }
