@@ -1,6 +1,14 @@
-#if SEND_PRONTO
-
 #define TEST 0
+
+#if TEST
+#	define SEND_PRONTO        1
+#	define PRONTO_ONCE        false
+#	define PRONTO_REPEAT      true
+#	define PRONTO_FALLBACK    true
+#	define PRONTO_NOFALLBACK  false
+#endif
+
+#if SEND_PRONTO
 
 //******************************************************************************
 #if TEST
@@ -68,7 +76,7 @@ bool sendPronto (char* s,  bool repeat,  bool fallback)
 	int       len;
 	int       skip;
 	char*     cp;
-	uint8_t   freq;  // Frequency in KHz
+	uint16_t  freq;  // Frequency in KHz
 	uint8_t   usec;  // pronto uSec/tick
 	uint8_t   once;
 	uint8_t   rpt;
@@ -90,8 +98,9 @@ bool sendPronto (char* s,  bool repeat,  bool fallback)
 
 	// Extract & set frequency
 	byp(&cp);
-	freq = (int)((1000000 / (htow(cp) * 0.241246)) / 1000);
-	usec = (int)(((1.0 / freq) * 1000000) + 0.5);
+	freq = (int)(1000000 / (htow(cp) * 0.241246));  // Rounding errors will occur, tolerance is +/- 10%
+	usec = (int)(((1.0 / freq) * 1000000) + 0.5);  // Another rounding error, thank Cod for analogue electronics
+	freq /= 1000;  // This will introduce a(nother) rounding error which we do not want in the usec calcualtion
 	cp += 4;
 
 	// Get length of "once" code
@@ -105,7 +114,7 @@ bool sendPronto (char* s,  bool repeat,  bool fallback)
 	cp += 4;
 
 	// Which code are we sending?
-	if (fallback) {
+	if (fallback) { // fallback on the "other" code if "this" code is not present
 		if (!repeat) { // requested 'once'
 			if (once)  len = once * 2,  skip = 0 ;  // if once exists send it
 			else       len = rpt  * 2,  skip = 0 ;  // else send repeat code
@@ -123,7 +132,6 @@ bool sendPronto (char* s,  bool repeat,  bool fallback)
 
 	// Send code
 	enableIROut(freq);
-
 	for (i = 0;  i < len;  i++) {
 		byp(&cp);
 		if (i & 1)  space(htow(cp) * usec);
@@ -160,7 +168,7 @@ int  main ( )
 
 #endif // TEST
 
-#endif SEND_PRONTO
+#endif // SEND_PRONTO
 
 
 
