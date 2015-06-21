@@ -3,7 +3,7 @@
 // IRremote
 // Version 0.1 July, 2009
 // Copyright 2009 Ken Shirriff
-// For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.htm http://arcfn.com
+// For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
 // Edited by Mitra to add new controller SANYO
 //
 // Interrupt code based on NECIRrcv by Joe Knapp
@@ -73,6 +73,24 @@
 #define DECODE_DENON         1
 #define SEND_DENON           1
 
+#define DECODE_PRONTO        0 // This function doe not logically make sense
+#define SEND_PRONTO          1
+
+//------------------------------------------------------------------------------
+// When sending a Pronto code we request to send either the "once" code
+//                                                   or the "repeat" code
+// If the code requested does not exist we can request to fallback on the
+// other code (the one we did not explicitly request)
+//
+// I would suggest that "fallback" will be the standard calling method
+// The last paragraph on this page discusses the rationale of this idea:
+//   http://www.remotecentral.com/features/irdisp2.htm
+//
+#define PRONTO_ONCE        false
+#define PRONTO_REPEAT      true
+#define PRONTO_FALLBACK    true
+#define PRONTO_NOFALLBACK  false
+
 //------------------------------------------------------------------------------
 // An enumerated list of all supported formats
 // You do NOT need to remove entries from this list when disabling protocols!
@@ -96,6 +114,7 @@ typedef
 		DISH,
 		SHARP,
 		DENON,
+		PRONTO,
 	}
 decode_type_t;
 
@@ -300,6 +319,10 @@ class IRsend
 		//......................................................................
 #		if SEND_DENON
 			void  sendDenon      (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_Pronto
+			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
 #		endif
 } ;
 
