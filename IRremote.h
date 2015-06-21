@@ -70,6 +70,9 @@
 #define DECODE_SHARP         0 // NOT WRITTEN
 #define SEND_SHARP           1
 
+#define DECODE_DENON         1
+#define SEND_DENON           1
+
 //------------------------------------------------------------------------------
 // An enumerated list of all supported formats
 // You do NOT need to remove entries from this list when disabling protocols!
@@ -92,6 +95,7 @@ typedef
 		MITSUBISHI,
 		DISH,
 		SHARP,
+		DENON,
 	}
 decode_type_t;
 
@@ -214,6 +218,10 @@ class IRrecv
 #		if DECODE_SHARP
 			bool  decodeSharp (decode_results *results) ; // NOT WRITTEN
 #		endif
+		//......................................................................
+#		if DECODE_DENON
+			bool  decodeDenon (decode_results *results) ;
+#		endif
 } ;
 
 //------------------------------------------------------------------------------
@@ -288,6 +296,10 @@ class IRsend
 #		if SEND_SHARP
 			void  sendSharpRaw   (unsigned long data,  int nbits) ;
 			void  sendSharp      (unsigned int address,  unsigned int command) ;
+#		endif
+		//......................................................................
+#		if SEND_DENON
+			void  sendDenon      (unsigned long data,  int nbits) ;
 #		endif
 } ;
 

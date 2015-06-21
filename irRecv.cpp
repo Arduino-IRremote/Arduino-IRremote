@@ -45,6 +45,8 @@ void  IRrecv::blink13 (int blinkflag)
 }
 
 //+=============================================================================
+// Restart the ISR state machine
+//
 void  IRrecv::resume ( )
 {
 	irparams.rcvstate = STATE_IDLE;
@@ -55,6 +57,7 @@ void  IRrecv::resume ( )
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
+//
 int  IRrecv::decode (decode_results *results)
 {
 	results->rawbuf   = irparams.rawbuf;
@@ -119,15 +122,21 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeWhynter(results))  return true ;
 #endif
 
-#ifdef AIWA_RC_T501
+#ifdef DECODE_AIWA_RC_T501
 	DBG_PRINTLN("Attempting Aiwa RC-T501 decode");
 	if (decodeAiwaRCT501(results))  return true ;
+#endif
+
+#ifdef DECODE_DENON
+	DBG_PRINTLN("Attempting Denon decode");
+	if (decodeDenon(results))  return true ;
 #endif
 
 	// decodeHash returns a hash on any input.
 	// Thus, it needs to be last in the list.
 	// If you add any decodes, add them before this.
 	if (decodeHash(results))  return true ;
+
 	// Throw away and start over
 	resume();
 	return false;
@@ -140,7 +149,7 @@ int  IRrecv::decode (decode_results *results)
 //
 // The algorithm: look at the sequence of MARK signals, and see if each one
 // is shorter (0), the same length (1), or longer (2) than the previous.
-// Do the same with the SPACE signals.  Hszh the resulting sequence of 0's,
+// Do the same with the SPACE signals.  Hash the resulting sequence of 0's,
 // 1's, and 2's to a 32-bit value.  This will give a unique value for each
 // different code (probably), for most code systems.
 //
@@ -168,9 +177,11 @@ int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
 
 long  IRrecv::decodeHash (decode_results *results)
 {
+	long  hash = FNV_BASIS_32;
+
 	// Require at least 6 samples to prevent triggering on noise
 	if (results->rawlen < 6)  return false ;
-	long hash = FNV_BASIS_32;
+
 	for (int i = 1;  (i + 2) < results->rawlen;  i++) {
 		int value =  compare(results->rawbuf[i], results->rawbuf[i+2]);
 		// Add value into the hash

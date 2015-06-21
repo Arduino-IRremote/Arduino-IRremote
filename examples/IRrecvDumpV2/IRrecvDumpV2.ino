@@ -54,6 +54,7 @@ void  encoding (decode_results *results)
     case WHYNTER:      Serial.print("WHYNTER");       break ;
     case AIWA_RC_T501: Serial.print("AIWA_RC_T501");  break ;
     case PANASONIC:    Serial.print("PANASONIC");     break ;
+    case DENON:        Serial.print("Denon");         break ;
   }
 }
 
