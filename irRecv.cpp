@@ -2,58 +2,6 @@
 #include "IRremoteInt.h"
 
 //+=============================================================================
-IRrecv::IRrecv (int recvpin)
-{
-	irparams.recvpin = recvpin;
-	irparams.blinkflag = 0;
-}
-
-//+=============================================================================
-// initialization
-//
-void  IRrecv::enableIRIn ( )
-{
-	cli();
-	// setup pulse clock timer interrupt
-	//Prescale /8 (16M/8 = 0.5 microseconds per tick)
-	// Therefore, the timer interval can range from 0.5 to 128 microseconds
-	// depending on the reset value (255 to 0)
-	TIMER_CONFIG_NORMAL();
-
-	//Timer2 Overflow Interrupt Enable
-	TIMER_ENABLE_INTR;
-
-	TIMER_RESET;
-
-	sei();  // enable interrupts
-
-	// initialize state machine variables
-	irparams.rcvstate = STATE_IDLE;
-	irparams.rawlen = 0;
-
-	// set pin modes
-	pinMode(irparams.recvpin, INPUT);
-}
-
-//+=============================================================================
-// enable/disable blinking of pin 13 on IR processing
-//
-void  IRrecv::blink13 (int blinkflag)
-{
-	irparams.blinkflag = blinkflag;
-	if (blinkflag)  pinMode(BLINKLED, OUTPUT) ;
-}
-
-//+=============================================================================
-// Restart the ISR state machine
-//
-void  IRrecv::resume ( )
-{
-	irparams.rcvstate = STATE_IDLE;
-	irparams.rawlen = 0;
-}
-
-//+=============================================================================
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
@@ -140,6 +88,58 @@ int  IRrecv::decode (decode_results *results)
 	// Throw away and start over
 	resume();
 	return false;
+}
+
+//+=============================================================================
+IRrecv::IRrecv (int recvpin)
+{
+	irparams.recvpin = recvpin;
+	irparams.blinkflag = 0;
+}
+
+//+=============================================================================
+// initialization
+//
+void  IRrecv::enableIRIn ( )
+{
+	cli();
+	// Setup pulse clock timer interrupt
+	// Prescale /8 (16M/8 = 0.5 microseconds per tick)
+	// Therefore, the timer interval can range from 0.5 to 128 microseconds
+	// Depending on the reset value (255 to 0)
+	TIMER_CONFIG_NORMAL();
+
+	// Timer2 Overflow Interrupt Enable
+	TIMER_ENABLE_INTR;
+
+	TIMER_RESET;
+
+	sei();  // enable interrupts
+
+	// Initialize state machine variables
+	irparams.rcvstate = STATE_IDLE;
+	irparams.rawlen = 0;
+
+	// Set pin modes
+	pinMode(irparams.recvpin, INPUT);
+}
+
+//+=============================================================================
+// Enable/disable blinking of pin 13 on IR processing
+//
+void  IRrecv::blink13 (int blinkflag)
+{
+	irparams.blinkflag = blinkflag;
+	if (blinkflag)  pinMode(BLINKLED, OUTPUT) ;
+}
+
+//+=============================================================================
+// Restart the ISR state machine
+//
+void  IRrecv::resume ( )
+{
+	irparams.rcvstate = STATE_IDLE;
+	irparams.rawlen = 0;
 }
 
 //+=============================================================================

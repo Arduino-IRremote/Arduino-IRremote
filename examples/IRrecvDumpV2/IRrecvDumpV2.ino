@@ -142,6 +142,22 @@ void  dumpCode (decode_results *results)
 
   // Newline
   Serial.println("");
+  
+  // Now dump "known" codes
+  if (results->decode_type != UNKNOWN) {
+    
+    // Some protocols have an address
+    if (results->decode_type == PANASONIC) {
+      Serial.print("unsigned int  addr = 0x");
+      Serial.print(results->address, HEX);
+      Serial.println(";");
+    }
+    
+    // All protocols have data
+    Serial.print("unsigned int  data = 0x");
+    Serial.print(results->value, HEX);
+    Serial.println(";");
+  }
 }
 
 //+=============================================================================
