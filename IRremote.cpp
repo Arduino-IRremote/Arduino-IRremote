@@ -443,6 +443,13 @@ ISR(TIMER_INTR_NAME)
 }
 
 void IRrecv::resume() {
+if (!IS_TIMER_INTR_ENABLED()) {
+    // Enable the Timer2 Interrupt (which is used for receiving IR)
+    TIMER_CONFIG_NORMAL();
+    TIMER_ENABLE_INTR;
+    TIMER_RESET;
+    sei();
+  }
   irparams.rcvstate = STATE_IDLE;
   irparams.rawlen = 0;
 }
