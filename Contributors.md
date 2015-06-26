@@ -11,6 +11,7 @@ These are the active contributors of this project that you may contact if there 
 - [crash7](https://github.com/crash7) : Active contributor
 - [Neco777](https://github.com/neco777) : Active contributor
 - [Lauszus](https://github.com/lauszus) : Active contributor
+- [csBlueChip](https://github.com/csbluechip) : Active contributor
 
 Note: This list is being updated constantly so please let [z3t0](https://github.com/z3t0) know if you have been missed.
 
