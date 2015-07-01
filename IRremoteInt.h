@@ -30,6 +30,7 @@
 // to switch IRremote to use a different timer.
 
 // Arduino Mega
+#if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER2) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4) && !defined(IR_USE_TIMER4HS) && !defined(IR_USE_TIMER5)
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
   //#define IR_USE_TIMER1   // tx = pin 11
   #define IR_USE_TIMER2     // tx = pin 9
@@ -71,7 +72,7 @@
   //#define IR_USE_TIMER1   // tx = pin 9
   #define IR_USE_TIMER2     // tx = pin 3
 #endif
-
+#endif
 
 
 #ifdef F_CPU
