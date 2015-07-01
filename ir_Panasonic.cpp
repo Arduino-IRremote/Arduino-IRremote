@@ -28,14 +28,14 @@ void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 	space(PANASONIC_HDR_SPACE);
 
 	// Address
-	for (unsigned long  mask = 1 << (16 - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (16 - 1);  mask;  mask >>= 1) {
 		mark(PANASONIC_BIT_MARK);
 		if (address & mask)  space(PANASONIC_ONE_SPACE) ;
 		else                 space(PANASONIC_ZERO_SPACE) ;
     }
 
 	// Data
-	for (unsigned long  mask = 1 << (32 - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (32 - 1);  mask;  mask >>= 1) {
         mark(PANASONIC_BIT_MARK);
         if (data & mask)  space(PANASONIC_ONE_SPACE) ;
         else              space(PANASONIC_ZERO_SPACE) ;

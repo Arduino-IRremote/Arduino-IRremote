@@ -36,7 +36,7 @@ void  IRsend::sendJVC (unsigned long data,  int nbits,  bool repeat)
 	}
 
 	// Data
-	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
 		if (data & mask) {
 			mark(JVC_BIT_MARK);
 			space(JVC_ONE_SPACE);

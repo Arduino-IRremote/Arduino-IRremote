@@ -64,7 +64,7 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
 	mark(RC5_T1);
 
 	// Data
-	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
 		if (data & mask) {
 			space(RC5_T1); // 1 is space, then mark
 			mark(RC5_T1);
@@ -141,7 +141,7 @@ void  IRsend::sendRC6 (unsigned long data,  int nbits)
 	space(RC6_T1);
 
 	// Data
-	for (unsigned long  i = 1, mask = 1 << (nbits - 1);  mask;  i++, mask >>= 1) {
+	for (unsigned long  i = 1, mask = 1UL << (nbits - 1);  mask;  i++, mask >>= 1) {
 		// The fourth bit we send is a "double width trailer bit"
 		int  t = (i == 4) ? (RC6_T1 * 2) : (RC6_T1) ;
 		if (data & mask) {

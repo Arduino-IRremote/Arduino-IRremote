@@ -34,7 +34,7 @@ void  IRsend::sendWhynter (unsigned long data,  int nbits)
 	space(WHYNTER_HDR_SPACE);
 
 	// Data
-	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
 		if (data & mask) {
 			mark(WHYNTER_ONE_MARK);
 			space(WHYNTER_ONE_SPACE);

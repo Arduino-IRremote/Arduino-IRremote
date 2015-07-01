@@ -40,7 +40,7 @@ void  IRsend::sendSharpRaw (unsigned long data,  int nbits)
 	// Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
 	// much more reliable. That's the exact behaviour of CD-S6470 remote control.
 	for (int n = 0;  n < 3;  n++) {
-		for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+		for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
 			if (data & mask) {
 				mark(SHARP_BIT_MARK);
 				space(SHARP_ONE_SPACE);

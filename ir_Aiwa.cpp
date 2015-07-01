@@ -38,7 +38,7 @@ void  IRsend::sendAiwaRCT501 (int code)
 	space(AIWA_RC_T501_HDR_SPACE);
 
 	// Send "pre" data
-	for (unsigned long  mask = 1 << (26 - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (26 - 1);  mask;  mask >>= 1) {
 		mark(AIWA_RC_T501_BIT_MARK);
 		if (pre & mask)  space(AIWA_RC_T501_ONE_SPACE) ;
 		else             space(AIWA_RC_T501_ZERO_SPACE) ;

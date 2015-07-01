@@ -29,7 +29,7 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
 	space(NEC_HDR_SPACE);
 
 	// Data
-	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
 		if (data & mask) {
 			mark(NEC_BIT_MARK);
 			space(NEC_ONE_SPACE);
