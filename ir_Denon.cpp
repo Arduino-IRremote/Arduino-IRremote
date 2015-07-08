@@ -41,7 +41,7 @@ void  IRsend::sendDenon (unsigned long data,  int nbits)
 	space(HDR_SPACE);
 
 	// Data
-	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
 		if (data & mask) {
 			mark (BIT_MARK);
 			space(ONE_SPACE);

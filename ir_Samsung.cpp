@@ -29,7 +29,7 @@ void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
 	space(SAMSUNG_HDR_SPACE);
 
 	// Data
-	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
 		if (data & mask) {
 			mark(SAMSUNG_BIT_MARK);
 			space(SAMSUNG_ONE_SPACE);

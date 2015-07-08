@@ -39,7 +39,7 @@ void  IRsend::sendDISH (unsigned long data,  int nbits)
 	mark(DISH_HDR_MARK);
 	space(DISH_HDR_SPACE);
 
-	for (unsigned long  mask = 1 << (nbits - 1);  mask;  mask >>= 1) {
+	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
 		if (data & mask) {
 			mark(DISH_BIT_MARK);
 			space(DISH_ONE_SPACE);
