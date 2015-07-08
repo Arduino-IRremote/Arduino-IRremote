@@ -172,6 +172,10 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(__MK20DX128__)
 	#define IR_USE_TIMER_CMT  // tx = pin 5
 
+// Teensy-LC
+#elif defined(__MKL26Z64__)
+  #define IR_USE_TIMER_TPM1 // tx = pin 16
+
 // Teensy++ 1.0 & 2.0
 #elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
 	//#define IR_USE_TIMER1   // tx = pin 25
@@ -513,11 +517,42 @@ EXTERN  volatile irparams_t  irparams;
 
 #define TIMER_PWM_PIN  5
 
+// defines for TPM1 timer on Teensy-LC
+#elif defined(IR_USE_TIMER_TPM1)
+#define TIMER_RESET          FTM1_SC |= FTM_SC_TOF;
+#define TIMER_ENABLE_PWM     CORE_PIN16_CONFIG = PORT_PCR_MUX(3)|PORT_PCR_DSE|PORT_PCR_SRE
+#define TIMER_DISABLE_PWM    CORE_PIN16_CONFIG = PORT_PCR_MUX(1)|PORT_PCR_SRE
+#define TIMER_ENABLE_INTR    NVIC_ENABLE_IRQ(IRQ_FTM1)
+#define TIMER_DISABLE_INTR   NVIC_DISABLE_IRQ(IRQ_FTM1)
+#define TIMER_INTR_NAME      ftm1_isr
+#ifdef ISR
+#undef ISR
+#endif
+#define ISR(f) void f(void)
+#define TIMER_CONFIG_KHZ(val) ({                     \
+	SIM_SCGC6 |= SIM_SCGC6_TPM1;                 \
+	FTM1_SC = 0;                                 \
+	FTM1_CNT = 0;                                \
+	FTM1_MOD = (F_PLL/2000) / val - 1;           \
+	FTM1_C0V = (F_PLL/6000) / val - 1;           \
+	FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0);     \
+})
+#define TIMER_CONFIG_NORMAL() ({                     \
+	SIM_SCGC6 |= SIM_SCGC6_TPM1;                 \
+	FTM1_SC = 0;                                 \
+	FTM1_CNT = 0;                                \
+	FTM1_MOD = (F_PLL/40000) - 1;                \
+	FTM1_C0V = 0;                                \
+	FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
+})
+#define TIMER_PWM_PIN        16
+
+
+
 //---------------------------------------------------------
 // Unknown Timer
 //
 #else
 #	error "Internal code configuration error, no known IR_USE_TIMER# defined\n"
 #endif
-
-#endif // IRremoteint_h
+#endif
