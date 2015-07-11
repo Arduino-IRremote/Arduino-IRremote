@@ -1,6 +1,0 @@
-## 1.1.0 - 2015/06/26
-- Separated protocols into individual files
-- Lots of code clean up
-- Possible bug fixes
-
-
