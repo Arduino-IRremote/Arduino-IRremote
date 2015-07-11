@@ -169,7 +169,7 @@ EXTERN  volatile irparams_t  irparams;
 	#define IR_USE_TIMER4_HS  // tx = pin 10
 
 // Teensy 3.0
-#elif defined(__MK20DX128__)
+#elif defined(__MK20DX128__) || defined(__MK20DX256__)
 	#define IR_USE_TIMER_CMT  // tx = pin 5
 
 // Teensy-LC
