@@ -442,6 +442,10 @@ ISR(TIMER_INTR_NAME)
   }
 }
 
+bool IRrecv::isIdle() {
+  return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
+}
+
 void IRrecv::resume() {
   irparams.rcvstate = STATE_IDLE;
   irparams.rawlen = 0;
