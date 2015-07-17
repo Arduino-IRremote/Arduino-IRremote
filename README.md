@@ -25,6 +25,7 @@ If you want to contribute to this project:
 - Ask for enhancements
 - Create issues and pull requests
 - Tell other people about this library
+- Contribute new protocols
 
 ## Contributors
 Check [here](Contributors.md)
