@@ -2,6 +2,7 @@
 #include "IRremoteInt.h"
 
 //+=============================================================================
+#if (DECODE_RC5 || DECODE_RC6)
 // Gets one undecoded level at a time from the raw buffer.
 // The RC5/6 decoding is easier if the data is broken into time intervals.
 // E.g. if the buffer has MARK for 2 time intervals and SPACE for 1,
@@ -37,6 +38,7 @@ int  IRrecv::getRClevel (decode_results *results,  int *offset,  int *used,  int
 
 	return val;
 }
+#endif
 
 //==============================================================================
 // RRRR    CCCC  55555
