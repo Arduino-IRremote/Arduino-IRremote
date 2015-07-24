@@ -134,6 +134,13 @@ void  IRrecv::blink13 (int blinkflag)
 }
 
 //+=============================================================================
+// Return if receiving new IR signals
+// 
+bool  IRrecv::isIdle ( ) 
+{
+  return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
+}
+//+=============================================================================
 // Restart the ISR state machine
 //
 void  IRrecv::resume ( )
