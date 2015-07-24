@@ -168,7 +168,7 @@ EXTERN  volatile irparams_t  irparams;
 	//#define IR_USE_TIMER3   // tx = pin 9
 	#define IR_USE_TIMER4_HS  // tx = pin 10
 
-// Teensy 3.0
+// Teensy 3.0 / Teensy 3.1
 #elif defined(__MK20DX128__) || defined(__MK20DX256__)
 	#define IR_USE_TIMER_CMT  // tx = pin 5
 
@@ -190,6 +190,10 @@ EXTERN  volatile irparams_t  irparams;
 // Atmega8
 #elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
 	#define IR_USE_TIMER1     // tx = pin 9
+
+// ATtiny84
+#elif defined(__AVR_ATtiny84__)
+  #define IR_USE_TIMER1
 
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 #else
