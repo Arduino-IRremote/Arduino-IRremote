@@ -302,6 +302,8 @@ EXTERN  volatile irparams_t  irparams;
 #	define TIMER_PWM_PIN  11             // Arduino Mega
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 #	define TIMER_PWM_PIN  13             // Sanguino
+#elif defined(__AVR_ATtiny84__)
+# define TIMER_PWM_PIN  6
 #else
 #	define TIMER_PWM_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif
