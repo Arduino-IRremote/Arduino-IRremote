@@ -138,7 +138,7 @@ void  IRrecv::blink13 (int blinkflag)
 // 
 bool  IRrecv::isIdle ( ) 
 {
-  return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
+ return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
 }
 //+=============================================================================
 // Restart the ISR state machine
