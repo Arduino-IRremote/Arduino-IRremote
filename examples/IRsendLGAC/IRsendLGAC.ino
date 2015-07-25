@@ -125,12 +125,30 @@ void setup()
   Wire.begin(7);
   Wire.onReceive(receiveEvent);
 
+  pinMode(4, OUTPUT); // GND ping
+  digitalWrite(4, LOW);  // GND mode
+
   Serial.println("  - - - T E S T - - -   ");
 
+/* test
+  ac_activate(25, 1);
+  delay(5000);
+  ac_activate(27, 2);
+  delay(5000);
+
+*/  
 }
 
 void loop()
 {
+
+/* test
+  ac_activate(25, 1);
+  delay(5000);
+  ac_activate(27, 0);
+  delay(5000);
+*/
+  
   if ( r != o_r) {
 
     /*

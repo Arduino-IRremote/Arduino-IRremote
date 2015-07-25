@@ -10,11 +10,21 @@
 //==============================================================================
 // chaeplin@gmail.com
 
+/*
+
 #define LGAC_HDR_MARK 3200
 #define LGAC_HDR_SPACE 10000
 #define LGAC_BIT_MARK 1500
 #define LGAC_ONE_SPACE 500
 #define LGAC_ZERO_SPACE 500
+
+*/
+
+#define LGAC_HDR_MARK 4100
+#define LGAC_HDR_SPACE 8800
+#define LGAC_BIT_MARK 1550
+#define LGAC_ONE_SPACE 500
+#define LGAC_ZERO_SPACE 550
 
 
 #define LGAC_RPT_LENGTH 60000
