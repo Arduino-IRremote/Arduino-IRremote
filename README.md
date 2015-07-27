@@ -1,5 +1,3 @@
-![Build Status](https://travis-ci.org/shirriff/Arduino-IRremote.svg)](https://travis-ci.org/shirriff/Arduino-IRremote)
-
 # IRremote Arduino Library
 
 [![Join the chat at https://gitter.im/shirriff/Arduino-IRremote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shirriff/Arduino-IRremote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
