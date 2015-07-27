@@ -193,7 +193,7 @@ EXTERN  volatile irparams_t  irparams;
 
 // ATtiny84
 #elif defined(__AVR_ATtiny84__)
-  #define IR_USE_TIMER1
+  #define IR_USE_TIMER1     // tx = pin 6
 
 //ATtiny85
 #elif defined(__AVR_ATtiny85__)
