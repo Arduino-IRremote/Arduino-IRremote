@@ -125,9 +125,6 @@ void setup()
   Wire.begin(7);
   Wire.onReceive(receiveEvent);
 
-  pinMode(4, OUTPUT); // GND ping
-  digitalWrite(4, LOW);  // GND mode
-
   Serial.println("  - - - T E S T - - -   ");
 
 /* test
