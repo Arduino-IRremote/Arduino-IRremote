@@ -1,6 +1,6 @@
 # IRremote Arduino Library
 
-[![Build Status](https://travis-ci.org/shirriff/Arduino-IRremote.svg?branch=master)](https://travis-ci.org/shirriff/Arduino-IRremote)
+[![Build Status](https://travis-ci.org/z3t0/Arduino-IRremote.svg?branch=master)](https://travis-ci.org/z3t0/Arduino-IRremote)
 
 [![Join the chat at https://gitter.im/shirriff/Arduino-IRremote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shirriff/Arduino-IRremote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
