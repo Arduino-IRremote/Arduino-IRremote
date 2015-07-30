@@ -8,7 +8,8 @@
 
 #include <IRremote.h>
 
-IRrecv irrecv;
+int RECV_PIN = 11;
+IRrecv irrecv (RECV_PIN);
 
 void setup()
 {
