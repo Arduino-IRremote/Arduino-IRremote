@@ -22,9 +22,10 @@ int AC_FLOW        = 1;
 // 0 : low
 // 1 : mid
 // 2 : high
+// if AC_TYPE =1, 3 : change
 
 const int AC_FLOW_TOWER[4] = {0, 4, 6};
-const int AC_FLOW_WALL[4]  = {0, 2, 4};
+const int AC_FLOW_WALL[4]  = {0, 2, 4, 5};
 
 unsigned long AC_CODE_TO_SEND;
 
