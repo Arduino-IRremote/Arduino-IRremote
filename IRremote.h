@@ -76,6 +76,9 @@
 #define DECODE_PRONTO        0 // This function doe not logically make sense
 #define SEND_PRONTO          1
 
+#define DECODE_LGAC          0
+#define SEND_LGAC            1
+
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
 //                                                   or the "repeat" code
@@ -325,6 +328,9 @@ class IRsend
 #		if SEND_Pronto
 			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
 #		endif
+#		if SEND_LGAC
+			void  sendLGAC    (unsigned long data,  int nbits) ;
+#		endif				
 } ;
 
 #endif
