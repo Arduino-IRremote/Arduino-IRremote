@@ -22,10 +22,9 @@ int AC_FLOW        = 1;
 // 0 : low
 // 1 : mid
 // 2 : high
-// 3 : rotate
 
-const int AC_FLOW_TOWER[4] = {0, 4, 6, 12};
-const int AC_FLOW_WALL[4]  = {0, 2, 4, 5};
+const int AC_FLOW_TOWER[4] = {0, 4, 6};
+const int AC_FLOW_WALL[4]  = {0, 2, 4};
 
 unsigned long AC_CODE_TO_SEND;
 
@@ -139,12 +138,12 @@ void setup()
 void loop()
 {
 
-/* test
+
   ac_activate(25, 1);
   delay(5000);
   ac_activate(27, 0);
   delay(5000);
-*/
+
   
   if ( r != o_r) {
 
@@ -155,7 +154,7 @@ void loop()
     # 1 : on              0
     # 2 : air_swing       0 or 1
     # 3 : air_clean       0 or 1
-    # 4 : air_flow        0 ~ 3 : flow
+    # 4 : air_flow        0 ~ 2 : flow
     # 5 : temp            18 ~ 30
     # + : temp + 1
     # - : temp - 1
@@ -184,7 +183,7 @@ void loop()
         }
         break;
       case 4:
-        if ( 0 <= b && b <= 3  ) {
+        if ( 0 <= b && b <= 2  ) {
           ac_activate(AC_TEMPERATURE, b);
         }
         break;
@@ -222,7 +221,7 @@ void loop()
         break;
       default:
         if ( 18 <= a && a <= 30 ) {
-          if ( 0 <= b && b <= 3 ) {
+          if ( 0 <= b && b <= 2 ) {
             ac_activate(a, b);
           }
         }
