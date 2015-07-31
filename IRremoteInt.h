@@ -47,7 +47,8 @@ typedef
 		// The fields are ordered to reduce memory over caused by struct-padding
 		uint8_t       rcvstate;        // State Machine state
 		uint8_t       recvpin;         // Pin connected to IR data from detector
-		uint8_t       blinkflag;       // true -> enable blinking of pin 13 on IR processing
+		uint8_t       blinkpin;
+		uint8_t       blinkflag;       // true -> enable blinking of pin on IR processing
 		uint8_t       rawlen;          // counter of entries in rawbuf
 		unsigned int  timer;           // State timer, counts 50uS ticks.
 		unsigned int  rawbuf[RAWBUF];  // raw data
@@ -70,6 +71,7 @@ EXTERN  volatile irparams_t  irparams;
 //------------------------------------------------------------------------------
 // Defines for blinking the LED
 //
+
 #if defined(CORE_LED0_PIN)
 #	define BLINKLED        CORE_LED0_PIN
 #	define BLINKLED_ON()   (digitalWrite(CORE_LED0_PIN, HIGH))
