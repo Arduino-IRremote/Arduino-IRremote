@@ -97,6 +97,16 @@ IRrecv::IRrecv (int recvpin)
 	irparams.blinkflag = 0;
 }
 
+IRrecv::IRrecv (int recvpin, int blinkpin)
+{
+	irparams.recvpin = recvpin;
+	irparams.blinkpin = blinkpin;
+	pinMode(blinkpin, OUTPUT);
+	irparams.blinkflag = 0;
+}
+
+
+
 //+=============================================================================
 // initialization
 //
