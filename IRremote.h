@@ -168,11 +168,12 @@ class IRrecv
 {
 	public:
 		IRrecv (int recvpin) ;
+		IRrecv (int recvpin, int blinkpin);
 
 		void  blink13    (int blinkflag) ;
 		int   decode     (decode_results *results) ;
 		void  enableIRIn ( ) ;
-    bool  isIdle     ( ) ;
+		bool  isIdle     ( ) ;
 		void  resume     ( ) ;
 
 	private:

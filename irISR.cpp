@@ -77,9 +77,12 @@ ISR (TIMER_INTR_NAME)
 		 	break;
 	}
 
-	// If requested, flash LED L (D13) while receiving IR data
+	// If requested, flash LED while receiving IR data
 	if (irparams.blinkflag) {
-		if (irdata == MARK)  BLINKLED_ON() ;   // turn pin 13 LED on
-		else                 BLINKLED_OFF() ;  // turn pin 13 LED off
+		if (irdata == MARK)  
+			if (irparams.blinkpin) digitalWrite(irparams.blinkpin, HIGH); // Turn user defined pin LED on
+				else BLINKLED_ON() ;   // if no user defined LED pin, turn default LED pin for the hardware on
+		else if (irparams.blinkpin) digitalWrite(irparams.blinkpin, LOW); // Turn user defined pin LED on
+				else BLINKLED_OFF() ;   // if no user defined LED pin, turn default LED pin for the hardware on
 	}
 }
