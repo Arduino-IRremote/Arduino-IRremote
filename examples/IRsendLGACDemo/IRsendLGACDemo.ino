@@ -4,9 +4,12 @@
 // LGAC IR send demo by chaeplin@gmail.com
 // python i2c demo : https://gist.github.com/chaeplin/a1220c86d88421806215
 
+
+
 IRsend irsend;
 // not used
-IRrecv irrecv;
+int RECV_PIN = 11;
+IRrecv irrecv (RECV_PIN);
 
 const int AC_TYPE  = 0;
 // 0 : TOWER
@@ -155,7 +158,7 @@ void loop()
 
     /*
     # a : mode or temp    b : air_flow, temp, swing, clean
-    # 18 ~ 30 : temp      0 ~ 3 : flow // on
+    # 18 ~ 30 : temp      0 ~ 2 : flow // on
     # 0 : off             0
     # 1 : on              0
     # 2 : air_swing       0 or 1
