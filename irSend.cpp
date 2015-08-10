@@ -2,12 +2,12 @@
 #include "IRremoteInt.h"
 
 //+=============================================================================
-void  IRsend::sendRaw (unsigned int buf[],  int len,  int hz)
+void  IRsend::sendRaw (unsigned int buf[],  unsigned char len,  unsigned char hz)
 {
 	// Set IR carrier frequency
 	enableIROut(hz);
 
-	for (int i = 0;  i < len;  i++) {
+	for (unsigned char i = 0;  i < len;  i++) {
 		if (i & 1)  space(buf[i]) ;
 		else        mark (buf[i]) ;
 	}
