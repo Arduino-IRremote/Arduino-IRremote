@@ -178,8 +178,8 @@ void  IRrecv::resume ( )
 //
 int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
 {
-	if      (newval < oldval * .8)  return 0 ;
-	else if (oldval < newval * .8)  return 2 ;
+	if      (newval < (int) (( (long) ((oldval * 80)/100) ))) return 0 ;
+	else if (oldval < (int) (( (long) ((newval * 80)/100) ))) return 2 ;
 	else                            return 1 ;
 }
 

@@ -128,15 +128,15 @@ EXTERN  volatile irparams_t  irparams;
 
 // Upper and Lower percentage tolerances in measurements
 #define TOLERANCE       25
-#define LTOL            (1.0 - (TOLERANCE/100.))
-#define UTOL            (1.0 + (TOLERANCE/100.))
+#define LTOL (100 - TOLERANCE)
+#define UTOL (100 + TOLERANCE)
 
 // Minimum gap between IR transmissions
 #define _GAP            5000
 #define GAP_TICKS       (_GAP/USECPERTICK)
 
-#define TICKS_LOW(us)   ((int)(((us)*LTOL/USECPERTICK)))
-#define TICKS_HIGH(us)  ((int)(((us)*UTOL/USECPERTICK + 1)))
+#define TICKS_LOW(us) (int) (( (long) (us) * LTOL / (USECPERTICK * 100) ))
+#define TICKS_HIGH(us) (int) (( (long) (us) * UTOL / (USECPERTICK * 100) + 1))
 
 //------------------------------------------------------------------------------
 // IR detector output is active low
