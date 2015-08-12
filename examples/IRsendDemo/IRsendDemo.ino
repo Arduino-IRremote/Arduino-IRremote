@@ -6,17 +6,18 @@
  * http://arcfn.com
  */
 
+
 #include <IRremote.h>
 
-int RECV_PIN = 11;
-IRrecv irrecv (RECV_PIN);
+IRsend irsend;
 
 void setup()
 {
-  Serial.begin(115200);
 }
 
 void loop() {
-  if (irrecv.isIdle())
-  Serial.println("Idling");
+	for (int i = 0; i < 3; i++) {
+		irsend.sendSony(0xa90, 12);
+		delay(40);
+	}
 }
