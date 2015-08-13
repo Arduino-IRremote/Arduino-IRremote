@@ -15,67 +15,67 @@ int  IRrecv::decode (decode_results *results)
 
 	if (irparams.rcvstate != STATE_STOP)  return false ;
 
-#ifdef DECODE_NEC
+#if DECODE_NEC
 	DBG_PRINTLN("Attempting NEC decode");
 	if (decodeNEC(results))  return true ;
 #endif
 
-#ifdef DECODE_SONY
+#if DECODE_SONY
 	DBG_PRINTLN("Attempting Sony decode");
 	if (decodeSony(results))  return true ;
 #endif
 
-#ifdef DECODE_SANYO
+#if DECODE_SANYO
 	DBG_PRINTLN("Attempting Sanyo decode");
 	if (decodeSanyo(results))  return true ;
 #endif
 
-#ifdef DECODE_MITSUBISHI
+#if DECODE_MITSUBISHI
 	DBG_PRINTLN("Attempting Mitsubishi decode");
 	if (decodeMitsubishi(results))  return true ;
 #endif
 
-#ifdef DECODE_RC5
+#if DECODE_RC5
 	DBG_PRINTLN("Attempting RC5 decode");
 	if (decodeRC5(results))  return true ;
 #endif
 
-#ifdef DECODE_RC6
+#if DECODE_RC6
 	DBG_PRINTLN("Attempting RC6 decode");
 	if (decodeRC6(results))  return true ;
 #endif
 
-#ifdef DECODE_PANASONIC
+#if DECODE_PANASONIC
 	DBG_PRINTLN("Attempting Panasonic decode");
 	if (decodePanasonic(results))  return true ;
 #endif
 
-#ifdef DECODE_LG
+#if DECODE_LG
 	DBG_PRINTLN("Attempting LG decode");
 	if (decodeLG(results))  return true ;
 #endif
 
-#ifdef DECODE_JVC
+#if DECODE_JVC
 	DBG_PRINTLN("Attempting JVC decode");
 	if (decodeJVC(results))  return true ;
 #endif
 
-#ifdef DECODE_SAMSUNG
+#if DECODE_SAMSUNG
 	DBG_PRINTLN("Attempting SAMSUNG decode");
 	if (decodeSAMSUNG(results))  return true ;
 #endif
 
-#ifdef DECODE_WHYNTER
+#if DECODE_WHYNTER
 	DBG_PRINTLN("Attempting Whynter decode");
 	if (decodeWhynter(results))  return true ;
 #endif
 
-#ifdef DECODE_AIWA_RC_T501
+#if DECODE_AIWA_RC_T501
 	DBG_PRINTLN("Attempting Aiwa RC-T501 decode");
 	if (decodeAiwaRCT501(results))  return true ;
 #endif
 
-#ifdef DECODE_DENON
+#if DECODE_DENON
 	DBG_PRINTLN("Attempting Denon decode");
 	if (decodeDenon(results))  return true ;
 #endif

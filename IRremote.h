@@ -263,7 +263,7 @@ class IRsend
 		void  enableIROut (int khz) ;
 		void  mark        (int usec) ;
 		void  space       (int usec) ;
-		void  sendRaw     (unsigned int buf[],  int len,  int hz) ;
+		void  sendRaw     (unsigned int buf[],  unsigned char len,  unsigned char hz) ;
 
 		//......................................................................
 #		if SEND_RC5
