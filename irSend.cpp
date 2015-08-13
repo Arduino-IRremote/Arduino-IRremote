@@ -22,7 +22,7 @@ void  IRsend::sendRaw (unsigned int buf[],  unsigned char len,  unsigned char hz
 void  IRsend::mark (int time)
 {
 	TIMER_ENABLE_PWM; // Enable pin 3 PWM output
-	if (time > 0) delayMicroseconds(time);
+	if (time > 0) custom_delay_ms(time);
 }
 
 //+=============================================================================
@@ -33,8 +33,12 @@ void  IRsend::mark (int time)
 void  IRsend::space (int time)
 {
 	TIMER_DISABLE_PWM; // Disable pin 3 PWM output
-	if (time > 0) delayMicroseconds(time);
+	if (time > 0) IRsend::custom_delay_ms(time);
 }
+
+
+
+
 
 //+=============================================================================
 // Enables IR output.  The khz value controls the modulation frequency in kilohertz.
@@ -64,3 +68,17 @@ void  IRsend::enableIROut (int khz)
 	TIMER_CONFIG_KHZ(khz);
 }
 
+//+=============================================================================
+// Custom delay function that circumvents Arduino's delayMicroseconds limit
+
+void IRsend::custom_delay_ms(unsigned int time) {
+	if (time)
+	{
+		if (time > 16000)
+		{
+			delayMicroseconds(time % 1000);
+			delay(time / 1000);
+		} 
+		else delayMicroseconds(time);
+	}
+}
