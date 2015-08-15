@@ -253,7 +253,7 @@ class IRsend
 	public:
 		IRsend () { }
 
-		void  custom_delay_ms (unsigned int time);
+		void  custom_delay_usec (unsigned long uSecs);
 		void  enableIROut 		(int khz) ;
 		void  mark        		(int usec) ;
 		void  space       		(int usec) ;
