@@ -22,7 +22,7 @@ void  IRsend::sendRaw (unsigned int buf[],  unsigned char len,  unsigned char hz
 void  IRsend::mark (int time)
 {
 	TIMER_ENABLE_PWM; // Enable pin 3 PWM output
-	if (time > 0) custom_delay_ms(time);
+	if (time > 0) custom_delay_usec(time);
 }
 
 //+=============================================================================
@@ -33,7 +33,7 @@ void  IRsend::mark (int time)
 void  IRsend::space (int time)
 {
 	TIMER_DISABLE_PWM; // Disable pin 3 PWM output
-	if (time > 0) IRsend::custom_delay_ms(time);
+	if (time > 0) IRsend::custom_delay_usec(time);
 }
 
 
@@ -71,14 +71,16 @@ void  IRsend::enableIROut (int khz)
 //+=============================================================================
 // Custom delay function that circumvents Arduino's delayMicroseconds limit
 
-void IRsend::custom_delay_ms(unsigned int time) {
-	if (time)
-	{
-		if (time > 16000)
-		{
-			delayMicroseconds(time % 1000);
-			delay(time / 1000);
-		} 
-		else delayMicroseconds(time);
-	}
+void IRsend::custom_delay_usec(unsigned long uSecs) {
+  if (uSecs > 4) {
+    unsigned long start = micros();
+    unsigned long endMicros = start + uSecs - 4;
+    if (endMicros < start) { // Check if overflow
+      while ( micros() > start ) {} // wait until overflow
+    }
+    while ( micros() < endMicros ) {} // normal wait
+  } else {
+    __asm__("nop\n\t"); // must have or compiler optimizes out
+  }
 }
+
