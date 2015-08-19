@@ -260,10 +260,11 @@ class IRsend
 	public:
 		IRsend () { }
 
-		void  enableIROut (int khz) ;
-		void  mark        (int usec) ;
-		void  space       (int usec) ;
-		void  sendRaw     (unsigned int buf[],  unsigned char len,  unsigned char hz) ;
+		void  custom_delay_usec (unsigned long uSecs);
+		void  enableIROut 		(int khz) ;
+		void  mark        		(int usec) ;
+		void  space       		(int usec) ;
+		void  sendRaw     		(unsigned int buf[],  unsigned char len,  unsigned char hz) ;
 
 		//......................................................................
 #		if SEND_RC5
