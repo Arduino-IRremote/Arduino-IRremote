@@ -95,7 +95,7 @@ void  dumpRaw (decode_results *results)
   Serial.print("     -");
   Serial.println(results->rawbuf[0] * USECPERTICK, DEC);
   for (int i = 1;  i < results->rawlen;  i++) {
-    int  x = results->rawbuf[i] * USECPERTICK;
+    unsigned int  x = results->rawbuf[i] * USECPERTICK;
     if (!(i & 1)) {  // even
       Serial.print("-");
       if (x < 1000)  Serial.print(" ") ;
@@ -127,7 +127,7 @@ void  dumpCode (decode_results *results)
 
   // Dump data
   for (int i = 0;  i < results->rawlen;  i++) {
-    Serial.print(results->rawbuf[i], DEC);
+    Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
     Serial.print(",");
     if (!(i&1))  Serial.print(" ");
   }

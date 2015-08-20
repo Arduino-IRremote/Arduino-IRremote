@@ -262,9 +262,9 @@ class IRsend
 
 		void  custom_delay_usec (unsigned long uSecs);
 		void  enableIROut 		(int khz) ;
-		void  mark        		(int usec) ;
-		void  space       		(int usec) ;
-		void  sendRaw     		(unsigned int buf[],  unsigned char len,  unsigned char hz) ;
+		void  mark        		(unsigned int usec) ;
+		void  space       		(unsigned int usec) ;
+		void  sendRaw     		(unsigned int buf[],  unsigned int len,  unsigned int hz) ;
 
 		//......................................................................
 #		if SEND_RC5

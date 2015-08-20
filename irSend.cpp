@@ -2,12 +2,12 @@
 #include "IRremoteInt.h"
 
 //+=============================================================================
-void  IRsend::sendRaw (unsigned int buf[],  unsigned char len,  unsigned char hz)
+void  IRsend::sendRaw (unsigned int buf[],  unsigned int len,  unsigned int hz)
 {
 	// Set IR carrier frequency
 	enableIROut(hz);
 
-	for (unsigned char i = 0;  i < len;  i++) {
+	for (unsigned int i = 0;  i < len;  i++) {
 		if (i & 1)  space(buf[i]) ;
 		else        mark (buf[i]) ;
 	}
@@ -19,7 +19,7 @@ void  IRsend::sendRaw (unsigned int buf[],  unsigned char len,  unsigned char hz
 // Sends an IR mark for the specified number of microseconds.
 // The mark output is modulated at the PWM frequency.
 //
-void  IRsend::mark (int time)
+void  IRsend::mark (unsigned int time)
 {
 	TIMER_ENABLE_PWM; // Enable pin 3 PWM output
 	if (time > 0) custom_delay_usec(time);
@@ -30,7 +30,7 @@ void  IRsend::mark (int time)
 // Sends an IR space for the specified number of microseconds.
 // A space is no output, so the PWM output is disabled.
 //
-void  IRsend::space (int time)
+void  IRsend::space (unsigned int time)
 {
 	TIMER_DISABLE_PWM; // Disable pin 3 PWM output
 	if (time > 0) IRsend::custom_delay_usec(time);
@@ -79,8 +79,9 @@ void IRsend::custom_delay_usec(unsigned long uSecs) {
       while ( micros() > start ) {} // wait until overflow
     }
     while ( micros() < endMicros ) {} // normal wait
-  } else {
-    __asm__("nop\n\t"); // must have or compiler optimizes out
-  }
+  } 
+  //else {
+  //  __asm__("nop\n\t"); // must have or compiler optimizes out
+  //}
 }
 
