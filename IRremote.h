@@ -56,7 +56,7 @@
 #define SEND_AIWA_RC_T501    1
 
 #define DECODE_LG            1
-#define SEND_LG              0 // NOT WRITTEN
+#define SEND_LG              1 
 
 #define DECODE_SANYO         1
 #define SEND_SANYO           0 // NOT WRITTEN
@@ -300,7 +300,7 @@ class IRsend
 #		endif
 		//......................................................................
 #		if SEND_LG
-			void  sendLG         ( ) ; // NOT WRITTEN
+			void  sendLG         (unsigned long data,  int nbits) ;
 #		endif
 		//......................................................................
 #		if SEND_SANYO
