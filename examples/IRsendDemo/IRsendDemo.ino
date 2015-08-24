@@ -20,4 +20,5 @@ void loop() {
 		irsend.sendSony(0xa90, 12);
 		delay(40);
 	}
+	delay(5000); //5 second delay between each signal burst
 }
