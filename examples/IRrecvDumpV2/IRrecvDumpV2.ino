@@ -6,7 +6,7 @@
 //------------------------------------------------------------------------------
 // Tell IRremote which Arduino pin is connected to the IR Receiver (TSOP4838)
 //
-int recvPin = 6;
+int recvPin = 11;
 IRrecv irrecv(recvPin);
 
 //+=============================================================================
@@ -92,10 +92,9 @@ void  dumpRaw (decode_results *results)
   Serial.print("Timing[");
   Serial.print(results->rawlen, DEC);
   Serial.println("]: ");
-  Serial.print("     -");
-  Serial.println(results->rawbuf[0] * USECPERTICK, DEC);
+
   for (int i = 1;  i < results->rawlen;  i++) {
-    unsigned int  x = results->rawbuf[i] * USECPERTICK;
+    unsigned long  x = results->rawbuf[i] * USECPERTICK;
     if (!(i & 1)) {  // even
       Serial.print("-");
       if (x < 1000)  Serial.print(" ") ;
@@ -109,7 +108,7 @@ void  dumpRaw (decode_results *results)
       Serial.print(x, DEC);
       Serial.print(", ");
     }
-    if (!(i%8))  Serial.println("");
+    if (!(i % 8))  Serial.println("");
   }
   Serial.println("");                    // Newline
 }
@@ -126,10 +125,10 @@ void  dumpCode (decode_results *results)
   Serial.print("] = {");                   // Start declaration
 
   // Dump data
-  for (int i = 0;  i < results->rawlen;  i++) {
+  for (int i = 1;  i < results->rawlen;  i++) {
     Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
     Serial.print(",");
-    if (!(i&1))  Serial.print(" ");
+    if (!(i & 1))  Serial.print(" ");
   }
 
   // End declaration
@@ -143,17 +142,17 @@ void  dumpCode (decode_results *results)
 
   // Newline
   Serial.println("");
-  
+
   // Now dump "known" codes
   if (results->decode_type != UNKNOWN) {
-    
+
     // Some protocols have an address
     if (results->decode_type == PANASONIC) {
       Serial.print("unsigned int  addr = 0x");
       Serial.print(results->address, HEX);
       Serial.println(";");
     }
-    
+
     // All protocols have data
     Serial.print("unsigned int  data = 0x");
     Serial.print(results->value, HEX);
@@ -166,14 +165,13 @@ void  dumpCode (decode_results *results)
 //
 void  loop ( )
 {
-    decode_results  results;        // Somewhere to store the results
+  decode_results  results;        // Somewhere to store the results
 
-    if (irrecv.decode(&results)) {  // Grab an IR code
-      dumpInfo(&results);           // Output the results
-      dumpRaw(&results);            // Output the results in RAW format
-      dumpCode(&results);           // Output the results as source code
-      Serial.println("");           // Blank line between entries
-      irrecv.resume();              // Prepare for the next value
-    }
+  if (irrecv.decode(&results)) {  // Grab an IR code
+    dumpInfo(&results);           // Output the results
+    dumpRaw(&results);            // Output the results in RAW format
+    dumpCode(&results);           // Output the results as source code
+    Serial.println("");           // Blank line between entries
+    irrecv.resume();              // Prepare for the next value
+  }
 }
-
