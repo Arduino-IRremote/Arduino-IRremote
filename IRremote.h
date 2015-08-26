@@ -324,7 +324,7 @@ class IRsend
 			void  sendDenon      (unsigned long data,  int nbits) ;
 #		endif
 		//......................................................................
-#		if SEND_Pronto
+#		if SEND_PRONTO
 			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
 #		endif
 } ;
