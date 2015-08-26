@@ -52,3 +52,29 @@ bool  IRrecv::decodeLG (decode_results *results)
 }
 #endif
 
+//+=============================================================================
+#if SEND_LG
+void  IRsend::sendLG (unsigned long data,  int nbits)
+{
+    // Set IR carrier frequency
+    enableIROut(38);
+
+    // Header
+    mark(LG_HDR_MARK);
+    space(LG_HDR_SPACE);
+    mark(LG_BIT_MARK);
+
+    // Data
+    for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
+        if (data & mask) {
+            space(LG_ONE_SPACE);
+            mark(LG_BIT_MARK);
+        } else {
+            space(LG_ZERO_SPACE);
+            mark(LG_BIT_MARK);
+        }
+    }
+    space(0);  // Always end with the LED off
+}
+#endif
+
