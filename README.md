@@ -15,6 +15,7 @@ Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more inf
 2. Download the latest release.
 3. Extract the zip file
 4. Move the "IRremote" folder that has been extracted to your libraries directory.
+5. Make sure to delete Arduino_Root/libraries/RobotIRRemote. Where Arduino_Root refers to the install directory of Arduino. The library RobotIRRemote has similar definitions to IRremote and causes errors.
 
 ## Usage
 - TODO (Check examples for now)
