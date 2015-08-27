@@ -10,6 +10,11 @@ IRrecv irrecv (RECV_PIN);
 const int AC_TYPE  = 0;
 // 0 : TOWER
 // 1 : WALL
+//
+
+int AC_HEAT = 0;
+// 0 : cooling
+// 1 : heating
 
 int AC_POWER_ON    = 0;
 // 0 : off
@@ -27,6 +32,8 @@ int AC_FLOW        = 1;
 // 1 : mid
 // 2 : high
 // if AC_TYPE =1, 3 : change
+//
+
 
 const int AC_FLOW_TOWER[3] = {0, 4, 6};
 const int AC_FLOW_WALL[4]  = {0, 2, 4, 5};
@@ -54,7 +61,14 @@ void ac_activate(int temperature, int air_flow)
   int AC_MSBITS1 = 8;
   int AC_MSBITS2 = 8;
   int AC_MSBITS3 = 0;
-  int AC_MSBITS4 = 0;
+  int AC_MSBITS4 ;
+  if ( AC_HEAT == 1 ) {
+    // heating
+    AC_MSBITS4 = 4;
+  } else {
+    // cooling
+    AC_MSBITS4 = 0;
+  }
   int AC_MSBITS5 = temperature - 15;
   int AC_MSBITS6 ;
 
@@ -131,13 +145,13 @@ void setup()
 
   Serial.println("  - - - T E S T - - -   ");
 
-/* test
-  ac_activate(25, 1);
-  delay(5000);
-  ac_activate(27, 2);
-  delay(5000);
+  /* test
+    ac_activate(25, 1);
+    delay(5000);
+    ac_activate(27, 2);
+    delay(5000);
 
-*/  
+  */
 }
 
 void loop()
@@ -149,11 +163,11 @@ void loop()
   ac_activate(27, 0);
   delay(5000);
 
-  
+
   if ( r != o_r) {
 
     /*
-    # a : mode or temp    b : air_flow, temp, swing, clean
+    # a : mode or temp    b : air_flow, temp, swing, clean, cooling/heating
     # 18 ~ 30 : temp      0 ~ 2 : flow // on
     # 0 : off             0
     # 1 : on              0
