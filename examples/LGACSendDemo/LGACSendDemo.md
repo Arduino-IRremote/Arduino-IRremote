@@ -1,3 +1,12 @@
+=== decoding for LG A/C ====
+- 1) remote of LG AC has two type of HDR mark/space, 8000/4000 and 3100/10000 
+- 2) HDR 8000/4000 is decoded using decodeLG(IRrecvDumpV2) without problem
+- 3) for HDR 3100/10000, use AnalysIR's code : http://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino/
+- 4) for bin output based on AnalysIR's code : https://gist.github.com/chaeplin/a3a4b4b6b887c663bfe8
+- 5) remove first two byte(11)
+- 6) sample rawcode with bin output : https://gist.github.com/chaeplin/134d232e0b8cfb898860
+
+
 === *** ===
 - 1) Sample raw code : https://gist.github.com/chaeplin/ab2a7ad1533c41260f0d
 - 2) send raw code : https://gist.github.com/chaeplin/7c800d3166463bb51be4
