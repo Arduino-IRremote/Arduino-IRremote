@@ -8,7 +8,7 @@
 - (1) : fixed 
 - (2) : fixed
 - (3) : special(power, swing, air clean)
-- (4) : change air flow, temperature, coolingi(0)/heating(4)
+- (4) : change air flow, temperature, cooling(0)/heating(4)
 - (5) : temperature ( 15 + (5) = )
 - (6) : air flow
 - (7) : crc ( 3 + 4 + 5 + 6 ) & B00001111
