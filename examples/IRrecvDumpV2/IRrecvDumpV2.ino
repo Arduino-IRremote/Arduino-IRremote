@@ -90,7 +90,7 @@ void  dumpRaw (decode_results *results)
 {
   // Print Raw data
   Serial.print("Timing[");
-  Serial.print(results->rawlen, DEC);
+  Serial.print(results->rawlen-1, DEC);
   Serial.println("]: ");
 
   for (int i = 1;  i < results->rawlen;  i++) {
@@ -106,7 +106,7 @@ void  dumpRaw (decode_results *results)
       if (x < 1000)  Serial.print(" ") ;
       if (x < 100)   Serial.print(" ") ;
       Serial.print(x, DEC);
-      Serial.print(", ");
+      if (i < results->rawlen-1) Serial.print(", "); //',' not needed for last one
     }
     if (!(i % 8))  Serial.println("");
   }
@@ -121,18 +121,18 @@ void  dumpCode (decode_results *results)
   // Start declaration
   Serial.print("unsigned int  ");          // variable type
   Serial.print("rawData[");                // array name
-  Serial.print(results->rawlen + 1, DEC);  // array size
+  Serial.print(results->rawlen - 1, DEC);  // array size
   Serial.print("] = {");                   // Start declaration
 
   // Dump data
   for (int i = 1;  i < results->rawlen;  i++) {
     Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
-    Serial.print(",");
+    if ( i < results->rawlen-1 ) Serial.print(","); // ',' not needed on last one
     if (!(i & 1))  Serial.print(" ");
   }
 
   // End declaration
-  Serial.print("0};");  // Turn LED off at the end
+  Serial.print("};");  // 
 
   // Comment
   Serial.print("  // ");
