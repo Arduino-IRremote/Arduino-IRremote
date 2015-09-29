@@ -1,7 +1,7 @@
 
 //******************************************************************************
 // IRremote
-// Version 0.1 July, 2009
+// Version 2.0.1 June, 2015
 // Copyright 2009 Ken Shirriff
 // For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
 // Edited by Mitra to add new controller SANYO
