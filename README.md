@@ -27,6 +27,11 @@ If you want to contribute to this project:
 - Create issues and pull requests
 - Tell other people about this library
 - Contribute new protocols
+- 
+
+## Contact
+The only way to contact me at the moment is by email: zetoslab@gmail.com
+I am not currently monitoring any PRs or Issues due to other issues but will respond to all emails. If anyone wants contributor access, feel free to email me. Or if you find any Issues/PRs to be of importance that my attention is needed please email me.
 
 ## Contributors
 Check [here](Contributors.md)
