@@ -76,6 +76,9 @@
 #define DECODE_PRONTO        0 // This function doe not logically make sense
 #define SEND_PRONTO          1
 
+#define DECODE_SEIKI        0 // NOT WRITTEN
+#define SEND_SEIKI          1
+
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
 //                                                   or the "repeat" code
@@ -115,6 +118,7 @@ typedef
 		SHARP,
 		DENON,
 		PRONTO,
+		SEIKI,
 	}
 decode_type_t;
 
@@ -242,6 +246,10 @@ class IRrecv
 #		if DECODE_DENON
 			bool  decodeDenon (decode_results *results) ;
 #		endif
+		//......................................................................
+#		if DECODE_SEIKI
+			bool  decodeSeiki (decode_results *results) ;
+#		endif
 } ;
 
 //------------------------------------------------------------------------------
@@ -324,6 +332,10 @@ class IRsend
 		//......................................................................
 #		if SEND_Pronto
 			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
+#		endif
+		//......................................................................
+#		if SEND_SEIKI
+			void  sendSeiki      (unsigned long data,  int nbits) ;
 #		endif
 } ;
 
