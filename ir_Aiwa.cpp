@@ -28,7 +28,6 @@
 void  IRsend::sendAiwaRCT501 (int code)
 {
 	unsigned long  pre = 0x0227EEC0;  // 26-bits
-	int            mask;
 
 	// Set IR carrier frequency
 	enableIROut(AIWA_RC_T501_HZ);
