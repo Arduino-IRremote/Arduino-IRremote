@@ -1,7 +1,7 @@
 
 //******************************************************************************
 // IRremote
-// Version 0.1 July, 2009
+// Version 2.0.1 June, 2015
 // Copyright 2009 Ken Shirriff
 // For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
 // Edited by Mitra to add new controller SANYO
@@ -56,7 +56,7 @@
 #define SEND_AIWA_RC_T501    1
 
 #define DECODE_LG            1
-#define SEND_LG              0 // NOT WRITTEN
+#define SEND_LG              1 
 
 #define DECODE_SANYO         1
 #define SEND_SANYO           0 // NOT WRITTEN
@@ -300,7 +300,7 @@ class IRsend
 #		endif
 		//......................................................................
 #		if SEND_LG
-			void  sendLG         ( ) ; // NOT WRITTEN
+			void  sendLG         (unsigned long data,  int nbits) ;
 #		endif
 		//......................................................................
 #		if SEND_SANYO
@@ -324,7 +324,7 @@ class IRsend
 			void  sendDenon      (unsigned long data,  int nbits) ;
 #		endif
 		//......................................................................
-#		if SEND_Pronto
+#		if SEND_PRONTO
 			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
 #		endif
 } ;

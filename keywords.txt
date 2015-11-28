@@ -32,7 +32,6 @@ sendSharpRaw KEYWORD2
 sendPanasonic KEYWORD2
 sendJVC KEYWORD2
 
-#
 #######################################
 # Constants (LITERAL1)
 #######################################

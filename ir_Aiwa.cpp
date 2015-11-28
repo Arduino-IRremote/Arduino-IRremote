@@ -9,7 +9,7 @@
 //                        A   A  IIIII   WWW   A   A
 //==============================================================================
 
-// Baszed off the RC-T501 RCU
+// Based off the RC-T501 RCU
 // Lirc file http://lirc.sourceforge.net/remotes/aiwa/RC-T501
 
 #define AIWA_RC_T501_HZ            38
@@ -28,7 +28,6 @@
 void  IRsend::sendAiwaRCT501 (int code)
 {
 	unsigned long  pre = 0x0227EEC0;  // 26-bits
-	int            mask;
 
 	// Set IR carrier frequency
 	enableIROut(AIWA_RC_T501_HZ);
