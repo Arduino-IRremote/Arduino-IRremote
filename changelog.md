@@ -1,3 +1,8 @@
+
+## 2.0.2 - 2015/12/02
+- Added IRremoteInfo Sketch - [PR](https://github.com/z3t0/Arduino-IRremote/pull/241)
+- Enforcing changelog.md
+
 ## 2.0.1 - 2015/07/26 - [Release](https://github.com/shirriff/Arduino-IRremote/releases/tag/BETA)
 ### Changes
 - Updated README
