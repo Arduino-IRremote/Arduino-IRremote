@@ -325,7 +325,7 @@ class IRsend
 #		endif
 		//......................................................................
 #		if SEND_PRONTO
-			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
+			bool  sendPronto     (const char* code,  bool repeat,  bool fallback) ;
 #		endif
 } ;
 

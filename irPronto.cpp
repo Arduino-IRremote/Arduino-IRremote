@@ -8,8 +8,6 @@
 #	define PRONTO_NOFALLBACK  false
 #endif
 
-#if SEND_PRONTO
-
 //******************************************************************************
 #if TEST
 #	include <stdio.h>
@@ -19,6 +17,8 @@
 #else
 #	include "IRremote.h"
 #endif // TEST
+
+#if SEND_PRONTO
 
 //+=============================================================================
 // Check for a valid hex digit
@@ -41,7 +41,7 @@ bool  isblank (char ch)
 //+=============================================================================
 // Bypass spaces
 //
-bool  byp (char** pcp)
+bool  byp (const char** pcp)
 {
 	while (isblank(**pcp))  (*pcp)++ ;
 }
@@ -62,7 +62,7 @@ uint8_t  htob (char ch)
 // We assume the string has already been validated
 //   and the pointer being passed points at the start of a block of 4 hex digits
 //
-uint16_t  htow (char* cp)
+uint16_t  htow (const char* cp)
 {
 	return ( (htob(cp[0]) << 12) | (htob(cp[1]) <<  8) |
              (htob(cp[2]) <<  4) | (htob(cp[3])      )  ) ;
@@ -70,12 +70,16 @@ uint16_t  htow (char* cp)
 
 //+=============================================================================
 //
-bool sendPronto (char* s,  bool repeat,  bool fallback)
+bool
+#if !TEST
+	IRsend::
+#endif
+	sendPronto (const char* s,  bool repeat,  bool fallback)
 {
 	int       i;
 	int       len;
 	int       skip;
-	char*     cp;
+	const char*	cp;
 	uint16_t  freq;  // Frequency in KHz
 	uint8_t   usec;  // pronto uSec/tick
 	uint8_t   once;
@@ -138,6 +142,7 @@ bool sendPronto (char* s,  bool repeat,  bool fallback)
 		else        mark (htow(cp) * usec);
 		cp += 4;
 	}
+	return true;
 }
 
 //+=============================================================================
