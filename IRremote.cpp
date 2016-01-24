@@ -46,9 +46,14 @@ int  MATCH (int measured,  int desired)
  	DBG_PRINT(" <= ");
  	DBG_PRINT(measured, DEC);
  	DBG_PRINT(" <= ");
- 	DBG_PRINTLN(TICKS_HIGH(desired), DEC);
+ 	DBG_PRINT(TICKS_HIGH(desired), DEC);
 
- 	return ((measured >= TICKS_LOW(desired)) && (measured <= TICKS_HIGH(desired)));
+  bool passed = ((measured >= TICKS_LOW(desired)) && (measured <= TICKS_HIGH(desired)));
+  if (passed)
+    DBG_PRINTLN("; passed");
+  else
+    DBG_PRINTLN("; FAILED"); 
+ 	return passed;
 }
 
 //+========================================================
@@ -65,10 +70,15 @@ int  MATCH_MARK (int measured_ticks,  int desired_us)
 	DBG_PRINT(" <= ");
 	DBG_PRINT(measured_ticks, DEC);
 	DBG_PRINT(" <= ");
-	DBG_PRINTLN(TICKS_HIGH(desired_us + MARK_EXCESS), DEC);
+	DBG_PRINT(TICKS_HIGH(desired_us + MARK_EXCESS), DEC);
 
-	return ((measured_ticks >= TICKS_LOW (desired_us + MARK_EXCESS))
-	     && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS)));
+  bool passed = ((measured_ticks >= TICKS_LOW (desired_us + MARK_EXCESS))
+                && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS)));
+  if (passed)
+    DBG_PRINTLN("; passed");
+  else
+    DBG_PRINTLN("; FAILED"); 
+ 	return passed;
 }
 
 //+========================================================
@@ -85,10 +95,15 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 	DBG_PRINT(" <= ");
 	DBG_PRINT(measured_ticks, DEC);
 	DBG_PRINT(" <= ");
-	DBG_PRINTLN(TICKS_HIGH(desired_us - MARK_EXCESS), DEC);
+	DBG_PRINT(TICKS_HIGH(desired_us - MARK_EXCESS), DEC);
 
-	return ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS))
-	     && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS)));
+  bool passed = ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS))
+                && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS)));
+  if (passed)
+    DBG_PRINTLN("; passed");
+  else
+    DBG_PRINTLN("; FAILED"); 
+ 	return passed;
 }
 
 //+=============================================================================
