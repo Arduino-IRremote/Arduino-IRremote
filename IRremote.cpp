@@ -41,18 +41,18 @@
 //
 int  MATCH (int measured,  int desired)
 {
- 	DBG_PRINT("Testing: ");
+ 	DBG_PRINT(F("Testing: "));
  	DBG_PRINT(TICKS_LOW(desired), DEC);
- 	DBG_PRINT(" <= ");
+ 	DBG_PRINT(F(" <= "));
  	DBG_PRINT(measured, DEC);
- 	DBG_PRINT(" <= ");
+ 	DBG_PRINT(F(" <= "));
  	DBG_PRINT(TICKS_HIGH(desired), DEC);
 
   bool passed = ((measured >= TICKS_LOW(desired)) && (measured <= TICKS_HIGH(desired)));
   if (passed)
-    DBG_PRINTLN("; passed");
+    DBG_PRINTLN(F("; passed"));
   else
-    DBG_PRINTLN("; FAILED"); 
+    DBG_PRINTLN(F("; FAILED")); 
  	return passed;
 }
 
@@ -61,23 +61,24 @@ int  MATCH (int measured,  int desired)
 //
 int  MATCH_MARK (int measured_ticks,  int desired_us)
 {
-	DBG_PRINT("Testing mark ");
+	DBG_PRINT(F("Testing mark (actual vs desired): "));
 	DBG_PRINT(measured_ticks * USECPERTICK, DEC);
-	DBG_PRINT(" vs ");
+	DBG_PRINT(F("us vs "));
 	DBG_PRINT(desired_us, DEC);
+  DBG_PRINT("us"); 
 	DBG_PRINT(": ");
-	DBG_PRINT(TICKS_LOW(desired_us + MARK_EXCESS), DEC);
-	DBG_PRINT(" <= ");
-	DBG_PRINT(measured_ticks, DEC);
-	DBG_PRINT(" <= ");
-	DBG_PRINT(TICKS_HIGH(desired_us + MARK_EXCESS), DEC);
+	DBG_PRINT(TICKS_LOW(desired_us + MARK_EXCESS) * USECPERTICK, DEC);
+	DBG_PRINT(F(" <= "));
+	DBG_PRINT(measured_ticks * USECPERTICK, DEC);
+	DBG_PRINT(F(" <= "));
+	DBG_PRINT(TICKS_HIGH(desired_us + MARK_EXCESS) * USECPERTICK, DEC);
 
   bool passed = ((measured_ticks >= TICKS_LOW (desired_us + MARK_EXCESS))
                 && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS)));
   if (passed)
-    DBG_PRINTLN("; passed");
+    DBG_PRINTLN(F("; passed"));
   else
-    DBG_PRINTLN("; FAILED"); 
+    DBG_PRINTLN(F("; FAILED")); 
  	return passed;
 }
 
@@ -86,23 +87,24 @@ int  MATCH_MARK (int measured_ticks,  int desired_us)
 //
 int  MATCH_SPACE (int measured_ticks,  int desired_us)
 {
-	DBG_PRINT("Testing space ");
+	DBG_PRINT(F("Testing space (actual vs desired): "));
 	DBG_PRINT(measured_ticks * USECPERTICK, DEC);
-	DBG_PRINT(" vs ");
+	DBG_PRINT(F("us vs "));
 	DBG_PRINT(desired_us, DEC);
+  DBG_PRINT("us"); 
 	DBG_PRINT(": ");
-	DBG_PRINT(TICKS_LOW(desired_us - MARK_EXCESS), DEC);
-	DBG_PRINT(" <= ");
-	DBG_PRINT(measured_ticks, DEC);
-	DBG_PRINT(" <= ");
-	DBG_PRINT(TICKS_HIGH(desired_us - MARK_EXCESS), DEC);
+	DBG_PRINT(TICKS_LOW(desired_us - MARK_EXCESS) * USECPERTICK, DEC);
+	DBG_PRINT(F(" <= "));
+	DBG_PRINT(measured_ticks * USECPERTICK, DEC);
+	DBG_PRINT(F(" <= "));
+	DBG_PRINT(TICKS_HIGH(desired_us - MARK_EXCESS) * USECPERTICK, DEC);
 
   bool passed = ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS))
                 && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS)));
   if (passed)
-    DBG_PRINTLN("; passed");
+    DBG_PRINTLN(F("; passed"));
   else
-    DBG_PRINTLN("; FAILED"); 
+    DBG_PRINTLN(F("; FAILED")); 
  	return passed;
 }
 
