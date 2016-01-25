@@ -28,6 +28,10 @@
 // Each protocol you include costs memory and, during decode, costs time
 // Disable (set to 0) all the protocols you do not need/want!
 //
+
+#define DECODE_TCL112AC      1
+#define SEND_TCL112AC        1
+
 #define DECODE_RC5           1
 #define SEND_RC5             1
 
@@ -115,6 +119,7 @@ typedef
 		SHARP,
 		DENON,
 		PRONTO,
+		TCL112AC,
 	}
 decode_type_t;
 
@@ -181,6 +186,10 @@ class IRrecv
 		int   compare    (unsigned int oldval, unsigned int newval) ;
 
 		//......................................................................
+#   if (DECODE_TCL112AC)
+    bool   decodeTcl112ac (decode_results *results) ;
+#   endif
+    //......................................................................
 #		if (DECODE_RC5 || DECODE_RC6)
 			// This helper function is shared by RC5 and RC6
 			int  getRClevel (decode_results *results,  int *offset,  int *used,  int t1) ;
@@ -260,6 +269,10 @@ class IRsend
 		void  sendRaw     		(unsigned int buf[],  unsigned int len,  unsigned int hz) ;
 
 		//......................................................................
+#   if SEND_TCL112AC
+      void sendTcl112ac    (unsigned long data,  int nbits) ;
+#   endif
+    //......................................................................
 #		if SEND_RC5
 			void  sendRC5        (unsigned long data,  int nbits) ;
 #		endif
