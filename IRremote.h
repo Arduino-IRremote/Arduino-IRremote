@@ -56,7 +56,7 @@
 #define SEND_AIWA_RC_T501    1
 
 #define DECODE_LG            1
-#define SEND_LG              1 
+#define SEND_LG              1
 
 #define DECODE_SANYO         1
 #define SEND_SANYO           0 // NOT WRITTEN
@@ -75,6 +75,9 @@
 
 #define DECODE_PRONTO        0 // This function doe not logically make sense
 #define SEND_PRONTO          1
+
+#define DECODE_POWERFUNCTIONS 1
+#define SEND_POWERFUNCTIONS 0 // not yet implemented!
 
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
@@ -115,6 +118,7 @@ typedef
 		SHARP,
 		DENON,
 		PRONTO,
+		POWERFUNCTIONS
 	}
 decode_type_t;
 
@@ -243,6 +247,10 @@ class IRrecv
 #		if DECODE_DENON
 			bool  decodeDenon (decode_results *results) ;
 #		endif
+#   if DECODE_POWERFUNCTIONS
+      bool  decodePowerFunc (decode_results *results) ;
+#   endif
+
 } ;
 
 //------------------------------------------------------------------------------
@@ -327,6 +335,11 @@ class IRsend
 #		if SEND_PRONTO
 			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
 #		endif
+
+#		if SEND_POWERFUNCTIONS
+  void  sendPowerFunctions(char* code,  bool repeat,  bool fallback) ;
+#		endif
+
 } ;
 
 #endif

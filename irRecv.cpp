@@ -80,6 +80,11 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeDenon(results))  return true ;
 #endif
 
+#if DECODE_POWERFUNCTIONS
+	DBG_PRINTLN("Attempting Power Functions decode");
+	if (decodePowerFunc(results))  return true ;
+#endif
+
 	// decodeHash returns a hash on any input.
 	// Thus, it needs to be last in the list.
 	// If you add any decodes, add them before this.
@@ -102,7 +107,7 @@ IRrecv::IRrecv (int recvpin, int blinkpin)
 	irparams.recvpin = recvpin;
 	irparams.blinkpin = blinkpin;
 	pinMode(blinkpin, OUTPUT);
-	irparams.blinkflag = 0;
+	irparams.blinkflag = 1;
 }
 
 
@@ -145,8 +150,8 @@ void  IRrecv::blink13 (int blinkflag)
 
 //+=============================================================================
 // Return if receiving new IR signals
-// 
-bool  IRrecv::isIdle ( ) 
+//
+bool  IRrecv::isIdle ( )
 {
  return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
 }
