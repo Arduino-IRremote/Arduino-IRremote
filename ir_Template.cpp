@@ -102,16 +102,16 @@ Regards,
 //
 //==============================================================================
 
-#define BITS          32  // The number of bits in the command
+#define SHUZU_BITS          32  // The number of bits in the command
 
-#define HDR_MARK    1000  // The length of the Header:Mark
-#define HDR_SPACE   2000  // The lenght of the Header:Space
+#define SHUZU_HDR_MARK    1000  // The length of the Header:Mark
+#define SHUZU_HDR_SPACE   2000  // The lenght of the Header:Space
 
-#define BIT_MARK    3000  // The length of a Bit:Mark
-#define ONE_SPACE   4000  // The length of a Bit:Space for 1's
-#define ZERO_SPACE  5000  // The length of a Bit:Space for 0's
+#define SHUZU_BIT_MARK    3000  // The length of a Bit:Mark
+#define SHUZU_ONE_SPACE   4000  // The length of a Bit:Space for 1's
+#define SHUZU_ZERO_SPACE  5000  // The length of a Bit:Space for 0's
 
-#define OTHER       1234  // Other things you may need to define
+#define SHUZU_OTHER       1234  // Other things you may need to define
 
 //+=============================================================================
 //
@@ -122,22 +122,22 @@ void  IRsend::sendShuzu (unsigned long data,  int nbits)
 	enableIROut(38);
 
 	// Header
-	mark (HDR_MARK);
-	space(HDR_SPACE);
+	mark (SHUZU_HDR_MARK);
+	space(SHUZU_HDR_SPACE);
 
 	// Data
 	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
 		if (data & mask) {
-			mark (BIT_MARK);
-			space(ONE_SPACE);
+			mark (SHUZU_BIT_MARK);
+			space(SHUZU_ONE_SPACE);
 		} else {
-			mark (BIT_MARK);
-			space(ZERO_SPACE);
+			mark (SHUZU_BIT_MARK);
+			space(SHUZU_ZERO_SPACE);
 		}
 	}
 
 	// Footer
-	mark(BIT_MARK);
+	mark(SHUZU_BIT_MARK);
     space(0);  // Always end with the LED off
 }
 #endif
@@ -150,28 +150,31 @@ bool  IRrecv::decodeShuzu (decode_results *results)
 	unsigned long  data   = 0;  // Somewhere to build our code
 	int            offset = 1;  // Skip the Gap reading
 
-	// Check we have the right amount of data
-	if (irparams.rawlen != 1 + 2 + (2 * BITS) + 1)  return false ;
+	// Check we have the right amount of data.
+	if (irparams.rawlen != 1 + 2 + (2 * SHUZU_BITS) + 1)  return false ;
 
-	// Check initial Mark+Space match
-	if (!MATCH_MARK (results->rawbuf[offset++], HDR_MARK ))  return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], HDR_SPACE))  return false ;
+	// Check initial Mark+Space match. Do not use "[offset++]" or the macros will not function correctly.
+	if (!MATCH_MARK (results->rawbuf[offset], SHUZU_HDR_MARK ))  return false ;
+	offset++;
+	if (!MATCH_SPACE(results->rawbuf[offset], SHUZU_HDR_SPACE))  return false ;
+	offset++;
 
 	// Read the bits in
 	for (int i = 0;  i < SHUZU_BITS;  i++) {
 		// Each bit looks like: MARK + SPACE_1 -> 1
 		//                 or : MARK + SPACE_0 -> 0
-		if (!MATCH_MARK(results->rawbuf[offset++], BIT_MARK))  return false ;
+		if (!MATCH_MARK(results->rawbuf[offset], SHUZU_BIT_MARK))  return false ;
+		offset++;
 
 		// IR data is big-endian, so we shuffle it in from the right:
-		if      (MATCH_SPACE(results->rawbuf[offset], ONE_SPACE))   data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset], ZERO_SPACE))  data = (data << 1) | 0 ;
+		if      (MATCH_SPACE(results->rawbuf[offset], SHUZU_ONE_SPACE))   data = (data << 1) | 1 ;
+		else if (MATCH_SPACE(results->rawbuf[offset], SHUZU_ZERO_SPACE))  data = (data << 1) | 0 ;
 		else                                                        return false ;
 		offset++;
 	}
 
 	// Success
-	results->bits        = BITS;
+	results->bits        = SHUZU_BITS;
 	results->value       = data;
 	results->decode_type = SHUZU;
 	return true;
