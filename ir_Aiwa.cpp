@@ -80,8 +80,10 @@ bool  IRrecv::decodeAiwaRCT501 (decode_results *results)
 	if (irparams.rawlen < 2 * (AIWA_RC_T501_SUM_BITS) + 4)  return false ;
 
 	// Check HDR Mark/Space
-	if (!MATCH_MARK (results->rawbuf[offset++], AIWA_RC_T501_HDR_MARK ))  return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], AIWA_RC_T501_HDR_SPACE))  return false ;
+	if (!MATCH_MARK (results->rawbuf[offset], AIWA_RC_T501_HDR_MARK ))  return false ;
+	offset++;
+	if (!MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_HDR_SPACE))  return false ;
+	offset++;
 
 	offset += 26;  // skip pre-data - optional
 	while(offset < irparams.rawlen - 4) {
