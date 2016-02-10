@@ -56,6 +56,8 @@ void  encoding (decode_results *results)
     case AIWA_RC_T501: Serial.print("AIWA_RC_T501");  break ;
     case PANASONIC:    Serial.print("PANASONIC");     break ;
     case DENON:        Serial.print("Denon");         break ;
+    case JENSEN:       Serial.print("Jensen");        break ;
+    case HEATER:       Serial.print("Heater");        break ;
   }
 }
 
@@ -76,7 +78,7 @@ void  dumpInfo (decode_results *results)
   Serial.println("");
 
   // Show Code & length
-  Serial.print("Code      : ");
+  Serial.print("Code      : 0x");
   ircode(results);
   Serial.print(" (");
   Serial.print(results->bits, DEC);
@@ -91,7 +93,9 @@ void  dumpRaw (decode_results *results)
   // Print Raw data
   Serial.print("Timing[");
   Serial.print(results->rawlen-1, DEC);
-  Serial.println("]: ");
+  Serial.print("]: ~");
+  Serial.print(results->rawbuf[0] * USECPERTICK, DEC);
+  Serial.println(" (<-- Gap reading excluded, but useful to know for repeat delay in sending.)");
 
   for (int i = 1;  i < results->rawlen;  i++) {
     unsigned long  x = results->rawbuf[i] * USECPERTICK;
