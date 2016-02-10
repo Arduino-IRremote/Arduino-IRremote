@@ -80,6 +80,16 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeDenon(results))  return true ;
 #endif
 
+#if DECODE_JENSEN
+	DBG_PRINTLN("Attempting Jensen decode");
+	if (decodeJensen(results))  return true ;
+#endif
+
+#if DECODE_HEATER
+	DBG_PRINTLN("Attempting Heater decode");
+	if (decodeHeater(results))  return true ;
+#endif
+
 	// decodeHash returns a hash on any input.
 	// Thus, it needs to be last in the list.
 	// If you add any decodes, add them before this.
