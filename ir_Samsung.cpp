@@ -71,10 +71,12 @@ bool  IRrecv::decodeSAMSUNG (decode_results *results)
 	if (irparams.rawlen < (2 * SAMSUNG_BITS) + 4)  return false ;
 
 	// Initial space
-	if (!MATCH_SPACE(results->rawbuf[offset++], SAMSUNG_HDR_SPACE))  return false ;
+	if (!MATCH_SPACE(results->rawbuf[offset], SAMSUNG_HDR_SPACE))  return false ;
+	offset++;
 
 	for (int i = 0;  i < SAMSUNG_BITS;   i++) {
-		if (!MATCH_MARK(results->rawbuf[offset++], SAMSUNG_BIT_MARK))  return false ;
+		if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_BIT_MARK))  return false ;
+		offset++;
 
 		if      (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ONE_SPACE))   data = (data << 1) | 1 ;
 		else if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ZERO_SPACE))  data = (data << 1) | 0 ;
@@ -89,4 +91,3 @@ bool  IRrecv::decodeSAMSUNG (decode_results *results)
 	return true;
 }
 #endif
-
