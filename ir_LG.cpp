@@ -29,11 +29,14 @@ bool  IRrecv::decodeLG (decode_results *results)
     if (irparams.rawlen < (2 * LG_BITS) + 1 )  return false ;
 
     // Initial mark/space
-    if (!MATCH_MARK(results->rawbuf[offset++], LG_HDR_MARK))  return false ;
-    if (!MATCH_SPACE(results->rawbuf[offset++], LG_HDR_SPACE))  return false ;
+    if (!MATCH_MARK(results->rawbuf[offset], LG_HDR_MARK))  return false ;
+	offset++;
+    if (!MATCH_SPACE(results->rawbuf[offset], LG_HDR_SPACE))  return false ;
+	offset++;
 
     for (int i = 0;  i < LG_BITS;  i++) {
-        if (!MATCH_MARK(results->rawbuf[offset++], LG_BIT_MARK))  return false ;
+        if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK))  return false ;
+		offset++;
 
         if      (MATCH_SPACE(results->rawbuf[offset], LG_ONE_SPACE))   data = (data << 1) | 1 ;
         else if (MATCH_SPACE(results->rawbuf[offset], LG_ZERO_SPACE))  data = (data << 1) | 0 ;
@@ -77,4 +80,3 @@ void  IRsend::sendLG (unsigned long data,  int nbits)
     space(0);  // Always end with the LED off
 }
 #endif
-
