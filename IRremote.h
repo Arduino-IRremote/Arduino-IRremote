@@ -76,8 +76,8 @@
 #define DECODE_PRONTO        0 // This function doe not logically make sense
 #define SEND_PRONTO          1
 
-#define DECODE_POWERFUNCTIONS 1
-#define SEND_POWERFUNCTIONS 0 // not yet implemented!
+#define DECODE_LEGO_POWERFUNCTIONS 1
+#define SEND_LEGO_POWERFUNCTIONS 0 // not yet implemented!
 
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
@@ -118,7 +118,7 @@ typedef
 		SHARP,
 		DENON,
 		PRONTO,
-		POWERFUNCTIONS
+		LEGO_POWERFUNCTIONS
 	}
 decode_type_t;
 
@@ -247,8 +247,8 @@ class IRrecv
 #		if DECODE_DENON
 			bool  decodeDenon (decode_results *results) ;
 #		endif
-#   if DECODE_POWERFUNCTIONS
-      bool  decodePowerFunc (decode_results *results) ;
+#   if DECODE_LEGO_POWERFUNCTIONS
+      bool  decodeLegoPowerFunctions (decode_results *results) ;
 #   endif
 
 } ;
@@ -336,8 +336,8 @@ class IRsend
 			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
 #		endif
 
-#		if SEND_POWERFUNCTIONS
-  void  sendPowerFunctions(char* code,  bool repeat,  bool fallback) ;
+#		if SEND_LEGO_POWERFUNCTIONS
+  void  sendLegoPowerFunctions(char* code,  bool repeat,  bool fallback) ;
 #		endif
 
 } ;

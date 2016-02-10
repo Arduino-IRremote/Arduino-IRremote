@@ -80,9 +80,9 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeDenon(results))  return true ;
 #endif
 
-#if DECODE_POWERFUNCTIONS
-	DBG_PRINTLN("Attempting Power Functions decode");
-	if (decodePowerFunc(results))  return true ;
+#if DECODE_LEGO_POWERFUNCTIONS
+	DBG_PRINTLN("Attempting Lego Power Functions decode");
+	if (decodeLegoPowerFunctions(results))  return true ;
 #endif
 
 	// decodeHash returns a hash on any input.
