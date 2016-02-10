@@ -17,7 +17,7 @@
 #define SANYO_HDR_SPACE	            950  // seen 950
 #define SANYO_ONE_MARK	           2400  // seen 2400
 #define SANYO_ZERO_MARK             700  // seen 700
-#define SANYO_DOUBLE_SPACE_USECS    800  // usually ssee 713 - not using ticks as get number wrapround
+#define SANYO_DOUBLE_SPACE_USECS    800  // usually see 713 - not using ticks as get number wrapround
 #define SANYO_RPT_LENGTH          45000
 
 //+=============================================================================
@@ -31,14 +31,14 @@ bool  IRrecv::decodeSanyo (decode_results *results)
 
 #if 0
 	// Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
-	Serial.print("IR Gap: ");
-	Serial.println( results->rawbuf[offset]);
-	Serial.println( "test against:");
-	Serial.println(results->rawbuf[offset]);
+	Serial.print("IR Gap:       ");
+	Serial.println(results->rawbuf[offset] * USECPERTICK);
+	Serial.print("test against: ");
+	Serial.println(SANYO_DOUBLE_SPACE_USECS);
 #endif
 
 	// Initial space
-	if (results->rawbuf[offset] < SANYO_DOUBLE_SPACE_USECS) {
+	if ((results->rawbuf[offset] * USECPERTICK) < SANYO_DOUBLE_SPACE_USECS) {
 		//Serial.print("IR Gap found: ");
 		results->bits        = 0;
 		results->value       = REPEAT;
@@ -48,13 +48,16 @@ bool  IRrecv::decodeSanyo (decode_results *results)
 	offset++;
 
 	// Initial mark
-	if (!MATCH_MARK(results->rawbuf[offset++], SANYO_HDR_MARK))  return false ;
+	if (!MATCH_MARK(results->rawbuf[offset], SANYO_HDR_MARK))  return false ;
+	offset++;
 
 	// Skip Second Mark
-	if (!MATCH_MARK(results->rawbuf[offset++], SANYO_HDR_MARK))  return false ;
+	if (!MATCH_MARK(results->rawbuf[offset], SANYO_HDR_MARK))  return false ;
+	offset++;
 
 	while (offset + 1 < irparams.rawlen) {
-		if (!MATCH_SPACE(results->rawbuf[offset++], SANYO_HDR_SPACE))  break ;
+		if (!MATCH_SPACE(results->rawbuf[offset], SANYO_HDR_SPACE))  break ;
+		offset++;
 
 		if      (MATCH_MARK(results->rawbuf[offset], SANYO_ONE_MARK))   data = (data << 1) | 1 ;
 		else if (MATCH_MARK(results->rawbuf[offset], SANYO_ZERO_MARK))  data = (data << 1) | 0 ;
