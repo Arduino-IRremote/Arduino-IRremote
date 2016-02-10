@@ -27,18 +27,11 @@
 #undef IR_GLOBAL
 
 //+=============================================================================
-// The match functions were (apparently) originally MACROs to improve code speed
-//   (although this would have bloated the code) hence the names being CAPS
-// A later release implemented debug output and so they needed to be converted
-//   to functions.
-// I tried to implement a dual-compile mode (DEBUG/non-DEBUG) but for some
-//   reason, no matter what I did I could not get them to function as macros again.
-// I have found a *lot* of bugs in the Arduino compiler over the last few weeks,
-//   and I am currently assuming that one of these bugs is my problem.
-// I may revisit this code at a later date and look at the assembler produced
-//   in a hope of finding out what is going on, but for now they will remain as
-//   functions even in non-DEBUG mode
+// These versions of MATCH, MATCH_MARK, and MATCH_SPACE are only for debugging.
+// To use them, set DEBUG in IRremoteInt.h
+// Normally macros are used for efficiency, both in speed and final program size.
 //
+#if DEBUG
 int  MATCH (int measured,  int desired)
 {
  	DBG_PRINT("Testing: ");
@@ -90,6 +83,7 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 	return ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS))
 	     && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS)));
 }
+#endif
 
 //+=============================================================================
 // Interrupt Service Routine - Fires every 50uS
