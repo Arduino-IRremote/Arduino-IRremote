@@ -69,14 +69,17 @@ bool  IRrecv::decodeDenon (decode_results *results)
 	if (irparams.rawlen != 1 + 2 + (2 * BITS) + 1)  return false ;
 
 	// Check initial Mark+Space match
-	if (!MATCH_MARK (results->rawbuf[offset++], HDR_MARK ))  return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], HDR_SPACE))  return false ;
+	if (!MATCH_MARK (results->rawbuf[offset], HDR_MARK ))  return false ;
+	offset++;
+	if (!MATCH_SPACE(results->rawbuf[offset], HDR_SPACE))  return false ;
+	offset++;
 
 	// Read the bits in
 	for (int i = 0;  i < BITS;  i++) {
 		// Each bit looks like: MARK + SPACE_1 -> 1
 		//                 or : MARK + SPACE_0 -> 0
-		if (!MATCH_MARK(results->rawbuf[offset++], BIT_MARK))  return false ;
+		if (!MATCH_MARK(results->rawbuf[offset], BIT_MARK))  return false ;
+		offset++;
 
 		// IR data is big-endian, so we shuffle it in from the right:
 		if      (MATCH_SPACE(results->rawbuf[offset], ONE_SPACE))   data = (data << 1) | 1 ;
