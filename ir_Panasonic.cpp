@@ -54,12 +54,15 @@ bool  IRrecv::decodePanasonic (decode_results *results)
     unsigned long long  data   = 0;
     int                 offset = 1;
 
-    if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_HDR_MARK ))  return false ;
-    if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_HDR_SPACE))  return false ;
+    if (!MATCH_MARK(results->rawbuf[offset], PANASONIC_HDR_MARK ))  return false ;
+	offset++;
+    if (!MATCH_MARK(results->rawbuf[offset], PANASONIC_HDR_SPACE))  return false ;
+	offset++;
 
     // decode address
     for (int i = 0;  i < PANASONIC_BITS;  i++) {
-        if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_BIT_MARK))  return false ;
+        if (!MATCH_MARK(results->rawbuf[offset], PANASONIC_BIT_MARK))  return false ;
+		offset++;
 
         if      (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ONE_SPACE ))  data = (data << 1) | 1 ;
         else if (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ZERO_SPACE))  data = (data << 1) | 0 ;
@@ -75,4 +78,3 @@ bool  IRrecv::decodePanasonic (decode_results *results)
     return true;
 }
 #endif
-
