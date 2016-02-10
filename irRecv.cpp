@@ -1,218 +1,345 @@
-#include "IRremote.h"
+
+//******************************************************************************
+// IRremote
+// Version 2.0.1 June, 2015
+// Copyright 2009 Ken Shirriff
+// For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
+// Edited by Mitra to add new controller SANYO
+//
+// Interrupt code based on NECIRrcv by Joe Knapp
+// http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
+// Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
+//
+// JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
+// LG added by Darryl Smith (based on the JVC protocol)
+// Whynter A/C ARC-110WD added by Francesco Meschia
+//******************************************************************************
+
+#ifndef IRremote_h
+#define IRremote_h
+
+//------------------------------------------------------------------------------
+// The ISR header contains several useful macros the user may wish to use
+//
 #include "IRremoteInt.h"
 
-//+=============================================================================
-// Decodes the received IR message
-// Returns 0 if no data ready, 1 if data ready.
-// Results of decoding are stored in results
+//------------------------------------------------------------------------------
+// Supported IR protocols
+// Each protocol you include costs memory and, during decode, costs time
+// Disable (set to 0) all the protocols you do not need/want!
 //
-int  IRrecv::decode (decode_results *results)
-{
-	results->rawbuf   = irparams.rawbuf;
-	results->rawlen   = irparams.rawlen;
+#define DECODE_RC5           0
+#define SEND_RC5             0
 
-	results->overflow = irparams.overflow;
+#define DECODE_RC6           0
+#define SEND_RC6             0
 
-	if (irparams.rcvstate != STATE_STOP)  return false ;
+#define DECODE_NEC           0
+#define SEND_NEC             0
 
-#if DECODE_NEC
-	DBG_PRINTLN("Attempting NEC decode");
-	if (decodeNEC(results))  return true ;
-#endif
+#define DECODE_SONY          0
+#define SEND_SONY            0
 
-#if DECODE_SONY
-	DBG_PRINTLN("Attempting Sony decode");
-	if (decodeSony(results))  return true ;
-#endif
+#define DECODE_PANASONIC     0
+#define SEND_PANASONIC       0
 
-#if DECODE_SANYO
-	DBG_PRINTLN("Attempting Sanyo decode");
-	if (decodeSanyo(results))  return true ;
-#endif
+#define DECODE_JVC           0
+#define SEND_JVC             0
 
-#if DECODE_MITSUBISHI
-	DBG_PRINTLN("Attempting Mitsubishi decode");
-	if (decodeMitsubishi(results))  return true ;
-#endif
+#define DECODE_SAMSUNG       0
+#define SEND_SAMSUNG         0
 
-#if DECODE_RC5
-	DBG_PRINTLN("Attempting RC5 decode");
-	if (decodeRC5(results))  return true ;
-#endif
+#define DECODE_WHYNTER       0
+#define SEND_WHYNTER         0
 
-#if DECODE_RC6
-	DBG_PRINTLN("Attempting RC6 decode");
-	if (decodeRC6(results))  return true ;
-#endif
+#define DECODE_AIWA_RC_T501  0
+#define SEND_AIWA_RC_T501    0
 
-#if DECODE_PANASONIC
-	DBG_PRINTLN("Attempting Panasonic decode");
-	if (decodePanasonic(results))  return true ;
-#endif
+#define DECODE_LG            0
+#define SEND_LG              0
 
-#if DECODE_LG
-	DBG_PRINTLN("Attempting LG decode");
-	if (decodeLG(results))  return true ;
-#endif
+#define DECODE_SANYO         0
+#define SEND_SANYO           0 // NOT WRITTEN
 
-#if DECODE_JVC
-	DBG_PRINTLN("Attempting JVC decode");
-	if (decodeJVC(results))  return true ;
-#endif
+#define DECODE_MITSUBISHI    0
+#define SEND_MITSUBISHI      0 // NOT WRITTEN
 
-#if DECODE_SAMSUNG
-	DBG_PRINTLN("Attempting SAMSUNG decode");
-	if (decodeSAMSUNG(results))  return true ;
-#endif
+#define DECODE_DISH          0 // NOT WRITTEN
+#define SEND_DISH            0
 
-#if DECODE_WHYNTER
-	DBG_PRINTLN("Attempting Whynter decode");
-	if (decodeWhynter(results))  return true ;
-#endif
+#define DECODE_SHARP         0 // NOT WRITTEN
+#define SEND_SHARP           0
 
-#if DECODE_AIWA_RC_T501
-	DBG_PRINTLN("Attempting Aiwa RC-T501 decode");
-	if (decodeAiwaRCT501(results))  return true ;
-#endif
+#define DECODE_DENON         0
+#define SEND_DENON           0
 
-#if DECODE_DENON
-	DBG_PRINTLN("Attempting Denon decode");
-	if (decodeDenon(results))  return true ;
-#endif
+#define DECODE_PRONTO        0 // This function doe not logically make sense
+#define SEND_PRONTO          0
 
-#if DECODE_POWERFUNCTIONS
-	DBG_PRINTLN("Attempting Power Functions decode");
-	if (decodePowerFunc(results))  return true ;
-#endif
+#define DECODE_LEGOPOWERFUNCTIONS 1
+#define SEND_LEGOPOWERFUNCTIONS 0 // not yet implemented!
 
-	// decodeHash returns a hash on any input.
-	// Thus, it needs to be last in the list.
-	// If you add any decodes, add them before this.
-	if (decodeHash(results))  return true ;
-
-	// Throw away and start over
-	resume();
-	return false;
-}
-
-//+=============================================================================
-IRrecv::IRrecv (int recvpin)
-{
-	irparams.recvpin = recvpin;
-	irparams.blinkflag = 0;
-}
-
-IRrecv::IRrecv (int recvpin, int blinkpin)
-{
-	irparams.recvpin = recvpin;
-	irparams.blinkpin = blinkpin;
-	pinMode(blinkpin, OUTPUT);
-	irparams.blinkflag = 1;
-}
-
-
-
-//+=============================================================================
-// initialization
+//------------------------------------------------------------------------------
+// When sending a Pronto code we request to send either the "once" code
+//                                                   or the "repeat" code
+// If the code requested does not exist we can request to fallback on the
+// other code (the one we did not explicitly request)
 //
-void  IRrecv::enableIRIn ( )
-{
-	cli();
-	// Setup pulse clock timer interrupt
-	// Prescale /8 (16M/8 = 0.5 microseconds per tick)
-	// Therefore, the timer interval can range from 0.5 to 128 microseconds
-	// Depending on the reset value (255 to 0)
-	TIMER_CONFIG_NORMAL();
-
-	// Timer2 Overflow Interrupt Enable
-	TIMER_ENABLE_INTR;
-
-	TIMER_RESET;
-
-	sei();  // enable interrupts
-
-	// Initialize state machine variables
-	irparams.rcvstate = STATE_IDLE;
-	irparams.rawlen = 0;
-
-	// Set pin modes
-	pinMode(irparams.recvpin, INPUT);
-}
-
-//+=============================================================================
-// Enable/disable blinking of pin 13 on IR processing
+// I would suggest that "fallback" will be the standard calling method
+// The last paragraph on this page discusses the rationale of this idea:
+//   http://www.remotecentral.com/features/irdisp2.htm
 //
-void  IRrecv::blink13 (int blinkflag)
-{
-	irparams.blinkflag = blinkflag;
-	if (blinkflag)  pinMode(BLINKLED, OUTPUT) ;
-}
+#define PRONTO_ONCE        false
+#define PRONTO_REPEAT      true
+#define PRONTO_FALLBACK    true
+#define PRONTO_NOFALLBACK  false
 
-//+=============================================================================
-// Return if receiving new IR signals
+//------------------------------------------------------------------------------
+// An enumerated list of all supported formats
+// You do NOT need to remove entries from this list when disabling protocols!
 //
-bool  IRrecv::isIdle ( )
-{
- return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
-}
-//+=============================================================================
-// Restart the ISR state machine
-//
-void  IRrecv::resume ( )
-{
-	irparams.rcvstate = STATE_IDLE;
-	irparams.rawlen = 0;
-}
-
-//+=============================================================================
-// hashdecode - decode an arbitrary IR code.
-// Instead of decoding using a standard encoding scheme
-// (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
-//
-// The algorithm: look at the sequence of MARK signals, and see if each one
-// is shorter (0), the same length (1), or longer (2) than the previous.
-// Do the same with the SPACE signals.  Hash the resulting sequence of 0's,
-// 1's, and 2's to a 32-bit value.  This will give a unique value for each
-// different code (probably), for most code systems.
-//
-// http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
-//
-// Compare two tick values, returning 0 if newval is shorter,
-// 1 if newval is equal, and 2 if newval is longer
-// Use a tolerance of 20%
-//
-int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
-{
-	if      (newval < oldval * .8)  return 0 ;
-	else if (oldval < newval * .8)  return 2 ;
-	else                            return 1 ;
-}
-
-//+=============================================================================
-// Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
-// Converts the raw code values into a 32-bit hash code.
-// Hopefully this code is unique for each button.
-// This isn't a "real" decoding, just an arbitrary value.
-//
-#define FNV_PRIME_32 16777619
-#define FNV_BASIS_32 2166136261
-
-long  IRrecv::decodeHash (decode_results *results)
-{
-	long  hash = FNV_BASIS_32;
-
-	// Require at least 6 samples to prevent triggering on noise
-	if (results->rawlen < 6)  return false ;
-
-	for (int i = 1;  (i + 2) < results->rawlen;  i++) {
-		int value =  compare(results->rawbuf[i], results->rawbuf[i+2]);
-		// Add value into the hash
-		hash = (hash * FNV_PRIME_32) ^ value;
+typedef
+	enum {
+		UNKNOWN      = -1,
+		UNUSED       =  0,
+		RC5,
+		RC6,
+		NEC,
+		SONY,
+		PANASONIC,
+		JVC,
+		SAMSUNG,
+		WHYNTER,
+		AIWA_RC_T501,
+		LG,
+		SANYO,
+		MITSUBISHI,
+		DISH,
+		SHARP,
+		DENON,
+		PRONTO,
+		POWERFUNCTIONS
 	}
+decode_type_t;
 
-	results->value       = hash;
-	results->bits        = 32;
-	results->decode_type = UNKNOWN;
+//------------------------------------------------------------------------------
+// Set DEBUG to 1 for lots of lovely debug output
+//
+#define DEBUG  0
 
-	return true;
-}
+//------------------------------------------------------------------------------
+// Debug directives
+//
+#if DEBUG
+#	define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
+#	define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
+#else
+#	define DBG_PRINT(...)
+#	define DBG_PRINTLN(...)
+#endif
+
+//------------------------------------------------------------------------------
+// Mark & Space matching functions
+//
+int  MATCH       (int measured, int desired) ;
+int  MATCH_MARK  (int measured_ticks, int desired_us) ;
+int  MATCH_SPACE (int measured_ticks, int desired_us) ;
+
+//------------------------------------------------------------------------------
+// Results returned from the decoder
+//
+class decode_results
+{
+	public:
+		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
+		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
+		unsigned long          value;        // Decoded value [max 32-bits]
+		int                    bits;         // Number of bits in decoded value
+		volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
+		int                    rawlen;       // Number of records in rawbuf
+		int                    overflow;     // true iff IR raw code too long
+};
+
+//------------------------------------------------------------------------------
+// Decoded value for NEC when a repeat code is received
+//
+#define REPEAT 0xFFFFFFFF
+
+//------------------------------------------------------------------------------
+// Main class for receiving IR
+//
+class IRrecv
+{
+	public:
+		IRrecv (int recvpin) ;
+		IRrecv (int recvpin, int blinkpin);
+
+		void  blink13    (int blinkflag) ;
+		int   decode     (decode_results *results) ;
+		void  enableIRIn ( ) ;
+		bool  isIdle     ( ) ;
+		void  resume     ( ) ;
+
+	private:
+		long  decodeHash (decode_results *results) ;
+		int   compare    (unsigned int oldval, unsigned int newval) ;
+
+		//......................................................................
+#		if (DECODE_RC5 || DECODE_RC6)
+			// This helper function is shared by RC5 and RC6
+			int  getRClevel (decode_results *results,  int *offset,  int *used,  int t1) ;
+#		endif
+#		if DECODE_RC5
+			bool  decodeRC5        (decode_results *results) ;
+#		endif
+#		if DECODE_RC6
+			bool  decodeRC6        (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_NEC
+			bool  decodeNEC        (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_SONY
+			bool  decodeSony       (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_PANASONIC
+			bool  decodePanasonic  (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_JVC
+			bool  decodeJVC        (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_SAMSUNG
+			bool  decodeSAMSUNG    (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_WHYNTER
+			bool  decodeWhynter    (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_AIWA_RC_T501
+			bool  decodeAiwaRCT501 (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_LG
+			bool  decodeLG         (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_SANYO
+			bool  decodeSanyo      (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_MITSUBISHI
+			bool  decodeMitsubishi (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_DISH
+			bool  decodeDish (decode_results *results) ; // NOT WRITTEN
+#		endif
+		//......................................................................
+#		if DECODE_SHARP
+			bool  decodeSharp (decode_results *results) ; // NOT WRITTEN
+#		endif
+		//......................................................................
+#		if DECODE_DENON
+			bool  decodeDenon (decode_results *results) ;
+#		endif
+#   if DECODE_LEGO_POWERFUNCTIONS
+      bool  decodePowerFunc (decode_results *results) ;
+#   endif
+
+} ;
+
+//------------------------------------------------------------------------------
+// Main class for sending IR
+//
+class IRsend
+{
+	public:
+		IRsend () { }
+
+		void  custom_delay_usec (unsigned long uSecs);
+		void  enableIROut 		(int khz) ;
+		void  mark        		(unsigned int usec) ;
+		void  space       		(unsigned int usec) ;
+		void  sendRaw     		(unsigned int buf[],  unsigned int len,  unsigned int hz) ;
+
+		//......................................................................
+#		if SEND_RC5
+			void  sendRC5        (unsigned long data,  int nbits) ;
+#		endif
+#		if SEND_RC6
+			void  sendRC6        (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_NEC
+			void  sendNEC        (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_SONY
+			void  sendSony       (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_PANASONIC
+			void  sendPanasonic  (unsigned int address,  unsigned long data) ;
+#		endif
+		//......................................................................
+#		if SEND_JVC
+			// JVC does NOT repeat by sending a separate code (like NEC does).
+			// The JVC protocol repeats by skipping the header.
+			// To send a JVC repeat signal, send the original code value
+			//   and set 'repeat' to true
+			void  sendJVC        (unsigned long data,  int nbits,  bool repeat) ;
+#		endif
+		//......................................................................
+#		if SEND_SAMSUNG
+			void  sendSAMSUNG    (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_WHYNTER
+			void  sendWhynter    (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_AIWA_RC_T501
+			void  sendAiwaRCT501 (int code) ;
+#		endif
+		//......................................................................
+#		if SEND_LG
+			void  sendLG         (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_SANYO
+			void  sendSanyo      ( ) ; // NOT WRITTEN
+#		endif
+		//......................................................................
+#		if SEND_MISUBISHI
+			void  sendMitsubishi ( ) ; // NOT WRITTEN
+#		endif
+		//......................................................................
+#		if SEND_DISH
+			void  sendDISH       (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_SHARP
+			void  sendSharpRaw   (unsigned long data,  int nbits) ;
+			void  sendSharp      (unsigned int address,  unsigned int command) ;
+#		endif
+		//......................................................................
+#		if SEND_DENON
+			void  sendDenon      (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_PRONTO
+			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
+#		endif
+
+#		if SEND_LEGO_POWERFUNCTIONS
+  void  sendPowerFunctions(char* code,  bool repeat,  bool fallback) ;
+#		endif
+
+} ;
+
+#endif

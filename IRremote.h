@@ -76,8 +76,8 @@
 #define DECODE_PRONTO        0 // This function doe not logically make sense
 #define SEND_PRONTO          1
 
-#define DECODE_POWERFUNCTIONS 1
-#define SEND_POWERFUNCTIONS 0 // not yet implemented!
+#define DECODE_LEGO_POWERFUNCTIONS 1
+#define SEND_LEGO_POWERFUNCTIONS 0 // not yet implemented!
 
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
