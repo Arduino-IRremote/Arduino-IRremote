@@ -61,16 +61,21 @@ bool  IRrecv::decodeWhynter (decode_results *results)
 	if (irparams.rawlen < (2 * WHYNTER_BITS) + 6)  return false ;
 
 	// Sequence begins with a bit mark and a zero space
-	if (!MATCH_MARK (results->rawbuf[offset++], WHYNTER_BIT_MARK  ))  return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], WHYNTER_ZERO_SPACE))  return false ;
+	if (!MATCH_MARK (results->rawbuf[offset], WHYNTER_BIT_MARK  ))  return false ;
+	offset++;
+	if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE))  return false ;
+	offset++;
 
 	// header mark and space
-	if (!MATCH_MARK (results->rawbuf[offset++], WHYNTER_HDR_MARK ))  return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], WHYNTER_HDR_SPACE))  return false ;
+	if (!MATCH_MARK (results->rawbuf[offset], WHYNTER_HDR_MARK ))  return false ;
+	offset++;
+	if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_HDR_SPACE))  return false ;
+	offset++;
 
 	// data bits
 	for (int i = 0;  i < WHYNTER_BITS;  i++) {
-		if (!MATCH_MARK(results->rawbuf[offset++], WHYNTER_BIT_MARK))  return false ;
+		if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK))  return false ;
+		offset++;
 
 		if      (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE ))  data = (data << 1) | 1 ;
 		else if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE))  data = (data << 1) | 0 ;
@@ -88,4 +93,3 @@ bool  IRrecv::decodeWhynter (decode_results *results)
 	return true;
 }
 #endif
-
