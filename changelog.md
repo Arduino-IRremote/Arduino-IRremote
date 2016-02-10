@@ -1,7 +1,23 @@
 
+## 2.0.3 - 2016/02/10
+### Changes
+- Updated IRrecvDumpV2.ino to include gap reading to determine send repeat timing
+- Fixed false positive REPEAT in Sony and Sanyo protocols due to code errors
+- Restored macros for MATCH, MATCH_MARK, and MATCH_SPACE for efficiency
+- Updated protocols with separate “offset++;” in place of “[offset++]” to function with macros
+- Fixed some minor typos
+
+### Additions
+- Added Jensen Protocol [adamlhumphreys]
+- Added Heater Protocol [adamlhumphreys]
+- Added “SHUZU_” prefix to macro variables in ir_Template.cpp to maintain distinction and standardization
+- Added notice to use “offset++;” in place of “[offset++]” in ir_Template.cpp for macros
+
+
 ## 2.0.2 - 2015/12/02
 - Added IRremoteInfo Sketch - [PR](https://github.com/z3t0/Arduino-IRremote/pull/241)
 - Enforcing changelog.md
+
 
 ## 2.0.1 - 2015/07/26 - [Release](https://github.com/shirriff/Arduino-IRremote/releases/tag/BETA)
 ### Changes
