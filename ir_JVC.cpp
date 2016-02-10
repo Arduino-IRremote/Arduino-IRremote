@@ -71,15 +71,18 @@ bool  IRrecv::decodeJVC (decode_results *results)
 	}
 
 	// Initial mark
-	if (!MATCH_MARK(results->rawbuf[offset++], JVC_HDR_MARK))  return false ;
+	if (!MATCH_MARK(results->rawbuf[offset], JVC_HDR_MARK))  return false ;
+	offset++;
 
 	if (irparams.rawlen < (2 * JVC_BITS) + 1 )  return false ;
 
 	// Initial space
-	if (!MATCH_SPACE(results->rawbuf[offset++], JVC_HDR_SPACE))  return false ;
+	if (!MATCH_SPACE(results->rawbuf[offset], JVC_HDR_SPACE))  return false ;
+	offset++;
 
 	for (int i = 0;  i < JVC_BITS;  i++) {
-		if (!MATCH_MARK(results->rawbuf[offset++], JVC_BIT_MARK))  return false ;
+		if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK))  return false ;
+		offset++;
 
 		if      (MATCH_SPACE(results->rawbuf[offset], JVC_ONE_SPACE))   data = (data << 1) | 1 ;
 		else if (MATCH_SPACE(results->rawbuf[offset], JVC_ZERO_SPACE))  data = (data << 1) | 0 ;
@@ -98,4 +101,3 @@ bool  IRrecv::decodeJVC (decode_results *results)
 	return true;
 }
 #endif
-
