@@ -73,7 +73,13 @@
 #define DECODE_DENON         1
 #define SEND_DENON           1
 
-#define DECODE_PRONTO        0 // This function doe not logically make sense
+#define DECODE_JENSEN        1
+#define SEND_JENSEN          1
+
+#define DECODE_HEATER        1
+#define SEND_HEATER          1
+
+#define DECODE_PRONTO        0 // This function does not logically make sense
 #define SEND_PRONTO          1
 
 //------------------------------------------------------------------------------
@@ -115,6 +121,8 @@ typedef
 		SHARP,
 		DENON,
 		PRONTO,
+		JENSEN,
+		HEATER,
 	}
 decode_type_t;
 
@@ -137,10 +145,16 @@ decode_type_t;
 //------------------------------------------------------------------------------
 // Mark & Space matching functions
 //
+#if DEBUG
 int  MATCH       (int measured, int desired) ;
 int  MATCH_MARK  (int measured_ticks, int desired_us) ;
 int  MATCH_SPACE (int measured_ticks, int desired_us) ;
-
+#else
+#	define MATCH(measured_ticks, desired_us) ((measured_ticks) >= TICKS_LOW(desired_us) && (measured_ticks) <= TICKS_HIGH(desired_us))
+#	define MATCH_MARK(measured_ticks, desired_us) MATCH(measured_ticks, (desired_us) + MARK_EXCESS)
+#	define MATCH_SPACE(measured_ticks, desired_us) MATCH((measured_ticks), (desired_us) - MARK_EXCESS)
+// Debugging versions are in IRremote.cpp
+#endif
 //------------------------------------------------------------------------------
 // Results returned from the decoder
 //
@@ -153,7 +167,7 @@ class decode_results
 		int                    bits;         // Number of bits in decoded value
 		volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
 		int                    rawlen;       // Number of records in rawbuf
-		int                    overflow;     // true iff IR raw code too long
+		int                    overflow;     // true if IR raw code too long
 };
 
 //------------------------------------------------------------------------------
@@ -243,6 +257,14 @@ class IRrecv
 #		if DECODE_DENON
 			bool  decodeDenon (decode_results *results) ;
 #		endif
+		//......................................................................
+#		if DECODE_JENSEN
+			bool  decodeJensen (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_HEATER
+			bool  decodeHeater (decode_results *results) ;
+#		endif
 } ;
 
 //------------------------------------------------------------------------------
@@ -322,6 +344,14 @@ class IRsend
 		//......................................................................
 #		if SEND_DENON
 			void  sendDenon      (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_JENSEN
+			void  sendJensen     (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_HEATER
+			void  sendHeater     (unsigned long data,  int nbits) ;
 #		endif
 		//......................................................................
 #		if SEND_PRONTO
