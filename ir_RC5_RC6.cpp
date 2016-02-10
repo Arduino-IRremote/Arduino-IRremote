@@ -171,8 +171,10 @@ bool  IRrecv::decodeRC6 (decode_results *results)
 	if (results->rawlen < MIN_RC6_SAMPLES)  return false ;
 
 	// Initial mark
-	if (!MATCH_MARK(results->rawbuf[offset++],  RC6_HDR_MARK))   return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], RC6_HDR_SPACE))  return false ;
+	if (!MATCH_MARK(results->rawbuf[offset],  RC6_HDR_MARK))   return false ;
+	offset++;
+	if (!MATCH_SPACE(results->rawbuf[offset], RC6_HDR_SPACE))  return false ;
+	offset++;
 
 	// Get start bit (1)
 	if (getRClevel(results, &offset, &used, RC6_T1) != MARK)   return false ;
