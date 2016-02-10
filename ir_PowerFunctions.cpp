@@ -19,7 +19,7 @@
 
 //+=============================================================================
 //
-#if SEND_LEGO_POWERFUNCTIONS
+#if SEND_POWERFUNCTIONS
 void  IRsend::sendPowerFunctions (unsigned long data,  int nbits)
 {
   // // Set IR carrier frequency
@@ -55,17 +55,16 @@ void  IRsend::sendPowerFunctions (unsigned long data,  int nbits)
 
 
 
-#if DECODE_LEGO_POWERFUNCTIONS
+#if DECODE_POWERFUNCTIONS
 bool IRrecv::decodePowerFunc(decode_results *results)
 {
   unsigned long  data   = 0;  // Somewhere to build our code
-
   DBG_PRINTLN(results->rawlen,DEC);
   // Check we have the right amount of data
   if (irparams.rawlen != (2 * BITS) + 4)
     return false ;
 
-  DBG_PRINTLN("Attempting Lego Power Functions Decode");
+  DBG_PRINTLN("Attempting Power Functions Decode");
 
   uint16_t desired_us = (results->rawbuf[1] + results->rawbuf[2]) * USECPERTICK;
   DBG_PRINT("PF desired_us = ");
