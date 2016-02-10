@@ -15,7 +15,7 @@
 #define SONY_ONE_MARK             1200
 #define SONY_ZERO_MARK             600
 #define SONY_RPT_LENGTH          45000
-#define SONY_DOUBLE_SPACE_USECS    500  // usually ssee 713 - not using ticks as get number wrapround
+#define SONY_DOUBLE_SPACE_USECS    500  // usually see 713 - not using ticks as get number wrapround
 
 //+=============================================================================
 #if SEND_SONY
@@ -50,11 +50,11 @@ bool  IRrecv::decodeSony (decode_results *results)
 	long  data   = 0;
 	int   offset = 0;  // Dont skip first space, check its size
 
-	if (irparams.rawlen < (2 * SONY_BITS) + 2)  return false ;
+	if (irparams.rawlen < (SONY_BITS<<1) + 2)  return false ; //(2 * SONY_BITS) + 2)  return false ;
 
 	// Some Sony's deliver repeats fast after first
 	// unfortunately can't spot difference from of repeat from two fast clicks
-	if (results->rawbuf[offset] < SONY_DOUBLE_SPACE_USECS) {
+	if ((results->rawbuf[offset] * USECPERTICK) < SONY_DOUBLE_SPACE_USECS) {
 		// Serial.print("IR Gap found: ");
 		results->bits = 0;
 		results->value = REPEAT;
@@ -70,10 +70,12 @@ bool  IRrecv::decodeSony (decode_results *results)
 	offset++;
 
 	// Initial mark
-	if (!MATCH_MARK(results->rawbuf[offset++], SONY_HDR_MARK))  return false ;
+	if (!MATCH_MARK(results->rawbuf[offset], SONY_HDR_MARK))  return false ;
+	offset++;
 
 	while (offset + 1 < irparams.rawlen) {
-		if (!MATCH_SPACE(results->rawbuf[offset++], SONY_HDR_SPACE))  break ;
+		if (!MATCH_SPACE(results->rawbuf[offset], SONY_HDR_SPACE))  break ;
+		offset++;
 
 		if      (MATCH_MARK(results->rawbuf[offset], SONY_ONE_MARK))   data = (data << 1) | 1 ;
 		else if (MATCH_MARK(results->rawbuf[offset], SONY_ZERO_MARK))  data = (data << 1) | 0 ;
@@ -82,7 +84,7 @@ bool  IRrecv::decodeSony (decode_results *results)
 	}
 
 	// Success
-	results->bits = (offset - 1) / 2;
+	results->bits = (offset - 1)>>1; //(offset - 1) / 2;
 	if (results->bits < 12) {
 		results->bits = 0;
 		return false;
@@ -92,4 +94,3 @@ bool  IRrecv::decodeSony (decode_results *results)
 	return true;
 }
 #endif
-
