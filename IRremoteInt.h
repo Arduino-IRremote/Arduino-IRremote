@@ -520,7 +520,7 @@ EXTERN  volatile irparams_t  irparams;
 	CMT_CGH1   = 1;               \
 	CMT_CGL1   = 1;               \
 	CMT_CMD1   = 0;               \
-	CMT_CMD2   = 30               \
+	CMT_CMD2   = 30;               \
 	CMT_CMD3   = 0;               \
 	CMT_CMD4   = 19;              \
 	CMT_OC     = 0;               \
