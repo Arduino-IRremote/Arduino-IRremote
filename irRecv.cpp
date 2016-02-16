@@ -90,10 +90,13 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeHeater(results))  return true ;
 #endif
 
+#if DECODE_HASH
+	DBG_PRINTLN("Hash decode");
 	// decodeHash returns a hash on any input.
 	// Thus, it needs to be last in the list.
 	// If you add any decodes, add them before this.
 	if (decodeHash(results))  return true ;
+#endif
 
 	// Throw away and start over
 	resume();
@@ -155,8 +158,8 @@ void  IRrecv::blink13 (int blinkflag)
 
 //+=============================================================================
 // Return if receiving new IR signals
-// 
-bool  IRrecv::isIdle ( ) 
+//
+bool  IRrecv::isIdle ( )
 {
  return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
 }
@@ -169,6 +172,7 @@ void  IRrecv::resume ( )
 	irparams.rawlen = 0;
 }
 
+#if DECODE_HASH
 //+=============================================================================
 // hashdecode - decode an arbitrary IR code.
 // Instead of decoding using a standard encoding scheme
@@ -188,9 +192,9 @@ void  IRrecv::resume ( )
 //
 int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
 {
-	if      (newval < oldval * .8)  return 0 ;
-	else if (oldval < newval * .8)  return 2 ;
-	else                            return 1 ;
+	if      ((newval * 10) < (oldval * 8)) return 0 ; // (newval < oldval * .8), alternately, a bitwise "<<3" would work in place of "* 8" 
+	else if ((oldval * 10) < (newval * 8)) return 2 ; // (oldval < newval * .8)
+	else                                   return 1 ;
 }
 
 //+=============================================================================
@@ -221,3 +225,4 @@ long  IRrecv::decodeHash (decode_results *results)
 
 	return true;
 }
+#endif
