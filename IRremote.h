@@ -56,7 +56,7 @@
 #define SEND_AIWA_RC_T501    1
 
 #define DECODE_LG            1
-#define SEND_LG              1 
+#define SEND_LG              1
 
 #define DECODE_SANYO         1
 #define SEND_SANYO           0 // NOT WRITTEN
@@ -78,6 +78,8 @@
 
 #define DECODE_HEATER        1
 #define SEND_HEATER          1
+
+#define DECODE_HASH          1
 
 #define DECODE_PRONTO        0 // This function does not logically make sense
 #define SEND_PRONTO          1
@@ -120,9 +122,9 @@ typedef
 		DISH,
 		SHARP,
 		DENON,
-		PRONTO,
 		JENSEN,
 		HEATER,
+		PRONTO,
 	}
 decode_type_t;
 
@@ -191,9 +193,10 @@ class IRrecv
 		void  resume     ( ) ;
 
 	private:
+#if		DECODE_HASH
 		long  decodeHash (decode_results *results) ;
 		int   compare    (unsigned int oldval, unsigned int newval) ;
-
+#		endif
 		//......................................................................
 #		if (DECODE_RC5 || DECODE_RC6)
 			// This helper function is shared by RC5 and RC6
