@@ -28,19 +28,19 @@ We are open to suggestions for adding support to new boards, however we highly r
 
 ### Hardware specifications
 
-| Board/CPU                                | Send Pin           | Timers            |
-|------------------------------------------|--------------------|-------------------|
-| Arduino Mega / ATmega 1280 / ATmega 2560 | 5, 6 **9**, 11, 46 | 1, **2**, 3, 4, 5 |
-| Teensy 1.0                               | **17**             | **1**             |
-| Teensy 2.0                               | 9, **10**, 14      | 1, 3, **4_HS**    |
-| Teensy++ 1.0 / 2.0                       | **1**, 16, 25      | 1, **2**, 3       |
-| Teensy 3.0 / 3.1                         | **5**              | **CMT**           |
-| Teensy-LC                                | **16**             | **TPM1**          |
-| Sanguino                                 | 13, **14**         | 1, **2**          |
-| Atmega8                                  | **9**              | **1**             |
-| ATtiny84                                 | **6**              | **1**             |
-| ATtiny85                                 | **1**              | **TINY0**         |
-| Arduino Duemilanove, UNO etc.            | **3**, 9           | 1, **2**          |
+| Board/CPU                                | Send Pin            | Timers            |
+|------------------------------------------|---------------------|-------------------|
+| Arduino Mega / ATmega 1280 / ATmega 2560 | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
+| Teensy 1.0                               | **17**              | **1**             |
+| Teensy 2.0                               | 9, **10**, 14       | 1, 3, **4_HS**    |
+| Teensy++ 1.0 / 2.0                       | **1**, 16, 25       | 1, **2**, 3       |
+| Teensy 3.0 / 3.1                         | **5**               | **CMT**           |
+| Teensy-LC                                | **16**              | **TPM1**          |
+| Sanguino                                 | 13, **14**          | 1, **2**          |
+| Atmega8                                  | **9**               | **1**             |
+| ATtiny84                                 | **6**               | **1**             |
+| ATtiny85                                 | **1**               | **TINY0**         |
+| Arduino Duemilanove, UNO etc.            | **3**, 9            | 1, **2**          |
 
 The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 
