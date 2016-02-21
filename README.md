@@ -17,6 +17,15 @@ Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more inf
 4. Move the "IRremote" folder that has been extracted to your libraries directory.
 5. Make sure to delete Arduino_Root/libraries/RobotIRremote. Where Arduino_Root refers to the install directory of Arduino. The library RobotIRremote has similar definitions to IRremote and causes errors.
 
+## Supported Boards
+- Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
+- Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: @PaulStoffregen (Teensy Team)
+- Sanguino
+- Atmega8
+- ATtiny 84 / 85
+
+We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
+
 ## Usage
 - TODO (Check examples for now)
 
@@ -27,7 +36,6 @@ If you want to contribute to this project:
 - Create issues and pull requests
 - Tell other people about this library
 - Contribute new protocols
-- 
 
 ## Contact
 The only way to contact me at the moment is by email: zetoslab@gmail.com
