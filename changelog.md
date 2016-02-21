@@ -1,3 +1,6 @@
+## 2.0.4 - 2016/02/20
+- Add Panasonic and JVC to IRrecord example [PR](https://github.com/z3t0/Arduino-IRremote/pull/54)
+
 ## 2.0.3 - 2016/02/20
 - Change IRSend Raw parameter to const [PR](https://github.com/z3t0/Arduino-IRremote/pull/227)
 
