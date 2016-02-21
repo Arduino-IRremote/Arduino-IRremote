@@ -1,3 +1,5 @@
+## 2.0.3 - 2016/02/20
+- Change IRSend Raw parameter to const [PR](https://github.com/z3t0/Arduino-IRremote/pull/227)
 
 ## 2.0.2 - 2015/12/02
 - Added IRremoteInfo Sketch - [PR](https://github.com/z3t0/Arduino-IRremote/pull/241)
