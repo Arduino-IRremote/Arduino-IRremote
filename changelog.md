@@ -1,3 +1,7 @@
+## 2.1.0 - 2016/02/20
+- Improved Debugging [PR #258](https://github.com/z3t0/Arduino-IRremote/pull/258)
+- Display TIME instead of TICKS [PR #258](https://github.com/z3t0/Arduino-IRremote/pull/258)
+
 ## 2.0.4 - 2016/02/20
 - Add Panasonic and JVC to IRrecord example [PR](https://github.com/z3t0/Arduino-IRremote/pull/54)
 
