@@ -9,6 +9,7 @@
 - Optimized with macros when using default USECPERTICK and TOLERANCE
 - Made decodeHash as a settable protocol defined by DECODE_HASH
 - Fixed some minor typos
+
 ### Additions
 - Added Jensen Protocol [@adamlhumphreys]
 - Added Heater Protocol [@adamlhumphreys]
