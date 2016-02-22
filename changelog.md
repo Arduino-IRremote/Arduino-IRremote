@@ -1,5 +1,5 @@
 
-## 2.1.1 - 2016/02/16
+## 2.1.1 - 2016/02/21
 ### Changes
 - Updated IRrecvDumpV2.ino to include gap reading to determine send repeat timing
 - Fixed false positive REPEAT in Sony and Sanyo protocols due to code errors
