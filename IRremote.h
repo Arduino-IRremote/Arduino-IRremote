@@ -56,7 +56,7 @@
 #define SEND_AIWA_RC_T501    1
 
 #define DECODE_LG            1
-#define SEND_LG              1 
+#define SEND_LG              1
 
 #define DECODE_SANYO         1
 #define SEND_SANYO           0 // NOT WRITTEN
@@ -258,6 +258,8 @@ class IRsend
 		void  mark        		(unsigned int usec) ;
 		void  space       		(unsigned int usec) ;
 		void  sendRaw     		(const unsigned int buf[],  unsigned int len,  unsigned int hz) ;
+		void  sendRaw           (const byte buf[],  unsigned int len,  unsigned int hz) ;
+		void  sendRawDelayed    (const byte buf[],  unsigned int len,  unsigned int hz) ;
 
 		//......................................................................
 #		if SEND_RC5

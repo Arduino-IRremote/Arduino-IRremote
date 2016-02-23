@@ -15,6 +15,40 @@ void  IRsend::sendRaw (const unsigned int buf[],  unsigned int len,  unsigned in
 	space(0);  // Always end with the LED off
 }
 
+// send byte array with 50 msec (USECPERTICK) multipler, added to less memory consumation
+void  IRsend::sendRaw (const byte buf[],  unsigned int len,  unsigned int hz)
+{
+	// Set IR carrier frequency
+	enableIROut(hz);
+
+	for (unsigned int i = 0;  i < len;  i++) {
+		if (i & 1)  space((unsigned int)buf[i]*USECPERTICK) ;
+		else        mark ((unsigned int)buf[i]*USECPERTICK) ;
+	}
+
+	space(0);  // Always end with the LED off
+}
+
+// send byte array with 50 msec (USECPERTICK) multipler, added to less memory consumation
+// delay need for pause main thread before all data going to IR
+void  IRsend::sendRawDelayed (const byte buf[],  unsigned int len,  unsigned int hz)
+{
+	// Set IR carrier frequency
+	enableIROut(hz);
+
+	for (unsigned int i = 0;  i < len;  i++) {
+		if (i & 1)  space((unsigned int)buf[i]*USECPERTICK) ;
+		else        mark ((unsigned int)buf[i]*USECPERTICK) ;
+	}
+
+	space(0);  // Always end with the LED off
+	// add delay
+	for(unsigned int i=0;i<len;i++){
+      // Using usec, so multiply raw to USECPERTICK
+      custom_delay_usec((unsigned long)buf[i]*USECPERTICK);
+    }
+}
+
 //+=============================================================================
 // Sends an IR mark for the specified number of microseconds.
 // The mark output is modulated at the PWM frequency.
@@ -35,9 +69,6 @@ void  IRsend::space (unsigned int time)
 	TIMER_DISABLE_PWM; // Disable pin 3 PWM output
 	if (time > 0) IRsend::custom_delay_usec(time);
 }
-
-
-
 
 
 //+=============================================================================
@@ -79,7 +110,7 @@ void IRsend::custom_delay_usec(unsigned long uSecs) {
       while ( micros() > start ) {} // wait until overflow
     }
     while ( micros() < endMicros ) {} // normal wait
-  } 
+  }
   //else {
   //  __asm__("nop\n\t"); // must have or compiler optimizes out
   //}
