@@ -189,6 +189,10 @@ EXTERN  volatile irparams_t  irparams;
 	//#define IR_USE_TIMER1   // tx = pin 13
 	#define IR_USE_TIMER2     // tx = pin 14
 
+// MightyCore - ATmega8535, ATmega16, ATmega32
+#elif defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
+	#define IR_USE_TIMER1     // tx = pin 13
+
 // Atmega8
 #elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
 	#define IR_USE_TIMER1     // tx = pin 9
@@ -271,7 +275,8 @@ EXTERN  volatile irparams_t  irparams;
 #define TIMER_DISABLE_PWM  (TCCR1A &= ~(_BV(COM1A1)))
 
 //-----------------
-#if defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
+#if defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__) || defined(__AVR_ATmega8535__) \
+ || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
 #	define TIMER_ENABLE_INTR   (TIMSK |= _BV(OCIE1A))
 #	define TIMER_DISABLE_INTR  (TIMSK &= ~_BV(OCIE1A))
 #else
