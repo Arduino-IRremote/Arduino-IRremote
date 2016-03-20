@@ -1,6 +1,19 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
+//init for decoding
+bool IRrecv::available(decode_results *results)
+{
+	if (irparams.rcvstate != STATE_STOP)  return false ;
+	results->rawbuf   = irparams.rawbuf;
+	results->rawlen   = irparams.rawlen;
+
+	results->overflow = irparams.overflow;
+	if (!results->overflow) return true;
+	resume(); //skip overflowed buffer
+	return false;
+}
+
 //+=============================================================================
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
@@ -145,8 +158,8 @@ void  IRrecv::blink13 (int blinkflag)
 
 //+=============================================================================
 // Return if receiving new IR signals
-// 
-bool  IRrecv::isIdle ( ) 
+//
+bool  IRrecv::isIdle ( )
 {
  return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
 }
@@ -192,7 +205,7 @@ int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
 #define FNV_PRIME_32 16777619
 #define FNV_BASIS_32 2166136261
 
-long  IRrecv::decodeHash (decode_results *results)
+bool  IRrecv::decodeHash (decode_results *results)
 {
 	long  hash = FNV_BASIS_32;
 

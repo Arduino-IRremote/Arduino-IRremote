@@ -56,7 +56,7 @@
 #define SEND_AIWA_RC_T501    1
 
 #define DECODE_LG            1
-#define SEND_LG              1 
+#define SEND_LG              1
 
 #define DECODE_SANYO         1
 #define SEND_SANYO           0 // NOT WRITTEN
@@ -170,6 +170,8 @@ class IRrecv
 		IRrecv (int recvpin) ;
 		IRrecv (int recvpin, int blinkpin);
 
+		bool available(decode_results *results);
+
 		void  blink13    (int blinkflag) ;
 		int   decode     (decode_results *results) ;
 		void  enableIRIn ( ) ;
@@ -177,7 +179,7 @@ class IRrecv
 		void  resume     ( ) ;
 
 	private:
-		long  decodeHash (decode_results *results) ;
+		bool  decodeHash (decode_results *results) ;
 		int   compare    (unsigned int oldval, unsigned int newval) ;
 
 		//......................................................................
@@ -185,6 +187,7 @@ class IRrecv
 			// This helper function is shared by RC5 and RC6
 			int  getRClevel (decode_results *results,  int *offset,  int *used,  int t1) ;
 #		endif
+	public:
 #		if DECODE_RC5
 			bool  decodeRC5        (decode_results *results) ;
 #		endif
