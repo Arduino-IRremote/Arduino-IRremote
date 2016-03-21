@@ -170,81 +170,81 @@ class IRrecv
 		IRrecv (int recvpin) ;
 		IRrecv (int recvpin, int blinkpin);
 
-		bool available(decode_results *results);
+		bool available(decode_results &results);
 
 		void  blink13    (int blinkflag) ;
-		int   decode     (decode_results *results) ;
+		int   decode     (decode_results &results) ;
 		void  enableIRIn ( ) ;
 		bool  isIdle     ( ) ;
 		void  resume     ( ) ;
 
 	private:
-		bool  decodeHash (decode_results *results) ;
+		bool  decodeHash (decode_results &results) ;
 		int   compare    (unsigned int oldval, unsigned int newval) ;
 
 		//......................................................................
 #		if (DECODE_RC5 || DECODE_RC6)
 			// This helper function is shared by RC5 and RC6
-			int  getRClevel (decode_results *results,  int *offset,  int *used,  int t1) ;
+			int  getRClevel (int *offset,  int *used,  int t1) ;
 #		endif
 	public:
 #		if DECODE_RC5
-			bool  decodeRC5        (decode_results *results) ;
+			bool  decodeRC5        (decode_results &results) ;
 #		endif
 #		if DECODE_RC6
-			bool  decodeRC6        (decode_results *results) ;
+			bool  decodeRC6        (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_NEC
-			bool  decodeNEC        (decode_results *results) ;
+			bool  decodeNEC        (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_SONY
-			bool  decodeSony       (decode_results *results) ;
+			bool  decodeSony       (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_PANASONIC
-			bool  decodePanasonic  (decode_results *results) ;
+			bool  decodePanasonic  (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_JVC
-			bool  decodeJVC        (decode_results *results) ;
+			bool  decodeJVC        (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_SAMSUNG
-			bool  decodeSAMSUNG    (decode_results *results) ;
+			bool  decodeSAMSUNG    (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_WHYNTER
-			bool  decodeWhynter    (decode_results *results) ;
+			bool  decodeWhynter    (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_AIWA_RC_T501
-			bool  decodeAiwaRCT501 (decode_results *results) ;
+			bool  decodeAiwaRCT501 (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_LG
-			bool  decodeLG         (decode_results *results) ;
+			bool  decodeLG         (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_SANYO
-			bool  decodeSanyo      (decode_results *results) ;
+			bool  decodeSanyo      (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_MITSUBISHI
-			bool  decodeMitsubishi (decode_results *results) ;
+			bool  decodeMitsubishi (decode_results &results) ;
 #		endif
 		//......................................................................
 #		if DECODE_DISH
-			bool  decodeDish (decode_results *results) ; // NOT WRITTEN
+			bool  decodeDish (decode_results &results) ; // NOT WRITTEN
 #		endif
 		//......................................................................
 #		if DECODE_SHARP
-			bool  decodeSharp (decode_results *results) ; // NOT WRITTEN
+			bool  decodeSharp (decode_results &results) ; // NOT WRITTEN
 #		endif
 		//......................................................................
 #		if DECODE_DENON
-			bool  decodeDenon (decode_results *results) ;
+			bool  decodeDenon (decode_results &results) ;
 #		endif
 } ;
 

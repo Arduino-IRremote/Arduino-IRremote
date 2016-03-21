@@ -49,30 +49,29 @@ void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 
 //+=============================================================================
 #if DECODE_PANASONIC
-bool  IRrecv::decodePanasonic (decode_results *results)
+bool  IRrecv::decodePanasonic (decode_results &results)
 {
     unsigned long long  data   = 0;
     int                 offset = 1;
 
-    if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_HDR_MARK ))  return false ;
-    if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_HDR_SPACE))  return false ;
+    if (!MATCH_MARK(irparams.rawbuf[offset++], PANASONIC_HDR_MARK ))  return false ;
+    if (!MATCH_MARK(irparams.rawbuf[offset++], PANASONIC_HDR_SPACE))  return false ;
 
     // decode address
     for (int i = 0;  i < PANASONIC_BITS;  i++) {
-        if (!MATCH_MARK(results->rawbuf[offset++], PANASONIC_BIT_MARK))  return false ;
+        if (!MATCH_MARK(irparams.rawbuf[offset++], PANASONIC_BIT_MARK))  return false ;
 
-        if      (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ONE_SPACE ))  data = (data << 1) | 1 ;
-        else if (MATCH_SPACE(results->rawbuf[offset],PANASONIC_ZERO_SPACE))  data = (data << 1) | 0 ;
+        if      (MATCH_SPACE(irparams.rawbuf[offset],PANASONIC_ONE_SPACE ))  data = (data << 1) | 1 ;
+        else if (MATCH_SPACE(irparams.rawbuf[offset],PANASONIC_ZERO_SPACE))  data = (data << 1) | 0 ;
         else                                                                 return false ;
         offset++;
     }
 
-    results->value       = (unsigned long)data;
-    results->address     = (unsigned int)(data >> 32);
-    results->decode_type = PANASONIC;
-    results->bits        = PANASONIC_BITS;
+    results.value       = (unsigned long)data;
+    results.address     = (unsigned int)(data >> 32);
+    results.decode_type = PANASONIC;
+    results.bits        = PANASONIC_BITS;
 
     return true;
 }
 #endif
-

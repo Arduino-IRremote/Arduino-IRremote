@@ -22,7 +22,7 @@
 
 //+=============================================================================
 #if DECODE_SANYO
-bool  IRrecv::decodeSanyo (decode_results *results)
+bool  IRrecv::decodeSanyo (decode_results &results)
 {
 	long  data   = 0;
 	int   offset = 0;  // Skip first space  <-- CHECK THIS!
@@ -32,45 +32,45 @@ bool  IRrecv::decodeSanyo (decode_results *results)
 #if 0
 	// Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
 	Serial.print("IR Gap: ");
-	Serial.println( results->rawbuf[offset]);
+	Serial.println( irparams.rawbuf[offset]);
 	Serial.println( "test against:");
-	Serial.println(results->rawbuf[offset]);
+	Serial.println(irparams.rawbuf[offset]);
 #endif
 
 	// Initial space
-	if (results->rawbuf[offset] < SANYO_DOUBLE_SPACE_USECS) {
+	if (irparams.rawbuf[offset] < SANYO_DOUBLE_SPACE_USECS) {
 		//Serial.print("IR Gap found: ");
-		results->bits        = 0;
-		results->value       = REPEAT;
-		results->decode_type = SANYO;
+		results.bits        = 0;
+		results.value       = REPEAT;
+		results.decode_type = SANYO;
 		return true;
 	}
 	offset++;
 
 	// Initial mark
-	if (!MATCH_MARK(results->rawbuf[offset++], SANYO_HDR_MARK))  return false ;
+	if (!MATCH_MARK(irparams.rawbuf[offset++], SANYO_HDR_MARK))  return false ;
 
 	// Skip Second Mark
-	if (!MATCH_MARK(results->rawbuf[offset++], SANYO_HDR_MARK))  return false ;
+	if (!MATCH_MARK(irparams.rawbuf[offset++], SANYO_HDR_MARK))  return false ;
 
 	while (offset + 1 < irparams.rawlen) {
-		if (!MATCH_SPACE(results->rawbuf[offset++], SANYO_HDR_SPACE))  break ;
+		if (!MATCH_SPACE(irparams.rawbuf[offset++], SANYO_HDR_SPACE))  break ;
 
-		if      (MATCH_MARK(results->rawbuf[offset], SANYO_ONE_MARK))   data = (data << 1) | 1 ;
-		else if (MATCH_MARK(results->rawbuf[offset], SANYO_ZERO_MARK))  data = (data << 1) | 0 ;
+		if      (MATCH_MARK(irparams.rawbuf[offset], SANYO_ONE_MARK))   data = (data << 1) | 1 ;
+		else if (MATCH_MARK(irparams.rawbuf[offset], SANYO_ZERO_MARK))  data = (data << 1) | 0 ;
 		else                                                            return false ;
 		offset++;
 	}
 
 	// Success
-	results->bits = (offset - 1) / 2;
-	if (results->bits < 12) {
-		results->bits = 0;
+	results.bits = (offset - 1) / 2;
+	if (results.bits < 12) {
+		results.bits = 0;
 		return false;
 	}
 
-	results->value       = data;
-	results->decode_type = SANYO;
+	results.value       = data;
+	results.decode_type = SANYO;
 	return true;
 }
 #endif

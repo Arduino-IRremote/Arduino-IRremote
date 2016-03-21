@@ -49,44 +49,43 @@ void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
 // SAMSUNGs have a repeat only 4 items long
 //
 #if DECODE_SAMSUNG
-bool  IRrecv::decodeSAMSUNG (decode_results *results)
+bool  IRrecv::decodeSAMSUNG (decode_results &results)
 {
 	long  data   = 0;
 	int   offset = 1;  // Skip first space
 
 	// Initial mark
-	if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_HDR_MARK))   return false ;
+	if (!MATCH_MARK(irparams.rawbuf[offset], SAMSUNG_HDR_MARK))   return false ;
 	offset++;
 
 	// Check for repeat
 	if (    (irparams.rawlen == 4)
-	     && MATCH_SPACE(results->rawbuf[offset], SAMSUNG_RPT_SPACE)
-	     && MATCH_MARK(results->rawbuf[offset+1], SAMSUNG_BIT_MARK)
+	     && MATCH_SPACE(irparams.rawbuf[offset], SAMSUNG_RPT_SPACE)
+	     && MATCH_MARK(irparams.rawbuf[offset+1], SAMSUNG_BIT_MARK)
 	   ) {
-		results->bits        = 0;
-		results->value       = REPEAT;
-		results->decode_type = SAMSUNG;
+		results.bits        = 0;
+		results.value       = REPEAT;
+		results.decode_type = SAMSUNG;
 		return true;
 	}
 	if (irparams.rawlen < (2 * SAMSUNG_BITS) + 4)  return false ;
 
 	// Initial space
-	if (!MATCH_SPACE(results->rawbuf[offset++], SAMSUNG_HDR_SPACE))  return false ;
+	if (!MATCH_SPACE(irparams.rawbuf[offset++], SAMSUNG_HDR_SPACE))  return false ;
 
 	for (int i = 0;  i < SAMSUNG_BITS;   i++) {
-		if (!MATCH_MARK(results->rawbuf[offset++], SAMSUNG_BIT_MARK))  return false ;
+		if (!MATCH_MARK(irparams.rawbuf[offset++], SAMSUNG_BIT_MARK))  return false ;
 
-		if      (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ONE_SPACE))   data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ZERO_SPACE))  data = (data << 1) | 0 ;
+		if      (MATCH_SPACE(irparams.rawbuf[offset], SAMSUNG_ONE_SPACE))   data = (data << 1) | 1 ;
+		else if (MATCH_SPACE(irparams.rawbuf[offset], SAMSUNG_ZERO_SPACE))  data = (data << 1) | 0 ;
 		else                                                                return false ;
 		offset++;
 	}
 
 	// Success
-	results->bits        = SAMSUNG_BITS;
-	results->value       = data;
-	results->decode_type = SAMSUNG;
+	results.bits        = SAMSUNG_BITS;
+	results.value       = data;
+	results.decode_type = SAMSUNG;
 	return true;
 }
 #endif
-

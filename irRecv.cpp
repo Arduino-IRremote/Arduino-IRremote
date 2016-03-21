@@ -2,14 +2,14 @@
 #include "IRremoteInt.h"
 
 //init for decoding
-bool IRrecv::available(decode_results *results)
+bool IRrecv::available(decode_results &results)
 {
 	if (irparams.rcvstate != STATE_STOP)  return false ;
-	results->rawbuf   = irparams.rawbuf;
-	results->rawlen   = irparams.rawlen;
+	results.rawbuf   = irparams.rawbuf;
+	results.rawlen   = irparams.rawlen;
 
-	results->overflow = irparams.overflow;
-	if (!results->overflow) return true;
+	results.overflow = irparams.overflow;
+	if (!results.overflow) return true;
 	resume(); //skip overflowed buffer
 	return false;
 }
@@ -19,12 +19,12 @@ bool IRrecv::available(decode_results *results)
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
 //
-int  IRrecv::decode (decode_results *results)
+int  IRrecv::decode (decode_results &results)
 {
-	results->rawbuf   = irparams.rawbuf;
-	results->rawlen   = irparams.rawlen;
+	results.rawbuf   = irparams.rawbuf;
+	results.rawlen   = irparams.rawlen;
 
-	results->overflow = irparams.overflow;
+	results.overflow = irparams.overflow;
 
 	if (irparams.rcvstate != STATE_STOP)  return false ;
 
@@ -205,22 +205,22 @@ int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
 #define FNV_PRIME_32 16777619
 #define FNV_BASIS_32 2166136261
 
-bool  IRrecv::decodeHash (decode_results *results)
+bool  IRrecv::decodeHash (decode_results &results)
 {
 	long  hash = FNV_BASIS_32;
 
 	// Require at least 6 samples to prevent triggering on noise
-	if (results->rawlen < 6)  return false ;
+	if (irparams.rawlen < 6)  return false ;
 
-	for (int i = 1;  (i + 2) < results->rawlen;  i++) {
-		int value =  compare(results->rawbuf[i], results->rawbuf[i+2]);
+	for (int i = 1;  (i + 2) < irparams.rawlen;  i++) {
+		int value =  compare(irparams.rawbuf[i], irparams.rawbuf[i+2]);
 		// Add value into the hash
 		hash = (hash * FNV_PRIME_32) ^ value;
 	}
 
-	results->value       = hash;
-	results->bits        = 32;
-	results->decode_type = UNKNOWN;
+	results.value       = hash;
+	results.bits        = 32;
+	results.decode_type = UNKNOWN;
 
 	return true;
 }

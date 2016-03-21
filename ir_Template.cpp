@@ -45,7 +45,7 @@ Now you must do a few things to add it to the IRremote system:
    C. Further down in "Main class for receiving IR", add:
       //......................................................................
       #if DECODE_SHUZU
-          bool  decodeShuzu (decode_results *results) ;
+          bool  decodeShuzu (decode_results &results) ;
       #endif
 
    D. Further down in "Main class for sending IR", add:
@@ -145,7 +145,7 @@ void  IRsend::sendShuzu (unsigned long data,  int nbits)
 //+=============================================================================
 //
 #if DECODE_SHUZU
-bool  IRrecv::decodeShuzu (decode_results *results)
+bool  IRrecv::decodeShuzu (decode_results &results)
 {
 	unsigned long  data   = 0;  // Somewhere to build our code
 	int            offset = 1;  // Skip the Gap reading
@@ -154,26 +154,26 @@ bool  IRrecv::decodeShuzu (decode_results *results)
 	if (irparams.rawlen != 1 + 2 + (2 * BITS) + 1)  return false ;
 
 	// Check initial Mark+Space match
-	if (!MATCH_MARK (results->rawbuf[offset++], HDR_MARK ))  return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], HDR_SPACE))  return false ;
+	if (!MATCH_MARK (irparams.rawbuf[offset++], HDR_MARK ))  return false ;
+	if (!MATCH_SPACE(irparams.rawbuf[offset++], HDR_SPACE))  return false ;
 
 	// Read the bits in
 	for (int i = 0;  i < SHUZU_BITS;  i++) {
 		// Each bit looks like: MARK + SPACE_1 -> 1
 		//                 or : MARK + SPACE_0 -> 0
-		if (!MATCH_MARK(results->rawbuf[offset++], BIT_MARK))  return false ;
+		if (!MATCH_MARK(irparams.rawbuf[offset++], BIT_MARK))  return false ;
 
 		// IR data is big-endian, so we shuffle it in from the right:
-		if      (MATCH_SPACE(results->rawbuf[offset], ONE_SPACE))   data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset], ZERO_SPACE))  data = (data << 1) | 0 ;
+		if      (MATCH_SPACE(irparams.rawbuf[offset], ONE_SPACE))   data = (data << 1) | 1 ;
+		else if (MATCH_SPACE(irparams.rawbuf[offset], ZERO_SPACE))  data = (data << 1) | 0 ;
 		else                                                        return false ;
 		offset++;
 	}
 
 	// Success
-	results->bits        = BITS;
-	results->value       = data;
-	results->decode_type = SHUZU;
+	results.bits        = BITS;
+	results.value       = data;
+	results.decode_type = SHUZU;
 	return true;
 }
 #endif

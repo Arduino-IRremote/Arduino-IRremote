@@ -49,23 +49,23 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
 // NECs have a repeat only 4 items long
 //
 #if DECODE_NEC
-bool  IRrecv::decodeNEC (decode_results *results)
+bool  IRrecv::decodeNEC (decode_results &results)
 {
 	long  data   = 0;  // We decode in to here; Start with nothing
 	int   offset = 1;  // Index in to results; Skip first entry!?
 
 	// Check header "mark"
-	if (!MATCH_MARK(results->rawbuf[offset], NEC_HDR_MARK))  return false ;
+	if (!MATCH_MARK(irparams.rawbuf[offset], NEC_HDR_MARK))  return false ;
 	offset++;
 
 	// Check for repeat
 	if ( (irparams.rawlen == 4)
-	    && MATCH_SPACE(results->rawbuf[offset  ], NEC_RPT_SPACE)
-	    && MATCH_MARK (results->rawbuf[offset+1], NEC_BIT_MARK )
+	    && MATCH_SPACE(irparams.rawbuf[offset  ], NEC_RPT_SPACE)
+	    && MATCH_MARK (irparams.rawbuf[offset+1], NEC_BIT_MARK )
 	   ) {
-		results->bits        = 0;
-		results->value       = REPEAT;
-		results->decode_type = NEC;
+		results.bits        = 0;
+		results.value       = REPEAT;
+		results.decode_type = NEC;
 		return true;
 	}
 
@@ -73,25 +73,25 @@ bool  IRrecv::decodeNEC (decode_results *results)
 	if (irparams.rawlen < (2 * NEC_BITS) + 4)  return false ;
 
 	// Check header "space"
-	if (!MATCH_SPACE(results->rawbuf[offset], NEC_HDR_SPACE))  return false ;
+	if (!MATCH_SPACE(irparams.rawbuf[offset], NEC_HDR_SPACE))  return false ;
 	offset++;
 
 	// Build the data
 	for (int i = 0;  i < NEC_BITS;  i++) {
 		// Check data "mark"
-		if (!MATCH_MARK(results->rawbuf[offset], NEC_BIT_MARK))  return false ;
+		if (!MATCH_MARK(irparams.rawbuf[offset], NEC_BIT_MARK))  return false ;
 		offset++;
         // Suppend this bit
-		if      (MATCH_SPACE(results->rawbuf[offset], NEC_ONE_SPACE ))  data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset], NEC_ZERO_SPACE))  data = (data << 1) | 0 ;
+		if      (MATCH_SPACE(irparams.rawbuf[offset], NEC_ONE_SPACE ))  data = (data << 1) | 1 ;
+		else if (MATCH_SPACE(irparams.rawbuf[offset], NEC_ZERO_SPACE))  data = (data << 1) | 0 ;
 		else                                                            return false ;
 		offset++;
 	}
 
 	// Success
-	results->bits        = NEC_BITS;
-	results->value       = data;
-	results->decode_type = NEC;
+	results.bits        = NEC_BITS;
+	results.value       = data;
+	results.decode_type = NEC;
 
 	return true;
 }

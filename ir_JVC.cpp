@@ -54,48 +54,47 @@ void  IRsend::sendJVC (unsigned long data,  int nbits,  bool repeat)
 
 //+=============================================================================
 #if DECODE_JVC
-bool  IRrecv::decodeJVC (decode_results *results)
+bool  IRrecv::decodeJVC (decode_results &results)
 {
 	long  data   = 0;
 	int   offset = 1; // Skip first space
 
 	// Check for repeat
 	if (  (irparams.rawlen - 1 == 33)
-	    && MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK)
-	    && MATCH_MARK(results->rawbuf[irparams.rawlen-1], JVC_BIT_MARK)
+	    && MATCH_MARK(irparams.rawbuf[offset], JVC_BIT_MARK)
+	    && MATCH_MARK(irparams.rawbuf[irparams.rawlen-1], JVC_BIT_MARK)
 	   ) {
-		results->bits        = 0;
-		results->value       = REPEAT;
-		results->decode_type = JVC;
+		results.bits        = 0;
+		results.value       = REPEAT;
+		results.decode_type = JVC;
 		return true;
 	}
 
 	// Initial mark
-	if (!MATCH_MARK(results->rawbuf[offset++], JVC_HDR_MARK))  return false ;
+	if (!MATCH_MARK(irparams.rawbuf[offset++], JVC_HDR_MARK))  return false ;
 
 	if (irparams.rawlen < (2 * JVC_BITS) + 1 )  return false ;
 
 	// Initial space
-	if (!MATCH_SPACE(results->rawbuf[offset++], JVC_HDR_SPACE))  return false ;
+	if (!MATCH_SPACE(irparams.rawbuf[offset++], JVC_HDR_SPACE))  return false ;
 
 	for (int i = 0;  i < JVC_BITS;  i++) {
-		if (!MATCH_MARK(results->rawbuf[offset++], JVC_BIT_MARK))  return false ;
+		if (!MATCH_MARK(irparams.rawbuf[offset++], JVC_BIT_MARK))  return false ;
 
-		if      (MATCH_SPACE(results->rawbuf[offset], JVC_ONE_SPACE))   data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset], JVC_ZERO_SPACE))  data = (data << 1) | 0 ;
+		if      (MATCH_SPACE(irparams.rawbuf[offset], JVC_ONE_SPACE))   data = (data << 1) | 1 ;
+		else if (MATCH_SPACE(irparams.rawbuf[offset], JVC_ZERO_SPACE))  data = (data << 1) | 0 ;
 		else                                                            return false ;
 		offset++;
 	}
 
 	// Stop bit
-	if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK))  return false ;
+	if (!MATCH_MARK(irparams.rawbuf[offset], JVC_BIT_MARK))  return false ;
 
 	// Success
-	results->bits        = JVC_BITS;
-	results->value       = data;
-	results->decode_type = JVC;
+	results.bits        = JVC_BITS;
+	results.value       = data;
+	results.decode_type = JVC;
 
 	return true;
 }
 #endif
-

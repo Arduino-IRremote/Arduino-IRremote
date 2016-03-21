@@ -71,7 +71,7 @@ void  IRsend::sendAiwaRCT501 (int code)
 
 //+=============================================================================
 #if DECODE_AIWA_RC_T501
-bool  IRrecv::decodeAiwaRCT501 (decode_results *results)
+bool  IRrecv::decodeAiwaRCT501 (decode_results &results)
 {
 	int  data   = 0;
 	int  offset = 1;
@@ -80,26 +80,26 @@ bool  IRrecv::decodeAiwaRCT501 (decode_results *results)
 	if (irparams.rawlen < 2 * (AIWA_RC_T501_SUM_BITS) + 4)  return false ;
 
 	// Check HDR Mark/Space
-	if (!MATCH_MARK (results->rawbuf[offset++], AIWA_RC_T501_HDR_MARK ))  return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], AIWA_RC_T501_HDR_SPACE))  return false ;
+	if (!MATCH_MARK (irparams.rawbuf[offset++], AIWA_RC_T501_HDR_MARK ))  return false ;
+	if (!MATCH_SPACE(irparams.rawbuf[offset++], AIWA_RC_T501_HDR_SPACE))  return false ;
 
 	offset += 26;  // skip pre-data - optional
 	while(offset < irparams.rawlen - 4) {
-		if (MATCH_MARK(results->rawbuf[offset], AIWA_RC_T501_BIT_MARK))  offset++ ;
+		if (MATCH_MARK(irparams.rawbuf[offset], AIWA_RC_T501_BIT_MARK))  offset++ ;
 		else                                                             return false ;
 
 		// ONE & ZERO
-		if      (MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_ONE_SPACE))   data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_ZERO_SPACE))  data = (data << 1) | 0 ;
+		if      (MATCH_SPACE(irparams.rawbuf[offset], AIWA_RC_T501_ONE_SPACE))   data = (data << 1) | 1 ;
+		else if (MATCH_SPACE(irparams.rawbuf[offset], AIWA_RC_T501_ZERO_SPACE))  data = (data << 1) | 0 ;
 		else                                                                     break ;  // End of one & zero detected
 		offset++;
 	}
 
-	results->bits = (offset - 1) / 2;
-	if (results->bits < 42)  return false ;
+	results.bits = (offset - 1) / 2;
+	if (results.bits < 42)  return false ;
 
-	results->value       = data;
-	results->decode_type = AIWA_RC_T501;
+	results.value       = data;
+	results.decode_type = AIWA_RC_T501;
 	return true;
 }
 #endif
