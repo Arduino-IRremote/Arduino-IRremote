@@ -45,6 +45,7 @@
 typedef
 	struct {
 		// The fields are ordered to reduce memory over caused by struct-padding
+		volatile
 		uint8_t       rcvstate;        // State Machine state
 		uint8_t       recvpin;         // Pin connected to IR data from detector
 		uint8_t       blinkpin;
@@ -66,7 +67,11 @@ irparams_t;
 // Allow all parts of the code access to the ISR data
 // NB. The data can be changed by the ISR at any time, even mid-function
 // Therefore we declare it as "volatile" to stop the compiler/CPU caching it
-EXTERN  volatile irparams_t  irparams;
+/* reading is meaningful only in state STATE_STOP.
+ Reading the state is an atomic operation, no need for volatile
+*/
+//EXTERN  volatile irparams_t  irparams;
+EXTERN  irparams_t  irparams;
 
 //------------------------------------------------------------------------------
 // Defines for blinking the LED
