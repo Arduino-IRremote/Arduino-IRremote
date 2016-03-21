@@ -52,7 +52,7 @@ int  MATCH (int measured,  int desired)
   if (passed)
     DBG_PRINTLN(F("?; passed"));
   else
-    DBG_PRINTLN(F("?; FAILED")); 
+    DBG_PRINTLN(F("?; FAILED"));
  	return passed;
 }
 
@@ -65,7 +65,7 @@ int  MATCH_MARK (int measured_ticks,  int desired_us)
 	DBG_PRINT(measured_ticks * USECPERTICK, DEC);
 	DBG_PRINT(F("us vs "));
 	DBG_PRINT(desired_us, DEC);
-	DBG_PRINT("us"); 
+	DBG_PRINT("us");
 	DBG_PRINT(": ");
 	DBG_PRINT(TICKS_LOW(desired_us + MARK_EXCESS) * USECPERTICK, DEC);
 	DBG_PRINT(F(" <= "));
@@ -78,7 +78,7 @@ int  MATCH_MARK (int measured_ticks,  int desired_us)
   if (passed)
     DBG_PRINTLN(F("?; passed"));
   else
-    DBG_PRINTLN(F("?; FAILED")); 
+    DBG_PRINTLN(F("?; FAILED"));
  	return passed;
 }
 
@@ -91,7 +91,7 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 	DBG_PRINT(measured_ticks * USECPERTICK, DEC);
 	DBG_PRINT(F("us vs "));
 	DBG_PRINT(desired_us, DEC);
-	DBG_PRINT("us"); 
+	DBG_PRINT("us");
 	DBG_PRINT(": ");
 	DBG_PRINT(TICKS_LOW(desired_us - MARK_EXCESS) * USECPERTICK, DEC);
 	DBG_PRINT(F(" <= "));
@@ -104,7 +104,7 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
   if (passed)
     DBG_PRINTLN(F("?; passed"));
   else
-    DBG_PRINTLN(F("?; FAILED")); 
+    DBG_PRINTLN(F("?; FAILED"));
  	return passed;
 }
 
@@ -129,7 +129,11 @@ ISR (TIMER_INTR_NAME)
 	uint8_t  irdata = (uint8_t)digitalRead(irparams.recvpin);
 
 	irparams.timer++;  // One more 50uS tick
-	if (irparams.rawlen >= RAWBUF)  irparams.rcvstate = STATE_OVERFLOW ;  // Buffer overflow
+	if (irparams.rawlen >= RAWBUF)  //irparams.rcvstate = STATE_OVERFLOW ;  // Buffer overflow
+  {
+    irparams.overflow = true;
+    irparams.rcvstate = STATE_STOP;
+  }
 
 	switch(irparams.rcvstate) {
 		//......................................................................
@@ -175,11 +179,13 @@ ISR (TIMER_INTR_NAME)
 		case STATE_STOP:  // Waiting; Measuring Gap
 		 	if (irdata == MARK)  irparams.timer = 0 ;  // Reset gap timer
 		 	break;
+  #if 0
 		//......................................................................
 		case STATE_OVERFLOW:  // Flag up a read overflow; Stop the State Machine
 			irparams.overflow = true;
 			irparams.rcvstate = STATE_STOP;
 		 	break;
+  #endif
 	}
 
 	// If requested, flash LED while receiving IR data

@@ -62,7 +62,6 @@ irparams_t;
 #define STATE_MARK      3
 #define STATE_SPACE     4
 #define STATE_STOP      5
-#define STATE_OVERFLOW  6
 
 // Allow all parts of the code access to the ISR data
 // NB. The data can be changed by the ISR at any time, even mid-function
