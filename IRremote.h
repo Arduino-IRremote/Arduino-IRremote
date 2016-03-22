@@ -202,7 +202,8 @@ class IRrecv
 		IRvalue_t read() { return results.value; }
 
 		void  blink13    (bool blinkflag) ;
-		int   decode     () ;
+		bool  decode     () ;
+		bool  decode     (decode_results *copy) ;
 		void  enableIRIn ( ) ;
 		bool  isIdle     ( ) ;
 		void  resume     ( ) ;

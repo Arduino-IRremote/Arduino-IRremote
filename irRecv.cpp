@@ -33,7 +33,15 @@ bool IRrecv::available(decoder_t which)
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
 //
-int  IRrecv::decode ()
+bool  IRrecv::decode (decode_results *copy)
+{
+	if (!decode()) return false;
+	*copy = results;
+	return true;
+}
+
+//using built-in results
+bool  IRrecv::decode ()
 {
 	results.rawlen   = irparams.rawlen;
 
