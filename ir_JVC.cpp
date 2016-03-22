@@ -54,7 +54,7 @@ void  IRsend::sendJVC (unsigned long data,  int nbits,  bool repeat)
 
 //+=============================================================================
 #if DECODE_JVC
-bool  IRrecv::decodeJVC (decode_results &results)
+bool  IRrecv::decodeJVC ()
 {
 	long  data   = 0;
 	int   offset = 1; // Skip first space

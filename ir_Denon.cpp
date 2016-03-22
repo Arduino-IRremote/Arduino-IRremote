@@ -60,7 +60,7 @@ void  IRsend::sendDenon (unsigned long data,  int nbits)
 //+=============================================================================
 //
 #if DECODE_DENON
-bool  IRrecv::decodeDenon (decode_results &results)
+bool  IRrecv::decodeDenon ()
 {
 	unsigned long  data   = 0;  // Somewhere to build our code
 	int            offset = 1;  // Skip the Gap reading

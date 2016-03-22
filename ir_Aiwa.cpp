@@ -71,7 +71,7 @@ void  IRsend::sendAiwaRCT501 (int code)
 
 //+=============================================================================
 #if DECODE_AIWA_RC_T501
-bool  IRrecv::decodeAiwaRCT501 (decode_results &results)
+bool  IRrecv::decodeAiwaRCT501 ()
 {
 	int  data   = 0;
 	int  offset = 1;

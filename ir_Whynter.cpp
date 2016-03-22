@@ -52,7 +52,7 @@ void  IRsend::sendWhynter (unsigned long data,  int nbits)
 
 //+=============================================================================
 #if DECODE_WHYNTER
-bool  IRrecv::decodeWhynter (decode_results &results)
+bool  IRrecv::decodeWhynter ()
 {
 	long  data   = 0;
 	int   offset = 1;  // skip initial space

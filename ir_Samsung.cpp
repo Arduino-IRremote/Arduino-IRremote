@@ -49,7 +49,7 @@ void  IRsend::sendSAMSUNG (unsigned long data,  int nbits)
 // SAMSUNGs have a repeat only 4 items long
 //
 #if DECODE_SAMSUNG
-bool  IRrecv::decodeSAMSUNG (decode_results &results)
+bool  IRrecv::decodeSAMSUNG ()
 {
 	long  data   = 0;
 	int   offset = 1;  // Skip first space

@@ -49,7 +49,7 @@ void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 
 //+=============================================================================
 #if DECODE_PANASONIC
-bool  IRrecv::decodePanasonic (decode_results &results)
+bool  IRrecv::decodePanasonic ()
 {
     unsigned long long  data   = 0;
     int                 offset = 1;

@@ -45,7 +45,7 @@ Now you must do a few things to add it to the IRremote system:
    C. Further down in "Main class for receiving IR", add:
       //......................................................................
       #if DECODE_SHUZU
-          bool  decodeShuzu (decode_results &results) ;
+          bool  decodeShuzu () ;
       #endif
 
    D. Further down in "Main class for sending IR", add:
@@ -59,9 +59,9 @@ Now you must do a few things to add it to the IRremote system:
 2. Now open irRecv.cpp and make the following change:
 
    A. In the function IRrecv::decode(), add:
-      #ifdef DECODE_NEC
+      #if DECODE_SHUZU
           DBG_PRINTLN("Attempting Shuzu decode");
-          if (decodeShuzu(results))  return true ;
+          if (decodeShuzu())  return true ;
       #endif
 
    B. Save your changes and close the file
@@ -145,7 +145,7 @@ void  IRsend::sendShuzu (unsigned long data,  int nbits)
 //+=============================================================================
 //
 #if DECODE_SHUZU
-bool  IRrecv::decodeShuzu (decode_results &results)
+bool  IRrecv::decodeShuzu ()
 {
 	unsigned long  data   = 0;  // Somewhere to build our code
 	int            offset = 1;  // Skip the Gap reading

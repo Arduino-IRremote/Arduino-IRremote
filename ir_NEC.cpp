@@ -49,7 +49,7 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
 // NECs have a repeat only 4 items long
 //
 #if DECODE_NEC
-bool  IRrecv::decodeNEC (decode_results &results)
+bool  IRrecv::decodeNEC ()
 {
 	long  data   = 0;  // We decode in to here; Start with nothing
 	int   offset = 1;  // Index in to results; Skip first entry!?

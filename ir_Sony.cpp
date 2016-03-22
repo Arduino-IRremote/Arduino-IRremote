@@ -45,7 +45,7 @@ void  IRsend::sendSony (unsigned long data,  int nbits)
 
 //+=============================================================================
 #if DECODE_SONY
-bool  IRrecv::decodeSony (decode_results &results)
+bool  IRrecv::decodeSony ()
 {
 	long  data   = 0;
 	int   offset = 0;  // Dont skip first space, check its size

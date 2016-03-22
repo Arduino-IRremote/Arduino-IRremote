@@ -82,7 +82,7 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
 
 //+=============================================================================
 #if DECODE_RC5
-bool  IRrecv::decodeRC5 (decode_results &results)
+bool  IRrecv::decodeRC5 ()
 {
 	int   nbits;
 	long  data   = 0;
@@ -161,7 +161,7 @@ void  IRsend::sendRC6 (unsigned long data,  int nbits)
 
 //+=============================================================================
 #if DECODE_RC6
-bool  IRrecv::decodeRC6 (decode_results &results)
+bool  IRrecv::decodeRC6 ()
 {
 	int   nbits;
 	long  data   = 0;

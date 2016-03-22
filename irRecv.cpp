@@ -2,10 +2,9 @@
 #include "IRremoteInt.h"
 
 //init for decoding
-bool IRrecv::available(decode_results &results)
+bool IRrecv::available()
 {
 	if (irparams.rcvstate != STATE_STOP)  return false ;
-	results.rawbuf   = irparams.rawbuf;
 	results.rawlen   = irparams.rawlen;
 
 	results.overflow = irparams.overflow;
@@ -19,9 +18,8 @@ bool IRrecv::available(decode_results &results)
 // Returns 0 if no data ready, 1 if data ready.
 // Results of decoding are stored in results
 //
-int  IRrecv::decode (decode_results &results)
+int  IRrecv::decode ()
 {
-	results.rawbuf   = irparams.rawbuf;
 	results.rawlen   = irparams.rawlen;
 
 	results.overflow = irparams.overflow;
@@ -30,73 +28,73 @@ int  IRrecv::decode (decode_results &results)
 
 #if DECODE_NEC
 	DBG_PRINTLN("Attempting NEC decode");
-	if (decodeNEC(results))  return true ;
+	if (decodeNEC())  return true ;
 #endif
 
 #if DECODE_SONY
 	DBG_PRINTLN("Attempting Sony decode");
-	if (decodeSony(results))  return true ;
+	if (decodeSony())  return true ;
 #endif
 
 #if DECODE_SANYO
 	DBG_PRINTLN("Attempting Sanyo decode");
-	if (decodeSanyo(results))  return true ;
+	if (decodeSanyo())  return true ;
 #endif
 
 #if DECODE_MITSUBISHI
 	DBG_PRINTLN("Attempting Mitsubishi decode");
-	if (decodeMitsubishi(results))  return true ;
+	if (decodeMitsubishi())  return true ;
 #endif
 
 #if DECODE_RC5
 	DBG_PRINTLN("Attempting RC5 decode");
-	if (decodeRC5(results))  return true ;
+	if (decodeRC5())  return true ;
 #endif
 
 #if DECODE_RC6
 	DBG_PRINTLN("Attempting RC6 decode");
-	if (decodeRC6(results))  return true ;
+	if (decodeRC6())  return true ;
 #endif
 
 #if DECODE_PANASONIC
 	DBG_PRINTLN("Attempting Panasonic decode");
-	if (decodePanasonic(results))  return true ;
+	if (decodePanasonic())  return true ;
 #endif
 
 #if DECODE_LG
 	DBG_PRINTLN("Attempting LG decode");
-	if (decodeLG(results))  return true ;
+	if (decodeLG())  return true ;
 #endif
 
 #if DECODE_JVC
 	DBG_PRINTLN("Attempting JVC decode");
-	if (decodeJVC(results))  return true ;
+	if (decodeJVC())  return true ;
 #endif
 
 #if DECODE_SAMSUNG
 	DBG_PRINTLN("Attempting SAMSUNG decode");
-	if (decodeSAMSUNG(results))  return true ;
+	if (decodeSAMSUNG())  return true ;
 #endif
 
 #if DECODE_WHYNTER
 	DBG_PRINTLN("Attempting Whynter decode");
-	if (decodeWhynter(results))  return true ;
+	if (decodeWhynter())  return true ;
 #endif
 
 #if DECODE_AIWA_RC_T501
 	DBG_PRINTLN("Attempting Aiwa RC-T501 decode");
-	if (decodeAiwaRCT501(results))  return true ;
+	if (decodeAiwaRCT501())  return true ;
 #endif
 
 #if DECODE_DENON
 	DBG_PRINTLN("Attempting Denon decode");
-	if (decodeDenon(results))  return true ;
+	if (decodeDenon())  return true ;
 #endif
 
 	// decodeHash returns a hash on any input.
 	// Thus, it needs to be last in the list.
 	// If you add any decodes, add them before this.
-	if (decodeHash(results))  return true ;
+	if (decodeHash())  return true ;
 
 	// Throw away and start over
 	resume();
@@ -108,12 +106,11 @@ IRrecv::IRrecv (int recvpin)
 {
 	irparams.recvpin = recvpin;
 	irparams.blinkflag = 0;
+	results.rawbuf = irparams.rawbuf; //const address
 }
 
-IRrecv::IRrecv (int recvpin, int blinkpin)
+IRrecv::IRrecv (int recvpin, int blinkpin) : IRrecv(recvpin)
 {
-	irparams.recvpin = recvpin;
-	irparams.blinkpin = blinkpin;
 	pinMode(blinkpin, OUTPUT);
 	irparams.blinkflag = 0;
 }
@@ -205,9 +202,9 @@ int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
 #define FNV_PRIME_32 16777619
 #define FNV_BASIS_32 2166136261
 
-bool  IRrecv::decodeHash (decode_results &results)
+bool  IRrecv::decodeHash ()
 {
-	long  hash = FNV_BASIS_32;
+	unsigned long  hash = FNV_BASIS_32;
 
 	// Require at least 6 samples to prevent triggering on noise
 	if (irparams.rawlen < 6)  return false ;

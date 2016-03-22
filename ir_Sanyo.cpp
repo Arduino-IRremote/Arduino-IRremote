@@ -22,7 +22,7 @@
 
 //+=============================================================================
 #if DECODE_SANYO
-bool  IRrecv::decodeSanyo (decode_results &results)
+bool  IRrecv::decodeSanyo ()
 {
 	long  data   = 0;
 	int   offset = 0;  // Skip first space  <-- CHECK THIS!

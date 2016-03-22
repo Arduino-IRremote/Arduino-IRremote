@@ -24,7 +24,7 @@
 
 //+=============================================================================
 #if DECODE_MITSUBISHI
-bool  IRrecv::decodeMitsubishi (decode_results &results)
+bool  IRrecv::decodeMitsubishi ()
 {
   // Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
   long data = 0;

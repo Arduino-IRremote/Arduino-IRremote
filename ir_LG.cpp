@@ -20,7 +20,7 @@
 
 //+=============================================================================
 #if DECODE_LG
-bool  IRrecv::decodeLG (decode_results &results)
+bool  IRrecv::decodeLG ()
 {
     long  data   = 0;
     int   offset = 1; // Skip first space
