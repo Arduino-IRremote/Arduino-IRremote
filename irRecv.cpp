@@ -1,6 +1,14 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
+//==============================================================================
+// Stream API
+//
+void IRrecv::begin(bool blinkflag)
+{
+	irparams.blinkflag = blinkflag;
+	enableIRIn();
+}
 //init for decoding
 bool IRrecv::available()
 {
@@ -12,7 +20,14 @@ bool IRrecv::available()
 	resume(); //skip overflowed buffer
 	return false;
 }
-
+bool IRrecv::available(decoder_t which)
+{
+	bool res;
+	if (!available()) return false;
+	res = (this->*which)();
+	resume(); //restart for next input
+	return res;
+}
 //+=============================================================================
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
@@ -147,7 +162,7 @@ void  IRrecv::enableIRIn ( )
 //+=============================================================================
 // Enable/disable blinking of pin 13 on IR processing
 //
-void  IRrecv::blink13 (int blinkflag)
+void  IRrecv::blink13 (bool blinkflag)
 {
 	irparams.blinkflag = blinkflag;
 	if (blinkflag)  pinMode(BLINKLED, OUTPUT) ;
@@ -204,7 +219,7 @@ int  IRrecv::compare (unsigned int oldval,  unsigned int newval)
 
 bool  IRrecv::decodeHash ()
 {
-	unsigned long  hash = FNV_BASIS_32;
+	IRvalue_t  hash = FNV_BASIS_32;
 
 	// Require at least 6 samples to prevent triggering on noise
 	if (irparams.rawlen < 6)  return false ;

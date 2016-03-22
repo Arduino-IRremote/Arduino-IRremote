@@ -144,17 +144,18 @@ int  MATCH_SPACE (int measured_ticks, int desired_us) ;
 //------------------------------------------------------------------------------
 // Results returned from the decoder
 //
+typedef unsigned long IRvalue_t;
 struct decode_results
 {
 	public:
 		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
 		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
-		unsigned long          value;        // Decoded value [max 32-bits]
-		int                    bits;         // Number of bits in decoded value
+		IRvalue_t              value;        // Decoded value [max 32-bits]
 		//volatile
 		unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
-		int                    rawlen;       // Number of records in rawbuf
-		int                    overflow;     // true iff IR raw code too long
+		byte                    rawlen;       // Number of records in rawbuf
+		byte                    bits;         // Number of bits in decoded value
+		byte                    overflow;     // true iff IR raw code too long
 };
 
 //------------------------------------------------------------------------------
@@ -165,15 +166,42 @@ struct decode_results
 //------------------------------------------------------------------------------
 // Main class for receiving IR
 //
+class IRrecv;
+typedef bool (IRrecv::*decoder_t)();
+
+// Macros for available()
+//
+#define irNEC	&IRrecv::decodeNEC
+#define irSony	&IRrecv::decodeSony
+#define irHash  &IRrecv::decodeHash
+#define irRC5 &IRrecv::decodeRC5
+#define irRC6 &IRrecv::decodeRC6
+#define irPana &IRrecv::decodePanasonic
+#define irJVC &IRrecv::decodeJVC
+#define irSamsung &IRrecv::decodeSAMSUNG
+#define irWhynter &IRrecv::decodeWhynter
+#define irRCT501 &IRrecv::decodeAiwaRCT501
+#define irLG &IRrecv::decodeLG
+#define irSanyo &IRrecv::decodeSanyo
+#define irMitsubishi &IRrecv::decodeMitsubishi
+//#define  &IRrecv::decodeDish
+//#define  &IRrecv::decodeSharp
+#define irDenon &IRrecv::decodeDenon
+
 class IRrecv
 {
 	public:
+		decode_results results;
 		IRrecv (int recvpin) ;
 		IRrecv (int recvpin, int blinkpin);
 
 		bool available();
 
-		void  blink13    (int blinkflag) ;
+		void begin(bool blinkflag);
+		bool available(decoder_t which);
+		IRvalue_t read() { return results.value; }
+
+		void  blink13    (bool blinkflag) ;
 		int   decode     () ;
 		void  enableIRIn ( ) ;
 		bool  isIdle     ( ) ;
@@ -185,7 +213,6 @@ class IRrecv
 		int  getRClevel (int *offset,  int *used,  int t1) ;
 
 	public:
-		decode_results results;
 		bool  decodeHash 			 () ;
 		bool  decodeRC5        () ;
 		bool  decodeRC6        () ;
