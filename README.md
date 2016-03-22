@@ -8,7 +8,7 @@ This library enables you to send and receive using infra-red signals on an Ardui
 
 Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more information.
 
-## Version - 2.1.0
+## Version - 2.1.1
 
 ## Installation
 1. Navigate to the [Releases](https://github.com/z3t0/Arduino-IRremote/releases) page.
@@ -19,6 +19,11 @@ Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more inf
 
 ## Usage
 - TODO (Check examples for now)
+Version 2.1.1 by DoDi offers these improvements:
+- Editing the library files for customization is not required any more.
+- Moved results into the class, removed it from parameter lists.
+- The new Stream-like API includes the standard methods begin(), available() and read().
+See IRrecvNew for using a specific decoder only.
 
 ## Contributing
 If you want to contribute to this project:
@@ -27,7 +32,7 @@ If you want to contribute to this project:
 - Create issues and pull requests
 - Tell other people about this library
 - Contribute new protocols
-- 
+-
 
 ## Contact
 The only way to contact me at the moment is by email: zetoslab@gmail.com

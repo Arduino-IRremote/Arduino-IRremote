@@ -148,14 +148,14 @@ typedef unsigned long IRvalue_t;
 struct decode_results
 {
 	public:
-		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
-		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
 		IRvalue_t              value;        // Decoded value [max 32-bits]
 		//volatile
 		unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
+		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
+		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
 		byte                    rawlen;       // Number of records in rawbuf
 		byte                    bits;         // Number of bits in decoded value
-		byte                    overflow;     // true iff IR raw code too long
+		bool                    overflow;     // true iff IR raw code too long
 };
 
 //------------------------------------------------------------------------------

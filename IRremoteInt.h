@@ -49,11 +49,11 @@ typedef
 		uint8_t       rcvstate;        // State Machine state
 		uint8_t       recvpin;         // Pin connected to IR data from detector
 		uint8_t       blinkpin;
-		uint8_t       blinkflag;       // true -> enable blinking of pin on IR processing
+		bool       blinkflag;       // true -> enable blinking of pin on IR processing
 		uint8_t       rawlen;          // counter of entries in rawbuf
 		unsigned int  timer;           // State timer, counts 50uS ticks.
 		unsigned int  rawbuf[RAWBUF];  // raw data
-		uint8_t       overflow;        // Raw buffer overflow occurred
+		bool       overflow;        // Raw buffer overflow occurred
 	}
 irparams_t;
 
