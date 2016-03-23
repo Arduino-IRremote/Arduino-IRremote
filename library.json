@@ -11,14 +11,13 @@
   "platforms": "atmelavr",
   "authors" :
   [
-      {
-        name:"Rafi Khan",
-        email:"zetoslab@gmail.com"
-      }
-      
-      {
-        name:"Ken Shirriff",
-        email:"ken.shirriff@gmail.com"
-      }
-    ]
+     {
+         "name":"Rafi Khan",
+         "email":"zetoslab@gmail.com"
+     },
+     {
+         "name":"Ken Shirriff",
+         "email":"ken.shirriff@gmail.com"
+     }
+]
 }
