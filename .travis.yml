@@ -13,6 +13,7 @@ env:
     - PLATFORMIO_CI_SRC=examples/IRtest PLATFORMIO_BUILD_FLAGS="-DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6"
     - PLATFORMIO_CI_SRC=examples/IRtest2 PLATFORMIO_BUILD_FLAGS="-DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6"
     - PLATFORMIO_CI_SRC=examples/JVCPanasonicSendDemo PLATFORMIO_BUILD_FLAGS="-DSEND_JVC -DSEND_PANASONIC"
+    - PLATFORMIO_CI_SRC=examples/IRremoteInfo 
 
 install:
     - python -c "$(curl -fsSL https://raw.githubusercontent.com/platformio/platformio/master/scripts/get-platformio.py)"
