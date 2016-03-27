@@ -5,19 +5,20 @@
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/shirriff/Arduino-IRremote.git"
+    "url": "https://github.com/z3t0/Arduino-IRremote.git"
   },
+  "version": "2.1.0",
   "frameworks": "arduino",
   "platforms": "atmelavr",
   "authors" :
   [
      {
-         "name":"Rafi Khan",
-         "email":"zetoslab@gmail.com"
+       "name":"Rafi Khan",
+       "email":"zetoslab@gmail.com"
      },
      {
-         "name":"Ken Shirriff",
-         "email":"ken.shirriff@gmail.com"
+       "name":"Ken Shirriff",
+       "email":"ken.shirriff@gmail.com"
      }
-]
+  ]
 }
