@@ -1,3 +1,6 @@
+## 2.1.1 - 2016/03/23
+- Add support for ATmega8535, ATmega16 and ATmega32 [PR #293](https://github.com/z3t0/Arduino-IRremote/pull/293)
+
 ## 2.1.0 - 2016/02/20
 - Improved Debugging [PR #258](https://github.com/z3t0/Arduino-IRremote/pull/258)
 - Display TIME instead of TICKS [PR #258](https://github.com/z3t0/Arduino-IRremote/pull/258)
