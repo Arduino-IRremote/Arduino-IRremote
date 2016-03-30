@@ -48,6 +48,7 @@ void  IRsend::sendDISH (unsigned long data,  int nbits)
 			space(DISH_ZERO_SPACE);
 		}
 	}
+	mark(DISH_HDR_MARK); //added 26th March 2016, by AnalysIR ( https://www.AnalysIR.com )
 }
 #endif
 
