@@ -184,10 +184,10 @@ EXTERN  volatile irparams_t  irparams;
 	#define IR_USE_TIMER2     // tx = pin 1
 	//#define IR_USE_TIMER3   // tx = pin 16
 
-// Sanguino
+// Sanguino  or Microduino
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 	//#define IR_USE_TIMER1   // tx = pin 13
-	#define IR_USE_TIMER2     // tx = pin 14
+	#define IR_USE_TIMER2     // tx = pin 14 for sanguino and 8 for microduino
 
 // Atmega8
 #elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
@@ -256,7 +256,11 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  9              // Arduino Mega
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
-#	define TIMER_PWM_PIN  14             // Sanguino
+	#if defined(MICRODUINO)
+		#define TIMER_PWM_PIN  8             // microduino pd6
+	#else 	#define TIMER_PWM_PIN  14             // sanguino pd6
+	#endif
+
 #else
 #	define TIMER_PWM_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif
@@ -302,8 +306,11 @@ EXTERN  volatile irparams_t  irparams;
 #	define TIMER_PWM_PIN  CORE_OC1A_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  11             // Arduino Mega
-#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
-#	define TIMER_PWM_PIN  13             // Sanguino
+#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)// Sanguino or microduino
+	#if defined(MICRODUINO)
+		#define TIMER_PWM_PIN  9        // microduino PD5
+	#else   #define TIMER_PWM_PIN  13        //sanguino PD5
+	#endif
 #elif defined(__AVR_ATtiny84__)
 # define TIMER_PWM_PIN  6
 #else
