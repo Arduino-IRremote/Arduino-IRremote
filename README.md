@@ -21,6 +21,7 @@ Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more inf
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: @PaulStoffregen (Teensy Team)
 - Sanguino
+- microduino core+
 - Atmega8
 - ATtiny 84 / 85
 
@@ -36,7 +37,8 @@ We are open to suggestions for adding support to new boards, however we highly r
 | Teensy++ 1.0 / 2.0                       | **1**, 16, 25       | 1, **2**, 3       |
 | Teensy 3.0 / 3.1                         | **5**               | **CMT**           |
 | Teensy-LC                                | **16**              | **TPM1**          |
-| Sanguino                                 | 13, **14**          | 1, **2**          |
+| Sanguino								   | 13, **14**          | 1, **2**          |
+| microduino core +                        | 9, **8**            | 1, **2**          |
 | Atmega8                                  | **9**               | **1**             |
 | ATtiny84                                 | **6**               | **1**             |
 | ATtiny85                                 | **1**               | **TINY0**         |
