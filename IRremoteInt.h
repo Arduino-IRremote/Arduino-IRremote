@@ -17,6 +17,11 @@
 #ifndef IRremoteint_h
 #define IRremoteint_h
 
+
+// If you are using sanguino comment the line below
+// #define if you are using Microduino 
+#define MICRODUINO   
+
 //------------------------------------------------------------------------------
 // Include the right Arduino header
 //
@@ -258,7 +263,8 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 	#if defined(MICRODUINO)
 		#define TIMER_PWM_PIN  8             // microduino pd6
-	#else 	#define TIMER_PWM_PIN  14             // sanguino pd6
+	#else 	
+		#define TIMER_PWM_PIN  14             // sanguino pd6
 	#endif
 
 #else
