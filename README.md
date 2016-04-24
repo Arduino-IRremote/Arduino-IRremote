@@ -10,6 +10,16 @@ Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more inf
 
 ## Version - 2.1.0
 
+## Hardware setup
+The library can use any of the digital input signals to receive the input from a 38KHz IR receiver module. It has been tested with the Radio Shack 276-640 IR receiver and the Panasonic PNA4602. Simply wire power to pin 1, ground to pin 2, and the pin 3 output to an Arduino digital input pin, e.g. 11. These receivers provide a filtered and demodulated inverted logic level output; you can't just use a photodiode or phototransistor. I have found these detectors have pretty good range and easily work across a room.
+IR wiring
+
+![alt tag](http://arcfn.com/images/ir-schematic.png)
+
+
+For output, connect an IR LED and appropriate resistor to PWM output pin 3. Make sure the polarity of the LED is correct, or it won't illuminate - the long lead is positive. I used a NTE 3027 LED (because that's what was handy) and 100 ohm resistor; the range is about 15 feet. For additional range, you can amplify the output with a transistor.
+
+
 ## Installation
 1. Navigate to the [Releases](https://github.com/z3t0/Arduino-IRremote/releases) page.
 2. Download the latest release.
