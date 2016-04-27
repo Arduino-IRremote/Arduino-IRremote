@@ -9,6 +9,9 @@
 //    LLLLLL  EEEEEE   EEEE    OOOO     Copyright (c) 2016 Philipp Henkel
 //==============================================================================
 
+// Supported Devices
+// LEGO® Power Functions IR Receiver 8884
+
 //+=============================================================================
 //
 #if SEND_LEGO_PF
