@@ -80,6 +80,11 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeDenon(results))  return true ;
 #endif
 
+#if DECODE_LEGO_PF
+	DBG_PRINTLN("Attempting Lego Power Functions");
+	if (decodeLegoPowerFunctions(results))  return true ;
+#endif
+
 	// decodeHash returns a hash on any input.
 	// Thus, it needs to be last in the list.
 	// If you add any decodes, add them before this.
@@ -145,8 +150,8 @@ void  IRrecv::blink13 (int blinkflag)
 
 //+=============================================================================
 // Return if receiving new IR signals
-// 
-bool  IRrecv::isIdle ( ) 
+//
+bool  IRrecv::isIdle ( )
 {
  return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
 }
