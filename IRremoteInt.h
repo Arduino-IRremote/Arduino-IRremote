@@ -18,10 +18,6 @@
 #define IRremoteint_h
 
 
-// If you are using sanguino comment the line below
-// #define if you are using Microduino 
-#define MICRODUINO   
-
 //------------------------------------------------------------------------------
 // Include the right Arduino header
 //
@@ -261,7 +257,8 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  9              // Arduino Mega
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
-	#if defined(MICRODUINO)
+//Core+ defines NUM_DIGITAL_PINS as 32, whereas Sanguino defines it as 24.
+	#if defined(NUM_DIGITAL_PINS == 32)
 		#define TIMER_PWM_PIN  8             // microduino pd6
 	#else 	
 		#define TIMER_PWM_PIN  14             // sanguino pd6
@@ -313,7 +310,8 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  11             // Arduino Mega
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)// Sanguino or microduino
-	#if defined(MICRODUINO)
+//Core+ defines NUM_DIGITAL_PINS as 32, whereas Sanguino defines it as 24.
+	#if defined(NUM_DIGITAL_PINS == 32)
 		#define TIMER_PWM_PIN  9        // microduino PD5
 	#else   #define TIMER_PWM_PIN  13        //sanguino PD5
 	#endif
