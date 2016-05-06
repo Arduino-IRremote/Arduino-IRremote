@@ -108,7 +108,7 @@ void dumpPlatform() {
 #elif defined(__AVR_AT90USB1286__)
   Serial.println(F("Teensy++ 2.0 / AT90USB1286"));
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
-  #if defined(MICRODUINO)
+  #if defined(NUM_DIGITAL_PINS == 32)  //For Micoduino
     Serial.println(F("Microduino core + / ATmega644(P)"));
   #else     
     Serial.println(F("Sanguino / ATmega644(P)"));
