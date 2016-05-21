@@ -10,6 +10,16 @@ Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more inf
 
 ## Version - 2.1.0
 
+## Hardware setup
+The library can use any of the digital input signals to receive the input from a 38KHz IR receiver module. It has been tested with the Radio Shack [276-640](http://www.radioshack.com/product/index.jsp?productId=2049727) IR receiver and the Panasonic [PNA4602](http://www.adafruit.com/index.php?main_page=product_info&cPath=35&products_id=157). Simply wire power to pin 1, ground to pin 2, and the pin 3 output to an Arduino digital input pin, e.g. 11. These receivers provide a filtered and demodulated inverted logic level output; you can't just use a photodiode or phototransistor. I have found these detectors have pretty good range and easily work across a room.
+IR wiring
+
+![alt tag](http://arcfn.com/images/ir-schematic.png)
+
+
+For output, connect an IR LED and appropriate resistor to PWM output pin 3. Make sure the polarity of the LED is correct, or it won't illuminate - the long lead is positive. I used a NTE 3027 LED (because that's what was handy) and 100 ohm resistor; the range is about 15 feet. For additional range, you can amplify the output with a transistor.
+[source](http://www.righto.com/2009/08/multi-protocol-infrared-remote-library.html)
+
 ## Installation
 1. Navigate to the [Releases](https://github.com/z3t0/Arduino-IRremote/releases) page.
 2. Download the latest release.
@@ -21,6 +31,7 @@ Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more inf
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: @PaulStoffregen (Teensy Team)
 - Sanguino
+- microduino core+
 - Atmega8
 - ATtiny 84 / 85
 
@@ -36,7 +47,8 @@ We are open to suggestions for adding support to new boards, however we highly r
 | Teensy++ 1.0 / 2.0                       | **1**, 16, 25       | 1, **2**, 3       |
 | Teensy 3.0 / 3.1                         | **5**               | **CMT**           |
 | Teensy-LC                                | **16**              | **TPM1**          |
-| Sanguino                                 | 13, **14**          | 1, **2**          |
+| Sanguino								   | 13, **14**          | 1, **2**          |
+| microduino core +                        | 9, **8**            | 1, **2**          |
 | Atmega8                                  | **9**               | **1**             |
 | ATtiny84                                 | **6**               | **1**             |
 | ATtiny85                                 | **1**               | **TINY0**         |
