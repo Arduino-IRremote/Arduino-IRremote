@@ -21,7 +21,11 @@ void  IRsend::sendRaw (const unsigned int buf[],  unsigned int len,  unsigned in
 //
 void  IRsend::mark (unsigned int time)
 {
+#if SEND_BY_DIRECT_WIRING
+	digitalWrite(TIMER_PWM_PIN, LOW);
+#else
 	TIMER_ENABLE_PWM; // Enable pin 3 PWM output
+#endif
 	if (time > 0) custom_delay_usec(time);
 }
 
@@ -32,7 +36,11 @@ void  IRsend::mark (unsigned int time)
 //
 void  IRsend::space (unsigned int time)
 {
+#if SEND_BY_DIRECT_WIRING
+	digitalWrite(TIMER_PWM_PIN, HIGH);
+#else
 	TIMER_DISABLE_PWM; // Disable pin 3 PWM output
+#endif
 	if (time > 0) IRsend::custom_delay_usec(time);
 }
 
@@ -58,6 +66,10 @@ void  IRsend::enableIROut (int khz)
 	TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
 
 	pinMode(TIMER_PWM_PIN, OUTPUT);
+#if SEND_BY_DIRECT_WIRING
+	khz = khz; // avoid compiler warning: unused parameter ‘khz’
+	digitalWrite(TIMER_PWM_PIN, HIGH);
+#else
 	digitalWrite(TIMER_PWM_PIN, LOW); // When not sending PWM, we want it low
 
 	// COM2A = 00: disconnect OC2A
@@ -66,6 +78,7 @@ void  IRsend::enableIROut (int khz)
 	// CS2  = 000: no prescaling
 	// The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
 	TIMER_CONFIG_KHZ(khz);
+#endif
 }
 
 //+=============================================================================
@@ -79,7 +92,7 @@ void IRsend::custom_delay_usec(unsigned long uSecs) {
       while ( micros() > start ) {} // wait until overflow
     }
     while ( micros() < endMicros ) {} // normal wait
-  } 
+  }
   //else {
   //  __asm__("nop\n\t"); // must have or compiler optimizes out
   //}

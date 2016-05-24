@@ -95,6 +95,15 @@
 #define PRONTO_NOFALLBACK  false
 
 //------------------------------------------------------------------------------
+// When set to 1, you can wiring directly to your target device, without
+// to use an IR-LED and IR-receiver.
+// All codes will be send without a carrier and digital.
+// NOTE: If you have a 5V Arduino board you should use a resitor divider to do
+// not damage your target device input pin, you have directly wired.
+//
+#define SEND_BY_DIRECT_WIRING	0
+
+//------------------------------------------------------------------------------
 // An enumerated list of all supported formats
 // You do NOT need to remove entries from this list when disabling protocols!
 //
