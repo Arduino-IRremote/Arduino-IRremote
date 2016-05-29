@@ -201,6 +201,10 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(__AVR_ATtiny85__)
   #define IR_USE_TIMER_TINY0   // tx = pin 1
 
+//ATmega16
+#elif defined(__AVR_ATmega16__) || defined(__AVR_ATmega16A__)
+  #define IR_USE_TIMER1   // tx = pin 13
+
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 #else
 	//#define IR_USE_TIMER1   // tx = pin 9
@@ -271,7 +275,7 @@ EXTERN  volatile irparams_t  irparams;
 #define TIMER_DISABLE_PWM  (TCCR1A &= ~(_BV(COM1A1)))
 
 //-----------------
-#if defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
+#if defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega16A__)
 #	define TIMER_ENABLE_INTR   (TIMSK |= _BV(OCIE1A))
 #	define TIMER_DISABLE_INTR  (TIMSK &= ~_BV(OCIE1A))
 #else
