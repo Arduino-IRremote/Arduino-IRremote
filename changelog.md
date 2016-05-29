@@ -1,3 +1,6 @@
+## 2.1.2 - 2016/05/29
+- Add support for Atmega16
+
 ## 2.1.1 - 2016/05/04
 - Added Lego Power Functions Protocol [PR #309](https://github.com/z3t0/Arduino-IRremote/pull/309)
 

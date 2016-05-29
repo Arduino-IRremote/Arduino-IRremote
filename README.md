@@ -41,6 +41,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 | ATtiny84                                 | **6**               | **1**             |
 | ATtiny85                                 | **1**               | **TINY0**         |
 | Arduino Duemilanove, UNO etc.            | **3**, 9            | 1, **2**          |
+| ATmega16                                 | 13                  | 1                 |
 
 The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 
