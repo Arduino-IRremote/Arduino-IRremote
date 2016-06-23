@@ -87,6 +87,11 @@ EXTERN  volatile irparams_t  irparams;
 #	define BLINKLED_ON()   (PORTD |= B00000001)
 #	define BLINKLED_OFF()  (PORTD &= B11111110)
 
+#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__)
+#	define BLINKLED        13
+#	define BLINKLED_ON()   (PORTD |= B00100000)
+#	define BLINKLED_OFF()  (PORTD &= B11011111)
+
 #else
 #	define BLINKLED        13
 	#define BLINKLED_ON()  (PORTB |= B00100000)
@@ -189,6 +194,10 @@ EXTERN  volatile irparams_t  irparams;
 	//#define IR_USE_TIMER1   // tx = pin 13
 	#define IR_USE_TIMER2     // tx = pin 14
 
+// Sleeping Beauty / Mighty Stick / ATmega1284(P)
+#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__)
+	#define IR_USE_TIMER2     // tx = pin 14
+
 // Atmega8
 #elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
 	#define IR_USE_TIMER1     // tx = pin 9
@@ -257,6 +266,8 @@ EXTERN  volatile irparams_t  irparams;
 #	define TIMER_PWM_PIN  9              // Arduino Mega
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 #	define TIMER_PWM_PIN  14             // Sanguino
+#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__)
+#	define TIMER_PWM_PIN  14             // Sanguino
 #else
 #	define TIMER_PWM_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif
@@ -304,6 +315,8 @@ EXTERN  volatile irparams_t  irparams;
 #	define TIMER_PWM_PIN  11             // Arduino Mega
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
 #	define TIMER_PWM_PIN  13             // Sanguino
+#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__)
+#	define TIMER_PWM_PIN  14             // Sleeping Beauty / Mighty Stick / ATmega1284(P)
 #elif defined(__AVR_ATtiny84__)
 # define TIMER_PWM_PIN  6
 #else
