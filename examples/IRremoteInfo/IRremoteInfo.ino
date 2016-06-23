@@ -109,6 +109,8 @@ void dumpPlatform() {
   Serial.println(F("Teensy++ 2.0 / AT90USB1286"));
 #elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
   Serial.println(F("Sanguino / ATmega644(P)"));
+#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__)
+  Serial.println(F("Sleeping Beauty / Mighty Stick / ATmega1284(P)"));
 #elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
   Serial.println(F("Atmega8 / ATmega8(P)"));
 #elif defined(__AVR_ATtiny84__)
