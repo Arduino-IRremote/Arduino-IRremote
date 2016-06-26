@@ -205,7 +205,6 @@ EXTERN  volatile irparams_t  irparams;
 // MightyCore - ATmega8535, ATmega16, ATmega32
 #elif defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
  	#define IR_USE_TIMER1     // tx = pin 13
- 
 
 // Atmega8
 #elif defined(__AVR_ATmega8__)
