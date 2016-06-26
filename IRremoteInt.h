@@ -184,13 +184,31 @@ EXTERN  volatile irparams_t  irparams;
 	#define IR_USE_TIMER2     // tx = pin 1
 	//#define IR_USE_TIMER3   // tx = pin 16
 
-// Sanguino
-#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
+// MightyCore - ATmega1284
+#elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
 	//#define IR_USE_TIMER1   // tx = pin 13
 	#define IR_USE_TIMER2     // tx = pin 14
+	//#define IR_USE_TIMER3   // tx = pin 6
+
+// MightyCore - ATmega164, ATmega324, ATmega644
+#elif defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
+|| defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
+|| defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
+|| defined(__AVR_ATmega164P__)
+	//#define IR_USE_TIMER1   // tx = pin 13
+	#define IR_USE_TIMER2     // tx = pin 14
+	
+//MegaCore - ATmega64, ATmega128
+#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
+ 	#define IR_USE_TIMER1     // tx = pin 13
+
+// MightyCore - ATmega8535, ATmega16, ATmega32
+#elif defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
+ 	#define IR_USE_TIMER1     // tx = pin 13
+ 
 
 // Atmega8
-#elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
+#elif defined(__AVR_ATmega8__)
 	#define IR_USE_TIMER1     // tx = pin 9
 
 // ATtiny84
@@ -255,8 +273,12 @@ EXTERN  volatile irparams_t  irparams;
 #	define TIMER_PWM_PIN  CORE_OC2B_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  9              // Arduino Mega
-#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
-#	define TIMER_PWM_PIN  14             // Sanguino
+#elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
+|| defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
+|| defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
+|| defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
+|| defined(__AVR_ATmega164P__)
+#	define TIMER_PWM_PIN  14             // MightyCore
 #else
 #	define TIMER_PWM_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif
@@ -271,7 +293,9 @@ EXTERN  volatile irparams_t  irparams;
 #define TIMER_DISABLE_PWM  (TCCR1A &= ~(_BV(COM1A1)))
 
 //-----------------
-#if defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8535__) \
+|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__) \
+|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
 #	define TIMER_ENABLE_INTR   (TIMSK |= _BV(OCIE1A))
 #	define TIMER_DISABLE_INTR  (TIMSK &= ~_BV(OCIE1A))
 #else
@@ -302,10 +326,17 @@ EXTERN  volatile irparams_t  irparams;
 #	define TIMER_PWM_PIN  CORE_OC1A_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  11             // Arduino Mega
-#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
-#	define TIMER_PWM_PIN  13             // Sanguino
+#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
+#	define TIMER_PWM_PIN  13	     // MegaCore
+#elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
+|| defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
+|| defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
+|| defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
+|| defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
+|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__)
+#	define TIMER_PWM_PIN  13             // MightyCore
 #elif defined(__AVR_ATtiny84__)
-# define TIMER_PWM_PIN  6
+# 	define TIMER_PWM_PIN  6
 #else
 #	define TIMER_PWM_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif
@@ -342,6 +373,8 @@ EXTERN  volatile irparams_t  irparams;
 #	define TIMER_PWM_PIN  CORE_OC3A_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  5              // Arduino Mega
+#elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
+#	define TIMER_PWM_PIN  6              // MightyCore
 #else
 #	error "Please add OC3A pin number here\n"
 #endif
