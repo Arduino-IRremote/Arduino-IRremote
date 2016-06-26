@@ -125,8 +125,8 @@ void dumpPlatform() {
   Serial.println(F("ATmega16"));
 #elif defined(__AVR_ATmega8535__)
   Serial.println(F("ATmega8535"));  
-#elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
-  Serial.println(F("Atmega8 / ATmega8(P)"));
+#elif defined(__AVR_ATmega8__)
+  Serial.println(F("Atmega8"));
 #elif defined(__AVR_ATtiny84__)
   Serial.println(F("ATtiny84"));
 #elif defined(__AVR_ATtiny85__)
