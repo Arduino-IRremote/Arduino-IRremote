@@ -8,7 +8,7 @@ This library enables you to send and receive using infra-red signals on an Ardui
 
 Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more information.
 
-## Version - 2.1.0
+## Version - 2.2.0
 
 ## Installation
 1. Navigate to the [Releases](https://github.com/z3t0/Arduino-IRremote/releases) page.
@@ -21,7 +21,7 @@ Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more inf
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: @PaulStoffregen (Teensy Team)
 - Sanguino
-- Atmega8
+- Atmega8535, 8, 16, 32, 164, 324, 644, 1284, 64, 128
 - ATtiny 84 / 85
 
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.

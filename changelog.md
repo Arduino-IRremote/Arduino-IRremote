@@ -1,3 +1,16 @@
+## 2.2.0 - 2016/06/28
+- Added support for ATmega8535
+- Added support for ATmega16
+- Added support for ATmega32
+- Added support for ATmega164
+- Added support for ATmega324
+- Added support for ATmega644
+- Added support for ATmega1284
+- Added support for ATmega64
+- Added support for ATmega128
+
+[PR](https://github.com/z3t0/Arduino-IRremote/pull/324)
+
 ## 2.1.1 - 2016/05/04
 - Added Lego Power Functions Protocol [PR #309](https://github.com/z3t0/Arduino-IRremote/pull/309)
 
