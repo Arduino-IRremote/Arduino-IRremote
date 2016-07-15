@@ -219,6 +219,7 @@ EXTERN  volatile irparams_t  irparams;
   #define IR_USE_TIMER_TINY0   // tx = pin 1
 
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
+// ATmega48, ATmega88, ATmega168, ATmega328
 #else
 	//#define IR_USE_TIMER1   // tx = pin 9
 	#define IR_USE_TIMER2     // tx = pin 3
@@ -280,7 +281,7 @@ EXTERN  volatile irparams_t  irparams;
 #	define TIMER_PWM_PIN  14             // MightyCore
 #else
 #	define TIMER_PWM_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
-#endif
+#endif					     // ATmega48, ATmega88, ATmega168, ATmega328
 
 //---------------------------------------------------------
 // Timer1 (16 bits)
@@ -338,7 +339,7 @@ EXTERN  volatile irparams_t  irparams;
 # 	define TIMER_PWM_PIN  6
 #else
 #	define TIMER_PWM_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, etc
-#endif
+#endif					     // ATmega48, ATmega88, ATmega168, ATmega328
 
 //---------------------------------------------------------
 // Timer3 (16 bits)
