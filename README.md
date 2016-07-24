@@ -21,7 +21,9 @@ Check [here](http://z3t0.github.io/Arduino-IRremote/) for tutorials and more inf
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: @PaulStoffregen (Teensy Team)
 - Sanguino
-- Atmega8535, 8, 16, 32, 164, 324, 644, 1284, 64, 128
+- ATmega8, 48, 88, 168, 328
+- ATmega8535, 16, 32, 164, 324, 644, 1284,
+- ATmega64, 128
 - ATtiny 84 / 85
 
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
@@ -32,9 +34,9 @@ We are open to suggestions for adding support to new boards, however we highly r
 |--------------------------------------------------------------------------|---------------------|-------------------|
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
 | [ATtiny85](https://github.com/SpenceKonde/ATTinyCore)                    | **1**               | **TINY0**         |
-| ATmega8                                                                  | **9**               | **1**             |
+| [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
 | Atmega32u4                                                               | 5, 9, **13**        | 1, 3, **4**       |
-| ATmega168, ATmega328                                                     | **3**, 9            | 1, **2**          |
+| [ATmega48, ATmega88, ATmega168, ATmega328](https://github.com/MCUdude/MiniCore) | **3**, 9     | 1, **2**          |
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
 | [ATmega164, ATmega324, ATmega644](https://github.com/MCUdude/MightyCore) | 13, **14**          | 1, **2**          |
 | [ATmega8535 ATmega16, ATmega32](https://github.com/MCUdude/MightyCore)   | **13**              | **1**             |
