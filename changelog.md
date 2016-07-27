@@ -1,3 +1,6 @@
+## 2.2.1 - 2016/07/27
+- Added tests for Lego Power Functions Protocol [PR #336](https://github.com/z3t0/Arduino-IRremote/pull/336)
+
 ## 2.2.0 - 2016/06/28
 - Added support for ATmega8535
 - Added support for ATmega16
