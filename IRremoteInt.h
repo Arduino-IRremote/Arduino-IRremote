@@ -171,7 +171,7 @@ EXTERN  volatile irparams_t  irparams;
 	#define IR_USE_TIMER4_HS  // tx = pin 10
 
 // Teensy 3.0 / Teensy 3.1
-#elif defined(__MK20DX128__) || defined(__MK20DX256__)
+#elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
 	#define IR_USE_TIMER_CMT  // tx = pin 5
 
 // Teensy-LC
@@ -503,7 +503,7 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(IR_USE_TIMER_CMT)
 
 #define TIMER_RESET ({     \
-	uint8_t tmp = CMT_MSC; \
+	uint8_t tmp __attribute__((unused)) = CMT_MSC; \
 	CMT_CMD2 = 30;         \
 })
 
@@ -526,19 +526,18 @@ EXTERN  volatile irparams_t  irparams;
 #define  ISR(f)  void f(void)
 
 //-----------------
-#if (F_BUS == 48000000)
-#	define CMT_PPS_VAL  5
-#else
-#	define CMT_PPS_VAL  2
+#define CMT_PPS_DIV  ((F_BUS + 7999999) / 8000000)
+#if F_BUS < 8000000
+#error IRremote requires at least 8 MHz on Teensy 3.x
 #endif
 
 //-----------------
 #define TIMER_CONFIG_KHZ(val) ({ 	 \
 	SIM_SCGC4 |= SIM_SCGC4_CMT;      \
 	SIM_SOPT2 |= SIM_SOPT2_PTD7PAD;  \
-	CMT_PPS    = CMT_PPS_VAL;        \
-	CMT_CGH1   = 2667 / val;         \
-	CMT_CGL1   = 5333 / val;         \
+	CMT_PPS    = CMT_PPS_DIV - 1;    \
+	CMT_CGH1   = ((F_BUS / CMT_PPS_DIV / 3000) + ((val)/2)) / (val); \
+	CMT_CGL1   = ((F_BUS / CMT_PPS_DIV / 1500) + ((val)/2)) / (val); \
 	CMT_CMD1   = 0;                  \
 	CMT_CMD2   = 30;                 \
 	CMT_CMD3   = 0;                  \
@@ -549,13 +548,13 @@ EXTERN  volatile irparams_t  irparams;
 
 #define TIMER_CONFIG_NORMAL() ({  \
 	SIM_SCGC4 |= SIM_SCGC4_CMT;   \
-	CMT_PPS    = CMT_PPS_VAL;     \
+	CMT_PPS    = CMT_PPS_DIV - 1; \
 	CMT_CGH1   = 1;               \
 	CMT_CGL1   = 1;               \
 	CMT_CMD1   = 0;               \
-	CMT_CMD2   = 30               \
+	CMT_CMD2   = 30;              \
 	CMT_CMD3   = 0;               \
-	CMT_CMD4   = 19;              \
+	CMT_CMD4   = (F_BUS / 160000 + CMT_PPS_DIV / 2) / CMT_PPS_DIV - 31; \
 	CMT_OC     = 0;               \
 	CMT_MSC    = 0x03;            \
 })
