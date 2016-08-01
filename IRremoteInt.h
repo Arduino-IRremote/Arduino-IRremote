@@ -171,7 +171,7 @@ EXTERN  volatile irparams_t  irparams;
 	#define IR_USE_TIMER4_HS  // tx = pin 10
 
 // Teensy 3.0 / Teensy 3.1
-#elif defined(__MK20DX128__) || defined(__MK20DX256__)
+#elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
 	#define IR_USE_TIMER_CMT  // tx = pin 5
 
 // Teensy-LC
@@ -503,7 +503,7 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(IR_USE_TIMER_CMT)
 
 #define TIMER_RESET ({     \
-	uint8_t tmp = CMT_MSC; \
+	uint8_t tmp __attribute__((unused)) = CMT_MSC; \
 	CMT_CMD2 = 30;         \
 })
 
@@ -553,7 +553,7 @@ EXTERN  volatile irparams_t  irparams;
 	CMT_CGH1   = 1;               \
 	CMT_CGL1   = 1;               \
 	CMT_CMD1   = 0;               \
-	CMT_CMD2   = 30               \
+	CMT_CMD2   = 30;              \
 	CMT_CMD3   = 0;               \
 	CMT_CMD4   = 19;              \
 	CMT_OC     = 0;               \
