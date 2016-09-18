@@ -79,6 +79,8 @@
 #define DECODE_LEGO_PF       0 // NOT WRITTEN
 #define SEND_LEGO_PF         1
 
+#define DECODE_MOTO          1
+#define SEND_MOTO            1
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
 //                                                   or the "repeat" code
@@ -119,6 +121,7 @@ typedef
 		DENON,
 		PRONTO,
 		LEGO_PF,
+		MOTOROLA,
 	}
 decode_type_t;
 
@@ -200,6 +203,10 @@ class IRrecv
 			bool  decodeNEC        (decode_results *results) ;
 #		endif
 		//......................................................................
+#		if DECODE_MOTO
+			bool  decodeMoto           (decode_results *results) ;
+#		endif
+		//......................................................................
 #		if DECODE_SONY
 			bool  decodeSony       (decode_results *results) ;
 #		endif
@@ -277,6 +284,10 @@ class IRsend
 		//......................................................................
 #		if SEND_NEC
 			void  sendNEC        (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if SEND_MOTO
+			void  sendMoto           (unsigned long data,  int nbits) ;
 #		endif
 		//......................................................................
 #		if SEND_SONY

@@ -31,6 +31,8 @@ sendSharp KEYWORD2
 sendSharpRaw KEYWORD2
 sendPanasonic KEYWORD2
 sendJVC KEYWORD2
+sendLG KEYWORD2
+sendMoto KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
@@ -50,3 +52,4 @@ LG LITERAL1
 AIWA_RC_T501 LITERAL1
 UNKNOWN	LITERAL1
 REPEAT	LITERAL1
+MOTOROLA LITERAL1

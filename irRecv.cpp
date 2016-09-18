@@ -80,6 +80,11 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeDenon(results))  return true ;
 #endif
 
+#if DECODE_MOTO
+	DBG_PRINTLN("Attempting Motorola decode");
+	if (decodeMoto(results))  return true ;
+#endif
+
 #if DECODE_LEGO_PF
 	DBG_PRINTLN("Attempting Lego Power Functions");
 	if (decodeLegoPowerFunctions(results))  return true ;
