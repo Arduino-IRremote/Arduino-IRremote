@@ -1,5 +1,20 @@
 # IRremote Arduino Library
 
+# todo
+
+- [ ] only keep base functions in the library
+- [ ] move all protocols to examples as sketches
+- [ ] notation for ir protocols
+- [ ] update keywords.txt
+- [ ] write some documentation on library development
+- [ ] write documentation for library usage
+- [ ] remove documentation from source code? cleaner code
+- [ ] write tutorials
+- [ ] update links (library.properties)
+- [ ] update travis coverage
+- [ ] create a rules list for issues and prs
+- [ ] create guidlines for contributions, line-endings, indentations etc.
+
 [![Build Status](https://travis-ci.org/z3t0/Arduino-IRremote.svg?branch=master)](https://travis-ci.org/z3t0/Arduino-IRremote)
 
 [![Join the chat at https://gitter.im/z3t0/Arduino-IRremote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/z3t0/Arduino-IRremote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
