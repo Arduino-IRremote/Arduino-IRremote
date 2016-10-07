@@ -8,6 +8,10 @@ This library enables you to send and receive using infra-red signals on an Ardui
 
 Tutorials and more information will be made available on [the official homepage](http://z3t0.github.io/Arduino-IRremote/).
 
+Note: the support for Arduino MKR1000 (Atmel SAM D21) is not tested!
+The code implemented here comes basically from the [ZERO IRremote demo sketch](https://github.com/manitou48/ZERO/tree/master/IRtest) plus some minor changes.
+In my project I'm only using the receiver with a custom remote: I never tested neither the sending part of the library nor the different remotes that are supported.
+
 ## Version - 2.2.1
 
 ## Installation
@@ -19,6 +23,7 @@ Tutorials and more information will be made available on [the official homepage]
 
 ## Supported Boards
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
+- Arduino Zero / MKR1000
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: @PaulStoffregen (Teensy Team)
 - Sanguino
 - ATmega8, 48, 88, 168, 328
@@ -47,6 +52,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/)                       | **1**, 16, 25       | 1, **2**, 3       |
 | [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/)                         | **5**               | **CMT**           |
 | [Teensy-LC](https://www.pjrc.com/teensy/)                                | **16**              | **TPM1**          |
+| [Arduino MKR1000](https://www.arduino.cc/en/Main/ArduinoMKR1000)         | **12**              | **TCC0**, **TC5** |
 
 The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 

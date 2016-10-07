@@ -87,6 +87,11 @@ EXTERN  volatile irparams_t  irparams;
 #	define BLINKLED_ON()   (PORTD |= B00000001)
 #	define BLINKLED_OFF()  (PORTD &= B11111110)
 
+#elif defined(__SAMD21G18A__) || defined(__SAMD21E17A__)
+#	define BLINKLED        6
+#	define BLINKLED_ON()   (digitalWrite(BLINKLED, HIGH))
+#	define BLINKLED_OFF()  (digitalWrite(BLINKLED, LOW))
+
 #else
 #	define BLINKLED        13
 	#define BLINKLED_ON()  (PORTB |= B00100000)
@@ -217,6 +222,12 @@ EXTERN  volatile irparams_t  irparams;
 //ATtiny85
 #elif defined(__AVR_ATtiny85__)
   #define IR_USE_TIMER_TINY0   // tx = pin 1
+
+// Arduino MKR1000
+#elif defined(__SAMD21G18A__) || defined(__SAMD21E17A__)
+  #define IR_USE_TIMER_MKR  // tx = pin 12
+  #define cli() __disable_irq();
+  #define sei() __enable_irq();
 
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
@@ -624,6 +635,68 @@ EXTERN  volatile irparams_t  irparams;
 #endif
 
 #define TIMER_PWM_PIN        1  /* ATtiny85 */
+
+// defines for TCC/TC timers on MKR1000
+#elif defined(IR_USE_TIMER_MKR)
+
+#define TIMER_RESET { \
+  REG_TC5_INTFLAG = TC_INTFLAG_MC0; /* clear interrupts */ \
+}
+
+#define TIMER_ENABLE_PWM { \
+  REG_TCC0_CTRLA |= TCC_CTRLA_ENABLE; \
+  while (TCC0->SYNCBUSY.reg & TCC_SYNCBUSY_MASK); \
+}
+
+#define TIMER_DISABLE_PWM { \
+  REG_TCC0_CTRLA &= ~TCC_CTRLA_ENABLE; \
+  while (TCC0->SYNCBUSY.reg & TCC_SYNCBUSY_MASK); \
+}
+
+#define TIMER_ENABLE_INTR { \
+  NVIC_EnableIRQ(TC5_IRQn); \
+  REG_TC5_INTENSET = TC_INTENSET_MC0; \
+}
+
+#define TIMER_DISABLE_INTR { \
+  NVIC_DisableIRQ(TC5_IRQn); \
+  REG_TC5_INTFLAG = TC_INTFLAG_MC0; \
+}
+#define TIMER_INTR_NAME     TC5_Handler
+
+//-----------------
+#ifdef ISR
+#	undef ISR
+#endif
+#define  ISR(f) void f(void)
+
+//-----------------
+#define TIMER_CONFIG_KHZ(val) ({ \
+  REG_TCC0_CTRLA &= ~TCC_CTRLA_ENABLE; \
+  while (TCC0->SYNCBUSY.reg & TCC_SYNCBUSY_MASK); \
+  uint32_t cc = SYSCLOCK / (val * 1000) - 1; \
+  REG_TCC0_CC3 = cc / 2; \
+  while (TCC0->SYNCBUSY.reg & TCC_SYNCBUSY_MASK); \
+  REG_TCC0_PER = cc; \
+  while (TCC0->SYNCBUSY.reg & TCC_SYNCBUSY_MASK); \
+})
+
+#define TIMER_CONFIG_NORMAL() ({ \
+  REG_GCLK_CLKCTRL = GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | GCLK_CLKCTRL_ID(GCM_TC4_TC5); \
+  while (GCLK->STATUS.bit.SYNCBUSY); \
+  REG_TC5_CTRLA &= ~TC_CTRLA_ENABLE; \
+  while (TC5->COUNT16.STATUS.bit.SYNCBUSY); \
+  REG_TC5_CTRLA = TC_CTRLA_SWRST; \
+  while (TC5->COUNT16.CTRLA.bit.SWRST); \
+  REG_TC5_CTRLA |= TC_CTRLA_MODE_COUNT16 | TC_CTRLA_WAVEGEN_MFRQ; \
+  uint16_t cc = SYSCLOCK / (1000000 / USECPERTICK) - 1; /* 20 khz */ \
+  REG_TC5_COUNT16_CC0 = cc; \
+  while (TC5->COUNT16.STATUS.bit.SYNCBUSY); \
+  REG_TC5_CTRLA |= TC_CTRLA_ENABLE; \
+  while (TC5->COUNT16.STATUS.bit.SYNCBUSY); \
+})
+
+#define TIMER_PWM_PIN  12
 
 //---------------------------------------------------------
 // Unknown Timer
