@@ -59,7 +59,7 @@
 #define SEND_LG              1
 
 #define DECODE_SANYO         1
-#define SEND_SANYO           0 // NOT WRITTEN
+#define SEND_SANYO           1
 
 #define DECODE_MITSUBISHI    1
 #define SEND_MITSUBISHI      0 // NOT WRITTEN
@@ -153,7 +153,8 @@ class decode_results
 	public:
 		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
 		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
-		unsigned long          value;        // Decoded value [max 32-bits]
+		unsigned long          value;        // Decoded value [max 32-bits] 
+		unsigned long		   valueOver;    // Overflow value for protocols greater than 32
 		int                    bits;         // Number of bits in decoded value
 		volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
 		int                    rawlen;       // Number of records in rawbuf
@@ -214,6 +215,7 @@ class IRrecv
 		//......................................................................
 #		if DECODE_SAMSUNG
 			bool  decodeSAMSUNG    (decode_results *results) ;
+			bool  decodeSAMSUNG36    (decode_results *results) ;
 #		endif
 		//......................................................................
 #		if DECODE_WHYNTER
@@ -297,6 +299,7 @@ class IRsend
 		//......................................................................
 #		if SEND_SAMSUNG
 			void  sendSAMSUNG    (unsigned long data,  int nbits) ;
+			void  sendSAMSUNG36    (unsigned long long data,  int nbits) ;
 #		endif
 		//......................................................................
 #		if SEND_WHYNTER
@@ -312,7 +315,7 @@ class IRsend
 #		endif
 		//......................................................................
 #		if SEND_SANYO
-			void  sendSanyo      ( ) ; // NOT WRITTEN
+			void  sendSanyo      (unsigned long address, unsigned long data) ;
 #		endif
 		//......................................................................
 #		if SEND_MISUBISHI

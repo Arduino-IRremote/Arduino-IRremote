@@ -13,8 +13,10 @@ int  IRrecv::decode (decode_results *results)
 
 	results->overflow = irparams.overflow;
 
-	if (irparams.rcvstate != STATE_STOP)  return false ;
+	results->decode_type = SAMSUNG;
 
+	if (irparams.rcvstate != STATE_STOP)  return false ;
+	
 #if DECODE_NEC
 	DBG_PRINTLN("Attempting NEC decode");
 	if (decodeNEC(results))  return true ;
@@ -63,6 +65,10 @@ int  IRrecv::decode (decode_results *results)
 #if DECODE_SAMSUNG
 	DBG_PRINTLN("Attempting SAMSUNG decode");
 	if (decodeSAMSUNG(results))  return true ;
+
+	DBG_PRINTLN("Attempting SAMSUNG36 decode");
+	if (decodeSAMSUNG36(results))  return true ;
+	
 #endif
 
 #if DECODE_WHYNTER

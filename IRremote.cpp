@@ -8,6 +8,7 @@
 // Modified  by Mitra Ardron <mitra@mitra.biz>
 // Added Sanyo and Mitsubishi controllers
 // Modified Sony to spot the repeat codes that some Sony's send
+// Modified by Frank Hernandez <hernandez.frank@gmail.com> to add sendSanyo
 //
 // Interrupt code based on NECIRrcv by Joe Knapp
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
