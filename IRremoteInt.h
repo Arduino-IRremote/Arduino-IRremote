@@ -164,11 +164,11 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(__AVR_AT90USB162__)
 	#define IR_USE_TIMER1     // tx = pin 17
 
-// Teensy 2.0
+// Teensy 2.0 & Arduino pro micro
 #elif defined(__AVR_ATmega32U4__)
 	//#define IR_USE_TIMER1   // tx = pin 14
-	//#define IR_USE_TIMER3   // tx = pin 9
-	#define IR_USE_TIMER4_HS  // tx = pin 10
+	#define IR_USE_TIMER3   // tx = pin 5
+	//#define IR_USE_TIMER4_HS  // tx = pin 10
 
 // Teensy 3.0 / Teensy 3.1
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
@@ -376,7 +376,7 @@ EXTERN  volatile irparams_t  irparams;
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
 #	define TIMER_PWM_PIN  6              // MightyCore
 #else
-#	error "Please add OC3A pin number here\n"
+#	define TIMER_PWM_PIN  5
 #endif
 
 //---------------------------------------------------------
