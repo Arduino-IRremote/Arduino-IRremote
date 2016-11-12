@@ -5,6 +5,7 @@ These are the active contributors of this project that you may contact if there 
   * Email: zetoslab@gmail.com
   * Skype: polarised16
 - [shirriff](https://github.com/shirriff) : An amazing person who worked to create this awesome library and provide unending support
+- [AnalysIR](https:/github.com/AnalysIR): Active contributor and is amazing with providing support!
 - [Informatic](https://github.com/Informatic) : Active contributor
 - [fmeschia](https://github.com/fmeschia) : Active contributor
 - [PaulStoffregen](https://github.com/paulstroffregen) : Active contributor
