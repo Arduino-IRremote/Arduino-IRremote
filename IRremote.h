@@ -67,7 +67,7 @@
 #define DECODE_DISH          0 // NOT WRITTEN
 #define SEND_DISH            1
 
-#define DECODE_SHARP         0 // NOT WRITTEN
+#define DECODE_SHARP         1 
 #define SEND_SHARP           1
 
 #define DECODE_DENON         1
