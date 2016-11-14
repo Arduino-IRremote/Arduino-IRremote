@@ -104,7 +104,7 @@ bool  IRrecv::decodeSharp(decode_results *results)
 	if (!(MATCH_SPACE(results->rawbuf[offset+1], SHARP_ONE_SPACE) || MATCH_SPACE(results->rawbuf[offset + 1], SHARP_ZERO_SPACE)))  return false;
 
 	// Read the bits in
-	for (int j = 0; j < 3; j++) {
+//	for (int j = 0; j < 3; j++) {
 		for (int i = 0; i < SHARP_ADDR_BITS; i++) {
 			// Each bit looks like: SHARP_BIT_MARK_RECV + SHARP_ONE_SPACE -> 1
 			//                 or : SHARP_BIT_MARK_RECV + SHARP_ZERO_SPACE -> 0
@@ -129,13 +129,13 @@ bool  IRrecv::decodeSharp(decode_results *results)
 			//Serial.println(data, HEX);
 		}
 		//skip exp bit (mark+pause), chk bit (mark+pause), mark and long pause before next burst
-		offset+=6;
+//		offset+=6;
 
 		//Check if last burst data is equal to this burst (lastData allready inverted)
-		if (lastData != 0 && data != lastData) return false;
+//		if (lastData != 0 && data != lastData) return false;
 		//save current burst of data but invert (XOR) the last 10 bits (8 data bits + exp bit + chk bit)
-		lastData = data ^ 0xFF;
-	}
+//		lastData = data ^ 0xFF;
+//	}
 
 	// Success
 	results->bits = SHARP_BITS;
