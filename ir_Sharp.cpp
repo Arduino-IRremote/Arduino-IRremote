@@ -93,10 +93,17 @@ bool  IRrecv::decodeSharp(decode_results *results)
 	unsigned long  data = 0;  // Somewhere to build our data
 	unsigned long  lastData = 0;  // Somewhere to store last data
 	int            offset = 1;  //skip long space
-
-
-	// Check we have the right amount of data  
-	if (irparams.rawlen != (SHARP_BITS + 1) * 2)  return false;
+	int			   loops = 1; //number of bursts
+	
+	// Check we have the right amount of data
+	// Either one burst or three where second is inverted 
+	// The setting #define _GAP 5000 in IRremoteInt.h will give one burst and possibly three calls to this function
+	if (irparams.rawlen == (SHARP_BITS + 1) * 2)
+		loops = 1;
+	else if(irparams.rawlen == (SHARP_BITS + 1) * 2 * 3)
+		loops = 3;
+	else
+		return false;
 	
 	// Check the first mark to see if it fits the SHARP_BIT_MARK_RECV length
 	if (!MATCH_MARK(results->rawbuf[offset], SHARP_BIT_MARK_RECV))  return false;
@@ -104,14 +111,16 @@ bool  IRrecv::decodeSharp(decode_results *results)
 	if (!(MATCH_SPACE(results->rawbuf[offset+1], SHARP_ONE_SPACE) || MATCH_SPACE(results->rawbuf[offset + 1], SHARP_ZERO_SPACE)))  return false;
 
 	// Read the bits in
-//	for (int j = 0; j < 3; j++) {
+	for (int j = 0; j < loops; j++) {
+		data = 0;
+		addr = 0;
 		for (int i = 0; i < SHARP_ADDR_BITS; i++) {
 			// Each bit looks like: SHARP_BIT_MARK_RECV + SHARP_ONE_SPACE -> 1
 			//                 or : SHARP_BIT_MARK_RECV + SHARP_ZERO_SPACE -> 0
 			if (!MATCH_MARK(results->rawbuf[offset++], SHARP_BIT_MARK_RECV))  return false;
 			// IR data is big-endian, so we shuffle it in from the right:
-			if (MATCH_SPACE(results->rawbuf[offset], SHARP_ONE_SPACE)) addr += 1<<i ;//   addr = (addr << 1) | 1;
-			else if (MATCH_SPACE(results->rawbuf[offset], SHARP_ZERO_SPACE)) addr = addr;  //addr = (addr << 1) | 0;
+			if (MATCH_SPACE(results->rawbuf[offset], SHARP_ONE_SPACE)) addr += 1<<i ;
+			else if (MATCH_SPACE(results->rawbuf[offset], SHARP_ZERO_SPACE)) addr = addr;
 			else                                                        return false;
 			offset++;
 		}
@@ -120,8 +129,8 @@ bool  IRrecv::decodeSharp(decode_results *results)
 			//                 or : SHARP_BIT_MARK_RECV + SHARP_ZERO_SPACE -> 0
 			if (!MATCH_MARK(results->rawbuf[offset++], SHARP_BIT_MARK_RECV))  return false;
 			// IR data is big-endian, so we shuffle it in from the right:
-			if (MATCH_SPACE(results->rawbuf[offset], SHARP_ONE_SPACE)) data += 1<<i ;//data = (data << 1) | 1;
-			else if (MATCH_SPACE(results->rawbuf[offset], SHARP_ZERO_SPACE))  data = data;  //data = (data << 1) | 0;
+			if (MATCH_SPACE(results->rawbuf[offset], SHARP_ONE_SPACE)) data += 1<<i ;
+			else if (MATCH_SPACE(results->rawbuf[offset], SHARP_ZERO_SPACE))  data = data;
 			else                                                        return false;
 			offset++;
 			//Serial.print(i);
@@ -129,13 +138,13 @@ bool  IRrecv::decodeSharp(decode_results *results)
 			//Serial.println(data, HEX);
 		}
 		//skip exp bit (mark+pause), chk bit (mark+pause), mark and long pause before next burst
-//		offset+=6;
+		offset+=6;
 
-		//Check if last burst data is equal to this burst (lastData allready inverted)
-//		if (lastData != 0 && data != lastData) return false;
+		//Check if last burst data is equal to this burst (lastData already inverted)
+		if (lastData != 0 && data != lastData) return false;
 		//save current burst of data but invert (XOR) the last 10 bits (8 data bits + exp bit + chk bit)
-//		lastData = data ^ 0xFF;
-//	}
+		lastData = data ^ 0xFF;
+	}
 
 	// Success
 	results->bits = SHARP_BITS;
