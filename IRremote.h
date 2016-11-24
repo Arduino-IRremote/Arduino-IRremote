@@ -31,6 +31,8 @@
 #define DECODE_RC5           1
 #define SEND_RC5             1
 
+#define SEND_RC5X            1
+
 #define DECODE_RC6           1
 #define SEND_RC6             1
 
@@ -270,6 +272,9 @@ class IRsend
 		//......................................................................
 #		if SEND_RC5
 			void  sendRC5        (unsigned long data,  int nbits) ;
+#		endif
+#		if SEND_RC5X
+			void  sendRC5x       (unsigned char toggle,  unsigned char system,  unsigned char command,  unsigned char extension) ;
 #		endif
 #		if SEND_RC6
 			void  sendRC6        (unsigned long data,  int nbits) ;
