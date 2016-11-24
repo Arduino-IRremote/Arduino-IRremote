@@ -114,6 +114,53 @@ bool  IRrecv::decodeRC5 (decode_results *results)
 #endif
 
 //+=============================================================================
+#if SEND_RC5X
+// send RC5x command defined by system, command and extension
+void IRsend::sendRC5x(unsigned char toggle, unsigned char system, unsigned char command, unsigned char extension){
+	
+	unsigned long data;
+	// if command is greater than 63, the second bit will be zero
+	if (command & 64){
+		data = 2;
+	}else{
+		data = 3;
+	}
+		
+	
+	// copy lsb of toggle into data
+	data = (data<<1) | (toggle & 1);
+	// copy lower 5 bits of system into data
+	data = (data<<5) | (system & 0x1F);
+	// shift by command length (6 bits) and add command
+	data = (data<<6) | (command & 0x3F);
+	// shift by extension length and add extension
+	data = (data<<6) | (extension & 0x3F);
+	
+	// the full command is 20 bits long
+	enableIROut(36);
+	data = data << 12;
+	
+	// the initializing bits are included in the data
+	for (int i = 0; i < nbits; i++) {
+		if (data & TOPBIT) {
+			space(RC5_T1); // 1 is space, then mark
+			mark(RC5_T1);
+		} else {
+			mark(RC5_T1);
+			space(RC5_T1);
+		}
+		data <<= 1;
+		// we use the RC5x protocol, which includes 2
+		// low cycles (4 spaces) after the device id
+		if (i==7){
+			space(4*RC5_T1);
+		}
+	}
+	space(0); // Turn off at end
+}
+#endif
+
+//+=============================================================================
 // RRRR    CCCC   6666
 // R   R  C      6
 // RRRR   C      6666
