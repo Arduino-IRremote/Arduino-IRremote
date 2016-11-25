@@ -105,6 +105,7 @@ typedef
 		UNKNOWN      = -1,
 		UNUSED       =  0,
 		RC5,
+		RC5X,
 		RC6,
 		NEC,
 		SONY,

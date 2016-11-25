@@ -25,6 +25,7 @@ sendSanyo KEYWORD2
 sendMitsubishi KEYWORD2
 sendRaw	KEYWORD2
 sendRC5	KEYWORD2
+sendRC5x KEYWORD2
 sendRC6	KEYWORD2
 sendDISH KEYWORD2
 sendSharp KEYWORD2
