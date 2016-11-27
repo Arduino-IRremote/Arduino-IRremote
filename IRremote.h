@@ -67,7 +67,7 @@
 #define DECODE_DISH          0 // NOT WRITTEN
 #define SEND_DISH            1
 
-#define DECODE_SHARP         0 // NOT WRITTEN
+#define DECODE_SHARP         1
 #define SEND_SHARP           1
 
 #define DECODE_DENON         1
@@ -241,7 +241,7 @@ class IRrecv
 #		endif
 		//......................................................................
 #		if DECODE_SHARP
-			bool  decodeSharp (decode_results *results) ; // NOT WRITTEN
+			bool  decodeSharp (decode_results *results) ;
 #		endif
 		//......................................................................
 #		if DECODE_DENON
@@ -324,8 +324,9 @@ class IRsend
 #		endif
 		//......................................................................
 #		if SEND_SHARP
-			void  sendSharpRaw   (unsigned long data,  int nbits) ;
-			void  sendSharp      (unsigned int address,  unsigned int command) ;
+			void  sendSharpRaw (unsigned long data,  int nbits) ;
+			void  sendSharpRawLittleEndian (unsigned long data,  int nbits);
+			void  sendSharp (unsigned int address,  unsigned long command) ;
 #		endif
 		//......................................................................
 #		if SEND_DENON
