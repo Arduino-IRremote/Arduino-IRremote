@@ -78,14 +78,14 @@ void testMessageBitCount(LegoPfBitStreamEncoder& bitStreamEncoder) {
   logTestResult(bitCount == 18);
 }
 
-boolean check(LegoPfBitStreamEncoder& bitStreamEncoder, int markDuration, int pauseDuration) {
+boolean check(LegoPfBitStreamEncoder& bitStreamEncoder, unsigned long markDuration, unsigned long pauseDuration) {
   bool result = true;
   result = result && bitStreamEncoder.getMarkDuration() == markDuration;
   result = result && bitStreamEncoder.getPauseDuration() == pauseDuration;
   return result;
 }
 
-boolean checkNext(LegoPfBitStreamEncoder& bitStreamEncoder, int markDuration, int pauseDuration) {
+boolean checkNext(LegoPfBitStreamEncoder& bitStreamEncoder, unsigned long markDuration, unsigned long pauseDuration) {
   bool result = bitStreamEncoder.next();
   result = result && check(bitStreamEncoder, markDuration, pauseDuration);
   return result;
@@ -129,16 +129,16 @@ void testMessage407Repeated(LegoPfBitStreamEncoder& bitStreamEncoder) {
   bool result = true;
   result = result && check(bitStreamEncoder, 158, 1026);
   result = result && checkDataBitsOfMessage407(bitStreamEncoder);
-  result = result && checkNext(bitStreamEncoder, 158, 1026 + 5 * 16000 - 10844);
+  result = result && checkNext(bitStreamEncoder, 158, 1026L + 5L * 16000L - 10844L);
   result = result && checkNext(bitStreamEncoder, 158, 1026);
   result = result && checkDataBitsOfMessage407(bitStreamEncoder);
-  result = result && checkNext(bitStreamEncoder, 158, 1026 + 5 * 16000 - 10844);
+  result = result && checkNext(bitStreamEncoder, 158, 1026L + 5L * 16000L - 10844L);
   result = result && checkNext(bitStreamEncoder, 158, 1026);
   result = result && checkDataBitsOfMessage407(bitStreamEncoder);
-  result = result && checkNext(bitStreamEncoder, 158, 1026 + 8 * 16000 - 10844);
+  result = result && checkNext(bitStreamEncoder, 158, 1026L + 8L * 16000L - 10844L);
   result = result && checkNext(bitStreamEncoder, 158, 1026);
   result = result && checkDataBitsOfMessage407(bitStreamEncoder);
-  result = result && checkNext(bitStreamEncoder, 158, 1026 + 8 * 16000 - 10844);
+  result = result && checkNext(bitStreamEncoder, 158, 1026L + 8L * 16000L - 10844L);
   result = result && checkNext(bitStreamEncoder, 158, 1026);
   result = result && checkDataBitsOfMessage407(bitStreamEncoder);
   result = result && checkNext(bitStreamEncoder, 158, 1026);
