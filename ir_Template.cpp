@@ -31,7 +31,7 @@ You have written the code to support your new protocol!
 
 Now you must do a few things to add it to the IRremote system:
 
-1. Open IRremote.h and make the following changes:
+1. Open AIRremote.h and make the following changes:
    REMEMEBER to change occurences of "SHUZU" with the name of your protocol
 
    A. At the top, in the section "Supported Protocols", add:
@@ -91,7 +91,7 @@ Regards,
   BlueChip
 */
 
-#include "IRremote.h"
+#include "AIRremote.h"
 #include "IRremoteInt.h"
 
 //==============================================================================

@@ -11,7 +11,7 @@
  */
 
 
-#include <IRremote.h>
+#include <AIRremote.h>
 
 void setup()
 {
@@ -224,7 +224,7 @@ void dumpFooter() {
   Serial.println(F("Notes: "));
   Serial.println(F("     - Most of the seetings above can be configured in the following files included as part of the library"));
   Serial.println(F("     - IRremteInt.h"));
-  Serial.println(F("     - IRremote.h"));
+  Serial.println(F("     - AIRremote.h"));
   Serial.println(F("     - You can save SRAM by disabling the Decode or Send features for any protocol (Near the top of IRremoteInt.h)"));
   Serial.println(F("     - Some Timer conflicts, with other libraries, can be easily resolved by configuring a differnt Timer for your platform"));
 }

@@ -4,12 +4,12 @@
  * Copyright 2009 Ken Shirriff
  * http://arcfn.com
  *
- * Note: to run these tests, edit IRremote/IRremote.h to add "#define TEST"
+ * Note: to run these tests, edit IRremote/AIRremote.h to add "#define TEST"
  * You must then recompile the library by removing IRremote.o and restarting
  * the arduino IDE.
  */
 
-#include <IRremote.h>
+#include <AIRremote.h>
 #include <IRremoteInt.h>
 
 // Dumps out the decode_results structure.
