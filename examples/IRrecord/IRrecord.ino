@@ -126,7 +126,7 @@ void sendCode(int repeat) {
     Serial.println(codeValue, HEX);
   }
   else if (codeType == JVC) {
-    irsend.sendPanasonic(codeValue, codeLen);
+    irsend.sendJVC(codeValue, codeLen, false);
     Serial.print("Sent JVC");
     Serial.println(codeValue, HEX);
   }
