@@ -66,7 +66,7 @@ void  dumpInfo (decode_results *results)
 {
   // Check if the buffer overflowed
   if (results->overflow) {
-    Serial.println("IR code too long. Edit IRremoteInt.h and increase RAWLEN");
+    Serial.println("IR code too long. Edit IRremoteInt.h and increase RAWBUF");
     return;
   }
 
