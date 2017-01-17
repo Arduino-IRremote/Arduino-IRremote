@@ -50,6 +50,11 @@ We are open to suggestions for adding support to new boards, however we highly r
 
 The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 
+## Supported Sensors
+- IRM8601
+- TSOP1738
+- TSOP382
+
 ## Usage
 - TODO (Check examples for now)
 
