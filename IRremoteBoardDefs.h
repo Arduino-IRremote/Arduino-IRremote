@@ -17,8 +17,8 @@
 // Whynter A/C ARC-110WD added by Francesco Meschia
 //******************************************************************************
 
-#ifndef boarddefs_h
-#define boarddefs_h
+#ifndef IRremoteBoardDefs_h
+#define IRremoteBoardDefs_h
 
 //------------------------------------------------------------------------------
 // Defines for blinking the LED
@@ -545,4 +545,4 @@
 #	error "Internal code configuration error, no known IR_USE_TIMER# defined\n"
 #endif
 
-#endif // ! boarddefs_h
+#endif // ! IRremoteBoardDefs_h

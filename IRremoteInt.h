@@ -108,6 +108,6 @@ EXTERN  volatile irparams_t  irparams;
 #define SPACE  1
 
 // All board specific stuff has been moved to its own file, included here.
-#include "boarddefs.h"
+#include "IRremoteBoardDefs.h"
 
 #endif
