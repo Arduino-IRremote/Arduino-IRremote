@@ -1,3 +1,6 @@
+## 2.2.2 - 2017/01/20
+- Fixed naming bug [PR #398](https://github.com/z3t0/Arduino-IRremote/pull/398)
+
 ## 2.2.1 - 2016/07/27
 - Added tests for Lego Power Functions Protocol [PR #336](https://github.com/z3t0/Arduino-IRremote/pull/336)
 
