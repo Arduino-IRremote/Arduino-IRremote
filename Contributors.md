@@ -15,8 +15,9 @@ These are the active contributors of this project that you may contact if there 
 - [csBlueChip](https://github.com/csbluechip) : Active contributor, who contributed major and vital changes to the code base.
 - [Sebazzz](https://github.com/sebazz): Contributor
 - [lumbric](https://github.com/lumbric): Contributor
-- [ElectricRCAircraftGuy](https://github.com/electricrcaircraftguy): Active Contributor
+- [ElectricRCAircraftGuy](https://github.com/electricrcaircraftguy): Contributor
 - [henkel](https://github.com/henkel): Contributor
 - [MCUdude](https://github.com/MCUdude): Contributor
+- [salocinx](https://github.com/salocinx): Contributor
 
 Note: This list is being updated constantly so please let [z3t0](https://github.com/z3t0) know if you have been missed.

@@ -1,3 +1,6 @@
+## 2.3.0 - 2017/02/06
+- Added Commodore Amiga CDTV Support [ISSUE #407](https://github.com/z3t0/Arduino-IRremote/issues/407) [PR #413](https://github.com/z3t0/Arduino-IRremote/pull/413)
+
 ## 2.2.2 - 2017/01/20
 - Renamed "boarddefs.h" [ISSUE #375](https://github.com/z3t0/Arduino-IRremote/issues/375)
 - Fixed naming bug [PR #398](https://github.com/z3t0/Arduino-IRremote/pull/398)
