@@ -3,7 +3,7 @@
 
 #ifdef ESP32
 hw_timer_t *timer;
-void onTimer(); // defined in IRremote.cpp
+void IRTimer(); // defined in IRremote.cpp
 #endif
 
 //+=============================================================================
@@ -126,7 +126,7 @@ void  IRrecv::enableIRIn ( )
 #ifdef ESP32
 	// 3 timers, choose #1, 80 divider nanosecond precision, 1 to count up
 	timer = timerBegin(1, 80, 1);
-	timerAttachInterrupt(timer, &onTimer, 1);
+	timerAttachInterrupt(timer, &IRTimer, 1);
 	// every 50ns, autoreload = true
 	timerAlarmWrite(timer, 50, true);
 	timerAlarmEnable(timer);
