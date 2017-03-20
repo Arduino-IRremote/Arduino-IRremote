@@ -8,7 +8,11 @@
 
 #include <IRremote.h>
 
+#ifdef ESP32
+int RECV_PIN = 35;
+#else
 int RECV_PIN = 11;
+#endif
 
 IRrecv irrecv(RECV_PIN);
 
@@ -16,8 +20,10 @@ decode_results results;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
+  Serial.println("Enabling IRin");
   irrecv.enableIRIn(); // Start the receiver
+  Serial.println("Enabled IRin");
 }
 
 void loop() {

@@ -1,6 +1,11 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
+#ifdef ESP32
+hw_timer_t *timer;
+void onTimer(); // defined in IRremote.cpp
+#endif
+
 //+=============================================================================
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
@@ -117,6 +122,15 @@ IRrecv::IRrecv (int recvpin, int blinkpin)
 //
 void  IRrecv::enableIRIn ( )
 {
+// Interrupt Service Routine - Fires every 50uS
+#ifdef ESP32
+	// 3 timers, choose #1, 80 divider nanosecond precision, 1 to count up
+	timer = timerBegin(1, 80, 1);
+	timerAttachInterrupt(timer, &onTimer, 1);
+	// every 50ns, autoreload = true
+	timerAlarmWrite(timer, 50, true);
+	timerAlarmEnable(timer);
+#else
 	cli();
 	// Setup pulse clock timer interrupt
 	// Prescale /8 (16M/8 = 0.5 microseconds per tick)
@@ -130,6 +144,7 @@ void  IRrecv::enableIRIn ( )
 	TIMER_RESET;
 
 	sei();  // enable interrupts
+#endif
 
 	// Initialize state machine variables
 	irparams.rcvstate = STATE_IDLE;

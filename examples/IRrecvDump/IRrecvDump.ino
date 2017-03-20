@@ -15,7 +15,11 @@
 *  You can change this to another available Arduino Pin.
 *  Your IR receiver should be connected to the pin defined here
 */
-int RECV_PIN = 11; 
+#ifdef ESP32
+int RECV_PIN = 35;
+#else
+int RECV_PIN = 11;
+#endif
 
 IRrecv irrecv(RECV_PIN);
 
@@ -23,7 +27,7 @@ decode_results results;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   irrecv.enableIRIn(); // Start the receiver
 }
 

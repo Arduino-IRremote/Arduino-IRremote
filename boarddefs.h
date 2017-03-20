@@ -39,6 +39,10 @@
 #	define BLINKLED_ON()   (PORTD |= B00000001)
 #	define BLINKLED_OFF()  (PORTD &= B11111110)
 
+#elif defined(ESP32)
+#	define BLINKLED        255
+#	define BLINKLED_ON()   1
+#	define BLINKLED_OFF()  1
 #else
 #	define BLINKLED        13
 	#define BLINKLED_ON()  (PORTB |= B00100000)
@@ -147,12 +151,21 @@
 //
 #if defined(IR_USE_TIMER2)
 
+#ifdef ESP32 // Used in irSend, not implemented yet (FIXME)
+#define TIMER_RESET	    1
+#define TIMER_ENABLE_PWM    1
+#define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for ESP32 yet");
+#define TIMER_ENABLE_INTR   1
+#define TIMER_DISABLE_INTR  1
+#define TIMER_INTR_NAME     1
+#else
 #define TIMER_RESET
 #define TIMER_ENABLE_PWM    (TCCR2A |= _BV(COM2B1))
 #define TIMER_DISABLE_PWM   (TCCR2A &= ~(_BV(COM2B1)))
 #define TIMER_ENABLE_INTR   (TIMSK2 = _BV(OCIE2A))
 #define TIMER_DISABLE_INTR  (TIMSK2 = 0)
 #define TIMER_INTR_NAME     TIMER2_COMPA_vect
+#endif
 
 #define TIMER_CONFIG_KHZ(val) ({ \
 	const uint8_t pwmval = SYSCLOCK / 2000 / (val); \
