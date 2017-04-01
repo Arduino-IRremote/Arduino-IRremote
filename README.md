@@ -25,6 +25,7 @@ Tutorials and more information will be made available on [the official homepage]
 - ATmega8535, 16, 32, 164, 324, 644, 1284,
 - ATmega64, 128
 - ATtiny 84 / 85
+- ESP32 (receive only)
 
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
 
