@@ -25,6 +25,7 @@ Tutorials and more information will be made available on [the official homepage]
 - ATmega8535, 16, 32, 164, 324, 644, 1284,
 - ATmega64, 128
 - ATtiny 84 / 85
+- ESP32 (receive only)
 
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
 
@@ -42,6 +43,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [ATmega8535 ATmega16, ATmega32](https://github.com/MCUdude/MightyCore)   | **13**              | **1**             |
 | [ATmega64, ATmega128](https://github.com/MCUdude/MegaCore)               | **13**              | **1**             |
 | ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
+| [ESP32](http://esp32.net/)                                               | N/A (not supported) | **1**             |
 | [Teensy 1.0](https://www.pjrc.com/teensy/)                               | **17**              | **1**             |
 | [Teensy 2.0](https://www.pjrc.com/teensy/)                               | 9, **10**, 14       | 1, 3, **4_HS**    |
 | [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/)                       | **1**, 16, 25       | 1, **2**, 3       |
