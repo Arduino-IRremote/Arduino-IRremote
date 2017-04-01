@@ -1,7 +1,7 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
-#ifdef ESP32
+#ifdef IR_TIMER_USE_ESP32
 hw_timer_t *timer;
 void IRTimer(); // defined in IRremote.cpp
 #endif

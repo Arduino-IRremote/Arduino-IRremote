@@ -136,11 +136,11 @@
 #elif defined(__AVR_ATtiny85__)
 	#define IR_USE_TIMER_TINY0   // tx = pin 1
 
-// Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
-// ATmega48, ATmega88, ATmega168, ATmega328
 #elif defined(ESP32)
 	#define IR_TIMER_USE_ESP32
 #else
+// Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
+// ATmega48, ATmega88, ATmega168, ATmega328
 	//#define IR_USE_TIMER1   // tx = pin 9
 	#define IR_USE_TIMER2     // tx = pin 3
 
