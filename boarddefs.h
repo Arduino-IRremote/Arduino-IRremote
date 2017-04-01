@@ -560,12 +560,12 @@
 // way to do this on ESP32 is using the RMT built in driver like in this incomplete library below
 // https://github.com/ExploreEmbedded/ESP32_RMT
 #elif defined(IR_TIMER_USE_ESP32)
-#define TIMER_RESET	    1
-#define TIMER_ENABLE_PWM    1
+#define TIMER_RESET	     
+#define TIMER_ENABLE_PWM     
 #define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for ESP32 yet");
-#define TIMER_ENABLE_INTR   1
-#define TIMER_DISABLE_INTR  1
-#define TIMER_INTR_NAME     1
+#define TIMER_ENABLE_INTR    
+#define TIMER_DISABLE_INTR   
+#define TIMER_INTR_NAME      
 
 //---------------------------------------------------------
 // Unknown Timer
