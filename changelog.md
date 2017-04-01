@@ -1,4 +1,4 @@
-## 2.2.4 - 2017/03/31
+## 2.3.3 - 2017/03/31
 - Added ESP32 IR receive support [PR #427](https://github.com/z3t0/Arduino-IRremote/pull/425)
 
 ## 2.2.3 - 2017/03/27
