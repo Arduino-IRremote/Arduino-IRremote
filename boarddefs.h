@@ -39,13 +39,14 @@
 #	define BLINKLED_ON()   (PORTD |= B00000001)
 #	define BLINKLED_OFF()  (PORTD &= B11111110)
 
+// No system LED on ESP32, disable blinking
 #elif defined(ESP32)
 #	define BLINKLED        255
 #	define BLINKLED_ON()   1
 #	define BLINKLED_OFF()  1
 #else
 #	define BLINKLED        13
-	#define BLINKLED_ON()  (PORTB |= B00100000)
+#	define BLINKLED_ON()  (PORTB |= B00100000)
 #	define BLINKLED_OFF()  (PORTB &= B11011111)
 #endif
 
@@ -129,14 +130,16 @@
 
 // ATtiny84
 #elif defined(__AVR_ATtiny84__)
-  #define IR_USE_TIMER1     // tx = pin 6
+	#define IR_USE_TIMER1     // tx = pin 6
 
 //ATtiny85
 #elif defined(__AVR_ATtiny85__)
-  #define IR_USE_TIMER_TINY0   // tx = pin 1
+	#define IR_USE_TIMER_TINY0   // tx = pin 1
 
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
+#elif defined(ESP32)
+	#define IR_TIMER_USE_ESP32
 #else
 	//#define IR_USE_TIMER1   // tx = pin 9
 	#define IR_USE_TIMER2     // tx = pin 3
@@ -151,21 +154,12 @@
 //
 #if defined(IR_USE_TIMER2)
 
-#ifdef ESP32 // Used in irSend, not implemented yet (FIXME)
-#define TIMER_RESET	    1
-#define TIMER_ENABLE_PWM    1
-#define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for ESP32 yet");
-#define TIMER_ENABLE_INTR   1
-#define TIMER_DISABLE_INTR  1
-#define TIMER_INTR_NAME     1
-#else
 #define TIMER_RESET
 #define TIMER_ENABLE_PWM    (TCCR2A |= _BV(COM2B1))
 #define TIMER_DISABLE_PWM   (TCCR2A &= ~(_BV(COM2B1)))
 #define TIMER_ENABLE_INTR   (TIMSK2 = _BV(OCIE2A))
 #define TIMER_DISABLE_INTR  (TIMSK2 = 0)
 #define TIMER_INTR_NAME     TIMER2_COMPA_vect
-#endif
 
 #define TIMER_CONFIG_KHZ(val) ({ \
 	const uint8_t pwmval = SYSCLOCK / 2000 / (val); \
@@ -550,6 +544,28 @@
 #endif
 
 #define TIMER_PWM_PIN        1  /* ATtiny85 */
+
+//---------------------------------------------------------
+// ESP32 (ESP8266 should likely be added here too)
+//
+
+// ESP32 has it own timer API and does not use these macros, but to avoid ifdef'ing
+// them out in the common code, they are defined to no-op. This allows the code to compile
+// (which it wouldn't otherwise) but irsend will not work until ESP32 specific code is written
+// for that -- merlin
+// As a warning, sending timing specific code from an ESP32 can be challenging if you need 100%
+// reliability because the arduino code may be interrupted and cause your sent waveform to be the
+// wrong length. This is specifically an issue for neopixels which require 800Khz resolution.
+// IR may just work as is with the common code since it's lower frequency, but if not, the other
+// way to do this on ESP32 is using the RMT built in driver like in this incomplete library below
+// https://github.com/ExploreEmbedded/ESP32_RMT
+#elif defined(IR_TIMER_USE_ESP32)
+#define TIMER_RESET	    1
+#define TIMER_ENABLE_PWM    1
+#define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for ESP32 yet");
+#define TIMER_ENABLE_INTR   1
+#define TIMER_DISABLE_INTR  1
+#define TIMER_INTR_NAME     1
 
 //---------------------------------------------------------
 // Unknown Timer

@@ -18,15 +18,16 @@
 // Whynter A/C ARC-110WD added by Francesco Meschia
 //******************************************************************************
 
-#ifndef ESP32
-#include <avr/interrupt.h>
-#endif
-
 // Defining IR_GLOBAL here allows us to declare the instantiation of global variables
 #define IR_GLOBAL
 #	include "IRremote.h"
 #	include "IRremoteInt.h"
 #undef IR_GLOBAL
+
+#ifndef IR_TIMER_USE_ESP32
+#include <avr/interrupt.h>
+#endif
+
 
 //+=============================================================================
 // The match functions were (apparently) originally MACROs to improve code speed
@@ -122,7 +123,7 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 // As soon as first MARK arrives:
 //   Gap width is recorded; Ready is cleared; New logging starts
 //
-#ifdef ESP32
+#ifdef IR_TIMER_USE_ESP32
 void IRTimer()
 #else
 ISR (TIMER_INTR_NAME)

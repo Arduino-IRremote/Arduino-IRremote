@@ -124,6 +124,8 @@ void  IRrecv::enableIRIn ( )
 {
 // Interrupt Service Routine - Fires every 50uS
 #ifdef ESP32
+	// ESP32 has a proper API to setup timers, no weird chip macros needed
+	// simply call the readable API versions :)
 	// 3 timers, choose #1, 80 divider nanosecond precision, 1 to count up
 	timer = timerBegin(1, 80, 1);
 	timerAttachInterrupt(timer, &IRTimer, 1);
