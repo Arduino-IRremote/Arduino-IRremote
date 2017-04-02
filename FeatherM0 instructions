@@ -1,7 +1,14 @@
-Feather M0 support can be added by doing the following instructions in an Adafruit forum thread.  
+Feather M0 support can be added by doing the following instructions in 
+an Adafruit forum thread.  
 
-Problem is the work was done bases on V2.2.1.  Latest version has a couple of changes that effect how easy it will be to merge. One change is the boarddefs change. The other problematic change is the one putting Recv support for ESP32.  Both these change had considerable impact in the same area as the Feather changes.
+Problem is the work was done bases on V2.2.1.  Latest version has a couple 
+of changes that effect how easy it will be to merge. One change is the 
+boarddefs change. The other problematic change is the one putting Recv 
+support for ESP32.  Both these change had considerable impact in the same 
+area as the Feather changes.
 
-See https://forums.adafruit.com/viewtopic.php?f=57&t=114520. Note that the instructions and the testing took place for a version before the ESP32 changes.
+See https://forums.adafruit.com/viewtopic.php?f=57&t=114520. Note that 
+the instructions and the testing took place for a version before the ESP32 
+changes.
 
 
