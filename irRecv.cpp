@@ -1,11 +1,6 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
-#ifdef IR_TIMER_USE_ESP32
-hw_timer_t *timer;
-void IRTimer(); // defined in IRremote.cpp
-#endif
-
 //+=============================================================================
 // Decodes the received IR message
 // Returns 0 if no data ready, 1 if data ready.
@@ -120,6 +115,7 @@ IRrecv::IRrecv (int recvpin, int blinkpin)
 //+=============================================================================
 // initialization
 //
+#ifdef USE_DEFAULT_ENABLE_IR_IN
 void  IRrecv::enableIRIn ( )
 {
 // Interrupt Service Routine - Fires every 50uS
@@ -155,14 +151,17 @@ void  IRrecv::enableIRIn ( )
 	// Set pin modes
 	pinMode(irparams.recvpin, INPUT);
 }
+#endif // USE_DEFAULT_ENABLE_IR_IN
 
 //+=============================================================================
 // Enable/disable blinking of pin 13 on IR processing
 //
 void  IRrecv::blink13 (int blinkflag)
 {
+#ifdef BLINKLED
 	irparams.blinkflag = blinkflag;
 	if (blinkflag)  pinMode(BLINKLED, OUTPUT) ;
+#endif
 }
 
 //+=============================================================================
