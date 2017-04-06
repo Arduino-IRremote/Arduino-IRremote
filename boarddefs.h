@@ -20,6 +20,12 @@
 #ifndef boarddefs_h
 #define boarddefs_h
 
+// Define some defaults, that some boards may like to override
+// (This is to avoid negative logic, ! DONT_... is just awkward.)
+#define HAS_AVR_INTERRUPT_H
+#define SENDING_SUPPORTED
+#define USE_DEFAULT_ENABLE_IR_IN
+
 //------------------------------------------------------------------------------
 // Defines for blinking the LED
 //
@@ -39,11 +45,18 @@
 #	define BLINKLED_ON()   (PORTD |= B00000001)
 #	define BLINKLED_OFF()  (PORTD &= B11111110)
 
-// No system LED on ESP32, disable blinking
 #elif defined(ESP32)
-#	define BLINKLED        255
-#	define BLINKLED_ON()   1
-#	define BLINKLED_OFF()  1
+        // No system LED on ESP32, disable blinking by NOT defining BLINKLED
+
+        // avr/interrupt.h is not present
+#       undef HAS_AVR_INTERRUPT_H
+
+        // Sending not implemented
+#       undef SENDING_SUPPORTED#
+
+        // Supply own enbleIRIn
+#       undef USE_DEFAULT_ENABLE_IR_IN
+
 #else
 #	define BLINKLED        13
 #	define BLINKLED_ON()  (PORTB |= B00100000)
@@ -560,12 +573,11 @@
 // way to do this on ESP32 is using the RMT built in driver like in this incomplete library below
 // https://github.com/ExploreEmbedded/ESP32_RMT
 #elif defined(IR_TIMER_USE_ESP32)
-#define TIMER_RESET	     
-#define TIMER_ENABLE_PWM     
-#define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for ESP32 yet");
-#define TIMER_ENABLE_INTR    
-#define TIMER_DISABLE_INTR   
-#define TIMER_INTR_NAME      
+
+#ifdef ISR
+#	undef ISR
+#endif
+#define  ISR(f)  void IRTimer()
 
 //---------------------------------------------------------
 // Unknown Timer
