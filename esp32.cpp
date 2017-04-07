@@ -5,6 +5,11 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
+// "Idiot check"
+#ifdef USE_DEFAULT_ENABLE_IR_IN
+#error Must undef USE_DEFAULT_ENABLE_IR_IN
+#endif
+
 hw_timer_t *timer;
 void IRTimer(); // defined in IRremote.cpp, masqueraded as ISR(TIMER_INTR_NAME)
 
