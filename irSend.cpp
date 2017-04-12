@@ -22,8 +22,20 @@ void  IRsend::sendRaw (const unsigned int buf[],  unsigned int len,  unsigned in
 //
 void  IRsend::mark (unsigned int time)
 {
+#ifdef USE_SOFT_CARRIER
+	long stop = micros() + time - period_off_time;
+	int state = LOW;
+	while (micros() < stop) {
+		state = state == HIGH ? LOW : HIGH;
+		digitalWrite(TIMER_PWM_PIN, state);
+		delayMicroseconds(state == HIGH ? period_on_time : period_off_time);
+	}
+	if (state == HIGH)
+		digitalWrite(TIMER_PWM_PIN, LOW); // to be on the safe side...
+#else
 	TIMER_ENABLE_PWM; // Enable pin 3 PWM output
 	if (time > 0) custom_delay_usec(time);
+#endif
 }
 
 //+=============================================================================
@@ -55,6 +67,11 @@ void  IRsend::space (unsigned int time)
 //
 void  IRsend::enableIROut (int khz)
 {
+#ifdef USE_SOFT_CARRIER
+	period_on_time = 1000 * DUTY_CYCLE / 100 / khz - PULSE_CORRECTION_ON;
+	period_off_time = 1000 * (100-DUTY_CYCLE) / 100 / khz - PULSE_CORRECTION_OFF;
+#endif
+	
 	// Disable the Timer2 Interrupt (which is used for receiving IR)
 	TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
 

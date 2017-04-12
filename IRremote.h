@@ -266,7 +266,7 @@ class IRsend
 		void  mark        		(unsigned int usec) ;
 		void  space       		(unsigned int usec) ;
 		void  sendRaw     		(const unsigned int buf[],  unsigned int len,  unsigned int hz) ;
-
+		
 		//......................................................................
 #		if SEND_RC5
 			void  sendRC5        (unsigned long data,  int nbits) ;
@@ -339,6 +339,12 @@ class IRsend
 #		if SEND_LEGO_PF
 			void  sendLegoPowerFunctions (uint16_t data, bool repeat = true) ;
 #		endif
+
+#ifdef USE_SOFT_CARRIER
+	private:
+		int period_on_time;
+		int period_off_time;
+#endif
 } ;
 
 #endif
