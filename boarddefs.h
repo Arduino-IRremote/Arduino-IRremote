@@ -22,9 +22,24 @@
 
 // Define some defaults, that some boards may like to override
 // (This is to avoid negative logic, ! DONT_... is just awkward.)
+
+// This board has/needs the avr/interrupt.h
 #define HAS_AVR_INTERRUPT_H
+
+// Define if sending is supported
 #define SENDING_SUPPORTED
+
+// If defined, a standard enableIRIn function will be define.
+// Undefine for boards supplying their own.
 #define USE_DEFAULT_ENABLE_IR_IN
+
+// Duty cycle in percent for sent signals. Presently takes effect only with USE_SOFT_CARRIER
+#define DUTY_CYCLE 50
+
+// If USE_SOFT_CARRIER, this amount (in micro seconds) is subtracted from the
+// on- and off-times of the pulses, to compensate for non-zero computation time.
+#define PULSE_CORRECTION_ON 5
+#define PULSE_CORRECTION_OFF 6
 
 //------------------------------------------------------------------------------
 // Defines for blinking the LED
@@ -44,6 +59,20 @@
 #	define BLINKLED        0
 #	define BLINKLED_ON()   (PORTD |= B00000001)
 #	define BLINKLED_OFF()  (PORTD &= B11111110)
+
+#elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+#	define BLINKLED        LED_BUILTIN
+#	define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
+#	define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, HIGH))
+
+#	define USE_SOFT_CARRIER
+#       undef USE_DEFAULT_ENABLE_IR_IN
+
+        // The pin used used for sending. The names is now "semantically drifted".
+#	define TIMER_PWM_PIN 3
+
+#	define PULSE_CORRECTION_ON 5
+#	define PULSE_CORRECTION_OFF 6
 
 #elif defined(ESP32)
         // No system LED on ESP32, disable blinking by NOT defining BLINKLED
@@ -151,6 +180,10 @@
 
 #elif defined(ESP32)
 	#define IR_TIMER_USE_ESP32
+
+#elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+	#define TIMER_PRESCALER_DIV 64
+
 #else
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
@@ -578,6 +611,22 @@
 #	undef ISR
 #endif
 #define  ISR(f)  void IRTimer()
+
+#elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+// use timer 3 hardcoded at this time
+
+#define TIMER_RESET
+#define TIMER_ENABLE_PWM     // Not presently used
+#define TIMER_DISABLE_PWM
+#define TIMER_ENABLE_INTR    NVIC_EnableIRQ(TC3_IRQn) // Not presently used    
+#define TIMER_DISABLE_INTR   NVIC_DisableIRQ(TC3_IRQn)
+#define TIMER_INTR_NAME      TC3_Handler // Not presently used
+#define TIMER_CONFIG_KHZ(f)
+
+#ifdef ISR
+#	undef ISR
+#endif
+#define  ISR(f)  void irs()
 
 //---------------------------------------------------------
 // Unknown Timer
