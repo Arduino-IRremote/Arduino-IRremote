@@ -69,7 +69,7 @@
 #       undef USE_DEFAULT_ENABLE_IR_IN
 
         // The pin used used for sending. The names is now "semantically drifted".
-#	define TIMER_PWM_PIN 3
+#	define SEND_PIN 3
 
 #	define PULSE_CORRECTION_ON 5
 #	define PULSE_CORRECTION_OFF 6
@@ -236,17 +236,17 @@
 
 //-----------------
 #if defined(CORE_OC2B_PIN)
-#	define TIMER_PWM_PIN  CORE_OC2B_PIN  // Teensy
+#	define SEND_PIN  CORE_OC2B_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  9              // Arduino Mega
+#	define SEND_PIN  9              // Arduino Mega
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
 || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
 || defined(__AVR_ATmega164P__)
-#	define TIMER_PWM_PIN  14             // MightyCore
+#	define SEND_PIN  14             // MightyCore
 #else
-#	define TIMER_PWM_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
+#	define SEND_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif					     // ATmega48, ATmega88, ATmega168, ATmega328
 
 //---------------------------------------------------------
@@ -289,22 +289,22 @@
 
 //-----------------
 #if defined(CORE_OC1A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC1A_PIN  // Teensy
+#	define SEND_PIN  CORE_OC1A_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  11             // Arduino Mega
+#	define SEND_PIN  11             // Arduino Mega
 #elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
-#	define TIMER_PWM_PIN  13	     // MegaCore
+#	define SEND_PIN  13	     // MegaCore
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
 || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
 || defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
 || defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__)
-#	define TIMER_PWM_PIN  13             // MightyCore
+#	define SEND_PIN  13             // MightyCore
 #elif defined(__AVR_ATtiny84__)
-# 	define TIMER_PWM_PIN  6
+# 	define SEND_PIN  6
 #else
-#	define TIMER_PWM_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, etc
+#	define SEND_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif					     // ATmega48, ATmega88, ATmega168, ATmega328
 
 //---------------------------------------------------------
@@ -336,11 +336,11 @@
 
 //-----------------
 #if defined(CORE_OC3A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC3A_PIN  // Teensy
+#	define SEND_PIN  CORE_OC3A_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  5              // Arduino Mega
+#	define SEND_PIN  5              // Arduino Mega
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
-#	define TIMER_PWM_PIN  6              // MightyCore
+#	define SEND_PIN  6              // MightyCore
 #else
 #	error "Please add OC3A pin number here\n"
 #endif
@@ -384,9 +384,9 @@
 
 //-----------------
 #if defined(CORE_OC4A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC4A_PIN  // Teensy
+#	define SEND_PIN  CORE_OC4A_PIN  // Teensy
 #elif defined(__AVR_ATmega32U4__)
-#	define TIMER_PWM_PIN  13             // Leonardo
+#	define SEND_PIN  13             // Leonardo
 #else
 #	error "Please add OC4A pin number here\n"
 #endif
@@ -420,9 +420,9 @@
 
 //-----------------
 #if defined(CORE_OC4A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC4A_PIN
+#	define SEND_PIN  CORE_OC4A_PIN
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  6  // Arduino Mega
+#	define SEND_PIN  6  // Arduino Mega
 #else
 #	error "Please add OC4A pin number here\n"
 #endif
@@ -456,9 +456,9 @@
 
 //-----------------
 #if defined(CORE_OC5A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC5A_PIN
+#	define SEND_PIN  CORE_OC5A_PIN
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  46  // Arduino Mega
+#	define SEND_PIN  46  // Arduino Mega
 #else
 #	error "Please add OC5A pin number here\n"
 #endif
@@ -525,7 +525,7 @@
 	CMT_MSC    = 0x03;            \
 })
 
-#define TIMER_PWM_PIN  5
+#define SEND_PIN  5
 
 // defines for TPM1 timer on Teensy-LC
 #elif defined(IR_USE_TIMER_TPM1)
@@ -555,7 +555,7 @@
 	FTM1_C0V = 0;                                \
 	FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
 })
-#define TIMER_PWM_PIN        16
+#define SEND_PIN        16
 
 // defines for timer_tiny0 (8 bits)
 #elif defined(IR_USE_TIMER_TINY0)
@@ -589,7 +589,7 @@
 })
 #endif
 
-#define TIMER_PWM_PIN        1  /* ATtiny85 */
+#define SEND_PIN        1  /* ATtiny85 */
 
 //---------------------------------------------------------
 // ESP32 (ESP8266 should likely be added here too)
