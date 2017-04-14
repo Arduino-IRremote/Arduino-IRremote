@@ -68,8 +68,8 @@
 #	define USE_SOFT_CARRIER
 #       undef USE_DEFAULT_ENABLE_IR_IN
 
-        // The pin used used for sending. The names is now "semantically drifted".
-#	define SEND_PIN 3
+        // The default pin used used for sending.
+#	define SEND_PIN 9
 
 #	define PULSE_CORRECTION_ON 5
 #	define PULSE_CORRECTION_OFF 6

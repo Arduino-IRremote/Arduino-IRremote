@@ -259,7 +259,18 @@ class IRrecv
 class IRsend
 {
 	public:
-		IRsend () { }
+#ifdef USE_SOFT_CARRIER
+
+		IRsend(int pin = SEND_PIN)
+		{
+			sendPin = pin;
+		}
+#else
+
+		IRsend()
+		{
+		}
+#endif
 
 		void  custom_delay_usec (unsigned long uSecs);
 		void  enableIROut 		(int khz) ;
@@ -342,8 +353,12 @@ class IRsend
 
 #ifdef USE_SOFT_CARRIER
 	private:
+		int sendPin;
+
 		int period_on_time;
 		int period_off_time;
+#else
+		const int sendPin = SEND_PIN;
 #endif
 } ;
 

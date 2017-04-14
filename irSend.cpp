@@ -27,11 +27,11 @@ void  IRsend::mark (unsigned int time)
 	int state = LOW;
 	while (micros() < stop) {
 		state = state == HIGH ? LOW : HIGH;
-		digitalWrite(SEND_PIN, state);
+		digitalWrite(sendPin, state);
 		delayMicroseconds(state == HIGH ? period_on_time : period_off_time);
 	}
 	if (state == HIGH)
-		digitalWrite(SEND_PIN, LOW); // to be on the safe side...
+		digitalWrite(sendPin, LOW); // to be on the safe side...
 #else
 	TIMER_ENABLE_PWM; // Enable pin 3 PWM output
 	if (time > 0) custom_delay_usec(time);
@@ -75,8 +75,8 @@ void  IRsend::enableIROut (int khz)
 	// Disable the Timer2 Interrupt (which is used for receiving IR)
 	TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
 
-	pinMode(SEND_PIN, OUTPUT);
-	digitalWrite(SEND_PIN, LOW); // When not sending PWM, we want it low
+	pinMode(sendPin, OUTPUT);
+	digitalWrite(sendPin, LOW); // When not sending PWM, we want it low
 
 	// COM2A = 00: disconnect OC2A
 	// COM2B = 00: disconnect OC2B; to send signal set to 10: OC2B non-inverted
