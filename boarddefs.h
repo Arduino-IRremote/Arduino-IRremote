@@ -37,9 +37,8 @@
 #define DUTY_CYCLE 50
 
 // If USE_SOFT_CARRIER, this amount (in micro seconds) is subtracted from the
-// on- and off-times of the pulses, to compensate for non-zero computation time.
-#define PULSE_CORRECTION_ON 5
-#define PULSE_CORRECTION_OFF 6
+// on-time of the pulses.
+#define PULSE_CORRECTION 3
 
 //------------------------------------------------------------------------------
 // Defines for blinking the LED
@@ -70,9 +69,6 @@
 
         // The default pin used used for sending.
 #	define SEND_PIN 9
-
-#	define PULSE_CORRECTION_ON 5
-#	define PULSE_CORRECTION_OFF 6
 
 #elif defined(ESP32)
         // No system LED on ESP32, disable blinking by NOT defining BLINKLED

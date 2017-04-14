@@ -355,8 +355,8 @@ class IRsend
 	private:
 		int sendPin;
 
-		int period_on_time;
-		int period_off_time;
+		unsigned int periodTime;
+		unsigned int periodOnTime;
 #else
 		const int sendPin = SEND_PIN;
 #endif

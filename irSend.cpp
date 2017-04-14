@@ -23,15 +23,28 @@ void  IRsend::sendRaw (const unsigned int buf[],  unsigned int len,  unsigned in
 void  IRsend::mark (unsigned int time)
 {
 #ifdef USE_SOFT_CARRIER
-	long stop = micros() + time - period_off_time;
-	int state = LOW;
+	unsigned long start = micros();
+	unsigned long stop = start + time;
+	if (stop < start)
+		// Counter wrap-around, happens very seldomly, but CAN happen.
+		// Just give up instead of possibly damaging the hardware.
+		return;
+
+	unsigned int count = 0U;
 	while (micros() < stop) {
-		state = state == HIGH ? LOW : HIGH;
-		digitalWrite(sendPin, state);
-		delayMicroseconds(state == HIGH ? period_on_time : period_off_time);
+		count++;
+		unsigned long now = micros();
+		int onTime = min(periodOnTime, (int) (stop - now));
+		if (onTime > 0) {
+			digitalWrite(sendPin, HIGH);
+			delayMicroseconds((unsigned) onTime);
+		}
+		digitalWrite(sendPin, LOW);
+		unsigned long targetTime = min(start + count * periodTime, stop);
+		int timeOff = (int) (targetTime - micros());
+		if (timeOff > 0)
+			delayMicroseconds((unsigned) timeOff);
 	}
-	if (state == HIGH)
-		digitalWrite(sendPin, LOW); // to be on the safe side...
 #else
 	TIMER_ENABLE_PWM; // Enable pin 3 PWM output
 	if (time > 0) custom_delay_usec(time);
@@ -68,8 +81,8 @@ void  IRsend::space (unsigned int time)
 void  IRsend::enableIROut (int khz)
 {
 #ifdef USE_SOFT_CARRIER
-	period_on_time = 1000 * DUTY_CYCLE / 100 / khz - PULSE_CORRECTION_ON;
-	period_off_time = 1000 * (100-DUTY_CYCLE) / 100 / khz - PULSE_CORRECTION_OFF;
+	periodTime = 1000U / khz;
+	periodOnTime = periodTime * DUTY_CYCLE / 100U - PULSE_CORRECTION;
 #endif
 	
 	// Disable the Timer2 Interrupt (which is used for receiving IR)
