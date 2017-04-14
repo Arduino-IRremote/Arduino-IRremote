@@ -607,6 +607,8 @@
 // https://github.com/ExploreEmbedded/ESP32_RMT
 #elif defined(IR_TIMER_USE_ESP32)
 
+#define TIMER_RESET
+
 #ifdef ISR
 #	undef ISR
 #endif
