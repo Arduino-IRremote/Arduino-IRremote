@@ -40,6 +40,12 @@
 // on-time of the pulses.
 #define PULSE_CORRECTION 3
 
+// digitalWrite is supposed to be slow. If this is an issue, define faster,
+// board-dependent versions of these macros SENDPIN_ON(pin) and SENDPIN_OFF(pin).
+// Portable, possibly slow, default definitions are given at the end of this file.
+// If defining new versions, feel free to ignore the pin argument if it
+// is not configurable on the current board.
+
 //------------------------------------------------------------------------------
 // Defines for blinking the LED
 //
@@ -631,6 +637,15 @@
 //
 #else
 #	error "Internal code configuration error, no known IR_USE_TIMER# defined\n"
+#endif
+
+// Provide default definitions, portable but possibly slower than necessary.
+#ifndef SENDPIN_ON
+#define SENDPIN_ON(pin)  digitalWrite(pin, HIGH)
+#endif
+	
+#ifndef SENDPIN_OFF
+#define SENDPIN_OFF(pin) digitalWrite(pin, LOW)
 #endif
 
 #endif // ! boarddefs_h

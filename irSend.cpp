@@ -36,10 +36,10 @@ void  IRsend::mark (unsigned int time)
 		unsigned long now = micros();
 		int onTime = min(periodOnTime, (int) (stop - now));
 		if (onTime > 0) {
-			digitalWrite(sendPin, HIGH);
+			SENDPIN_ON(sendPin);
 			delayMicroseconds((unsigned) onTime);
 		}
-		digitalWrite(sendPin, LOW);
+		SENDPIN_OFF(sendPin);
 		unsigned long targetTime = min(start + count * periodTime, stop);
 		int timeOff = (int) (targetTime - micros());
 		if (timeOff > 0)
@@ -89,7 +89,7 @@ void  IRsend::enableIROut (int khz)
 	TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
 
 	pinMode(sendPin, OUTPUT);
-	digitalWrite(sendPin, LOW); // When not sending PWM, we want it low
+	SENDPIN_OFF(sendPin); // When not sending, we want it low
 
 	// COM2A = 00: disconnect OC2A
 	// COM2B = 00: disconnect OC2B; to send signal set to 10: OC2B non-inverted
