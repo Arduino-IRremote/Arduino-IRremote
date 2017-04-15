@@ -62,7 +62,7 @@
 #elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
 #	define BLINKLED        LED_BUILTIN
 #	define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
-#	define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, HIGH))
+#	define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
 
 #	define USE_SOFT_CARRIER
 #       undef USE_DEFAULT_ENABLE_IR_IN
