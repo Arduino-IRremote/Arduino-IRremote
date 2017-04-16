@@ -357,6 +357,10 @@ class IRsend
 
 		unsigned int periodTime;
 		unsigned int periodOnTime;
+		
+		void sleepMicros(unsigned long us);
+		void sleepUntilMicros(unsigned long targetTime);
+
 #else
 		const int sendPin = SEND_PIN;
 #endif

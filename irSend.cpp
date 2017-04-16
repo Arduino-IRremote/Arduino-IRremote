@@ -16,34 +16,50 @@ void  IRsend::sendRaw (const unsigned int buf[],  unsigned int len,  unsigned in
 	space(0);  // Always end with the LED off
 }
 
+void inline IRsend::sleepMicros(unsigned long us)
+{
+#ifdef USE_SPIN_WAIT
+	sleepUntilMicros(micros() + us);
+#else
+	if (us > 0U) // Is this necessary? (Official docu https://www.arduino.cc/en/Reference/DelayMicroseconds does not tell.)
+		delayMicroseconds((unsigned int) us);
+#endif
+}
+
+void inline IRsend::sleepUntilMicros(unsigned long targetTime)
+{
+#ifdef USE_SPIN_WAIT
+	while (micros() < targetTime)
+		;
+#else
+	sleepMicros(targetTime - micros());
+#endif
+}
+
 //+=============================================================================
 // Sends an IR mark for the specified number of microseconds.
 // The mark output is modulated at the PWM frequency.
 //
-void  IRsend::mark (unsigned int time)
+
+void IRsend::mark(unsigned int time)
 {
 #ifdef USE_SOFT_CARRIER
 	unsigned long start = micros();
 	unsigned long stop = start + time;
-	if (stop < start)
+	if (stop + periodTime < start)
 		// Counter wrap-around, happens very seldomly, but CAN happen.
 		// Just give up instead of possibly damaging the hardware.
 		return;
 
-	unsigned int count = 0U;
-	while (micros() < stop) {
-		count++;
-		unsigned long now = micros();
-		int onTime = min(periodOnTime, (int) (stop - now));
-		if (onTime > 0) {
-			SENDPIN_ON(sendPin);
-			delayMicroseconds((unsigned) onTime);
-		}
+	unsigned long nextPeriodEnding = start;
+	unsigned long now = micros();
+	while (now < stop + periodOnTime / 2) {
+		SENDPIN_ON(sendPin);
+		sleepMicros(periodOnTime);
 		SENDPIN_OFF(sendPin);
-		unsigned long targetTime = min(start + count * periodTime, stop);
-		int timeOff = (int) (targetTime - micros());
-		if (timeOff > 0)
-			delayMicroseconds((unsigned) timeOff);
+		nextPeriodEnding += periodTime;
+		sleepUntilMicros(nextPeriodEnding);
+		now = micros();
 	}
 #else
 	TIMER_ENABLE_PWM; // Enable pin 3 PWM output
@@ -81,7 +97,7 @@ void  IRsend::space (unsigned int time)
 void  IRsend::enableIROut (int khz)
 {
 #ifdef USE_SOFT_CARRIER
-	periodTime = 1000U / khz;
+	periodTime = (1000U + khz/2) / khz; // = 1000/khz + 1/2 = round(1000.0/khz)
 	periodOnTime = periodTime * DUTY_CYCLE / 100U - PULSE_CORRECTION;
 #endif
 	
