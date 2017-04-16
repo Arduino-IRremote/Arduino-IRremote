@@ -221,7 +221,7 @@
 #if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8515__) \
 || defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) \
 || defined(__AVR_ATmega32__) || defined(__AVR_ATmega64__) \
-|| defined(__AVR_ATmega128__)
+|| defined(__AVR_ATmega128__) || defined(__AVR_ATmega162__)
 #	define TIMER_ENABLE_INTR   (TIMSK |= _BV(OCIE1A))
 #	define TIMER_DISABLE_INTR  (TIMSK &= ~_BV(OCIE1A))
 #else
