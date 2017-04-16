@@ -22,9 +22,10 @@ Tutorials and more information will be made available on [the official homepage]
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: @PaulStoffregen (Teensy Team)
 - Sanguino
 - ATmega8, 48, 88, 168, 328
-- ATmega8535, 16, 32, 164, 324, 644, 1284,
+- ATmega8535, 16, 32, 164, 324, 644, 1284
+- ATmega8515, 162
 - ATmega64, 128
-- ATtiny 84 / 85
+- ATtiny 84, 85
 - ESP32 (receive only)
 - ESP8266 is supported in a fork based on an old codebase that isn't as recent, but it works reasonably well given that perfectly timed sub millisecond interrupts are different on that chip. See https://github.com/markszabo/IRremoteESP8266
 
@@ -42,7 +43,8 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
 | [ATmega164, ATmega324, ATmega644](https://github.com/MCUdude/MightyCore) | 13, **14**          | 1, **2**          |
 | [ATmega8535 ATmega16, ATmega32](https://github.com/MCUdude/MightyCore)   | **13**              | **1**             |
-| [ATmega64, ATmega128](https://github.com/MCUdude/MegaCore)               | **13**              | **1**             |
+| [ATmega8515, ATmega162](https://github.com/MCUdude/MajorCore)            | **13**              | **1**             |
+| [ATmega64, ATmega128, ATmega1281, ATmega2561](https://github.com/MCUdude/MegaCore) | **13**    | **1**             |
 | ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
 | [ESP32](http://esp32.net/)                                               | N/A (not supported) | **1**             |
 | [Teensy 1.0](https://www.pjrc.com/teensy/)                               | **17**              | **1**             |
