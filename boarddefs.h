@@ -218,9 +218,10 @@
 #define TIMER_DISABLE_PWM  (TCCR1A &= ~(_BV(COM1A1)))
 
 //-----------------
-#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8535__) \
-|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__) \
-|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8515__) \
+|| defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) \
+|| defined(__AVR_ATmega32__) || defined(__AVR_ATmega64__) \
+|| defined(__AVR_ATmega128__)
 #	define TIMER_ENABLE_INTR   (TIMSK |= _BV(OCIE1A))
 #	define TIMER_DISABLE_INTR  (TIMSK &= ~_BV(OCIE1A))
 #else
@@ -251,7 +252,8 @@
 #	define TIMER_PWM_PIN  CORE_OC1A_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  11             // Arduino Mega
-#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
+#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) \
+|| defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2561__)
 #	define TIMER_PWM_PIN  13	     // MegaCore
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
@@ -260,6 +262,8 @@
 || defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
 || defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__)
 #	define TIMER_PWM_PIN  13             // MightyCore
+#elif defined(__AVR_ATmega8515__) || defined(__AVR_ATmega162__) 
+#	define TIMER_PWM_PIN  13	     // MajorCore
 #elif defined(__AVR_ATtiny84__)
 # 	define TIMER_PWM_PIN  6
 #else
