@@ -16,6 +16,7 @@ void  IRsend::sendRaw (const unsigned int buf[],  unsigned int len,  unsigned in
 	space(0);  // Always end with the LED off
 }
 
+#ifdef USE_SOFT_CARRIER
 void inline IRsend::sleepMicros(unsigned long us)
 {
 #ifdef USE_SPIN_WAIT
@@ -35,6 +36,7 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime)
 	sleepMicros(targetTime - micros());
 #endif
 }
+#endif // USE_SOFT_CARRIER
 
 //+=============================================================================
 // Sends an IR mark for the specified number of microseconds.
