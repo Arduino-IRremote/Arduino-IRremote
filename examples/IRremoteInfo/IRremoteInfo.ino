@@ -92,7 +92,7 @@ void dumpPlatform() {
 
 #if defined(__AVR_ATmega1280__)
   Serial.println(F("Arduino Mega1280"));
-#elif  defined(__AVR_ATmega2560__)
+#elif defined(__AVR_ATmega2560__)
   Serial.println(F("Arduino Mega2560"));
 #elif defined(__AVR_AT90USB162__)
   Serial.println(F("Teensy 1.0 / AT90USB162"));
@@ -107,14 +107,20 @@ void dumpPlatform() {
   Serial.println(F("Teensy++ 1.0 / AT90USB646"));
 #elif defined(__AVR_AT90USB1286__)
   Serial.println(F("Teensy++ 2.0 / AT90USB1286"));
+#elif defined(__AVR_ATmega2561__)
+  Serial.println(F("ATmega2561"));
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
   Serial.println(F("ATmega1284"));
+#elif defined(__AVR_ATmega1281__)
+  Serial.println(F("ATmega1281"));
 #elif defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__)
   Serial.println(F("ATmega644"));
 #elif defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) || defined(__AVR_ATmega324PA__)
   Serial.println(F("ATmega324")); 
 #elif defined(__AVR_ATmega164A__) || defined(__AVR_ATmega164P__)
   Serial.println(F("ATmega164"));
+#elif defined(__AVR_ATmega162__)
+  Serial.println(F("ATmega162"));
 #elif defined(__AVR_ATmega128__)
   Serial.println(F("ATmega128"));
 #elif defined(__AVR_ATmega88__) || defined(__AVR_ATmega88P__)
@@ -128,7 +134,9 @@ void dumpPlatform() {
 #elif defined(__AVR_ATmega16__)
   Serial.println(F("ATmega16"));
 #elif defined(__AVR_ATmega8535__)
-  Serial.println(F("ATmega8535"));  
+  Serial.println(F("ATmega8535"));
+#elif defined(__AVR_ATmega8515__)
+  Serial.println(F("ATmega8515"));   
 #elif defined(__AVR_ATmega8__)
   Serial.println(F("Atmega8"));
 #elif defined(__AVR_ATtiny84__)
