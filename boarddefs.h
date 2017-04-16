@@ -115,16 +115,21 @@
 || defined(__AVR_ATmega164P__)
 	//#define IR_USE_TIMER1   // tx = pin 13
 	#define IR_USE_TIMER2     // tx = pin 14
-	
-//MegaCore - ATmega64, ATmega128
-#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
- 	#define IR_USE_TIMER1     // tx = pin 13
 
 // MightyCore - ATmega8535, ATmega16, ATmega32
 #elif defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
  	#define IR_USE_TIMER1     // tx = pin 13
 
-// Atmega8
+// MajorCore - ATmega8515, ATmega12
+#elif defined(__AVR_ATmega8515__) || defined(__AVR_ATmega162__)
+ 	#define IR_USE_TIMER1     // tx = pin 13
+	//#define IR_USE_TIMER3   // tx = pin 12 - ATmega162 only
+
+//MegaCore - ATmega64, ATmega128, ATmega1281, ATmega2561
+#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) || defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2560__)
+ 	#define IR_USE_TIMER1     // tx = pin 13
+
+// ATmega8
 #elif defined(__AVR_ATmega8__)
 	#define IR_USE_TIMER1     // tx = pin 9
 
