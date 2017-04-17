@@ -21,7 +21,7 @@
 void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 {
 	// Set IR carrier frequency
-	enableIROut(35);
+	enableIROut(37);
 
 	// Header
 	mark(PANASONIC_HDR_MARK);
