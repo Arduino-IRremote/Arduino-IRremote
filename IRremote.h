@@ -28,56 +28,59 @@
 // Each protocol you include costs memory and, during decode, costs time
 // Disable (set to 0) all the protocols you do not need/want!
 //
-#define DECODE_RC5           1
-#define SEND_RC5             1
+#define DECODE_RC5           0
+#define SEND_RC5             0
 
-#define DECODE_RC6           1
-#define SEND_RC6             1
+#define DECODE_RC6           0
+#define SEND_RC6             0
 
-#define DECODE_NEC           1
-#define SEND_NEC             1
+#define DECODE_NEC           0
+#define SEND_NEC             0
 
-#define DECODE_SONY          1
-#define SEND_SONY            1
+#define DECODE_SONY          0
+#define SEND_SONY            0
 
-#define DECODE_PANASONIC     1
-#define SEND_PANASONIC       1
+#define DECODE_PANASONIC     0
+#define SEND_PANASONIC       0
 
-#define DECODE_JVC           1
-#define SEND_JVC             1
+#define DECODE_JVC           0
+#define SEND_JVC             0
 
-#define DECODE_SAMSUNG       1
-#define SEND_SAMSUNG         1
+#define DECODE_SAMSUNG       0
+#define SEND_SAMSUNG         0
 
-#define DECODE_WHYNTER       1
-#define SEND_WHYNTER         1
+#define DECODE_WHYNTER       0
+#define SEND_WHYNTER         0
 
-#define DECODE_AIWA_RC_T501  1
-#define SEND_AIWA_RC_T501    1
+#define DECODE_AIWA_RC_T501  0
+#define SEND_AIWA_RC_T501    0
 
-#define DECODE_LG            1
-#define SEND_LG              1
+#define DECODE_LG            0
+#define SEND_LG              0
 
-#define DECODE_SANYO         1
+#define DECODE_SANYO         0
 #define SEND_SANYO           0 // NOT WRITTEN
 
-#define DECODE_MITSUBISHI    1
+#define DECODE_MITSUBISHI    0
 #define SEND_MITSUBISHI      0 // NOT WRITTEN
 
 #define DECODE_DISH          0 // NOT WRITTEN
-#define SEND_DISH            1
+#define SEND_DISH            0
 
 #define DECODE_SHARP         0 // NOT WRITTEN
-#define SEND_SHARP           1
+#define SEND_SHARP           0
 
-#define DECODE_DENON         1
-#define SEND_DENON           1
+#define DECODE_DENON         0
+#define SEND_DENON           0
 
 #define DECODE_PRONTO        0 // This function doe not logically make sense
-#define SEND_PRONTO          1
+#define SEND_PRONTO          0
 
 #define DECODE_LEGO_PF       0 // NOT WRITTEN
-#define SEND_LEGO_PF         1
+#define SEND_LEGO_PF         0
+
+#define DECODE_ELECTRARC3    1
+#define SEND_ELECTRARC3      1
 
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
@@ -119,6 +122,7 @@ typedef
 		DENON,
 		PRONTO,
 		LEGO_PF,
+		ELECTRARC3,
 	}
 decode_type_t;
 
@@ -153,7 +157,11 @@ class decode_results
 	public:
 		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
 		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
+#		if DECODE_ELECTRARC3
+		unsigned long long     value;        // Electra RC3 value is 34-bits
+#		else
 		unsigned long          value;        // Decoded value [max 32-bits]
+#		endif
 		int                    bits;         // Number of bits in decoded value
 		volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
 		int                    rawlen;       // Number of records in rawbuf
@@ -247,9 +255,13 @@ class IRrecv
 #		if DECODE_DENON
 			bool  decodeDenon (decode_results *results) ;
 #		endif
-//......................................................................
+		//......................................................................
 #		if DECODE_LEGO_PF
 			bool  decodeLegoPowerFunctions (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_ELECTRARC3
+			bool  decodeElectraRC3 (decode_results *results) ;
 #		endif
 } ;
 
@@ -335,9 +347,13 @@ class IRsend
 #		if SEND_PRONTO
 			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
 #		endif
-//......................................................................
+		//......................................................................
 #		if SEND_LEGO_PF
 			void  sendLegoPowerFunctions (uint16_t data, bool repeat = true) ;
+#		endif
+		//......................................................................
+#		if SEND_ELECTRARC3
+			void  sendElectraRC3 (unsigned long long data,  int nbits) ;
 #		endif
 } ;
 

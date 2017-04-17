@@ -40,7 +40,11 @@
 //------------------------------------------------------------------------------
 // Information for the Interrupt Service Routine
 //
-#define RAWBUF  101  // Maximum length of raw duration buffer
+#if DECODE_ELECTRARC3
+# define RAWBUF  212  // For the manchester code used by Electra RC3 to represent 34-bits, the rawbuf can have a length of 211
+#else
+# define RAWBUF  101  // Maximum length of raw duration buffer
+#endif
 
 typedef
 	struct {
