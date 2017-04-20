@@ -72,7 +72,7 @@
 
 #	define USE_SOFT_CARRIER
 	// Define to use spin wait instead of delayMicros()
-#	define USE_SPIN_WAIT
+//#	define USE_SPIN_WAIT
 #       undef USE_DEFAULT_ENABLE_IR_IN
 
         // The default pin used used for sending.

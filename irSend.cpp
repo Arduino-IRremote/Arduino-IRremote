@@ -55,7 +55,7 @@ void IRsend::mark(unsigned int time)
 
 	unsigned long nextPeriodEnding = start;
 	unsigned long now = micros();
-	while (now < stop + periodOnTime / 2) {
+	while (now < stop) {
 		SENDPIN_ON(sendPin);
 		sleepMicros(periodOnTime);
 		SENDPIN_OFF(sendPin);
