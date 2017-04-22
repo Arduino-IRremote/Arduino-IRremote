@@ -75,3 +75,7 @@ Check [here](Contributors.md)
 
 ## Copyright
 Copyright 2009-2012 Ken Shirriff
+
+## FAQ
+- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)  
+Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic arduinos. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
