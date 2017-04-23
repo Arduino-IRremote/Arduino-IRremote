@@ -33,7 +33,9 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime)
 	while (micros() < targetTime)
 		;
 #else
-	sleepMicros(targetTime - micros());
+        unsigned long now = micros();
+        if (now < targetTime)
+                sleepMicros(targetTime - now);
 #endif
 }
 #endif // USE_SOFT_CARRIER
