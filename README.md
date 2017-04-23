@@ -17,6 +17,12 @@ Tutorials and more information will be made available on [the official homepage]
 4. Move the "IRremote" folder that has been extracted to your libraries directory.
 5. Make sure to delete Arduino_Root/libraries/RobotIRremote. Where Arduino_Root refers to the install directory of Arduino. The library RobotIRremote has similar definitions to IRremote and causes errors.
 
+
+## FAQ
+- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)  
+Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic arduinos. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
+
+
 ## Supported Boards
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: @PaulStoffregen (Teensy Team)
@@ -75,7 +81,3 @@ Check [here](Contributors.md)
 
 ## Copyright
 Copyright 2009-2012 Ken Shirriff
-
-## FAQ
-- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)  
-Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic arduinos. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
