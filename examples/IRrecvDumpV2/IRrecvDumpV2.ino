@@ -56,6 +56,7 @@ void  encoding (decode_results *results)
     case AIWA_RC_T501: Serial.print("AIWA_RC_T501");  break ;
     case PANASONIC:    Serial.print("PANASONIC");     break ;
     case DENON:        Serial.print("Denon");         break ;
+    case DIRECTV:      Serial.print("DIRECTV");       break ;
   }
 }
 
@@ -66,7 +67,7 @@ void  dumpInfo (decode_results *results)
 {
   // Check if the buffer overflowed
   if (results->overflow) {
-    Serial.println("IR code too long. Edit IRremoteInt.h and increase RAWBUF");
+    Serial.println("IR code too long. Edit IRremoteInt.h and increase RAWLEN");
     return;
   }
 

@@ -65,6 +65,9 @@ void dump(decode_results *results) {
   else if (results->decode_type == WHYNTER) {
     Serial.print("Decoded Whynter: ");
   }
+    else if (results->decode_type == DIRECTV) {
+    Serial.print("Decoded DirecTV: ");
+  }
   Serial.print(results->value, HEX);
   Serial.print(" (");
   Serial.print(results->bits, DEC);
