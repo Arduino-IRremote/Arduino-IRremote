@@ -1,3 +1,9 @@
+## 2.3.3 - 2017/03/31
+- Added ESP32 IR receive support [PR #427](https://github.com/z3t0/Arduino-IRremote/pull/425)
+
+## 2.2.3 - 2017/03/27
+- Fix calculation of pause length in LEGO PF protocol [PR #427](https://github.com/z3t0/Arduino-IRremote/pull/427)
+
 ## 2.2.2 - 2017/01/20
 - Fixed naming bug [PR #398](https://github.com/z3t0/Arduino-IRremote/pull/398)
 
