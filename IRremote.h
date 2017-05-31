@@ -252,6 +252,62 @@ class IRrecv
 			bool  decodeLegoPowerFunctions (decode_results *results) ;
 #		endif
 } ;
+//class added to create second type working on pin 9 (added by khaireddine hlali) 
+class IRsend1
+{
+public:
+  IRsend1(){}
+  void sendWhynter(unsigned long data, int nbits);
+  void sendNEC(unsigned long data, int nbits);
+  void sendSony(unsigned long data, int nbits);
+  // Neither Sanyo nor Mitsubishi send is implemented yet
+  //  void sendSanyo(unsigned long data, int nbits);
+  //  void sendMitsubishi(unsigned long data, int nbits);
+  void sendRaw(unsigned int buf[], int len, int hz);
+  void sendRC5(unsigned long data, int nbits);
+  void sendRC6(unsigned long data, int nbits);
+  void sendDISH(unsigned long data, int nbits);
+  void sendSharp(unsigned int address, unsigned int command);
+  void sendSharpRaw(unsigned long data, int nbits);
+  void sendPanasonic(unsigned int address, unsigned long data);
+  void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
+  // private:
+  void sendSAMSUNG(unsigned long data, int nbits);
+  
+  void enableIROut1(int khz);
+  VIRTUAL void mark1(int usec);
+  VIRTUAL void space1(int usec);
+} ;
+
+//class added to create third type working on pin 10 (added by khaireddine hlali) 
+
+class IRsend2
+{
+public:
+  IRsend2(){}
+  void sendWhynter(unsigned long data, int nbits);
+  void sendNEC(unsigned long data, int nbits);
+  void sendSony(unsigned long data, int nbits);
+  // Neither Sanyo nor Mitsubishi send is implemented yet
+  //  void sendSanyo(unsigned long data, int nbits);
+  //  void sendMitsubishi(unsigned long data, int nbits);
+  void sendRaw(unsigned int buf[], int len, int hz);
+  void sendRC5(unsigned long data, int nbits);
+  void sendRC6(unsigned long data, int nbits);
+  void sendDISH(unsigned long data, int nbits);
+  void sendSharp(unsigned int address, unsigned int command);
+  void sendSharpRaw(unsigned long data, int nbits);
+  void sendPanasonic(unsigned int address, unsigned long data);
+  void sendJVC(unsigned long data, int nbits, int repeat); // *Note instead of sending the REPEAT constant if you want the JVC repeat signal sent, send the original code value and change the repeat argument from 0 to 1. JVC protocol repeats by skipping the header NOT by sending a separate code value like NEC does.
+  // private:
+  void sendSAMSUNG(unsigned long data, int nbits);
+
+  
+  
+  void enableIROut2(int khz);
+  VIRTUAL void mark2(int usec);
+  VIRTUAL void space2(int usec);
+} ;
 
 //------------------------------------------------------------------------------
 // Main class for sending IR
