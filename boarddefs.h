@@ -44,6 +44,12 @@
 #	define BLINKLED        255
 #	define BLINKLED_ON()   1
 #	define BLINKLED_OFF()  1
+
+#elif defined(CURIE_IDE) || defined(__ARDUINO_ARC__) || defined(ARDUINO_ARCH_ARC32)
+#	define BLINKLED        13
+#	define BLINKLED_ON()   (digitalWrite(13, HIGH))
+#	define BLINKLED_OFF()  (digitalWrite(13, LOW))
+
 #else
 #	define BLINKLED        13
 #	define BLINKLED_ON()  (PORTB |= B00100000)
@@ -138,6 +144,10 @@
 
 #elif defined(ESP32)
 	#define IR_TIMER_USE_ESP32
+
+#elif defined(CURIE_IDE) || defined(__ARDUINO_ARC__) || defined(ARDUINO_ARCH_ARC32)
+  #define IR_TIMER_USE_CURIE
+
 #else
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
@@ -562,11 +572,19 @@
 #elif defined(IR_TIMER_USE_ESP32)
 #define TIMER_RESET	     
 #define TIMER_ENABLE_PWM     
-#define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for ESP32 yet");
+#define TIMER_DISABLE_PWM   Serial.println(F("IRsend not implemented for ESP32 yet"));
 #define TIMER_ENABLE_INTR    
 #define TIMER_DISABLE_INTR   
 #define TIMER_INTR_NAME      
 
+#elif defined(IR_TIMER_USE_CURIE)
+
+#define TIMER_RESET
+#define TIMER_ENABLE_PWM
+#define TIMER_DISABLE_PWM   Serial.println(F("IRsend not implemented for curie yet"));
+#define TIMER_ENABLE_INTR
+#define TIMER_DISABLE_INTR
+#define TIMER_INTR_NAME
 //---------------------------------------------------------
 // Unknown Timer
 //

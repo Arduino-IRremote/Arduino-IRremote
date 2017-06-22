@@ -24,7 +24,7 @@
 #	include "IRremoteInt.h"
 #undef IR_GLOBAL
 
-#ifndef IR_TIMER_USE_ESP32
+#if (!defined(IR_TIMER_USE_ESP32) && !defined(IR_TIMER_USE_CURIE))
 #include <avr/interrupt.h>
 #endif
 
@@ -123,7 +123,7 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 // As soon as first MARK arrives:
 //   Gap width is recorded; Ready is cleared; New logging starts
 //
-#ifdef IR_TIMER_USE_ESP32
+#if (defined(IR_TIMER_USE_ESP32) || defined(IR_TIMER_USE_CURIE))
 void IRTimer()
 #else
 ISR (TIMER_INTR_NAME)
