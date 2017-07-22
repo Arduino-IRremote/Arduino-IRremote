@@ -54,8 +54,10 @@ void  IRsend::space (unsigned int time)
 //
 void  IRsend::enableIROut (int khz)
 {
-// FIXME: implement ESP32 support, see IR_TIMER_USE_ESP32 in boarddefs.h
-#ifndef ESP32
+#ifdef ESP32
+         ledcSetup(TIMER_CHANNEL, khz*1000, TIMER_LENGHT); // channel, freq, timerLength		 
+         ledcWrite(TIMER_CHANNEL, (1<<(TIMER_LENGHT-1))); //50% Duty Cycle
+#else
 	// Disable the Timer2 Interrupt (which is used for receiving IR)
 	TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
 
