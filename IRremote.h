@@ -259,7 +259,18 @@ class IRrecv
 class IRsend
 {
 	public:
-		IRsend () { }
+#ifdef USE_SOFT_CARRIER
+
+		IRsend(int pin = SEND_PIN)
+		{
+			sendPin = pin;
+		}
+#else
+
+		IRsend()
+		{
+		}
+#endif
 
 		void  custom_delay_usec (unsigned long uSecs);
 		void  enableIROut 		(int khz) ;
@@ -339,6 +350,20 @@ class IRsend
 #		if SEND_LEGO_PF
 			void  sendLegoPowerFunctions (uint16_t data, bool repeat = true) ;
 #		endif
+
+#ifdef USE_SOFT_CARRIER
+	private:
+		int sendPin;
+
+		unsigned int periodTime;
+		unsigned int periodOnTime;
+		
+		void sleepMicros(unsigned long us);
+		void sleepUntilMicros(unsigned long targetTime);
+
+#else
+		const int sendPin = SEND_PIN;
+#endif
 } ;
 
 #endif
