@@ -14,7 +14,6 @@ IRsend	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
-blink13	KEYWORD2
 decode	KEYWORD2
 enableIRIn	KEYWORD2
 resume	KEYWORD2
