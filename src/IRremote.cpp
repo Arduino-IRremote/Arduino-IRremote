@@ -127,6 +127,7 @@ ISR (TIMER_INTR_NAME)
 {
 	TIMER_RESET;
 
+	// Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
 	// digitalRead() is very slow. Optimisation is possible, but makes the code unportable
 	uint8_t  irdata = (uint8_t)digitalRead(irparams.recvpin);
 
@@ -184,4 +185,14 @@ ISR (TIMER_INTR_NAME)
 		 	break;
 	}
 
+#ifdef BLINKLED
+	// If requested, flash LED while receiving IR data
+	if (irparams.blinkflag) {
+		if (irdata == MARK)
+			if (irparams.blinkpin) digitalWrite(irparams.blinkpin, HIGH); // Turn user defined pin LED on
+				else BLINKLED_ON() ;   // if no user defined LED pin, turn default LED pin for the hardware on
+		else if (irparams.blinkpin) digitalWrite(irparams.blinkpin, LOW); // Turn user defined pin LED on
+				else BLINKLED_OFF() ;   // if no user defined LED pin, turn default LED pin for the hardware on
+	}
+#endif // BLINKLED
 }

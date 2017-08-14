@@ -47,10 +47,29 @@
 // is not configurable on the current board.
 
 //------------------------------------------------------------------------------
-// Soft Carrier fallback for SAM and SAMD architectures
+// Defines for blinking the LED
 //
 
+#if defined(CORE_LED0_PIN)
+#	define BLINKLED        CORE_LED0_PIN
+#	define BLINKLED_ON()   (digitalWrite(CORE_LED0_PIN, HIGH))
+#	define BLINKLED_OFF()  (digitalWrite(CORE_LED0_PIN, LOW))
+
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#	define BLINKLED        13
+#	define BLINKLED_ON()   (PORTB |= B10000000)
+#	define BLINKLED_OFF()  (PORTB &= B01111111)
+
+#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
+#	define BLINKLED        0
+#	define BLINKLED_ON()   (PORTD |= B00000001)
+#	define BLINKLED_OFF()  (PORTD &= B11111110)
+
 #elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+#	define BLINKLED        LED_BUILTIN
+#	define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
+#	define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
+
 #	define USE_SOFT_CARRIER
 	// Define to use spin wait instead of delayMicros()
 //#	define USE_SPIN_WAIT
@@ -60,6 +79,8 @@
 #	define SEND_PIN 9
 
 #elif defined(ESP32)
+        // No system LED on ESP32, disable blinking by NOT defining BLINKLED
+
         // avr/interrupt.h is not present
 #       undef HAS_AVR_INTERRUPT_H
 
@@ -69,6 +90,10 @@
         // Supply own enbleIRIn
 #       undef USE_DEFAULT_ENABLE_IR_IN
 
+#else
+#	define BLINKLED        13
+#	define BLINKLED_ON()  (PORTB |= B00100000)
+#	define BLINKLED_OFF()  (PORTB &= B11011111)
 #endif
 
 //------------------------------------------------------------------------------
