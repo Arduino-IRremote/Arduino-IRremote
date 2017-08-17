@@ -85,7 +85,7 @@
 #       undef HAS_AVR_INTERRUPT_H
 
         // Sending not implemented
-#       undef SENDING_SUPPORTED#
+#       undef SENDING_SUPPORTED
 
         // Supply own enbleIRIn
 #       undef USE_DEFAULT_ENABLE_IR_IN
@@ -161,7 +161,7 @@
 || defined(__AVR_ATmega164P__)
 	//#define IR_USE_TIMER1   // tx = pin 13
 	#define IR_USE_TIMER2     // tx = pin 14
-	
+
 //MegaCore - ATmega64, ATmega128
 #elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
  	#define IR_USE_TIMER1     // tx = pin 13
@@ -624,7 +624,7 @@
 #define TIMER_RESET
 #define TIMER_ENABLE_PWM     // Not presently used
 #define TIMER_DISABLE_PWM
-#define TIMER_ENABLE_INTR    NVIC_EnableIRQ(TC3_IRQn) // Not presently used    
+#define TIMER_ENABLE_INTR    NVIC_EnableIRQ(TC3_IRQn) // Not presently used
 #define TIMER_DISABLE_INTR   NVIC_DisableIRQ(TC3_IRQn)
 #define TIMER_INTR_NAME      TC3_Handler // Not presently used
 #define TIMER_CONFIG_KHZ(f)
@@ -645,7 +645,7 @@
 #ifndef SENDPIN_ON
 #define SENDPIN_ON(pin)  digitalWrite(pin, HIGH)
 #endif
-	
+
 #ifndef SENDPIN_OFF
 #define SENDPIN_OFF(pin) digitalWrite(pin, LOW)
 #endif
