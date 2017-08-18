@@ -10,7 +10,6 @@
  */
 
 #include <IRremote.h>
-#include <IRremoteInt.h>
 
 // Dumps out the decode_results structure.
 // Call this after IRrecv::decode()
