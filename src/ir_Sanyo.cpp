@@ -1,5 +1,4 @@
 #include "IRremote.h"
-#include "IRremoteInt.h"
 
 //==============================================================================
 //                      SSSS   AAA   N   N  Y   Y   OOO

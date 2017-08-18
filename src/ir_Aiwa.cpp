@@ -1,5 +1,4 @@
 #include "IRremote.h"
-#include "IRremoteInt.h"
 
 //==============================================================================
 //                         AAA   IIIII  W   W   AAA

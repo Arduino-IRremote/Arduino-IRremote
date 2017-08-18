@@ -1,5 +1,4 @@
 #include "IRremote.h"
-#include "IRremoteInt.h"
 
 //+=============================================================================
 // Gets one undecoded level at a time from the raw buffer.

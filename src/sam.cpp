@@ -1,7 +1,6 @@
 // Support routines for SAM processor boards
 
 #include "IRremote.h"
-#include "IRremoteInt.h"
 
 #if defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
 
