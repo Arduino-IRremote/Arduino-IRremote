@@ -1,5 +1,4 @@
 #include "IRremote.h"
-#include "IRremoteInt.h"
 #include "ir_Lego_PF_BitStreamEncoder.h"
 
 //==============================================================================
