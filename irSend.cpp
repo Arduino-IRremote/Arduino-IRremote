@@ -54,6 +54,8 @@ void  IRsend::space (unsigned int time)
 //
 void  IRsend::enableIROut (int khz)
 {
+// FIXME: implement ESP32 support, see IR_TIMER_USE_ESP32 in boarddefs.h
+#ifndef ESP32
 	// Disable the Timer2 Interrupt (which is used for receiving IR)
 	TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
 
@@ -66,6 +68,7 @@ void  IRsend::enableIROut (int khz)
 	// CS2  = 000: no prescaling
 	// The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
 	TIMER_CONFIG_KHZ(khz);
+#endif
 }
 
 //+=============================================================================
