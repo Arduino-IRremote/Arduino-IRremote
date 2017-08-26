@@ -99,13 +99,6 @@
 #endif
 
 //------------------------------------------------------------------------------
-// CPU Frequency
-//
-#ifdef F_CPU
-#define SYSCLOCK  F_CPU     // main Arduino clock
-#else // ! F_CPU
-#define SYSCLOCK  16000000  // main Arduino clock
-#endif // ! F_CPU
 
 // microseconds per clock interrupt tick
 #define USECPERTICK    50
@@ -209,6 +202,17 @@
 #define IR_USE_TIMER2     // tx = pin 3
 
 #endif
+
+//------------------------------------------------------------------------------
+// CPU Frequency
+//
+#ifndef SYSCLOCK // allow for processor specific code to define SYSCLOCK
+#ifndef F_CPU
+#error SYSCLOCK cannot be determined. Define it for your board in boarddefs.h.
+#endif // ! F_CPU
+/** Clock frequency to be used for timing. */
+#define SYSCLOCK F_CPU
+#endif // ! SYSCLOCK
 
 //------------------------------------------------------------------------------
 // Defines for Timer
