@@ -1,11 +1,16 @@
-//******************************************************************************
+/**
+ * @file boarddefs.h
+ *
+ * @brief All board specific information should be contained in this file.
+ * It defines a number of macros, depending on the board, as determined by
+ * pre-proccesor symbols.
+ * It was previously contained within IRremoteInt.h.
+ */
+
 // IRremote
 // Version 2.0.1 June, 2015
 // Copyright 2009 Ken Shirriff
 // For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
-
-// This file contains all board specific information. It was previously contained within
-// IRremoteInt.h
 
 // Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
 //
@@ -25,37 +30,83 @@
 // Define some defaults, that some boards may like to override
 // (This is to avoid negative logic, ! DONT_... is just awkward.)
 
-// This board has/needs the avr/interrupt.h
+/**
+ * Define if the current board has/needs the header avr/interrupt.h.
+ */
 #define HAS_AVR_INTERRUPT_H
 
-// Define if sending is supported
+/**
+ * Define if the current board supports sending.
+ */
 #define SENDING_SUPPORTED
 
-// If defined, a standard enableIRIn function will be define.
-// Undefine for boards supplying their own.
+/**
+ * Defined if the standard enableIRIn function should be used.
+ * Undefine for boards supplying their own.
+ */
 #define USE_DEFAULT_ENABLE_IR_IN
 
-// Duty cycle in percent for sent signals. Presently takes effect only with USE_SOFT_CARRIER
-#define DUTY_CYCLE 50
+/**
+ * Duty cycle in percent for sent signals.
+ * Presently takes effect only together with USE_SOFT_CARRIER.
+ */
+#define DUTY_CYCLE 40
 
-// If USE_SOFT_CARRIER, this amount (in micro seconds) is subtracted from the
-// on-time of the pulses.
+/**
+ * If USE_SOFT_CARRIER, this amount (in micro seconds) is subtracted from the
+ * on-time of the pulses.
+ */
 #define PULSE_CORRECTION 3
 
-// digitalWrite is supposed to be slow. If this is an issue, define faster,
-// board-dependent versions of these macros SENDPIN_ON(pin) and SENDPIN_OFF(pin).
-// Portable, possibly slow, default definitions are given at the end of this file.
-// If defining new versions, feel free to ignore the pin argument if it
-// is not configurable on the current board.
-
 //------------------------------------------------------------------------------
-// Defines for blinking the LED
-//
+// This first #ifdef statement contains defines for blinking the LED,
+// as well as all other board specific information, with the exception of
+// times and the sending pin (SEND_PIN).
 
-#if defined(CORE_LED0_PIN)
+#ifdef DOXYGEN
+/**
+ * If defined, denotes pin number of LED that should be blinked during IR reception.
+ * Leave undefined to disable blinking.
+ */
+#define BLINKLED        LED_BUILTIN
+
+/**
+ * Board dependent macro to turn BLINKLED on.
+ */
+#define BLINKLED_ON()   digitalWrite(BLINKLED, HIGH)
+
+/**
+ * Board dependent macro to turn BLINKLED off.
+ */
+#define BLINKLED_OFF()  digitalWrite(BLINKLED, HIGH)
+
+/**
+ * Define to use carrier generation in software, instead of hardware PWM.
+ */
+#define USE_SOFT_CARRIER
+
+/**
+ * Define to use spin wait instead of delayMicros() for USE_SOFT_CARRIER.
+ */
+#define USE_SPIN_WAIT
+
+#elif ! defined(ARDUINO)
+// Assume that we compile a test version, to be executed on the host, not on a board.
+
+// Do not define anything.
+
+#undef HAS_AVR_INTERRUPT_H
+
+#elif defined(CORE_LED0_PIN)
 #define BLINKLED        CORE_LED0_PIN
 #define BLINKLED_ON()   (digitalWrite(CORE_LED0_PIN, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(CORE_LED0_PIN, LOW))
+
+/////////////////// Arduino Uno, Nano etc (previously default clause)
+#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
+#define BLINKLED        LED_BUILTIN
+#define BLINKLED_ON()  (PORTB |= B00100000)
+#define BLINKLED_OFF()  (PORTB &= B11011111)
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define BLINKLED        13
@@ -77,9 +128,6 @@
 //#define USE_SPIN_WAIT
 #undef USE_DEFAULT_ENABLE_IR_IN
 
-// The default pin used used for sending.
-#define SEND_PIN 9
-
 #elif defined(ESP32)
 // No system LED on ESP32, disable blinking by NOT defining BLINKLED
 
@@ -93,9 +141,12 @@
 #undef USE_DEFAULT_ENABLE_IR_IN
 
 #else
-#define BLINKLED        13
-#define BLINKLED_ON()  (PORTB |= B00100000)
-#define BLINKLED_OFF()  (PORTB &= B11011111)
+#warning No blinking definition found. Check boarddefs.h.
+#ifdef LED_BUILTIN
+#define BLINKLED        LED_BUILTIN
+#define BLINKLED_ON()   digitalWrite(BLINKLED, HIGH)
+#define BLINKLED_OFF()  digitalWrite(BLINKLED, LOW)
+#endif
 #endif
 
 //------------------------------------------------------------------------------
@@ -108,11 +159,22 @@
 //
 // Uncomment the timer you wish to use on your board.
 // If you are using another library which uses timer2, you have options to
-//   switch IRremote to use a different timer.
+// switch IRremote to use a different timer.
 //
+#ifndef ARDUINO
+// Assume that we compile a test version, to be executed on the host,
+// not on a board.
+
+// Do not define any timer.
+
+// Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
+// ATmega48, ATmega88, ATmega168, ATmega328
+#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) // old default clause
+//#define IR_USE_TIMER1   // tx = pin 9
+#define IR_USE_TIMER2     // tx = pin 3
 
 // Sparkfun Pro Micro
-#if defined(ARDUINO_AVR_PROMICRO)
+#elif defined(ARDUINO_AVR_PROMICRO)
 //#define IR_USE_TIMER1     // tx = pin 9
 #define IR_USE_TIMER3       // tx = pin 5
 //#define IR_USE_TIMER4_HS  // tx = pin 5
@@ -124,7 +186,7 @@
 //#define IR_USE_TIMER4_HS  // tx = pin 5
 
 // Arduino Mega
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 //#define IR_USE_TIMER1   // tx = pin 11
 #define IR_USE_TIMER2     // tx = pin 9
 //#define IR_USE_TIMER3   // tx = pin 5
@@ -196,21 +258,38 @@
 #define TIMER_PRESCALER_DIV 64
 
 #else
-// Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
-// ATmega48, ATmega88, ATmega168, ATmega328
-//#define IR_USE_TIMER1   // tx = pin 9
-#define IR_USE_TIMER2     // tx = pin 3
+#error Board could not be identified from pre-processor symbols. Please extend boarddefs.h.
 
 #endif
 
+// Provide default definitions, portable but possibly slower than necessary.
+// digitalWrite is supposed to be slow. If this is an issue, define faster,
+// board-dependent versions of these macros SENDPIN_ON(pin) and SENDPIN_OFF(pin).
+// Portable, possibly slow, default definitions are given at the end of this file.
+// If defining new versions, feel free to ignore the pin argument if it
+// is not configurable on the current board.
+
+#ifndef SENDPIN_ON
+/** Board dependent macro to turn on the pin given as argument. */
+#define SENDPIN_ON(pin)  digitalWrite(pin, HIGH)
+#endif
+
+#ifndef SENDPIN_OFF
+/**
+ * Board dependent macro to turn off the pin given as argument.
+ */
+#define SENDPIN_OFF(pin) digitalWrite(pin, LOW)
+#endif
 //------------------------------------------------------------------------------
 // CPU Frequency
 //
-#ifndef SYSCLOCK // allow for processor specific code to define SYSCLOCK
+#if !defined(SYSCLOCK) && defined(ARDUINO) // allow for processor specific code to define SYSCLOCK
 #ifndef F_CPU
 #error SYSCLOCK cannot be determined. Define it for your board in boarddefs.h.
 #endif // ! F_CPU
-/** Clock frequency to be used for timing. */
+/**
+ * Clock frequency to be used for timing.
+ */
 #define SYSCLOCK F_CPU
 #endif // ! SYSCLOCK
 
@@ -218,9 +297,33 @@
 // Defines for Timer
 
 //---------------------------------------------------------
+#ifdef DOXYGEN
+/**
+ * If applicable, pin number for sending IR. Note that in most cases, this is not
+ * used and ignored if set. Instead, the sending pin is determined by the timer
+ * deployed.
+ */
+#define SEND_PIN
+
+/**
+ * Interrupt service routine. Called as interrupt routine to collect read IR data.
+ */
+#define  ISR
+
+#elif ! defined(ARDUINO)
+// Assume that we compile a test version, to be executed on the host,
+// not on a board.
+// Do nothing.
+#ifdef ISR
+#undef ISR
+#endif
+#define  ISR(f)  void do_not_use__(void)
+#define TIMER_RESET
+
+//---------------------------------------------------------
 // Timer2 (8 bits)
 //
-#if defined(IR_USE_TIMER2)
+#elif defined(IR_USE_TIMER2)
 
 #define TIMER_RESET
 #define TIMER_ENABLE_PWM    (TCCR2A |= _BV(COM2B1))
@@ -649,6 +752,8 @@
 #elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
 // use timer 3 hardcoded at this time
 
+#define SEND_PIN 9
+
 #define TIMER_RESET
 #define TIMER_ENABLE_PWM     // Not presently used
 #define TIMER_DISABLE_PWM
@@ -666,16 +771,7 @@
 // Unknown Timer
 //
 #else
-#error "Internal code configuration error, no known IR_USE_TIMER# defined\n"
-#endif
-
-// Provide default definitions, portable but possibly slower than necessary.
-#ifndef SENDPIN_ON
-#define SENDPIN_ON(pin)  digitalWrite(pin, HIGH)
-#endif
-
-#ifndef SENDPIN_OFF
-#define SENDPIN_OFF(pin) digitalWrite(pin, LOW)
+#error "Internal code configuration error, no known IR_USE_TIMER* defined\n"
 #endif
 
 #endif // ! boarddefs_h
