@@ -57,6 +57,12 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/)                         | **5**               | **CMT**           |
 | [Teensy-LC](https://www.pjrc.com/teensy/)                                | **16**              | **TPM1**          |
 
+
+### Experimental patches
+The following are strictly community supported patches that have yet to make it into mainstream. If you have issues feel free to ask here. If it works well then let us know!
+
+[Arduino 101](https://github.com/z3t0/Arduino-IRremote/pull/481#issuecomment-311243146)
+
 The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 
 ## Usage

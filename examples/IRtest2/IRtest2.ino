@@ -61,7 +61,7 @@ void setup()
 // Wait for the gap between tests, to synchronize with
 // the sender.
 // Specifically, wait for a signal followed by a gap of at last gap ms.
-void waitForGap(int gap) {
+void waitForGap(unsigned long gap) {
   Serial.println("Waiting for gap");
   while (1) {
     while (digitalRead(RECV_PIN) == LOW) { 
@@ -125,7 +125,7 @@ void dump(decode_results *results) {
 // The motivation behind this method is that the sender and the receiver
 // can do the same test calls, and the mode variable indicates whether
 // to send or receive.
-void test(char *label, int type, unsigned long value, int bits) {
+void test(const char *label, int type, unsigned long value, int bits) {
   if (mode == SENDER) {
     Serial.println(label);
     if (type == NEC) {
@@ -175,7 +175,7 @@ void test(char *label, int type, unsigned long value, int bits) {
 
 // Test raw send or receive.  This is similar to the test method,
 // except it send/receives raw data.
-void testRaw(char *label, unsigned int *rawbuf, int rawlen) {
+void testRaw(const char *label, unsigned int *rawbuf, int rawlen) {
   if (mode == SENDER) {
     Serial.println(label);
     irsend.sendRaw(rawbuf, rawlen, 38 /* kHz */);
