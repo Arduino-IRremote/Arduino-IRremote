@@ -71,6 +71,12 @@ void  IRsend::enableIROut (int khz)
 #endif
 }
 
+void IRsend::disableIROut ()
+{
+	TIMER_ENABLE_INTR;
+	TIMER_CONFIG_NORMAL();
+}
+
 //+=============================================================================
 // Custom delay function that circumvents Arduino's delayMicroseconds limit
 
