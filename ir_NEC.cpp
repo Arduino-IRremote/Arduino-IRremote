@@ -23,6 +23,7 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
 {
 	// Set IR carrier frequency
 	enableIROut(38);
+	delay(200);  // Added by LWH
 
 	// Header
 	mark(NEC_HDR_MARK);
@@ -42,6 +43,8 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
 	// Footer
 	mark(NEC_BIT_MARK);
 	space(0);  // Always end with the LED off
+	disableIROut();  // Added by LWH
+
 }
 #endif
 

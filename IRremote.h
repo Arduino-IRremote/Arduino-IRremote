@@ -1,4 +1,3 @@
-
 //******************************************************************************
 // IRremote
 // Version 2.0.1 June, 2015
@@ -263,6 +262,7 @@ class IRsend
 
 		void  custom_delay_usec (unsigned long uSecs);
 		void  enableIROut 		(int khz) ;
+		void  disableIROut 		( ) ;
 		void  mark        		(unsigned int usec) ;
 		void  space       		(unsigned int usec) ;
 		void  sendRaw     		(const unsigned int buf[],  unsigned int len,  unsigned int hz) ;
@@ -270,6 +270,7 @@ class IRsend
 		//......................................................................
 #		if SEND_RC5
 			void  sendRC5        (unsigned long data,  int nbits) ;
+			void  sendRC5ext     (unsigned long addr, unsigned long cmd, boolean toggle);
 #		endif
 #		if SEND_RC6
 			void  sendRC6        (unsigned long data,  int nbits) ;
