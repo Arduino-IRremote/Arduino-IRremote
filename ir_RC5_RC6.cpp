@@ -50,7 +50,7 @@ int  IRrecv::getRClevel (decode_results *results,  int *offset,  int *used,  int
 // NB: First bit must be a one (start bit)
 //
 #define MIN_RC5_SAMPLES     11
-#define RC5_T1             830 //LWH originally: 889
+#define RC5_T1             889
 #define RC5_RPT_LENGTH   46000
 
 //+=============================================================================
@@ -59,7 +59,6 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
 {
 	// Set IR carrier frequency
 	enableIROut(36);
-	delay(84);  // Added by LWH
 
 	// Start
 	mark(RC5_T1);
@@ -78,26 +77,21 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
 	}
 
 	space(0);  // Always end with the LED off
-
-	disableIROut();   // Added by LWH
-
 }
 
 void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
 {
 	// Set IR carrier frequency
 	enableIROut(36);
-	delay(80);  // Added by LWH
 	
 	unsigned long addressBits = 5;
 	unsigned long commandBits = 7;
 	unsigned long nbits = addressBits + commandBits;
-
 	
 	// Start
 	mark(RC5_T1);
 	
-	// Bit #6 og the command part, but inverted!
+	// Bit #6 of the command part, but inverted!
 	unsigned long cmdBit6 = (1UL << (commandBits-1)) & cmd;
 	if (cmdBit6) {
 		// Inverted (1 -> 0 = mark-to-space)
@@ -149,9 +143,6 @@ void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
 	}
 
 	space(0);  // Always end with the LED off
-
-	disableIROut(); // Added by LWH
-
 }
 
 #endif
