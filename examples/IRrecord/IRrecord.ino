@@ -45,7 +45,7 @@ int toggle = 0; // The RC5/6 toggle state
 // Most of this code is just logging
 void storeCode(decode_results *results) {
   codeType = results->decode_type;
-  //int count = results->rawlen;
+  int count = results->rawlen;
   if (codeType == UNKNOWN) {
     Serial.println("Received unknown code, saving as raw");
     codeLen = results->rawlen - 1;
