@@ -1,3 +1,9 @@
+## 3.0.0 - 2017/09/14
+- Changed default send pin on ATmega32u4 from 13 to 9.
+	Note: this is a non-backwards compatible change as the behaviour of existing programs using this board for receiving WILL be affected. If you would like to use pin 13 as before then please search src/boarddefs.h for "32u4" and comment the line for pin 9 while uncommenting the line for pin 13
+
+
+
 ## 2.3.3 - 2017/03/31
 - Added ESP32 IR receive support [PR #427](https://github.com/z3t0/Arduino-IRremote/pull/425)
 
