@@ -19,7 +19,7 @@ Tutorials and more information will be made available on [the official homepage]
 
 
 ## FAQ
-- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)  
+- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)
 Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic arduinos. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
 
 
@@ -67,6 +67,20 @@ The table above lists the currently supported timers and corresponding send pins
 
 ## Usage
 - TODO (Check examples for now)
+
+## API documentation
+This project documents the library API using [Doxygen](http://www.doxygen.org).
+It is planned to make generated and up-to-date API documentation available online.
+
+To generate the API documentation,
+Doxygen, as well as [Graphviz](http://www.graphviz.org/) should be installed.
+(Note that on Windows, it may be necessary to add the Graphviz binary directory
+(something like `C:\Program Files\Graphviz2.38\bin`)
+to the `PATH` variable manually.)
+With Doxygen and Graphviz installed, issue the command
+`doxygen` from the command line in the main project directory, which will
+generate the API documentation in HTML format.
+The just generated `api-doc/index.html` can now be opened in a browser.
 
 ## Contributing
 If you want to contribute to this project:
