@@ -8,7 +8,7 @@ This library enables you to send and receive using infra-red signals on an Ardui
 
 Tutorials and more information will be made available on [the official homepage](http://z3t0.github.io/Arduino-IRremote/).
 
-## Version - 2.4.0b
+## Version - 2.5.0b
 
 ## Installation
 1. Navigate to the [Releases](https://github.com/z3t0/Arduino-IRremote/releases) page.
@@ -43,7 +43,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
 | [ATtiny85](https://github.com/SpenceKonde/ATTinyCore)                    | **1**               | **TINY0**         |
 | [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
-| Atmega32u4                                                               | 5, 9, **13**        | 1, 3, **4**       |
+| Atmega32u4                                                               | 5, **9**, 13        | 1, 3, **4**       |
 | [ATmega48, ATmega88, ATmega168, ATmega328](https://github.com/MCUdude/MiniCore) | **3**, 9     | 1, **2**          |
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
 | [ATmega164, ATmega324, ATmega644](https://github.com/MCUdude/MightyCore) | 13, **14**          | 1, **2**          |

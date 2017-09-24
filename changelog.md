@@ -1,3 +1,6 @@
+## 2.5.0
+- Added Philips Extended RC-5 protocol support [PR #522] (https://github.com/z3t0/Arduino-IRremote/pull/522)
+
 ## 2.4.0 - 2017/08/10
  - Cleanup of hardware dependencies. Merge in SAM support [PR #437](https://github.com/z3t0/Arduino-IRremote/pull/437)
 
