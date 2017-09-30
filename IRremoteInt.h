@@ -40,7 +40,7 @@
 //------------------------------------------------------------------------------
 // Information for the Interrupt Service Routine
 //
-#define RAWBUF  101  // Maximum length of raw duration buffer
+#define RAWBUF  150  // Maximum length of raw duration buffer
 
 typedef
 	struct {
@@ -95,7 +95,7 @@ EXTERN  volatile irparams_t  irparams;
 #define UTOL            (1.0 + (TOLERANCE/100.))
 
 // Minimum gap between IR transmissions
-#define _GAP            5000
+#define _GAP            20000
 #define GAP_TICKS       (_GAP/USECPERTICK)
 
 #define TICKS_LOW(us)   ((int)(((us)*LTOL/USECPERTICK)))

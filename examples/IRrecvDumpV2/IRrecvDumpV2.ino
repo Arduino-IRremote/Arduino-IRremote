@@ -31,6 +31,10 @@ void  ircode (decode_results *results)
 
   // Print Code
   Serial.print(results->value, HEX);
+  if (results->addit_value > 0){
+    Serial.print(", ");
+    Serial.print(results->addit_value, HEX);
+  }
 }
 
 //+=============================================================================
@@ -56,6 +60,7 @@ void  encoding (decode_results *results)
     case AIWA_RC_T501: Serial.print("AIWA_RC_T501");  break ;
     case PANASONIC:    Serial.print("PANASONIC");     break ;
     case DENON:        Serial.print("Denon");         break ;
+    case GREE:         Serial.print("GREE");          break ;
   }
 }
 
@@ -156,6 +161,10 @@ void  dumpCode (decode_results *results)
     // All protocols have data
     Serial.print("unsigned int  data = 0x");
     Serial.print(results->value, HEX);
+    if (results->addit_value > 0){
+      Serial.print(", 0x");
+      Serial.print(results->addit_value, HEX);
+    }
     Serial.println(";");
   }
 }
