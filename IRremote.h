@@ -79,6 +79,9 @@
 #define DECODE_LEGO_PF       0 // NOT WRITTEN
 #define SEND_LEGO_PF         1
 
+#define DECODE_RSTEP         1
+#define SEND_RSTEP           1
+
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
 //                                                   or the "repeat" code
@@ -119,6 +122,7 @@ typedef
 		DENON,
 		PRONTO,
 		LEGO_PF,
+		RSTEP,
 	}
 decode_type_t;
 
@@ -250,6 +254,10 @@ class IRrecv
 //......................................................................
 #		if DECODE_LEGO_PF
 			bool  decodeLegoPowerFunctions (decode_results *results) ;
+#		endif
+//......................................................................
+#		if DECODE_RSTEP
+			bool  decodeRstep (decode_results *results) ;
 #		endif
 } ;
 
