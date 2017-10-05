@@ -12,7 +12,6 @@
 /* -----------------------------------------------------------------------------
  r-step (Ruwido Standard Engineering Protocol) is used by some set top boxes
  (like canal+ cube).
- Few informations are available on internet except this pdf : http://bit.ly/2fRMTmu
 
  type of transmission : bi-phase, carried
  carrier frequency : 56 kHz / 17.9 usec
@@ -93,13 +92,6 @@ void  IRsend::sendRstep (byte custom_id,  byte data, byte repeat_code)
     bin_code[i++] = (data & ( 1 << k )) >> k;
   }
 
-  /*
-  for (i = 0; i < RS_BITS; i++) {
-    Serial.print(bin_code[i], DEC);
-  }
-  Serial.println("");
-  */
-
   // Set IR carrier frequency
   enableIROut(56);
   for (i = 0; i < RS_BITS; i++) {
@@ -161,7 +153,7 @@ bool  IRrecv::decodeRstep (decode_results *results)
         bin_map[j++] = 0;
     }
 
-#ifdef DEBUG
+#if DEBUG
     if (t <= RS_SHORT_LEN + RS_TOLERANCE)
       Serial.print("250");
     else
@@ -175,11 +167,6 @@ bool  IRrecv::decodeRstep (decode_results *results)
     if (bin_map[i] == 1 && bin_map[i+1] == 0) bin_code[j] = 1;
   }
 
-  for (int i = 0; i < RS_BITS; i++) {
-    Serial.print(bin_code[i], DEC);
-  }
-  Serial.println("");
-
   rstep.sta = bin_code[0];
   convert_to_byte(&rstep.custom_id, &bin_code[1], 6);
   rstep.bat = bin_code[7];
@@ -188,7 +175,7 @@ bool  IRrecv::decodeRstep (decode_results *results)
   rstep.rep = bin_code[14];
   convert_to_byte(&rstep.function_code, &bin_code[15], 8);
 
-#ifdef DEBUG
+#if DEBUG
   Serial.println("");
   Serial.print("STA: ");
   Serial.println(rstep.sta, DEC);

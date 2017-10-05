@@ -251,11 +251,11 @@ class IRrecv
 #		if DECODE_DENON
 			bool  decodeDenon (decode_results *results) ;
 #		endif
-//......................................................................
+		//......................................................................
 #		if DECODE_LEGO_PF
 			bool  decodeLegoPowerFunctions (decode_results *results) ;
 #		endif
-//......................................................................
+		//......................................................................
 #		if DECODE_RSTEP
 			bool  decodeRstep (decode_results *results) ;
 #		endif
@@ -343,10 +343,15 @@ class IRsend
 #		if SEND_PRONTO
 			void  sendPronto     (char* code,  bool repeat,  bool fallback) ;
 #		endif
-//......................................................................
+		//......................................................................
 #		if SEND_LEGO_PF
 			void  sendLegoPowerFunctions (uint16_t data, bool repeat = true) ;
 #		endif
+		//......................................................................
+#		if SEND_RSTEP
+			void  sendRstep (byte custom_id,  byte data, byte repeat_code) ;
+#		endif
+
 } ;
 
 #endif
