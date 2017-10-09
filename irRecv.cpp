@@ -25,9 +25,19 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeNEC(results))  return true ;
 #endif
 
+#if DECODE_RCA
+	DBG_PRINTLN("Attempting RCA decode");
+	if (decodeRCA(results))  return true ;
+#endif
+
 #if DECODE_SONY
 	DBG_PRINTLN("Attempting Sony decode");
 	if (decodeSony(results))  return true ;
+#endif
+
+#if DECODE_RCA
+	DBG_PRINTLN("Attempting RCA decode");
+	if (decodeRCA(results))  return true ;
 #endif
 
 #if DECODE_SANYO
