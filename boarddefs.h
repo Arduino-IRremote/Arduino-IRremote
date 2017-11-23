@@ -70,8 +70,14 @@
 //   switch IRremote to use a different timer.
 //
 
+// Sparkfun Pro Micro
+#if defined(ARDUINO_AVR_PROMICRO)
+	//#define IR_USE_TIMER1     // tx = pin 9
+	#define IR_USE_TIMER3       // tx = pin 5
+	//#define IR_USE_TIMER4_HS  // tx = pin 5
+
 // Arduino Mega
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	//#define IR_USE_TIMER1   // tx = pin 11
 	#define IR_USE_TIMER2     // tx = pin 9
 	//#define IR_USE_TIMER3   // tx = pin 5
@@ -246,19 +252,19 @@
 #	define TIMER_PWM_PIN  CORE_OC1A_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  11             // Arduino Mega
-#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
-#	define TIMER_PWM_PIN  13	     // MegaCore
+#elif
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
 || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
 || defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
-|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__)
-#	define TIMER_PWM_PIN  13             // MightyCore
-#elif defined(__AVR_ATtiny84__)
-# 	define TIMER_PWM_PIN  6
+|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__) \
+|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
+#	define TIMER_PWM_PIN  13             // MightyCore, // MegaCore
+#elif defined(__AVR_ATtiny84__) || 
+# 	define TIMER_PWM_PIN  6          
 #else
-#	define TIMER_PWM_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, etc
+#	define TIMER_PWM_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro etc
 #endif					     // ATmega48, ATmega88, ATmega168, ATmega328
 
 //---------------------------------------------------------
@@ -291,8 +297,8 @@
 //-----------------
 #if defined(CORE_OC3A_PIN)
 #	define TIMER_PWM_PIN  CORE_OC3A_PIN  // Teensy
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  5              // Arduino Mega
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(ARDUINO_AVR_PROMICRO)
+#	define TIMER_PWM_PIN  5              // Arduino Mega, Sparkfun Pro Micro
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
 #	define TIMER_PWM_PIN  6              // MightyCore
 #else
@@ -339,6 +345,8 @@
 //-----------------
 #if defined(CORE_OC4A_PIN)
 #	define TIMER_PWM_PIN  CORE_OC4A_PIN  // Teensy
+#elif defined(ARDUINO_AVR_PROMICRO)
+#	define TIMER_PWM_PIN  5              // Sparkfun Pro Micro
 #elif defined(__AVR_ATmega32U4__)
 #	define TIMER_PWM_PIN  13             // Leonardo
 #else
