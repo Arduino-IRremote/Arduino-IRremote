@@ -33,6 +33,7 @@ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled o
 - ATtiny 84 / 85
 - ESP32 (receive only)
 - ESP8266 is supported in a fork based on an old codebase that isn't as recent, but it works reasonably well given that perfectly timed sub millisecond interrupts are different on that chip. See https://github.com/markszabo/IRremoteESP8266
+- Sparkfun Pro Micro
 
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
 
@@ -56,6 +57,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/)                       | **1**, 16, 25       | 1, **2**, 3       |
 | [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/)                         | **5**               | **CMT**           |
 | [Teensy-LC](https://www.pjrc.com/teensy/)                                | **16**              | **TPM1**          |
+| [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | 9, **5**, 5         | 1, **3**, 4       |
 
 
 ### Experimental patches
