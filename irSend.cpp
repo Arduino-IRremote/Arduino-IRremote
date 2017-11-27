@@ -21,7 +21,11 @@ void  IRsend::sendRaw (const unsigned int buf[],  unsigned int len,  unsigned in
 //
 void  IRsend::mark (unsigned int time)
 {
-	TIMER_ENABLE_PWM; // Enable pin 3 PWM output
+	#ifdef ESP32
+		ledcWrite(LEDCHANNEL, 50);
+	#else
+		TIMER_ENABLE_PWM; // Enable pin 3 PWM output
+	#endif
 	if (time > 0) custom_delay_usec(time);
 }
 
@@ -32,8 +36,13 @@ void  IRsend::mark (unsigned int time)
 //
 void  IRsend::space (unsigned int time)
 {
-	TIMER_DISABLE_PWM; // Disable pin 3 PWM output
+	#ifdef ESP32
+		ledcWrite(LEDCHANNEL, 0);
+	#else
+		TIMER_DISABLE_PWM; // Disable pin 3 PWM output
+	#endif
 	if (time > 0) IRsend::custom_delay_usec(time);
+	
 }
 
 
@@ -68,6 +77,9 @@ void  IRsend::enableIROut (int khz)
 	// CS2  = 000: no prescaling
 	// The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
 	TIMER_CONFIG_KHZ(khz);
+#else
+	ledcSetup(LEDCHANNEL, khz*1000, 8);
+	ledcAttachPin(timerPwmPin, LEDCHANNEL);
 #endif
 }
 

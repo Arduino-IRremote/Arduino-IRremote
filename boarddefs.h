@@ -565,7 +565,9 @@
 #define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for ESP32 yet");
 #define TIMER_ENABLE_INTR    
 #define TIMER_DISABLE_INTR   
-#define TIMER_INTR_NAME      
+#define TIMER_INTR_NAME    
+#define TIMER_PWM_PIN  5  
+#define LEDCHANNEL 0
 
 //---------------------------------------------------------
 // Unknown Timer

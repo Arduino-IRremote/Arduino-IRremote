@@ -259,6 +259,11 @@ class IRrecv
 class IRsend
 {
 	public:
+		byte timerPwmPin=3;
+		IRsend(byte pin){
+			timerPwmPin=pin;
+			IRsend ();
+		}
 		IRsend () { }
 
 		void  custom_delay_usec (unsigned long uSecs);
