@@ -26,6 +26,9 @@ void setup()
 
 void loop() {
   if (irrecv.decode(&results)) {
+    if(results.decode_type == UNKNOWN)
+      Serial.print("[UNKNOWN] ");  // Unknown result has a hash value, so mark it.
+
     Serial.println(results.value, HEX);
     irrecv.resume(); // Receive the next value
   }

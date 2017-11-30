@@ -76,8 +76,8 @@
 #define DECODE_PRONTO        0 // This function doe not logically make sense
 #define SEND_PRONTO          1
 
-#define DECODE_LEGO_PF       0 // NOT WRITTEN
-#define SEND_LEGO_PF         1
+#define DECODE_XIAOMI1         1
+#define SEND_XIAOMI1           0 // NOT WRITTEN
 
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
@@ -119,6 +119,7 @@ typedef
 		DENON,
 		PRONTO,
 		LEGO_PF,
+		XIAOMI1,
 	}
 decode_type_t;
 
@@ -247,9 +248,13 @@ class IRrecv
 #		if DECODE_DENON
 			bool  decodeDenon (decode_results *results) ;
 #		endif
-//......................................................................
+		//......................................................................
 #		if DECODE_LEGO_PF
 			bool  decodeLegoPowerFunctions (decode_results *results) ;
+#		endif
+		//......................................................................
+#		if DECODE_XIAOMI1
+			bool  decodeXiaoMi1 (decode_results *results) ;
 #		endif
 } ;
 

@@ -90,6 +90,11 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeLegoPowerFunctions(results))  return true ;
 #endif
 
+#if DECODE_XIAOMI1
+	DBG_PRINTLN("Attempting Xiao Mi 1 decode");
+	if (decodeXiaoMi1(results))  return true ;
+#endif
+
 	// decodeHash returns a hash on any input.
 	// Thus, it needs to be last in the list.
 	// If you add any decodes, add them before this.
