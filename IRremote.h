@@ -76,6 +76,9 @@
 #define DECODE_PRONTO        0 // This function doe not logically make sense
 #define SEND_PRONTO          1
 
+#define DECODE_LEGO_PF       0 // NOT WRITTEN
+#define SEND_LEGO_PF         1
+
 #define DECODE_XIAOMI1         1
 #define SEND_XIAOMI1           0 // NOT WRITTEN
 
