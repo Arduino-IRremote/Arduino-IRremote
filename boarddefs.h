@@ -261,7 +261,7 @@
 || defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
 || defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__) \
 || defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
-#	define TIMER_PWM_PIN  13             // MightyCore, // MegaCore
+#	define TIMER_PWM_PIN  13             // MightyCore, MegaCore
 #elif defined(__AVR_ATtiny84__)
 # 	define TIMER_PWM_PIN  6
 #else
