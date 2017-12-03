@@ -261,7 +261,7 @@
 || defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
 #	define TIMER_PWM_PIN  13             // MightyCore, // MegaCore
 #elif defined(__AVR_ATtiny84__)
-# 	define TIMER_PWM_PIN  6          
+# 	define TIMER_PWM_PIN  6
 #else
 #	define TIMER_PWM_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro etc
 #endif					     // ATmega48, ATmega88, ATmega168, ATmega328
