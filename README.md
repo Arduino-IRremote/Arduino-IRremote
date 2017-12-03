@@ -52,12 +52,12 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [ATmega64, ATmega128](https://github.com/MCUdude/MegaCore)               | **13**              | **1**             |
 | ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
 | [ESP32](http://esp32.net/)                                               | N/A (not supported) | **1**             |
+| [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | 9, **5**, 5         | 1, **3**, 4_HS    |
 | [Teensy 1.0](https://www.pjrc.com/teensy/)                               | **17**              | **1**             |
 | [Teensy 2.0](https://www.pjrc.com/teensy/)                               | 9, **10**, 14       | 1, 3, **4_HS**    |
 | [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/)                       | **1**, 16, 25       | 1, **2**, 3       |
 | [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/)                         | **5**               | **CMT**           |
 | [Teensy-LC](https://www.pjrc.com/teensy/)                                | **16**              | **TPM1**          |
-| [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | 9, **5**, 5         | 1, **3**, 4_HS    |
 
 
 ### Experimental patches
