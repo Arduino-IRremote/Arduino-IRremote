@@ -15,6 +15,8 @@
 //
 // JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
 // Whynter A/C ARC-110WD added by Francesco Meschia
+
+// Sparkfun Pro Micro support by Alastair McCormack
 //******************************************************************************
 
 #ifndef boarddefs_h
