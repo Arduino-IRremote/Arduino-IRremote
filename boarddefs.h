@@ -252,7 +252,6 @@
 #	define TIMER_PWM_PIN  CORE_OC1A_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define TIMER_PWM_PIN  11             // Arduino Mega
-#elif
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
@@ -261,7 +260,7 @@
 || defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__) \
 || defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
 #	define TIMER_PWM_PIN  13             // MightyCore, // MegaCore
-#elif defined(__AVR_ATtiny84__) || 
+#elif defined(__AVR_ATtiny84__)
 # 	define TIMER_PWM_PIN  6          
 #else
 #	define TIMER_PWM_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro etc
@@ -311,11 +310,20 @@
 #elif defined(IR_USE_TIMER4_HS)
 
 #define TIMER_RESET
-#define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A1))
-#define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A1)))
+
+#if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro                         
+	#define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A0))     // Use complimentary O̅C̅4̅A̅ output on pin 5
+	#define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A0)))  // (Pro Micro does not map PC7 (32/ICP3/CLK0/OC4A)
+															// of ATmega32U4 )
+#else
+	#define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A1))
+	#define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A1)))
+#endif
+
 #define TIMER_ENABLE_INTR   (TIMSK4 = _BV(TOIE4))
 #define TIMER_DISABLE_INTR  (TIMSK4 = 0)
 #define TIMER_INTR_NAME     TIMER4_OVF_vect
+
 
 #define TIMER_CONFIG_KHZ(val) ({ \
 	const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
