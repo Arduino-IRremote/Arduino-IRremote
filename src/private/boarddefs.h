@@ -124,6 +124,12 @@
 	#define IR_USE_TIMER3       // tx = pin 5
 	//#define IR_USE_TIMER4_HS  // tx = pin 5
 
+// Leonardo
+#elif defined(ARDUINO_AVR_LEONARDO)
+    //#define IR_USE_TIMER1     // tx = pin 9
+    #define IR_USE_TIMER3       // tx = pin 5
+    //#define IR_USE_TIMER4_HS  // tx = pin 13
+
 // Arduino Mega
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	//#define IR_USE_TIMER1   // tx = pin 11
@@ -138,8 +144,8 @@
 
 // Teensy 2.0
 #elif defined(__AVR_ATmega32U4__)
-	//#define IR_USE_TIMER1   // tx = pin 14
-	#define IR_USE_TIMER3   // tx = pin 9
+	//#define IR_USE_TIMER1     // tx = pin 14
+	#define IR_USE_TIMER3       // tx = pin 9
 	//#define IR_USE_TIMER4_HS  // tx = pin 10
 
 // Teensy 3.0 / Teensy 3.1
@@ -316,7 +322,7 @@
 # 	define SEND_PIN  6
 #else
 #	define SEND_PIN  9       // Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro etc
-#endif					     // ATmega48, ATmega88, ATmega168, ATmega328
+#endif					     // ATmega48, ATmega88, ATmega168, ATmega328, Leonardo
 
 //---------------------------------------------------------
 // Timer3 (16 bits)
@@ -348,8 +354,10 @@
 //-----------------
 #if defined(CORE_OC3A_PIN)
 #	define SEND_PIN  CORE_OC3A_PIN  // Teensy
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(ARDUINO_AVR_PROMICRO)
-#	define SEND_PIN  5              // Arduino Mega, Sparkfun Pro Micro
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) \
+|| defined(ARDUINO_AVR_LEONARDO) || defined(ARDUINO_AVR_PROMICRO) \
+|| defined(__AVR_ATmega32U4__)
+#	define SEND_PIN  5              // Arduino Mega, Leonardo, Sparkfun Pro Micro
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
 #	define SEND_PIN  6              // MightyCore
 #else
