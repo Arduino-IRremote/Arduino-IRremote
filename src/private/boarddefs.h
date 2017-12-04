@@ -120,8 +120,8 @@
 
 // Sparkfun Pro Micro
 #if defined(ARDUINO_AVR_PROMICRO)
-	#define IR_USE_TIMER1     // tx = pin 9
-	//#define IR_USE_TIMER3       // tx = pin 5
+	//#define IR_USE_TIMER1     // tx = pin 9
+	#define IR_USE_TIMER3       // tx = pin 5
 	//#define IR_USE_TIMER4_HS  // tx = pin 5
 
 // Arduino Mega
