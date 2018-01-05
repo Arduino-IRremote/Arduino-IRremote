@@ -1,4 +1,4 @@
-#include "IRremote.h"
+#include "AIRremote.h"
 #include "IRremoteInt.h"
 
 #ifdef IR_TIMER_USE_ESP32

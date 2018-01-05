@@ -17,7 +17,7 @@
 	void  mark        (int t)     { printf("+%d," , t); }
 	void  space       (int t)     { printf("-%d, ", t); }
 #else
-#	include "IRremote.h"
+#	include "AIRremote.h"
 #endif // TEST
 
 //+=============================================================================

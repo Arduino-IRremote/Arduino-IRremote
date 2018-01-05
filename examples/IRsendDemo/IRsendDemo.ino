@@ -7,7 +7,7 @@
  */
 
 
-#include <IRremote.h>
+#include <AIRremote.h>
 
 IRsend irsend;
 

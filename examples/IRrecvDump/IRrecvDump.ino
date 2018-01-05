@@ -8,7 +8,7 @@
  * LG added by Darryl Smith (based on the JVC protocol)
  */
 
-#include <IRremote.h>
+#include <AIRremote.h>
 
 /* 
 *  Default is Arduino pin D11. 

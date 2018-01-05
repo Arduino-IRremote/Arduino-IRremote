@@ -6,7 +6,7 @@
  * http://arcfn.com
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  */
-#include <IRremote.h>
+#include <AIRremote.h>
  
 #define PanasonicAddress      0x4004     // Panasonic address (Pre data) 
 #define PanasonicPower        0x100BCBD  // Panasonic Power button
