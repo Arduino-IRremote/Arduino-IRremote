@@ -8,8 +8,6 @@
 #	define PRONTO_NOFALLBACK  false
 #endif
 
-#if SEND_PRONTO
-
 //******************************************************************************
 #if TEST
 #	include <stdio.h>
@@ -19,6 +17,8 @@
 #else
 #	include "IRremote.h"
 #endif // TEST
+
+#if SEND_PRONTO
 
 //+=============================================================================
 // Check for a valid hex digit
