@@ -13,6 +13,7 @@
 // JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
 // LG added by Darryl Smith (based on the JVC protocol)
 // Whynter A/C ARC-110WD added by Francesco Meschia
+// AC 48bit protocol (Midea, Komeco, Electrolux, Hitachi) added by Marcelo Buregio
 //******************************************************************************
 
 #ifndef IRremote_h
@@ -79,6 +80,9 @@
 #define DECODE_LEGO_PF       0 // NOT WRITTEN
 #define SEND_LEGO_PF         1
 
+#define DECODE_AC            1
+#define SEND_AC              1
+
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
 //                                                   or the "repeat" code
@@ -119,6 +123,7 @@ typedef
 		DENON,
 		PRONTO,
 		LEGO_PF,
+		AC,
 	}
 decode_type_t;
 
@@ -152,7 +157,7 @@ class decode_results
 {
 	public:
 		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
-		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
+		unsigned int           address;      // Used by Panasonic & Sharp [16-bits] & AC
 		unsigned long          value;        // Decoded value [max 32-bits]
 		int                    bits;         // Number of bits in decoded value
 		volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
@@ -251,6 +256,9 @@ class IRrecv
 #		if DECODE_LEGO_PF
 			bool  decodeLegoPowerFunctions (decode_results *results) ;
 #		endif
+#		if DECODE_AC
+			bool  decodeAC (decode_results *results) ;
+#		endif
 } ;
 
 //------------------------------------------------------------------------------
@@ -338,6 +346,9 @@ class IRsend
 //......................................................................
 #		if SEND_LEGO_PF
 			void  sendLegoPowerFunctions (uint16_t data, bool repeat = true) ;
+#		endif
+#		if SEND_AC
+			void  sendAC (unsigned int address, unsigned long data) ;
 #		endif
 } ;
 

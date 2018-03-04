@@ -6,6 +6,7 @@
  * http://arcfn.com
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  * LG added by Darryl Smith (based on the JVC protocol)
+ * AC 48bit protocol (Midea, Komeco, Electrolux, Hitachi) added by Marcelo Buregio
  */
 
 #include <IRremote.h>
@@ -42,6 +43,12 @@ void dump(decode_results *results) {
   else if (results->decode_type == SONY) {
     Serial.print("Decoded SONY: ");
   }
+  else if (results->decode_type == SANYO) {
+    Serial.print("Decoded SANYO: ");
+  }
+  else if (results->decode_type == MITSUBISHI) {
+    Serial.print("Decoded MITSUBISHI: ");
+  }
   else if (results->decode_type == RC5) {
     Serial.print("Decoded RC5: ");
   }
@@ -59,11 +66,19 @@ void dump(decode_results *results) {
   else if (results->decode_type == JVC) {
     Serial.print("Decoded JVC: ");
   }
+  else if (results->decode_type == SAMSUNG) {
+    Serial.print("Decoded SAMSUNG: ");
+  }
   else if (results->decode_type == AIWA_RC_T501) {
     Serial.print("Decoded AIWA RC T501: ");
   }
   else if (results->decode_type == WHYNTER) {
     Serial.print("Decoded Whynter: ");
+  }
+  else if (results->decode_type == AC) {
+    Serial.print("Decoded AC - Address: ");
+    Serial.print(results->address, HEX);
+    Serial.print(" Value: ");
   }
   Serial.print(results->value, HEX);
   Serial.print(" (");

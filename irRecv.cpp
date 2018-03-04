@@ -65,6 +65,11 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeJVC(results))  return true ;
 #endif
 
+#if DECODE_AC
+	DBG_PRINTLN("Attempting AC decode");
+	if (decodeAC(results))  return true ;
+#endif
+
 #if DECODE_SAMSUNG
 	DBG_PRINTLN("Attempting SAMSUNG decode");
 	if (decodeSAMSUNG(results))  return true ;
