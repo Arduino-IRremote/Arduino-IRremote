@@ -76,7 +76,7 @@ int  MATCH_MARK (int measured_ticks,  int desired_us)
 	DBG_PRINT(F(" <= "));
 	DBG_PRINT(TICKS_HIGH(desired_us + MARK_EXCESS) * USECPERTICK, DEC);
 
-  bool passed = ((measured_ticks >= TICKS_LOW (desired_us + MARK_EXCESS))
+  bool passed = ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS))
                 && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS)));
   if (passed)
     DBG_PRINTLN(F("?; passed"));
@@ -103,7 +103,7 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 	DBG_PRINT(TICKS_HIGH(desired_us - MARK_EXCESS) * USECPERTICK, DEC);
 
   bool passed = ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS))
-                && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS)));
+                && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS)));
   if (passed)
     DBG_PRINTLN(F("?; passed"));
   else
