@@ -10,7 +10,7 @@ IRemulate::IRemulate (int emulatepin, bool solesource)
 //+=============================================================================
 void  IRemulate::emulateRaw (const unsigned int buf[],  unsigned int len)
 {
-	// Set IR carrier frequency
+	// Manage outputs
 	enableIROut();
 
 	for (unsigned int i = 0;  i < len;  i++) {
@@ -23,7 +23,6 @@ void  IRemulate::emulateRaw (const unsigned int buf[],  unsigned int len)
 
 //+=============================================================================
 // Sends an IR mark for the specified number of microseconds.
-// The mark output is modulated at the PWM frequency.
 //
 void  IRemulate::mark (unsigned int time)
 {
@@ -32,9 +31,8 @@ void  IRemulate::mark (unsigned int time)
 }
 
 //+=============================================================================
-// Leave pin off for time (given in microseconds)
+// Leave pin on for time (given in microseconds)
 // Sends an IR space for the specified number of microseconds.
-// A space is no output, so the PWM output is disabled.
 //
 void  IRemulate::space (unsigned int time)
 {
