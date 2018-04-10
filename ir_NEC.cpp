@@ -41,7 +41,7 @@ void  IRemulate::emulateNEC (unsigned long data,  int nbits)
 
 	// Footer
 	mark(NEC_BIT_MARK);
-	space(0);  // Always end with the IR receiver on
+	disableIROut();
 }
 #endif
 

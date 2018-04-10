@@ -364,10 +364,11 @@ class IRsend
 class IRemulate
 {
 	public:
-		IRemulate (int emulatepin);
+		IRemulate (int emulatepin, bool solesource = true);
 
 		void  custom_delay_usec (unsigned long uSecs);
 		void  enableIROut 		() ;
+		void  disableIROut 		() ;
 		void  mark        		(unsigned int usec) ;
 		void  space       		(unsigned int usec) ;
 		void  emulateRaw     		(const unsigned int buf[],  unsigned int len) ;
@@ -447,6 +448,8 @@ class IRemulate
 
 	private:
 		byte emulatepin_;
+		bool solesource_; // Used for specifying if emulator is sole signal source
+		                  // or if it runs on top of an actual IR receiver
 } ;
 
 #endif

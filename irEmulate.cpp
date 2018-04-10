@@ -2,8 +2,8 @@
 #include "IRremoteInt.h"
 
 //+=============================================================================
-IRemulate::IRemulate (int emulatepin)
-: emulatepin_(emulatepin)
+IRemulate::IRemulate (int emulatepin, bool solesource)
+: emulatepin_(emulatepin), solesource_(solesource)
 {
 }
 
@@ -18,7 +18,7 @@ void  IRemulate::emulateRaw (const unsigned int buf[],  unsigned int len)
 		else        mark (buf[i]) ;
 	}
 
-	space(0);  // Always end with the Emulator on
+	disableIROut();
 }
 
 //+=============================================================================
@@ -56,6 +56,21 @@ void  IRemulate::enableIROut ()
 
 	pinMode(emulatepin_, OUTPUT);
 	digitalWrite(emulatepin_, HIGH); // When not sending, we want it high
+}
+
+//+=============================================================================
+// Disables emulation output.
+//
+void  IRemulate::disableIROut ()
+{
+	// Enable the Timer2 Interrupt (which is used for receiving IR)
+	TIMER_ENABLE_INTR; //Timer2 Overflow Interrupt
+
+	if (solesource_) {
+		space(0);  // Always end with the Emulator on
+	} else {
+		pinMode(emulatepin_, INPUT); // Enable high impedance on pin to allow actual receiver
+	}
 }
 
 //+=============================================================================
