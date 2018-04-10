@@ -18,6 +18,34 @@
 #define NEC_RPT_SPACE   2250
 
 //+=============================================================================
+#if EMULATE_NEC
+void  IRemulate::emulateNEC (unsigned long data,  int nbits)
+{
+	// Manage outputs
+	enableIROut();
+
+	// Header
+	mark(NEC_HDR_MARK);
+	space(NEC_HDR_SPACE);
+
+	// Data
+	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
+		if (data & mask) {
+			mark(NEC_BIT_MARK);
+			space(NEC_ONE_SPACE);
+		} else {
+			mark(NEC_BIT_MARK);
+			space(NEC_ZERO_SPACE);
+		}
+	}
+
+	// Footer
+	mark(NEC_BIT_MARK);
+	space(0);  // Always end with the IR receiver on
+}
+#endif
+
+//+=============================================================================
 #if SEND_NEC
 void  IRsend::sendNEC (unsigned long data,  int nbits)
 {

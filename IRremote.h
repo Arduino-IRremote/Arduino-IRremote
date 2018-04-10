@@ -30,54 +30,71 @@
 //
 #define DECODE_RC5           1
 #define SEND_RC5             1
+#define EMULATE_RC5          0 // NOT IMPLEMENTED YET
 
 #define DECODE_RC6           1
 #define SEND_RC6             1
+#define EMULATE_RC6          0 // NOT IMPLEMENTED YET
 
 #define DECODE_NEC           1
 #define SEND_NEC             1
+#define EMULATE_NEC          1
 
 #define DECODE_SONY          1
 #define SEND_SONY            1
+#define EMULATE_SONY         0 // NOT IMPLEMENTED YET
 
 #define DECODE_PANASONIC     1
 #define SEND_PANASONIC       1
+#define EMULATE_PANASONIC    0 // NOT IMPLEMENTED YET
 
 #define DECODE_JVC           1
 #define SEND_JVC             1
+#define EMULATE_JVC          0 // NOT IMPLEMENTED YET
 
 #define DECODE_SAMSUNG       1
 #define SEND_SAMSUNG         1
+#define EMULATE_SAMSUNG      0 // NOT IMPLEMENTED YET
 
 #define DECODE_WHYNTER       1
 #define SEND_WHYNTER         1
+#define EMULATE_WHYNTER      0 // NOT IMPLEMENTED YET
 
 #define DECODE_AIWA_RC_T501  1
 #define SEND_AIWA_RC_T501    1
+#define EMULATE_AIWA_RC_T501 0 // NOT IMPLEMENTED YET
 
 #define DECODE_LG            1
 #define SEND_LG              1
+#define EMULATE_LG           0 // NOT IMPLEMENTED YET
 
 #define DECODE_SANYO         1
 #define SEND_SANYO           0 // NOT WRITTEN
+#define EMULATE_SANYO        0 // NOT WRITTEN
 
 #define DECODE_MITSUBISHI    1
 #define SEND_MITSUBISHI      0 // NOT WRITTEN
+#define EMULATE_MITSUBISHI   0 // NOT WRITTEN
 
 #define DECODE_DISH          0 // NOT WRITTEN
 #define SEND_DISH            1
+#define EMULATE_DISH         0 // NOT IMPLEMENTED YET
 
 #define DECODE_SHARP         0 // NOT WRITTEN
 #define SEND_SHARP           1
+#define EMULATE_SHARP        0 // NOT IMPLEMENTED YET
 
 #define DECODE_DENON         1
 #define SEND_DENON           1
+#define EMULATE_DENON        0 // NOT IMPLEMENTED YET
 
 #define DECODE_PRONTO        0 // This function doe not logically make sense
 #define SEND_PRONTO          1
+#define EMULATE_PRONTO       0 // NOT IMPLEMENTED YET
 
 #define DECODE_LEGO_PF       0 // NOT WRITTEN
 #define SEND_LEGO_PF         1
+#define EMULATE_LEGO_PF      0 // NOT IMPLEMENTED YET
 
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
@@ -339,6 +356,97 @@ class IRsend
 #		if SEND_LEGO_PF
 			void  sendLegoPowerFunctions (uint16_t data, bool repeat = true) ;
 #		endif
+} ;
+
+//------------------------------------------------------------------------------
+// Main class for emulating IR receiver
+//
+class IRemulate
+{
+	public:
+		IRemulate (int emulatepin);
+
+		void  custom_delay_usec (unsigned long uSecs);
+		void  enableIROut 		() ;
+		void  mark        		(unsigned int usec) ;
+		void  space       		(unsigned int usec) ;
+		void  emulateRaw     		(const unsigned int buf[],  unsigned int len) ;
+
+		//......................................................................
+#		if EMULATE_RC5
+			// void  emulateRC5        (unsigned long data,  int nbits) ;
+#		endif
+#		if EMULATE_RC6
+			// void  emulateRC6        (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if EMULATE_NEC
+			void  emulateNEC        (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if EMULATE_SONY
+			// void  emulateSony       (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if EMULATE_PANASONIC
+			// void  emulatePanasonic  (unsigned int address,  unsigned long data) ;
+#		endif
+		//......................................................................
+#		if EMULATE_JVC
+			// JVC does NOT repeat by sending a separate code (like NEC does).
+			// The JVC protocol repeats by skipping the header.
+			// To send a JVC repeat signal, send the original code value
+			//   and set 'repeat' to true
+			// void  emulateJVC        (unsigned long data,  int nbits,  bool repeat) ;
+#		endif
+		//......................................................................
+#		if EMULATE_SAMSUNG
+			// void  emulateSAMSUNG    (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if EMULATE_WHYNTER
+			// void  emulateWhynter    (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if EMULATE_AIWA_RC_T501
+			// void  emulateAiwaRCT501 (int code) ;
+#		endif
+		//......................................................................
+#		if EMULATE_LG
+			// void  emulateLG         (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if EMULATE_SANYO
+			// void  emulateSanyo      ( ) ; // NOT WRITTEN
+#		endif
+		//......................................................................
+#		if EMULATE_MISUBISHI
+			// void  emulateMitsubishi ( ) ; // NOT WRITTEN
+#		endif
+		//......................................................................
+#		if EMULATE_DISH
+			// void  emulateDISH       (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if EMULATE_SHARP
+			// void  emulateSharpRaw   (unsigned long data,  int nbits) ;
+			// void  emulateSharp      (unsigned int address,  unsigned int command) ;
+#		endif
+		//......................................................................
+#		if EMULATE_DENON
+			// void  emulateDenon      (unsigned long data,  int nbits) ;
+#		endif
+		//......................................................................
+#		if EMULATE_PRONTO
+			// void  emulatePronto     (char* code,  bool repeat,  bool fallback) ;
+#		endif
+//......................................................................
+#		if EMULATE_LEGO_PF
+			// void  emulateLegoPowerFunctions (uint16_t data, bool repeat = true) ;
+#		endif
+
+	private:
+		byte emulatepin_;
 } ;
 
 #endif

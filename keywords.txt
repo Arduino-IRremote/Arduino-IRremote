@@ -9,6 +9,7 @@
 decode_results	KEYWORD1
 IRrecv	KEYWORD1
 IRsend	KEYWORD1
+IRemulate	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -19,6 +20,7 @@ decode	KEYWORD2
 enableIRIn	KEYWORD2
 resume	KEYWORD2
 enableIROut	KEYWORD2
+
 sendNEC	KEYWORD2
 sendSony	KEYWORD2
 sendSanyo KEYWORD2
@@ -32,6 +34,20 @@ sendSharpRaw KEYWORD2
 sendPanasonic KEYWORD2
 sendJVC KEYWORD2
 sendLG KEYWORD2
+
+emulateNEC	KEYWORD2
+emulateSony	KEYWORD2
+emulateSanyo KEYWORD2
+emulateMitsubishi KEYWORD2
+emulateRaw	KEYWORD2
+emulateRC5	KEYWORD2
+emulateRC6	KEYWORD2
+emulateDISH KEYWORD2
+emulateSharp KEYWORD2
+emulateSharpRaw KEYWORD2
+emulatePanasonic KEYWORD2
+emulateJVC KEYWORD2
+emulateLG KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
