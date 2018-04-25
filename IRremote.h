@@ -153,7 +153,7 @@ class decode_results
 	public:
 		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
 		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
-		unsigned long          value;        // Decoded value [max 32-bits]
+		unsigned long long     value;        // Decoded value [max 64-bits]
 		int                    bits;         // Number of bits in decoded value
 		volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
 		int                    rawlen;       // Number of records in rawbuf
@@ -272,7 +272,7 @@ class IRsend
 			void  sendRC5        (unsigned long data,  int nbits) ;
 #		endif
 #		if SEND_RC6
-			void  sendRC6        (unsigned long data,  int nbits) ;
+			void  sendRC6        (unsigned long long data,  int nbits) ;
 #		endif
 		//......................................................................
 #		if SEND_NEC

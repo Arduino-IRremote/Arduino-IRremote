@@ -65,7 +65,8 @@ void dump(decode_results *results) {
   else if (results->decode_type == WHYNTER) {
     Serial.print("Decoded Whynter: ");
   }
-  Serial.print(results->value, HEX);
+  Serial.print((long)((results->value)>>32), HEX);
+  Serial.print((long)((results->value)& 0xFFFFFFFF), HEX);
   Serial.print(" (");
   Serial.print(results->bits, DEC);
   Serial.println(" bits)");

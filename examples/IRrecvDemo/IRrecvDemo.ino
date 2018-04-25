@@ -26,7 +26,8 @@ void setup()
 
 void loop() {
   if (irrecv.decode(&results)) {
-    Serial.println(results.value, HEX);
+    Serial.print((long)((results->value)>>32), HEX);
+    Serial.print((long)((results->value)& 0xFFFFFFFF), HEX);
     irrecv.resume(); // Receive the next value
   }
   delay(100);

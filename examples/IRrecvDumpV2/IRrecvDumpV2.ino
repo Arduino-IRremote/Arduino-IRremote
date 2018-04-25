@@ -30,7 +30,9 @@ void  ircode (decode_results *results)
   }
 
   // Print Code
-  Serial.print(results->value, HEX);
+  Serial.print((long)((results->value) >> 32), HEX);
+  Serial.print((long)((results->value) & 0xFFFFFFFF), HEX);
+
 }
 
 //+=============================================================================
@@ -155,7 +157,8 @@ void  dumpCode (decode_results *results)
 
     // All protocols have data
     Serial.print("unsigned int  data = 0x");
-    Serial.print(results->value, HEX);
+    Serial.print((long)((results->value) >> 32), HEX);
+    Serial.print((long)((results->value) & 0xFFFFFFFF), HEX);
     Serial.println(";");
   }
 }
