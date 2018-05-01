@@ -174,6 +174,8 @@ void  loop ( )
     dumpInfo(&results);           // Output the results
     dumpRaw(&results);            // Output the results in RAW format
     dumpCode(&results);           // Output the results as source code
+    if (sizeof(results.value) * 8 < results.bits)
+      Serial.println("Warning: Decoded data too large, truncated. Consider enabling RC6_64BIT in IRremote.h.");
     Serial.println("");           // Blank line between entries
     irrecv.resume();              // Prepare for the next value
   }

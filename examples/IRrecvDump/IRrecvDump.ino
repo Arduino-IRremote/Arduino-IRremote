@@ -85,11 +85,13 @@ void dump(decode_results *results) {
     Serial.print(" ");
   }
   Serial.println();
+
+  if (sizeof(results->value) * 8 < results->bits)
+    Serial.println("Warning: Decoded data too large, truncated. Consider enabling RC6_64BIT in IRremote.h.");
 }
 
 void loop() {
   if (irrecv.decode(&results)) {
-    Serial.println(results.value, HEX);
     dump(&results);
     irrecv.resume(); // Receive the next value
   }
