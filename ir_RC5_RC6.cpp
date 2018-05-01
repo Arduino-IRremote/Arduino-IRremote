@@ -128,8 +128,14 @@ bool  IRrecv::decodeRC5 (decode_results *results)
 #define RC6_T1             444
 #define RC6_RPT_LENGTH   46000
 
+#if RC6_64BIT
+#	define MASK 1ULL
+#else
+#	define MASK 1UL
+#endif
+
 #if SEND_RC6
-void  IRsend::sendRC6 (unsigned long long data,  int nbits)
+void  IRsend::sendRC6 (data_type_t data,  int nbits)
 {
 	// Set IR carrier frequency
 	enableIROut(36);
@@ -143,7 +149,7 @@ void  IRsend::sendRC6 (unsigned long long data,  int nbits)
 	space(RC6_T1);
 
 	// Data
-	for (unsigned long long  i = 1, mask = 1ULL << (nbits - 1);  mask;  i++, mask >>= 1) {
+	for (data_type_t  i = 1, mask = MASK << (nbits - 1);  mask;  i++, mask >>= 1) {
 		// The fourth bit we send is a "double width trailer bit"
 		int  t = (i == 4) ? (RC6_T1 * 2) : (RC6_T1) ;
 		if (data & mask) {
@@ -164,7 +170,7 @@ void  IRsend::sendRC6 (unsigned long long data,  int nbits)
 bool  IRrecv::decodeRC6 (decode_results *results)
 {
 	int   nbits;
-	long long data   = 0;
+	data_type_t data   = 0;
 	int   used   = 0;
 	int   offset = 1;  // Skip first space
 

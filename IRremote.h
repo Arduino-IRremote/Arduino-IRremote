@@ -80,6 +80,12 @@
 #define SEND_LEGO_PF         1
 
 //------------------------------------------------------------------------------
+// RC6 can have data longer than 32 bits. To conserve memory, support for
+// 64 bit data is disabled by default
+//
+#define RC6_64BIT        false
+
+//------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
 //                                                   or the "repeat" code
 // If the code requested does not exist we can request to fallback on the
@@ -146,6 +152,15 @@ int  MATCH_MARK  (int measured_ticks, int desired_us) ;
 int  MATCH_SPACE (int measured_ticks, int desired_us) ;
 
 //------------------------------------------------------------------------------
+// Type used for storing decoded data
+//
+#if RC6_64BIT
+	typedef unsigned long long data_type_t;
+#else
+	typedef unsigned long data_type_t;
+#endif
+
+//------------------------------------------------------------------------------
 // Results returned from the decoder
 //
 class decode_results
@@ -153,7 +168,7 @@ class decode_results
 	public:
 		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
 		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
-		unsigned long long     value;        // Decoded value [max 64-bits]
+		data_type_t            value;        // Decoded value [max 32 or 64-bits]
 		int                    bits;         // Number of bits in decoded value
 		volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
 		int                    rawlen;       // Number of records in rawbuf
@@ -272,7 +287,7 @@ class IRsend
 			void  sendRC5        (unsigned long data,  int nbits) ;
 #		endif
 #		if SEND_RC6
-			void  sendRC6        (unsigned long long data,  int nbits) ;
+			void  sendRC6        (data_type_t data,  int nbits) ;
 #		endif
 		//......................................................................
 #		if SEND_NEC
