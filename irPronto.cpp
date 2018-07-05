@@ -6,6 +6,8 @@
 #	define PRONTO_REPEAT      true
 #	define PRONTO_FALLBACK    true
 #	define PRONTO_NOFALLBACK  false
+#else
+#	include "IRremote.h"
 #endif
 
 #if SEND_PRONTO
@@ -16,8 +18,6 @@
 	void  enableIROut (int freq)  { printf("\nFreq = %d KHz\n", freq); }
 	void  mark        (int t)     { printf("+%d," , t); }
 	void  space       (int t)     { printf("-%d, ", t); }
-#else
-#	include "IRremote.h"
 #endif // TEST
 
 //+=============================================================================
@@ -70,7 +70,7 @@ uint16_t  htow (char* cp)
 
 //+=============================================================================
 //
-bool sendPronto (char* s,  bool repeat,  bool fallback)
+void IRsend::sendPronto (char* s,  bool repeat,  bool fallback)
 {
 	int       i;
 	int       len;
