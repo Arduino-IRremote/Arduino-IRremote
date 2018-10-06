@@ -79,6 +79,8 @@
 #define DECODE_LEGO_PF       0 // NOT WRITTEN
 #define SEND_LEGO_PF         1
 
+#define SEND_PIONEER         1 // send double NEC codes for PIONEER
+
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
 //                                                   or the "repeat" code
@@ -119,6 +121,7 @@ typedef
 		DENON,
 		PRONTO,
 		LEGO_PF,
+		PIONEER,
 	}
 decode_type_t;
 
@@ -338,6 +341,10 @@ class IRsend
 //......................................................................
 #		if SEND_LEGO_PF
 			void  sendLegoPowerFunctions (uint16_t data, bool repeat = true) ;
+#		endif
+//......................................................................
+#		if SEND_PIONEER
+			void  sendPioneer (unsigned long data1, unsigned long data2, int nbits) ;
 #		endif
 } ;
 
