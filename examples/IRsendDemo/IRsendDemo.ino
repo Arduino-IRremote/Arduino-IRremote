@@ -16,6 +16,7 @@ void setup()
 }
 
 void loop() {
+	// Sony codes must be sent 3 times according to the protocol
 	for (int i = 0; i < 3; i++) {
 		irsend.sendSony(0xa90, 12);
 		delay(40);
