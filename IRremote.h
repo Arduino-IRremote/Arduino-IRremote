@@ -176,6 +176,9 @@ class IRrecv
 
 		void  blink13    (int blinkflag) ;
 		int   decode     (decode_results *results) ;
+#ifdef ESP32
+		void  disableIRIn( ) ;
+#endif
 		void  enableIRIn ( ) ;
 		bool  isIdle     ( ) ;
 		void  resume     ( ) ;
