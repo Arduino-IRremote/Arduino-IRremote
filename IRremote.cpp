@@ -124,7 +124,7 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 //   Gap width is recorded; Ready is cleared; New logging starts
 //
 #ifdef IR_TIMER_USE_ESP32
-void IRTimer()
+IRAM_ATTR void IRTimer()
 #else
 ISR (TIMER_INTR_NAME)
 #endif
@@ -138,9 +138,9 @@ ISR (TIMER_INTR_NAME)
 	irparams.timer++;  // One more 50uS tick
 	if (irparams.rawlen >= RAWBUF)  irparams.rcvstate = STATE_OVERFLOW ;  // Buffer overflow
 
-	switch(irparams.rcvstate) {
-		//......................................................................
-		case STATE_IDLE: // In the middle of a gap
+    //Switch case would be much more appropriate. However, it creates a PANIC in ESP32
+    //which reads as "Cache disabled but cached memory region accessed". -- Phil5555
+	if (irparams.rcvstate==STATE_IDLE) {
 			if (irdata == MARK) {
 				if (irparams.timer < GAP_TICKS)  {  // Not big enough to be a gap.
 					irparams.timer = 0;
@@ -154,17 +154,13 @@ ISR (TIMER_INTR_NAME)
 					irparams.rcvstate                  = STATE_MARK;
 				}
 			}
-			break;
-		//......................................................................
-		case STATE_MARK:  // Timing Mark
+    } else if (irparams.rcvstate==STATE_MARK) {
 			if (irdata == SPACE) {   // Mark ended; Record time
 				irparams.rawbuf[irparams.rawlen++] = irparams.timer;
 				irparams.timer                     = 0;
 				irparams.rcvstate                  = STATE_SPACE;
 			}
-			break;
-		//......................................................................
-		case STATE_SPACE:  // Timing Space
+    } else if (irparams.rcvstate==STATE_SPACE) {
 			if (irdata == MARK) {  // Space just ended; Record time
 				irparams.rawbuf[irparams.rawlen++] = irparams.timer;
 				irparams.timer                     = 0;
@@ -177,16 +173,11 @@ ISR (TIMER_INTR_NAME)
 					// Don't reset timer; keep counting Space width
 					irparams.rcvstate = STATE_STOP;
 			}
-			break;
-		//......................................................................
-		case STATE_STOP:  // Waiting; Measuring Gap
+    } else if (irparams.rcvstate==STATE_STOP) {
 		 	if (irdata == MARK)  irparams.timer = 0 ;  // Reset gap timer
-		 	break;
-		//......................................................................
-		case STATE_OVERFLOW:  // Flag up a read overflow; Stop the State Machine
+    } else if (irparams.rcvstate==STATE_OVERFLOW) {
 			irparams.overflow = true;
 			irparams.rcvstate = STATE_STOP;
-		 	break;
 	}
 
 	// If requested, flash LED while receiving IR data
