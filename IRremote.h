@@ -67,13 +67,16 @@
 #define DECODE_DISH          0 // NOT WRITTEN
 #define SEND_DISH            1
 
-#define DECODE_SHARP         1
+#define DECODE_SHARP         0 // NOT WRITTEN
 #define SEND_SHARP           1
+
+#define DECODE_SHARP_ALT     1
+#define SEND_SHARP_ALT       1
 
 #define DECODE_DENON         1
 #define SEND_DENON           1
 
-#define DECODE_PRONTO        0 // This function doe not logically make sense
+#define DECODE_PRONTO        0 // This function does not logically make sense
 #define SEND_PRONTO          1
 
 #define DECODE_LEGO_PF       0 // NOT WRITTEN
@@ -116,6 +119,7 @@ typedef
 		MITSUBISHI,
 		DISH,
 		SHARP,
+		SHARP_ALT,
 		DENON,
 		PRONTO,
 		LEGO_PF,
@@ -241,7 +245,11 @@ class IRrecv
 #		endif
 		//......................................................................
 #		if DECODE_SHARP
-			bool  decodeSharp (decode_results *results) ;
+			bool  decodeSharp (decode_results *results) ; // NOT WRITTEN
+#		endif
+		//......................................................................
+#		if DECODE_SHARP_ALT
+			bool  decodeSharpAlt (decode_results *results) ;
 #		endif
 		//......................................................................
 #		if DECODE_DENON
@@ -324,9 +332,13 @@ class IRsend
 #		endif
 		//......................................................................
 #		if SEND_SHARP
-			void  sendSharpRaw (unsigned long data,  int nbits) ;
-			void  sendSharpRawLittleEndian (unsigned long data,  int nbits);
-			void  sendSharp (unsigned int address,  unsigned long command) ;
+			void  sendSharpRaw   (unsigned long data,  int nbits) ;
+			void  sendSharp      (unsigned int address,  unsigned int command) ;
+#		endif
+		//......................................................................
+#		if SEND_SHARP_ALT
+			void  sendSharpAltRaw (unsigned long data,  int nbits) ;
+			void  sendSharpAlt    (unsigned int address,  unsigned long command) ;
 #		endif
 		//......................................................................
 #		if SEND_DENON

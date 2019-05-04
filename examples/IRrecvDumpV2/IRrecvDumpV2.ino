@@ -47,6 +47,7 @@ void  encoding (decode_results *results)
     case RC6:          Serial.print("RC6");           break ;
     case DISH:         Serial.print("DISH");          break ;
     case SHARP:        Serial.print("SHARP");         break ;
+    case SHARP_ALT:    Serial.print("SHARP_ALT");     break ;
     case JVC:          Serial.print("JVC");           break ;
     case SANYO:        Serial.print("SANYO");         break ;
     case MITSUBISHI:   Serial.print("MITSUBISHI");    break ;

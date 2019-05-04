@@ -90,9 +90,9 @@ int  IRrecv::decode (decode_results *results)
 	if (decodeLegoPowerFunctions(results))  return true ;
 #endif
 
-#if DECODE_SHARP
-	DBG_PRINTLN("Attempting Sharp decode");
-	if (decodeSharp(results))  return true ;
+#if DECODE_SHARP_ALT
+	DBG_PRINTLN("Attempting SharpAlt decode");
+	if (decodeSharpAlt(results))  return true ;
 #endif
 
 	// decodeHash returns a hash on any input.
