@@ -1,0 +1,24 @@
+{
+  "name": "IRremote",
+  "keywords": "infrared, ir, remote",
+  "description": "Send and receive infrared signals with multiple protocols",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/z3t0/Arduino-IRremote.git"
+  },
+  "version": "2.3.3",
+  "frameworks": "arduino",
+  "platforms": "atmelavr",
+  "authors" :
+  [
+     {
+       "name":"Rafi Khan",
+       "email":"zetoslab@gmail.com"
+     },
+     {
+       "name":"Ken Shirriff",
+       "email":"ken.shirriff@gmail.com"
+     }
+  ]
+}

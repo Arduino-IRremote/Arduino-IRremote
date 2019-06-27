@@ -1,0 +1,30 @@
+language: python
+python:
+    - "2.7"
+    
+# Cache PlatformIO packages using Travis CI container-based infrastructure
+sudo: false
+cache:
+    directories:
+        - "~/.platformio"    
+
+env:
+    - PLATFORMIO_CI_SRC=examples/AiwaRCT501SendDemo PLATFORMIO_BUILD_FLAGS="-DSEND_AIWA_RC_T501"
+    - PLATFORMIO_CI_SRC=examples/IRrecord PLATFORMIO_BUILD_FLAGS="-DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6"
+    - PLATFORMIO_CI_SRC=examples/IRrecvDemo
+    - PLATFORMIO_CI_SRC=examples/IRrecvDump
+    - PLATFORMIO_CI_SRC=examples/IRrecvDumpV2
+    - PLATFORMIO_CI_SRC=examples/IRrelay
+    - PLATFORMIO_CI_SRC=examples/IRsendDemo PLATFORMIO_BUILD_FLAGS="-DSEND_SONY"
+    - PLATFORMIO_CI_SRC=examples/IRtest PLATFORMIO_BUILD_FLAGS="-DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6"
+    - PLATFORMIO_CI_SRC=examples/IRtest2 PLATFORMIO_BUILD_FLAGS="-DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6"
+    - PLATFORMIO_CI_SRC=examples/JVCPanasonicSendDemo PLATFORMIO_BUILD_FLAGS="-DSEND_JVC -DSEND_PANASONIC"
+    - PLATFORMIO_CI_SRC=examples/LegoPowerFunctionsSendDemo PLATFORMIO_BUILD_FLAGS="-DSEND_LEGO_PF"
+    - PLATFORMIO_CI_SRC=examples/LegoPowerFunctionsTests PLATFORMIO_BUILD_FLAGS="-DSEND_LEGO_PF"
+    - PLATFORMIO_CI_SRC=examples/IRremoteInfo 
+
+install:
+    - pip install -U platformio
+
+script:
+  - platformio ci --lib="." --board=uno --board=leonardo --board=pro16MHzatmega168 --board=btatmega328 

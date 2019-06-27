@@ -45,7 +45,7 @@ int toggle = 0; // The RC5/6 toggle state
 // Most of this code is just logging
 void storeCode(decode_results *results) {
   codeType = results->decode_type;
-  int count = results->rawlen;
+  //int count = results->rawlen;
   if (codeType == UNKNOWN) {
     Serial.println("Received unknown code, saving as raw");
     codeLen = results->rawlen - 1;
@@ -80,6 +80,12 @@ void storeCode(decode_results *results) {
     else if (codeType == SONY) {
       Serial.print("Received SONY: ");
     } 
+    else if (codeType == PANASONIC) {
+      Serial.print("Received PANASONIC: ");
+    }
+    else if (codeType == JVC) {
+      Serial.print("Received JVC: ");
+    }
     else if (codeType == RC5) {
       Serial.print("Received RC5: ");
     } 
@@ -114,6 +120,16 @@ void sendCode(int repeat) {
     Serial.print("Sent Sony ");
     Serial.println(codeValue, HEX);
   } 
+  else if (codeType == PANASONIC) {
+    irsend.sendPanasonic(codeValue, codeLen);
+    Serial.print("Sent Panasonic");
+    Serial.println(codeValue, HEX);
+  }
+  else if (codeType == JVC) {
+    irsend.sendJVC(codeValue, codeLen, false);
+    Serial.print("Sent JVC");
+    Serial.println(codeValue, HEX);
+  }
   else if (codeType == RC5 || codeType == RC6) {
     if (!repeat) {
       // Flip the toggle bit for a new button press
