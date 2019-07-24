@@ -110,4 +110,5 @@ EXTERN  volatile irparams_t  irparams;
 // All board specific stuff has been moved to its own file, included here.
 #include "boarddefs.h"
 
+#undef EXTERN
 #endif
