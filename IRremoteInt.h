@@ -22,50 +22,51 @@
 //
 #if defined(ARDUINO) && (ARDUINO >= 100)
 #	include <Arduino.h>
+// define which timer to use
+//
+// Uncomment the timer you wish to use on your board.  If you
+// are using another library which uses timer2, you have options
+// to switch IRremote to use a different timer.
+
+// Arduino Mega
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+ //#define IR_USE_TIMER1   // tx = pin 11
+ #define IR_USE_TIMER2     // tx = pin 9
+ //#define IR_USE_TIMER3   // tx = pin 5
+ //#define IR_USE_TIMER4   // tx = pin 6
+ //#define IR_USE_TIMER5   // tx = pin 46
+
+// Teensy 1.0
+#elif defined(__AVR_AT90USB162__)
+ #define IR_USE_TIMER1     // tx = pin 17
+
+// Teensy 2.0
+#elif defined(__AVR_ATmega32U4__)
+ //#define IR_USE_TIMER1   // tx = pin 14
+ //#define IR_USE_TIMER3   // tx = pin 9
+ #define IR_USE_TIMER4_HS  // tx = pin 10
+
+// Teensy++ 1.0 & 2.0
+#elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+ //#define IR_USE_TIMER1   // tx = pin 25
+ #define IR_USE_TIMER2     // tx = pin 1
+ //#define IR_USE_TIMER3   // tx = pin 16
+
+// Sanguino
+#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
+ //#define IR_USE_TIMER1   // tx = pin 13
+ #define IR_USE_TIMER2     // tx = pin 14
+
+// Atmega8
+#elif defined(__AVR_ATmega8P__) || defined(__AVR_ATmega8__)
+ #define IR_USE_TIMER1   // tx = pin 9
+
+// Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, etc
 #else
-#	if !defined(IRPRONTO)
-#		include <WProgram.h>
-#	endif
+ #define IR_USE_TIMER1   // tx = pin 9   uncomment out this line
+ //#define IR_USE_TIMER2     // tx = pin 3   comment out this line
 #endif
 
-//------------------------------------------------------------------------------
-// This handles definition and access to global variables
-//
-#ifdef IR_GLOBAL
-#	define EXTERN
-#else
-#	define EXTERN extern
-#endif
-
-//------------------------------------------------------------------------------
-// Information for the Interrupt Service Routine
-//
-#define RAWBUF  101  // Maximum length of raw duration buffer
-
-typedef
-	struct {
-		// The fields are ordered to reduce memory over caused by struct-padding
-		uint8_t       rcvstate;        // State Machine state
-		uint8_t       recvpin;         // Pin connected to IR data from detector
-		uint8_t       blinkpin;
-		uint8_t       blinkflag;       // true -> enable blinking of pin on IR processing
-		uint8_t       rawlen;          // counter of entries in rawbuf
-		unsigned int  timer;           // State timer, counts 50uS ticks.
-		unsigned int  rawbuf[RAWBUF];  // raw data
-		uint8_t       overflow;        // Raw buffer overflow occurred
-	}
-irparams_t;
-
-// ISR State-Machine : Receiver States
-#define STATE_IDLE      2
-#define STATE_MARK      3
-#define STATE_SPACE     4
-#define STATE_STOP      5
-#define STATE_OVERFLOW  6
-
-// Allow all parts of the code access to the ISR data
-// NB. The data can be changed by the ISR at any time, even mid-function
-// Therefore we declare it as "volatile" to stop the compiler/CPU caching it
 EXTERN  volatile irparams_t  irparams;
 
 //------------------------------------------------------------------------------
