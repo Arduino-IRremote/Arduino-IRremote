@@ -41,6 +41,12 @@
 #	define BLINKLED_ON()   (PORTD |= B00000001)
 #	define BLINKLED_OFF()  (PORTD &= B11111110)
 
+// Nano Every, Uno WiFi Rev2
+#elif defined(__AVR_ATmega4809__)
+#	define BLINKLED        LED_BUILTIN
+#	define BLINKLED_ON()   (digitalWrite(BLINKLED, HIGH))
+#	define BLINKLED_OFF()  (digitalWrite(BLINKLED, LOW))
+
 // No system LED on ESP32, disable blinking
 #elif defined(ESP32)
 #	define BLINKLED        255
@@ -85,6 +91,11 @@
 	//#define IR_USE_TIMER3   // tx = pin 5
 	//#define IR_USE_TIMER4   // tx = pin 6
 	//#define IR_USE_TIMER5   // tx = pin 46
+
+// Nano Every, Uno WiFi Rev2
+#elif defined(__AVR_ATmega4809__)
+	#define IR_USE_TIMER_4809_1     //  tx = pin 24
+// 	#define IR_USE_TIMER_4809_2     // TODO tx = pin 21
 
 // Teensy 1.0
 #elif defined(__AVR_AT90USB162__)
@@ -562,6 +573,32 @@
 #endif
 
 #define TIMER_PWM_PIN        1  /* ATtiny85 */
+
+#elif defined(IR_USE_TIMER_4809_1)
+// ATmega4809 TCB0
+#define TIMER_RESET          TCB0.INTFLAGS = TCB_CAPT_bm
+#define TIMER_ENABLE_PWM     (TCB0.CTRLB = TCB_CNTMODE_PWM8_gc)
+#define TIMER_DISABLE_PWM    (TCB0.CTRLB &= ~(TCB_CNTMODE_PWM8_gc))
+#define TIMER_ENABLE_INTR    (TCB0.INTCTRL = TCB_CAPT_bm)
+#define TIMER_DISABLE_INTR   (TCB0.INTCTRL &= ~(TCB_CAPT_bm))
+#define TIMER_INTR_NAME      TCB0_INT_vect
+#define TIMER_CONFIG_KHZ(val) ({ \
+  const uint8_t pwmval = SYSCLOCK / 2000 / 2 /(val); \
+  TCB0.CTRLB = TCB_CNTMODE_PWM8_gc; \
+  TCB0.CCMPL = pwmval; \
+  TCB0.CCMPH = pwmval / 3; \
+  TCB0.CTRLA = (TCB_CLKSEL_CLKDIV2_gc) | (TCB_ENABLE_bm); \
+})
+#define TIMER_COUNT_TOP      ((SYSCLOCK * USECPERTICK / 1000000))
+#define TIMER_CONFIG_NORMAL() ({ \
+  TCB0.CTRLB = (TCB_CNTMODE_INT_gc); \
+  TCB0.CCMP = TIMER_COUNT_TOP; \
+  TCB0.INTCTRL = TCB_CAPT_bm; \
+  TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm); \
+})
+
+#define TIMER_PWM_PIN        24  /* Uno Every */
+
 
 //---------------------------------------------------------
 // ESP32 (ESP8266 should likely be added here too)
