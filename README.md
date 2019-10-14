@@ -65,6 +65,8 @@ The following are strictly community supported patches that have yet to make it 
 
 [Arduino 101](https://github.com/z3t0/Arduino-IRremote/pull/481#issuecomment-311243146)
 
+[ATmega4809 -> Nano Every & UNO WiFi Rev2](https://github.com/mklemenz/Arduino-IRremote) (Send Pin 24, Timer TCB0)
+
 The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 
 ## Usage
