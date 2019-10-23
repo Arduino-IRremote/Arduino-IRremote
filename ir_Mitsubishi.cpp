@@ -9,23 +9,77 @@
 //    M   M  IIIII   T    SSSS    UUU   BBBBB  IIIII  SSSS   H   H  IIIII
 //==============================================================================
 
-// Looks like Sony except for timings, 48 chars of data and time/space different
+// IR Mitsubishi protocol (https://sbprojects.net/knowledge/ir/xsat.php)
 
 #define MITSUBISHI_BITS 16
 
-// Mitsubishi RM 75501
-// 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7
-// #define MITSUBISHI_HDR_MARK	250  // seen range 3500
-#define MITSUBISHI_HDR_SPACE	350 //  7*50+100
 #define MITSUBISHI_ONE_MARK	1950 // 41*50-100
 #define MITSUBISHI_ZERO_MARK  750 // 17*50-100
-// #define MITSUBISHI_DOUBLE_SPACE_USECS  800  // usually ssee 713 - not using ticks as get number wrapround
-// #define MITSUBISHI_RPT_LENGTH 45000
+
+#define MITSUBISHI_HDR_MARK   8000U
+#define MITSUBISHI_HDR_SPACE  4000U
+#define MITSUBISHI_BIT_MARK   526U
+#define MITSUBISHI_ZERO_SPACE 474U
+#define MITSUBISHI_ONE_SPACE  1474U
 
 //+=============================================================================
+#if SEND_MITSUBISHI
+void  IRsend::sendMitsubishi (unsigned long data, int nbits)
+{
+  // Set IR carrier frequency
+  enableIROut(38); // kHz
+
+  uint8_t address = data >> (nbits / 2);
+  uint8_t command = data & ((1 << (nbits / 2)) - 1);
+  unsigned int dataLength = 0;
+
+  // Header
+  mark(MITSUBISHI_HDR_MARK);
+  space(MITSUBISHI_HDR_SPACE);
+
+  // ------- first part of data: address ------- //
+  for (uint64_t mask = 1ULL << 7; mask; mask >>= 1)
+    if (address & mask) {
+      // Send 1
+      mark(MITSUBISHI_BIT_MARK);
+      space(MITSUBISHI_ONE_SPACE);
+      dataLength +=2;
+    } else {
+      // Send 0
+      mark(MITSUBISHI_BIT_MARK);
+      space(MITSUBISHI_ZERO_SPACE);
+      dataLength +=1;
+    }
+
+  // Gap between the address and the command
+  mark(MITSUBISHI_BIT_MARK);
+  space(MITSUBISHI_HDR_SPACE);
+
+  // ------- second part of data: command ------- //
+  for (uint64_t mask = 1ULL << 7; mask; mask >>= 1)
+    if (command & mask) {
+      // Send 1
+      mark(MITSUBISHI_BIT_MARK);
+      space(MITSUBISHI_ONE_SPACE);
+      dataLength +=2;
+    } else {
+      // Send 0
+      mark(MITSUBISHI_BIT_MARK);
+      space(MITSUBISHI_ZERO_SPACE);
+      dataLength +=1;
+    }
+
+  // Footer
+  mark(MITSUBISHI_BIT_MARK);
+  unsigned int gap = 60000 - (dataLength * 1000) - MITSUBISHI_HDR_MARK - MITSUBISHI_HDR_SPACE * 2 - MITSUBISHI_BIT_MARK * 2;
+  space(gap);
+};
+#endif
+
 #if DECODE_MITSUBISHI
 bool  IRrecv::decodeMitsubishi (decode_results *results)
 {
+  unsigned int HDR_SPACE = 350;
   // Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
   long data = 0;
   if (irparams.rawlen < 2 * MITSUBISHI_BITS + 2)  return false ;
@@ -57,7 +111,7 @@ bool  IRrecv::decodeMitsubishi (decode_results *results)
   // 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7
 
   // Initial Space
-  if (!MATCH_MARK(results->rawbuf[offset], MITSUBISHI_HDR_SPACE))  return false ;
+  if (!MATCH_MARK(results->rawbuf[offset], HDR_SPACE))  return false ;
   offset++;
 
   while (offset + 1 < irparams.rawlen) {
@@ -66,7 +120,7 @@ bool  IRrecv::decodeMitsubishi (decode_results *results)
     else                                                                 return false ;
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], MITSUBISHI_HDR_SPACE))  break ;
+    if (!MATCH_SPACE(results->rawbuf[offset], HDR_SPACE))  break ;
     offset++;
   }
 

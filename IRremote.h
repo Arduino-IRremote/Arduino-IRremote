@@ -62,7 +62,7 @@
 #define SEND_SANYO           0 // NOT WRITTEN
 
 #define DECODE_MITSUBISHI    1
-#define SEND_MITSUBISHI      0 // NOT WRITTEN
+#define SEND_MITSUBISHI      1
 
 #define DECODE_DISH          0 // NOT WRITTEN
 #define SEND_DISH            1
@@ -315,8 +315,8 @@ class IRsend
 			void  sendSanyo      ( ) ; // NOT WRITTEN
 #		endif
 		//......................................................................
-#		if SEND_MISUBISHI
-			void  sendMitsubishi ( ) ; // NOT WRITTEN
+#		if SEND_MITSUBISHI
+			void  sendMitsubishi (unsigned long data, int nbits) ;
 #		endif
 		//......................................................................
 #		if SEND_DISH
