@@ -597,7 +597,7 @@
   TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm); \
 })
 
-#define TIMER_PWM_PIN        24  /* Uno Every */
+#define TIMER_PWM_PIN        6  /* Nano Every, Uno WiFi Rev2 */
 
 
 //---------------------------------------------------------
