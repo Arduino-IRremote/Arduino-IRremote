@@ -86,6 +86,10 @@
 	//#define IR_USE_TIMER4   // tx = pin 6
 	//#define IR_USE_TIMER5   // tx = pin 46
 
+// ATmega8u2, ATmega16U2, ATmega32U2
+#elif defined(__AVR_ATmega8U2__) || defined(__AVR_ATmega16U2__)  || defined(__AVR_ATmega32U2__)
+	#define IR_USE_TIMER1     // tx = pin C6
+
 // Teensy 1.0
 #elif defined(__AVR_AT90USB162__)
 	#define IR_USE_TIMER1     // tx = pin 17
