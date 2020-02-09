@@ -25,16 +25,16 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
 
 	// Header
 	mark(NEC_HDR_MARK);
-	space(NEC_HDR_SPACE);
 
-	// Data
-	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
-		if (data & mask) {
+	if (data == REPEAT) {
+		space(NEC_RPT_SPACE);
+	}
+	else {
+		// Data
+		space(NEC_HDR_SPACE);
+		for (unsigned long  mask = 1;  nbits;  mask <<= 1, --nbits) {
 			mark(NEC_BIT_MARK);
-			space(NEC_ONE_SPACE);
-		} else {
-			mark(NEC_BIT_MARK);
-			space(NEC_ZERO_SPACE);
+			space(data & mask ? NEC_ONE_SPACE : NEC_ZERO_SPACE);
 		}
 	}
 
@@ -42,6 +42,7 @@ void  IRsend::sendNEC (unsigned long data,  int nbits)
 	mark(NEC_BIT_MARK);
 	space(0);  // Always end with the LED off
 }
+
 #endif
 
 //+=============================================================================
@@ -59,8 +60,8 @@ bool  IRrecv::decodeNEC (decode_results *results)
 
 	// Check for repeat
 	if ( (irparams.rawlen == 4)
-	    && MATCH_SPACE(results->rawbuf[offset  ], NEC_RPT_SPACE)
-	    && MATCH_MARK (results->rawbuf[offset+1], NEC_BIT_MARK )
+		&& MATCH_SPACE(results->rawbuf[offset  ], NEC_RPT_SPACE)
+		&& MATCH_MARK (results->rawbuf[offset+1], NEC_BIT_MARK )
 	   ) {
 		results->bits        = 0;
 		results->value       = REPEAT;
@@ -80,9 +81,9 @@ bool  IRrecv::decodeNEC (decode_results *results)
 		// Check data "mark"
 		if (!MATCH_MARK(results->rawbuf[offset], NEC_BIT_MARK))  return false ;
 		offset++;
-        // Suppend this bit
-		if      (MATCH_SPACE(results->rawbuf[offset], NEC_ONE_SPACE ))  data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset], NEC_ZERO_SPACE))  data = (data << 1) | 0 ;
+		// Suppend this bit
+		if      (MATCH_SPACE(results->rawbuf[offset], NEC_ONE_SPACE ))  data |= 1UL << i;
+		else if (MATCH_SPACE(results->rawbuf[offset], NEC_ZERO_SPACE))  data |= 0UL << i;
 		else                                                            return false ;
 		offset++;
 	}
