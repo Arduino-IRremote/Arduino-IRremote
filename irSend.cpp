@@ -22,7 +22,7 @@ void  IRsend::sendRaw (const unsigned int buf[],  unsigned int len,  unsigned in
 void  IRsend::mark (unsigned int time)
 {
 	#ifdef ESP32
-		ledcWrite(LEDCHANNEL, 50);
+		ledcWrite(LEDCHANNEL, 83);
 	#else
 		TIMER_ENABLE_PWM; // Enable pin 3 PWM output
 	#endif
