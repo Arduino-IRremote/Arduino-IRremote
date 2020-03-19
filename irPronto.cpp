@@ -1,24 +1,6 @@
-#define TEST 0
-
-#if TEST
-#	define SEND_PRONTO        1
-#	define PRONTO_ONCE        false
-#	define PRONTO_REPEAT      true
-#	define PRONTO_FALLBACK    true
-#	define PRONTO_NOFALLBACK  false
-#endif
+#include "IRremote.h"
 
 #if SEND_PRONTO
-
-//******************************************************************************
-#if TEST
-#	include <stdio.h>
-	void  enableIROut (int freq)  { printf("\nFreq = %d KHz\n", freq); }
-	void  mark        (int t)     { printf("+%d," , t); }
-	void  space       (int t)     { printf("-%d, ", t); }
-#else
-#	include "IRremote.h"
-#endif // TEST
 
 //+=============================================================================
 // Check for a valid hex digit
@@ -70,7 +52,7 @@ uint16_t  htow (char* cp)
 
 //+=============================================================================
 //
-bool sendPronto (char* s,  bool repeat,  bool fallback)
+void  IRsend::sendPronto (char* s,  bool repeat,  bool fallback)
 {
 	int       i;
 	int       len;
