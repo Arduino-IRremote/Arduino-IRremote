@@ -1,9 +1,25 @@
 #include "IRremote.h"
 #include "IRremoteInt.h"
 
-#ifdef IR_TIMER_USE_ESP32
+#if defined(IR_TIMER_USE_ESP32)
 hw_timer_t *timer;
 void IRTimer(); // defined in IRremote.cpp
+#elif defined(IR_TIMER_USE_SAMD21_TC3)
+void IRTimer(); // defined in IRremote.cpp
+// TC3_Handler is declared somewhere in the guts of the SAMD21 compiler.  It is the handler for the
+// TC3 timer which we set up in IRrecv::enableIRIn().
+void TC3_Handler ()
+{
+	TcCount8* TC = (TcCount8*) TC3; // Get timer struct.
+	// Check that a compare to CC0 caused the interrupt:
+	if (TC->INTFLAG.bit.MC0 == 1) {
+		// We configured CC0 to a value that is reached 50us after the
+		// last interrupt, so it's time to invoke the main ISR:
+		IRTimer();
+		TC->INTFLAG.bit.MC0 = 1;  // writing a one clears the compare interrupt flag
+		TC->COUNT.reg = 0;  // Set the counter back to zero.
+	}
+}
 #endif
 
 //+=============================================================================
@@ -123,7 +139,7 @@ IRrecv::IRrecv (int recvpin, int blinkpin)
 void  IRrecv::enableIRIn ( )
 {
 // Interrupt Service Routine - Fires every 50uS
-#ifdef ESP32
+#if defined(IR_TIMER_USE_ESP32)
 	// ESP32 has a proper API to setup timers, no weird chip macros needed
 	// simply call the readable API versions :)
 	// 3 timers, choose #1, 80 divider nanosecond precision, 1 to count up
@@ -132,6 +148,49 @@ void  IRrecv::enableIRIn ( )
 	// every 50ns, autoreload = true
 	timerAlarmWrite(timer, 50, true);
 	timerAlarmEnable(timer);
+#elif defined(IR_TIMER_USE_SAMD21_TC3)
+	// SAMD21 does not have a simple API for timers, so we have to do some low level register
+	// manipulation and manual synchronization.
+
+	// Enable clock for TC
+	REG_GCLK_CLKCTRL = (uint16_t) (GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | GCLK_CLKCTRL_ID_TCC2_TC3) ;
+	while ( GCLK->STATUS.bit.SYNCBUSY == 1 ); // wait for sync
+
+	// The type cast must fit with the selected timer mode
+	TcCount8* TC = (TcCount8*) TC3; // get timer struct
+
+	TC->CTRLA.reg &= ~TC_CTRLA_ENABLE;  // Disable TC
+	while (TC->STATUS.bit.SYNCBUSY == 1);  // wait for sync
+	TC->CTRLA.reg |= TC_CTRLA_MODE_COUNT8;  // Set Timer counter Mode to 8 bits
+	while (TC->STATUS.bit.SYNCBUSY == 1);  // wait for sync
+	TC->CTRLA.reg |= TC_CTRLA_WAVEGEN_NFRQ;  // Set TC as normal Normal Frq
+	while (TC->STATUS.bit.SYNCBUSY == 1);  // wait for sync
+	TC->CTRLA.reg |= TC_CTRLA_PRESCALER_DIV16;  // Set perscaler to divide by 16.
+	while (TC->STATUS.bit.SYNCBUSY == 1);  // wait for sync
+
+	// Set the compare register CC0 to configure the interrupt period.
+	// 0x096 = 150 is the count that is required to achieve a 50us interrupt
+	// period.  Formula to calculate:
+	//
+	//   (48MHz / 16) * 50us = 150
+	//
+	// where 48MHz is the MCU clock speed
+	// where 16 is the clock prescaler
+	// where 50us is the desired interrupt period
+	//
+	TC->CC[0].reg = 0x096;
+	while (TC->STATUS.bit.SYNCBUSY == 1); // wait for sync
+
+	// Interrupts
+	TC->INTENSET.reg = 0;  // disable all interrupts
+	TC->INTENSET.bit.MC0 = 1;  // enable compare match to CC0
+
+	// Enable InterruptVector
+	NVIC_EnableIRQ(TC3_IRQn);
+
+	// Enable TC
+	TC->CTRLA.reg |= TC_CTRLA_ENABLE;
+	while (TC->STATUS.bit.SYNCBUSY == 1);  // wait for sync
 #else
 	cli();
 	// Setup pulse clock timer interrupt

@@ -13,10 +13,10 @@
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
 // Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
 //
-// JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
-// Whynter A/C ARC-110WD added by Francesco Meschia
-
-// Sparkfun Pro Micro support by Alastair McCormack
+// JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post).
+// Whynter A/C ARC-110WD added by Francesco Meschia.
+// Sparkfun Pro Micro support by Alastair McCormack.
+// SAMD21 MCU receive support added by Troy Sankey.
 //******************************************************************************
 
 #ifndef boarddefs_h
@@ -46,6 +46,12 @@
 #	define BLINKLED        255
 #	define BLINKLED_ON()   1
 #	define BLINKLED_OFF()  1
+
+#elif defined(_SAMD21_)
+#	define BLINKLED        LED_BUILTIN
+#	define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
+#	define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
+
 #else
 #	define BLINKLED        13
 #	define BLINKLED_ON()  (PORTB |= B00100000)
@@ -68,8 +74,8 @@
 // Define which timer to use
 //
 // Uncomment the timer you wish to use on your board.
-// If you are using another library which uses timer2, you have options to
-//   switch IRremote to use a different timer.
+// If you are using another library which uses the currently uncommented timer,
+// you may select a different timer depending on your MCU.
 //
 
 // Sparkfun Pro Micro
@@ -146,6 +152,18 @@
 
 #elif defined(ESP32)
 	#define IR_TIMER_USE_ESP32
+
+// SAMD21 MCU family.
+//
+// Compatible Arduino boards:
+// M0 Pro, M0, MKR FOX 1200, MKR GSM 1400, MKR NB 1500, MKR Vidor 4000, MKR WAN
+// 1300, MKR WAN 1310, MKR WiFi 1010, MKR1000, MKRZero, NANO 33 IoT, Tian,
+// Zero.
+//
+// Right now, this codebase is hard-coded to only use the TC3 timer on the SAMD21.
+#elif defined(_SAMD21_)
+	#define IR_TIMER_USE_SAMD21_TC3
+
 #else
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
@@ -313,7 +331,7 @@
 
 #define TIMER_RESET
 
-#if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro                         
+#if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro
 	#define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A0))     // Use complimentary O̅C̅4̅A̅ output on pin 5
 	#define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A0)))  // (Pro Micro does not map PC7 (32/ICP3/CLK0/OC4A)
 															// of ATmega32U4 )
@@ -566,11 +584,11 @@
 //---------------------------------------------------------
 // ESP32 (ESP8266 should likely be added here too)
 //
-
-// ESP32 has it own timer API and does not use these macros, but to avoid ifdef'ing
-// them out in the common code, they are defined to no-op. This allows the code to compile
-// (which it wouldn't otherwise) but irsend will not work until ESP32 specific code is written
-// for that -- merlin
+// ESP32 has it own timer API and does not use some macros (e.g.  TIMER_CONFIG_NORMAL).  Also, IR
+// Send is not implemented, so some macros are defined as no-op to avoid ifdef'ing them out in the
+// common code. This allows the code to compile (which it wouldn't otherwise) but irsend will not
+// work until ESP32 specific code is written for that.
+//
 // As a warning, sending timing specific code from an ESP32 can be challenging if you need 100%
 // reliability because the arduino code may be interrupted and cause your sent waveform to be the
 // wrong length. This is specifically an issue for neopixels which require 800Khz resolution.
@@ -578,12 +596,18 @@
 // way to do this on ESP32 is using the RMT built in driver like in this incomplete library below
 // https://github.com/ExploreEmbedded/ESP32_RMT
 #elif defined(IR_TIMER_USE_ESP32)
-#define TIMER_RESET	     
-#define TIMER_ENABLE_PWM     
+#define TIMER_RESET
+#define TIMER_ENABLE_PWM
 #define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for ESP32 yet");
-#define TIMER_ENABLE_INTR    
-#define TIMER_DISABLE_INTR   
-#define TIMER_INTR_NAME      
+
+//---------------------------------------------------------
+// SAMD21
+//
+// Similar to ESP32, SAMD21 has its own timer APIs, and IR Send is not implemented.
+#elif defined(IR_TIMER_USE_SAMD21_TC3)
+#define TIMER_RESET
+#define TIMER_ENABLE_PWM
+#define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for SAMD21 yet");
 
 //---------------------------------------------------------
 // Unknown Timer
