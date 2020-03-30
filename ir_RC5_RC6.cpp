@@ -65,6 +65,11 @@ void IRsend::sendRC5(unsigned long data, int nbits)
 {
     // Set IR carrier frequency
     enableIROut(36);
+#ifdef ESP32
+    // TODO refactor this out into a makro and use it on all send()-routines
+    const UBaseType_t oldPrio = uxTaskPriorityGet(NULL);
+    vTaskPrioritySet(NULL, configMAX_PRIORITIES - 2);
+#endif
 
     // Start
     mark(RC5_T1);
@@ -87,6 +92,9 @@ void IRsend::sendRC5(unsigned long data, int nbits)
     }
 
     space(0); // Always end with the LED off
+#ifdef ESP32
+    vTaskPrioritySet(NULL, oldPrio);
+#endif
 }
 #endif
 
