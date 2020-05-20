@@ -124,7 +124,7 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 //   Gap width is recorded; Ready is cleared; New logging starts
 //
 #ifdef IR_TIMER_USE_ESP32
-void IRTimer()
+void IRAM_ATTR IRTimer()
 #else
 ISR (TIMER_INTR_NAME)
 #endif
@@ -138,6 +138,65 @@ ISR (TIMER_INTR_NAME)
 	irparams.timer++;  // One more 50uS tick
 	if (irparams.rawlen >= RAWBUF)  irparams.rcvstate = STATE_OVERFLOW ;  // Buffer overflow
 
+#ifdef  IR_TIMER_USE_ESP32
+	//......................................................................
+	if( irparams.rcvstate == STATE_IDLE ) // In the middle of a gap
+	{
+		if (irdata == MARK) {
+			if (irparams.timer < GAP_TICKS)  {  // Not big enough to be a gap.
+				irparams.timer = 0;
+
+			} else {
+				// Gap just ended; Record duration; Start recording transmission
+				irparams.overflow                  = false;
+				irparams.rawlen                    = 0;
+				irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+				irparams.timer                     = 0;
+				irparams.rcvstate                  = STATE_MARK;
+			}
+		}
+	}
+
+	//......................................................................
+	else if( irparams.rcvstate == STATE_MARK ) // Timing Mark
+	{
+		if (irdata == SPACE) {   // Mark ended; Record time
+			irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+			irparams.timer                     = 0;
+			irparams.rcvstate                  = STATE_SPACE;
+		}
+	//	break;
+	}
+	//......................................................................
+	else if( irparams.rcvstate == STATE_SPACE ) // Timing Space
+	{
+		if (irdata == MARK) {  // Space just ended; Record time
+			irparams.rawbuf[irparams.rawlen++] = irparams.timer;
+			irparams.timer                     = 0;
+			irparams.rcvstate                  = STATE_MARK;
+
+		} else if (irparams.timer > GAP_TICKS) {  // Space
+				// A long Space, indicates gap between codes
+				// Flag the current code as ready for processing
+				// Switch to STOP
+				// Don't reset timer; keep counting Space width
+				irparams.rcvstate = STATE_STOP;
+		}
+	}
+	//......................................................................
+	else if( irparams.rcvstate == STATE_STOP ) // Waiting; Measuring Gap
+	{
+		if (irdata == MARK)  irparams.timer = 0 ;  // Reset gap timer
+	}
+	//......................................................................
+
+	else if( irparams.rcvstate == STATE_OVERFLOW ) // Flag up a read overflow; Stop the State Machine
+	{
+		irparams.overflow = true;
+		irparams.rcvstate = STATE_STOP;
+	}
+
+#else
 	switch(irparams.rcvstate) {
 		//......................................................................
 		case STATE_IDLE: // In the middle of a gap
@@ -154,7 +213,8 @@ ISR (TIMER_INTR_NAME)
 					irparams.rcvstate                  = STATE_MARK;
 				}
 			}
-			break;
+		  break;
+
 		//......................................................................
 		case STATE_MARK:  // Timing Mark
 			if (irdata == SPACE) {   // Mark ended; Record time
@@ -163,6 +223,7 @@ ISR (TIMER_INTR_NAME)
 				irparams.rcvstate                  = STATE_SPACE;
 			}
 			break;
+
 		//......................................................................
 		case STATE_SPACE:  // Timing Space
 			if (irdata == MARK) {  // Space just ended; Record time
@@ -178,16 +239,19 @@ ISR (TIMER_INTR_NAME)
 					irparams.rcvstate = STATE_STOP;
 			}
 			break;
+		
 		//......................................................................
 		case STATE_STOP:  // Waiting; Measuring Gap
 		 	if (irdata == MARK)  irparams.timer = 0 ;  // Reset gap timer
 		 	break;
+		
 		//......................................................................
 		case STATE_OVERFLOW:  // Flag up a read overflow; Stop the State Machine
 			irparams.overflow = true;
 			irparams.rcvstate = STATE_STOP;
 		 	break;
 	}
+#endif
 
 	// If requested, flash LED while receiving IR data
 	if (irparams.blinkflag) {
