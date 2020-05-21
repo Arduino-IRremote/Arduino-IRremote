@@ -80,6 +80,9 @@ void storeCode(decode_results *results) {
     else if (codeType == SONY) {
       Serial.print("Received SONY: ");
     } 
+    else if (codeType == SAMSUNG) {
+      Serial.print("Received SAMSUNG: ");
+    }
     else if (codeType == PANASONIC) {
       Serial.print("Received PANASONIC: ");
     }
