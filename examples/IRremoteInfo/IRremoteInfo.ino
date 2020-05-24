@@ -188,6 +188,7 @@ void dumpProtocols() {
   Serial.print(F("DISH:         "));  printSendEnabled(SEND_DISH);  printDecodeEnabled(DECODE_DISH);
   Serial.print(F("SHARP:        "));  printSendEnabled(SEND_SHARP);  printDecodeEnabled(DECODE_SHARP);
   Serial.print(F("DENON:        "));  printSendEnabled(SEND_DENON);  printDecodeEnabled(DECODE_DENON);
+  Serial.print(F("BOSEWAVE:     "));  printSendEnabled(SEND_BOSEWAVE);  printDecodeEnabled(DECODE_BOSEWAVE);
   Serial.print(F("PRONTO:       "));  printSendEnabled(SEND_PRONTO);  Serial.println(F("(Not Applicable)"));
 }
 

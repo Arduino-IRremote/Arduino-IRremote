@@ -65,6 +65,9 @@ void dump(decode_results *results) {
   else if (results->decode_type == WHYNTER) {
     Serial.print("Decoded Whynter: ");
   }
+  else if (results.decode_type == BOSEWAVE) {
+    Serial.print("Decoded Bose Wave Radio / CD: ");
+  }
   Serial.print(results->value, HEX);
   Serial.print(" (");
   Serial.print(results->bits, DEC);
