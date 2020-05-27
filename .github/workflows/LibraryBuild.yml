@@ -54,9 +54,6 @@ jobs:
         include:
           - arduino-boards-fqbn: arduino:avr:uno
             examples-exclude: 50Hz # Comma separated list of (unique substrings of) example names to exclude in build
-            examples-build-properties:
-              All:
-                -DDEBUG
 
       # Do not cancel all jobs / architectures if one job fails
       fail-fast: false
