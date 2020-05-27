@@ -54,7 +54,16 @@ jobs:
         include:
           - arduino-boards-fqbn: arduino:avr:uno
             examples-exclude: 50Hz # Comma separated list of (unique substrings of) example names to exclude in build
-
+            examples-build-properties:
+              AiwaRCT501SendDemo: -DSEND_AIWA_RC_T501
+              IRrecord: -DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6
+              IRsendDemo: -DSEND_SONY
+              IRtest: -DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6
+              IRtest2: -DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6
+              JVCPanasonicSendDemo: -DSEND_JVC -DSEND_PANASONIC
+              LegoPowerFunctionsSendDemo: -DSEND_LEGO_PF
+              LegoPowerFunctionsTests: -DSEND_LEGO_PF
+              
       # Do not cancel all jobs / architectures if one job fails
       fail-fast: false
 
