@@ -10,7 +10,6 @@
  * Original Author: AnalysIR - IR software & modules for Makers & Pros, visit http://www.AnalysIR.com
  */
 
-
 #include <IRremote.h>
 
 // Function declarations for non Arduino IDE's
@@ -29,39 +28,44 @@ void dumpFooter();
 void printSendEnabled(int flag);
 void printDecodeEnabled(int flag);
 
-void setup()
-{
-  Serial.begin(115200); //You may alter the BAUD rate here as needed
-  while (!Serial); //wait until Serial is established - required on some Platforms
+void setup() {
+    Serial.begin(115200);
+#if defined(__AVR_ATmega32U4__)
+    while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
+#endif
+    // Just to know which program is running on my Arduino
+    Serial.println(F("START " __FILE__ " from " __DATE__));
 
-  //Runs only once per restart of the Arduino.
-  dumpHeader();
-  dumpRAWBUF();
-  dumpTIMER();
-  dumpTimerPin();
-  dumpClock();
-  dumpPlatform();
-  dumpPulseParams();
-  dumpSignalParams();
-  dumpArduinoIDE();
-  dumpDebugMode();
-  dumpProtocols();
-  dumpFooter();
+    //Runs only once per restart of the Arduino.
+    dumpHeader();
+    dumpRAWBUF();
+    dumpTIMER();
+    dumpTimerPin();
+    dumpClock();
+    dumpPlatform();
+    dumpPulseParams();
+    dumpSignalParams();
+    dumpArduinoIDE();
+    dumpDebugMode();
+    dumpProtocols();
+    dumpFooter();
 }
 
 void loop() {
-  //nothing to do!
+    //nothing to do!
 }
 
 void dumpRAWBUF() {
-  Serial.print(F("RAWBUF: "));
-  Serial.println(RAWBUF);
+    Serial.print(F("RAWBUF: "));
+    Serial.println(RAWBUF);
 }
 
 void dumpTIMER() {
-  boolean flag = false;
+    boolean flag = false;
 #ifdef IR_USE_TIMER1
-  Serial.print(F("Timer defined for use: ")); Serial.println(F("Timer1")); flag = true;
+    Serial.print(F("Timer defined for use: "));
+    Serial.println(F("Timer1"));
+    flag = true;
 #endif
 #ifdef IR_USE_TIMER2
   Serial.print(F("Timer defined for use: ")); Serial.println(F("Timer2")); flag = true;
@@ -88,23 +92,24 @@ void dumpTIMER() {
   Serial.print(F("Timer defined for use: ")); Serial.println(F("Timer_TINY0")); flag = true;
 #endif
 
-  if (!flag) {
-    Serial.print(F("Timer Error: ")); Serial.println(F("not defined"));
-  }
+    if (!flag) {
+        Serial.print(F("Timer Error: "));
+        Serial.println(F("not defined"));
+    }
 }
 
 void dumpTimerPin() {
-  Serial.print(F("IR Tx Pin: "));
-  Serial.println(SEND_PIN);
+    Serial.print(F("IR Tx Pin: "));
+    Serial.println(SEND_PIN);
 }
 
 void dumpClock() {
-  Serial.print(F("MCU Clock: "));
-  Serial.println(F_CPU);
+    Serial.print(F("MCU Clock: "));
+    Serial.println(F_CPU);
 }
 
 void dumpPlatform() {
-  Serial.print(F("MCU Platform: "));
+    Serial.print(F("MCU Platform: "));
 
 #if defined(__AVR_ATmega1280__)
   Serial.println(F("Arduino Mega1280"));
@@ -142,7 +147,7 @@ void dumpPlatform() {
 #elif defined(__AVR_ATmega32__)
   Serial.println(F("ATmega32"));
 #elif defined(__AVR_ATmega16__)
-  Serial.println(F("ATmega16"));
+    Serial.println(F("ATmega16"));
 #elif defined(__AVR_ATmega8535__)
   Serial.println(F("ATmega8535"));
 #elif defined(__AVR_ATmega8__)
@@ -152,95 +157,149 @@ void dumpPlatform() {
 #elif defined(__AVR_ATtiny85__)
   Serial.println(F("ATtiny85"));
 #else
-  Serial.println(F("ATmega328(P) / (Duemilanove, Diecimila, LilyPad, Mini, Micro, Fio, Nano, etc)"));
+    Serial.println(F("ATmega328(P) / (Duemilanove, Diecimila, LilyPad, Mini, Micro, Fio, Nano, etc)"));
 #endif
 }
 
 void dumpPulseParams() {
-  Serial.print(F("Mark Excess: ")); Serial.print(MARK_EXCESS);; Serial.println(F(" uSecs"));
-  Serial.print(F("Microseconds per tick: ")); Serial.print(USECPERTICK);; Serial.println(F(" uSecs"));
-  Serial.print(F("Measurement tolerance: ")); Serial.print(TOLERANCE); Serial.println(F("%"));
+    Serial.print(F("Mark Excess: "));
+    Serial.print(MARK_EXCESS);
+    ;
+    Serial.println(F(" uSecs"));
+    Serial.print(F("Microseconds per tick: "));
+    Serial.print(USECPERTICK);
+    ;
+    Serial.println(F(" uSecs"));
+    Serial.print(F("Measurement tolerance: "));
+    Serial.print(TOLERANCE);
+    Serial.println(F("%"));
 }
 
 void dumpSignalParams() {
-  Serial.print(F("Minimum Gap between IR Signals: ")); Serial.print(_GAP); Serial.println(F(" uSecs"));
+    Serial.print(F("Minimum Gap between IR Signals: "));
+    Serial.print(_GAP);
+    Serial.println(F(" uSecs"));
 }
 
 void dumpDebugMode() {
-  Serial.print(F("Debug Mode: "));
+    Serial.print(F("Debug Mode: "));
 #if DEBUG
   Serial.println(F("ON"));
 #else
-  Serial.println(F("OFF (Normal)"));
+    Serial.println(F("OFF (Normal)"));
 #endif
 
 }
 
 void dumpArduinoIDE() {
-  Serial.print(F("Arduino IDE version: "));
-  Serial.print(ARDUINO / 10000);
-  Serial.write('.');
-  Serial.print((ARDUINO % 10000) / 100);
-  Serial.write('.');
-  Serial.println(ARDUINO % 100);
+    Serial.print(F("Arduino IDE version: "));
+    Serial.print(ARDUINO / 10000);
+    Serial.write('.');
+    Serial.print((ARDUINO % 10000) / 100);
+    Serial.write('.');
+    Serial.println(ARDUINO % 100);
 }
 
 void dumpProtocols() {
 
-  Serial.println(); Serial.print(F("IR PROTOCOLS  "));  Serial.print(F("SEND     "));  Serial.println(F("DECODE"));
-  Serial.print(F("============= "));  Serial.print(F("======== "));  Serial.println(F("========"));
-  Serial.print(F("RC5:          "));  printSendEnabled(SEND_RC5);  printDecodeEnabled(DECODE_RC6);
-  Serial.print(F("RC6:          "));  printSendEnabled(SEND_RC6);  printDecodeEnabled(DECODE_RC5);
-  Serial.print(F("NEC:          "));  printSendEnabled(SEND_NEC);  printDecodeEnabled(DECODE_NEC);
-  Serial.print(F("SONY:         "));  printSendEnabled(SEND_SONY);  printDecodeEnabled(DECODE_SONY);
-  Serial.print(F("PANASONIC:    "));  printSendEnabled(SEND_PANASONIC);  printDecodeEnabled(DECODE_PANASONIC);
-  Serial.print(F("JVC:          "));  printSendEnabled(SEND_JVC);  printDecodeEnabled(DECODE_JVC);
-  Serial.print(F("SAMSUNG:      "));  printSendEnabled(SEND_SAMSUNG);  printDecodeEnabled(DECODE_SAMSUNG);
-  Serial.print(F("WHYNTER:      "));  printSendEnabled(SEND_WHYNTER);  printDecodeEnabled(DECODE_WHYNTER);
-  Serial.print(F("AIWA_RC_T501: "));  printSendEnabled(SEND_AIWA_RC_T501);  printDecodeEnabled(DECODE_AIWA_RC_T501);
-  Serial.print(F("LG:           "));  printSendEnabled(SEND_LG);  printDecodeEnabled(DECODE_LG);
-  Serial.print(F("SANYO:        "));  printSendEnabled(SEND_SANYO);  printDecodeEnabled(DECODE_SANYO);
-  Serial.print(F("MITSUBISHI:   "));  printSendEnabled(SEND_MITSUBISHI);  printDecodeEnabled(DECODE_MITSUBISHI);
-  Serial.print(F("DISH:         "));  printSendEnabled(SEND_DISH);  printDecodeEnabled(DECODE_DISH);
-  Serial.print(F("SHARP:        "));  printSendEnabled(SEND_SHARP);  printDecodeEnabled(DECODE_SHARP);
-  Serial.print(F("DENON:        "));  printSendEnabled(SEND_DENON);  printDecodeEnabled(DECODE_DENON);
-  Serial.print(F("PRONTO:       "));  printSendEnabled(SEND_PRONTO);  Serial.println(F("(Not Applicable)"));
+    Serial.println();
+    Serial.print(F("IR PROTOCOLS  "));
+    Serial.print(F("SEND     "));
+    Serial.println(F("DECODE"));
+    Serial.print(F("============= "));
+    Serial.print(F("======== "));
+    Serial.println(F("========"));
+    Serial.print(F("RC5:          "));
+    printSendEnabled(SEND_RC5);
+    printDecodeEnabled(DECODE_RC6);
+    Serial.print(F("RC6:          "));
+    printSendEnabled(SEND_RC6);
+    printDecodeEnabled(DECODE_RC5);
+    Serial.print(F("NEC:          "));
+    printSendEnabled(SEND_NEC);
+    printDecodeEnabled(DECODE_NEC);
+    Serial.print(F("SONY:         "));
+    printSendEnabled(SEND_SONY);
+    printDecodeEnabled(DECODE_SONY);
+    Serial.print(F("PANASONIC:    "));
+    printSendEnabled(SEND_PANASONIC);
+    printDecodeEnabled(DECODE_PANASONIC);
+    Serial.print(F("JVC:          "));
+    printSendEnabled(SEND_JVC);
+    printDecodeEnabled(DECODE_JVC);
+    Serial.print(F("SAMSUNG:      "));
+    printSendEnabled(SEND_SAMSUNG);
+    printDecodeEnabled(DECODE_SAMSUNG);
+    Serial.print(F("WHYNTER:      "));
+    printSendEnabled(SEND_WHYNTER);
+    printDecodeEnabled(DECODE_WHYNTER);
+    Serial.print(F("AIWA_RC_T501: "));
+    printSendEnabled(SEND_AIWA_RC_T501);
+    printDecodeEnabled(DECODE_AIWA_RC_T501);
+    Serial.print(F("LG:           "));
+    printSendEnabled(SEND_LG);
+    printDecodeEnabled(DECODE_LG);
+    Serial.print(F("SANYO:        "));
+    printSendEnabled(SEND_SANYO);
+    printDecodeEnabled(DECODE_SANYO);
+    Serial.print(F("MITSUBISHI:   "));
+    printSendEnabled(SEND_MITSUBISHI);
+    printDecodeEnabled(DECODE_MITSUBISHI);
+    Serial.print(F("DISH:         "));
+    printSendEnabled(SEND_DISH);
+    printDecodeEnabled(DECODE_DISH);
+    Serial.print(F("SHARP:        "));
+    printSendEnabled(SEND_SHARP);
+    printDecodeEnabled(DECODE_SHARP);
+    Serial.print(F("DENON:        "));
+    printSendEnabled(SEND_DENON);
+    printDecodeEnabled(DECODE_DENON);
+    Serial.print(F("PRONTO:       "));
+    printSendEnabled(SEND_PRONTO);
+    Serial.println(F("(Not Applicable)"));
 }
 
 void printSendEnabled(int flag) {
-  if (flag) {
-    Serial.print(F("Enabled  "));
-  }
-  else {
-    Serial.print(F("Disabled "));
-  }
+    if (flag) {
+        Serial.print(F("Enabled  "));
+    } else {
+        Serial.print(F("Disabled "));
+    }
 }
 
 void printDecodeEnabled(int flag) {
-  if (flag) {
-    Serial.println(F("Enabled"));
-  }
-  else {
-    Serial.println(F("Disabled"));
-  }
+    if (flag) {
+        Serial.println(F("Enabled"));
+    } else {
+        Serial.println(F("Disabled"));
+    }
 }
 
 void dumpHeader() {
-  Serial.println(F("IRremoteInfo - by AnalysIR (http://www.AnalysIR.com/)"));
-  Serial.println(F("             - A helper sketch to assist in troubleshooting issues with the library by reviewing the settings within the IRremote library"));
-  Serial.println(F("             - Prints out the important settings within the library, which can be configured to suit the many supported platforms"));
-  Serial.println(F("             - When seeking on-line support, please post or upload the output of this sketch, where appropriate"));
-  Serial.println();
-  Serial.println(F("IRremote Library Settings"));
-  Serial.println(F("========================="));
+    Serial.println(F("IRremoteInfo - by AnalysIR (http://www.AnalysIR.com/)"));
+    Serial.println(
+            F(
+                    "             - A helper sketch to assist in troubleshooting issues with the library by reviewing the settings within the IRremote library"));
+    Serial.println(
+            F(
+                    "             - Prints out the important settings within the library, which can be configured to suit the many supported platforms"));
+    Serial.println(
+            F("             - When seeking on-line support, please post or upload the output of this sketch, where appropriate"));
+    Serial.println();
+    Serial.println(F("IRremote Library Settings"));
+    Serial.println(F("========================="));
 }
 
 void dumpFooter() {
-  Serial.println();
-  Serial.println(F("Notes: "));
-  Serial.println(F("     - Most of the seetings above can be configured in the following files included as part of the library"));
-  Serial.println(F("     - IRremteInt.h"));
-  Serial.println(F("     - IRremote.h"));
-  Serial.println(F("     - You can save SRAM by disabling the Decode or Send features for any protocol (Near the top of IRremoteInt.h)"));
-  Serial.println(F("     - Some Timer conflicts, with other libraries, can be easily resolved by configuring a differnt Timer for your platform"));
+    Serial.println();
+    Serial.println(F("Notes: "));
+    Serial.println(F("     - Most of the seetings above can be configured in the following files included as part of the library"));
+    Serial.println(F("     - IRremteInt.h"));
+    Serial.println(F("     - IRremote.h"));
+    Serial.println(
+            F(
+                    "     - You can save SRAM by disabling the Decode or Send features for any protocol (Near the top of IRremoteInt.h)"));
+    Serial.println(
+            F(
+                    "     - Some Timer conflicts, with other libraries, can be easily resolved by configuring a differnt Timer for your platform"));
 }

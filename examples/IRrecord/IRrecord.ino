@@ -1,8 +1,8 @@
 /*
- * IRrecord: record and play back IR signals as a minimal 
+ * IRrecord: record and play back IR signals as a minimal
  * An IR detector/demodulator must be connected to the input RECV_PIN.
  * An IR LED must be connected to the output PWM pin 3.
- * A button must be connected to the input BUTTON_PIN; this is the
+ * A button must be connected between the input BUTTON_PIN and ground, this is the
  * send button.
  * A visible LED can be connected to STATUS_PIN to provide status.
  *
@@ -29,8 +29,14 @@ decode_results results;
 void setup()
 {
   Serial.begin(9600);
+#if defined(__AVR_ATmega32U4__)
+  while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
+#endif
+  // Just to know which program is running on my Arduino
+  Serial.println(F("START " __FILE__ " from " __DATE__));
+
   irrecv.enableIRIn(); // Start the receiver
-  pinMode(BUTTON_PIN, INPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
   pinMode(STATUS_PIN, OUTPUT);
 }
 
@@ -45,7 +51,7 @@ int toggle = 0; // The RC5/6 toggle state
 // Most of this code is just logging
 void storeCode(decode_results *results) {
   codeType = results->decode_type;
-  int count = results->rawlen;
+//  int count = results->rawlen;
   if (codeType == UNKNOWN) {
     Serial.println("Received unknown code, saving as raw");
     codeLen = results->rawlen - 1;
@@ -58,7 +64,7 @@ void storeCode(decode_results *results) {
         // Mark
         rawCodes[i - 1] = results->rawbuf[i]*USECPERTICK - MARK_EXCESS;
         Serial.print(" m");
-      } 
+      }
       else {
         // Space
         rawCodes[i - 1] = results->rawbuf[i]*USECPERTICK + MARK_EXCESS;
@@ -76,10 +82,10 @@ void storeCode(decode_results *results) {
         Serial.println("repeat; ignoring.");
         return;
       }
-    } 
+    }
     else if (codeType == SONY) {
       Serial.print("Received SONY: ");
-    } 
+    }
     else if (codeType == PANASONIC) {
       Serial.print("Received PANASONIC: ");
     }
@@ -88,10 +94,10 @@ void storeCode(decode_results *results) {
     }
     else if (codeType == RC5) {
       Serial.print("Received RC5: ");
-    } 
+    }
     else if (codeType == RC6) {
       Serial.print("Received RC6: ");
-    } 
+    }
     else {
       Serial.print("Unexpected codeType ");
       Serial.print(codeType, DEC);
@@ -108,18 +114,18 @@ void sendCode(int repeat) {
     if (repeat) {
       irsend.sendNEC(REPEAT, codeLen);
       Serial.println("Sent NEC repeat");
-    } 
+    }
     else {
       irsend.sendNEC(codeValue, codeLen);
       Serial.print("Sent NEC ");
       Serial.println(codeValue, HEX);
     }
-  } 
+  }
   else if (codeType == SONY) {
     irsend.sendSony(codeValue, codeLen);
     Serial.print("Sent Sony ");
     Serial.println(codeValue, HEX);
-  } 
+  }
   else if (codeType == PANASONIC) {
     irsend.sendPanasonic(codeValue, codeLen);
     Serial.print("Sent Panasonic");
@@ -142,13 +148,13 @@ void sendCode(int repeat) {
       Serial.print("Sent RC5 ");
       Serial.println(codeValue, HEX);
       irsend.sendRC5(codeValue, codeLen);
-    } 
+    }
     else {
       irsend.sendRC6(codeValue, codeLen);
       Serial.print("Sent RC6 ");
       Serial.println(codeValue, HEX);
     }
-  } 
+  }
   else if (codeType == UNKNOWN /* i.e. raw */) {
     // Assume 38 KHz
     irsend.sendRaw(rawCodes, codeLen, 38);
@@ -160,7 +166,7 @@ int lastButtonState;
 
 void loop() {
   // If button pressed, send the code.
-  int buttonState = digitalRead(BUTTON_PIN);
+  int buttonState = ! digitalRead(BUTTON_PIN); // Button pin is active LOW
   if (lastButtonState == HIGH && buttonState == LOW) {
     Serial.println("Released");
     irrecv.enableIRIn(); // Re-enable receiver
@@ -172,7 +178,7 @@ void loop() {
     sendCode(lastButtonState == buttonState);
     digitalWrite(STATUS_PIN, LOW);
     delay(50); // Wait a bit between retransmissions
-  } 
+  }
   else if (irrecv.decode(&results)) {
     digitalWrite(STATUS_PIN, HIGH);
     storeCode(&results);

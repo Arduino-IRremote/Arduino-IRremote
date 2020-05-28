@@ -10,8 +10,8 @@
 
 #include <IRremote.h>
 
-/* 
-*  Default is Arduino pin D11. 
+/*
+*  Default is Arduino pin D11.
 *  You can change this to another available Arduino Pin.
 *  Your IR receiver should be connected to the pin defined here
 */
@@ -24,6 +24,11 @@ decode_results results;
 void setup()
 {
   Serial.begin(9600);
+#if defined(__AVR_ATmega32U4__)
+  while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
+#endif
+  // Just to know which program is running on my Arduino
+  Serial.println(F("START " __FILE__ " from " __DATE__));
   irrecv.enableIRIn(); // Start the receiver
 }
 
