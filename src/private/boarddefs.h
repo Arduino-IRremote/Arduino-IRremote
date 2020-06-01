@@ -124,6 +124,12 @@
     #define IR_USE_TIMER3       // tx = pin 5
     //#define IR_USE_TIMER4_HS  // tx = pin 5
 
+// Leonardo
+#elif defined(__AVR_ATmega32U4__) && ! defined(TEENSYDUINO)
+    //#define IR_USE_TIMER1     // tx = pin 9
+    #define IR_USE_TIMER3       // tx = pin 5
+    //#define IR_USE_TIMER4_HS  // tx = pin 5
+
 // Arduino Mega
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 	//#define IR_USE_TIMER1   // tx = pin 11
@@ -137,7 +143,7 @@
 	#define IR_USE_TIMER1     // tx = pin 17
 
 // Teensy 2.0
-#elif defined(__AVR_ATmega32U4__)
+#elif defined(__AVR_ATmega32U4__) && defined(TEENSYDUINO)
 	//#define IR_USE_TIMER1   // tx = pin 14
 	#define IR_USE_TIMER3   // tx = pin 9
 	//#define IR_USE_TIMER4_HS  // tx = pin 10
@@ -349,6 +355,8 @@
 //-----------------
 #if defined(CORE_OC3A_PIN)
 #	define SEND_PIN  CORE_OC3A_PIN  // Teensy
+#elif defined(__AVR_ATmega32U4__) && ! defined(TEENSYDUINO)
+#   define SEND_PIN  5              // Arduino Leonardo
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #	define SEND_PIN  5              // Arduino Mega
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
