@@ -47,13 +47,14 @@ jobs:
         #############################################################################################################
         arduino-boards-fqbn:
           - arduino:avr:uno
+          - arduino:samd:arduino_zero_native
+          - esp32:esp32:featheresp32:FlashFreq=80
 
         # Specify parameters for each board.
         # With examples-exclude you may exclude specific examples for a board. Use a comma separated list.
         #############################################################################################################
         include:
           - arduino-boards-fqbn: arduino:avr:uno
-            examples-exclude: 50Hz # Comma separated list of (unique substrings of) example names to exclude in build
             examples-build-properties:
               AiwaRCT501SendDemo: -DSEND_AIWA_RC_T501
               IRrecord: -DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6
@@ -63,7 +64,11 @@ jobs:
               JVCPanasonicSendDemo: -DSEND_JVC -DSEND_PANASONIC
               LegoPowerFunctionsSendDemo: -DSEND_LEGO_PF
               LegoPowerFunctionsTests: -DSEND_LEGO_PF
-              
+
+          - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
+            platform-url: https://dl.espressif.com/dl/package_esp32_index.json
+            examples-exclude: AiwaRCT501SendDemo,IRrecord,IRsendDemo,IRsendRawDemo,IRtest,IRtest2,JVCPanasonicSendDemo,LegoPowerFunctionsSendDemo,LGACSendDemo # Comma separated list of (unique substrings of) example names to exclude in build
+
       # Do not cancel all jobs / architectures if one job fails
       fail-fast: false
 

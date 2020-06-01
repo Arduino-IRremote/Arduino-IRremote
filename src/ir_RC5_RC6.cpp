@@ -82,14 +82,14 @@ void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
 {
 	// Set IR carrier frequency
 	enableIROut(36);
-	
+
 	unsigned long addressBits = 5;
 	unsigned long commandBits = 7;
-	unsigned long nbits = addressBits + commandBits;
-	
+//	unsigned long nbits = addressBits + commandBits;
+
 	// Start
 	mark(RC5_T1);
-	
+
 	// Bit #6 of the command part, but inverted!
 	unsigned long cmdBit6 = (1UL << (commandBits-1)) & cmd;
 	if (cmdBit6) {
@@ -129,7 +129,7 @@ void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
 			space(RC5_T1);
 		}
 	}
-	
+
 	// Command
 	for (unsigned long  mask = 1UL << (commandBits - 1);  mask;  mask >>= 1) {
 		if (cmd & mask) {

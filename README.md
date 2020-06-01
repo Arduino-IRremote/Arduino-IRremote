@@ -1,17 +1,18 @@
 # IRremote Arduino Library
+Available as Arduino library "IRremote"
+
+### [Version 2.5.0](https://github.com/z3t0/Arduino-IRremote/releases)
 
 [![Build Status](https://travis-ci.org/z3t0/Arduino-IRremote.svg?branch=master)](https://travis-ci.org/z3t0/Arduino-IRremote)
-
 [![Join the chat at https://gitter.im/z3t0/Arduino-IRremote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/z3t0/Arduino-IRremote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![LibraryBuild](https://github.com/z3t0/Arduino-IRremote/workflows/LibraryBuild/badge.svg)](https://github.com/z3t0/Arduino-IRremote/actions)
 
 This library enables you to send and receive using infra-red signals on an Arduino.
 
 Tutorials and more information will be made available on [the official homepage](http://z3t0.github.io/Arduino-IRremote/).
 
-## Version - 2.5.0b
-
 ## Installation
-1. Navigate to the [Releases](https://github.com/z3t0/Arduino-IRremote/releases) page.
+1. Navigate to the [Releases](releases) page.
 2. Download the latest release.
 3. Extract the zip file
 4. Move the "IRremote" folder that has been extracted to your libraries directory.
@@ -31,8 +32,10 @@ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled o
 - ATmega8535, 16, 32, 164, 324, 644, 1284,
 - ATmega64, 128
 - ATtiny 84 / 85
+- SAMD21 (receive only)
 - ESP32 (receive only)
 - ESP8266 is supported in a fork based on an old codebase that isn't as recent, but it works reasonably well given that perfectly timed sub millisecond interrupts are different on that chip. See https://github.com/markszabo/IRremoteESP8266
+- Sparkfun Pro Micro
 
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
 
@@ -51,6 +54,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [ATmega64, ATmega128](https://github.com/MCUdude/MegaCore)               | **13**              | **1**             |
 | ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
 | [ESP32](http://esp32.net/)                                               | N/A (not supported) | **1**             |
+| [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | 9, **5**, 5         | 1, **3**, 4_HS    |
 | [Teensy 1.0](https://www.pjrc.com/teensy/)                               | **17**              | **1**             |
 | [Teensy 2.0](https://www.pjrc.com/teensy/)                               | 9, **10**, 14       | 1, 3, **4_HS**    |
 | [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/)                       | **1**, 16, 25       | 1, **2**, 3       |
@@ -61,7 +65,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 ### Experimental patches
 The following are strictly community supported patches that have yet to make it into mainstream. If you have issues feel free to ask here. If it works well then let us know!
 
-[Arduino 101](https://github.com/z3t0/Arduino-IRremote/pull/481#issuecomment-311243146)
+[Arduino 101](pull/481#issuecomment-311243146)
 
 The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 
