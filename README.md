@@ -3,6 +3,8 @@ Available as Arduino library "IRremote"
 
 ### [Version 2.5.0](https://github.com/z3t0/Arduino-IRremote/releases)
 
+[![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
+[![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
 [![Join the chat at https://gitter.im/z3t0/Arduino-IRremote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/z3t0/Arduino-IRremote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![LibraryBuild](https://github.com/z3t0/Arduino-IRremote/workflows/LibraryBuild/badge.svg)](https://github.com/z3t0/Arduino-IRremote/actions)
 
@@ -11,12 +13,7 @@ This library enables you to send and receive using infra-red signals on an Ardui
 Tutorials and more information will be made available on [the official homepage](http://z3t0.github.io/Arduino-IRremote/).
 
 ## Installation
-1. Navigate to the [Releases](/releases) page.
-2. Download the latest release.
-3. Extract the zip file
-4. Move the "IRremote" folder that has been extracted to your libraries directory.
-5. Make sure to delete Arduino_Root/libraries/RobotIRremote. Where Arduino_Root refers to the install directory of Arduino. The library RobotIRremote has similar definitions to IRremote and causes errors.
-
+Click on the LibraryManager badge above to see the instructions.
 
 ## FAQ
 - IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)
