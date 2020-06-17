@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['rather_245',['rather',['../LICENSE_8txt.html#a9e488ec5b91629b25061b1b46784800c',1,'LICENSE.txt']]],
+  ['rawbuf_246',['rawbuf',['../classdecode__results.html#a78d3244122456d52a493ef0c116fc7bb',1,'decode_results::rawbuf()'],['../structirparams__t.html#a39b3006fe9d26cc23c0feb639d3d793e',1,'irparams_t::rawbuf()'],['../IRremoteInt_8h.html#abb919079668bcc14433d4c857ab8a196',1,'RAWBUF():&#160;IRremoteInt.h']]],
+  ['rawlen_247',['rawlen',['../classdecode__results.html#a434962fbdf5929ec4fa8f28fa443a4b5',1,'decode_results::rawlen()'],['../structirparams__t.html#a9667efc63148298657283a16f963d1ec',1,'irparams_t::rawlen()']]],
+  ['rc5_248',['RC5',['../IRremote_8h.html#ad5b287a488a8c1b7b8661f029ab56fadac3c0a3883a1488209bcd91730ece33b2',1,'IRremote.h']]],
+  ['rc5_5frpt_5flength_249',['RC5_RPT_LENGTH',['../ir__RC5__RC6_8cpp.html#aa8c287a3a1602657fde8f7bc6741bf1f',1,'ir_RC5_RC6.cpp']]],
+  ['rc5_5ft1_250',['RC5_T1',['../ir__RC5__RC6_8cpp.html#aacadad5996114b73e6ebe4ac4a3670f8',1,'ir_RC5_RC6.cpp']]],
+  ['rc6_251',['RC6',['../IRremote_8h.html#ad5b287a488a8c1b7b8661f029ab56fada7f7247f15587eb3812846f424b941abe',1,'IRremote.h']]],
+  ['rc6_5fhdr_5fmark_252',['RC6_HDR_MARK',['../ir__RC5__RC6_8cpp.html#aaf18416e602d4df98ade887edd350ae7',1,'ir_RC5_RC6.cpp']]],
+  ['rc6_5fhdr_5fspace_253',['RC6_HDR_SPACE',['../ir__RC5__RC6_8cpp.html#a1f9724085ece5ed0103b5ce5e57b7aff',1,'ir_RC5_RC6.cpp']]],
+  ['rc6_5frpt_5flength_254',['RC6_RPT_LENGTH',['../ir__RC5__RC6_8cpp.html#ab20744e40f55c70de7fd11c163643d03',1,'ir_RC5_RC6.cpp']]],
+  ['rc6_5ft1_255',['RC6_T1',['../ir__RC5__RC6_8cpp.html#a6c695681ce7b028d11ae6af423b96178',1,'ir_RC5_RC6.cpp']]],
+  ['rcvstate_256',['rcvstate',['../structirparams__t.html#a63354788dab4569f4092cd05e77f0260',1,'irparams_t']]],
+  ['readmdfrench_2emd_257',['readmdFrench.md',['../readmdFrench_8md.html',1,'']]],
+  ['readme_2emd_258',['README.md',['../README_8md.html',1,'']]],
+  ['reason_259',['reason',['../LICENSE_8txt.html#a9642942062a0c88c684a2bb3289aa738',1,'LICENSE.txt']]],
+  ['recipients_260',['recipients',['../LICENSE_8txt.html#ac2be71e6b9f58e4791403f97d5152e6e',1,'LICENSE.txt']]],
+  ['recvpin_261',['recvpin',['../structirparams__t.html#a50da5aa1c42a69b01d50ea688db67d14',1,'irparams_t']]],
+  ['repeat_262',['REPEAT',['../IRremote_8h.html#a2c9384c67919c632913b8db2088f8341',1,'IRremote.h']]],
+  ['reset_263',['reset',['../classLegoPfBitStreamEncoder.html#a070831b126f9ee8d304e81d9f84d4ffb',1,'LegoPfBitStreamEncoder']]],
+  ['resume_264',['resume',['../classIRrecv.html#af40f1e16b1cc911e47ac3f0a9b3b1ec5',1,'IRrecv']]],
+  ['rights_265',['rights',['../LICENSE_8txt.html#a8735f0e515c965031b8651a7fc9eae79',1,'LICENSE.txt']]],
+  ['runs_266',['runs',['../LICENSE_8txt.html#a67521e40ab794c3178368ec253fa7ad5',1,'LICENSE.txt']]]
+];

@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['sendaiwarct501_485',['sendAiwaRCT501',['../classIRsend.html#a7d9e7ec49cc8d96c91237f6f1a0c60ae',1,'IRsend']]],
+  ['senddenon_486',['sendDenon',['../classIRsend.html#ab5a2c0a20071c7b37f0d1cd99680d513',1,'IRsend']]],
+  ['senddish_487',['sendDISH',['../classIRsend.html#ac8b3fe0ba492391c8f142281165accec',1,'IRsend']]],
+  ['sendjvc_488',['sendJVC',['../classIRsend.html#a2d5d788be84c389de71a823725a5346c',1,'IRsend']]],
+  ['sendlegopowerfunctions_489',['sendLegoPowerFunctions',['../classIRsend.html#addb0ce2447558851112abb2e201e19b0',1,'IRsend']]],
+  ['sendlg_490',['sendLG',['../classIRsend.html#a88ecc2eb801abf6aa1428cc0669abe94',1,'IRsend']]],
+  ['sendnec_491',['sendNEC',['../classIRsend.html#abf9c063bb285ed1b7d84efc96dff3928',1,'IRsend']]],
+  ['sendpanasonic_492',['sendPanasonic',['../classIRsend.html#a32c0bb7a2e710526951b8a1d815a456e',1,'IRsend']]],
+  ['sendpronto_493',['sendPronto',['../classIRsend.html#ac77144d3e6b877911abb00bb1ce7cfd9',1,'IRsend']]],
+  ['sendraw_494',['sendRaw',['../classIRsend.html#ac238f5fb6e36ab175f93c16f22c77085',1,'IRsend']]],
+  ['sendrc5_495',['sendRC5',['../classIRsend.html#a5a0559d6b3f980a02320a6d378ddc1fe',1,'IRsend']]],
+  ['sendrc5ext_496',['sendRC5ext',['../classIRsend.html#a6aa5b77a83aec56b5d3070c9ac9b2ab6',1,'IRsend']]],
+  ['sendrc6_497',['sendRC6',['../classIRsend.html#ad185ea4c85356afa218eb7688af014f0',1,'IRsend']]],
+  ['sendsamsung_498',['sendSAMSUNG',['../classIRsend.html#a7b4ca49d8fceaf6ccfa26df2d1b553d5',1,'IRsend']]],
+  ['sendsharp_499',['sendSharp',['../classIRsend.html#a0b0933040532b8c1cbc7cbf17ab7edb5',1,'IRsend']]],
+  ['sendsharpraw_500',['sendSharpRaw',['../classIRsend.html#a50067887a95c401e98362e0c6f721f71',1,'IRsend']]],
+  ['sendsony_501',['sendSony',['../classIRsend.html#a87054d6ff63e82d94c039895d011baba',1,'IRsend']]],
+  ['sendwhynter_502',['sendWhynter',['../classIRsend.html#a8acfdbfc54f8b76d49acb799f5b40805',1,'IRsend']]],
+  ['software_503',['software',['../LICENSE_8txt.html#a7e3d97962fc90d949b977b96883e70f3',1,'LICENSE.txt']]],
+  ['space_504',['space',['../classIRsend.html#a825f5e14c42ec45b6c4639ae69566f3a',1,'IRsend']]]
+];
