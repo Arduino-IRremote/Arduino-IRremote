@@ -22,6 +22,32 @@
 #ifndef boarddefs_h
 #define boarddefs_h
 
+// Define some defaults, that some boards may like to override
+// (This is to avoid negative logic, ! DONT_... is just awkward.)
+
+// This board has/needs the avr/interrupt.h
+#define HAS_AVR_INTERRUPT_H
+
+// Define if sending is supported
+#define SENDING_SUPPORTED
+
+// If defined, a standard enableIRIn function will be define.
+// Undefine for boards supplying their own.
+#define USE_DEFAULT_ENABLE_IR_IN
+
+// Duty cycle in percent for sent signals. Presently takes effect only with USE_SOFT_CARRIER
+#define DUTY_CYCLE 50
+
+// If USE_SOFT_CARRIER, this amount (in micro seconds) is subtracted from the
+// on-time of the pulses.
+#define PULSE_CORRECTION 3
+
+// digitalWrite is supposed to be slow. If this is an issue, define faster,
+// board-dependent versions of these macros SENDPIN_ON(pin) and SENDPIN_OFF(pin).
+// Portable, possibly slow, default definitions are given at the end of this file.
+// If defining new versions, feel free to ignore the pin argument if it
+// is not configurable on the current board.
+
 //------------------------------------------------------------------------------
 // Defines for blinking the LED
 //
@@ -41,11 +67,31 @@
 #	define BLINKLED_ON()   (PORTD |= B00000001)
 #	define BLINKLED_OFF()  (PORTD &= B11111110)
 
-// No system LED on ESP32, disable blinking
+#elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+#	define BLINKLED        LED_BUILTIN
+#	define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
+#	define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
+
+#	define USE_SOFT_CARRIER
+	// Define to use spin wait instead of delayMicros()
+//#	define USE_SPIN_WAIT
+#       undef USE_DEFAULT_ENABLE_IR_IN
+
+        // The default pin used used for sending.
+#	define SEND_PIN 9
+
 #elif defined(ESP32)
-#	define BLINKLED        255
-#	define BLINKLED_ON()   1
-#	define BLINKLED_OFF()  1
+        // No system LED on ESP32, disable blinking by NOT defining BLINKLED
+
+        // avr/interrupt.h is not present
+#       undef HAS_AVR_INTERRUPT_H
+
+        // Sending not implemented
+#       undef SENDING_SUPPORTED
+#       define SEND_PIN 0 // dummy to avoid compiler warning
+        // Supply own enbleIRIn
+#       undef USE_DEFAULT_ENABLE_IR_IN
+
 #else
 #	define BLINKLED        13
 #	define BLINKLED_ON()  (PORTB |= B00100000)
@@ -74,9 +120,15 @@
 
 // Sparkfun Pro Micro
 #if defined(ARDUINO_AVR_PROMICRO)
-	//#define IR_USE_TIMER1     // tx = pin 9
-	#define IR_USE_TIMER3       // tx = pin 5
-	//#define IR_USE_TIMER4_HS  // tx = pin 5
+    //#define IR_USE_TIMER1     // tx = pin 9
+    #define IR_USE_TIMER3       // tx = pin 5
+    //#define IR_USE_TIMER4_HS  // tx = pin 5
+
+// Leonardo
+#elif defined(__AVR_ATmega32U4__) && ! defined(TEENSYDUINO)
+    //#define IR_USE_TIMER1     // tx = pin 9
+    #define IR_USE_TIMER3       // tx = pin 5
+    //#define IR_USE_TIMER4_HS  // tx = pin 5
 
 // Arduino Mega
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -91,10 +143,10 @@
 	#define IR_USE_TIMER1     // tx = pin 17
 
 // Teensy 2.0
-#elif defined(__AVR_ATmega32U4__)
+#elif defined(__AVR_ATmega32U4__) && defined(TEENSYDUINO)
 	//#define IR_USE_TIMER1   // tx = pin 14
-	//#define IR_USE_TIMER3   // tx = pin 9
-	#define IR_USE_TIMER4_HS  // tx = pin 10
+	#define IR_USE_TIMER3   // tx = pin 9
+	//#define IR_USE_TIMER4_HS  // tx = pin 10
 
 // Teensy 3.0 / Teensy 3.1
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
@@ -123,7 +175,7 @@
 || defined(__AVR_ATmega164P__)
 	//#define IR_USE_TIMER1   // tx = pin 13
 	#define IR_USE_TIMER2     // tx = pin 14
-	
+
 //MegaCore - ATmega64, ATmega128
 #elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
  	#define IR_USE_TIMER1     // tx = pin 13
@@ -146,6 +198,10 @@
 
 #elif defined(ESP32)
 	#define IR_TIMER_USE_ESP32
+
+#elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+	#define TIMER_PRESCALER_DIV 64
+
 #else
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
@@ -198,17 +254,17 @@
 
 //-----------------
 #if defined(CORE_OC2B_PIN)
-#	define TIMER_PWM_PIN  CORE_OC2B_PIN  // Teensy
+#	define SEND_PIN  CORE_OC2B_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  9              // Arduino Mega
+#	define SEND_PIN  9              // Arduino Mega
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
 || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
 || defined(__AVR_ATmega164P__)
-#	define TIMER_PWM_PIN  14             // MightyCore
+#	define SEND_PIN  14             // MightyCore, MegaCore
 #else
-#	define TIMER_PWM_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
+#	define SEND_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif					     // ATmega48, ATmega88, ATmega168, ATmega328
 
 //---------------------------------------------------------
@@ -251,21 +307,22 @@
 
 //-----------------
 #if defined(CORE_OC1A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC1A_PIN  // Teensy
+#	define SEND_PIN  CORE_OC1A_PIN  // Teensy
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  11             // Arduino Mega
+#	define SEND_PIN  11             // Arduino Mega
+#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
+#	define SEND_PIN  13	     // MegaCore
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
 || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
 || defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
-|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__) \
-|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
-#	define TIMER_PWM_PIN  13             // MightyCore, MegaCore
+|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__)
+#	define SEND_PIN  13             // MightyCore, MegaCore
 #elif defined(__AVR_ATtiny84__)
-# 	define TIMER_PWM_PIN  6
+# 	define SEND_PIN  6
 #else
-#	define TIMER_PWM_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro etc
+#	define SEND_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif					     // ATmega48, ATmega88, ATmega168, ATmega328
 
 //---------------------------------------------------------
@@ -297,11 +354,13 @@
 
 //-----------------
 #if defined(CORE_OC3A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC3A_PIN  // Teensy
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(ARDUINO_AVR_PROMICRO)
-#	define TIMER_PWM_PIN  5              // Arduino Mega, Sparkfun Pro Micro
+#	define SEND_PIN  CORE_OC3A_PIN  // Teensy
+#elif defined(__AVR_ATmega32U4__) && ! defined(TEENSYDUINO)
+#   define SEND_PIN  5              // Arduino Leonardo
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#	define SEND_PIN  5              // Arduino Mega
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
-#	define TIMER_PWM_PIN  6              // MightyCore
+#	define SEND_PIN  6              // MightyCore, MegaCore
 #else
 #	error "Please add OC3A pin number here\n"
 #endif
@@ -312,20 +371,17 @@
 #elif defined(IR_USE_TIMER4_HS)
 
 #define TIMER_RESET
-
-#if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro                         
-	#define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A0))     // Use complimentary O̅C̅4̅A̅ output on pin 5
-	#define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A0)))  // (Pro Micro does not map PC7 (32/ICP3/CLK0/OC4A)
-															// of ATmega32U4 )
+#if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro
+    #define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A0))     // Use complimentary O̅C̅4̅A̅ output on pin 5
+    #define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A0)))  // (Pro Micro does not map PC7 (32/ICP3/CLK0/OC4A)
+                                                            // of ATmega32U4 )
 #else
-	#define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A1))
-	#define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A1)))
+    #define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A1))
+    #define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A1)))
 #endif
-
 #define TIMER_ENABLE_INTR   (TIMSK4 = _BV(TOIE4))
 #define TIMER_DISABLE_INTR  (TIMSK4 = 0)
 #define TIMER_INTR_NAME     TIMER4_OVF_vect
-
 
 #define TIMER_CONFIG_KHZ(val) ({ \
 	const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
@@ -354,11 +410,11 @@
 
 //-----------------
 #if defined(CORE_OC4A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC4A_PIN  // Teensy
+#	define SEND_PIN  CORE_OC4A_PIN  // Teensy
 #elif defined(ARDUINO_AVR_PROMICRO)
-#	define TIMER_PWM_PIN  5              // Sparkfun Pro Micro
+#   define SEND_PIN  5              // Sparkfun Pro Micro
 #elif defined(__AVR_ATmega32U4__)
-#	define TIMER_PWM_PIN  13             // Leonardo
+#	define SEND_PIN  13             // Leonardo
 #else
 #	error "Please add OC4A pin number here\n"
 #endif
@@ -392,9 +448,9 @@
 
 //-----------------
 #if defined(CORE_OC4A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC4A_PIN
+#	define SEND_PIN  CORE_OC4A_PIN
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  6  // Arduino Mega
+#	define SEND_PIN  6  // Arduino Mega
 #else
 #	error "Please add OC4A pin number here\n"
 #endif
@@ -428,9 +484,9 @@
 
 //-----------------
 #if defined(CORE_OC5A_PIN)
-#	define TIMER_PWM_PIN  CORE_OC5A_PIN
+#	define SEND_PIN  CORE_OC5A_PIN
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#	define TIMER_PWM_PIN  46  // Arduino Mega
+#	define SEND_PIN  46  // Arduino Mega
 #else
 #	error "Please add OC5A pin number here\n"
 #endif
@@ -497,7 +553,7 @@
 	CMT_MSC    = 0x03;            \
 })
 
-#define TIMER_PWM_PIN  5
+#define SEND_PIN  5
 
 // defines for TPM1 timer on Teensy-LC
 #elif defined(IR_USE_TIMER_TPM1)
@@ -527,7 +583,7 @@
 	FTM1_C0V = 0;                                \
 	FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
 })
-#define TIMER_PWM_PIN        16
+#define SEND_PIN        16
 
 // defines for timer_tiny0 (8 bits)
 #elif defined(IR_USE_TIMER_TINY0)
@@ -561,7 +617,7 @@
 })
 #endif
 
-#define TIMER_PWM_PIN        1  /* ATtiny85 */
+#define SEND_PIN        1  /* ATtiny85 */
 
 //---------------------------------------------------------
 // ESP32 (ESP8266 should likely be added here too)
@@ -578,18 +634,44 @@
 // way to do this on ESP32 is using the RMT built in driver like in this incomplete library below
 // https://github.com/ExploreEmbedded/ESP32_RMT
 #elif defined(IR_TIMER_USE_ESP32)
-#define TIMER_RESET	     
-#define TIMER_ENABLE_PWM     
-#define TIMER_DISABLE_PWM   Serial.println("IRsend not implemented for ESP32 yet");
-#define TIMER_ENABLE_INTR    
-#define TIMER_DISABLE_INTR   
-#define TIMER_INTR_NAME      
+
+#define TIMER_RESET
+
+#ifdef ISR
+#	undef ISR
+#endif
+#define  ISR(f)  void IRTimer()
+
+#elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+// use timer 3 hardcoded at this time
+
+#define TIMER_RESET
+#define TIMER_ENABLE_PWM     // Not presently used
+#define TIMER_DISABLE_PWM
+#define TIMER_ENABLE_INTR    NVIC_EnableIRQ(TC3_IRQn) // Not presently used
+#define TIMER_DISABLE_INTR   NVIC_DisableIRQ(TC3_IRQn)
+#define TIMER_INTR_NAME      TC3_Handler // Not presently used
+#define TIMER_CONFIG_KHZ(f)
+
+#ifdef ISR
+#	undef ISR
+#endif
+#define  ISR(f)  void irs()
 
 //---------------------------------------------------------
 // Unknown Timer
 //
 #else
 #	error "Internal code configuration error, no known IR_USE_TIMER# defined\n"
+#endif
+
+// Provide default definitions, portable but possibly slower than necessary.
+#ifndef SENDPIN_ON
+#define SENDPIN_ON(pin)  digitalWrite(pin, HIGH)
+#endif
+
+#ifndef SENDPIN_OFF
+#define SENDPIN_OFF(pin) digitalWrite(pin, LOW)
 #endif
 
 #endif // ! boarddefs_h

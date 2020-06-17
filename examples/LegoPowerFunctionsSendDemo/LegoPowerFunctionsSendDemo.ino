@@ -4,7 +4,6 @@
  */
 
 #include <IRremote.h>
-#include <IRremoteInt.h>
 
 IRsend irsend;
 

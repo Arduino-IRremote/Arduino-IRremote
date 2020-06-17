@@ -18,15 +18,9 @@
 #define IRremoteint_h
 
 //------------------------------------------------------------------------------
-// Include the right Arduino header
+// Include the Arduino header
 //
-#if defined(ARDUINO) && (ARDUINO >= 100)
-#	include <Arduino.h>
-#else
-#	if !defined(IRPRONTO)
-#		include <WProgram.h>
-#	endif
-#endif
+#include <Arduino.h>
 
 //------------------------------------------------------------------------------
 // This handles definition and access to global variables
@@ -40,19 +34,22 @@
 //------------------------------------------------------------------------------
 // Information for the Interrupt Service Routine
 //
-#define RAWBUF  101  // Maximum length of raw duration buffer
+#define RAWBUF  101  ///< Maximum length of raw duration buffer. Must be odd.
 
+/**
+  * This struct is used to communicate with the ISR (interrupt service routine).
+  */
 typedef
 	struct {
 		// The fields are ordered to reduce memory over caused by struct-padding
-		uint8_t       rcvstate;        // State Machine state
-		uint8_t       recvpin;         // Pin connected to IR data from detector
+		uint8_t       rcvstate;        ///< State Machine state
+		uint8_t       recvpin;         ///< Pin connected to IR data from detector
 		uint8_t       blinkpin;
-		uint8_t       blinkflag;       // true -> enable blinking of pin on IR processing
-		uint8_t       rawlen;          // counter of entries in rawbuf
-		unsigned int  timer;           // State timer, counts 50uS ticks.
-		unsigned int  rawbuf[RAWBUF];  // raw data
-		uint8_t       overflow;        // Raw buffer overflow occurred
+		uint8_t       blinkflag;       ///< true -> enable blinking of pin on IR processing
+		uint8_t       rawlen;          ///< counter of entries in rawbuf
+		unsigned int  timer;           ///< State timer, counts 50uS ticks.
+		unsigned int  rawbuf[RAWBUF];  ///< raw data
+		uint8_t       overflow;        ///< Raw buffer overflow occurred
 	}
 irparams_t;
 
@@ -63,9 +60,11 @@ irparams_t;
 #define STATE_STOP      5
 #define STATE_OVERFLOW  6
 
-// Allow all parts of the code access to the ISR data
-// NB. The data can be changed by the ISR at any time, even mid-function
-// Therefore we declare it as "volatile" to stop the compiler/CPU caching it
+/**
+ * Allow all parts of the code access to the ISR data
+ * NB. The data can be changed by the ISR at any time, even mid-function
+ * Therefore we declare it as "volatile" to stop the compiler/CPU caching it
+ */
 EXTERN  volatile irparams_t  irparams;
 
 //------------------------------------------------------------------------------
@@ -85,8 +84,12 @@ EXTERN  volatile irparams_t  irparams;
 // Pulse parameters in uSec
 //
 
-// Due to sensor lag, when received, Marks  tend to be 100us too long and
-//                                   Spaces tend to be 100us too short
+/**
+ * When received, marks  tend to be too long and
+ * spaces tend to be too short.
+ * To compensate for this, MARK_EXCESS is subtracted from all marks,
+ * and added to all spaces.
+ */
 #define MARK_EXCESS    100
 
 // Upper and Lower percentage tolerances in measurements

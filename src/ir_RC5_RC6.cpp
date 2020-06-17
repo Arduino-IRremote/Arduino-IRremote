@@ -1,5 +1,4 @@
 #include "IRremote.h"
-#include "IRremoteInt.h"
 
 //+=============================================================================
 // Gets one undecoded level at a time from the raw buffer.
@@ -78,6 +77,73 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
 
 	space(0);  // Always end with the LED off
 }
+
+void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
+{
+	// Set IR carrier frequency
+	enableIROut(36);
+
+	unsigned long addressBits = 5;
+	unsigned long commandBits = 7;
+//	unsigned long nbits = addressBits + commandBits;
+
+	// Start
+	mark(RC5_T1);
+
+	// Bit #6 of the command part, but inverted!
+	unsigned long cmdBit6 = (1UL << (commandBits-1)) & cmd;
+	if (cmdBit6) {
+		// Inverted (1 -> 0 = mark-to-space)
+		mark(RC5_T1);
+		space(RC5_T1);
+	} else {
+		space(RC5_T1);
+		mark(RC5_T1);
+	}
+	commandBits--;
+
+	// Toggle bit
+	static int toggleBit = 1;
+	if (toggle) {
+		if (toggleBit == 0) {
+			toggleBit = 1;
+		} else {
+			toggleBit = 0;
+		}
+	}
+	if (toggleBit) {
+		space(RC5_T1);
+		mark(RC5_T1);
+	} else {
+		mark(RC5_T1);
+		space(RC5_T1);
+	}
+
+	// Address
+	for (unsigned long  mask = 1UL << (addressBits - 1);  mask;  mask >>= 1) {
+		if (addr & mask) {
+			space(RC5_T1); // 1 is space, then mark
+			mark(RC5_T1);
+		} else {
+			mark(RC5_T1);
+			space(RC5_T1);
+		}
+	}
+
+	// Command
+	for (unsigned long  mask = 1UL << (commandBits - 1);  mask;  mask >>= 1) {
+		if (cmd & mask) {
+			space(RC5_T1); // 1 is space, then mark
+			mark(RC5_T1);
+		} else {
+			mark(RC5_T1);
+			space(RC5_T1);
+		}
+	}
+
+	space(0);  // Always end with the LED off
+}
+
 #endif
 
 //+=============================================================================

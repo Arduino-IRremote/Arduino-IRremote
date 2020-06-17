@@ -1,3 +1,7 @@
+/**
+ * @file IRremote.h
+ * @brief Public API to the library.
+ */
 
 //******************************************************************************
 // IRremote
@@ -21,7 +25,7 @@
 //------------------------------------------------------------------------------
 // The ISR header contains several useful macros the user may wish to use
 //
-#include "IRremoteInt.h"
+#include "private/IRremoteInt.h"
 
 //------------------------------------------------------------------------------
 // Supported IR protocols
@@ -94,10 +98,10 @@
 #define PRONTO_FALLBACK    true
 #define PRONTO_NOFALLBACK  false
 
-//------------------------------------------------------------------------------
-// An enumerated list of all supported formats
-// You do NOT need to remove entries from this list when disabling protocols!
-//
+/**
+ * An enum consisting of all supported formats.
+ * You do NOT need to remove entries from this list when disabling protocols!
+ */
 typedef
 	enum {
 		UNKNOWN      = -1,
@@ -122,9 +126,9 @@ typedef
 	}
 decode_type_t;
 
-//------------------------------------------------------------------------------
-// Set DEBUG to 1 for lots of lovely debug output
-//
+/**
+ * Set DEBUG to 1 for lots of lovely debug output.
+ */
 #define DEBUG  0
 
 //------------------------------------------------------------------------------
@@ -134,9 +138,21 @@ decode_type_t;
 #	define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
 #	define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else
+/**
+ * If DEBUG, print the arguments, otherwise do nothing.
+ */
 #	define DBG_PRINT(...)
+/**
+ * If DEBUG, print the arguments as a line, otherwise do nothing.
+ */
 #	define DBG_PRINTLN(...)
 #endif
+
+//------------------------------------------------------------------------------
+// Helper macro for getting a macro definition as string
+//
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
 
 //------------------------------------------------------------------------------
 // Mark & Space matching functions
@@ -145,39 +161,71 @@ int  MATCH       (int measured, int desired) ;
 int  MATCH_MARK  (int measured_ticks, int desired_us) ;
 int  MATCH_SPACE (int measured_ticks, int desired_us) ;
 
-//------------------------------------------------------------------------------
-// Results returned from the decoder
-//
+/**
+ * Results returned from the decoder
+ */
 class decode_results
 {
 	public:
-		decode_type_t          decode_type;  // UNKNOWN, NEC, SONY, RC5, ...
-		unsigned int           address;      // Used by Panasonic & Sharp [16-bits]
-		unsigned long          value;        // Decoded value [max 32-bits]
-		int                    bits;         // Number of bits in decoded value
-		volatile unsigned int  *rawbuf;      // Raw intervals in 50uS ticks
-		int                    rawlen;       // Number of records in rawbuf
-		int                    overflow;     // true iff IR raw code too long
+		decode_type_t          decode_type;  ///< UNKNOWN, NEC, SONY, RC5, ...
+		unsigned int           address;      ///< Used by Panasonic & Sharp [16-bits]
+		unsigned long          value;        ///< Decoded value [max 32-bits]
+		int                    bits;         ///< Number of bits in decoded value
+		volatile unsigned int  *rawbuf;      ///< Raw intervals in 50uS ticks
+		int                    rawlen;       ///< Number of records in rawbuf
+		int                    overflow;     ///< true iff IR raw code too long
 };
 
-//------------------------------------------------------------------------------
-// Decoded value for NEC when a repeat code is received
-//
+/**
+ * Decoded value for NEC when a repeat code is received
+ */
 #define REPEAT 0xFFFFFFFF
 
-//------------------------------------------------------------------------------
-// Main class for receiving IR
-//
+/**
+ * Main class for receiving IR
+ */
 class IRrecv
 {
 	public:
+                /**
+                 * Instantiate the IRrecv class. Multiple instantiation is not supported.
+                 * @param recvpin Arduino pin to use. No sanity check is made.
+                 */
 		IRrecv (int recvpin) ;
+                /**
+                 * Instantiate the IRrecv class. Multiple instantiation is not supported.
+                 * @param recvpin Arduino pin to use, where a demodulating IR receiver is connected.
+                 * @param blinkpin pin to blink when receiving IR. Not supported by all hardware. No sanity check is made.
+                 */
 		IRrecv (int recvpin, int blinkpin);
 
+                /**
+                 * TODO: Why is this public???
+                 * @param blinkflag
+                 */
 		void  blink13    (int blinkflag) ;
+
+                /**
+                 * Attempt to decode the recently receive IR signal
+                 * @param results decode_results instance returning the decode, if any.
+                 * @return success of operation. TODO: convert to bool
+                 */
 		int   decode     (decode_results *results) ;
+
+                /**
+                 * Enable IR reception.
+                 */
 		void  enableIRIn ( ) ;
+
+                /**
+                 * Returns status of reception
+                 * @return true if no reception is on-going.
+                 */
 		bool  isIdle     ( ) ;
+
+                /**
+                 * Called to re-enable IR reception.
+                 */
 		void  resume     ( ) ;
 
 	private:
@@ -186,10 +234,17 @@ class IRrecv
 
 		//......................................................................
 #		if (DECODE_RC5 || DECODE_RC6)
-			// This helper function is shared by RC5 and RC6
+			/**
+                         *  This helper function is shared by RC5 and RC6
+                         */
 			int  getRClevel (decode_results *results,  int *offset,  int *used,  int t1) ;
 #		endif
 #		if DECODE_RC5
+                        /**
+                         * Try to decode the recently received IR signal as an RC5 signal-
+                         * @param results decode_results instance returning the decode, if any.
+                         * @return Success of the operation.
+                         */
 			bool  decodeRC5        (decode_results *results) ;
 #		endif
 #		if DECODE_RC6
@@ -253,13 +308,24 @@ class IRrecv
 #		endif
 } ;
 
-//------------------------------------------------------------------------------
-// Main class for sending IR
-//
+/**
+ * Main class for sending IR
+ */
 class IRsend
 {
 	public:
-		IRsend () { }
+#ifdef USE_SOFT_CARRIER
+
+		IRsend(int pin = SEND_PIN)
+		{
+			sendPin = pin;
+		}
+#else
+
+		IRsend()
+		{
+		}
+#endif
 
 		void  custom_delay_usec (unsigned long uSecs);
 		void  enableIROut 		(int khz) ;
@@ -270,6 +336,7 @@ class IRsend
 		//......................................................................
 #		if SEND_RC5
 			void  sendRC5        (unsigned long data,  int nbits) ;
+			void  sendRC5ext     (unsigned long addr, unsigned long cmd, boolean toggle);
 #		endif
 #		if SEND_RC6
 			void  sendRC6        (unsigned long data,  int nbits) ;
@@ -339,6 +406,20 @@ class IRsend
 #		if SEND_LEGO_PF
 			void  sendLegoPowerFunctions (uint16_t data, bool repeat = true) ;
 #		endif
+
+#ifdef USE_SOFT_CARRIER
+	private:
+		int sendPin;
+
+		unsigned int periodTime;
+		unsigned int periodOnTime;
+
+		void sleepMicros(unsigned long us);
+		void sleepUntilMicros(unsigned long targetTime);
+
+#else
+		const int sendPin = SEND_PIN;
+#endif
 } ;
 
 #endif

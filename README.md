@@ -1,25 +1,22 @@
 # IRremote Arduino Library
+Available as Arduino library "IRremote"
 
-[![Build Status](https://travis-ci.org/z3t0/Arduino-IRremote.svg?branch=master)](https://travis-ci.org/z3t0/Arduino-IRremote)
+### [Version 2.5.0](https://github.com/z3t0/Arduino-IRremote/releases)
 
+[![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
+[![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
 [![Join the chat at https://gitter.im/z3t0/Arduino-IRremote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/z3t0/Arduino-IRremote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![LibraryBuild](https://github.com/z3t0/Arduino-IRremote/workflows/LibraryBuild/badge.svg)](https://github.com/z3t0/Arduino-IRremote/actions)
 
 This library enables you to send and receive using infra-red signals on an Arduino.
 
 Tutorials and more information will be made available on [the official homepage](http://z3t0.github.io/Arduino-IRremote/).
 
-## Version - 2.2.3
-
 ## Installation
-1. Navigate to the [Releases](https://github.com/z3t0/Arduino-IRremote/releases) page.
-2. Download the latest release.
-3. Extract the zip file
-4. Move the "IRremote" folder that has been extracted to your libraries directory.
-5. Make sure to delete Arduino_Root/libraries/RobotIRremote. Where Arduino_Root refers to the install directory of Arduino. The library RobotIRremote has similar definitions to IRremote and causes errors.
-
+Click on the LibraryManager badge above to see the instructions.
 
 ## FAQ
-- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)  
+- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)
 Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic arduinos. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
 
 
@@ -31,6 +28,7 @@ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled o
 - ATmega8535, 16, 32, 164, 324, 644, 1284,
 - ATmega64, 128
 - ATtiny 84 / 85
+- SAMD21 (receive only)
 - ESP32 (receive only)
 - ESP8266 is supported in a fork based on an old codebase that isn't as recent, but it works reasonably well given that perfectly timed sub millisecond interrupts are different on that chip. See https://github.com/markszabo/IRremoteESP8266
 - Sparkfun Pro Micro
@@ -44,7 +42,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
 | [ATtiny85](https://github.com/SpenceKonde/ATTinyCore)                    | **1**               | **TINY0**         |
 | [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
-| Atmega32u4                                                               | 5, 9, **13**        | 1, 3, **4**       |
+| Atmega32u4                                                               | 5, **9**, 13        | 1, 3, **4**       |
 | [ATmega48, ATmega88, ATmega168, ATmega328](https://github.com/MCUdude/MiniCore) | **3**, 9     | 1, **2**          |
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
 | [ATmega164, ATmega324, ATmega644](https://github.com/MCUdude/MightyCore) | 13, **14**          | 1, **2**          |
@@ -63,12 +61,26 @@ We are open to suggestions for adding support to new boards, however we highly r
 ### Experimental patches
 The following are strictly community supported patches that have yet to make it into mainstream. If you have issues feel free to ask here. If it works well then let us know!
 
-[Arduino 101](https://github.com/z3t0/Arduino-IRremote/pull/481#issuecomment-311243146)
+[Arduino 101](pull/481#issuecomment-311243146)
 
 The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 
 ## Usage
 - TODO (Check examples for now)
+
+## API documentation
+This project documents the library API using [Doxygen](http://www.doxygen.org).
+It is planned to make generated and up-to-date API documentation available online.
+
+To generate the API documentation,
+Doxygen, as well as [Graphviz](http://www.graphviz.org/) should be installed.
+(Note that on Windows, it may be necessary to add the Graphviz binary directory
+(something like `C:\Program Files\Graphviz2.38\bin`)
+to the `PATH` variable manually.)
+With Doxygen and Graphviz installed, issue the command
+`doxygen` from the command line in the main project directory, which will
+generate the API documentation in HTML format.
+The just generated `api-doc/index.html` can now be opened in a browser.
 
 ## Contributing
 If you want to contribute to this project:
