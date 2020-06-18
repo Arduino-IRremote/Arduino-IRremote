@@ -142,7 +142,7 @@
 #elif defined(__AVR_AT90USB162__)
 	#define IR_USE_TIMER1     // tx = pin 17
 
-// Teensy 2.0
+// Teensy 2.0, Generic ATmega32U4
 #elif defined(__AVR_ATmega32U4__)
 	//#define IR_USE_TIMER1     // tx = pin 14
 	#define IR_USE_TIMER3       // tx = pin 9
