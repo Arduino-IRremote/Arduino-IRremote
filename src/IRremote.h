@@ -149,6 +149,12 @@ decode_type_t;
 #endif
 
 //------------------------------------------------------------------------------
+// Helper macro for getting a macro definition as string
+//
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+
+//------------------------------------------------------------------------------
 // Mark & Space matching functions
 //
 int  MATCH       (int measured, int desired) ;

@@ -15,7 +15,6 @@
 //
 // JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
 // Whynter A/C ARC-110WD added by Francesco Meschia
-//
 // Sparkfun Pro Micro support by Alastair McCormack
 //******************************************************************************
 
@@ -88,7 +87,7 @@
 
         // Sending not implemented
 #       undef SENDING_SUPPORTED
-
+#       define SEND_PIN 0 // dummy to avoid compiler warning
         // Supply own enbleIRIn
 #       undef USE_DEFAULT_ENABLE_IR_IN
 
@@ -262,7 +261,7 @@
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
 || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
 || defined(__AVR_ATmega164P__)
-#	define SEND_PIN  14             // MightyCore
+#	define SEND_PIN  14             // MightyCore, MegaCore
 #else
 #	define SEND_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif					     // ATmega48, ATmega88, ATmega168, ATmega328
@@ -359,7 +358,7 @@
 || defined(__AVR_ATmega32U4__)
 #	define SEND_PIN  5              // Arduino Mega, Leonardo, Sparkfun Pro Micro
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
-#	define SEND_PIN  6              // MightyCore
+#	define SEND_PIN  6              // MightyCore, MegaCore
 #else
 #	error "Please add OC3A pin number here\n"
 #endif
@@ -370,16 +369,14 @@
 #elif defined(IR_USE_TIMER4_HS)
 
 #define TIMER_RESET
-
-#if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro                         
-	#define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A0))     // Use complimentary O̅C̅4̅A̅ output on pin 5
-	#define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A0)))  // (Pro Micro does not map PC7 (32/ICP3/CLK0/OC4A)
-															// of ATmega32U4 )
+#if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro
+    #define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A0))     // Use complimentary O̅C̅4̅A̅ output on pin 5
+    #define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A0)))  // (Pro Micro does not map PC7 (32/ICP3/CLK0/OC4A)
+                                                            // of ATmega32U4 )
 #else
-	#define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A1))
-	#define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A1)))
+    #define TIMER_ENABLE_PWM    (TCCR4A |= _BV(COM4A1))
+    #define TIMER_DISABLE_PWM   (TCCR4A &= ~(_BV(COM4A1)))
 #endif
-
 #define TIMER_ENABLE_INTR   (TIMSK4 = _BV(TOIE4))
 #define TIMER_DISABLE_INTR  (TIMSK4 = 0)
 #define TIMER_INTR_NAME     TIMER4_OVF_vect
@@ -413,7 +410,7 @@
 #if defined(CORE_OC4A_PIN)
 #	define SEND_PIN  CORE_OC4A_PIN  // Teensy
 #elif defined(ARDUINO_AVR_PROMICRO)
-#	define SEND_PIN  5              // Sparkfun Pro Micro
+#   define SEND_PIN  5              // Sparkfun Pro Micro
 #elif defined(__AVR_ATmega32U4__)
 #	define SEND_PIN  13             // Leonardo
 #else

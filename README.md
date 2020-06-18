@@ -1,22 +1,19 @@
 # IRremote Arduino Library
+Available as Arduino library "IRremote"
 
-[![Build Status](https://travis-ci.org/z3t0/Arduino-IRremote.svg?branch=master)](https://travis-ci.org/z3t0/Arduino-IRremote)
+### [Version 2.5.0](https://github.com/z3t0/Arduino-IRremote/releases)
 
+[![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
+[![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
 [![Join the chat at https://gitter.im/z3t0/Arduino-IRremote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/z3t0/Arduino-IRremote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![LibraryBuild](https://github.com/z3t0/Arduino-IRremote/workflows/LibraryBuild/badge.svg)](https://github.com/z3t0/Arduino-IRremote/actions)
 
 This library enables you to send and receive using infra-red signals on an Arduino.
 
 Tutorials and more information will be made available on [the official homepage](http://z3t0.github.io/Arduino-IRremote/).
 
-## Version - 2.5.0b
-
 ## Installation
-1. Navigate to the [Releases](https://github.com/z3t0/Arduino-IRremote/releases) page.
-2. Download the latest release.
-3. Extract the zip file
-4. Move the "IRremote" folder that has been extracted to your libraries directory.
-5. Make sure to delete Arduino_Root/libraries/RobotIRremote. Where Arduino_Root refers to the install directory of Arduino. The library RobotIRremote has similar definitions to IRremote and causes errors.
-
+Click on the LibraryManager badge above to see the instructions.
 
 ## FAQ
 - IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)
@@ -31,6 +28,7 @@ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled o
 - ATmega8535, 16, 32, 164, 324, 644, 1284,
 - ATmega64, 128
 - ATtiny 84 / 85
+- SAMD21 (receive only)
 - ESP32 (receive only)
 - ESP8266 is supported in a fork based on an old codebase that isn't as recent, but it works reasonably well given that perfectly timed sub millisecond interrupts are different on that chip. See https://github.com/markszabo/IRremoteESP8266
 - Sparkfun Pro Micro
@@ -63,7 +61,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 ### Experimental patches
 The following are strictly community supported patches that have yet to make it into mainstream. If you have issues feel free to ask here. If it works well then let us know!
 
-[Arduino 101](https://github.com/z3t0/Arduino-IRremote/pull/481#issuecomment-311243146)
+[Arduino 101](pull/481#issuecomment-311243146)
 
 The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 
