@@ -263,8 +263,8 @@
 || defined(__AVR_ATmega164P__)
 #	define SEND_PIN  14             // MightyCore, MegaCore
 #else
-#	define SEND_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
-#endif					     // ATmega48, ATmega88, ATmega168, ATmega328
+#	define SEND_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad
+#endif                              // ATmega48, ATmega88, ATmega168, ATmega328
 
 //---------------------------------------------------------
 // Timer1 (16 bits)
@@ -321,7 +321,7 @@
 # 	define SEND_PIN  6
 #else
 #	define SEND_PIN  9       // Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro,
-#endif					     // ATmega48, ATmega88, ATmega168, ATmega328, Leonardo
+#endif                       // ATmega48, ATmega88, ATmega168, ATmega328, Leonardo
 
 //---------------------------------------------------------
 // Timer3 (16 bits)
