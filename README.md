@@ -101,3 +101,4 @@ Check [here](https://github.com/z3t0/Arduino-IRremote/blob/master/Contributors.m
 
 ## Copyright
 Copyright 2009-2012 Ken Shirriff
+Copyright (c) 2016 Rafi Khan
