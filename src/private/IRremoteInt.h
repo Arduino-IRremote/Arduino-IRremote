@@ -1,3 +1,9 @@
+/**
+ * @file IRremoteInt.h
+ *
+ * @brief This file contains a few macros and typedefs that should be considered private.
+ */
+
 //******************************************************************************
 // IRremote
 // Version 2.0.1 June, 2015
@@ -64,11 +70,11 @@ extern volatile irparams_t irparams;
 // Defines for setting and clearing register bits
 //
 #ifndef cbi
-#	define cbi(sfr, bit)  (_SFR_BYTE(sfr) &= ~_BV(bit))
+#define cbi(sfr, bit)  (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
 
 #ifndef sbi
-#	define sbi(sfr, bit)  (_SFR_BYTE(sfr) |= _BV(bit))
+#define sbi(sfr, bit)  (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
 //------------------------------------------------------------------------------
@@ -85,13 +91,19 @@ extern volatile irparams_t irparams;
  */
 #define MARK_EXCESS    100
 
-// Upper and Lower percentage tolerances in measurements
+/** Relative tolerance (in percent) for some comparisons on measured data. */
 #define TOLERANCE       25
+
+/** Lower tolerance for comparison of measured data */
 #define LTOL            (1.0 - (TOLERANCE/100.))
+
+/** Lower tolerance for comparison of measured data */
 #define UTOL            (1.0 + (TOLERANCE/100.))
 
-// Minimum gap between IR transmissions
+/** Minimum gap between IR transmissions, in microseconds */
 #define _GAP            5000
+
+/** Minimum gap between IR transmissions, in USECPERTICK */
 #define GAP_TICKS       (_GAP/USECPERTICK)
 
 #define TICKS_LOW(us)   ((int)(((us)*LTOL/USECPERTICK)))
@@ -100,10 +112,10 @@ extern volatile irparams_t irparams;
 //------------------------------------------------------------------------------
 // IR detector output is active low
 //
-#define MARK   0
-#define SPACE  1
+#define MARK   0 ///< Sensor output for a mark ("flash")
+#define SPACE  1 ///< Sensor output for a space ("gap")
 
-// All board specific stuff has been moved to its own file, included here.
+// All board specific stuff have been moved to its own file, included here.
 #include "boarddefs.h"
 
 #endif
