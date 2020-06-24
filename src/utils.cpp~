@@ -1,0 +1,73 @@
+const unsigned int BITS_IN_BYTE = 8U;
+
+unsigned int bitCount(unsigned int data) {
+    // Not the very most efficient implementation
+    unsigned int result = 0U;
+    unsigned int d = data;
+    for (unsigned int i = 0U; i < BITS_IN_BYTE * sizeof(unsigned int); i++) {
+        result += (d & 1);
+        d >>= 1U;
+    }
+    return result;
+}
+
+unsigned int bitReverse(unsigned int data, unsigned int width) {
+    // Not the very most efficient implementation
+    unsigned int result = 0U;
+    unsigned int d = data;
+    for (unsigned int i = 0U; i < width; i++) {
+        result <<= 1U;
+        result |= (d & 1);
+        d >>= 1U;
+    }
+    return result;
+}
+
+        static inline unsigned int ones(unsigned int n) {
+    return (1U << n) - 1U;
+}
+
+static inline unsigned int maskTo(unsigned int data, unsigned int width) {
+    return data & ones(width);
+}
+
+static unsigned int preprocessFiniteBitField(unsigned int data,
+        unsigned int width,
+        unsigned int chop,
+        bool complement,
+        bool reverse) {
+    unsigned int realdata = complement ? ~data : data;
+    realdata >>= chop;
+    if (reverse)
+        realdata = bitReverse(realdata, width);
+    return realdata;
+}
+
+unsigned int finiteBitField(unsigned int data,
+        unsigned int width,
+        unsigned int chop,
+        bool complement,
+        bool reverse) {
+    unsigned int realdata = preprocessFiniteBitField(data, width, chop, complement, reverse);
+    return maskTo(realdata, (int) width);
+}
+
+#ifdef TESTING
+#include <iostream>
+       #include <unistd.h>
+
+int main() {
+    sleep(20);
+    std::cout << bitReverse(0, 8) << std::endl;
+    std::cout << bitReverse(1, 8) << std::endl;
+    std::cout << bitReverse(3, 8) << std::endl;
+    std::cout << bitReverse(128, 8) << std::endl;
+    std::cout << bitCount(0U) << std::endl;
+    std::cout << bitCount(1U) << std::endl;
+
+      std::cout << bitCount(64U) << std::endl;
+  std::cout << bitCount(128U) << std::endl;
+
+
+}
+#endif

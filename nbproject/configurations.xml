@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="examples">
+        <df name="AiwaRCT501SendDemo">
+          <in>AiwaRCT501SendDemo.ino</in>
+        </df>
+        <df name="IRrecord">
+          <in>IRrecord.ino</in>
+        </df>
+        <df name="IRrecvDemo">
+          <in>IRrecvDemo.ino</in>
+        </df>
+        <df name="IRrecvDump">
+          <in>IRrecvDump.ino</in>
+        </df>
+        <df name="IRrecvDumpV2">
+          <in>IRrecvDumpV2.ino</in>
+        </df>
+        <df name="IRrelay">
+          <in>IRrelay.ino</in>
+        </df>
+        <df name="IRremoteInfo">
+          <in>IRremoteInfo.ino</in>
+        </df>
+        <df name="IRsendDemo">
+          <in>IRsendDemo.ino</in>
+        </df>
+        <df name="IRsendRawDemo">
+          <in>IRsendRawDemo.ino</in>
+        </df>
+        <df name="IRtest">
+          <in>IRtest.ino</in>
+        </df>
+        <df name="IRtest2">
+          <in>IRtest2.ino</in>
+        </df>
+        <df name="JVCPanasonicSendDemo">
+          <in>JVCPanasonicSendDemo.ino</in>
+        </df>
+        <df name="LegoPowerFunctionsSendDemo">
+          <in>LegoPowerFunctionsSendDemo.ino</in>
+        </df>
+        <df name="LegoPowerFunctionsTests">
+          <in>LegoPowerFunctionsTests.ino</in>
+        </df>
+        <df name="LGACSendDemo">
+          <in>LGACSendDemo.ino</in>
+        </df>
+      </df>
+      <df name="src">
+        <in>IRremote.cpp</in>
+        <in>esp32.cpp</in>
+        <in>irPronto.cpp</in>
+        <in>irRecv.cpp</in>
+        <in>irSend.cpp</in>
+        <in>ir_Aiwa.cpp</in>
+        <in>ir_Denon.cpp</in>
+        <in>ir_Dish.cpp</in>
+        <in>ir_JVC.cpp</in>
+        <in>ir_LG.cpp</in>
+        <in>ir_Lego_PF.cpp</in>
+        <in>ir_Mitsubishi.cpp</in>
+        <in>ir_NEC.cpp</in>
+        <in>ir_Panasonic.cpp</in>
+        <in>ir_RC5_RC6.cpp</in>
+        <in>ir_Samsung.cpp</in>
+        <in>ir_Sanyo.cpp</in>
+        <in>ir_Sharp.cpp</in>
+        <in>ir_Sony.cpp</in>
+        <in>ir_Template.cpp</in>
+        <in>ir_Whynter.cpp</in>
+        <in>sam.cpp</in>
+      </df>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+      <itemPath>nbproject/private/launcher.properties</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+        <buildAnalyzer>false</buildAnalyzer>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="examples/AiwaRCT501SendDemo/AiwaRCT501SendDemo.ino"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="examples/IRrecord/IRrecord.ino" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="examples/IRrecvDemo/IRrecvDemo.ino" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="examples/IRrecvDump/IRrecvDump.ino" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="examples/IRrecvDumpV2/IRrecvDumpV2.ino"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="examples/IRrelay/IRrelay.ino" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="examples/IRremoteInfo/IRremoteInfo.ino"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="examples/IRsendDemo/IRsendDemo.ino" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="examples/IRsendRawDemo/IRsendRawDemo.ino"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="examples/IRtest/IRtest.ino" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="examples/IRtest2/IRtest2.ino" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="examples/JVCPanasonicSendDemo/JVCPanasonicSendDemo.ino"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="examples/LGACSendDemo/LGACSendDemo.ino"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="examples/LegoPowerFunctionsSendDemo/LegoPowerFunctionsSendDemo.ino"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="examples/LegoPowerFunctionsTests/LegoPowerFunctionsTests.ino"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="src/IRremote.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/esp32.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/irPronto.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/irRecv.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/irSend.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Aiwa.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Denon.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Dish.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_JVC.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_LG.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Lego_PF.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Mitsubishi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_NEC.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Panasonic.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_RC5_RC6.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Samsung.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Sanyo.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Sharp.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Sony.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Template.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ir_Whynter.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/sam.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

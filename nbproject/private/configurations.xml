@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="api-doc">
+      </df>
+      <df name="examples">
+        <df name="AiwaRCT501SendDemo">
+          <in>AiwaRCT501SendDemo.ino</in>
+        </df>
+        <df name="IRrecord">
+          <in>IRrecord.ino</in>
+        </df>
+        <df name="IRrecvDemo">
+          <in>IRrecvDemo.ino</in>
+        </df>
+        <df name="IRrecvDump">
+          <in>IRrecvDump.ino</in>
+        </df>
+        <df name="IRrecvDumpV2">
+          <in>IRrecvDumpV2.ino</in>
+        </df>
+        <df name="IRrelay">
+          <in>IRrelay.ino</in>
+        </df>
+        <df name="IRremoteInfo">
+          <in>IRremoteInfo.ino</in>
+        </df>
+        <df name="IRsendDemo">
+          <in>IRsendDemo.ino</in>
+        </df>
+        <df name="IRsendRawDemo">
+          <in>IRsendRawDemo.ino</in>
+        </df>
+        <df name="IRtest">
+          <in>IRtest.ino</in>
+        </df>
+        <df name="IRtest2">
+          <in>IRtest2.ino</in>
+        </df>
+        <df name="JVCPanasonicSendDemo">
+          <in>JVCPanasonicSendDemo.ino</in>
+        </df>
+        <df name="LegoPowerFunctionsSendDemo">
+          <in>LegoPowerFunctionsSendDemo.ino</in>
+        </df>
+        <df name="LegoPowerFunctionsTests">
+          <in>LegoPowerFunctionsTests.ino</in>
+        </df>
+        <df name="LGACSendDemo">
+          <in>LGACSendDemo.ino</in>
+        </df>
+      </df>
+      <df name="junk">
+        <df name="Arduino-IRremote-bm">
+        </df>
+      </df>
+      <df name="nbproject-">
+        <df name="private">
+        </df>
+      </df>
+      <df name="src">
+        <df name="junk">
+        </df>
+        <df name="private">
+        </df>
+        <in>IRremote.cpp</in>
+        <in>esp32.cpp</in>
+        <in>irPronto.cpp</in>
+        <in>irRecv.cpp</in>
+        <in>irSend.cpp</in>
+        <in>ir_AdNotam.cpp</in>
+        <in>ir_Aiwa.cpp</in>
+        <in>ir_Aiwa2.cpp</in>
+        <in>ir_Akai.cpp</in>
+        <in>ir_Amino.cpp</in>
+        <in>ir_Amino56.cpp</in>
+        <in>ir_Anthem.cpp</in>
+        <in>ir_Anthem_relaxed.cpp</in>
+        <in>ir_Apple.cpp</in>
+        <in>ir_Archer.cpp</in>
+        <in>ir_Audiovox.cpp</in>
+        <in>ir_Barco.cpp</in>
+        <in>ir_Blaupunkt.cpp</in>
+        <in>ir_Blaupunkt_relaxed.cpp</in>
+        <in>ir_Bose.cpp</in>
+        <in>ir_Bryston.cpp</in>
+        <in>ir_CanalSat.cpp</in>
+        <in>ir_CanalSatLD.cpp</in>
+        <in>ir_Canon.cpp</in>
+        <in>ir_Denon.cpp</in>
+        <in>ir_DenonK.cpp</in>
+        <in>ir_Denon_1_.cpp</in>
+        <in>ir_Denon_2_.cpp</in>
+        <in>ir_Dgtec.cpp</in>
+        <in>ir_Digivision.cpp</in>
+        <in>ir_DirecTV.cpp</in>
+        <in>ir_DirecTV_3FG.cpp</in>
+        <in>ir_Dish.cpp</in>
+        <in>ir_Dish_Network.cpp</in>
+        <in>ir_Dishplayer.cpp</in>
+        <in>ir_Dysan.cpp</in>
+        <in>ir_Elan.cpp</in>
+        <in>ir_Emerson.cpp</in>
+        <in>ir_Epson.cpp</in>
+        <in>ir_F12.cpp</in>
+        <in>ir_F120.cpp</in>
+        <in>ir_F121.cpp</in>
+        <in>ir_F32.cpp</in>
+        <in>ir_Fujitsu.cpp</in>
+        <in>ir_Fujitsu56.cpp</in>
+        <in>ir_Fujitsu_128.cpp</in>
+        <in>ir_Fujitsu_Aircon.cpp</in>
+        <in>ir_GI4DTV.cpp</in>
+        <in>ir_GI4DTVnoCheck.cpp</in>
+        <in>ir_GICable.cpp</in>
+        <in>ir_GIRG.cpp</in>
+        <in>ir_GXB.cpp</in>
+        <in>ir_Grundig16.cpp</in>
+        <in>ir_Grundig1630.cpp</in>
+        <in>ir_GuangZhou.cpp</in>
+        <in>ir_GwtS.cpp</in>
+        <in>ir_Humax4Phase.cpp</in>
+        <in>ir_IODATAn.cpp</in>
+        <in>ir_JVC.cpp</in>
+        <in>ir_JVC2.cpp</in>
+        <in>ir_JVC48.cpp</in>
+        <in>ir_JVC56.cpp</in>
+        <in>ir_Jerrold.cpp</in>
+        <in>ir_Kaseikyo.cpp</in>
+        <in>ir_Kaseikyo56.cpp</in>
+        <in>ir_Kathrein.cpp</in>
+        <in>ir_Konka.cpp</in>
+        <in>ir_LG.cpp</in>
+        <in>ir_Lego_PF.cpp</in>
+        <in>ir_Logitech.cpp</in>
+        <in>ir_Lumagen.cpp</in>
+        <in>ir_Lutron.cpp</in>
+        <in>ir_MCE.cpp</in>
+        <in>ir_Matsui.cpp</in>
+        <in>ir_Metz19.cpp</in>
+        <in>ir_Mitsubishi.cpp</in>
+        <in>ir_MitsubishiK.cpp</in>
+        <in>ir_NEC.cpp</in>
+        <in>ir_NEC1.cpp</in>
+        <in>ir_NEC1f16.cpp</in>
+        <in>ir_NEC1rnc.cpp</in>
+        <in>ir_NEC2.cpp</in>
+        <in>ir_NECShirriff.cpp</in>
+        <in>ir_NECShirriff32.cpp</in>
+        <in>ir_NECx1.cpp</in>
+        <in>ir_NECx2.cpp</in>
+        <in>ir_NRC16.cpp</in>
+        <in>ir_NRC1632.cpp</in>
+        <in>ir_NRC17.cpp</in>
+        <in>ir_Nokia.cpp</in>
+        <in>ir_Nokia12.cpp</in>
+        <in>ir_Nokia32.cpp</in>
+        <in>ir_NovaPace.cpp</in>
+        <in>ir_OrtekMCE.cpp</in>
+        <in>ir_PCTV.cpp</in>
+        <in>ir_PaceMSS.cpp</in>
+        <in>ir_Panasonic.cpp</in>
+        <in>ir_Panasonic2.cpp</in>
+        <in>ir_Panasonic_Old.cpp</in>
+        <in>ir_Pioneer.cpp</in>
+        <in>ir_PioneerMix.cpp</in>
+        <in>ir_Proton.cpp</in>
+        <in>ir_Proton40.cpp</in>
+        <in>ir_RC5.cpp</in>
+        <in>ir_RC57F.cpp</in>
+        <in>ir_RC57F57.cpp</in>
+        <in>ir_RC5_RC6.cpp</in>
+        <in>ir_RC5x.cpp</in>
+        <in>ir_RCA.cpp</in>
+        <in>ir_RCA38.cpp</in>
+        <in>ir_RCA38Old.cpp</in>
+        <in>ir_RCAOld.cpp</in>
+        <in>ir_RECS80.cpp</in>
+        <in>ir_RECS800045.cpp</in>
+        <in>ir_RECS800068.cpp</in>
+        <in>ir_RECS800090.cpp</in>
+        <in>ir_Revox.cpp</in>
+        <in>ir_Roku.cpp</in>
+        <in>ir_Rs200.cpp</in>
+        <in>ir_SIM2.cpp</in>
+        <in>ir_Sampo.cpp</in>
+        <in>ir_Samsung.cpp</in>
+        <in>ir_Samsung20.cpp</in>
+        <in>ir_Samsung36.cpp</in>
+        <in>ir_Sanyo.cpp</in>
+        <in>ir_ScAtl6.cpp</in>
+        <in>ir_Sharp.cpp</in>
+        <in>ir_Sharp1.cpp</in>
+        <in>ir_Sharp2.cpp</in>
+        <in>ir_SharpDVD.cpp</in>
+        <in>ir_Solidtek16.cpp</in>
+        <in>ir_Somfy.cpp</in>
+        <in>ir_Sony.cpp</in>
+        <in>ir_Sony12.cpp</in>
+        <in>ir_Sony15.cpp</in>
+        <in>ir_Sony20.cpp</in>
+        <in>ir_Sony8.cpp</in>
+        <in>ir_StreamZap.cpp</in>
+        <in>ir_StreamZap57.cpp</in>
+        <in>ir_Sunfire.cpp</in>
+        <in>ir_TDC38.cpp</in>
+        <in>ir_TDC56.cpp</in>
+        <in>ir_TeacK.cpp</in>
+        <in>ir_Template.cpp</in>
+        <in>ir_Thomson.cpp</in>
+        <in>ir_Thomson7.cpp</in>
+        <in>ir_Tivo.cpp</in>
+        <in>ir_Velleman.cpp</in>
+        <in>ir_Velodyne.cpp</in>
+        <in>ir_Viewstar.cpp</in>
+        <in>ir_Whynter.cpp</in>
+        <in>ir_X10.cpp</in>
+        <in>ir_X10_18.cpp</in>
+        <in>ir_X10_8.cpp</in>
+        <in>ir_X10n.cpp</in>
+        <in>ir_X48NEC1.cpp</in>
+        <in>ir_X48NEC2.cpp</in>
+        <in>ir_XMP.cpp</in>
+        <in>ir_XMP1.cpp</in>
+        <in>ir_XMP2.cpp</in>
+        <in>ir_XMPMeta.cpp</in>
+        <in>ir_XMPff.cpp</in>
+        <in>ir_XMPff1.cpp</in>
+        <in>ir_XMPff2.cpp</in>
+        <in>ir_Xiaomi.cpp</in>
+        <in>ir_Zaptor36.cpp</in>
+        <in>ir_Zaptor56.cpp</in>
+        <in>ir_pid0001.cpp</in>
+        <in>ir_pid0003.cpp</in>
+        <in>ir_pid0004.cpp</in>
+        <in>ir_pid0083.cpp</in>
+        <in>sam.cpp</in>
+      </df>
+      <in>IRremote.cpp</in>
+      <in>IRremote.h</in>
+      <in>IRremoteInt.h</in>
+      <in>boarddefs.h</in>
+      <in>esp32.cpp</in>
+      <in>irPronto.cpp</in>
+      <in>irRecv.cpp</in>
+      <in>irSend.cpp</in>
+      <in>ir_Aiwa.cpp</in>
+      <in>ir_Denon.cpp</in>
+      <in>ir_Dish.cpp</in>
+      <in>ir_JVC.cpp</in>
+      <in>ir_LG.cpp</in>
+      <in>ir_Lego_PF.cpp</in>
+      <in>ir_Lego_PF_BitStreamEncoder.h</in>
+      <in>ir_Mitsubishi.cpp</in>
+      <in>ir_NEC.cpp</in>
+      <in>ir_Panasonic.cpp</in>
+      <in>ir_RC5_RC6.cpp</in>
+      <in>ir_Samsung.cpp</in>
+      <in>ir_Sanyo.cpp</in>
+      <in>ir_Sharp.cpp</in>
+      <in>ir_Sony.cpp</in>
+      <in>ir_Template.cpp</in>
+      <in>ir_Whynter.cpp</in>
+      <in>sam.cpp</in>
+    </df>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>.</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

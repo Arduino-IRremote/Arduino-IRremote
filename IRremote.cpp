@@ -24,7 +24,7 @@
 #	include "IRremoteInt.h"
 #undef IR_GLOBAL
 
-#ifdef HAS_AVR_INTERRUPT_H
+#ifndef IR_TIMER_USE_ESP32
 #include <avr/interrupt.h>
 #endif
 
@@ -123,7 +123,11 @@ int  MATCH_SPACE (int measured_ticks,  int desired_us)
 // As soon as first MARK arrives:
 //   Gap width is recorded; Ready is cleared; New logging starts
 //
+#ifdef IR_TIMER_USE_ESP32
+void IRTimer()
+#else
 ISR (TIMER_INTR_NAME)
+#endif
 {
 	TIMER_RESET;
 
@@ -185,7 +189,6 @@ ISR (TIMER_INTR_NAME)
 		 	break;
 	}
 
-#ifdef BLINKLED
 	// If requested, flash LED while receiving IR data
 	if (irparams.blinkflag) {
 		if (irdata == MARK)
@@ -194,5 +197,4 @@ ISR (TIMER_INTR_NAME)
 		else if (irparams.blinkpin) digitalWrite(irparams.blinkpin, LOW); // Turn user defined pin LED on
 				else BLINKLED_OFF() ;   // if no user defined LED pin, turn default LED pin for the hardware on
 	}
-#endif // BLINKLED
 }
