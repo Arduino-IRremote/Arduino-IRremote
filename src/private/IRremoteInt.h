@@ -23,35 +23,24 @@
 #include <Arduino.h>
 
 //------------------------------------------------------------------------------
-// This handles definition and access to global variables
-//
-#ifdef IR_GLOBAL
-#	define EXTERN
-#else
-#	define EXTERN extern
-#endif
-
-//------------------------------------------------------------------------------
 // Information for the Interrupt Service Routine
 //
 #define RAWBUF  101  ///< Maximum length of raw duration buffer. Must be odd.
 
 /**
-  * This struct is used to communicate with the ISR (interrupt service routine).
-  */
-typedef
-	struct {
-		// The fields are ordered to reduce memory over caused by struct-padding
-		uint8_t       rcvstate;        ///< State Machine state
-		uint8_t       recvpin;         ///< Pin connected to IR data from detector
-		uint8_t       blinkpin;
-		uint8_t       blinkflag;       ///< true -> enable blinking of pin on IR processing
-		uint8_t       rawlen;          ///< counter of entries in rawbuf
-		unsigned int  timer;           ///< State timer, counts 50uS ticks.
-		unsigned int  rawbuf[RAWBUF];  ///< raw data
-		uint8_t       overflow;        ///< Raw buffer overflow occurred
-	}
-irparams_t;
+ * This struct is used to communicate with the ISR (interrupt service routine).
+ */
+typedef struct {
+    // The fields are ordered to reduce memory over caused by struct-padding
+    uint8_t rcvstate;        ///< State Machine state
+    uint8_t recvpin;         ///< Pin connected to IR data from detector
+    uint8_t blinkpin;
+    uint8_t blinkflag;       ///< true -> enable blinking of pin on IR processing
+    uint8_t rawlen;          ///< counter of entries in rawbuf
+    unsigned int timer;           ///< State timer, counts 50uS ticks.
+    unsigned int rawbuf[RAWBUF];  ///< raw data
+    uint8_t overflow;        ///< Raw buffer overflow occurred
+} irparams_t;
 
 // ISR State-Machine : Receiver States
 #define STATE_IDLE      2
@@ -65,7 +54,11 @@ irparams_t;
  * NB. The data can be changed by the ISR at any time, even mid-function
  * Therefore we declare it as "volatile" to stop the compiler/CPU caching it
  */
-EXTERN  volatile irparams_t  irparams;
+#ifdef IR_GLOBAL
+volatile irparams_t  irparams;
+#else
+extern volatile irparams_t irparams;
+#endif
 
 //------------------------------------------------------------------------------
 // Defines for setting and clearing register bits
