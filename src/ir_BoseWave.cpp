@@ -1,5 +1,4 @@
 #include "IRremote.h"
-#include "IRremoteInt.h"
 
 //==============================================================================
 //                           BBBB    OOO    SSSS  EEEEE
@@ -106,7 +105,7 @@ void  IRsend::sendBoseWave (unsigned char code)
 #if DECODE_BOSEWAVE
 bool  IRrecv::decodeBoseWave (decode_results *results)
 {
-	unsigned char command  = 0;      // Decoded command   
+	unsigned char command  = 0;      // Decoded command
 	unsigned char complement  = 0;   // Decoded command complement
 
 	int   index = 0;   // Index in to results array
