@@ -1,4 +1,10 @@
-## 2.5.0
+## 2.5.0 2020/06
+- corrected keywords.txt.
+- BoseWave protocol added PR #690.
+- Formatting comply to the new stylesheet.
+- Renamed "boarddefs.h" [ISSUE #375](https://github.com/z3t0/Arduino-IRremote/issues/375).
+
+## 2.5.0 ???
 - Added Philips Extended RC-5 protocol support [PR #522] (https://github.com/z3t0/Arduino-IRremote/pull/522)
 
 ## 2.4.0 - 2017/08/10
