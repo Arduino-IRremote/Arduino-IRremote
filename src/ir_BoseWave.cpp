@@ -66,35 +66,35 @@
 
 //+=============================================================================
 #if SEND_BOSEWAVE
-void  IRsend::sendBoseWave (unsigned char code)
-{
-    unsigned int rawSignal[35];
+unsigned int rawSignal[35];
+void IRsend::sendBoseWave(unsigned char code) {
+
     int index = 0;
-	// Header
-	rawSignal[index++] = BOSEWAVE_HDR_MARK;
+    // Header
+    rawSignal[index++] = BOSEWAVE_HDR_MARK;
     rawSignal[index++] = BOSEWAVE_HDR_SPACE;
 
-	// 8 bit command
-	for (unsigned char mask = 0x80;  mask;  mask >>= 1) {
-		rawSignal[index++] = BOSEWAVE_BIT_MARK;
-		if (code & mask) {
+    // 8 bit command
+    for (unsigned char mask = 0x80; mask; mask >>= 1) {
+        rawSignal[index++] = BOSEWAVE_BIT_MARK;
+        if (code & mask) {
             rawSignal[index++] = BOSEWAVE_ONE_SPACE;
-		} else {
+        } else {
             rawSignal[index++] = BOSEWAVE_ZERO_SPACE;
-		}
-	}
+        }
+    }
 
-	// 8 bit command complement
-	for (unsigned char mask = 0x80;  mask;  mask >>= 1) {
-		rawSignal[index++] = BOSEWAVE_BIT_MARK;
-		if (code & mask) {
+    // 8 bit command complement
+    for (unsigned char mask = 0x80; mask; mask >>= 1) {
+        rawSignal[index++] = BOSEWAVE_BIT_MARK;
+        if (code & mask) {
             rawSignal[index++] = BOSEWAVE_ZERO_SPACE;
-		} else {
+        } else {
             rawSignal[index++] = BOSEWAVE_ONE_SPACE;
-		}
-	}
-	// End transmission
-	rawSignal[index++] = BOSEWAVE_END_MARK;
+        }
+    }
+    // End transmission
+    rawSignal[index++] = BOSEWAVE_END_MARK;
 
     // Transmit
     this->sendRaw(rawSignal, 35, 38);
@@ -103,35 +103,34 @@ void  IRsend::sendBoseWave (unsigned char code)
 
 //+=============================================================================
 #if DECODE_BOSEWAVE
-bool  IRrecv::decodeBoseWave (decode_results *results)
-{
-	unsigned char command  = 0;      // Decoded command
-	unsigned char complement  = 0;   // Decoded command complement
+bool IRrecv::decodeBoseWave(decode_results *results) {
+    unsigned char command = 0;      // Decoded command
+    unsigned char complement = 0;   // Decoded command complement
 
-	int   index = 0;   // Index in to results array
+    int index = 0;   // Index in to results array
 
     DBG_PRINTLN("Decoding Bose Wave ...");
 
-	// Check we have enough data
-	if (irparams.rawlen < (2 * BOSEWAVE_BITS * 2) + 3)  {
+    // Check we have enough data
+    if (irparams.rawlen < (2 * BOSEWAVE_BITS * 2) + 3) {
         DBG_PRINT("\tInvalid data length found:  ");
         DBG_PRINTLN(results->rawlen);
-        return false ;
+        return false;
     }
 
-	// Check header "mark"
-	index = 1;
-	if (!MATCH_MARK(results->rawbuf[index], BOSEWAVE_HDR_MARK))  {
+    // Check header "mark"
+    index = 1;
+    if (!MATCH_MARK(results->rawbuf[index], BOSEWAVE_HDR_MARK)) {
         DBG_PRINT("\tInvalid Header Mark.  Expecting ");
         DBG_PRINT(BOSEWAVE_HDR_MARK);
         DBG_PRINT(".  Got ");
         DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
-        return false ;
+        return false;
     }
     index++;
 
-	// Check header "space"
-	if (!MATCH_SPACE(results->rawbuf[index], BOSEWAVE_HDR_SPACE)) {
+    // Check header "space"
+    if (!MATCH_SPACE(results->rawbuf[index], BOSEWAVE_HDR_SPACE)) {
         DBG_PRINT("\tInvalid Header Space.  Expecting ");
         DBG_PRINT(BOSEWAVE_HDR_SPACE);
         DBG_PRINT(".  Got ");
@@ -140,63 +139,63 @@ bool  IRrecv::decodeBoseWave (decode_results *results)
     }
     index++;
 
-	// Decode the data bits
-	for (int ii = 7;  ii >= 0;  ii--) {
-		// Check bit "mark".  Mark is always the same length.
-		if (!MATCH_MARK(results->rawbuf[index], BOSEWAVE_BIT_MARK))  {
+    // Decode the data bits
+    for (int ii = 7; ii >= 0; ii--) {
+        // Check bit "mark".  Mark is always the same length.
+        if (!MATCH_MARK(results->rawbuf[index], BOSEWAVE_BIT_MARK)) {
             DBG_PRINT("\tInvalid command Mark.  Expecting ");
             DBG_PRINT(BOSEWAVE_BIT_MARK);
             DBG_PRINT(".  Got ");
             DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
-            return false ;
+            return false;
         }
         index++;
 
         // Check bit "space"
-		if (MATCH_SPACE(results->rawbuf[index], BOSEWAVE_ONE_SPACE ))  {
+        if (MATCH_SPACE(results->rawbuf[index], BOSEWAVE_ONE_SPACE)) {
             command |= (0x01 << ii);
-		} else if (MATCH_SPACE(results->rawbuf[index], BOSEWAVE_ZERO_SPACE)) {
+        } else if (MATCH_SPACE(results->rawbuf[index], BOSEWAVE_ZERO_SPACE)) {
             // Nothing to do for zeroes.
         } else {
             DBG_PRINT("\tInvalid command Space.  Got ");
             DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
-            return false ;
+            return false;
         }
-		index++;
-	}
+        index++;
+    }
 
-	// Decode the command complement bits.  We decode it here as the complement
+    // Decode the command complement bits.  We decode it here as the complement
     // of the complement (0=1 and 1=0) so we can easily compare it to the command.
-	for (int ii = 7;  ii >= 0;  ii--) {
-		// Check bit "mark".  Mark is always the same length.
-		if (!MATCH_MARK(results->rawbuf[index], BOSEWAVE_BIT_MARK))  {
+    for (int ii = 7; ii >= 0; ii--) {
+        // Check bit "mark".  Mark is always the same length.
+        if (!MATCH_MARK(results->rawbuf[index], BOSEWAVE_BIT_MARK)) {
             DBG_PRINT("\tInvalid complement Mark.  Expecting ");
             DBG_PRINT(BOSEWAVE_BIT_MARK);
             DBG_PRINT(".  Got ");
             DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
-            return false ;
+            return false;
         }
         index++;
 
         // Check bit "space"
-		if (MATCH_SPACE(results->rawbuf[index], BOSEWAVE_ONE_SPACE ))  {
-			// Nothing to do.
-		} else if (MATCH_SPACE(results->rawbuf[index], BOSEWAVE_ZERO_SPACE)) {
+        if (MATCH_SPACE(results->rawbuf[index], BOSEWAVE_ONE_SPACE)) {
+            // Nothing to do.
+        } else if (MATCH_SPACE(results->rawbuf[index], BOSEWAVE_ZERO_SPACE)) {
             complement |= (0x01 << ii);
         } else {
             DBG_PRINT("\tInvalid complement Space.  Got ");
             DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
-            return false ;
+            return false;
         }
-		index++;
-	}
+        index++;
+    }
 
-    if (command != complement)  {
+    if (command != complement) {
         DBG_PRINT("\tComplement is not correct.  Command=0x");
         DBG_PRINT(command, HEX);
         DBG_PRINT("  Complement=0x");
         DBG_PRINTLN(complement, HEX);
-        return false ;
+        return false;
     } else {
         DBG_PRINTLN("\tValid command");
     }
@@ -205,14 +204,14 @@ bool  IRrecv::decodeBoseWave (decode_results *results)
     if (MATCH_MARK(results->rawbuf[index], BOSEWAVE_END_MARK) == 0) {
         DBG_PRINT("\tInvalid end Mark.  Got ");
         DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
-        return false ;
+        return false;
     }
 
-	// Success
-	results->bits        = BOSEWAVE_BITS;
-	results->value       = command;
-	results->decode_type = BOSEWAVE;
+    // Success
+    results->bits = BOSEWAVE_BITS;
+    results->value = command;
+    results->decode_type = BOSEWAVE;
 
-	return true;
+    return true;
 }
 #endif

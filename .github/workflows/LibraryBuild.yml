@@ -69,7 +69,7 @@ jobs:
 
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://dl.espressif.com/dl/package_esp32_index.json
-            examples-exclude: AiwaRCT501SendDemo,IRrecord,IRsendDemo,IRsendRawDemo,IRtest,IRtest2,JVCPanasonicSendDemo,LegoPowerFunctionsSendDemo,LGACSendDemo # Comma separated list of (unique substrings of) example names to exclude in build
+            examples-exclude: AiwaRCT501SendDemo,IRrecord,IRsendDemo,IRsendRawDemo,IRtest,IRtest2,JVCPanasonicSendDemo,LegoPowerFunctionsSendDemo,LGACSendDemo,BoseWaveSendDemo # Comma separated list of (unique substrings of) example names to exclude in build
 
           - arduino-boards-fqbn: SparkFun:avr:promicro
             arduino-platform: arduino:avr,SparkFun:avr
