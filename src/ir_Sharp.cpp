@@ -32,29 +32,28 @@
 
 //+=============================================================================
 #if SEND_SHARP
-void  IRsend::sendSharpRaw (unsigned long data,  int nbits)
-{
-	enableIROut(38);
+void IRsend::sendSharpRaw(unsigned long data, int nbits) {
+    enableIROut(38);
 
-	// Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
-	// much more reliable. That's the exact behaviour of CD-S6470 remote control.
-	for (int n = 0;  n < 3;  n++) {
-		for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
-			if (data & mask) {
-				mark(SHARP_BIT_MARK);
-				space(SHARP_ONE_SPACE);
-			} else {
-				mark(SHARP_BIT_MARK);
-				space(SHARP_ZERO_SPACE);
-			}
-		}
+    // Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
+    // much more reliable. That's the exact behaviour of CD-S6470 remote control.
+    for (int n = 0; n < 3; n++) {
+        for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
+            if (data & mask) {
+                mark(SHARP_BIT_MARK);
+                space(SHARP_ONE_SPACE);
+            } else {
+                mark(SHARP_BIT_MARK);
+                space(SHARP_ZERO_SPACE);
+            }
+        }
 
-		mark(SHARP_BIT_MARK);
-		space(SHARP_ZERO_SPACE);
-		delay(40);
+        mark(SHARP_BIT_MARK);
+        space(SHARP_ZERO_SPACE);
+        delay(40);
 
-		data = data ^ SHARP_TOGGLE_MASK;
-	}
+        data = data ^ SHARP_TOGGLE_MASK;
+    }
 }
 #endif
 
@@ -63,8 +62,7 @@ void  IRsend::sendSharpRaw (unsigned long data,  int nbits)
 //                                                  ^^^^^^^^^^^^^ FUNCTION MISSING!
 //
 #if SEND_SHARP
-void  IRsend::sendSharp (unsigned int address,  unsigned int command)
-{
-	sendSharpRaw((address << 10) | (command << 2) | 2, SHARP_BITS);
+void IRsend::sendSharp(unsigned int address, unsigned int command) {
+    sendSharpRaw((address << 10) | (command << 2) | 2, SHARP_BITS);
 }
 #endif

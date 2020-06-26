@@ -21,31 +21,31 @@
 #if SEND_WHYNTER
 void  IRsend::sendWhynter (unsigned long data,  int nbits)
 {
-	// Set IR carrier frequency
-	enableIROut(38);
+    // Set IR carrier frequency
+    enableIROut(38);
 
-	// Start
-	mark(WHYNTER_ZERO_MARK);
-	space(WHYNTER_ZERO_SPACE);
+    // Start
+    mark(WHYNTER_ZERO_MARK);
+    space(WHYNTER_ZERO_SPACE);
 
-	// Header
-	mark(WHYNTER_HDR_MARK);
-	space(WHYNTER_HDR_SPACE);
+    // Header
+    mark(WHYNTER_HDR_MARK);
+    space(WHYNTER_HDR_SPACE);
 
-	// Data
-	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
-		if (data & mask) {
-			mark(WHYNTER_ONE_MARK);
-			space(WHYNTER_ONE_SPACE);
-		} else {
-			mark(WHYNTER_ZERO_MARK);
-			space(WHYNTER_ZERO_SPACE);
-		}
-	}
+    // Data
+    for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
+        if (data & mask) {
+            mark(WHYNTER_ONE_MARK);
+            space(WHYNTER_ONE_SPACE);
+        } else {
+            mark(WHYNTER_ZERO_MARK);
+            space(WHYNTER_ZERO_SPACE);
+        }
+    }
 
-	// Footer
-	mark(WHYNTER_ZERO_MARK);
-	space(WHYNTER_ZERO_SPACE);  // Always end with the LED off
+    // Footer
+    mark(WHYNTER_ZERO_MARK);
+    space(WHYNTER_ZERO_SPACE);  // Always end with the LED off
 }
 #endif
 
@@ -53,38 +53,38 @@ void  IRsend::sendWhynter (unsigned long data,  int nbits)
 #if DECODE_WHYNTER
 bool  IRrecv::decodeWhynter (decode_results *results)
 {
-	long  data   = 0;
-	int   offset = 1;  // skip initial space
+    long  data   = 0;
+    int   offset = 1;  // skip initial space
 
-	// Check we have the right amount of data
-	if (irparams.rawlen < (2 * WHYNTER_BITS) + 6)  return false ;
+    // Check we have the right amount of data
+    if (irparams.rawlen < (2 * WHYNTER_BITS) + 6)  return false ;
 
-	// Sequence begins with a bit mark and a zero space
-	if (!MATCH_MARK (results->rawbuf[offset++], WHYNTER_BIT_MARK  ))  return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], WHYNTER_ZERO_SPACE))  return false ;
+    // Sequence begins with a bit mark and a zero space
+    if (!MATCH_MARK (results->rawbuf[offset++], WHYNTER_BIT_MARK  ))  return false ;
+    if (!MATCH_SPACE(results->rawbuf[offset++], WHYNTER_ZERO_SPACE))  return false ;
 
-	// header mark and space
-	if (!MATCH_MARK (results->rawbuf[offset++], WHYNTER_HDR_MARK ))  return false ;
-	if (!MATCH_SPACE(results->rawbuf[offset++], WHYNTER_HDR_SPACE))  return false ;
+    // header mark and space
+    if (!MATCH_MARK (results->rawbuf[offset++], WHYNTER_HDR_MARK ))  return false ;
+    if (!MATCH_SPACE(results->rawbuf[offset++], WHYNTER_HDR_SPACE))  return false ;
 
-	// data bits
-	for (int i = 0;  i < WHYNTER_BITS;  i++) {
-		if (!MATCH_MARK(results->rawbuf[offset++], WHYNTER_BIT_MARK))  return false ;
+    // data bits
+    for (int i = 0;  i < WHYNTER_BITS;  i++) {
+        if (!MATCH_MARK(results->rawbuf[offset++], WHYNTER_BIT_MARK))  return false ;
 
-		if      (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE ))  data = (data << 1) | 1 ;
-		else if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE))  data = (data << 1) | 0 ;
-		else                                                                return false ;
-		offset++;
-	}
+        if      (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE ))  data = (data << 1) | 1 ;
+        else if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE))  data = (data << 1) | 0 ;
+        else                                                                return false ;
+        offset++;
+    }
 
-	// trailing mark
-	if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK))  return false ;
+    // trailing mark
+    if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK))  return false ;
 
-	// Success
-	results->bits = WHYNTER_BITS;
-	results->value = data;
-	results->decode_type = WHYNTER;
-	return true;
+    // Success
+    results->bits = WHYNTER_BITS;
+    results->value = data;
+    results->decode_type = WHYNTER;
+    return true;
 }
 #endif
 

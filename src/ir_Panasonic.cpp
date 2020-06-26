@@ -19,28 +19,28 @@
 #if SEND_PANASONIC
 void  IRsend::sendPanasonic (unsigned int address,  unsigned long data)
 {
-	// Set IR carrier frequency
-	enableIROut(35);
+    // Set IR carrier frequency
+    enableIROut(35);
 
-	// Header
-	mark(PANASONIC_HDR_MARK);
-	space(PANASONIC_HDR_SPACE);
+    // Header
+    mark(PANASONIC_HDR_MARK);
+    space(PANASONIC_HDR_SPACE);
 
-	// Address
-	for (unsigned long  mask = 1UL << (16 - 1);  mask;  mask >>= 1) {
-		mark(PANASONIC_BIT_MARK);
-		if (address & mask)  space(PANASONIC_ONE_SPACE) ;
-		else                 space(PANASONIC_ZERO_SPACE) ;
+    // Address
+    for (unsigned long  mask = 1UL << (16 - 1);  mask;  mask >>= 1) {
+        mark(PANASONIC_BIT_MARK);
+        if (address & mask)  space(PANASONIC_ONE_SPACE) ;
+        else                 space(PANASONIC_ZERO_SPACE) ;
     }
 
-	// Data
-	for (unsigned long  mask = 1UL << (32 - 1);  mask;  mask >>= 1) {
+    // Data
+    for (unsigned long  mask = 1UL << (32 - 1);  mask;  mask >>= 1) {
         mark(PANASONIC_BIT_MARK);
         if (data & mask)  space(PANASONIC_ONE_SPACE) ;
         else              space(PANASONIC_ZERO_SPACE) ;
     }
 
-	// Footer
+    // Footer
     mark(PANASONIC_BIT_MARK);
     space(0);  // Always end with the LED off
 }

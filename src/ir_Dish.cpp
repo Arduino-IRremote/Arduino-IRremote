@@ -30,24 +30,23 @@
 
 //+=============================================================================
 #if SEND_DISH
-void  IRsend::sendDISH (unsigned long data,  int nbits)
-{
-	// Set IR carrier frequency
-	enableIROut(56);
+void IRsend::sendDISH(unsigned long data, int nbits) {
+    // Set IR carrier frequency
+    enableIROut(56);
 
-	mark(DISH_HDR_MARK);
-	space(DISH_HDR_SPACE);
+    mark(DISH_HDR_MARK);
+    space(DISH_HDR_SPACE);
 
-	for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
-		if (data & mask) {
-			mark(DISH_BIT_MARK);
-			space(DISH_ONE_SPACE);
-		} else {
-			mark(DISH_BIT_MARK);
-			space(DISH_ZERO_SPACE);
-		}
-	}
-	mark(DISH_HDR_MARK); //added 26th March 2016, by AnalysIR ( https://www.AnalysIR.com )
+    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
+        if (data & mask) {
+            mark(DISH_BIT_MARK);
+            space(DISH_ONE_SPACE);
+        } else {
+            mark(DISH_BIT_MARK);
+            space(DISH_ZERO_SPACE);
+        }
+    }
+    mark(DISH_HDR_MARK); //added 26th March 2016, by AnalysIR ( https://www.AnalysIR.com )
 }
 #endif
 

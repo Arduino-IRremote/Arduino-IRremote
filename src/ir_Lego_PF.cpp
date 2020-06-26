@@ -27,19 +27,18 @@ void logFunctionParameters(uint16_t data, bool repeat) {
 } // anonymous namespace
 #endif // DEBUG
 
-void IRsend::sendLegoPowerFunctions(uint16_t data, bool repeat)
-{
+void IRsend::sendLegoPowerFunctions(uint16_t data, bool repeat) {
 #if DEBUG
   ::logFunctionParameters(data, repeat);
 #endif // DEBUG
 
-  enableIROut(38);
-  static LegoPfBitStreamEncoder bitStreamEncoder;
-  bitStreamEncoder.reset(data, repeat);
-  do {
-    mark(bitStreamEncoder.getMarkDuration());
-    space(bitStreamEncoder.getPauseDuration());
-  } while (bitStreamEncoder.next());
+    enableIROut(38);
+    static LegoPfBitStreamEncoder bitStreamEncoder;
+    bitStreamEncoder.reset(data, repeat);
+    do {
+        mark(bitStreamEncoder.getMarkDuration());
+        space(bitStreamEncoder.getPauseDuration());
+    } while (bitStreamEncoder.next());
 }
 
 #endif // SEND_LEGO_PF
