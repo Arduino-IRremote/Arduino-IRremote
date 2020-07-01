@@ -34,7 +34,7 @@ int IR_RECEIVE_PIN = 11;
 #endif
 int LED_PIN = 3;
 
-IRrecv irrecv(RECV_PIN);
+IRrecv irrecv(IR_RECEIVE_PIN);
 IRsend irsend;
 
 decode_results results;
@@ -57,8 +57,8 @@ void setup()
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__));
     
-  // Check RECV_PIN to decide if we're RECEIVER or SENDER
-  if (digitalRead(RECV_PIN) == HIGH) {
+  // Check IR_RECEIVE_PIN to decide if we're RECEIVER or SENDER
+  if (digitalRead(IR_RECEIVE_PIN) == HIGH) {
     mode = RECEIVER;
     irrecv.enableIRIn();
     pinMode(LED_PIN, OUTPUT);
@@ -79,10 +79,10 @@ void setup()
 void waitForGap(int gap) {
   Serial.println("Waiting for gap");
   while (1) {
-    while (digitalRead(RECV_PIN) == LOW) { 
+    while (digitalRead(IR_RECEIVE_PIN) == LOW) { 
     }
     unsigned long time = millis();
-    while (digitalRead(RECV_PIN) == HIGH) {
+    while (digitalRead(IR_RECEIVE_PIN) == HIGH) {
       if (millis() - time > gap) {
         return;
       }

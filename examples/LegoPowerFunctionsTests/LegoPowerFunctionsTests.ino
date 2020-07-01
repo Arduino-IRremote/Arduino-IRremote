@@ -4,6 +4,7 @@
  */
 
 #include <IRremote.h>
+#include "ir_Lego_PF_BitStreamEncoder.h"
 
 void runBitStreamEncoderTests();
 
