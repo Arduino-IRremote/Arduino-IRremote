@@ -317,13 +317,10 @@ private:
 class IRsend {
 public:
 #ifdef USE_SOFT_CARRIER
-
-    IRsend(int pin = SEND_PIN)
-    {
+    IRsend(int pin = SEND_PIN) {
       sendPin = pin;
     }
 #else
-
     IRsend() {
     }
 #endif
