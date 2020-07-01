@@ -7,40 +7,20 @@
  */
 #include <IRremote.h>
 
-#if defined(ESP32)
-int IR_RECEIVE_PIN = 15;
-#else
-int IR_RECEIVE_PIN = 11;
+IRsend irsend;
+
+// On the Zero and others we switch explicitly to SerialUSB
+#if defined(ARDUINO_ARCH_SAMD)
+#define Serial SerialUSB
 #endif
 
-void menu() {
-    Serial.println("0:  On / Off");
-    Serial.println("1:  Volume Up");
-    Serial.println("2:  Volume Down");
-    Serial.println("3:  Tune Up");
-    Serial.println("4:  Tune Down");
-    Serial.println("5:  AM");
-    Serial.println("6:  FM");
-    Serial.println("7:  Preset 1");
-    Serial.println("8:  Preset 2");
-    Serial.println("9:  Preset 3");
-    Serial.println("a:  Preset 4");
-    Serial.println("b:  Preset 5");
-    Serial.println("c:  Preset 6");
-    Serial.println("d:  Mute");
-    Serial.println("e:  Play/Pause");
-    Serial.println("f:  Stop");
-    Serial.println("g:  Aux");
-    Serial.println("h:  Sleep");
-}
-
-IRsend irsend;
 bool prompt;
+void menu();
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
-    Serial.begin(9600);
+    Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__)
     while (!Serial)
         ; //delay for Leonardo, but this loops forever for Maple Serial
@@ -121,4 +101,25 @@ void loop() {
         }
         delay(300);
     }
+}
+
+void menu() {
+    Serial.println("0:  On / Off");
+    Serial.println("1:  Volume Up");
+    Serial.println("2:  Volume Down");
+    Serial.println("3:  Tune Up");
+    Serial.println("4:  Tune Down");
+    Serial.println("5:  AM");
+    Serial.println("6:  FM");
+    Serial.println("7:  Preset 1");
+    Serial.println("8:  Preset 2");
+    Serial.println("9:  Preset 3");
+    Serial.println("a:  Preset 4");
+    Serial.println("b:  Preset 5");
+    Serial.println("c:  Preset 6");
+    Serial.println("d:  Mute");
+    Serial.println("e:  Play/Pause");
+    Serial.println("f:  Stop");
+    Serial.println("g:  Aux");
+    Serial.println("h:  Sleep");
 }

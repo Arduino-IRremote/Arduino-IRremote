@@ -27,7 +27,11 @@
 
 #include <IRremote.h>
 
-int RECV_PIN = 11;
+#if defined(ESP32)
+int IR_RECEIVE_PIN = 15;
+#else
+int IR_RECEIVE_PIN = 11;
+#endif
 int LED_PIN = 3;
 
 IRrecv irrecv(RECV_PIN);
@@ -43,7 +47,16 @@ int mode;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
+  #if defined(__AVR_ATmega32U4__)
+    while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
+#endif
+#if defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)
+    delay(2000); // To be able to connect Serial monitor after reset and before first printout
+#endif
+    // Just to know which program is running on my Arduino
+    Serial.println(F("START " __FILE__ " from " __DATE__));
+    
   // Check RECV_PIN to decide if we're RECEIVER or SENDER
   if (digitalRead(RECV_PIN) == HIGH) {
     mode = RECEIVER;
@@ -51,6 +64,8 @@ void setup()
     pinMode(LED_PIN, OUTPUT);
     digitalWrite(LED_PIN, LOW);
     Serial.println("Receiver mode");
+    Serial.print(F("Ready to receive IR signals at pin "));
+    Serial.println(IR_RECEIVE_PIN);
   } 
   else {
     mode = SENDER;

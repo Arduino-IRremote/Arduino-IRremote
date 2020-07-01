@@ -138,7 +138,7 @@ void ac_air_clean(int air_clean)
 
 void setup()
 {
-  Serial.begin(38400);
+  Serial.begin(115200);
   delay(1000);
   Wire.begin(7);
   Wire.onReceive(receiveEvent);

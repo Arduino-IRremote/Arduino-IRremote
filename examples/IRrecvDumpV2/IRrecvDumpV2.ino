@@ -6,7 +6,11 @@
 //------------------------------------------------------------------------------
 // Tell IRremote which Arduino pin is connected to the IR Receiver (TSOP4838)
 //
+#if defined(ESP32)
+int IR_RECEIVE_PIN = 15;
+#else
 int IR_RECEIVE_PIN = 11;
+#endif
 IRrecv irrecv(IR_RECEIVE_PIN);
 
 //+=============================================================================
@@ -15,7 +19,7 @@ IRrecv irrecv(IR_RECEIVE_PIN);
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
-    Serial.begin(9600);   // Status message will be sent to PC at 9600 baud
+    Serial.begin(115200);   // Status message will be sent to PC at 9600 baud
 #if defined(__AVR_ATmega32U4__)
     while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
 #endif

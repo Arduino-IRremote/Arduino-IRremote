@@ -25,9 +25,10 @@ decode_results results;
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
-    Serial.begin(9600);
+    Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__)
-    while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
+    while (!Serial)
+        ; //delay for Leonardo, but this loops forever for Maple Serial
 #endif
 #if defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)
     delay(2000); // To be able to connect Serial monitor after reset and before first printout

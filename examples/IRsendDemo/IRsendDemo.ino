@@ -9,6 +9,7 @@
 #include <IRremote.h>
 
 IRsend irsend;
+
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
 #define Serial SerialUSB
@@ -17,7 +18,7 @@ IRsend irsend;
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
-    Serial.begin(9600);
+    Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__)
     while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
 #endif
@@ -29,7 +30,6 @@ void setup() {
 }
 
 void loop() {
-    // Sony codes must be sent 3 times according to the protocol
     for (int i = 0; i < 3; i++) {
         irsend.sendSony(0xa90, 12);
         Serial.println(F("sendSony(0xa90, 12)"));

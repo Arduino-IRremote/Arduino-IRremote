@@ -17,19 +17,27 @@
 
 #include <IRremote.h>
 
+#if defined(ESP32)
+int IR_RECEIVE_PIN = 15;
+#else
 int IR_RECEIVE_PIN = 11;
+#endif
 int BUTTON_PIN = 12;
 int STATUS_PIN = 13;
 
 IRrecv irrecv(IR_RECEIVE_PIN);
 IRsend irsend;
-
 decode_results results;
+
+// On the Zero and others we switch explicitly to SerialUSB
+#if defined(ARDUINO_ARCH_SAMD)
+#define Serial SerialUSB
+#endif
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
-    Serial.begin(9600);
+    Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__)
     while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
 #endif
@@ -87,7 +95,7 @@ void storeCode(decode_results *results) {
         } else if (codeType == SONY) {
             Serial.print("Received SONY: ");
         } else if (codeType == SAMSUNG) {
-            Serial.print("Received SAMSUNG: ");            
+            Serial.print("Received SAMSUNG: ");
         } else if (codeType == PANASONIC) {
             Serial.print("Received PANASONIC: ");
         } else if (codeType == JVC) {
