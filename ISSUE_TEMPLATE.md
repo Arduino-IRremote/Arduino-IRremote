@@ -1,6 +1,31 @@
-**Board:** ARDUINO UNO
-**Library Version:** 2.1.0
-**Protocol:** Sony (if any)
+### Board
+* [ ] Arduino ATmega328* board (UNO, Nano)
+* [ ] Arduino ATmega2560 board (Mega)
+* [ ] Arduino ATmega32U4 board (Leonardo)
+* [ ] Arduino SAM board (Due)
+* [ ] Arduino SAMD board (Zero, MKR*)
+* [ ] ESP32 board
+* [ ] Teensy board
+* [ ] Other - please specify
+
+### Protocol
+* [ ] Aiwa
+* [ ] BoseWave
+* [ ] Denon
+* [ ] Dish
+* [ ] JVC
+* [ ] Lego
+* [ ] LG
+* [ ] Mitsubishi
+* [ ] Panasonic
+* [ ] RC5, RC6
+* [ ] Samsung
+* [ ] Sanyo
+* [ ] Sharp
+* [ ] Sony
+* [ ] Whynter
+* [ ] Other - please specify
+
 
 **Code Block:**
 ```c
