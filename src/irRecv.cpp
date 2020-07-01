@@ -11,7 +11,7 @@ int IRrecv::decode(decode_results *results) {
 
     results->overflow = irparams.overflow;
 
-    if (irparams.rcvstate != STATE_STOP) {
+    if (irparams.rcvstate != IR_REC_STATE_STOP) {
         return false;
     }
 
@@ -158,7 +158,7 @@ void IRrecv::enableIRIn() {
     // enable interrupts
 
     // Initialize state machine variables
-    irparams.rcvstate = STATE_IDLE;
+    irparams.rcvstate = IR_REC_STATE_IDLE;
     irparams.rawlen = 0;
 
     // Set pin modes
@@ -182,13 +182,13 @@ void IRrecv::blink13(int blinkflag) {
 // Return if receiving new IR signals
 //
 bool IRrecv::isIdle() {
-    return (irparams.rcvstate == STATE_IDLE || irparams.rcvstate == STATE_STOP) ? true : false;
+    return (irparams.rcvstate == IR_REC_STATE_IDLE || irparams.rcvstate == IR_REC_STATE_STOP) ? true : false;
 }
 //+=============================================================================
 // Restart the ISR state machine
 //
 void IRrecv::resume() {
-    irparams.rcvstate = STATE_IDLE;
+    irparams.rcvstate = IR_REC_STATE_IDLE;
     irparams.rawlen = 0;
 }
 

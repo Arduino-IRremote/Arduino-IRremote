@@ -43,11 +43,11 @@ typedef struct {
 } irparams_t;
 
 // ISR State-Machine : Receiver States
-#define STATE_IDLE      2
-#define STATE_MARK      3
-#define STATE_SPACE     4
-#define STATE_STOP      5
-#define STATE_OVERFLOW  6
+#define IR_REC_STATE_IDLE      2
+#define IR_REC_STATE_MARK      3
+#define IR_REC_STATE_SPACE     4
+#define IR_REC_STATE_STOP      5
+#define IR_REC_STATE_OVERFLOW  6
 
 /**
  * Allow all parts of the code access to the ISR data

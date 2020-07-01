@@ -83,7 +83,7 @@ public:
   // Copies the dummy buf into the interrupt buf
   void useDummyBuf() {
     int last = SPACE;
-    irparams.rcvstate = STATE_STOP;
+    irparams.rcvstate = IR_REC_STATE_STOP;
     irparams.rawlen = 1; // Skip the gap
     for (int i = 0 ; i < sendlogcnt; i++) {
       if (sendlog[i] < 0) {
