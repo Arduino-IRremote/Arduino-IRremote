@@ -68,7 +68,9 @@ void dumpTIMER() {
     flag = true;
 #endif
 #ifdef IR_USE_TIMER2
-  Serial.print(F("Timer defined for use: ")); Serial.println(F("Timer2")); flag = true;
+    Serial.print(F("Timer defined for use: "));
+    Serial.println(F("Timer2"));
+    flag = true;
 #endif
 #ifdef IR_USE_TIMER3
   Serial.print(F("Timer defined for use: ")); Serial.println(F("Timer3")); flag = true;
@@ -212,51 +214,70 @@ void dumpProtocols() {
     Serial.print(F("RC5:          "));
     printSendEnabled(SEND_RC5);
     printDecodeEnabled(DECODE_RC6);
+
     Serial.print(F("RC6:          "));
     printSendEnabled(SEND_RC6);
     printDecodeEnabled(DECODE_RC5);
+
     Serial.print(F("NEC:          "));
     printSendEnabled(SEND_NEC);
     printDecodeEnabled(DECODE_NEC);
+
     Serial.print(F("SONY:         "));
     printSendEnabled(SEND_SONY);
     printDecodeEnabled(DECODE_SONY);
+
     Serial.print(F("PANASONIC:    "));
     printSendEnabled(SEND_PANASONIC);
     printDecodeEnabled(DECODE_PANASONIC);
+
     Serial.print(F("JVC:          "));
     printSendEnabled(SEND_JVC);
     printDecodeEnabled(DECODE_JVC);
+
     Serial.print(F("SAMSUNG:      "));
     printSendEnabled(SEND_SAMSUNG);
     printDecodeEnabled(DECODE_SAMSUNG);
+
     Serial.print(F("WHYNTER:      "));
     printSendEnabled(SEND_WHYNTER);
     printDecodeEnabled(DECODE_WHYNTER);
+
     Serial.print(F("AIWA_RC_T501: "));
     printSendEnabled(SEND_AIWA_RC_T501);
     printDecodeEnabled(DECODE_AIWA_RC_T501);
+
     Serial.print(F("LG:           "));
     printSendEnabled(SEND_LG);
     printDecodeEnabled(DECODE_LG);
+
     Serial.print(F("SANYO:        "));
     printSendEnabled(SEND_SANYO);
     printDecodeEnabled(DECODE_SANYO);
+
     Serial.print(F("MITSUBISHI:   "));
     printSendEnabled(SEND_MITSUBISHI);
     printDecodeEnabled(DECODE_MITSUBISHI);
+
     Serial.print(F("DISH:         "));
     printSendEnabled(SEND_DISH);
     printDecodeEnabled(DECODE_DISH);
+
     Serial.print(F("SHARP:        "));
     printSendEnabled(SEND_SHARP);
     printDecodeEnabled(DECODE_SHARP);
+    Serial.print(F("SHARP_ALT:    "));
+    printSendEnabled(SEND_SHARP_ALT);
+    printDecodeEnabled(DECODE_SHARP_ALT);
+
     Serial.print(F("DENON:        "));
     printSendEnabled(SEND_DENON);
     printDecodeEnabled(DECODE_DENON);
+
     Serial.print(F("BOSEWAVE:     "));
     printSendEnabled(SEND_BOSEWAVE);
     printDecodeEnabled(DECODE_BOSEWAVE);
+
     Serial.print(F("PRONTO:       "));
     printSendEnabled(SEND_PRONTO);
     Serial.println(F("(Not Applicable)"));

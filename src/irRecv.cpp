@@ -22,6 +22,11 @@ int IRrecv::decode(decode_results *results) {
     }
 #endif
 
+#if DECODE_SHARP_ALT
+    DBG_PRINTLN("Attempting SharpAlt decode");
+    if (decodeSharpAlt(results))  return true ;
+#endif
+
 #if DECODE_SONY
     DBG_PRINTLN("Attempting Sony decode");
     if (decodeSony(results)) {

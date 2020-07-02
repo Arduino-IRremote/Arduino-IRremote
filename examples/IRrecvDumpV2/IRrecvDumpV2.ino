@@ -73,6 +73,9 @@ void encoding(decode_results *results) {
     case SHARP:
         Serial.print("SHARP");
         break;
+    case SHARP_ALT:
+        Serial.print("SHARP_ALT");
+        break;
     case JVC:
         Serial.print("JVC");
         break;
