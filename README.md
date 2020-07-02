@@ -42,17 +42,17 @@ We are open to suggestions for adding support to new boards, however we highly r
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
 | [ATtiny85](https://github.com/SpenceKonde/ATTinyCore)                    | **1**               | **TINY0**         |
 | [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
-| Atmega32u4                                                               | 5, **9**, 13        | 1, 3, **4**       |
 | [ATmega48, ATmega88, ATmega168, ATmega328](https://github.com/MCUdude/MiniCore) | **3**, 9     | 1, **2**          |
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
 | [ATmega164, ATmega324, ATmega644](https://github.com/MCUdude/MightyCore) | 13, **14**          | 1, **2**          |
 | [ATmega8535 ATmega16, ATmega32](https://github.com/MCUdude/MightyCore)   | **13**              | **1**             |
 | [ATmega64, ATmega128](https://github.com/MCUdude/MegaCore)               | **13**              | **1**             |
 | ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
+| Leonardo (Atmega32u4)                                                    | 5, **9**, 13        | 1, 3, **4_HS**    |
 | [ESP32](http://esp32.net/)                                               | N/A (not supported) | **1**             |
 | [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | 9, **5**, 5         | 1, **3**, 4_HS    |
 | [Teensy 1.0](https://www.pjrc.com/teensy/)                               | **17**              | **1**             |
-| [Teensy 2.0](https://www.pjrc.com/teensy/)                               | 9, **10**, 14       | 1, 3, **4_HS**    |
+| [Teensy 2.0](https://www.pjrc.com/teensy/)                               | **9**, 10, 14       | 1, **3**, 4_HS    |
 | [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/)                       | **1**, 16, 25       | 1, **2**, 3       |
 | [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/)                         | **5**               | **CMT**           |
 | [Teensy-LC](https://www.pjrc.com/teensy/)                                | **16**              | **TPM1**          |
