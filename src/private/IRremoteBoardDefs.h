@@ -468,7 +468,7 @@ TCNT1  = 0; \
 #define SEND_PIN  CORE_OC3A_PIN  // Teensy
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) \
-|| defined(__AVR_ATmega32U4__) || defined(ARDUINO_AVR_PROMICRO) \
+|| defined(__AVR_ATmega32U4__) || defined(ARDUINO_AVR_PROMICRO)
 #define SEND_PIN  5              // Arduino Mega, Arduino Leonardo, Sparkfun Pro Micro
 
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
