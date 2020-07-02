@@ -22,9 +22,18 @@ int IRrecv::decode(decode_results *results) {
     }
 #endif
 
+#if DECODE_SHARP
+    DBG_PRINTLN("Attempting Sharp decode");
+    if (decodeSharp(results)) {
+        return true;
+    }
+#endif
+
 #if DECODE_SHARP_ALT
     DBG_PRINTLN("Attempting SharpAlt decode");
-    if (decodeSharpAlt(results))  return true ;
+    if (decodeSharpAlt(results)) {
+        return true;
+    }
 #endif
 
 #if DECODE_SONY
