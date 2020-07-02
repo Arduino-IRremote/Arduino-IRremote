@@ -221,6 +221,11 @@ public:
     void enableIRIn();
 
     /**
+     * Disable IR reception.
+     */
+    void disableIRIn();
+
+    /**
      * Returns status of reception
      * @return true if no reception is on-going.
      */
@@ -299,7 +304,7 @@ private:
 #endif
     //......................................................................
 #if DECODE_SHARP
-      bool  decodeSharp (decode_results *results) ; // NOT WRITTEN
+    bool decodeSharp(decode_results *results); // NOT WRITTEN
 #endif
 #if DECODE_SHARP_ALT
     bool decodeSharpAlt(decode_results *results);

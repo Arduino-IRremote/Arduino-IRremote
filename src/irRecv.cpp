@@ -178,6 +178,13 @@ void IRrecv::enableIRIn() {
     // Set pin modes
     pinMode(irparams.recvpin, INPUT);
 }
+
+void IRrecv::disableIRIn() {
+    cli();
+    TIMER_DISABLE_INTR;
+    sei();  // enable interrupts
+}
+
 #endif // USE_DEFAULT_ENABLE_IR_IN
 
 //+=============================================================================
