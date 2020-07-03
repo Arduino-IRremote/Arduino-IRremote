@@ -18,8 +18,8 @@ Click on the LibraryManager badge above to see the instructions.
 # FAQ
 - IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)
 Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic arduinos. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
-- The default IR timer on AVR's is timer 2. Since the Arduino Tone library as well as analogWrite() for pin 3 and pin 11 requires this timer, they cannot be used.
-- You can use **multiple IR receiver** by just connecting the output pins of several devices together. The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC. This is almost "open collector" and allows connecting of sereral output pins.
+- The default IR timer on AVR's is timer 2. Since the Arduino Tone library as well as analogWrite() for pin 3 and pin 11 requires timer 2, this functionality cannot be used simultaneously.
+- You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together. The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC. This is almost "open collector" and allows connecting of several output pins.
 
 # Supported IR Protocols
 Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, Mitsubishi, Panasonic, RC5, RC6, Samsung, Sanyo, Sharp, Sony, Whynter.
@@ -27,11 +27,11 @@ Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, Mitsubishi, Panasonic, RC5, RC6, Sam
 ## Handling unknown Protocols
 ### Disclaimer
 This library was never designed to handle long codes like the ones used by air conditioners. See [Recording long Infrared Remote control signals with Arduino](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).<br/>
-The reason is that it was designed to fit inside MCUs with relatively low levels of resources and also work as a library with other applications which also require some resources of the MCU to operate.
+The main reason is, that it was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.
 
 If you do not know which protocol your IR transmitter uses, you have several choices.
-- Use the IRrecvDumpV2 example to dump out the IR timing. You can then reproduce/send this timing with the sendRAW example. For long codes you may change 
-- Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, [IRLib2]https://github.com/cyborg5/IRLib2) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
+- Use the [IRrecvDumpV2 example](tree/master/examples/IRrecvDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [sendRAW example](tree/master/examples/sendRAW). For long codes you may change the length of the input buffer in [IRremoteint.h](tree/master/src/private/IRremoteint.h#L30).
+- Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
 - Use the [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) and check the serial output if the protocol is one of the 40 supported protocols.
 
 # Supported Boards
@@ -50,7 +50,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
 
 ## Hardware specifications
-The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](https://github.com/z3t0/Arduino-IRremote/src/private/IRremoteBoardDefs.h#L154)
+The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](tree/master/src/private/IRremoteBoardDefs.h#L154)
 
 | Board/CPU                                                                | Send Pin            | Timers            |
 |--------------------------------------------------------------------------|---------------------|-------------------|
@@ -71,14 +71,6 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](https://git
 | [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/)                       | **1**, 16, 25       | 1, **2**, 3       |
 | [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/)                         | **5**               | **CMT**           |
 | [Teensy-LC](https://www.pjrc.com/teensy/)                                | **16**              | **TPM1**          |
-
-
-### Experimental patches
-The following are strictly community supported patches that have yet to make it into mainstream. If you have issues feel free to ask here. If it works well then let us know!
-
-[Arduino 101](https://github.com/z3t0/Arduino-IRremote/issues/481#issue-311243146)
-
-The table above lists the currently supported timers and corresponding send pins, many of these can have additional pins opened up and we are open to requests if a need arises for other pins.
 
 ## Usage
 - TODO (Check examples for now)
