@@ -1,7 +1,7 @@
 /*
  * IRremote: IRremoteInfo - prints relevant config info & settings for IRremote over serial
  * Intended to help identify & troubleshoot the various settings of IRremote
- * For example, sometimes users are unsure of which pin is used for Tx or the RAWBUF values
+ * For example, sometimes users are unsure of which pin is used for Tx or the RAW_BUFFER_LENGTH value
  * This example can be used to assist the user directly or with support.
  * Intended to help identify & troubleshoot the various settings of IRremote
  * Hopefully this utility will be a useful tool for support & troubleshooting for IRremote
@@ -14,7 +14,7 @@
 
 // Function declarations for non Arduino IDE's
 void dumpHeader();
-void dumpRAWBUF();
+void dumpRAW_BUFFER_LENGTH();
 void dumpTIMER();
 void dumpTimerPin();
 void dumpClock();
@@ -38,7 +38,7 @@ void setup() {
 
     //Runs only once per restart of the Arduino.
     dumpHeader();
-    dumpRAWBUF();
+    dumpRAW_BUFFER_LENGTH();
     dumpTIMER();
     dumpTimerPin();
     dumpClock();
@@ -55,9 +55,9 @@ void loop() {
     //nothing to do!
 }
 
-void dumpRAWBUF() {
-    Serial.print(F("RAWBUF: "));
-    Serial.println(RAWBUF);
+void dumpRAW_BUFFER_LENGTH() {
+    Serial.print(F("RAW_BUFFER_LENGTH: "));
+    Serial.println(RAW_BUFFER_LENGTH);
 }
 
 void dumpTIMER() {
@@ -102,7 +102,7 @@ void dumpTIMER() {
 
 void dumpTimerPin() {
     Serial.print(F("IR Tx Pin: "));
-    Serial.println(SEND_PIN);
+    Serial.println(IR_SEND_PIN);
 }
 
 void dumpClock() {

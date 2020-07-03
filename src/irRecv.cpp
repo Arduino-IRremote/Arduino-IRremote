@@ -253,7 +253,7 @@ long IRrecv::decodeHash(decode_results *results) {
         return false;
     }
 
-    for (int i = 1; (i + 2) < results->rawlen; i++) {
+    for (unsigned int i = 1; (i + 2) < results->rawlen; i++) {
         int value = compare(results->rawbuf[i], results->rawbuf[i + 2]);
         // Add value into the hash
         hash = (hash * FNV_PRIME_32) ^ value;

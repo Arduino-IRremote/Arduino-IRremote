@@ -9,6 +9,7 @@
 * [ ] Other - please specify
 
 ### Protocol
+* [ ] Unknown
 * [ ] Aiwa
 * [ ] BoseWave
 * [ ] Denon

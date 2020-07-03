@@ -129,7 +129,7 @@ ISR (TIMER_INTR_NAME) {
     uint8_t irdata = (uint8_t) digitalRead(irparams.recvpin);
 
     irparams.timer++;  // One more 50uS tick
-    if (irparams.rawlen >= RAWBUF) {
+    if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
         irparams.rcvstate = IR_REC_STATE_OVERFLOW;  // Buffer overflow
     }
 
