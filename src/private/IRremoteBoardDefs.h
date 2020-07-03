@@ -122,7 +122,7 @@
 #define BLINKLED_ON()   (PORTD |= B00000001)
 #define BLINKLED_OFF()  (PORTD &= B11111110)
 
-#elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+#elif defined(ARDUINO_ARCH_SAMD)
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
@@ -256,7 +256,7 @@
 #elif defined(ESP32)
 #define IR_TIMER_USE_ESP32
 
-#elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+#elif defined(ARDUINO_ARCH_SAMD)
 #define TIMER_PRESCALER_DIV 64
 
 #else
@@ -772,7 +772,7 @@ FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
 #endif
 #define  ISR(f)  void IRTimer()
 
-#elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+#elif defined(ARDUINO_ARCH_SAMD)
 // use timer 3 hardcoded at this time
 
 #define IR_SEND_PIN 9

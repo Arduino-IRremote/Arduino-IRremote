@@ -2,7 +2,7 @@
 
 #include "IRremote.h"
 
-#if defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+#if defined(ARDUINO_ARCH_SAMD)
 
 // "Idiot check"
 #ifdef USE_DEFAULT_ENABLE_IR_IN
@@ -94,4 +94,4 @@ void TC3_Handler(void) {
     }
 }
 
-#endif // defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
+#endif // defined(ARDUINO_ARCH_SAMD)

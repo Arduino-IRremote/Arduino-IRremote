@@ -31,6 +31,7 @@ The main reason is, that it was designed to fit inside MCUs with relatively low 
 
 If you do not know which protocol your IR transmitter uses, you have several choices.
 - Use the [IRrecvDumpV2 example](examples/IRrecvDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo). For long codes you may change the length of the input buffer in [IRremoteInt.h](src/private/IRremoteInt.h#L30).
+- If you have a bigger Arduino board at hand (> 100 kByte program space) you can try the [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library DecodeIR.
 - Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
 - Use the [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) and check the serial output if the protocol is one of the 40 supported protocols.
 
