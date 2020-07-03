@@ -88,6 +88,8 @@
 #define DECODE_BOSEWAVE      1
 #define SEND_BOSEWAVE        1
 
+#define DECODE_HASH          1 // special decoder for all protocols
+
 //------------------------------------------------------------------------------
 // When sending a Pronto code we request to send either the "once" code
 //                                                   or the "repeat" code
@@ -172,12 +174,12 @@ int MATCH_SPACE(int measured_ticks, int desired_us);
 class decode_results {
 public:
     decode_type_t decode_type;  ///< UNKNOWN, NEC, SONY, RC5, ...
-    unsigned int address;      ///< Used by Panasonic & Sharp [16-bits]
+    unsigned int address;       ///< Used by Panasonic & Sharp [16-bits]
     unsigned long value;        ///< Decoded value [max 32-bits]
-    int bits;         ///< Number of bits in decoded value
+    int bits;                   ///< Number of bits in decoded value
     volatile unsigned int *rawbuf;      ///< Raw intervals in 50uS ticks
-    unsigned int rawlen;       ///< Number of records in rawbuf
-    int overflow;     ///< true iff IR raw code too long
+    unsigned int rawlen;        ///< Number of records in rawbuf
+    int overflow;               ///< true if IR raw code too long
 };
 
 /**
@@ -237,8 +239,10 @@ public:
     void resume();
 
 private:
+#if DECODE_HASH
     long decodeHash(decode_results *results);
     int compare(unsigned int oldval, unsigned int newval);
+#endif
 
     //......................................................................
 #if (DECODE_RC5 || DECODE_RC6)

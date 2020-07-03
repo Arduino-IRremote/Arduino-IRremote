@@ -8,6 +8,10 @@
 - Enabled DUTY_CYCLE for send signal.
 - Added sending for ESP32.
 - Changed rawlen from uint8_t to unsigned int allowing bigger receive buffer and renamed RAWBUF to RAW_BUFFER_LENGTH.
+Changes from #268 by adamlhumphreys
+- Optimized by reducing floating point operations as suggested by @madmalkav (#193)
+- Optimized with macros when using default USECPERTICK and TOLERANCE
+- Made decodeHash as a settable protocol defined by DECODE_HASH
 
 ## 2.5.0 ???
 - Added Philips Extended RC-5 protocol support [PR #522] (https://github.com/z3t0/Arduino-IRremote/pull/522)

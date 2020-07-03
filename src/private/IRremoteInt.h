@@ -23,6 +23,9 @@
 //
 #include <Arduino.h>
 
+// All board specific stuff have been moved to its own file, included here.
+#include "IRremoteBoardDefs.h"
+
 //------------------------------------------------------------------------------
 // Information for the Interrupt Service Routine
 //
@@ -92,10 +95,11 @@ extern volatile irparams_t irparams;
 #define TOLERANCE       25
 
 /** Lower tolerance for comparison of measured data */
-#define LTOL            (1.0 - (TOLERANCE/100.))
-
+//#define LTOL            (1.0 - (TOLERANCE/100.))
+#define LTOL            (100 - TOLERANCE)
 /** Upper tolerance for comparison of measured data */
-#define UTOL            (1.0 + (TOLERANCE/100.))
+//#define UTOL            (1.0 + (TOLERANCE/100.))
+#define UTOL            (100 + TOLERANCE)
 
 /** Minimum gap between IR transmissions, in microseconds */
 #define _GAP            5000
@@ -103,16 +107,20 @@ extern volatile irparams_t irparams;
 /** Minimum gap between IR transmissions, in USECPERTICK */
 #define GAP_TICKS       (_GAP/USECPERTICK)
 
-#define TICKS_LOW(us)   ((int)(((us)*LTOL/USECPERTICK)))
-#define TICKS_HIGH(us)  ((int)(((us)*UTOL/USECPERTICK + 1)))
+//#define TICKS_LOW(us)   ((int)(((us)*LTOL/USECPERTICK)))
+//#define TICKS_HIGH(us)  ((int)(((us)*UTOL/USECPERTICK + 1)))
+#if USECPERTICK == 50 && TOLERANCE == 25           // Defaults
+    #define TICKS_LOW(us)   ((int) ((us)/67 ))     // (us) / ((USECPERTICK:50 / LTOL:75 ) * 100)
+    #define TICKS_HIGH(us)  ((int) ((us)/40 + 1))  // (us) / ((USECPERTICK:50 / UTOL:125) * 100) + 1
+#else
+    #define TICKS_LOW(us)   ((int) ((long) (us) * LTOL / (USECPERTICK * 100) ))
+    #define TICKS_HIGH(us)  ((int) ((long) (us) * UTOL / (USECPERTICK * 100) + 1))
+#endif
 
 //------------------------------------------------------------------------------
 // IR detector output is active low
 //
 #define MARK   0 ///< Sensor output for a mark ("flash")
 #define SPACE  1 ///< Sensor output for a space ("gap")
-
-// All board specific stuff have been moved to its own file, included here.
-#include "IRremoteBoardDefs.h"
 
 #endif

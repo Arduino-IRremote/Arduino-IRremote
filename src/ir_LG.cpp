@@ -28,27 +28,36 @@ bool IRrecv::decodeLG(decode_results *results) {
         return false;
 
     // Initial mark/space
-    if (!MATCH_MARK(results->rawbuf[offset++], LG_HDR_MARK))
+    if (!MATCH_MARK(results->rawbuf[offset], LG_HDR_MARK)) {
         return false;
-    if (!MATCH_SPACE(results->rawbuf[offset++], LG_HDR_SPACE))
+    }
+    offset++;
+
+    if (!MATCH_SPACE(results->rawbuf[offset], LG_HDR_SPACE)) {
         return false;
+    }
+    offset++;
 
     for (int i = 0; i < LG_BITS; i++) {
-        if (!MATCH_MARK(results->rawbuf[offset++], LG_BIT_MARK))
+        if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK)) {
             return false;
+        }
+        offset++;
 
-        if (MATCH_SPACE(results->rawbuf[offset], LG_ONE_SPACE))
+        if (MATCH_SPACE(results->rawbuf[offset], LG_ONE_SPACE)) {
             data = (data << 1) | 1;
-        else if (MATCH_SPACE(results->rawbuf[offset], LG_ZERO_SPACE))
+        } else if (MATCH_SPACE(results->rawbuf[offset], LG_ZERO_SPACE)) {
             data = (data << 1) | 0;
-        else
+        } else {
             return false;
+        }
         offset++;
     }
 
     // Stop bit
-    if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK))
+    if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK)) {
         return false;
+    }
 
     // Success
     results->bits = LG_BITS;

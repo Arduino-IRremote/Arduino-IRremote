@@ -121,16 +121,19 @@ int IRrecv::decode(decode_results *results) {
 #endif
 
 #if DECODE_LEGO_PF
-	DBG_PRINTLN("Attempting Lego Power Functions");
-	if (decodeLegoPowerFunctions(results))  {return true ;}
+    DBG_PRINTLN("Attempting Lego Power Functions");
+    if (decodeLegoPowerFunctions(results))  {return true ;}
 #endif
 
+#if DECODE_HASH
+    DBG_PRINTLN("Hash decode");
     // decodeHash returns a hash on any input.
     // Thus, it needs to be last in the list.
     // If you add any decodes, add them before this.
     if (decodeHash(results)) {
         return true;
     }
+#endif
 
     // Throw away and start over
     resume();
@@ -182,7 +185,8 @@ void IRrecv::enableIRIn() {
 void IRrecv::disableIRIn() {
     cli();
     TIMER_DISABLE_INTR;
-    sei();  // enable interrupts
+    sei();
+    // enable interrupts
 }
 
 #endif // USE_DEFAULT_ENABLE_IR_IN
@@ -213,6 +217,7 @@ void IRrecv::resume() {
     irparams.rawlen = 0;
 }
 
+# if DECODE_HASH
 //+=============================================================================
 // hashdecode - decode an arbitrary IR code.
 // Instead of decoding using a standard encoding scheme
@@ -232,9 +237,9 @@ void IRrecv::resume() {
 //
 int IRrecv::compare(unsigned int oldval, unsigned int newval) {
 // @formatter:off
-    if      (newval < oldval * .8)  return 0 ;
-    else if (oldval < newval * .8)  return 2 ;
-    else                            return 1 ;
+    if      (newval * 10 < oldval * 8)  return 0 ;
+    else if (oldval * 10 < newval * 8)  return 2 ;
+    else                                return 1 ;
 // @formatter:on
 }    //+=============================================================================
 // Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
@@ -265,3 +270,4 @@ long IRrecv::decodeHash(decode_results *results) {
 
     return true;
 }
+#endif // defined(DECODE_HASH)

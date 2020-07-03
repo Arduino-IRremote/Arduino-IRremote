@@ -18,7 +18,7 @@
 #define MITSUBISHI_HDR_SPACE	350 //  7*50+100
 #define MITSUBISHI_ONE_MARK	1950 // 41*50-100
 #define MITSUBISHI_ZERO_MARK  750 // 17*50-100
-// #define MITSUBISHI_DOUBLE_SPACE_USECS  800  // usually ssee 713 - not using ticks as get number wrapround
+// #define MITSUBISHI_DOUBLE_SPACE_USECS  800  // usually see 713 - not using ticks as get number wrap around
 // #define MITSUBISHI_RPT_LENGTH 45000
 
 //+=============================================================================

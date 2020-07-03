@@ -10,22 +10,28 @@
 // Returns -1 for error (measured time interval is not a multiple of t1).
 //
 #if (DECODE_RC5 || DECODE_RC6)
-int  IRrecv::getRClevel (decode_results *results,  unsigned int *offset,  int *used,  int t1)
-{
-    int  width;
-    int  val;
-    int  correction;
-    int  avail;
+int IRrecv::getRClevel(decode_results *results, unsigned int *offset, int *used, int t1) {
+    int width;
+    int val;
+    int correction;
+    int avail;
 
-    if (*offset >= results->rawlen)  return SPACE ;  // After end of recorded buffer, assume SPACE.
-    width      = results->rawbuf[*offset];
-    val        = ((*offset) % 2) ? MARK : SPACE;
+    if (*offset >= results->rawlen) {
+        return SPACE;  // After end of recorded buffer, assume SPACE.
+    }
+    width = results->rawbuf[*offset];
+    val = ((*offset) % 2) ? MARK : SPACE;
     correction = (val == MARK) ? MARK_EXCESS : - MARK_EXCESS;
 
-    if      (MATCH(width, (  t1) + correction))  avail = 1 ;
-    else if (MATCH(width, (2*t1) + correction))  avail = 2 ;
-    else if (MATCH(width, (3*t1) + correction))  avail = 3 ;
-    else                                         return -1 ;
+    if (MATCH(width, (t1) + correction)) {
+        avail = 1;
+    } else if (MATCH(width, (2 * t1) + correction)) {
+        avail = 2;
+    } else if (MATCH(width, (3 * t1) + correction)) {
+        avail = 3;
+    } else {
+        return -1;
+    }
 
     (*used)++;
     if (*used >= avail) {
@@ -33,7 +39,7 @@ int  IRrecv::getRClevel (decode_results *results,  unsigned int *offset,  int *u
         (*offset)++;
     }
 
-    DBG_PRINTLN( (val == MARK) ? "MARK" : "SPACE" );
+    DBG_PRINTLN((val == MARK) ? "MARK" : "SPACE");
 
     return val;
 }
@@ -54,8 +60,7 @@ int  IRrecv::getRClevel (decode_results *results,  unsigned int *offset,  int *u
 
 //+=============================================================================
 #if SEND_RC5
-void  IRsend::sendRC5 (unsigned long data,  int nbits)
-{
+void IRsend::sendRC5(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(36);
 
@@ -65,7 +70,7 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
     mark(RC5_T1);
 
     // Data
-    for (unsigned long  mask = 1UL << (nbits - 1);  mask;  mask >>= 1) {
+    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
         if (data & mask) {
             space(RC5_T1); // 1 is space, then mark
             mark(RC5_T1);
@@ -78,8 +83,7 @@ void  IRsend::sendRC5 (unsigned long data,  int nbits)
     space(0);  // Always end with the LED off
 }
 
-void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
-{
+void IRsend::sendRC5ext(unsigned long addr, unsigned long cmd, boolean toggle) {
     // Set IR carrier frequency
     enableIROut(36);
 
@@ -91,7 +95,7 @@ void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
     mark(RC5_T1);
 
     // Bit #6 of the command part, but inverted!
-    unsigned long cmdBit6 = (1UL << (commandBits-1)) & cmd;
+    unsigned long cmdBit6 = (1UL << (commandBits - 1)) & cmd;
     if (cmdBit6) {
         // Inverted (1 -> 0 = mark-to-space)
         mark(RC5_T1);
@@ -120,7 +124,7 @@ void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
     }
 
     // Address
-    for (unsigned long  mask = 1UL << (addressBits - 1);  mask;  mask >>= 1) {
+    for (unsigned long mask = 1UL << (addressBits - 1); mask; mask >>= 1) {
         if (addr & mask) {
             space(RC5_T1); // 1 is space, then mark
             mark(RC5_T1);
@@ -131,7 +135,7 @@ void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
     }
 
     // Command
-    for (unsigned long  mask = 1UL << (commandBits - 1);  mask;  mask >>= 1) {
+    for (unsigned long mask = 1UL << (commandBits - 1); mask; mask >>= 1) {
         if (cmd & mask) {
             space(RC5_T1); // 1 is space, then mark
             mark(RC5_T1);
@@ -148,32 +152,43 @@ void  IRsend::sendRC5ext (unsigned long addr, unsigned long cmd, boolean toggle)
 
 //+=============================================================================
 #if DECODE_RC5
-bool  IRrecv::decodeRC5 (decode_results *results)
-{
-    int   nbits;
-    long  data   = 0;
-    int   used   = 0;
-    unsigned int   offset = 1;  // Skip gap space
+bool IRrecv::decodeRC5(decode_results *results) {
+    int nbits;
+    long data = 0;
+    int used = 0;
+    unsigned int offset = 1;  // Skip gap space
 
-    if (irparams.rawlen < MIN_RC5_SAMPLES + 2)  return false ;
+    if (irparams.rawlen < MIN_RC5_SAMPLES + 2) {
+        return false;
+    }
 
     // Get start bits
-    if (getRClevel(results, &offset, &used, RC5_T1) != MARK)   return false ;
-    if (getRClevel(results, &offset, &used, RC5_T1) != SPACE)  return false ;
-    if (getRClevel(results, &offset, &used, RC5_T1) != MARK)   return false ;
+    if (getRClevel(results, &offset, &used, RC5_T1) != MARK) {
+        return false;
+    }
+    if (getRClevel(results, &offset, &used, RC5_T1) != SPACE) {
+        return false;
+    }
+    if (getRClevel(results, &offset, &used, RC5_T1) != MARK) {
+        return false;
+    }
 
-    for (nbits = 0;  offset < irparams.rawlen;  nbits++) {
-        int  levelA = getRClevel(results, &offset, &used, RC5_T1);
-        int  levelB = getRClevel(results, &offset, &used, RC5_T1);
+    for (nbits = 0; offset < irparams.rawlen; nbits++) {
+        int levelA = getRClevel(results, &offset, &used, RC5_T1);
+        int levelB = getRClevel(results, &offset, &used, RC5_T1);
 
-        if      ((levelA == SPACE) && (levelB == MARK ))  data = (data << 1) | 1 ;
-        else if ((levelA == MARK ) && (levelB == SPACE))  data = (data << 1) | 0 ;
-        else                                              return false ;
+        if ((levelA == SPACE) && (levelB == MARK)) {
+            data = (data << 1) | 1;
+        } else if ((levelA == MARK) && (levelB == SPACE)) {
+            data = (data << 1) | 0;
+        } else {
+            return false;
+        }
     }
 
     // Success
-    results->bits        = nbits;
-    results->value       = data;
+    results->bits = nbits;
+    results->value = data;
     results->decode_type = RC5;
     return true;
 }
@@ -195,8 +210,7 @@ bool  IRrecv::decodeRC5 (decode_results *results)
 #define RC6_RPT_LENGTH   46000
 
 #if SEND_RC6
-void  IRsend::sendRC6 (unsigned long data,  int nbits)
-{
+void IRsend::sendRC6(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(36);
 
@@ -209,9 +223,9 @@ void  IRsend::sendRC6 (unsigned long data,  int nbits)
     space(RC6_T1);
 
     // Data
-    for (unsigned long  i = 1, mask = 1UL << (nbits - 1);  mask;  i++, mask >>= 1) {
+    for (unsigned long i = 1, mask = 1UL << (nbits - 1); mask; i++, mask >>= 1) {
         // The fourth bit we send is a "double width trailer bit"
-        int  t = (i == 4) ? (RC6_T1 * 2) : (RC6_T1) ;
+        int t = (i == 4) ? (RC6_T1 * 2) : (RC6_T1);
         if (data & mask) {
             mark(t);
             space(t);
@@ -227,46 +241,66 @@ void  IRsend::sendRC6 (unsigned long data,  int nbits)
 
 //+=============================================================================
 #if DECODE_RC6
-bool  IRrecv::decodeRC6 (decode_results *results)
-{
-    int   nbits;
-    long  data   = 0;
-    int   used   = 0;
-    unsigned int   offset = 1;  // Skip first space
+bool IRrecv::decodeRC6(decode_results *results) {
+    int nbits;
+    long data = 0;
+    int used = 0;
+    unsigned int offset = 1;  // Skip first space
 
-    if (results->rawlen < MIN_RC6_SAMPLES)  return false ;
+    if (results->rawlen < MIN_RC6_SAMPLES) {
+        return false;
+    }
 
-    // Initial mark
-    if (!MATCH_MARK(results->rawbuf[offset++],  RC6_HDR_MARK))   return false ;
-    if (!MATCH_SPACE(results->rawbuf[offset++], RC6_HDR_SPACE))  return false ;
+// Initial mark
+    if (!MATCH_MARK(results->rawbuf[offset], RC6_HDR_MARK)) {
+        return false;
+    }
+    offset++;
 
-    // Get start bit (1)
-    if (getRClevel(results, &offset, &used, RC6_T1) != MARK)   return false ;
-    if (getRClevel(results, &offset, &used, RC6_T1) != SPACE)  return false ;
+    if (!MATCH_SPACE(results->rawbuf[offset], RC6_HDR_SPACE)) {
+        return false;
+    }
+    offset++;
 
-    for (nbits = 0;  offset < results->rawlen;  nbits++) {
-        int  levelA, levelB;  // Next two levels
+// Get start bit (1)
+    if (getRClevel(results, &offset, &used, RC6_T1) != MARK) {
+        return false;
+    }
+    if (getRClevel(results, &offset, &used, RC6_T1) != SPACE) {
+        return false;
+    }
+
+    for (nbits = 0; offset < results->rawlen; nbits++) {
+        int levelA, levelB;  // Next two levels
 
         levelA = getRClevel(results, &offset, &used, RC6_T1);
         if (nbits == 3) {
             // T bit is double wide; make sure second half matches
-            if (levelA != getRClevel(results, &offset, &used, RC6_T1)) return false;
+            if (levelA != getRClevel(results, &offset, &used, RC6_T1)) {
+                return false;
+            }
         }
 
         levelB = getRClevel(results, &offset, &used, RC6_T1);
         if (nbits == 3) {
             // T bit is double wide; make sure second half matches
-            if (levelB != getRClevel(results, &offset, &used, RC6_T1)) return false;
+            if (levelB != getRClevel(results, &offset, &used, RC6_T1)) {
+                return false;
+            }
         }
 
-        if      ((levelA == MARK ) && (levelB == SPACE))  data = (data << 1) | 1 ;  // inverted compared to RC5
-        else if ((levelA == SPACE) && (levelB == MARK ))  data = (data << 1) | 0 ;  // ...
-        else                                              return false ;            // Error
+        if ((levelA == MARK) && (levelB == SPACE)) {
+            data = (data << 1) | 1;  // inverted compared to RC5
+        } else if ((levelA == SPACE) && (levelB == MARK)) {
+            data = (data << 1) | 0;
+        } else {
+            return false;            // Error
+        }
     }
 
     // Success
-    results->bits        = nbits;
-    results->value       = data;
+    results->bits = nbits;
+    results->value = data;
     results->decode_type = RC6;
     return true;
 }

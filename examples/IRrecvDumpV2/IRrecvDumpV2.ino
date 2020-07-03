@@ -125,7 +125,7 @@ void dumpInfo(decode_results *results) {
     Serial.println("");
 
     // Show Code & length
-    Serial.print("Code      : ");
+    Serial.print("Code      : 0x");
     ircode(results);
     Serial.print(" (");
     Serial.print(results->bits, DEC);
@@ -141,7 +141,7 @@ void dumpRaw(decode_results *results) {
     Serial.print(results->rawlen - 1, DEC);
     Serial.println("]: ");
 
-    for (int i = 1; i < results->rawlen; i++) {
+    for (unsigned int i = 1; i < results->rawlen; i++) {
         unsigned long x = results->rawbuf[i] * USECPERTICK;
         if (!(i & 1)) {  // even
             Serial.print("-");
@@ -178,7 +178,7 @@ void dumpCode(decode_results *results) {
     Serial.print("] = {");                   // Start declaration
 
     // Dump data
-    for (int i = 1; i < results->rawlen; i++) {
+    for (unsigned int i = 1; i < results->rawlen; i++) {
         Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
         if (i < results->rawlen - 1)
             Serial.print(","); // ',' not needed on last one
