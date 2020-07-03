@@ -15,8 +15,7 @@ void IRTimer(); // defined in IRremote.cpp, masqueraded as ISR(TIMER_INTR_NAME)
 //+=============================================================================
 // initialization
 //
-void  IRrecv::enableIRIn ( )
-{
+void IRrecv::enableIRIn() {
 // Interrupt Service Routine - Fires every 50uS
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
@@ -33,6 +32,11 @@ void  IRrecv::enableIRIn ( )
 
     // Set pin modes
     pinMode(irparams.recvpin, INPUT);
+}
+
+void IRsend::enableIROut(int khz) {
+    ledcSetup(LEDCHANNEL, khz * 1000, 8);  // 8 bit PWM resolution
+    ledcAttachPin(IR_SEND_PIN, LEDCHANNEL); // bind pin to channel
 }
 
 #endif // ESP32

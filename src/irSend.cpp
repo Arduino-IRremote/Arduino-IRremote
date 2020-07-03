@@ -85,6 +85,7 @@ void IRsend::space(unsigned int time) {
     }
 }
 
+#ifdef USE_DEFAULT_ENABLE_IR_OUT
 //+=============================================================================
 // Enables IR output.  The khz value controls the modulation frequency in kilohertz.
 // The IR output will be on pin 3 (OC2B).
@@ -116,6 +117,7 @@ void IRsend::enableIROut(int khz) {
     // The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
     TIMER_CONFIG_KHZ(khz);
 }
+#endif
 
 //+=============================================================================
 // Custom delay function that circumvents Arduino's delayMicroseconds limit

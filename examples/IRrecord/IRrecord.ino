@@ -2,8 +2,7 @@
  * IRrecord: record and play back IR signals as a minimal
  * An IR detector/demodulator must be connected to the input RECV_PIN.
  * An IR LED must be connected to the output PWM pin 3.
- * A button must be connected between the input BUTTON_PIN and ground, this is the
- * send button.
+ * A button must be connected between the input SEND_BUTTON_PIN and ground.
  * A visible LED can be connected to STATUS_PIN to provide status.
  *
  * The logic is:
@@ -19,11 +18,12 @@
 
 #if defined(ESP32)
 int IR_RECEIVE_PIN = 15;
+int SEND_BUTTON_PIN = 16; // RX2 pin
 #else
 int IR_RECEIVE_PIN = 11;
+int SEND_BUTTON_PIN = 12;
 #endif
-int BUTTON_PIN = 12;
-int STATUS_PIN = 13;
+int STATUS_PIN = LED_BUILTIN;
 
 IRrecv irrecv(IR_RECEIVE_PIN);
 IRsend irsend;
@@ -35,8 +35,6 @@ decode_results results;
 #endif
 
 void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
-
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__)
     while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
@@ -45,17 +43,19 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__));
 
     irrecv.enableIRIn(); // Start the receiver
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
+    pinMode(SEND_BUTTON_PIN, INPUT_PULLUP);
     pinMode(STATUS_PIN, OUTPUT);
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);
+    Serial.print(F("Ready to send IR signals at pin "));
+    Serial.println(IR_SEND_PIN);
 }
 
 // Storage for the recorded code
 int codeType = -1; // The type of code
 unsigned long codeValue; // The code value if not raw
-unsigned int rawCodes[RAWBUF]; // The durations if raw
+unsigned int rawCodes[RAW_BUFFER_LENGTH]; // The durations if raw
 int codeLen; // The length of the code
 int toggle = 0; // The RC5/6 toggle state
 
@@ -165,13 +165,13 @@ int lastButtonState;
 
 void loop() {
     // If button pressed, send the code.
-    int buttonState = !digitalRead(BUTTON_PIN); // Button pin is active LOW
-    if (lastButtonState == HIGH && buttonState == LOW) {
+    int buttonState = digitalRead(SEND_BUTTON_PIN); // Button pin is active LOW
+    if (lastButtonState == LOW && buttonState == HIGH) {
         Serial.println("Released");
         irrecv.enableIRIn(); // Re-enable receiver
     }
 
-    if (buttonState) {
+    if (buttonState == LOW) {
         Serial.println("Pressed, sending");
         digitalWrite(STATUS_PIN, HIGH);
         sendCode(lastButtonState == buttonState);
