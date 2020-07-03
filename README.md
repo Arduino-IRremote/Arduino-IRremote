@@ -30,7 +30,7 @@ This library was never designed to handle long codes like the ones used by air c
 The main reason is, that it was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.
 
 If you do not know which protocol your IR transmitter uses, you have several choices.
-- Use the [IRrecvDumpV2 example](tree/master/examples/IRrecvDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [sendRAW example](tree/master/examples/sendRAW). For long codes you may change the length of the input buffer in [IRremoteint.h](tree/master/src/private/IRremoteint.h#L30).
+- Use the [IRrecvDumpV2 example](examples/IRrecvDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [sendRAW example](examples/sendRAW). For long codes you may change the length of the input buffer in [IRremoteint.h](tree/master/src/private/IRremoteint.h#L30).
 - Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
 - Use the [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) and check the serial output if the protocol is one of the 40 supported protocols.
 
@@ -50,7 +50,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
 
 ## Hardware specifications
-The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](tree/master/src/private/IRremoteBoardDefs.h#L154)
+The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private/IRremoteBoardDefs.h#L154)
 
 | Board/CPU                                                                | Send Pin            | Timers            |
 |--------------------------------------------------------------------------|---------------------|-------------------|
