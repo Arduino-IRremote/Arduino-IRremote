@@ -1,4 +1,5 @@
 //******************************************************************************
+// IRremoteint.h
 // IRremote
 // Version 2.0.1 June, 2015
 // Copyright 2009 Ken Shirriff
@@ -25,7 +26,9 @@
 //------------------------------------------------------------------------------
 // Information for the Interrupt Service Routine
 //
-#define RAWBUF  101  ///< Maximum length of raw duration buffer. Must be odd.
+#if ! defined(RAW_BUFFER_LENGTH)
+#define RAW_BUFFER_LENGTH  101  ///< Maximum length of raw duration buffer. Must be odd.
+#endif
 
 /**
  * This struct is used to communicate with the ISR (interrupt service routine).
@@ -36,9 +39,9 @@ typedef struct {
     uint8_t recvpin;         ///< Pin connected to IR data from detector
     uint8_t blinkpin;
     uint8_t blinkflag;       ///< true -> enable blinking of pin on IR processing
-    uint8_t rawlen;          ///< counter of entries in rawbuf
+    unsigned int rawlen;         ///< counter of entries in rawbuf
     unsigned int timer;           ///< State timer, counts 50uS ticks.
-    unsigned int rawbuf[RAWBUF];  ///< raw data
+    unsigned int rawbuf[RAW_BUFFER_LENGTH];  ///< raw data
     uint8_t overflow;        ///< Raw buffer overflow occurred
 } irparams_t;
 

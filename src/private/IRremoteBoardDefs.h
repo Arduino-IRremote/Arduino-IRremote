@@ -32,21 +32,29 @@
 #define HAS_AVR_INTERRUPT_H
 
 /**
- * Define if the current board supports sending.
- */
-#define SENDING_SUPPORTED
-
-/**
  * Defined if the standard enableIRIn function should be used.
  * Undefine for boards supplying their own.
  */
 #define USE_DEFAULT_ENABLE_IR_IN
 
 /**
+ * Define if the current board supports sending.
+ */
+#define SENDING_SUPPORTED
+
+/**
+ * Defined if the standard enableIROut function should be used.
+ * Undefine for boards supplying their own.
+ */
+#define USE_DEFAULT_ENABLE_IR_OUT
+
+/**
  * Duty cycle in percent for sent signals.
  * Presently takes effect only together with USE_SOFT_CARRIER.
  */
-#define DUTY_CYCLE 40
+#if ! defined(DUTY_CYCLE)
+#define DUTY_CYCLE 30 // 30 saves power and is be compatible to the old existing code
+#endif
 
 /**
  * If USE_SOFT_CARRIER, this amount (in micro seconds) is subtracted from the
@@ -57,7 +65,7 @@
 //------------------------------------------------------------------------------
 // This first #ifdef statement contains defines for blinking the LED,
 // as well as all other board specific information, with the exception of
-// timers and the sending pin (SEND_PIN).
+// timers and the sending pin (IR_SEND_PIN).
 
 #ifdef DOXYGEN
 /**
@@ -130,10 +138,9 @@
 // avr/interrupt.h is not present
 #undef HAS_AVR_INTERRUPT_H
 
-// Sending not implemented
-#undef SENDING_SUPPORTED
 // Supply own enbleIRIn
 #undef USE_DEFAULT_ENABLE_IR_IN
+#undef USE_DEFAULT_ENABLE_IR_OUT
 
 #else
 #warning No blinking definition found. Check IRremoteBoardDefs.h.
@@ -301,7 +308,7 @@
  * used and ignored if set. Instead, the sending pin is determined by the timer
  * deployed.
  */
-#define SEND_PIN
+#define IR_SEND_PIN
 
 /**
  * Interrupt service routine. Called as interrupt routine to collect read IR data.
@@ -335,7 +342,7 @@ const uint8_t pwmval = SYSCLOCK / 2000 / (val); \
 TCCR2A               = _BV(WGM20); \
 TCCR2B               = _BV(WGM22) | _BV(CS20); \
 OCR2A                = pwmval; \
-OCR2B                = pwmval / 3; \
+OCR2B                = pwmval / (100/DUTY_CYCLE); \
 })
 
 #define TIMER_COUNT_TOP  (SYSCLOCK * USECPERTICK / 1000000)
@@ -359,20 +366,20 @@ TCNT2  = 0; \
 
 //-----------------
 #if defined(CORE_OC2B_PIN)
-#define SEND_PIN  CORE_OC2B_PIN  // Teensy
+#define IR_SEND_PIN  CORE_OC2B_PIN  // Teensy
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#define SEND_PIN  9              // Arduino Mega
+#define IR_SEND_PIN  9              // Arduino Mega
 
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
 || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
 || defined(__AVR_ATmega164P__)
-#define SEND_PIN  14             // MightyCore, MegaCore
+#define IR_SEND_PIN  14             // MightyCore, MegaCore
 
 #else
-#define SEND_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
+#define IR_SEND_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
 #endif // defined(CORE_OC2B_PIN)
 
 //---------------------------------------------------------
@@ -403,7 +410,7 @@ const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
 TCCR1A                = _BV(WGM11); \
 TCCR1B                = _BV(WGM13) | _BV(CS10); \
 ICR1                  = pwmval; \
-OCR1A                 = pwmval / 3; \
+OCR1A                 = pwmval / (100/DUTY_CYCLE); \
 })
 
 #define TIMER_CONFIG_NORMAL() ({ \
@@ -415,10 +422,10 @@ TCNT1  = 0; \
 
 //-----------------
 #if defined(CORE_OC1A_PIN)
-#define SEND_PIN  CORE_OC1A_PIN  // Teensy
+#define IR_SEND_PIN  CORE_OC1A_PIN  // Teensy
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#define SEND_PIN  11             // Arduino Mega
+#define IR_SEND_PIN  11             // Arduino Mega
 
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
@@ -427,13 +434,13 @@ TCNT1  = 0; \
 || defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
 || defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__) \
 || defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
-#define SEND_PIN  13             // MightyCore, MegaCore
+#define IR_SEND_PIN  13             // MightyCore, MegaCore
 
 #elif defined(__AVR_ATtiny84__)
-# define SEND_PIN  6
+# define IR_SEND_PIN  6
 
 #else
-#define SEND_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro, Leonardo etc.
+#define IR_SEND_PIN  9              // Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro, Leonardo etc.
 #endif // defined(CORE_OC1A_PIN)
 
 //---------------------------------------------------------
@@ -453,7 +460,7 @@ TCNT1  = 0; \
   TCCR3A = _BV(WGM31); \
   TCCR3B = _BV(WGM33) | _BV(CS30); \
   ICR3 = pwmval; \
-  OCR3A = pwmval / 3; \
+  OCR3A = pwmval / (100/DUTY_CYCLE); \
 })
 
 #define TIMER_CONFIG_NORMAL() ({ \
@@ -465,14 +472,14 @@ TCNT1  = 0; \
 
 //-----------------
 #if defined(CORE_OC3A_PIN)
-#define SEND_PIN  CORE_OC3A_PIN  // Teensy
+#define IR_SEND_PIN  CORE_OC3A_PIN  // Teensy
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) \
 || defined(__AVR_ATmega32U4__) || defined(ARDUINO_AVR_PROMICRO)
-#define SEND_PIN  5              // Arduino Mega, Arduino Leonardo, Sparkfun Pro Micro
+#define IR_SEND_PIN  5              // Arduino Mega, Arduino Leonardo, Sparkfun Pro Micro
 
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
-#define SEND_PIN  6              // MightyCore, MegaCore
+#define IR_SEND_PIN  6              // MightyCore, MegaCore
 
 #else
 #error "Please add OC3A pin number here\n"
@@ -505,8 +512,8 @@ TCCR4D                = (1<<WGM40); \
 TCCR4E                = 0; \
 TC4H                  = pwmval >> 8; \
 OCR4C                 = pwmval; \
-TC4H                  = (pwmval / 3) >> 8; \
-OCR4A                 = (pwmval / 3) & 255; \
+TC4H                  = (pwmval / (100/DUTY_CYCLE)) >> 8; \
+OCR4A                 = (pwmval / (100/DUTY_CYCLE)) & 255; \
 })
 
 #define TIMER_CONFIG_NORMAL() ({ \
@@ -523,11 +530,11 @@ TCNT4  = 0; \
 
 //-----------------
 #if defined(CORE_OC4A_PIN)
-#define SEND_PIN  CORE_OC4A_PIN  // Teensy
+#define IR_SEND_PIN  CORE_OC4A_PIN  // Teensy
 #elif defined(ARDUINO_AVR_PROMICRO)
-#   define SEND_PIN  5              // Sparkfun Pro Micro
+#   define IR_SEND_PIN  5              // Sparkfun Pro Micro
 #elif defined(__AVR_ATmega32U4__)
-#define SEND_PIN  13             // Leonardo
+#define IR_SEND_PIN  13             // Leonardo
 #else
 #error "Please add OC4A pin number here\n"
 #endif
@@ -549,7 +556,7 @@ TCNT4  = 0; \
   TCCR4A = _BV(WGM41); \
   TCCR4B = _BV(WGM43) | _BV(CS40); \
   ICR4 = pwmval; \
-  OCR4A = pwmval / 3; \
+  OCR4A = pwmval / (100/DUTY_CYCLE); \
 })
 
 #define TIMER_CONFIG_NORMAL() ({ \
@@ -561,9 +568,9 @@ TCNT4  = 0; \
 
 //-----------------
 #if defined(CORE_OC4A_PIN)
-#define SEND_PIN  CORE_OC4A_PIN
+#define IR_SEND_PIN  CORE_OC4A_PIN
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#define SEND_PIN  6  // Arduino Mega
+#define IR_SEND_PIN  6  // Arduino Mega
 #else
 #error "Please add OC4A pin number here\n"
 #endif
@@ -585,7 +592,7 @@ TCNT4  = 0; \
   TCCR5A = _BV(WGM51); \
   TCCR5B = _BV(WGM53) | _BV(CS50); \
   ICR5 = pwmval; \
-  OCR5A = pwmval / 3; \
+  OCR5A = pwmval / (100/DUTY_CYCLE); \
 })
 
 #define TIMER_CONFIG_NORMAL() ({ \
@@ -597,9 +604,9 @@ TCNT4  = 0; \
 
 //-----------------
 #if defined(CORE_OC5A_PIN)
-#define SEND_PIN  CORE_OC5A_PIN
+#define IR_SEND_PIN  CORE_OC5A_PIN
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#define SEND_PIN  46  // Arduino Mega
+#define IR_SEND_PIN  46  // Arduino Mega
 #else
 #error "Please add OC5A pin number here\n"
 #endif
@@ -666,7 +673,7 @@ CMT_OC     = 0;               \
 CMT_MSC    = 0x03;            \
 })
 
-#define SEND_PIN  5
+#define IR_SEND_PIN  5
 
 // defines for TPM1 timer on Teensy-LC
 #elif defined(IR_USE_TIMER_TPM1)
@@ -696,7 +703,7 @@ FTM1_MOD = (F_PLL/40000) - 1;                \
 FTM1_C0V = 0;                                \
 FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
 })
-#define SEND_PIN        16
+#define IR_SEND_PIN        16
 
 // defines for timer_tiny0 (8 bits)
 #elif defined(IR_USE_TIMER_TINY0)
@@ -711,7 +718,7 @@ FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
   TCCR0A = _BV(WGM00); \
   TCCR0B = _BV(WGM02) | _BV(CS00); \
   OCR0A = pwmval; \
-  OCR0B = pwmval / 3; \
+  OCR0B = pwmval / (100/DUTY_CYCLE); \
 })
 #define TIMER_COUNT_TOP      (SYSCLOCK * USECPERTICK / 1000000)
 #if (TIMER_COUNT_TOP < 256)
@@ -730,7 +737,7 @@ FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
 })
 #endif
 
-#define SEND_PIN        1  /* ATtiny85 */
+#define IR_SEND_PIN        1  /* ATtiny85 */
 
 //---------------------------------------------------------
 // ESP32 (ESP8266 should likely be added here too)
@@ -748,19 +755,27 @@ FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
 // https://github.com/ExploreEmbedded/ESP32_RMT
 #elif defined(IR_TIMER_USE_ESP32)
 
+#if ! defined(IR_SEND_PIN)
+#define IR_SEND_PIN 4 // can use any pin, no timer restrictions
+#endif
+
+#if ! defined(LEDCHANNEL)
+#define LEDCHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
+#endif
+
 #define TIMER_RESET
+#define TIMER_ENABLE_PWM    ledcWrite(LEDCHANNEL, DUTY_CYCLE) // we must use channel here not pin number
+#define TIMER_DISABLE_PWM   ledcWrite(LEDCHANNEL, 0)
 
 #ifdef ISR
 #undef ISR
 #endif
 #define  ISR(f)  void IRTimer()
 
-#define SEND_PIN    0 // dummy to avoid compiler warning
-
 #elif defined(ARDUINO_ARCH_SAM) || defined(ARDUINO_ARCH_SAMD)
 // use timer 3 hardcoded at this time
 
-#define SEND_PIN 9
+#define IR_SEND_PIN 9
 
 #define TIMER_RESET
 #define TIMER_ENABLE_PWM     // Not presently used
