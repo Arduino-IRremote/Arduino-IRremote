@@ -56,20 +56,9 @@ jobs:
         # With examples-exclude you may exclude specific examples for a board. Use a comma separated list.
         #############################################################################################################
         include:
-          - arduino-boards-fqbn: arduino:avr:uno
-            examples-build-properties:
-              AiwaRCT501SendDemo: -DSEND_AIWA_RC_T501
-              IRrecord: -DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6
-              IRsendDemo: -DSEND_SONY
-              IRtest: -DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6
-              IRtest2: -DSEND_NEC -DSEND_SONY -DSEND_RC5 -DSEND_RC6
-              JVCPanasonicSendDemo: -DSEND_JVC -DSEND_PANASONIC
-              LegoPowerFunctionsSendDemo: -DSEND_LEGO_PF
-              LegoPowerFunctionsTests: -DSEND_LEGO_PF
-
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://dl.espressif.com/dl/package_esp32_index.json
-#            examples-exclude: AiwaRCT501SendDemo,IRrecord,IRsendDemo,IRsendRawDemo,IRtest,IRtest2,JVCPanasonicSendDemo,LegoPowerFunctionsSendDemo,LGACSendDemo,BoseWaveSendDemo # Comma separated list of (unique substrings of) example names to exclude in build
+            examples-exclude: LGACSendDemo # undefined reference to `TwoWire::onReceive(void (*)(int))'
 
           - arduino-boards-fqbn: SparkFun:avr:promicro
             arduino-platform: arduino:avr,SparkFun:avr

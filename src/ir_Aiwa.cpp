@@ -73,7 +73,7 @@ void  IRsend::sendAiwaRCT501 (int code)
 bool  IRrecv::decodeAiwaRCT501 (decode_results *results)
 {
     int  data   = 0;
-    int  offset = 1;
+    unsigned int  offset = 1;
 
     // Check SIZE
     if (irparams.rawlen < 2 * (AIWA_RC_T501_SUM_BITS) + 4)  return false ;

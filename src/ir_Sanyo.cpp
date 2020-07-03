@@ -24,7 +24,7 @@
 bool  IRrecv::decodeSanyo (decode_results *results)
 {
 	long  data   = 0;
-	int   offset = 0;  // Skip first space  <-- CHECK THIS!
+	unsigned int   offset = 0;  // Skip first space  <-- CHECK THIS!
 
 	if (irparams.rawlen < (2 * SANYO_BITS) + 2)  return false ;
 

@@ -245,7 +245,7 @@ private:
     /**
      *  This helper function is shared by RC5 and RC6
      */
-    int getRClevel(decode_results *results, int *offset, int *used, int t1);
+    int getRClevel(decode_results *results, unsigned int *offset, int *used, int t1);
 #endif
 #if DECODE_RC5
     /**

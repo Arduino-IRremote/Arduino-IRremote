@@ -10,7 +10,7 @@
 // Returns -1 for error (measured time interval is not a multiple of t1).
 //
 #if (DECODE_RC5 || DECODE_RC6)
-int  IRrecv::getRClevel (decode_results *results,  int *offset,  int *used,  int t1)
+int  IRrecv::getRClevel (decode_results *results,  unsigned int *offset,  int *used,  int t1)
 {
     int  width;
     int  val;
@@ -153,7 +153,7 @@ bool  IRrecv::decodeRC5 (decode_results *results)
     int   nbits;
     long  data   = 0;
     int   used   = 0;
-    int   offset = 1;  // Skip gap space
+    unsigned int   offset = 1;  // Skip gap space
 
     if (irparams.rawlen < MIN_RC5_SAMPLES + 2)  return false ;
 
@@ -232,7 +232,7 @@ bool  IRrecv::decodeRC6 (decode_results *results)
     int   nbits;
     long  data   = 0;
     int   used   = 0;
-    int   offset = 1;  // Skip first space
+    unsigned int   offset = 1;  // Skip first space
 
     if (results->rawlen < MIN_RC6_SAMPLES)  return false ;
 

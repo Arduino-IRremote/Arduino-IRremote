@@ -28,7 +28,7 @@ bool  IRrecv::decodeMitsubishi (decode_results *results)
   // Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
   long data = 0;
   if (irparams.rawlen < 2 * MITSUBISHI_BITS + 2)  return false ;
-  int offset = 0; // Skip first space
+  unsigned int offset = 0; // Skip first space
   // Initial space
 
 #if 0
