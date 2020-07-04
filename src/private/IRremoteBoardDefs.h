@@ -182,94 +182,130 @@
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
 #elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) // old default clause
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER2)
 //#define IR_USE_TIMER1   // tx = pin 9
 #define IR_USE_TIMER2     // tx = pin 3
+#  endif
 
 // Sparkfun Pro Micro
 #elif defined(ARDUINO_AVR_PROMICRO)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4_HS)
 //#define IR_USE_TIMER1     // tx = pin 9
 #define IR_USE_TIMER3       // tx = pin 5
 //#define IR_USE_TIMER4_HS  // tx = pin 13
+#  endif
 
 // Leonardo
 #elif defined(__AVR_ATmega32U4__) && ! defined(TEENSYDUINO)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4_HS)
 //#define IR_USE_TIMER1     // tx = pin 9
 #define IR_USE_TIMER3       // tx = pin 5
 //#define IR_USE_TIMER4_HS  // tx = pin 13
+#  endif
 
 // Arduino Mega
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER2) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4) && !defined(IR_USE_TIMER5)
 //#define IR_USE_TIMER1   // tx = pin 11
 #define IR_USE_TIMER2     // tx = pin 9
 //#define IR_USE_TIMER3   // tx = pin 5
 //#define IR_USE_TIMER4   // tx = pin 6
 //#define IR_USE_TIMER5   // tx = pin 46
+#  endif
 
 // Nano Every, Uno WiFi Rev2
 #elif defined(__AVR_ATmega4809__)
+#  if !defined(IR_USE_TIMER_4809_1) && !defined(IR_USE_TIMER_4809_2)
 #define IR_USE_TIMER_4809_1     //  tx = pin 24
 //#define IR_USE_TIMER_4809_2     // TODO tx = pin 21
+#  endif
 
 // Teensy 1.0
 #elif defined(__AVR_AT90USB162__)
+#  if !defined(IR_USE_TIMER1)
 #define IR_USE_TIMER1     // tx = pin 17
+#  endif
 
 // Teensy 2.0
 #elif defined(__AVR_ATmega32U4__) && defined(TEENSYDUINO)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4_HS)
 //#define IR_USE_TIMER1     // tx = pin 14 (Teensy 2.0 - physical pin: B5)
 #define IR_USE_TIMER3       // tx = pin 9  (Teensy 2.0 - physical pin: C6)
 //#define IR_USE_TIMER4_HS  // tx = pin 10 (Teensy 2.0 - physical pin: C7)
+#  endif
 
 // Teensy 3.0 / Teensy 3.1
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
+#  if !defined(IR_USE_TIMER_CMT)
 #define IR_USE_TIMER_CMT    // tx = pin 5
+#  endif
 
 // Teensy-LC
 #elif defined(__MKL26Z64__)
-  #define IR_USE_TIMER_TPM1 // tx = pin 16
+#  if !defined(IR_USE_TIMER_TPM1)
+#define IR_USE_TIMER_TPM1 // tx = pin 16
+#  endif
 
 // Teensy++ 1.0 & 2.0
 #elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER2) && !defined(IR_USE_TIMER3)
 //#define IR_USE_TIMER1   // tx = pin 25
 #define IR_USE_TIMER2     // tx = pin 1
 //#define IR_USE_TIMER3   // tx = pin 16
+#  endif
 
 // MightyCore - ATmega1284
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER2) && !defined(IR_USE_TIMER3)
 //#define IR_USE_TIMER1   // tx = pin 13
 #define IR_USE_TIMER2     // tx = pin 14
 //#define IR_USE_TIMER3   // tx = pin 6
+#  endif
 
 // MightyCore - ATmega164, ATmega324, ATmega644
 #elif defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
 || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
 || defined(__AVR_ATmega164P__)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER2)
 //#define IR_USE_TIMER1   // tx = pin 13
 #define IR_USE_TIMER2     // tx = pin 14
+#  endif
 
 //MegaCore - ATmega64, ATmega128
 #elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
+#  if !defined(IR_USE_TIMER1)
  #define IR_USE_TIMER1     // tx = pin 13
+#  endif
 
 // MightyCore - ATmega8535, ATmega16, ATmega32
 #elif defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
+#  if !defined(IR_USE_TIMER1)
 #define IR_USE_TIMER1     // tx = pin 13
+#  endif
 
 // Atmega8
 #elif defined(__AVR_ATmega8__)
+#  if !defined(IR_USE_TIMER1)
 #define IR_USE_TIMER1     // tx = pin 9
+#  endif
 
 // ATtiny84
 #elif defined(__AVR_ATtiny84__)
+#  if !defined(IR_USE_TIMER1)
 #define IR_USE_TIMER1     // tx = pin 6
+#  endif
 
 //ATtiny85
 #elif defined(__AVR_ATtiny85__)
+#  if !defined(IR_USE_TIMER_TINY0)
 #define IR_USE_TIMER_TINY0   // tx = pin 1
+#  endif
 
 #elif defined(ESP32)
+#  if !defined(IR_TIMER_USE_ESP32)
 #define IR_TIMER_USE_ESP32
+#  endif
 
 #elif defined(ARDUINO_ARCH_SAMD)
 #define TIMER_PRESCALER_DIV 64
