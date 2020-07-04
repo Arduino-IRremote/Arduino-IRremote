@@ -48,6 +48,7 @@ jobs:
         arduino-boards-fqbn:
           - arduino:avr:uno
           - arduino:avr:leonardo
+          - arduino:megaavr:nona4809:mode=off
           - arduino:samd:arduino_zero_native
           - esp32:esp32:featheresp32:FlashFreq=80
           - SparkFun:avr:promicro
