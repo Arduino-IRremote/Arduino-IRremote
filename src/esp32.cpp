@@ -10,7 +10,7 @@
 #endif
 
 hw_timer_t *timer;
-void IRTimer(); // defined in IRremote.cpp, masqueraded as ISR(TIMER_INTR_NAME)
+IRAM_ATTR void IRTimer(); // defined in IRremote.cpp, masqueraded as ISR(TIMER_INTR_NAME)
 
 //+=============================================================================
 // initialization
@@ -32,6 +32,11 @@ void IRrecv::enableIRIn() {
 
     // Set pin modes
     pinMode(irparams.recvpin, INPUT);
+}
+
+void IRrecv::disableIRIn() {
+    timerEnd(timer);
+    timerDetachInterrupt(timer);
 }
 
 void IRsend::enableIROut(int khz) {
