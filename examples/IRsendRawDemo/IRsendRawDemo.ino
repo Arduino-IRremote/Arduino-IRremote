@@ -55,11 +55,11 @@ void loop() {
     /*
      * Send data direct from FLASH
      */
-    unsigned int irSignal[] PROGMEM = { 9000, 4500, 560, 560, 560, 560, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560,
+    unsigned int irSignalP[] PROGMEM = { 9000, 4500, 560, 560, 560, 560, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560,
             560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560,
             560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560,
             1690, 560, 1690, 560, 39416, 9000, 2210, 560 }; // AnalysIR Batch Export (IRremote) - RAW
-    irsend.sendRaw_P(irSignal, sizeof(irSignal) / sizeof(irSignal[0]), khz); // Note the approach used to automatically calculate the size of the array.
+    irsend.sendRaw_P(irSignalP, sizeof(irSignalP) / sizeof(irSignalP[0]), khz); // Note the approach used to automatically calculate the size of the array.
 
     delay(5000); //In this example, the signal will be repeated every 7 seconds, approximately.
 }
