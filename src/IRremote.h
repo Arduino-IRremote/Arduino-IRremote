@@ -80,7 +80,7 @@
 #define SEND_DENON           1
 
 #define DECODE_PRONTO        0 // This function does not logically make sense
-#define SEND_PRONTO          1
+#define SEND_PRONTO          0 // Not tested yet
 
 #define DECODE_LEGO_PF       0 // NOT WRITTEN
 #define SEND_LEGO_PF         1
@@ -419,7 +419,7 @@ public:
 #endif
     //......................................................................
 #if SEND_PRONTO
-    void sendPronto(char* code, bool repeat, bool fallback);
+    bool sendPronto(char* code, bool repeat, bool fallback);
 #endif
     //......................................................................
 #if SEND_LEGO_PF
