@@ -19,7 +19,7 @@
 #if SEND_PANASONIC
 void IRsend::sendPanasonic(unsigned int address, unsigned long data) {
     // Set IR carrier frequency
-    enableIROut(35);
+    enableIROut(37); // 36.7kHz is the correct frequency
 
     // Header
     mark(PANASONIC_HDR_MARK);
