@@ -50,14 +50,13 @@
 
 /**
  * Duty cycle in percent for sent signals.
- * Presently takes effect only together with USE_SOFT_CARRIER.
  */
 #if ! defined(DUTY_CYCLE)
-#define DUTY_CYCLE 30 // 30 saves power and is be compatible to the old existing code
+#define DUTY_CYCLE 30 // 30 saves power and is compatible to the old existing code
 #endif
 
 /**
- * If USE_SOFT_CARRIER, this amount (in micro seconds) is subtracted from the
+ * If USE_SOFT_CARRIER or USE_NO_CARRIER, this amount (in micro seconds) is subtracted from the
  * on-time of the pulses.
  */
 #define PULSE_CORRECTION 3
@@ -83,6 +82,11 @@
  * Board dependent macro to turn BLINKLED off.
  */
 #define BLINKLED_OFF()  digitalWrite(BLINKLED, HIGH)
+
+/**
+ * Define to use no carrier PWM, just simulate a receiver signal.
+ */
+#define USE_NO_CARRIER
 
 /**
  * Define to use carrier generation in software, instead of hardware PWM.
@@ -773,7 +777,7 @@ FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
   TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm); \
 })
 
-#define TIMER_PWM_PIN        6  /* Nano Every, Uno WiFi Rev2 */
+#define IR_SEND_PIN        6  /* Nano Every, Uno WiFi Rev2 */
 //---------------------------------------------------------
 // ESP32 (ESP8266 should likely be added here too)
 //

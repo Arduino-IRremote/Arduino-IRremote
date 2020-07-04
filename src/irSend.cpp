@@ -85,6 +85,8 @@ void IRsend::mark(unsigned int time) {
         sleepUntilMicros(nextPeriodEnding);
         now = micros();
     }
+#elif defined(USE_NO_CARRIER)
+    digitalWrite(sendPin, LOW); // Set output to active low.
 #else
     TIMER_ENABLE_PWM; // Enable pin 3 PWM output
     if (time > 0) {
@@ -99,7 +101,11 @@ void IRsend::mark(unsigned int time) {
 // A space is no output, so the PWM output is disabled.
 //
 void IRsend::space(unsigned int time) {
+#if defined(USE_NO_CARRIER)
+    digitalWrite(sendPin, HIGH); // Set output to inactive high.
+#else
     TIMER_DISABLE_PWM; // Disable pin 3 PWM output
+#endif
     if (time > 0) {
         IRsend::custom_delay_usec(time);
     }
@@ -124,10 +130,15 @@ void IRsend::enableIROut(int khz) {
     periodOnTime = periodTime * DUTY_CYCLE / 100U - PULSE_CORRECTION;
 #endif
 
+#if defined(USE_NO_CARRIER)
+    pinMode(sendPin, OUTPUT);
+    digitalWrite(sendPin, HIGH); // Set output to inactive high.
+#else
     // Disable the Timer2 Interrupt (which is used for receiving IR)
     TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
 
     pinMode(sendPin, OUTPUT);
+
     SENDPIN_OFF(sendPin); // When not sending, we want it low
 
     // COM2A = 00: disconnect OC2A
@@ -136,6 +147,7 @@ void IRsend::enableIROut(int khz) {
     // CS2  = 000: no prescaling
     // The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
     TIMER_CONFIG_KHZ(khz);
+#endif
 }
 #endif
 

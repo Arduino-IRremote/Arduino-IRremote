@@ -8,6 +8,7 @@
 - Enabled DUTY_CYCLE for send signal.
 - Added sending for ESP32.
 - Changed rawlen from uint8_t to unsigned int allowing bigger receive buffer and renamed RAWBUF to RAW_BUFFER_LENGTH.
+- Introduced USE_NO_CARRIER for simulating an IR receiver.
 Changes from #283 by bengtmartensson
 - Added function sendRaw_P() for sending data from flash.
 Changes from #268 by adamlhumphreys

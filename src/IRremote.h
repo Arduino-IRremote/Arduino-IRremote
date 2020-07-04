@@ -332,7 +332,7 @@ private:
  */
 class IRsend {
 public:
-#ifdef USE_SOFT_CARRIER
+#if defined(USE_SOFT_CARRIER) || defined(USE_NO_CARRIER)
     IRsend(int pin = IR_SEND_PIN) {
       sendPin = pin;
     }
@@ -430,15 +430,17 @@ public:
     void sendBoseWave(unsigned char code);
 #endif
 
-#ifdef USE_SOFT_CARRIER
+#if defined(USE_SOFT_CARRIER) || defined(USE_NO_CARRIER)
   private:
     int sendPin;
 
+#  if defined(USE_SOFT_CARRIER)
     unsigned int periodTime;
     unsigned int periodOnTime;
 
     void sleepMicros(unsigned long us);
     void sleepUntilMicros(unsigned long targetTime);
+#  endif
 
 #else
     const int sendPin = IR_SEND_PIN;
