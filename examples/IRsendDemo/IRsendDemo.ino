@@ -27,12 +27,19 @@ void setup() {
 #endif
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__));
+    Serial.print(F("Ready to send IR signals at pin "));
+    Serial.println(IR_SEND_PIN);
 }
 
 void loop() {
     for (int i = 0; i < 3; i++) {
         irsend.sendSony(0xa90, 12);
         Serial.println(F("sendSony(0xa90, 12)"));
+//        irsend.sendJVC(0xC5B8, 16,0); // hex value, 16 bits, no repeat
+//        delayMicroseconds(50); // see http://www.sbprojects.com/knowledge/ir/jvc.php for information
+//        irsend.sendJVC(0xC5B8, 16,1); // hex value, 16 bits, repeat
+//        Serial.println(F("sendJVC(9xC5B8, 16)"));
+
         delay(40);
     }
     delay(5000); //5 second delay between each signal burst

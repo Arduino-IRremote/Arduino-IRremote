@@ -110,8 +110,8 @@
 #define BLINKLED_ON()   (digitalWrite(CORE_LED0_PIN, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(CORE_LED0_PIN, LOW))
 
-/////////////////// Arduino Uno, Nano etc (previously default clause)
-#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
+// Arduino Uno, Nano etc (previously default clause)
+#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega32U4__)
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()  (PORTB |= B00100000)
 #define BLINKLED_OFF()  (PORTB &= B11011111)
@@ -189,7 +189,7 @@
 #elif defined(ARDUINO_AVR_PROMICRO)
 //#define IR_USE_TIMER1     // tx = pin 9
 #define IR_USE_TIMER3       // tx = pin 5
-//#define IR_USE_TIMER4_HS  // tx = pin 5
+//#define IR_USE_TIMER4_HS  // tx = pin 13
 
 // Leonardo
 #elif defined(__AVR_ATmega32U4__) && ! defined(TEENSYDUINO)
