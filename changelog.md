@@ -8,6 +8,8 @@
 - Enabled DUTY_CYCLE for send signal.
 - Added sending for ESP32.
 - Changed rawlen from uint8_t to unsigned int allowing bigger receive buffer and renamed RAWBUF to RAW_BUFFER_LENGTH.
+Changes from #283 by bengtmartensson
+- Added function sendRaw_P() for sending data from flash.
 Changes from #268 by adamlhumphreys
 - Optimized by reducing floating point operations as suggested by @madmalkav (#193)
 - Optimized with macros when using default USECPERTICK and TOLERANCE
