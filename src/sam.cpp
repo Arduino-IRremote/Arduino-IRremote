@@ -82,6 +82,10 @@ void IRrecv::enableIRIn() {
     pinMode(irparams.recvpin, INPUT);
 }
 
+void IRrecv::disableIRIn() {
+    TC3->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
+}
+
 void irs(); // Defined in IRRemote as ISR(TIMER_INTR_NAME)
 
 void TC3_Handler(void) {
