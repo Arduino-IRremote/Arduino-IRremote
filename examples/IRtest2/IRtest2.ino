@@ -221,10 +221,10 @@ void testRaw(char *label, unsigned int *rawbuf, int rawlen) {
       long got = results.rawbuf[i+1] * MICROS_PER_TICK;
       // Adjust for extra duration of marks
       if (i % 2 == 0) { 
-        got -= MARK_EXCESS;
+        got -= MARK_EXCESS_MICROS;
       } 
       else {
-        got += MARK_EXCESS;
+        got += MARK_EXCESS_MICROS;
       }
       // See if close enough, within 25%
       if (rawbuf[i] * 1.25 < got || got * 1.25 < rawbuf[i]) {

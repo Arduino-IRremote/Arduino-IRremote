@@ -89,7 +89,7 @@ public:
       if (sendlog[i] < 0) {
         if (last == MARK) {
           // New space
-          irparams.rawbuf[irparams.rawlen++] = (-sendlog[i] - MARK_EXCESS) / MICROS_PER_TICK;
+          irparams.rawbuf[irparams.rawlen++] = (-sendlog[i] - MARK_EXCESS_MICROS) / MICROS_PER_TICK;
           last = SPACE;
         } 
         else {
@@ -100,7 +100,7 @@ public:
       else if (sendlog[i] > 0) {
         if (last == SPACE) {
           // New mark
-          irparams.rawbuf[irparams.rawlen++] = (sendlog[i] + MARK_EXCESS) / MICROS_PER_TICK;
+          irparams.rawbuf[irparams.rawlen++] = (sendlog[i] + MARK_EXCESS_MICROS) / MICROS_PER_TICK;
           last = MARK;
         } 
         else {

@@ -100,7 +100,7 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {
     DBG_PRINT(F(" <= "));
     DBG_PRINT(TICKS_HIGH(desired_us - MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
 
-    // compensate for marks exceeded by demodulator hardware
+    // compensate for marks exceeded and spaces shortened by demodulator hardware
     bool passed = ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS_MICROS))
                   && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS_MICROS)));
     if (passed) {
