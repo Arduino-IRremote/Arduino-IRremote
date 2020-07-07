@@ -163,7 +163,7 @@
 
 //------------------------------------------------------------------------------
 // microseconds per clock interrupt tick
-#define USECPERTICK    50
+#define MICROS_PER_TICK    50
 
 //------------------------------------------------------------------------------
 // Define which timer to use
@@ -396,7 +396,7 @@ OCR2A                = pwmval; \
 OCR2B                = pwmval * DUTY_CYCLE / 100; \
 })
 
-#define TIMER_COUNT_TOP  (SYSCLOCK * USECPERTICK / 1000000)
+#define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
 
 //-----------------
 #if (TIMER_COUNT_TOP < 256)
@@ -467,7 +467,7 @@ OCR1A                 = pwmval * DUTY_CYCLE / 100; \
 #define TIMER_CONFIG_NORMAL() ({ \
 TCCR1A = 0; \
 TCCR1B = _BV(WGM12) | _BV(CS10); \
-OCR1A  = SYSCLOCK * USECPERTICK / 1000000; \
+OCR1A  = SYSCLOCK * MICROS_PER_TICK / 1000000; \
 TCNT1  = 0; \
 })
 
@@ -517,7 +517,7 @@ TCNT1  = 0; \
 #define TIMER_CONFIG_NORMAL() ({ \
   TCCR3A = 0; \
   TCCR3B = _BV(WGM32) | _BV(CS30); \
-  OCR3A = SYSCLOCK * USECPERTICK / 1000000; \
+  OCR3A = SYSCLOCK * MICROS_PER_TICK / 1000000; \
   TCNT3 = 0; \
 })
 
@@ -573,8 +573,8 @@ TCCR4B = _BV(CS40); \
 TCCR4C = 0; \
 TCCR4D = 0; \
 TCCR4E = 0; \
-TC4H   = (SYSCLOCK * USECPERTICK / 1000000) >> 8; \
-OCR4C  = (SYSCLOCK * USECPERTICK / 1000000) & 255; \
+TC4H   = (SYSCLOCK * MICROS_PER_TICK / 1000000) >> 8; \
+OCR4C  = (SYSCLOCK * MICROS_PER_TICK / 1000000) & 255; \
 TC4H   = 0; \
 TCNT4  = 0; \
 })
@@ -613,7 +613,7 @@ TCNT4  = 0; \
 #define TIMER_CONFIG_NORMAL() ({ \
   TCCR4A = 0; \
   TCCR4B = _BV(WGM42) | _BV(CS40); \
-  OCR4A = SYSCLOCK * USECPERTICK / 1000000; \
+  OCR4A = SYSCLOCK * MICROS_PER_TICK / 1000000; \
   TCNT4 = 0; \
 })
 
@@ -649,7 +649,7 @@ TCNT4  = 0; \
 #define TIMER_CONFIG_NORMAL() ({ \
   TCCR5A = 0; \
   TCCR5B = _BV(WGM52) | _BV(CS50); \
-  OCR5A = SYSCLOCK * USECPERTICK / 1000000; \
+  OCR5A = SYSCLOCK * MICROS_PER_TICK / 1000000; \
   TCNT5 = 0; \
 })
 
@@ -771,7 +771,7 @@ FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
   OCR0A = pwmval; \
   OCR0B = pwmval * DUTY_CYCLE / 100; \
 })
-#define TIMER_COUNT_TOP      (SYSCLOCK * USECPERTICK / 1000000)
+#define TIMER_COUNT_TOP      (SYSCLOCK * MICROS_PER_TICK / 1000000)
 #if (TIMER_COUNT_TOP < 256)
 #define TIMER_CONFIG_NORMAL() ({ \
   TCCR0A = _BV(WGM01); \
@@ -805,7 +805,7 @@ FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
   TCB0.CCMPH = pwmval * DUTY_CYCLE / 100; \
   TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm); \
 })
-#define TIMER_COUNT_TOP      ((SYSCLOCK * USECPERTICK / 1000000))
+#define TIMER_COUNT_TOP      ((SYSCLOCK * MICROS_PER_TICK / 1000000))
 #define TIMER_CONFIG_NORMAL() ({ \
   TCB0.CTRLB = (TCB_CNTMODE_INT_gc); \
   TCB0.CCMP = TIMER_COUNT_TOP; \

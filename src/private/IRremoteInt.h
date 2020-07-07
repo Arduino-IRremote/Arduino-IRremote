@@ -86,10 +86,10 @@ extern volatile irparams_t irparams;
 /**
  * When received, marks  tend to be too long and
  * spaces tend to be too short.
- * To compensate for this, MARK_EXCESS is subtracted from all marks,
+ * To compensate for this, MARK_EXCESS_MICROS is subtracted from all marks,
  * and added to all spaces.
  */
-#define MARK_EXCESS    100
+#define MARK_EXCESS_MICROS    100
 
 /** Relative tolerance (in percent) for some comparisons on measured data. */
 #define TOLERANCE       25
@@ -104,17 +104,17 @@ extern volatile irparams_t irparams;
 /** Minimum gap between IR transmissions, in microseconds */
 #define _GAP            5000
 
-/** Minimum gap between IR transmissions, in USECPERTICK */
-#define GAP_TICKS       (_GAP/USECPERTICK)
+/** Minimum gap between IR transmissions, in MICROS_PER_TICK */
+#define GAP_TICKS       (_GAP/MICROS_PER_TICK)
 
-//#define TICKS_LOW(us)   ((int)(((us)*LTOL/USECPERTICK)))
-//#define TICKS_HIGH(us)  ((int)(((us)*UTOL/USECPERTICK + 1)))
-#if USECPERTICK == 50 && TOLERANCE == 25           // Defaults
-    #define TICKS_LOW(us)   ((int) ((us)/67 ))     // (us) / ((USECPERTICK:50 / LTOL:75 ) * 100)
-    #define TICKS_HIGH(us)  ((int) ((us)/40 + 1))  // (us) / ((USECPERTICK:50 / UTOL:125) * 100) + 1
+//#define TICKS_LOW(us)   ((int)(((us)*LTOL/MICROS_PER_TICK)))
+//#define TICKS_HIGH(us)  ((int)(((us)*UTOL/MICROS_PER_TICK + 1)))
+#if MICROS_PER_TICK == 50 && TOLERANCE == 25           // Defaults
+    #define TICKS_LOW(us)   ((int) ((us)/67 ))     // (us) / ((MICROS_PER_TICK:50 / LTOL:75 ) * 100)
+    #define TICKS_HIGH(us)  ((int) ((us)/40 + 1))  // (us) / ((MICROS_PER_TICK:50 / UTOL:125) * 100) + 1
 #else
-    #define TICKS_LOW(us)   ((int) ((long) (us) * LTOL / (USECPERTICK * 100) ))
-    #define TICKS_HIGH(us)  ((int) ((long) (us) * UTOL / (USECPERTICK * 100) + 1))
+    #define TICKS_LOW(us)   ((int) ((long) (us) * LTOL / (MICROS_PER_TICK * 100) ))
+    #define TICKS_HIGH(us)  ((int) ((long) (us) * UTOL / (MICROS_PER_TICK * 100) + 1))
 #endif
 
 //------------------------------------------------------------------------------
