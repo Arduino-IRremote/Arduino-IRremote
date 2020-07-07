@@ -62,19 +62,20 @@ int MATCH(int measured, int desired) {
 //
 int MATCH_MARK(int measured_ticks, int desired_us) {
     DBG_PRINT(F("Testing mark (actual vs desired): "));
-    DBG_PRINT(measured_ticks * USECPERTICK, DEC);
+    DBG_PRINT(measured_ticks * MICROS_PER_TICK, DEC);
     DBG_PRINT(F("us vs "));
     DBG_PRINT(desired_us, DEC);
     DBG_PRINT("us");
     DBG_PRINT(": ");
-    DBG_PRINT(TICKS_LOW(desired_us + MARK_EXCESS) * USECPERTICK, DEC);
+    DBG_PRINT(TICKS_LOW(desired_us + MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
     DBG_PRINT(F(" <= "));
-    DBG_PRINT(measured_ticks * USECPERTICK, DEC);
+    DBG_PRINT(measured_ticks * MICROS_PER_TICK, DEC);
     DBG_PRINT(F(" <= "));
-    DBG_PRINT(TICKS_HIGH(desired_us + MARK_EXCESS) * USECPERTICK, DEC);
+    DBG_PRINT(TICKS_HIGH(desired_us + MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
 
-    int compensated_ticks = measured_ticks - MARK_EXCESS; // compensate for marks exceeded by demodulator hardware
-    bool passed = ((compensated_ticks >= TICKS_LOW(desired_us)) && (compensated_ticks <= TICKS_HIGH(desired_us)));
+    // compensate for marks exceeded by demodulator hardware
+    bool passed = ((measured_ticks >= TICKS_LOW(desired_us + MARK_EXCESS_MICROS))
+            && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS_MICROS)));
     if (passed) {
         DBG_PRINTLN(F("?; passed"));
     } else {
@@ -88,19 +89,20 @@ int MATCH_MARK(int measured_ticks, int desired_us) {
 //
 int MATCH_SPACE(int measured_ticks, int desired_us) {
     DBG_PRINT(F("Testing space (actual vs desired): "));
-    DBG_PRINT(measured_ticks * USECPERTICK, DEC);
+    DBG_PRINT(measured_ticks * MICROS_PER_TICK, DEC);
     DBG_PRINT(F("us vs "));
     DBG_PRINT(desired_us, DEC);
     DBG_PRINT("us");
     DBG_PRINT(": ");
-    DBG_PRINT(TICKS_LOW(desired_us - MARK_EXCESS) * USECPERTICK, DEC);
+    DBG_PRINT(TICKS_LOW(desired_us - MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
     DBG_PRINT(F(" <= "));
-    DBG_PRINT(measured_ticks * USECPERTICK, DEC);
+    DBG_PRINT(measured_ticks * MICROS_PER_TICK, DEC);
     DBG_PRINT(F(" <= "));
-    DBG_PRINT(TICKS_HIGH(desired_us - MARK_EXCESS) * USECPERTICK, DEC);
+    DBG_PRINT(TICKS_HIGH(desired_us - MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
 
-    int compensated_ticks = measured_ticks + MARK_EXCESS; // compensate for marks exceeded by demodulator hardware
-    bool passed = ((compensated_ticks >= TICKS_LOW(desired_us)) && (compensated_ticks <= TICKS_HIGH(desired_us)));
+    // compensate for marks exceeded by demodulator hardware
+    bool passed = ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS_MICROS))
+                  && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS_MICROS)));
     if (passed) {
         DBG_PRINTLN(F("?; passed"));
     } else {

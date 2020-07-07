@@ -54,7 +54,7 @@ static void startTimer() {
     // Set prescaler to 64
     TC->CTRLA.reg |= TC_CTRLA_MODE_COUNT16 | TC_CTRLA_WAVEGEN_MFRQ | TC_CTRLA_PRESCALER_DIV64 | TC_CTRLA_ENABLE;
 
-    setTimerFrequency(1000000 / USECPERTICK);
+    setTimerFrequency(1000000 / MICROS_PER_TICK);
 
     // Enable the compare interrupt
     TC->INTENSET.reg = 0;

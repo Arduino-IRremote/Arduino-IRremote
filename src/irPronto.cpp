@@ -205,7 +205,7 @@ int main() {
 #include <stdio.h>
 
 #define IRPRONTO
-#include "IRremoteInt.h"  // The Arduino IRremote library defines USECPERTICK
+#include "IRremoteInt.h"  // The Arduino IRremote library defines MICROS_PER_TICK
 
 //------------------------------------------------------------------------------
 // Source: https://www.google.co.uk/search?q=DENON+MASTER+IR+Hex+Command+Sheet
@@ -257,11 +257,11 @@ typedef struct {
 //      "  1st  "    "   "   "  length of the "once" code
 //      "  2nd  "    "   "   "  length of the "repeat" code
 //
-// Thereafter, odd  bytes will be Mark  lengths as a multiple of USECPERTICK uS
+// Thereafter, odd  bytes will be Mark  lengths as a multiple of MICROS_PER_TICK uS
 //             even   "     "  "  Space    "    "  "    "     "       "      "
 //
 // Any occurence of "FF" in either a Mark or a Space will indicate
-//   "Use the 16-bit FF value" which will also be a multiple of USECPERTICK uS
+//   "Use the 16-bit FF value" which will also be a multiple of MICROS_PER_TICK uS
 //
 //
 // As a point of comparison, the test code (prontoTest[]) is 520 bytes
@@ -434,13 +434,13 @@ bool decode(char* s, pronto_t* p, irCode_t* ir) {
             DEBUGF("\n%04X : Mark/Space overflow\n", p->code[i + 4]);
             return false;
         } else {
-            ir->code[i + 3] = (p->code[i + 4] * p->usec) / USECPERTICK;
+            ir->code[i + 3] = (p->code[i + 4] * p->usec) / MICROS_PER_TICK;
         }
         DEBUGF("%s%d", !i ? "" : (i & 1 ? "," : ", "), ir->code[i + 3]);
     }
     DEBUGF("|\n");
 
-    ir->FF = (ir->FF * p->usec) / USECPERTICK;
+    ir->FF = (ir->FF * p->usec) / MICROS_PER_TICK;
     DEBUGF("FF -> %d\n", ir->FF);
 
     return true;

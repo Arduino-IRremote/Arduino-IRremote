@@ -124,7 +124,7 @@ bool IRrecv::decodeBoseWave(decode_results *results) {
         DBG_PRINT("\tInvalid Header Mark.  Expecting ");
         DBG_PRINT(BOSEWAVE_HDR_MARK);
         DBG_PRINT(".  Got ");
-        DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
+        DBG_PRINTLN(results->rawbuf[index] * MICROS_PER_TICK);
         return false;
     }
     index++;
@@ -134,7 +134,7 @@ bool IRrecv::decodeBoseWave(decode_results *results) {
         DBG_PRINT("\tInvalid Header Space.  Expecting ");
         DBG_PRINT(BOSEWAVE_HDR_SPACE);
         DBG_PRINT(".  Got ");
-        DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
+        DBG_PRINTLN(results->rawbuf[index] * MICROS_PER_TICK);
         return false;
     }
     index++;
@@ -146,7 +146,7 @@ bool IRrecv::decodeBoseWave(decode_results *results) {
             DBG_PRINT("\tInvalid command Mark.  Expecting ");
             DBG_PRINT(BOSEWAVE_BIT_MARK);
             DBG_PRINT(".  Got ");
-            DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
+            DBG_PRINTLN(results->rawbuf[index] * MICROS_PER_TICK);
             return false;
         }
         index++;
@@ -158,7 +158,7 @@ bool IRrecv::decodeBoseWave(decode_results *results) {
             // Nothing to do for zeroes.
         } else {
             DBG_PRINT("\tInvalid command Space.  Got ");
-            DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
+            DBG_PRINTLN(results->rawbuf[index] * MICROS_PER_TICK);
             return false;
         }
         index++;
@@ -172,7 +172,7 @@ bool IRrecv::decodeBoseWave(decode_results *results) {
             DBG_PRINT("\tInvalid complement Mark.  Expecting ");
             DBG_PRINT(BOSEWAVE_BIT_MARK);
             DBG_PRINT(".  Got ");
-            DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
+            DBG_PRINTLN(results->rawbuf[index] * MICROS_PER_TICK);
             return false;
         }
         index++;
@@ -184,7 +184,7 @@ bool IRrecv::decodeBoseWave(decode_results *results) {
             complement |= (0x01 << ii);
         } else {
             DBG_PRINT("\tInvalid complement Space.  Got ");
-            DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
+            DBG_PRINTLN(results->rawbuf[index] * MICROS_PER_TICK);
             return false;
         }
         index++;
@@ -203,7 +203,7 @@ bool IRrecv::decodeBoseWave(decode_results *results) {
     // Check end "mark"
     if (MATCH_MARK(results->rawbuf[index], BOSEWAVE_END_MARK) == 0) {
         DBG_PRINT("\tInvalid end Mark.  Got ");
-        DBG_PRINTLN(results->rawbuf[index] * USECPERTICK);
+        DBG_PRINTLN(results->rawbuf[index] * MICROS_PER_TICK);
         return false;
     }
 

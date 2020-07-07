@@ -32,13 +32,13 @@ bool IRrecv::decodeSanyo(decode_results *results) {
 #if 0
 	// Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
 	Serial.print("IR Gap: ");
-	Serial.println( results->rawbuf[offset] * USECPERTICK);
+	Serial.println( results->rawbuf[offset] * MICROS_PER_TICK);
 	Serial.println( "test against:");
 	Serial.println(SANYO_DOUBLE_SPACE_USECS);
 #endif
 
 // Initial space
-    if ((results->rawbuf[offset] * USECPERTICK) < SANYO_DOUBLE_SPACE_USECS) {
+    if ((results->rawbuf[offset] * MICROS_PER_TICK) < SANYO_DOUBLE_SPACE_USECS) {
         //Serial.print("IR Gap found: ");
         results->bits = 0;
         results->value = REPEAT;

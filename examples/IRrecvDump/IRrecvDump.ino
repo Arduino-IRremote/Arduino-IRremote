@@ -89,10 +89,10 @@ void dump(decode_results *results) {
 
     for (int i = 1; i < count; i++) {
         if (i & 1) {
-            Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
+            Serial.print(results->rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {
             Serial.write('-');
-            Serial.print((unsigned long) results->rawbuf[i] * USECPERTICK, DEC);
+            Serial.print((unsigned long) results->rawbuf[i] * MICROS_PER_TICK, DEC);
         }
         Serial.print(" ");
     }

@@ -107,9 +107,9 @@ void dump(decode_results *results) {
 
     for (int i = 0; i < count; i++) {
         if ((i % 2) == 1) {
-            Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
+            Serial.print(results->rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {
-            Serial.print(-(int) results->rawbuf[i] * USECPERTICK, DEC);
+            Serial.print(-(int) results->rawbuf[i] * MICROS_PER_TICK, DEC);
         }
         Serial.print(" ");
     }

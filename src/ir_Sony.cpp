@@ -53,7 +53,7 @@ bool IRrecv::decodeSony(decode_results *results) {
 
     // Some Sony's deliver repeats fast after first
     // unfortunately can't spot difference from of repeat from two fast clicks
-    if (results->rawbuf[offset] * USECPERTICK < SONY_DOUBLE_SPACE_USECS) {
+    if (results->rawbuf[offset] * MICROS_PER_TICK < SONY_DOUBLE_SPACE_USECS) {
         // Serial.print("IR Gap found: ");
         results->bits = 0;
         results->value = REPEAT;

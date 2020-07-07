@@ -142,7 +142,7 @@ void dumpRaw(decode_results *results) {
     Serial.println("]: ");
 
     for (unsigned int i = 1; i < results->rawlen; i++) {
-        unsigned long x = results->rawbuf[i] * USECPERTICK;
+        unsigned long x = results->rawbuf[i] * MICROS_PER_TICK;
         if (!(i & 1)) {  // even
             Serial.print("-");
             if (x < 1000)
@@ -179,7 +179,7 @@ void dumpCode(decode_results *results) {
 
     // Dump data
     for (unsigned int i = 1; i < results->rawlen; i++) {
-        Serial.print(results->rawbuf[i] * USECPERTICK, DEC);
+        Serial.print(results->rawbuf[i] * MICROS_PER_TICK, DEC);
         if (i < results->rawlen - 1)
             Serial.print(","); // ',' not needed on last one
         if (!(i & 1))

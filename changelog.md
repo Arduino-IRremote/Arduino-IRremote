@@ -13,7 +13,7 @@ Changes from #283 by bengtmartensson
 - Added function sendRaw_P() for sending data from flash.
 Changes from #268 by adamlhumphreys
 - Optimized by reducing floating point operations as suggested by @madmalkav (#193)
-- Optimized with macros when using default USECPERTICK and TOLERANCE
+- Optimized with macros when using default MICROS_PER_TICK and TOLERANCE
 - Made decodeHash as a settable protocol defined by DECODE_HASH
 
 ## 2.5.0 ???

@@ -80,7 +80,7 @@ bool IRrecv::decodeSharpAlt(decode_results *results) {
 
     // Check for repeat.
     static boolean is_first_repeat = true;
-    long initial_space = ((long) results->rawbuf[0]) * USECPERTICK;
+    long initial_space = ((long) results->rawbuf[0]) * MICROS_PER_TICK;
     if (initial_space <= SHARP_ALT_RPT_SPACE) {
         if (!is_first_repeat) {
             results->bits = 0;

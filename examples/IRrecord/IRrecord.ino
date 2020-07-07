@@ -74,11 +74,11 @@ void storeCode(decode_results *results) {
         for (int i = 1; i <= codeLen; i++) {
             if (i % 2) {
                 // Mark
-                rawCodes[i - 1] = results->rawbuf[i] * USECPERTICK - MARK_EXCESS;
+                rawCodes[i - 1] = results->rawbuf[i] * MICROS_PER_TICK - MARK_EXCESS_MICROS;
                 Serial.print(" m");
             } else {
                 // Space
-                rawCodes[i - 1] = results->rawbuf[i] * USECPERTICK + MARK_EXCESS;
+                rawCodes[i - 1] = results->rawbuf[i] * MICROS_PER_TICK + MARK_EXCESS_MICROS;
                 Serial.print(" s");
             }
             Serial.print(rawCodes[i - 1], DEC);

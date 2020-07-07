@@ -21,7 +21,7 @@ int IRrecv::getRClevel(decode_results *results, unsigned int *offset, int *used,
     }
     width = results->rawbuf[*offset];
     val = ((*offset) % 2) ? MARK : SPACE;
-    correction = (val == MARK) ? MARK_EXCESS : - MARK_EXCESS;
+    correction = (val == MARK) ? MARK_EXCESS_MICROS : - MARK_EXCESS_MICROS;
 
     if (MATCH(width, (t1) + correction)) {
         avail = 1;

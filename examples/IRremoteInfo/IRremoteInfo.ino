@@ -165,11 +165,11 @@ void dumpPlatform() {
 
 void dumpPulseParams() {
     Serial.print(F("Mark Excess: "));
-    Serial.print(MARK_EXCESS);
+    Serial.print(MARK_EXCESS_MICROS);
     ;
     Serial.println(F(" uSecs"));
     Serial.print(F("Microseconds per tick: "));
-    Serial.print(USECPERTICK);
+    Serial.print(MICROS_PER_TICK);
     ;
     Serial.println(F(" uSecs"));
     Serial.print(F("Measurement tolerance: "));
