@@ -304,7 +304,7 @@ static void dump(Stream& stream, decode_results* results) {
     count &=  ~1;
     for (unsigned int i = 1; i < count; i++) {
         stream.write(i & 1 ? '+' : '-');
-        stream.print(results->rawbuf[i] * USECPERTICK, DEC);
+        stream.print(results->rawbuf[i] * MICROS_PER_TICK, DEC);
         stream.print(" ");
     }
     stream.print('-');

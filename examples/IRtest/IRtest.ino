@@ -45,10 +45,10 @@ void dump(decode_results *results) {
 
   for (int i = 0; i < count; i++) {
     if ((i % 2) == 1) {
-      Serial.print(results->rawbuf[i]*USECPERTICK, DEC);
+      Serial.print(results->rawbuf[i]*MICROS_PER_TICK, DEC);
     } 
     else {
-      Serial.print(-(int)results->rawbuf[i]*USECPERTICK, DEC);
+      Serial.print(-(int)results->rawbuf[i]*MICROS_PER_TICK, DEC);
     }
     Serial.print(" ");
   }
@@ -89,23 +89,23 @@ public:
       if (sendlog[i] < 0) {
         if (last == MARK) {
           // New space
-          irparams.rawbuf[irparams.rawlen++] = (-sendlog[i] - MARK_EXCESS) / USECPERTICK;
+          irparams.rawbuf[irparams.rawlen++] = (-sendlog[i] - MARK_EXCESS) / MICROS_PER_TICK;
           last = SPACE;
         } 
         else {
           // More space
-          irparams.rawbuf[irparams.rawlen - 1] += -sendlog[i] / USECPERTICK;
+          irparams.rawbuf[irparams.rawlen - 1] += -sendlog[i] / MICROS_PER_TICK;
         }
       } 
       else if (sendlog[i] > 0) {
         if (last == SPACE) {
           // New mark
-          irparams.rawbuf[irparams.rawlen++] = (sendlog[i] + MARK_EXCESS) / USECPERTICK;
+          irparams.rawbuf[irparams.rawlen++] = (sendlog[i] + MARK_EXCESS) / MICROS_PER_TICK;
           last = MARK;
         } 
         else {
           // More mark
-          irparams.rawbuf[irparams.rawlen - 1] += sendlog[i] / USECPERTICK;
+          irparams.rawbuf[irparams.rawlen - 1] += sendlog[i] / MICROS_PER_TICK;
         }
       }
     }
