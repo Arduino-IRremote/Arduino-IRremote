@@ -79,9 +79,6 @@
 #define DECODE_DENON         1
 #define SEND_DENON           1
 
-#define DECODE_PRONTO        0 // This function does not logically make sense
-#define SEND_PRONTO          0 // Not tested yet
-
 #define DECODE_LEGO_PF       0 // NOT WRITTEN
 #define SEND_LEGO_PF         1
 
@@ -89,21 +86,6 @@
 #define SEND_BOSEWAVE        1
 
 #define DECODE_HASH          1 // special decoder for all protocols
-
-//------------------------------------------------------------------------------
-// When sending a Pronto code we request to send either the "once" code
-//                                                   or the "repeat" code
-// If the code requested does not exist we can request to fallback on the
-// other code (the one we did not explicitly request)
-//
-// I would suggest that "fallback" will be the standard calling method
-// The last paragraph on this page discusses the rationale of this idea:
-//   http://www.remotecentral.com/features/irdisp2.htm
-//
-#define PRONTO_ONCE        false
-#define PRONTO_REPEAT      true
-#define PRONTO_FALLBACK    true
-#define PRONTO_NOFALLBACK  false
 
 /**
  * An enum consisting of all supported formats.
@@ -128,7 +110,6 @@ typedef enum {
     SHARP,
     SHARP_ALT,
     DENON,
-    PRONTO,
     LEGO_PF,
     BOSEWAVE,
 } decode_type_t;
@@ -416,10 +397,6 @@ public:
     //......................................................................
 #if SEND_DENON
     void sendDenon(unsigned long data, int nbits);
-#endif
-    //......................................................................
-#if SEND_PRONTO
-    bool sendPronto(char* code, bool repeat, bool fallback);
 #endif
     //......................................................................
 #if SEND_LEGO_PF

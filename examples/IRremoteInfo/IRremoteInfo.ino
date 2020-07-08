@@ -277,10 +277,6 @@ void dumpProtocols() {
     Serial.print(F("BOSEWAVE:     "));
     printSendEnabled(SEND_BOSEWAVE);
     printDecodeEnabled(DECODE_BOSEWAVE);
-
-    Serial.print(F("PRONTO:       "));
-    printSendEnabled(SEND_PRONTO);
-    Serial.println(F("(Not Applicable)"));
 }
 
 void printSendEnabled(int flag) {
