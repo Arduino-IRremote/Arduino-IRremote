@@ -26,6 +26,14 @@
 //
 #include "private/IRremoteInt.h"
 
+#ifdef ARDUINO_ARCH_AVR
+#include <avr/pgmspace.h>
+#define HAS_FLASH_READ 1
+#define STRCPY_PF_CAST(x) (x)
+#else
+#define HAS_FLASH_READ 0
+#endif
+
 //------------------------------------------------------------------------------
 // Supported IR protocols
 // Each protocol you include costs memory and, during decode, costs time
@@ -219,6 +227,14 @@ public:
      */
     void resume();
 
+    /**
+     * Print the result (second argument) as Pronto Hex on the Stream supplied as argument.
+     * @param stream The Stream on which to write, often Serial
+     * @param results the decode_results as delivered from irrecv.decode.
+     * @param frequency Modulation frequency in Hz. Often 38000Hz.
+     */
+    void dumpPronto(Stream& stream, decode_results *results, unsigned int frequency = 38000U);
+
 private:
 #if DECODE_HASH
     long decodeHash(decode_results *results);
@@ -405,6 +421,39 @@ public:
     //......................................................................
 #if SEND_BOSEWAVE
     void sendBoseWave(unsigned char code);
+#endif
+
+    /**
+     * Parse the string given as Pronto Hex, and send it a number of times given
+     * as the second argument. Thereby the division of the Pronto Hex into
+     * an intro-sequence and a repeat sequence is taken into account:
+     * First the intro sequence is sent, then the repeat sequence is sent times-1 times.
+     * However, if the intro sequence is empty, the repeat sequence is sent times times.
+     * <a href="http://www.harctoolbox.org/Glossary.html#ProntoSemantics">Reference</a>.
+     *
+     * Note: Using this function is very wasteful for the memory consumption on
+     * a small board.
+     * Normally it is a much better ide to use a tool like e.g. IrScrutinizer
+     * to transform Pronto type signals offline
+     * to a more memory efficient format.
+     *
+     * @param prontoHexString C type string (null terminated) containing a Pronto Hex representation.
+     * @param times Number of times to send the signal.
+     */
+    void sendPronto(const char* prontoHexString, unsigned int times = 1U);
+
+    void sendPronto(const unsigned int* data, unsigned int length, unsigned int times = 1U);
+
+#if HAS_FLASH_READ || defined(DOXYGEN)
+    void sendPronto_PF(uint_farptr_t str, unsigned int times = 1U);
+
+    /**
+     * Version of sendPronto that reads from PROGMEM, saving RAM memory.
+     * @param pronto C type string (null terminated) containing a Pronto Hex representation.
+     * @param times Number of times to send the signal.
+     */
+    void sendPronto_PF(const char *str, unsigned int times = 1U);
+    void sendPronto(const __FlashStringHelper *str, unsigned int times = 1U);
 #endif
 
 #if defined(USE_SOFT_CARRIER) || defined(USE_NO_CARRIER)
