@@ -9,7 +9,7 @@
 #if defined(ESP32)
 int IR_RECEIVE_PIN = 15;
 #else
-int IR_RECEIVE_PIN = 5;
+int IR_RECEIVE_PIN = 11;
 #endif
 IRrecv irrecv(IR_RECEIVE_PIN);
 
