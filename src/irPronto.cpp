@@ -23,7 +23,7 @@ static unsigned int toFrequencyKHz(uint16_t code) {
     return ((referenceFrequency / code) + 500) / 1000;
 }
 
-void IRsend::sendPronto(const unsigned int *data, unsigned int size, unsigned int times) {
+void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int times) {
     unsigned int timebase = (microsecondsInSeconds * data[1] + referenceFrequency / 2) / referenceFrequency;
     unsigned int khz;
     switch (data[0]) {
@@ -132,7 +132,7 @@ static void dumpDuration(Stream& stream, uint16_t duration, uint16_t timebase) {
     dumpNumber(stream, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
 }
 
-static void dumpSequence(Stream& stream, const uint16_t *data, size_t length, uint16_t timebase) {
+static void dumpSequence(Stream& stream, const volatile unsigned int *data, size_t length, uint16_t timebase) {
     for (unsigned int i = 0; i < length; i++)
         dumpDuration(stream, data[i], timebase);
 
