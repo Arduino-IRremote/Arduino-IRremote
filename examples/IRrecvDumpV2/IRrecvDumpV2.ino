@@ -216,6 +216,15 @@ void dumpCode(decode_results *results) {
 }
 
 //+=============================================================================
+// Dump out the raw data as Pronto Hex.
+//
+void dumpPronto(decode_results *results) {
+    Serial.print("Pronto Hex: ");
+    irrecv.dumpPronto(Serial, results);
+    Serial.println();
+}
+
+//+=============================================================================
 // The repeating section of the code
 //
 void loop() {
@@ -224,6 +233,7 @@ void loop() {
     if (irrecv.decode(&results)) {  // Grab an IR code
         dumpInfo(&results);           // Output the results
         dumpRaw(&results);            // Output the results in RAW format
+        dumpPronto(&results);
         dumpCode(&results);           // Output the results as source code
         Serial.println("");           // Blank line between entries
         irrecv.resume();              // Prepare for the next value
