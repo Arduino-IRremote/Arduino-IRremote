@@ -179,28 +179,15 @@
 
 // Do not define any timer.
 
+/*********************
+ * ARDUINO Boards
+ *********************/
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
 #elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) // old default clause
 #  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER2)
 //#define IR_USE_TIMER1   // tx = pin 9
 #define IR_USE_TIMER2     // tx = pin 3
-#  endif
-
-// Sparkfun Pro Micro
-#elif defined(ARDUINO_AVR_PROMICRO)
-#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4_HS)
-//#define IR_USE_TIMER1     // tx = pin 9
-#define IR_USE_TIMER3       // tx = pin 5
-//#define IR_USE_TIMER4_HS  // tx = pin 13
-#  endif
-
-// Leonardo
-#elif defined(__AVR_ATmega32U4__) && ! defined(TEENSYDUINO)
-#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4_HS)
-//#define IR_USE_TIMER1     // tx = pin 9
-#define IR_USE_TIMER3       // tx = pin 5
-//#define IR_USE_TIMER4_HS  // tx = pin 13
 #  endif
 
 // Arduino Mega
@@ -213,6 +200,14 @@
 //#define IR_USE_TIMER5   // tx = pin 46
 #  endif
 
+// Leonardo
+#elif defined(__AVR_ATmega32U4__) && ! defined(TEENSYDUINO) && ! defined(ARDUINO_AVR_PROMICRO)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4_HS)
+//#define IR_USE_TIMER1     // tx = pin 9
+#define IR_USE_TIMER3       // tx = pin 5
+//#define IR_USE_TIMER4_HS  // tx = pin 13
+#  endif
+
 // Nano Every, Uno WiFi Rev2
 #elif defined(__AVR_ATmega4809__)
 #  if !defined(IR_USE_TIMER_4809_1) && !defined(IR_USE_TIMER_4809_2)
@@ -220,6 +215,42 @@
 //#define IR_USE_TIMER_4809_2     // TODO tx = pin 21
 #  endif
 
+/*********************
+ * Plain AVR CPU's
+ *********************/
+// Atmega8
+#elif defined(__AVR_ATmega8__)
+#  if !defined(IR_USE_TIMER1)
+#define IR_USE_TIMER1     // tx = pin 9
+#  endif
+
+
+// ATtiny84
+#elif defined(__AVR_ATtiny84__)
+#  if !defined(IR_USE_TIMER1)
+#define IR_USE_TIMER1     // tx = pin 6
+#  endif
+
+//ATtiny85
+#elif defined(__AVR_ATtiny85__)
+#  if !defined(IR_USE_TIMER_TINY0)
+#define IR_USE_TIMER_TINY0   // tx = pin 1
+#  endif
+
+/*********************
+ * SPARKFUN Boards
+ *********************/
+// Sparkfun Pro Micro
+#elif defined(ARDUINO_AVR_PROMICRO)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4_HS)
+//#define IR_USE_TIMER1     // tx = pin 9
+#define IR_USE_TIMER3       // tx = pin 5
+//#define IR_USE_TIMER4_HS  // tx = pin 13
+#  endif
+
+/*********************
+ * TEENSY Boards
+ *********************/
 // Teensy 1.0
 #elif defined(__AVR_AT90USB162__)
 #  if !defined(IR_USE_TIMER1)
@@ -254,6 +285,27 @@
 //#define IR_USE_TIMER3   // tx = pin 16
 #  endif
 
+/*********************
+ * CPU's with MegaCore
+ *********************/
+// MegaCore - ATmega64, ATmega128
+#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) || defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2560__)
+#  if !defined(IR_USE_TIMER1)
+ #define IR_USE_TIMER1     // tx = pin 13
+#  endif
+
+/*********************
+ * CPU's with MajorCore
+ *********************/
+#elif defined(__AVR_ATmega8515__) || defined(__AVR_ATmega162__)
+#  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER3)
+    #define IR_USE_TIMER1     // tx = pin 13
+    //#define IR_USE_TIMER3   // tx = pin 12 - ATmega162 only
+#endif
+
+/*********************
+ * CPU's with MightyCore
+ *********************/
 // MightyCore - ATmega1284
 #elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__)
 #  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER2) && !defined(IR_USE_TIMER3)
@@ -272,36 +324,15 @@
 #define IR_USE_TIMER2     // tx = pin 14
 #  endif
 
-//MegaCore - ATmega64, ATmega128
-#elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
-#  if !defined(IR_USE_TIMER1)
- #define IR_USE_TIMER1     // tx = pin 13
-#  endif
-
 // MightyCore - ATmega8535, ATmega16, ATmega32
 #elif defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__)
 #  if !defined(IR_USE_TIMER1)
 #define IR_USE_TIMER1     // tx = pin 13
 #  endif
 
-// Atmega8
-#elif defined(__AVR_ATmega8__)
-#  if !defined(IR_USE_TIMER1)
-#define IR_USE_TIMER1     // tx = pin 9
-#  endif
-
-// ATtiny84
-#elif defined(__AVR_ATtiny84__)
-#  if !defined(IR_USE_TIMER1)
-#define IR_USE_TIMER1     // tx = pin 6
-#  endif
-
-//ATtiny85
-#elif defined(__AVR_ATtiny85__)
-#  if !defined(IR_USE_TIMER_TINY0)
-#define IR_USE_TIMER_TINY0   // tx = pin 1
-#  endif
-
+/*********************
+ * OTHER CPU's
+ *********************/
 #elif defined(ESP32)
 #  if !defined(IR_TIMER_USE_ESP32)
 #define IR_TIMER_USE_ESP32
@@ -443,9 +474,10 @@ TCNT2  = 0; \
 #define TIMER_DISABLE_PWM  (TCCR1A &= ~(_BV(COM1A1)))
 
 //-----------------
-#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8535__) \
-|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__) \
-|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8515__) \
+|| defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) \
+|| defined(__AVR_ATmega32__) || defined(__AVR_ATmega64__) \
+|| defined(__AVR_ATmega128__) || defined(__AVR_ATmega162__)
 #define TIMER_ENABLE_INTR   (TIMSK |= _BV(OCIE1A))
 #define TIMER_DISABLE_INTR  (TIMSK &= ~_BV(OCIE1A))
 #else
@@ -484,8 +516,10 @@ TCNT1  = 0; \
 || defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
 || defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
 || defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__) \
-|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__)
-#define IR_SEND_PIN  13             // MightyCore, MegaCore
+|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) \
+|| defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2561__) \
+|| defined(__AVR_ATmega8515__) || defined(__AVR_ATmega162__)
+#define IR_SEND_PIN  13             // MightyCore, MegaCore, MajorCore
 
 #elif defined(__AVR_ATtiny84__)
 # define IR_SEND_PIN  6
