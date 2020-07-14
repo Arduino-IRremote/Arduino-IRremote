@@ -218,6 +218,12 @@
 /*********************
  * Plain AVR CPU's
  *********************/
+// ATmega8u2, ATmega16U2, ATmega32U2
+#elif defined(__AVR_ATmega8U2__) || defined(__AVR_ATmega16U2__)  || defined(__AVR_ATmega32U2__)
+#  if !defined(IR_USE_TIMER1)
+    #define IR_USE_TIMER1     // tx = pin C6
+#endif
+
 // Atmega8
 #elif defined(__AVR_ATmega8__)
 #  if !defined(IR_USE_TIMER1)
