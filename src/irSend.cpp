@@ -89,10 +89,10 @@ void IRsend::mark(unsigned int time) {
     digitalWrite(sendPin, LOW); // Set output to active low.
 #else
     TIMER_ENABLE_PWM; // Enable pin 3 PWM output
+#endif
     if (time > 0) {
         custom_delay_usec(time);
     }
-#endif
 }
 
 //+=============================================================================

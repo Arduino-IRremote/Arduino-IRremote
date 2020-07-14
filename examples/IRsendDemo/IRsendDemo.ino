@@ -32,9 +32,12 @@ void setup() {
 }
 
 void loop() {
+    unsigned long tData = 0xa90;
     for (int i = 0; i < 3; i++) {
-        irsend.sendSony(0xa90, 12);
-        Serial.println(F("sendSony(0xa90, 12)"));
+        irsend.sendSony(tData, 12);
+        Serial.print(F("sendSony(0x"));
+        Serial.print(tData,HEX);
+        Serial.println(F(", 12)"));
 //        irsend.sendJVC(0xC5B8, 16,0); // hex value, 16 bits, no repeat
 //        delayMicroseconds(50); // see http://www.sbprojects.com/knowledge/ir/jvc.php for information
 //        irsend.sendJVC(0xC5B8, 16,1); // hex value, 16 bits, repeat
@@ -42,5 +45,7 @@ void loop() {
 
         delay(40);
     }
+
+    tData++;
     delay(5000); //5 second delay between each signal burst
 }
