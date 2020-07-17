@@ -81,7 +81,7 @@
 /**
  * Board dependent macro to turn BLINKLED off.
  */
-#define BLINKLED_OFF()  digitalWrite(BLINKLED, HIGH)
+#define BLINKLED_OFF()  digitalWrite(BLINKLED, LOW)
 
 /**
  * Define to use no carrier PWM, just simulate a receiver signal.

@@ -1,3 +1,6 @@
+## 2.5.0 2020/07
+- Added support for MagiQuest IR wands
+
 ## 2.5.0 2020/06
 - corrected keywords.txt.
 - BoseWave protocol added PR #690.
