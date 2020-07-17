@@ -125,6 +125,11 @@ int IRrecv::decode(decode_results *results) {
     if (decodeLegoPowerFunctions(results))  {return true ;}
 #endif
 
+#if DECODE_MAGIQUEST
+    DBG_PRINTLN("Attempting MagiQuest decode");
+    if (decodeMagiQuest(results))  {return true ;}
+#endif
+
 #if DECODE_HASH
     DBG_PRINTLN("Hash decode");
     // decodeHash returns a hash on any input.

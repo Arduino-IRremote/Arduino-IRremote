@@ -17,6 +17,7 @@
 // JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
 // LG added by Darryl Smith (based on the JVC protocol)
 // Whynter A/C ARC-110WD added by Francesco Meschia
+// MagiQuest added by E. Stuart Hicks (based on code by mpflaga - https://github.com/mpflaga/Arduino-IRremote/)
 //******************************************************************************
 #ifndef IRremote_h
 #define IRremote_h
@@ -93,6 +94,9 @@
 #define DECODE_BOSEWAVE      1
 #define SEND_BOSEWAVE        1
 
+#define DECODE_MAGIQUEST     1
+#define SEND_MAGIQUEST       1
+
 #define DECODE_HASH          1 // special decoder for all protocols
 
 /**
@@ -120,6 +124,7 @@ typedef enum {
     DENON,
     LEGO_PF,
     BOSEWAVE,
+    MAGIQUEST,
 } decode_type_t;
 
 /**
@@ -165,6 +170,7 @@ public:
     decode_type_t decode_type;  ///< UNKNOWN, NEC, SONY, RC5, ...
     unsigned int address;       ///< Used by Panasonic & Sharp [16-bits]
     unsigned long value;        ///< Decoded value [max 32-bits]
+    unsigned int magnitude;     ///< Used by MagiQuest [16-bits]
     int bits;                   ///< Number of bits in decoded value
     volatile unsigned int *rawbuf;      ///< Raw intervals in 50uS ticks
     unsigned int rawlen;        ///< Number of records in rawbuf
@@ -322,6 +328,10 @@ private:
 #if DECODE_BOSEWAVE
     bool decodeBoseWave(decode_results *results);
 #endif
+    //......................................................................
+#if DECODE_MAGIQUEST
+    bool decodeMagiQuest(decode_results *results);
+#endif
 };
 
 /**
@@ -421,6 +431,10 @@ public:
     //......................................................................
 #if SEND_BOSEWAVE
     void sendBoseWave(unsigned char code);
+#endif
+    //......................................................................
+#if SEND_MAGIQUEST
+    void sendMagiQuest(unsigned long wand_id, unsigned int magnitude);
 #endif
 
     /**
