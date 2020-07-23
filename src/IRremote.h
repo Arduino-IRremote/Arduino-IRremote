@@ -365,7 +365,7 @@ public:
 #endif
     //......................................................................
 #if SEND_NEC
-    void sendNEC(unsigned long data, int nbits);
+    void sendNEC(unsigned long data, int nbits, bool repeat = false);
 #endif
     //......................................................................
 #if SEND_SONY
@@ -381,7 +381,7 @@ public:
     // The JVC protocol repeats by skipping the header.
     // To send a JVC repeat signal, send the original code value
     //   and set 'repeat' to true
-    void sendJVC(unsigned long data, int nbits, bool repeat);
+    void sendJVC(unsigned long data, int nbits, bool repeat = false);
 #endif
     //......................................................................
 #if SEND_SAMSUNG
