@@ -9,8 +9,8 @@
 //==============================================================================
 
 #define SAMSUNG_BITS          32
-#define SAMSUNG_HDR_MARK    5000
-#define SAMSUNG_HDR_SPACE   5000
+#define SAMSUNG_HDR_MARK    4500
+#define SAMSUNG_HDR_SPACE   4500
 #define SAMSUNG_BIT_MARK     560
 #define SAMSUNG_ONE_SPACE   1600
 #define SAMSUNG_ZERO_SPACE   560
