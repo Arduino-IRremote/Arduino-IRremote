@@ -90,17 +90,17 @@ bool IRrecv::decodeMagiQuest(decode_results *results) {
 
     // Check we have enough data
     if (irparams.rawlen < 2 * MAGIQUEST_BITS) {
-    	DBG_PRINT("Not enough bits to be a MagiQuest packet (");
-    	DBG_PRINT(irparams.rawlen);
-    	DBG_PRINT(" < ");
-    	DBG_PRINT(MAGIQUEST_BITS*2);
-    	DBG_PRINTLN(")");
-    	return false;
+        DBG_PRINT("Not enough bits to be a MagiQuest packet (");
+        DBG_PRINT(irparams.rawlen);
+        DBG_PRINT(" < ");
+        DBG_PRINT(MAGIQUEST_BITS*2);
+        DBG_PRINTLN(")");
+        return false;
     }
 
     // Read the bits in
     data.llword = 0;
-    while (offset+1 < irparams.rawlen) {
+    while (offset + 1 < irparams.rawlen) {
         mark_ = results->rawbuf[offset++];
         space_ = results->rawbuf[offset++];
         ratio_ = space_ / mark_;
@@ -114,16 +114,16 @@ bool IRrecv::decodeMagiQuest(decode_results *results) {
 
         if (MATCH_MARK(space_ + mark_, MAGIQUEST_PERIOD)) {
             if (ratio_ > 1) {
-            	// It's a 0
-            	data.llword <<= 1;
+                // It's a 0
+                data.llword <<= 1;
 #if DEBUG
-            	bitstring[(offset/2)-1] = '0';
+                bitstring[(offset/2)-1] = '0';
 #endif
             } else {
-            	// It's a 1
-            	data.llword = (data.llword << 1) | 1;
+                // It's a 1
+                data.llword = (data.llword << 1) | 1;
 #if DEBUG
-            	bitstring[(offset/2)-1] = '1';
+                bitstring[(offset/2)-1] = '1';
 #endif
             }
         } else {
