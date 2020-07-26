@@ -22,5 +22,6 @@ These are the active contributors of this project that you may contact if there 
 - [bengtmartensson](https://github.com/bengtmartensson) providing support
 - [AnalysIR](https:/github.com/AnalysIR) providing support
 - [ArminJo](https://github.com/ArminJo) Maintainer
+- [eshicks4](https://github.com/eshicks4)
 
 Note: Please let [z3t0](https://github.com/z3t0) know if you have been missed.
