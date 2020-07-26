@@ -1,5 +1,4 @@
 #include "IRremote.h"
-#include <math.h>
 
 // Based off the Magiquest fork of Arduino-IRremote by mpflaga
 // https://github.com/mpflaga/Arduino-IRremote/
@@ -15,7 +14,6 @@
 // MagiQuest packet is both Wand ID and magnitude of swish and flick
 union magiquest_t {
     unsigned long long llword;
-    unsigned char byte[8];
     struct {
         unsigned int magnitude;
         unsigned long wand_id;
@@ -34,10 +32,12 @@ union magiquest_t {
  *     1150 * 0.5 = 575 usec mark
  *     1150 - 575 = 575 usec space
  */
-#define MAGIQUEST_ONE_MARK 575
-#define MAGIQUEST_ONE_SPACE 575
-#define MAGIQUEST_ZERO_MARK 288
-#define MAGIQUEST_ZERO_SPACE 862
+#define MAGIQUEST_ONE_MARK    575
+#define MAGIQUEST_ONE_SPACE   575
+#define MAGIQUEST_ZERO_MARK   288
+#define MAGIQUEST_ZERO_SPACE  862
+
+#define MAGIQUEST_MASK        (1ULL << (MAGIQUEST_BITS-1))
 
 //+=============================================================================
 //
@@ -53,18 +53,18 @@ void IRsend::sendMagiQuest(unsigned long wand_id, unsigned int magnitude) {
     enableIROut(38);
 
     // Data
-    for (unsigned long long mask = (unsigned long long)pow(2, MAGIQUEST_BITS-1); mask > 0; mask >>= 1) {
+    for (unsigned long long mask = MAGIQUEST_MASK; mask > 0; mask >>= 1) {
         if (data.llword & mask) {
-        	DBG_PRINT("1");
+            DBG_PRINT("1");
             mark(MAGIQUEST_ONE_MARK);
             space(MAGIQUEST_ONE_SPACE);
         } else {
-        	DBG_PRINT("0");
+            DBG_PRINT("0");
             mark(MAGIQUEST_ZERO_MARK);
             space(MAGIQUEST_ZERO_SPACE);
         }
     }
-	DBG_PRINTLN("");
+    DBG_PRINTLN("");
 
     // Footer
     mark(MAGIQUEST_ZERO_MARK);
@@ -127,8 +127,8 @@ bool IRrecv::decodeMagiQuest(decode_results *results) {
 #endif
             }
         } else {
-        	DBG_PRINTLN("MATCH_MARK failed");
-        	return false;
+            DBG_PRINTLN("MATCH_MARK failed");
+            return false;
         }
     }
 #if DEBUG
@@ -141,12 +141,12 @@ bool IRrecv::decodeMagiQuest(decode_results *results) {
     results->value = data.cmd.wand_id;
     results->magnitude = data.cmd.magnitude;
 
-   	DBG_PRINT("MQ: bits=");
-   	DBG_PRINT(results->bits);
-   	DBG_PRINT(" value=");
-   	DBG_PRINT(results->value);
-   	DBG_PRINT(" magnitude=");
-   	DBG_PRINTLN(results->magnitude);
+    DBG_PRINT("MQ: bits=");
+    DBG_PRINT(results->bits);
+    DBG_PRINT(" value=");
+    DBG_PRINT(results->value);
+    DBG_PRINT(" magnitude=");
+    DBG_PRINTLN(results->magnitude);
 
     return true;
 }
