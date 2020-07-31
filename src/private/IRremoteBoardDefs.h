@@ -424,33 +424,34 @@
 #define TIMER_ENABLE_INTR   (TIMSK2 = _BV(OCIE2A))
 #define TIMER_DISABLE_INTR  (TIMSK2 = 0)
 #define TIMER_INTR_NAME     TIMER2_COMPA_vect
-
-#define TIMER_CONFIG_KHZ(val) ({ \
-const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
-TCCR2A               = _BV(WGM20); \
-TCCR2B               = _BV(WGM22) | _BV(CS20); \
-OCR2A                = pwmval; \
-OCR2B                = pwmval * DUTY_CYCLE / 100; \
-})
+// COM2A = 00: disconnect OC2A
+// COM2B = 00: disconnect OC2B; to send signal set to 10: OC2B non-inverted
+// WGM2 = 101: phase-correct PWM with OCRA as top
+// CS2  = 000: no prescaling
+// The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
+#pragma GCC diagnostic ignored "-Wunused-function"
+static void timerConfigkHz(uint16_t frequency) {
+    const uint16_t pwmval = (SYSCLOCK / 2000) / (frequency);
+    TCCR2A = _BV(WGM20);
+    TCCR2B = _BV(WGM22) | _BV(CS20);
+    OCR2A = pwmval;
+    OCR2B = pwmval * DUTY_CYCLE / 100;
+}
 
 #define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
-
-//-----------------
+static void timerConfigNormal() {
 #if (TIMER_COUNT_TOP < 256)
-#define TIMER_CONFIG_NORMAL() ({ \
-TCCR2A = _BV(WGM21); \
-TCCR2B = _BV(CS20); \
-OCR2A  = TIMER_COUNT_TOP; \
-TCNT2  = 0; \
-})
+    TCCR2A = _BV(WGM21);
+    TCCR2B = _BV(CS20);
+    OCR2A  = TIMER_COUNT_TOP;
+    TCNT2  = 0;
 #else
-#define TIMER_CONFIG_NORMAL() ({ \
-TCCR2A = _BV(WGM21); \
-TCCR2B = _BV(CS21); \
-OCR2A  = TIMER_COUNT_TOP / 8; \
-TCNT2  = 0; \
-})
+    TCCR2A = _BV(WGM21);
+    TCCR2B = _BV(CS21);
+    OCR2A = TIMER_COUNT_TOP / 8;
+    TCNT2 = 0;
 #endif
+}
 
 //-----------------
 #if defined(CORE_OC2B_PIN)
@@ -494,20 +495,20 @@ TCNT2  = 0; \
 //-----------------
 #define TIMER_INTR_NAME       TIMER1_COMPA_vect
 
-#define TIMER_CONFIG_KHZ(val) ({ \
-const uint32_t pwmval = SYSCLOCK / 2000 / (val); \
-TCCR1A                = _BV(WGM11); \
-TCCR1B                = _BV(WGM13) | _BV(CS10); \
-ICR1                  = pwmval; \
-OCR1A                 = pwmval * DUTY_CYCLE / 100; \
-})
+static void timerConfigkHz(uint16_t frequency) {
+    const uint32_t pwmval = SYSCLOCK / 2000 / (frequency);
+    TCCR1A = _BV(WGM11);
+    TCCR1B = _BV(WGM13) | _BV(CS10);
+    ICR1 = pwmval;
+    OCR1A = pwmval * DUTY_CYCLE / 100;
+}
 
-#define TIMER_CONFIG_NORMAL() ({ \
-TCCR1A = 0; \
-TCCR1B = _BV(WGM12) | _BV(CS10); \
-OCR1A  = SYSCLOCK * MICROS_PER_TICK / 1000000; \
-TCNT1  = 0; \
-})
+static void timerConfigNormal() {
+    TCCR1A = 0;
+    TCCR1B = _BV(WGM12) | _BV(CS10);
+    OCR1A = SYSCLOCK * MICROS_PER_TICK / 1000000;
+    TCNT1 = 0;
+}
 
 //-----------------
 #if defined(CORE_OC1A_PIN)
@@ -546,20 +547,20 @@ TCNT1  = 0; \
 #define TIMER_DISABLE_INTR   (TIMSK3 = 0)
 #define TIMER_INTR_NAME      TIMER3_COMPA_vect
 
-#define TIMER_CONFIG_KHZ(val) ({ \
-  const uint32_t pwmval = SYSCLOCK / 2000 / (val); \
-  TCCR3A = _BV(WGM31); \
-  TCCR3B = _BV(WGM33) | _BV(CS30); \
-  ICR3 = pwmval; \
-  OCR3A = pwmval * DUTY_CYCLE / 100; \
-})
+static void timerConfigkHz(uint16_t frequency) {
+    const uint32_t pwmval = SYSCLOCK / 2000 / (frequency);
+    TCCR3A = _BV(WGM31);
+    TCCR3B = _BV(WGM33) | _BV(CS30);
+    ICR3 = pwmval;
+    OCR3A = pwmval * DUTY_CYCLE / 100;
+}
 
-#define TIMER_CONFIG_NORMAL() ({ \
-  TCCR3A = 0; \
-  TCCR3B = _BV(WGM32) | _BV(CS30); \
-  OCR3A = SYSCLOCK * MICROS_PER_TICK / 1000000; \
-  TCNT3 = 0; \
-})
+static void timerConfigNormal() {
+    TCCR3A = 0;
+    TCCR3B = _BV(WGM32) | _BV(CS30);
+    OCR3A = SYSCLOCK * MICROS_PER_TICK / 1000000;
+    TCNT3 = 0;
+}
 
 //-----------------
 #if defined(CORE_OC3A_PIN)
@@ -594,30 +595,30 @@ TCNT1  = 0; \
 #define TIMER_DISABLE_INTR  (TIMSK4 = 0)
 #define TIMER_INTR_NAME     TIMER4_OVF_vect
 
-#define TIMER_CONFIG_KHZ(val) ({ \
-const uint32_t pwmval = SYSCLOCK / 2000 / (val); \
-TCCR4A                = (1<<PWM4A); \
-TCCR4B                = _BV(CS40); \
-TCCR4C                = 0; \
-TCCR4D                = (1<<WGM40); \
-TCCR4E                = 0; \
-TC4H                  = pwmval >> 8; \
-OCR4C                 = pwmval; \
-TC4H                  = (pwmval * DUTY_CYCLE / 100) >> 8; \
-OCR4A                 = (pwmval * DUTY_CYCLE / 100) & 255; \
-})
+static void timerConfigkHz(uint16_t frequency) {
+    const uint32_t pwmval = SYSCLOCK / 2000 / (frequency);
+    TCCR4A = (1 << PWM4A);
+    TCCR4B = _BV(CS40);
+    TCCR4C = 0;
+    TCCR4D = (1 << WGM40);
+    TCCR4E = 0;
+    TC4H = pwmval >> 8;
+    OCR4C = pwmval;
+    TC4H = (pwmval * DUTY_CYCLE / 100) >> 8;
+    OCR4A = (pwmval * DUTY_CYCLE / 100) & 255;
+}
 
-#define TIMER_CONFIG_NORMAL() ({ \
-TCCR4A = 0; \
-TCCR4B = _BV(CS40); \
-TCCR4C = 0; \
-TCCR4D = 0; \
-TCCR4E = 0; \
-TC4H   = (SYSCLOCK * MICROS_PER_TICK / 1000000) >> 8; \
-OCR4C  = (SYSCLOCK * MICROS_PER_TICK / 1000000) & 255; \
-TC4H   = 0; \
-TCNT4  = 0; \
-})
+static void timerConfigNormal() {
+    TCCR4A = 0;
+    TCCR4B = _BV(CS40);
+    TCCR4C = 0;
+    TCCR4D = 0;
+    TCCR4E = 0;
+    TC4H = (SYSCLOCK * MICROS_PER_TICK / 1000000) >> 8;
+    OCR4C = (SYSCLOCK * MICROS_PER_TICK / 1000000) & 255;
+    TC4H = 0;
+    TCNT4 = 0;
+}
 
 //-----------------
 #if defined(CORE_OC4A_PIN)
@@ -642,20 +643,20 @@ TCNT4  = 0; \
 #define TIMER_DISABLE_INTR  (TIMSK4 = 0)
 #define TIMER_INTR_NAME     TIMER4_COMPA_vect
 
-#define TIMER_CONFIG_KHZ(val) ({ \
-  const uint32_t pwmval = SYSCLOCK / 2000 / (val); \
-  TCCR4A = _BV(WGM41); \
-  TCCR4B = _BV(WGM43) | _BV(CS40); \
-  ICR4 = pwmval; \
-  OCR4A = pwmval * DUTY_CYCLE / 100; \
-})
+static void timerConfigkHz(uint16_t frequency) {
+    const uint32_t pwmval = SYSCLOCK / 2000 / (frequency);
+    TCCR4A = _BV(WGM41);
+    TCCR4B = _BV(WGM43) | _BV(CS40);
+    ICR4 = pwmval;
+    OCR4A = pwmval * DUTY_CYCLE / 100;
+}
 
-#define TIMER_CONFIG_NORMAL() ({ \
-  TCCR4A = 0; \
-  TCCR4B = _BV(WGM42) | _BV(CS40); \
-  OCR4A = SYSCLOCK * MICROS_PER_TICK / 1000000; \
-  TCNT4 = 0; \
-})
+static void timerConfigNormal() {
+    TCCR4A = 0;
+    TCCR4B = _BV(WGM42) | _BV(CS40);
+    OCR4A = SYSCLOCK * MICROS_PER_TICK / 1000000;
+    TCNT4 = 0;
+}
 
 //-----------------
 #if defined(CORE_OC4A_PIN)
@@ -678,20 +679,20 @@ TCNT4  = 0; \
 #define TIMER_DISABLE_INTR  (TIMSK5 = 0)
 #define TIMER_INTR_NAME     TIMER5_COMPA_vect
 
-#define TIMER_CONFIG_KHZ(val) ({ \
-  const uint32_t pwmval = SYSCLOCK / 2000 / (val); \
-  TCCR5A = _BV(WGM51); \
-  TCCR5B = _BV(WGM53) | _BV(CS50); \
-  ICR5 = pwmval; \
-  OCR5A = pwmval * DUTY_CYCLE / 100; \
-})
+static void timerConfigkHz(uint16_t frequency) {
+    const uint32_t pwmval = SYSCLOCK / 2000 / (frequency);
+    TCCR5A = _BV(WGM51);
+    TCCR5B = _BV(WGM53) | _BV(CS50);
+    ICR5 = pwmval;
+    OCR5A = pwmval * DUTY_CYCLE / 100;
+}
 
-#define TIMER_CONFIG_NORMAL() ({ \
-  TCCR5A = 0; \
-  TCCR5B = _BV(WGM52) | _BV(CS50); \
-  OCR5A = SYSCLOCK * MICROS_PER_TICK / 1000000; \
-  TCNT5 = 0; \
-})
+static void timerConfigNormal() {
+    TCCR5A = 0;
+    TCCR5B = _BV(WGM52) | _BV(CS50);
+    OCR5A = SYSCLOCK * MICROS_PER_TICK / 1000000;
+    TCNT5 = 0;
+}
 
 //-----------------
 #if defined(CORE_OC5A_PIN)
@@ -736,33 +737,32 @@ CORE_PIN5_CONFIG = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_SRE;  \
 #error IRremote requires at least 8 MHz on Teensy 3.x
 #endif
 
-//-----------------
-#define TIMER_CONFIG_KHZ(val) ({  \
-SIM_SCGC4 |= SIM_SCGC4_CMT;      \
-SIM_SOPT2 |= SIM_SOPT2_PTD7PAD;  \
-CMT_PPS    = CMT_PPS_DIV - 1;    \
-CMT_CGH1   = ((F_BUS / CMT_PPS_DIV / 3000) + ((val)/2)) / (val); \
-CMT_CGL1   = ((F_BUS / CMT_PPS_DIV / 1500) + ((val)/2)) / (val); \
-CMT_CMD1   = 0;                  \
-CMT_CMD2   = 30;                 \
-CMT_CMD3   = 0;                  \
-CMT_CMD4   = 0;                  \
-CMT_OC     = 0x60;               \
-CMT_MSC    = 0x01;               \
-})
+static void timerConfigkHz(uint16_t frequency) {
+    SIM_SCGC4 |= SIM_SCGC4_CMT;
+    SIM_SOPT2 |= SIM_SOPT2_PTD7PAD;
+    CMT_PPS = CMT_PPS_DIV - 1;
+    CMT_CGH1 = ((F_BUS / CMT_PPS_DIV / 3000) + ((frequency) / 2)) / (frequency);
+    CMT_CGL1 = ((F_BUS / CMT_PPS_DIV / 1500) + ((frequency) / 2)) / (frequency);
+    CMT_CMD1 = 0;
+    CMT_CMD2 = 30;
+    CMT_CMD3 = 0;
+    CMT_CMD4 = 0;
+    CMT_OC = 0x60;
+    CMT_MSC = 0x01;
+}
 
-#define TIMER_CONFIG_NORMAL() ({  \
-SIM_SCGC4 |= SIM_SCGC4_CMT;   \
-CMT_PPS    = CMT_PPS_DIV - 1; \
-CMT_CGH1   = 1;               \
-CMT_CGL1   = 1;               \
-CMT_CMD1   = 0;               \
-CMT_CMD2   = 30;              \
-CMT_CMD3   = 0;               \
-CMT_CMD4   = (F_BUS / 160000 + CMT_PPS_DIV / 2) / CMT_PPS_DIV - 31; \
-CMT_OC     = 0;               \
-CMT_MSC    = 0x03;            \
-})
+static void timerConfigNormal() {
+    SIM_SCGC4 |= SIM_SCGC4_CMT;
+    CMT_PPS = CMT_PPS_DIV - 1;
+    CMT_CGH1 = 1;
+    CMT_CGL1 = 1;
+    CMT_CMD1 = 0;
+    CMT_CMD2 = 30;
+    CMT_CMD3 = 0;
+    CMT_CMD4 = (F_BUS / 160000 + CMT_PPS_DIV / 2) / CMT_PPS_DIV - 31;
+    CMT_OC = 0;
+    CMT_MSC = 0x03;
+}
 
 #define IR_SEND_PIN  5
 
@@ -778,22 +778,24 @@ CMT_MSC    = 0x03;            \
 #undef ISR
 #endif
 #define ISR(f) void f(void)
-#define TIMER_CONFIG_KHZ(val) ({                     \
-SIM_SCGC6 |= SIM_SCGC6_TPM1;                 \
-FTM1_SC = 0;                                 \
-FTM1_CNT = 0;                                \
-FTM1_MOD = (F_PLL/2000) / val - 1;           \
-FTM1_C0V = (F_PLL/6000) / val - 1;           \
-FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0);     \
-})
-#define TIMER_CONFIG_NORMAL() ({                     \
-SIM_SCGC6 |= SIM_SCGC6_TPM1;                 \
-FTM1_SC = 0;                                 \
-FTM1_CNT = 0;                                \
-FTM1_MOD = (F_PLL/40000) - 1;                \
-FTM1_C0V = 0;                                \
-FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
-})
+
+static void timerConfigkHz(uint16_t frequency) {
+    SIM_SCGC6 |= SIM_SCGC6_TPM1;
+    FTM1_SC = 0;
+    FTM1_CNT = 0;
+    FTM1_MOD = (F_PLL / 2000) / frequency - 1;
+    FTM1_C0V = (F_PLL / 6000) / frequency - 1;
+    FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0);
+}
+
+static void timerConfigNormal() {
+    SIM_SCGC6 |= SIM_SCGC6_TPM1;
+    FTM1_SC = 0;
+    FTM1_CNT = 0;
+    FTM1_MOD = (F_PLL / 40000) - 1;
+    FTM1_C0V = 0;
+    FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE;
+}
 #define IR_SEND_PIN        16
 
 // defines for timer_tiny0 (8 bits)
@@ -804,54 +806,55 @@ FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
 #define TIMER_ENABLE_INTR    (TIMSK |= _BV(OCIE0A))
 #define TIMER_DISABLE_INTR   (TIMSK &= ~(_BV(OCIE0A)))
 #define TIMER_INTR_NAME      TIMER0_COMPA_vect
-#define TIMER_CONFIG_KHZ(val) ({ \
-  const uint16_t pwmval = SYSCLOCK / 2000 / (val); \
-  TCCR0A = _BV(WGM00); \
-  TCCR0B = _BV(WGM02) | _BV(CS00); \
-  OCR0A = pwmval; \
-  OCR0B = pwmval * DUTY_CYCLE / 100; \
-})
-#define TIMER_COUNT_TOP      (SYSCLOCK * MICROS_PER_TICK / 1000000)
+
+static void timerConfigkHz(uint16_t frequency) {
+    const uint16_t pwmval = SYSCLOCK / 2000 / (frequency);
+    TCCR0A = _BV(WGM00);
+    TCCR0B = _BV(WGM02) | _BV(CS00);
+    OCR0A = pwmval;
+    OCR0B = pwmval * DUTY_CYCLE / 100;
+}
+
+#define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
+static void timerConfigNormal() {
 #if (TIMER_COUNT_TOP < 256)
-#define TIMER_CONFIG_NORMAL() ({ \
-  TCCR0A = _BV(WGM01); \
-  TCCR0B = _BV(CS00); \
-  OCR0A = TIMER_COUNT_TOP; \
-  TCNT0 = 0; \
-})
+    TCCR0A = _BV(WGM01);
+    TCCR0B = _BV(CS00);
+    OCR0A = TIMER_COUNT_TOP;
+    TCNT0 = 0;
 #else
-#define TIMER_CONFIG_NORMAL() ({ \
-  TCCR0A = _BV(WGM01); \
-  TCCR0B = _BV(CS01); \
-  OCR0A = TIMER_COUNT_TOP / 8; \
-  TCNT0 = 0; \
-})
+    TCCR0A = _BV(WGM01);
+    TCCR0B = _BV(CS01);
+    OCR0A = TIMER_COUNT_TOP / 8;
+    TCNT0 = 0;
 #endif
+}
 
 #define IR_SEND_PIN        1  /* ATtiny85 */
 
 #elif defined(IR_USE_TIMER_4809_1)
 // ATmega4809 TCB0
 #define TIMER_RESET          TCB0.INTFLAGS = TCB_CAPT_bm
-#define TIMER_ENABLE_PWM     (TCB0.CTRLB = TCB_CNTMODE_PWM8_gc)
-#define TIMER_DISABLE_PWM    (TCB0.CTRLB &= ~(TCB_CNTMODE_PWM8_gc))
+#define TIMER_ENABLE_PWM     (TCB0.CTRLB = TCB_CCMPEN_bm)
+#define TIMER_DISABLE_PWM    (TCB0.CTRLB &= ~(TCB_CCMPEN_bm))
 #define TIMER_ENABLE_INTR    (TCB0.INTCTRL = TCB_CAPT_bm)
 #define TIMER_DISABLE_INTR   (TCB0.INTCTRL &= ~(TCB_CAPT_bm))
 #define TIMER_INTR_NAME      TCB0_INT_vect
-#define TIMER_CONFIG_KHZ(val) ({ \
-  const uint32_t pwmval = SYSCLOCK / 2000 / (val); \
-  TCB0.CTRLB = TCB_CNTMODE_PWM8_gc; \
-  TCB0.CCMPL = pwmval; \
-  TCB0.CCMPH = pwmval * DUTY_CYCLE / 100; \
-  TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm); \
-})
-#define TIMER_COUNT_TOP      ((SYSCLOCK * MICROS_PER_TICK / 1000000))
-#define TIMER_CONFIG_NORMAL() ({ \
-  TCB0.CTRLB = (TCB_CNTMODE_INT_gc); \
-  TCB0.CCMP = TIMER_COUNT_TOP; \
-  TCB0.INTCTRL = TCB_CAPT_bm; \
-  TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm); \
-})
+
+static void timerConfigkHz(uint16_t frequency) {
+    const uint32_t pwmval = (SYSCLOCK / 2000) / (frequency);
+    TCB0.CTRLB = TCB_CNTMODE_PWM8_gc;
+    TCB0.CCMPL = pwmval;
+    TCB0.CCMPH = (pwmval * DUTY_CYCLE) / 100;
+    TCB0.CTRLA = (TCB_CLKSEL_CLKDIV2_gc) | (TCB_ENABLE_bm);
+}
+
+static void timerConfigNormal() {
+    TCB0.CTRLB = (TCB_CNTMODE_INT_gc);
+    TCB0.CCMP = ((SYSCLOCK * MICROS_PER_TICK) / 1000000);
+    TCB0.INTCTRL = TCB_CAPT_bm;
+    TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm);
+}
 
 #define IR_SEND_PIN        6  /* Nano Every, Uno WiFi Rev2 */
 //---------------------------------------------------------
@@ -898,7 +901,9 @@ FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE; \
 #define TIMER_ENABLE_INTR    NVIC_EnableIRQ(TC3_IRQn) // Not presently used
 #define TIMER_DISABLE_INTR   NVIC_DisableIRQ(TC3_IRQn)
 #define TIMER_INTR_NAME      TC3_Handler // Not presently used
-#define TIMER_CONFIG_KHZ(f)
+static void timerConfigkHz(uint16_t frequency) {
+
+}
 
 #ifdef ISR
 #undef ISR

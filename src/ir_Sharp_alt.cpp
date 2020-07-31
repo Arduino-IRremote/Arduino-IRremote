@@ -34,7 +34,7 @@ void IRsend::sendSharpAltRaw(unsigned long data, int nbits) {
     enableIROut(38);
 
     for (int n = 0; n < 3; n++) {
-        unsigned long mask = B1;
+        unsigned long mask =  1UL;
         for (int i = 0; i < nbits; i++) {
             if (data & mask) {
                 mark(SHARP_ALT_SEND_BIT_MARK);

@@ -141,12 +141,7 @@ void IRsend::enableIROut(int khz) {
 
     SENDPIN_OFF(sendPin); // When not sending, we want it low
 
-    // COM2A = 00: disconnect OC2A
-    // COM2B = 00: disconnect OC2B; to send signal set to 10: OC2B non-inverted
-    // WGM2 = 101: phase-correct PWM with OCRA as top
-    // CS2  = 000: no prescaling
-    // The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
-    TIMER_CONFIG_KHZ(khz);
+    timerConfigkHz(khz);
 #endif
 }
 #endif

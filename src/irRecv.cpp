@@ -122,12 +122,16 @@ int IRrecv::decode(decode_results *results) {
 
 #if DECODE_LEGO_PF
     DBG_PRINTLN("Attempting Lego Power Functions");
-    if (decodeLegoPowerFunctions(results))  {return true ;}
+    if (decodeLegoPowerFunctions(results)) {
+        return true;
+    }
 #endif
 
 #if DECODE_MAGIQUEST
     DBG_PRINTLN("Attempting MagiQuest decode");
-    if (decodeMagiQuest(results))  {return true ;}
+    if (decodeMagiQuest(results)) {
+        return true;
+    }
 #endif
 
 #if DECODE_HASH
@@ -169,7 +173,7 @@ void IRrecv::enableIRIn() {
     // Prescale /8 (16M/8 = 0.5 microseconds per tick)
     // Therefore, the timer interval can range from 0.5 to 128 microseconds
     // Depending on the reset value (255 to 0)
-    TIMER_CONFIG_NORMAL();
+    timerConfigNormal();
 
     // Timer2 Overflow Interrupt Enable
     TIMER_ENABLE_INTR;
@@ -242,9 +246,14 @@ void IRrecv::resume() {
 //
 int IRrecv::compare(unsigned int oldval, unsigned int newval) {
 // @formatter:off
-    if      (newval * 10 < oldval * 8)  return 0 ;
-    else if (oldval * 10 < newval * 8)  return 2 ;
-    else                                return 1 ;
+    if (newval * 10 < oldval * 8) {
+        return 0;
+    }
+    if (oldval * 10 < newval * 8) {
+        return 2;
+    }
+    return 1;
+
 // @formatter:on
 }    //+=============================================================================
 // Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
