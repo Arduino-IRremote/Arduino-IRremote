@@ -1,7 +1,7 @@
-## 2.5.1 2020/08
+## 2.6.0 2020/08
 - Added support for MagiQuest IR wands.
 - Corrected Samsung timing.
-- NEC repeat implemantation.
+- NEC repeat implementation.
 - Formatting and changing TIMER_CONFIG_KHZ and TIMER_CONFIG_NORMAL macros to static functions.
 - Added IRAM_ATTR for ESP32 ISR.
 - Removed #define HAS_AVR_INTERRUPT_H.

@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 2.5.0](https://github.com/z3t0/Arduino-IRremote/releases)
+### [Version 2.6.0](https://github.com/z3t0/Arduino-IRremote/releases)
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 [![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
@@ -42,6 +42,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 - ATmega8, 48, 88, 168, 328
 - ATmega8535, 16, 32, 164, 324, 644, 1284,
 - ATmega64, 128
+- ATmega4809 (Nano every)
 - ATtiny84, 85
 - SAMD21 (receive only)
 - ESP32
@@ -51,9 +52,9 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
 
 ## Hardware specifications
-The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private/IRremoteBoardDefs.h#L154)
+The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private/IRremoteBoardDefs.h)
 
-| Board/CPU                                                                | Send Pin            | Timers            |
+| Board/CPU                                                                | IR-Receive Pin      | Timers            |
 |--------------------------------------------------------------------------|---------------------|-------------------|
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
 | [ATtiny85](https://github.com/SpenceKonde/ATTinyCore)                    | **1**               | **TINY0**         |
@@ -65,6 +66,7 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 | [ATmega64, ATmega128, ATmega1281, ATmega2561](https://github.com/MCUdude/MegaCore) | **13**              | **1**             |
 | [ATmega8515, ATmega162](https://github.com/MCUdude/MajorCore)            | **13**              | **1**             |
 | ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
+| ATmega4809                                                               | 5, 6, **9**, 11, 46 | **TCB0**          |
 | Leonardo (Atmega32u4)                                                    | 5, **9**, 13        | 1, 3, **4_HS**    |
 | [ESP32](http://esp32.net/)                                               | **4**, all pins     | **1**             |
 | [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | **5**, 9, 13        | 1, **3**, 4_HS    |
