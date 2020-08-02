@@ -6,7 +6,8 @@
 - Added IRAM_ATTR for ESP32 ISR.
 - Removed #define HAS_AVR_INTERRUPT_H.
 - Changed Receiver States. Now starting with 0.
-- Changed switch to if / else if in IRRemote,.cpp because of ESP32 compiler bug.
+- Changed switch to if / else if in IRRemote.cpp because of ESP32 compiler bug.
+- Changed DEBUG handling since compiler warns about empty "IF" or "ELSE" statements in IRRemote.cpp.
 
 ## 2.5.0 2020/06
 - corrected keywords.txt.

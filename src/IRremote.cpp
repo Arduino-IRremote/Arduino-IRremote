@@ -37,19 +37,22 @@
 //   functions even in non-DEBUG mode
 //
 int MATCH(int measured, int desired) {
-    DBG_PRINT(F("Testing: "));
-    DBG_PRINT(TICKS_LOW(desired), DEC);
-    DBG_PRINT(F(" <= "));
-    DBG_PRINT(measured, DEC);
-    DBG_PRINT(F(" <= "));
-    DBG_PRINT(TICKS_HIGH(desired), DEC);
-
+#if DEBUG
+    Serial.print(F("Testing: "));
+    Serial.print(TICKS_LOW(desired), DEC);
+    Serial.print(F(" <= "));
+    Serial.print(measured, DEC);
+    Serial.print(F(" <= "));
+    Serial.print(TICKS_HIGH(desired), DEC);
+#endif
     bool passed = ((measured >= TICKS_LOW(desired)) && (measured <= TICKS_HIGH(desired)));
+#if DEBUG
     if (passed) {
-        DBG_PRINTLN(F("?; passed"));
+        Serial.println(F("?; passed"));
     } else {
-        DBG_PRINTLN(F("?; FAILED"));
+        Serial.println(F("?; FAILED"));
     }
+#endif
     return passed;
 }
 
@@ -57,26 +60,28 @@ int MATCH(int measured, int desired) {
 // Due to sensor lag, when received, Marks tend to be 100us too long
 //
 int MATCH_MARK(int measured_ticks, int desired_us) {
-    DBG_PRINT(F("Testing mark (actual vs desired): "));
-    DBG_PRINT(measured_ticks * MICROS_PER_TICK, DEC);
-    DBG_PRINT(F("us vs "));
-    DBG_PRINT(desired_us, DEC);
-    DBG_PRINT("us");
-    DBG_PRINT(": ");
-    DBG_PRINT(TICKS_LOW(desired_us + MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
-    DBG_PRINT(F(" <= "));
-    DBG_PRINT(measured_ticks * MICROS_PER_TICK, DEC);
-    DBG_PRINT(F(" <= "));
-    DBG_PRINT(TICKS_HIGH(desired_us + MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
-
+#if DEBUG
+    Serial.print(F("Testing mark (actual vs desired): "));
+    Serial.print(measured_ticks * MICROS_PER_TICK, DEC);
+    Serial.print(F("us vs "));
+    Serial.print(desired_us, DEC);
+    Serial.print(F("us: "));
+    Serial.print(TICKS_LOW(desired_us + MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
+    Serial.print(F(" <= "));
+    Serial.print(measured_ticks * MICROS_PER_TICK, DEC);
+    Serial.print(F(" <= "));
+    Serial.print(TICKS_HIGH(desired_us + MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
+#endif
     // compensate for marks exceeded by demodulator hardware
     bool passed = ((measured_ticks >= TICKS_LOW(desired_us + MARK_EXCESS_MICROS))
             && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS_MICROS)));
+#if DEBUG
     if (passed) {
-        DBG_PRINTLN(F("?; passed"));
+        Serial.println(F("?; passed"));
     } else {
-        DBG_PRINTLN(F("?; FAILED"));
+        Serial.println(F("?; FAILED"));
     }
+#endif
     return passed;
 }
 
@@ -84,26 +89,28 @@ int MATCH_MARK(int measured_ticks, int desired_us) {
 // Due to sensor lag, when received, Spaces tend to be 100us too short
 //
 int MATCH_SPACE(int measured_ticks, int desired_us) {
-    DBG_PRINT(F("Testing space (actual vs desired): "));
-    DBG_PRINT(measured_ticks * MICROS_PER_TICK, DEC);
-    DBG_PRINT(F("us vs "));
-    DBG_PRINT(desired_us, DEC);
-    DBG_PRINT("us");
-    DBG_PRINT(": ");
-    DBG_PRINT(TICKS_LOW(desired_us - MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
-    DBG_PRINT(F(" <= "));
-    DBG_PRINT(measured_ticks * MICROS_PER_TICK, DEC);
-    DBG_PRINT(F(" <= "));
-    DBG_PRINT(TICKS_HIGH(desired_us - MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
-
+#if DEBUG
+    Serial.print(F("Testing space (actual vs desired): "));
+    Serial.print(measured_ticks * MICROS_PER_TICK, DEC);
+    Serial.print(F("us vs "));
+    Serial.print(desired_us, DEC);
+    Serial.print(F("us: "));
+    Serial.print(TICKS_LOW(desired_us - MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
+    Serial.print(F(" <= "));
+    Serial.print(measured_ticks * MICROS_PER_TICK, DEC);
+    Serial.print(F(" <= "));
+    Serial.print(TICKS_HIGH(desired_us - MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
+#endif
     // compensate for marks exceeded and spaces shortened by demodulator hardware
     bool passed = ((measured_ticks >= TICKS_LOW(desired_us - MARK_EXCESS_MICROS))
             && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS_MICROS)));
+#if DEBUG
     if (passed) {
-        DBG_PRINTLN(F("?; passed"));
+        Serial.println(F("?; passed"));
     } else {
-        DBG_PRINTLN(F("?; FAILED"));
+        Serial.println(F("?; FAILED"));
     }
+#endif
     return passed;
 }
 
