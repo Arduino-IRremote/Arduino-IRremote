@@ -27,11 +27,6 @@
 // (This is to avoid negative logic, ! DONT_... is just awkward.)
 
 /**
- * Define if the current board has/needs the header avr/interrupt.h.
- */
-#define HAS_AVR_INTERRUPT_H
-
-/**
  * Defined if the standard enableIRIn function should be used.
  * Undefine for boards supplying their own.
  */
@@ -39,6 +34,7 @@
 
 /**
  * Define if the current board supports sending.
+ * Currently not used.
  */
 #define SENDING_SUPPORTED
 
@@ -103,8 +99,6 @@
 
 // Do not define anything.
 
-#undef HAS_AVR_INTERRUPT_H
-
 #elif defined(CORE_LED0_PIN)
 #define BLINKLED        CORE_LED0_PIN
 #define BLINKLED_ON()   (digitalWrite(CORE_LED0_PIN, HIGH))
@@ -140,15 +134,13 @@
 #define USE_SOFT_CARRIER
 // Define to use spin wait instead of delayMicros()
 //#define USE_SPIN_WAIT
+// Supply own enableIRIn()
 #undef USE_DEFAULT_ENABLE_IR_IN
 
 #elif defined(ESP32)
 // No system LED on ESP32, disable blinking by NOT defining BLINKLED
 
-// avr/interrupt.h is not present
-#undef HAS_AVR_INTERRUPT_H
-
-// Supply own enbleIRIn
+// Supply own enableIRIn() and enableIROut()
 #undef USE_DEFAULT_ENABLE_IR_IN
 #undef USE_DEFAULT_ENABLE_IR_OUT
 
@@ -704,7 +696,7 @@ static void timerConfigNormal() {
 #endif
 
 //---------------------------------------------------------
-// Special carrier modulator timer
+// Special carrier modulator timer for Teensy 3.0 / Teensy 3.1
 //
 #elif defined(IR_USE_TIMER_CMT)
 
@@ -888,7 +880,7 @@ static void timerConfigNormal() {
 #ifdef ISR
 #undef ISR
 #endif
-#define  ISR(f)  void IRTimer()
+#define  ISR(f)  void IRAM_ATTR IRTimer()
 
 #elif defined(ARDUINO_ARCH_SAMD)
 // use timer 3 hardcoded at this time

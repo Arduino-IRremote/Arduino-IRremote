@@ -23,10 +23,6 @@
 #include "IRremote.h"
 #undef IR_GLOBAL
 
-#ifdef HAS_AVR_INTERRUPT_H
-#include <avr/interrupt.h>
-#endif
-
 //+=============================================================================
 // The match functions were (apparently) originally MACROs to improve code speed
 //   (although this would have bloated the code) hence the names being CAPS
@@ -101,8 +97,8 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {
     DBG_PRINT(TICKS_HIGH(desired_us - MARK_EXCESS_MICROS) * MICROS_PER_TICK, DEC);
 
     // compensate for marks exceeded and spaces shortened by demodulator hardware
-    bool passed = ((measured_ticks >= TICKS_LOW (desired_us - MARK_EXCESS_MICROS))
-                  && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS_MICROS)));
+    bool passed = ((measured_ticks >= TICKS_LOW(desired_us - MARK_EXCESS_MICROS))
+            && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS_MICROS)));
     if (passed) {
         DBG_PRINTLN(F("?; passed"));
     } else {
@@ -124,7 +120,7 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {
 //   Gap width is recorded; Ready is cleared; New logging starts
 //
 ISR (TIMER_INTR_NAME) {
-    TIMER_RESET;
+    TIMER_RESET; // reset timer interrupt flag if required (currently only for Teensy and ATmega4809)
 
     // Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
     // digitalRead() is very slow. Optimisation is possible, but makes the code unportable
@@ -135,9 +131,13 @@ ISR (TIMER_INTR_NAME) {
         irparams.rcvstate = IR_REC_STATE_OVERFLOW;  // Buffer overflow
     }
 
-    switch (irparams.rcvstate) {
+    /*
+     * Due to a ESP32 compiler bug https://github.com/espressif/esp-idf/issues/1552 no switch statements are possible for ESP32
+     * So we change the code to if / else if
+     */
+//    switch (irparams.rcvstate) {
     //......................................................................
-    case IR_REC_STATE_IDLE: // In the middle of a gap
+    if (irparams.rcvstate == IR_REC_STATE_IDLE) { // In the middle of a gap
         if (irdata == MARK) {
             if (irparams.timer < GAP_TICKS) {  // Not big enough to be a gap.
                 irparams.timer = 0;
@@ -150,17 +150,13 @@ ISR (TIMER_INTR_NAME) {
                 irparams.rcvstate = IR_REC_STATE_MARK;
             }
         }
-        break;
-        //......................................................................
-    case IR_REC_STATE_MARK:  // Timing Mark
+    } else if (irparams.rcvstate == IR_REC_STATE_MARK) {  // Timing Mark
         if (irdata == SPACE) {   // Mark ended; Record time
             irparams.rawbuf[irparams.rawlen++] = irparams.timer;
             irparams.timer = 0;
             irparams.rcvstate = IR_REC_STATE_SPACE;
         }
-        break;
-        //......................................................................
-    case IR_REC_STATE_SPACE:  // Timing Space
+    } else if (irparams.rcvstate == IR_REC_STATE_SPACE) {  // Timing Space
         if (irdata == MARK) {  // Space just ended; Record time
             irparams.rawbuf[irparams.rawlen++] = irparams.timer;
             irparams.timer = 0;
@@ -173,18 +169,13 @@ ISR (TIMER_INTR_NAME) {
             // Don't reset timer; keep counting Space width
             irparams.rcvstate = IR_REC_STATE_STOP;
         }
-        break;
-        //......................................................................
-    case IR_REC_STATE_STOP:  // Waiting; Measuring Gap
+    } else if (irparams.rcvstate == IR_REC_STATE_STOP) {  // Waiting; Measuring Gap
         if (irdata == MARK) {
             irparams.timer = 0;  // Reset gap timer
         }
-        break;
-        //......................................................................
-    case IR_REC_STATE_OVERFLOW:  // Flag up a read overflow; Stop the State Machine
+    } else if (irparams.rcvstate == IR_REC_STATE_OVERFLOW) {  // Flag up a read overflow; Stop the State Machine
         irparams.overflow = true;
         irparams.rcvstate = IR_REC_STATE_STOP;
-        break;
     }
 
 #ifdef BLINKLED
