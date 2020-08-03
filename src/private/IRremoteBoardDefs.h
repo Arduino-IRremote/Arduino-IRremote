@@ -827,7 +827,7 @@ static void timerConfigNormal() {
 #elif defined(IR_USE_TIMER_4809_1)
 // ATmega4809 TCB0
 #define TIMER_RESET          TCB0.INTFLAGS = TCB_CAPT_bm
-#define TIMER_ENABLE_PWM     (TCB0.CTRLB = TCB_CCMPEN_bm)
+#define TIMER_ENABLE_PWM     (TCB0.CTRLB |= TCB_CCMPEN_bm)
 #define TIMER_DISABLE_PWM    (TCB0.CTRLB &= ~(TCB_CCMPEN_bm))
 #define TIMER_ENABLE_INTR    (TCB0.INTCTRL = TCB_CAPT_bm)
 #define TIMER_DISABLE_INTR   (TCB0.INTCTRL &= ~(TCB_CAPT_bm))
