@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 2.6.0](https://github.com/z3t0/Arduino-IRremote/releases)
+### [Version 2.6.1](https://github.com/z3t0/Arduino-IRremote/releases)
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 [![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
