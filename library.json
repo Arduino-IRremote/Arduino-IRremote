@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/z3t0/Arduino-IRremote.git"
   },
-  "version": "2.4.0",
+  "version": "2.6.1",
   "frameworks": "arduino",
   "platforms": "atmelavr",
   "authors" :

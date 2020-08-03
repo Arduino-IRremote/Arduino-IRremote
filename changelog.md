@@ -1,3 +1,7 @@
+## 2.6.1 2020/08
+- Adjusted JVC and LG timing.
+- Fixed 4809 bug.
+
 ## 2.6.0 2020/08
 - Added support for MagiQuest IR wands.
 - Corrected Samsung timing.
@@ -26,8 +30,6 @@ Changes from #268 by adamlhumphreys
 - Optimized by reducing floating point operations as suggested by @madmalkav (#193)
 - Optimized with macros when using default MICROS_PER_TICK and TOLERANCE
 - Made decodeHash as a settable protocol defined by DECODE_HASH
-
-## 2.5.0 ???
 - Added Philips Extended RC-5 protocol support [PR #522] (https://github.com/z3t0/Arduino-IRremote/pull/522)
 
 ## 2.4.0 - 2017/08/10
