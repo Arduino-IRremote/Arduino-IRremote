@@ -10,8 +10,8 @@
 
 #define LG_BITS 28
 
-#define LG_HDR_MARK 8000
-#define LG_HDR_SPACE 4000
+#define LG_HDR_MARK 8400
+#define LG_HDR_SPACE 4200
 #define LG_BIT_MARK 600
 #define LG_ONE_SPACE 1600
 #define LG_ZERO_SPACE 550
