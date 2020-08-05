@@ -1,3 +1,6 @@
+## 2.6.2 2020/08
+- Added ATmega328PB support.
+
 ## 2.6.1 2020/08
 - Adjusted JVC and LG timing.
 - Fixed 4809 bug.

@@ -105,7 +105,7 @@
 #define BLINKLED_OFF()  (digitalWrite(CORE_LED0_PIN, LOW))
 
 // Arduino Uno, Nano etc (previously default clause)
-#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega32U4__)
+#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega32U4__)
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()  (PORTB |= B00100000)
 #define BLINKLED_OFF()  (PORTB &= B11011111)
@@ -176,7 +176,7 @@
  *********************/
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
-#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__) // old default clause
+#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) // old default clause
 #  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER2)
 //#define IR_USE_TIMER1   // tx = pin 9
 #define IR_USE_TIMER2     // tx = pin 3
@@ -342,8 +342,8 @@
 #else
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
-//#define IR_USE_TIMER1   // tx = pin 9
-#error Board could not be identified from pre-processor symbols. Please extend IRremoteBoardDefs.h.
+#define IR_USE_TIMER1   // tx = pin 9
+#warning Board could not be identified from pre-processor symbols. By Default, TIMER1 has been selected for use with IRremote. Please extend IRremoteBoardDefs.h.
 #endif
 
 // Provide default definitions, portable but possibly slower than necessary.
