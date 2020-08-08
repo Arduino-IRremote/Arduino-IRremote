@@ -168,20 +168,19 @@ IRrecv::IRrecv(int recvpin, int blinkpin) {
 #ifdef USE_DEFAULT_ENABLE_IR_IN
 void IRrecv::enableIRIn() {
 // Interrupt Service Routine - Fires every 50uS
-    cli();
+    noInterrupts();
     // Setup pulse clock timer interrupt
     // Prescale /8 (16M/8 = 0.5 microseconds per tick)
     // Therefore, the timer interval can range from 0.5 to 128 microseconds
     // Depending on the reset value (255 to 0)
-    timerConfigNormal();
+    timerConfigForReceive();
 
     // Timer2 Overflow Interrupt Enable
-    TIMER_ENABLE_INTR;
+    TIMER_ENABLE_RECEIVE_INTR;
 
-    TIMER_RESET;
+    TIMER_RESET_INTR_PENDING;
 
-    sei();
-    // enable interrupts
+    interrupts();
 
     // Initialize state machine variables
     irparams.rcvstate = IR_REC_STATE_IDLE;
@@ -192,10 +191,7 @@ void IRrecv::enableIRIn() {
 }
 
 void IRrecv::disableIRIn() {
-    cli();
-    TIMER_DISABLE_INTR;
-    sei();
-    // enable interrupts
+    TIMER_DISABLE_RECEIVE_INTR;
 }
 
 #endif // USE_DEFAULT_ENABLE_IR_IN

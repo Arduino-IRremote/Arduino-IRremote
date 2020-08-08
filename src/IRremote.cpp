@@ -127,7 +127,7 @@ int MATCH_SPACE(int measured_ticks, int desired_us) {
 //   Gap width is recorded; Ready is cleared; New logging starts
 //
 ISR (TIMER_INTR_NAME) {
-    TIMER_RESET; // reset timer interrupt flag if required (currently only for Teensy and ATmega4809)
+    TIMER_RESET_INTR_PENDING; // reset timer interrupt flag if required (currently only for Teensy and ATmega4809)
 
     // Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
     // digitalRead() is very slow. Optimisation is possible, but makes the code unportable

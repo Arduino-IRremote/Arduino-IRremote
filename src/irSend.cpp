@@ -88,7 +88,7 @@ void IRsend::mark(unsigned int time) {
 #elif defined(USE_NO_CARRIER)
     digitalWrite(sendPin, LOW); // Set output to active low.
 #else
-    TIMER_ENABLE_PWM; // Enable pin 3 PWM output
+    TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
 #endif
     if (time > 0) {
         custom_delay_usec(time);
@@ -104,7 +104,7 @@ void IRsend::space(unsigned int time) {
 #if defined(USE_NO_CARRIER)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
-    TIMER_DISABLE_PWM; // Disable pin 3 PWM output
+    TIMER_DISABLE_SEND_PWM; // Disable pin 3 PWM output
 #endif
     if (time > 0) {
         IRsend::custom_delay_usec(time);
@@ -135,13 +135,13 @@ void IRsend::enableIROut(int khz) {
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
     // Disable the Timer2 Interrupt (which is used for receiving IR)
-    TIMER_DISABLE_INTR; //Timer2 Overflow Interrupt
+    TIMER_DISABLE_RECEIVE_INTR; //Timer2 Overflow Interrupt
 
     pinMode(sendPin, OUTPUT);
 
     SENDPIN_OFF(sendPin); // When not sending, we want it low
 
-    timerConfigkHz(khz);
+    timerConfigForSend(khz);
 #endif
 }
 #endif

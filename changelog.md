@@ -1,5 +1,6 @@
 ## 2.6.2 2020/08
 - Added ATmega328PB support.
+- Renamed hardware specific macro and function names.
 
 ## 2.6.1 2020/08
 - Adjusted JVC and LG timing.
