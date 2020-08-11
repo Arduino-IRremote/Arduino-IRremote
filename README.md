@@ -57,7 +57,7 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 | Board/CPU                                                                | IR-Receive Pin      | Timers            |
 |--------------------------------------------------------------------------|---------------------|-------------------|
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
-| [ATtiny85](https://github.com/SpenceKonde/ATTinyCore)                    | **1**               | **TINY0**         |
+| [ATtiny85](https://github.com/SpenceKonde/ATTinyCore)                    | **1**               | **0**         |
 | [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
 | [ATmega48, ATmega88, ATmega168, ATmega328](https://github.com/MCUdude/MiniCore) | **3**, 9     | 1, **2**          |
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
@@ -68,6 +68,7 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 | ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
 | ATmega4809                                                               | 5, 6, **9**, 11, 46 | **TCB0**          |
 | Leonardo (Atmega32u4)                                                    | 5, **9**, 13        | 1, 3, **4_HS**    |
+| Zero (SAMD)                                                              | \*, **9**           | **TC3**           |
 | [ESP32](http://esp32.net/)                                               | **4**, all pins     | **1**             |
 | [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | **5**, 9, 13        | 1, **3**, 4_HS    |
 | [Teensy 1.0](https://www.pjrc.com/teensy/)                               | **17**              | **1**             |

@@ -339,7 +339,7 @@ private:
  */
 class IRsend {
 public:
-#if defined(USE_SOFT_CARRIER) || defined(USE_NO_CARRIER)
+#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
     IRsend(int pin = IR_SEND_PIN) {
       sendPin = pin;
     }
@@ -470,11 +470,11 @@ public:
     void sendPronto(const __FlashStringHelper *str, unsigned int times = 1U);
 #endif
 
-#if defined(USE_SOFT_CARRIER) || defined(USE_NO_CARRIER)
+#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
   private:
     int sendPin;
 
-#  if defined(USE_SOFT_CARRIER)
+#  if defined(USE_SOFT_SEND_PWM)
     unsigned int periodTime;
     unsigned int periodOnTime;
 

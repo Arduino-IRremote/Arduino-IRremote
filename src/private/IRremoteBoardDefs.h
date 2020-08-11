@@ -52,7 +52,7 @@
 #endif
 
 /**
- * If USE_SOFT_CARRIER or USE_NO_CARRIER, this amount (in micro seconds) is subtracted from the
+ * If USE_SOFT_SEND_PWM or USE_NO_SEND_PWM, this amount (in micro seconds) is subtracted from the
  * on-time of the pulses.
  */
 #define PULSE_CORRECTION 3
@@ -82,15 +82,15 @@
 /**
  * Define to use no carrier PWM, just simulate a receiver signal.
  */
-#define USE_NO_CARRIER
+#define USE_NO_SEND_PWM
 
 /**
- * Define to use carrier generation in software, instead of hardware PWM.
+ * Define to use carrier PWM generation in software, instead of hardware PWM.
  */
-#define USE_SOFT_CARRIER
+#define USE_SOFT_SEND_PWM
 
 /**
- * Define to use spin wait instead of delayMicros() for USE_SOFT_CARRIER.
+ * Define to use spin wait instead of delayMicros() for USE_SOFT_SEND_PWM.
  */
 #define USE_SPIN_WAIT
 
@@ -131,7 +131,7 @@
 #define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
 
-#define USE_SOFT_CARRIER
+#define USE_SOFT_SEND_PWM
 // Define to use spin wait instead of delayMicros()
 //#define USE_SPIN_WAIT
 // Supply own enableIRIn()

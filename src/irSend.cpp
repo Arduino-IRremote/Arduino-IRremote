@@ -37,7 +37,7 @@ void IRsend::sendRaw_P(const unsigned int buf[], unsigned int len, unsigned int 
 
 }
 
-#ifdef USE_SOFT_CARRIER
+#ifdef USE_SOFT_SEND_PWM
 void inline IRsend::sleepMicros(unsigned long us) {
 #ifdef USE_SPIN_WAIT
     sleepUntilMicros(micros() + us);
@@ -59,7 +59,7 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
     }
 #endif
 }
-#endif // USE_SOFT_CARRIER
+#endif // USE_SOFT_SEND_PWM
 
 //+=============================================================================
 // Sends an IR mark for the specified number of microseconds.
@@ -67,7 +67,7 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
 //
 
 void IRsend::mark(unsigned int time) {
-#ifdef USE_SOFT_CARRIER
+#ifdef USE_SOFT_SEND_PWM
     unsigned long start = micros();
     unsigned long stop = start + time;
     if (stop + periodTime < start) {
@@ -85,7 +85,7 @@ void IRsend::mark(unsigned int time) {
         sleepUntilMicros(nextPeriodEnding);
         now = micros();
     }
-#elif defined(USE_NO_CARRIER)
+#elif defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, LOW); // Set output to active low.
 #else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
@@ -101,7 +101,7 @@ void IRsend::mark(unsigned int time) {
 // A space is no output, so the PWM output is disabled.
 //
 void IRsend::space(unsigned int time) {
-#if defined(USE_NO_CARRIER)
+#if defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
     TIMER_DISABLE_SEND_PWM; // Disable pin 3 PWM output
@@ -125,12 +125,12 @@ void IRsend::space(unsigned int time) {
 // See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
 //
 void IRsend::enableIROut(int khz) {
-#ifdef USE_SOFT_CARRIER
+#ifdef USE_SOFT_SEND_PWM
     periodTime = (1000U + khz / 2) / khz; // = 1000/khz + 1/2 = round(1000.0/khz)
     periodOnTime = periodTime * DUTY_CYCLE / 100U - PULSE_CORRECTION;
 #endif
 
-#if defined(USE_NO_CARRIER)
+#if defined(USE_NO_SEND_PWM)
     pinMode(sendPin, OUTPUT);
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
