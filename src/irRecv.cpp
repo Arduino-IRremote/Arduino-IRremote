@@ -167,7 +167,7 @@ IRrecv::IRrecv(int recvpin, int blinkpin) {
 //
 #ifdef USE_DEFAULT_ENABLE_IR_IN
 void IRrecv::enableIRIn() {
-// Interrupt Service Routine - Fires every 50uS
+// the interrupt Service Routine fires every 50 uS
     noInterrupts();
     // Setup pulse clock timer interrupt
     // Prescale /8 (16M/8 = 0.5 microseconds per tick)
