@@ -62,6 +62,27 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
 #endif // USE_SOFT_SEND_PWM
 
 //+=============================================================================
+// Sends PulseDistance data from MSB to LSB
+//
+void IRsend::sendPulseDistanceData(unsigned long aData, int aNumberOfBits, unsigned int aBitMarkMicros,
+        unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros) {
+
+    // send data from MSB to LSB
+    for (unsigned long mask = 1UL << (aNumberOfBits - 1); mask; mask >>= 1) {
+        if (aData & mask) {
+            DBG_PRINT("1");
+            mark(aBitMarkMicros);
+            space(aOneSpaceMicros);
+        } else {
+            DBG_PRINT("0");
+            mark(aBitMarkMicros);
+            space(aZeroSpaceMicros);
+        }
+    }
+    DBG_PRINTLN("");
+}
+
+//+=============================================================================
 // Sends an IR mark for the specified number of microseconds.
 // The mark output is modulated at the PWM frequency.
 //

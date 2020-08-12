@@ -350,6 +350,8 @@ public:
 
     void custom_delay_usec(unsigned long uSecs);
     void enableIROut(int khz);
+    void sendPulseDistanceData(unsigned long aData, int aNumberOfBits, unsigned int aBitMarkMicros, unsigned int aOneSpaceMicros,
+            unsigned int aZeroSpaceMicros);
     void mark(unsigned int usec);
     void space(unsigned int usec);
     void sendRaw(const unsigned int buf[], unsigned int len, unsigned int hz);

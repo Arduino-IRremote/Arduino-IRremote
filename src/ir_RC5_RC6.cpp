@@ -69,7 +69,7 @@ void IRsend::sendRC5(unsigned long data, int nbits) {
     space(RC5_T1);
     mark(RC5_T1);
 
-    // Data
+    // Data - Biphase code
     for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
         if (data & mask) {
             space(RC5_T1); // 1 is space, then mark
@@ -204,8 +204,8 @@ bool IRrecv::decodeRC5(decode_results *results) {
 // NB : Caller needs to take care of flipping the toggle bit
 //
 #define MIN_RC6_SAMPLES      1
-#define RC6_HDR_MARK      2666
-#define RC6_HDR_SPACE      889
+#define RC6_HEADER_MARK      2666
+#define RC6_HEADER_SPACE      889
 #define RC6_T1             444
 #define RC6_RPT_LENGTH   46000
 
@@ -215,8 +215,8 @@ void IRsend::sendRC6(unsigned long data, int nbits) {
     enableIROut(36);
 
     // Header
-    mark(RC6_HDR_MARK);
-    space(RC6_HDR_SPACE);
+    mark(RC6_HEADER_MARK);
+    space(RC6_HEADER_SPACE);
 
     // Start bit
     mark(RC6_T1);
@@ -252,12 +252,12 @@ bool IRrecv::decodeRC6(decode_results *results) {
     }
 
 // Initial mark
-    if (!MATCH_MARK(results->rawbuf[offset], RC6_HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[offset], RC6_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], RC6_HDR_SPACE)) {
+    if (!MATCH_SPACE(results->rawbuf[offset], RC6_HEADER_SPACE)) {
         return false;
     }
     offset++;

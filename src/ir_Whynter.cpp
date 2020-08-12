@@ -8,14 +8,12 @@
 //                WWW   H   H    Y   N   N   T   EEEEE  R   R
 //==============================================================================
 
-#define WHYNTER_BITS          32
-#define WHYNTER_HDR_MARK    2850
-#define WHYNTER_HDR_SPACE   2850
-#define WHYNTER_BIT_MARK     750
-#define WHYNTER_ONE_MARK     750
-#define WHYNTER_ONE_SPACE   2150
-#define WHYNTER_ZERO_MARK    750
-#define WHYNTER_ZERO_SPACE   750
+#define WHYNTER_BITS            32
+#define WHYNTER_HEADER_MARK   2850
+#define WHYNTER_HEADER_SPACE  2850
+#define WHYNTER_BIT_MARK       750
+#define WHYNTER_ONE_SPACE     2150
+#define WHYNTER_ZERO_SPACE     750
 
 //+=============================================================================
 #if SEND_WHYNTER
@@ -24,27 +22,28 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
     enableIROut(38);
 
     // Start
-    mark(WHYNTER_ZERO_MARK);
+    mark(WHYNTER_BIT_MARK);
     space(WHYNTER_ZERO_SPACE);
 
     // Header
-    mark(WHYNTER_HDR_MARK);
-    space(WHYNTER_HDR_SPACE);
+    mark(WHYNTER_HEADER_MARK);
+    space(WHYNTER_HEADER_SPACE);
 
     // Data
-    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-        if (data & mask) {
-            mark(WHYNTER_ONE_MARK);
-            space(WHYNTER_ONE_SPACE);
-        } else {
-            mark(WHYNTER_ZERO_MARK);
-            space(WHYNTER_ZERO_SPACE);
-        }
-    }
+    sendPulseDistanceData(data, nbits, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE);
+//    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
+//        if (data & mask) {
+//            mark(WHYNTER_ONE_MARK);
+//            space(WHYNTER_ONE_SPACE);
+//        } else {
+//            mark(WHYNTER_ZERO_MARK);
+//            space(WHYNTER_ZERO_SPACE);
+//        }
+//    }
 
     // Footer
-    mark(WHYNTER_ZERO_MARK);
-    space(WHYNTER_ZERO_SPACE);  // Always end with the LED off
+    mark(WHYNTER_BIT_MARK);
+    space(0);  // Always end with the LED off
 }
 #endif
 
@@ -71,12 +70,12 @@ bool IRrecv::decodeWhynter(decode_results *results) {
     offset++;
 
     // header mark and space
-    if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_HDR_SPACE)) {
+    if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_HEADER_SPACE)) {
         return false;
     }
     offset++;

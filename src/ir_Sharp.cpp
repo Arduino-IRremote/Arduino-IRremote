@@ -32,9 +32,9 @@
 
 #define SHARP_ZERO_SPACE      795
 #define SHARP_GAP          600000
-#define SHARP_RPT_SPACE      3000
+#define SHARP_REPEAT_SPACE   3000
 
-#define SHARP_TOGGLE_MASK  0x3FF
+#define SHARP_TOGGLE_MASK   0x3FF
 
 //+=============================================================================
 #if SEND_SHARP
@@ -44,15 +44,16 @@ void IRsend::sendSharpRaw(unsigned long data, int nbits) {
     // Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
     // much more reliable. That's the exact behavior of CD-S6470 remote control.
     for (int n = 0; n < 3; n++) {
-        for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-            if (data & mask) {
-                mark (SHARP_BIT_MARK_SEND);
-                space(SHARP_ONE_SPACE);
-            } else {
-                mark (SHARP_BIT_MARK_SEND);
-                space(SHARP_ZERO_SPACE);
-            }
-        }
+        sendPulseDistanceData(data, nbits, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE, SHARP_ZERO_SPACE);
+//        for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
+//            if (data & mask) {
+//                mark (SHARP_BIT_MARK_SEND);
+//                space(SHARP_ONE_SPACE);
+//            } else {
+//                mark (SHARP_BIT_MARK_SEND);
+//                space(SHARP_ZERO_SPACE);
+//            }
+//        }
 
         mark (SHARP_BIT_MARK_SEND);
         space(SHARP_ZERO_SPACE);
@@ -60,6 +61,8 @@ void IRsend::sendSharpRaw(unsigned long data, int nbits) {
 
         data = data ^ SHARP_TOGGLE_MASK;
     }
+
+    space(0);  // Always end with the LED off
 }
 #endif
 

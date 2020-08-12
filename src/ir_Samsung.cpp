@@ -8,13 +8,13 @@
 //             SSSS   A   A  M   M  SSSS    UUU   N   N   GGG
 //==============================================================================
 
-#define SAMSUNG_BITS          32
-#define SAMSUNG_HDR_MARK    4500
-#define SAMSUNG_HDR_SPACE   4500
-#define SAMSUNG_BIT_MARK     560
-#define SAMSUNG_ONE_SPACE   1600
-#define SAMSUNG_ZERO_SPACE   560
-#define SAMSUNG_RPT_SPACE   2250
+#define SAMSUNG_BITS            32
+#define SAMSUNG_HEADER_MARK   4500
+#define SAMSUNG_HEADER_SPACE  4500
+#define SAMSUNG_BIT_MARK       560
+#define SAMSUNG_ONE_SPACE     1600
+#define SAMSUNG_ZERO_SPACE     560
+#define SAMSUNG_REPEAT_SPACE  2250
 
 //+=============================================================================
 #if SEND_SAMSUNG
@@ -23,19 +23,20 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     enableIROut(38);
 
     // Header
-    mark(SAMSUNG_HDR_MARK);
-    space(SAMSUNG_HDR_SPACE);
+    mark(SAMSUNG_HEADER_MARK);
+    space(SAMSUNG_HEADER_SPACE);
 
     // Data
-    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-        if (data & mask) {
-            mark(SAMSUNG_BIT_MARK);
-            space(SAMSUNG_ONE_SPACE);
-        } else {
-            mark(SAMSUNG_BIT_MARK);
-            space(SAMSUNG_ZERO_SPACE);
-        }
-    }
+    sendPulseDistanceData(data, nbits,  SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE);
+//    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
+//        if (data & mask) {
+//            mark(SAMSUNG_BIT_MARK);
+//            space(SAMSUNG_ONE_SPACE);
+//        } else {
+//            mark(SAMSUNG_BIT_MARK);
+//            space(SAMSUNG_ZERO_SPACE);
+//        }
+//    }
 
     // Footer
     mark(SAMSUNG_BIT_MARK);
@@ -52,13 +53,13 @@ bool IRrecv::decodeSAMSUNG(decode_results *results) {
     int offset = 1;  // Skip first space
 
     // Initial mark
-    if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_HEADER_MARK)) {
         return false;
     }
     offset++;
 
 // Check for repeat
-    if ((irparams.rawlen == 4) && MATCH_SPACE(results->rawbuf[offset], SAMSUNG_RPT_SPACE)
+    if ((irparams.rawlen == 4) && MATCH_SPACE(results->rawbuf[offset], SAMSUNG_REPEAT_SPACE)
             && MATCH_MARK(results->rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
         results->bits = 0;
         results->value = REPEAT;
@@ -70,7 +71,7 @@ bool IRrecv::decodeSAMSUNG(decode_results *results) {
     }
 
 // Initial space
-    if (!MATCH_SPACE(results->rawbuf[offset], SAMSUNG_HDR_SPACE)) {
+    if (!MATCH_SPACE(results->rawbuf[offset], SAMSUNG_HEADER_SPACE)) {
         return false;
     }
     offset++;

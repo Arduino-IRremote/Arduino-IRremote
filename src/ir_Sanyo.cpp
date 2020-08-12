@@ -12,8 +12,8 @@
 // Looks like Sony except for timings, 48 chars of data and time/space different
 
 #define SANYO_BITS                   12
-#define SANYO_HDR_MARK	           3500  // seen range 3500
-#define SANYO_HDR_SPACE	            950  // seen 950
+#define SANYO_HEADER_MARK	           3500  // seen range 3500
+#define SANYO_HEADER_SPACE	            950  // seen 950
 #define SANYO_ONE_MARK	           2400  // seen 2400
 #define SANYO_ZERO_MARK             700  // seen 700
 #define SANYO_DOUBLE_SPACE_USECS    800  // usually see 713 - not using ticks as get number wrap around
@@ -48,19 +48,19 @@ bool IRrecv::decodeSanyo(decode_results *results) {
     offset++;
 
     // Initial mark
-    if (!MATCH_MARK(results->rawbuf[offset], SANYO_HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[offset], SANYO_HEADER_MARK)) {
         return false;
     }
     offset++;
 
     // Skip Second Mark
-    if (!MATCH_MARK(results->rawbuf[offset], SANYO_HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[offset], SANYO_HEADER_MARK)) {
         return false;
     }
     offset++;
 
     while (offset + 1 < irparams.rawlen) {
-        if (!MATCH_SPACE(results->rawbuf[offset], SANYO_HDR_SPACE)) {
+        if (!MATCH_SPACE(results->rawbuf[offset], SANYO_HEADER_SPACE)) {
             break;
         }
         offset++;

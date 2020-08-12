@@ -8,13 +8,13 @@
 //                           N   N  EEEEE   CCCC
 //==============================================================================
 
-#define NEC_BITS          32
-#define NEC_HDR_MARK    9000
-#define NEC_HDR_SPACE   4500
-#define NEC_BIT_MARK     560
-#define NEC_ONE_SPACE   1690
-#define NEC_ZERO_SPACE   560
-#define NEC_RPT_SPACE   2250
+#define NEC_BITS             32
+#define NEC_HEADER_MARK    9000
+#define NEC_HEADER_SPACE   4500
+#define NEC_BIT_MARK        560
+#define NEC_ONE_SPACE      1690
+#define NEC_ZERO_SPACE      560
+#define NEC_REPEAT_SPACE   2250
 
 //+=============================================================================
 #if SEND_NEC
@@ -27,30 +27,31 @@ void IRsend::sendNEC(unsigned long data, int nbits, bool repeat) {
     enableIROut(38);
 
     // Header
-    mark(NEC_HDR_MARK);
+    mark(NEC_HEADER_MARK);
 
     if (data == REPEAT || repeat) {
         // repeat "space and data"
-        space(NEC_RPT_SPACE);
-        mark(NEC_BIT_MARK);
+        space(NEC_REPEAT_SPACE);
     } else {
 
-        space(NEC_HDR_SPACE);
-
+        space(NEC_HEADER_SPACE);
         // Data
-        for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-            if (data & mask) {
-                mark(NEC_BIT_MARK);
-                space(NEC_ONE_SPACE);
-            } else {
-                mark(NEC_BIT_MARK);
-                space(NEC_ZERO_SPACE);
-            }
-        }
+        sendPulseDistanceData(data, nbits, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE);
+//        for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
+//            if (data & mask) {
+//                mark(NEC_BIT_MARK);
+//                space(NEC_ONE_SPACE);
+//            } else {
+//                mark(NEC_BIT_MARK);
+//                space(NEC_ZERO_SPACE);
+//            }
+//        }
 
-        // Footer
-        mark(NEC_BIT_MARK);
+
     }
+
+    // Footer
+    mark(NEC_BIT_MARK);
     space(0);  // Always end with the LED off
 }
 #endif
@@ -64,13 +65,13 @@ bool IRrecv::decodeNEC(decode_results *results) {
     int offset = 1;  // Index in to results; Skip first entry!?
 
     // Check header "mark"
-    if (!MATCH_MARK(results->rawbuf[offset], NEC_HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[offset], NEC_HEADER_MARK)) {
         return false;
     }
     offset++;
 
     // Check for repeat
-    if ((irparams.rawlen == 4) && MATCH_SPACE(results->rawbuf[offset], NEC_RPT_SPACE)
+    if ((irparams.rawlen == 4) && MATCH_SPACE(results->rawbuf[offset], NEC_REPEAT_SPACE)
             && MATCH_MARK(results->rawbuf[offset + 1], NEC_BIT_MARK)) {
         results->bits = 0;
         results->value = REPEAT;
@@ -83,7 +84,7 @@ bool IRrecv::decodeNEC(decode_results *results) {
         return false;
     }
     // Check header "space"
-    if (!MATCH_SPACE(results->rawbuf[offset], NEC_HDR_SPACE)) {
+    if (!MATCH_SPACE(results->rawbuf[offset], NEC_HEADER_SPACE)) {
         return false;
     }
     offset++;

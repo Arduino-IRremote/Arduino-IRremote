@@ -9,8 +9,8 @@
 //==============================================================================
 
 #define SONY_BITS                   12
-#define SONY_HDR_MARK             2400
-#define SONY_HDR_SPACE             600
+#define SONY_HEADER_MARK          2400
+#define SONY_HEADER_SPACE          600
 #define SONY_ONE_MARK             1200
 #define SONY_ZERO_MARK             600
 #define SONY_RPT_LENGTH          45000
@@ -23,21 +23,21 @@ void IRsend::sendSony(unsigned long data, int nbits) {
     enableIROut(40);
 
     // Header
-    mark(SONY_HDR_MARK);
-    space(SONY_HDR_SPACE);
+    mark(SONY_HEADER_MARK);
+    space(SONY_HEADER_SPACE);
 
-    // Data
+    // Data - Pulse width coding
     for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
         if (data & mask) {
             mark(SONY_ONE_MARK);
-            space(SONY_HDR_SPACE);
+            space(SONY_HEADER_SPACE);
         } else {
             mark(SONY_ZERO_MARK);
-            space(SONY_HDR_SPACE);
+            space(SONY_HEADER_SPACE);
         }
     }
 
-    // We will have ended with LED off
+    space(0);  // Always end with the LED off
 }
 #endif
 
@@ -69,13 +69,13 @@ bool IRrecv::decodeSony(decode_results *results) {
     offset++;
 
     // Initial mark
-    if (!MATCH_MARK(results->rawbuf[offset], SONY_HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[offset], SONY_HEADER_MARK)) {
         return false;
     }
     offset++;
 
     while (offset + 1 < irparams.rawlen) {
-        if (!MATCH_SPACE(results->rawbuf[offset], SONY_HDR_SPACE)) {
+        if (!MATCH_SPACE(results->rawbuf[offset], SONY_HEADER_SPACE)) {
             break;
         }
         offset++;

@@ -16,16 +16,16 @@
 // Author: Sergiy Kolesnikov
 //
 
-#define SHARP_ALT_RAWLEN            32
-#define SHARP_ALT_ADDRESS_BITS      5
-#define SHARP_ALT_COMMAND_BITS      8
-#define SHARP_ALT_BIT_MARK          150
-#define SHARP_ALT_SEND_BIT_MARK     300
-#define SHARP_ALT_ONE_SPACE         1750
-#define SHARP_ALT_ZERO_SPACE        700
-#define SHARP_ALT_RPT_SPACE         50000
-#define SHARP_ALT_SEND_RPT_SPACE    44000
-#define SHARP_ALT_TOGGLE_MASK       0x3FF
+#define SHARP_ALT_RAWLEN                32
+#define SHARP_ALT_ADDRESS_BITS           5
+#define SHARP_ALT_COMMAND_BITS           8
+#define SHARP_ALT_BIT_MARK             150
+#define SHARP_ALT_SEND_BIT_MARK        300
+#define SHARP_ALT_ONE_SPACE           1750
+#define SHARP_ALT_ZERO_SPACE           700
+#define SHARP_ALT_REPEAT_SPACE       50000
+#define SHARP_ALT_SEND_REPEAT_SPACE  44000
+#define SHARP_ALT_TOGGLE_MASK        0x3FF
 #define SHARP_ALT_SEND_INVERT_MASK  0x7FE0
 
 //+=============================================================================
@@ -34,6 +34,7 @@ void IRsend::sendSharpAltRaw(unsigned long data, int nbits) {
     enableIROut(38);
 
     for (int n = 0; n < 3; n++) {
+        // From LSB to MSB
         unsigned long mask =  1UL;
         for (int i = 0; i < nbits; i++) {
             if (data & mask) {
@@ -46,7 +47,7 @@ void IRsend::sendSharpAltRaw(unsigned long data, int nbits) {
             mask <<= 1;
         }
         mark(SHARP_ALT_BIT_MARK);
-        space(SHARP_ALT_SEND_RPT_SPACE);
+        space(SHARP_ALT_SEND_REPEAT_SPACE);
         data = data ^ SHARP_ALT_SEND_INVERT_MASK;
     }
 }
@@ -81,7 +82,7 @@ bool IRrecv::decodeSharpAlt(decode_results *results) {
     // Check for repeat.
     static boolean is_first_repeat = true;
     long initial_space = ((long) results->rawbuf[0]) * MICROS_PER_TICK;
-    if (initial_space <= SHARP_ALT_RPT_SPACE) {
+    if (initial_space <= SHARP_ALT_REPEAT_SPACE) {
         if (!is_first_repeat) {
             results->bits = 0;
             results->value = REPEAT;
