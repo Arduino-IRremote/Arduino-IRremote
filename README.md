@@ -62,13 +62,13 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 | Board/CPU                                                                | IR-Send (PWM) Pin   | Timers            |
 |--------------------------------------------------------------------------|---------------------|-------------------|
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
-| [ATtiny85](https://github.com/SpenceKonde/ATTinyCore)                    | **1**               | **0**         |
+| [ATtiny85 > 1 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **1**               | **0**             |
 | [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
-| [ATmega48, ATmega88, ATmega168, **ATmega328**](https://github.com/MCUdude/MiniCore) | **3**, 9     | 1, **2**          |
+| [ATmega48, ATmega88, ATmega168, **ATmega328**](https://github.com/MCUdude/MiniCore) | **3**, 9 | 1, **2**          |
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
 | [ATmega164, ATmega324, ATmega644](https://github.com/MCUdude/MightyCore) | 13, **14**          | 1, **2**          |
 | [ATmega8535 ATmega16, ATmega32](https://github.com/MCUdude/MightyCore)   | **13**              | **1**             |
-| [ATmega64, ATmega128, ATmega1281, ATmega2561](https://github.com/MCUdude/MegaCore) | **13**              | **1**             |
+| [ATmega64, ATmega128, ATmega1281, ATmega2561](https://github.com/MCUdude/MegaCore) | **13**    | **1**             |
 | [ATmega8515, ATmega162](https://github.com/MCUdude/MajorCore)            | **13**              | **1**             |
 | ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
 | ATmega4809                                                               | 5, 6, **9**, 11, 46 | **TCB0**          |
