@@ -22,6 +22,8 @@
 // To send a JVC repeat signal, send the original code value
 //   and set 'repeat' to true
 //
+// JVC commands sometimes need to be sent two or three times with 40 to 60 ms pause in between.
+//
 #if SEND_JVC
 void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
     // Set IR carrier frequency

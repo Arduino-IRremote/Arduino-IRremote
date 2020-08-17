@@ -22,8 +22,9 @@ void setup()
 void loop() {
   irsend.sendPanasonic(PanasonicAddress,PanasonicPower); // This should turn your TV on and off
   
+  // JVC commands sometimes need to be sent two or three times with 40 to 60 ms pause in between.
   irsend.sendJVC(JVCPower, 16,0); // hex value, 16 bits, no repeat
-  delayMicroseconds(50); // see http://www.sbprojects.com/knowledge/ir/jvc.php for information
+  delayMicroseconds(50); // see http://www.sbprojects.net/knowledge/ir/jvc.php for information
   irsend.sendJVC(JVCPower, 16,1); // hex value, 16 bits, repeat
   delayMicroseconds(50);
 }
