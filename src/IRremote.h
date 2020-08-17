@@ -241,6 +241,9 @@ public:
      */
     void dumpPronto(Stream& stream, decode_results *results, unsigned int frequency = 38000U);
 
+    unsigned long decodePulseDistanceData(decode_results *aResults,  uint8_t aNumberOfBits,uint8_t aStartOffset, unsigned int aBitMarkMicros,
+            unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros);
+
 private:
 #if DECODE_HASH
     long decodeHash(decode_results *results);
@@ -350,7 +353,7 @@ public:
 
     void custom_delay_usec(unsigned long uSecs);
     void enableIROut(int khz);
-    void sendPulseDistanceData(unsigned long aData, int aNumberOfBits, unsigned int aBitMarkMicros, unsigned int aOneSpaceMicros,
+    void sendPulseDistanceData(unsigned long aData, uint8_t aNumberOfBits, unsigned int aBitMarkMicros, unsigned int aOneSpaceMicros,
             unsigned int aZeroSpaceMicros);
     void mark(unsigned int usec);
     void space(unsigned int usec);

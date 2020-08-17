@@ -56,13 +56,13 @@
 #define CMD_PRESET_5   0xee
 
 #define BOSEWAVE_BITS           8
-#define BOSEWAVE_HDR_MARK    1061
-#define BOSEWAVE_HDR_SPACE   1456
+#define BOSEWAVE_HEADER_MARK    1061
+#define BOSEWAVE_HEADER_SPACE   1456
 #define BOSEWAVE_BIT_MARK     534
 #define BOSEWAVE_ONE_SPACE    468
 #define BOSEWAVE_ZERO_SPACE  1447
 #define BOSEWAVE_END_MARK     614
-#define BOSEWAVE_RPT_SPACE  51200
+#define BOSEWAVE_REPEAT_SPACE  51200
 
 //+=============================================================================
 #if SEND_BOSEWAVE
@@ -71,8 +71,8 @@ void IRsend::sendBoseWave(unsigned char code) {
 
     int index = 0;
     // Header
-    rawSignal[index++] = BOSEWAVE_HDR_MARK;
-    rawSignal[index++] = BOSEWAVE_HDR_SPACE;
+    rawSignal[index++] = BOSEWAVE_HEADER_MARK;
+    rawSignal[index++] = BOSEWAVE_HEADER_SPACE;
 
     // 8 bit command
     for (unsigned char mask = 0x80; mask; mask >>= 1) {
@@ -120,9 +120,9 @@ bool IRrecv::decodeBoseWave(decode_results *results) {
 
     // Check header "mark"
     index = 1;
-    if (!MATCH_MARK(results->rawbuf[index], BOSEWAVE_HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[index], BOSEWAVE_HEADER_MARK)) {
         DBG_PRINT("\tInvalid Header Mark.  Expecting ");
-        DBG_PRINT(BOSEWAVE_HDR_MARK);
+        DBG_PRINT(BOSEWAVE_HEADER_MARK);
         DBG_PRINT(".  Got ");
         DBG_PRINTLN(results->rawbuf[index] * MICROS_PER_TICK);
         return false;
@@ -130,9 +130,9 @@ bool IRrecv::decodeBoseWave(decode_results *results) {
     index++;
 
     // Check header "space"
-    if (!MATCH_SPACE(results->rawbuf[index], BOSEWAVE_HDR_SPACE)) {
+    if (!MATCH_SPACE(results->rawbuf[index], BOSEWAVE_HEADER_SPACE)) {
         DBG_PRINT("\tInvalid Header Space.  Expecting ");
-        DBG_PRINT(BOSEWAVE_HDR_SPACE);
+        DBG_PRINT(BOSEWAVE_HEADER_SPACE);
         DBG_PRINT(".  Got ");
         DBG_PRINTLN(results->rawbuf[index] * MICROS_PER_TICK);
         return false;

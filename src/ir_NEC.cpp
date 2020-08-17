@@ -89,23 +89,24 @@ bool IRrecv::decodeNEC(decode_results *results) {
     }
     offset++;
 
-    // Build the data
-    for (int i = 0; i < NEC_BITS; i++) {
-        // Check data "mark"
-        if (!MATCH_MARK(results->rawbuf[offset], NEC_BIT_MARK)) {
-            return false;
-        }
-        offset++;
-
-        if (MATCH_SPACE(results->rawbuf[offset], NEC_ONE_SPACE)) {
-            data = (data << 1) | 1;
-        } else if (MATCH_SPACE(results->rawbuf[offset], NEC_ZERO_SPACE)) {
-            data = (data << 1) | 0;
-        } else {
-            return false;
-        }
-        offset++;
-    }
+    data = decodePulseDistanceData(results, NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE);
+//    // Build the data
+//    for (int i = 0; i < NEC_BITS; i++) {
+//        // Check data "mark"
+//        if (!MATCH_MARK(results->rawbuf[offset], NEC_BIT_MARK)) {
+//            return false;
+//        }
+//        offset++;
+//
+//        if (MATCH_SPACE(results->rawbuf[offset], NEC_ONE_SPACE)) {
+//            data = (data << 1) | 1;
+//        } else if (MATCH_SPACE(results->rawbuf[offset], NEC_ZERO_SPACE)) {
+//            data = (data << 1) | 0;
+//        } else {
+//            return false;
+//        }
+//        offset++;
+//    }
 
     // Success
     results->bits = NEC_BITS;

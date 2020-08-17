@@ -16,8 +16,8 @@
 #define AIWA_RC_T501_PRE_BITS      26
 #define AIWA_RC_T501_POST_BITS      1
 #define AIWA_RC_T501_SUM_BITS    (AIWA_RC_T501_PRE_BITS + AIWA_RC_T501_BITS + AIWA_RC_T501_POST_BITS)
-#define AIWA_RC_T501_HDR_MARK    8800
-#define AIWA_RC_T501_HDR_SPACE   4500
+#define AIWA_RC_T501_HEADER_MARK    8800
+#define AIWA_RC_T501_HEADER_SPACE   4500
 #define AIWA_RC_T501_BIT_MARK     500
 #define AIWA_RC_T501_ONE_SPACE    600
 #define AIWA_RC_T501_ZERO_SPACE  1700
@@ -31,8 +31,8 @@ void IRsend::sendAiwaRCT501(int code) {
     enableIROut(AIWA_RC_T501_HZ);
 
     // Header
-    mark(AIWA_RC_T501_HDR_MARK);
-    space(AIWA_RC_T501_HDR_SPACE);
+    mark(AIWA_RC_T501_HEADER_MARK);
+    space(AIWA_RC_T501_HEADER_SPACE);
 
     // Send "pre" data
     for (unsigned long mask = 1UL << (26 - 1); mask; mask >>= 1) {
@@ -67,7 +67,7 @@ void IRsend::sendAiwaRCT501(int code) {
     space(AIWA_RC_T501_ZERO_SPACE);
 
     mark(AIWA_RC_T501_BIT_MARK);
-    space(0);
+    space(0);  // Always end with the LED off
 }
 #endif
 
@@ -83,12 +83,12 @@ bool IRrecv::decodeAiwaRCT501(decode_results *results) {
     }
 
     // Check HDR Mark/Space
-    if (!MATCH_MARK(results->rawbuf[offset], AIWA_RC_T501_HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[offset], AIWA_RC_T501_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_HDR_SPACE)) {
+    if (!MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_HEADER_SPACE)) {
         return false;
     }
     offset++;

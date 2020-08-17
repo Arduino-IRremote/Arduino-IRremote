@@ -80,22 +80,23 @@ bool IRrecv::decodeWhynter(decode_results *results) {
     }
     offset++;
 
-    // data bits
-    for (int i = 0; i < WHYNTER_BITS; i++) {
-        if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {
-            return false;
-        }
-        offset++;
-
-        if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE)) {
-            data = (data << 1) | 1;
-        } else if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE)) {
-            data = (data << 1) | 0;
-        } else {
-            return false;
-        }
-        offset++;
-    }
+    data = decodePulseDistanceData(results, WHYNTER_BITS, offset, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE);
+//    // data bits
+//    for (int i = 0; i < WHYNTER_BITS; i++) {
+//        if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {
+//            return false;
+//        }
+//        offset++;
+//
+//        if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE)) {
+//            data = (data << 1) | 1;
+//        } else if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE)) {
+//            data = (data << 1) | 0;
+//        } else {
+//            return false;
+//        }
+//        offset++;
+//    }
 
     // trailing mark
     if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {

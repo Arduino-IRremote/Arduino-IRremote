@@ -69,7 +69,7 @@ void IRsend::sendRC5(unsigned long data, int nbits) {
     space(RC5_T1);
     mark(RC5_T1);
 
-    // Data - Biphase code
+    // Data - Biphase code MSB first
     for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
         if (data & mask) {
             space(RC5_T1); // 1 is space, then mark
@@ -173,6 +173,9 @@ bool IRrecv::decodeRC5(decode_results *results) {
         return false;
     }
 
+    /*
+     * Get data bits - MSB first
+     */
     for (nbits = 0; offset < irparams.rawlen; nbits++) {
         int levelA = getRClevel(results, &offset, &used, RC5_T1);
         int levelB = getRClevel(results, &offset, &used, RC5_T1);

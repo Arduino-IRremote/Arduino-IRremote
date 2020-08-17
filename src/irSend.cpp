@@ -64,10 +64,10 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
 //+=============================================================================
 // Sends PulseDistance data from MSB to LSB
 //
-void IRsend::sendPulseDistanceData(unsigned long aData, int aNumberOfBits, unsigned int aBitMarkMicros,
+void IRsend::sendPulseDistanceData(unsigned long aData, uint8_t aNumberOfBits, unsigned int aBitMarkMicros,
         unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros) {
 
-    // send data from MSB to LSB
+    // send data from MSB to LSB until mask bit is shifted out
     for (unsigned long mask = 1UL << (aNumberOfBits - 1); mask; mask >>= 1) {
         if (aData & mask) {
             DBG_PRINT("1");

@@ -14,8 +14,8 @@
 
 // Mitsubishi RM 75501
 // 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7
-// #define MITSUBISHI_HDR_MARK	250  // seen range 3500
-#define MITSUBISHI_HDR_SPACE	350 //  7*50+100
+// #define MITSUBISHI_HEADER_MARK	250  // seen range 3500
+#define MITSUBISHI_HEADER_SPACE	350 //  7*50+100
 #define MITSUBISHI_ONE_MARK	1950 // 41*50-100
 #define MITSUBISHI_ZERO_MARK  750 // 17*50-100
 // #define MITSUBISHI_DOUBLE_SPACE_USECS  800  // usually see 713 - not using ticks as get number wrap around
@@ -56,7 +56,7 @@ bool  IRrecv::decodeMitsubishi (decode_results *results)
   // 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7
 
   // Initial Space
-  if (!MATCH_MARK(results->rawbuf[offset], MITSUBISHI_HDR_SPACE))  return false ;
+  if (!MATCH_MARK(results->rawbuf[offset], MITSUBISHI_HEADER_SPACE))  return false ;
   offset++;
 
   while (offset + 1 < irparams.rawlen) {
@@ -65,7 +65,7 @@ bool  IRrecv::decodeMitsubishi (decode_results *results)
     else                                                                 return false ;
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], MITSUBISHI_HDR_SPACE))  break ;
+    if (!MATCH_SPACE(results->rawbuf[offset], MITSUBISHI_HEADER_SPACE))  break ;
     offset++;
   }
 

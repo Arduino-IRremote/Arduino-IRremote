@@ -18,14 +18,14 @@
 //                    DDDD   EEEEE  N   N   OOO   N   N
 //==============================================================================
 
-#define BITS          14  // The number of bits in the command
+#define DENON_BITS            14  // The number of bits in the command
 
-#define HDR_MARK     300  // The length of the Header:Mark
-#define HDR_SPACE    750  // The lenght of the Header:Space
+#define DENON_HEADER_MARK    300  // The length of the Header:Mark
+#define DENON_HEADER_SPACE   750  // The lenght of the Header:Space
 
-#define BIT_MARK     300  // The length of a Bit:Mark
-#define ONE_SPACE   1800  // The length of a Bit:Space for 1's
-#define ZERO_SPACE   750  // The length of a Bit:Space for 0's
+#define DENON_BIT_MARK       300  // The length of a Bit:Mark
+#define DENON_ONE_SPACE     1800  // The length of a Bit:Space for 1's
+#define DENON_ZERO_SPACE     750  // The length of a Bit:Space for 0's
 
 //+=============================================================================
 //
@@ -35,22 +35,23 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
     enableIROut(38);
 
     // Header
-    mark(HDR_MARK);
-    space(HDR_SPACE);
+    mark(DENON_HEADER_MARK);
+    space(DENON_HEADER_SPACE);
 
     // Data
-    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-        if (data & mask) {
-            mark(BIT_MARK);
-            space(ONE_SPACE);
-        } else {
-            mark(BIT_MARK);
-            space(ZERO_SPACE);
-        }
-    }
+    sendPulseDistanceData(data, nbits, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE);
+//    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
+//        if (data & mask) {
+//            mark(DENON_BIT_MARK);
+//            space(DENON_ONE_SPACE);
+//        } else {
+//            mark(DENON_BIT_MARK);
+//            space(DENON_ZERO_SPACE);
+//        }
+//    }
 
-    // Footer
-    mark(BIT_MARK);
+// Footer
+    mark(DENON_BIT_MARK);
     space(0);  // Always end with the LED off
 }
 #endif
@@ -63,43 +64,44 @@ bool IRrecv::decodeDenon(decode_results *results) {
     int offset = 1;  // Skip the Gap reading
 
     // Check we have the right amount of data
-    if (irparams.rawlen != 1 + 2 + (2 * BITS) + 1) {
+    if (irparams.rawlen != 1 + 2 + (2 * DENON_BITS) + 1) {
         return false;
     }
 
     // Check initial Mark+Space match
-    if (!MATCH_MARK(results->rawbuf[offset], HDR_MARK)) {
+    if (!MATCH_MARK(results->rawbuf[offset], DENON_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], HDR_SPACE)) {
+    if (!MATCH_SPACE(results->rawbuf[offset], DENON_HEADER_SPACE)) {
         return false;
     }
     offset++;
 
     // Read the bits in
-    for (int i = 0; i < BITS; i++) {
-        // Each bit looks like: MARK + SPACE_1 -> 1
-        //                 or : MARK + SPACE_0 -> 0
-        if (!MATCH_MARK(results->rawbuf[offset], BIT_MARK)) {
-            return false;
-        }
-        offset++;
-
-        // IR data is big-endian, so we shuffle it in from the right:
-        if (MATCH_SPACE(results->rawbuf[offset], ONE_SPACE)) {
-            data = (data << 1) | 1;
-        } else if (MATCH_SPACE(results->rawbuf[offset], ZERO_SPACE)) {
-            data = (data << 1) | 0;
-        } else {
-            return false;
-        }
-        offset++;
-    }
+    data = decodePulseDistanceData(results, DENON_BITS, offset, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE);
+//    for (int i = 0; i < DENON_BITS; i++) {
+//        // Each bit looks like: MARK + SPACE_1 -> 1
+//        //                 or : MARK + SPACE_0 -> 0
+//        if (!MATCH_MARK(results->rawbuf[offset], DENON_BIT_MARK)) {
+//            return false;
+//        }
+//        offset++;
+//
+//        // IR data is big-endian, so we shuffle it in from the right:
+//        if (MATCH_SPACE(results->rawbuf[offset], DENON_ONE_SPACE)) {
+//            data = (data << 1) | 1;
+//        } else if (MATCH_SPACE(results->rawbuf[offset], DENON_ZERO_SPACE)) {
+//            data = (data << 1) | 0;
+//        } else {
+//            return false;
+//        }
+//        offset++;
+//    }
 
     // Success
-    results->bits = BITS;
+    results->bits = DENON_BITS;
     results->value = data;
     results->decode_type = DENON;
     return true;

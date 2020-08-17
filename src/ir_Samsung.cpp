@@ -76,21 +76,22 @@ bool IRrecv::decodeSAMSUNG(decode_results *results) {
     }
     offset++;
 
-    for (int i = 0; i < SAMSUNG_BITS; i++) {
-        if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_BIT_MARK)) {
-            return false;
-        }
-        offset++;
-
-        if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ONE_SPACE)) {
-            data = (data << 1) | 1;
-        } else if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ZERO_SPACE)) {
-            data = (data << 1) | 0;
-        } else {
-            return false;
-        }
-        offset++;
-    }
+    data = decodePulseDistanceData(results, SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE);
+//    for (int i = 0; i < SAMSUNG_BITS; i++) {
+//        if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_BIT_MARK)) {
+//            return false;
+//        }
+//        offset++;
+//
+//        if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ONE_SPACE)) {
+//            data = (data << 1) | 1;
+//        } else if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ZERO_SPACE)) {
+//            data = (data << 1) | 0;
+//        } else {
+//            return false;
+//        }
+//        offset++;
+//    }
 
 // Success
     results->bits = SAMSUNG_BITS;

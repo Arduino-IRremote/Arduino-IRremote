@@ -241,7 +241,6 @@ void IRrecv::resume() {
 // Use a tolerance of 20%
 //
 int IRrecv::compare(unsigned int oldval, unsigned int newval) {
-// @formatter:off
     if (newval * 10 < oldval * 8) {
         return 0;
     }
@@ -250,8 +249,38 @@ int IRrecv::compare(unsigned int oldval, unsigned int newval) {
     }
     return 1;
 
-// @formatter:on
-}    //+=============================================================================
+}
+
+/*
+ * Each bit looks like: MARK + SPACE_1 -> 1
+ *                 or : MARK + SPACE_0 -> 0
+ * Data is read MSB first.
+ */
+unsigned long IRrecv::decodePulseDistanceData(decode_results *aResults, uint8_t aNumberOfBits, uint8_t aStartOffset,
+        unsigned int aBitMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros) {
+    unsigned long aDecodedData = 0;
+
+    for (uint8_t i = 0; i < aNumberOfBits; i++) {
+        // Check for constant length mark
+        if (!MATCH_MARK(aResults->rawbuf[aStartOffset], aBitMarkMicros)) {
+            return false;
+        }
+        aStartOffset++;
+
+        // Check for variable length space indicating a 0 or 1
+        if (MATCH_SPACE(aResults->rawbuf[aStartOffset], aOneSpaceMicros)) {
+            aDecodedData = (aDecodedData << 1) | 1;
+        } else if (MATCH_SPACE(aResults->rawbuf[aStartOffset], aZeroSpaceMicros)) {
+            aDecodedData = (aDecodedData << 1) | 0;
+        } else {
+            return false;
+        }
+        aStartOffset++;
+    }
+    return aDecodedData;
+}
+
+//+=============================================================================
 // Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
 // Converts the raw code values into a 32-bit hash code.
 // Hopefully this code is unique for each button.
