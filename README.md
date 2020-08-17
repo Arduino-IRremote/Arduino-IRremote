@@ -24,16 +24,21 @@ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled o
 # Supported IR Protocols
 Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, MagiQuest, Mitsubishi, Panasonic, RC5, RC6, Samsung, Sanyo, Sharp, Sony, Whynter, (Pronto).
 
-## Handling unknown Protocols
-### Disclaimer
+# Handling unknown Protocols
+## Disclaimer
 This library was never designed to handle long codes like the ones used by air conditioners. See [Recording long Infrared Remote control signals with Arduino](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).<br/>
 The main reason is, that it was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.
 
+## Hints
 If you do not know which protocol your IR transmitter uses, you have several choices.
 - Use the [IRrecvDumpV2 example](examples/IRrecvDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo). For **long codes** like from air conditioners, you can **change the length of the input buffer** in [IRremoteInt.h](src/private/IRremoteInt.h#L30).
 - If you have a bigger Arduino board at hand (> 100 kByte program space) you can try the [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library DecodeIR.
 - Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
 - Use the [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) and check the serial output if the protocol is one of the 40 supported protocols.
+
+## Other IR libraries
+[Here](https://github.com/ukw100/IRMP#quick-comparison-of-4-arduino-ir-receiving-libraries) you find a short comparison matrix of 4 popular Arduino IR libraries.<br/>
+[Here](https://github.com/crankyoldgit/IRremoteESP8266) you find an **ESP8266/ESP32** version of IRremote with an **[impressive list of supported protocols](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md)**.
 
 # Supported Boards
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
@@ -76,9 +81,6 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 | [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/)                       | **1**, 16, 25       | 1, **2**, 3       |
 | [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/)                         | **5**               | **CMT**           |
 | [Teensy-LC](https://www.pjrc.com/teensy/)                                | **16**              | **TPM1**          |
-
-## Other IR libraries
-[Here](https://github.com/ukw100/IRMP#quick-comparison-of-4-arduino-ir-receiving-libraries) you find a short comparison matrix of 4 popular Arduino IR libraries.
 
 ## Revision History
 Please see [changelog.md](https://github.com/z3t0/Arduino-IRremote/blob/master/changelog.md).

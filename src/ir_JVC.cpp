@@ -14,7 +14,7 @@
 #define JVC_BIT_MARK        600
 #define JVC_ONE_SPACE      1600
 #define JVC_ZERO_SPACE      550
-#define JVC_RPT_LENGTH    60000
+#define JVC_REPEAT_DISTANCE 60000
 
 //+=============================================================================
 // JVC does NOT repeat by sending a separate code (like NEC does).
