@@ -48,8 +48,11 @@ void setup() {
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);
+
+#if defined(SENDING_SUPPORTED)
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
+#endif
 }
 
 // Storage for the recorded code
@@ -61,7 +64,7 @@ int toggle = 0; // The RC5/6 toggle state
 
 // Stores the code for later playback
 // Most of this code is just logging
-void storeCode(decode_results *results) {
+void storeCode(decode_results *aResults) {
     codeType = results->decode_type;
 //  int count = results->rawlen;
     if (codeType == UNKNOWN) {

@@ -35,7 +35,7 @@ void setup() {
 //+=============================================================================
 // Display IR code
 //
-void ircode(decode_results *results) {
+void ircode(decode_results *aResults) {
     // Panasonic has an Address
     if (results->decode_type == PANASONIC) {
         Serial.print(results->address, HEX);
@@ -49,7 +49,7 @@ void ircode(decode_results *results) {
 //+=============================================================================
 // Display encoding type
 //
-void encoding(decode_results *results) {
+void encoding(decode_results *aResults) {
     switch (results->decode_type) {
     default:
     case UNKNOWN:
@@ -112,7 +112,7 @@ void encoding(decode_results *results) {
 //+=============================================================================
 // Dump out the decode_results structure.
 //
-void dumpInfo(decode_results *results) {
+void dumpInfo(decode_results *aResults) {
     // Check if the buffer overflowed
     if (results->overflow) {
         Serial.println("IR code too long. Edit IRremoteInt.h and increase RAW_BUFFER_LENGTH");
@@ -135,7 +135,7 @@ void dumpInfo(decode_results *results) {
 //+=============================================================================
 // Dump out the decode_results structure.
 //
-void dumpRaw(decode_results *results) {
+void dumpRaw(decode_results *aResults) {
     // Print Raw data
     Serial.print("Timing[");
     Serial.print(results->rawlen - 1, DEC);
@@ -170,7 +170,7 @@ void dumpRaw(decode_results *results) {
 //+=============================================================================
 // Dump out the decode_results structure.
 //
-void dumpCode(decode_results *results) {
+void dumpCode(decode_results *aResults) {
     // Start declaration
     Serial.print("unsigned int  ");          // variable type
     Serial.print("rawData[");                // array name
@@ -218,7 +218,7 @@ void dumpCode(decode_results *results) {
 //+=============================================================================
 // Dump out the raw data as Pronto Hex.
 //
-void dumpPronto(decode_results *results) {
+void dumpPronto(decode_results *aResults) {
     Serial.print("Pronto Hex: ");
     irrecv.dumpPronto(Serial, results);
     Serial.println();

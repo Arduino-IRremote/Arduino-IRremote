@@ -14,7 +14,7 @@
 #define JVC_BIT_MARK        600
 #define JVC_ONE_SPACE      1600
 #define JVC_ZERO_SPACE      550
-#define JVC_REPEAT_DISTANCE 60000
+#define JVC_REPEAT_SPACE  50000
 
 //+=============================================================================
 // JVC does NOT repeat by sending a separate code (like NEC does).
@@ -36,7 +36,7 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
     }
 
     // Data
-    sendPulseDistanceData(data, nbits, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE);
+    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits);
 //    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
 //        if (data & mask) {
 //            mark(JVC_BIT_MARK);
@@ -55,47 +55,47 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
 
 //+=============================================================================
 #if DECODE_JVC
-bool IRrecv::decodeJVC(decode_results *results) {
+bool IRrecv::decodeJVC() {
     long data = 0;
     int offset = 1; // Skip first space
 
     // Check for repeat
-    if ((irparams.rawlen - 1 == 33) && MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK)
-            && MATCH_MARK(results->rawbuf[irparams.rawlen - 1], JVC_BIT_MARK)) {
-        results->bits = 0;
-        results->value = REPEAT;
-        results->decode_type = JVC;
+    if ((results.rawlen - 1 == 33) && MATCH_MARK(results.rawbuf[offset], JVC_BIT_MARK)
+            && MATCH_MARK(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
+        results.bits = 0;
+        results.value = REPEAT;
+        results.decode_type = JVC;
         return true;
     }
 
     // Initial mark
-    if (!MATCH_MARK(results->rawbuf[offset], JVC_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], JVC_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (irparams.rawlen < (2 * JVC_BITS) + 1) {
+    if (results.rawlen < (2 * JVC_BITS) + 1) {
         return false;
     }
 
     // Initial space
-    if (!MATCH_SPACE(results->rawbuf[offset], JVC_HEADER_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[offset], JVC_HEADER_SPACE)) {
         return false;
     }
     offset++;
 
-    data = decodePulseDistanceData(results, JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE);
+    data = decodePulseDistanceData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE);
 //    for (int i = 0; i < JVC_BITS; i++) {
 //        // Check for constant length mark
-//        if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK)) {
+//        if (!MATCH_MARK(results.rawbuf[offset], JVC_BIT_MARK)) {
 //            return false;
 //        }
 //        offset++;
 //
 //        // Check for variable length space indicating a 0 or 1
-//        if (MATCH_SPACE(results->rawbuf[offset], JVC_ONE_SPACE)) {
+//        if (MATCH_SPACE(results.rawbuf[offset], JVC_ONE_SPACE)) {
 //            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results->rawbuf[offset], JVC_ZERO_SPACE)) {
+//        } else if (MATCH_SPACE(results.rawbuf[offset], JVC_ZERO_SPACE)) {
 //            data = (data << 1) | 0;
 //        } else {
 //            return false;
@@ -104,16 +104,21 @@ bool IRrecv::decodeJVC(decode_results *results) {
 //    }
 
     // Stop bit
-    if (!MATCH_MARK(results->rawbuf[offset], JVC_BIT_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], JVC_BIT_MARK)) {
         return false;
     }
 
     // Success
-    results->bits = JVC_BITS;
-    results->value = data;
-    results->decode_type = JVC;
+    results.bits = JVC_BITS;
+    results.value = data;
+    results.decode_type = JVC;
 
     return true;
+}
+bool IRrecv::decodeJVC(decode_results *aResults) {
+    bool aReturnValue = decodeJVC();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif
 

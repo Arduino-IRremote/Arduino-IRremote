@@ -27,7 +27,7 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     space(SAMSUNG_HEADER_SPACE);
 
     // Data
-    sendPulseDistanceData(data, nbits,  SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE);
+    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits);
 //    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
 //        if (data & mask) {
 //            mark(SAMSUNG_BIT_MARK);
@@ -38,7 +38,7 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 //        }
 //    }
 
-    // Footer
+// Footer
     mark(SAMSUNG_BIT_MARK);
     space(0);  // Always end with the LED off
 }
@@ -48,22 +48,22 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 // SAMSUNGs have a repeat only 4 items long
 //
 #if DECODE_SAMSUNG
-bool IRrecv::decodeSAMSUNG(decode_results *results) {
+bool IRrecv::decodeSAMSUNG() {
     long data = 0;
     int offset = 1;  // Skip first space
 
     // Initial mark
-    if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], SAMSUNG_HEADER_MARK)) {
         return false;
     }
     offset++;
 
 // Check for repeat
-    if ((irparams.rawlen == 4) && MATCH_SPACE(results->rawbuf[offset], SAMSUNG_REPEAT_SPACE)
-            && MATCH_MARK(results->rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
-        results->bits = 0;
-        results->value = REPEAT;
-        results->decode_type = SAMSUNG;
+    if ((irparams.rawlen == 4) && MATCH_SPACE(results.rawbuf[offset], SAMSUNG_REPEAT_SPACE)
+            && MATCH_MARK(results.rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
+        results.bits = 0;
+        results.value = REPEAT;
+        results.decode_type = SAMSUNG;
         return true;
     }
     if (irparams.rawlen < (2 * SAMSUNG_BITS) + 4) {
@@ -71,21 +71,21 @@ bool IRrecv::decodeSAMSUNG(decode_results *results) {
     }
 
 // Initial space
-    if (!MATCH_SPACE(results->rawbuf[offset], SAMSUNG_HEADER_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[offset], SAMSUNG_HEADER_SPACE)) {
         return false;
     }
     offset++;
 
-    data = decodePulseDistanceData(results, SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE);
+    data = decodePulseDistanceData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE);
 //    for (int i = 0; i < SAMSUNG_BITS; i++) {
-//        if (!MATCH_MARK(results->rawbuf[offset], SAMSUNG_BIT_MARK)) {
+//        if (!MATCH_MARK(results.rawbuf[offset], SAMSUNG_BIT_MARK)) {
 //            return false;
 //        }
 //        offset++;
 //
-//        if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ONE_SPACE)) {
+//        if (MATCH_SPACE(results.rawbuf[offset], SAMSUNG_ONE_SPACE)) {
 //            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results->rawbuf[offset], SAMSUNG_ZERO_SPACE)) {
+//        } else if (MATCH_SPACE(results.rawbuf[offset], SAMSUNG_ZERO_SPACE)) {
 //            data = (data << 1) | 0;
 //        } else {
 //            return false;
@@ -94,10 +94,15 @@ bool IRrecv::decodeSAMSUNG(decode_results *results) {
 //    }
 
 // Success
-    results->bits = SAMSUNG_BITS;
-    results->value = data;
-    results->decode_type = SAMSUNG;
+    results.bits = SAMSUNG_BITS;
+    results.value = data;
+    results.decode_type = SAMSUNG;
     return true;
+}
+bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
+    bool aReturnValue = decodeSAMSUNG();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif
 

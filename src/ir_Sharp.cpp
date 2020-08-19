@@ -44,7 +44,7 @@ void IRsend::sendSharpRaw(unsigned long data, int nbits) {
     // Sending codes in bursts of 3 (normal, inverted, normal) makes transmission
     // much more reliable. That's the exact behavior of CD-S6470 remote control.
     for (int n = 0; n < 3; n++) {
-        sendPulseDistanceData(data, nbits, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE, SHARP_ZERO_SPACE);
+        sendPulseDistanceWidthData(SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE, SHARP_BIT_MARK_SEND, SHARP_ZERO_SPACE, data, nbits);
 //        for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
 //            if (data & mask) {
 //                mark (SHARP_BIT_MARK_SEND);
@@ -93,7 +93,7 @@ void IRsend::sendSharp(unsigned int address, unsigned int command) {
 // Tesded on a DENON AVR-1804 reciever
 
 #if DECODE_SHARP
-bool IRrecv::decodeSharp(decode_results *results) {
+bool IRrecv::decodeSharp() {
     unsigned long addr = 0;  // Somewhere to build our address
     unsigned long data = 0;  // Somewhere to build our data
     unsigned long lastData = 0;  // Somewhere to store last data
@@ -111,42 +111,42 @@ bool IRrecv::decodeSharp(decode_results *results) {
         return false;
 
     // Check the first mark to see if it fits the SHARP_BIT_MARK_RECV length
-    if (!MATCH_MARK(results->rawbuf[offset], SHARP_BIT_MARK_RECV))
+    if (!MATCH_MARK(results.rawbuf[offset], SHARP_BIT_MARK_RECV))
         return false;
     //check the first pause and see if it fits the SHARP_ONE_SPACE or SHARP_ZERO_SPACE length
-    if (!(MATCH_SPACE(results->rawbuf[offset + 1], SHARP_ONE_SPACE) || MATCH_SPACE(results->rawbuf[offset + 1], SHARP_ZERO_SPACE)))
+    if (!(MATCH_SPACE(results.rawbuf[offset + 1], SHARP_ONE_SPACE) || MATCH_SPACE(results.rawbuf[offset + 1], SHARP_ZERO_SPACE)))
         return false;
 
     // Read the bits in
     for (int j = 0; j < loops; j++) {
         data = 0;
         addr = 0;
-        addr = decodePulseDistanceData(results, SHARP_ADDR_BITS, offset, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE, SHARP_ZERO_SPACE);
+        addr = decodePulseDistanceData(SHARP_ADDR_BITS, offset, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE, SHARP_ZERO_SPACE);
 //        for (int i = 0; i < SHARP_ADDR_BITS; i++) {
 //            // Each bit looks like: SHARP_BIT_MARK_RECV + SHARP_ONE_SPACE -> 1
 //            //                 or : SHARP_BIT_MARK_RECV + SHARP_ZERO_SPACE -> 0
-//            if (!MATCH_MARK(results->rawbuf[offset++], SHARP_BIT_MARK_RECV))
+//            if (!MATCH_MARK(results.rawbuf[offset++], SHARP_BIT_MARK_RECV))
 //                return false;
 //            // IR data is big-endian, so we shuffle it in from the right:
-//            if (MATCH_SPACE(results->rawbuf[offset], SHARP_ONE_SPACE))
+//            if (MATCH_SPACE(results.rawbuf[offset], SHARP_ONE_SPACE))
 //                addr += 1 << i;
-//            else if (MATCH_SPACE(results->rawbuf[offset], SHARP_ZERO_SPACE))
+//            else if (MATCH_SPACE(results.rawbuf[offset], SHARP_ZERO_SPACE))
 //                addr = addr;
 //            else
 //                return false;
 //            offset++;
 //        }
-        data = decodePulseDistanceData(results, SHARP_DATA_BITS, offset + SHARP_ADDR_BITS, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE,
+        data = decodePulseDistanceData( SHARP_DATA_BITS, offset + SHARP_ADDR_BITS, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE,
         SHARP_ZERO_SPACE);
 //        for (int i = 0; i < SHARP_DATA_BITS; i++) {
 //            // Each bit looks like: SHARP_BIT_MARK_RECV + SHARP_ONE_SPACE -> 1
 //            //                 or : SHARP_BIT_MARK_RECV + SHARP_ZERO_SPACE -> 0
-//            if (!MATCH_MARK(results->rawbuf[offset++], SHARP_BIT_MARK_RECV))
+//            if (!MATCH_MARK(results.rawbuf[offset++], SHARP_BIT_MARK_RECV))
 //                return false;
 //            // IR data is big-endian, so we shuffle it in from the right:
-//            if (MATCH_SPACE(results->rawbuf[offset], SHARP_ONE_SPACE))
+//            if (MATCH_SPACE(results.rawbuf[offset], SHARP_ONE_SPACE))
 //                data += 1 << i;
-//            else if (MATCH_SPACE(results->rawbuf[offset], SHARP_ZERO_SPACE))
+//            else if (MATCH_SPACE(results.rawbuf[offset], SHARP_ZERO_SPACE))
 //                data = data;
 //            else
 //                return false;
@@ -166,10 +166,15 @@ bool IRrecv::decodeSharp(decode_results *results) {
     }
 
 // Success
-    results->bits = SHARP_BITS;
-    results->value = data;
-    results->address = addr;
-    results->decode_type = SHARP;
+    results.bits = SHARP_BITS;
+    results.value = data;
+    results.address = addr;
+    results.decode_type = SHARP;
     return true;
+}
+bool IRrecv::decodeSharp(decode_results *aResults) {
+    bool aReturnValue = decodeSharp();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif

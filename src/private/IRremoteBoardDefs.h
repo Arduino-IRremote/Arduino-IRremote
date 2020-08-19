@@ -79,21 +79,6 @@
  */
 #define BLINKLED_OFF()  digitalWrite(BLINKLED, LOW)
 
-/**
- * Define to use no carrier PWM, just simulate a receiver signal.
- */
-#define USE_NO_SEND_PWM
-
-/**
- * Define to use carrier PWM generation in software, instead of hardware PWM.
- */
-#define USE_SOFT_SEND_PWM
-
-/**
- * Define to use spin wait instead of delayMicros() for USE_SOFT_SEND_PWM.
- */
-#define USE_SPIN_WAIT
-
 #elif ! defined(ARDUINO)
 // Assume that we compile a test version, to be executed on the host, not on a board.
 

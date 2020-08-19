@@ -73,38 +73,38 @@ void IRsend::sendAiwaRCT501(int code) {
 
 //+=============================================================================
 #if DECODE_AIWA_RC_T501
-bool IRrecv::decodeAiwaRCT501(decode_results *results) {
+bool IRrecv::decodeAiwaRCT501() {
     int data = 0;
     unsigned int offset = 1;
 
     // Check SIZE
-    if (irparams.rawlen < 2 * (AIWA_RC_T501_SUM_BITS) + 4) {
+    if (results.rawlen < 2 * (AIWA_RC_T501_SUM_BITS) + 4) {
         return false;
     }
 
     // Check HDR Mark/Space
-    if (!MATCH_MARK(results->rawbuf[offset], AIWA_RC_T501_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], AIWA_RC_T501_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_HEADER_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[offset], AIWA_RC_T501_HEADER_SPACE)) {
         return false;
     }
     offset++;
 
     offset += 26;  // skip pre-data - optional
-    while (offset < irparams.rawlen - 4) {
-        if (MATCH_MARK(results->rawbuf[offset], AIWA_RC_T501_BIT_MARK)) {
+    while (offset < results.rawlen - 4) {
+        if (MATCH_MARK(results.rawbuf[offset], AIWA_RC_T501_BIT_MARK)) {
             offset++;
         } else {
             return false;
         }
 
         // ONE & ZERO
-        if (MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_ONE_SPACE)) {
+        if (MATCH_SPACE(results.rawbuf[offset], AIWA_RC_T501_ONE_SPACE)) {
             data = (data << 1) | 1;
-        } else if (MATCH_SPACE(results->rawbuf[offset], AIWA_RC_T501_ZERO_SPACE)) {
+        } else if (MATCH_SPACE(results.rawbuf[offset], AIWA_RC_T501_ZERO_SPACE)) {
             data = (data << 1) | 0;
         } else {
             break; // End of one & zero detected
@@ -112,13 +112,18 @@ bool IRrecv::decodeAiwaRCT501(decode_results *results) {
         offset++;
     }
 
-    results->bits = (offset - 1) / 2;
-    if (results->bits < 42) {
+    results.bits = (offset - 1) / 2;
+    if (results.bits < 42) {
         return false;
     }
 
-    results->value = data;
-    results->decode_type = AIWA_RC_T501;
+    results.value = data;
+    results.decode_type = AIWA_RC_T501;
     return true;
+}
+bool IRrecv::decodeAiwaRCT501(decode_results *aResults) {
+    bool aReturnValue = decodeAiwaRCT501();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif

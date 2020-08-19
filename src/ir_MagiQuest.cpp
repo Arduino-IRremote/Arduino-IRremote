@@ -75,9 +75,9 @@ void IRsend::sendMagiQuest(unsigned long wand_id, unsigned int magnitude) {
 //+=============================================================================
 //
 #if DECODE_MAGIQUEST
-bool IRrecv::decodeMagiQuest(decode_results *results) {
+bool IRrecv::decodeMagiQuest() {
     magiquest_t data;  // Somewhere to build our code
-    unsigned int offset = 1;  // Skip the Gap reading
+    unsigned int offset = 1;  // Skip the gap reading
 
     unsigned int mark_;
     unsigned int space_;
@@ -89,7 +89,7 @@ bool IRrecv::decodeMagiQuest(decode_results *results) {
 #endif
 
     // Check we have enough data
-    if (irparams.rawlen < 2 * MAGIQUEST_BITS) {
+    if (results.rawlen < 2 * MAGIQUEST_BITS) {
         DBG_PRINT("Not enough bits to be a MagiQuest packet (");
         DBG_PRINT(irparams.rawlen);
         DBG_PRINT(" < ");
@@ -100,9 +100,9 @@ bool IRrecv::decodeMagiQuest(decode_results *results) {
 
     // Read the bits in
     data.llword = 0;
-    while (offset + 1 < irparams.rawlen) {
-        mark_ = results->rawbuf[offset++];
-        space_ = results->rawbuf[offset++];
+    while (offset + 1 < results.rawlen) {
+        mark_ = results.rawbuf[offset++];
+        space_ = results.rawbuf[offset++];
         ratio_ = space_ / mark_;
 
         DBG_PRINT("mark=");
@@ -136,18 +136,23 @@ bool IRrecv::decodeMagiQuest(decode_results *results) {
 #endif
 
     // Success
-    results->decode_type = MAGIQUEST;
-    results->bits = offset / 2;
-    results->value = data.cmd.wand_id;
-    results->magnitude = data.cmd.magnitude;
+    results.decode_type = MAGIQUEST;
+    results.bits = offset / 2;
+    results.value = data.cmd.wand_id;
+    results.magnitude = data.cmd.magnitude;
 
     DBG_PRINT("MQ: bits=");
-    DBG_PRINT(results->bits);
+    DBG_PRINT(results.bits);
     DBG_PRINT(" value=");
-    DBG_PRINT(results->value);
+    DBG_PRINT(results.value);
     DBG_PRINT(" magnitude=");
-    DBG_PRINTLN(results->magnitude);
+    DBG_PRINTLN(results.magnitude);
 
     return true;
+}
+bool IRrecv::decodeMagiQuest(decode_results *aResults) {
+    bool aReturnValue = decodeMagiQuest();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif

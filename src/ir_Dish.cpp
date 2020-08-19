@@ -37,7 +37,7 @@ void IRsend::sendDISH(unsigned long data, int nbits) {
     mark(DISH_HEADER_MARK);
     space(DISH_HEADER_SPACE);
 
-    sendPulseDistanceData(data, nbits,  DISH_BIT_MARK, DISH_ONE_SPACE, DISH_ZERO_SPACE);
+    sendPulseDistanceWidthData(DISH_BIT_MARK, DISH_ONE_SPACE, DISH_BIT_MARK, DISH_ZERO_SPACE, data, nbits);
 //    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
 //        if (data & mask) {
 //            mark(DISH_BIT_MARK);

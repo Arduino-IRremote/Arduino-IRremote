@@ -23,62 +23,70 @@
 
 //+=============================================================================
 #if DECODE_MITSUBISHI
-bool  IRrecv::decodeMitsubishi (decode_results *results)
-{
-  // Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
-  long data = 0;
-  if (irparams.rawlen < 2 * MITSUBISHI_BITS + 2)  return false ;
-  unsigned int offset = 0; // Skip first space
-  // Initial space
+bool IRrecv::decodeMitsubishi() {
+    // Serial.print("?!? decoding Mitsubishi:");Serial.print(irparams.rawlen); Serial.print(" want "); Serial.println( 2 * MITSUBISHI_BITS + 2);
+    long data = 0;
+    if (results.rawlen < 2 * MITSUBISHI_BITS + 2)
+        return false;
+    unsigned int offset = 1; // Skip first space
+    // Initial space
 
 #if 0
   // Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
   Serial.print("IR Gap: ");
-  Serial.println( results->rawbuf[offset]);
+  Serial.println( results.rawbuf[0]);
   Serial.println( "test against:");
-  Serial.println(results->rawbuf[offset]);
+  Serial.println(results.rawbuf[0]);
 #endif
 
 #if 0
   // Not seeing double keys from Mitsubishi
-  if (results->rawbuf[offset] < MITSUBISHI_DOUBLE_SPACE_USECS) {
+  if (results.rawbuf[0] < MITSUBISHI_DOUBLE_SPACE_USECS) {
     // Serial.print("IR Gap found: ");
-    results->bits = 0;
-    results->value = REPEAT;
-    results->decode_type = MITSUBISHI;
+    results.bits = 0;
+    results.value = REPEAT;
+    results.decode_type = MITSUBISHI;
     return true;
   }
 #endif
 
-  offset++;
+    // Typical
+    // 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7
 
-  // Typical
-  // 14200 7 41 7 42 7 42 7 17 7 17 7 18 7 41 7 18 7 17 7 17 7 18 7 41 8 17 7 17 7 18 7 17 7
-
-  // Initial Space
-  if (!MATCH_MARK(results->rawbuf[offset], MITSUBISHI_HEADER_SPACE))  return false ;
-  offset++;
-
-  while (offset + 1 < irparams.rawlen) {
-    if      (MATCH_MARK(results->rawbuf[offset], MITSUBISHI_ONE_MARK))   data = (data << 1) | 1 ;
-    else if (MATCH_MARK(results->rawbuf[offset], MITSUBISHI_ZERO_MARK))  data <<= 1 ;
-    else                                                                 return false ;
+    // Initial Space
+    if (!MATCH_MARK(results.rawbuf[offset], MITSUBISHI_HEADER_SPACE))
+        return false;
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], MITSUBISHI_HEADER_SPACE))  break ;
-    offset++;
-  }
+    while (offset + 1 < irparams.rawlen) {
+        if (MATCH_MARK(results.rawbuf[offset], MITSUBISHI_ONE_MARK))
+            data = (data << 1) | 1;
+        else if (MATCH_MARK(results.rawbuf[offset], MITSUBISHI_ZERO_MARK))
+            data <<= 1;
+        else
+            return false;
+        offset++;
 
-  // Success
-  results->bits = (offset - 1) / 2;
-  if (results->bits < MITSUBISHI_BITS) {
-    results->bits = 0;
-    return false;
-  }
+        if (!MATCH_SPACE(results.rawbuf[offset], MITSUBISHI_HEADER_SPACE))
+            break;
+        offset++;
+    }
 
-  results->value       = data;
-  results->decode_type = MITSUBISHI;
-  return true;
+    // Success
+    results.bits = (offset - 1) / 2;
+    if (results.bits < MITSUBISHI_BITS) {
+        results.bits = 0;
+        return false;
+    }
+
+    results.value = data;
+    results.decode_type = MITSUBISHI;
+    return true;
+}
+bool IRrecv::decodeMitsubishi(decode_results *aResults) {
+    bool aReturnValue = decodeMitsubishi();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif
 

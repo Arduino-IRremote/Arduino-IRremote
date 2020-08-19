@@ -1,6 +1,6 @@
 #include "IRremote.h"
 
-#ifdef SENDING_SUPPORTED
+#ifdef SENDING_SUPPORTED // from IRremoteBoardDefs.h
 //+=============================================================================
 void IRsend::sendRaw(const unsigned int buf[], unsigned int len, unsigned int hz) {
     // Set IR carrier frequency
@@ -64,22 +64,39 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
 //+=============================================================================
 // Sends PulseDistance data from MSB to LSB
 //
-void IRsend::sendPulseDistanceData(unsigned long aData, uint8_t aNumberOfBits, unsigned int aBitMarkMicros,
-        unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros) {
+void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
+        unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst) {
 
-    // send data from MSB to LSB until mask bit is shifted out
-    for (unsigned long mask = 1UL << (aNumberOfBits - 1); mask; mask >>= 1) {
-        if (aData & mask) {
-            DBG_PRINT("1");
-            mark(aBitMarkMicros);
-            space(aOneSpaceMicros);
-        } else {
-            DBG_PRINT("0");
-            mark(aBitMarkMicros);
-            space(aZeroSpaceMicros);
+    if (aMSBfirst) {  // Send the MSB first.
+        // send data from MSB to LSB until mask bit is shifted out
+        for (unsigned long mask = 1UL << (aNumberOfBits - 1); mask; mask >>= 1) {
+            if (aData & mask) {
+                DBG_PRINT("1");
+                mark(aOneMarkMicros);
+                space(aOneSpaceMicros);
+            } else {
+                DBG_PRINT("0");
+                mark(aZeroMarkMicros);
+                space(aZeroSpaceMicros);
+            }
         }
+        DBG_PRINTLN("");
     }
-    DBG_PRINTLN("");
+#if defined(LSB_FIRST_REQURED)
+     else {  // Send the Least Significant Bit (LSB) first / MSB last.
+        for (uint16_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
+            if (aData & 1) {  // Send a 1
+                DBG_PRINT("1");
+                mark(aOneMarkMicros);
+                space(aOneSpaceMicros);
+            } else {  // Send a 0
+                DBG_PRINT("0");
+                mark(aZeroMarkMicros);
+                space(aZeroSpaceMicros);
+            }
+        DBG_PRINTLN("");
+    }
+#endif
 }
 
 //+=============================================================================

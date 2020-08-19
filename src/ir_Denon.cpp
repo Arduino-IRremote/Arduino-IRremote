@@ -39,7 +39,7 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
     space(DENON_HEADER_SPACE);
 
     // Data
-    sendPulseDistanceData(data, nbits, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE);
+    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits);
 //    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
 //        if (data & mask) {
 //            mark(DENON_BIT_MARK);
@@ -59,9 +59,9 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
 //+=============================================================================
 //
 #if DECODE_DENON
-bool IRrecv::decodeDenon(decode_results *results) {
+bool IRrecv::decodeDenon() {
     unsigned long data = 0;  // Somewhere to build our code
-    int offset = 1;  // Skip the Gap reading
+    int offset = 1;  // Skip the gap reading
 
     // Check we have the right amount of data
     if (irparams.rawlen != 1 + 2 + (2 * DENON_BITS) + 1) {
@@ -69,30 +69,30 @@ bool IRrecv::decodeDenon(decode_results *results) {
     }
 
     // Check initial Mark+Space match
-    if (!MATCH_MARK(results->rawbuf[offset], DENON_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], DENON_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], DENON_HEADER_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[offset], DENON_HEADER_SPACE)) {
         return false;
     }
     offset++;
 
     // Read the bits in
-    data = decodePulseDistanceData(results, DENON_BITS, offset, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE);
+    data = decodePulseDistanceData(DENON_BITS, offset, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE);
 //    for (int i = 0; i < DENON_BITS; i++) {
 //        // Each bit looks like: MARK + SPACE_1 -> 1
 //        //                 or : MARK + SPACE_0 -> 0
-//        if (!MATCH_MARK(results->rawbuf[offset], DENON_BIT_MARK)) {
+//        if (!MATCH_MARK(results.rawbuf[offset], DENON_BIT_MARK)) {
 //            return false;
 //        }
 //        offset++;
 //
 //        // IR data is big-endian, so we shuffle it in from the right:
-//        if (MATCH_SPACE(results->rawbuf[offset], DENON_ONE_SPACE)) {
+//        if (MATCH_SPACE(results.rawbuf[offset], DENON_ONE_SPACE)) {
 //            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results->rawbuf[offset], DENON_ZERO_SPACE)) {
+//        } else if (MATCH_SPACE(results.rawbuf[offset], DENON_ZERO_SPACE)) {
 //            data = (data << 1) | 0;
 //        } else {
 //            return false;
@@ -101,9 +101,14 @@ bool IRrecv::decodeDenon(decode_results *results) {
 //    }
 
     // Success
-    results->bits = DENON_BITS;
-    results->value = data;
-    results->decode_type = DENON;
+    results.bits = DENON_BITS;
+    results.value = data;
+    results.decode_type = DENON;
     return true;
+}
+bool IRrecv::decodeDenon(decode_results *aResults) {
+    bool aReturnValue = decodeDenon();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif

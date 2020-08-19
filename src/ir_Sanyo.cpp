@@ -21,53 +21,53 @@
 
 //+=============================================================================
 #if DECODE_SANYO
-bool IRrecv::decodeSanyo(decode_results *results) {
+bool IRrecv::decodeSanyo() {
     long data = 0;
     unsigned int offset = 0;  // Skip first space  <-- CHECK THIS!
 
-    if (irparams.rawlen < (2 * SANYO_BITS) + 2) {
+    if (results.rawlen < (2 * SANYO_BITS) + 2) {
         return false;
     }
 
 #if 0
 	// Put this back in for debugging - note can't use #DEBUG as if Debug on we don't see the repeat cos of the delay
 	Serial.print("IR Gap: ");
-	Serial.println( results->rawbuf[offset] * MICROS_PER_TICK);
+	Serial.println( results.rawbuf[offset] * MICROS_PER_TICK);
 	Serial.println( "test against:");
 	Serial.println(SANYO_DOUBLE_SPACE_USECS);
 #endif
 
 // Initial space
-    if ((results->rawbuf[offset] * MICROS_PER_TICK) < SANYO_DOUBLE_SPACE_USECS) {
+    if ((results.rawbuf[offset] * MICROS_PER_TICK) < SANYO_DOUBLE_SPACE_USECS) {
         //Serial.print("IR Gap found: ");
-        results->bits = 0;
-        results->value = REPEAT;
-        results->decode_type = SANYO;
+        results.bits = 0;
+        results.value = REPEAT;
+        results.decode_type = SANYO;
         return true;
     }
     offset++;
 
     // Initial mark
-    if (!MATCH_MARK(results->rawbuf[offset], SANYO_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], SANYO_HEADER_MARK)) {
         return false;
     }
     offset++;
 
     // Skip Second Mark
-    if (!MATCH_MARK(results->rawbuf[offset], SANYO_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], SANYO_HEADER_MARK)) {
         return false;
     }
     offset++;
 
     while (offset + 1 < irparams.rawlen) {
-        if (!MATCH_SPACE(results->rawbuf[offset], SANYO_HEADER_SPACE)) {
+        if (!MATCH_SPACE(results.rawbuf[offset], SANYO_HEADER_SPACE)) {
             break;
         }
         offset++;
 
-        if (MATCH_MARK(results->rawbuf[offset], SANYO_ONE_MARK)) {
+        if (MATCH_MARK(results.rawbuf[offset], SANYO_ONE_MARK)) {
             data = (data << 1) | 1;
-        } else if (MATCH_MARK(results->rawbuf[offset], SANYO_ZERO_MARK)) {
+        } else if (MATCH_MARK(results.rawbuf[offset], SANYO_ZERO_MARK)) {
             data = (data << 1) | 0;
         } else {
             return false;
@@ -76,14 +76,19 @@ bool IRrecv::decodeSanyo(decode_results *results) {
     }
 
     // Success
-    results->bits = (offset - 1) / 2;
-    if (results->bits < 12) {
-        results->bits = 0;
+    results.bits = (offset - 1) / 2;
+    if (results.bits < 12) {
+        results.bits = 0;
         return false;
     }
 
-    results->value = data;
-    results->decode_type = SANYO;
+    results.value = data;
+    results.decode_type = SANYO;
     return true;
+}
+bool IRrecv::decodeSanyo(decode_results *aResults) {
+    bool aReturnValue = decodeSanyo();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif

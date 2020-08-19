@@ -49,7 +49,7 @@ void setup() {
     Serial.println(IR_RECEIVE_PIN);
 }
 
-void dump(decode_results *results) {
+void dump(decode_results *aResults) {
     // Dumps out the decode_results structure.
     // Call this after IRrecv::decode()
     int count = results->rawlen;

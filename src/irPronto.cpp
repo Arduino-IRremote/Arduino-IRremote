@@ -139,11 +139,11 @@ static void dumpSequence(Stream& stream, const volatile unsigned int *data, size
     dumpDuration(stream, _GAP, timebase);
 }
 
-void IRrecv::dumpPronto(Stream& stream, decode_results *results, unsigned int frequency) {
+void IRrecv::dumpPronto(Stream& stream, unsigned int frequency) {
     dumpNumber(stream, frequency > 0 ? learnedToken : learnedNonModulatedToken);
     dumpNumber(stream, toFrequencyCode(frequency));
-    dumpNumber(stream, (results->rawlen + 1) / 2);
+    dumpNumber(stream, (results.rawlen + 1) / 2);
     dumpNumber(stream, 0);
     unsigned int timebase = toTimebase(frequency);
-    dumpSequence(stream, results->rawbuf + RESULT_JUNK_COUNT, results->rawlen - RESULT_JUNK_COUNT, timebase);
+    dumpSequence(stream, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
 }

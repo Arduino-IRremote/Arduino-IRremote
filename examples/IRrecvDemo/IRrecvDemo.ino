@@ -15,8 +15,6 @@ int IR_RECEIVE_PIN = 11;
 #endif
 IRrecv irrecv(IR_RECEIVE_PIN);
 
-decode_results results;
-
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
 #define Serial SerialUSB
@@ -46,8 +44,8 @@ void setup() {
 }
 
 void loop() {
-    if (irrecv.decode(&results)) {
-        Serial.println(results.value, HEX);
+    if (irrecv.decode()) {
+        Serial.println(irrecv.results.value, HEX);
         irrecv.resume(); // Receive the next value
     }
     delay(100);

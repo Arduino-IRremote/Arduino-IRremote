@@ -33,38 +33,29 @@
 #define RAW_BUFFER_LENGTH  101  ///< Maximum length of raw duration buffer. Must be odd.
 #endif
 
-/**
- * This struct is used to communicate with the ISR (interrupt service routine).
- */
-typedef struct {
-    // The fields are ordered to reduce memory over caused by struct-padding
-    uint8_t rcvstate;        ///< State Machine state
-    uint8_t recvpin;         ///< Pin connected to IR data from detector
-    uint8_t blinkpin;
-    uint8_t blinkflag;       ///< true -> enable blinking of pin on IR processing
-    unsigned int rawlen;         ///< counter of entries in rawbuf
-    unsigned int timer;           ///< State timer, counts 50uS ticks.
-    unsigned int rawbuf[RAW_BUFFER_LENGTH];  ///< raw data
-    uint8_t overflow;        ///< Raw buffer overflow occurred
-} irparams_t;
-
 // ISR State-Machine : Receiver States
 #define IR_REC_STATE_IDLE      0
 #define IR_REC_STATE_MARK      1
 #define IR_REC_STATE_SPACE     2
 #define IR_REC_STATE_STOP      3
-#define IR_REC_STATE_OVERFLOW  4
 
 /**
- * Allow all parts of the code access to the ISR data
- * NB. The data can be changed by the ISR at any time, even mid-function
- * Therefore we declare it as "volatile" to stop the compiler/CPU caching it
+ * This struct is used for the ISR (interrupt service routine)
+ * and is copied once only in state STATE_STOP, so only rcvstate needs to be volatile.
  */
-#ifdef IR_GLOBAL
-volatile irparams_t  irparams;
-#else
-extern volatile irparams_t irparams;
-#endif
+struct irparams_struct {
+    // The fields are ordered to reduce memory over caused by struct-padding
+    volatile uint8_t rcvstate;      ///< State Machine state
+    uint8_t recvpin;                ///< Pin connected to IR data from detector
+    uint8_t blinkpin;
+    uint8_t blinkflag;              ///< true -> enable blinking of pin on IR processing
+    unsigned int rawlen;            ///< counter of entries in rawbuf
+    unsigned int timer;             ///< State timer, counts 50uS ticks.
+    unsigned int rawbuf[RAW_BUFFER_LENGTH];  ///< raw data
+    uint8_t overflow;               ///< Raw buffer overflow occurred
+};
+
+extern struct irparams_struct irparams;
 
 //------------------------------------------------------------------------------
 // Defines for setting and clearing register bits
@@ -110,8 +101,8 @@ extern volatile irparams_t irparams;
 //#define TICKS_LOW(us)   ((int)(((us)*LTOL/MICROS_PER_TICK)))
 //#define TICKS_HIGH(us)  ((int)(((us)*UTOL/MICROS_PER_TICK + 1)))
 #if MICROS_PER_TICK == 50 && TOLERANCE == 25           // Defaults
-    #define TICKS_LOW(us)   ((int) ((us)/67 ))     // (us) / ((MICROS_PER_TICK:50 / LTOL:75 ) * 100)
-    #define TICKS_HIGH(us)  ((int) ((us)/40 + 1))  // (us) / ((MICROS_PER_TICK:50 / UTOL:125) * 100) + 1
+#define TICKS_LOW(us)   ((int) ((us)/67 ))     // (us) / ((MICROS_PER_TICK:50 / LTOL:75 ) * 100)
+#define TICKS_HIGH(us)  ((int) ((us)/40 + 1))  // (us) / ((MICROS_PER_TICK:50 / UTOL:125) * 100) + 1
 #else
     #define TICKS_LOW(us)   ((int) ((long) (us) * LTOL / (MICROS_PER_TICK * 100) ))
     #define TICKS_HIGH(us)  ((int) ((long) (us) * UTOL / (MICROS_PER_TICK * 100) + 1))

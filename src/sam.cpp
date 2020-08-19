@@ -1,8 +1,7 @@
+#if defined(ARDUINO_ARCH_SAMD)
 // Support routines for SAM processor boards
 
 #include "IRremote.h"
-
-#if defined(ARDUINO_ARCH_SAMD)
 
 // "Idiot check"
 #ifdef USE_DEFAULT_ENABLE_IR_IN

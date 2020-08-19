@@ -28,7 +28,7 @@ decode_results results;
 //#define LED_BUILTIN 25 // Or choose pin 25, it is the RX pin, but active low.
 #endif
 
-void dump(decode_results *results);
+void dump(decode_results *aResults);
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
@@ -81,8 +81,8 @@ void loop() {
 // Call this after IRrecv::decode()
 // void * to work around compiler issue
 //void dump(void *v) {
-//  decode_results *results = (decode_results *)v
-void dump(decode_results *results) {
+//  decode_results *aResults = (decode_results *)v
+void dump(decode_results *aResults) {
     int count = results->rawlen;
     if (results->decode_type == UNKNOWN) {
         Serial.println("Could not decode message");

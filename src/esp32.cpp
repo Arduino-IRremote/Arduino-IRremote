@@ -40,8 +40,8 @@ void IRrecv::disableIRIn() {
 }
 
 void IRsend::enableIROut(int khz) {
-    ledcSetup(LEDCHANNEL, khz * 1000, 8);  // 8 bit PWM resolution
-    ledcAttachPin(IR_SEND_PIN, LEDCHANNEL); // bind pin to channel
+    ledcSetup(LED_CHANNEL, khz * 1000, 8);  // 8 bit PWM resolution
+    ledcAttachPin(IR_SEND_PIN, LED_CHANNEL); // bind pin to channel
 }
 
 #endif // ESP32

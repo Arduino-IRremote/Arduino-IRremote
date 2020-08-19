@@ -18,7 +18,7 @@
 
 //+=============================================================================
 #if DECODE_LG
-bool IRrecv::decodeLG(decode_results *results) {
+bool IRrecv::decodeLG() {
     long data = 0;
     int offset = 1; // Skip first space
 
@@ -27,26 +27,26 @@ bool IRrecv::decodeLG(decode_results *results) {
         return false;
 
     // Initial mark/space
-    if (!MATCH_MARK(results->rawbuf[offset], LG_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], LG_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], LG_HEADER_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[offset], LG_HEADER_SPACE)) {
         return false;
     }
     offset++;
 
-    data = decodePulseDistanceData(results, LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE);
+    data = decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE);
 //    for (int i = 0; i < LG_BITS; i++) {
-//        if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK)) {
+//        if (!MATCH_MARK(results.rawbuf[offset], LG_BIT_MARK)) {
 //            return false;
 //        }
 //        offset++;
 //
-//        if (MATCH_SPACE(results->rawbuf[offset], LG_ONE_SPACE)) {
+//        if (MATCH_SPACE(results.rawbuf[offset], LG_ONE_SPACE)) {
 //            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results->rawbuf[offset], LG_ZERO_SPACE)) {
+//        } else if (MATCH_SPACE(results.rawbuf[offset], LG_ZERO_SPACE)) {
 //            data = (data << 1) | 0;
 //        } else {
 //            return false;
@@ -55,15 +55,20 @@ bool IRrecv::decodeLG(decode_results *results) {
 //    }
 
     // Stop bit
-    if (!MATCH_MARK(results->rawbuf[offset], LG_BIT_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], LG_BIT_MARK)) {
         return false;
     }
 
     // Success
-    results->bits = LG_BITS;
-    results->value = data;
-    results->decode_type = LG;
+    results.bits = LG_BITS;
+    results.value = data;
+    results.decode_type = LG;
     return true;
+}
+bool IRrecv::decodeLG(decode_results *aResults) {
+    bool aReturnValue = decodeLG();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif
 
@@ -79,7 +84,7 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 //    mark(LG_BIT_MARK);
 
     // Data
-    sendPulseDistanceData(data, nbits,  LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE);
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits);
 //    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
 //        if (data & mask) {
 //            space(LG_ONE_SPACE);

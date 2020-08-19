@@ -30,7 +30,7 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
     space(WHYNTER_HEADER_SPACE);
 
     // Data
-    sendPulseDistanceData(data, nbits, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE);
+    sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits);
 //    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
 //        if (data & mask) {
 //            mark(WHYNTER_ONE_MARK);
@@ -41,7 +41,7 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 //        }
 //    }
 
-    // Footer
+// Footer
     mark(WHYNTER_BIT_MARK);
     space(0);  // Always end with the LED off
 }
@@ -49,48 +49,48 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 
 //+=============================================================================
 #if DECODE_WHYNTER
-bool IRrecv::decodeWhynter(decode_results *results) {
+bool IRrecv::decodeWhynter() {
     long data = 0;
     int offset = 1;  // skip initial space
 
     // Check we have the right amount of data
-    if (irparams.rawlen < (2 * WHYNTER_BITS) + 6) {
+    if (results.rawlen < (2 * WHYNTER_BITS) + 6) {
         return false;
     }
 
     // Sequence begins with a bit mark and a zero space
-    if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], WHYNTER_BIT_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[offset], WHYNTER_ZERO_SPACE)) {
         return false;
     }
     offset++;
 
     // header mark and space
-    if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], WHYNTER_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results->rawbuf[offset], WHYNTER_HEADER_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[offset], WHYNTER_HEADER_SPACE)) {
         return false;
     }
     offset++;
 
-    data = decodePulseDistanceData(results, WHYNTER_BITS, offset, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE);
+    data = decodePulseDistanceData(WHYNTER_BITS, offset, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE);
 //    // data bits
 //    for (int i = 0; i < WHYNTER_BITS; i++) {
-//        if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {
+//        if (!MATCH_MARK(results.rawbuf[offset], WHYNTER_BIT_MARK)) {
 //            return false;
 //        }
 //        offset++;
 //
-//        if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ONE_SPACE)) {
+//        if (MATCH_SPACE(results.rawbuf[offset], WHYNTER_ONE_SPACE)) {
 //            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results->rawbuf[offset], WHYNTER_ZERO_SPACE)) {
+//        } else if (MATCH_SPACE(results.rawbuf[offset], WHYNTER_ZERO_SPACE)) {
 //            data = (data << 1) | 0;
 //        } else {
 //            return false;
@@ -99,15 +99,20 @@ bool IRrecv::decodeWhynter(decode_results *results) {
 //    }
 
     // trailing mark
-    if (!MATCH_MARK(results->rawbuf[offset], WHYNTER_BIT_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset], WHYNTER_BIT_MARK)) {
         return false;
     }
 
     // Success
-    results->bits = WHYNTER_BITS;
-    results->value = data;
-    results->decode_type = WHYNTER;
+    results.bits = WHYNTER_BITS;
+    results.value = data;
+    results.decode_type = WHYNTER;
     return true;
+}
+bool IRrecv::decodeWhynter(decode_results *aResults) {
+    bool aReturnValue = decodeWhynter();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif
 
