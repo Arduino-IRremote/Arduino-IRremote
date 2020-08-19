@@ -27,7 +27,6 @@ int STATUS_PIN = LED_BUILTIN;
 
 IRrecv irrecv(IR_RECEIVE_PIN);
 IRsend irsend;
-decode_results results;
 
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
@@ -64,12 +63,12 @@ int toggle = 0; // The RC5/6 toggle state
 
 // Stores the code for later playback
 // Most of this code is just logging
-void storeCode(decode_results *aResults) {
-    codeType = results->decode_type;
-//  int count = results->rawlen;
+void storeCode() {
+    codeType = irrecv.results.decode_type;
+//  int count = irrecv.results.rawlen;
     if (codeType == UNKNOWN) {
         Serial.println("Received unknown code, saving as raw");
-        codeLen = results->rawlen - 1;
+        codeLen = irrecv.results.rawlen - 1;
         // To store raw codes:
         // Drop first value (gap)
         // Convert from ticks to microseconds
@@ -77,11 +76,11 @@ void storeCode(decode_results *aResults) {
         for (int i = 1; i <= codeLen; i++) {
             if (i % 2) {
                 // Mark
-                rawCodes[i - 1] = results->rawbuf[i] * MICROS_PER_TICK - MARK_EXCESS_MICROS;
+                rawCodes[i - 1] = irrecv.results.rawbuf[i] * MICROS_PER_TICK - MARK_EXCESS_MICROS;
                 Serial.print(" m");
             } else {
                 // Space
-                rawCodes[i - 1] = results->rawbuf[i] * MICROS_PER_TICK + MARK_EXCESS_MICROS;
+                rawCodes[i - 1] = irrecv.results.rawbuf[i] * MICROS_PER_TICK + MARK_EXCESS_MICROS;
                 Serial.print(" s");
             }
             Serial.print(rawCodes[i - 1], DEC);
@@ -90,7 +89,7 @@ void storeCode(decode_results *aResults) {
     } else {
         if (codeType == NEC) {
             Serial.print("Received NEC: ");
-            if (results->value == REPEAT) {
+            if (irrecv.results.value == REPEAT) {
                 // Don't record a NEC repeat value as that's useless.
                 Serial.println("repeat; ignoring.");
                 return;
@@ -112,9 +111,9 @@ void storeCode(decode_results *aResults) {
             Serial.print(codeType, DEC);
             Serial.println("");
         }
-        Serial.println(results->value, HEX);
-        codeValue = results->value;
-        codeLen = results->bits;
+        Serial.println(irrecv.results.value, HEX);
+        codeValue = irrecv.results.value;
+        codeLen = irrecv.results.bits;
     }
 }
 
@@ -180,9 +179,9 @@ void loop() {
         sendCode(lastButtonState == buttonState);
         digitalWrite(STATUS_PIN, LOW);
         delay(50); // Wait a bit between retransmissions
-    } else if (irrecv.decode(&results)) {
+    } else if (irrecv.decode()) {
         digitalWrite(STATUS_PIN, HIGH);
-        storeCode(&results);
+        storeCode();
         irrecv.resume(); // resume receiver
         digitalWrite(STATUS_PIN, LOW);
     }

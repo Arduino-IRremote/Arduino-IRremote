@@ -28,7 +28,7 @@ decode_results results;
 //#define LED_BUILTIN 25 // Or choose pin 25, it is the RX pin, but active low.
 #endif
 
-void dump(decode_results *aResults);
+void dump();
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
@@ -54,7 +54,7 @@ int on = 0;
 unsigned long last = millis();
 
 void loop() {
-    if (irrecv.decode(&results)) {
+    if (irrecv.decode()) {
         // If it's been at least 1/4 second since the last
         // IR received, toggle the relay
         if (millis() - last > 250) {
@@ -69,7 +69,7 @@ void loop() {
                 digitalWrite(LED_BUILTIN, LOW);
                 Serial.println(F("off"));
             }
-            dump(&results);
+            dump();
         }
         last = millis();
         irrecv.resume(); // Receive the next value
@@ -79,26 +79,23 @@ void loop() {
 
 // Dumps out the decode_results structure.
 // Call this after IRrecv::decode()
-// void * to work around compiler issue
-//void dump(void *v) {
-//  decode_results *aResults = (decode_results *)v
-void dump(decode_results *aResults) {
-    int count = results->rawlen;
-    if (results->decode_type == UNKNOWN) {
+void dump() {
+    int count = irrecv.results.rawlen;
+    if (irrecv.results.decode_type == UNKNOWN) {
         Serial.println("Could not decode message");
     } else {
-        if (results->decode_type == NEC) {
+        if (irrecv.results.decode_type == NEC) {
             Serial.print("Decoded NEC: ");
-        } else if (results->decode_type == SONY) {
+        } else if (irrecv.results.decode_type == SONY) {
             Serial.print("Decoded SONY: ");
-        } else if (results->decode_type == RC5) {
+        } else if (irrecv.results.decode_type == RC5) {
             Serial.print("Decoded RC5: ");
-        } else if (results->decode_type == RC6) {
+        } else if (irrecv.results.decode_type == RC6) {
             Serial.print("Decoded RC6: ");
         }
-        Serial.print(results->value, HEX);
+        Serial.print(irrecv.results.value, HEX);
         Serial.print(" (");
-        Serial.print(results->bits, DEC);
+        Serial.print(irrecv.results.bits, DEC);
         Serial.println(" bits)");
     }
     Serial.print("Raw (");
@@ -107,9 +104,9 @@ void dump(decode_results *aResults) {
 
     for (int i = 0; i < count; i++) {
         if ((i % 2) == 1) {
-            Serial.print(results->rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print(irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {
-            Serial.print(-(int) results->rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print(-(int) irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         }
         Serial.print(" ");
     }

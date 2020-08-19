@@ -35,22 +35,22 @@ void setup() {
 //+=============================================================================
 // Display IR code
 //
-void ircode(decode_results *aResults) {
+void ircode() {
     // Panasonic has an Address
-    if (results->decode_type == PANASONIC) {
-        Serial.print(results->address, HEX);
+    if (irrecv.results.decode_type == PANASONIC) {
+        Serial.print(irrecv.results.address, HEX);
         Serial.print(":");
     }
 
     // Print Code
-    Serial.print(results->value, HEX);
+    Serial.print(irrecv.results.value, HEX);
 }
 
 //+=============================================================================
 // Display encoding type
 //
-void encoding(decode_results *aResults) {
-    switch (results->decode_type) {
+void encoding() {
+    switch (irrecv.results.decode_type) {
     default:
     case UNKNOWN:
         Serial.print("UNKNOWN");
@@ -112,37 +112,37 @@ void encoding(decode_results *aResults) {
 //+=============================================================================
 // Dump out the decode_results structure.
 //
-void dumpInfo(decode_results *aResults) {
+void dumpInfo() {
     // Check if the buffer overflowed
-    if (results->overflow) {
+    if (irrecv.results.overflow) {
         Serial.println("IR code too long. Edit IRremoteInt.h and increase RAW_BUFFER_LENGTH");
         return;
     }
 
     // Show Encoding standard
     Serial.print("Encoding  : ");
-    encoding(results);
+    encoding();
     Serial.println("");
 
     // Show Code & length
     Serial.print("Code      : 0x");
-    ircode(results);
+    ircode();
     Serial.print(" (");
-    Serial.print(results->bits, DEC);
+    Serial.print(irrecv.results.bits, DEC);
     Serial.println(" bits)");
 }
 
 //+=============================================================================
 // Dump out the decode_results structure.
 //
-void dumpRaw(decode_results *aResults) {
+void dumpRaw() {
     // Print Raw data
     Serial.print("Timing[");
-    Serial.print(results->rawlen - 1, DEC);
+    Serial.print(irrecv.results.rawlen - 1, DEC);
     Serial.println("]: ");
 
-    for (unsigned int i = 1; i < results->rawlen; i++) {
-        unsigned long x = results->rawbuf[i] * MICROS_PER_TICK;
+    for (unsigned int i = 1; i < irrecv.results.rawlen; i++) {
+        unsigned long x = irrecv.results.rawbuf[i] * MICROS_PER_TICK;
         if (!(i & 1)) {  // even
             Serial.print("-");
             if (x < 1000)
@@ -158,7 +158,7 @@ void dumpRaw(decode_results *aResults) {
             if (x < 100)
                 Serial.print(" ");
             Serial.print(x, DEC);
-            if (i < results->rawlen - 1)
+            if (i < irrecv.results.rawlen - 1)
                 Serial.print(", "); //',' not needed for last one
         }
         if (!(i % 8))
@@ -170,17 +170,17 @@ void dumpRaw(decode_results *aResults) {
 //+=============================================================================
 // Dump out the decode_results structure.
 //
-void dumpCode(decode_results *aResults) {
+void dumpCode() {
     // Start declaration
     Serial.print("unsigned int  ");          // variable type
     Serial.print("rawData[");                // array name
-    Serial.print(results->rawlen - 1, DEC);  // array size
+    Serial.print(irrecv.results.rawlen - 1, DEC);  // array size
     Serial.print("] = {");                   // Start declaration
 
     // Dump data
-    for (unsigned int i = 1; i < results->rawlen; i++) {
-        Serial.print(results->rawbuf[i] * MICROS_PER_TICK, DEC);
-        if (i < results->rawlen - 1)
+    for (unsigned int i = 1; i < irrecv.results.rawlen; i++) {
+        Serial.print(irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
+        if (i < irrecv.results.rawlen - 1)
             Serial.print(","); // ',' not needed on last one
         if (!(i & 1))
             Serial.print(" ");
@@ -191,26 +191,26 @@ void dumpCode(decode_results *aResults) {
 
     // Comment
     Serial.print("  // ");
-    encoding(results);
+    encoding();
     Serial.print(" ");
-    ircode(results);
+    ircode();
 
     // Newline
     Serial.println("");
 
     // Now dump "known" codes
-    if (results->decode_type != UNKNOWN) {
+    if (irrecv.results.decode_type != UNKNOWN) {
 
         // Some protocols have an address
-        if (results->decode_type == PANASONIC) {
+        if (irrecv.results.decode_type == PANASONIC) {
             Serial.print("unsigned int  addr = 0x");
-            Serial.print(results->address, HEX);
+            Serial.print(irrecv.results.address, HEX);
             Serial.println(";");
         }
 
         // All protocols have data
         Serial.print("unsigned int  data = 0x");
-        Serial.print(results->value, HEX);
+        Serial.print(irrecv.results.value, HEX);
         Serial.println(";");
     }
 }
@@ -218,9 +218,9 @@ void dumpCode(decode_results *aResults) {
 //+=============================================================================
 // Dump out the raw data as Pronto Hex.
 //
-void dumpPronto(decode_results *aResults) {
+void dumpPronto() {
     Serial.print("Pronto Hex: ");
-    irrecv.dumpPronto(Serial, results);
+    irrecv.dumpPronto(Serial);
     Serial.println();
 }
 
@@ -228,13 +228,11 @@ void dumpPronto(decode_results *aResults) {
 // The repeating section of the code
 //
 void loop() {
-    decode_results results;        // Somewhere to store the results
-
-    if (irrecv.decode(&results)) {  // Grab an IR code
-        dumpInfo(&results);           // Output the results
-        dumpRaw(&results);            // Output the results in RAW format
-        dumpPronto(&results);
-        dumpCode(&results);           // Output the results as source code
+    if (irrecv.decode()) {  // Grab an IR code
+        dumpInfo();           // Output the results
+        dumpRaw();            // Output the results in RAW format
+        dumpPronto();
+        dumpCode();           // Output the results as source code
         Serial.println("");           // Blank line between entries
         irrecv.resume();              // Prepare for the next value
     }

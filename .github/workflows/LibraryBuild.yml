@@ -54,6 +54,7 @@ jobs:
           - arduino:samd:arduino_zero_native
           - esp32:esp32:featheresp32:FlashFreq=80
           - SparkFun:avr:promicro
+          - sandeepmistry:nRF5:BBCmicrobit
 
         # Specify parameters for each board.
         # With sketches-exclude you may exclude specific examples for a board. Use a comma separated list.
@@ -74,6 +75,10 @@ jobs:
           - arduino-boards-fqbn: SparkFun:avr:promicro
             arduino-platform: arduino:avr,SparkFun:avr
             platform-url: https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json # Arduino URL is not required here
+
+          - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
+            platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
+            sketches-exclude: AiwaRCT501SendDemo,BoseWaveSendDemo,IRrecord,IRsendDemo,IRsendProntoDemo,IRsendRawDemo,IRtest,IRtest2,LegoPowerFunctionsSendDemo,JVCPanasonicSendDemo,LGACSendDemo,MicroGirs # no sending yet
 
 
       # Do not cancel all jobs / architectures if one job fails

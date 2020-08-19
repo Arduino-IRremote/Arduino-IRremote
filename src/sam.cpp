@@ -85,7 +85,7 @@ void IRrecv::disableIRIn() {
     TC3->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
 }
 
-void irs(); // Defined in IRRemote as ISR(TIMER_INTR_NAME)
+void IRTimer(); // Defined in IRRemote as ISR(TIMER_INTR_NAME)
 
 void TC3_Handler(void) {
     TcCount16* TC = (TcCount16*) TC3;
@@ -93,7 +93,7 @@ void TC3_Handler(void) {
     // we toggle the LED.
     if (TC->INTFLAG.bit.MC0 == 1) {
         TC->INTFLAG.bit.MC0 = 1;
-        irs();
+        IRTimer();
     }
 }
 

@@ -288,23 +288,22 @@ static void sendRaw(const microseconds_t intro[], unsigned lengthIntro,
 static void receive(Stream& stream) {
     irRecv.enableIRIn();
     irRecv.resume(); // Receive the next value
-    decode_results results;
 
-    while (!irRecv.decode(&results)) {
+    while (!irRecv.decode()) {
     }
     irRecv.disableIRIn();
 
-    dump(stream, &results);
+    dump(stream);
 }
 
-static void dump(Stream& stream, decode_results* results) {
-    unsigned int count = results->rawlen;
+static void dump(Stream& stream) {
+    unsigned int count = irRecv.results.rawlen;
     // If buffer gets full, count = RAW_BUFFER_LENGTH, which is odd,
     // and IrScrutinizer does not like that.
     count &=  ~1;
     for (unsigned int i = 1; i < count; i++) {
         stream.write(i & 1 ? '+' : '-');
-        stream.print(results->rawbuf[i] * MICROS_PER_TICK, DEC);
+        stream.print(irRecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         stream.print(" ");
     }
     stream.print('-');

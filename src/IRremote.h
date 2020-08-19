@@ -52,8 +52,10 @@
 //#define USE_NEC_STANDARD // remove comment to have the standard NEC decoding (LSB first) available.
 #if defined(USE_NEC_STANDARD)
 #define DECODE_NEC_STANDARD  1
+#define DECODE_NEC           0
 #define LSB_FIRST_REQURED
 #else
+#define DECODE_NEC_STANDARD  0
 #define DECODE_NEC           1
 #endif
 #define SEND_NEC             1
@@ -121,6 +123,7 @@ typedef enum {
     UNUSED = 0,
     RC5,
     RC6,
+    NEC_STANDARD,
     NEC,
     SONY,
     PANASONIC,

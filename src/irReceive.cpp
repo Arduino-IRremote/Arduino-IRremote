@@ -17,6 +17,13 @@ bool IRrecv::decode() {
     results.rawlen = irparams.rawlen;
     results.overflow = irparams.overflow;
 
+#if DECODE_NEC_STANDARD
+    DBG_PRINTLN("Attempting NEC_STANDARD decode");
+    if (decodeNECStandard()) {
+        return true;
+    }
+#endif
+
 #if DECODE_NEC
     DBG_PRINTLN("Attempting NEC decode");
     if (decodeNEC()) {

@@ -74,7 +74,7 @@ bool IRrecv::decodeNECStandard() {
             && MATCH_MARK(results.rawbuf[offset + 1], NEC_BIT_MARK)) {
         results.bits = 0;
         results.value = REPEAT;
-        results.decode_type = NEC;
+        results.decode_type = NEC_STANDARD;
         return true;
     }
 
@@ -110,13 +110,8 @@ bool IRrecv::decodeNECStandard() {
     // Success
     results.bits = NEC_BITS;
     results.value = data;
-    results.decode_type = NEC;
+    results.decode_type = NEC_STANDARD;
 
     return true;
-}
-bool IRrecv::decodeNEC(decode_results *aResults) {
-    bool aReturnValue = decodeNEC();
-    *aResults = results;
-    return aReturnValue;
 }
 #endif

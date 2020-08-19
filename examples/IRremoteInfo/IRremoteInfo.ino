@@ -231,6 +231,10 @@ void dumpProtocols() {
     printSendEnabled(SEND_RC6);
     printDecodeEnabled(DECODE_RC5);
 
+    Serial.print(F("NEC_STANDARD: "));
+    printSendEnabled(SEND_NEC_STANDARD);
+    printDecodeEnabled(DECODE_NEC_STANDARD);
+
     Serial.print(F("NEC:          "));
     printSendEnabled(SEND_NEC);
     printDecodeEnabled(DECODE_NEC);

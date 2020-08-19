@@ -23,8 +23,6 @@ int IR_RECEIVE_PIN = 11;
 
 IRrecv irrecv(IR_RECEIVE_PIN);
 
-decode_results results;
-
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
 #define Serial SerialUSB
@@ -49,39 +47,40 @@ void setup() {
     Serial.println(IR_RECEIVE_PIN);
 }
 
-void dump(decode_results *aResults) {
+void dump() {
     // Dumps out the decode_results structure.
     // Call this after IRrecv::decode()
-    int count = results->rawlen;
-    if (results->decode_type == UNKNOWN) {
+    int count = irrecv.results.rawlen;
+    if (irrecv.results.decode_type == UNKNOWN) {
         Serial.print("Unknown encoding: ");
-    } else if (results->decode_type == NEC) {
+    } else if (irrecv.results.decode_type == NEC_STANDARD) {
+        Serial.print("Decoded NEC_STANDARD: ");
+    } else if (irrecv.results.decode_type == NEC) {
         Serial.print("Decoded NEC: ");
-
-    } else if (results->decode_type == SONY) {
+    } else if (irrecv.results.decode_type == SONY) {
         Serial.print("Decoded SONY: ");
-    } else if (results->decode_type == RC5) {
+    } else if (irrecv.results.decode_type == RC5) {
         Serial.print("Decoded RC5: ");
-    } else if (results->decode_type == RC6) {
+    } else if (irrecv.results.decode_type == RC6) {
         Serial.print("Decoded RC6: ");
-    } else if (results->decode_type == PANASONIC) {
+    } else if (irrecv.results.decode_type == PANASONIC) {
         Serial.print("Decoded PANASONIC - Address: ");
-        Serial.print(results->address, HEX);
+        Serial.print(irrecv.results.address, HEX);
         Serial.print(" Value: ");
-    } else if (results->decode_type == LG) {
+    } else if (irrecv.results.decode_type == LG) {
         Serial.print("Decoded LG: ");
-    } else if (results->decode_type == JVC) {
+    } else if (irrecv.results.decode_type == JVC) {
         Serial.print("Decoded JVC: ");
-    } else if (results->decode_type == AIWA_RC_T501) {
+    } else if (irrecv.results.decode_type == AIWA_RC_T501) {
         Serial.print("Decoded AIWA RC T501: ");
-    } else if (results->decode_type == WHYNTER) {
+    } else if (irrecv.results.decode_type == WHYNTER) {
         Serial.print("Decoded Whynter: ");
-    } else if (results->decode_type == BOSEWAVE) {
+    } else if (irrecv.results.decode_type == BOSEWAVE) {
         Serial.print("Decoded Bose Wave Radio / CD: ");
     }
-    Serial.print(results->value, HEX);
+    Serial.print(irrecv.results.value, HEX);
     Serial.print(" (");
-    Serial.print(results->bits, DEC);
+    Serial.print(irrecv.results.bits, DEC);
     Serial.println(" bits)");
     Serial.print("Raw (");
     Serial.print(count, DEC);
@@ -89,10 +88,10 @@ void dump(decode_results *aResults) {
 
     for (int i = 1; i < count; i++) {
         if (i & 1) {
-            Serial.print(results->rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print(irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {
             Serial.write('-');
-            Serial.print((unsigned long) results->rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print((unsigned long) irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         }
         Serial.print(" ");
     }
@@ -100,9 +99,9 @@ void dump(decode_results *aResults) {
 }
 
 void loop() {
-    if (irrecv.decode(&results)) {
-        Serial.println(results.value, HEX);
-        dump(&results);
+    if (irrecv.decode()) {
+        Serial.println(irrecv.results.value, HEX);
+        dump();
         irrecv.resume(); // Receive the next value
     }
 }

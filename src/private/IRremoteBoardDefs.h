@@ -105,12 +105,13 @@
 #define BLINKLED_ON()   (PORTD |= B00000001)
 #define BLINKLED_OFF()  (PORTD &= B11111110)
 
-// Nano Every, Uno WiFi Rev2
-#elif defined(__AVR_ATmega4809__)
+// Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit
+#elif defined(__AVR_ATmega4809__) || defined(NRF5)
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()   (digitalWrite(BLINKLED, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(BLINKLED, LOW))
 
+// Arduino Zero
 #elif defined(ARDUINO_ARCH_SAMD)
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
@@ -317,12 +318,20 @@
  * OTHER CPU's
  *********************/
 #elif defined(ESP32)
-#  if !defined(IR_TIMER_USE_ESP32)
-#define IR_TIMER_USE_ESP32
+#  if !defined(IR_USE_TIMER_ESP32)
+#define IR_USE_TIMER_ESP32
 #  endif
 
 #elif defined(ARDUINO_ARCH_SAMD)
 #define TIMER_PRESCALER_DIV 64
+
+#elif defined(NRF5) // nRF5 BBC MicroBit
+// It uses Timer2 so you cannot use the Adafruit_Microbit display driver
+// Sending not implemented
+#undef SENDING_SUPPORTED
+
+// Supply own enbleIRIn
+#undef USE_DEFAULT_ENABLE_IR_IN
 
 #else
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
@@ -387,7 +396,7 @@
 #ifdef ISR
 #undef ISR
 #endif
-#define  ISR(f)  void do_not_use__(void)
+#define ISR(f) void do_not_use__(void)
 #define TIMER_RESET_INTR_PENDING
 
 //---------------------------------------------------------
@@ -608,7 +617,7 @@ static void timerConfigForReceive() {
 #if defined(CORE_OC4A_PIN)
 #define IR_SEND_PIN  CORE_OC4A_PIN  // Teensy
 #elif defined(ARDUINO_AVR_PROMICRO)
-#   define IR_SEND_PIN  5              // Sparkfun Pro Micro
+#define IR_SEND_PIN  5              // Sparkfun Pro Micro
 #elif defined(__AVR_ATmega32U4__)
 #define IR_SEND_PIN  13             // Leonardo
 #else
@@ -713,7 +722,7 @@ CORE_PIN5_CONFIG = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_SRE;  \
 #ifdef ISR
 #undef ISR
 #endif
-#define  ISR(f)  void f(void)
+#define ISR(f) void do_not_use__(void)
 
 //-----------------
 #define CMT_PPS_DIV  ((F_BUS + 7999999) / 8000000)
@@ -761,7 +770,7 @@ static void timerConfigForReceive() {
 #ifdef ISR
 #undef ISR
 #endif
-#define ISR(f) void f(void)
+#define ISR(f) void do_not_use__(void)
 
 static void timerConfigForSend(uint16_t frequency) {
     SIM_SCGC6 |= SIM_SCGC6_TPM1;
@@ -874,24 +883,24 @@ static void timerConfigForReceive() {
 // IR may just work as is with the common code since it's lower frequency, but if not, the other
 // way to do this on ESP32 is using the RMT built in driver like in this incomplete library below
 // https://github.com/ExploreEmbedded/ESP32_RMT
-#elif defined(IR_TIMER_USE_ESP32)
+#elif defined(IR_USE_TIMER_ESP32)
 
 #if ! defined(IR_SEND_PIN)
 #define IR_SEND_PIN 4 // can use any pin, no timer restrictions
 #endif
 
-#if ! defined(LEDCHANNEL)
-#define LEDCHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
+#if ! defined(LED_CHANNEL)
+#define LED_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
 #endif
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_SEND_PWM    ledcWrite(LEDCHANNEL, DUTY_CYCLE) // we must use channel here not pin number
-#define TIMER_DISABLE_SEND_PWM   ledcWrite(LEDCHANNEL, 0)
+#define TIMER_ENABLE_SEND_PWM    ledcWrite(LED_CHANNEL, DUTY_CYCLE) // we must use channel here not pin number
+#define TIMER_DISABLE_SEND_PWM   ledcWrite(LED_CHANNEL, 0)
 
 #ifdef ISR
 #undef ISR
 #endif
-#define  ISR(f)  void IRAM_ATTR IRTimer()
+#define ISR(f) void IRAM_ATTR IRTimer()
 
 #elif defined(ARDUINO_ARCH_SAMD)
 // use timer 3 hardcoded at this time
@@ -904,14 +913,24 @@ static void timerConfigForReceive() {
 #define TIMER_ENABLE_RECEIVE_INTR    NVIC_EnableIRQ(TC3_IRQn) // Not presently used
 #define TIMER_DISABLE_RECEIVE_INTR   NVIC_DisableIRQ(TC3_IRQn)
 #define TIMER_INTR_NAME      TC3_Handler // Not presently used
-static void timerConfigForSend(uint16_t frequency) {
-
-}
+#pragma GCC diagnostic ignored "-Wunused-function"
+static void timerConfigForSend(uint16_t frequency __attribute__((unused))) {}
 
 #ifdef ISR
 #undef ISR
 #endif
-#define  ISR(f)  void irs()
+#define ISR(f) void IRTimer(void)
+
+#elif defined(NRF5)
+// The default pin used used for sending. 3, A0 - left pad
+#define IR_SEND_PIN   3 // dummy since sending not yet supported
+
+#define TIMER_RESET_INTR_PENDING
+
+#ifdef ISR
+#undef ISR
+#endif
+#define ISR(f) void IRTimer(void)
 
 //---------------------------------------------------------
 // Unknown Timer
