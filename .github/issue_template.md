@@ -4,7 +4,7 @@
 * [ ] Arduino ATmega32U4 board (Leonardo)
 * [ ] Arduino SAM board (Due)
 * [ ] Arduino SAMD board (Zero, MKR*)
-* [ ] ESP32 board
+* [ ] ESP32 board - first check https://github.com/crankyoldgit/IRremoteESP8266
 * [ ] Teensy board
 * [ ] Other - please specify
 

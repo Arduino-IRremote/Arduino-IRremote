@@ -876,13 +876,10 @@ static void timerConfigForReceive() {
 // ESP32 has it own timer API and does not use these macros, but to avoid ifdef'ing
 // them out in the common code, they are defined to no-op. This allows the code to compile
 // (which it wouldn't otherwise) but irsend will not work until ESP32 specific code is written
-// for that -- merlin
-// As a warning, sending timing specific code from an ESP32 can be challenging if you need 100%
-// reliability because the arduino code may be interrupted and cause your sent waveform to be the
-// wrong length. This is specifically an issue for neopixels which require 800Khz resolution.
-// IR may just work as is with the common code since it's lower frequency, but if not, the other
-// way to do this on ESP32 is using the RMT built in driver like in this incomplete library below
-// https://github.com/ExploreEmbedded/ESP32_RMT
+//
+// The timer code is in the esp32.cpp file
+//
+// An IRremote version for ESP8266 and ESP32 is available at https://github.com/crankyoldgit/IRremoteESP8266
 #elif defined(IR_USE_TIMER_ESP32)
 
 #if ! defined(IR_SEND_PIN)

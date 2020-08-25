@@ -94,6 +94,13 @@ void storeCode() {
                 Serial.println("repeat; ignoring.");
                 return;
             }
+        } else if (codeType == NEC_STANDARD) {
+            Serial.print("Received NEC: ");
+            if (irrecv.results.value == REPEAT) {
+                // Don't record a NEC repeat value as that's useless.
+                Serial.println("repeat; ignoring.");
+                return;
+            }
         } else if (codeType == SONY) {
             Serial.print("Received SONY: ");
         } else if (codeType == SAMSUNG) {
