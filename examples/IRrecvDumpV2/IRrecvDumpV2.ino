@@ -20,13 +20,14 @@ void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
     Serial.begin(115200);   // Status message will be sent to PC at 9600 baud
-#if defined(__AVR_ATmega32U4__)
-    while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)
+    delay(2000); // To be able to connect Serial monitor after reset and before first printout
 #endif
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__));
 
     irrecv.enableIRIn();  // Start the receiver
+    irrecv.blink13(true); // Enable feedback LED
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);

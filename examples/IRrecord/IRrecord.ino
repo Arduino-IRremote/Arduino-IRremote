@@ -35,13 +35,15 @@ IRsend irsend;
 
 void setup() {
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__)
-    while (!Serial); //delay for Leonardo, but this loops forever for Maple Serial
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)
+    delay(2000); // To be able to connect Serial monitor after reset and before first printout
 #endif
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__));
 
-    irrecv.enableIRIn(); // Start the receiver
+    irrecv.enableIRIn();  // Start the receiver
+    irrecv.blink13(true); // Enable feedback LED
+
     pinMode(SEND_BUTTON_PIN, INPUT_PULLUP);
     pinMode(STATUS_PIN, OUTPUT);
 
@@ -51,6 +53,8 @@ void setup() {
 #if defined(SENDING_SUPPORTED)
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
+#else
+    Serial.println(F("Sending not supported for this board!"));
 #endif
 }
 

@@ -10,6 +10,8 @@
 
 #if defined(ESP32)
 int IR_RECEIVE_PIN = 15;
+#elif defined(ARDUINO_AVR_PROMICRO)
+int IR_RECEIVE_PIN = 10;
 #else
 int IR_RECEIVE_PIN = 11;
 #endif
@@ -24,11 +26,7 @@ void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__)
-    while (!Serial)
-        ; //delay for Leonardo, but this loops forever for Maple Serial
-#endif
-#if defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)
     delay(2000); // To be able to connect Serial monitor after reset and before first printout
 #endif
     // Just to know which program is running on my Arduino
@@ -37,7 +35,8 @@ void setup() {
     // In case the interrupt driver crashes on setup, give a clue
     // to the user what's going on.
     Serial.println("Enabling IRin");
-    irrecv.enableIRIn(); // Start the receiver
+    irrecv.enableIRIn();  // Start the receiver
+    irrecv.blink13(true); // Enable feedback LED
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);

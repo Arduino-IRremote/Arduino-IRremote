@@ -1,4 +1,4 @@
-#ifdef NRF5
+#if defined (NRF5)  || defined (ARDUINO_ARCH_NRF52840)
 
 // This file contains functions specific to the nRF5.
 // It uses Timer2 so you cannot use the Adafruit_Microbit display driver

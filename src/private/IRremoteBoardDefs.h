@@ -89,8 +89,21 @@
 #define BLINKLED_ON()   (digitalWrite(CORE_LED0_PIN, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(CORE_LED0_PIN, LOW))
 
+// Sparkfun Pro Micro is __AVR_ATmega32U4__ but has different external circuit
+#elif defined(ARDUINO_AVR_PROMICRO)
+// We have no built in LED -> reuse RX LED
+#define BLINKLED        LED_BUILTIN_RX
+#define BLINKLED_ON()   RXLED1
+#define BLINKLED_OFF()  RXLED0
+
+// Arduino Leonardo
+#elif defined(__AVR_ATmega32U4__)
+#define BLINKLED        LED_BUILTIN
+#define BLINKLED_ON()   (PORTC |= B10000000)
+#define BLINKLED_OFF()  (PORTC &= B01111111)
+
 // Arduino Uno, Nano etc (previously default clause)
-#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega32U4__)
+#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__)
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()  (PORTB |= B00100000)
 #define BLINKLED_OFF()  (PORTB &= B11011111)
@@ -105,8 +118,8 @@
 #define BLINKLED_ON()   (PORTD |= B00000001)
 #define BLINKLED_OFF()  (PORTD &= B11111110)
 
-// Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit
-#elif defined(__AVR_ATmega4809__) || defined(NRF5)
+// Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
+#elif defined(__AVR_ATmega4809__) || defined(NRF5) || defined (ARDUINO_ARCH_NRF52840)
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()   (digitalWrite(BLINKLED, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(BLINKLED, LOW))
@@ -364,7 +377,7 @@
 //
 #if !defined(SYSCLOCK) && defined(ARDUINO) // allow for processor specific code to define SYSCLOCK
 #ifndef F_CPU
-#error SYSCLOCK cannot be determined. Define it for your board in IRremoteBoardDefs.h.
+#error SYSCLOCK or F_CPU cannot be determined. Define it for your board in IRremoteBoardDefs.h.
 #endif // ! F_CPU
 /**
  * Clock frequency to be used for timing.
@@ -375,6 +388,8 @@
 //------------------------------------------------------------------------------
 // Defines for Timer
 
+// We define static board specific functions here, but they are only used in a few files.
+#pragma GCC diagnostic ignored "-Wunused-function"
 //---------------------------------------------------------
 #ifdef DOXYGEN
 /**
@@ -918,7 +933,7 @@ static void timerConfigForSend(uint16_t frequency __attribute__((unused))) {}
 #endif
 #define ISR(f) void IRTimer(void)
 
-#elif defined(NRF5)
+#elif defined(NRF5) || defined (ARDUINO_ARCH_NRF52840)
 // The default pin used used for sending. 3, A0 - left pad
 #define IR_SEND_PIN   3 // dummy since sending not yet supported
 

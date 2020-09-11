@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 2.6.1](https://github.com/z3t0/Arduino-IRremote/releases)
+### [Version 2.6.2](https://github.com/z3t0/Arduino-IRremote/releases)
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 [![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
@@ -75,7 +75,7 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 | Leonardo (Atmega32u4)                                                    | 5, **9**, 13        | 1, 3, **4_HS**    |
 | Zero (SAMD)                                                              | \*, **9**           | **TC3**           |
 | [ESP32](http://esp32.net/)                                               | **4**, all pins     | **1**             |
-| [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | **5**, 9, 13        | 1, **3**, 4_HS    |
+| [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | **5**, 9            | 1, **3**          |
 | [Teensy 1.0](https://www.pjrc.com/teensy/)                               | **17**              | **1**             |
 | [Teensy 2.0](https://www.pjrc.com/teensy/)                               | **9**, 10, 14       | 1, **3**, 4_HS    |
 | [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/)                       | **1**, 16, 25       | 1, **2**, 3       |
