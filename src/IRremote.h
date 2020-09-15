@@ -144,14 +144,14 @@ typedef enum {
 } decode_type_t;
 
 /**
- * Set DEBUG to 1 for lots of lovely debug output.
+ * Comment this out for lots of lovely debug output.
  */
-#define DEBUG  0
+//#define DEBUG
 
 //------------------------------------------------------------------------------
 // Debug directives
 //
-#if DEBUG
+#ifdef DEBUG
 #  define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
 #  define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else

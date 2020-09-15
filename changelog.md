@@ -1,7 +1,9 @@
-## 2.6.2 2020/08
+## 2.6.2 2020/09
 - Added ATmega328PB support.
 - Renamed hardware specific macro and function names.
 - Renamed USE_SOFT_CARRIER and USE_NO_CARRIER macros to USE_SOFT_SEND_PWM and USE_NO_SEND_PWM.
+- Removed blocking wait for ATmega32U4 Serial in examples.
+- Deactivated default debug output.
 
 ## 2.6.1 2020/08
 - Adjusted JVC and LG timing.
