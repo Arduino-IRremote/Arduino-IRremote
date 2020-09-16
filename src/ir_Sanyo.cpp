@@ -42,6 +42,7 @@ bool IRrecv::decodeSanyo() {
         //Serial.print("IR Gap found: ");
         results.bits = 0;
         results.value = REPEAT;
+        results.isRepeat = true;
         results.decode_type = SANYO;
         return true;
     }

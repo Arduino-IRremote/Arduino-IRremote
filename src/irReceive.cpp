@@ -17,6 +17,10 @@ bool IRrecv::decode() {
     results.rawlen = irparams.rawlen;
     results.overflow = irparams.overflow;
 
+    // reset optional values
+    results.address = 0;
+    results.isRepeat = false;
+
 #if DECODE_NEC_STANDARD
     DBG_PRINTLN("Attempting NEC_STANDARD decode");
     if (decodeNECStandard()) {
@@ -158,146 +162,6 @@ bool IRrecv::decode() {
     return false;
 }
 
-/*
- * For backwards compatibility
- */
-bool IRrecv::decode(decode_results *aResults) {
-    if (irparams.rcvstate != IR_REC_STATE_STOP) {
-        return false;
-    }
-
-    /*
-     * First copy 3 values from irparams to internal results structure
-     */
-    results.rawbuf = irparams.rawbuf;
-    results.rawlen = irparams.rawlen;
-    results.overflow = irparams.overflow;
-
-#if DECODE_NEC
-    DBG_PRINTLN("Attempting NEC decode");
-    if (decodeNEC(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_SHARP
-    DBG_PRINTLN("Attempting Sharp decode");
-    if (decodeSharp(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_SHARP_ALT
-    DBG_PRINTLN("Attempting SharpAlt decode");
-    if (decodeSharpAlt(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_SONY
-    DBG_PRINTLN("Attempting Sony decode");
-    if (decodeSony(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_SANYO
-    DBG_PRINTLN("Attempting Sanyo decode");
-    if (decodeSanyo(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_MITSUBISHI
-    DBG_PRINTLN("Attempting Mitsubishi decode");
-    if (decodeMitsubishi(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_RC5
-    DBG_PRINTLN("Attempting RC5 decode");
-    if (decodeRC5(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_RC6
-    DBG_PRINTLN("Attempting RC6 decode");
-    if (decodeRC6(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_PANASONIC
-    DBG_PRINTLN("Attempting Panasonic decode");
-    if (decodePanasonic(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_LG
-    DBG_PRINTLN("Attempting LG decode");
-    if (decodeLG(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_JVC
-    DBG_PRINTLN("Attempting JVC decode");
-    if (decodeJVC(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_SAMSUNG
-    DBG_PRINTLN("Attempting SAMSUNG decode");
-    if (decodeSAMSUNG(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_WHYNTER
-    DBG_PRINTLN("Attempting Whynter decode");
-    if (decodeWhynter(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_AIWA_RC_T501
-    DBG_PRINTLN("Attempting Aiwa RC-T501 decode");
-    if (decodeAiwaRCT501(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_DENON
-    DBG_PRINTLN("Attempting Denon decode");
-    if (decodeDenon(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_LEGO_PF
-    DBG_PRINTLN("Attempting Lego Power Functions");
-    if (decodeLegoPowerFunctions(aResults))  {return true ;}
-#endif
-
-#if defined(DECODE_HASH)
-    DBG_PRINTLN("Hash decode");
-    // decodeHash returns a hash on any input.
-    // Thus, it needs to be last in the list.
-    // If you add any decodes, add them before this.
-    if (decodeHash(aResults)) {
-        return true;
-    }
-#endif
-
-    // Throw away and start over
-    resume();
-    return false;
-}
-
 //+=============================================================================
 IRrecv::IRrecv(int recvpin) {
     irparams.recvpin = recvpin;
@@ -413,7 +277,6 @@ int IRrecv::compare(unsigned int oldval, unsigned int newval) {
         return 2;
     }
     return 1;
-
 }
 
 /*
@@ -422,26 +285,50 @@ int IRrecv::compare(unsigned int oldval, unsigned int newval) {
  * Data is read MSB first.
  */
 unsigned long IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
-        unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros) {
+        unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst) {
     unsigned long aDecodedData = 0;
 
-    for (uint8_t i = 0; i < aNumberOfBits; i++) {
-        // Check for constant length mark
-        if (!MATCH_MARK(results.rawbuf[aStartOffset], aBitMarkMicros)) {
-            return false;
-        }
-        aStartOffset++;
+    if (aMSBfirst) {
+        for (uint8_t i = 0; i < aNumberOfBits; i++) {
+            // Check for constant length mark
+            if (!MATCH_MARK(results.rawbuf[aStartOffset], aBitMarkMicros)) {
+                return false;
+            }
+            aStartOffset++;
 
-        // Check for variable length space indicating a 0 or 1
-        if (MATCH_SPACE(results.rawbuf[aStartOffset], aOneSpaceMicros)) {
-            aDecodedData = (aDecodedData << 1) | 1;
-        } else if (MATCH_SPACE(results.rawbuf[aStartOffset], aZeroSpaceMicros)) {
-            aDecodedData = (aDecodedData << 1) | 0;
-        } else {
-            return false;
+            // Check for variable length space indicating a 0 or 1
+            if (MATCH_SPACE(results.rawbuf[aStartOffset], aOneSpaceMicros)) {
+                aDecodedData = (aDecodedData << 1) | 1;
+            } else if (MATCH_SPACE(results.rawbuf[aStartOffset], aZeroSpaceMicros)) {
+                aDecodedData = (aDecodedData << 1) | 0;
+            } else {
+                return false;
+            }
+            aStartOffset++;
         }
-        aStartOffset++;
     }
+#if defined(LSB_FIRST_REQUIRED)
+    else {
+        for (unsigned long mask = 1UL; aNumberOfBits > 0; mask <<= 1, aNumberOfBits--) {
+            // Check for constant length mark
+            if (!MATCH_MARK(results.rawbuf[aStartOffset], aBitMarkMicros)) {
+                return false;
+            }
+            aStartOffset++;
+
+            // Check for variable length space indicating a 0 or 1
+            if (MATCH_SPACE(results.rawbuf[aStartOffset], aOneSpaceMicros)) {
+                aDecodedData |= mask; // set the bit
+            } else if (MATCH_SPACE(results.rawbuf[aStartOffset], aZeroSpaceMicros)) {
+                // do not set the bit
+            } else {
+                return false;
+            }
+
+            aStartOffset++;
+        }
+    }
+#endif
     return aDecodedData;
 }
 
@@ -457,7 +344,7 @@ unsigned long IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aSt
 bool IRrecv::decodeHash() {
     long hash = FNV_BASIS_32;
 
-    // Require at least 6 samples to prevent triggering on noise
+// Require at least 6 samples to prevent triggering on noise
     if (results.rawlen < 6) {
         return false;
     }
@@ -480,3 +367,274 @@ bool IRrecv::decodeHash(decode_results *aResults) {
     return aReturnValue;
 }
 #endif // defined(DECODE_HASH)
+
+const char* IRrecv::getProtocolString() {
+    switch (results.decode_type) {
+    default:
+    case UNKNOWN:
+        return ("UNKNOWN");
+        break;
+#if DECODE_AIWA_RC_T501
+    case AIWA_RC_T501:
+        return ("AIWA_RC_T501");
+        break;
+#endif
+#if DECODE_BOSEWAVE
+    case BOSEWAVE:
+        return ("BOSEWAVE");
+        break;
+#endif
+#if DECODE_DENON
+    case DENON:
+        return ("Denon");
+        break;
+#endif
+#if DECODE_DISH
+        case DISH:
+        return("DISH");
+        break;
+#endif
+#if DECODE_JVC
+    case JVC:
+        return ("JVC");
+        break;
+#endif
+#if DECODE_LEGO_PF
+    case LG:
+        return("LEGO");
+        break;
+#endif
+#if DECODE_LG
+    case LG:
+        return ("LG");
+        break;
+#endif
+#if DECODE_MAGIQUEST
+    case MAGIQUEST:
+        return ("MAGIQUEST");
+        break;
+#endif
+#if DECODE_MITSUBISHI
+    case MITSUBISHI:
+        return ("MITSUBISHI");
+        break;
+#endif
+#if DECODE_NEC_STANDARD
+    case NEC_STANDARD:
+        return ("NEC_STANDARD");
+        break;
+#endif
+#if DECODE_NEC
+    case NEC:
+        return("NEC");
+        break;
+#endif
+#if DECODE_PANASONIC
+    case PANASONIC:
+        return ("PANASONIC");
+        break;
+#endif
+#if DECODE_RC5
+    case RC5:
+        return ("RC5");
+        break;
+#endif
+#if DECODE_RC6
+    case RC6:
+        return ("RC6");
+        break;
+#endif
+#if DECODE_SAMSUNG
+    case SAMSUNG:
+        return ("SAMSUNG");
+        break;
+#endif
+#if DECODE_SANYO
+    case SANYO:
+        return ("SANYO");
+        break;
+#endif
+#if DECODE_SHARP
+    case SHARP:
+        return ("SHARP");
+        break;
+#endif
+#if DECODE_SHARP_ALT
+    case SHARP_ALT:
+        return ("SHARP_ALT");
+        break;
+#endif
+#if DECODE_SONY
+    case SONY:
+        return ("SONY");
+        break;
+#endif
+#if DECODE_WHYNTER
+    case WHYNTER:
+        return ("WHYNTER");
+        break;
+#endif
+    }
+}
+
+void IRrecv::printResultShort(Print * aSerial) {
+    aSerial->print(F("Protocol="));
+    aSerial->print(getProtocolString());
+    aSerial->print(F(" Data=0x"));
+    aSerial->print(results.value, HEX);
+    if (results.isRepeat) {
+        aSerial->print(F(" R"));
+    }
+    if (results.address != 0) {
+        aSerial->print(F(" Address=0x"));
+        aSerial->print(results.address, HEX);
+    }
+}
+
+/*
+ * DEPRECATED
+ * With parameter aResults for backwards compatibility
+ * Contains no new (since 5/2020) protocols.
+ */
+bool IRrecv::decode(decode_results *aResults) {
+    if (irparams.rcvstate != IR_REC_STATE_STOP) {
+        return false;
+    }
+
+    /*
+     * First copy 3 values from irparams to internal results structure
+     */
+    results.rawbuf = irparams.rawbuf;
+    results.rawlen = irparams.rawlen;
+    results.overflow = irparams.overflow;
+
+    // reset optional values
+    results.address = 0;
+    results.isRepeat = false;
+
+#if DECODE_NEC
+    DBG_PRINTLN("Attempting NEC decode");
+    if (decodeNEC(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_SHARP
+    DBG_PRINTLN("Attempting Sharp decode");
+    if (decodeSharp(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_SHARP_ALT
+    DBG_PRINTLN("Attempting SharpAlt decode");
+    if (decodeSharpAlt(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_SONY
+    DBG_PRINTLN("Attempting Sony decode");
+    if (decodeSony(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_SANYO
+    DBG_PRINTLN("Attempting Sanyo decode");
+    if (decodeSanyo(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_MITSUBISHI
+    DBG_PRINTLN("Attempting Mitsubishi decode");
+    if (decodeMitsubishi(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_RC5
+    DBG_PRINTLN("Attempting RC5 decode");
+    if (decodeRC5(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_RC6
+    DBG_PRINTLN("Attempting RC6 decode");
+    if (decodeRC6(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_PANASONIC
+    DBG_PRINTLN("Attempting Panasonic decode");
+    if (decodePanasonic(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_LG
+    DBG_PRINTLN("Attempting LG decode");
+    if (decodeLG(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_JVC
+    DBG_PRINTLN("Attempting JVC decode");
+    if (decodeJVC(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_SAMSUNG
+    DBG_PRINTLN("Attempting SAMSUNG decode");
+    if (decodeSAMSUNG(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_WHYNTER
+    DBG_PRINTLN("Attempting Whynter decode");
+    if (decodeWhynter(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_AIWA_RC_T501
+    DBG_PRINTLN("Attempting Aiwa RC-T501 decode");
+    if (decodeAiwaRCT501(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_DENON
+    DBG_PRINTLN("Attempting Denon decode");
+    if (decodeDenon(aResults)) {
+        return true;
+    }
+#endif
+
+#if DECODE_LEGO_PF
+    DBG_PRINTLN("Attempting Lego Power Functions");
+    if (decodeLegoPowerFunctions(aResults))  {
+        return true ;
+    }
+#endif
+
+#if defined(DECODE_HASH)
+    DBG_PRINTLN("Hash decode");
+    // decodeHash returns a hash on any input.
+    // Thus, it needs to be last in the list.
+    // If you add any decodes, add them before this.
+    if (decodeHash(aResults)) {
+        return true;
+    }
+#endif
+
+    // Throw away and start over
+    resume();
+    return false;
+}

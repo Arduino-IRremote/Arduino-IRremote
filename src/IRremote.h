@@ -43,17 +43,38 @@
 // Each protocol you include costs memory and, during decode, costs time
 // Disable (set to 0) all the protocols you do not need/want!
 //
-#define DECODE_RC5           1
-#define SEND_RC5             1
+#define DECODE_AIWA_RC_T501  1
+#define SEND_AIWA_RC_T501    1
 
-#define DECODE_RC6           1
-#define SEND_RC6             1
+#define DECODE_BOSEWAVE      1
+#define SEND_BOSEWAVE        1
+
+#define DECODE_DENON         1
+#define SEND_DENON           1
+
+#define DECODE_DISH          0 // NOT WRITTEN
+#define SEND_DISH            1
+
+#define DECODE_JVC           1
+#define SEND_JVC             1
+
+#define DECODE_LEGO_PF       0 // NOT WRITTEN
+#define SEND_LEGO_PF         1
+
+#define DECODE_LG            1
+#define SEND_LG              1
+
+#define DECODE_MAGIQUEST     1
+#define SEND_MAGIQUEST       1
+
+#define DECODE_MITSUBISHI    1
+#define SEND_MITSUBISHI      0 // NOT WRITTEN
 
 //#define USE_NEC_STANDARD // remove comment to have the standard NEC decoding (LSB first) available.
 #if defined(USE_NEC_STANDARD)
 #define DECODE_NEC_STANDARD  1
 #define DECODE_NEC           0
-#define LSB_FIRST_REQURED
+#define LSB_FIRST_REQUIRED
 #else
 #define DECODE_NEC_STANDARD  0
 #define DECODE_NEC           1
@@ -61,35 +82,20 @@
 #define SEND_NEC             1
 #define SEND_NEC_STANDARD    1
 
-#define DECODE_SONY          1
-#define SEND_SONY            1
-
 #define DECODE_PANASONIC     1
 #define SEND_PANASONIC       1
 
-#define DECODE_JVC           1
-#define SEND_JVC             1
+#define DECODE_RC5           1
+#define SEND_RC5             1
+
+#define DECODE_RC6           1
+#define SEND_RC6             1
 
 #define DECODE_SAMSUNG       1
 #define SEND_SAMSUNG         1
 
-#define DECODE_WHYNTER       1
-#define SEND_WHYNTER         1
-
-#define DECODE_AIWA_RC_T501  1
-#define SEND_AIWA_RC_T501    1
-
-#define DECODE_LG            1
-#define SEND_LG              1
-
 #define DECODE_SANYO         1
 #define SEND_SANYO           0 // NOT WRITTEN
-
-#define DECODE_MITSUBISHI    1
-#define SEND_MITSUBISHI      0 // NOT WRITTEN
-
-#define DECODE_DISH          0 // NOT WRITTEN
-#define SEND_DISH            1
 
 #define DECODE_SHARP         1
 #define SEND_SHARP           1
@@ -97,20 +103,14 @@
 #define DECODE_SHARP_ALT     1
 #define SEND_SHARP_ALT       1
 #if SEND_SHARP_ALT
-#define LSB_FIRST_REQURED
+#define LSB_FIRST_REQUIRED
 #endif
 
-#define DECODE_DENON         1
-#define SEND_DENON           1
+#define DECODE_SONY          1
+#define SEND_SONY            1
 
-#define DECODE_LEGO_PF       0 // NOT WRITTEN
-#define SEND_LEGO_PF         1
-
-#define DECODE_BOSEWAVE      1
-#define SEND_BOSEWAVE        1
-
-#define DECODE_MAGIQUEST     1
-#define SEND_MAGIQUEST       1
+#define DECODE_WHYNTER       1
+#define SEND_WHYNTER         1
 
 #define DECODE_HASH          1 // special decoder for all protocols
 
@@ -121,33 +121,32 @@
 typedef enum {
     UNKNOWN = -1,
     UNUSED = 0,
-    RC5,
-    RC6,
+    AIWA_RC_T501,
+    BOSEWAVE,
+    DENON,
+    DISH,
+    JVC,
+    LEGO_PF,
+    LG,
+    MAGIQUEST,
+    MITSUBISHI,
     NEC_STANDARD,
     NEC,
-    SONY,
     PANASONIC,
-    JVC,
+    RC5,
+    RC6,
     SAMSUNG,
-    WHYNTER,
-    AIWA_RC_T501,
-    LG,
     SANYO,
-    MITSUBISHI,
-    DISH,
     SHARP,
     SHARP_ALT,
-    DENON,
-    LEGO_PF,
-    BOSEWAVE,
-    MAGIQUEST,
+    SONY,
+    WHYNTER,
 } decode_type_t;
 
 /**
  * Comment this out for lots of lovely debug output.
  */
 //#define DEBUG
-
 //------------------------------------------------------------------------------
 // Debug directives
 //
@@ -186,10 +185,11 @@ int MATCH_SPACE(int measured_ticks, int desired_us);
  */
 struct decode_results {
     decode_type_t decode_type;  ///< UNKNOWN, NEC, SONY, RC5, ...
-    unsigned int address;       ///< Used by Panasonic & Sharp [16-bits]
-    unsigned long value;        ///< Decoded value [max 32-bits]
+    unsigned int address;       ///< Used by Panasonic & Sharp6 NEC_standard [16-bits]
+    unsigned long value;        ///< Decoded value / command [max 32-bits]
     int bits;                   ///< Number of bits in decoded value
     unsigned int magnitude;     ///< Used by MagiQuest [16-bits]
+    bool isRepeat;              ///< True if repeat of value is detected
 
     // next 3 values are copies of irparams values
     unsigned int *rawbuf;       ///< Raw intervals in 50uS ticks
@@ -198,7 +198,9 @@ struct decode_results {
 };
 
 /**
- * Decoded value for NEC when a repeat code is received
+ * DEPRECATED
+ * Decoded value for NEC and others when a repeat code is received
+ * Use Flag isRepeat instead
  */
 #define REPEAT 0xFFFFFFFF
 
@@ -230,7 +232,8 @@ public:
      * @param results decode_results instance returning the decode, if any.
      * @return success of operation.
      */
-    bool decode(decode_results *aResults);
+    bool decode(decode_results *aResults);__attribute__ ((deprecated ("You should use decode() without a parameter.")))
+    ;               // deprecated
     bool decode();
 
     /**
@@ -260,6 +263,9 @@ public:
      */
     void resume();
 
+    const char* getProtocolString();
+    void printResultShort(Print * aSerial);
+
     /**
      * Print the result (second argument) as Pronto Hex on the Stream supplied as argument.
      * @param stream The Stream on which to write, often Serial
@@ -268,8 +274,8 @@ public:
      */
     void dumpPronto(Stream& stream, unsigned int frequency = 38000U);
 
-    unsigned long decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset,
-            unsigned int aBitMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros);
+    unsigned long decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
+            unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst = true);
 
     decode_results results; // the instance for decoding
 
@@ -354,12 +360,12 @@ private:
 #endif
     //......................................................................
 #if DECODE_SHARP
-      bool decodeSharp();
-      bool decodeSharp(decode_results *aResults);
+    bool decodeSharp();
+    bool decodeSharp(decode_results *aResults);
 #endif
 #if DECODE_SHARP_ALT
-      bool decodeSharpAlt();
-      bool decodeSharpAlt(decode_results *aResults);
+    bool decodeSharpAlt();
+    bool decodeSharpAlt(decode_results *aResults);
 #endif
     //......................................................................
 #if DECODE_DENON
@@ -372,13 +378,13 @@ private:
 #endif
     //......................................................................
 #if DECODE_BOSEWAVE
-      bool decodeBoseWave();
-      bool decodeBoseWave(decode_results *aResults);
+    bool decodeBoseWave();
+    bool decodeBoseWave(decode_results *aResults);
 #endif
     //......................................................................
 #if DECODE_MAGIQUEST
-      bool decodeMagiQuest();
-      bool decodeMagiQuest(decode_results *aResults);
+    bool decodeMagiQuest();
+    bool decodeMagiQuest(decode_results *aResults);
 #endif
 };
 
@@ -389,17 +395,14 @@ private:
  * Define to use no carrier PWM, just simulate a receiver signal.
  */
 //#define USE_NO_SEND_PWM
-
 /**
  * Define to use carrier PWM generation in software, instead of hardware PWM.
  */
 //#define USE_SOFT_SEND_PWM
-
 /**
  * Define to use spin wait instead of delayMicros() for USE_SOFT_SEND_PWM.
  */
 //#define USE_SPIN_WAIT
-
 /**
  * Main class for sending IR
  */
@@ -426,17 +429,20 @@ public:
     //......................................................................
 #if SEND_RC5
     void sendRC5(unsigned long data, int nbits);
-    void sendRC5ext(unsigned long addr, unsigned long cmd, boolean toggle);
+    void sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle);
 #endif
 #if SEND_RC6
     void sendRC6(unsigned long data, int nbits);
 #endif
     //......................................................................
+#if SEND_NEC || SEND_NEC_STANDARD
+    void sendNECRepeat();
+#endif
 #if SEND_NEC
     void sendNEC(unsigned long data, int nbits, bool repeat = false);
 #endif
 #if SEND_NEC_STANDARD
-    void sendNECStandard(unsigned long data, int nbits, bool repeat = false);
+    void sendNECStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats = 0);
 #endif
     //......................................................................
 #if SEND_SONY
@@ -488,8 +494,8 @@ public:
     void sendSharp(unsigned int address, unsigned int command);
 #endif
 #if SEND_SHARP_ALT
-    void sendSharpAltRaw(unsigned long data, int nbits);
-    void sendSharpAlt(unsigned int address, unsigned long command);
+    void sendSharpAltRaw(unsigned int data, int nbits);
+    void sendSharpAlt(uint8_t address, uint8_t command);
 #endif
     //......................................................................
 #if SEND_DENON

@@ -1,5 +1,5 @@
 /*
- * IRremote: IRrecvDemo - demonstrates receiving IR codes with IRrecv
+ * IRremote: IRreceiveDemo - demonstrates receiving IR codes with IRrecv
  * An IR detector/demodulator must be connected to the input RECV_PIN.
  * Version 0.1 July, 2009
  * Copyright 2009 Ken Shirriff
@@ -15,7 +15,7 @@ int IR_RECEIVE_PIN = 10;
 #else
 int IR_RECEIVE_PIN = 11;
 #endif
-IRrecv irrecv(IR_RECEIVE_PIN);
+IRrecv IrReceiver(IR_RECEIVE_PIN);
 
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
@@ -35,17 +35,19 @@ void setup() {
     // In case the interrupt driver crashes on setup, give a clue
     // to the user what's going on.
     Serial.println("Enabling IRin");
-    irrecv.enableIRIn();  // Start the receiver
-    irrecv.blink13(true); // Enable feedback LED
+    IrReceiver.enableIRIn();  // Start the receiver
+    IrReceiver.blink13(true); // Enable feedback LED
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);
 }
 
 void loop() {
-    if (irrecv.decode()) {
-        Serial.println(irrecv.results.value, HEX);
-        irrecv.resume(); // Receive the next value
+    if (IrReceiver.decode()) {
+        IrReceiver.printResultShort(&Serial);
+        Serial.println();
+
+        IrReceiver.resume(); // Receive the next value
     }
     delay(100);
 }

@@ -28,17 +28,8 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 
     // Data
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits);
-//    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-//        if (data & mask) {
-//            mark(SAMSUNG_BIT_MARK);
-//            space(SAMSUNG_ONE_SPACE);
-//        } else {
-//            mark(SAMSUNG_BIT_MARK);
-//            space(SAMSUNG_ZERO_SPACE);
-//        }
-//    }
 
-// Footer
+    // Footer
     mark(SAMSUNG_BIT_MARK);
     space(0);  // Always end with the LED off
 }
@@ -63,6 +54,7 @@ bool IRrecv::decodeSAMSUNG() {
             && MATCH_MARK(results.rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
         results.bits = 0;
         results.value = REPEAT;
+        results.isRepeat = true;
         results.decode_type = SAMSUNG;
         return true;
     }
@@ -77,21 +69,6 @@ bool IRrecv::decodeSAMSUNG() {
     offset++;
 
     data = decodePulseDistanceData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE);
-//    for (int i = 0; i < SAMSUNG_BITS; i++) {
-//        if (!MATCH_MARK(results.rawbuf[offset], SAMSUNG_BIT_MARK)) {
-//            return false;
-//        }
-//        offset++;
-//
-//        if (MATCH_SPACE(results.rawbuf[offset], SAMSUNG_ONE_SPACE)) {
-//            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results.rawbuf[offset], SAMSUNG_ZERO_SPACE)) {
-//            data = (data << 1) | 0;
-//        } else {
-//            return false;
-//        }
-//        offset++;
-//    }
 
 // Success
     results.bits = SAMSUNG_BITS;

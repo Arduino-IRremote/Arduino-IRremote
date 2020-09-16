@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 2.6.2](https://github.com/z3t0/Arduino-IRremote/releases)
+### [Version 2.7.0](https://github.com/z3t0/Arduino-IRremote/releases)
 
 [![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 [![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
@@ -22,7 +22,8 @@ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled o
 - You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together. The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC. This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
 
 # Supported IR Protocols
-Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, MagiQuest, Mitsubishi, Panasonic, RC5, RC6, Samsung, Sanyo, Sharp, Sony, Whynter, (Pronto).
+Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, MagiQuest, Mitsubishi, NEC, Panasonic, RC5, RC6, Samsung, Sanyo, Sharp, Sony, Whynter, (Pronto).<br/>
+To receive IR signals in NEC standard format, you must comment out the line `#define USE_NEC_STANDARD` in [IRremote.h](src/IRremote.h#L74).
 
 # Handling unknown Protocols
 ## Disclaimer
@@ -31,7 +32,7 @@ The main reason is, that it was designed to fit inside MCUs with relatively low 
 
 ## Hints
 If you do not know which protocol your IR transmitter uses, you have several choices.
-- Use the [IRrecvDumpV2 example](examples/IRrecvDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo). For **long codes** like from air conditioners, you can **change the length of the input buffer** in [IRremoteInt.h](src/private/IRremoteInt.h#L30).
+- Use the [IRreceiveDumpV2 example](examples/IRreceiveDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo). For **long codes** like from air conditioners, you can **change the length of the input buffer** in [IRremoteInt.h](src/private/IRremoteInt.h#L30).
 - If you have a bigger Arduino board at hand (> 100 kByte program space) you can try the [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library DecodeIR.
 - Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
 - Use the [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) and check the serial output if the protocol is one of the 40 supported protocols.

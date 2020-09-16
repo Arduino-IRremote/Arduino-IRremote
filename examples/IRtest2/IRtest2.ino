@@ -34,8 +34,8 @@ int IR_RECEIVE_PIN = 11;
 #endif
 int LED_PIN = 3;
 
-IRrecv irrecv(IR_RECEIVE_PIN);
-IRsend irsend;
+IRrecv IrReceiver(IR_RECEIVE_PIN);
+IRsend IrSender;
 
 #define RECEIVER 1
 #define SENDER 2
@@ -54,7 +54,7 @@ void setup() {
     // Check IR_RECEIVE_PIN to decide if we're RECEIVER or SENDER
     if (digitalRead(IR_RECEIVE_PIN) == HIGH) {
         mode = RECEIVER;
-        irrecv.enableIRIn();
+        IrReceiver.enableIRIn();
         pinMode(LED_PIN, OUTPUT);
         digitalWrite(LED_PIN, LOW);
         Serial.println("Receiver mode");
@@ -86,22 +86,14 @@ void waitForGap(unsigned int gap) {
 // Dumps out the decode_results structure.
 // Call this after IRrecv::decode()
 void dump() {
-    int count = irrecv.results.rawlen;
-    if (irrecv.results.decode_type == UNKNOWN) {
+    int count = IrReceiver.results.rawlen;
+    if (IrReceiver.results.decode_type == UNKNOWN) {
         Serial.println("Could not decode message");
     } else {
-        if (irrecv.results.decode_type == NEC) {
-            Serial.print("Decoded NEC: ");
-        } else if (irrecv.results.decode_type == SONY) {
-            Serial.print("Decoded SONY: ");
-        } else if (irrecv.results.decode_type == RC5) {
-            Serial.print("Decoded RC5: ");
-        } else if (irrecv.results.decode_type == RC6) {
-            Serial.print("Decoded RC6: ");
-        }
-        Serial.print(irrecv.results.value, HEX);
+        IrReceiver.printResultShort(&Serial);
+
         Serial.print(" (");
-        Serial.print(irrecv.results.bits, DEC);
+        Serial.print(IrReceiver.results.bits, DEC);
         Serial.println(" bits)");
     }
     Serial.print("Raw (");
@@ -110,9 +102,9 @@ void dump() {
 
     for (int i = 0; i < count; i++) {
         if ((i % 2) == 1) {
-            Serial.print(irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print(IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {
-            Serial.print(-(int) irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print(-(int) IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         }
         Serial.print(" ");
     }
@@ -131,32 +123,32 @@ void test(const char *label, int type, unsigned long value, int bits) {
     if (mode == SENDER) {
         Serial.println(label);
         if (type == NEC) {
-            irsend.sendNEC(value, bits);
+            IrSender.sendNEC(value, bits);
         } else if (type == SONY) {
-            irsend.sendSony(value, bits);
+            IrSender.sendSony(value, bits);
         } else if (type == RC5) {
-            irsend.sendRC5(value, bits);
+            IrSender.sendRC5(value, bits);
         } else if (type == RC6) {
-            irsend.sendRC6(value, bits);
+            IrSender.sendRC6(value, bits);
         } else {
             Serial.print(label);
             Serial.println("Bad type!");
         }
         delay(200);
     } else if (mode == RECEIVER) {
-        irrecv.resume(); // Receive the next value
+        IrReceiver.resume(); // Receive the next value
         unsigned long max_time = millis() + 30000;
         Serial.print(label);
 
         // Wait for decode or timeout
-        while (!irrecv.decode()) {
+        while (!IrReceiver.decode()) {
             if (millis() > max_time) {
                 Serial.println("Timeout receiving data");
                 mode = ERROR;
                 return;
             }
         }
-        if (type == irrecv.results.decode_type && value == irrecv.results.value && bits == irrecv.results.bits) {
+        if (type == IrReceiver.results.decode_type && value == IrReceiver.results.value && bits == IrReceiver.results.bits) {
             Serial.println(": OK");
             digitalWrite(LED_PIN, HIGH);
             delay(20);
@@ -174,15 +166,15 @@ void test(const char *label, int type, unsigned long value, int bits) {
 void testRaw(const char *label, unsigned int *rawbuf, unsigned int rawlen) {
     if (mode == SENDER) {
         Serial.println(label);
-        irsend.sendRaw(rawbuf, rawlen, 38 /* kHz */);
+        IrSender.sendRaw(rawbuf, rawlen, 38 /* kHz */);
         delay(200);
     } else if (mode == RECEIVER) {
-        irrecv.resume(); // Receive the next value
+        IrReceiver.resume(); // Receive the next value
         unsigned long max_time = millis() + 30000;
         Serial.print(label);
 
         // Wait for decode or timeout
-        while (!irrecv.decode()) {
+        while (!IrReceiver.decode()) {
             if (millis() > max_time) {
                 Serial.println("Timeout receiving data");
                 mode = ERROR;
@@ -191,14 +183,14 @@ void testRaw(const char *label, unsigned int *rawbuf, unsigned int rawlen) {
         }
 
         // Received length has extra first element for gap
-        if (rawlen != irrecv.results.rawlen - 1) {
+        if (rawlen != IrReceiver.results.rawlen - 1) {
             Serial.print("Bad raw length ");
-            Serial.println(irrecv.results.rawlen, DEC);
+            Serial.println(IrReceiver.results.rawlen, DEC);
             mode = ERROR;
             return;
         }
         for (unsigned int i = 0; i < rawlen; i++) {
-            long got = irrecv.results.rawbuf[i + 1] * MICROS_PER_TICK;
+            long got = IrReceiver.results.rawbuf[i + 1] * MICROS_PER_TICK;
             // Adjust for extra duration of marks
             if (i % 2 == 0) {
                 got -= MARK_EXCESS_MICROS;

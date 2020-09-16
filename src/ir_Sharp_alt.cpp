@@ -30,12 +30,13 @@
 
 //+=============================================================================
 #if SEND_SHARP_ALT
-void IRsend::sendSharpAltRaw(unsigned long data, int nbits) {
+void IRsend::sendSharpAltRaw(unsigned int data, int nbits) {
     enableIROut(38);
 
     for (int n = 0; n < 3; n++) {
         // From LSB to MSB
-        sendPulseDistanceWidthData(SHARP_ALT_SEND_BIT_MARK, SHARP_ALT_ONE_SPACE, SHARP_ALT_SEND_BIT_MARK,SHARP_ALT_ZERO_SPACE, data, nbits, false);
+        sendPulseDistanceWidthData(SHARP_ALT_SEND_BIT_MARK, SHARP_ALT_ONE_SPACE, SHARP_ALT_SEND_BIT_MARK, SHARP_ALT_ZERO_SPACE,
+                data, nbits, false);
 //        unsigned long mask =  1UL;
 //        for (int i = 0; i < nbits; i++) {
 //            if (data & mask) {
@@ -53,12 +54,12 @@ void IRsend::sendSharpAltRaw(unsigned long data, int nbits) {
     }
 }
 
-void IRsend::sendSharpAlt(unsigned int address, unsigned long command) {
-    unsigned long data = 1; // The expansion and the check bits (01).
-    data = (data << SHARP_ALT_COMMAND_BITS) | command;
+void IRsend::sendSharpAlt(uint8_t address, uint8_t command) {
+    // 1 = The expansion and the check bits (01).
+    unsigned int data = (1 << SHARP_ALT_COMMAND_BITS) | command;
     data = (data << SHARP_ALT_ADDRESS_BITS) | address;
 
-    // (+2) is for the expansion and the check bits.
+    // (+2) is for the expansion and the check bits 0b01.
     sendSharpAltRaw(data, SHARP_ALT_ADDRESS_BITS + SHARP_ALT_COMMAND_BITS + 2);
 }
 #endif
@@ -66,6 +67,7 @@ void IRsend::sendSharpAlt(unsigned int address, unsigned long command) {
 //+=============================================================================
 #if DECODE_SHARP_ALT
 bool IRrecv::decodeSharpAlt() {
+    static boolean is_first_repeat = true;
 
     // Check we have enough data.
     if (results.rawlen < (SHARP_ALT_RAWLEN))
@@ -81,19 +83,17 @@ bool IRrecv::decodeSharpAlt() {
         return false;
 
     // Check for repeat.
-    static boolean is_first_repeat = true;
     long initial_space = ((long) results.rawbuf[0]) * MICROS_PER_TICK;
     if (initial_space <= SHARP_ALT_REPEAT_SPACE) {
         if (!is_first_repeat) {
             results.bits = 0;
             results.value = REPEAT;
+            results.isRepeat = true;
             results.decode_type = SHARP;
             return true;
         } else {
-
             // Ignore the first repeat that always comes after the
-            // inverted frame (even if the button was pressed only
-            // once).
+            // inverted frame (even if the button was pressed only once).
             is_first_repeat = false;
             return false;
         }
@@ -103,7 +103,7 @@ bool IRrecv::decodeSharpAlt() {
     // omit the timings for the stop mark (-1), the check bit (-2), and the
     // expansion bit (-2).
     uint16_t bits = 0;
-    for (int i = SHARP_ALT_RAWLEN - 6; i > 1; i -= 2) {
+    for (uint8_t i = SHARP_ALT_RAWLEN - 6; i > 1; i -= 2) {
         if (MATCH_SPACE(results.rawbuf[i], SHARP_ALT_ONE_SPACE)) {
             bits = (bits << 1) | 1;
         } else if (MATCH_SPACE(results.rawbuf[i], SHARP_ALT_ZERO_SPACE)) {
@@ -115,7 +115,7 @@ bool IRrecv::decodeSharpAlt() {
 
     results.bits = SHARP_ALT_ADDRESS_BITS + SHARP_ALT_COMMAND_BITS;
     results.address = (bits & (1 << (SHARP_ALT_ADDRESS_BITS))) - 1;
-    results.value = bits >> SHARP_ALT_ADDRESS_BITS;	// command
+    results.value = bits >> SHARP_ALT_ADDRESS_BITS; // command
     results.decode_type = SHARP_ALT;
     is_first_repeat = true;
     return true;

@@ -78,7 +78,7 @@ jobs:
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
-            sketches-exclude: AiwaRCT501SendDemo,BoseWaveSendDemo,IRrecord,IRsendDemo,IRsendProntoDemo,IRsendRawDemo,IRtest,IRtest2,LegoPowerFunctionsSendDemo,JVCPanasonicSendDemo,LGACSendDemo,MicroGirs # no sending yet
+            sketches-exclude: AiwaRCT501SendDemo,BoseWaveSendDemo,IRrecord,IRsendDemo,IRsendProntoDemo,IRsendRawDemo,IRsendNecStandardDemo,IRtest,IRtest2,LegoPowerFunctionsSendDemo,JVCPanasonicSendDemo,LGACSendDemo,MicroGirs # no sending yet
 
 
       # Do not cancel all jobs / architectures if one job fails

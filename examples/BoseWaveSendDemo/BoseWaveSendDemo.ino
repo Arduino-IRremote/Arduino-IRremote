@@ -7,7 +7,7 @@
  */
 #include <IRremote.h>
 
-IRsend irsend;
+IRsend IrSender;
 
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
@@ -41,58 +41,58 @@ void loop() {
         if (answer == -1) {
             delay(300);
         } else if (answer == 48) {    // 0
-            irsend.sendBoseWave(0xFF);  // On/Off
+            IrSender.sendBoseWave(0xFF);  // On/Off
             prompt = true;
         } else if (answer == 49) {    // 1
-            irsend.sendBoseWave(0xFD);  // Volume Up
+            IrSender.sendBoseWave(0xFD);  // Volume Up
             prompt = true;
         } else if (answer == 50) {    // 2
-            irsend.sendBoseWave(0xFC);  // Volume Down
+            IrSender.sendBoseWave(0xFC);  // Volume Down
             prompt = true;
         } else if (answer == 51) {    // 3
-            irsend.sendBoseWave(0xF4);  // Tune Up
+            IrSender.sendBoseWave(0xF4);  // Tune Up
             prompt = true;
         } else if (answer == 52) {    // 4
-            irsend.sendBoseWave(0xF3);  // Tune Down
+            IrSender.sendBoseWave(0xF3);  // Tune Down
             prompt = true;
         } else if (answer == 53) {    // 5
-            irsend.sendBoseWave(0xF7);  // AM
+            IrSender.sendBoseWave(0xF7);  // AM
             prompt = true;
         } else if (answer == 54) {    // 6
-            irsend.sendBoseWave(0xF9);  // FM
+            IrSender.sendBoseWave(0xF9);  // FM
             prompt = true;
         } else if (answer == 55) {    // 7
-            irsend.sendBoseWave(0xF2);  // Preset 1
+            IrSender.sendBoseWave(0xF2);  // Preset 1
             prompt = true;
         } else if (answer == 56) {    // 8
-            irsend.sendBoseWave(0xF1);  // Preset 2
+            IrSender.sendBoseWave(0xF1);  // Preset 2
             prompt = true;
         } else if (answer == 57) {    // 9
-            irsend.sendBoseWave(0xF0);  // Preset 3
+            IrSender.sendBoseWave(0xF0);  // Preset 3
             prompt = true;
         } else if (answer == 97) {    // a
-            irsend.sendBoseWave(0xEF);  // Preset 4
+            IrSender.sendBoseWave(0xEF);  // Preset 4
             prompt = true;
         } else if (answer == 98) {    // b
-            irsend.sendBoseWave(0xEE);  // Preset 5
+            IrSender.sendBoseWave(0xEE);  // Preset 5
             prompt = true;
         } else if (answer == 99) {    // c
-            irsend.sendBoseWave(0xFB);  // Preset 6
+            IrSender.sendBoseWave(0xFB);  // Preset 6
             prompt = true;
         } else if (answer == 100) {   // d
-            irsend.sendBoseWave(0xFE);  // Mute
+            IrSender.sendBoseWave(0xFE);  // Mute
             prompt = true;
         } else if (answer == 101) {   // e
-            irsend.sendBoseWave(0xF6);  // Pause
+            IrSender.sendBoseWave(0xF6);  // Pause
             prompt = true;
         } else if (answer == 102) {   // f
-            irsend.sendBoseWave(0xF5);  // Stop
+            IrSender.sendBoseWave(0xF5);  // Stop
             prompt = true;
         } else if (answer == 103) {   // g
-            irsend.sendBoseWave(0xF8);  // Aux
+            IrSender.sendBoseWave(0xF8);  // Aux
             prompt = true;
         } else if (answer == 104) {   // h
-            irsend.sendBoseWave(0xFA);  // Sleep
+            IrSender.sendBoseWave(0xFA);  // Sleep
             prompt = true;
         }
         delay(300);

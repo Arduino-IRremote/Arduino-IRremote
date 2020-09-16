@@ -11,7 +11,7 @@
 
 #include <IRremote.h>
 
-IRrecv irrecv(0);
+IRrecv IrReceiver(0);
 
 // Dumps out the decode_results structure.
 // Call this after IRrecv::decode()
@@ -19,22 +19,15 @@ IRrecv irrecv(0);
 //void dump(void *v) {
 //  decode_results *results = (decode_results *)v
 void dump() {
-    int count = irrecv.results.rawlen;
-    if (irrecv.results.decode_type == UNKNOWN) {
+    int count = IrReceiver.results.rawlen;
+
+    if (IrReceiver.results.decode_type == UNKNOWN) {
         Serial.println("Could not decode message");
     } else {
-        if (irrecv.results.decode_type == NEC) {
-            Serial.print("Decoded NEC: ");
-        } else if (irrecv.results.decode_type == SONY) {
-            Serial.print("Decoded SONY: ");
-        } else if (irrecv.results.decode_type == RC5) {
-            Serial.print("Decoded RC5: ");
-        } else if (irrecv.results.decode_type == RC6) {
-            Serial.print("Decoded RC6: ");
-        }
-        Serial.print(irrecv.results.value, HEX);
+        IrReceiver.printResultShort(&Serial);
+
         Serial.print(" (");
-        Serial.print(irrecv.results.bits, DEC);
+        Serial.print(IrReceiver.results.bits, DEC);
         Serial.println(" bits)");
     }
     Serial.print("Raw (");
@@ -43,9 +36,9 @@ void dump() {
 
     for (int i = 0; i < count; i++) {
         if ((i % 2) == 1) {
-            Serial.print(irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print(IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {
-            Serial.print(-(int) irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print(-(int) IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         }
         Serial.print(" ");
     }
@@ -57,7 +50,7 @@ public:
     // For testing, just log the marks/spaces
 #define SENDLOG_LEN 128
     int sendlog[SENDLOG_LEN];
-    int sendlogcnt;
+    int sendlogcnt = 0;
     IRsendDummy() :
             IRsend() {
     }
@@ -110,10 +103,10 @@ IRsendDummy irsenddummy;
 
 void verify(unsigned long val, int bits, int type) {
     irsenddummy.useDummyBuf();
-    irrecv.decode();
+    IrReceiver.decode();
     Serial.print("Testing ");
     Serial.print(val, HEX);
-    if (irrecv.results.value == val && irrecv.results.bits == bits && irrecv.results.decode_type == type) {
+    if (IrReceiver.results.value == val && IrReceiver.results.bits == bits && IrReceiver.results.decode_type == type) {
         Serial.println(": OK");
     } else {
         Serial.println(": Error");

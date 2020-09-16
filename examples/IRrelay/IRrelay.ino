@@ -16,7 +16,7 @@ int IR_RECEIVE_PIN = 11;
 #endif
 int RELAY_PIN = 4; // is labeled D2 on the Chinese SAMD21 M0-Mini clone
 
-IRrecv irrecv(IR_RECEIVE_PIN);
+IRrecv IrReceiver(IR_RECEIVE_PIN);
 decode_results results;
 
 // On the Zero and others we switch explicitly to SerialUSB
@@ -41,8 +41,8 @@ void setup() {
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__));
 
-    irrecv.enableIRIn();  // Start the receiver
-    irrecv.blink13(true); // Enable feedback LED
+    IrReceiver.enableIRIn();  // Start the receiver
+    IrReceiver.blink13(true); // Enable feedback LED
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);
@@ -52,7 +52,7 @@ int on = 0;
 unsigned long last = millis();
 
 void loop() {
-    if (irrecv.decode()) {
+    if (IrReceiver.decode()) {
         // If it's been at least 1/4 second since the last
         // IR received, toggle the relay
         if (millis() - last > 250) {
@@ -70,7 +70,7 @@ void loop() {
             dump();
         }
         last = millis();
-        irrecv.resume(); // Receive the next value
+        IrReceiver.resume(); // Receive the next value
     }
 }
 
@@ -78,22 +78,14 @@ void loop() {
 // Dumps out the decode_results structure.
 // Call this after IRrecv::decode()
 void dump() {
-    int count = irrecv.results.rawlen;
-    if (irrecv.results.decode_type == UNKNOWN) {
+    int count = IrReceiver.results.rawlen;
+    if (IrReceiver.results.decode_type == UNKNOWN) {
         Serial.println("Could not decode message");
     } else {
-        if (irrecv.results.decode_type == NEC) {
-            Serial.print("Decoded NEC: ");
-        } else if (irrecv.results.decode_type == SONY) {
-            Serial.print("Decoded SONY: ");
-        } else if (irrecv.results.decode_type == RC5) {
-            Serial.print("Decoded RC5: ");
-        } else if (irrecv.results.decode_type == RC6) {
-            Serial.print("Decoded RC6: ");
-        }
-        Serial.print(irrecv.results.value, HEX);
+        IrReceiver.printResultShort(&Serial);
+
         Serial.print(" (");
-        Serial.print(irrecv.results.bits, DEC);
+        Serial.print(IrReceiver.results.bits, DEC);
         Serial.println(" bits)");
     }
     Serial.print("Raw (");
@@ -102,9 +94,9 @@ void dump() {
 
     for (int i = 0; i < count; i++) {
         if ((i % 2) == 1) {
-            Serial.print(irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print(IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {
-            Serial.print(-(int) irrecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
+            Serial.print(-(int) IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         }
         Serial.print(" ");
     }

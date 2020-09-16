@@ -82,7 +82,7 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
         }
         DBG_PRINTLN("");
     }
-#if defined(LSB_FIRST_REQURED)
+#if defined(LSB_FIRST_REQUIRED)
      else {  // Send the Least Significant Bit (LSB) first / MSB last.
         for (uint16_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
             if (aData & 1) {  // Send a 1
