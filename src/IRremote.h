@@ -23,17 +23,7 @@
 #define IRremote_h
 
 //------------------------------------------------------------------------------
-// The ISR header contains several useful macros the user may wish to use
-//
 #include "private/IRremoteInt.h"
-
-#ifdef ARDUINO_ARCH_AVR
-#include <avr/pgmspace.h>
-#define HAS_FLASH_READ 1
-#define STRCPY_PF_CAST(x) (x)
-#else
-#define HAS_FLASH_READ 0
-#endif
 
 /****************************************************
  *                     PROTOCOLS
@@ -200,7 +190,7 @@ struct decode_results {
 /**
  * DEPRECATED
  * Decoded value for NEC and others when a repeat code is received
- * Use Flag isRepeat instead
+ * Use Flag decode_results.isRepeat (see above) instead
  */
 #define REPEAT 0xFFFFFFFF
 
@@ -392,7 +382,7 @@ private:
  *                     SENDING
  ****************************************************/
 /**
- * Define to use no carrier PWM, just simulate a receiver signal.
+ * Define to use no carrier PWM, just simulate an active low receiver signal.
  */
 //#define USE_NO_SEND_PWM
 /**
@@ -400,7 +390,13 @@ private:
  */
 //#define USE_SOFT_SEND_PWM
 /**
- * Define to use spin wait instead of delayMicros() for USE_SOFT_SEND_PWM.
+ * If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses.
+ */
+#ifndef PULSE_CORRECTION_MICROS
+#define PULSE_CORRECTION_MICROS 3
+#endif
+/**
+ * If USE_SOFT_SEND_PWM, use spin wait instead of delayMicros().
  */
 //#define USE_SPIN_WAIT
 /**
@@ -559,8 +555,8 @@ private:
     int sendPin;
 
 #  if defined(USE_SOFT_SEND_PWM)
-    unsigned int periodTime;
-    unsigned int periodOnTime;
+    unsigned int periodTimeMicros;
+    unsigned int periodOnTimeMicros;
 
     void sleepMicros(unsigned long us);
     void sleepUntilMicros(unsigned long targetTime);

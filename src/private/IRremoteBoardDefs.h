@@ -23,6 +23,14 @@
 #ifndef IRremoteBoardDefs_h
 #define IRremoteBoardDefs_h
 
+#ifdef ARDUINO_ARCH_AVR
+#include <avr/pgmspace.h>
+#define HAS_FLASH_READ 1
+#define STRCPY_PF_CAST(x) (x)
+#else
+#define HAS_FLASH_READ 0
+#endif
+
 // Define some defaults, that some boards may like to override
 // (This is to avoid negative logic, ! DONT_... is just awkward.)
 
@@ -47,15 +55,9 @@
 /**
  * Duty cycle in percent for sent signals.
  */
-#if ! defined(DUTY_CYCLE)
-#define DUTY_CYCLE 30 // 30 saves power and is compatible to the old existing code
+#if ! defined(IR_SEND_DUTY_CYCLE)
+#define IR_SEND_DUTY_CYCLE 30 // 30 saves power and is compatible to the old existing code
 #endif
-
-/**
- * If USE_SOFT_SEND_PWM or USE_NO_SEND_PWM, this amount (in micro seconds) is subtracted from the
- * on-time of the pulses.
- */
-#define PULSE_CORRECTION 3
 
 //------------------------------------------------------------------------------
 // This first #ifdef statement contains defines for blinking the LED,
@@ -154,7 +156,9 @@
 
 //------------------------------------------------------------------------------
 // microseconds per clock interrupt tick
+#if ! defined(MICROS_PER_TICK)
 #define MICROS_PER_TICK    50
+#endif
 
 //------------------------------------------------------------------------------
 // Define which timer to use
@@ -439,7 +443,7 @@ static void timerConfigForSend(uint16_t frequency) {
     TCCR2A = _BV(WGM20);
     TCCR2B = _BV(WGM22) | _BV(CS20);
     OCR2A = pwmval;
-    OCR2B = pwmval * DUTY_CYCLE / 100;
+    OCR2B = pwmval * IR_SEND_DUTY_CYCLE / 100;
 }
 
 #define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
@@ -508,7 +512,7 @@ static void timerConfigForSend(uint16_t frequency) {
     TCCR1A = _BV(WGM11);
     TCCR1B = _BV(WGM13) | _BV(CS10);
     ICR1 = pwmval;
-    OCR1A = pwmval * DUTY_CYCLE / 100;
+    OCR1A = pwmval * IR_SEND_DUTY_CYCLE / 100;
 }
 
 static void timerConfigForReceive() {
@@ -560,7 +564,7 @@ static void timerConfigForSend(uint16_t frequency) {
     TCCR3A = _BV(WGM31);
     TCCR3B = _BV(WGM33) | _BV(CS30);
     ICR3 = pwmval;
-    OCR3A = pwmval * DUTY_CYCLE / 100;
+    OCR3A = pwmval * IR_SEND_DUTY_CYCLE / 100;
 }
 
 static void timerConfigForReceive() {
@@ -612,8 +616,8 @@ static void timerConfigForSend(uint16_t frequency) {
     TCCR4E = 0;
     TC4H = pwmval >> 8;
     OCR4C = pwmval;
-    TC4H = (pwmval * DUTY_CYCLE / 100) >> 8;
-    OCR4A = (pwmval * DUTY_CYCLE / 100) & 255;
+    TC4H = (pwmval * IR_SEND_DUTY_CYCLE / 100) >> 8;
+    OCR4A = (pwmval * IR_SEND_DUTY_CYCLE / 100) & 255;
 }
 
 static void timerConfigForReceive() {
@@ -656,7 +660,7 @@ static void timerConfigForSend(uint16_t frequency) {
     TCCR4A = _BV(WGM41);
     TCCR4B = _BV(WGM43) | _BV(CS40);
     ICR4 = pwmval;
-    OCR4A = pwmval * DUTY_CYCLE / 100;
+    OCR4A = pwmval * IR_SEND_DUTY_CYCLE / 100;
 }
 
 static void timerConfigForReceive() {
@@ -692,7 +696,7 @@ static void timerConfigForSend(uint16_t frequency) {
     TCCR5A = _BV(WGM51);
     TCCR5B = _BV(WGM53) | _BV(CS50);
     ICR5 = pwmval;
-    OCR5A = pwmval * DUTY_CYCLE / 100;
+    OCR5A = pwmval * IR_SEND_DUTY_CYCLE / 100;
 }
 
 static void timerConfigForReceive() {
@@ -820,7 +824,7 @@ static void timerConfigForSend(uint16_t frequency) {
     TCCR0A = _BV(WGM00);
     TCCR0B = _BV(WGM02) | _BV(CS00);
     OCR0A = pwmval;
-    OCR0B = pwmval * DUTY_CYCLE / 100;
+    OCR0B = pwmval * IR_SEND_DUTY_CYCLE / 100;
 }
 
 #define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
@@ -854,7 +858,7 @@ static void timerConfigForSend(uint16_t frequency) {
     TCCR0A = _BV(WGM00);
     TCCR0B = _BV(WGM02) | _BV(CS00);
     OCR0A = pwmval;
-    OCR0B = pwmval * DUTY_CYCLE / 100;
+    OCR0B = pwmval * IR_SEND_DUTY_CYCLE / 100;
 }
 
 #define IR_SEND_PIN        1
@@ -872,7 +876,7 @@ static void timerConfigForSend(uint16_t frequency) {
     const uint32_t pwmval = (SYSCLOCK / 2000) / (frequency);
     TCB0.CTRLB = TCB_CNTMODE_PWM8_gc;
     TCB0.CCMPL = pwmval;
-    TCB0.CCMPH = (pwmval * DUTY_CYCLE) / 100;
+    TCB0.CCMPH = (pwmval * IR_SEND_DUTY_CYCLE) / 100;
     TCB0.CTRLA = (TCB_CLKSEL_CLKDIV2_gc) | (TCB_ENABLE_bm);
 }
 
@@ -906,7 +910,7 @@ static void timerConfigForReceive() {
 #endif
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_SEND_PWM    ledcWrite(LED_CHANNEL, DUTY_CYCLE) // we must use channel here not pin number
+#define TIMER_ENABLE_SEND_PWM    ledcWrite(LED_CHANNEL, IR_SEND_DUTY_CYCLE) // we must use channel here not pin number
 #define TIMER_DISABLE_SEND_PWM   ledcWrite(LED_CHANNEL, 0)
 
 #ifdef ISR

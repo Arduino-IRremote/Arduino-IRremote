@@ -23,7 +23,27 @@ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled o
 
 # Supported IR Protocols
 Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, MagiQuest, Mitsubishi, NEC, Panasonic, RC5, RC6, Samsung, Sanyo, Sharp, Sony, Whynter, (Pronto).<br/>
-To receive IR signals in NEC standard format, you must comment out the line `#define USE_NEC_STANDARD` in [IRremote.h](src/IRremote.h#L74).
+Protocols can be switched off and on by changing the lines in *IRremote.h*:
+
+```
+#define DECODE_<PROTOCOL_NAME>  1
+#define SEND_<PROTOCOL_NAME>    1
+```
+
+# Useful defines
+You may modify the behavior of the library by changing this values in the source code or just defining a new value for compile (the latter is not possible with the Arduino IDE, so consider to use [sloeber](https://eclipse.baeyens.it).
+| Name | File | Default value | Description |
+|-|-|-|-|
+| `DEBUG` | IRremote.h | disabled | Enables lots of lovely debug output. |
+| `USE_NEC_STANDARD` | IRremote.h | disabled | Use LSB first, address/code schema for encoding. |
+| `USE_NO_SEND_PWM` | IRremote.h | disabled | Use no carrier PWM, just simulate an active low receiver signal. |
+| `USE_SOFT_SEND_PWM` | IRremote.h | disabled | Use carrier PWM generation in software, instead of hardware PWM. |
+| `PULSE_CORRECTION_MICROS` | IRremote.h | 3 | If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses. |
+| `USE_SPIN_WAIT` | IRremote.h | disabled | If USE_SOFT_SEND_PWM, use spin wait instead of delayMicros(). |
+| `RAW_BUFFER_LENGTH` | IRremoteint.h | 101 | Buffer size of raw input buffer. Must be odd! |
+| `IR_SEND_DUTY_CYCLE` | IRremoteBoardDefs.h | 30 | Duty cycle of IR send signal. |
+| `MICROS_PER_TICK` | IRremoteBoardDefs.h | 50 | Resolution of the raw input buffer data. |
+
 
 # Handling unknown Protocols
 ## Disclaimer

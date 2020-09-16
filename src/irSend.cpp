@@ -108,7 +108,7 @@ void IRsend::mark(unsigned int time) {
 #ifdef USE_SOFT_SEND_PWM
     unsigned long start = micros();
     unsigned long stop = start + time;
-    if (stop + periodTime < start) {
+    if (stop + periodTimeMicros < start) {
         // Counter wrap-around, happens very seldomly, but CAN happen.
         // Just give up instead of possibly damaging the hardware.
         return;
@@ -117,9 +117,9 @@ void IRsend::mark(unsigned int time) {
     unsigned long now = micros();
     while (now < stop) {
         SENDPIN_ON(sendPin);
-        sleepMicros (periodOnTime);
+        sleepMicros (periodOnTimeMicros);
         SENDPIN_OFF(sendPin);
-        nextPeriodEnding += periodTime;
+        nextPeriodEnding += periodTimeMicros;
         sleepUntilMicros(nextPeriodEnding);
         now = micros();
     }
@@ -164,8 +164,8 @@ void IRsend::space(unsigned int time) {
 //
 void IRsend::enableIROut(int khz) {
 #ifdef USE_SOFT_SEND_PWM
-    periodTime = (1000U + khz / 2) / khz; // = 1000/khz + 1/2 = round(1000.0/khz)
-    periodOnTime = periodTime * DUTY_CYCLE / 100U - PULSE_CORRECTION;
+    periodTimeMicros = (1000U + khz / 2) / khz; // = 1000/khz + 1/2 = round(1000.0/khz)
+    periodOnTimeMicros = periodTimeMicros * IR_SEND_DUTY_CYCLE / 100U - PULSE_CORRECTION_MICROS;
 #endif
 
 #if defined(USE_NO_SEND_PWM)
