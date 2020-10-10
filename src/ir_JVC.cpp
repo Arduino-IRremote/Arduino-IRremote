@@ -66,7 +66,7 @@ bool IRrecv::decodeJVC() {
     }
     offset++;
 
-    if (results.rawlen < (2 * JVC_BITS) + 1) {
+    if (results.rawlen < (2 * JVC_BITS) + 4) {
         return false;
     }
 
@@ -77,6 +77,7 @@ bool IRrecv::decodeJVC() {
     offset++;
 
     data = decodePulseDistanceData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE);
+    offset += (2 * JVC_BITS);
 
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[offset], JVC_BIT_MARK)) {
