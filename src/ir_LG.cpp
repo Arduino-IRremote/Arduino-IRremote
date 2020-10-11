@@ -38,21 +38,6 @@ bool IRrecv::decodeLG() {
     offset++;
 
     data = decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE);
-//    for (int i = 0; i < LG_BITS; i++) {
-//        if (!MATCH_MARK(results.rawbuf[offset], LG_BIT_MARK)) {
-//            return false;
-//        }
-//        offset++;
-//
-//        if (MATCH_SPACE(results.rawbuf[offset], LG_ONE_SPACE)) {
-//            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results.rawbuf[offset], LG_ZERO_SPACE)) {
-//            data = (data << 1) | 0;
-//        } else {
-//            return false;
-//        }
-//        offset++;
-//    }
 
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[offset], LG_BIT_MARK)) {

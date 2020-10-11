@@ -1,7 +1,7 @@
 ## 2.7.0 2020/09
 - Added ATmega328PB support.
 - Renamed hardware specific macro and function names.
-- Renamed `USE_SOFT_CARRIER` and `USE_NO_CARRIER` macros to `USE_SOFT_SEND_PWM` and `USE_NO_SEND_PWM`.
+- Renamed `USE_SOFT_CARRIER`, `USE_NO_CARRIER`, `DUTY_CYCLE` macros to `USE_SOFT_SEND_PWM`, `USE_NO_SEND_PWM`, `IR_SEND_DUTY_CYCLE`.
 - Removed blocking wait for ATmega32U4 Serial in examples.
 - Deactivated default debug output.
 - Optimized types in sendRC5ext and sendSharpAlt.

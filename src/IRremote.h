@@ -181,10 +181,10 @@ struct decode_results {
     unsigned int magnitude;     ///< Used by MagiQuest [16-bits]
     bool isRepeat;              ///< True if repeat of value is detected
 
-    // next 3 values are copies of irparams values
+    // next 3 values are copies of irparams values - see IRremoteint.h
     unsigned int *rawbuf;       ///< Raw intervals in 50uS ticks
     unsigned int rawlen;        ///< Number of records in rawbuf
-    bool overflow;               ///< true if IR raw code too long
+    bool overflow;              ///< true if IR raw code too long
 };
 
 /**

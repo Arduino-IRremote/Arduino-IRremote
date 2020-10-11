@@ -81,24 +81,6 @@ bool IRrecv::decodeDenon() {
 
     // Read the bits in
     data = decodePulseDistanceData(DENON_BITS, offset, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE);
-//    for (int i = 0; i < DENON_BITS; i++) {
-//        // Each bit looks like: MARK + SPACE_1 -> 1
-//        //                 or : MARK + SPACE_0 -> 0
-//        if (!MATCH_MARK(results.rawbuf[offset], DENON_BIT_MARK)) {
-//            return false;
-//        }
-//        offset++;
-//
-//        // IR data is big-endian, so we shuffle it in from the right:
-//        if (MATCH_SPACE(results.rawbuf[offset], DENON_ONE_SPACE)) {
-//            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results.rawbuf[offset], DENON_ZERO_SPACE)) {
-//            data = (data << 1) | 0;
-//        } else {
-//            return false;
-//        }
-//        offset++;
-//    }
 
     // Success
     results.bits = DENON_BITS;
