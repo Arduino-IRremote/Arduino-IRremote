@@ -38,7 +38,7 @@ bool IRrecv::decodeSanyo() {
 #endif
 
 // Initial space
-    if ((results.rawbuf[offset] * MICROS_PER_TICK) < SANYO_DOUBLE_SPACE_USECS) {
+    if (results.rawbuf[offset] < SANYO_DOUBLE_SPACE_USECS / MICROS_PER_TICK) {
         //Serial.print("IR Gap found: ");
         results.bits = 0;
         results.value = REPEAT;
