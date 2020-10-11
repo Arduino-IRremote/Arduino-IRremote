@@ -30,24 +30,10 @@ void IRsend::sendPanasonic(unsigned int address, unsigned long data) {
     // Address
     sendPulseDistanceWidthData(PANASONIC_BIT_MARK, PANASONIC_ONE_SPACE, PANASONIC_BIT_MARK, PANASONIC_ZERO_SPACE, address,
     PANASONIC_ADDRESS_BITS);
-//    for (unsigned long mask = 1UL << (16 - 1); mask; mask >>= 1) {
-//        mark(PANASONIC_BIT_MARK);
-//        if (address & mask)
-//            space(PANASONIC_ONE_SPACE);
-//        else
-//            space(PANASONIC_ZERO_SPACE);
-//    }
 
     // Data
     sendPulseDistanceWidthData(PANASONIC_BIT_MARK, PANASONIC_ONE_SPACE, PANASONIC_BIT_MARK,
     PANASONIC_ZERO_SPACE, data, PANASONIC_DATA_BITS);
-//    for (unsigned long mask = 1UL << (32 - 1); mask; mask >>= 1) {
-//        mark(PANASONIC_BIT_MARK);
-//        if (data & mask)
-//            space(PANASONIC_ONE_SPACE);
-//        else
-//            space(PANASONIC_ZERO_SPACE);
-//    }
 
     // Footer
     mark(PANASONIC_BIT_MARK);
@@ -75,22 +61,6 @@ bool IRrecv::decodePanasonic() {
     PANASONIC_ZERO_SPACE);
     data = decodePulseDistanceData(PANASONIC_DATA_BITS, offset + PANASONIC_ADDRESS_BITS, PANASONIC_BIT_MARK,
     PANASONIC_ONE_SPACE, PANASONIC_ZERO_SPACE);
-//    // decode address
-//    for (int i = 0; i < PANASONIC_BITS; i++) {
-//        if (!MATCH_MARK(results.rawbuf[offset], PANASONIC_BIT_MARK)) {
-//            return false;
-//        }
-//        offset++;
-//
-//        if (MATCH_SPACE(results.rawbuf[offset], PANASONIC_ONE_SPACE)) {
-//            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results.rawbuf[offset], PANASONIC_ZERO_SPACE)) {
-//            data = (data << 1) | 0;
-//        } else {
-//            return false;
-//        }
-//        offset++;
-//    }
 
     results.value = data;
     results.address = address;
@@ -99,6 +69,7 @@ bool IRrecv::decodePanasonic() {
 
     return true;
 }
+
 bool IRrecv::decodePanasonic(decode_results *aResults) {
     bool aReturnValue = decodePanasonic();
     *aResults = results;

@@ -8,13 +8,15 @@
 //                          SSSS    OOO   N   N    Y
 //==============================================================================
 
+// see https://www.sbprojects.net/knowledge/ir/sirc.php
+
 #define SONY_BITS                   12
 #define SONY_HEADER_MARK          2400
 #define SONY_HEADER_SPACE          600
 #define SONY_ONE_MARK             1200
 #define SONY_ZERO_MARK             600
-#define SONY_RPT_LENGTH          45000
-#define SONY_DOUBLE_SPACE_USECS    500  // usually see 713 - not using ticks as get number wrap around
+#define SONY_RPT_LENGTH          45000 // Not used. Commands are repeated every 45ms(measured from start to start) for as long as the key on the remote control is held down.
+#define SONY_DOUBLE_SPACE_USECS    500 // usually see 713 - not using ticks as get number wrap around
 
 //+=============================================================================
 #if SEND_SONY
@@ -54,7 +56,7 @@ bool IRrecv::decodeSony() {
 
     // Some Sony's deliver repeats fast after first
     // unfortunately can't spot difference from of repeat from two fast clicks
-    if (results.rawbuf[offset] < SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK) {
+    if (results.rawbuf[offset] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
         DBG_PRINTLN("IR Gap found");
         results.bits = 0;
         results.value = REPEAT;

@@ -53,8 +53,8 @@ bool IRrecv::decodeWhynter() {
     long data = 0;
     int offset = 1;  // skip initial space
 
-    // Check we have the right amount of data
-    if (results.rawlen < (2 * WHYNTER_BITS) + 6) {
+    // Check we have the right amount of data +5 for (start bit + header) mark and space + stop bit mark
+    if (results.rawlen <= (2 * WHYNTER_BITS) + 5) {
         return false;
     }
 
@@ -81,25 +81,10 @@ bool IRrecv::decodeWhynter() {
     offset++;
 
     data = decodePulseDistanceData(WHYNTER_BITS, offset, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE);
-//    // data bits
-//    for (int i = 0; i < WHYNTER_BITS; i++) {
-//        if (!MATCH_MARK(results.rawbuf[offset], WHYNTER_BIT_MARK)) {
-//            return false;
-//        }
-//        offset++;
-//
-//        if (MATCH_SPACE(results.rawbuf[offset], WHYNTER_ONE_SPACE)) {
-//            data = (data << 1) | 1;
-//        } else if (MATCH_SPACE(results.rawbuf[offset], WHYNTER_ZERO_SPACE)) {
-//            data = (data << 1) | 0;
-//        } else {
-//            return false;
-//        }
-//        offset++;
-//    }
 
-    // trailing mark
-    if (!MATCH_MARK(results.rawbuf[offset], WHYNTER_BIT_MARK)) {
+    // trailing mark / stop bit
+    if (!MATCH_MARK(results.rawbuf[offset+ (2* WHYNTER_BITS)], WHYNTER_BIT_MARK)) {
+        DBG_PRINT("Stop bit verify failed");
         return false;
     }
 
@@ -109,6 +94,7 @@ bool IRrecv::decodeWhynter() {
     results.decode_type = WHYNTER;
     return true;
 }
+
 bool IRrecv::decodeWhynter(decode_results *aResults) {
     bool aReturnValue = decodeWhynter();
     *aResults = results;

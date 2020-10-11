@@ -94,9 +94,9 @@ void IRsend::sendSharp(unsigned int address, unsigned int command) {
 
 #if DECODE_SHARP
 bool IRrecv::decodeSharp() {
-    unsigned long addr = 0;  // Somewhere to build our address
-    unsigned long data = 0;  // Somewhere to build our data
-    unsigned long lastData = 0;  // Somewhere to store last data
+    unsigned long addr = 0;  // to build our address
+    unsigned long data = 0;  // to build our data
+    unsigned long lastData = 0;  // to store last data
     int offset = 1;  //skip long space
     int loops = 1; //number of bursts
 
@@ -122,39 +122,10 @@ bool IRrecv::decodeSharp() {
         data = 0;
         addr = 0;
         addr = decodePulseDistanceData(SHARP_ADDR_BITS, offset, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE, SHARP_ZERO_SPACE);
-//        for (int i = 0; i < SHARP_ADDR_BITS; i++) {
-//            // Each bit looks like: SHARP_BIT_MARK_RECV + SHARP_ONE_SPACE -> 1
-//            //                 or : SHARP_BIT_MARK_RECV + SHARP_ZERO_SPACE -> 0
-//            if (!MATCH_MARK(results.rawbuf[offset++], SHARP_BIT_MARK_RECV))
-//                return false;
-//            // IR data is big-endian, so we shuffle it in from the right:
-//            if (MATCH_SPACE(results.rawbuf[offset], SHARP_ONE_SPACE))
-//                addr += 1 << i;
-//            else if (MATCH_SPACE(results.rawbuf[offset], SHARP_ZERO_SPACE))
-//                addr = addr;
-//            else
-//                return false;
-//            offset++;
-//        }
+
         data = decodePulseDistanceData( SHARP_DATA_BITS, offset + SHARP_ADDR_BITS, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE,
         SHARP_ZERO_SPACE);
-//        for (int i = 0; i < SHARP_DATA_BITS; i++) {
-//            // Each bit looks like: SHARP_BIT_MARK_RECV + SHARP_ONE_SPACE -> 1
-//            //                 or : SHARP_BIT_MARK_RECV + SHARP_ZERO_SPACE -> 0
-//            if (!MATCH_MARK(results.rawbuf[offset++], SHARP_BIT_MARK_RECV))
-//                return false;
-//            // IR data is big-endian, so we shuffle it in from the right:
-//            if (MATCH_SPACE(results.rawbuf[offset], SHARP_ONE_SPACE))
-//                data += 1 << i;
-//            else if (MATCH_SPACE(results.rawbuf[offset], SHARP_ZERO_SPACE))
-//                data = data;
-//            else
-//                return false;
-//            offset++;
-//        //Serial.print(i);
-//        //Serial.print(":");
-//        //Serial.println(data, HEX);
-//    }
+
         //skip exp bit (mark+pause), chk bit (mark+pause), mark and long pause before next burst
         offset += 6;
 
@@ -172,6 +143,7 @@ bool IRrecv::decodeSharp() {
     results.decode_type = SHARP;
     return true;
 }
+
 bool IRrecv::decodeSharp(decode_results *aResults) {
     bool aReturnValue = decodeSharp();
     *aResults = results;

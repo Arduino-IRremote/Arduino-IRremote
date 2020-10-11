@@ -76,6 +76,7 @@ bool IRrecv::decodeSAMSUNG() {
     results.decode_type = SAMSUNG;
     return true;
 }
+
 bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
     bool aReturnValue = decodeSAMSUNG();
     *aResults = results;

@@ -12,18 +12,18 @@
 // Looks like Sony except for timings, 48 chars of data and time/space different
 
 #define SANYO_BITS                   12
-#define SANYO_HEADER_MARK	           3500  // seen range 3500
-#define SANYO_HEADER_SPACE	            950  // seen 950
+#define SANYO_HEADER_MARK	       3500  // seen range 3500
+#define SANYO_HEADER_SPACE	        950  // seen 950
 #define SANYO_ONE_MARK	           2400  // seen 2400
 #define SANYO_ZERO_MARK             700  // seen 700
+#define SANYO_RPT_LENGTH          45000  // Not used. Commands are repeated every 45ms(measured from start to start) for as long as the key on the remote control is held down.
 #define SANYO_DOUBLE_SPACE_USECS    800  // usually see 713 - not using ticks as get number wrap around
-#define SANYO_RPT_LENGTH          45000
 
 //+=============================================================================
 #if DECODE_SANYO
 bool IRrecv::decodeSanyo() {
     long data = 0;
-    unsigned int offset = 0;  // Skip first space  <-- CHECK THIS!
+    unsigned int offset = 0;  // Dont skip first space, check its size
 
     if (results.rawlen < (2 * SANYO_BITS) + 2) {
         return false;
@@ -38,7 +38,7 @@ bool IRrecv::decodeSanyo() {
 #endif
 
 // Initial space
-    if (results.rawbuf[offset] < SANYO_DOUBLE_SPACE_USECS / MICROS_PER_TICK) {
+    if (results.rawbuf[offset] < (SANYO_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
         //Serial.print("IR Gap found: ");
         results.bits = 0;
         results.value = REPEAT;
