@@ -53,7 +53,7 @@ void IRsend::sendNECRepeat() {
  * Repeat commands should be sent in a 110 ms raster.
  * https://www.sbprojects.net/knowledge/ir/nec.php
  */
-void IRsend::sendNEC(unsigned long data, int nbits, bool repeat) {
+void IRsend::sendNEC(uint32_t data, uint8_t nbits, bool repeat) {
     // Set IR carrier frequency
     enableIROut(38);
 

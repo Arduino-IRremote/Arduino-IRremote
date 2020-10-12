@@ -60,7 +60,7 @@ int getRClevel(decode_results *results, unsigned int *offset, int *used, int t1)
 
 //+=============================================================================
 #if SEND_RC5
-void IRsend::sendRC5(unsigned long data, int nbits) {
+void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
     enableIROut(36);
 
@@ -70,7 +70,7 @@ void IRsend::sendRC5(unsigned long data, int nbits) {
     mark(RC5_T1);
 
     // Data - Biphase code MSB first
-    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
+    for (uint32_t mask = 1UL << (nbits - 1); mask; mask >>= 1) {
         if (data & mask) {
             space(RC5_T1); // 1 is space, then mark
             mark(RC5_T1);
@@ -211,14 +211,14 @@ bool IRrecv::decodeRC5(decode_results *aResults) {
 //
 // NB : Caller needs to take care of flipping the toggle bit
 //
-#define MIN_RC6_SAMPLES      1
+#define MIN_RC6_SAMPLES         1
 #define RC6_HEADER_MARK      2666
 #define RC6_HEADER_SPACE      889
-#define RC6_T1             444
-#define RC6_RPT_LENGTH   46000
+#define RC6_T1                444
+#define RC6_RPT_LENGTH      46000
 
 #if SEND_RC6
-void IRsend::sendRC6(unsigned long data, int nbits) {
+void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
     enableIROut(36);
 
@@ -231,7 +231,37 @@ void IRsend::sendRC6(unsigned long data, int nbits) {
     space(RC6_T1);
 
     // Data
-    for (unsigned long i = 1, mask = 1UL << (nbits - 1); mask; i++, mask >>= 1) {
+    uint32_t mask = 1UL << (nbits - 1);
+    for (uint8_t i = 1; mask; i++, mask >>= 1) {
+        // The fourth bit we send is a "double width trailer bit"
+        int t = (i == 4) ? (RC6_T1 * 2) : (RC6_T1);
+        if (data & mask) {
+            mark(t);
+            space(t);
+        } else {
+            space(t);
+            mark(t);
+        }
+    }
+
+    space(0);  // Always end with the LED off
+}
+
+void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
+    // Set IR carrier frequency
+    enableIROut(36);
+
+    // Header
+    mark(RC6_HEADER_MARK);
+    space(RC6_HEADER_SPACE);
+
+    // Start bit
+    mark(RC6_T1);
+    space(RC6_T1);
+
+    // Data
+    uint64_t mask = 1ULL << (nbits - 1);
+    for (uint8_t i = 1; mask; i++, mask >>= 1) {
         // The fourth bit we send is a "double width trailer bit"
         int t = (i == 4) ? (RC6_T1 * 2) : (RC6_T1);
         if (data & mask) {
@@ -251,7 +281,7 @@ void IRsend::sendRC6(unsigned long data, int nbits) {
 #if DECODE_RC6
 bool IRrecv::decodeRC6() {
     int nbits;
-    long data = 0;
+    uint32_t data = 0;
     int used = 0;
     unsigned int offset = 1;  // Skip first space
 

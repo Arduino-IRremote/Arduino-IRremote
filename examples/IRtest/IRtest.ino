@@ -114,7 +114,7 @@ void verify(unsigned long val, int bits, int type) {
     }
 }
 
-void testNEC(unsigned long val, int bits) {
+void testNEC(uint32_t val, int bits) {
     irsenddummy.reset();
     irsenddummy.sendNEC(val, bits);
     verify(val, bits, NEC);
@@ -124,12 +124,12 @@ void testSony(unsigned long val, int bits) {
     irsenddummy.sendSony(val, bits);
     verify(val, bits, SONY);
 }
-void testRC5(unsigned long val, int bits) {
+void testRC5(uint32_t val, int bits) {
     irsenddummy.reset();
     irsenddummy.sendRC5(val, bits);
     verify(val, bits, RC5);
 }
-void testRC6(unsigned long val, int bits) {
+void testRC6(uint32_t val, int bits) {
     irsenddummy.reset();
     irsenddummy.sendRC6(val, bits);
     verify(val, bits, RC6);

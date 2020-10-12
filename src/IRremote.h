@@ -424,18 +424,19 @@ public:
 
     //......................................................................
 #if SEND_RC5
-    void sendRC5(unsigned long data, int nbits);
+    void sendRC5(uint32_t data, uint8_t nbits);
     void sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle);
 #endif
 #if SEND_RC6
-    void sendRC6(unsigned long data, int nbits);
+    void sendRC6(uint32_t data, uint8_t nbits);
+    void sendRC6(uint64_t data, uint8_t nbits);
 #endif
     //......................................................................
 #if SEND_NEC || SEND_NEC_STANDARD
     void sendNECRepeat();
 #endif
 #if SEND_NEC
-    void sendNEC(unsigned long data, int nbits, bool repeat = false);
+    void sendNEC(uint32_t data, uint8_t nbits, bool repeat = false);
 #endif
 #if SEND_NEC_STANDARD
     void sendNECStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats = 0);
