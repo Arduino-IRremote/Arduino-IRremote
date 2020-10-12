@@ -8,6 +8,9 @@
 //                              J       V     CCCC
 //==============================================================================
 
+// https://www.sbprojects.net/knowledge/ir/jvc.php
+// Here it is decoded MSB first!!! It is not corrected in order to be backwards compatible!
+
 #define JVC_BITS             16
 #define JVC_HEADER_MARK    8400
 #define JVC_HEADER_SPACE   4200
@@ -36,7 +39,7 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
     }
 
     // Data
-    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits);
+    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, true);
 
 // Footer
     mark(JVC_BIT_MARK);
@@ -66,7 +69,8 @@ bool IRrecv::decodeJVC() {
     }
     offset++;
 
-    if (results.rawlen < (2 * JVC_BITS) + 1) {
+    // Check we have enough data - +3 for start bit mark and space + stop bit mark
+    if (results.rawlen <= (2 * JVC_BITS) + 3) {
         return false;
     }
 
@@ -79,8 +83,9 @@ bool IRrecv::decodeJVC() {
     data = decodePulseDistanceData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE);
 
     // Stop bit
-    if (!MATCH_MARK(results.rawbuf[offset], JVC_BIT_MARK)) {
-        return false;
+    if (!MATCH_MARK(results.rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
+        DBG_PRINT("Stop bit verify failed");
+       return false;
     }
 
     // Success
@@ -90,6 +95,7 @@ bool IRrecv::decodeJVC() {
 
     return true;
 }
+
 bool IRrecv::decodeJVC(decode_results *aResults) {
     bool aReturnValue = decodeJVC();
     *aResults = results;

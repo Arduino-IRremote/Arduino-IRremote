@@ -40,15 +40,6 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
 
     // Data
     sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits);
-//    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-//        if (data & mask) {
-//            mark(DENON_BIT_MARK);
-//            space(DENON_ONE_SPACE);
-//        } else {
-//            mark(DENON_BIT_MARK);
-//            space(DENON_ZERO_SPACE);
-//        }
-//    }
 
 // Footer
     mark(DENON_BIT_MARK);
@@ -88,6 +79,7 @@ bool IRrecv::decodeDenon() {
     results.decode_type = DENON;
     return true;
 }
+
 bool IRrecv::decodeDenon(decode_results *aResults) {
     bool aReturnValue = decodeDenon();
     *aResults = results;
