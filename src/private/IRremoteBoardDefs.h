@@ -514,7 +514,11 @@ static void timerConfigForReceive() {
 #  endif
 
 //-----------------
+#if defined(TIMER1_COMPA_vect)
 #define TIMER_INTR_NAME       TIMER1_COMPA_vect
+#elif defined(TIM1_COMPA_vect)
+#define TIMER_INTR_NAME       TIM1_COMPA_vect
+#endif
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
     const uint32_t pwmval = SYSCLOCK / 2000 / (aFrequencyKHz);  // 2000 instead of 1000 because of Phase Correct PWM
