@@ -30,10 +30,12 @@ Protocols can be switched off and on by changing the lines in *IRremote.h*:
 #define DECODE_<PROTOCOL_NAME>  1
 #define SEND_<PROTOCOL_NAME>    1
 ```
+# [Wiki](https://github.com/z3t0/Arduino-IRremote/wiki)
+[Here](https://github.com/z3t0/Arduino-IRremote/wiki) is a quite old but maybe useful wiki for this library.
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / makros available.<br/>
-Modify it by commenting them out or in, or change the values if applicable. Or define the macro with the -D compiler option for gobal compile (the latter is not possible with the Arduino IDE, so consider to use [sloeber](https://eclipse.baeyens.it).
+Modify it by commenting them out or in, or change the values if applicable. Or define the macro with the -D compiler option for gobal compile (the latter is not possible with the Arduino IDE, so consider to use [Sloeber](https://eclipse.baeyens.it).
 
 | Name | File | Default value | Description |
 |-|-|-|-|
@@ -47,6 +49,15 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `IR_SEND_DUTY_CYCLE` | IRremoteBoardDefs.h | 30 | Duty cycle of IR send signal. |
 | `MICROS_PER_TICK` | IRremoteBoardDefs.h | 50 | Resolution of the raw input buffer data. |
 
+### Modifying library properties with Arduino IDE
+First use *Sketch/Show Sketch Folder (Ctrl+K)*.<br/>
+If you did not yet stored the example as your own sketch, then you are instantly in the right library folder.<br/>
+Otherwise you have to navigate to the parallel `libraries` folder and select the library you want to access.<br/>
+In both cases the library files itself are located in the `src` directory.<br/>
+
+### Modifying library properties with Sloeber IDE
+If you are using Sloeber as your IDE, you can easily define global symbols with *Properties/Arduino/CompileOptions*.<br/>
+![Sloeber settings](https://github.com/ArminJo/ServoEasing/blob/master/pictures/SloeberDefineSymbols.png)
 
 # Handling unknown Protocols
 ## Disclaimer
@@ -86,7 +97,7 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 | Board/CPU                                                                | IR-Send (PWM) Pin   | Timers            |
 |--------------------------------------------------------------------------|---------------------|-------------------|
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
-| [ATtiny85 > 1 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **1**               | **0**             |
+| [ATtiny85 > 1 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **1**, 4            | **0**, 1          |
 | [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
 | [ATmega48, ATmega88, ATmega168, **ATmega328**](https://github.com/MCUdude/MiniCore) | **3**, 9 | 1, **2**          |
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
@@ -110,8 +121,7 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 Please see [changelog.md](https://github.com/z3t0/Arduino-IRremote/blob/master/changelog.md).
 
 ## API documentation
-This project documents the library API using [Doxygen](http://www.doxygen.org).
-It is planned to make generated and up-to-date API documentation available online.
+See [API reference in wiki](https://github.com/z3t0/Arduino-IRremote/wiki/API-Reference).
 
 To generate the API documentation,
 Doxygen, as well as [Graphviz](http://www.graphviz.org/) should be installed.

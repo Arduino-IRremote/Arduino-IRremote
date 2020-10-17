@@ -1,3 +1,6 @@
+## 2.7.1 2020/10
+- Added ATtiny timer 1 support.
+
 ## 2.7.0 2020/09
 - Added ATmega328PB support.
 - Renamed hardware specific macro and function names.
