@@ -60,6 +60,9 @@ jobs:
         # With sketches-exclude you may exclude specific examples for a board. Use a comma separated list.
         #############################################################################################################
         include:
+          - arduino-boards-fqbn: arduino:avr:uno
+            sketches-exclude: IR2Keyboard
+
           - arduino-boards-fqbn: arduino:avr:uno|USE_NEC_STANDARD
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
@@ -69,6 +72,9 @@ jobs:
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DUSE_NO_SEND_PWM
+
+          - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
+            sketches-exclude: IR2Keyboard
 
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://dl.espressif.com/dl/package_esp32_index.json

@@ -162,9 +162,9 @@ typedef enum {
 //------------------------------------------------------------------------------
 // Mark & Space matching functions
 //
-int MATCH(int measured, int desired);
-int MATCH_MARK(int measured_ticks, int desired_us);
-int MATCH_SPACE(int measured_ticks, int desired_us);
+int MATCH(unsigned int measured, unsigned int desired);
+int MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us);
+int MATCH_SPACE(uint16_t measured_ticks, unsigned int desired_us);
 
 /****************************************************
  *                     RECEIVING
@@ -174,15 +174,15 @@ int MATCH_SPACE(int measured_ticks, int desired_us);
  */
 struct decode_results {
     decode_type_t decode_type;  ///< UNKNOWN, NEC, SONY, RC5, ...
-    unsigned int address;       ///< Used by Panasonic & Sharp6 NEC_standard [16-bits]
-    unsigned long value;        ///< Decoded value / command [max 32-bits]
-    int bits;                   ///< Number of bits in decoded value
-    unsigned int magnitude;     ///< Used by MagiQuest [16-bits]
+    uint16_t address;           ///< Used by Panasonic & Sharp6 NEC_standard [16-bits]
+    uint32_t value;             ///< Decoded value / command [max 32-bits]
+    uint16_t bits;              ///< Number of bits in decoded value
+    uint16_t magnitude;         ///< Used by MagiQuest [16-bits]
     bool isRepeat;              ///< True if repeat of value is detected
 
     // next 3 values are copies of irparams values - see IRremoteint.h
-    unsigned int *rawbuf;       ///< Raw intervals in 50uS ticks
-    unsigned int rawlen;        ///< Number of records in rawbuf
+    uint16_t *rawbuf;           ///< Raw intervals in 50uS ticks
+    uint16_t rawlen;            ///< Number of records in rawbuf
     bool overflow;              ///< true if IR raw code too long
 };
 

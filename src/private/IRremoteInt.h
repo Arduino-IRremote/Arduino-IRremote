@@ -48,9 +48,9 @@ struct irparams_struct {
     uint8_t recvpin;                ///< Pin connected to IR data from detector
     uint8_t blinkpin;
     uint8_t blinkflag;              ///< true -> enable blinking of pin on IR processing
-    unsigned int rawlen;            ///< counter of entries in rawbuf
-    unsigned int timer;             ///< State timer, counts 50uS ticks.
-    unsigned int rawbuf[RAW_BUFFER_LENGTH]; ///< raw data, first entry is the length of the gap between previous and current command
+    uint16_t rawlen;                ///< counter of entries in rawbuf
+    uint16_t timer;             ///< State timer, counts 50uS ticks.
+    uint16_t rawbuf[RAW_BUFFER_LENGTH]; ///< raw data, first entry is the length of the gap between previous and current command
     uint8_t overflow;               ///< Raw buffer overflow occurred
 };
 
@@ -101,11 +101,11 @@ extern struct irparams_struct irparams;
 //#define TICKS_LOW(us)   ((int)(((us)*LTOL/MICROS_PER_TICK)))
 //#define TICKS_HIGH(us)  ((int)(((us)*UTOL/MICROS_PER_TICK + 1)))
 #if MICROS_PER_TICK == 50 && TOLERANCE == 25           // Defaults
-#define TICKS_LOW(us)   ((int) ((us)/67 ))     // (us) / ((MICROS_PER_TICK:50 / LTOL:75 ) * 100)
-#define TICKS_HIGH(us)  ((int) ((us)/40 + 1))  // (us) / ((MICROS_PER_TICK:50 / UTOL:125) * 100) + 1
+#define TICKS_LOW(us)   ((us)/67 )     // (us) / ((MICROS_PER_TICK:50 / LTOL:75 ) * 100)
+#define TICKS_HIGH(us)  ((us)/40 + 1)  // (us) / ((MICROS_PER_TICK:50 / UTOL:125) * 100) + 1
 #else
-    #define TICKS_LOW(us)   ((int) ((long) (us) * LTOL / (MICROS_PER_TICK * 100) ))
-    #define TICKS_HIGH(us)  ((int) ((long) (us) * UTOL / (MICROS_PER_TICK * 100) + 1))
+    #define TICKS_LOW(us)   ((uint16_t) ((long) (us) * LTOL / (MICROS_PER_TICK * 100) ))
+    #define TICKS_HIGH(us)  ((uint16_t) ((long) (us) * UTOL / (MICROS_PER_TICK * 100) + 1))
 #endif
 
 //------------------------------------------------------------------------------

@@ -34,7 +34,7 @@ struct irparams_struct irparams; // the irparams instance
 //   in a hope of finding out what is going on, but for now they will remain as
 //   functions even in non-DEBUG mode
 //
-int MATCH(int measured, int desired) {
+int MATCH(unsigned int measured, unsigned int desired) {
 #if DEBUG
     Serial.print(F("Testing: "));
     Serial.print(TICKS_LOW(desired), DEC);
@@ -57,7 +57,7 @@ int MATCH(int measured, int desired) {
 //+========================================================
 // Due to sensor lag, when received, Marks tend to be 100us too long
 //
-int MATCH_MARK(int measured_ticks, int desired_us) {
+int MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us) {
 #if DEBUG
     Serial.print(F("Testing mark (actual vs desired): "));
     Serial.print(measured_ticks * MICROS_PER_TICK, DEC);
@@ -86,7 +86,7 @@ int MATCH_MARK(int measured_ticks, int desired_us) {
 //+========================================================
 // Due to sensor lag, when received, Spaces tend to be 100us too short
 //
-int MATCH_SPACE(int measured_ticks, int desired_us) {
+int MATCH_SPACE(uint16_t measured_ticks, unsigned int desired_us) {
 #if DEBUG
     Serial.print(F("Testing space (actual vs desired): "));
     Serial.print(measured_ticks * MICROS_PER_TICK, DEC);

@@ -4,6 +4,8 @@
 - Changed wrong return code signature of decodePulseDistanceData() and its handling.
 - Removed Mitsubishi protocol, since the implementation is in contradiction with all documentation I could found and therefore supposed to be wrong.
 - Removed AIWA implementation, since it is only for 1 device and at least sending implemented wrong.
+- Added Lego_PF decode.
+- Added new example IR2Keyboard.
 
 ## 2.7.0 2020/09
 - Added ATmega328PB support.

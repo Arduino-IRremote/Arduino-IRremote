@@ -132,7 +132,7 @@ static void dumpDuration(Stream& stream, uint16_t duration, uint16_t timebase) {
     dumpNumber(stream, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
 }
 
-static void dumpSequence(Stream& stream, const volatile unsigned int *data, size_t length, uint16_t timebase) {
+static void dumpSequence(Stream& stream, const volatile uint16_t *data, size_t length, uint16_t timebase) {
     for (unsigned int i = 0; i < length; i++)
         dumpDuration(stream, data[i], timebase);
 
