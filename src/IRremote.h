@@ -56,8 +56,8 @@
 #define DECODE_MAGIQUEST     1
 #define SEND_MAGIQUEST       1
 
-#define DECODE_MITSUBISHI    1
-#define SEND_MITSUBISHI      0 // NOT WRITTEN
+//#define DECODE_MITSUBISHI    1 // Faulty implementation
+//#define SEND_MITSUBISHI      0 // NOT WRITTEN
 
 //#define USE_NEC_STANDARD // remove comment to have the standard NEC decoding (LSB first) available.
 #if defined(USE_NEC_STANDARD)
@@ -118,7 +118,7 @@ typedef enum {
     LEGO_PF,
     LG,
     MAGIQUEST,
-    MITSUBISHI,
+//    MITSUBISHI,
     NEC_STANDARD,
     NEC,
     PANASONIC,
@@ -263,7 +263,7 @@ public:
      */
     void dumpPronto(Stream& stream, unsigned int frequency = 38000U);
 
-    unsigned long decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
+    bool decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
             unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst = true);
 
     decode_results results; // the instance for decoding
@@ -339,10 +339,10 @@ private:
     bool decodeSanyo(decode_results *aResults);
 #endif
     //......................................................................
-#if DECODE_MITSUBISHI
-    bool decodeMitsubishi();
-    bool decodeMitsubishi(decode_results *aResults);
-#endif
+//#if DECODE_MITSUBISHI
+//    bool decodeMitsubishi();
+//    bool decodeMitsubishi(decode_results *aResults);
+//#endif
     //......................................................................
 #if DECODE_DISH
       bool  decodeDish () ; // NOT WRITTEN
@@ -477,9 +477,9 @@ public:
       void  sendSanyo      ( ) ; // NOT WRITTEN
 #endif
     //......................................................................
-#if SEND_MISUBISHI
-      void  sendMitsubishi ( ) ; // NOT WRITTEN
-#endif
+//#if SEND_MISUBISHI
+//      void  sendMitsubishi ( ) ; // NOT WRITTEN
+//#endif
     //......................................................................
 #if SEND_DISH
     void sendDISH(unsigned long data, int nbits);

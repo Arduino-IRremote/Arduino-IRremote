@@ -271,9 +271,9 @@ void dumpProtocols() {
     printSendEnabled(SEND_SANYO);
     printDecodeEnabled(DECODE_SANYO);
 
-    Serial.print(F("MITSUBISHI:   "));
-    printSendEnabled(SEND_MITSUBISHI);
-    printDecodeEnabled(DECODE_MITSUBISHI);
+//    Serial.print(F("MITSUBISHI:   "));
+//    printSendEnabled(SEND_MITSUBISHI);
+//    printDecodeEnabled(DECODE_MITSUBISHI);
 
     Serial.print(F("DISH:         "));
     printSendEnabled(SEND_DISH);

@@ -23,7 +23,7 @@ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled o
 - You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together. The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC. This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
 
 # Supported IR Protocols
-Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, MagiQuest, Mitsubishi, NEC, Panasonic, RC5, RC6, Samsung, Sanyo, Sharp, Sony, Whynter, (Pronto).<br/>
+Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, MagiQuest, NEC, Panasonic, RC5, RC6, Samsung, Sanyo, Sharp, Sony, Whynter, (Pronto).<br/>
 Protocols can be switched off and on by changing the lines in *IRremote.h*:
 
 ```
@@ -31,7 +31,7 @@ Protocols can be switched off and on by changing the lines in *IRremote.h*:
 #define SEND_<PROTOCOL_NAME>    1
 ```
 # [Wiki](https://github.com/z3t0/Arduino-IRremote/wiki)
-[Here](https://github.com/z3t0/Arduino-IRremote/wiki) is a quite old but maybe useful wiki for this library.
+This is a quite old but maybe useful wiki for this library.
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / makros available.<br/>

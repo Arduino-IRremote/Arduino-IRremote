@@ -1,5 +1,9 @@
-## 2.7.1 2020/10
+## 2.8.0 2020/10
+- Changed License to MIT see https://github.com/z3t0/Arduino-IRremote/issues/397.
 - Added ATtiny timer 1 support.
+- Changed wrong return code signature of decodePulseDistanceData() and its handling.
+- Removed Mitsubishi protocol, since the implementation is in contradiction with all documentation I could found and therefore supposed to be wrong.
+- Removed AIWA implementation, since it is only for 1 device and at least sending implemented wrong.
 
 ## 2.7.0 2020/09
 - Added ATmega328PB support.
