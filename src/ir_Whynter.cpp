@@ -50,7 +50,6 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 //+=============================================================================
 #if DECODE_WHYNTER
 bool IRrecv::decodeWhynter() {
-    long data = 0;
     int offset = 1;  // skip initial space
 
     // Check we have the right amount of data +5 for (start bit + header) mark and space + stop bit mark
@@ -80,17 +79,18 @@ bool IRrecv::decodeWhynter() {
     }
     offset++;
 
-    data = decodePulseDistanceData(WHYNTER_BITS, offset, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE);
+    if (!decodePulseDistanceData(WHYNTER_BITS, offset, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE)) {
+        return false;
+    }
 
     // trailing mark / stop bit
-    if (!MATCH_MARK(results.rawbuf[offset+ (2* WHYNTER_BITS)], WHYNTER_BIT_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[offset + (2 * WHYNTER_BITS)], WHYNTER_BIT_MARK)) {
         DBG_PRINT("Stop bit verify failed");
         return false;
     }
 
     // Success
     results.bits = WHYNTER_BITS;
-    results.value = data;
     results.decode_type = WHYNTER;
     return true;
 }

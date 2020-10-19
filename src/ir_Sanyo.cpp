@@ -23,7 +23,7 @@
 #if DECODE_SANYO
 bool IRrecv::decodeSanyo() {
     long data = 0;
-    unsigned int offset = 0;  // Dont skip first space, check its size
+    unsigned int offset = 0;  // Don't skip first space, check its size
 
     if (results.rawlen < (2 * SANYO_BITS) + 2) {
         return false;

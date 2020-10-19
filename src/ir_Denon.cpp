@@ -51,7 +51,6 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
 //
 #if DECODE_DENON
 bool IRrecv::decodeDenon() {
-    unsigned long data = 0;  // Somewhere to build our code
     int offset = 1;  // Skip the gap reading
 
     // Check we have the right amount of data
@@ -71,11 +70,12 @@ bool IRrecv::decodeDenon() {
     offset++;
 
     // Read the bits in
-    data = decodePulseDistanceData(DENON_BITS, offset, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE);
+    if (!decodePulseDistanceData(DENON_BITS, offset, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE)) {
+        return false;
+    }
 
     // Success
     results.bits = DENON_BITS;
-    results.value = data;
     results.decode_type = DENON;
     return true;
 }

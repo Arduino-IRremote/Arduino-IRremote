@@ -8,9 +8,9 @@
 //       P      A   A  N   N  A   A  SSSS    OOO   N   N  IIIII   CCCC
 //==============================================================================
 
-#define PANASONIC_BITS            48
 #define PANASONIC_ADDRESS_BITS    16
 #define PANASONIC_DATA_BITS       32
+#define PANASONIC_BITS            (PANASONIC_ADDRESS_BITS + PANASONIC_DATA_BITS)
 #define PANASONIC_HEADER_MARK   3502
 #define PANASONIC_HEADER_SPACE  1750
 #define PANASONIC_BIT_MARK       502
@@ -44,9 +44,11 @@ void IRsend::sendPanasonic(unsigned int address, unsigned long data) {
 //+=============================================================================
 #if DECODE_PANASONIC
 bool IRrecv::decodePanasonic() {
-    unsigned long address = 0;
-    unsigned long data = 0;
     int offset = 1;
+
+    if (results.rawlen < (2 * PANASONIC_BITS) + 2) {
+        return false;
+    }
 
     if (!MATCH_MARK(results.rawbuf[offset], PANASONIC_HEADER_MARK)) {
         return false;
@@ -57,13 +59,18 @@ bool IRrecv::decodePanasonic() {
     }
     offset++;
 
-    address = decodePulseDistanceData(PANASONIC_ADDRESS_BITS, offset, PANASONIC_BIT_MARK, PANASONIC_ONE_SPACE,
-    PANASONIC_ZERO_SPACE);
-    data = decodePulseDistanceData(PANASONIC_DATA_BITS, offset + PANASONIC_ADDRESS_BITS, PANASONIC_BIT_MARK,
-    PANASONIC_ONE_SPACE, PANASONIC_ZERO_SPACE);
+    // decode address
+    if (!decodePulseDistanceData(PANASONIC_ADDRESS_BITS, offset, PANASONIC_BIT_MARK, PANASONIC_ONE_SPACE,
+    PANASONIC_ZERO_SPACE)) {
+        return false;
+    }
+    results.address = results.value;
 
-    results.value = data;
-    results.address = address;
+    if (!decodePulseDistanceData(PANASONIC_DATA_BITS, offset + PANASONIC_ADDRESS_BITS, PANASONIC_BIT_MARK,
+    PANASONIC_ONE_SPACE, PANASONIC_ZERO_SPACE)) {
+        return false;
+    }
+
     results.decode_type = PANASONIC;
     results.bits = PANASONIC_BITS;
 

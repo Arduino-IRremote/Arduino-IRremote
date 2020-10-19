@@ -94,8 +94,6 @@ void IRsend::sendSharp(unsigned int address, unsigned int command) {
 
 #if DECODE_SHARP
 bool IRrecv::decodeSharp() {
-    unsigned long addr = 0;  // to build our address
-    unsigned long data = 0;  // to build our data
     unsigned long lastData = 0;  // to store last data
     int offset = 1;  //skip long space
     int loops = 1; //number of bursts
@@ -119,27 +117,28 @@ bool IRrecv::decodeSharp() {
 
     // Read the bits in
     for (int j = 0; j < loops; j++) {
-        data = 0;
-        addr = 0;
-        addr = decodePulseDistanceData(SHARP_ADDR_BITS, offset, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE, SHARP_ZERO_SPACE);
+        if (!decodePulseDistanceData(SHARP_ADDR_BITS, offset, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE, SHARP_ZERO_SPACE)) {
+            return false;
+        }
+        results.address = results.value;
 
-        data = decodePulseDistanceData( SHARP_DATA_BITS, offset + SHARP_ADDR_BITS, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE,
-        SHARP_ZERO_SPACE);
+        if (!decodePulseDistanceData( SHARP_DATA_BITS, offset + SHARP_ADDR_BITS, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE,
+        SHARP_ZERO_SPACE)) {
+            return false;
+        }
 
         //skip exp bit (mark+pause), chk bit (mark+pause), mark and long pause before next burst
         offset += 6;
 
         //Check if last burst data is equal to this burst (lastData already inverted)
-        if (lastData != 0 && data != lastData)
+        if (lastData != 0 && results.value != lastData)
             return false;
         //save current burst of data but invert (XOR) the last 10 bits (8 data bits + exp bit + chk bit)
-        lastData = data ^ 0xFF;
+        lastData = results.value ^ 0xFF;
     }
 
 // Success
     results.bits = SHARP_BITS;
-    results.value = data;
-    results.address = addr;
     results.decode_type = SHARP;
     return true;
 }

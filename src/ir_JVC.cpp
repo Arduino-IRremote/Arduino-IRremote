@@ -50,7 +50,6 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
 //+=============================================================================
 #if DECODE_JVC
 bool IRrecv::decodeJVC() {
-    long data = 0;
     int offset = 1; // Skip first space
 
     // Check for repeat
@@ -80,17 +79,18 @@ bool IRrecv::decodeJVC() {
     }
     offset++;
 
-    data = decodePulseDistanceData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE);
+    if (!decodePulseDistanceData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE)) {
+        return false;
+    }
 
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
         DBG_PRINT("Stop bit verify failed");
-       return false;
+        return false;
     }
 
     // Success
     results.bits = JVC_BITS;
-    results.value = data;
     results.decode_type = JVC;
 
     return true;

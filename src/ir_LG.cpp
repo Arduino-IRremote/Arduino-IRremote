@@ -19,7 +19,6 @@
 //+=============================================================================
 #if DECODE_LG
 bool IRrecv::decodeLG() {
-    long data = 0;
     int offset = 1; // Skip first space
 
     // Check we have the right amount of data  +3 for start bit mark and space + stop bit mark
@@ -37,8 +36,9 @@ bool IRrecv::decodeLG() {
     }
     offset++;
 
-    data = decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE);
-
+    if (!decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE)) {
+        return false;
+    }
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
         DBG_PRINT("Stop bit verify failed");
@@ -47,7 +47,6 @@ bool IRrecv::decodeLG() {
 
     // Success
     results.bits = LG_BITS;
-    results.value = data;
     results.decode_type = LG;
     return true;
 }

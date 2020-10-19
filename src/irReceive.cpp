@@ -63,12 +63,12 @@ bool IRrecv::decode() {
     }
 #endif
 
-#if DECODE_MITSUBISHI
-    DBG_PRINTLN("Attempting Mitsubishi decode");
-    if (decodeMitsubishi()) {
-        return true;
-    }
-#endif
+//#if DECODE_MITSUBISHI
+//    DBG_PRINTLN("Attempting Mitsubishi decode");
+//    if (decodeMitsubishi()) {
+//        return true;
+//    }
+//#endif
 
 #if DECODE_RC5
     DBG_PRINTLN("Attempting RC5 decode");
@@ -280,13 +280,17 @@ int IRrecv::compare(unsigned int oldval, unsigned int newval) {
 }
 
 /*
+ * Decode pulse distance protocols.
+ * The mark (pulse) has constant length, the length of the space determines the bit value.
  * Each bit looks like: MARK + SPACE_1 -> 1
  *                 or : MARK + SPACE_0 -> 0
- * Data is read MSB first.
+ * Data is read MSB first if not otherwise enabled.
+ * Input is     results.rawbuf
+ * Output is    results.value
  */
-unsigned long IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
+bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
         unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst) {
-    unsigned long aDecodedData = 0;
+    unsigned long tDecodedData = 0;
 
     if (aMSBfirst) {
         for (uint8_t i = 0; i < aNumberOfBits; i++) {
@@ -298,9 +302,9 @@ unsigned long IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aSt
 
             // Check for variable length space indicating a 0 or 1
             if (MATCH_SPACE(results.rawbuf[aStartOffset], aOneSpaceMicros)) {
-                aDecodedData = (aDecodedData << 1) | 1;
+                tDecodedData = (tDecodedData << 1) | 1;
             } else if (MATCH_SPACE(results.rawbuf[aStartOffset], aZeroSpaceMicros)) {
-                aDecodedData = (aDecodedData << 1) | 0;
+                tDecodedData = (tDecodedData << 1) | 0;
             } else {
                 return false;
             }
@@ -318,7 +322,7 @@ unsigned long IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aSt
 
             // Check for variable length space indicating a 0 or 1
             if (MATCH_SPACE(results.rawbuf[aStartOffset], aOneSpaceMicros)) {
-                aDecodedData |= mask; // set the bit
+                tDecodedData |= mask; // set the bit
             } else if (MATCH_SPACE(results.rawbuf[aStartOffset], aZeroSpaceMicros)) {
                 // do not set the bit
             } else {
@@ -329,7 +333,8 @@ unsigned long IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aSt
         }
     }
 #endif
-    return aDecodedData;
+    results.value = tDecodedData;
+    return true;
 }
 
 //+=============================================================================
@@ -414,11 +419,11 @@ const char* IRrecv::getProtocolString() {
         return ("MAGIQUEST");
         break;
 #endif
-#if DECODE_MITSUBISHI
-    case MITSUBISHI:
-        return ("MITSUBISHI");
-        break;
-#endif
+//#if DECODE_MITSUBISHI
+//    case MITSUBISHI:
+//        return ("MITSUBISHI");
+//        break;
+//#endif
 #if DECODE_NEC_STANDARD
     case NEC_STANDARD:
         return ("NEC_STANDARD");
@@ -547,12 +552,12 @@ bool IRrecv::decode(decode_results *aResults) {
     }
 #endif
 
-#if DECODE_MITSUBISHI
-    DBG_PRINTLN("Attempting Mitsubishi decode");
-    if (decodeMitsubishi(aResults)) {
-        return true;
-    }
-#endif
+//#if DECODE_MITSUBISHI
+//    DBG_PRINTLN("Attempting Mitsubishi decode");
+//    if (decodeMitsubishi(aResults)) {
+//        return true;
+//    }
+//#endif
 
 #if DECODE_RC5
     DBG_PRINTLN("Attempting RC5 decode");

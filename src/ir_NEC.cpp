@@ -105,7 +105,6 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumbe
 //
 #if DECODE_NEC
 bool IRrecv::decodeNEC() {
-    long data = 0;  // We decode in to here; Start with nothing
     int offset = 1;  // Index in to results; Skip first space.
 
 // Check header "mark"
@@ -128,13 +127,16 @@ bool IRrecv::decodeNEC() {
     if (results.rawlen <= (2 * NEC_BITS) + 3) {
         return false;
     }
+
 // Check header "space"
     if (!MATCH_SPACE(results.rawbuf[offset], NEC_HEADER_SPACE)) {
         return false;
     }
     offset++;
 
-    data = decodePulseDistanceData(NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE);
+    if (!decodePulseDistanceData(NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE)) {
+        return false;
+    }
 
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[offset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
@@ -144,7 +146,6 @@ bool IRrecv::decodeNEC() {
 
 // Success
     results.bits = NEC_BITS;
-    results.value = data;
     results.decode_type = NEC;
 
     return true;

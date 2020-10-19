@@ -40,7 +40,6 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 //
 #if DECODE_SAMSUNG
 bool IRrecv::decodeSAMSUNG() {
-    long data = 0;
     int offset = 1;  // Skip first space
 
     // Initial mark
@@ -68,11 +67,12 @@ bool IRrecv::decodeSAMSUNG() {
     }
     offset++;
 
-    data = decodePulseDistanceData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE);
+    if (!decodePulseDistanceData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE)) {
+        return false;
+    }
 
 // Success
     results.bits = SAMSUNG_BITS;
-    results.value = data;
     results.decode_type = SAMSUNG;
     return true;
 }

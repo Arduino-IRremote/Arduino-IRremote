@@ -9,10 +9,11 @@
 //==============================================================================
 
 // see https://www.sbprojects.net/knowledge/ir/sirc.php
+// pulse width protocol
 
 #define SONY_BITS                   12
 #define SONY_HEADER_MARK          2400
-#define SONY_HEADER_SPACE          600
+#define SONY_SPACE                 600
 #define SONY_ONE_MARK             1200
 #define SONY_ZERO_MARK             600
 #define SONY_RPT_LENGTH          45000 // Not used. Commands are repeated every 45ms(measured from start to start) for as long as the key on the remote control is held down.
@@ -26,20 +27,22 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 
     // Header
     mark(SONY_HEADER_MARK);
-    space(SONY_HEADER_SPACE);
+    space (SONY_SPACE);
 
-    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_HEADER_SPACE, SONY_ZERO_MARK, SONY_HEADER_SPACE, data, nbits);
-//    // Data - Pulse width coding
+    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits);
+    /*
+     * Pulse width coding, the short version.
+     * Use this if need to save program space and you only require this protocol.
+     */
 //    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
 //        if (data & mask) {
 //            mark(SONY_ONE_MARK);
-//            space(SONY_HEADER_SPACE);
+//            space(SONY_SPACE);
 //        } else {
 //            mark(SONY_ZERO_MARK);
-//            space(SONY_HEADER_SPACE);
+//            space(SONY_SPACE);
 //        }
 //    }
-
     space(0);  // Always end with the LED off
 }
 #endif
@@ -66,18 +69,21 @@ bool IRrecv::decodeSony() {
     }
     offset++;
 
-    // Initial mark
+    // Check header "mark"
     if (!MATCH_MARK(results.rawbuf[offset], SONY_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    while (offset + 1 < results.rawlen) {
-        if (!MATCH_SPACE(results.rawbuf[offset], SONY_HEADER_SPACE)) {
-            break;
-        }
-        offset++;
+    // Check header "space"
+    if (!MATCH_SPACE(results.rawbuf[offset], SONY_SPACE)) {
+        return false;
+    }
+    offset++;
 
+    // MSB first - Not compatible to standard, which says LSB first :-(
+    while (offset < results.rawlen) {
+        // bit value is determined by length of the mark
         if (MATCH_MARK(results.rawbuf[offset], SONY_ONE_MARK)) {
             data = (data << 1) | 1;
         } else if (MATCH_MARK(results.rawbuf[offset], SONY_ZERO_MARK)) {
@@ -86,18 +92,20 @@ bool IRrecv::decodeSony() {
             return false;
         }
         offset++;
+
+        // check for the constant space length
+        if (!MATCH_SPACE(results.rawbuf[offset], SONY_SPACE)) {
+            return false;
+        }
+        offset++;
     }
 
-    // Success
-    results.bits = (offset - 1) / 2;
-    if (results.bits < 12) {
-        results.bits = 0;
-        return false;
-    }
+    results.bits = SONY_BITS;
     results.value = data;
     results.decode_type = SONY;
     return true;
 }
+
 bool IRrecv::decodeSony(decode_results *aResults) {
     bool aReturnValue = decodeSony();
     *aResults = results;
