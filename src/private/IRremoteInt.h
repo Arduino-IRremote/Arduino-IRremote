@@ -51,7 +51,7 @@ struct irparams_struct {
     uint8_t blinkflag;              ///< true -> enable blinking of pin on IR processing
     unsigned int rawlen;            ///< counter of entries in rawbuf
     unsigned int timer;             ///< State timer, counts 50uS ticks.
-    unsigned int rawbuf[RAW_BUFFER_LENGTH];  ///< raw data, first entry is the length of the gap between previous and current command
+    unsigned int rawbuf[RAW_BUFFER_LENGTH]; ///< raw data, first entry is the length of the gap between previous and current command
     uint8_t overflow;               ///< Raw buffer overflow occurred
 };
 
@@ -75,10 +75,11 @@ extern struct irparams_struct irparams;
 //
 
 /**
- * When received, marks  tend to be too long and
- * spaces tend to be too short.
- * To compensate for this, MARK_EXCESS_MICROS is subtracted from all marks,
- * and added to all spaces.
+ * When received, marks  tend to be too long and spaces tend to be too short.
+ * To compensate for this, MARK_EXCESS_MICROS is subtracted from all marks, and added to all spaces.
+ * If you set MARK_EXCESS to approx. 50us then the TSOP4838 works best.
+ * At 100us it also worked, but not as well.
+ * Set MARK_EXCESS to 100us and the VS1838 doesn't work at all.
  */
 #define MARK_EXCESS_MICROS    100
 
