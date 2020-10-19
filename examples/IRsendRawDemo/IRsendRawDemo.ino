@@ -1,9 +1,7 @@
 /*
  * IRremote: IRsendRawDemo - demonstrates sending IR codes with sendRaw
  * An IR LED must be connected to Arduino PWM pin 3.
- * Version 0.1 July, 2009
- * Copyright 2009 Ken Shirriff
- * http://arcfn.com
+ * Initially coded 2009 Ken Shirriff http://www.righto.com
  *
  * IRsendRawDemo - added by AnalysIR (via www.AnalysIR.com), 24 August 2015
  *

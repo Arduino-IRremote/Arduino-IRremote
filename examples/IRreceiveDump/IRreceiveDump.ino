@@ -1,9 +1,7 @@
 /*
  * IRremote: IRreceiveDump - dump details of IR codes with IRrecv
  * An IR detector/demodulator must be connected to the input RECV_PIN.
- * Version 0.1 July, 2009
- * Copyright 2009 Ken Shirriff
- * http://arcfn.com
+ * Initially coded 2009 Ken Shirriff http://www.righto.com
  * JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
  * LG added by Darryl Smith (based on the JVC protocol)
  */

@@ -1,8 +1,7 @@
 //******************************************************************************
 // IRremote
 // Version 2.0.1 June, 2015
-// Copyright 2009 Ken Shirriff
-// For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
+// Initially coded 2009 Ken Shirriff http://www.righto.com
 //
 // Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
 // Modified  by Mitra Ardron <mitra@mitra.biz>

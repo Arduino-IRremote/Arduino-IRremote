@@ -1,27 +1,12 @@
 /*
- *
- * An IR LED must be connected to Arduino PWM pin 3 (IR_SEND_PIN).
- * To receive IR signals in compatible format, you must comment out the line
- * #define USE_NEC_STANDARD in IRremote.h.
- */
-/*
  * IRremote: IRsendNecStandardDemo
  *
  *  Demonstrates sending NEC IR codes in standard format with 16 bit Address  8bit Data
+ * An IR LED must be connected to Arduino PWM pin 3 (IR_SEND_PIN).
+ * To receive IR signals in compatible format, you must comment out the line
+ * #define USE_NEC_STANDARD in IRremote.h.
  *
- *  Created on: 15.09.2020
- *  Copyright (C) 2020  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
- *
- *  This file is part of Arduino-RobotCar https://github.com/z3t0/Arduino-IRremote.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  */
 
 #include <IRremote.h>

@@ -1,8 +1,6 @@
 /*
  * IRremote: IRtest unittest
- * Version 0.1 July, 2009
- * Copyright 2009 Ken Shirriff
- * http://arcfn.com
+ * Initially coded 2009 Ken Shirriff http://www.righto.com
  *
  * Note: to run these tests, edit IRremote/IRremote.h to add "#define TEST"
  * You must then recompile the library by removing IRremote.o and restarting

@@ -21,8 +21,7 @@
  * the receiver by looking for an input on the send pin, which will indicate
  * the sender.  You should hook the serial port to the receiver for debugging.
  *
- * Copyright 2010 Ken Shirriff
- * http://arcfn.com
+ * Initially coded 2010 Ken Shirriff http://www.righto.com
  */
 
 #include <IRremote.h>

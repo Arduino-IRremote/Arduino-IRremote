@@ -1,9 +1,9 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 2.7.0](https://github.com/z3t0/Arduino-IRremote/releases)
+### [Version 2.8.0](https://github.com/z3t0/Arduino-IRremote/releases) - work in progress
 
-[![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/z3t0/Arduino-IRremote/latest)](https://github.com/z3t0/Arduino-IRremote/commits/master)
 [![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
 [![Join the chat at https://gitter.im/z3t0/Arduino-IRremote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/z3t0/Arduino-IRremote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -150,6 +150,10 @@ Please only email me if it is more appropriate than creating an Issue / PR. I **
 ## Contributors
 Check [here](https://github.com/z3t0/Arduino-IRremote/blob/master/Contributors.md)
 
+# License
+Up to the version 2.7.0 the License is GPLv2.
+From the version 2.8.0 the license is the MIT license.
+
 ## Copyright
-Copyright 2009-2012 Ken Shirriff
+Initially coded 2009 Ken Shirriff http://www.righto.com
 Copyright (c) 2016 Rafi Khan
