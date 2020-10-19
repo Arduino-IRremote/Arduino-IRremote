@@ -31,7 +31,7 @@ jobs:
 
     env:
       # Comma separated list without double quotes around the list. 
-      REQUIRED_LIBRARIES:
+      REQUIRED_LIBRARIES: Keyboard
 
     strategy:
       matrix:
@@ -61,16 +61,18 @@ jobs:
         #############################################################################################################
         include:
           - arduino-boards-fqbn: arduino:avr:uno|USE_NEC_STANDARD
+            sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DUSE_NEC_STANDARD
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_NO_SEND_PWM
+            sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DUSE_NO_SEND_PWM
 
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://dl.espressif.com/dl/package_esp32_index.json
-            sketches-exclude: LGACSendDemo # undefined reference to `TwoWire::onReceive(void (*)(int))'
+            sketches-exclude: IR2Keyboard,LGACSendDemo # undefined reference to `TwoWire::onReceive(void (*)(int))'
 
           - arduino-boards-fqbn: SparkFun:avr:promicro
             arduino-platform: arduino:avr,SparkFun:avr
@@ -78,7 +80,7 @@ jobs:
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
-            sketches-exclude: AiwaRCT501SendDemo,BoseWaveSendDemo,IRrecord,IRsendDemo,IRsendProntoDemo,IRsendRawDemo,IRsendNecStandardDemo,IRtest,IRtest2,LegoPowerFunctionsSendDemo,JVCPanasonicSendDemo,LGACSendDemo,MicroGirs # no sending yet
+            sketches-exclude: IR2Keyboard,BoseWaveSendDemo,IRrecord,IRsendDemo,IRsendProntoDemo,IRsendRawDemo,IRsendNecStandardDemo,IRtest,IRtest2,LegoPowerFunctionsSendDemo,JVCPanasonicSendDemo,LGACSendDemo,MicroGirs # no sending yet
 
 
       # Do not cancel all jobs / architectures if one job fails

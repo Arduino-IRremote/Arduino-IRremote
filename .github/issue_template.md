@@ -10,14 +10,12 @@
 
 ### Protocol
 * [ ] Unknown
-* [ ] Aiwa
 * [ ] BoseWave
 * [ ] Denon
 * [ ] Dish
 * [ ] JVC
 * [ ] Lego
 * [ ] LG
-* [ ] Mitsubishi
 * [ ] Panasonic
 * [ ] RC5, RC6
 * [ ] Samsung

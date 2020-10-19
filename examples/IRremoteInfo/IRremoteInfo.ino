@@ -259,9 +259,9 @@ void dumpProtocols() {
     printSendEnabled(SEND_WHYNTER);
     printDecodeEnabled(DECODE_WHYNTER);
 
-    Serial.print(F("AIWA_RC_T501: "));
-    printSendEnabled(SEND_AIWA_RC_T501);
-    printDecodeEnabled(DECODE_AIWA_RC_T501);
+//    Serial.print(F("AIWA_RC_T501: "));
+//    printSendEnabled(SEND_AIWA_RC_T501);
+//    printDecodeEnabled(DECODE_AIWA_RC_T501);
 
     Serial.print(F("LG:           "));
     printSendEnabled(SEND_LG);

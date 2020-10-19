@@ -32,8 +32,8 @@
 // Each protocol you include costs memory and, during decode, costs time
 // Disable (set to 0) all the protocols you do not need/want!
 //
-#define DECODE_AIWA_RC_T501  1
-#define SEND_AIWA_RC_T501    1
+//#define DECODE_AIWA_RC_T501  1
+//#define SEND_AIWA_RC_T501    1
 
 #define DECODE_BOSEWAVE      1
 #define SEND_BOSEWAVE        1
@@ -47,7 +47,7 @@
 #define DECODE_JVC           1
 #define SEND_JVC             1
 
-#define DECODE_LEGO_PF       0 // NOT WRITTEN
+#define DECODE_LEGO_PF       1
 #define SEND_LEGO_PF         1
 
 #define DECODE_LG            1
@@ -110,7 +110,7 @@
 typedef enum {
     UNKNOWN = -1,
     UNUSED = 0,
-    AIWA_RC_T501,
+//    AIWA_RC_T501,
     BOSEWAVE,
     DENON,
     DISH,
@@ -324,10 +324,10 @@ private:
     bool decodeWhynter(decode_results *aResults);
 #endif
     //......................................................................
-#if DECODE_AIWA_RC_T501
-    bool decodeAiwaRCT501();
-    bool decodeAiwaRCT501(decode_results *aResults);
-#endif
+//#if DECODE_AIWA_RC_T501
+//    bool decodeAiwaRCT501();
+//    bool decodeAiwaRCT501(decode_results *aResults);
+//#endif
     //......................................................................
 #if DECODE_LG
     bool decodeLG();
@@ -363,7 +363,7 @@ private:
 #endif
     //......................................................................
 #if DECODE_LEGO_PF
-      bool  decodeLegoPowerFunctions (decode_results *aResults) ;
+      bool  decodeLegoPowerFunctions () ;
 #endif
     //......................................................................
 #if DECODE_BOSEWAVE
@@ -465,9 +465,9 @@ public:
     void sendWhynter(unsigned long data, int nbits);
 #endif
     //......................................................................
-#if SEND_AIWA_RC_T501
-    void sendAiwaRCT501(int code);
-#endif
+//#if SEND_AIWA_RC_T501
+//    void sendAiwaRCT501(int code);
+//#endif
     //......................................................................
 #if SEND_LG
     void sendLG(unsigned long data, int nbits);
