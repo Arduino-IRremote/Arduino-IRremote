@@ -126,7 +126,7 @@
 #define BLINKLED_OFF()  (PORTD &= B11111110)
 
 // Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
-#elif defined(__AVR_ATmega4809__) || defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)
+#elif defined(__AVR_ATmega4809__) || defined(NRF5) || defined(ARDUINO_ARCH_NRF52840) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny85__)
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()   (digitalWrite(BLINKLED, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(BLINKLED, LOW))
@@ -861,7 +861,7 @@ static void timerConfigForReceive() {
 #elif defined(IR_USE_TIMER_TINY1)
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_SEND_PWM     (GTCCR |= _BV(PWM1B)) // Enable pin 3 PWM output (PB4 - Arduino D4)
-#define TIMER_DISABLE_SEND_PWM    (GTCCR &= ~(_BV(PWM1B))))
+#define TIMER_DISABLE_SEND_PWM    (GTCCR &= ~(_BV(PWM1B)))
 #define TIMER_ENABLE_RECEIVE_INTR    (TIMSK |= _BV(OCIE1B))
 #define TIMER_DISABLE_RECEIVE_INTR   (TIMSK &= ~(_BV(OCIE1B)))
 #define TIMER_INTR_NAME      TIMER1_COMPB_vect
