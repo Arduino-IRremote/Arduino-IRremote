@@ -55,14 +55,14 @@
 #define CMD_PRESET_4   0xef
 #define CMD_PRESET_5   0xee
 
-#define BOSEWAVE_BITS           8
+#define BOSEWAVE_BITS              8
 #define BOSEWAVE_HEADER_MARK    1061
 #define BOSEWAVE_HEADER_SPACE   1456
-#define BOSEWAVE_BIT_MARK     534
-#define BOSEWAVE_ONE_SPACE    468
-#define BOSEWAVE_ZERO_SPACE  1447
-#define BOSEWAVE_END_MARK     614
-#define BOSEWAVE_REPEAT_SPACE  51200
+#define BOSEWAVE_BIT_MARK        534
+#define BOSEWAVE_ONE_SPACE       468
+#define BOSEWAVE_ZERO_SPACE     1447
+#define BOSEWAVE_END_MARK        614
+#define BOSEWAVE_REPEAT_SPACE  51200 // Not used.
 
 //+=============================================================================
 #if SEND_BOSEWAVE

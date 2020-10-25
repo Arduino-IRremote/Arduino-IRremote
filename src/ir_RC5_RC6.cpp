@@ -56,7 +56,7 @@ int getRClevel(decode_results *results, unsigned int *offset, int *used, int t1)
 //
 #define MIN_RC5_SAMPLES     11
 #define RC5_T1             889
-#define RC5_RPT_LENGTH   46000
+#define RC5_RPT_LENGTH   46000 // Not used.
 
 //+=============================================================================
 #if SEND_RC5

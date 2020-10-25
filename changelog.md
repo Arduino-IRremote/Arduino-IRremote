@@ -6,6 +6,7 @@
 - Removed AIWA implementation, since it is only for 1 device and at least sending implemented wrong.
 - Added Lego_PF decode.
 - Added new example IR2Keyboard.
+- Changed internal usage of custom_delay_usec.
 
 ## 2.7.0 2020/09
 - Added ATmega328PB support.

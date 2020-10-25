@@ -5,6 +5,9 @@
  */
 
 #include <IRremote.h>
+#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
+#include "ATtinySerialOut.h"
+#endif
 
 IRsend IrSender;
 
@@ -27,7 +30,14 @@ void setup() {
 }
 
 void loop() {
+#ifdef SEND_NEC_STANDARD
+    static uint8_t sCommand = 9;
+    IrSender.sendNECStandard(0xFF00, sCommand, 2);
+    Serial.println(F("sendNECStandard(0xFF00, sCommand,2)"));
+    sCommand++;
+#else
     unsigned long tData = 0xa90;
+    // loop for repeats
     for (int i = 0; i < 3; i++) {
         IrSender.sendSony(tData, 12);
         Serial.print(F("sendSony(0x"));
@@ -40,7 +50,7 @@ void loop() {
 
         delay(40);
     }
-
     tData++;
+#endif
     delay(5000); //5 second delay between each signal burst
 }

@@ -2,6 +2,8 @@
 * [ ] Arduino ATmega328* board (UNO, Nano)
 * [ ] Arduino ATmega2560 board (Mega)
 * [ ] Arduino ATmega32U4 board (Leonardo)
+* [ ] ATtiny85 board (ATTinyCore by Spence Conde)
+* [ ] Digispark board
 * [ ] Arduino SAM board (Due)
 * [ ] Arduino SAMD board (Zero, MKR*)
 * [ ] ESP32 board - first check https://github.com/crankyoldgit/IRremoteESP8266
@@ -16,6 +18,7 @@
 * [ ] JVC
 * [ ] Lego
 * [ ] LG
+* [ ] NEC
 * [ ] Panasonic
 * [ ] RC5, RC6
 * [ ] Samsung
@@ -27,7 +30,7 @@
 
 
 **Code Block:**
-```c
+```
 
 #include <IRremote.h> 
 

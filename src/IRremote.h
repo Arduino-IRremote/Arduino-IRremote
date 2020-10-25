@@ -416,8 +416,10 @@ public:
     void enableIROut(int khz);
     void sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
             unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst = true);
-    void mark(unsigned int usec);
-    void space(unsigned int usec);
+    void mark(uint16_t timeMicros);
+    void mark_long(uint32_t timeMicros);
+    void space(uint16_t timeMicros);
+    void space_long(uint32_t timeMicros);
     void sendRaw(const unsigned int buf[], unsigned int len, unsigned int hz);
     void sendRaw_P(const unsigned int buf[], unsigned int len, unsigned int hz);
 

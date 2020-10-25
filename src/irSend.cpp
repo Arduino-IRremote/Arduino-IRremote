@@ -83,7 +83,7 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
         DBG_PRINTLN("");
     }
 #if defined(LSB_FIRST_REQUIRED)
-     else {  // Send the Least Significant Bit (LSB) first / MSB last.
+    else {  // Send the Least Significant Bit (LSB) first / MSB last.
         for (uint16_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
             if (aData & 1) {  // Send a 1
                 DBG_PRINT("1");
@@ -104,12 +104,12 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
 // The mark output is modulated at the PWM frequency.
 //
 
-void IRsend::mark(unsigned int time) {
+void IRsend::mark(uint16_t timeMicros) {
 #ifdef USE_SOFT_SEND_PWM
     unsigned long start = micros();
-    unsigned long stop = start + time;
+    unsigned long stop = start + timeMicros;
     if (stop + periodTimeMicros < start) {
-        // Counter wrap-around, happens very seldomly, but CAN happen.
+        // Counter wrap-around, happens very seldom, but CAN happen.
         // Just give up instead of possibly damaging the hardware.
         return;
     }
@@ -128,8 +128,19 @@ void IRsend::mark(unsigned int time) {
 #else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
 #endif
-    if (time > 0) {
-        custom_delay_usec(time);
+    if (timeMicros > 0) {
+        delayMicroseconds(timeMicros);
+    }
+}
+
+void IRsend::mark_long(uint32_t timeMicros) {
+#if defined(USE_NO_SEND_PWM)
+    digitalWrite(sendPin, LOW); // Set output to active low.
+#else
+    TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
+#endif
+    if (timeMicros > 0) {
+        custom_delay_usec(timeMicros);
     }
 }
 
@@ -138,14 +149,29 @@ void IRsend::mark(unsigned int time) {
 // Sends an IR space for the specified number of microseconds.
 // A space is no output, so the PWM output is disabled.
 //
-void IRsend::space(unsigned int time) {
+void IRsend::space(uint16_t timeMicros) {
 #if defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
-    TIMER_DISABLE_SEND_PWM; // Disable pin 3 PWM output
+    TIMER_DISABLE_SEND_PWM; // Disable PWM output
 #endif
-    if (time > 0) {
-        IRsend::custom_delay_usec(time);
+    if (timeMicros > 0) {
+        delayMicroseconds(timeMicros);
+    }
+}
+
+/*
+ * used e.g. by LEGO
+ */
+void IRsend::space_long(uint32_t timeMicros) {
+#if defined(USE_NO_SEND_PWM)
+    digitalWrite(sendPin, HIGH); // Set output to inactive high.
+#else
+    TIMER_DISABLE_SEND_PWM; // Disable PWM output
+#endif
+    if (timeMicros > 0) {
+        // custom delay does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
+        custom_delay_usec(timeMicros);
     }
 }
 
@@ -172,7 +198,7 @@ void IRsend::enableIROut(int khz) {
     pinMode(sendPin, OUTPUT);
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
-    // Disable the Timer2 Interrupt (which is used for receiving IR)
+// Disable the Timer2 Interrupt (which is used for receiving IR)
     TIMER_DISABLE_RECEIVE_INTR; //Timer2 Overflow Interrupt
 
     pinMode(sendPin, OUTPUT);
@@ -185,7 +211,8 @@ void IRsend::enableIROut(int khz) {
 #endif
 
 //+=============================================================================
-// Custom delay function that circumvents Arduino's delayMicroseconds limit
+// Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit
+// It does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
 
 void IRsend::custom_delay_usec(unsigned long uSecs) {
     if (uSecs > 4) {
@@ -198,9 +225,6 @@ void IRsend::custom_delay_usec(unsigned long uSecs) {
         while (micros() < endMicros) {
         } // normal wait
     }
-    //else {
-    //  __asm__("nop\n\t"); // must have or compiler optimizes out
-    //}
 }
 
 #endif // SENDING_SUPPORTED

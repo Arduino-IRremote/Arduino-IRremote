@@ -23,7 +23,6 @@
 //+=============================================================================
 //
 #if SEND_LEGO_PF
-
 #if DEBUG
 namespace {
 void logFunctionParameters(uint16_t data, bool repeat) {
@@ -45,7 +44,7 @@ void IRsend::sendLegoPowerFunctions(uint16_t data, bool repeat) {
     bitStreamEncoder.reset(data, repeat);
     do {
         mark(bitStreamEncoder.getMarkDuration());
-        space(bitStreamEncoder.getPauseDuration());
+        space_long(bitStreamEncoder.getPauseDuration());
     } while (bitStreamEncoder.next());
 }
 

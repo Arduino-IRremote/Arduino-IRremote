@@ -31,7 +31,7 @@
 #define SHARP_BIT_MARK_RECV   150
 
 #define SHARP_ZERO_SPACE      795
-#define SHARP_GAP          600000
+#define SHARP_GAP          600000 // Not used.
 #define SHARP_REPEAT_SPACE   3000
 
 #define SHARP_TOGGLE_MASK   0x3FF

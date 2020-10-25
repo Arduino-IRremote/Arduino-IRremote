@@ -70,6 +70,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 - If you have a bigger Arduino board at hand (> 100 kByte program space) you can try the [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library [DecodeIR](https://github.com/bengtmartensson/Arduino-DecodeIR).
 - Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
 - Use the [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) and you will see some serial output if the protocol is one of the 40 supported protocols.
+- To increase strength of sent output signal you can increase the current through the send diode, or use 2 diodes in series, since one IR diode requires only 1.5 volt. Changing `IR_SEND_DUTY_CYCLE` to 50 increases the signal current by 40%.
 
 ## Other IR libraries
 [Here](https://github.com/ukw100/IRMP#quick-comparison-of-4-arduino-ir-receiving-libraries) you find a **short comparison matrix** of 4 popular Arduino IR libraries.<br/>

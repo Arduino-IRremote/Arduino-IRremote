@@ -246,8 +246,13 @@
 //ATtiny85
 #elif defined(__AVR_ATtiny85__)
 #  if !defined(IR_USE_TIMER_TINY0) && !defined(IR_USE_TIMER_TINY1)
+#    if defined(TIMER_TO_USE_FOR_MILLIS) && (TIMER_TO_USE_FOR_MILLIS== 0)
+// standard ATTinyCore settings use timer 0 for millis() and micros()
+#define IR_USE_TIMER_TINY1   // tx = pin 4
+#    else
 #define IR_USE_TIMER_TINY0   // tx = pin 1
 //#define IR_USE_TIMER_TINY1   // tx = pin 4
+#    endif
 #  endif
 
 /*********************
@@ -860,18 +865,28 @@ static void timerConfigForReceive() {
 // defines for timer_tiny1 (8 bits)
 #elif defined(IR_USE_TIMER_TINY1)
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_SEND_PWM     (GTCCR |= _BV(PWM1B)) // Enable pin 3 PWM output (PB4 - Arduino D4)
-#define TIMER_DISABLE_SEND_PWM    (GTCCR &= ~(_BV(PWM1B)))
+#define TIMER_ENABLE_SEND_PWM     TCNT1 = 0; GTCCR |= _BV(PWM1B) | _BV(COM1B0) // Enable pin 4 PWM output (PB4 - Arduino D4)
+#define TIMER_DISABLE_SEND_PWM    (GTCCR &= ~(_BV(PWM1B) | _BV(COM1B0)))
 #define TIMER_ENABLE_RECEIVE_INTR    (TIMSK |= _BV(OCIE1B))
 #define TIMER_DISABLE_RECEIVE_INTR   (TIMSK &= ~(_BV(OCIE1B)))
 #define TIMER_INTR_NAME      TIMER1_COMPB_vect
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
-    const uint16_t pwmval = SYSCLOCK / 1000 / (aFrequencyKHz);
+#  if (((SYSCLOCK / 1000) / 38) < 256)
+    const uint16_t pwmval = (SYSCLOCK / 1000) / (aFrequencyKHz); // 421 @16 MHz, 26 @1 MHz and 38 kHz
     TCCR1 = _BV(CTC1) | _BV(CS10);  // CTC1 = 1: TOP value set to OCR1C, CS10 No Prescaling
-    GTCCR = _BV(PWM1B); // PWM1B = 1: Enable PWM for OCR1B
     OCR1C = pwmval;
     OCR1B = pwmval * IR_SEND_DUTY_CYCLE / 100;
+    TCNT1 = 0;
+    GTCCR = _BV(PWM1B) | _BV(COM1B0); // PWM1B = 1: Enable PWM for OCR1B, COM1B0 Clear on compare match
+#  else
+    const uint16_t pwmval = ((SYSCLOCK / 2) / 1000) / (aFrequencyKHz); // 210 for 16 MHz and 38 kHz
+    TCCR1 = _BV(CTC1) | _BV(CS11);  // CTC1 = 1: TOP value set to OCR1C, CS11 Prescaling by 2
+    OCR1C = pwmval;
+    OCR1B = pwmval * IR_SEND_DUTY_CYCLE / 100;
+    TCNT1 = 0;
+    GTCCR = _BV(PWM1B) | _BV(COM1B0); // PWM1B = 1: Enable PWM for OCR1B, COM1B0 Clear on compare match
+#  endif
 }
 
 #define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
