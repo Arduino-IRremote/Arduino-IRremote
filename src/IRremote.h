@@ -253,15 +253,19 @@ public:
     void resume();
 
     const char* getProtocolString();
-    void printResultShort(Print * aSerial);
-
+    void printResultShort(Print *aSerial);
+    void printIRResultRaw(Print *aSerial);
+    void printIRResultRawFormatted(Print *aSerial);
+    void printIRResultAsCArray(Print *aSerial);
+    void printIRResultAsCVariables(Print *aSerial);
     /**
      * Print the result (second argument) as Pronto Hex on the Stream supplied as argument.
      * @param stream The Stream on which to write, often Serial
      * @param results the decode_results as delivered from irrecv.decode.
      * @param frequency Modulation frequency in Hz. Often 38000Hz.
      */
-    void dumpPronto(Stream& stream, unsigned int frequency = 38000U);
+    void dumpPronto(Print *aSerial, unsigned int frequency = 38000U);
+    void printIRResultAsPronto(Print *aSerial, unsigned int frequency = 38000U);
 
     bool decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
             unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst = true);

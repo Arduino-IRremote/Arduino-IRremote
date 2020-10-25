@@ -27,17 +27,17 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int ti
     unsigned int timebase = (microsecondsInSeconds * data[1] + referenceFrequency / 2) / referenceFrequency;
     unsigned int khz;
     switch (data[0]) {
-        case learnedToken: // normal, "learned"
-            khz = toFrequencyKHz(data[1]);
-            break;
-        case learnedNonModulatedToken: // non-demodulated, "learned"
-            khz = 0U;
-            break;
-        default:
-            return; // There are other types, but they are not handled yet.
+    case learnedToken: // normal, "learned"
+        khz = toFrequencyKHz(data[1]);
+        break;
+    case learnedNonModulatedToken: // non-demodulated, "learned"
+        khz = 0U;
+        break;
+    default:
+        return; // There are other types, but they are not handled yet.
     }
-    unsigned int intros = 2*data[2];
-    unsigned int repeats = 2*data[3];
+    unsigned int intros = 2 * data[2];
+    unsigned int repeats = 2 * data[3];
     if (numbersInPreamble + intros + repeats != size) // inconsistent sizes
         return;
 
@@ -64,9 +64,8 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int ti
     }
 }
 
-
 void IRsend::sendPronto(const char *str, unsigned int times) {
-    size_t len = strlen(str)/(digitsInProntoNumber + 1) + 1;
+    size_t len = strlen(str) / (digitsInProntoNumber + 1) + 1;
     uint16_t data[len];
     const char *p = str;
     char *endptr[1];
@@ -93,7 +92,8 @@ void IRsend::sendPronto_PF(uint_farptr_t str, unsigned int times) {
 
 void IRsend::sendPronto_PF(const char *str, unsigned int times) {
     sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), times); // to avoid infinite recursion
-};
+}
+;
 
 void IRsend::sendPronto(const __FlashStringHelper *str, unsigned int times) {
     return sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), times);
@@ -116,34 +116,48 @@ static char hexDigit(unsigned int x) {
     return (char) (x <= 9 ? ('0' + x) : ('A' + (x - 10)));
 }
 
-static void dumpDigit(Stream& stream, unsigned int number) {
-    stream.print(hexDigit(number));
+static void dumpDigit(Print *aSerial, unsigned int number) {
+    aSerial->print(hexDigit(number));
 }
 
-static void dumpNumber(Stream& stream, uint16_t number) {
+static void dumpNumber(Print *aSerial, uint16_t number) {
     for (unsigned int i = 0; i < digitsInProntoNumber; i++) {
         unsigned int shifts = bitsInHexadecimal * (digitsInProntoNumber - 1 - i);
-        dumpDigit(stream, (number >> shifts) & hexMask);
+        dumpDigit(aSerial, (number >> shifts) & hexMask);
     }
-    stream.print(' ');
+    aSerial->print(' ');
 }
 
-static void dumpDuration(Stream& stream, uint16_t duration, uint16_t timebase) {
-    dumpNumber(stream, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
+static void dumpDuration(Print *aSerial, uint16_t duration, uint16_t timebase) {
+    dumpNumber(aSerial, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
 }
 
-static void dumpSequence(Stream& stream, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+static void dumpSequence(Print *aSerial, const volatile uint16_t *data, size_t length, uint16_t timebase) {
     for (unsigned int i = 0; i < length; i++)
-        dumpDuration(stream, data[i], timebase);
+        dumpDuration(aSerial, data[i], timebase);
 
-    dumpDuration(stream, _GAP, timebase);
+    dumpDuration(aSerial, _GAP, timebase);
 }
 
-void IRrecv::dumpPronto(Stream& stream, unsigned int frequency) {
-    dumpNumber(stream, frequency > 0 ? learnedToken : learnedNonModulatedToken);
-    dumpNumber(stream, toFrequencyCode(frequency));
-    dumpNumber(stream, (results.rawlen + 1) / 2);
-    dumpNumber(stream, 0);
+/*
+ * Using Print instead of Stream saves 1020 bytes program memory
+ * Changed from & to * parameter type to be more transparent and consistent with other code of IRremote
+ */
+void IRrecv::dumpPronto(Print *aSerial, unsigned int frequency) {
+    dumpNumber(aSerial, frequency > 0 ? learnedToken : learnedNonModulatedToken);
+    dumpNumber(aSerial, toFrequencyCode(frequency));
+    dumpNumber(aSerial, (results.rawlen + 1) / 2);
+    dumpNumber(aSerial, 0);
     unsigned int timebase = toTimebase(frequency);
-    dumpSequence(stream, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
+    dumpSequence(aSerial, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
+}
+
+//+=============================================================================
+// Dump out the raw data as Pronto Hex.
+// I know Stream * is locally inconsistent, but all global print functions use it
+//
+void IRrecv::printIRResultAsPronto(Print *aSerial, unsigned int frequency) {
+    aSerial->print("Pronto Hex: ");
+    dumpPronto(aSerial, frequency);
+    aSerial->println();
 }

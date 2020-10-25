@@ -482,7 +482,7 @@ const char* IRrecv::getProtocolString() {
     }
 }
 
-void IRrecv::printResultShort(Print * aSerial) {
+void IRrecv::printResultShort(Print *aSerial) {
     aSerial->print(F("Protocol="));
     aSerial->print(getProtocolString());
     aSerial->print(F(" Data=0x"));
@@ -493,6 +493,120 @@ void IRrecv::printResultShort(Print * aSerial) {
     if (results.address != 0) {
         aSerial->print(F(" Address=0x"));
         aSerial->print(results.address, HEX);
+    }
+}
+
+void IRrecv::printIRResultRaw(Print *aSerial) {
+    // Dumps out the decode_results structure.
+    // Call this after IRrecv::decode()
+    int count = results.rawlen;
+    printResultShort(&Serial);
+
+    aSerial->print(" (");
+    aSerial->print(results.bits, DEC);
+    aSerial->println(" bits)");
+    aSerial->print("rawData[");
+    aSerial->print(count, DEC);
+    aSerial->print("]: ");
+
+    for (int i = 0; i < count; i++) {
+        if (i & 1) {
+            aSerial->print(results.rawbuf[i] * MICROS_PER_TICK, DEC);
+        } else {
+            aSerial->write('-');
+            aSerial->print((unsigned long) results.rawbuf[i] * MICROS_PER_TICK, DEC);
+        }
+        aSerial->print(" ");
+    }
+    aSerial->println();
+}
+
+//+=============================================================================
+// Dump out the decode_results structure.
+//
+void IRrecv::printIRResultRawFormatted(Print *aSerial) {
+    // Print Raw data
+    aSerial->print("rawData[");
+    aSerial->print(results.rawlen - 1, DEC);
+    aSerial->println("]: ");
+
+    for (unsigned int i = 1; i < results.rawlen; i++) {
+        unsigned long x = results.rawbuf[i] * MICROS_PER_TICK;
+        if (!(i & 1)) {  // even
+            aSerial->print("-");
+            if (x < 1000) {
+                aSerial->print(" ");
+            }
+            if (x < 100) {
+                aSerial->print(" ");
+            }
+            aSerial->print(x, DEC);
+        } else {  // odd
+            aSerial->print("     ");
+            aSerial->print("+");
+            if (x < 1000) {
+                aSerial->print(" ");
+            }
+            if (x < 100) {
+                aSerial->print(" ");
+            }
+            aSerial->print(x, DEC);
+            if (i < results.rawlen - 1) {
+                aSerial->print(", "); //',' not needed for last one
+            }
+        }
+        if (!(i % 8)) {
+            aSerial->println("");
+        }
+    }
+    aSerial->println("");                    // Newline
+}
+//+=============================================================================
+// Dump out the decode_results structure.
+//
+void IRrecv::printIRResultAsCArray(Print *aSerial) {
+    // Start declaration
+    aSerial->print("uint16_t ");               // variable type
+    aSerial->print("rawData[");                // array name
+    aSerial->print(results.rawlen - 1, DEC);  // array size
+    aSerial->print("] = {");                   // Start declaration
+
+    // Dump data
+    for (unsigned int i = 1; i < results.rawlen; i++) {
+        aSerial->print(results.rawbuf[i] * MICROS_PER_TICK, DEC);
+        if (i < results.rawlen - 1)
+            aSerial->print(","); // ',' not needed on last one
+        if (!(i & 1))
+            aSerial->print(" ");
+    }
+
+    // End declaration
+    aSerial->print("};");  //
+
+    // Comment
+    aSerial->print("  // ");
+    printResultShort(aSerial);
+
+    // Newline
+    aSerial->println("");
+}
+
+void IRrecv::printIRResultAsCVariables(Print *aSerial) {
+    // Now dump "known" codes
+    if (results.decode_type != UNKNOWN) {
+
+        // Some protocols have an address
+        if(results.address != 0){
+            aSerial->print("uint16_t address = 0x");
+            aSerial->print(results.address, HEX);
+            aSerial->println(";");
+        }
+
+        // All protocols have data
+        aSerial->print("uint16_t data = 0x");
+        aSerial->print(results.value, HEX);
+        aSerial->println(";");
+        aSerial->println();
     }
 }
 

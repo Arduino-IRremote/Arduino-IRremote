@@ -7,6 +7,8 @@
 - Added Lego_PF decode.
 - Added new example IR2Keyboard.
 - Changed internal usage of custom_delay_usec.
+- Moved dump/print functions from example to irReceiver.
+- irPronto.cpp: Using Print instead of Stream saves 1020 bytes program memory. Changed from & to * parameter type to be more transparent and consistent with other code of IRremote.
 
 ## 2.7.0 2020/09
 - Added ATmega328PB support.

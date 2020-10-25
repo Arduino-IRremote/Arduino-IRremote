@@ -42,35 +42,10 @@ void setup() {
     Serial.println(IR_RECEIVE_PIN);
 }
 
-void dump() {
-    // Dumps out the decode_results structure.
-    // Call this after IRrecv::decode()
-    int count = IrReceiver.results.rawlen;
-    IrReceiver.printResultShort(&Serial);
-
-    Serial.print(" (");
-    Serial.print(IrReceiver.results.bits, DEC);
-    Serial.println(" bits)");
-    Serial.print("Raw [");
-    Serial.print(count, DEC);
-    Serial.print("]: ");
-
-    for (int i = 0; i < count; i++) {
-        if (i & 1) {
-            Serial.print(IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
-        } else {
-            Serial.write('-');
-            Serial.print((unsigned long) IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
-        }
-        Serial.print(" ");
-    }
-    Serial.println();
-}
-
 void loop() {
     if (IrReceiver.decode()) {
         Serial.println();
-        dump();
+        IrReceiver.printIRResultRaw(&Serial);
         IrReceiver.resume(); // Receive the next value
     }
 }
