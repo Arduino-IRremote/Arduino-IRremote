@@ -29,7 +29,7 @@
 // Information for the Interrupt Service Routine
 //
 #if ! defined(RAW_BUFFER_LENGTH)
-#define RAW_BUFFER_LENGTH  101  ///< Maximum length of raw duration buffer. Must be odd.
+#define RAW_BUFFER_LENGTH  101  ///< Maximum length of raw duration buffer. Must be odd. Supports 16 + 32 bit codings.
 #endif
 
 // ISR State-Machine : Receiver States

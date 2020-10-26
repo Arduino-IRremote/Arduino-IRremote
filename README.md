@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 2.8.0](https://github.com/z3t0/Arduino-IRremote/releases) - work in progress
+### [Version 2.9.0](https://github.com/z3t0/Arduino-IRremote/releases) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/z3t0/Arduino-IRremote/latest)](https://github.com/z3t0/Arduino-IRremote/commits/master)
@@ -16,12 +16,6 @@ Tutorials and more information will be made available on [the official homepage]
 # Installation
 Click on the LibraryManager badge above to see the instructions.
 
-# FAQ
-- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)
-Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic arduinos for longer than 50 us. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
-- The default IR timer on AVR's is timer 2. Since the Arduino Tone library as well as analogWrite() for pin 3 and pin 11 requires timer 2, this functionality cannot be used simultaneously.
-- You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together. The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC. This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
-
 # Supported IR Protocols
 Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, MagiQuest, NEC, Panasonic, RC5, RC6, Samsung, Sanyo, Sharp, Sony, Whynter, (Pronto).<br/>
 Protocols can be switched off and on by changing the lines in *IRremote.h*:
@@ -32,6 +26,26 @@ Protocols can be switched off and on by changing the lines in *IRremote.h*:
 ```
 # [Wiki](https://github.com/z3t0/Arduino-IRremote/wiki)
 This is a quite old but maybe useful wiki for this library.
+
+
+# FAQ
+- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)<br/>
+Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic arduinos for longer than 50 us. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
+- The default IR timer on AVR's is timer 2. Since the Arduino Tone library as well as analogWrite() for pin 3 and pin 11 requires timer 2, this functionality cannot be used simultaneously.
+- You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together. The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC. This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
+
+# Handling unknown Protocols
+## Disclaimer
+This library was never designed to handle long codes like the ones used by air conditioners. See [Recording long Infrared Remote control signals with Arduino](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).<br/>
+The main reason is, that it was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.
+
+## Hints
+If you do not know which protocol your IR transmitter uses, you have several choices.
+- Use the [IRreceiveDumpV2 example](examples/IRreceiveDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo). For **long codes** with more than 48 bits like from air conditioners, you can **change the length of the input buffer** in [IRremoteInt.h](src/private/IRremoteInt.h#L31).
+- The [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) prints the protocol and data for one of the **40 supported protocols**. The same library can be used to send this codes.
+- If you have a bigger Arduino board at hand (> 100 kByte program space) you can try the [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library [DecodeIR](https://github.com/bengtmartensson/Arduino-DecodeIR).
+- Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
+- To **increase strength of sent output signal** you can increase the current through the send diode, or use 2 diodes in series, since one IR diode requires only 1.5 volt. Changing `IR_SEND_DUTY_CYCLE` to 50 increases the signal current by 40%.
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / makros available.<br/>
@@ -58,19 +72,6 @@ In both cases the library files itself are located in the `src` directory.<br/>
 ### Modifying library properties with Sloeber IDE
 If you are using Sloeber as your IDE, you can easily define global symbols with *Properties/Arduino/CompileOptions*.<br/>
 ![Sloeber settings](https://github.com/ArminJo/ServoEasing/blob/master/pictures/SloeberDefineSymbols.png)
-
-# Handling unknown Protocols
-## Disclaimer
-This library was never designed to handle long codes like the ones used by air conditioners. See [Recording long Infrared Remote control signals with Arduino](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).<br/>
-The main reason is, that it was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.
-
-## Hints
-If you do not know which protocol your IR transmitter uses, you have several choices.
-- Use the [IRreceiveDumpV2 example](examples/IRreceiveDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo). For **long codes** like from air conditioners, you can **change the length of the input buffer** in [IRremoteInt.h](src/private/IRremoteInt.h#L30).
-- If you have a bigger Arduino board at hand (> 100 kByte program space) you can try the [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library [DecodeIR](https://github.com/bengtmartensson/Arduino-DecodeIR).
-- Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
-- Use the [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) and you will see some serial output if the protocol is one of the 40 supported protocols.
-- To increase strength of sent output signal you can increase the current through the send diode, or use 2 diodes in series, since one IR diode requires only 1.5 volt. Changing `IR_SEND_DUTY_CYCLE` to 50 increases the signal current by 40%.
 
 ## Other IR libraries
 [Here](https://github.com/ukw100/IRMP#quick-comparison-of-4-arduino-ir-receiving-libraries) you find a **short comparison matrix** of 4 popular Arduino IR libraries.<br/>
