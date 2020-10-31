@@ -535,7 +535,7 @@ public:
      */
     void sendPronto(const char* prontoHexString, unsigned int times = 1U);
 
-    void sendPronto(const uint16_t* data, unsigned int length, unsigned int times = 1U);
+    void sendPronto(const uint16_t *data, unsigned int length, unsigned int times = 1U);
 
 #if HAS_FLASH_READ || defined(DOXYGEN)
     void sendPronto_PF(uint_farptr_t str, unsigned int times = 1U);

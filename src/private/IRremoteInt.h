@@ -49,8 +49,8 @@ struct irparams_struct {
     uint8_t blinkpin;
     uint8_t blinkflag;              ///< true -> enable blinking of pin on IR processing
     uint16_t rawlen;                ///< counter of entries in rawbuf
-    uint16_t timer;             ///< State timer, counts 50uS ticks.
-    uint16_t rawbuf[RAW_BUFFER_LENGTH]; ///< raw data, first entry is the length of the gap between previous and current command
+    uint16_t timer;                 ///< State timer, counts 50uS ticks.
+    uint16_t rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
     uint8_t overflow;               ///< Raw buffer overflow occurred
 };
 

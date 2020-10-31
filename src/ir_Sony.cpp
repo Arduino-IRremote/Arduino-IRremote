@@ -27,7 +27,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 
     // Header
     mark(SONY_HEADER_MARK);
-    space (SONY_SPACE);
+    space(SONY_SPACE);
 
     sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits);
     /*
@@ -59,7 +59,7 @@ bool IRrecv::decodeSony() {
 
     // Some Sony's deliver repeats fast after first
     // unfortunately can't spot difference from of repeat from two fast clicks
-    if (results.rawbuf[offset] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
+    if (results.rawbuf[0] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
         DBG_PRINTLN("IR Gap found");
         results.bits = 0;
         results.value = REPEAT;
@@ -75,14 +75,16 @@ bool IRrecv::decodeSony() {
     }
     offset++;
 
-    // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[offset], SONY_SPACE)) {
-        return false;
-    }
-    offset++;
-
     // MSB first - Not compatible to standard, which says LSB first :-(
-    while (offset < results.rawlen) {
+    while (offset + 1 < results.rawlen) {
+
+        // First check for the constant space length, we do not have a space at the end of raw data
+        // we are lucky, since the start space is equal the data space.
+        if (!MATCH_SPACE(results.rawbuf[offset], SONY_SPACE)) {
+            return false;
+        }
+        offset++;
+
         // bit value is determined by length of the mark
         if (MATCH_MARK(results.rawbuf[offset], SONY_ONE_MARK)) {
             data = (data << 1) | 1;
@@ -93,11 +95,6 @@ bool IRrecv::decodeSony() {
         }
         offset++;
 
-        // check for the constant space length
-        if (!MATCH_SPACE(results.rawbuf[offset], SONY_SPACE)) {
-            return false;
-        }
-        offset++;
     }
 
     results.bits = SONY_BITS;

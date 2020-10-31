@@ -118,7 +118,7 @@ void dump() {
 // The motivation behind this method is that the sender and the receiver
 // can do the same test calls, and the mode variable indicates whether
 // to send or receive.
-void test(const char *label, int type, uint32_t value, int bits) {
+void test(const char *label, int type, uint32_t value, unsigned int bits) {
     if (mode == SENDER) {
         Serial.println(label);
         if (type == NEC) {

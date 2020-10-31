@@ -1,3 +1,6 @@
+## 2.8.1 2020/10
+- Fixed bug in Sony decode introduced in 2.8.0.
+
 ## 2.8.0 2020/10
 - Changed License to MIT see https://github.com/z3t0/Arduino-IRremote/issues/397.
 - Added ATtiny timer 1 support.

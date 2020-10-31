@@ -99,7 +99,7 @@ public:
 
 IRsendDummy irsenddummy;
 
-void verify(unsigned long val, int bits, int type) {
+void verify(unsigned long val, unsigned int bits, unsigned int type) {
     irsenddummy.useDummyBuf();
     IrReceiver.decode();
     Serial.print("Testing ");
