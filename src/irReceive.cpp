@@ -406,7 +406,7 @@ const char* IRrecv::getProtocolString() {
 #endif
 #if DECODE_LEGO_PF
     case LG:
-        return("LEGO");
+        return ("LEGO");
         break;
 #endif
 #if DECODE_LG
@@ -431,7 +431,7 @@ const char* IRrecv::getProtocolString() {
 #endif
 #if DECODE_NEC
     case NEC:
-        return("NEC");
+        return ("NEC");
         break;
 #endif
 #if DECODE_PANASONIC
@@ -494,27 +494,31 @@ void IRrecv::printResultShort(Print *aSerial) {
         aSerial->print(F(" Address=0x"));
         aSerial->print(results.address, HEX);
     }
-}
-
-void IRrecv::printIRResultRaw(Print *aSerial) {
-    // Dumps out the decode_results structure.
-    // Call this after IRrecv::decode()
-    int count = results.rawlen;
-    printResultShort(&Serial);
-
     aSerial->print(" (");
     aSerial->print(results.bits, DEC);
     aSerial->println(" bits)");
+}
+
+void IRrecv::printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
+    // Dumps out the decode_results structure.
+    // Call this after IRrecv::decode()
+    int count = results.rawlen;
     aSerial->print("rawData[");
     aSerial->print(count, DEC);
     aSerial->print("]: ");
 
     for (int i = 0; i < count; i++) {
+        uint32_t tDurationMicros;
+        if (aOutputMicrosecondsInsteadOfTicks) {
+            tDurationMicros = results.rawbuf[i] * (uint32_t)MICROS_PER_TICK;
+        } else {
+            tDurationMicros = results.rawbuf[i];
+        }
         if (i & 1) {
-            aSerial->print(results.rawbuf[i] * MICROS_PER_TICK, DEC);
+            aSerial->print(tDurationMicros, DEC);
         } else {
             aSerial->write('-');
-            aSerial->print((unsigned long) results.rawbuf[i] * MICROS_PER_TICK, DEC);
+            aSerial->print(tDurationMicros, DEC);
         }
         aSerial->print(" ");
     }
@@ -524,35 +528,40 @@ void IRrecv::printIRResultRaw(Print *aSerial) {
 //+=============================================================================
 // Dump out the decode_results structure.
 //
-void IRrecv::printIRResultRawFormatted(Print *aSerial) {
+void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
     // Print Raw data
     aSerial->print("rawData[");
     aSerial->print(results.rawlen - 1, DEC);
     aSerial->println("]: ");
 
     for (unsigned int i = 1; i < results.rawlen; i++) {
-        unsigned long x = results.rawbuf[i] * MICROS_PER_TICK;
+        uint32_t tDurationMicros;
+        if (aOutputMicrosecondsInsteadOfTicks) {
+            tDurationMicros = results.rawbuf[i] * MICROS_PER_TICK;
+        } else {
+            tDurationMicros = results.rawbuf[i];
+        }
         if (!(i & 1)) {  // even
             aSerial->print("-");
-            if (x < 1000) {
+            if (tDurationMicros < 1000) {
                 aSerial->print(" ");
             }
-            if (x < 100) {
+            if (tDurationMicros < 100) {
                 aSerial->print(" ");
             }
-            aSerial->print(x, DEC);
+            aSerial->print(tDurationMicros, DEC);
         } else {  // odd
             aSerial->print("     ");
             aSerial->print("+");
-            if (x < 1000) {
+            if (tDurationMicros < 1000) {
                 aSerial->print(" ");
             }
-            if (x < 100) {
+            if (tDurationMicros < 100) {
                 aSerial->print(" ");
             }
-            aSerial->print(x, DEC);
+            aSerial->print(tDurationMicros, DEC);
             if (i < results.rawlen - 1) {
-                aSerial->print(", "); //',' not needed for last one
+                aSerial->print(", "); //',' not required for last one
             }
         }
         if (!(i % 8)) {
@@ -561,42 +570,57 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial) {
     }
     aSerial->println("");                    // Newline
 }
-//+=============================================================================
-// Dump out the decode_results structure.
-//
-void IRrecv::printIRResultAsCArray(Print *aSerial) {
-    // Start declaration
-    aSerial->print("uint16_t ");               // variable type
-    aSerial->print("rawData[");                // array name
-    aSerial->print(results.rawlen - 1, DEC);  // array size
-    aSerial->print("] = {");                   // Start declaration
 
-    // Dump data
+/*
+ * Dump out the decode_results structure.
+ * 255*50microseconds = 12750microseconds = 12.75 ms, which "hardly ever" occurs inside an Ir sequence.
+ * Note that 930 is the final silence. Many systems, including Lirc and IrRemote, just ignore the final gap.
+ * However, you have to take care if repeating the signal, for example your NEC2 signal (which repeats every 114ms).
+ */
+
+void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
+    // Start declaration
+    if (aOutputMicrosecondsInsteadOfTicks) {
+        aSerial->print("uint16_t ");            // variable type
+        aSerial->print("rawData[");             // array name
+    } else {
+        aSerial->print("uint8_t ");             // variable type
+        aSerial->print("rawTicks[");            // array name
+    }
+
+    aSerial->print(results.rawlen - 1, DEC);    // array size
+    aSerial->print("] = {");                    // Start declaration
+
+// Dump data
     for (unsigned int i = 1; i < results.rawlen; i++) {
-        aSerial->print(results.rawbuf[i] * MICROS_PER_TICK, DEC);
+        if (aOutputMicrosecondsInsteadOfTicks) {
+            aSerial->print(results.rawbuf[i] * MICROS_PER_TICK, DEC);
+        } else {
+            aSerial->print(results.rawbuf[i]);
+        }
         if (i < results.rawlen - 1)
-            aSerial->print(","); // ',' not needed on last one
+            aSerial->print(",");                // ',' not required on last one
         if (!(i & 1))
             aSerial->print(" ");
     }
 
-    // End declaration
-    aSerial->print("};");  //
+// End declaration
+    aSerial->print("};"); //
 
-    // Comment
+// Comment
     aSerial->print("  // ");
     printResultShort(aSerial);
 
-    // Newline
+// Newline
     aSerial->println("");
 }
 
 void IRrecv::printIRResultAsCVariables(Print *aSerial) {
-    // Now dump "known" codes
+// Now dump "known" codes
     if (results.decode_type != UNKNOWN) {
 
         // Some protocols have an address
-        if(results.address != 0){
+        if (results.address != 0) {
             aSerial->print("uint16_t address = 0x");
             aSerial->print(results.address, HEX);
             aSerial->println(";");
@@ -627,7 +651,7 @@ bool IRrecv::decode(decode_results *aResults) {
     results.rawlen = irparams.rawlen;
     results.overflow = irparams.overflow;
 
-    // reset optional values
+// reset optional values
     results.address = 0;
     results.isRepeat = false;
 
@@ -738,15 +762,15 @@ bool IRrecv::decode(decode_results *aResults) {
 
 #if defined(DECODE_HASH)
     DBG_PRINTLN("Hash decode");
-    // decodeHash returns a hash on any input.
-    // Thus, it needs to be last in the list.
-    // If you add any decodes, add them before this.
+// decodeHash returns a hash on any input.
+// Thus, it needs to be last in the list.
+// If you add any decodes, add them before this.
     if (decodeHash(aResults)) {
         return true;
     }
 #endif
 
-    // Throw away and start over
+// Throw away and start over
     resume();
     return false;
 }

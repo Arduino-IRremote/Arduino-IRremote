@@ -41,7 +41,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int ti
     if (numbersInPreamble + intros + repeats != size) // inconsistent sizes
         return;
 
-    unsigned int durations[intros + repeats];
+    uint16_t durations[intros + repeats];
     for (unsigned int i = 0; i < intros + repeats; i++) {
         uint32_t duration = ((uint32_t) data[i + numbersInPreamble]) * timebase;
         durations[i] = (unsigned int) ((duration <= MICROSECONDS_T_MAX) ? duration : MICROSECONDS_T_MAX);

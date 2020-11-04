@@ -106,19 +106,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-      # Use the arduino-test-compile script, because it is faster
-      - name: Compile all examples using the bash script arduino-test-compile.sh
-        env:
-          # Passing parameters to the script by setting the appropriate ENV_* variables.
-          ENV_ARDUINO_BOARD_FQBN: ${{ matrix.arduino-boards-fqbn }}
-          ENV_ARDUINO_PLATFORM: ${{ matrix.arduino-platform }}
-          ENV_PLATFORM_URL: ${{ matrix.platform-url }}
-          ENV_REQUIRED_LIBRARIES: ${{ env.REQUIRED_LIBRARIES }}
-          ENV_EXAMPLES_EXCLUDE: ${{ matrix.sketches-exclude }}
-          ENV_EXAMPLES_BUILD_PROPERTIES: ${{ toJson(matrix.build-properties) }}
-
-        run: |
-          wget --quiet https://raw.githubusercontent.com/ArminJo/arduino-test-compile/master/arduino-test-compile.sh
-            ls -l arduino-test-compile.sh
-            chmod +x arduino-test-compile.sh
-            ./arduino-test-compile.sh
+      - name: Compile all examples using the arduino-test-compile action
+        uses: ArminJo/arduino-test-compile@master
+        with:
+          arduino-board-fqbn: ${{ matrix.arduino-boards-fqbn }}
+          arduino-platform: ${{ matrix.arduino-platform }}
+          platform-url: ${{ matrix.platform-url }}
+          required-libraries: ${{ env.REQUIRED_LIBRARIES }}
+          sketches-exclude: ${{ matrix.sketches-exclude }}
+          build-properties: ${{ toJson(matrix.build-properties) }}

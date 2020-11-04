@@ -66,7 +66,7 @@
 
 //+=============================================================================
 #if SEND_BOSEWAVE
-unsigned int rawSignal[35];
+uint16_t rawSignal[35];
 void IRsend::sendBoseWave(unsigned char code) {
 
     int index = 0;

@@ -375,7 +375,7 @@ size_t TinySerialOut::write(uint8_t aByte) {
     return 1;
 }
 
-void TinySerialOut::print(const char* aStringPtr) {
+void TinySerialOut::print(const char *aStringPtr) {
     writeString(aStringPtr);
 }
 
@@ -435,7 +435,7 @@ void TinySerialOut::println(char aChar) {
     println();
 }
 
-void TinySerialOut::println(const char* aStringPtr) {
+void TinySerialOut::println(const char *aStringPtr) {
     print(aStringPtr);
     println();
 }

@@ -254,9 +254,9 @@ public:
 
     const char* getProtocolString();
     void printResultShort(Print *aSerial);
-    void printIRResultRaw(Print *aSerial);
-    void printIRResultRawFormatted(Print *aSerial);
-    void printIRResultAsCArray(Print *aSerial);
+    void printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
+    void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
+    void printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
     /**
      * Print the result (second argument) as Pronto Hex on the Stream supplied as argument.
@@ -424,8 +424,11 @@ public:
     void mark_long(uint32_t timeMicros);
     void space(uint16_t timeMicros);
     void space_long(uint32_t timeMicros);
-    void sendRaw(const unsigned int buf[], unsigned int len, unsigned int hz);
-    void sendRaw_P(const unsigned int buf[], unsigned int len, unsigned int hz);
+    void sendRaw(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz);
+    void sendRaw_P(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz);
+
+    void sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz);
+    void sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz);
 
     //......................................................................
 #if SEND_RC5

@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 2.9.0](https://github.com/z3t0/Arduino-IRremote/releases) - work in progress
+### [Version 2.8.2](https://github.com/z3t0/Arduino-IRremote/releases) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/z3t0/Arduino-IRremote/latest)](https://github.com/z3t0/Arduino-IRremote/commits/master)
@@ -26,7 +26,6 @@ Protocols can be switched off and on by changing the lines in *IRremote.h*:
 ```
 # [Wiki](https://github.com/z3t0/Arduino-IRremote/wiki)
 This is a quite old but maybe useful wiki for this library.
-
 
 # FAQ
 - IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)<br/>

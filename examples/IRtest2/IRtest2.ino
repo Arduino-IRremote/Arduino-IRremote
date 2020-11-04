@@ -162,7 +162,7 @@ void test(const char *label, int type, uint32_t value, unsigned int bits) {
 
 // Test raw send or receive.  This is similar to the test method,
 // except it send/receives raw data.
-void testRaw(const char *label, unsigned int *rawbuf, uint8_t rawlen) {
+void testRaw(const char *label, uint16_t *rawbuf, uint8_t rawlen) {
     if (mode == SENDER) {
         Serial.println(label);
         IrSender.sendRaw(rawbuf, rawlen, 38 /* kHz */);
@@ -213,7 +213,7 @@ void testRaw(const char *label, unsigned int *rawbuf, uint8_t rawlen) {
 }
 
 // This is the raw data corresponding to NEC 0x12345678
-unsigned int sendbuf[] = { /* NEC format */
+uint16_t sendbuf[] = { /* NEC format */
 9000, 4500, 560, 560, 560, 560, 560, 560, 560, 1690, /* 1 */
 560, 560, 560, 560, 560, 1690, 560, 560, /* 2 */
 560, 560, 560, 560, 560, 1690, 560, 1690, /* 3 */

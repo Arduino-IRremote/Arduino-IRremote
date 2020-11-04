@@ -146,7 +146,7 @@ typedef unsigned frequency_t; // max 65535, unless 32-bit
 /**
  * Type used for durations in micro seconds.
  */
-typedef unsigned microseconds_t; // max 65535, unless 32-bit
+typedef uint16_t microseconds_t; // max 65535
 
 static const microseconds_t DUMMYENDING = 40000U;
 static const frequency_t FREQUENCY_T_MAX = UINT16_MAX;
