@@ -161,9 +161,7 @@ void IRsend::mark(uint16_t timeMicros) {
 #else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
 #endif
-    if (timeMicros > 0) {
-        delayMicroseconds(timeMicros);
-    }
+    delayMicroseconds(timeMicros);
 }
 
 void IRsend::mark_long(uint32_t timeMicros) {
@@ -172,9 +170,7 @@ void IRsend::mark_long(uint32_t timeMicros) {
 #else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
 #endif
-    if (timeMicros > 0) {
-        custom_delay_usec(timeMicros);
-    }
+    custom_delay_usec(timeMicros);
 }
 
 //+=============================================================================
@@ -188,9 +184,7 @@ void IRsend::space(uint16_t timeMicros) {
 #else
     TIMER_DISABLE_SEND_PWM; // Disable PWM output
 #endif
-    if (timeMicros > 0) {
-        delayMicroseconds(timeMicros); // overflow at 0x4000 / 16.384
-    }
+    delayMicroseconds(timeMicros); // overflow at 0x4000 / 16.384
 }
 
 /*
@@ -202,10 +196,8 @@ void IRsend::space_long(uint32_t timeMicros) {
 #else
     TIMER_DISABLE_SEND_PWM; // Disable PWM output
 #endif
-    if (timeMicros > 0) {
-        // custom delay does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
-        custom_delay_usec(timeMicros);
-    }
+    // custom delay does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
+    custom_delay_usec(timeMicros);
 }
 
 #ifdef USE_DEFAULT_ENABLE_IR_OUT

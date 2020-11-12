@@ -87,7 +87,7 @@ If you are using Sloeber as your IDE, you can easily define global symbols with 
 - ATtiny84, 85
 - SAMD21 (receive only)
 - ESP32
-- ESP8266 is supported in a fork based on an old codebase that isn't as recent, but it works reasonably well given that perfectly timed sub millisecond interrupts are different on that chip. See https://github.com/markszabo/IRremoteESP8266
+- [ESP8266 is supported in a fork](https://github.com/crankyoldgit/IRremoteESP8266) based on an old codebase. It works well given that perfectly timed sub millisecond interrupts are different on that chip.
 - Sparkfun Pro Micro
 
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
