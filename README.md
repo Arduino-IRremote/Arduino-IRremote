@@ -29,26 +29,39 @@ This is a quite old but maybe useful wiki for this library.
 
 # FAQ
 - IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)<br/>
-Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic arduinos for longer than 50 us. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
-- The default IR timer on AVR's is timer 2. Since the Arduino Tone library as well as analogWrite() for pin 3 and pin 11 requires timer 2, this functionality cannot be used simultaneously.
-- You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together. The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC. This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
+ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 µs.
+In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors,
+ [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
+- The default IR timer on AVR's is timer 2. Since the Arduino Tone library as well as analogWrite() for pin 3 and pin 11 requires timer 2,
+ this functionality cannot be used simultaneously.
+- You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
+ The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
+ This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
 
 # Handling unknown Protocols
 ## Disclaimer
-This library was never designed to handle long codes like the ones used by air conditioners. See [Recording long Infrared Remote control signals with Arduino](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).<br/>
+This library was never designed to handle long codes like the ones used by air conditioners.
+See [Recording long Infrared Remote control signals with Arduino](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).<br/>
 The main reason is, that it was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.
 
 ## Hints
 If you do not know which protocol your IR transmitter uses, you have several choices.
-- Use the [IRreceiveDumpV2 example](examples/IRreceiveDumpV2) to dump out the IR timing. You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo). For **long codes** with more than 48 bits like from air conditioners, you can **change the length of the input buffer** in [IRremoteInt.h](src/private/IRremoteInt.h#L31).
-- The [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) prints the protocol and data for one of the **40 supported protocols**. The same library can be used to send this codes.
-- If you have a bigger Arduino board at hand (> 100 kByte program space) you can try the [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library [DecodeIR](https://github.com/bengtmartensson/Arduino-DecodeIR).
-- Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html). It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote, the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
-- To **increase strength of sent output signal** you can increase the current through the send diode, or use 2 diodes in series, since one IR diode requires only 1.5 volt. Changing `IR_SEND_DUTY_CYCLE` to 50 increases the signal current by 40%.
+- Use the [IRreceiveDumpV2 example](examples/IRreceiveDumpV2) to dump out the IR timing.
+ You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo).
+ For **long codes** with more than 48 bits like from air conditioners, you can **change the length of the input buffer** in [IRremoteInt.h](src/private/IRremoteInt.h#L31).
+- The [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) prints the protocol and data for one of the **40 supported protocols**.
+ The same library can be used to send this codes.
+- If you have a bigger Arduino board at hand (> 100 kByte program space) you can try the
+ [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library [DecodeIR](https://github.com/bengtmartensson/Arduino-DecodeIR).
+- Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html).
+ It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote,
+ the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
+- To **increase strength of sent output signal** you can increase the current through the send diode, or use 2 diodes in series,
+ since one IR diode requires only 1.5 volt. Changing `IR_SEND_DUTY_CYCLE` to 50 increases the signal current by 40%.
 
 # Compile options / macros for this library
-To customize the library to different requirements, there are some compile options / makros available.<br/>
-Modify it by commenting them out or in, or change the values if applicable. Or define the macro with the -D compiler option for gobal compile (the latter is not possible with the Arduino IDE, so consider to use [Sloeber](https://eclipse.baeyens.it).
+To customize the library to different requirements, there are some compile options / macros available.<br/>
+Modify it by commenting them out or in, or change the values if applicable. Or define the macro with the -D compiler option for global compile (the latter is not possible with the Arduino IDE, so consider to use [Sloeber](https://eclipse.baeyens.it).
 
 | Name | File | Default value | Description |
 |-|-|-|-|
@@ -118,10 +131,10 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 | [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/)                         | **5**               | **CMT**           |
 | [Teensy-LC](https://www.pjrc.com/teensy/)                                | **16**              | **TPM1**          |
 
-## Revision History
+# Revision History
 Please see [changelog.md](https://github.com/z3t0/Arduino-IRremote/blob/master/changelog.md).
 
-## API documentation
+# API documentation
 See [API reference in wiki](https://github.com/z3t0/Arduino-IRremote/wiki/API-Reference).
 
 To generate the API documentation,
@@ -134,7 +147,18 @@ With Doxygen and Graphviz installed, issue the command
 generate the API documentation in HTML format.
 The just generated `api-doc/index.html` can now be opened in a browser.
 
-## Contributing
+## Why do we use 33% duty cycle
+We do it according to the statement in the [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf):
+- Carrier duty cycle 50 %, peak current of emitter IF = 200 mA, the resulting transmission distance is 25 m.
+- Carrier duty cycle 10 %, peak current of emitter IF = 800 mA, the resulting transmission distance is 29 m. - Factor 1.16
+The reason is, that it is not the pure energy of the fundamental which is responsible for the receiver to detect a signal.
+Due to automatic gain control and other bias effects high intensity and lower energy (duty cycle) of the 38 kHz pulse counts more than high low intensity and higher energy.
+
+BTW, **the best way to increase the IR power** is to use 2 or 3 IR diodes in series. One diode requires 1.1 to 1.5 volt so you can supply 3 diodes with a 5 volt output.<br/>
+To keep the current, you must reduce the resistor by (5 - 1.3) / (5 - 2.6) = 1.5 e.g. from 150 ohm to 100 ohm for 25 mA and 2 diodes with 1.3 volt and a 5 volt supply.<br/>
+For 3 diodes it requires factor 2.5 e.g. from 150 ohm to 60 ohm.
+
+# Contributing
 If you want to contribute to this project:
 - Report bugs and errors
 - Ask for enhancements
@@ -144,12 +168,12 @@ If you want to contribute to this project:
 
 Check [here](https://github.com/z3t0/Arduino-IRremote/blob/master/Contributing.md) for some guidelines.
 
-## Contact
-Email: zetoslab@gmail.com
-Please only email me if it is more appropriate than creating an Issue / PR. I **will** not respond to requests for adding support for particular boards, unless of course you are the creator of the board and would like to cooperate on the project. I will also **ignore** any emails asking me to tell you how to implement your ideas. However, if you have a private inquiry that you would only apply to you and you would prefer it to be via email, by all means.
-
 ## Contributors
 Check [here](https://github.com/z3t0/Arduino-IRremote/blob/master/Contributors.md)
+
+# Contact
+Email: zetoslab@gmail.com
+Please only email me if it is more appropriate than creating an Issue / PR. I **will** not respond to requests for adding support for particular boards, unless of course you are the creator of the board and would like to cooperate on the project. I will also **ignore** any emails asking me to tell you how to implement your ideas. However, if you have a private inquiry that you would only apply to you and you would prefer it to be via email, by all means.
 
 # License
 Up to the version 2.7.0 the License is GPLv2.
@@ -158,3 +182,4 @@ From the version 2.8.0 the license is the MIT license.
 ## Copyright
 Initially coded 2009 Ken Shirriff http://www.righto.com
 Copyright (c) 2016 Rafi Khan
+Copyright (c) 2020 Armin Joachimsmeyer
