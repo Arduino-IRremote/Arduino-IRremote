@@ -22,7 +22,7 @@ bool IRrecv::decodeLG() {
     int offset = 1; // Skip first space
 
     // Check we have the right amount of data  +3 for start bit mark and space + stop bit mark
-    if (irparams.rawlen <= (2 * LG_BITS) + 3)
+    if (results.rawlen <= (2 * LG_BITS) + 3)
         return false;
 
     // Initial mark/space

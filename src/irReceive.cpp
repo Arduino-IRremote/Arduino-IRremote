@@ -248,7 +248,6 @@ bool IRrecv::available() {
 //
 void IRrecv::resume() {
     irparams.rcvstate = IR_REC_STATE_IDLE;
-//    irparams.rawlen = 0; // not required
 }
 
 # if DECODE_HASH
@@ -510,7 +509,7 @@ void IRrecv::printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfT
     for (int i = 0; i < count; i++) {
         uint32_t tDurationMicros;
         if (aOutputMicrosecondsInsteadOfTicks) {
-            tDurationMicros = results.rawbuf[i] * (uint32_t)MICROS_PER_TICK;
+            tDurationMicros = results.rawbuf[i] * (uint32_t) MICROS_PER_TICK;
         } else {
             tDurationMicros = results.rawbuf[i];
         }
@@ -560,7 +559,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
                 aSerial->print(" ");
             }
             aSerial->print(tDurationMicros, DEC);
-            if (i < results.rawlen - 1) {
+            if (i + 1 < results.rawlen) {
                 aSerial->print(", "); //',' not required for last one
             }
         }
@@ -598,7 +597,7 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
         } else {
             aSerial->print(results.rawbuf[i]);
         }
-        if (i < results.rawlen - 1)
+        if (i + 1 < results.rawlen)
             aSerial->print(",");                // ',' not required on last one
         if (!(i & 1))
             aSerial->print(" ");
