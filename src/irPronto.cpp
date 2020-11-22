@@ -157,13 +157,20 @@ static void dumpSequence(Print *aSerial, const volatile uint16_t *data, size_t l
     dumpDuration(aSerial, _GAP, timebase);
 }
 
-static void dumpSequence(char *&varChar, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+bool dumpSequence(char *&aStringBuffer, size_t aBufferLength, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+
+    if (aBufferLength < (((length + 1) * 5) - 1) { // dumpDuration takes 5 chars
+         return false;
+    }
+
     for (unsigned int i = 0; i < length; i++)
         dumpDuration(varChar, data[i], timebase);
     
     dumpDuration(varChar, _GAP, timebase);
 
     *varChar = '\0';
+
+    return true;
 }
 
 /*
@@ -179,13 +186,31 @@ void IRrecv::dumpPronto(Print *aSerial, unsigned int frequency) {
     dumpSequence(aSerial, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
 }
 
-void IRrecv::dumpPronto(char *&varStr, unsigned int frequency) {
+
+/*
+ * Writing data to a reference to a pointer to a char buffer.
+ * No copy of the data is made and thus this saves memory.
+ * varStr - is a char pointer which has memory already allocated
+ * length - is the size of the memory allocation
+ * frequency - used to calculate first 2 Pronto Hex numbers
+ */
+
+bool IRrecv::dumpPronto(char *&varStr, size_t length, unsigned int frequency) {
+
+    if (length < 4 * 5) {      // 4 dumpNumbers - 5 characters used by each dumoNumber
+         return false;
+    }
+
     dumpNumber(varStr, frequency > 0 ? learnedToken : learnedNonModulatedToken);
     dumpNumber(varStr, toFrequencyCode(frequency));
     dumpNumber(varStr, (results.rawlen + 1) / 2);
     dumpNumber(varStr, 0);
     unsigned int timebase = toTimebase(frequency);
-    dumpSequence(varStr, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
+    if (dumpSequence(varStr, length - 4 * 5, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //+=============================================================================
