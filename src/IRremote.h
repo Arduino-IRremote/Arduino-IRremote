@@ -265,7 +265,7 @@ public:
      * @param frequency Modulation frequency in Hz. Often 38000Hz.
      */
     void dumpPronto(Print *aSerial, unsigned int frequency = 38000U);
-    bool dumpPronto(char *&varStr, size_t length, unsigned int frequency = 38000U);
+    bool dumpPronto(char *&aStringBuffer, size_t aBufferLength, unsigned int frequency = 38000U);
     void printIRResultAsPronto(Print *aSerial, unsigned int frequency = 38000U);
 
     bool decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,

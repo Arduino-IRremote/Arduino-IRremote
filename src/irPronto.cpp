@@ -159,16 +159,16 @@ static void dumpSequence(Print *aSerial, const volatile uint16_t *data, size_t l
 
 bool dumpSequence(char *&aStringBuffer, size_t aBufferLength, const volatile uint16_t *data, size_t length, uint16_t timebase) {
 
-    if (aBufferLength < (((length + 1) * 5) - 1) { // dumpDuration takes 5 chars
+    if (aBufferLength < (((length + 1) * 5) - 1)) { // dumpDuration takes 5 chars
          return false;
     }
 
     for (unsigned int i = 0; i < length; i++)
-        dumpDuration(varChar, data[i], timebase);
+        dumpDuration(aStringBuffer, data[i], timebase);
     
-    dumpDuration(varChar, _GAP, timebase);
+    dumpDuration(aStringBuffer, _GAP, timebase);
 
-    *varChar = '\0';
+    *aStringBuffer = '\0';
 
     return true;
 }
@@ -195,18 +195,18 @@ void IRrecv::dumpPronto(Print *aSerial, unsigned int frequency) {
  * frequency - used to calculate first 2 Pronto Hex numbers
  */
 
-bool IRrecv::dumpPronto(char *&varStr, size_t length, unsigned int frequency) {
+bool IRrecv::dumpPronto(char *&aStringBuffer, size_t aBufferLength, unsigned int frequency) {
 
-    if (length < 4 * 5) {      // 4 dumpNumbers - 5 characters used by each dumoNumber
+    if (aBufferLength < 4 * 5) {      // 4 dumpNumbers - 5 characters used by each dumoNumber
          return false;
     }
 
-    dumpNumber(varStr, frequency > 0 ? learnedToken : learnedNonModulatedToken);
-    dumpNumber(varStr, toFrequencyCode(frequency));
-    dumpNumber(varStr, (results.rawlen + 1) / 2);
-    dumpNumber(varStr, 0);
+    dumpNumber(aStringBuffer, frequency > 0 ? learnedToken : learnedNonModulatedToken);
+    dumpNumber(aStringBuffer, toFrequencyCode(frequency));
+    dumpNumber(aStringBuffer, (results.rawlen + 1) / 2);
+    dumpNumber(aStringBuffer, 0);
     unsigned int timebase = toTimebase(frequency);
-    if (dumpSequence(varStr, length - 4 * 5, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase)) {
+    if (dumpSequence(aStringBuffer, aBufferLength - 4 * 5, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase)) {
         return true;
     } else {
         return false;
