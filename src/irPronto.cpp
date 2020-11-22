@@ -120,6 +120,11 @@ static void dumpDigit(Print *aSerial, unsigned int number) {
     aSerial->print(hexDigit(number));
 }
 
+static void dumpDigit(char *&varChar, unsigned int number) {
+    *varChar = hexDigit(number);
+    varChar++;
+}
+
 static void dumpNumber(Print *aSerial, uint16_t number) {
     for (unsigned int i = 0; i < digitsInProntoNumber; i++) {
         unsigned int shifts = bitsInHexadecimal * (digitsInProntoNumber - 1 - i);
@@ -128,8 +133,21 @@ static void dumpNumber(Print *aSerial, uint16_t number) {
     aSerial->print(' ');
 }
 
+static void dumpNumber(char *&varChar, uint16_t number) {
+    for (unsigned int i = 0; i < digitsInProntoNumber; i++) {
+        unsigned int shifts = bitsInHexadecimal * (digitsInProntoNumber - 1 - i);
+        dumpDigit(varChar, (number >> shifts) & hexMask);
+    }
+    *varChar = ' ';
+    varChar++;
+}
+
 static void dumpDuration(Print *aSerial, uint16_t duration, uint16_t timebase) {
     dumpNumber(aSerial, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
+}
+
+static void dumpDuration(char *&varChar, uint16_t duration, uint16_t timebase) {
+    dumpNumber(varChar, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
 }
 
 static void dumpSequence(Print *aSerial, const volatile uint16_t *data, size_t length, uint16_t timebase) {
@@ -137,6 +155,15 @@ static void dumpSequence(Print *aSerial, const volatile uint16_t *data, size_t l
         dumpDuration(aSerial, data[i], timebase);
 
     dumpDuration(aSerial, _GAP, timebase);
+}
+
+static void dumpSequence(char *&varChar, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+    for (unsigned int i = 0; i < length; i++)
+        dumpDuration(varChar, data[i], timebase);
+    
+    dumpDuration(varChar, _GAP, timebase);
+
+    *varChar = '\0';
 }
 
 /*
@@ -150,6 +177,15 @@ void IRrecv::dumpPronto(Print *aSerial, unsigned int frequency) {
     dumpNumber(aSerial, 0);
     unsigned int timebase = toTimebase(frequency);
     dumpSequence(aSerial, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
+}
+
+void IRrecv::dumpPronto(char *&varStr, unsigned int frequency) {
+    dumpNumber(varStr, frequency > 0 ? learnedToken : learnedNonModulatedToken);
+    dumpNumber(varStr, toFrequencyCode(frequency));
+    dumpNumber(varStr, (results.rawlen + 1) / 2);
+    dumpNumber(varStr, 0);
+    unsigned int timebase = toTimebase(frequency);
+    dumpSequence(varStr, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
 }
 
 //+=============================================================================
