@@ -248,7 +248,7 @@ bool IRrecv::available() {
 //
 void IRrecv::resume() {
     irparams.rcvstate = IR_REC_STATE_IDLE;
-//    irparams.rawlen = 0; // not required
+    irparams.rawlen = 0;
 }
 
 # if DECODE_HASH

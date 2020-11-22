@@ -57,7 +57,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int ti
 
     delay(durations[intros - 1] / 1000U);
     for (unsigned int i = 0; i < numberRepeats; i++) {
-        sendRaw(durations + intros, repeats - 1, khz);
+        sendRaw(durations, intros + repeats - 1, khz);
         if (i < numberRepeats - 1) { // skip last wait
             delay(durations[intros + repeats - 1] / 1000U);
         }
