@@ -120,9 +120,8 @@ static void dumpDigit(Print *aSerial, unsigned int number) {
     aSerial->print(hexDigit(number));
 }
 
-static void dumpDigit(char *&varChar, unsigned int number) {
-    *varChar = hexDigit(number);
-    varChar++;
+static bool dumpDigit(String *aString, unsigned int number) {
+    return aString->concat(hexDigit(number));
 }
 
 static void dumpNumber(Print *aSerial, uint16_t number) {
@@ -133,21 +132,25 @@ static void dumpNumber(Print *aSerial, uint16_t number) {
     aSerial->print(' ');
 }
 
-static void dumpNumber(char *&varChar, uint16_t number) {
+static size_t dumpNumber(String *aString, uint16_t number) {
+
+    size_t size = 0;
+
     for (unsigned int i = 0; i < digitsInProntoNumber; i++) {
         unsigned int shifts = bitsInHexadecimal * (digitsInProntoNumber - 1 - i);
-        dumpDigit(varChar, (number >> shifts) & hexMask);
+        size += dumpDigit(aString, (number >> shifts) & hexMask);
     }
-    *varChar = ' ';
-    varChar++;
+    size += aString->concat(' ');
+
+    return size;
 }
 
 static void dumpDuration(Print *aSerial, uint16_t duration, uint16_t timebase) {
     dumpNumber(aSerial, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
 }
 
-static void dumpDuration(char *&varChar, uint16_t duration, uint16_t timebase) {
-    dumpNumber(varChar, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
+static size_t dumpDuration(String *aString, uint16_t duration, uint16_t timebase) {
+    return dumpNumber(aString, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
 }
 
 static void dumpSequence(Print *aSerial, const volatile uint16_t *data, size_t length, uint16_t timebase) {
@@ -157,20 +160,16 @@ static void dumpSequence(Print *aSerial, const volatile uint16_t *data, size_t l
     dumpDuration(aSerial, _GAP, timebase);
 }
 
-bool dumpSequence(char *&aStringBuffer, size_t aBufferLength, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+static size_t dumpSequence(String *aString, const volatile uint16_t *data, size_t length, uint16_t timebase) {
 
-    if (aBufferLength < (((length + 1) * 5) - 1)) { // dumpDuration takes 5 chars
-         return false;
-    }
+    size_t size = 0;
 
     for (unsigned int i = 0; i < length; i++)
-        dumpDuration(aStringBuffer, data[i], timebase);
+        size += dumpDuration(aString, data[i], timebase);
     
-    dumpDuration(aStringBuffer, _GAP, timebase);
+    size += dumpDuration(aString, _GAP, timebase);
 
-    *aStringBuffer = '\0';
-
-    return true;
+    return size;
 }
 
 /*
@@ -188,29 +187,22 @@ void IRrecv::dumpPronto(Print *aSerial, unsigned int frequency) {
 
 
 /*
- * Writing data to a reference to a pointer to a char buffer.
- * No copy of the data is made and thus this saves memory.
- * varStr - is a char pointer which has memory already allocated
- * length - is the size of the memory allocation
- * frequency - used to calculate first 2 Pronto Hex numbers
+ * Writes Pronto HEX to a String object.
+ * Returns the amount of characters added to the string.
  */
 
-bool IRrecv::dumpPronto(char *&aStringBuffer, size_t aBufferLength, unsigned int frequency) {
+size_t IRrecv::dumpPronto(String *aString, unsigned int frequency) {
 
-    if (aBufferLength < 4 * 5) {      // 4 dumpNumbers - 5 characters used by each dumoNumber
-         return false;
-    }
-
-    dumpNumber(aStringBuffer, frequency > 0 ? learnedToken : learnedNonModulatedToken);
-    dumpNumber(aStringBuffer, toFrequencyCode(frequency));
-    dumpNumber(aStringBuffer, (results.rawlen + 1) / 2);
-    dumpNumber(aStringBuffer, 0);
+    size_t size = 0;
     unsigned int timebase = toTimebase(frequency);
-    if (dumpSequence(aStringBuffer, aBufferLength - 4 * 5, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase)) {
-        return true;
-    } else {
-        return false;
-    }
+
+    size += dumpNumber(aString, frequency > 0 ? learnedToken : learnedNonModulatedToken);
+    size += dumpNumber(aString, toFrequencyCode(frequency));
+    size += dumpNumber(aString, (results.rawlen + 1) / 2);
+    size += dumpNumber(aString, 0);
+    size += dumpSequence(aString, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
+
+    return size;
 }
 
 //+=============================================================================
