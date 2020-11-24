@@ -61,7 +61,7 @@ void loop() {
 
         String ProntoHEX = "Pronto HEX contains: ";     // Assign string to ProtoHex string object
 
-        if(int size = IrReceiver.dumpPronto(&ProntoHEX) {  // Dump the content of the IReceiver Pronto HEX to the String object
+        if(int size = IrReceiver.dumpPronto(&ProntoHEX)) {  // Dump the content of the IReceiver Pronto HEX to the String object
             ProntoHEX += "\nProntoHEX is ";                 // Add size information to the String object
             ProntoHEX += size;                              //
             ProntoHEX += " characters long and contains ";  // Add codes count information to the String object
