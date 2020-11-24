@@ -76,7 +76,6 @@ void loop() {
         }
 
         Serial.println();                               // blank line between entries
-
         IrReceiver.resume();                            // Prepare for the next value
     }
 }
