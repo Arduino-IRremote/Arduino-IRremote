@@ -74,8 +74,7 @@ void loop() {
             Serial.println(ProntoHex);                      // Print to the serial console the whole String object
             Serial.println();                               // blank line between entries
         }
-
-        Serial.println();                               // blank line between entries
+        
         IrReceiver.resume();                            // Prepare for the next value
     }
 }
