@@ -64,7 +64,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
     unsigned long data = 0;  // Somewhere to build our code
     DBG_PRINTLN(results.rawlen, DEC);
     // Check we have the right amount of data
-    if (irparams.rawlen != (2 * LEGO_PF_BITS) + 4)
+    if (results.rawlen != (2 * LEGO_PF_BITS) + 4)
         return false;
 
     DBG_PRINTLN("Attempting Lego Power Functions Decode");

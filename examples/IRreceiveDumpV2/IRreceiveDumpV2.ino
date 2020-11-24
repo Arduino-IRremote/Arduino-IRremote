@@ -34,31 +34,28 @@ void setup() {
 }
 
 //+=============================================================================
-// Dump out the decode_results structure.
-//
-void dumpInfo() {
-    // Check if the buffer overflowed
-    if (IrReceiver.results.overflow) {
-        Serial.println("IR code too long. Edit IRremoteInt.h and increase RAW_BUFFER_LENGTH");
-        return;
-    }
-
-    IrReceiver.printResultShort(&Serial);
-
-    Serial.print(" (");
-    Serial.print(IrReceiver.results.bits, DEC);
-    Serial.println(" bits)");
-}
-
-//+=============================================================================
 // The repeating section of the code
 //
 void loop() {
     if (IrReceiver.decode()) {  // Grab an IR code
-        dumpInfo();             // Output the results
-        IrReceiver.printIRResultRawFormatted(&Serial);  // Output the results in RAW format
+        // Check if the buffer overflowed
+        if (IrReceiver.results.overflow) {
+            Serial.println("IR code too long. Edit IRremoteInt.h and increase RAW_BUFFER_LENGTH");
+            return;
+        }
+        Serial.println();                               // 2 blank lines between entries
+        Serial.println();
+        IrReceiver.printResultShort(&Serial);
+
+        Serial.println(F("Result in internal ticks (50 us)"));
+        IrReceiver.printIRResultRawFormatted(&Serial, false); // Output the results in RAW format
+        Serial.println(F("Result in microseconds"));
+        IrReceiver.printIRResultRawFormatted(&Serial, true);  // Output the results in RAW format
         Serial.println();                               // blank line between entries
-        IrReceiver.printIRResultAsCArray(&Serial);      // Output the results as source code array
+        Serial.println(F("Result as internal ticks (50 us) array"));
+        IrReceiver.printIRResultAsCArray(&Serial, false);   // Output the results as uint8_t source code array of ticks
+        Serial.println(F("Result as microseconds array"));
+        IrReceiver.printIRResultAsCArray(&Serial, true);    // Output the results as uint16_t source code array of micros
         IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
         IrReceiver.printIRResultAsPronto(&Serial);
 
@@ -73,6 +70,7 @@ void loop() {
             Serial.println(ProntoHex);                      // Print to the serial console the whole String object
             Serial.println();                               // blank line between entries
         }
+
         IrReceiver.resume();                            // Prepare for the next value
     }
 }

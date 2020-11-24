@@ -49,7 +49,7 @@ bool IRrecv::decodeSAMSUNG() {
     offset++;
 
 // Check for repeat
-    if ((irparams.rawlen == 4) && MATCH_SPACE(results.rawbuf[offset], SAMSUNG_REPEAT_SPACE)
+    if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[offset], SAMSUNG_REPEAT_SPACE)
             && MATCH_MARK(results.rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
         results.bits = 0;
         results.value = REPEAT;
@@ -57,7 +57,7 @@ bool IRrecv::decodeSAMSUNG() {
         results.decode_type = SAMSUNG;
         return true;
     }
-    if (irparams.rawlen < (2 * SAMSUNG_BITS) + 4) {
+    if (results.rawlen < (2 * SAMSUNG_BITS) + 4) {
         return false;
     }
 

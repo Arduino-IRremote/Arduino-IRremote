@@ -2,30 +2,45 @@
 
 #ifdef SENDING_SUPPORTED // from IRremoteBoardDefs.h
 //+=============================================================================
-void IRsend::sendRaw(const unsigned int buf[], unsigned int len, unsigned int hz) {
+void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
     // Set IR carrier frequency
-    enableIROut(hz);
+    enableIROut(aIRFrequencyKilohertz);
 
-    for (unsigned int i = 0; i < len; i++) {
+    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         if (i & 1) {
-            space(buf[i]);
+            space(aBufferWithMicroseconds[i]);
         } else {
-            mark(buf[i]);
+            mark(aBufferWithMicroseconds[i]);
         }
     }
 
     space(0);  // Always end with the LED off
 }
 
-void IRsend::sendRaw_P(const unsigned int buf[], unsigned int len, unsigned int hz) {
+void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
+    // Set IR carrier frequency
+    enableIROut(aIRFrequencyKilohertz);
+
+    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
+        if (i & 1) {
+            space(aBufferWithTicks[i] * MICROS_PER_TICK);
+        } else {
+            mark(aBufferWithTicks[i] * MICROS_PER_TICK);
+        }
+    }
+
+    space(0);  // Always end with the LED off
+}
+
+void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
-    sendRaw(buf,len,hz); // Let the function work for non AVR platforms
+    sendRaw(aBufferWithMicroseconds, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
 #else
     // Set IR carrier frequency
-    enableIROut(hz);
+    enableIROut(aIRFrequencyKilohertz);
 
-    for (unsigned int i = 0; i < len; i++) {
-        uint16_t duration = pgm_read_word_near(buf + sizeof(uint16_t) * i);
+    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
+        uint16_t duration = pgm_read_word(&aBufferWithMicroseconds[i]);
         if (i & 1) {
             space(duration);
         } else {
@@ -34,7 +49,25 @@ void IRsend::sendRaw_P(const unsigned int buf[], unsigned int len, unsigned int 
     }
     space(0);  // Always end with the LED off
 #endif
+}
 
+void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
+#if !defined(__AVR__)
+    sendRaw(aBufferWithTicks, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
+#else
+    // Set IR carrier frequency
+    enableIROut(aIRFrequencyKilohertz);
+
+    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
+        uint16_t duration = pgm_read_byte(&aBufferWithTicks[i]) * (uint16_t)MICROS_PER_TICK;
+        if (i & 1) {
+            space(duration);
+        } else {
+            mark(duration);
+        }
+    }
+    space(0);  // Always end with the LED off
+#endif
 }
 
 #ifdef USE_SOFT_SEND_PWM
@@ -128,9 +161,7 @@ void IRsend::mark(uint16_t timeMicros) {
 #else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
 #endif
-    if (timeMicros > 0) {
-        delayMicroseconds(timeMicros);
-    }
+    delayMicroseconds(timeMicros);
 }
 
 void IRsend::mark_long(uint32_t timeMicros) {
@@ -139,9 +170,7 @@ void IRsend::mark_long(uint32_t timeMicros) {
 #else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
 #endif
-    if (timeMicros > 0) {
-        custom_delay_usec(timeMicros);
-    }
+    custom_delay_usec(timeMicros);
 }
 
 //+=============================================================================
@@ -155,9 +184,7 @@ void IRsend::space(uint16_t timeMicros) {
 #else
     TIMER_DISABLE_SEND_PWM; // Disable PWM output
 #endif
-    if (timeMicros > 0) {
-        delayMicroseconds(timeMicros);
-    }
+    delayMicroseconds(timeMicros); // overflow at 0x4000 / 16.384
 }
 
 /*
@@ -169,10 +196,8 @@ void IRsend::space_long(uint32_t timeMicros) {
 #else
     TIMER_DISABLE_SEND_PWM; // Disable PWM output
 #endif
-    if (timeMicros > 0) {
-        // custom delay does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
-        custom_delay_usec(timeMicros);
-    }
+    // custom delay does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
+    custom_delay_usec(timeMicros);
 }
 
 #ifdef USE_DEFAULT_ENABLE_IR_OUT

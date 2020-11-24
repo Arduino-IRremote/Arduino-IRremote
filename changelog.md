@@ -1,3 +1,7 @@
+## 2.8.2 2020/11
+- Added SendRaw with byte data.
+- Fixed resume bug if irparams.rawlen >= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi
+
 ## 2.8.1 2020/10
 - Fixed bug in Sony decode introduced in 2.8.0.
 

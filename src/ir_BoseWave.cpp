@@ -66,7 +66,7 @@
 
 //+=============================================================================
 #if SEND_BOSEWAVE
-unsigned int rawSignal[35];
+uint16_t rawSignal[35];
 void IRsend::sendBoseWave(unsigned char code) {
 
     int index = 0;
@@ -112,7 +112,7 @@ bool IRrecv::decodeBoseWave() {
     DBG_PRINTLN("Decoding Bose Wave ...");
 
     // Check we have enough data
-    if (irparams.rawlen < (2 * BOSEWAVE_BITS * 2) + 3) {
+    if (results.rawlen < (2 * BOSEWAVE_BITS * 2) + 3) {
         DBG_PRINT("\tInvalid data length found:  ");
         DBG_PRINTLN(results.rawlen);
         return false;

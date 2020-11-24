@@ -2,6 +2,7 @@
  * @file irPronto.cpp
  * @brief In this file, the functions IRrecv::dumpPronto and
  * IRsend::sendPronto are defined.
+ * See http://www.harctoolbox.org/Glossary.html#ProntoSemantics
  */
 
 #include "IRremote.h"
@@ -23,6 +24,9 @@ static unsigned int toFrequencyKHz(uint16_t code) {
     return ((referenceFrequency / code) + 500) / 1000;
 }
 
+/*
+ * Parse the string given as Pronto Hex, and send it a number of times given as argument.
+ */
 void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int times) {
     unsigned int timebase = (microsecondsInSeconds * data[1] + referenceFrequency / 2) / referenceFrequency;
     unsigned int khz;
@@ -38,27 +42,37 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int ti
     }
     unsigned int intros = 2 * data[2];
     unsigned int repeats = 2 * data[3];
-    if (numbersInPreamble + intros + repeats != size) // inconsistent sizes
+    if (numbersInPreamble + intros + repeats != size) { // inconsistent sizes
         return;
+    }
 
-    unsigned int durations[intros + repeats];
+    uint16_t durations[intros + repeats];
     for (unsigned int i = 0; i < intros + repeats; i++) {
         uint32_t duration = ((uint32_t) data[i + numbersInPreamble]) * timebase;
         durations[i] = (unsigned int) ((duration <= MICROSECONDS_T_MAX) ? duration : MICROSECONDS_T_MAX);
     }
 
     unsigned int numberRepeats = intros > 0 ? times - 1 : times;
-    if (intros > 0) {
+
+    /*
+     * Send the intro. intros is even.
+     * Do not send the trailing space here, send it if repeats are requested
+     */
+    if (intros >= 2) {
         sendRaw(durations, intros - 1, khz);
     }
 
-    if (numberRepeats == 0)
+    if (repeats == 0 || numberRepeats == 0) {
         return;
+    }
 
-    delay(durations[intros - 1] / 1000U);
+    /*
+     * Now send the trailing space/gap of the intro and all the repeats
+     */
+    delay(durations[intros - 1] / 1000U); // equivalent to space(durations[intros - 1]); but allow bigger values for the gap
     for (unsigned int i = 0; i < numberRepeats; i++) {
-        sendRaw(durations + intros, repeats - 1, khz);
-        if (i < numberRepeats - 1) { // skip last wait
+        sendRaw(&durations[0] + intros, repeats - 1, khz);
+        if (i < numberRepeats - 1) { // skip last trailing space/gap, see above
             delay(durations[intros + repeats - 1] / 1000U);
         }
     }
@@ -93,7 +107,6 @@ void IRsend::sendPronto_PF(uint_farptr_t str, unsigned int times) {
 void IRsend::sendPronto_PF(const char *str, unsigned int times) {
     sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), times); // to avoid infinite recursion
 }
-;
 
 void IRsend::sendPronto(const __FlashStringHelper *str, unsigned int times) {
     return sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), times);
@@ -210,7 +223,8 @@ size_t IRrecv::dumpPronto(String *aString, unsigned int frequency) {
 // I know Stream * is locally inconsistent, but all global print functions use it
 //
 void IRrecv::printIRResultAsPronto(Print *aSerial, unsigned int frequency) {
-    aSerial->print("Pronto Hex: ");
+    aSerial->println("Pronto Hex as string");
+    aSerial->print("char ProntoData[] = \"");
     dumpPronto(aSerial, frequency);
-    aSerial->println();
+    aSerial->println("\"");
 }

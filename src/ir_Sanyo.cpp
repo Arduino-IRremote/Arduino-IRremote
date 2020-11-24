@@ -60,7 +60,7 @@ bool IRrecv::decodeSanyo() {
     }
     offset++;
 
-    while (offset + 1 < irparams.rawlen) {
+    while (offset + 1 < results.rawlen) {
         if (!MATCH_SPACE(results.rawbuf[offset], SANYO_HEADER_SPACE)) {
             break;
         }

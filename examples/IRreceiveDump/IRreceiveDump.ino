@@ -45,7 +45,16 @@ void setup() {
 void loop() {
     if (IrReceiver.decode()) {
         Serial.println();
-        IrReceiver.printIRResultRaw(&Serial);
+        Serial.println();
+        IrReceiver.printResultShort(&Serial);
+        Serial.println();
+        Serial.println(F("Result in internal ticks (50 us):"));
+        IrReceiver.printIRResultRaw(&Serial, false);
+
+        Serial.println();
+        Serial.println(F("Result in microseconds:"));
+        IrReceiver.printIRResultRaw(&Serial, true);
+
         IrReceiver.resume(); // Receive the next value
     }
 }

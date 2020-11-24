@@ -128,15 +128,9 @@ ISR (TIMER_INTR_NAME) {
     TIMER_RESET_INTR_PENDING; // reset timer interrupt flag if required (currently only for Teensy and ATmega4809)
 
     // Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
-    // digitalRead() is very slow. Optimisation is possible, but makes the code unportable
     uint8_t irdata = (uint8_t) digitalRead(irparams.recvpin);
 
     irparams.timer++;  // One more 50uS tick
-    if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
-        // Flag up a read overflow; Stop the State Machine
-        irparams.overflow = true;
-        irparams.rcvstate = IR_REC_STATE_STOP;
-    }
 
     /*
      * Due to a ESP32 compiler bug https://github.com/espressif/esp-idf/issues/1552 no switch statements are possible for ESP32
@@ -158,7 +152,20 @@ ISR (TIMER_INTR_NAME) {
                 irparams.rcvstate = IR_REC_STATE_MARK;
             }
         }
-    } else if (irparams.rcvstate == IR_REC_STATE_MARK) {  // Timing Mark
+    }
+
+    /*
+     * Here we detected a start mark and record the signal
+     */
+    // First check for buffer overflow
+    if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
+        // Flag up a read overflow; Stop the State Machine
+        irparams.overflow = true;
+        irparams.rcvstate = IR_REC_STATE_STOP;
+    }
+
+    // record marks and spaces and detect end of code
+    if (irparams.rcvstate == IR_REC_STATE_MARK) {  // Timing Mark
         if (irdata == SPACE) {   // Mark ended; Record time
             irparams.rawbuf[irparams.rawlen++] = irparams.timer;
             irparams.timer = 0;

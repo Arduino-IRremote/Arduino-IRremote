@@ -146,7 +146,7 @@ public:
     operator bool(); // To support "while (!Serial); // wait for serial port to connect. Needed for Leonardo only
 
     void print(const __FlashStringHelper *aStringPtr);
-    void print(const char* aStringPtr);
+    void print(const char *aStringPtr);
     void print(char aChar);
     void print(uint8_t aByte, uint8_t aBase = 10);
     void print(int16_t aInteger, uint8_t aBase = 10);
@@ -155,7 +155,7 @@ public:
     void print(uint32_t aLong, uint8_t aBase = 10);
     void print(double aFloat, uint8_t aDigits = 2);
 
-    void println(const char* aStringPtr);
+    void println(const char *aStringPtr);
     void println(const __FlashStringHelper *aStringPtr);
     void println(char aChar);
     void println(uint8_t aByte, uint8_t aBase = 10);

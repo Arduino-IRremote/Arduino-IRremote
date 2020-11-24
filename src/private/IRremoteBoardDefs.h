@@ -150,6 +150,12 @@
 #undef USE_DEFAULT_ENABLE_IR_IN
 #undef USE_DEFAULT_ENABLE_IR_OUT
 
+#elif defined(PARTICLE)
+
+#define BLINKLED       D7
+#define BLINKLED_ON()  digitalWrite(BLINKLED,1)
+#define BLINKLED_OFF() digitalWrite(BLINKLED,0)
+
 #else
 #warning No blinking definition found. Check IRremoteBoardDefs.h.
 #ifdef LED_BUILTIN
@@ -366,6 +372,13 @@
 
 // Supply own enbleIRIn
 #undef USE_DEFAULT_ENABLE_IR_IN
+
+/*********************
+ * Particle Boards
+ *********************/
+#elif defined(PARTICLE)
+  #define IR_USE_TIMER_PARTICLE
+  #define SYSCLOCK 16000000
 
 #else
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
@@ -990,6 +1003,49 @@ static void timerConfigForSend(uint16_t aFrequencyKHz __attribute__((unused))) {
 #undef ISR
 #endif
 #define ISR(f) void IRTimer(void)
+
+// defines for Particle special IntervalTimer
+#elif defined(IR_USE_TIMER_PARTICLE)
+
+#ifndef __INTERVALTIMER_H__
+#include "SparkIntervalTimer.h" // SparkIntervalTimer.h is required if PARTICLE is defined.
+#endif
+
+#ifndef IR_SEND_PIN
+#define IR_SEND_PIN         A5 // Particle supports multiple pins
+#endif
+
+#ifndef IR_OUT_KHZ
+#define IR_OUT_KHZ          38 // default set to 38 KHz
+#endif
+
+extern IntervalTimer timer;
+extern int ir_send_pin;
+extern int ir_out_khz;
+
+
+void IRTimer();
+
+#define TIMER_RESET_INTR_PENDING
+#define TIMER_ENABLE_SEND_PWM       analogWrite(ir_send_pin, 128, ir_out_khz*1000)
+#define TIMER_DISABLE_SEND_PWM      analogWrite(ir_send_pin, 0, ir_out_khz*1000)
+#define TIMER_ENABLE_RECEIVE_INTR   timer.begin(IRTimer, 50, uSec);
+#define TIMER_DISABLE_RECEIVE_INTR  timer.end()
+
+#ifdef ISR
+#undef ISR
+#endif
+#define ISR(f)  IntervalTimer timer; \
+                int ir_out_khz = IR_OUT_KHZ; \
+                int ir_send_pin = IR_SEND_PIN; \
+                void IRTimer(void)
+
+static void timerConfigForSend(uint16_t aFrequencyKHz) {
+  ir_out_khz = aFrequencyKHz;
+}
+
+static void timerConfigForReceive() {
+}
 
 //---------------------------------------------------------
 // Unknown Timer

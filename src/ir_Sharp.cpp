@@ -101,9 +101,9 @@ bool IRrecv::decodeSharp() {
     // Check we have the right amount of data
     // Either one burst or three where second is inverted
     // The setting #define _GAP 5000 in IRremoteInt.h will give one burst and possibly three calls to this function
-    if (irparams.rawlen == (SHARP_BITS + 1) * 2)
+    if (results.rawlen == (SHARP_BITS + 1) * 2)
         loops = 1;
-    else if (irparams.rawlen == (SHARP_BITS + 1) * 2 * 3)
+    else if (results.rawlen == (SHARP_BITS + 1) * 2 * 3)
         loops = 3;
     else
         return false;
