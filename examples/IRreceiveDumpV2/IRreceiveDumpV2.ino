@@ -57,7 +57,7 @@ void loop() {
         Serial.println(F("Result as microseconds array"));
         IrReceiver.printIRResultAsCArray(&Serial, true);    // Output the results as uint16_t source code array of micros
         IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
-        IrReceiver.printIRResultAsPronto(&Serial);                             // blank line between entries
+        IrReceiver.printIRResultAsPronto(&Serial);
 
         String ProntoHEX = "Pronto HEX contains: ";     // Assign string to ProtoHex string object
 
