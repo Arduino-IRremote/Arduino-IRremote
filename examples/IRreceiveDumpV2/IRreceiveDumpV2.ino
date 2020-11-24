@@ -61,8 +61,21 @@ void loop() {
         IrReceiver.printIRResultAsCArray(&Serial);      // Output the results as source code array
         IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
         IrReceiver.printIRResultAsPronto(&Serial);
-        Serial.println();                               // 2 blank lines between entries
-        Serial.println();
+        Serial.println();                               // blank line between entries
+
+        String ProntoHEX = "Pronto HEX contains: ";     // Assign string to ProtoHex string object
+
+        if(int size = IrReceiver.dumpPronto(&ProntoHex)) {  // Dump the content of the IReceiver Pronto HEX to the String object
+            ProntoHEX += "\nProntoHEX is ";                 // Add size information to the String object
+            ProntoHEX += size;                              //
+            ProntoHEX += " characters long and contains ";  // Add codes count information to the String object
+            ProntoHEX += size/5;                            //
+            ProntoHEX += " codes";                          //
+            Serial.println(ProntoHex);                      // Print to the serial console the whole String object
+            Serial.println();                               // blank line between entries
+        }
+
+        Serial.println();                               // blank line between entries        
         IrReceiver.resume();                            // Prepare for the next value
     }
 }
