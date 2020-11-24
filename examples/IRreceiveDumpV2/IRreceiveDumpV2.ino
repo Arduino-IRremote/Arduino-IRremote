@@ -61,7 +61,6 @@ void loop() {
         IrReceiver.printIRResultAsCArray(&Serial);      // Output the results as source code array
         IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
         IrReceiver.printIRResultAsPronto(&Serial);
-        Serial.println();                               // blank line between entries
 
         String ProntoHEX = "Pronto HEX contains: ";     // Assign string to ProtoHex string object
 
