@@ -75,7 +75,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     if (desired_us > LEGO_PF_HIBIT && desired_us <= LEGO_PF_STARTSTOP) {
         DBG_PRINTLN("Found PF Start Bit");
-        int offset = 3;
+        unsigned int offset = 3;
         for (int i = 0; i < LEGO_PF_BITS; i++) {
             desired_us = (results.rawbuf[offset] + results.rawbuf[offset + 1]) * MICROS_PER_TICK;
 

@@ -44,7 +44,7 @@ void IRsend::sendPanasonic(unsigned int address, unsigned long data) {
 //+=============================================================================
 #if DECODE_PANASONIC
 bool IRrecv::decodePanasonic() {
-    int offset = 1;
+    unsigned int offset = 1;
 
     if (results.rawlen < (2 * PANASONIC_BITS) + 2) {
         return false;

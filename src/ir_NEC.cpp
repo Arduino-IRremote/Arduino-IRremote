@@ -105,7 +105,7 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumbe
 //
 #if DECODE_NEC
 bool IRrecv::decodeNEC() {
-    int offset = 1;  // Index in to results; Skip first space.
+    unsigned int offset = 1;  // Index in to results; Skip first space.
 
 // Check header "mark"
     if (!MATCH_MARK(results.rawbuf[offset], NEC_HEADER_MARK)) {
@@ -164,7 +164,7 @@ bool IRrecv::decodeNEC(decode_results *aResults) {
 #if DECODE_NEC_STANDARD
 bool IRrecv::decodeNECStandard() {
     long data = 0;  // We decode in to here; Start with nothing
-    int offset = 1;  // Index in to results; Skip first space.
+    unsigned int offset = 1;  // Index in to results; Skip first space.
 
     // Check header "mark"
     if (!MATCH_MARK(results.rawbuf[offset], NEC_HEADER_MARK)) {

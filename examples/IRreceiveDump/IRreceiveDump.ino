@@ -48,11 +48,11 @@ void loop() {
         Serial.println();
         IrReceiver.printResultShort(&Serial);
         Serial.println();
-        Serial.println(F("Result in internal ticks (50 us):"));
+        Serial.println(F("Result in internal ticks (50 us) - always without trailing gap"));
         IrReceiver.printIRResultRaw(&Serial, false);
 
         Serial.println();
-        Serial.println(F("Result in microseconds:"));
+        Serial.println(F("Result in microseconds - with trailing gap for IRremote versions 2.*"));
         IrReceiver.printIRResultRaw(&Serial, true);
 
         IrReceiver.resume(); // Receive the next value

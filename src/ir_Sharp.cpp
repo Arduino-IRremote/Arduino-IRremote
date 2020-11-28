@@ -95,8 +95,8 @@ void IRsend::sendSharp(unsigned int address, unsigned int command) {
 #if DECODE_SHARP
 bool IRrecv::decodeSharp() {
     unsigned long lastData = 0;  // to store last data
-    int offset = 1;  //skip long space
-    int loops = 1; //number of bursts
+    unsigned int offset = 1;  //skip long space
+    unsigned int loops = 1; //number of bursts
 
     // Check we have the right amount of data
     // Either one burst or three where second is inverted
@@ -116,7 +116,7 @@ bool IRrecv::decodeSharp() {
         return false;
 
     // Read the bits in
-    for (int j = 0; j < loops; j++) {
+    for (unsigned int j = 0; j < loops; j++) {
         if (!decodePulseDistanceData(SHARP_ADDR_BITS, offset, SHARP_BIT_MARK_SEND, SHARP_ONE_SPACE, SHARP_ZERO_SPACE)) {
             return false;
         }

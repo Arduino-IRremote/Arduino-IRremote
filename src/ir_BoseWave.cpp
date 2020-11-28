@@ -69,7 +69,7 @@
 uint16_t rawSignal[35];
 void IRsend::sendBoseWave(unsigned char code) {
 
-    int index = 0;
+    unsigned int index = 0;
     // Header
     rawSignal[index++] = BOSEWAVE_HEADER_MARK;
     rawSignal[index++] = BOSEWAVE_HEADER_SPACE;
@@ -107,7 +107,7 @@ bool IRrecv::decodeBoseWave() {
     unsigned char command = 0;      // Decoded command
     unsigned char complement = 0;   // Decoded command complement
 
-    int index = 0;   // Index in to results array
+    unsigned int index = 0;   // Index in to results array
 
     DBG_PRINTLN("Decoding Bose Wave ...");
 

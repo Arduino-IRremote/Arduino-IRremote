@@ -64,10 +64,6 @@
 #define TX_DDR DDRB
 #endif // defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 
-#if defined(Serial)
-#undef Serial
-#endif
-
 void write1Start8Data1StopNoParity(uint8_t aValue);
 
 bool sUseCliSeiForWrite = true;

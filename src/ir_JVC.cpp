@@ -50,7 +50,7 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
 //+=============================================================================
 #if DECODE_JVC
 bool IRrecv::decodeJVC() {
-    int offset = 1; // Skip first space
+    unsigned int offset = 1; // Skip first space
 
     // Check for repeat
     if ((results.rawlen - 1 == 33) && MATCH_MARK(results.rawbuf[offset], JVC_BIT_MARK)

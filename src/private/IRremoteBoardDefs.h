@@ -224,7 +224,7 @@
 #elif defined(__AVR_ATmega4809__)
 #  if !defined(IR_USE_TIMER_4809_1) && !defined(IR_USE_TIMER_4809_2)
 #define IR_USE_TIMER_4809_1     //  tx = pin 24
-//#define IR_USE_TIMER_4809_2     // TODO tx = pin 21
+//#define IR_USE_TIMER_4809_2     // Not yet implemented tx = pin 21
 #  endif
 
 /*********************
@@ -999,25 +999,25 @@ static void timerConfigForSend(uint16_t aFrequencyKHz __attribute__((unused))) {
 
 #define TIMER_RESET_INTR_PENDING
 
-#ifdef ISR
+#  ifdef ISR
 #undef ISR
-#endif
+#  endif
 #define ISR(f) void IRTimer(void)
 
 // defines for Particle special IntervalTimer
 #elif defined(IR_USE_TIMER_PARTICLE)
 
-#ifndef __INTERVALTIMER_H__
+#  ifndef __INTERVALTIMER_H__
 #include "SparkIntervalTimer.h" // SparkIntervalTimer.h is required if PARTICLE is defined.
-#endif
+#  endif
 
-#ifndef IR_SEND_PIN
+#  ifndef IR_SEND_PIN
 #define IR_SEND_PIN         A5 // Particle supports multiple pins
-#endif
+#  endif
 
-#ifndef IR_OUT_KHZ
+#  ifndef IR_OUT_KHZ
 #define IR_OUT_KHZ          38 // default set to 38 KHz
-#endif
+#  endif
 
 extern IntervalTimer timer;
 extern int ir_send_pin;
@@ -1032,12 +1032,12 @@ void IRTimer();
 #define TIMER_ENABLE_RECEIVE_INTR   timer.begin(IRTimer, 50, uSec);
 #define TIMER_DISABLE_RECEIVE_INTR  timer.end()
 
-#ifdef ISR
+#  ifdef ISR
 #undef ISR
-#endif
+#  endif
 #define ISR(f)  IntervalTimer timer; \
-                int ir_out_khz = IR_OUT_KHZ; \
-                int ir_send_pin = IR_SEND_PIN; \
+                ir_out_khz = IR_OUT_KHZ; \
+                ir_send_pin = IR_SEND_PIN; \
                 void IRTimer(void)
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {

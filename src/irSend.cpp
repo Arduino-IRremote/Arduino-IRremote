@@ -6,6 +6,22 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOf
     // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
+#ifdef VERSION_3
+    /*
+     * Raw data starts with a Mark. No trailing space any more.
+     * It was only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+     */
+    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
+        if (i & 1) {
+            mark(aBufferWithMicroseconds[i]);
+        } else {
+            space(aBufferWithMicroseconds[i]);
+        }
+#else
+    /*
+     * Raw data starts with a Space. This enables backwards compatibility.
+     * It is only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+     */
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         if (i & 1) {
             space(aBufferWithMicroseconds[i]);
@@ -13,22 +29,27 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOf
             mark(aBufferWithMicroseconds[i]);
         }
     }
+#endif
 
     space(0);  // Always end with the LED off
 }
 
+/*
+ * New function!
+ * Raw data starts with a Mark. No trailing space any more.
+ * It was only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+ */
 void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
     // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         if (i & 1) {
-            space(aBufferWithTicks[i] * MICROS_PER_TICK);
-        } else {
             mark(aBufferWithTicks[i] * MICROS_PER_TICK);
+        } else {
+            space(aBufferWithTicks[i] * MICROS_PER_TICK);
         }
     }
-
     space(0);  // Always end with the LED off
 }
 
@@ -38,7 +59,24 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLength
 #else
     // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
-
+#ifdef VERSION_3
+    /*
+     * Raw data starts with a Mark. No trailing space any more.
+     * It was only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+     */
+    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
+        uint16_t duration = pgm_read_word(&aBufferWithMicroseconds[i]);
+        if (i & 1) {
+            mark(aBufferWithMicroseconds[i]);
+        } else {
+            space(aBufferWithMicroseconds[i]);
+        }
+    }
+#else
+    /*
+     * Raw data starts with a Space. This enables backwards compatibility.
+     * It is only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+     */
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         uint16_t duration = pgm_read_word(&aBufferWithMicroseconds[i]);
         if (i & 1) {
@@ -47,10 +85,16 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLength
             mark(duration);
         }
     }
+#endif
     space(0);  // Always end with the LED off
 #endif
 }
 
+/*
+ * New function!
+ * Raw data starts with a Mark. No trailing space any more.
+ * It was only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+ */
 void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
     sendRaw(aBufferWithTicks, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
@@ -59,7 +103,7 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer
     enableIROut(aIRFrequencyKilohertz);
 
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
-        uint16_t duration = pgm_read_byte(&aBufferWithTicks[i]) * (uint16_t)MICROS_PER_TICK;
+        uint16_t duration = pgm_read_byte(&aBufferWithTicks[i]) * (uint16_t) MICROS_PER_TICK;
         if (i & 1) {
             space(duration);
         } else {

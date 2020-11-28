@@ -211,7 +211,6 @@ public:
     IRrecv(int recvpin, int blinkpin);
 
     /**
-     * TODO: Why is this public???
      * @param blinkflag
      */
     void blink13(int blinkflag);
@@ -276,7 +275,7 @@ private:
 #if DECODE_HASH
     bool decodeHash();
     bool decodeHash(decode_results *aResults);
-    int compare(unsigned int oldval, unsigned int newval);
+    unsigned int compare(unsigned int oldval, unsigned int newval);
 #endif
 
     //......................................................................
@@ -561,7 +560,7 @@ private:
 #endif
 
 #if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
-    int sendPin;
+    uint8_t sendPin;
 
 #  if defined(USE_SOFT_SEND_PWM)
     unsigned int periodTimeMicros;

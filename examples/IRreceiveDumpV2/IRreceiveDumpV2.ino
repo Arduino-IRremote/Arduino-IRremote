@@ -1,3 +1,7 @@
+/*
+ * IRreceiveDumpV2.cpp
+ */
+
 //------------------------------------------------------------------------------
 // Include the IRremote library header
 //
@@ -47,14 +51,14 @@ void loop() {
         Serial.println();
         IrReceiver.printResultShort(&Serial);
 
-        Serial.println(F("Result in internal ticks (50 us)"));
+        Serial.println(F("Result in internal ticks (50 us) - always without trailing gap"));
         IrReceiver.printIRResultRawFormatted(&Serial, false); // Output the results in RAW format
-        Serial.println(F("Result in microseconds"));
+        Serial.println(F("Result in microseconds - without trailing gap for IRremote versions >= 3.*"));
         IrReceiver.printIRResultRawFormatted(&Serial, true);  // Output the results in RAW format
         Serial.println();                               // blank line between entries
-        Serial.println(F("Result as internal ticks (50 us) array"));
+        Serial.println(F("Result as internal ticks (50 us) array - always without trailing gap"));
         IrReceiver.printIRResultAsCArray(&Serial, false);   // Output the results as uint8_t source code array of ticks
-        Serial.println(F("Result as microseconds array"));
+        Serial.println(F("Result as microseconds array - with trailing gap for IRremote versions 2.*"));
         IrReceiver.printIRResultAsCArray(&Serial, true);    // Output the results as uint16_t source code array of micros
         IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
         IrReceiver.printIRResultAsPronto(&Serial);

@@ -268,7 +268,7 @@ void IRrecv::resume() {
 // 1 if newval is equal, and 2 if newval is longer
 // Use a tolerance of 20%
 //
-int IRrecv::compare(unsigned int oldval, unsigned int newval) {
+unsigned int IRrecv::compare(unsigned int oldval, unsigned int newval) {
     if (newval * 10 < oldval * 8) {
         return 0;
     }
@@ -354,7 +354,7 @@ bool IRrecv::decodeHash() {
     }
 
     for (unsigned int i = 1; (i + 2) < results.rawlen; i++) {
-        int value = compare(results.rawbuf[i], results.rawbuf[i + 2]);
+        unsigned int value = compare(results.rawbuf[i], results.rawbuf[i + 2]);
         // Add value into the hash
         hash = (hash * FNV_PRIME_32) ^ value;
     }
@@ -501,12 +501,29 @@ void IRrecv::printResultShort(Print *aSerial) {
 void IRrecv::printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
     // Dumps out the decode_results structure.
     // Call this after IRrecv::decode()
-    int count = results.rawlen;
     aSerial->print("rawData[");
-    aSerial->print(count, DEC);
-    aSerial->print("]: ");
 
-    for (int i = 0; i < count; i++) {
+#ifdef VERSION_3
+    aSerial->print(results.rawlen - 1, DEC);
+    aSerial->print("]: ");
+    for (unsigned int i = 1; i < results.rawlen; i++) {
+#else
+    /*
+     * We print the trailing space to enable backwards compatibility.
+     * It is only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+     */
+
+    unsigned int i;
+    if (aOutputMicrosecondsInsteadOfTicks) {
+        aSerial->print(results.rawlen, DEC);
+        i = 0; // We print the trailing space to enable backwards compatibility.
+    } else {
+        aSerial->print(results.rawlen - 1, DEC);
+        i = 1; // Skip the trailing space.
+    }
+    aSerial->print("]: ");
+    for (; i < results.rawlen; i++) {
+#endif
         uint32_t tDurationMicros;
         if (aOutputMicrosecondsInsteadOfTicks) {
             tDurationMicros = results.rawbuf[i] * (uint32_t) MICROS_PER_TICK;
@@ -525,7 +542,7 @@ void IRrecv::printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfT
 }
 
 //+=============================================================================
-// Dump out the decode_results structure.
+// Dump out the decode_results structure- always without trailing spaces.
 //
 void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
     // Print Raw data
@@ -576,7 +593,6 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
  * Note that 930 is the final silence. Many systems, including Lirc and IrRemote, just ignore the final gap.
  * However, you have to take care if repeating the signal, for example your NEC2 signal (which repeats every 114ms).
  */
-
 void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
     // Start declaration
     if (aOutputMicrosecondsInsteadOfTicks) {
@@ -587,11 +603,37 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
         aSerial->print("rawTicks[");            // array name
     }
 
+#ifdef VERSION_3
     aSerial->print(results.rawlen - 1, DEC);    // array size
+#else
+    /*
+     * We print the trailing space to enable backwards compatibility.
+     * It is only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+     */
+    if (aOutputMicrosecondsInsteadOfTicks) {
+        aSerial->print(results.rawlen, DEC);    // array size
+    } else {
+        aSerial->print(results.rawlen - 1, DEC);    // array size without trailing space
+    }
+#endif
     aSerial->print("] = {");                    // Start declaration
 
 // Dump data
+#ifdef VERSION_3
     for (unsigned int i = 1; i < results.rawlen; i++) {
+#else
+    /*
+     * We print the trailing space to enable backwards compatibility.
+     * It is only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+     */
+    unsigned int i;
+    if (aOutputMicrosecondsInsteadOfTicks) {
+        i = 0; // We print the trailing space to enable backwards compatibility.
+    } else {
+        i = 1; // Skip the trailing space.
+    }
+    for (; i < results.rawlen; i++) {
+#endif
         if (aOutputMicrosecondsInsteadOfTicks) {
             aSerial->print(results.rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {

@@ -1,6 +1,7 @@
 ## 2.8.2 2020/11
 - Added SendRaw with byte data.
 - Fixed resume bug if irparams.rawlen >= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi
+- Handling trailing gap/space inconsistency for raw data.
 
 ## 2.8.1 2020/10
 - Fixed bug in Sony decode introduced in 2.8.0.
@@ -131,7 +132,7 @@ Changes from #268 by adamlhumphreys
 - Added Aiwa RC-T501 Protocol
 - Added Denon Protocol
 - Added Pronto Support
-- Added Library Properties
+- Added compile options
 - Added Template For New Protocols
 - Added this changelog
 - Added Teensy LC Support

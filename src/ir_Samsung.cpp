@@ -40,7 +40,7 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 //
 #if DECODE_SAMSUNG
 bool IRrecv::decodeSAMSUNG() {
-    int offset = 1;  // Skip first space
+    unsigned int offset = 1;  // Skip first space
 
     // Initial mark
     if (!MATCH_MARK(results.rawbuf[offset], SAMSUNG_HEADER_MARK)) {

@@ -51,7 +51,7 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
 //
 #if DECODE_DENON
 bool IRrecv::decodeDenon() {
-    int offset = 1;  // Skip the gap reading
+    unsigned int offset = 1;  // Skip the gap reading
 
     // Check we have the right amount of data
     if (irparams.rawlen != 1 + 2 + (2 * DENON_BITS) + 1) {

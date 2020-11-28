@@ -50,7 +50,7 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 //+=============================================================================
 #if DECODE_WHYNTER
 bool IRrecv::decodeWhynter() {
-    int offset = 1;  // skip initial space
+    unsigned int offset = 1;  // skip initial space
 
     // Check we have the right amount of data +5 for (start bit + header) mark and space + stop bit mark
     if (results.rawlen <= (2 * WHYNTER_BITS) + 5) {

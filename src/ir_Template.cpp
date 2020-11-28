@@ -51,7 +51,7 @@
  D. Further down in "Main class for sending IR", add:
  //......................................................................
  #if SEND_SHUZU
- void  sendShuzu (unsigned long data,  int nbits) ;
+ void  sendShuzu (unsigned long data, unsigned int nbits) ;
  #endif
 
  E. Save your changes and close the file
@@ -146,7 +146,7 @@ void IRsend::sendShuzu(unsigned long data, int nbits) {
 #if DECODE_SHUZU
 bool IRrecv::decodeShuzu() {
     unsigned long data = 0;  // Somewhere to build our code
-    int offset = 1;  // Skip the gap reading
+    unsigned int offset = 1;  // Skip the gap reading
 
     // Check we have the right amount of data
     if (results.rawlen != 1 + 2 + (2 * SHUZU_BITS) + 1) {
