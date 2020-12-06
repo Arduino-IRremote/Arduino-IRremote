@@ -71,6 +71,8 @@ void loop() {
             Serial.println();                               // blank line between entries
         }
 
+        delete ProntoHEX;                               // Delete string object
+
         IrReceiver.resume();                            // Prepare for the next value
     }
 }
