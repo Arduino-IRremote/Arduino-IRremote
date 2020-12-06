@@ -67,9 +67,12 @@ void loop() {
             ProntoHEX += " characters long and contains ";  // Add codes count information to the String object
             ProntoHEX += size/5;                            //
             ProntoHEX += " codes";                          //
-            Serial.println(ProntoHEX);                      // Print to the serial console the whole String object
+            Serial.println(ProntoHEX.c_str());              // Print to the serial console the whole String object
             Serial.println();                               // blank line between entries
         }
+
+        ProntoHEX.remove(0);                            // Remove characters from string object
+        delete ProntoHEX;                               // Delete string object
 
         IrReceiver.resume();                            // Prepare for the next value
     }
