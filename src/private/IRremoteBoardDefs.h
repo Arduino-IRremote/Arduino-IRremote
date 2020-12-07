@@ -36,19 +36,19 @@
 
 /**
  * Defined if the standard enableIRIn function should be used.
- * Undefine for boards supplying their own.
+ * Undefined for boards supplying their own.
  */
 #define USE_DEFAULT_ENABLE_IR_IN
 
 /**
- * Define if the current board supports sending.
+ * Defined if the current board supports sending.
  * Currently not used.
  */
 #define SENDING_SUPPORTED
 
 /**
  * Defined if the standard enableIROut function should be used.
- * Undefine for boards supplying their own.
+ * Undefined for boards supplying their own.
  */
 #define USE_DEFAULT_ENABLE_IR_OUT
 

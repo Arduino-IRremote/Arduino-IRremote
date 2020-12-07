@@ -65,6 +65,7 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 
 | Name | File | Default value | Description |
 |-|-|-|-|
+| `IR_INPUT_IS_ACTIVE_HIGH` | IRremoteint.h | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
 | `DEBUG` | IRremote.h | disabled | Enables lots of lovely debug output. |
 | `USE_NEC_STANDARD` | IRremote.h | disabled | Use LSB first, address/code schema for encoding. |
 | `USE_NO_SEND_PWM` | IRremote.h | disabled | Use no carrier PWM, just simulate an active low receiver signal. |

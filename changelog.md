@@ -1,7 +1,9 @@
-## 2.8.2 2020/11
+## 2.8.2 2020/12
 - Added SendRaw with byte data.
 - Fixed resume bug if irparams.rawlen >= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi
 - Handling trailing gap/space inconsistency for raw data.
+- Fixed swapped cases in `getProtocolString()`. Thanks to Jim-2249
+- Added compile option `IR_INPUT_IS_ACTIVE_HIGH`. Thanks to Jim-2249
 
 ## 2.8.1 2020/10
 - Fixed bug in Sony decode introduced in 2.8.0.
