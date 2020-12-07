@@ -266,6 +266,8 @@ public:
     void dumpPronto(Print *aSerial, unsigned int frequency = 38000U);
     void printIRResultAsPronto(Print *aSerial, unsigned int frequency = 38000U);
 
+    size_t dumpPronto(String *aString, unsigned int frequency = 38000U);
+
     bool decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
             unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst = true);
 
@@ -300,7 +302,6 @@ private:
 #if DECODE_NEC_STANDARD
     bool decodeNECStandard();
 #endif
-
     //......................................................................
 #if DECODE_SONY
     bool decodeSony();
@@ -327,11 +328,6 @@ private:
     bool decodeWhynter(decode_results *aResults);
 #endif
     //......................................................................
-//#if DECODE_AIWA_RC_T501
-//    bool decodeAiwaRCT501();
-//    bool decodeAiwaRCT501(decode_results *aResults);
-//#endif
-    //......................................................................
 #if DECODE_LG
     bool decodeLG();
     bool decodeLG(decode_results *aResults);
@@ -341,11 +337,6 @@ private:
     bool decodeSanyo();
     bool decodeSanyo(decode_results *aResults);
 #endif
-    //......................................................................
-//#if DECODE_MITSUBISHI
-//    bool decodeMitsubishi();
-//    bool decodeMitsubishi(decode_results *aResults);
-//#endif
     //......................................................................
 #if DECODE_DISH
       bool  decodeDish () ; // NOT WRITTEN
@@ -473,10 +464,6 @@ public:
     void sendWhynter(unsigned long data, int nbits);
 #endif
     //......................................................................
-//#if SEND_AIWA_RC_T501
-//    void sendAiwaRCT501(int code);
-//#endif
-    //......................................................................
 #if SEND_LG
     void sendLG(unsigned long data, int nbits);
 #endif
@@ -484,10 +471,6 @@ public:
 #if SEND_SANYO
       void  sendSanyo      ( ) ; // NOT WRITTEN
 #endif
-    //......................................................................
-//#if SEND_MISUBISHI
-//      void  sendMitsubishi ( ) ; // NOT WRITTEN
-//#endif
     //......................................................................
 #if SEND_DISH
     void sendDISH(unsigned long data, int nbits);

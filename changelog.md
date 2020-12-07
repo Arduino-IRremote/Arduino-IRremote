@@ -4,6 +4,7 @@
 - Handling trailing gap/space inconsistency for raw data.
 - Fixed swapped cases in `getProtocolString()`. Thanks to Jim-2249
 - Added compile option `IR_INPUT_IS_ACTIVE_HIGH`. Thanks to Jim-2249
+- Added `dumpPronto(String *aString, unsigned int frequency)` with String object as argument. Thanks to iosifpeterfi
 
 ## 2.8.1 2020/10
 - Fixed bug in Sony decode introduced in 2.8.0.

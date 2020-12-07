@@ -175,3 +175,59 @@ void IRrecv::printIRResultAsPronto(Print *aSerial, unsigned int frequency) {
     dumpPronto(aSerial, frequency);
     aSerial->println("\"");
 }
+
+/*
+ * Functions for dumping Pronto to a String. This is not very time and space efficient
+ * and can lead to resource problems especially on small processors like AVR's
+ */
+
+static bool dumpDigit(String *aString, unsigned int number) {
+    return aString->concat(hexDigit(number));
+}
+
+static size_t dumpNumber(String *aString, uint16_t number) {
+
+    size_t size = 0;
+
+    for (unsigned int i = 0; i < digitsInProntoNumber; i++) {
+        unsigned int shifts = bitsInHexadecimal * (digitsInProntoNumber - 1 - i);
+        size += dumpDigit(aString, (number >> shifts) & hexMask);
+    }
+    size += aString->concat(' ');
+
+    return size;
+}
+
+static size_t dumpDuration(String *aString, uint16_t duration, uint16_t timebase) {
+    return dumpNumber(aString, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
+}
+
+static size_t dumpSequence(String *aString, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+
+    size_t size = 0;
+
+    for (unsigned int i = 0; i < length; i++)
+        size += dumpDuration(aString, data[i], timebase);
+
+    size += dumpDuration(aString, _GAP, timebase);
+
+    return size;
+}
+
+/*
+ * Writes Pronto HEX to a String object.
+ * Returns the amount of characters added to the string.(360 characters for a NEC code!)
+ */
+size_t IRrecv::dumpPronto(String *aString, unsigned int frequency) {
+
+    size_t size = 0;
+    unsigned int timebase = toTimebase(frequency);
+
+    size += dumpNumber(aString, frequency > 0 ? learnedToken : learnedNonModulatedToken);
+    size += dumpNumber(aString, toFrequencyCode(frequency));
+    size += dumpNumber(aString, (results.rawlen + 1) / 2);
+    size += dumpNumber(aString, 0);
+    size += dumpSequence(aString, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
+
+    return size;
+}
