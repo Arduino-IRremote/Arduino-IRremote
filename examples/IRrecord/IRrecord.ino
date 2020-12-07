@@ -79,7 +79,6 @@ void storeCode() {
     codeType = IrReceiver.results.decode_type;
     address = IrReceiver.results.address;
 
-//  int count = IrReceiver.results.rawlen;
     if (codeType == UNKNOWN) {
         Serial.println("Received unknown code, saving as raw");
         codeLen = IrReceiver.results.rawlen - 1;
@@ -87,7 +86,7 @@ void storeCode() {
         // Drop first value (gap)
         // Convert from ticks to microseconds
         // Tweak marks shorter, and spaces longer to cancel out IR receiver distortion
-        for (int i = 1; i <= codeLen; i++) {
+        for (uint16_t i = 1; i <= codeLen; i++) {
             if (i % 2) {
                 // Mark
                 rawCodes[i - 1] = IrReceiver.results.rawbuf[i] * MICROS_PER_TICK - MARK_EXCESS_MICROS;

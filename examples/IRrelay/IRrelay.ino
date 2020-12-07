@@ -76,7 +76,7 @@ void loop() {
 // Dumps out the decode_results structure.
 // Call this after IRrecv::decode()
 void dump() {
-    int count = IrReceiver.results.rawlen;
+    uint16_t count = IrReceiver.results.rawlen;
     if (IrReceiver.results.decode_type == UNKNOWN) {
         Serial.println("Could not decode message");
     } else {
@@ -90,7 +90,7 @@ void dump() {
     Serial.print(count, DEC);
     Serial.print("): ");
 
-    for (int i = 0; i < count; i++) {
+    for (uint16_t i = 0; i < count; i++) {
         if ((i % 2) == 1) {
             Serial.print(IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {

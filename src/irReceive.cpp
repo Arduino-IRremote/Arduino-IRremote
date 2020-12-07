@@ -63,13 +63,6 @@ bool IRrecv::decode() {
     }
 #endif
 
-//#if DECODE_LEGO_PF
-//    DBG_PRINTLN("Attempting Mitsubishi decode");
-//    if (decodeMitsubishi()) {
-//        return true;
-//    }
-//#endif
-
 #if DECODE_RC5
     DBG_PRINTLN("Attempting RC5 decode");
     if (decodeRC5()) {
@@ -118,13 +111,6 @@ bool IRrecv::decode() {
         return true;
     }
 #endif
-
-//#if DECODE_AIWA_RC_T501
-//    DBG_PRINTLN("Attempting Aiwa RC-T501 decode");
-//    if (decodeAiwaRCT501()) {
-//        return true;
-//    }
-//#endif
 
 #if DECODE_DENON
     DBG_PRINTLN("Attempting Denon decode");
@@ -378,11 +364,6 @@ const char* IRrecv::getProtocolString() {
     case UNKNOWN:
         return ("UNKNOWN");
         break;
-//#if DECODE_AIWA_RC_T501
-//    case AIWA_RC_T501:
-//        return ("AIWA_RC_T501");
-//        break;
-//#endif
 #if DECODE_BOSEWAVE
     case BOSEWAVE:
         return ("BOSEWAVE");
@@ -404,13 +385,13 @@ const char* IRrecv::getProtocolString() {
         break;
 #endif
 #if DECODE_LEGO_PF
-    case LG:
-        return ("LEGO");
+    case LEGO_PF:
+        return ("LEGO_PF");
         break;
 #endif
 #if DECODE_LG
-    case LEGO_PF:
-        return ("LEGO_PF");
+    case LG:
+        return ("LG");
         break;
 #endif
 #if DECODE_MAGIQUEST
@@ -418,11 +399,6 @@ const char* IRrecv::getProtocolString() {
         return ("MAGIQUEST");
         break;
 #endif
-//#if DECODE_MITSUBISHI
-//    case MITSUBISHI:
-//        return ("MITSUBISHI");
-//        break;
-//#endif
 #if DECODE_NEC_STANDARD
     case NEC_STANDARD:
         return ("NEC_STANDARD");

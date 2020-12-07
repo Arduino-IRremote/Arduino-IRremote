@@ -52,7 +52,7 @@ const uint8_t irSignalP[] PROGMEM
         11/*1110 Inverted 8 of command*/, 11, 11, 11, 34, 11, 34, 11, 34/*0111 inverted 1 of command*/, 11 /*stop bit*/};
 
 void loop() {
-    int khz = 38; // 38kHz carrier frequency for the NEC protocol
+    uint8_t khz = 38; // 38kHz carrier frequency for the NEC protocol
     /*
      * Send hand crafted data from RAM
      * The values are NOT multiple of 50, but are taken from the NEC timing definitions
