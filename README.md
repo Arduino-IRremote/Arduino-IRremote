@@ -132,6 +132,21 @@ The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private
 | [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/)                         | **5**               | **CMT**           |
 | [Teensy-LC](https://www.pjrc.com/teensy/)                                | **16**              | **TPM1**          |
 
+# Adding new protocols
+To add a new protocol is quite straightforward. Best is too look at the existing protocols to find a similar one and modify it.<br/>
+As a rule of thumb, it is easier to work with a description of the protocol rather than trying to entirely reverse-engineer the protocol.
+Please include a link to the description in the header, if you found one.<br/>
+The **durations** you receive are likely to be longer for marks and shorter for spaces than the protocol suggests,
+but this depends on the receiver circuit in use. It's easy to be off-by-one with the last bit; the last space may be implicit.
+
+Try to make use of the template functions `decodePulseDistanceData()` and `sendPulseDistanceData()`.
+If your protocol supports address and code fields, try to reflect this in your api like it is done in [`sendNECStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats)`](https://github.com/z3t0/Arduino-IRremote/src/ir_NEC.cpp#L76) and [`decodeNECStandard()`](https://github.com/z3t0/Arduino-IRremote/src/ir_NEC.cpp#L165).<br/>
+
+### Integration
+To integrate your protocol, you need to extend the two functions `decode()` and `getProtocolString()` in *IRreceice.cpp*,
+add macros and function declarations for sending and receiving and extend the `enum decode_type_t` in *IRremote.h*.<br/>
+And at least it would be wonderful if you can provide an example how to use the new protocol.
+
 # Revision History
 Please see [changelog.md](https://github.com/z3t0/Arduino-IRremote/blob/master/changelog.md).
 
