@@ -146,6 +146,7 @@ If your protocol supports address and code fields, try to reflect this in your a
 To integrate your protocol, you need to extend the two functions `decode()` and `getProtocolString()` in *IRreceice.cpp*,
 add macros and function declarations for sending and receiving and extend the `enum decode_type_t` in *IRremote.h*.<br/>
 And at least it would be wonderful if you can provide an example how to use the new protocol.
+A detailed description can be found in the [ir_Template.cpp](https://github.com/z3t0/Arduino-IRremote/src/ir_Template.cpp#L18) file.
 
 # Revision History
 Please see [changelog.md](https://github.com/z3t0/Arduino-IRremote/blob/master/changelog.md).
