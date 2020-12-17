@@ -11,7 +11,7 @@ Available as Arduino library "IRremote"
 
 This library enables you to send and receive using infra-red signals on an Arduino.
 
-Tutorials and more information will be made available on [the official homepage](http://z3t0.github.io/Arduino-IRremote/).
+Tutorials and more information will be made available on [the official homepage](https://arduino-irremote.github.io/Arduino-IRremote/).
 
 # Installation
 Click on the LibraryManager badge above to see the instructions.
