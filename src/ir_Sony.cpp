@@ -51,6 +51,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 #if DECODE_SONY
 bool IRrecv::decodeSony() {
     long data = 0;
+    uint16_t bits = 0;
     unsigned int offset = 0;  // Dont skip first space, check its size
 
     if (results.rawlen < (2 * SONY_BITS) + 2) {
@@ -94,10 +95,11 @@ bool IRrecv::decodeSony() {
             return false;
         }
         offset++;
+        bits++;
 
     }
 
-    results.bits = SONY_BITS;
+    results.bits = bits;
     results.value = data;
     results.decode_type = SONY;
     return true;
