@@ -154,6 +154,7 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
 #if DECODE_RC5
 bool IRrecv::decodeRC5() {
     unsigned int nbits;
+    uint8_t cmdBit6, startLevel2, startLevel3;
     unsigned long data = 0;
     uint8_t used = 0;
     unsigned int offset = 1;  // Skip gap space
@@ -166,10 +167,15 @@ bool IRrecv::decodeRC5() {
     if (getRClevel(&results, &offset, &used, RC5_T1) != MARK) {
         return false;
     }
-    if (getRClevel(&results, &offset, &used, RC5_T1) != SPACE) {
-        return false;
-    }
-    if (getRClevel(&results, &offset, &used, RC5_T1) != MARK) {
+    startLevel2 = getRClevel(&results, &offset, &used, RC5_T1);
+    startLevel3 = getRClevel(&results, &offset, &used, RC5_T1);
+    if (startLevel2 == SPACE and startLevel3 == MARK) {
+        /* Possible RC5 or RC5ext */
+        cmdBit6 = 0;
+    } else if (startLevel2 == MARK and startLevel3 == SPACE) {
+        /* RC5ext */
+        cmdBit6 = 1;
+    } else {
         return false;
     }
 
@@ -187,6 +193,12 @@ bool IRrecv::decodeRC5() {
         } else {
             return false;
         }
+    }
+
+    /* Add the RC5ext 7th command bit (aka bit #6) */
+    if (cmdBit6) {
+        data = ((data & 0x7C0) << 1) | (cmdBit6 << 6) | (data & 0x3F);
+        nbits++;
     }
 
     // Success
