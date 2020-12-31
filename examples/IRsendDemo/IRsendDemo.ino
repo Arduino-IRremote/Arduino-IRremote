@@ -1,5 +1,5 @@
 /*
- * IRsendDemo
+ * IRsendDemo.cpp
  *
  *  Demonstrates sending IR codes in standard format with address and command
  *

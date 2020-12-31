@@ -596,7 +596,7 @@ void IRrecv::printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfT
     // Call this after IRrecv::decode()
     aSerial->print(F("rawData["));
 
-#ifdef VERSION_3
+#if VERSION_IRREMOTE_MAJOR > 2
     aSerial->print(results.rawlen - 1, DEC);
     aSerial->print(F("]: "));
     for (unsigned int i = 1; i < results.rawlen; i++) {
@@ -706,7 +706,7 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
         aSerial->print(F("rawTicks["));            // array name
     }
 
-#ifdef VERSION_3
+#if VERSION_IRREMOTE_MAJOR > 2
     aSerial->print(results.rawlen - 1, DEC);    // array size
 #else
     /*
@@ -722,7 +722,7 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
     aSerial->print(F("] = {"));                    // Start declaration
 
 // Dump data
-#ifdef VERSION_3
+#if VERSION_IRREMOTE_MAJOR > 2
     for (unsigned int i = 1; i < results.rawlen; i++) {
 #else
     /*

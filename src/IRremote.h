@@ -27,11 +27,19 @@
 //------------------------------------------------------------------------------
 #include "private/IRremoteInt.h"
 
+#define VERSION_IRREMOTE "2.8.3"
+#define VERSION_IRREMOTE_MAJOR 2
+#define VERSION_IRREMOTE_MINOR 8
+
 /****************************************************
  *                     PROTOCOLS
  ****************************************************/
 
+#if VERSION_IRREMOTE_MAJOR > 2
+#define USE_STANDARD_DECODE
+#else
 //#define USE_STANDARD_DECODE // remove comment to have the standard NEC and other decoders available.
+#endif
 //------------------------------------------------------------------------------
 // Supported IR protocols
 // Each protocol you include costs memory and, during decode, costs time

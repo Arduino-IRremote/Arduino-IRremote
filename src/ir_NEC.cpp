@@ -7,6 +7,7 @@
  *
  */
 
+//#define DEBUG // Comment this out for lots of lovely debug output.
 #include "IRremote.h"
 
 //==============================================================================
@@ -16,10 +17,11 @@
 //                           N  NN  E      C
 //                           N   N  EEEEE   CCCC
 //==============================================================================
-
 // see: https://www.sbprojects.net/knowledge/ir/nec.php
 
-#define NEC_ADDRESS_BITS        16 // For the old version: address and inverted address
+// LSB first, 1 start bit + 16 bit address + 8 bit data + 8 bit inverted data + 1 stop bit.
+//
+#define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
 #define NEC_COMMAND_BITS        16 // Command and inverted command
 
 #define NEC_BITS                (NEC_ADDRESS_BITS + NEC_COMMAND_BITS)

@@ -6,16 +6,9 @@
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  *
  */
-//#define DEBUG
+
+//#define DEBUG // Comment this out for lots of lovely debug output.
 #include "IRremote.h"
-
-// Denon publish all their IR codes:
-//  https://www.google.co.uk/search?q=DENON+MASTER+IR+Hex+Command+Sheet
-//  -> http://assets.denon.com/documentmaster/us/denon%20master%20ir%20hex.xls
-
-// Having looked at the official Denon Pronto sheet and reverse engineered
-// the timing values from it, it is obvious that Denon have a range of
-// different timings and protocols ...the values here work for my AVR-3801 Amp!
 
 //==============================================================================
 //                    DDDD   EEEEE  N   N   OOO   N   N
@@ -30,9 +23,16 @@
 //                          S  H   H  A   A  R  R   P
 //                      SSSS   H   H  A   A  R   R  P
 //==============================================================================
-// MSB first, no start bit, 5 address, 8 command 2 frame bits 1 stop bit
-// each frame 2 times
+// Denon publish all their IR codes:
+//  https://www.google.co.uk/search?q=DENON+MASTER+IR+Hex+Command+Sheet
+//  -> http://assets.denon.com/documentmaster/us/denon%20master%20ir%20hex.xls
 
+// Having looked at the official Denon Pronto sheet and reverse engineered
+// the timing values from it, it is obvious that Denon have a range of
+// different timings and protocols ...the values here work for my AVR-3801 Amp!
+
+// MSB first, no start bit, 5 address + 8 command + 2 frame + 1 stop bit - each frame 2 times
+//
 #define DENON_ADDRESS_BITS      5
 #define DENON_COMMAND_BITS      8
 #define DENON_FRAME_BITS        2 // 00/10 for 1. frame Denon/Sharp, inverted for autorepeat frame

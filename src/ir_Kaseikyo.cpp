@@ -6,6 +6,10 @@
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  *
  */
+
+//#define DEBUG // Comment this out for lots of lovely debug output.
+#include "IRremote.h"
+
 //==============================================================================
 //       PPPP    AAA   N   N   AAA    SSSS   OOO   N   N  IIIII   CCCC
 //       P   P  A   A  NN  N  A   A  S      O   O  NN  N    I    C
@@ -14,14 +18,14 @@
 //       P      A   A  N   N  A   A  SSSS    OOO   N   N  IIIII   CCCC
 //==============================================================================
 // see: http://www.remotecentral.com/cgi-bin/mboard/rc-pronto/thread.cgi?26152
-// LSB first
 // The first two (8-bit) bytes are always 2 and 32 (These identify Panasonic within the Kaseikyo standard)
 // The next two bytes are 4 independent 4-bit fields or Device and Subdevice
 // The second to last byte is the function and the last byte is and xor of the three bytes before it.
 // 0_______ 1_______  2______ 3_______ 4_______ 5
 // 76543210 76543210 76543210 76543210 76543210 76543210
 // 00000010 00100000 Dev____  Sub Dev  Fun____  XOR( B2, B3, B4)
-// Kasieko: 16 Vendor-Bits + 4 Parity-Bits + 4 Genre1-Bits + 4 Genre2-Bits + 10 Command-Bits + 2 ID-Bits + 8 Parity-Bits
+
+// LSB first, 16 Vendor-Bits + 4 Parity-Bits + 4 Genre1-Bits + 4 Genre2-Bits + 10 Command-Bits + 2 ID-Bits + 8 Parity-Bits
 //
 #define KASEIKYO_VENDOR_ID_BITS     16
 #define PANASONIC_VENDOR_ID_CODE    0x2002
@@ -45,9 +49,6 @@
 
 // for old decoder
 #define KASEIKYO_DATA_BITS          32
-
-//#define DEBUG
-#include "IRremote.h"
 
 //+=============================================================================
 /*

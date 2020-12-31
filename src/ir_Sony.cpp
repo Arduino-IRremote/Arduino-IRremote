@@ -7,7 +7,7 @@
  *
  */
 
-//#define DEBUG
+//#define DEBUG // Comment this out for lots of lovely debug output.
 #include "IRremote.h"
 
 //==============================================================================
@@ -17,9 +17,10 @@
 //                              S  O   O  N  NN    Y
 //                          SSSS    OOO   N   N    Y
 //==============================================================================
-// LSB first, Start bit, 7 bit command and 5 to 13 bit address, no stop bit
 // see https://www.sbprojects.net/knowledge/ir/sirc.php
 
+// LSB first, start bit + 7 command + 5 to 13 address, no stop bit
+//
 #define SONY_ADDRESS_BITS       5
 #define SONY_COMMAND_BITS       7
 #define SONY_EXTRA_BITS         8
