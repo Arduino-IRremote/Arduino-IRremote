@@ -17,7 +17,6 @@
 #define SAMSUNG_REPEAT_SPACE  2250
 
 //+=============================================================================
-#if SEND_SAMSUNG
 void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(38);
@@ -33,12 +32,10 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     mark(SAMSUNG_BIT_MARK);
     space(0);  // Always end with the LED off
 }
-#endif
 
 //+=============================================================================
 // SAMSUNGs have a repeat only 4 items long
 //
-#if DECODE_SAMSUNG
 bool IRrecv::decodeSAMSUNG() {
     unsigned int offset = 1;  // Skip first space
 
@@ -53,8 +50,8 @@ bool IRrecv::decodeSAMSUNG() {
             && MATCH_MARK(results.rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
         results.bits = 0;
         results.value = REPEAT;
-        results.isRepeat = true;
-        results.decode_type = SAMSUNG;
+        decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER | IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.protocol = SAMSUNG;
         return true;
     }
     if (results.rawlen < (2 * SAMSUNG_BITS) + 4) {
@@ -73,7 +70,8 @@ bool IRrecv::decodeSAMSUNG() {
 
 // Success
     results.bits = SAMSUNG_BITS;
-    results.decode_type = SAMSUNG;
+    decodedIRData.protocol = SAMSUNG;
+    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
 
@@ -82,5 +80,3 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
     *aResults = results;
     return aReturnValue;
 }
-#endif
-

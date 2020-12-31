@@ -159,7 +159,7 @@ bool IRrecv::decodeShuzu() {
     // Success
     results.bits = SHUZU_BITS;
     results.value = data;
-    results.decode_type = SHUZU;
+    decodedIRData.protocol = SHUZU;
     return true;
 }
 #endif

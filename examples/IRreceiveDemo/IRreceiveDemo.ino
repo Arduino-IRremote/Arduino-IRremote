@@ -1,7 +1,10 @@
 /*
- * IRremote: IRreceiveDemo - demonstrates receiving IR codes with IRrecv
- * An IR detector/demodulator must be connected to the input RECV_PIN.
- * Initially coded 2009 Ken Shirriff http://www.righto.com/
+ * IRreceiveDemo.cpp
+ *
+ * Demonstrates receiving IR codes with IRrecv
+ *
+ *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *
  */
 
 #include <IRremote.h>
@@ -41,11 +44,24 @@ void setup() {
 }
 
 void loop() {
+    /*
+     * Check if received data is available and if yes, try to decode it.
+     * Decoded result is in the IrReceiver.decodedIRData structure.
+     */
     if (IrReceiver.decode()) {
+        // Print a short summary of received data
         IrReceiver.printResultShort(&Serial);
         Serial.println();
-
+        if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
+            // We have an unknown protocol, print more info
+            IrReceiver.printIRResultRawFormatted(&Serial, true);
+        }
         IrReceiver.resume(); // Receive the next value
+        /*
+         * Check the received data
+         */
+        if (IrReceiver.decodedIRData.command == 0x11) {
+            // do something
+        }
     }
-    delay(100);
 }

@@ -59,7 +59,6 @@ int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int
 #define RC5_RPT_LENGTH   46000 // Not used.
 
 //+=============================================================================
-#if SEND_RC5
 void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
     enableIROut(36);
@@ -148,12 +147,9 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
     space(0);  // Always end with the LED off
 }
 
-#endif
-
 //+=============================================================================
-#if DECODE_RC5
 bool IRrecv::decodeRC5() {
-    unsigned int nbits;
+    uint8_t nbits;
     unsigned long data = 0;
     uint8_t used = 0;
     unsigned int offset = 1;  // Skip gap space
@@ -192,7 +188,8 @@ bool IRrecv::decodeRC5() {
     // Success
     results.bits = nbits;
     results.value = data;
-    results.decode_type = RC5;
+    decodedIRData.protocol = RC5;
+    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
 bool IRrecv::decodeRC5(decode_results *aResults) {
@@ -200,7 +197,6 @@ bool IRrecv::decodeRC5(decode_results *aResults) {
     *aResults = results;
     return aReturnValue;
 }
-#endif
 
 //+=============================================================================
 // RRRR    CCCC   6666
@@ -217,7 +213,6 @@ bool IRrecv::decodeRC5(decode_results *aResults) {
 #define RC6_T1                444
 #define RC6_RPT_LENGTH      46000
 
-#if SEND_RC6
 void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
     enableIROut(36);
@@ -275,10 +270,8 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
 
     space(0);  // Always end with the LED off
 }
-#endif
 
 //+=============================================================================
-#if DECODE_RC6
 bool IRrecv::decodeRC6() {
     unsigned int nbits;
     uint32_t data = 0;
@@ -339,12 +332,13 @@ bool IRrecv::decodeRC6() {
     // Success
     results.bits = nbits;
     results.value = data;
-    results.decode_type = RC6;
+    decodedIRData.protocol = RC6;
+    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
+
 bool IRrecv::decodeRC6(decode_results *aResults) {
     bool aReturnValue = decodeRC6();
     *aResults = results;
     return aReturnValue;
 }
-#endif

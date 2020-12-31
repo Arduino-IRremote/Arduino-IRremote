@@ -3,6 +3,8 @@
  * @brief In this file, the functions IRrecv::dumpPronto and
  * IRsend::sendPronto are defined.
  * See http://www.harctoolbox.org/Glossary.html#ProntoSemantics
+ *
+ * Pronto database http://www.remotecentral.com/search.htm
  */
 
 #include "IRremote.h"

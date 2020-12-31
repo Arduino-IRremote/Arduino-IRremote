@@ -57,7 +57,7 @@ void loop() {
      * Send hand crafted data from RAM
      * The values are NOT multiple of 50, but are taken from the NEC timing definitions
      */
-    Serial.println(F("Send NEC 0xFB04, 0x08 with exact timing (integer format)"));
+    Serial.println(F("Send NEC 8 bit address 0xFB04, 0x08 with exact timing (16 bit array format)"));
     const uint16_t irSignal[] = { 9000, 4500, 560, 560, 560, 560, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560,
             560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560,
             560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560,
@@ -70,13 +70,13 @@ void loop() {
      * Send byte data direct from FLASH
      * Note the approach used to automatically calculate the size of the array.
      */
-    Serial.println(F("Send NEC 0xFB0C, 0x18 with tick resolution timing (byte format) "));
+    Serial.println(F("Send NEC 16 bit address 0xFB0C, 0x18 with tick resolution timing (8 bit array format) "));
     IrSender.sendRaw_P(irSignalP, sizeof(irSignalP) / sizeof(irSignalP[0]), khz);
 
     delay(2000);
 
-    Serial.println(F("Send NEC 0xFF00, 0x17 generated"));
-    IrSender.sendNECStandard(0xFF00, 0x17, 0);
+    Serial.println(F("Send NEC 16 bit address 0x0102, 8 bit data 0x34 with generated timing"));
+    IrSender.sendNECStandard(0x0102, 0x34, true,0);
 
     delay(3000);
 }

@@ -2,7 +2,7 @@
 - Added SendRaw with byte data.
 - Fixed resume bug if irparams.rawlen >= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi
 - Added `dumpPronto(String *aString, unsigned int frequency)` with String object as argument. Thanks to Iosif Peterfi
-- Handling trailing gap/space inconsistency for raw data.
+- Handling leading gap/space inconsistency for raw data.
 - Fixed swapped cases in `getProtocolString()`. Thanks to Jim-2249
 - Added compile option `IR_INPUT_IS_ACTIVE_HIGH`. Thanks to Jim-2249
 - Corrected template. Thanks to Jim-2249
@@ -32,7 +32,7 @@
 - Added `DECODE_NEC_STANDARD` and `SEND_NEC_STANDARD`.
 - Renamed all IRrecv* examples to IRreceive*.
 - Added functions `printResultShort(&Serial)` and `getProtocolString(decode_type_t aDecodeType)`.
-- Added flag `results.isRepeat`.
+- Added flag `decodedIRData.isRepeat`.
 - Updated examples.
 
 ## 2.6.1 2020/08

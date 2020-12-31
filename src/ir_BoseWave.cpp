@@ -65,7 +65,6 @@
 #define BOSEWAVE_REPEAT_SPACE  51200 // Not used.
 
 //+=============================================================================
-#if SEND_BOSEWAVE
 uint16_t rawSignal[35];
 void IRsend::sendBoseWave(unsigned char code) {
 
@@ -99,10 +98,8 @@ void IRsend::sendBoseWave(unsigned char code) {
     // Transmit
     this->sendRaw(rawSignal, 35, 38);
 }
-#endif
 
 //+=============================================================================
-#if DECODE_BOSEWAVE
 bool IRrecv::decodeBoseWave() {
     unsigned char command = 0;      // Decoded command
     unsigned char complement = 0;   // Decoded command complement
@@ -113,7 +110,7 @@ bool IRrecv::decodeBoseWave() {
 
     // Check we have enough data
     if (results.rawlen < (2 * BOSEWAVE_BITS * 2) + 3) {
-        DBG_PRINT("\tInvalid data length found:  ");
+        DBG_PRINT("\tInvalid (too small) data length found: ");
         DBG_PRINTLN(results.rawlen);
         return false;
     }
@@ -210,7 +207,8 @@ bool IRrecv::decodeBoseWave() {
     // Success
     results.bits = BOSEWAVE_BITS;
     results.value = command;
-    results.decode_type = BOSEWAVE;
+    decodedIRData.protocol = BOSEWAVE;
+    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
 
     return true;
 }
@@ -219,4 +217,3 @@ bool IRrecv::decodeBoseWave(decode_results *aResults) {
     *aResults = results;
     return aReturnValue;
 }
-#endif

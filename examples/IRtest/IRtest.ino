@@ -19,7 +19,7 @@ IRrecv IrReceiver(0);
 void dump() {
     int count = IrReceiver.results.rawlen;
 
-    if (IrReceiver.results.decode_type == UNKNOWN) {
+    if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
         Serial.println("Could not decode message");
     } else {
         IrReceiver.printResultShort(&Serial);
@@ -104,7 +104,7 @@ void verify(unsigned long val, unsigned int bits, unsigned int type) {
     IrReceiver.decode();
     Serial.print("Testing ");
     Serial.print(val, HEX);
-    if (IrReceiver.results.value == val && IrReceiver.results.bits == bits && IrReceiver.results.decode_type == type) {
+    if (IrReceiver.results.value == val && IrReceiver.results.bits == bits && IrReceiver.decodedIRData.protocol == type) {
         Serial.println(": OK");
     } else {
         Serial.println(": Error");

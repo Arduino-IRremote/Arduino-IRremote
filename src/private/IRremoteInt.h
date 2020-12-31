@@ -85,7 +85,7 @@ extern struct irparams_struct irparams;
  * At 100us it also worked, but not as well.
  * Set MARK_EXCESS to 100us and the VS1838 doesn't work at all.
  */
-#define MARK_EXCESS_MICROS    100
+#define MARK_EXCESS_MICROS    50
 
 /** Relative tolerance (in percent) for some comparisons on measured data. */
 #define TOLERANCE       25

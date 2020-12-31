@@ -86,7 +86,7 @@ void waitForGap(unsigned int gap) {
 // Call this after IRrecv::decode()
 void dump() {
     int count = IrReceiver.results.rawlen;
-    if (IrReceiver.results.decode_type == UNKNOWN) {
+    if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
         Serial.println("Could not decode message");
     } else {
         IrReceiver.printResultShort(&Serial);
@@ -147,7 +147,7 @@ void test(const char *label, int type, uint32_t value, unsigned int bits) {
                 return;
             }
         }
-        if (type == IrReceiver.results.decode_type && value == IrReceiver.results.value && bits == IrReceiver.results.bits) {
+        if (type == IrReceiver.decodedIRData.protocol && value == IrReceiver.results.value && bits == IrReceiver.results.bits) {
             Serial.println(": OK");
             digitalWrite(LED_PIN, HIGH);
             delay(20);

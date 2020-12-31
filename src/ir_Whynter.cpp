@@ -16,7 +16,6 @@
 #define WHYNTER_ZERO_SPACE     750
 
 //+=============================================================================
-#if SEND_WHYNTER
 void IRsend::sendWhynter(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(38);
@@ -45,10 +44,8 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
     mark(WHYNTER_BIT_MARK);
     space(0);  // Always end with the LED off
 }
-#endif
 
 //+=============================================================================
-#if DECODE_WHYNTER
 bool IRrecv::decodeWhynter() {
     unsigned int offset = 1;  // skip initial space
 
@@ -91,7 +88,8 @@ bool IRrecv::decodeWhynter() {
 
     // Success
     results.bits = WHYNTER_BITS;
-    results.decode_type = WHYNTER;
+    decodedIRData.protocol = WHYNTER;
+    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
 
@@ -100,5 +98,3 @@ bool IRrecv::decodeWhynter(decode_results *aResults) {
     *aResults = results;
     return aReturnValue;
 }
-#endif
-

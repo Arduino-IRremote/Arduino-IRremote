@@ -29,7 +29,6 @@
 #define DISH_REPEAT_SPACE   6200
 
 //+=============================================================================
-#if SEND_DISH
 void IRsend::sendDISH(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(56);
@@ -38,18 +37,7 @@ void IRsend::sendDISH(unsigned long data, int nbits) {
     space(DISH_HEADER_SPACE);
 
     sendPulseDistanceWidthData(DISH_BIT_MARK, DISH_ONE_SPACE, DISH_BIT_MARK, DISH_ZERO_SPACE, data, nbits);
-//    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-//        if (data & mask) {
-//            mark(DISH_BIT_MARK);
-//            space(DISH_ONE_SPACE);
-//        } else {
-//            mark(DISH_BIT_MARK);
-//            space(DISH_ZERO_SPACE);
-//        }
-//    }
-
     mark(DISH_HEADER_MARK); //added 26th March 2016, by AnalysIR ( https://www.AnalysIR.com )
     space(0);  // Always end with the LED off
 }
-#endif
 

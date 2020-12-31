@@ -852,4 +852,3 @@ void write1Start8Data1StopNoParity_C_Version(uint8_t aValue) {
     delay4CyclesInlineExact(4); // gives minimum 25 cycles for stop bit :-)
 }
 #endif // defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-

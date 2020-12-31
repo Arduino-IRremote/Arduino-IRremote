@@ -27,7 +27,6 @@
 //
 // JVC commands sometimes need to be sent two or three times with 40 to 60 ms pause in between.
 //
-#if SEND_JVC
 void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
     // Set IR carrier frequency
     enableIROut(38);
@@ -45,10 +44,8 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
     mark(JVC_BIT_MARK);
     space(0);  // Always end with the LED off
 }
-#endif
 
 //+=============================================================================
-#if DECODE_JVC
 bool IRrecv::decodeJVC() {
     unsigned int offset = 1; // Skip first space
 
@@ -57,8 +54,8 @@ bool IRrecv::decodeJVC() {
             && MATCH_MARK(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
         results.bits = 0;
         results.value = REPEAT;
-        results.isRepeat = true;
-        results.decode_type = JVC;
+        decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER | IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.protocol = JVC;
         return true;
     }
 
@@ -70,6 +67,10 @@ bool IRrecv::decodeJVC() {
 
     // Check we have enough data - +3 for start bit mark and space + stop bit mark
     if (results.rawlen <= (2 * JVC_BITS) + 3) {
+        DBG_PRINT("Data length=");
+        DBG_PRINT(results.rawlen);
+        DBG_PRINTLN(" is too small. >= 36 is required.");
+
         return false;
     }
 
@@ -91,7 +92,8 @@ bool IRrecv::decodeJVC() {
 
     // Success
     results.bits = JVC_BITS;
-    results.decode_type = JVC;
+    decodedIRData.protocol = JVC;
+    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
 
     return true;
 }
@@ -101,5 +103,3 @@ bool IRrecv::decodeJVC(decode_results *aResults) {
     *aResults = results;
     return aReturnValue;
 }
-#endif
-

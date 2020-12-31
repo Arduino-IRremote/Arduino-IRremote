@@ -1,3 +1,12 @@
+/*
+ * irSend.cpp
+ *
+ *  Contains common functions for sending
+ *
+ *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *
+ */
+//#define DEBUG
 #include "IRremote.h"
 
 #ifdef SENDING_SUPPORTED // from IRremoteBoardDefs.h
@@ -8,8 +17,7 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOf
 
 #ifdef VERSION_3
     /*
-     * Raw data starts with a Mark. No trailing space any more.
-     * It was only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+     * Raw data starts with a Mark. No leading space any more.
      */
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         if (i & 1) {
@@ -20,7 +28,6 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOf
 #else
     /*
      * Raw data starts with a Space. This enables backwards compatibility.
-     * It is only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
      */
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         if (i & 1) {
@@ -35,9 +42,8 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOf
 }
 
 /*
- * New function!
- * Raw data starts with a Mark. No trailing space any more.
- * It was only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+ * New function using an 8 byte buffer
+ * Raw data starts with a Mark. No leading space any more.
  */
 void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
     // Set IR carrier frequency
@@ -61,8 +67,7 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLength
     enableIROut(aIRFrequencyKilohertz);
 #ifdef VERSION_3
     /*
-     * Raw data starts with a Mark. No trailing space any more.
-     * It was only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+     * Raw data starts with a Mark. No leading space any more.
      */
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         uint16_t duration = pgm_read_word(&aBufferWithMicroseconds[i]);
@@ -75,7 +80,6 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLength
 #else
     /*
      * Raw data starts with a Space. This enables backwards compatibility.
-     * It is only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
      */
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         uint16_t duration = pgm_read_word(&aBufferWithMicroseconds[i]);
@@ -91,9 +95,8 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLength
 }
 
 /*
- * New function!
- * Raw data starts with a Mark. No trailing space any more.
- * It was only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
+ * New function using an 8 byte buffer
+ * Raw data starts with a Mark. No leading space any more.
  */
 void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
@@ -139,7 +142,7 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
 #endif // USE_SOFT_SEND_PWM
 
 //+=============================================================================
-// Sends PulseDistance data from MSB to LSB
+// Sends PulseDistance data
 //
 void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
         unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst) {
@@ -159,7 +162,6 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
         }
         DBG_PRINTLN("");
     }
-#if defined(LSB_FIRST_REQUIRED)
     else {  // Send the Least Significant Bit (LSB) first / MSB last.
         for (uint16_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
             if (aData & 1) {  // Send a 1
@@ -173,7 +175,6 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
             }
         DBG_PRINTLN("");
     }
-#endif
 }
 
 //+=============================================================================

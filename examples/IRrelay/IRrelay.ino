@@ -77,7 +77,7 @@ void loop() {
 // Call this after IRrecv::decode()
 void dump() {
     uint16_t count = IrReceiver.results.rawlen;
-    if (IrReceiver.results.decode_type == UNKNOWN) {
+    if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
         Serial.println("Could not decode message");
     } else {
         IrReceiver.printResultShort(&Serial);

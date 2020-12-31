@@ -17,7 +17,6 @@
 #define LG_ZERO_SPACE    550
 
 //+=============================================================================
-#if DECODE_LG
 bool IRrecv::decodeLG() {
     unsigned int offset = 1; // Skip first space
 
@@ -47,7 +46,8 @@ bool IRrecv::decodeLG() {
 
     // Success
     results.bits = LG_BITS;
-    results.decode_type = LG;
+    decodedIRData.protocol = LG;
+    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
 
@@ -56,10 +56,8 @@ bool IRrecv::decodeLG(decode_results *aResults) {
     *aResults = results;
     return aReturnValue;
 }
-#endif
 
 //+=============================================================================
-#if SEND_LG
 void IRsend::sendLG(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(38);
@@ -75,5 +73,4 @@ void IRsend::sendLG(unsigned long data, int nbits) {
     mark(LG_BIT_MARK);
     space(0);  // Always end with the LED off
 }
-#endif
 

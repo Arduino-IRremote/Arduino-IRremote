@@ -22,8 +22,7 @@
 
 //+=============================================================================
 //
-#if SEND_LEGO_PF
-#if DEBUG
+#ifdef DEBUG
 namespace {
 void logFunctionParameters(uint16_t data, bool repeat) {
   DBG_PRINT("sendLegoPowerFunctions(data=");
@@ -35,7 +34,7 @@ void logFunctionParameters(uint16_t data, bool repeat) {
 #endif // DEBUG
 
 void IRsend::sendLegoPowerFunctions(uint16_t data, bool repeat) {
-#if DEBUG
+#ifdef DEBUG
   ::logFunctionParameters(data, repeat);
 #endif // DEBUG
 
@@ -48,9 +47,7 @@ void IRsend::sendLegoPowerFunctions(uint16_t data, bool repeat) {
     } while (bitStreamEncoder.next());
 }
 
-#endif // SEND_LEGO_PF
 
-#if DECODE_LEGO_PF
 /*
  * UNTESTED!!!
  */
@@ -105,10 +102,10 @@ bool IRrecv::decodeLegoPowerFunctions() {
             // Success
             results.bits = LEGO_PF_BITS;
             results.value = data;
-            results.decode_type = LEGO_PF;
+            decodedIRData.protocol = LEGO_PF;
+            decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
             return true;
         }
     }
     return false;
 }
-#endif
