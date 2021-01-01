@@ -466,11 +466,12 @@
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  */
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
-    const uint16_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 2000 instead of 1000 because of Phase Correct PWM
+    const uint16_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR2A = _BV(WGM20); // PWM, Phase Correct, Top is OCR2A
     TCCR2B = _BV(WGM22) | _BV(CS20); // CS20 -> no prescaling
     OCR2A = pwmval;
     OCR2B = pwmval * IR_SEND_DUTY_CYCLE / 100;
+    TCNT2 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 #define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
@@ -539,11 +540,12 @@ static void timerConfigForReceive() {
 #endif
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
-    const uint32_t pwmval = SYSCLOCK / 2000 / (aFrequencyKHz);  // 2000 instead of 1000 because of Phase Correct PWM
+    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR1A = _BV(WGM11); // PWM, Phase Correct, Top is ICR1
     TCCR1B = _BV(WGM13) | _BV(CS10); // CS10 -> no prescaling
     ICR1 = pwmval;
     OCR1A = pwmval * IR_SEND_DUTY_CYCLE / 100;
+    TCNT1 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 static void timerConfigForReceive() {
@@ -591,11 +593,12 @@ static void timerConfigForReceive() {
 #define TIMER_INTR_NAME      TIMER3_COMPA_vect
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
-    const uint32_t pwmval = SYSCLOCK / 2000 / (aFrequencyKHz);
+    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR3A = _BV(WGM31);
-    TCCR3B = _BV(WGM33) | _BV(CS30);
+    TCCR3B = _BV(WGM33) | _BV(CS30); // PWM, Phase Correct, ICRn as TOP, complete period is double of pwmval
     ICR3 = pwmval;
     OCR3A = pwmval * IR_SEND_DUTY_CYCLE / 100;
+    TCNT3 = 0; // required, since we have an 16 bit counter
 }
 
 static void timerConfigForReceive() {
@@ -639,7 +642,7 @@ static void timerConfigForReceive() {
 #define TIMER_INTR_NAME     TIMER4_OVF_vect
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
-    const uint32_t pwmval = SYSCLOCK / 2000 / (aFrequencyKHz);
+    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR4A = (1 << PWM4A);
     TCCR4B = _BV(CS40);
     TCCR4C = 0;
@@ -649,6 +652,7 @@ static void timerConfigForSend(uint16_t aFrequencyKHz) {
     OCR4C = pwmval;
     TC4H = (pwmval * IR_SEND_DUTY_CYCLE / 100) >> 8;
     OCR4A = (pwmval * IR_SEND_DUTY_CYCLE / 100) & 255;
+    TCNT4 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 static void timerConfigForReceive() {
@@ -687,11 +691,12 @@ static void timerConfigForReceive() {
 #define TIMER_INTR_NAME     TIMER4_COMPA_vect
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
-    const uint32_t pwmval = SYSCLOCK / 2000 / (aFrequencyKHz);
+    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR4A = _BV(WGM41);
     TCCR4B = _BV(WGM43) | _BV(CS40);
     ICR4 = pwmval;
     OCR4A = pwmval * IR_SEND_DUTY_CYCLE / 100;
+    TCNT4 = 0; // required, since we have an 16 bit counter
 }
 
 static void timerConfigForReceive() {
@@ -723,11 +728,12 @@ static void timerConfigForReceive() {
 #define TIMER_INTR_NAME     TIMER5_COMPA_vect
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
-    const uint32_t pwmval = SYSCLOCK / 2000 / (aFrequencyKHz);
+    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR5A = _BV(WGM51);
     TCCR5B = _BV(WGM53) | _BV(CS50);
     ICR5 = pwmval;
     OCR5A = pwmval * IR_SEND_DUTY_CYCLE / 100;
+    TCNT5 = 0; // required, since we have an 16 bit counter
 }
 
 static void timerConfigForReceive() {
@@ -851,11 +857,12 @@ static void timerConfigForReceive() {
 #define TIMER_INTR_NAME      TIMER0_COMPA_vect
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
-    const uint16_t pwmval = SYSCLOCK / 2000 / (aFrequencyKHz); // 2000 instead of 1000 because of Phase Correct PWM
+    const uint16_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR0A = _BV(WGM00); // PWM, Phase Correct, Top is OCR0A
     TCCR0B = _BV(WGM02) | _BV(CS00); // CS00 -> no prescaling
     OCR0A = pwmval;
     OCR0B = pwmval * IR_SEND_DUTY_CYCLE / 100;
+    TCNT0 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 #define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
@@ -890,14 +897,14 @@ static void timerConfigForSend(uint16_t aFrequencyKHz) {
     TCCR1 = _BV(CTC1) | _BV(CS10);  // CTC1 = 1: TOP value set to OCR1C, CS10 No Prescaling
     OCR1C = pwmval;
     OCR1B = pwmval * IR_SEND_DUTY_CYCLE / 100;
-    TCNT1 = 0;
+    TCNT1 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
     GTCCR = _BV(PWM1B) | _BV(COM1B0); // PWM1B = 1: Enable PWM for OCR1B, COM1B0 Clear on compare match
 #  else
     const uint16_t pwmval = ((SYSCLOCK / 2) / 1000) / (aFrequencyKHz); // 210 for 16 MHz and 38 kHz
     TCCR1 = _BV(CTC1) | _BV(CS11);  // CTC1 = 1: TOP value set to OCR1C, CS11 Prescaling by 2
     OCR1C = pwmval;
     OCR1B = pwmval * IR_SEND_DUTY_CYCLE / 100;
-    TCNT1 = 0;
+    TCNT1 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
     GTCCR = _BV(PWM1B) | _BV(COM1B0); // PWM1B = 1: Enable PWM for OCR1B, COM1B0 Clear on compare match
 #  endif
 }
@@ -929,11 +936,12 @@ static void timerConfigForReceive() {
 #define TIMER_INTR_NAME      TCB0_INT_vect
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
-    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz);
+    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCB0.CTRLB = TCB_CNTMODE_PWM8_gc;
     TCB0.CCMPL = pwmval;
     TCB0.CCMPH = (pwmval * IR_SEND_DUTY_CYCLE) / 100;
     TCB0.CTRLA = (TCB_CLKSEL_CLKDIV2_gc) | (TCB_ENABLE_bm);
+    TCB0.TCNT = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 static void timerConfigForReceive() {
