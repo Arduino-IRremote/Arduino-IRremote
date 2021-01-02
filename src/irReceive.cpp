@@ -145,6 +145,13 @@ bool IRrecv::decode() {
     }
 #endif
 
+#if DECODE_BOSEWAVE
+    DBG_PRINTLN("Attempting Bosewave  decode");
+    if (decodeBoseWave()) {
+        return true;
+    }
+#endif
+
 #if DECODE_MAGIQUEST
     DBG_PRINTLN("Attempting MagiQuest decode");
     if (decodeMagiQuest()) {
@@ -556,14 +563,14 @@ void IRrecv::printResultShort(Print *aSerial) {
 
             if (decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
                 aSerial->print(F(" Repeat gap="));
-                aSerial->print(results.rawbuf[0] * MICROS_PER_TICK);
+                aSerial->print((uint32_t)results.rawbuf[0] * MICROS_PER_TICK);
                 aSerial->print(F("us"));
             }
         } else {
             // assume that we have a repeat if the gap is below 200 ms
             if (results.rawbuf[0] < (200000 / MICROS_PER_TICK)) {
                 aSerial->print(F(" Repeat gap="));
-                aSerial->print(results.rawbuf[0] * MICROS_PER_TICK);
+                aSerial->print((uint32_t)results.rawbuf[0] * MICROS_PER_TICK);
                 aSerial->print(F("us"));
             }
         }
@@ -647,7 +654,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
      * Print initial gap
      */
     if (aOutputMicrosecondsInsteadOfTicks) {
-        tDurationMicros = results.rawbuf[0] * MICROS_PER_TICK;
+        tDurationMicros = (uint32_t)results.rawbuf[0] * MICROS_PER_TICK;
     } else {
         tDurationMicros = results.rawbuf[0];
     }

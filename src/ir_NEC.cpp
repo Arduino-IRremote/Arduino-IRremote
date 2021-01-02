@@ -75,6 +75,7 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16Add
     uint16_t tCommand = ((~aCommand) << 8) | aCommand;
     // Command 16 bit LSB first
     sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, tCommand, NEC_COMMAND_BITS, false);
+
     mark(NEC_BIT_MARK); // Stop bit
     space(0); // Always end with the LED off
 
@@ -111,11 +112,11 @@ bool IRrecv::decodeNEC() {
     }
 
     // Check we have enough data - +4 for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen < (2 * NEC_BITS) + 4) {
+    if (results.rawlen != (2 * NEC_BITS) + 4) {
         DBG_PRINT("NEC: ");
         DBG_PRINT("Data length=");
         DBG_PRINT(results.rawlen);
-        DBG_PRINTLN(" is too small. > 67 is required");
+        DBG_PRINTLN(" is not 68");
         return false;
     }
     // Check header "space"
@@ -156,7 +157,7 @@ bool IRrecv::decodeNEC() {
 //    uint16_t tAddress = results.value;
     uint8_t tAddressNotInverted = results.value & 0xFF;
     uint8_t tAddressInverted = results.value >> 8;
-    // plausi check for command
+    // parity check for command. Use this variant to avoid compiler warning "comparison of promoted ~unsigned with unsigned [-Wsign-compare]"
     if ((tAddressNotInverted ^ tAddressInverted) == 0xFF) {
         // standard 8 bit address NEC protocol
         decodedIRData.address = tAddressNotInverted; // first 8 bit

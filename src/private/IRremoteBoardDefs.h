@@ -941,7 +941,7 @@ static void timerConfigForSend(uint16_t aFrequencyKHz) {
     TCB0.CCMPL = pwmval;
     TCB0.CCMPH = (pwmval * IR_SEND_DUTY_CYCLE) / 100;
     TCB0.CTRLA = (TCB_CLKSEL_CLKDIV2_gc) | (TCB_ENABLE_bm);
-    TCB0.TCNT = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
+    TCB0.CNT = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 static void timerConfigForReceive() {

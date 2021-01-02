@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-18.04 # I picked Ubuntu to use shell scripts.
 
     env:
-      # Comma separated list without double quotes around the list. 
+      # Comma separated list without double quotes around the list.
       REQUIRED_LIBRARIES: Keyboard
 
     strategy:
@@ -81,11 +81,11 @@ jobs:
 
           - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock1
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
-            sketches-exclude: IR2Keyboard,IRtest,IRtest2,IRrelay,LegoPowerFunctionsTests,IRrecord,IRreceiveDumpV2,IRsendProntoDemo,MicroGirs,IRreceiveDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM # Comma separated list of example names to exclude in build
+            sketches-exclude: IR2Keyboard,IRtest,IRtest2,IRrelay,LegoPowerFunctionsTests,IRrecord,IRreceiveDump,IRsendProntoDemo,MicroGirs,IRreceiveDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM # Comma separated list of example names to exclude in build
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx5:chip=85,clock=1internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: IR2Keyboard,IRtestIRtest2,IRrelay,LegoPowerFunctionsTests,IRrecord,IRreceiveDumpV2,IRsendProntoDemo,MicroGirs,BoseWaveSendDemo # Does not fit in FLASH or RAM
+            sketches-exclude: IR2Keyboard,IRtestIRtest2,IRrelay,LegoPowerFunctionsTests,IRrecord,IRreceiveDumpV2,IRsendProntoDemo,MicroGirs,IRreceiveDemo,BoseWaveSendDemo # Does not fit in FLASH or RAM
 
           - arduino-boards-fqbn: MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os,clock=8MHz_internal
             platform-url: https://mcudude.github.io/MegaCore/package_MCUdude_MegaCore_index.json

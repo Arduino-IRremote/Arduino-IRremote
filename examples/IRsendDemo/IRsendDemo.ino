@@ -67,8 +67,8 @@ void loop() {
     IrSender.sendPanasonicStandard(sAddress, sCommand, sRepeats);
     delay(2000);
 
-    Serial.println(F("Send Kaseikyo with 0x7411 as Vendor ID"));
-    IrSender.sendKaseikyoStandard(sAddress, sCommand, 0x7411, sRepeats);
+    Serial.println(F("Send Kaseikyo with 0x4711 as Vendor ID"));
+    IrSender.sendKaseikyoStandard(sAddress, sCommand, 0x4711, sRepeats);
     delay(2000);
 
     Serial.println(F("Send Denon"));
@@ -85,6 +85,14 @@ void loop() {
 
     Serial.println(F("Send Sony/SIRCS with with 7 command and 13 address bits"));
     IrSender.sendSonyStandard(sAddress, sCommand, true, sRepeats);
+    delay(2000);
+
+    Serial.println(F("Send Bosewave with 8 command bits"));
+    IrSender.sendBoseWaveStandard(sCommand, sRepeats);
+    delay(2000);
+
+    Serial.println(F("Send Lego with 2 channel and with 4 command bits"));
+    IrSender.sendLegoPowerFunctions(sAddress, LEGO_MODE_COMBO, sCommand, true);
     delay(2000);
 
     /*

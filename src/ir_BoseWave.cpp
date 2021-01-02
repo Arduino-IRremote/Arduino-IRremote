@@ -1,3 +1,13 @@
+/*
+ * ir_BoseWave.cpp
+ *
+ *  Contains functions for receiving and sending Bose IR Protocol
+ *
+ *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *
+ */
+
+//#define DEBUG // Comment this out for lots of lovely debug output.
 #include "IRremote.h"
 
 //==============================================================================
@@ -7,213 +17,113 @@
 //                           B   B  O   O      S  E
 //                           BBBB    OOO   SSSS   EEEEE
 //==============================================================================
+// see http://lirc.sourceforge.net/remotes/bose/WAVERADIO
 //
-//                       Bose Wave Radio CD Remote Control
-//                    |-------------------------------------|
-//                    |   On/Off        Sleep       VolUp   |
-//                    |   Play/Pause    Stop       VolDown  |
-//                    |      FM          AM          Aux    |
-//                    |   Tune Down    Tune Up       Mute   |
-//                    |       1           2           3     |
-//                    |       4           5           6     |
-//                    |-------------------------------------|
-//
-// Support for Bose Wave Radio CD provided by https://github.com/uvotguy.
-//
-// This protocol was reverse engineered by capturing IR signals from a working
-// remote.  Multiple signals were captured on my oscilloscope, and the timing
-// values were averaged.
-//
-// IR codes are 8 bits.  Transmission starts with a header:  a mark and a space.
-// The header is followed by an 8-bit command, where a bit is a mark and a short
-// space (1) or a long space (0).  The command is followed by the complement of
-// the command (8 bits).  A transmission ends with a short mark.
+// Support for Bose Wave Radio CD initially provided by https://github.com/uvotguy.
 //
 // As seen on my trusty oscilloscope, there is no repeat code.  Instead, when I
 // press and hold a button on my remote, it sends a command, makes a 51.2ms space,
 // and resends the command, etc, etc.
-//
-// It may be worth noting that these values do NOT match those in the LIRC
-// remote database (http://lirc.sourceforge.net/remotes/bose/).
 
-#define CMD_ON_OFF     0xff
-#define CMD_MUTE       0xfe
-#define CMD_VOL_UP     0xfd
-#define CMD_VOL_DOWN   0xfc
-#define CMD_PRESET_6   0xfb
-#define CMD_SLEEP      0xfa
-#define CMD_FM         0xf9
-#define CMD_AUX        0xf8
-#define CMD_AM         0xf7
-#define CMD_PLAY_PAUSE 0xf6
-#define CMD_STOP       0xf5
-#define CMD_TUNE_UP    0xf4
-#define CMD_TUNE_DOWN  0xf3
-#define CMD_PRESET_1   0xf2
-#define CMD_PRESET_2   0xf1
-#define CMD_PRESET_3   0xf0
-#define CMD_PRESET_4   0xef
-#define CMD_PRESET_5   0xee
+// LSB first, 1 start bit + 8 bit data + 8 bit inverted data + 1 stop bit.
+#define BOSEWAVE_BITS             16 // Command and inverted command
 
-#define BOSEWAVE_BITS              8
-#define BOSEWAVE_HEADER_MARK    1061
-#define BOSEWAVE_HEADER_SPACE   1456
+#define BOSEWAVE_HEADER_MARK    1060
+#define BOSEWAVE_HEADER_SPACE   1450
 #define BOSEWAVE_BIT_MARK        534
 #define BOSEWAVE_ONE_SPACE       468
 #define BOSEWAVE_ZERO_SPACE     1447
-#define BOSEWAVE_END_MARK        614
-#define BOSEWAVE_REPEAT_SPACE  51200 // Not used.
+
+#define BOSEWAVE_REPEAT_SPACE  52000
 
 //+=============================================================================
-uint16_t rawSignal[35];
-void IRsend::sendBoseWave(unsigned char code) {
 
-    unsigned int index = 0;
-    // Header
-    rawSignal[index++] = BOSEWAVE_HEADER_MARK;
-    rawSignal[index++] = BOSEWAVE_HEADER_SPACE;
+void IRsend::sendBoseWaveStandard(uint8_t aCommand, uint8_t aNumberOfRepeats) {
+    // Set IR carrier frequency
+    enableIROut(38);
 
-    // 8 bit command
-    for (unsigned char mask = 0x80; mask; mask >>= 1) {
-        rawSignal[index++] = BOSEWAVE_BIT_MARK;
-        if (code & mask) {
-            rawSignal[index++] = BOSEWAVE_ONE_SPACE;
-        } else {
-            rawSignal[index++] = BOSEWAVE_ZERO_SPACE;
+    uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+        // Header
+        mark(BOSEWAVE_HEADER_MARK);
+        space(BOSEWAVE_HEADER_SPACE);
+        // send 8 command bits and then 8 inverted command bits LSB first
+        uint16_t tData = ((~aCommand) << 8) | aCommand;
+
+        sendPulseDistanceWidthData(BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, tData,
+        BOSEWAVE_BITS, false);
+
+        mark(BOSEWAVE_BIT_MARK); // Stop bit
+        space(0);  // Always end with the LED off
+
+        tNumberOfCommands--;
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            // send repeated command with a fixed space gap
+            delay( BOSEWAVE_REPEAT_SPACE / 1000);
         }
     }
-
-    // 8 bit command complement
-    for (unsigned char mask = 0x80; mask; mask >>= 1) {
-        rawSignal[index++] = BOSEWAVE_BIT_MARK;
-        if (code & mask) {
-            rawSignal[index++] = BOSEWAVE_ZERO_SPACE;
-        } else {
-            rawSignal[index++] = BOSEWAVE_ONE_SPACE;
-        }
-    }
-    // End transmission
-    rawSignal[index++] = BOSEWAVE_END_MARK;
-
-    // Transmit
-    this->sendRaw(rawSignal, 35, 38);
 }
 
 //+=============================================================================
 bool IRrecv::decodeBoseWave() {
-    unsigned char command = 0;      // Decoded command
-    unsigned char complement = 0;   // Decoded command complement
-
-    unsigned int index = 0;   // Index in to results array
-
-    DBG_PRINTLN("Decoding Bose Wave ...");
-
-    // Check we have enough data
-    if (results.rawlen < (2 * BOSEWAVE_BITS * 2) + 3) {
-        DBG_PRINT("\tInvalid (too small) data length found: ");
-        DBG_PRINTLN(results.rawlen);
-        return false;
-    }
+    uint8_t tOffset = 1;  // Index in to results; Skip first space.
 
     // Check header "mark"
-    index = 1;
-    if (!MATCH_MARK(results.rawbuf[index], BOSEWAVE_HEADER_MARK)) {
-        DBG_PRINT("\tInvalid Header Mark.  Expecting ");
-        DBG_PRINT(BOSEWAVE_HEADER_MARK);
-        DBG_PRINT(".  Got ");
-        DBG_PRINTLN(results.rawbuf[index] * MICROS_PER_TICK);
+    if (!MATCH_MARK(results.rawbuf[tOffset], BOSEWAVE_HEADER_MARK)) {
+        // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
-    index++;
+    tOffset++;
 
+    // Check we have enough data +4 for initial gap, start bit mark and space + stop bit mark
+    if (results.rawlen != (2 * BOSEWAVE_BITS) + 4) {
+        DBG_PRINT("Bose: ");
+        DBG_PRINT("Data length=");
+        DBG_PRINT(results.rawlen);
+        DBG_PRINTLN(" is not 36");
+        return false;
+    }
     // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[index], BOSEWAVE_HEADER_SPACE)) {
-        DBG_PRINT("\tInvalid Header Space.  Expecting ");
-        DBG_PRINT(BOSEWAVE_HEADER_SPACE);
-        DBG_PRINT(".  Got ");
-        DBG_PRINTLN(results.rawbuf[index] * MICROS_PER_TICK);
+    if (!MATCH_SPACE(results.rawbuf[tOffset], BOSEWAVE_HEADER_SPACE)) {
+        DBG_PRINT("Bose: ");
+        DBG_PRINTLN("Header space length is wrong");
         return false;
     }
-    index++;
+    tOffset++;
 
-    // Decode the data bits
-    for (int ii = 7; ii >= 0; ii--) {
-        // Check bit "mark".  Mark is always the same length.
-        if (!MATCH_MARK(results.rawbuf[index], BOSEWAVE_BIT_MARK)) {
-            DBG_PRINT("\tInvalid command Mark.  Expecting ");
-            DBG_PRINT(BOSEWAVE_BIT_MARK);
-            DBG_PRINT(".  Got ");
-            DBG_PRINTLN(results.rawbuf[index] * MICROS_PER_TICK);
-            return false;
-        }
-        index++;
-
-        // Check bit "space"
-        if (MATCH_SPACE(results.rawbuf[index], BOSEWAVE_ONE_SPACE)) {
-            command |= (0x01 << ii);
-        } else if (MATCH_SPACE(results.rawbuf[index], BOSEWAVE_ZERO_SPACE)) {
-            // Nothing to do for zeroes.
-        } else {
-            DBG_PRINT("\tInvalid command Space.  Got ");
-            DBG_PRINTLN(results.rawbuf[index] * MICROS_PER_TICK);
-            return false;
-        }
-        index++;
-    }
-
-    // Decode the command complement bits.  We decode it here as the complement
-    // of the complement (0=1 and 1=0) so we can easily compare it to the command.
-    for (int ii = 7; ii >= 0; ii--) {
-        // Check bit "mark".  Mark is always the same length.
-        if (!MATCH_MARK(results.rawbuf[index], BOSEWAVE_BIT_MARK)) {
-            DBG_PRINT("\tInvalid complement Mark.  Expecting ");
-            DBG_PRINT(BOSEWAVE_BIT_MARK);
-            DBG_PRINT(".  Got ");
-            DBG_PRINTLN(results.rawbuf[index] * MICROS_PER_TICK);
-            return false;
-        }
-        index++;
-
-        // Check bit "space"
-        if (MATCH_SPACE(results.rawbuf[index], BOSEWAVE_ONE_SPACE)) {
-            // Nothing to do.
-        } else if (MATCH_SPACE(results.rawbuf[index], BOSEWAVE_ZERO_SPACE)) {
-            complement |= (0x01 << ii);
-        } else {
-            DBG_PRINT("\tInvalid complement Space.  Got ");
-            DBG_PRINTLN(results.rawbuf[index] * MICROS_PER_TICK);
-            return false;
-        }
-        index++;
-    }
-
-    if (command != complement) {
-        DBG_PRINT("\tComplement is not correct.  Command=0x");
-        DBG_PRINT(command, HEX);
-        DBG_PRINT("  Complement=0x");
-        DBG_PRINTLN(complement, HEX);
+    if (!decodePulseDistanceData(BOSEWAVE_BITS, tOffset, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_ZERO_SPACE, false)) {
+        DBG_PRINT("Bose: ");
+        DBG_PRINTLN("Decode failed");
         return false;
-    } else {
-        DBG_PRINTLN("\tValid command");
     }
 
-    // Check end "mark"
-    if (MATCH_MARK(results.rawbuf[index], BOSEWAVE_END_MARK) == 0) {
-        DBG_PRINT("\tInvalid end Mark.  Got ");
-        DBG_PRINTLN(results.rawbuf[index] * MICROS_PER_TICK);
+    // Stop bit
+    if (!MATCH_MARK(results.rawbuf[tOffset + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {
+        DBG_PRINT("Bose: ");
+        DBG_PRINTLN("Stop bit verify failed");
         return false;
     }
 
     // Success
-    results.bits = BOSEWAVE_BITS;
-    results.value = command;
+    uint16_t tDecodedValue = results.value;
+    uint8_t tCommandNotInverted = tDecodedValue & 0xFF;
+    uint8_t tCommandInverted = tDecodedValue >> 8;
+    // parity check for command. Use this variant to avoid compiler warning "comparison of promoted ~unsigned with unsigned [-Wsign-compare]"
+        if ((tCommandNotInverted ^ tCommandInverted) != 0xFF) {
+        DBG_PRINT("Bose: ");
+        DBG_PRINT("Command and inverted command check failed");
+        return false;
+    }
+
+    // check for repeat
+    if (results.rawbuf[0] < ((BOSEWAVE_REPEAT_SPACE + (BOSEWAVE_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+    }
+
+    decodedIRData.command = tCommandNotInverted;
     decodedIRData.protocol = BOSEWAVE;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
+    decodedIRData.numberOfBits = BOSEWAVE_BITS;
 
     return true;
-}
-bool IRrecv::decodeBoseWave(decode_results *aResults) {
-    bool aReturnValue = decodeBoseWave();
-    *aResults = results;
-    return aReturnValue;
 }

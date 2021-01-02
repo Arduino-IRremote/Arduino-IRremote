@@ -1,4 +1,4 @@
-// Comment this out if you to send from FLASH
+// Comment this out if you want to send from FLASH
 #define VAR_IN_PROGMEM
 
 #define TIMES_TO_SEND 10U
@@ -51,7 +51,7 @@ void loop() {
     delay(2000);
 #endif
 
-    // send Nec code aquired by IRreceiveDumpV2.cpp
+    // send Nec code aquired by IRreceiveDump.cpp
     Serial.println(F("Sending Nec: address 0xFF00, data 0x15"));
     // 006D -> 38029 Hz
     irsend.sendPronto(

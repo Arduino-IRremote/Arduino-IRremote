@@ -25,7 +25,7 @@
 // 76543210 76543210 76543210 76543210 76543210 76543210
 // 00000010 00100000 Dev____  Sub Dev  Fun____  XOR( B2, B3, B4)
 
-// LSB first, 16 Vendor-Bits + 4 Parity-Bits + 4 Genre1-Bits + 4 Genre2-Bits + 10 Command-Bits + 2 ID-Bits + 8 Parity-Bits
+// LSB first, start bit + 16 Vendor + 4 Parity + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
 //
 #define KASEIKYO_VENDOR_ID_BITS     16
 #define PANASONIC_VENDOR_ID_CODE    0x2002
@@ -104,24 +104,30 @@ bool IRrecv::decodeKaseikyo() {
     unsigned int offset = 1;
 
     decode_type_t tProtocol;
-    // + 2 for initial gap + stop bit mark
-    if (results.rawlen < (2 * KASEIKYO_BITS) + 2) {
+    // Check we have enough data (100)- +4 for initial gap, start bit mark and space + stop bit mark
+    if (results.rawlen != ((2 * KASEIKYO_BITS) + 4)) {
         return false;
     }
 
     if (!MATCH_MARK(results.rawbuf[offset], KASEIKYO_HEADER_MARK)) {
+        DBG_PRINT("Kaseikyo: ");
+        DBG_PRINTLN("Header mark length is wrong");
         return false;
     }
+
     offset++;
     if (!MATCH_MARK(results.rawbuf[offset], KASEIKYO_HEADER_SPACE)) {
+        DBG_PRINT("Kaseikyo: ");
+        DBG_PRINTLN("Header space length is wrong");
         return false;
     }
     offset++;
 
-    // decode Kaseikyo Vendor ID
+    // decode Vendor ID
     if (!decodePulseDistanceData(KASEIKYO_VENDOR_ID_BITS, offset, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_ZERO_SPACE,
             false)) {
-        DBG_PRINTLN("Kaseikyo decode failed");
+        DBG_PRINT("Kaseikyo: ");
+        DBG_PRINTLN("Vendor ID decode failed");
         return false;
     }
 
@@ -142,6 +148,8 @@ bool IRrecv::decodeKaseikyo() {
     offset += (2 * KASEIKYO_VENDOR_ID_BITS);
     if (!decodePulseDistanceData(KASEIKYO_ADDRESS_BITS, offset, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_ZERO_SPACE,
             false)) {
+        DBG_PRINT("Kaseikyo: ");
+        DBG_PRINTLN("Address decode failed");
         return false;
     }
     decodedIRData.address = results.value;
@@ -156,6 +164,8 @@ bool IRrecv::decodeKaseikyo() {
     offset += (2 * KASEIKYO_ADDRESS_BITS);
     if (!decodePulseDistanceData(KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS, offset, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
     KASEIKYO_ZERO_SPACE, false)) {
+        DBG_PRINT("Kaseikyo: ");
+        DBG_PRINTLN("Command + parity decode failed");
         return false;
     }
     decodedIRData.command = results.value & 0xFF;
@@ -174,6 +184,7 @@ bool IRrecv::decodeKaseikyo() {
         return false;
     }
 
+    // check for repeat
     if (results.rawbuf[0] < (KASEIKYO_REPEAT_PERIOD / MICROS_PER_TICK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
     }

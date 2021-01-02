@@ -332,6 +332,7 @@ private:
 
     //......................................................................
     bool decodeLegoPowerFunctions();
+
     //......................................................................
     bool decodeBoseWave();
     bool decodeBoseWave(decode_results *aResults);
@@ -433,17 +434,51 @@ public:
     //......................................................................
     void sendSharpRaw(unsigned long data, int nbits);
     void sendSharp(unsigned int address, unsigned int command);
-    void sendSharpStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
+    void sendSharpStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats = 0);
 
     //......................................................................
     void sendDenon(unsigned long data, int nbits);
-    void sendDenonStandard(uint8_t aAddress, uint8_t aCommand, bool aSendSharp, uint8_t aNumberOfRepeats);
+    void sendDenonStandard(uint8_t aAddress, uint8_t aCommand, bool aSendSharp, uint8_t aNumberOfRepeats = 0);
 
     //......................................................................
-    void sendLegoPowerFunctions(uint16_t data, bool repeat = true);
+#define LEGO_MODE_EXTENDED  0
+#define LEGO_MODE_COMBO     1
+#define LEGO_MODE_SINGLE    0x4 // here the 2 LSB have meanings like Output A / Output B
+    void sendLegoPowerFunctions(uint8_t aChannel, uint8_t aMode, uint8_t tCommand, bool aDoRepeat5Times = true);
+    void sendLegoPowerFunctions(uint16_t aRawData, bool aDoRepeat5Times = true);
+    void sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoRepeat5Times = true);
 
     //......................................................................
-    void sendBoseWave(unsigned char code);
+    //
+    //                       Bose Wave Radio CD Remote Control
+    //                    |-------------------------------------|
+    //                    |   On/Off        Sleep       VolUp   |
+    //                    |   Play/Pause    Stop       VolDown  |
+    //                    |      FM          AM          Aux    |
+    //                    |   Tune Down    Tune Up       Mute   |
+    //                    |       1           2           3     |
+    //                    |       4           5           6     |
+    //                    |-------------------------------------|
+#define BOSE_CMD_ON_OFF     0x00
+#define BOSE_CMD_MUTE       0x01
+#define BOSE_CMD_VOL_UP     0x02
+#define BOSE_CMD_VOL_DOWN   0x03
+#define BOSE_CMD_PRESET_6   0x04
+#define BOSE_CMD_SLEEP      0x05
+#define BOSE_CMD_FM         0x06
+#define BOSE_CMD_AUX        0x07
+#define BOSE_CMD_AM         0x08
+#define BOSE_CMD_PLAY_PAUSE 0x09
+#define BOSE_CMD_STOP       0x0A
+#define BOSE_CMD_TUNE_UP    0x0B
+#define BOSE_CMD_TUNE_DOWN  0x0C
+#define BOSE_CMD_PRESET_1   0x0D
+#define BOSE_CMD_PRESET_2   0x0E
+#define BOSE_CMD_PRESET_3   0x0F
+#define BOSE_CMD_PRESET_4   0x10
+#define BOSE_CMD_PRESET_5   0x11
+    void sendBoseWaveStandard(uint8_t aCommand, uint8_t aNumberOfRepeats = 0);
+
     //......................................................................
     void sendMagiQuest(uint32_t wand_id, uint16_t magnitude);
 

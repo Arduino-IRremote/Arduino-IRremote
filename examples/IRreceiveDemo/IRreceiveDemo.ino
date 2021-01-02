@@ -51,12 +51,12 @@ void loop() {
     if (IrReceiver.decode()) {
         // Print a short summary of received data
         IrReceiver.printResultShort(&Serial);
-        Serial.println();
         if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
             // We have an unknown protocol, print more info
             IrReceiver.printIRResultRawFormatted(&Serial, true);
         }
-        IrReceiver.resume(); // Receive the next value
+        Serial.println();
+        IrReceiver.resume(); // Enable receiving of the next value
         /*
          * Check the received data
          */

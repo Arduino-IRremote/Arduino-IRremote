@@ -145,17 +145,16 @@ ISR (TIMER_INTR_NAME) {
     //......................................................................
     if (irparams.rcvstate == IR_REC_STATE_IDLE) { // In the middle of a gap
         if (irdata == MARK) {
-            if (irparams.timer < GAP_TICKS) {  // Not big enough to be a gap.
-                irparams.timer = 0;
-            } else {
-                // Gap just ended; Record gap duration; Start recording transmission
+            // check if we did not start in the middle of an command by checking the minimum length of leading space
+            if (irparams.timer > GAP_TICKS) {
+                // Gap just ended; Record gap duration + start recording transmission
                 // Initialize all state machine variables
                 irparams.overflow = false;
-                irparams.rawlen = 0;
-                irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-                irparams.timer = 0;
+                irparams.rawbuf[0] = irparams.timer;
+                irparams.rawlen = 1;
                 irparams.rcvstate = IR_REC_STATE_MARK;
             }
+            irparams.timer = 0;
         }
     }
 
@@ -182,16 +181,21 @@ ISR (TIMER_INTR_NAME) {
             irparams.timer = 0;
             irparams.rcvstate = IR_REC_STATE_MARK;
 
-        } else if (irparams.timer > GAP_TICKS) {  // Space
-            // A long Space, indicates gap between codes
-            // Flag the current code as ready for processing
-            // Switch to STOP
-            // Don't reset timer; keep counting Space width
+        } else if (irparams.timer > GAP_TICKS) {
+            /*
+             * A long Space, indicates gap between codes
+             * Switch to IR_REC_STATE_STOP, which means current code is ready for processing
+             * Don't reset timer; keep counting width of next leading space
+             */
             irparams.rcvstate = IR_REC_STATE_STOP;
         }
-    } else if (irparams.rcvstate == IR_REC_STATE_STOP) {  // Waiting; Measuring Gap
+    } else if (irparams.rcvstate == IR_REC_STATE_STOP) {
+        /*
+         * Complete command received
+         * stay here until resume() is called, which switches state to IR_REC_STATE_IDLE
+         */
         if (irdata == MARK) {
-            irparams.timer = 0;  // Reset gap timer
+            irparams.timer = 0;  // Reset gap timer, to prepare for call of resume()
         }
     }
 

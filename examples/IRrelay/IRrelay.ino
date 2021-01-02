@@ -58,45 +58,20 @@ void loop() {
             Serial.print(F("Switch relay "));
             if (on) {
                 digitalWrite(RELAY_PIN, HIGH);
-                digitalWrite(LED_BUILTIN, HIGH);
                 Serial.println(F("on"));
             } else {
                 digitalWrite(RELAY_PIN, LOW);
-                digitalWrite(LED_BUILTIN, LOW);
                 Serial.println(F("off"));
             }
-            dump();
+
+            IrReceiver.printResultShort(&Serial);
+            Serial.println();
+            if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
+                // We have an unknown protocol, print more info
+                IrReceiver.printIRResultRawFormatted(&Serial, true);
+            }
         }
         last = millis();
-        IrReceiver.resume(); // Receive the next value
+        IrReceiver.resume(); // Enable receiving of the next value
     }
-}
-
-
-// Dumps out the decode_results structure.
-// Call this after IRrecv::decode()
-void dump() {
-    uint16_t count = IrReceiver.results.rawlen;
-    if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
-        Serial.println("Could not decode message");
-    } else {
-        IrReceiver.printResultShort(&Serial);
-
-        Serial.print(" (");
-        Serial.print(IrReceiver.results.bits, DEC);
-        Serial.println(" bits)");
-    }
-    Serial.print("Raw (");
-    Serial.print(count, DEC);
-    Serial.print("): ");
-
-    for (uint16_t i = 0; i < count; i++) {
-        if ((i % 2) == 1) {
-            Serial.print(IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
-        } else {
-            Serial.print(-(int) IrReceiver.results.rawbuf[i] * MICROS_PER_TICK, DEC);
-        }
-        Serial.print(" ");
-    }
-    Serial.println("");
 }
