@@ -22,6 +22,7 @@
 //==============================================================================
 // from LEGO Power Functions RC Manual 26.02.2010 Version 1.20
 // https://github.com/jurriaan/Arduino-PowerFunctions/raw/master/LEGO_Power_Functions_RC_v120.pdf
+// https://oberguru.net/elektronik/ir/codes/lego_power_functions_train.lircd.conf
 //
 // To ensure correct detection of IR messages six 38 kHz cycles are transmitted as mark.
 // Low bit consists of 6 cycles of IR and 10 “cycles” of pause,
@@ -100,7 +101,9 @@ bool IRrecv::decodeLegoPowerFunctions() {
     uint8_t tData = (tDecodedValue >> 4) & 0xF; // lego calls this field "data"
     uint8_t tParityReceived = tDecodedValue & 0xF;
 
-    uint8_t tParityComputed = tToggleEscapeChannel ^ tModeAddress ^ tData;
+    // This is parity as defined in the specifications
+    // But in some scans I saw 0x9 ^ .. as parity formula
+    uint8_t tParityComputed = 0xF ^ tToggleEscapeChannel ^ tModeAddress ^ tData;
 
     // parity check
     if (tParityReceived != tParityComputed) {
@@ -117,14 +120,15 @@ bool IRrecv::decodeLegoPowerFunctions() {
         DBG_PRINT(tModeAddress, HEX);
         DBG_PRINT(", 0x");
         DBG_PRINTLN(tData, HEX);
-        return false;
+        // might not be an error, so just continue
+        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED;
     }
 
     /*
      * Check for autorepeat (should happen 4 times for one press)
      */
     if (results.rawbuf[0] < (LEGO_AUTO_REPEAT_PERIOD_MAX / MICROS_PER_TICK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_AUTO_REPEAT;
+        decodedIRData.flags |= IRDATA_FLAGS_IS_AUTO_REPEAT;
     }
     decodedIRData.address = tDecodedValue >> 8;
     decodedIRData.command = tData;
@@ -151,7 +155,7 @@ void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aMode, uint8_t aCo
     aChannel &= 0x0F; // allow toggle and escape bits too
     aCommand &= 0x0F;
     aMode &= 0x0F;
-    uint8_t tParity = aChannel ^ aMode ^ aCommand;
+    uint8_t tParity = 0xF ^ aChannel ^ aMode ^ aCommand;
     uint16_t tRawData = (((aChannel << 4) | aMode) << 8) | (aCommand << 4) | tParity;
     sendLegoPowerFunctions(tRawData, aChannel, aDoRepeat5Times);
 }

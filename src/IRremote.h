@@ -38,7 +38,7 @@
 #if VERSION_IRREMOTE_MAJOR > 2
 #define USE_STANDARD_DECODE
 #else
-//#define USE_STANDARD_DECODE // remove comment to have the standard NEC and other decoders available.
+#define USE_STANDARD_DECODE // remove comment to have the standard NEC and other decoders available.
 #endif
 //------------------------------------------------------------------------------
 // Supported IR protocols
@@ -85,6 +85,9 @@ typedef enum {
     NEC,
     PANASONIC,
     KASEIKYO,
+    KASEIKYO_JVC,
+    KASEIKYO_DENON,
+    KASEIKYO_SHARP,
     RC5,
     RC6,
     SAMSUNG,
@@ -172,10 +175,10 @@ struct IRData {
     uint32_t address;           ///< Decoded address
     uint32_t command;           ///< Decoded command
 #if DECODE_MAGIQUEST
-    uint16_t magnitude;         ///< Used by MagiQuest [16-bits]
+    uint16_t extra;             ///< Used by MagiQuest [16-bits]
 #endif
     uint8_t numberOfBits;       ///< Number of bits received for data (address + command + parity + etc.)
-    uint8_t flags;                 ///< True if repeat of value is detected
+    uint8_t flags;              ///< See definitions above
 };
 
 /**
@@ -415,6 +418,10 @@ public:
     void sendSonyStandard(uint16_t aAddress, uint8_t aCommand, bool send8AddressBits = false, uint8_t aNumberOfRepeats = 0);
 
     //......................................................................
+#define PANASONIC_VENDOR_ID_CODE    0x2002
+#define SHARP_VENDOR_ID_CODE        0x5AAA
+#define DENON_VENDOR_ID_CODE        0x3254
+#define JVC_VENDOR_ID_CODE          0x0103
     void sendPanasonic(uint16_t aAddress, uint32_t aData);
     void sendPanasonicStandard(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats); // LSB first
     void sendKaseikyoStandard(uint16_t aAddress, uint8_t aData, uint16_t aVendorCode, uint8_t aNumberOfRepeats); // LSB first

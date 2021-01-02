@@ -549,6 +549,15 @@ const char* IRrecv::getProtocolString() {
     case KASEIKYO:
         return ("KASEIKYO");
         break;
+    case KASEIKYO_DENON:
+        return ("KASEIKYO_DENON");
+        break;
+    case KASEIKYO_SHARP:
+        return ("KASEIKYO_SHARP");
+        break;
+    case KASEIKYO_JVC:
+        return ("KASEIKYO_JVC");
+        break;
 #endif
 #if DECODE_RC5
     case RC5:

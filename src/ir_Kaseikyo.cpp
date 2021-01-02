@@ -29,10 +29,6 @@
 // LSB first, start bit + 16 Vendor + 4 Parity(of vendor) + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
 //
 #define KASEIKYO_VENDOR_ID_BITS     16
-#define PANASONIC_VENDOR_ID_CODE    0x2002
-#define SHARP_VENDOR_ID_CODE        0x5AAA
-#define DENON_VENDOR_ID_CODE        0x3254
-#define JVC_VENDOR_ID_CODE          0x0103
 #define KASEIKYO_ADDRESS_BITS       16
 #define KASEIKYO_COMMAND_BITS       8
 #define KASEIKYO_PARITY_BITS        8
@@ -136,11 +132,11 @@ bool IRrecv::decodeKaseikyo() {
     if (results.value == PANASONIC_VENDOR_ID_CODE) {
         tProtocol = PANASONIC;
     } else if (results.value == SHARP_VENDOR_ID_CODE) {
-        tProtocol = SHARP;
+        tProtocol = KASEIKYO_SHARP;
     } else if (results.value == DENON_VENDOR_ID_CODE) {
-        tProtocol = DENON;
+        tProtocol = KASEIKYO_DENON;
     } else if (results.value == JVC_VENDOR_ID_CODE) {
-        tProtocol = JVC;
+        tProtocol = KASEIKYO_JVC;
     } else {
         tProtocol = KASEIKYO;
     }
