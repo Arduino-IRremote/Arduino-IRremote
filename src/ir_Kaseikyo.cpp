@@ -17,6 +17,7 @@
 //       P      A   A  N  NN  A   A      S  O   O  N  NN    I    C
 //       P      A   A  N   N  A   A  SSSS    OOO   N   N  IIIII   CCCC
 //==============================================================================
+// see: http://www.hifi-remote.com/johnsfine/DecodeIR.html#Panasonic
 // see: http://www.remotecentral.com/cgi-bin/mboard/rc-pronto/thread.cgi?26152
 // The first two (8-bit) bytes are always 2 and 32 (These identify Panasonic within the Kaseikyo standard)
 // The next two bytes are 4 independent 4-bit fields or Device and Subdevice
@@ -25,7 +26,7 @@
 // 76543210 76543210 76543210 76543210 76543210 76543210
 // 00000010 00100000 Dev____  Sub Dev  Fun____  XOR( B2, B3, B4)
 
-// LSB first, start bit + 16 Vendor + 4 Parity + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
+// LSB first, start bit + 16 Vendor + 4 Parity(of vendor) + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
 //
 #define KASEIKYO_VENDOR_ID_BITS     16
 #define PANASONIC_VENDOR_ID_CODE    0x2002

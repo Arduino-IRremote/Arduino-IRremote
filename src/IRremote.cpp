@@ -35,7 +35,7 @@ struct irparams_struct irparams; // the irparams instance
 //   functions even in non-DEBUG mode
 //
 int MATCH(unsigned int measured, unsigned int desired) {
-#ifdef DEBUG
+#ifdef TRACE
     Serial.print(F("Testing: "));
     Serial.print(TICKS_LOW(desired), DEC);
     Serial.print(F(" <= "));
@@ -44,7 +44,7 @@ int MATCH(unsigned int measured, unsigned int desired) {
     Serial.print(TICKS_HIGH(desired), DEC);
 #endif
     bool passed = ((measured >= TICKS_LOW(desired)) && (measured <= TICKS_HIGH(desired)));
-#ifdef DEBUG
+#ifdef TRACE
     if (passed) {
         Serial.println(F("?; passed"));
     } else {
@@ -58,7 +58,7 @@ int MATCH(unsigned int measured, unsigned int desired) {
 // Due to sensor lag, when received, Marks tend to be 100us too long
 //
 int MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us) {
-#ifdef DEBUG
+#ifdef TRACE
     Serial.print(F("Testing mark (actual vs desired): "));
     Serial.print(measured_ticks * MICROS_PER_TICK, DEC);
     Serial.print(F("us vs "));
@@ -73,7 +73,7 @@ int MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us) {
     // compensate for marks exceeded by demodulator hardware
     bool passed = ((measured_ticks >= TICKS_LOW(desired_us + MARK_EXCESS_MICROS))
             && (measured_ticks <= TICKS_HIGH(desired_us + MARK_EXCESS_MICROS)));
-#ifdef DEBUG
+#ifdef TRACE
     if (passed) {
         Serial.println(F("?; passed"));
     } else {
@@ -87,7 +87,7 @@ int MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us) {
 // Due to sensor lag, when received, Spaces tend to be 100us too short
 //
 int MATCH_SPACE(uint16_t measured_ticks, unsigned int desired_us) {
-#ifdef DEBUG
+#ifdef TRACE
     Serial.print(F("Testing space (actual vs desired): "));
     Serial.print(measured_ticks * MICROS_PER_TICK, DEC);
     Serial.print(F("us vs "));
@@ -102,7 +102,7 @@ int MATCH_SPACE(uint16_t measured_ticks, unsigned int desired_us) {
     // compensate for marks exceeded and spaces shortened by demodulator hardware
     bool passed = ((measured_ticks >= TICKS_LOW(desired_us - MARK_EXCESS_MICROS))
             && (measured_ticks <= TICKS_HIGH(desired_us - MARK_EXCESS_MICROS)));
-#ifdef DEBUG
+#ifdef TRACE
     if (passed) {
         Serial.println(F("?; passed"));
     } else {

@@ -55,7 +55,9 @@ const uint8_t irSignalP[] PROGMEM
         11/*1110 Inverted 8 of command*/, 11, 11, 11, 34, 11, 34, 11, 34/*0111 inverted 1 of command*/, 11 /*stop bit*/};
 
 void loop() {
-    uint8_t khz = 38; // 38kHz carrier frequency for the NEC protocol
+    const uint8_t NEC_KHZ = 38; // 38kHz carrier frequency for the NEC protocol
+
+#if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__))
     /*
      * Send hand crafted data from RAM
      * The values are NOT multiple of 50, but are taken from the NEC timing definitions
@@ -69,24 +71,25 @@ void loop() {
 #else
     const uint16_t irSignal[] = { 4711, 9000, 4500, 560, 560, 560, 560, 560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560,
             560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 560, 560, 560,
-            560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 560, 560, 1690, 560, 1690, 560,
-            1690, 560, 1690, 560 }; // Using exact NEC timing
+            560, 1690, 560, 560, 560, 560, 560, 560, 560, 560, 560, 1690, 560, 1690, 560 /* maximum array size for ATtiny85 */,
+            1690, 560, 560, 560, 1690, 560, 1690, 560, 1690, 560, 1690, 560 }; // Using exact NEC timing
 #endif
-    IrSender.sendRaw(irSignal, sizeof(irSignal) / sizeof(irSignal[0]), khz); // Note the approach used to automatically calculate the size of the array.
+    IrSender.sendRaw(irSignal, sizeof(irSignal) / sizeof(irSignal[0]), NEC_KHZ); // Note the approach used to automatically calculate the size of the array.
 
     delay(1000);
+#endif
 
     /*
      * Send byte data direct from FLASH
      * Note the approach used to automatically calculate the size of the array.
      */
     Serial.println(F("Send NEC 16 bit address 0xFB0C, 0x18 with (50 us) tick resolution timing (8 bit array format) "));
-    IrSender.sendRaw_P(irSignalP, sizeof(irSignalP) / sizeof(irSignalP[0]), khz);
+    IrSender.sendRaw_P(irSignalP, sizeof(irSignalP) / sizeof(irSignalP[0]), NEC_KHZ);
 
     delay(1000);
 
     Serial.println(F("Send NEC 16 bit address 0x0102, 8 bit data 0x34 with generated timing"));
-    IrSender.sendNECStandard(0x0102, 0x34, true,0);
+    IrSender.sendNECStandard(0x0102, 0x34, true, 0);
 
     delay(3000);
 }

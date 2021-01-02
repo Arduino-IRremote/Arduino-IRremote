@@ -48,119 +48,119 @@ bool IRrecv::decode() {
     initDecodedIRData();
 
 #if DECODE_NEC
-    DBG_PRINTLN("Attempting NEC decode");
+    TRACE_PRINTLN("Attempting NEC decode");
     if (decodeNEC()) {
         return true;
     }
 #endif
 
 #if DECODE_PANASONIC
-    DBG_PRINTLN("Attempting Panasonic/Kaseikyo decode");
+    TRACE_PRINTLN("Attempting Panasonic/Kaseikyo decode");
     if (decodeKaseikyo()) {
         return true;
     }
 #endif
 
 #if DECODE_KASEIKYO && !defined(USE_STANDARD_DECODE) // if USE_STANDARD_DECODE enabled, decodeKaseikyo() is already called by decodePanasonic()
-    DBG_PRINTLN("Attempting Panasonic/Kaseikyo decode");
+    TRACE_PRINTLN("Attempting Panasonic/Kaseikyo decode");
     if (decodeKaseikyo()) {
         return true;
     }
 #endif
 
 #if DECODE_DENON
-    DBG_PRINTLN("Attempting Denon/Sharp decode");
+    TRACE_PRINTLN("Attempting Denon/Sharp decode");
     if (decodeDenon()) {
         return true;
     }
 #endif
 
 #if DECODE_SONY
-    DBG_PRINTLN("Attempting Sony decode");
+    TRACE_PRINTLN("Attempting Sony decode");
     if (decodeSony()) {
         return true;
     }
 #endif
 
 #if DECODE_SHARP && ! DECODE_DENON
-    DBG_PRINTLN("Attempting Denon/Sharp decode");
+    TRACE_PRINTLN("Attempting Denon/Sharp decode");
     if (decodeSharp()) {
         return true;
     }
 #endif
 
 #if DECODE_SANYO
-    DBG_PRINTLN("Attempting Sanyo decode");
+    TRACE_PRINTLN("Attempting Sanyo decode");
     if (decodeSanyo()) {
         return true;
     }
 #endif
 
 #if DECODE_RC5
-    DBG_PRINTLN("Attempting RC5 decode");
+    TRACE_PRINTLN("Attempting RC5 decode");
     if (decodeRC5()) {
         return true;
     }
 #endif
 
 #if DECODE_RC6
-    DBG_PRINTLN("Attempting RC6 decode");
+    TRACE_PRINTLN("Attempting RC6 decode");
     if (decodeRC6()) {
         return true;
     }
 #endif
 
 #if DECODE_LG
-    DBG_PRINTLN("Attempting LG decode");
+    TRACE_PRINTLN("Attempting LG decode");
     if (decodeLG()) {
         return true;
     }
 #endif
 
 #if DECODE_JVC
-    DBG_PRINTLN("Attempting JVC decode");
+    TRACE_PRINTLN("Attempting JVC decode");
     if (decodeJVC()) {
         return true;
     }
 #endif
 
 #if DECODE_SAMSUNG
-    DBG_PRINTLN("Attempting SAMSUNG decode");
+    TRACE_PRINTLN("Attempting SAMSUNG decode");
     if (decodeSAMSUNG()) {
         return true;
     }
 #endif
 
 #if DECODE_WHYNTER
-    DBG_PRINTLN("Attempting Whynter decode");
+    TRACE_PRINTLN("Attempting Whynter decode");
     if (decodeWhynter()) {
         return true;
     }
 #endif
 
 #if DECODE_LEGO_PF
-    DBG_PRINTLN("Attempting Lego Power Functions");
+    TRACE_PRINTLN("Attempting Lego Power Functions");
     if (decodeLegoPowerFunctions()) {
         return true;
     }
 #endif
 
 #if DECODE_BOSEWAVE
-    DBG_PRINTLN("Attempting Bosewave  decode");
+    TRACE_PRINTLN("Attempting Bosewave  decode");
     if (decodeBoseWave()) {
         return true;
     }
 #endif
 
 #if DECODE_MAGIQUEST
-    DBG_PRINTLN("Attempting MagiQuest decode");
+    TRACE_PRINTLN("Attempting MagiQuest decode");
     if (decodeMagiQuest()) {
         return true;
     }
 #endif
 
 #if DECODE_HASH
-    DBG_PRINTLN("Hash decode");
+    TRACE_PRINTLN("Hash decode");
     // decodeHash returns a hash on any input.
     // Thus, it needs to be last in the list.
     // If you add any decodes, add them before this.
@@ -308,9 +308,17 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
             // Check for variable length mark indicating a 0 or 1
             if (MATCH_MARK(results.rawbuf[aStartOffset], aOneMarkMicros)) {
                 tDecodedData = (tDecodedData << 1) | 1;
+                TRACE_PRINT('1');
             } else if (MATCH_MARK(results.rawbuf[aStartOffset], aZeroMarkMicros)) {
                 tDecodedData = (tDecodedData << 1) | 0;
+                TRACE_PRINT('0');
             } else {
+                DBG_PRINT(F("Mark="));
+                DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
+                DBG_PRINT(F(" is not "));
+                DBG_PRINT(aOneMarkMicros);
+                DBG_PRINT(F(" or "));
+                DBG_PRINTLN(aZeroMarkMicros);
                 return false;
             }
             aStartOffset++;
@@ -319,20 +327,33 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
                 // Assume that last space, which is not recorded, is correct
                 // Check for constant length space
                 if (!MATCH_SPACE(results.rawbuf[aStartOffset], aBitSpaceMicros)) {
+                    DBG_PRINT(F("Space="));
+                    DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
+                    DBG_PRINT(F(" is not "));
+                    DBG_PRINTLN(aBitSpaceMicros);
                     return false;
                 }
                 aStartOffset++;
             }
         }
+        TRACE_PRINTLN("");
     } else {
         for (unsigned long mask = 1UL; aNumberOfBits > 0; mask <<= 1, aNumberOfBits--) {
 
             // Check for variable length mark indicating a 0 or 1
             if (MATCH_MARK(results.rawbuf[aStartOffset], aOneMarkMicros)) {
                 tDecodedData |= mask; // set the bit
+                TRACE_PRINT('1');
             } else if (MATCH_MARK(results.rawbuf[aStartOffset], aZeroMarkMicros)) {
                 // do not set the bit
+                TRACE_PRINT('0');
             } else {
+                DBG_PRINT(F("Mark="));
+                DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
+                DBG_PRINT(F(" is not "));
+                DBG_PRINT(aOneMarkMicros);
+                DBG_PRINT(F(" or "));
+                DBG_PRINTLN(aZeroMarkMicros);
                 return false;
             }
             aStartOffset++;
@@ -341,11 +362,16 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
                 // Assume that last space, which is not recorded, is correct
                 // Check for constant length space
                 if (!MATCH_SPACE(results.rawbuf[aStartOffset], aBitSpaceMicros)) {
+                    DBG_PRINT(F("Space="));
+                    DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
+                    DBG_PRINT(F(" is not "));
+                    DBG_PRINTLN(aBitSpaceMicros);
                     return false;
                 }
                 aStartOffset++;
             }
         }
+        TRACE_PRINTLN("");
     }
     results.value = tDecodedData;
     return true;
@@ -368,6 +394,10 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
         for (uint8_t i = 0; i < aNumberOfBits; i++) {
             // Check for constant length mark
             if (!MATCH_MARK(results.rawbuf[aStartOffset], aBitMarkMicros)) {
+                DBG_PRINT(F("Mark="));
+                DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
+                DBG_PRINT(F(" is not "));
+                DBG_PRINTLN(aBitMarkMicros);
                 return false;
             }
             aStartOffset++;
@@ -375,17 +405,31 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
             // Check for variable length space indicating a 0 or 1
             if (MATCH_SPACE(results.rawbuf[aStartOffset], aOneSpaceMicros)) {
                 tDecodedData = (tDecodedData << 1) | 1;
+                TRACE_PRINT('1');
             } else if (MATCH_SPACE(results.rawbuf[aStartOffset], aZeroSpaceMicros)) {
                 tDecodedData = (tDecodedData << 1) | 0;
+                TRACE_PRINT('0');
             } else {
+                DBG_PRINT(F("Space="));
+                DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
+                DBG_PRINT(F(" is not "));
+                DBG_PRINT(aOneSpaceMicros);
+                DBG_PRINT(F(" or "));
+                DBG_PRINTLN(aZeroSpaceMicros);
                 return false;
             }
             aStartOffset++;
         }
+        TRACE_PRINTLN("");
+
     } else {
         for (unsigned long mask = 1UL; aNumberOfBits > 0; mask <<= 1, aNumberOfBits--) {
             // Check for constant length mark
             if (!MATCH_MARK(results.rawbuf[aStartOffset], aBitMarkMicros)) {
+                DBG_PRINT(F("Mark="));
+                DBG_PRINT(results.rawbuf[aStartOffset]*MICROS_PER_TICK);
+                DBG_PRINT(F(" is not "));
+                DBG_PRINTLN(aBitMarkMicros);
                 return false;
             }
             aStartOffset++;
@@ -393,14 +437,22 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
             // Check for variable length space indicating a 0 or 1
             if (MATCH_SPACE(results.rawbuf[aStartOffset], aOneSpaceMicros)) {
                 tDecodedData |= mask; // set the bit
+                TRACE_PRINT('1');
             } else if (MATCH_SPACE(results.rawbuf[aStartOffset], aZeroSpaceMicros)) {
                 // do not set the bit
+                TRACE_PRINT('0');
             } else {
+                DBG_PRINT(F("Space="));
+                DBG_PRINT(results.rawbuf[aStartOffset]*MICROS_PER_TICK);
+                DBG_PRINT(F(" is not "));
+                DBG_PRINT(aOneSpaceMicros);
+                DBG_PRINT(F(" or "));
+                DBG_PRINTLN(aZeroSpaceMicros);
                 return false;
             }
-
             aStartOffset++;
         }
+        TRACE_PRINTLN("");
     }
     results.value = tDecodedData;
     return true;
@@ -455,7 +507,7 @@ const char* IRrecv::getProtocolString() {
 #endif
 #if DECODE_DENON
     case DENON:
-        return ("Denon");
+        return ("DENON");
         break;
 #endif
 #if DECODE_SHARP
@@ -563,14 +615,14 @@ void IRrecv::printResultShort(Print *aSerial) {
 
             if (decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
                 aSerial->print(F(" Repeat gap="));
-                aSerial->print((uint32_t)results.rawbuf[0] * MICROS_PER_TICK);
+                aSerial->print((uint32_t) results.rawbuf[0] * MICROS_PER_TICK);
                 aSerial->print(F("us"));
             }
         } else {
             // assume that we have a repeat if the gap is below 200 ms
             if (results.rawbuf[0] < (200000 / MICROS_PER_TICK)) {
                 aSerial->print(F(" Repeat gap="));
-                aSerial->print((uint32_t)results.rawbuf[0] * MICROS_PER_TICK);
+                aSerial->print((uint32_t) results.rawbuf[0] * MICROS_PER_TICK);
                 aSerial->print(F("us"));
             }
         }
@@ -654,7 +706,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
      * Print initial gap
      */
     if (aOutputMicrosecondsInsteadOfTicks) {
-        tDurationMicros = (uint32_t)results.rawbuf[0] * MICROS_PER_TICK;
+        tDurationMicros = (uint32_t) results.rawbuf[0] * MICROS_PER_TICK;
     } else {
         tDurationMicros = results.rawbuf[0];
     }

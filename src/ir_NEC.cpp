@@ -7,7 +7,7 @@
  *
  */
 
-//#define DEBUG // Comment this out for lots of lovely debug output.
+//#define DEBUG // Comment this out to see output of decoding errors.
 #include "IRremote.h"
 
 //==============================================================================
@@ -113,30 +113,30 @@ bool IRrecv::decodeNEC() {
 
     // Check we have enough data - +4 for initial gap, start bit mark and space + stop bit mark
     if (results.rawlen != (2 * NEC_BITS) + 4) {
-        DBG_PRINT("NEC: ");
-        DBG_PRINT("Data length=");
+        DBG_PRINT(F("NEC: "));
+        DBG_PRINT(F("Data length="));
         DBG_PRINT(results.rawlen);
-        DBG_PRINTLN(" is not 68");
+        DBG_PRINTLN(F(" is not 68"));
         return false;
     }
     // Check header "space"
     if (!MATCH_SPACE(results.rawbuf[tOffset], NEC_HEADER_SPACE)) {
-        DBG_PRINT("NEC: ");
-        DBG_PRINTLN("Header space length is wrong");
+        DBG_PRINT(F("NEC: "));
+        DBG_PRINTLN(F("Header space length is wrong"));
         return false;
     }
     tOffset++;
 
     if (!decodePulseDistanceData(NEC_BITS, tOffset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, false)) {
-        DBG_PRINT("NEC: ");
-        DBG_PRINTLN("Decode failed");
+        DBG_PRINT(F("NEC: "));
+        DBG_PRINTLN(F("Decode failed"));
         return false;
     }
 
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[tOffset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
-        DBG_PRINT("NEC: ");
-        DBG_PRINTLN("Stop bit verify failed");
+        DBG_PRINT(F("NEC: "));
+        DBG_PRINTLN(F("Stop bit verify failed"));
         return false;
     }
 
@@ -146,8 +146,8 @@ bool IRrecv::decodeNEC() {
     uint8_t tCommandInverted = tCommand >> 8;
     // plausi check for command
     if ((tCommandNotInverted ^ tCommandInverted) != 0xFF) {
-        DBG_PRINT("NEC: ");
-        DBG_PRINT("Command and inverted command check failed");
+        DBG_PRINT(F("NEC: "));
+        DBG_PRINT(F("Command and inverted command check failed"));
         return false;
     }
     decodedIRData.command = tCommandNotInverted;

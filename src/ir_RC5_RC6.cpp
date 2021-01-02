@@ -39,7 +39,7 @@ int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int
         (*offset)++;
     }
 
-    DBG_PRINTLN((val == MARK) ? "MARK" : "SPACE");
+    TRACE_PRINTLN((val == MARK) ? "MARK" : "SPACE");
 
     return val;
 }

@@ -115,6 +115,13 @@ typedef enum {
 #  define DBG_PRINTLN(...) void()
 #endif
 
+#ifdef TRACE
+#  define TRACE_PRINT(...)    Serial.print(__VA_ARGS__)
+#  define TRACE_PRINTLN(...)  Serial.println(__VA_ARGS__)
+#else
+#  define TRACE_PRINT(...) void()
+#  define TRACE_PRINTLN(...) void()
+#endif
 //------------------------------------------------------------------------------
 // Helper macro for getting a macro definition as string
 //
