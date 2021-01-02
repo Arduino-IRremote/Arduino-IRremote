@@ -57,7 +57,7 @@ void setup() {
     delay(2000); // To be able to connect Serial monitor after reset and before first printout
 #endif
     // Just to know which program is running on my Arduino
-    Serial.println(F("START " __FILE__ " from " __DATE__));
+    Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
     Keyboard.begin();
     // In case the interrupt driver crashes on setup, give a clue

@@ -34,7 +34,7 @@ void setup() {
     delay(2000); // To be able to connect Serial monitor after reset and before first printout
 #endif
     // Just to know which program is running on my Arduino
-    Serial.println(F("START " __FILE__ " from " __DATE__));
+    Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
     Serial.println(F("Send with standard protocol encoders"));

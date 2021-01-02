@@ -22,7 +22,7 @@ void setup() {
         ;
 
     // Just to know which program is running on my Arduino
-    Serial.println(F("START " __FILE__ " from " __DATE__));
+    Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
     Serial.print(F("Will send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
