@@ -191,7 +191,9 @@ void loop()
         /*
          * Short beep as remainder, if we did not receive any command in the last 10 seconds
          */
+#if !defined(ESP32)
         doTone1800();
+#endif
     }
 
     delay(10);

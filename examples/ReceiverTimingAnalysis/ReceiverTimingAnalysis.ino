@@ -148,9 +148,13 @@ void loop()
         /*
          * This check enables statistics for longer protocols like Kaseikyo/Panasonics
          */
+#if !defined(ARDUINO_ARCH_MBED)
         noInterrupts();
+#endif
         uint32_t tLastMicros = LastMicros;
+#if !defined(ARDUINO_ARCH_MBED)
         interrupts();
+#endif
         uint32_t tMicrosDelta = micros() - tLastMicros;
 
         if (tMicrosDelta > 10000)

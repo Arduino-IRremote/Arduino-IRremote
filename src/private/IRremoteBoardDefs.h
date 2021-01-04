@@ -456,9 +456,9 @@
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_SEND_PWM    (TCCR2A |= _BV(COM2B1))    // Clear OC2B on Compare Match
 #define TIMER_DISABLE_SEND_PWM   (TCCR2A &= ~(_BV(COM2B1))) // Normal port operation, OC2B disconnected.
-#define TIMER_ENABLE_RECEIVE_INTR   (TIMSK2 = _BV(OCIE2A))  // Output Compare Match A Interrupt Enable
+#define TIMER_ENABLE_RECEIVE_INTR   (TIMSK2 = _BV(OCIE2B))  // Output Compare Match A Interrupt Enable
 #define TIMER_DISABLE_RECEIVE_INTR  (TIMSK2 = 0)
-#define TIMER_INTR_NAME     TIMER2_COMPA_vect
+#define TIMER_INTR_NAME     TIMER2_COMPB_vect // We use TIMER2_COMPB_vect to be compatible with tone() library
 
 // The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -484,11 +484,13 @@ static void timerConfigForReceive() {
     TCCR2A = _BV(WGM21);
     TCCR2B = _BV(CS20);
     OCR2A  = TIMER_COUNT_TOP;
+    OCR2B  = TIMER_COUNT_TOP;
     TCNT2  = 0;
 #  else
     TCCR2A = _BV(WGM21);
     TCCR2B = _BV(CS21);
     OCR2A = TIMER_COUNT_TOP / 8;
+    OCR2B = TIMER_COUNT_TOP / 8;
     TCNT2 = 0;
 #  endif
 }
@@ -588,9 +590,9 @@ static void timerConfigForReceive() {
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_SEND_PWM     (TCCR3A |= _BV(COM3A1))
 #define TIMER_DISABLE_SEND_PWM    (TCCR3A &= ~(_BV(COM3A1)))
-#define TIMER_ENABLE_RECEIVE_INTR    (TIMSK3 = _BV(OCIE3A))
+#define TIMER_ENABLE_RECEIVE_INTR    (TIMSK3 = _BV(OCIE3B))
 #define TIMER_DISABLE_RECEIVE_INTR   (TIMSK3 = 0)
-#define TIMER_INTR_NAME      TIMER3_COMPA_vect
+#define TIMER_INTR_NAME      TIMER3_COMPB_vect
 
 static void timerConfigForSend(uint16_t aFrequencyKHz) {
     const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
@@ -605,6 +607,7 @@ static void timerConfigForReceive() {
     TCCR3A = 0;
     TCCR3B = _BV(WGM32) | _BV(CS30);
     OCR3A = SYSCLOCK * MICROS_PER_TICK / 1000000;
+    OCR3B = SYSCLOCK * MICROS_PER_TICK / 1000000;
     TCNT3 = 0;
 }
 
