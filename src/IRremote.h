@@ -27,9 +27,9 @@
 //------------------------------------------------------------------------------
 #include "private/IRremoteInt.h"
 
-#define VERSION_IRREMOTE "2.8.2"
+#define VERSION_IRREMOTE "2.9.0"
 #define VERSION_IRREMOTE_MAJOR 2
-#define VERSION_IRREMOTE_MINOR 8
+#define VERSION_IRREMOTE_MINOR 9
 
 /****************************************************
  *                     PROTOCOLS
@@ -323,7 +323,8 @@ private:
 
     //......................................................................
     bool decodeSamsung();
-    bool decodeSAMSUNG(); __attribute__ ((deprecated ("Renamed to decodeSamsung()"))); // deprecated
+    bool decodeSAMSUNG();
+    __attribute__ ((deprecated ("Renamed to decodeSamsung()"))); // deprecated
     bool decodeSAMSUNG(decode_results *aResults);
 
     //......................................................................
@@ -348,6 +349,10 @@ private:
     //......................................................................
     bool decodeMagiQuest();
     bool decodeMagiQuest(decode_results *aResults);
+
+    //......................................................................
+    // Template functions :-)
+    bool decodeShuzu();
 
 };
 
@@ -427,9 +432,8 @@ public:
     //......................................................................
     // JVC does NOT repeat by sending a separate code (like NEC does).
     // The JVC protocol repeats by skipping the header.
-    // To send a JVC repeat signal, send the original code value
-    //   and set 'repeat' to true
     void sendJVC(unsigned long data, int nbits, bool repeat = false);
+    void sendJVCStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
 
     //......................................................................
     void sendSAMSUNG(unsigned long data, int nbits) __attribute__ ((deprecated ("Renamed to sendSamsung()"))); // deprecated
@@ -442,6 +446,8 @@ public:
 
     //......................................................................
     void sendLG(unsigned long data, int nbits);
+    void sendLGRepeat();
+    void sendLGStandard(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats);
 
     //......................................................................
     void sendDISH(unsigned long data, int nbits);
@@ -529,6 +535,10 @@ public:
     void sendPronto_PF(const char *str, unsigned int times = 1U);
     void sendPronto(const __FlashStringHelper *str, unsigned int times = 1U);
 #endif
+
+    //......................................................................
+    // Template functions :-)
+    void sendShuzuStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
 
 private:
     /**

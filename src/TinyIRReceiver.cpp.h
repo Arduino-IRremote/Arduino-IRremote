@@ -58,12 +58,8 @@ void IRPinChangeInterruptHandler(void)
     // save IR input level - negative logic, true means inactive / IR pause
     uint_fast8_t tIRLevel = digitalReadFast(IR_INPUT_PIN);
 
-#if !defined(FEEDBACK_LED_PIN) && defined(LED_BUILTIN)
-#define FEEDBACK_LED_PIN    LED_BUILTIN
-#endif
-
-#if !defined(DO_NOT_USE_FEEDBACK_LED) && defined(FEEDBACK_LED_PIN)
-    digitalWriteFast(FEEDBACK_LED_PIN, !tIRLevel);
+#if !defined(DO_NOT_USE_FEEDBACK_LED) && defined(IR_FEEDBACK_LED_PIN)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, !tIRLevel);
 #endif
 
     /*
@@ -188,8 +184,8 @@ void IRPinChangeInterruptHandler(void)
 void initPCIInterruptForTinyReceiver() {
     pinModeFast(IR_INPUT_PIN, INPUT_PULLUP);
 
-#if !defined(DO_NOT_USE_FEEDBACK_LED) && defined(FEEDBACK_LED_PIN)
-    pinModeFast(FEEDBACK_LED_PIN, OUTPUT);
+#if !defined(DO_NOT_USE_FEEDBACK_LED) && defined(IR_FEEDBACK_LED_PIN)
+    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #endif
 
 #if ! defined(__AVR__) || defined(TINY_RECEICER_USE_ARDUINO_ATTACH_INTERRUPT)

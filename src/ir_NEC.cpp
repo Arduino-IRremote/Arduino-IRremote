@@ -20,7 +20,7 @@
 //==============================================================================
 // see: https://www.sbprojects.net/knowledge/ir/nec.php
 
-// LSB first, 1 start bit + 16 bit address + 8 bit data + 8 bit inverted data + 1 stop bit.
+// LSB first, 1 start bit + 16 bit address + 8 bit command + 8 bit inverted command + 1 stop bit.
 //
 #define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
 #define NEC_COMMAND_BITS        16 // Command and inverted command
@@ -102,8 +102,8 @@ bool IRrecv::decodeNEC() {
     }
 
     // Check for repeat
-    if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[1], NEC_REPEAT_HEADER_SPACE)
-            && MATCH_MARK(results.rawbuf[2], NEC_BIT_MARK)) {
+    if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[2], NEC_REPEAT_HEADER_SPACE)
+            && MATCH_MARK(results.rawbuf[3], NEC_BIT_MARK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.address = lastDecodedAddress;
         decodedIRData.command = lastDecodedCommand;

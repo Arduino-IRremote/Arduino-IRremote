@@ -6,6 +6,10 @@
 - Fixed swapped cases in `getProtocolString()`. Thanks to Jim-2249
 - Added compile option `IR_INPUT_IS_ACTIVE_HIGH`. Thanks to Jim-2249
 - Corrected template. Thanks to Jim-2249
+- Introduced standard decode and send functions.
+- Added compatibility with tone for AVR's.
+- New TinyIRreceiver does not require a timer.
+- New dispatcher demo.
 
 ## 2.8.1 2020/10
 - Fixed bug in Sony decode introduced in 2.8.0.

@@ -21,12 +21,13 @@
 // see: http://www.remotecentral.com/cgi-bin/mboard/rc-pronto/thread.cgi?26152
 // The first two (8-bit) bytes are always 2 and 32 (These identify Panasonic within the Kaseikyo standard)
 // The next two bytes are 4 independent 4-bit fields or Device and Subdevice
-// The second to last byte is the function and the last byte is and xor of the three bytes before it.
+// The second to last byte is the function and the last byte is xor of the three bytes before it.
 // 0_______ 1_______  2______ 3_______ 4_______ 5
 // 76543210 76543210 76543210 76543210 76543210 76543210
 // 00000010 00100000 Dev____  Sub Dev  Fun____  XOR( B2, B3, B4)
 
 // LSB first, start bit + 16 Vendor + 4 Parity(of vendor) + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
+// We reduce it to: start bit + 16 Vendor + 16 Address + 8 Command + 8 Parity + stop bit
 //
 #define KASEIKYO_VENDOR_ID_BITS     16
 #define KASEIKYO_ADDRESS_BITS       16
@@ -98,7 +99,6 @@ void IRsend::sendPanasonicStandard(uint16_t aAddress, uint8_t aCommand, uint8_t 
 }
 
 bool IRrecv::decodeKaseikyo() {
-    unsigned int offset = 1;
 
     decode_type_t tProtocol;
     // Check we have enough data (100)- +4 for initial gap, start bit mark and space + stop bit mark
@@ -106,23 +106,20 @@ bool IRrecv::decodeKaseikyo() {
         return false;
     }
 
-    if (!MATCH_MARK(results.rawbuf[offset], KASEIKYO_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[1], KASEIKYO_HEADER_MARK)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Header mark length is wrong");
         return false;
     }
 
-    offset++;
-    if (!MATCH_MARK(results.rawbuf[offset], KASEIKYO_HEADER_SPACE)) {
+    if (!MATCH_MARK(results.rawbuf[2], KASEIKYO_HEADER_SPACE)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Header space length is wrong");
         return false;
     }
-    offset++;
 
     // decode Vendor ID
-    if (!decodePulseDistanceData(KASEIKYO_VENDOR_ID_BITS, offset, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_ZERO_SPACE,
-            false)) {
+    if (!decodePulseDistanceData(KASEIKYO_VENDOR_ID_BITS, 3, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_ZERO_SPACE, false)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Vendor ID decode failed");
         return false;
@@ -142,9 +139,8 @@ bool IRrecv::decodeKaseikyo() {
     }
 
     // decode address (device and subdevice)
-    offset += (2 * KASEIKYO_VENDOR_ID_BITS);
-    if (!decodePulseDistanceData(KASEIKYO_ADDRESS_BITS, offset, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_ZERO_SPACE,
-            false)) {
+    if (!decodePulseDistanceData(KASEIKYO_ADDRESS_BITS, 3 + (2 * KASEIKYO_VENDOR_ID_BITS), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
+    KASEIKYO_ZERO_SPACE, false)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Address decode failed");
         return false;
@@ -158,27 +154,28 @@ bool IRrecv::decodeKaseikyo() {
     }
 
     // decode command + parity
-    offset += (2 * KASEIKYO_ADDRESS_BITS);
-    if (!decodePulseDistanceData(KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS, offset, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
-    KASEIKYO_ZERO_SPACE, false)) {
+    if (!decodePulseDistanceData(KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
+            3 + (2 * (KASEIKYO_VENDOR_ID_BITS + KASEIKYO_ADDRESS_BITS)), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
+            KASEIKYO_ZERO_SPACE, false)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Command + parity decode failed");
-        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED;
+        return false;
     }
+
     decodedIRData.command = results.value & 0xFF;
     tParity ^= decodedIRData.command;
 
     if ((results.value >> KASEIKYO_COMMAND_BITS) != tParity) {
         DBG_PRINT("Kaseikyo: ");
-        DBG_PRINT("Parity is not correct. expected=0x");
+        DBG_PRINT("8 bit Parity is not correct. expected=0x");
         DBG_PRINT(tParity, HEX);
         DBG_PRINT(" received=0x");
-        DBG_PRINT(results.value, HEX);
+        DBG_PRINT(results.value >> KASEIKYO_COMMAND_BITS, HEX);
         DBG_PRINT(" address=0x");
         DBG_PRINT(decodedIRData.address, HEX);
         DBG_PRINT(" command=0x");
         DBG_PRINTLN(decodedIRData.command, HEX);
-        decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
+        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED;
     }
 
     // check for repeat

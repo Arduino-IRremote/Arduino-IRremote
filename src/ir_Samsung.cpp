@@ -20,6 +20,7 @@
 //==============================================================================
 // see http://www.hifi-remote.com/wiki/index.php?title=DecodeIR#Samsung
 // LSB first, 1 start bit + 16 bit address + 16,32,20 bit data + 1 stop bit.
+// repeats are like NEC but with 2 stop bits
 
 #define SAMSUNG_ADDRESS_BITS        16
 #define SAMSUNG_COMMAND16_BITS      16
@@ -33,7 +34,7 @@
 #define SAMSUNG_BIT_MARK            SAMSUNG_UNIT
 #define SAMSUNG_ONE_SPACE           (3 * SAMSUNG_UNIT) // 1650
 #define SAMSUNG_ZERO_SPACE          SAMSUNG_UNIT
-#define SAMSUNG_REPEAT_PERIOD      110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define SAMSUNG_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 
 //+=============================================================================
 /*
@@ -45,7 +46,7 @@ void IRsend::sendSamsungRepeat() {
     mark(SAMSUNG_HEADER_MARK);
     space(SAMSUNG_HEADER_SPACE);
     mark(SAMSUNG_BIT_MARK);
-    mark(SAMSUNG_ZERO_SPACE);
+    space(SAMSUNG_ZERO_SPACE);
     mark(SAMSUNG_BIT_MARK);
     space(0); // Always end with the LED off
 }
@@ -171,6 +172,9 @@ bool IRrecv::decodeSamsung() {
 }
 
 #else
+
+#warning "Old decoder functions decodeSAMSUNG() and decodeSAMSUNG(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeSamsung() instead."
+
 bool IRrecv::decodeSAMSUNG() {
     return decodeSamsung();
 }

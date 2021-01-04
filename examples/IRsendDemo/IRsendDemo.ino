@@ -93,6 +93,14 @@ void loop() {
     IrSender.sendSamsungStandard(sAddress, sCommand, sRepeats);
     delay(2000);
 
+    Serial.println(F("Send JVC"));
+    IrSender.sendJVCStandard(sAddress, sCommand, sRepeats);
+    delay(2000);
+
+    Serial.println(F("Send LG"));
+    IrSender.sendLGStandard(sAddress, sCommand, sRepeats);
+    delay(2000);
+
     Serial.println(F("Send Bosewave with 8 command bits"));
     IrSender.sendBoseWaveStandard(sCommand, sRepeats);
     delay(2000);

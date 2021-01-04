@@ -34,6 +34,12 @@
 #define IR_INPUT_PIN    2
 #endif
 
+#if !defined(IR_FEEDBACK_LED_PIN) && defined(LED_BUILTIN)
+#define IR_FEEDBACK_LED_PIN    LED_BUILTIN
+#endif
+
+//#define DO_NOT_USE_FEEDBACK_LED // Activate it if you do not want the feedback LED function, saving only 2 bytes code and 2 clock cycles per interrupt.
+
 /*
  * This function is called if a complete command was received and must be implemented by the including file (user code)
  */
@@ -78,8 +84,7 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
 /*
  * The control and data structure of the state machine
  */
-struct TinyIRReceiverStruct
-{
+struct TinyIRReceiverStruct {
     /*
      * State machine
      */

@@ -38,7 +38,7 @@
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 /*
- * First: set input pin definition.
+ * First: set input pin and other definition.
  */
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #include "ATtinySerialOut.h"
@@ -54,8 +54,9 @@
 #else
 
 #define TONE_PIN        5
-#define IR_INPUT_PIN    2
-//#define DO_NOT_USE_FEEDBACK_LED_PIN
+
+#define IR_INPUT_PIN   11   // The pin where the IR input signal is expected. The pin must be capable of generating a pin change interrupt.
+//#define DO_NOT_USE_FEEDBACK_LED // You can set it here, before the include of IRCommandDispatcher below
 #endif
 
 #else // defined(USE_TINY_IR_RECEIVER_INSTEAD_OF_IRMP)

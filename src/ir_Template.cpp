@@ -32,7 +32,7 @@
  Now you must do a few things to add it to the IRremote system:
 
  1. Open IRremote.h and make the following changes:
- REMEMEBER to change occurences of "SHUZU" with the name of your protocol
+ REMEMEBER to change occurrences of "SHUZU" with the name of your protocol
 
  A. At the top, in the section "Supported Protocols", add:
  #define DECODE_SHUZU  1
@@ -51,7 +51,7 @@
  D. Further down in "Main class for sending IR", add:
  //......................................................................
  #if SEND_SHUZU
- void  sendShuzu (unsigned long data, unsigned int nbits) ;
+ void  sendShuzuStandard (uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) ;
  #endif
 
  E. Save your changes and close the file
@@ -66,10 +66,10 @@
 
  B. In the function IRrecv::getProtocolString(), add
  #if DECODE_SHUZU
-    case SHUZU:
-        return ("SHUZU");
-        break;
-#endif
+ case SHUZU:
+ return ("Shuzu");
+ break;
+ #endif
 
  C. Save your changes and close the file
 
@@ -91,8 +91,23 @@
  BlueChip
  */
 
+/*
+ * ir_Shuzu.cpp
+ *
+ *  Contains functions for receiving and sending Shuzu IR Protocol ...
+ *
+ *  Copyright (C) 2021  Shuzu Guru
+ *  shuzu.guru@gmail.com
+ *
+ *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *
+ */
+
+//#define DEBUG // Activate this  for lots of lovely debug output.
 #include "IRremote.h"
 
+//#define SEND_SHUZU  1 // for testing
+//#define DECODE_SHUZU  1 // for testing
 //==============================================================================
 //
 //
@@ -100,66 +115,108 @@
 //
 //
 //==============================================================================
+// see: https://www....
 
-#define SHUZU_BITS            32  // The number of bits in the command
+// LSB first, 1 start bit + 16 bit address + 8 bit command + 1 stop bit.
+#define SHUZU_ADDRESS_BITS      16 // 16 bit address
+#define SHUZU_COMMAND_BITS      8 // Command
 
-#define SHUZU_HEADER_MARK   1000  // The length of the Header:Mark
-#define SHUZU_HEADER_SPACE  2000  // The lenght of the Header:Space
+#define SHUZU_BITS              (SHUZU_ADDRESS_BITS + SHUZU_COMMAND_BITS) // The number of bits in the protocol
+#define SHUZU_UNIT              560
 
-#define SHUZU_BIT_MARK      3000  // The length of a Bit:Mark
-#define SHUZU_ONE_SPACE     4000  // The length of a Bit:Space for 1's
-#define SHUZU_ZERO_SPACE    5000  // The length of a Bit:Space for 0's
+#define SHUZU_HEADER_MARK       (16 * SHUZU_UNIT) // The length of the Header:Mark
+#define SHUZU_HEADER_SPACE      (8 * SHUZU_UNIT)  // The lenght of the Header:Space
 
-#define SHUZU_OTHER         1234  // Other things you may need to define
+#define SHUZU_BIT_MARK          SHUZU_UNIT        // The length of a Bit:Mark
+#define SHUZU_ONE_SPACE         (3 * SHUZU_UNIT)  // The length of a Bit:Space for 1's
+#define SHUZU_ZERO_SPACE        SHUZU_UNIT        // The length of a Bit:Space for 0's
+
+#define SHUZU_REPEAT_HEADER_SPACE (4 * SHUZU_UNIT)  // 2250
+#define SHUZU_REPEAT_PERIOD     110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
+
+#define SHUZU_OTHER             1234  // Other things you may need to define
 
 //+=============================================================================
 //
-#if SEND_SHUZU
-void IRsend::sendShuzu(unsigned long data, int nbits) {
+void IRsend::sendShuzuStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
     // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(37); // 36.7kHz is the correct frequency
 
-    // Header
-    mark(SHUZU_HEADER_MARK);
-    space(SHUZU_HEADER_SPACE);
+    uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+        unsigned long tStartMillis = millis();
 
-    // Data
-    sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, data, nbits);
+        // Header
+        mark(SHUZU_HEADER_MARK);
+        space(SHUZU_HEADER_SPACE);
 
-    // Footer
-    mark(SHUZU_BIT_MARK);
-    space(0);  // Always end with the LED off
+        // Address (device and subdevice)
+        sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, aAddress,
+        SHUZU_ADDRESS_BITS, false); // false -> LSB first
+
+        // Command
+        sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, aCommand,
+        SHUZU_COMMAND_BITS, false); // false -> LSB first
+
+        // Footer
+        mark(SHUZU_BIT_MARK);
+        space(0);  // Always end with the LED off
+
+        tNumberOfCommands--;
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            // send repeated command in a fixed raster
+            delay((tStartMillis + SHUZU_REPEAT_PERIOD / 1000) - millis());
+        }
+    }
 }
-#endif
 
 //+=============================================================================
 //
-#if DECODE_SHUZU
 bool IRrecv::decodeShuzu() {
-    unsigned int offset = 1;  // Skip the gap reading
 
-    // Check we have the right amount of data
-    if (results.rawlen != 1 + 2 + (2 * SHUZU_BITS) + 1) {
+    // Check header "mark"
+    if (!MATCH_MARK(results.rawbuf[1], SHUZU_HEADER_MARK)) {
         return false;
     }
 
-    // Check initial Mark+Space match
-    if (!MATCH_MARK(results.rawbuf[offset], SHUZU_HEADER_MARK)) {
+    // Check we have the right amount of data +4 for initial gap, start bit mark and space + stop bit mark
+    if (results.rawlen != (2 * SHUZU_BITS) + 4) {
+        DBG_PRINT("Shuzu: ");
+        DBG_PRINT("Data length=");
+        DBG_PRINT(results.rawlen);
+        DBG_PRINTLN(" is not 52");
         return false;
     }
-    offset++;
 
-    if (!MATCH_SPACE(results.rawbuf[offset], SHUZU_HEADER_SPACE)) {
+    // Check header "space"
+    if (!MATCH_SPACE(results.rawbuf[2], SHUZU_HEADER_SPACE)) {
+        DBG_PRINT("Shuzu: ");
+        DBG_PRINTLN("Header space length is wrong");
         return false;
     }
-    offset++;
 
-    data = decodePulseDistanceData(SHUZU_BITS, offset, SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_ZERO_SPACE);
+    // false -> LSB first
+    if (!decodePulseDistanceData(SHUZU_BITS, 3, SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_ZERO_SPACE, false)) {
+        DBG_PRINT(F("Shuzu: "));
+        DBG_PRINTLN(F("Decode failed"));
+        return false;
+    }
 
     // Success
-    results.bits = SHUZU_BITS;
-    results.value = data;
-    decodedIRData.protocol = SHUZU;
+    uint8_t tCommand = results.value >> SHUZU_ADDRESS_BITS;  // upper 8 bits of LSB first value
+    uint8_t tAddress = results.value & 0xFFFF;    // lowest 16 bit of LSB first value
+
+    /*
+     *  Check for repeat
+     */
+    if (results.rawbuf[0] < (SHUZU_REPEAT_PERIOD / MICROS_PER_TICK)) {
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+    }
+    decodedIRData.command = tCommand;
+    decodedIRData.address = tAddress;
+    decodedIRData.numberOfBits = SHUZU_BITS;
+    decodedIRData.protocol = LG; // we have no SHUZU code
+
     return true;
 }
-#endif

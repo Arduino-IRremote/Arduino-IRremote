@@ -32,11 +32,14 @@ This is a quite old but maybe useful wiki for this library.
  Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 µs.
 In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors,
  [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
-- The default IR timer on AVR's is timer 2. Since the Arduino Tone library as well as analogWrite() for pin 3 and pin 11 requires timer 2,
- this functionality cannot be used simultaneously.
+- The default IR timer on AVR's is timer 2. Since the **Arduino Tone library** as well as **analogWrite() for pin 3 and pin 11** requires timer 2,
+ this functionality cannot be used simultaneously. You can use tone() but after the tone has stopped, you must call IrReceiver.enableIRIn() to restore the timer settings for receive.
 - You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
  The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
  This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
+
+# Minimal version
+For applications only requiring NEC protocol, there is a receiver which has very **small codesize and does NOT require any timer**. See the MinimalReceiver and IRDispatcherDemo example how to use it.
 
 # Handling unknown Protocols
 ## Disclaimer
@@ -75,6 +78,10 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `RAW_BUFFER_LENGTH` | IRremoteint.h | 101 | Buffer size of raw input buffer. Must be odd! |
 | `IR_SEND_DUTY_CYCLE` | IRremoteBoardDefs.h | 30 | Duty cycle of IR send signal. |
 | `MICROS_PER_TICK` | IRremoteBoardDefs.h | 50 | Resolution of the raw input buffer data. |
+|-|-|-|-|
+| `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
+| `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
+| `DO_NOT_USE_FEEDBACK_LED` | TinyIRReceiver.h | disabled | Enable it to disable the feedback LED function. |
 
 ### Modifying compile options with Arduino IDE
 First use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>
@@ -108,9 +115,6 @@ We are open to suggestions for adding support to new boards, however we highly r
 
 ## Hardware specifications
 The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private/IRremoteBoardDefs.h)
-The timer used for sending or receiving cannot be used by other libraries or functions. 
-E.g. for ATmega328 timer 2 is used and therefore using tone() will corrupt the receive timing. 
-After tone() you must therefore call IrReceiver.enableIRIn() to restore the receive timing.
 
 | Board/CPU                                                                | IR-Send (PWM) Pin   | Timers            |
 |--------------------------------------------------------------------------|---------------------|-------------------|
