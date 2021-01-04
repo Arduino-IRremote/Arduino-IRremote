@@ -108,6 +108,9 @@ We are open to suggestions for adding support to new boards, however we highly r
 
 ## Hardware specifications
 The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private/IRremoteBoardDefs.h)
+The timer used for sending or receiving cannot be used by other libraries or functions. 
+E.g. for ATmega328 timer 2 is used and therefore using tone() will corrupt the receive timing. 
+After tone() you must therefore call IrReceiver.enableIRIn() to restore the receive timing.
 
 | Board/CPU                                                                | IR-Send (PWM) Pin   | Timers            |
 |--------------------------------------------------------------------------|---------------------|-------------------|

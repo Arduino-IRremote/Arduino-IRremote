@@ -56,12 +56,15 @@ void loop() {
             IrReceiver.printIRResultRawFormatted(&Serial, true);
         }
         Serial.println();
+
+#if !defined(ESP32)
         /*
          * Play tone, wait and restore IR timer
          */
         tone(5, 2200, 50);
         delay(60);
         IrReceiver.enableIRIn();
+#endif
 
         IrReceiver.resume(); // Enable receiving of the next value
         /*
