@@ -4,8 +4,7 @@
  *  Demonstrates sending IR codes in standard format with address and command
  *
  * An IR LED must be connected to Arduino PWM pin 3 (IR_SEND_PIN).
- * To receive IR signals in compatible format, you must comment out the line
- * #define USE_STANDARD_DECODE in IRremote.h.
+ * To receive IR signals in compatible format, you must activate the line #define USE_STANDARD_DECODE in IRremote.h.
  *
  *
  *  Copyright (C) 2020-2021  Armin Joachimsmeyer
@@ -86,8 +85,12 @@ void loop() {
     IrSender.sendSonyStandard(sAddress, sCommand, false, sRepeats);
     delay(2000);
 
-    Serial.println(F("Send Sony/SIRCS with with 7 command and 13 address bits"));
+    Serial.println(F("Send Sony/SIRCS with 7 command and 13 address bits"));
     IrSender.sendSonyStandard(sAddress, sCommand, true, sRepeats);
+    delay(2000);
+
+    Serial.println(F("Send Samsung"));
+    IrSender.sendSamsungStandard(sAddress, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Send Bosewave with 8 command bits"));

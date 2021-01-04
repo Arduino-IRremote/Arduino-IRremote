@@ -17,7 +17,7 @@ Tutorials and more information will be made available on [the official homepage]
 Click on the LibraryManager badge above to see the instructions.
 
 # Supported IR Protocols
-Aiwa, BoseWave, Denon, Dish, JVC, Lego, LG, MagiQuest, NEC, Panasonic, RC5, RC6, Samsung, Sanyo, Sharp, Sony, Whynter, (Pronto).<br/>
+Denon, JVC, LG,  NEC, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sharp, Sony, (Pronto), BoseWave, Lego, Whynter, MagiQuest.<br/>
 Protocols can be switched off and on by changing the lines in *IRremote.h*:
 
 ```

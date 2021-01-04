@@ -18,7 +18,7 @@
 #define IRremoteint_h
 
 /*
- * Uncomment this line if your receiver has an external output driver transistor / "inverted" output
+ * Activate this line if your receiver has an external output driver transistor / "inverted" output
  */
 //#define IR_INPUT_IS_ACTIVE_HIGH
 

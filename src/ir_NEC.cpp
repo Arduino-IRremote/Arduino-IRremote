@@ -7,8 +7,9 @@
  *
  */
 
-//#define DEBUG // Comment this out to see output of decoding errors.
+//#define DEBUG // Activate this  for lots of lovely debug output.
 #include "IRremote.h"
+#include "LongUnion.h"
 
 //==============================================================================
 //                           N   N  EEEEE   CCCC
@@ -93,18 +94,16 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16Add
 //
 #if defined(USE_STANDARD_DECODE)
 bool IRrecv::decodeNEC() {
-    uint8_t tOffset = 1;  // Index in to results; Skip first space.
 
     // Check header "mark"
-    if (!MATCH_MARK(results.rawbuf[tOffset], NEC_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[1], NEC_HEADER_MARK)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
-    tOffset++;
 
     // Check for repeat
-    if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[tOffset], NEC_REPEAT_HEADER_SPACE)
-            && MATCH_MARK(results.rawbuf[tOffset + 1], NEC_BIT_MARK)) {
+    if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[1], NEC_REPEAT_HEADER_SPACE)
+            && MATCH_MARK(results.rawbuf[2], NEC_BIT_MARK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.address = lastDecodedAddress;
         decodedIRData.command = lastDecodedCommand;
@@ -120,21 +119,20 @@ bool IRrecv::decodeNEC() {
         return false;
     }
     // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[tOffset], NEC_HEADER_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[2], NEC_HEADER_SPACE)) {
         DBG_PRINT(F("NEC: "));
         DBG_PRINTLN(F("Header space length is wrong"));
         return false;
     }
-    tOffset++;
 
-    if (!decodePulseDistanceData(NEC_BITS, tOffset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, false)) {
+    if (!decodePulseDistanceData(NEC_BITS, 3, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, false)) {
         DBG_PRINT(F("NEC: "));
         DBG_PRINTLN(F("Decode failed"));
         return false;
     }
 
     // Stop bit
-    if (!MATCH_MARK(results.rawbuf[tOffset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[3 + (2 * NEC_BITS)], NEC_BIT_MARK)) {
         DBG_PRINT(F("NEC: "));
         DBG_PRINTLN(F("Stop bit verify failed"));
         return false;
@@ -154,16 +152,14 @@ bool IRrecv::decodeNEC() {
     decodedIRData.protocol = NEC;
     decodedIRData.numberOfBits = NEC_BITS;
 
-//    uint16_t tAddress = results.value;
-    uint8_t tAddressNotInverted = results.value & 0xFF;
-    uint8_t tAddressInverted = results.value >> 8;
-    // parity check for command. Use this variant to avoid compiler warning "comparison of promoted ~unsigned with unsigned [-Wsign-compare]"
-    if ((tAddressNotInverted ^ tAddressInverted) == 0xFF) {
+    WordUnion tAddress;
+    tAddress.UWord = results.value;
+    if (tAddress.UByte.LowByte != (uint8_t)(~tAddress.UByte.HighByte)) {
         // standard 8 bit address NEC protocol
-        decodedIRData.address = tAddressNotInverted; // first 8 bit
+        decodedIRData.address = tAddress.UByte.LowByte; // first 8 bit
     } else {
         // extended NEC protocol
-        decodedIRData.address = results.value & 0xFFFF; // first 16 bit
+        decodedIRData.address = tAddress.UWord; // first 16 bit
     }
 
     return true;
@@ -190,12 +186,12 @@ bool IRrecv::decodeNEC() {
         return true;
     }
 
-// Check we have enough data - +3 for start bit mark and space + stop bit mark
-    if (results.rawlen <= (2 * NEC_BITS) + 3) {
+    // Check we have the right amount of data (32). +4 for initial gap, start bit mark and space + stop bit mark
+    if (results.rawlen != (2 * NEC_BITS) + 4) {
         DBG_PRINT("NEC: ");
         DBG_PRINT("Data length=");
         DBG_PRINT(results.rawlen);
-        DBG_PRINTLN(" is too small. >= 67 is required");
+        DBG_PRINTLN(" is not 68");
         return false;
     }
 

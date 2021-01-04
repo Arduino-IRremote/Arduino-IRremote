@@ -89,12 +89,6 @@ bool IRrecv::decode() {
     }
 #endif
 
-#if DECODE_SANYO
-    TRACE_PRINTLN("Attempting Sanyo decode");
-    if (decodeSanyo()) {
-        return true;
-    }
-#endif
 
 #if DECODE_RC5
     TRACE_PRINTLN("Attempting RC5 decode");
@@ -125,8 +119,18 @@ bool IRrecv::decode() {
 #endif
 
 #if DECODE_SAMSUNG
-    TRACE_PRINTLN("Attempting SAMSUNG decode");
-    if (decodeSAMSUNG()) {
+    TRACE_PRINTLN("Attempting Samsung decode");
+    if (decodeSamsung()) {
+        return true;
+    }
+#endif
+    /*
+     * Start of the exotic protocols
+     */
+
+#if DECODE_SANYO
+    TRACE_PRINTLN("Attempting Sanyo decode");
+    if (decodeSanyo()) {
         return true;
     }
 #endif
@@ -159,6 +163,9 @@ bool IRrecv::decode() {
     }
 #endif
 
+    /*
+     * Last resort is the universal hash decode which always return true
+     */
 #if DECODE_HASH
     TRACE_PRINTLN("Hash decode");
     // decodeHash returns a hash on any input.
@@ -169,7 +176,10 @@ bool IRrecv::decode() {
     }
 #endif
 
-    // Throw away received data and start over
+    /*
+     * Not reached, if Hash is enabled!!!
+     * Throw away received data and start over
+     */
     resume();
     return false;
 }
@@ -278,7 +288,7 @@ void IRrecv::resume() {
 //
 // Compare two tick values, returning 0 if newval is shorter,
 // 1 if newval is equal, and 2 if newval is longer
-// Use a tolerance of 20%
+// Use a tolerance of 20% to enable 500 and 600 (NEC timing) to be equal
 //
 unsigned int IRrecv::compare(unsigned int oldval, unsigned int newval) {
     if (newval * 10 < oldval * 8) {
@@ -487,11 +497,13 @@ bool IRrecv::decodeHash() {
 
     return true;
 }
+
 bool IRrecv::decodeHash(decode_results *aResults) {
     bool aReturnValue = decodeHash();
     *aResults = results;
     return aReturnValue;
 }
+
 #endif // defined(DECODE_HASH)
 
 const char* IRrecv::getProtocolString() {

@@ -7,7 +7,7 @@
  *
  */
 
-//#define DEBUG // Comment this out for lots of lovely debug output.
+//#define DEBUG // Activate this  for lots of lovely debug output.
 #include "IRremote.h"
 
 //==============================================================================

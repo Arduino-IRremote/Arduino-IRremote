@@ -38,7 +38,7 @@
 #if VERSION_IRREMOTE_MAJOR > 2
 #define USE_STANDARD_DECODE
 #else
-#define USE_STANDARD_DECODE // remove comment to have the standard NEC and other decoders available.
+//#define USE_STANDARD_DECODE // activate this to have the standard NEC and other decoders available.
 #endif
 //------------------------------------------------------------------------------
 // Supported IR protocols
@@ -97,10 +97,7 @@ typedef enum {
     WHYNTER,
 } decode_type_t;
 
-/**
- * Comment this out for lots of lovely debug output.
- */
-//#define DEBUG
+//#define DEBUG // Activate this  for lots of lovely debug output.
 //------------------------------------------------------------------------------
 // Debug directives
 //
@@ -166,7 +163,7 @@ struct decode_results {
 #define IRDATA_FLAGS_EMPTY              0x00
 #define IRDATA_FLAGS_IS_REPEAT          0x01
 #define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
-#define IRDATA_FLAGS_PARITY_FAILED      0x04 // the current autorepeat frame violated parity check
+#define IRDATA_FLAGS_PARITY_FAILED      0x04 // the current (autorepeat) frame violated parity check
 #define IRDATA_FLAGS_WAS_OVERFLOW       0x08
 #define IRDATA_FLAGS_IS_OLD_DECODER     0x80
 
@@ -325,7 +322,8 @@ private:
     bool decodeJVC(decode_results *aResults);
 
     //......................................................................
-    bool decodeSAMSUNG();
+    bool decodeSamsung();
+    bool decodeSAMSUNG(); __attribute__ ((deprecated ("Renamed to decodeSamsung()"))); // deprecated
     bool decodeSAMSUNG(decode_results *aResults);
 
     //......................................................................
@@ -434,7 +432,10 @@ public:
     void sendJVC(unsigned long data, int nbits, bool repeat = false);
 
     //......................................................................
-    void sendSAMSUNG(unsigned long data, int nbits);
+    void sendSAMSUNG(unsigned long data, int nbits) __attribute__ ((deprecated ("Renamed to sendSamsung()"))); // deprecated
+    void sendSamsung(uint32_t aData, uint8_t aNumberOfBits);
+    void sendSamsungRepeat();
+    void sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats = 0);
 
     //......................................................................
     void sendWhynter(unsigned long data, int nbits);

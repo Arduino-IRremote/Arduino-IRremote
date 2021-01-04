@@ -7,7 +7,7 @@
  *
  */
 
-//#define DEBUG // Comment this out for lots of lovely debug output.
+//#define DEBUG // Activate this  for lots of lovely debug output.
 #include "IRremote.h"
 
 //==============================================================================
@@ -163,7 +163,7 @@ bool IRrecv::decodeKaseikyo() {
     KASEIKYO_ZERO_SPACE, false)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Command + parity decode failed");
-        return false;
+        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED;
     }
     decodedIRData.command = results.value & 0xFF;
     tParity ^= decodedIRData.command;
@@ -178,12 +178,12 @@ bool IRrecv::decodeKaseikyo() {
         DBG_PRINT(decodedIRData.address, HEX);
         DBG_PRINT(" command=0x");
         DBG_PRINTLN(decodedIRData.command, HEX);
-        return false;
+        decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
     }
 
     // check for repeat
     if (results.rawbuf[0] < (KASEIKYO_REPEAT_PERIOD / MICROS_PER_TICK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
 
     results.value = 0; // no sensible raw data here

@@ -1,3 +1,4 @@
+// to be removed
 #include "IRremote.h"
 
 //==============================================================================
@@ -9,7 +10,8 @@
 //==============================================================================
 
 // I think this is a Sanyo decoder:  Serial = SA 8650B
-// Looks like Sony except for timings, 48 chars of data and time/space different
+// Looks like Sony except for timings
+// See https://github.com/Arduino-IRremote/Arduino-IRremote/issues/521#issuecomment-331186455
 // see: https://www.sbprojects.net/knowledge/ir/sirc.php
 
 #define SANYO_BITS                   12
