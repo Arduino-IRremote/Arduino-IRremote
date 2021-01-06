@@ -1,4 +1,4 @@
-## 2.8.2 2020/12
+## 2.9.0 2021/01
 - Added SendRaw with byte data.
 - Fixed resume bug if irparams.rawlen >= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi
 - Added `dumpPronto(String *aString, unsigned int frequency)` with String object as argument. Thanks to Iosif Peterfi
@@ -9,7 +9,8 @@
 - Introduced standard decode and send functions.
 - Added compatibility with tone for AVR's.
 - New TinyIRreceiver does not require a timer.
-- New dispatcher demo.
+- New MinimalReceiver and IRDispatcherDemo examples.
+- Removed Test2 example.
 
 ## 2.8.1 2020/10
 - Fixed bug in Sony decode introduced in 2.8.0.

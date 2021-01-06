@@ -213,7 +213,16 @@ void IRsend::mark(uint16_t timeMicros) {
 #else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
 #endif
-    delayMicroseconds(timeMicros);
+    // Arduino core does not implement delayMicroseconds() for 4 MHz :-(
+#if F_CPU == 4000000L && defined(__AVR__)
+    // busy wait
+    __asm__ __volatile__ (
+        "1: sbiw %0,1" "\n\t" // 2 cycles
+        "brne 1b" : "=w" (timeMicros) : "0" (timeMicros) // 2 cycles
+    );
+#else
+    delayMicroseconds(timeMicros); // overflow at 0x4000 / 16.384 @16MHz (wiring.c line 175)
+#endif
 }
 
 //+=============================================================================
@@ -227,7 +236,16 @@ void IRsend::space(uint16_t timeMicros) {
 #else
     TIMER_DISABLE_SEND_PWM; // Disable PWM output
 #endif
-    delayMicroseconds(timeMicros); // overflow at 0x4000 / 16.384
+    // Arduino core does not implement delayMicroseconds() for 4 MHz :-(
+#if F_CPU == 4000000L && defined(__AVR__)
+    // busy wait
+    __asm__ __volatile__ (
+        "1: sbiw %0,1" "\n\t" // 2 cycles
+        "brne 1b" : "=w" (timeMicros) : "0" (timeMicros) // 2 cycles
+    );
+#else
+    delayMicroseconds(timeMicros); // overflow at 0x4000 / 16.384 @16MHz (wiring.c line 175)
+#endif
 }
 
 #ifdef USE_DEFAULT_ENABLE_IR_OUT

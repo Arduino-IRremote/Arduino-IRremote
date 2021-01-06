@@ -61,9 +61,9 @@ void loop() {
         /*
          * Play tone, wait and restore IR timer
          */
-//        tone(5, 2200, 10);
-//        delay(11);
-//        IrReceiver.enableIRIn();
+        tone(5, 2200, 10);
+        delay(11);
+        IrReceiver.enableIRIn();
 #endif
 
         IrReceiver.resume(); // Enable receiving of the next value
