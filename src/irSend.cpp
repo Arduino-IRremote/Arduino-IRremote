@@ -212,7 +212,8 @@ void IRsend::mark(uint16_t timeMicros) {
     digitalWrite(sendPin, LOW); // Set output to active low.
 #else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
-#endif
+#endif //  USE_SOFT_SEND_PWM
+
     // Arduino core does not implement delayMicroseconds() for 4 MHz :-(
 #if F_CPU == 4000000L && defined(__AVR__)
     // busy wait
@@ -221,8 +222,15 @@ void IRsend::mark(uint16_t timeMicros) {
         "brne 1b" : "=w" (timeMicros) : "0" (timeMicros) // 2 cycles
     );
 #else
-    delayMicroseconds(timeMicros); // overflow at 0x4000 / 16.384 @16MHz (wiring.c line 175)
-#endif
+    if (timeMicros >= 0x4000) {
+        // The implementation of Arduino delayMicroseconds() overflows at 0x4000 / 16.384 @16MHz (wiring.c line 175)
+        // But for sendRaw() and external protocols values between 16.384 and 65.535 might be required
+        // Use delay(), this in calls yield which is required on some platforms to work properly
+        delay(timeMicros / 1000);
+    } else {
+        delayMicroseconds(timeMicros);
+    }
+#endif // F_CPU == 4000000L && defined(__AVR__)
 }
 
 //+=============================================================================
@@ -235,7 +243,8 @@ void IRsend::space(uint16_t timeMicros) {
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
     TIMER_DISABLE_SEND_PWM; // Disable PWM output
-#endif
+#endif // defined(USE_NO_SEND_PWM)
+
     // Arduino core does not implement delayMicroseconds() for 4 MHz :-(
 #if F_CPU == 4000000L && defined(__AVR__)
     // busy wait
@@ -244,8 +253,15 @@ void IRsend::space(uint16_t timeMicros) {
         "brne 1b" : "=w" (timeMicros) : "0" (timeMicros) // 2 cycles
     );
 #else
-    delayMicroseconds(timeMicros); // overflow at 0x4000 / 16.384 @16MHz (wiring.c line 175)
-#endif
+    if (timeMicros >= 0x4000) {
+        // The implementation of Arduino delayMicroseconds() overflows at 0x4000 / 16.384 @16MHz (wiring.c line 175)
+        // But for sendRaw() and external protocols values between 16.384 and 65.535 might be required
+        // Use delay(), this in calls yield which is required on some platforms to work properly
+        delay(timeMicros / 1000);
+    } else {
+        delayMicroseconds(timeMicros);
+    }
+#endif // F_CPU == 4000000L && defined(__AVR__)
 }
 
 #ifdef USE_DEFAULT_ENABLE_IR_OUT
@@ -279,8 +295,8 @@ void IRsend::enableIROut(int khz) {
     SENDPIN_OFF(sendPin); // When not sending, we want it low
 
     timerConfigForSend(khz);
-#endif
+#endif // defined(USE_NO_SEND_PWM)
 }
-#endif
+#endif // USE_DEFAULT_ENABLE_IR_OUT
 
 #endif // SENDING_SUPPORTED
