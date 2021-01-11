@@ -159,7 +159,7 @@ static const char unknown[] PROGMEM ="unknown";
 /*
  * Main mapping array of commands to C functions and command strings
  */
-const struct IRToCommandMapping IRMapping[] =
+const struct IRToCommandMappingStruct IRMapping[] =
 {
 {
 COMMAND_BLINK, IR_COMMAND_FLAG_REGULAR, &doLedBlink20times, blink20times },

@@ -1,3 +1,34 @@
+/*
+ * ir_LG.cpp
+ *
+ *  Contains functions for receiving and sending LG IR Protocol in "raw" and standard format with 16 or 8 bit address and 8 bit command
+ *
+ *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2017-2021 Darryl Smith, Armin Joachimsmeyer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
+ */
 #include "IRremote.h"
 
 //==============================================================================
@@ -84,11 +115,24 @@ void IRsend::sendLGStandard(uint8_t aAddress, uint16_t aCommand, uint8_t aNumber
 // LGs has a repeat like NEC
 //
 #if defined(USE_STANDARD_DECODE)
+/*
+ * First check for right data length
+ * Next check start bit
+ * Next try the decode
+ * Last check stop bit
+ */
 bool IRrecv::decodeLG() {
 
-    // Check header "mark"
-    if (!MATCH_MARK(results.rawbuf[1], LG_HEADER_MARK)) {
+    // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
+    if (results.rawlen != ((2 * LG_BITS) + 4) && (results.rawlen == 4)) {
         // no debug output, since this check is mainly to determine the received protocol
+        return false;
+    }
+
+    // Check header "mark" and "space", this must be done for repeat and data
+    if (!MATCH_MARK(results.rawbuf[1], LG_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], LG_HEADER_SPACE)) {
+        DBG_PRINT(F("LG: "));
+        DBG_PRINTLN(F("Header mark or space length is wrong"));
         return false;
     }
 
@@ -101,21 +145,6 @@ bool IRrecv::decodeLG() {
         return true;
     }
 
-    // Check we have enough data - +4 for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen != (2 * LG_BITS) + 4) {
-        DBG_PRINT(F("LG: "));
-        DBG_PRINT(F("Data length="));
-        DBG_PRINT(results.rawlen);
-        DBG_PRINTLN(F(" is not 60"));
-        return false;
-    }
-    // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[2], LG_HEADER_SPACE)) {
-        DBG_PRINT(F("LG: "));
-        DBG_PRINTLN(F("Header space length is wrong"));
-        return false;
-    }
-
     if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, true)) {
         DBG_PRINT(F("LG: "));
         DBG_PRINTLN(F("Decode failed"));
@@ -125,7 +154,7 @@ bool IRrecv::decodeLG() {
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[3 + (2 * LG_BITS)], LG_BIT_MARK)) {
         DBG_PRINT(F("LG: "));
-        DBG_PRINTLN(F("Stop bit verify failed"));
+        DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
@@ -188,7 +217,7 @@ bool IRrecv::decodeLG() {
     }
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
-        DBG_PRINT("Stop bit verify failed");
+        DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
@@ -223,6 +252,6 @@ void IRsend::sendLG(unsigned long data, int nbits) {
     sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits);
 
     mark(LG_BIT_MARK);
-    space(0);// Always end with the LED off
+    space(0);    // Always end with the LED off
 }
 

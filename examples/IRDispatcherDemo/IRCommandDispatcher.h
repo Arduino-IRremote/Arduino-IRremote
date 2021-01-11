@@ -28,7 +28,7 @@
 #define IR_COMMAND_FLAG_IS_STOP_COMMAND     0x04 // implies IR_COMMAND_FLAG_EXECUTE_ALWAYS
 
 // Basic mapping structure
-struct IRToCommandMapping {
+struct IRToCommandMappingStruct {
     uint8_t IRCode;
     uint8_t Flags;
     void (*CommandToCall)();

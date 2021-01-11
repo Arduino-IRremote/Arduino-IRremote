@@ -167,7 +167,7 @@ uint8_t IRCommandDispatcher::checkAndCallCommand() {
         return IR_CODE_EMPTY;
     }
 
-    for (uint8_t i = 0; i < sizeof(IRMapping) / sizeof(struct IRToCommandMapping); ++i) {
+    for (uint8_t i = 0; i < sizeof(IRMapping) / sizeof(struct IRToCommandMappingStruct); ++i) {
         if (IRReceivedData.command == IRMapping[i].IRCode) {
 
 #ifdef INFO
@@ -290,7 +290,7 @@ bool IRCommandDispatcher::delayAndCheckForIRCommand(uint16_t aDelayMillis) {
 void IRCommandDispatcher::printIRCommandString() {
 #ifdef INFO
     Serial.print(F("IRCommand="));
-    for (uint8_t i = 0; i < sizeof(IRMapping) / sizeof(struct IRToCommandMapping); ++i) {
+    for (uint8_t i = 0; i < sizeof(IRMapping) / sizeof(struct IRToCommandMappingStruct); ++i) {
         if (IRReceivedData.command == IRMapping[i].IRCode) {
             Serial.println(reinterpret_cast<const __FlashStringHelper*>(IRMapping[i].CommandString));
             return;

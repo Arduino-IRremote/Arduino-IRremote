@@ -1,13 +1,36 @@
 /*
- * ir_NEC.cpp
+ * ir_JVC.cpp
  *
- *  Contains functions for receiving and sending NEC IR Protocol in "raw" and standard format with 16 or 8 bit Address and 8 bit Data
+ *  Contains functions for receiving and sending JVC IR Protocol in "raw" and standard format with 8 bit address and 8 bit command
  *
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2017-2021 Kristian Lauszus, Armin Joachimsmeyer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
 
-//#define DEBUG // Activate this  for lots of lovely debug output.
+//#define DEBUG // Activate this for lots of lovely debug output.
 #include "IRremote.h"
 
 //==============================================================================
@@ -19,12 +42,14 @@
 //==============================================================================
 
 // https://www.sbprojects.net/knowledge/ir/jvc.php
+// http://www.hifi-remote.com/johnsfine/DecodeIR.html#JVC
+// IRP: {38k,525}<1,-1|1,-3>(16,-8,(D:8,F:8,1,-45)+)
 // LSB first, 1 start bit + 8 bit address + 8 bit command + 1 stop bit.
 #define JVC_ADDRESS_BITS      8 // 8 bit address
 #define JVC_COMMAND_BITS      8 // Command
 
 #define JVC_BITS              (JVC_ADDRESS_BITS + JVC_COMMAND_BITS) // The number of bits in the protocol
-#define JVC_UNIT              525
+#define JVC_UNIT              526
 
 #define JVC_HEADER_MARK       (16 * JVC_UNIT) // The length of the Header:Mark
 #define JVC_HEADER_SPACE      (8 * JVC_UNIT)  // The lenght of the Header:Space
@@ -41,7 +66,7 @@
 //
 void IRsend::sendJVCStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
     // Set IR carrier frequency
-    enableIROut(37); // 36.7kHz is the correct frequency
+    enableIROut(38);
 
     // Header
     mark(JVC_HEADER_MARK);
@@ -69,12 +94,18 @@ void IRsend::sendJVCStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumber
 }
 
 #if defined(USE_STANDARD_DECODE)
+/*
+ * First check for right data length
+ * Next check start bit
+ * Next try the decode
+ */
 bool IRrecv::decodeJVC() {
 
     /*
      * Check for repeat
      */
-    if (results.rawlen == ((2 * JVC_BITS) + 2) && results.rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 2) / MICROS_PER_TICK))
+    if (results.rawlen == ((2 * JVC_BITS) + 2)
+            && results.rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 2) / MICROS_PER_TICK))
             && MATCH_MARK(results.rawbuf[1], JVC_BIT_MARK) && MATCH_MARK(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
         /*
          * We have a repeat here, so do not check for start bit
@@ -82,24 +113,16 @@ bool IRrecv::decodeJVC() {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
     } else {
 
-        // Check header "mark"
-        if (!MATCH_MARK(results.rawbuf[1], JVC_HEADER_MARK)) {
+        // Check we have the right amount of data (36). The +4 is for initial gap, start bit mark and space + stop bit mark.
+        if (results.rawlen != (2 * JVC_BITS) + 4) { // 36
+        // no debug output, since this check is mainly to determine the received protocol
             return false;
         }
 
-        // Check we have the right amount of data +4 for initial gap, start bit mark and space + stop bit mark
-        if (results.rawlen != (2 * JVC_BITS) + 4) {
+        // Check header "mark" and "space"
+        if (!MATCH_MARK(results.rawbuf[1], JVC_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], JVC_HEADER_SPACE)) {
             DBG_PRINT("JVC: ");
-            DBG_PRINT("Data length=");
-            DBG_PRINT(results.rawlen);
-            DBG_PRINTLN(" is not 36");
-            return false;
-        }
-
-        // Check header "space"
-        if (!MATCH_SPACE(results.rawbuf[2], JVC_HEADER_SPACE)) {
-            DBG_PRINT("JVC: ");
-            DBG_PRINTLN("Header space length is wrong");
+            DBG_PRINTLN("Header mark or space length is wrong");
             return false;
         }
     }
@@ -167,7 +190,7 @@ bool IRrecv::decodeJVC() {
 
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
-        DBG_PRINT("Stop bit verify failed");
+        DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 

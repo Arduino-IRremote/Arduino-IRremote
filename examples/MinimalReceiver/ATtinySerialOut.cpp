@@ -851,4 +851,8 @@ void write1Start8Data1StopNoParity_C_Version(uint8_t aValue) {
 // -8 cycles to compensate for fastest repeated call (1 ret + 1 load + 1 call)
     delay4CyclesInlineExact(4); // gives minimum 25 cycles for stop bit :-)
 }
+#elif defined(ARDUINO_ARCH_APOLLO3)
+    void AttinySerialOutDummyToAvoidBFDAssertions(){
+        ;
+    }
 #endif // defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)

@@ -101,9 +101,32 @@
  *
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2017-2021 Unknown Contributor :-)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
 
-//#define DEBUG // Activate this  for lots of lovely debug output.
+//#define DEBUG // Activate this for lots of lovely debug output.
 #include "IRremote.h"
 
 //#define SEND_SHUZU  1 // for testing
@@ -173,26 +196,25 @@ void IRsend::sendShuzuStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNum
 
 //+=============================================================================
 //
+ /*
+  * First check for right data length
+  * Next check start bit
+  * Next try the decode
+  * Last check stop bit
+  */
 bool IRrecv::decodeShuzu() {
 
-    // Check header "mark"
-    if (!MATCH_MARK(results.rawbuf[1], SHUZU_HEADER_MARK)) {
-        return false;
-    }
 
-    // Check we have the right amount of data +4 for initial gap, start bit mark and space + stop bit mark
+    // Check we have the right amount of data (28). The +4 is for initial gap, start bit mark and space + stop bit mark
     if (results.rawlen != (2 * SHUZU_BITS) + 4) {
-        DBG_PRINT("Shuzu: ");
-        DBG_PRINT("Data length=");
-        DBG_PRINT(results.rawlen);
-        DBG_PRINTLN(" is not 52");
+        // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
     // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[2], SHUZU_HEADER_SPACE)) {
+    if (!MATCH_MARK(results.rawbuf[1], SHUZU_HEADER_MARK) ||!MATCH_SPACE(results.rawbuf[2], SHUZU_HEADER_SPACE)) {
         DBG_PRINT("Shuzu: ");
-        DBG_PRINTLN("Header space length is wrong");
+        DBG_PRINTLN("Header mark or space length is wrong");
         return false;
     }
 
@@ -200,6 +222,13 @@ bool IRrecv::decodeShuzu() {
     if (!decodePulseDistanceData(SHUZU_BITS, 3, SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_ZERO_SPACE, false)) {
         DBG_PRINT(F("Shuzu: "));
         DBG_PRINTLN(F("Decode failed"));
+        return false;
+    }
+
+    // Stop bit
+    if (!MATCH_MARK(results.rawbuf[3 + (2 * SHUZU_BITS)], SHUZU_BIT_MARK)) {
+        DBG_PRINT(F("Shuzu: "));
+        DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 

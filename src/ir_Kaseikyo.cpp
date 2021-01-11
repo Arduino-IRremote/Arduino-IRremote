@@ -1,10 +1,33 @@
 /*
  * ir_Kaseikyo.cpp
  *
- *  Contains functions for receiving and sending Kaseikyo/Panasonic IR Protocol in "raw" and standard format with 16 bit Address + 8 bit Data
+ *  Contains functions for receiving and sending Kaseikyo/Panasonic IR Protocol in "raw" and standard format with 16 bit address + 8 bit command
  *
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
 
 //#define DEBUG // Activate this  for lots of lovely debug output.
@@ -18,6 +41,7 @@
 //       P      A   A  N   N  A   A  SSSS    OOO   N   N  IIIII   CCCC
 //==============================================================================
 // see: http://www.hifi-remote.com/johnsfine/DecodeIR.html#Panasonic
+// IRP notation: {37k,432}<1,-1|1,-3>(8,-4,M:8,N:8,X:4,D:4,S:8,F:8,G:8,1,-173)+ {X=M:4:0^M:4:4^N:4:0^N:4:4}
 // see: http://www.remotecentral.com/cgi-bin/mboard/rc-pronto/thread.cgi?26152
 // The first two (8-bit) bytes are always 2 and 32 (These identify Panasonic within the Kaseikyo standard)
 // The next two bytes are 4 independent 4-bit fields or Device and Subdevice
@@ -98,6 +122,9 @@ void IRsend::sendPanasonicStandard(uint16_t aAddress, uint8_t aCommand, uint8_t 
     sendKaseikyoStandard(aAddress, aCommand, PANASONIC_VENDOR_ID_CODE, aNumberOfRepeats);
 }
 
+/*
+ * Tested with my Panasonic DVD/TV remote
+ */
 bool IRrecv::decodeKaseikyo() {
 
     decode_type_t tProtocol;
@@ -134,6 +161,8 @@ bool IRrecv::decodeKaseikyo() {
         tProtocol = KASEIKYO_DENON;
     } else if (results.value == JVC_VENDOR_ID_CODE) {
         tProtocol = KASEIKYO_JVC;
+    } else if (results.value == MITSUBISHI_VENDOR_ID_CODE) {
+        tProtocol = KASEIKYO_MITSUBISHI;
     } else {
         tProtocol = KASEIKYO;
     }

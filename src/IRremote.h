@@ -88,6 +88,7 @@ typedef enum {
     KASEIKYO_JVC,
     KASEIKYO_DENON,
     KASEIKYO_SHARP,
+    KASEIKYO_MITSUBISHI,
     RC5,
     RC6,
     SAMSUNG,
@@ -97,7 +98,7 @@ typedef enum {
     WHYNTER,
 } decode_type_t;
 
-//#define DEBUG // Activate this  for lots of lovely debug output.
+//#define DEBUG // Activate this for lots of lovely debug output.
 //------------------------------------------------------------------------------
 // Debug directives
 //
@@ -424,6 +425,7 @@ public:
 #define PANASONIC_VENDOR_ID_CODE    0x2002
 #define SHARP_VENDOR_ID_CODE        0x5AAA
 #define DENON_VENDOR_ID_CODE        0x3254
+#define MITSUBISHI_VENDOR_ID_CODE   0xCB23
 #define JVC_VENDOR_ID_CODE          0x0103
     void sendPanasonic(uint16_t aAddress, uint32_t aData);
     void sendPanasonicStandard(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats); // LSB first

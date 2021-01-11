@@ -47,42 +47,26 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 
 //+=============================================================================
 bool IRrecv::decodeWhynter() {
-    unsigned int offset = 1;  // skip initial space
 
-    // Check we have the right amount of data +5 for (start bit + header) mark and space + stop bit mark
-    if (results.rawlen <= (2 * WHYNTER_BITS) + 5) {
+    // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
+    if (results.rawlen != (2 * WHYNTER_BITS) + 4) {
         return false;
     }
 
     // Sequence begins with a bit mark and a zero space
-    if (!MATCH_MARK(results.rawbuf[offset], WHYNTER_BIT_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[1], WHYNTER_BIT_MARK) || !MATCH_SPACE(results.rawbuf[2], WHYNTER_HEADER_SPACE)) {
+        DBG_PRINT(F("Whynter: "));
+        DBG_PRINTLN(F("Header mark or space length is wrong"));
         return false;
     }
-    offset++;
 
-    if (!MATCH_SPACE(results.rawbuf[offset], WHYNTER_ZERO_SPACE)) {
-        return false;
-    }
-    offset++;
-
-    // header mark and space
-    if (!MATCH_MARK(results.rawbuf[offset], WHYNTER_HEADER_MARK)) {
-        return false;
-    }
-    offset++;
-
-    if (!MATCH_SPACE(results.rawbuf[offset], WHYNTER_HEADER_SPACE)) {
-        return false;
-    }
-    offset++;
-
-    if (!decodePulseDistanceData(WHYNTER_BITS, offset, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE)) {
+    if (!decodePulseDistanceData(WHYNTER_BITS, 3, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE)) {
         return false;
     }
 
     // trailing mark / stop bit
-    if (!MATCH_MARK(results.rawbuf[offset + (2 * WHYNTER_BITS)], WHYNTER_BIT_MARK)) {
-        DBG_PRINT("Stop bit verify failed");
+    if (!MATCH_MARK(results.rawbuf[3 + (2 * WHYNTER_BITS)], WHYNTER_BIT_MARK)) {
+        DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 

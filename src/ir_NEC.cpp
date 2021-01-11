@@ -1,13 +1,34 @@
 /*
  * ir_NEC.cpp
  *
- *  Contains functions for receiving and sending NEC IR Protocol in "raw" and standard format with 16 or 8 bit Address and 8 bit Data
+ *  Contains functions for receiving and sending NEC IR Protocol in "raw" and standard format with 16 or 8 bit address and 8 bit command
  *
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  *
+ ************************************************************************************
+ * MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
 
-//#define DEBUG // Activate this  for lots of lovely debug output.
+//#define DEBUG // Activate this for lots of lovely debug output.
 #include "IRremote.h"
 #include "LongUnion.h"
 
@@ -93,36 +114,33 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16Add
 // NECs have a repeat only 4 items long
 //
 #if defined(USE_STANDARD_DECODE)
+/*
+ * First check for right data length
+ * Next check start bit
+ * Next try the decode
+ * Last check stop bit
+ */
 bool IRrecv::decodeNEC() {
 
-    // Check header "mark"
-    if (!MATCH_MARK(results.rawbuf[1], NEC_HEADER_MARK)) {
+    // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
+    if (results.rawlen != ((2 * NEC_BITS) + 4) && (results.rawlen == 4)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
+    // Check header "mark" and "space", this must be done for repeat and data
+    if (!MATCH_MARK(results.rawbuf[1], NEC_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], NEC_HEADER_SPACE)) {
+        DBG_PRINT(F("NEC: "));
+        DBG_PRINTLN(F("Header mark or space length is wrong"));
+        return false;
+    }
+
     // Check for repeat
-    if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[2], NEC_REPEAT_HEADER_SPACE)
-            && MATCH_MARK(results.rawbuf[3], NEC_BIT_MARK)) {
+    if ((results.rawlen == 4) && MATCH_MARK(results.rawbuf[3], NEC_BIT_MARK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.address = lastDecodedAddress;
         decodedIRData.command = lastDecodedCommand;
         return true;
-    }
-
-    // Check we have enough data - +4 for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen != (2 * NEC_BITS) + 4) {
-        DBG_PRINT(F("NEC: "));
-        DBG_PRINT(F("Data length="));
-        DBG_PRINT(results.rawlen);
-        DBG_PRINTLN(F(" is not 68"));
-        return false;
-    }
-    // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[2], NEC_HEADER_SPACE)) {
-        DBG_PRINT(F("NEC: "));
-        DBG_PRINTLN(F("Header space length is wrong"));
-        return false;
     }
 
     if (!decodePulseDistanceData(NEC_BITS, 3, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, false)) {
@@ -134,7 +152,7 @@ bool IRrecv::decodeNEC() {
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[3 + (2 * NEC_BITS)], NEC_BIT_MARK)) {
         DBG_PRINT(F("NEC: "));
-        DBG_PRINTLN(F("Stop bit verify failed"));
+        DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
@@ -154,7 +172,7 @@ bool IRrecv::decodeNEC() {
 
     WordUnion tAddress;
     tAddress.UWord = results.value;
-    if (tAddress.UByte.LowByte != (uint8_t)(~tAddress.UByte.HighByte)) {
+    if (tAddress.UByte.LowByte != (uint8_t) (~tAddress.UByte.HighByte)) {
         // standard 8 bit address NEC protocol
         decodedIRData.address = tAddress.UByte.LowByte; // first 8 bit
     } else {
@@ -210,7 +228,7 @@ bool IRrecv::decodeNEC() {
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[offset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
         DBG_PRINT("NEC: ");
-        DBG_PRINT("Stop bit verify failed");
+        DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 

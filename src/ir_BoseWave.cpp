@@ -7,7 +7,7 @@
  *
  */
 
-//#define DEBUG // Activate this  for lots of lovely debug output.
+//#define DEBUG // Activate this for lots of lovely debug output.
 #include "IRremote.h"
 
 //==============================================================================
@@ -101,7 +101,7 @@ bool IRrecv::decodeBoseWave() {
     // Stop bit
     if (!MATCH_MARK(results.rawbuf[tOffset + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {
         DBG_PRINT("Bose: ");
-        DBG_PRINTLN("Stop bit verify failed");
+        DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
