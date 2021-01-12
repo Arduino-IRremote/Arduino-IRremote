@@ -105,6 +105,7 @@ bool IRrecv::decodeMagiQuest() {
         space_ = results.rawbuf[offset++];
         ratio_ = space_ / mark_;
 
+        DBG_PRINT("MagiQuest: ");
         DBG_PRINT("mark=");
         DBG_PRINT(mark_ * MICROS_PER_TICK);
         DBG_PRINT(" space=");

@@ -123,24 +123,28 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16Add
 bool IRrecv::decodeNEC() {
 
     // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
-    if (results.rawlen != ((2 * NEC_BITS) + 4) && (results.rawlen == 4)) {
+    if (results.rawlen != ((2 * NEC_BITS) + 4) && (results.rawlen != 4)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
     // Check header "mark" and "space", this must be done for repeat and data
     if (!MATCH_MARK(results.rawbuf[1], NEC_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], NEC_HEADER_SPACE)) {
-        DBG_PRINT(F("NEC: "));
-        DBG_PRINTLN(F("Header mark or space length is wrong"));
+        // commented since I saw this too often
+//        DBG_PRINT(F("NEC: "));
+//        DBG_PRINTLN(F("Header mark or space length is wrong"));
         return false;
     }
 
     // Check for repeat
-    if ((results.rawlen == 4) && MATCH_MARK(results.rawbuf[3], NEC_BIT_MARK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
-        decodedIRData.address = lastDecodedAddress;
-        decodedIRData.command = lastDecodedCommand;
-        return true;
+    if (results.rawlen == 4) {
+        if (MATCH_MARK(results.rawbuf[3], NEC_BIT_MARK)) {
+            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+            decodedIRData.address = lastDecodedAddress;
+            decodedIRData.command = lastDecodedCommand;
+            return true;
+        }
+        return false;
     }
 
     if (!decodePulseDistanceData(NEC_BITS, 3, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, false)) {
@@ -157,27 +161,24 @@ bool IRrecv::decodeNEC() {
     }
 
     // Success
-    uint16_t tCommand = results.value >> NEC_ADDRESS_BITS;
-    uint8_t tCommandNotInverted = tCommand & 0xFF;
-    uint8_t tCommandInverted = tCommand >> 8;
+    LongUnion tValue;
+    tValue.ULong = results.value;
+    decodedIRData.command = tValue.UByte.MidHighByte;
     // plausi check for command
-    if ((tCommandNotInverted ^ tCommandInverted) != 0xFF) {
+    if (tValue.UByte.MidHighByte != (uint8_t) (~tValue.UByte.HighByte)) {
         DBG_PRINT(F("NEC: "));
-        DBG_PRINT(F("Command and inverted command check failed"));
+        DBG_PRINTLN(F("Command and inverted command check failed"));
         return false;
     }
-    decodedIRData.command = tCommandNotInverted;
     decodedIRData.protocol = NEC;
     decodedIRData.numberOfBits = NEC_BITS;
 
-    WordUnion tAddress;
-    tAddress.UWord = results.value;
-    if (tAddress.UByte.LowByte != (uint8_t) (~tAddress.UByte.HighByte)) {
+    if (tValue.UByte.LowByte != (uint8_t) (~tValue.UByte.MidLowByte)) {
         // standard 8 bit address NEC protocol
-        decodedIRData.address = tAddress.UByte.LowByte; // first 8 bit
+        decodedIRData.address = tValue.UByte.LowByte; // first 8 bit
     } else {
         // extended NEC protocol
-        decodedIRData.address = tAddress.UWord; // first 16 bit
+        decodedIRData.address = tValue.UWord.LowWord; // first 16 bit
     }
 
     return true;

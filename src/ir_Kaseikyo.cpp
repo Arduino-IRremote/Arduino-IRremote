@@ -32,6 +32,7 @@
 
 //#define DEBUG // Activate this  for lots of lovely debug output.
 #include "IRremote.h"
+#include "LongUnion.h"
 
 //==============================================================================
 //       PPPP    AAA   N   N   AAA    SSSS   OOO   N   N  IIIII   CCCC
@@ -167,34 +168,25 @@ bool IRrecv::decodeKaseikyo() {
         tProtocol = KASEIKYO;
     }
 
-    // decode address (device and subdevice)
-    if (!decodePulseDistanceData(KASEIKYO_ADDRESS_BITS, 3 + (2 * KASEIKYO_VENDOR_ID_BITS), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
+    // decode address (device and subdevice) + command + parity
+    if (!decodePulseDistanceData(KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS, 3 + (2 * KASEIKYO_VENDOR_ID_BITS), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
     KASEIKYO_ZERO_SPACE, false)) {
         DBG_PRINT("Kaseikyo: ");
-        DBG_PRINTLN("Address decode failed");
+        DBG_PRINTLN("Address, command + parity decode failed");
         return false;
     }
-    decodedIRData.address = results.value;
-    uint8_t tParity = (decodedIRData.address >> 8) ^ (decodedIRData.address & 0xFF);
+    LongUnion tValue;
+    tValue.ULong = results.value;
+    decodedIRData.address = tValue.UWord.LowWord;
+    decodedIRData.command = tValue.UByte.MidHighByte;
+    uint8_t tParity = tValue.UByte.LowByte ^ tValue.UByte.MidLowByte ^ tValue.UByte.MidHighByte;
 
     if (tProtocol == KASEIKYO) {
         // Include vendor ID in address
         decodedIRData.address |= ((uint32_t) tVendorId) << KASEIKYO_ADDRESS_BITS;
     }
 
-    // decode command + parity
-    if (!decodePulseDistanceData(KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
-            3 + (2 * (KASEIKYO_VENDOR_ID_BITS + KASEIKYO_ADDRESS_BITS)), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
-            KASEIKYO_ZERO_SPACE, false)) {
-        DBG_PRINT("Kaseikyo: ");
-        DBG_PRINTLN("Command + parity decode failed");
-        return false;
-    }
-
-    decodedIRData.command = results.value & 0xFF;
-    tParity ^= decodedIRData.command;
-
-    if ((results.value >> KASEIKYO_COMMAND_BITS) != tParity) {
+    if (tValue.UByte.HighByte != tParity) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINT("8 bit Parity is not correct. expected=0x");
         DBG_PRINT(tParity, HEX);
@@ -212,7 +204,6 @@ bool IRrecv::decodeKaseikyo() {
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
 
-    results.value = 0; // no sensible raw data here
     decodedIRData.protocol = tProtocol;
 
     decodedIRData.numberOfBits = KASEIKYO_BITS;

@@ -115,33 +115,25 @@ void IRsend::sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aN
 
 bool IRrecv::decodeSamsung() {
 
-    // Check header "mark"
-    if (!MATCH_MARK(results.rawbuf[1], SAMSUNG_HEADER_MARK)) {
+    // Check we have enough data (68). The +4 is for initial gap, start bit mark and space + stop bit mark
+    if (results.rawlen != ((2 * SAMSUNG_BITS) + 4) && results.rawlen != ((2 * SAMSUNG48_BITS) + 4) && (results.rawlen != 6)) {
+        return false;
+    }
+
+    // Check header "mark" + "space"
+    if (!MATCH_MARK(results.rawbuf[1], SAMSUNG_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], SAMSUNG_HEADER_SPACE)) {
+        DBG_PRINT("Samsung: ");
+        DBG_PRINTLN("Header mark or space length is wrong");
+
         return false;
     }
 
     // Check for repeat
-    if ((results.rawlen == 6) && MATCH_SPACE(results.rawbuf[1], SAMSUNG_HEADER_MARK)
-            && MATCH_MARK(results.rawbuf[2], SAMSUNG_HEADER_SPACE)) {
+    if (results.rawlen == 6) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.address = lastDecodedAddress;
         decodedIRData.command = lastDecodedCommand;
         return true;
-    }
-
-    // Check we have enough data (68). +4 for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen != (2 * SAMSUNG_BITS) + 4) {
-        DBG_PRINT("Samsung: ");
-        DBG_PRINT("Data length=");
-        DBG_PRINT(results.rawlen);
-        DBG_PRINTLN(" is not 68");
-        return false;
-    }
-    // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[2], SAMSUNG_HEADER_SPACE)) {
-        DBG_PRINT("Samsung: ");
-        DBG_PRINTLN("Header space length is wrong");
-        return false;
     }
 
     if (results.rawlen == (2 * SAMSUNG48_BITS) + 4) {
@@ -162,8 +154,8 @@ bool IRrecv::decodeSamsung() {
         LongUnion tValue;
         tValue.ULong = results.value;
         // receive 2 * 8 bits then 8 inverted bits LSB first
-        if (tValue.UByte.HighByte != (uint8_t) (~(tValue.UByte.MidHighByte))
-                && tValue.UByte.MidLowByte != (uint8_t) (~(tValue.UByte.LowByte))) {
+        if (tValue.UByte.HighByte != (uint8_t) (~tValue.UByte.MidHighByte)
+                && tValue.UByte.MidLowByte != (uint8_t) (~tValue.UByte.LowByte)) {
             decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
         }
         decodedIRData.command = tValue.UByte.HighByte << 8 | tValue.UByte.MidLowByte;
@@ -175,16 +167,16 @@ bool IRrecv::decodeSamsung() {
             DBG_PRINTLN("Decode failed");
             return false;
         }
-        decodedIRData.address = results.value & 0xFFFF;
+        LongUnion tValue;
+        tValue.ULong = results.value;
+        decodedIRData.address = tValue.UWord.LowWord;
 
-        WordUnion tCommand;
-        tCommand.UWord = results.value >> SAMSUNG_ADDRESS_BITS;
-        if (tCommand.UByte.LowByte == (uint8_t) (~tCommand.UByte.HighByte)) {
+        if (tValue.UByte.MidHighByte == (uint8_t) (~tValue.UByte.HighByte)) {
             // 8 bit command protocol
-            decodedIRData.command = tCommand.UByte.LowByte; // first 8 bit
+            decodedIRData.command = tValue.UByte.MidHighByte; // first 8 bit
         } else {
             // 16 bit command protocol
-            decodedIRData.command = tCommand.UWord; // first 16 bit
+            decodedIRData.command = tValue.UWord.HighWord; // first 16 bit
         }
         decodedIRData.numberOfBits = SAMSUNG_BITS;
     }

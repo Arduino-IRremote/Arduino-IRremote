@@ -45,6 +45,7 @@
 // http://www.hifi-remote.com/johnsfine/DecodeIR.html#JVC
 // IRP: {38k,525}<1,-1|1,-3>(16,-8,(D:8,F:8,1,-45)+)
 // LSB first, 1 start bit + 8 bit address + 8 bit command + 1 stop bit.
+// The JVC protocol repeats by skipping the header.
 #define JVC_ADDRESS_BITS      8 // 8 bit address
 #define JVC_COMMAND_BITS      8 // Command
 
@@ -101,28 +102,30 @@ void IRsend::sendJVCStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumber
  */
 bool IRrecv::decodeJVC() {
 
-    /*
-     * Check for repeat
-     */
-    if (results.rawlen == ((2 * JVC_BITS) + 2)
-            && results.rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 2) / MICROS_PER_TICK))
-            && MATCH_MARK(results.rawbuf[1], JVC_BIT_MARK) && MATCH_MARK(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
-        /*
-         * We have a repeat here, so do not check for start bit
-         */
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
-    } else {
-
-        // Check we have the right amount of data (36). The +4 is for initial gap, start bit mark and space + stop bit mark.
-        if (results.rawlen != (2 * JVC_BITS) + 4) { // 36
+    // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark.
+    if (results.rawlen != ((2 * JVC_BITS) + 4) && results.rawlen != ((2 * JVC_BITS) + 2)) {
         // no debug output, since this check is mainly to determine the received protocol
-            return false;
+        return false;
+    }
+
+
+    if (results.rawlen == ((2 * JVC_BITS) + 2)) {
+        /*
+         * Check for repeat
+         */
+        if (results.rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 2) / MICROS_PER_TICK))
+                && MATCH_MARK(results.rawbuf[1], JVC_BIT_MARK) && MATCH_MARK(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
+            /*
+             * We have a repeat here, so do not check for start bit
+             */
+            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         }
+    } else {
 
         // Check header "mark" and "space"
         if (!MATCH_MARK(results.rawbuf[1], JVC_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], JVC_HEADER_SPACE)) {
-            DBG_PRINT("JVC: ");
-            DBG_PRINTLN("Header mark or space length is wrong");
+//            DBG_PRINT("JVC: ");
+//            DBG_PRINTLN("Header mark or space length is wrong");
             return false;
         }
     }
@@ -228,5 +231,5 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
 
 // Footer
     mark(JVC_BIT_MARK);
-    space(0);  // Always end with the LED off
+    space(0); // Always end with the LED off
 }

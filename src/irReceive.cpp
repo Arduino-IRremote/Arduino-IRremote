@@ -112,7 +112,6 @@ bool IRrecv::decode() {
     }
 #endif
 
-
 #if DECODE_RC5
     TRACE_PRINTLN("Attempting RC5 decode");
     if (decodeRC5()) {
@@ -351,7 +350,8 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
                 DBG_PRINT(F(" is not "));
                 DBG_PRINT(aOneMarkMicros);
                 DBG_PRINT(F(" or "));
-                DBG_PRINTLN(aZeroMarkMicros);
+                DBG_PRINT(aZeroMarkMicros);
+                DBG_PRINT(' ');
                 return false;
             }
             aStartOffset++;
@@ -363,7 +363,8 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
                     DBG_PRINT(F("Space="));
                     DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
                     DBG_PRINT(F(" is not "));
-                    DBG_PRINTLN(aBitSpaceMicros);
+                    DBG_PRINT(aBitSpaceMicros);
+                    DBG_PRINT(' ');
                     return false;
                 }
                 aStartOffset++;
@@ -386,7 +387,8 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
                 DBG_PRINT(F(" is not "));
                 DBG_PRINT(aOneMarkMicros);
                 DBG_PRINT(F(" or "));
-                DBG_PRINTLN(aZeroMarkMicros);
+                DBG_PRINT(aZeroMarkMicros);
+                DBG_PRINT(' ');
                 return false;
             }
             aStartOffset++;
@@ -398,7 +400,8 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
                     DBG_PRINT(F("Space="));
                     DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
                     DBG_PRINT(F(" is not "));
-                    DBG_PRINTLN(aBitSpaceMicros);
+                    DBG_PRINT(aBitSpaceMicros);
+                    DBG_PRINT(' ');
                     return false;
                 }
                 aStartOffset++;
@@ -430,7 +433,8 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
                 DBG_PRINT(F("Mark="));
                 DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
                 DBG_PRINT(F(" is not "));
-                DBG_PRINTLN(aBitMarkMicros);
+                DBG_PRINT(aBitMarkMicros);
+                DBG_PRINT(' ');
                 return false;
             }
             aStartOffset++;
@@ -448,7 +452,8 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
                 DBG_PRINT(F(" is not "));
                 DBG_PRINT(aOneSpaceMicros);
                 DBG_PRINT(F(" or "));
-                DBG_PRINTLN(aZeroSpaceMicros);
+                DBG_PRINT(aZeroSpaceMicros);
+                DBG_PRINT(' ');
                 return false;
             }
             aStartOffset++;
@@ -462,7 +467,8 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
                 DBG_PRINT(F("Mark="));
                 DBG_PRINT(results.rawbuf[aStartOffset]*MICROS_PER_TICK);
                 DBG_PRINT(F(" is not "));
-                DBG_PRINTLN(aBitMarkMicros);
+                DBG_PRINT(aBitMarkMicros);
+                DBG_PRINT(' ');
                 return false;
             }
             aStartOffset++;
@@ -480,7 +486,8 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
                 DBG_PRINT(F(" is not "));
                 DBG_PRINT(aOneSpaceMicros);
                 DBG_PRINT(F(" or "));
-                DBG_PRINTLN(aZeroSpaceMicros);
+                DBG_PRINT(aZeroSpaceMicros);
+                DBG_PRINT(' ');
                 return false;
             }
             aStartOffset++;

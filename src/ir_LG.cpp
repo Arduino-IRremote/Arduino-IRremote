@@ -38,14 +38,14 @@
 //                               L      G   G
 //                               LLLLL   GGG
 //==============================================================================
-// MSB first, timing and repeat is like LG but 28 data bits
+// MSB first, timing and repeat is like NEC but 28 data bits
 // MSB! first, 1 start bit + 8 bit address + 16 bit command + 4 bit parity + 1 stop bit.
 #define LG_ADDRESS_BITS          8
 #define LG_COMMAND_BITS         16
 #define LG_CHECKSUM_BITS         4
 #define LG_BITS                 (LG_ADDRESS_BITS + LG_COMMAND_BITS + LG_CHECKSUM_BITS) // 28
 
-#define LG_UNIT                 560 // like LG
+#define LG_UNIT                 560 // like NEC
 
 #define LG_HEADER_MARK          (16 * LG_UNIT) // 9000
 #define LG_HEADER_SPACE         (8 * LG_UNIT)  // 4500
@@ -124,25 +124,32 @@ void IRsend::sendLGStandard(uint8_t aAddress, uint16_t aCommand, uint8_t aNumber
 bool IRrecv::decodeLG() {
 
     // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
-    if (results.rawlen != ((2 * LG_BITS) + 4) && (results.rawlen == 4)) {
+    if (results.rawlen != ((2 * LG_BITS) + 4) && (results.rawlen != 4)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
-    // Check header "mark" and "space", this must be done for repeat and data
-    if (!MATCH_MARK(results.rawbuf[1], LG_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], LG_HEADER_SPACE)) {
-        DBG_PRINT(F("LG: "));
-        DBG_PRINTLN(F("Header mark or space length is wrong"));
+    // Check header "mark" this must be done for repeat and data
+    if (!MATCH_MARK(results.rawbuf[1], LG_HEADER_MARK)) {
         return false;
     }
 
-    // Check for repeat
-    if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[2], LG_REPEAT_HEADER_SPACE)
-            && MATCH_MARK(results.rawbuf[3], LG_BIT_MARK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
-        decodedIRData.address = lastDecodedAddress;
-        decodedIRData.command = lastDecodedCommand;
-        return true;
+    // Check for repeat - here we have another header space length
+    if (results.rawlen == 4) {
+        if (MATCH_SPACE(results.rawbuf[2], LG_REPEAT_HEADER_SPACE) && MATCH_MARK(results.rawbuf[3], LG_BIT_MARK)) {
+            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+            decodedIRData.address = lastDecodedAddress;
+            decodedIRData.command = lastDecodedCommand;
+            return true;
+        }
+        return false;
+    }
+
+    // Check command header space
+    if (!MATCH_SPACE(results.rawbuf[2], LG_HEADER_SPACE)) {
+        DBG_PRINT(F("LG: "));
+        DBG_PRINTLN(F("Header space length is wrong"));
+        return false;
     }
 
     if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, true)) {
@@ -194,61 +201,61 @@ bool IRrecv::decodeLG() {
 
 //+=============================================================================
 bool IRrecv::decodeLG() {
-    unsigned int offset = 1; // Skip first space
+unsigned int offset = 1; // Skip first space
 
-    // Check we have enough data (60) - +4 for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen != (2 * LG_BITS) + 4) {
-        return false;
-    }
+// Check we have enough data (60) - +4 for initial gap, start bit mark and space + stop bit mark
+if (results.rawlen != (2 * LG_BITS) + 4) {
+    return false;
+}
 
-    // Initial mark/space
-    if (!MATCH_MARK(results.rawbuf[offset], LG_HEADER_MARK)) {
-        return false;
-    }
-    offset++;
+// Initial mark/space
+if (!MATCH_MARK(results.rawbuf[offset], LG_HEADER_MARK)) {
+    return false;
+}
+offset++;
 
-    if (!MATCH_SPACE(results.rawbuf[offset], LG_HEADER_SPACE)) {
-        return false;
-    }
-    offset++;
+if (!MATCH_SPACE(results.rawbuf[offset], LG_HEADER_SPACE)) {
+    return false;
+}
+offset++;
 
-    if (!decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, true)) {
-        return false;
-    }
-    // Stop bit
-    if (!MATCH_MARK(results.rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
-        DBG_PRINTLN(F("Stop bit mark length is wrong"));
-        return false;
-    }
+if (!decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, true)) {
+    return false;
+}
+// Stop bit
+if (!MATCH_MARK(results.rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
+    DBG_PRINTLN(F("Stop bit mark length is wrong"));
+    return false;
+}
 
-    // Success
-    // no parity check yet :-(
-    decodedIRData.address = results.value >> (LG_COMMAND_BITS + LG_CHECKSUM_BITS);
-    decodedIRData.command = (results.value >> LG_COMMAND_BITS) & 0xFFFF;
+// Success
+// no parity check yet :-(
+decodedIRData.address = results.value >> (LG_COMMAND_BITS + LG_CHECKSUM_BITS);
+decodedIRData.command = (results.value >> LG_COMMAND_BITS) & 0xFFFF;
 
-    decodedIRData.numberOfBits = LG_BITS;
-    decodedIRData.protocol = LG;
-    return true;
+decodedIRData.numberOfBits = LG_BITS;
+decodedIRData.protocol = LG;
+return true;
 }
 
 bool IRrecv::decodeLG(decode_results *aResults) {
-    bool aReturnValue = decodeLG();
-    *aResults = results;
-    return aReturnValue;
+bool aReturnValue = decodeLG();
+*aResults = results;
+return aReturnValue;
 }
 #endif
 
 //+=============================================================================
 void IRsend::sendLG(unsigned long data, int nbits) {
-    // Set IR carrier frequency
+// Set IR carrier frequency
     enableIROut(38);
 
-    // Header
+// Header
     mark(LG_HEADER_MARK);
     space(LG_HEADER_SPACE);
 //    mark(LG_BIT_MARK);
 
-    // Data
+// Data
     sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits);
 
     mark(LG_BIT_MARK);
