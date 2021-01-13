@@ -176,7 +176,6 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
 //
 void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
         unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst) {
-    noInterrupts();
 
     if (aMSBfirst) {  // Send the MSB first.
         // send data from MSB to LSB until mask bit is shifted out
@@ -205,7 +204,6 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
             }
         TRACE_PRINTLN("");
     }
-    interrupts();
 }
 
 //+=============================================================================

@@ -56,7 +56,9 @@
 #define SONY_ZERO_MARK          SONY_UNIT
 #define SONY_SPACE              SONY_UNIT
 
+#define SONY_AVERAGE_DURATION   21000 // SONY_HEADER_MARK + SONY_SPACE  + 12 * 2,5 * SONY_UNIT  // 2.5 because we assume more zeros than ones
 #define SONY_REPEAT_PERIOD      45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define SONY_REPEAT_SPACE       (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION)
 
 /*
  * Repeat commands should be sent in a 45 ms raster.
@@ -69,7 +71,8 @@ void IRsend::sendSonyStandard(uint16_t aAddress, uint8_t aCommand, bool send13Ad
 
     uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
-        unsigned long tStartMillis = millis();
+
+        noInterrupts();
 
         // Header
         mark(SONY_HEADER_MARK);
@@ -84,12 +87,13 @@ void IRsend::sendSonyStandard(uint16_t aAddress, uint8_t aCommand, bool send13Ad
         } else {
             sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress, SONY_ADDRESS_BITS, false);
         }
+        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a 45 ms raster
-            delay((tStartMillis + SONY_REPEAT_PERIOD / 1000) - millis());
+            delay(SONY_REPEAT_SPACE / 1000);
         }
     }
 }

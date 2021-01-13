@@ -59,7 +59,7 @@
 #define KASEIKYO_COMMAND_BITS       8
 #define KASEIKYO_PARITY_BITS        8
 #define KASEIKYO_BITS               (KASEIKYO_VENDOR_ID_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS)
-#define KASEIKYO_UNIT               432 // Pronto 0x70 / 0x10
+#define KASEIKYO_UNIT               432 // Pronto 0x70 / 0x10 - I measured 17 pulses
 
 #define KASEIKYO_HEADER_MARK        (8 * KASEIKYO_UNIT) // 3456
 #define KASEIKYO_HEADER_SPACE       (4 * KASEIKYO_UNIT) // 1728
@@ -68,7 +68,9 @@
 #define KASEIKYO_ONE_SPACE          (3 * KASEIKYO_UNIT) // 1296
 #define KASEIKYO_ZERO_SPACE         KASEIKYO_UNIT
 
+#define KASEIKYO_AVERAGE_DURATION   56000
 #define KASEIKYO_REPEAT_PERIOD      130000
+#define KASEIKYO_REPEAT_SPACE       (KASEIKYO_REPEAT_PERIOD - KASEIKYO_AVERAGE_DURATION)
 
 // for old decoder
 #define KASEIKYO_DATA_BITS          32
@@ -84,8 +86,8 @@ void IRsend::sendKaseikyoStandard(uint16_t aAddress, uint8_t aCommand, uint16_t 
 
     uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
-        unsigned long tStartMillis = millis();
 
+        noInterrupts();
         // Header
         mark(KASEIKYO_HEADER_MARK);
         space(KASEIKYO_HEADER_SPACE);
@@ -109,12 +111,13 @@ void IRsend::sendKaseikyoStandard(uint16_t aAddress, uint8_t aCommand, uint16_t 
         // Footer
         mark(KASEIKYO_BIT_MARK);
         space(0);  // Always end with the LED off
+        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay((tStartMillis + KASEIKYO_REPEAT_PERIOD / 1000) - millis());
+            delay(KASEIKYO_REPEAT_SPACE / 1000);
         }
     }
 }

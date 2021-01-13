@@ -59,7 +59,7 @@
 #define JVC_ONE_SPACE         (3 * JVC_UNIT)  // The length of a Bit:Space for 1's
 #define JVC_ZERO_SPACE        JVC_UNIT        // The length of a Bit:Space for 0's
 
-#define JVC_REPEAT_SPACE      (uint16_t)(45 * JVC_UNIT)  // 23625 Commands are repeated with a distance of 23 ms for as long as the key on the remote control is held down.
+#define JVC_REPEAT_SPACE      (uint16_t)(45 * JVC_UNIT)  // 23625 - Commands are repeated with a distance of 23 ms for as long as the key on the remote control is held down.
 
 //+=============================================================================
 // JVC does NOT repeat by sending a separate code (like NEC does).
@@ -69,6 +69,7 @@ void IRsend::sendJVCStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumber
     // Set IR carrier frequency
     enableIROut(38);
 
+    noInterrupts();
     // Header
     mark(JVC_HEADER_MARK);
     space(JVC_HEADER_SPACE);
@@ -84,6 +85,7 @@ void IRsend::sendJVCStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumber
         // Footer
         mark(JVC_BIT_MARK);
         space(0);  // Always end with the LED off
+        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!

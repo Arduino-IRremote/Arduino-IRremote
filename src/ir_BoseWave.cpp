@@ -44,6 +44,8 @@ void IRsend::sendBoseWaveStandard(uint8_t aCommand, uint8_t aNumberOfRepeats) {
 
     uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
+        noInterrupts();
+
         // Header
         mark(BOSEWAVE_HEADER_MARK);
         space(BOSEWAVE_HEADER_SPACE);
@@ -55,6 +57,7 @@ void IRsend::sendBoseWaveStandard(uint8_t aCommand, uint8_t aNumberOfRepeats) {
 
         mark(BOSEWAVE_BIT_MARK); // Stop bit
         space(0);  // Always end with the LED off
+        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!

@@ -73,6 +73,8 @@
 #define LEGO_ONE_SPACE           553    // 21 cycles
 #define LEGO_ZERO_SPACE          263    // 10 cycles
 
+#define LEGO_AVERAGE_DURATION    11000 // LEGO_HEADER_MARK + LEGO_HEADER_SPACE  + 16 * 600 + 158
+
 #define LEGO_AUTO_REPEAT_PERIOD_MIN 110000 // Every frame is auto repeated 5 times.
 #define LEGO_AUTO_REPEAT_PERIOD_MAX 230000 // space for channel 3
 
@@ -186,7 +188,6 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoRepeat5Times) {
 
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoRepeat5Times) {
     enableIROut(38);
-    unsigned long tStartMillis = millis();
 
     DBG_PRINT("aRawData=0x");
     DBG_PRINTLN(aRawData, HEX);
@@ -196,9 +197,11 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
         tNumberOfCommands = 5;
     }
 // required for repeat timing, see http://www.hackvandedam.nl/blog/?page_id=559
-    uint8_t tRepeatPeriod = 110 + (aChannel * 40); // from 110 to 230
+    uint8_t tRepeatPeriod = 110 - (LEGO_AVERAGE_DURATION / 1000) + (aChannel * 40); // from 110 to 230
 
     while (tNumberOfCommands > 0) {
+        noInterrupts();
+
         // Header
         mark(LEGO_HEADER_MARK);
         space(LEGO_HEADER_SPACE);
@@ -207,13 +210,13 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
 
         mark(LEGO_BIT_MARK); // Stop bit
         space(0); // Always end with the LED off
+        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command with a fixed space gap
-            delay((tStartMillis + tRepeatPeriod) - millis());
-            tStartMillis = millis();
+            delay(tRepeatPeriod);
         }
     }
 }

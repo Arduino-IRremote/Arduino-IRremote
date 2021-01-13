@@ -20,6 +20,8 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(38);
 
+    noInterrupts();
+
     // Start
     mark(WHYNTER_BIT_MARK);
     space(WHYNTER_ZERO_SPACE);
@@ -43,6 +45,7 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 // Footer
     mark(WHYNTER_BIT_MARK);
     space(0);  // Always end with the LED off
+    interrupts();
 }
 
 //+=============================================================================

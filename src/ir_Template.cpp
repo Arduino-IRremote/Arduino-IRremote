@@ -155,7 +155,8 @@
 #define SHUZU_ZERO_SPACE        SHUZU_UNIT        // The length of a Bit:Space for 0's
 
 #define SHUZU_REPEAT_HEADER_SPACE (4 * SHUZU_UNIT)  // 2250
-#define SHUZU_REPEAT_PERIOD     110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
+
+#define SHUZU_REPEAT_SPACE      45000
 
 #define SHUZU_OTHER             1234  // Other things you may need to define
 
@@ -167,7 +168,8 @@ void IRsend::sendShuzuStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNum
 
     uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
-        unsigned long tStartMillis = millis();
+
+        noInterrupts();
 
         // Header
         mark(SHUZU_HEADER_MARK);
@@ -184,26 +186,26 @@ void IRsend::sendShuzuStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNum
         // Footer
         mark(SHUZU_BIT_MARK);
         space(0);  // Always end with the LED off
+        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay((tStartMillis + SHUZU_REPEAT_PERIOD / 1000) - millis());
+            delay(SHUZU_REPEAT_SPACE / 1000);
         }
     }
 }
 
 //+=============================================================================
 //
- /*
-  * First check for right data length
-  * Next check start bit
-  * Next try the decode
-  * Last check stop bit
-  */
+/*
+ * First check for right data length
+ * Next check start bit
+ * Next try the decode
+ * Last check stop bit
+ */
 bool IRrecv::decodeShuzu() {
-
 
     // Check we have the right amount of data (28). The +4 is for initial gap, start bit mark and space + stop bit mark
     if (results.rawlen != (2 * SHUZU_BITS) + 4) {
@@ -212,7 +214,7 @@ bool IRrecv::decodeShuzu() {
     }
 
     // Check header "space"
-    if (!MATCH_MARK(results.rawbuf[1], SHUZU_HEADER_MARK) ||!MATCH_SPACE(results.rawbuf[2], SHUZU_HEADER_SPACE)) {
+    if (!MATCH_MARK(results.rawbuf[1], SHUZU_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], SHUZU_HEADER_SPACE)) {
         DBG_PRINT("Shuzu: ");
         DBG_PRINTLN("Header mark or space length is wrong");
         return false;
@@ -239,7 +241,7 @@ bool IRrecv::decodeShuzu() {
     /*
      *  Check for repeat
      */
-    if (results.rawbuf[0] < (SHUZU_REPEAT_PERIOD / MICROS_PER_TICK)) {
+    if (results.rawbuf[0] < ((SHUZU_REPEAT_SPACE + (SHUZU_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
     }
     decodedIRData.command = tCommand;

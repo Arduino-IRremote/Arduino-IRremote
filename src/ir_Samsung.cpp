@@ -24,7 +24,7 @@
  * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
  * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONSAMSUNGTION WITH THE SOFTWARE
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  ************************************************************************************
@@ -43,7 +43,7 @@
 //==============================================================================
 // see http://www.hifi-remote.com/wiki/index.php?title=DecodeIR#Samsung
 // LSB first, 1 start bit + 16 bit address + 16,32,20 bit data + 1 stop bit.
-// repeats are like NEC but with 2 stop bits
+// repeats are like SAMSUNG but with 2 stop bits
 
 #define SAMSUNG_ADDRESS_BITS        16
 #define SAMSUNG_COMMAND16_BITS      16
@@ -57,6 +57,9 @@
 #define SAMSUNG_BIT_MARK            SAMSUNG_UNIT
 #define SAMSUNG_ONE_SPACE           (3 * SAMSUNG_UNIT) // 1650
 #define SAMSUNG_ZERO_SPACE          SAMSUNG_UNIT
+
+#define SAMSUNG_AVERAGE_DURATION    55000 // SAMSUNG_HEADER_MARK + SAMSUNG_HEADER_SPACE  + 32 * 2,5 * SAMSUNG_UNIT + SAMSUNG_UNIT // 2.5 because we assume more zeros than ones
+#define SAMSUNG_REPEAT_DURATION     (SAMSUNG_HEADER_MARK  + SAMSUNG_HEADER_SPACE + SAMSUNG_BIT_MARK + SAMSUNG_ZERO_SPACE + SAMSUNG_BIT_MARK)
 #define SAMSUNG_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 
 //+=============================================================================
@@ -66,19 +69,21 @@
  */
 void IRsend::sendSamsungRepeat() {
     enableIROut(38);
+    noInterrupts();
     mark(SAMSUNG_HEADER_MARK);
     space(SAMSUNG_HEADER_SPACE);
     mark(SAMSUNG_BIT_MARK);
     space(SAMSUNG_ZERO_SPACE);
     mark(SAMSUNG_BIT_MARK);
     space(0); // Always end with the LED off
+    interrupts();
 }
 
 void IRsend::sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
     // Set IR carrier frequency
     enableIROut(38);
 
-    unsigned long tStartMillis = millis();
+    noInterrupts();
 
     // Header
     mark(SAMSUNG_HEADER_MARK);
@@ -100,11 +105,15 @@ void IRsend::sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aN
     // Footer
     mark(SAMSUNG_BIT_MARK);
     space(0);  // Always end with the LED off
+    interrupts();
 
     for (uint8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
-        delay((tStartMillis + (SAMSUNG_REPEAT_PERIOD / 1000)) - millis());
-        tStartMillis = millis();
+        if (i == 0) {
+            delay((SAMSUNG_REPEAT_PERIOD - SAMSUNG_AVERAGE_DURATION) / 1000);
+        } else {
+            delay((SAMSUNG_REPEAT_PERIOD - SAMSUNG_REPEAT_DURATION) / 1000);
+        }
         // send repeat
         sendSamsungRepeat();
     }

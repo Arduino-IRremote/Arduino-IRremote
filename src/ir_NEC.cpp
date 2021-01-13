@@ -57,6 +57,9 @@
 #define NEC_ZERO_SPACE          NEC_UNIT
 
 #define NEC_REPEAT_HEADER_SPACE (4 * NEC_UNIT)  // 2250
+
+#define NEC_AVERAGE_DURATION    62000 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2,5 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
+#define NEC_REPEAT_DURATION     (NEC_HEADER_MARK  + NEC_HEADER_SPACE + NEC_BIT_MARK)
 #define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 
 //+=============================================================================
@@ -66,10 +69,12 @@
  */
 void IRsend::sendNECRepeat() {
     enableIROut(38);
+    noInterrupts();
     mark(NEC_HEADER_MARK);
     space(NEC_REPEAT_HEADER_SPACE);
     mark(NEC_BIT_MARK);
     space(0); // Always end with the LED off
+    interrupts();
 }
 
 /*
@@ -81,7 +86,7 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16Add
     // Set IR carrier frequency
     enableIROut(38);
 
-    unsigned long tStartMillis = millis();
+    noInterrupts();
     // Header
     mark(NEC_HEADER_MARK);
     space(NEC_HEADER_SPACE);
@@ -100,11 +105,15 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16Add
 
     mark(NEC_BIT_MARK); // Stop bit
     space(0); // Always end with the LED off
+    interrupts();
 
     for (uint8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
-        delay((tStartMillis + (NEC_REPEAT_PERIOD / 1000)) - millis());
-        tStartMillis = millis();
+        if (i == 0) {
+            delay((NEC_REPEAT_PERIOD - NEC_AVERAGE_DURATION) / 1000);
+        } else {
+            delay((NEC_REPEAT_PERIOD - NEC_REPEAT_DURATION) / 1000);
+        }
         // send repeat
         sendNECRepeat();
     }

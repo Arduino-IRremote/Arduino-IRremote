@@ -180,9 +180,6 @@ ISR (TIMER_INTR_NAME) {
         }
     }
 
-    /*
-     * Here we detected a start mark and record the signal
-     */
     // First check for buffer overflow
     if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
         // Flag up a read overflow; Stop the State Machine
@@ -190,6 +187,9 @@ ISR (TIMER_INTR_NAME) {
         irparams.rcvstate = IR_REC_STATE_STOP;
     }
 
+    /*
+     * Here we detected a start mark and record the signal
+     */
     // record marks and spaces and detect end of code
     if (irparams.rcvstate == IR_REC_STATE_MARK) {  // Timing Mark
         if (irdata == SPACE) {   // Mark ended; Record time

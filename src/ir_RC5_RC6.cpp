@@ -63,6 +63,8 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
     enableIROut(36);
 
+    noInterrupts();
+
     // Start
     mark(RC5_T1);
     space(RC5_T1);
@@ -80,6 +82,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
     }
 
     space(0);  // Always end with the LED off
+    interrupts();
 }
 
 void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
@@ -91,6 +94,8 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
 //    unsigned long nbits = addressBits + commandBits;
 
     // Start
+    noInterrupts();
+
     mark(RC5_T1);
 
     // Bit #6 of the command part, but inverted!
@@ -145,6 +150,7 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
     }
 
     space(0);  // Always end with the LED off
+    interrupts();
 }
 
 //+=============================================================================
@@ -217,6 +223,8 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
     enableIROut(36);
 
+    noInterrupts();
+
     // Header
     mark(RC6_HEADER_MARK);
     space(RC6_HEADER_SPACE);
@@ -240,11 +248,14 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
     }
 
     space(0);  // Always end with the LED off
+    interrupts();
 }
 
 void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
     // Set IR carrier frequency
     enableIROut(36);
+
+    noInterrupts();
 
     // Header
     mark(RC6_HEADER_MARK);
@@ -269,6 +280,7 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
     }
 
     space(0);  // Always end with the LED off
+    interrupts();
 }
 
 //+=============================================================================

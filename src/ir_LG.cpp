@@ -55,6 +55,8 @@
 #define LG_ZERO_SPACE           LG_UNIT
 
 #define LG_REPEAT_HEADER_SPACE  (4 * LG_UNIT)  // 2250
+#define LG_AVERAGE_DURATION     58000 // LG_HEADER_MARK + LG_HEADER_SPACE  + 32 * 2,5 * LG_UNIT) + LG_UNIT // 2.5 because we assume more zeros than ones
+#define LG_REPEAT_DURATION      (LG_HEADER_MARK  + LG_REPEAT_HEADER_SPACE + LG_BIT_MARK)
 #define LG_REPEAT_PERIOD        110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 
 //+=============================================================================
@@ -64,10 +66,12 @@
  */
 void IRsend::sendLGRepeat() {
     enableIROut(38);
+    noInterrupts();
     mark(LG_HEADER_MARK);
     space(LG_REPEAT_HEADER_SPACE);
     mark(LG_BIT_MARK);
     space(0); // Always end with the LED off
+    interrupts();
 }
 
 /*
@@ -78,7 +82,7 @@ void IRsend::sendLGStandard(uint8_t aAddress, uint16_t aCommand, uint8_t aNumber
     // Set IR carrier frequency
     enableIROut(38);
 
-    unsigned long tStartMillis = millis();
+    noInterrupts();
     // Header
     mark(LG_HEADER_MARK);
     space(LG_HEADER_SPACE);
@@ -101,11 +105,15 @@ void IRsend::sendLGStandard(uint8_t aAddress, uint16_t aCommand, uint8_t aNumber
 
     mark(LG_BIT_MARK); // Stop bit
     space(0); // Always end with the LED off
+    interrupts();
 
     for (uint8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
-        delay((tStartMillis + (LG_REPEAT_PERIOD / 1000)) - millis());
-        tStartMillis = millis();
+        if (i == 0) {
+            delay((LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) / 1000);
+        } else {
+            delay((LG_REPEAT_PERIOD - LG_REPEAT_DURATION) / 1000);
+        }
         // send repeat
         sendLGRepeat();
     }
@@ -201,47 +209,47 @@ bool IRrecv::decodeLG() {
 
 //+=============================================================================
 bool IRrecv::decodeLG() {
-unsigned int offset = 1; // Skip first space
+    unsigned int offset = 1; // Skip first space
 
 // Check we have enough data (60) - +4 for initial gap, start bit mark and space + stop bit mark
-if (results.rawlen != (2 * LG_BITS) + 4) {
-    return false;
-}
+    if (results.rawlen != (2 * LG_BITS) + 4) {
+        return false;
+    }
 
 // Initial mark/space
-if (!MATCH_MARK(results.rawbuf[offset], LG_HEADER_MARK)) {
-    return false;
-}
-offset++;
+    if (!MATCH_MARK(results.rawbuf[offset], LG_HEADER_MARK)) {
+        return false;
+    }
+    offset++;
 
-if (!MATCH_SPACE(results.rawbuf[offset], LG_HEADER_SPACE)) {
-    return false;
-}
-offset++;
+    if (!MATCH_SPACE(results.rawbuf[offset], LG_HEADER_SPACE)) {
+        return false;
+    }
+    offset++;
 
-if (!decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, true)) {
-    return false;
-}
+    if (!decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, true)) {
+        return false;
+    }
 // Stop bit
-if (!MATCH_MARK(results.rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
-    DBG_PRINTLN(F("Stop bit mark length is wrong"));
-    return false;
-}
+    if (!MATCH_MARK(results.rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
+        DBG_PRINTLN(F("Stop bit mark length is wrong"));
+        return false;
+    }
 
 // Success
 // no parity check yet :-(
-decodedIRData.address = results.value >> (LG_COMMAND_BITS + LG_CHECKSUM_BITS);
-decodedIRData.command = (results.value >> LG_COMMAND_BITS) & 0xFFFF;
+    decodedIRData.address = results.value >> (LG_COMMAND_BITS + LG_CHECKSUM_BITS);
+    decodedIRData.command = (results.value >> LG_COMMAND_BITS) & 0xFFFF;
 
-decodedIRData.numberOfBits = LG_BITS;
-decodedIRData.protocol = LG;
-return true;
+    decodedIRData.numberOfBits = LG_BITS;
+    decodedIRData.protocol = LG;
+    return true;
 }
 
 bool IRrecv::decodeLG(decode_results *aResults) {
-bool aReturnValue = decodeLG();
-*aResults = results;
-return aReturnValue;
+    bool aReturnValue = decodeLG();
+    *aResults = results;
+    return aReturnValue;
 }
 #endif
 

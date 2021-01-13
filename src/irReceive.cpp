@@ -58,6 +58,10 @@ bool IRrecv::decode() {
         return false;
     }
     if (irparams.overflow) {
+        /*
+         * Do resume here, since the loop will not process any IR data if we return false.
+         */
+        resume();
         return false;
     }
 

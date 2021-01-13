@@ -95,6 +95,8 @@ void IRsend::sendDenonStandard(uint8_t aAddress, uint8_t aCommand, bool aSendSha
     uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
+        noInterrupts();
+
         // Data
         sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS, true);
         // Footer
@@ -102,12 +104,15 @@ void IRsend::sendDenonStandard(uint8_t aAddress, uint8_t aCommand, bool aSendSha
         space(0);  // Always end with the LED off
 
         // Inverted autorepeat frame
+        interrupts();
         delay(DENON_AUTO_REPEAT_SPACE / 1000);
+        noInterrupts();
         sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tInvertedData, DENON_BITS,
                 true);
         // Footer
         mark(DENON_BIT_MARK);
         space(0);  // Always end with the LED off
+        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!
