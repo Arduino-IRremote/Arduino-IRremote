@@ -105,6 +105,9 @@ void loop() {
     IrSender.sendBoseWaveStandard(sCommand, sRepeats);
     delay(2000);
 
+    /*
+     * !!LEGO is difficult to receive because of its short marks and spaces!!!
+     */
     Serial.println(F("Send Lego with 2 channel and with 4 command bits"));
     IrSender.sendLegoPowerFunctions(sAddress, LEGO_MODE_COMBO, sCommand, true);
     delay(2000);

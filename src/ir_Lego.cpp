@@ -173,31 +173,33 @@ void logFunctionParameters(uint16_t data, bool repeat) {
 /*
  * Here toggle and escape bits are set to 0
  */
-void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aMode, uint8_t aCommand, bool aDoRepeat5Times) {
+void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aMode, uint8_t aCommand, bool aDoSend5Times) {
     aChannel &= 0x0F; // allow toggle and escape bits too
     aCommand &= 0x0F;
     aMode &= 0x0F;
     uint8_t tParity = 0xF ^ aChannel ^ aMode ^ aCommand;
     uint16_t tRawData = (((aChannel << 4) | aMode) << 8) | (aCommand << 4) | tParity;
-    sendLegoPowerFunctions(tRawData, aChannel, aDoRepeat5Times);
+    sendLegoPowerFunctions(tRawData, aChannel, aDoSend5Times);
 }
 
-void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoRepeat5Times) {
-    sendLegoPowerFunctions(aRawData, (aRawData >> 12) & 0x3, aDoRepeat5Times);
+void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
+    sendLegoPowerFunctions(aRawData, (aRawData >> 12) & 0x3, aDoSend5Times);
 }
 
-void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoRepeat5Times) {
+void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
     enableIROut(38);
 
     DBG_PRINT("aRawData=0x");
     DBG_PRINTLN(aRawData, HEX);
 
+    aChannel &= 0x03; // we have 4 channels
+
     uint8_t tNumberOfCommands = 1;
-    if (aDoRepeat5Times) {
+    if (aDoSend5Times) {
         tNumberOfCommands = 5;
     }
 // required for repeat timing, see http://www.hackvandedam.nl/blog/?page_id=559
-    uint8_t tRepeatPeriod = 110 - (LEGO_AVERAGE_DURATION / 1000) + (aChannel * 40); // from 110 to 230
+    uint8_t tRepeatPeriod = (110 - (LEGO_AVERAGE_DURATION / 1000)) + (aChannel * 40); // from 100 to 220
 
     while (tNumberOfCommands > 0) {
         noInterrupts();

@@ -61,6 +61,10 @@ bool IRrecv::decode() {
         /*
          * Do resume here, since the loop will not process any IR data if we return false.
          */
+        results.overflow = irparams.overflow;
+        irparams.overflow = false;
+        irparams.rawlen = 0;
+        DBG_PRINTLN("Skip overflowed buffer");
         resume();
         return false;
     }

@@ -467,9 +467,9 @@ public:
 #define LEGO_MODE_EXTENDED  0
 #define LEGO_MODE_COMBO     1
 #define LEGO_MODE_SINGLE    0x4 // here the 2 LSB have meanings like Output A / Output B
-    void sendLegoPowerFunctions(uint8_t aChannel, uint8_t aMode, uint8_t tCommand, bool aDoRepeat5Times = true);
-    void sendLegoPowerFunctions(uint16_t aRawData, bool aDoRepeat5Times = true);
-    void sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoRepeat5Times = true);
+    void sendLegoPowerFunctions(uint8_t aChannel, uint8_t aMode, uint8_t tCommand, bool aDoSend5Times = true);
+    void sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times = true);
+    void sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times = true);
 
     //......................................................................
     //
