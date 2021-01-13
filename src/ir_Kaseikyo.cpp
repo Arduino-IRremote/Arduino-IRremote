@@ -55,10 +55,11 @@
 // We reduce it to: start bit + 16 Vendor + 16 Address + 8 Command + 8 Parity + stop bit
 //
 #define KASEIKYO_VENDOR_ID_BITS     16
-#define KASEIKYO_ADDRESS_BITS       16
+#define KASEIKYO_VENDOR_ID_PARITY_BITS   4
+#define KASEIKYO_ADDRESS_BITS       12
 #define KASEIKYO_COMMAND_BITS       8
 #define KASEIKYO_PARITY_BITS        8
-#define KASEIKYO_BITS               (KASEIKYO_VENDOR_ID_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS)
+#define KASEIKYO_BITS               (KASEIKYO_VENDOR_ID_BITS + KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS)
 #define KASEIKYO_UNIT               432 // Pronto 0x70 / 0x10 - I measured 17 pulses
 
 #define KASEIKYO_HEADER_MARK        (8 * KASEIKYO_UNIT) // 3456
@@ -96,21 +97,20 @@ void IRsend::sendKaseikyoStandard(uint16_t aAddress, uint8_t aCommand, uint16_t 
         sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aVendorCode,
         KASEIKYO_VENDOR_ID_BITS, false);
 
-        // Address (device and subdevice)
-        sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aAddress,
-        KASEIKYO_ADDRESS_BITS, false);
+        // Vendor Parity
+        uint8_t tVendorParity = aVendorCode ^ (aVendorCode >> 8);
+        tVendorParity = (tVendorParity ^ (tVendorParity >> 4)) & 0xF;
 
-        // Command
-        sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aCommand,
-        KASEIKYO_COMMAND_BITS, false);
+        LongUnion tSendValue;
+        tSendValue.UWord.LowWord = aAddress << KASEIKYO_VENDOR_ID_PARITY_BITS;
+        tSendValue.UByte.LowByte |= tVendorParity; // set low nibble to parity
+        tSendValue.UByte.MidHighByte = aCommand;
+        tSendValue.UByte.HighByte = aCommand ^ tSendValue.UByte.LowByte ^ tSendValue.UByte.MidLowByte; // Parity
 
-        // send xor of last 3 bytes
-        sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE,
-                (aCommand ^ (aAddress & 0xFF) ^ (aAddress >> 8)), KASEIKYO_PARITY_BITS, false);
+        // Send address (device and subdevice) + command + parity + Stop bit
+        sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, tSendValue.ULong,
+        KASEIKYO_ADDRESS_BITS + KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS, false, true);
 
-        // Footer
-        mark(KASEIKYO_BIT_MARK);
-        space(0);  // Always end with the LED off
         interrupts();
 
         tNumberOfCommands--;
@@ -171,18 +171,34 @@ bool IRrecv::decodeKaseikyo() {
         tProtocol = KASEIKYO;
     }
 
+    // Vendor Parity
+    uint8_t tVendorParity = tVendorId ^ (tVendorId >> 8);
+    tVendorParity = (tVendorParity ^ (tVendorParity >> 4)) & 0xF;
+
     // decode address (device and subdevice) + command + parity
-    if (!decodePulseDistanceData(KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS, 3 + (2 * KASEIKYO_VENDOR_ID_BITS), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
-    KASEIKYO_ZERO_SPACE, false)) {
+    if (!decodePulseDistanceData(KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
+            3 + (2 * KASEIKYO_VENDOR_ID_BITS), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
+            KASEIKYO_ZERO_SPACE, false)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Address, command + parity decode failed");
         return false;
     }
     LongUnion tValue;
     tValue.ULong = results.value;
-    decodedIRData.address = tValue.UWord.LowWord;
+    decodedIRData.address = (tValue.UWord.LowWord >> KASEIKYO_VENDOR_ID_PARITY_BITS); // remove vendor parity
     decodedIRData.command = tValue.UByte.MidHighByte;
     uint8_t tParity = tValue.UByte.LowByte ^ tValue.UByte.MidLowByte ^ tValue.UByte.MidHighByte;
+
+    if (tVendorParity != (tValue.UByte.LowByte & 0xF)) {
+        DBG_PRINT("Kaseikyo: ");
+        DBG_PRINT("4 bit VendorID Parity is not correct. expected=0x");
+        DBG_PRINT(tVendorParity, HEX);
+        DBG_PRINT(" received=0x");
+        DBG_PRINT(results.value, HEX);
+        DBG_PRINT(" VendorID=0x");
+        DBG_PRINTLN(tVendorId, HEX);
+        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED;
+    }
 
     if (tProtocol == KASEIKYO) {
         // Include vendor ID in address
@@ -264,12 +280,9 @@ void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aAddress,
     KASEIKYO_ADDRESS_BITS);
 
-    // Data
+    // Data + stop bit
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aData,
     KASEIKYO_DATA_BITS);
 
-    // Footer
-    mark(KASEIKYO_BIT_MARK);
-    space(0);  // Always end with the LED off
 }
 
