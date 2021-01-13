@@ -53,10 +53,8 @@ void IRsend::sendBoseWaveStandard(uint8_t aCommand, uint8_t aNumberOfRepeats) {
         uint16_t tData = ((~aCommand) << 8) | aCommand;
 
         sendPulseDistanceWidthData(BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, tData,
-        BOSEWAVE_BITS, false);
+        BOSEWAVE_BITS, false, true);
 
-        mark(BOSEWAVE_BIT_MARK); // Stop bit
-        space(0);  // Always end with the LED off
         interrupts();
 
         tNumberOfCommands--;

@@ -30,8 +30,8 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
     mark(WHYNTER_HEADER_MARK);
     space(WHYNTER_HEADER_SPACE);
 
-    // Data
-    sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits);
+    // Data + stop bit
+    sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits, true, true);
 //    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
 //        if (data & mask) {
 //            mark(WHYNTER_ONE_MARK);
@@ -42,9 +42,6 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 //        }
 //    }
 
-// Footer
-    mark(WHYNTER_BIT_MARK);
-    space(0);  // Always end with the LED off
     interrupts();
 }
 

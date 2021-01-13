@@ -73,5 +73,9 @@ void loop() {
         if (IrReceiver.decodedIRData.command == 0x11) {
             // do something
         }
+    } else if (IrReceiver.results.overflow) {
+        IrReceiver.results.overflow = false;
+        // no need to call resume, this is already done by decode()
+        Serial.println(F("Overflow detected"));
     }
 }

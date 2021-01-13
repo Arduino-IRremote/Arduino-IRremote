@@ -208,10 +208,8 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
         mark(LEGO_HEADER_MARK);
         space(LEGO_HEADER_SPACE);
 
-        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS, true); // MSB first
+        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS, true, true); // MSB first
 
-        mark(LEGO_BIT_MARK); // Stop bit
-        space(0); // Always end with the LED off
         interrupts();
 
         tNumberOfCommands--;

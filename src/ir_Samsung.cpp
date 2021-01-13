@@ -100,11 +100,8 @@ void IRsend::sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aN
     aCommand = ((~aCommand) << 8) | aCommand;
 
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aCommand,
-    SAMSUNG_COMMAND16_BITS, false);
+    SAMSUNG_COMMAND16_BITS, false, true);
 
-    // Footer
-    mark(SAMSUNG_BIT_MARK);
-    space(0);  // Always end with the LED off
     interrupts();
 
     for (uint8_t i = 0; i < aNumberOfRepeats; ++i) {
@@ -260,10 +257,6 @@ void IRsend::sendSamsung(uint32_t aData, uint8_t aNumberOfBits) {
     mark(SAMSUNG_HEADER_MARK);
     space(SAMSUNG_HEADER_SPACE);
 
-    // Data
-    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aData, aNumberOfBits);
-
-    // Footer
-    mark(SAMSUNG_BIT_MARK);
-    space(0);  // Always end with the LED off
+    // Data + stop bit
+    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aData, aNumberOfBits,true,true);
 }

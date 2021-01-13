@@ -101,10 +101,8 @@ void IRsend::sendLGStandard(uint8_t aAddress, uint16_t aCommand, uint8_t aNumber
     tData |= tChecksum;
 
     // MSB first
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, tData, LG_BITS, true);
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, tData, LG_BITS, true, true);
 
-    mark(LG_BIT_MARK); // Stop bit
-    space(0); // Always end with the LED off
     interrupts();
 
     for (uint8_t i = 0; i < aNumberOfRepeats; ++i) {
@@ -263,10 +261,8 @@ void IRsend::sendLG(unsigned long data, int nbits) {
     space(LG_HEADER_SPACE);
 //    mark(LG_BIT_MARK);
 
-// Data
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits);
+// Data + stop bit
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, true, true);
 
-    mark(LG_BIT_MARK);
-    space(0);    // Always end with the LED off
 }
 

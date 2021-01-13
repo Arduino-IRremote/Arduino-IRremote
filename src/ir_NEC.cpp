@@ -101,10 +101,8 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16Add
     // send 8 command bits and then 8 inverted command bits LSB first
     uint16_t tCommand = ((~aCommand) << 8) | aCommand;
     // Command 16 bit LSB first
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, tCommand, NEC_COMMAND_BITS, false);
+    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, tCommand, NEC_COMMAND_BITS, false, true);
 
-    mark(NEC_BIT_MARK); // Stop bit
-    space(0); // Always end with the LED off
     interrupts();
 
     for (uint8_t i = 0; i < aNumberOfRepeats; ++i) {
@@ -273,10 +271,8 @@ void IRsend::sendNEC(uint32_t data, uint8_t nbits, bool repeat) {
     // Header
     mark(NEC_HEADER_MARK);
     space(NEC_HEADER_SPACE);
-    // Data
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits);
 
-    // Stop bit
-    mark(NEC_BIT_MARK);
-    space(0);  // Always end with the LED off
+    // Data + stop bit
+    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, true, true);
+
 }

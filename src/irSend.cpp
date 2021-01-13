@@ -175,7 +175,7 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
 // Sends PulseDistance data
 //
 void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
-        unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst) {
+        unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit) {
 
     if (aMSBfirst) {  // Send the MSB first.
         // send data from MSB to LSB until mask bit is shifted out
@@ -190,7 +190,6 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
                 space(aZeroSpaceMicros);
             }
         }
-        TRACE_PRINTLN("");
     } else {  // Send the Least Significant Bit (LSB) first / MSB last.
         for (uint16_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
             if (aData & 1) {  // Send a 1
@@ -202,8 +201,13 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
                 mark(aZeroMarkMicros);
                 space(aZeroSpaceMicros);
             }
-        TRACE_PRINTLN("");
     }
+    if(aSendStopBit){
+        TRACE_PRINT('S');
+        mark(aZeroMarkMicros); // seems like this is used for stop bits
+        space(0);  // Always end with the LED off
+    }
+    TRACE_PRINTLN("");
 }
 
 //+=============================================================================

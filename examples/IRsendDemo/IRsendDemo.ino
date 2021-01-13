@@ -118,9 +118,9 @@ void loop() {
     sAddress += 0x0101;
     sCommand += 0x11;
     sRepeats++;
-    // clip repeats at 3
-    if (sRepeats > 3) {
-        sRepeats = 3;
+    // clip repeats at 4
+    if (sRepeats > 4) {
+        sRepeats = 4;
     }
 
     delay(5000); //  second additional delay between each values

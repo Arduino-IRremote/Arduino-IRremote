@@ -98,20 +98,16 @@ void IRsend::sendDenonStandard(uint8_t aAddress, uint8_t aCommand, bool aSendSha
         noInterrupts();
 
         // Data
-        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS, true);
-        // Footer
-        mark(DENON_BIT_MARK);
-        space(0);  // Always end with the LED off
+        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS, true,
+                true);
 
         // Inverted autorepeat frame
         interrupts();
         delay(DENON_AUTO_REPEAT_SPACE / 1000);
         noInterrupts();
         sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tInvertedData, DENON_BITS,
-                true);
-        // Footer
-        mark(DENON_BIT_MARK);
-        space(0);  // Always end with the LED off
+                true, true);
+
         interrupts();
 
         tNumberOfCommands--;
@@ -239,11 +235,8 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
     space(DENON_HEADER_SPACE);
 
     // Data
-    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits);
+    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits, true, true);
 
-// Footer
-    mark(DENON_BIT_MARK);
-    space(0);  // Always end with the LED off
 }
 
 void IRsend::sendSharp(unsigned int aAddress, unsigned int aCommand) {

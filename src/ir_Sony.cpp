@@ -228,7 +228,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
     mark(SONY_HEADER_MARK);
     space(SONY_SPACE);
 
-    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits);
+    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, true, false);
     /*
      * Pulse width coding, the short version.
      * Use this if you need to save program space and only require this protocol.
@@ -242,5 +242,4 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 //            space(SONY_SPACE);
 //        }
 //    }
-    space(0);  // Always end with the LED off
 }

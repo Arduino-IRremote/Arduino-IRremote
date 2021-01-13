@@ -395,7 +395,7 @@ public:
     void custom_delay_usec(unsigned long uSecs);
     void enableIROut(int khz);
     void sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
-            unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst = true);
+            unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst = true, bool aSendStopBit = false);
     void mark(uint16_t timeMicros);
     void mark_long(uint32_t timeMicros);
     void space(uint16_t timeMicros);

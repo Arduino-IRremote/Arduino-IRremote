@@ -179,13 +179,10 @@ void IRsend::sendShuzuStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNum
         sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, aAddress,
         SHUZU_ADDRESS_BITS, false); // false -> LSB first
 
-        // Command
+        // Command + stop bit
         sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, aCommand,
-        SHUZU_COMMAND_BITS, false); // false -> LSB first
+        SHUZU_COMMAND_BITS, false, true); // false, true -> LSB first, stop bit
 
-        // Footer
-        mark(SHUZU_BIT_MARK);
-        space(0);  // Always end with the LED off
         interrupts();
 
         tNumberOfCommands--;

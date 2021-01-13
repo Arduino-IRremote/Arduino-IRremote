@@ -79,12 +79,8 @@ void IRsend::sendJVCStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumber
 
         // Address + command
         sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE,
-                aAddress | aCommand << JVC_ADDRESS_BITS,
-                JVC_BITS, false); // false -> LSB first
+                aAddress | aCommand << JVC_ADDRESS_BITS, JVC_BITS, false, true); // false , true -> LSB first + stop bit
 
-        // Footer
-        mark(JVC_BIT_MARK);
-        space(0);  // Always end with the LED off
         interrupts();
 
         tNumberOfCommands--;
@@ -228,10 +224,7 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
         space(JVC_HEADER_SPACE);
     }
 
-    // Data
-    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, true);
+    // Data + stop bit
+    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, true,true);
 
-// Footer
-    mark(JVC_BIT_MARK);
-    space(0); // Always end with the LED off
 }
