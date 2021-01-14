@@ -35,10 +35,12 @@ union magiquest_t {
  *     1150 * 0.5 = 575 usec mark
  *     1150 - 575 = 575 usec space
  */
-#define MAGIQUEST_ONE_MARK    575
-#define MAGIQUEST_ONE_SPACE   575
-#define MAGIQUEST_ZERO_MARK   288
-#define MAGIQUEST_ZERO_SPACE  862
+#define MAGIQUEST_UNIT          288
+
+#define MAGIQUEST_ONE_MARK      (2* MAGIQUEST_UNIT) // 576
+#define MAGIQUEST_ONE_SPACE     (2* MAGIQUEST_UNIT) // 576
+#define MAGIQUEST_ZERO_MARK     MAGIQUEST_UNIT
+#define MAGIQUEST_ZERO_SPACE    (3* MAGIQUEST_UNIT) // 864
 
 //#define MAGIQUEST_MASK        (1ULL << (MAGIQUEST_BITS-1))
 

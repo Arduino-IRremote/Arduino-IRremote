@@ -341,7 +341,7 @@ unsigned int IRrecv::compare(unsigned int oldval, unsigned int newval) {
  */
 bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aOneMarkMicros,
         unsigned int aZeroMarkMicros, unsigned int aBitSpaceMicros, bool aMSBfirst) {
-    unsigned long tDecodedData = 0;
+    uint32_t tDecodedData = 0;
 
     if (aMSBfirst) {
         for (uint8_t i = 0; i < aNumberOfBits; i++) {
@@ -380,11 +380,11 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
         }
         TRACE_PRINTLN("");
     } else {
-        for (unsigned long mask = 1UL; aNumberOfBits > 0; mask <<= 1, aNumberOfBits--) {
+        for (uint32_t tMask = 1UL; aNumberOfBits > 0; tMask <<= 1, aNumberOfBits--) {
 
             // Check for variable length mark indicating a 0 or 1
             if (MATCH_MARK(results.rawbuf[aStartOffset], aOneMarkMicros)) {
-                tDecodedData |= mask; // set the bit
+                tDecodedData |= tMask; // set the bit
                 TRACE_PRINT('1');
             } else if (MATCH_MARK(results.rawbuf[aStartOffset], aZeroMarkMicros)) {
                 // do not set the bit
@@ -426,14 +426,15 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
  * The mark (pulse) has constant length, the length of the space determines the bit value.
  * Each bit looks like: MARK + SPACE_1 -> 1
  *                 or : MARK + SPACE_0 -> 0
- * Data is read MSB first if not otherwise enabled.
+ * @param aStartOffset must point to a mark
+ *
  * Input is     results.rawbuf
  * Output is    results.value
  * @return false if decoding failed
  */
 bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
         unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst) {
-    unsigned long tDecodedData = 0;
+    uint32_t tDecodedData = 0;
     if (aMSBfirst) {
         for (uint8_t i = 0; i < aNumberOfBits; i++) {
             // Check for constant length mark
@@ -469,7 +470,7 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
         TRACE_PRINTLN("");
 
     } else {
-        for (unsigned long mask = 1UL; aNumberOfBits > 0; mask <<= 1, aNumberOfBits--) {
+        for (uint32_t tMask = 1UL; aNumberOfBits > 0; tMask <<= 1, aNumberOfBits--) {
             // Check for constant length mark
             if (!MATCH_MARK(results.rawbuf[aStartOffset], aBitMarkMicros)) {
                 DBG_PRINT(F("Mark="));
@@ -483,7 +484,7 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
 
             // Check for variable length space indicating a 0 or 1
             if (MATCH_SPACE(results.rawbuf[aStartOffset], aOneSpaceMicros)) {
-                tDecodedData |= mask; // set the bit
+                tDecodedData |= tMask; // set the bit
                 TRACE_PRINT('1');
             } else if (MATCH_SPACE(results.rawbuf[aStartOffset], aZeroSpaceMicros)) {
                 // do not set the bit
@@ -506,6 +507,277 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
     return true;
 }
 
+/*
+ * The first bit is assumed as start bit and excluded for result
+ * @param aStartOffset must point to a mark
+ * Input is     results.rawbuf
+ * Output is    results.value
+ */
+//bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBiphaseTimeUnit) {
+//    uint32_t tDecodedData = 0;
+//    aNumberOfBits += 1; // we decode the start bit too
+//
+//    uint8_t tCurrentBitValue = 1; // We assume start bit is a 1
+//    for (uint8_t i = 0; i < aNumberOfBits; i++) {
+//        /*
+//         *  Check mark and determine current (and next) bit value
+//         */
+//        if (MATCH_MARK(results.rawbuf[aStartOffset], aBiphaseTimeUnit)) {
+//            // We have a single length mark -> bit value is the same as before
+//            if (tCurrentBitValue) {
+//                if (i == 0) {
+//                    TRACE_PRINT('S'); // do not put start bit into data
+//                } else {
+//                    tDecodedData = (tDecodedData << 1) | tCurrentBitValue;
+//                    TRACE_PRINT('1');
+//                }
+//            } else {
+//                tDecodedData = (tDecodedData << 1) | tCurrentBitValue;
+//                TRACE_PRINT('0');
+//            }
+//        } else if (MATCH_MARK(results.rawbuf[aStartOffset], 2 * aBiphaseTimeUnit)) {
+//            // We have a double length mark -> current bit value is 1 and changes to 0
+//            if (i == 0) {
+//                TRACE_PRINT('S'); // do not put start bit into data
+//                i++;
+//                tDecodedData = (tDecodedData << 1) | 0;
+//                TRACE_PRINT('0');
+//            } else {
+//                tDecodedData = (tDecodedData << 1) | 1;
+//                TRACE_PRINT('1');
+//                i++;
+//                tDecodedData = (tDecodedData << 1) | 0;
+//                TRACE_PRINT('0');
+//            }
+//
+//            tCurrentBitValue = 0;
+//        } else {
+//            /*
+//             * Use TRACE_PRINT here, since this normally checks the length of the start bit and therefore will happen very often
+//             */
+//            TRACE_PRINT(F("Mark="));
+//            TRACE_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
+//            TRACE_PRINT(F(" is not "));
+//            TRACE_PRINT(aBiphaseTimeUnit);
+//            TRACE_PRINT(F(" or "));
+//            TRACE_PRINT(2 * aBiphaseTimeUnit);
+//            TRACE_PRINT(' ');
+//            return false;
+//        }
+//
+//        aStartOffset++;
+//
+//        /*
+//         * Check space, only double space is significant for changing tNextBitValue to 1
+//         */
+//        if (MATCH_SPACE(results.rawbuf[aStartOffset], aBiphaseTimeUnit)) {
+//            // We have a single length space -> nothing changes
+//        } else if (MATCH_SPACE(results.rawbuf[aStartOffset], 2 * aBiphaseTimeUnit)) {
+//            // We have a double length space -> current bit value is 0 and changes to 1
+//            tCurrentBitValue = 1;
+//        } else {
+//            DBG_PRINT(F("Space="));
+//            DBG_PRINT(results.rawbuf[aStartOffset] * MICROS_PER_TICK);
+//            DBG_PRINT(F(" is not "));
+//            DBG_PRINT(aBiphaseTimeUnit);
+//            DBG_PRINT(F(" or "));
+//            DBG_PRINT(2 * aBiphaseTimeUnit);
+//            DBG_PRINT(' ');
+//            return false;
+//        }
+//        aStartOffset++;
+//    }
+//    TRACE_PRINTLN("");
+//    results.value = tDecodedData;
+//    return true;
+//}
+
+//bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBiphaseTimeUnit) {
+//    uint32_t tDecodedData = 0;
+//    aNumberOfBits += 1; // we decode the start bit too
+//
+//    uint16_t *tRawBufPointer = &results.rawbuf[aStartOffset];
+//
+//    uint8_t tClockCount = 0; // for BiPhaseCode, we have a transition at every odd clock count.
+//
+//    for (uint8_t tBitIndex = 0; tBitIndex < aNumberOfBits;) {
+//        /*
+//         *  Check mark and determine current (and next) bit value
+//         */
+//        if (MATCH_MARK(*tRawBufPointer, aBiphaseTimeUnit)) {
+//            // we have a transition here from space to mark
+//            tClockCount++;
+//            if (tClockCount & 1) {
+//                // valid clock edge
+//                if (tBitIndex == 0) {
+//                    TRACE_PRINT('S'); // do not put start bit into data
+//                } else {
+//                    tDecodedData = (tDecodedData << 1) | 1;
+//                    TRACE_PRINT('1');
+//                }
+//                tBitIndex++;
+//            }
+//        } else if (MATCH_MARK(*tRawBufPointer, 2 * aBiphaseTimeUnit)) {
+//            tClockCount = 0; // can reset clock count here
+//            // We have a double length mark this includes two valid clock edges
+//            if (tBitIndex == 0) {
+//                TRACE_PRINT('S'); // do not put start bit into data
+//            } else {
+//                tDecodedData = (tDecodedData << 1) | 1;
+//                TRACE_PRINT('1');
+//            }
+//            tBitIndex++;
+//
+//        } else {
+//            /*
+//             * Use TRACE_PRINT here, since this normally checks the length of the start bit and therefore will happen very often
+//             */
+//            TRACE_PRINT(F("Mark="));
+//            TRACE_PRINT(*tRawBufPointer * MICROS_PER_TICK);
+//            TRACE_PRINT(F(" is not "));
+//            TRACE_PRINT(aBiphaseTimeUnit);
+//            TRACE_PRINT(F(" or "));
+//            TRACE_PRINT(2 * aBiphaseTimeUnit);
+//            TRACE_PRINT(' ');
+//            return false;
+//        }
+//
+//        tRawBufPointer++;
+//
+//        /*
+//         * Check space - simulate last not recorded space
+//         */
+//        if (tRawBufPointer == &results.rawbuf[results.rawlen] || MATCH_SPACE(*tRawBufPointer, aBiphaseTimeUnit)) {
+//            // we have a transition here from mark to space
+//            tClockCount++;
+//            if (tClockCount & 1) {
+//                // valid clock edge
+//                tDecodedData = (tDecodedData << 1) | 0;
+//                TRACE_PRINT('0');
+//                tBitIndex++;
+//            }
+//        } else if (MATCH_SPACE(*tRawBufPointer, 2 * aBiphaseTimeUnit)) {
+//            // We have a double length space -> current bit value is 0 and changes to 1
+//            tClockCount = 0; // can reset clock count here
+//            // We have a double length mark this includes two valid clock edges
+//            tDecodedData = (tDecodedData << 1) | 0;
+//            TRACE_PRINT('0');
+//            tBitIndex++;
+//        } else {
+//            DBG_PRINT(F("Space="));
+//            DBG_PRINT(*tRawBufPointer * MICROS_PER_TICK);
+//            DBG_PRINT(F(" is not "));
+//            DBG_PRINT(aBiphaseTimeUnit);
+//            DBG_PRINT(F(" or "));
+//            DBG_PRINT(2 * aBiphaseTimeUnit);
+//            DBG_PRINT(' ');
+//            return false;
+//        }
+//
+//        tRawBufPointer++;
+//    }
+//    TRACE_PRINTLN("");
+//    results.value = tDecodedData;
+//    return true;
+//}
+
+//#  define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
+//#  define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
+//#  define TRACE_PRINT(...)    Serial.print(__VA_ARGS__)
+//#  define TRACE_PRINTLN(...)  Serial.println(__VA_ARGS__)
+/*
+ * We "regenerate" the clock and check changes on the significant clock transition
+ * We assume that the transition from (aStartOffset -1) to aStartOffset is a significant clock transition
+ */
+bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
+        unsigned int aBiphaseTimeUnit) {
+
+    uint16_t *tRawBufPointer = &results.rawbuf[aStartOffset];
+    bool tCheckMark = aStartOffset & 1;
+    uint8_t tClockCount = 0; // assume that first transition is significant
+    aValueOfSpaceToMarkTransition &= 1; // only 0 or 1 are valid
+    uint32_t tDecodedData = 0;
+
+    for (uint8_t tBitIndex = 0; tBitIndex < aNumberOfBits;) {
+        if (tCheckMark) {
+            /*
+             *  Check mark and determine current (and next) bit value
+             */
+            if (MATCH_MARK(*tRawBufPointer, aBiphaseTimeUnit)) {
+                // we have a transition here from space to mark
+                tClockCount++;
+                // for BiPhaseCode, we have a transition at every odd clock count.
+                if (tClockCount & 1) {
+                    // valid clock edge
+                    tDecodedData = (tDecodedData << 1) | aValueOfSpaceToMarkTransition;
+                    TRACE_PRINT(aValueOfSpaceToMarkTransition);
+                    tBitIndex++;
+                }
+            } else if (MATCH_MARK(*tRawBufPointer, 2 * aBiphaseTimeUnit)) {
+                tClockCount = 0; // can reset clock count here
+                // We have a double length mark this includes two valid clock edges
+                tDecodedData = (tDecodedData << 1) | aValueOfSpaceToMarkTransition;
+                TRACE_PRINT(aValueOfSpaceToMarkTransition);
+
+                tBitIndex++;
+
+            } else {
+                /*
+                 * Use TRACE_PRINT here, since this normally checks the length of the start bit and therefore will happen very often
+                 */
+                TRACE_PRINT(F("Mark="));
+                TRACE_PRINT(*tRawBufPointer * MICROS_PER_TICK);
+                TRACE_PRINT(F(" is not "));
+                TRACE_PRINT(aBiphaseTimeUnit);
+                TRACE_PRINT(F(" or "));
+                TRACE_PRINT(2 * aBiphaseTimeUnit);
+                TRACE_PRINT(' ');
+                return false;
+            }
+
+        } else {
+            /*
+             * Check space - simulate last not recorded space
+             */
+            if (tRawBufPointer == &results.rawbuf[results.rawlen] || MATCH_SPACE(*tRawBufPointer, aBiphaseTimeUnit)) {
+                // we have a transition here from mark to space
+                tClockCount++;
+                if (tClockCount & 1) {
+                    // valid clock edge
+                    tDecodedData = (tDecodedData << 1) | (aValueOfSpaceToMarkTransition ^ 1);
+                    TRACE_PRINT((aValueOfSpaceToMarkTransition ^ 1));
+                    tBitIndex++;
+                }
+            } else if (MATCH_SPACE(*tRawBufPointer, 2 * aBiphaseTimeUnit)) {
+                // We have a double length space -> current bit value is 0 and changes to 1
+                tClockCount = 0; // can reset clock count here
+                // We have a double length mark this includes two valid clock edges
+                if (tBitIndex == 0) {
+                    TRACE_PRINT('S'); // do not put start bit into data
+                } else {
+                    tDecodedData = (tDecodedData << 1) | (aValueOfSpaceToMarkTransition ^ 1);
+                    TRACE_PRINT((aValueOfSpaceToMarkTransition ^ 1));
+                }
+                tBitIndex++;
+            } else {
+                DBG_PRINT(F("Space="));
+                DBG_PRINT(*tRawBufPointer * MICROS_PER_TICK);
+                DBG_PRINT(F(" is not "));
+                DBG_PRINT(aBiphaseTimeUnit);
+                DBG_PRINT(F(" or "));
+                DBG_PRINT(2 * aBiphaseTimeUnit);
+                DBG_PRINT(' ');
+                return false;
+            }
+        }
+        tRawBufPointer++;
+        tCheckMark = !tCheckMark;
+
+    }
+    TRACE_PRINTLN("");
+    results.value = tDecodedData;
+    return true;
+}
 //+=============================================================================
 // Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
 // Converts the raw code values into a 32-bit hash code.
@@ -669,6 +941,10 @@ void IRrecv::printResultShort(Print *aSerial) {
                 aSerial->print(F(" Parity fail"));
             }
 
+            if (decodedIRData.flags & IRDATA_TOGGLE_BIT_MASK) {
+                aSerial->print(F(" Toggle is 1"));
+            }
+
             if (decodedIRData.flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
                 aSerial->print(F(" Auto-repeat gap="));
                 aSerial->print(results.rawbuf[0] * MICROS_PER_TICK);
@@ -827,14 +1103,14 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
     // Start declaration
     if (aOutputMicrosecondsInsteadOfTicks) {
         aSerial->print(F("uint16_t "));            // variable type
-        aSerial->print(F("rawData["));             // array name
+        aSerial->print(F("rawData["));            // array name
     } else {
         aSerial->print(F("uint8_t "));             // variable type
-        aSerial->print(F("rawTicks["));            // array name
+        aSerial->print(F("rawTicks["));             // array name
     }
 
 #if VERSION_IRREMOTE_MAJOR > 2
-    aSerial->print(results.rawlen - 1, DEC);    // array size
+        aSerial->print(results.rawlen - 1, DEC);    // array size
 #else
     /*
      * The leading space is required for repeat detection but not for sending raw data
@@ -850,7 +1126,7 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
 
 // Dump data
 #if VERSION_IRREMOTE_MAJOR > 2
-    for (unsigned int i = 1; i < results.rawlen; i++) {
+        for (unsigned int i = 1; i < results.rawlen; i++) {
 #else
     /*
      * We print the leading space to enable backwards compatibility.
@@ -876,7 +1152,7 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
     }
 
 // End declaration
-    aSerial->print(F("};")); //
+    aSerial->print(F("};"));                //
 
 // Comment
     aSerial->print(F("  // "));

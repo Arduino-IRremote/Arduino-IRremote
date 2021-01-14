@@ -137,9 +137,9 @@ bool IRrecv::decodeNEC() {
 
     // Check header "mark" and "space", this must be done for repeat and data
     if (!MATCH_MARK(results.rawbuf[1], NEC_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], NEC_HEADER_SPACE)) {
-        // commented since I saw this too often
-//        DBG_PRINT(F("NEC: "));
-//        DBG_PRINTLN(F("Header mark or space length is wrong"));
+        // TRACE_PRINT since I saw this too often
+        TRACE_PRINT(F("NEC: "));
+        TRACE_PRINTLN(F("Header mark or space length is wrong"));
         return false;
     }
 

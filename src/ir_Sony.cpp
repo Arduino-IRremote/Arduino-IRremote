@@ -111,10 +111,11 @@ bool IRrecv::decodeSony() {
     // Check we have enough data. +2 for initial gap and start bit mark and space minus the last/MSB space. NO stop bit!
     if (results.rawlen != (2 * SONY_BITS_MIN) + 2 && results.rawlen != (2 * SONY_BITS_MAX) + 2
             && results.rawlen != (2 * SONY_BITS_15) + 2) {
-        DBG_PRINT("Sony: ");
-        DBG_PRINT("Data length=");
-        DBG_PRINT(results.rawlen);
-        DBG_PRINTLN(" is not 12, 15 or 20");
+        // TRACE_PRINT since I saw this too often
+        TRACE_PRINT("Sony: ");
+        TRACE_PRINT("Data length=");
+        TRACE_PRINT(results.rawlen);
+        TRACE_PRINTLN(" is not 12, 15 or 20");
         return false;
     }
     // Check header "space"

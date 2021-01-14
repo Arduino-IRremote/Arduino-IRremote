@@ -175,12 +175,12 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
 // Sends PulseDistance data
 //
 void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
-        unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit) {
+        unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit) {
 
     if (aMSBfirst) {  // Send the MSB first.
         // send data from MSB to LSB until mask bit is shifted out
-        for (unsigned long mask = 1UL << (aNumberOfBits - 1); mask; mask >>= 1) {
-            if (aData & mask) {
+        for (uint32_t tMask = 1UL << (aNumberOfBits - 1); tMask; tMask >>= 1) {
+            if (aData & tMask) {
                 TRACE_PRINT('1');
                 mark(aOneMarkMicros);
                 space(aOneSpaceMicros);
@@ -191,7 +191,7 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
             }
         }
     } else {  // Send the Least Significant Bit (LSB) first / MSB last.
-        for (uint16_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
+        for (uint8_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
             if (aData & 1) {  // Send a 1
                 TRACE_PRINT('1');
                 mark(aOneMarkMicros);
@@ -202,11 +202,52 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
                 space(aZeroSpaceMicros);
             }
     }
-    if(aSendStopBit){
+    if (aSendStopBit) {
         TRACE_PRINT('S');
         mark(aZeroMarkMicros); // seems like this is used for stop bits
         space(0);  // Always end with the LED off
     }
+    TRACE_PRINTLN("");
+}
+
+/*
+ * Always send start bit, do not send the trailing space of the start bit
+ * 0 -> mark+space
+ * 1 -> space+mark
+ */
+void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint8_t aNumberOfBits) {
+
+    // do not send the trailing space of the start bit
+    mark(aBiphaseTimeUnit);
+
+    TRACE_PRINT('S');
+    uint8_t tLastBitValue = 1; // Start bit is a 1
+
+    // Data - Biphase code MSB first
+    for (uint32_t tMask = 1UL << (aNumberOfBits - 1); tMask; tMask >>= 1) {
+        if (aData & tMask) {
+            TRACE_PRINT('1');
+            space(aBiphaseTimeUnit);
+            mark(aBiphaseTimeUnit);
+            tLastBitValue = 1;
+
+        } else {
+            TRACE_PRINT('0');
+#ifdef USE_SOFT_SEND_PWM
+            mark(aBiphaseTimeUnit);
+#else
+            if (tLastBitValue) {
+                // Extend the current mark in order to generate a continuous signal without short breaks
+                delayMicroseconds(aBiphaseTimeUnit);
+            } else {
+                mark(aBiphaseTimeUnit);
+            }
+#endif
+            space(aBiphaseTimeUnit);
+            tLastBitValue = 0;
+        }
+    }
+    space(0);  // Always end with the LED off
     TRACE_PRINTLN("");
 }
 
@@ -236,17 +277,17 @@ void IRsend::mark(uint16_t timeMicros) {
 #elif defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, LOW); // Set output to active low.
 #else
-    TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
-#endif //  USE_SOFT_SEND_PWM
+    TIMER_ENABLE_SEND_PWM
+    ; // Enable pin 3 PWM output
 
     // Arduino core does not implement delayMicroseconds() for 4 MHz :-(
-#if F_CPU == 4000000L && defined(__AVR__)
+#  if F_CPU == 4000000L && defined(__AVR__)
     // busy wait
     __asm__ __volatile__ (
         "1: sbiw %0,1" "\n\t" // 2 cycles
         "brne 1b" : "=w" (timeMicros) : "0" (timeMicros) // 2 cycles
     );
-#else
+#  else
     if (timeMicros >= 0x4000) {
         // The implementation of Arduino delayMicroseconds() overflows at 0x4000 / 16.384 @16MHz (wiring.c line 175)
         // But for sendRaw() and external protocols values between 16.384 and 65.535 might be required
@@ -255,7 +296,8 @@ void IRsend::mark(uint16_t timeMicros) {
     } else {
         delayMicroseconds(timeMicros);
     }
-#endif // F_CPU == 4000000L && defined(__AVR__)
+#  endif // F_CPU == 4000000L && defined(__AVR__)
+#endif //  USE_SOFT_SEND_PWM
 }
 
 //+=============================================================================

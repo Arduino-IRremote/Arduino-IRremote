@@ -132,9 +132,9 @@ typedef enum {
 //------------------------------------------------------------------------------
 // Mark & Space matching functions
 //
-int MATCH(unsigned int measured, unsigned int desired);
-int MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us);
-int MATCH_SPACE(uint16_t measured_ticks, unsigned int desired_us);
+bool MATCH(unsigned int measured, unsigned int desired);
+bool MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us);
+bool MATCH_SPACE(uint16_t measured_ticks, unsigned int desired_us);
 
 /****************************************************
  *                     RECEIVING
@@ -165,7 +165,8 @@ struct decode_results {
 #define IRDATA_FLAGS_IS_REPEAT          0x01
 #define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
 #define IRDATA_FLAGS_PARITY_FAILED      0x04 // the current (autorepeat) frame violated parity check
-#define IRDATA_FLAGS_WAS_OVERFLOW       0x08
+#define IRDATA_TOGGLE_BIT_MASK          0x08
+#define IRDATA_FLAGS_WAS_OVERFLOW       0x10
 #define IRDATA_FLAGS_IS_OLD_DECODER     0x80
 
 struct IRData {
@@ -273,6 +274,9 @@ public:
 
     bool decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aOneMarkMicros,
             unsigned int aZeroMarkMicros, unsigned int aBitSpaceMicros, bool aMSBfirst = true);
+
+    bool decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
+            unsigned int aBiphaseTimeUnit);
 
     decode_results results;         // the instance for decoding
     IRData decodedIRData;           // decoded IR data for the application, used by all new / updated decoders
@@ -395,7 +399,9 @@ public:
     void custom_delay_usec(unsigned long uSecs);
     void enableIROut(int khz);
     void sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
-            unsigned int aZeroSpaceMicros, unsigned long aData, uint8_t aNumberOfBits, bool aMSBfirst = true, bool aSendStopBit = false);
+            unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst = true, bool aSendStopBit =
+                    false);
+    void sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint8_t aNumberOfBits);
     void mark(uint16_t timeMicros);
     void mark_long(uint32_t timeMicros);
     void space(uint16_t timeMicros);
@@ -409,9 +415,11 @@ public:
     //......................................................................
     void sendRC5(uint32_t data, uint8_t nbits);
     void sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle);
+    void sendRC5Standard(uint8_t aAddress, uint8_t aCommand, bool aEnableAutomaticToggle = true, uint8_t aNumberOfRepeats = 0);
 
     void sendRC6(uint32_t data, uint8_t nbits);
     void sendRC6(uint64_t data, uint8_t nbits);
+    void sendRC6Standard(uint8_t aAddress, uint8_t aCommand, bool aEnableAutomaticToggle = true, uint8_t aNumberOfRepeats = 0);
 
     //......................................................................
     void sendNECRepeat();

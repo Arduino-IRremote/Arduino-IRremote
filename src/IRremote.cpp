@@ -56,7 +56,7 @@ struct irparams_struct irparams; // the irparams instance
 //   in a hope of finding out what is going on, but for now they will remain as
 //   functions even in non-DEBUG mode
 //
-int MATCH(unsigned int measured, unsigned int desired) {
+bool MATCH(unsigned int measured, unsigned int desired) {
 #ifdef TRACE
     Serial.print(F("Testing: "));
     Serial.print(TICKS_LOW(desired), DEC);
@@ -77,9 +77,9 @@ int MATCH(unsigned int measured, unsigned int desired) {
 }
 
 //+========================================================
-// Due to sensor lag, when received, Marks tend to be 100us too long
+// Due to sensor lag, when received, Marks tend to be MARK_EXCESS_MICROS us too long
 //
-int MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us) {
+bool MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us) {
 #ifdef TRACE
     Serial.print(F("Testing mark (actual vs desired): "));
     Serial.print(measured_ticks * MICROS_PER_TICK, DEC);
@@ -106,9 +106,9 @@ int MATCH_MARK(uint16_t measured_ticks, unsigned int desired_us) {
 }
 
 //+========================================================
-// Due to sensor lag, when received, Spaces tend to be 100us too short
+// Due to sensor lag, when received, Spaces tend to be MARK_EXCESS_MICROS us too short
 //
-int MATCH_SPACE(uint16_t measured_ticks, unsigned int desired_us) {
+bool MATCH_SPACE(uint16_t measured_ticks, unsigned int desired_us) {
 #ifdef TRACE
     Serial.print(F("Testing space (actual vs desired): "));
     Serial.print(measured_ticks * MICROS_PER_TICK, DEC);

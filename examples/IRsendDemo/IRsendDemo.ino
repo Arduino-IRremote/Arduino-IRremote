@@ -89,6 +89,18 @@ void loop() {
     IrSender.sendSonyStandard(sAddress, sCommand, true, sRepeats);
     delay(2000);
 
+    Serial.println(F("Send RC5"));
+    IrSender.sendRC5Standard(sAddress, sCommand, true, sRepeats);
+    delay(2000);
+
+    Serial.println(F("Send RC5X with command + 0x40"));
+    IrSender.sendRC5Standard(sAddress, sCommand + 0x40, true, sRepeats);
+    delay(2000);
+
+    Serial.println(F("Send RC6"));
+    IrSender.sendRC6Standard(sAddress, sCommand, true, sRepeats);
+    delay(2000);
+
     Serial.println(F("Send Samsung"));
     IrSender.sendSamsungStandard(sAddress, sCommand, sRepeats);
     delay(2000);
