@@ -180,7 +180,7 @@ bool IRrecv::decodeNEC() {
     decodedIRData.protocol = NEC;
     decodedIRData.numberOfBits = NEC_BITS;
 
-    if (tValue.UByte.LowByte != (uint8_t) (~tValue.UByte.MidLowByte)) {
+    if (tValue.UByte.LowByte == (uint8_t) (~tValue.UByte.MidLowByte)) {
         // standard 8 bit address NEC protocol
         decodedIRData.address = tValue.UByte.LowByte; // first 8 bit
     } else {

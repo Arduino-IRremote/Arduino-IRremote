@@ -591,7 +591,6 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
 //    results.value = tDecodedData;
 //    return true;
 //}
-
 //bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBiphaseTimeUnit) {
 //    uint32_t tDecodedData = 0;
 //    aNumberOfBits += 1; // we decode the start bit too
@@ -680,7 +679,6 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
 //    results.value = tDecodedData;
 //    return true;
 //}
-
 //#  define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
 //#  define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
 //#  define TRACE_PRINT(...)    Serial.print(__VA_ARGS__)
@@ -942,7 +940,7 @@ void IRrecv::printResultShort(Print *aSerial) {
             }
 
             if (decodedIRData.flags & IRDATA_TOGGLE_BIT_MASK) {
-                aSerial->print(F(" Toggle is 1"));
+                aSerial->print(F(" Toggle=1"));
             }
 
             if (decodedIRData.flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
@@ -983,50 +981,6 @@ void IRrecv::printResultShort(Print *aSerial) {
         }
         aSerial->println(F(" bits)"));
     }
-}
-
-/*
- * Print a c rawData array for later use in sendRaw()
- */
-void IRrecv::printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
-    // Dumps out the decode_results structure.
-    // Call this after IRrecv::decode()
-    aSerial->print(F("rawData["));
-
-#if VERSION_IRREMOTE_MAJOR > 2
-    aSerial->print(results.rawlen - 1, DEC);
-    aSerial->print(F("]: "));
-    for (unsigned int i = 1; i < results.rawlen; i++) {
-#else
-    /*
-     * The leading space is required for repeat detection but not for sending raw data
-     */
-    unsigned int i;
-    if (aOutputMicrosecondsInsteadOfTicks) {
-        aSerial->print(results.rawlen, DEC);
-        i = 0; // We print the leading space to enable backwards compatibility.
-    } else {
-        aSerial->print(results.rawlen - 1, DEC);
-        i = 1; // Skip the leading space.
-    }
-    aSerial->print(F("]: "));
-    for (; i < results.rawlen; i++) {
-#endif
-        uint32_t tDurationMicros;
-        if (aOutputMicrosecondsInsteadOfTicks) {
-            tDurationMicros = results.rawbuf[i] * (uint32_t) MICROS_PER_TICK;
-        } else {
-            tDurationMicros = results.rawbuf[i];
-        }
-        if (i & 1) {
-            aSerial->print(tDurationMicros, DEC);
-        } else {
-            aSerial->write('-');
-            aSerial->print(tDurationMicros, DEC);
-        }
-        aSerial->print(' ');
-    }
-    aSerial->println();
 }
 
 //+=============================================================================
@@ -1109,37 +1063,11 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
         aSerial->print(F("rawTicks["));             // array name
     }
 
-#if VERSION_IRREMOTE_MAJOR > 2
-        aSerial->print(results.rawlen - 1, DEC);    // array size
-#else
-    /*
-     * The leading space is required for repeat detection but not for sending raw data
-     * We print the leading space to enable backwards compatibility.
-     */
-    if (aOutputMicrosecondsInsteadOfTicks) {
-        aSerial->print(results.rawlen, DEC);    // array size
-    } else {
-        aSerial->print(results.rawlen - 1, DEC);    // array size without leading space
-    }
-#endif
+    aSerial->print(results.rawlen - 1, DEC);    // array size
     aSerial->print(F("] = {"));                    // Start declaration
 
 // Dump data
-#if VERSION_IRREMOTE_MAJOR > 2
-        for (unsigned int i = 1; i < results.rawlen; i++) {
-#else
-    /*
-     * We print the leading space to enable backwards compatibility.
-     * It is only required for the Sanyo and Sony hack of decoding of repeats, which is incompatible to other protocols!
-     */
-    unsigned int i;
-    if (aOutputMicrosecondsInsteadOfTicks) {
-        i = 0; // We print the leading space to enable backwards compatibility.
-    } else {
-        i = 1; // Skip the leading space.
-    }
-    for (; i < results.rawlen; i++) {
-#endif
+    for (unsigned int i = 1; i < results.rawlen; i++) {
         if (aOutputMicrosecondsInsteadOfTicks) {
             aSerial->print(results.rawbuf[i] * MICROS_PER_TICK, DEC);
         } else {

@@ -530,20 +530,20 @@ public:
      * @param prontoHexString C type string (null terminated) containing a Pronto Hex representation.
      * @param times Number of times to send the signal.
      */
-    void sendPronto(const char *prontoHexString, unsigned int times = 1U);
+    void sendPronto(const char *prontoHexString, uint8_t numberOfRepeats = 0);
 
-    void sendPronto(const uint16_t *data, unsigned int length, unsigned int times = 1U);
+    void sendPronto(const uint16_t *data, unsigned int length, uint8_t numberOfRepeats = 0);
 
 #if HAS_FLASH_READ || defined(DOXYGEN)
-    void sendPronto_PF(uint_farptr_t str, unsigned int times = 1U);
+    void sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats = 0);
 
     /**
      * Version of sendPronto that reads from PROGMEM, saving RAM memory.
      * @param pronto C type string (null terminated) containing a Pronto Hex representation.
      * @param times Number of times to send the signal.
      */
-    void sendPronto_PF(const char *str, unsigned int times = 1U);
-    void sendPronto(const __FlashStringHelper *str, unsigned int times = 1U);
+    void sendPronto_PF(const char *str, uint8_t numberOfRepeats = 0);
+    void sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats = 0);
 #endif
 
     //......................................................................

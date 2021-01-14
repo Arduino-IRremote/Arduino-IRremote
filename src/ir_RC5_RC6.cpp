@@ -33,7 +33,7 @@
 #include "LongUnion.h"
 
 bool sLastSendToggleValue = false;
-uint8_t sLastReceiveToggleValue = 3; // 3 -> start value
+//uint8_t sLastReceiveToggleValue = 3; // 3 -> start value
 
 //==============================================================================
 // RRRR    CCCC  55555
@@ -311,20 +311,23 @@ void IRsend::sendRC6Standard(uint8_t aAddress, uint8_t aCommand, bool aEnableAut
     LongUnion tIRRawData;
     tIRRawData.UByte.LowByte = aCommand;
     tIRRawData.UByte.MidLowByte = aAddress;
+
+    tIRRawData.UWord.HighWord = 0; // must clear high word
     if (aEnableAutomaticToggle) {
         if (sLastSendToggleValue == 0) {
             sLastSendToggleValue = 1;
             // set toggled bit
+            DBG_PRINT(F("Set Toggle "));
             tIRRawData.UByte.MidHighByte = 1; // 3 Mode bits are 0
         } else {
             sLastSendToggleValue = 0;
         }
     }
 
-//    tIRRawData.UByte.MidHighByte += 0x10; // Leading bit
-
     DBG_PRINT(F("RC6: "));
-    DBG_PRINT(F("RawData="));
+    DBG_PRINT(F("sLastSendToggleValue="));
+    DBG_PRINT(sLastSendToggleValue);
+    DBG_PRINT(F(" RawData="));
     DBG_PRINTLN(tIRRawData.ULong, HEX);
 
     uint8_t tNumberOfCommands = aNumberOfRepeats + 1;

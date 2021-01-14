@@ -38,31 +38,17 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOf
     // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
-#if VERSION_IRREMOTE_MAJOR > 2
     /*
-     * Raw data starts with a Mark. No leading space any more.
+     * Raw data starts with a mark.
      */
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         if (i & 1) {
             // Odd
-           space(aBufferWithMicroseconds[i]);
-        } else {
-            mark(aBufferWithMicroseconds[i]);
-        }
-    }
-#else
-    /*
-     * Raw data starts with a Space
-     */
-    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
-        if (i & 1) {
-            // Odd
-            mark(aBufferWithMicroseconds[i]);
-        } else {
             space(aBufferWithMicroseconds[i]);
+        } else {
+            mark(aBufferWithMicroseconds[i]);
         }
     }
-#endif
 
     space(0);  // Always end with the LED off
 }
@@ -92,33 +78,18 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLength
 #else
     // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
-#if VERSION_IRREMOTE_MAJOR > 2
     /*
-     * Raw data starts with a Mark. No leading space any more.
+     * Raw data starts with a mark
      */
     for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
         uint16_t duration = pgm_read_word(&aBufferWithMicroseconds[i]);
         if (i & 1) {
             // Odd
-            space(aBufferWithMicroseconds[i]);
-        } else {
-            mark(aBufferWithMicroseconds[i]);
-        }
-    }
-#else
-    /*
-     * Raw data starts with a Space.
-     */
-    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
-        uint16_t duration = pgm_read_word(&aBufferWithMicroseconds[i]);
-        if (i & 1) {
-            // Odd
-            mark(duration);
-        } else {
             space(duration);
+        } else {
+            mark(duration);
         }
     }
-#endif
     space(0);  // Always end with the LED off
 #endif
 }

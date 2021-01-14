@@ -1,12 +1,37 @@
-/**
+/*
  * @file irPronto.cpp
- * @brief In this file, the functions IRrecv::dumpPronto and
- * IRsend::sendPronto are defined.
- * See http://www.harctoolbox.org/Glossary.html#ProntoSemantics
+ * @brief In this file, the functions IRrecv::dumpPronto and IRsend::sendPronto are defined.
  *
+ * See http://www.harctoolbox.org/Glossary.html#ProntoSemantics
  * Pronto database http://www.remotecentral.com/search.htm
+ *
+ *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2020 Bengt Martensson
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
-
+//#define DEBUG // Activate this for lots of lovely debug output.
 #include "IRremote.h"
 
 // DO NOT EXPORT from this file
@@ -29,7 +54,7 @@ static unsigned int toFrequencyKHz(uint16_t code) {
 /*
  * Parse the string given as Pronto Hex, and send it a number of times given as argument.
  */
-void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int times) {
+void IRsend::sendPronto(const uint16_t *data, unsigned int size, uint8_t numberOfRepeats) {
     unsigned int timebase = (microsecondsInSeconds * data[1] + referenceFrequency / 2) / referenceFrequency;
     unsigned int khz;
     switch (data[0]) {
@@ -44,17 +69,23 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int ti
     }
     unsigned int intros = 2 * data[2];
     unsigned int repeats = 2 * data[3];
+    DBG_PRINT(F("intros="));
+    DBG_PRINT(intros);
+    DBG_PRINT(F(" repeats="));
+    DBG_PRINTLN(repeats);
     if (numbersInPreamble + intros + repeats != size) { // inconsistent sizes
         return;
     }
 
+    /*
+     * Generate a new microseconds timing array for sendRaw.
+     * If recorded by IRremote, intro contains the whole IR data and repeat is empty
+     */
     uint16_t durations[intros + repeats];
     for (unsigned int i = 0; i < intros + repeats; i++) {
         uint32_t duration = ((uint32_t) data[i + numbersInPreamble]) * timebase;
         durations[i] = (unsigned int) ((duration <= MICROSECONDS_T_MAX) ? duration : MICROSECONDS_T_MAX);
     }
-
-    unsigned int numberRepeats = intros > 0 ? times - 1 : times;
 
     /*
      * Send the intro. intros is even.
@@ -64,7 +95,8 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int ti
         sendRaw(durations, intros - 1, khz);
     }
 
-    if (repeats == 0 || numberRepeats == 0) {
+    if (repeats == 0 || numberOfRepeats == 0) {
+        // only send intro once
         return;
     }
 
@@ -72,15 +104,15 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, unsigned int ti
      * Now send the trailing space/gap of the intro and all the repeats
      */
     delay(durations[intros - 1] / 1000U); // equivalent to space(durations[intros - 1]); but allow bigger values for the gap
-    for (unsigned int i = 0; i < numberRepeats; i++) {
-        sendRaw(&durations[0] + intros, repeats - 1, khz);
-        if (i < numberRepeats - 1) { // skip last trailing space/gap, see above
+    for (unsigned int i = 0; i < numberOfRepeats; i++) {
+        sendRaw(durations + intros, repeats - 1, khz);
+        if (i < numberOfRepeats - 1) { // skip last trailing space/gap, see above
             delay(durations[intros + repeats - 1] / 1000U);
         }
     }
 }
 
-void IRsend::sendPronto(const char *str, unsigned int times) {
+void IRsend::sendPronto(const char *str, uint8_t numberOfRepeats) {
     size_t len = strlen(str) / (digitsInProntoNumber + 1) + 1;
     uint16_t data[len];
     const char *p = str;
@@ -95,23 +127,23 @@ void IRsend::sendPronto(const char *str, unsigned int times) {
         data[i] = static_cast<uint16_t>(x); // If input is conforming, there can be no overflow!
         p = *endptr;
     }
-    sendPronto(data, len, times);
+    sendPronto(data, len, numberOfRepeats);
 }
 
 #if HAS_FLASH_READ
-void IRsend::sendPronto_PF(uint_farptr_t str, unsigned int times) {
+void IRsend::sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats) {
     size_t len = strlen_PF(STRCPY_PF_CAST(str));
     char work[len + 1];
     strncpy_PF(work, STRCPY_PF_CAST(str), len);
-    sendPronto(work, times);
+    sendPronto(work, numberOfRepeats);
 }
 
-void IRsend::sendPronto_PF(const char *str, unsigned int times) {
-    sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), times); // to avoid infinite recursion
+void IRsend::sendPronto_PF(const char *str, uint8_t numberOfRepeats) {
+    sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), numberOfRepeats); // to avoid infinite recursion
 }
 
-void IRsend::sendPronto(const __FlashStringHelper *str, unsigned int times) {
-    return sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), times);
+void IRsend::sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats) {
+    return sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), numberOfRepeats);
 }
 #endif
 

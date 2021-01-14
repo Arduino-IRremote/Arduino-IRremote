@@ -2,7 +2,6 @@
 - Added SendRaw with byte data.
 - Fixed resume bug if irparams.rawlen >= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi
 - Added `dumpPronto(String *aString, unsigned int frequency)` with String object as argument. Thanks to Iosif Peterfi
-- Handling leading gap/space inconsistency for raw data.
 - Fixed swapped cases in `getProtocolString()`. Thanks to Jim-2249
 - Added compile option `IR_INPUT_IS_ACTIVE_HIGH`. Thanks to Jim-2249
 - Corrected template. Thanks to Jim-2249
