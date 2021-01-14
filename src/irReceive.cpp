@@ -779,10 +779,10 @@ const char* IRrecv::getProtocolString() {
     }
 }
 
-void IRrecv::printResultShort(Print *aSerial) {
+void IRrecv::printResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t aLeadingSpaceDuration) {
     aSerial->print(F("Protocol="));
     aSerial->print(getProtocolString());
-    if (decodedIRData.protocol == UNKNOWN) {
+    if (aDecodedDataPtr->protocol == UNKNOWN) {
         aSerial->print(' ');
         aSerial->print((results.rawlen + 1) / 2, DEC);
         aSerial->println(F(" bits received"));
@@ -791,28 +791,28 @@ void IRrecv::printResultShort(Print *aSerial) {
          * New decoders have address and command
          */
         aSerial->print(F(" Address=0x"));
-        aSerial->print(decodedIRData.address, HEX);
+        aSerial->print(aDecodedDataPtr->address, HEX);
 
         aSerial->print(F(" Command=0x"));
-        aSerial->print(decodedIRData.command, HEX);
+        aSerial->print(aDecodedDataPtr->command, HEX);
 
-        if (decodedIRData.flags & IRDATA_FLAGS_PARITY_FAILED) {
+        if (aDecodedDataPtr->flags & IRDATA_FLAGS_PARITY_FAILED) {
             aSerial->print(F(" Parity fail"));
         }
 
-        if (decodedIRData.flags & IRDATA_TOGGLE_BIT_MASK) {
+        if (aDecodedDataPtr->flags & IRDATA_TOGGLE_BIT_MASK) {
             aSerial->print(F(" Toggle=1"));
         }
 
-        if (decodedIRData.flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
+        if (aDecodedDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
             aSerial->print(F(" Auto-repeat gap="));
-            aSerial->print(results.rawbuf[0] * MICROS_PER_TICK);
+            aSerial->print(aLeadingSpaceDuration * MICROS_PER_TICK);
             aSerial->print(F("us"));
         }
 
-        if (decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
+        if (aDecodedDataPtr->flags & IRDATA_FLAGS_IS_REPEAT) {
             aSerial->print(F(" Repeat gap="));
-            aSerial->print((uint32_t) results.rawbuf[0] * MICROS_PER_TICK);
+            aSerial->print((uint32_t) aLeadingSpaceDuration * MICROS_PER_TICK);
             aSerial->print(F("us"));
         }
 
@@ -826,15 +826,19 @@ void IRrecv::printResultShort(Print *aSerial) {
          * Print number of bits processed
          */
         aSerial->print(F(" ("));
-        if (!(decodedIRData.flags & IRDATA_FLAGS_IS_OLD_DECODER)) {
+        if (!(aDecodedDataPtr->flags & IRDATA_FLAGS_IS_OLD_DECODER)) {
             // New decoder
-            aSerial->print(decodedIRData.numberOfBits, DEC);
+            aSerial->print(aDecodedDataPtr->numberOfBits, DEC);
         } else {
             // Old decoder
             aSerial->print(results.bits, DEC);
         }
         aSerial->println(F(" bits)"));
     }
+
+}
+void IRrecv::printResultShort(Print *aSerial) {
+    printResultShort(aSerial, &decodedIRData, results.rawbuf[0]);
 }
 
 //+=============================================================================

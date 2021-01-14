@@ -1,0 +1,244 @@
+START ../src/IRreceiveDemo.cpp from Jan 14 2021
+Using library version 2.9.0
+Enabling IRin
+Ready to receive IR signals at pin 11
+Protocol=NEC Address=0x2 Command=0x34 Raw-Data=0xCB34FD02 (32 bits)
+
+Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 (32 bits)
+
+Protocol=NEC Address=0x80 Command=0x45 Raw-Data=0xBA457F80 (32 bits)
+
+Protocol=PANASONIC Address=0x102 Command=0x34 Raw-Data=0x4341020 (48 bits)
+
+Protocol=KASEIKYO Address=0x4711102 Command=0x34 Raw-Data=0x7341023 (48 bits)
+
+Protocol=DENON Address=0x2 Command=0x34 Raw-Data=0x8D0 (15 bits)
+
+Protocol=DENON Address=0x2 Command=0x34 Auto-repeat gap=37150us Raw-Data=0xB2F (15 bits)
+
+Protocol=SHARP Address=0x2 Command=0x34 Raw-Data=0x8D2 (15 bits)
+
+Protocol=SHARP Address=0x2 Command=0x34 Auto-repeat gap=36700us Raw-Data=0xB2D (15 bits)
+
+Protocol=SONY Address=0x2 Command=0x34 Raw-Data=0x134 (12 bits)
+
+Protocol=SONY Address=0x2 Command=0x34 Raw-Data=0x8134 (20 bits)
+
+Protocol=RC5 Address=0x2 Command=0x34 Toggle=1 Raw-Data=0x38B4 (13 bits)
+
+Protocol=RC5 Address=0x2 Command=0x74 Raw-Data=0x20B4 (13 bits)
+
+Protocol=RC6 Address=0x2 Command=0x34 Toggle=1 Raw-Data=0x234 (16 bits)
+
+Protocol=SAMSUNG Address=0x102 Command=0x34 Raw-Data=0x340102 (32 bits)
+
+Protocol=JVC Address=0x2 Command=0x34 Raw-Data=0x3402 (16 bits)
+
+Protocol=LG Address=0x2 Command=0x34 Raw-Data=0x200347 (28 bits)
+
+Protocol=BOSEWAVE Address=0x0 Command=0x34 Raw-Data=0xCB34 (16 bits)
+
+Protocol=LEGO_PF Address=0x21 Command=0x4 Raw-Data=0x2148 (16 bits)
+
+Protocol=LEGO_PF Address=0x21 Command=0x4 Auto-repeat gap=38578us Raw-Data=0x2148 (16 bits)
+
+Protocol=LEGO_PF Address=0x21 Command=0x4 Auto-repeat gap=38728us Raw-Data=0x2148 (16 bits)
+
+Protocol=LEGO_PF Address=0x21 Command=0x4 Auto-repeat gap=38678us Raw-Data=0x2148 (16 bits)
+
+Protocol=LEGO_PF Address=0x21 Command=0x4 Auto-repeat gap=38728us Raw-Data=0x2148 (16 bits)
+
+Protocol=NEC Address=0x3 Command=0x45 Raw-Data=0xBA45FC03 (32 bits)
+
+Protocol=NEC Address=0x3 Command=0x45 Repeat gap=40100us Raw-Data=0x0 (0 bits)
+
+Protocol=NEC Address=0x203 Command=0x45 Raw-Data=0xBA450203 (32 bits)
+
+Protocol=NEC Address=0x203 Command=0x45 Repeat gap=40850us Raw-Data=0x0 (0 bits)
+
+Protocol=NEC Address=0x80 Command=0x45 Raw-Data=0xBA457F80 (32 bits)
+
+Protocol=PANASONIC Address=0x203 Command=0x45 Raw-Data=0x55452030 (48 bits)
+
+Protocol=PANASONIC Address=0x203 Command=0x45 Repeat gap=66550us Raw-Data=0x55452030 (48 bits)
+
+Protocol=KASEIKYO Address=0x4711203 Command=0x45 Raw-Data=0x56452033 (48 bits)
+
+Protocol=KASEIKYO Address=0x4711203 Command=0x45 Repeat gap=65200us Raw-Data=0x56452033 (48 bits)
+
+Protocol=DENON Address=0x3 Command=0x45 Raw-Data=0xD14 (15 bits)
+
+Protocol=DENON Address=0x3 Command=0x45 Auto-repeat gap=36700us Raw-Data=0xEEB (15 bits)
+
+Protocol=DENON Address=0x3 Command=0x45 Repeat gap=37100us Raw-Data=0xD14 (15 bits)
+
+Protocol=DENON Address=0x3 Command=0x45 Auto-repeat gap=37400us Repeat gap=37400us Raw-Data=0xEEB (15 bits)
+
+Protocol=SHARP Address=0x3 Command=0x45 Raw-Data=0xD16 (15 bits)
+
+Protocol=SHARP Address=0x3 Command=0x45 Auto-repeat gap=37550us Raw-Data=0xEE9 (15 bits)
+
+Protocol=SHARP Address=0x3 Command=0x45 Repeat gap=37550us Raw-Data=0xD16 (15 bits)
+
+Protocol=SHARP Address=0x3 Command=0x45 Auto-repeat gap=35850us Repeat gap=35850us Raw-Data=0xEE9 (15 bits)
+
+Protocol=SONY Address=0x3 Command=0x45 Raw-Data=0x1C5 (12 bits)
+
+Protocol=SONY Address=0x3 Command=0x45 Repeat gap=17200us Raw-Data=0x1C5 (12 bits)
+
+Protocol=SONY Address=0x3 Command=0x45 Raw-Data=0x101C5 (20 bits)
+
+Protocol=SONY Address=0x3 Command=0x45 Repeat gap=17650us Raw-Data=0x101C5 (20 bits)
+
+Protocol=RC5 Address=0x3 Command=0x45 Raw-Data=0x20C5 (13 bits)
+
+Protocol=RC5 Address=0x3 Command=0x45 Repeat gap=91100us Raw-Data=0x20C5 (13 bits)
+
+Protocol=RC5 Address=0x3 Command=0x45 Toggle=1 Raw-Data=0x28C5 (13 bits)
+
+Protocol=RC5 Address=0x3 Command=0x45 Toggle=1 Repeat gap=91900us Raw-Data=0x28C5 (13 bits)
+
+Protocol=RC6 Address=0x3 Command=0x45 Raw-Data=0x345 (16 bits)
+
+Protocol=RC6 Address=0x3 Command=0x45 Repeat gap=99650us Raw-Data=0x345 (16 bits)
+
+Protocol=SAMSUNG Address=0x203 Command=0x45 Raw-Data=0x450203 (32 bits)
+
+Protocol=SAMSUNG Address=0x203 Command=0x45 Repeat gap=47350us Raw-Data=0x0 (0 bits)
+
+Protocol=JVC Address=0x3 Command=0x45 Raw-Data=0x4503 (16 bits)
+
+Protocol=JVC Address=0x81 Command=0x22 Repeat gap=15700us Raw-Data=0x2281 (16 bits)
+
+Protocol=LG Address=0x3 Command=0x45 Raw-Data=0x300459 (28 bits)
+
+Protocol=LG Address=0x3 Command=0x45 Repeat gap=43850us Raw-Data=0x0 (0 bits)
+
+Protocol=BOSEWAVE Address=0x0 Command=0x45 Raw-Data=0xBA45 (16 bits)
+
+Protocol=BOSEWAVE Address=0x0 Command=0x45 Repeat gap=43600us Raw-Data=0xBA45 (16 bits)
+
+Protocol=LEGO_PF Address=0x31 Command=0x5 Raw-Data=0x3158 (16 bits)
+
+Protocol=LEGO_PF Address=0x31 Command=0x5 Auto-repeat gap=13142us Raw-Data=0x3158 (16 bits)
+
+Protocol=LEGO_PF Address=0x31 Command=0x5 Auto-repeat gap=12742us Raw-Data=0x3158 (16 bits)
+
+Protocol=LEGO_PF Address=0x31 Command=0x5 Auto-repeat gap=12842us Raw-Data=0x3158 (16 bits)
+
+Protocol=LEGO_PF Address=0x31 Command=0x5 Auto-repeat gap=12742us Raw-Data=0x3158 (16 bits)
+
+Protocol=NEC Address=0x4 Command=0x56 Raw-Data=0xA956FB04 (32 bits)
+
+Protocol=NEC Address=0x4 Command=0x56 Repeat gap=40050us Raw-Data=0x0 (0 bits)
+
+Protocol=NEC Address=0x4 Command=0x56 Repeat gap=88150us Raw-Data=0x0 (0 bits)
+
+Protocol=NEC Address=0x304 Command=0x56 Raw-Data=0xA9560304 (32 bits)
+
+Protocol=NEC Address=0x304 Command=0x56 Repeat gap=40550us Raw-Data=0x0 (0 bits)
+
+Protocol=NEC Address=0x304 Command=0x56 Repeat gap=88100us Raw-Data=0x0 (0 bits)
+
+Protocol=NEC Address=0x80 Command=0x45 Raw-Data=0xBA457F80 (32 bits)
+
+Protocol=PANASONIC Address=0x304 Command=0x56 Raw-Data=0x26563040 (48 bits)
+
+Protocol=PANASONIC Address=0x304 Command=0x56 Repeat gap=66550us Raw-Data=0x26563040 (48 bits)
+
+Protocol=PANASONIC Address=0x304 Command=0x56 Repeat gap=65850us Raw-Data=0x26563040 (48 bits)
+
+Protocol=KASEIKYO Address=0x4711304 Command=0x56 Raw-Data=0x25563043 (48 bits)
+
+Protocol=KASEIKYO Address=0x4711304 Command=0x56 Repeat gap=65200us Raw-Data=0x25563043 (48 bits)
+
+Protocol=KASEIKYO Address=0x4711304 Command=0x56 Repeat gap=65850us Raw-Data=0x25563043 (48 bits)
+
+Protocol=DENON Address=0x4 Command=0x56 Raw-Data=0x1158 (15 bits)
+
+Protocol=DENON Address=0x4 Command=0x56 Auto-repeat gap=37400us Raw-Data=0x12A7 (15 bits)
+
+Protocol=DENON Address=0x4 Command=0x56 Repeat gap=37750us Raw-Data=0x1158 (15 bits)
+
+Protocol=DENON Address=0x4 Command=0x56 Auto-repeat gap=38000us Repeat gap=38000us Raw-Data=0x12A7 (15 bits)
+
+Protocol=DENON Address=0x4 Command=0x56 Repeat gap=37750us Raw-Data=0x1158 (15 bits)
+
+Protocol=DENON Address=0x4 Command=0x56 Auto-repeat gap=37150us Repeat gap=37150us Raw-Data=0x12A7 (15 bits)
+
+Protocol=SHARP Address=0x4 Command=0x56 Raw-Data=0x115A (15 bits)
+
+Protocol=SHARP Address=0x4 Command=0x56 Auto-repeat gap=37800us Raw-Data=0x12A5 (15 bits)
+
+Protocol=SHARP Address=0x4 Command=0x56 Repeat gap=37000us Raw-Data=0x115A (15 bits)
+
+Protocol=SHARP Address=0x4 Command=0x56 Auto-repeat gap=37400us Repeat gap=37400us Raw-Data=0x12A5 (15 bits)
+
+Protocol=SHARP Address=0x4 Command=0x56 Repeat gap=37000us Raw-Data=0x115A (15 bits)
+
+Protocol=SHARP Address=0x4 Command=0x56 Auto-repeat gap=37350us Repeat gap=37350us Raw-Data=0x12A5 (15 bits)
+
+Protocol=SONY Address=0x4 Command=0x56 Raw-Data=0x256 (12 bits)
+
+Protocol=SONY Address=0x4 Command=0x56 Repeat gap=17400us Raw-Data=0x256 (12 bits)
+
+Protocol=SONY Address=0x4 Command=0x56 Repeat gap=16950us Raw-Data=0x256 (12 bits)
+
+Protocol=SONY Address=0x4 Command=0x56 Raw-Data=0x18256 (20 bits)
+
+Protocol=SONY Address=0x4 Command=0x56 Repeat gap=17600us Raw-Data=0x18256 (20 bits)
+
+Protocol=SONY Address=0x4 Command=0x56 Repeat gap=16950us Raw-Data=0x18256 (20 bits)
+
+Protocol=RC5 Address=0x4 Command=0x56 Toggle=1 Raw-Data=0x2916 (13 bits)
+
+Protocol=RC5 Address=0x4 Command=0x56 Toggle=1 Repeat gap=93150us Raw-Data=0x2916 (13 bits)
+
+Protocol=RC5 Address=0x4 Command=0x56 Toggle=1 Repeat gap=92050us Raw-Data=0x2916 (13 bits)
+
+Protocol=RC5 Address=0x4 Command=0x56 Raw-Data=0x2116 (13 bits)
+
+Protocol=RC5 Address=0x4 Command=0x56 Repeat gap=92100us Raw-Data=0x2116 (13 bits)
+
+Protocol=RC5 Address=0x4 Command=0x56 Repeat gap=92000us Raw-Data=0x2116 (13 bits)
+
+Protocol=RC6 Address=0x4 Command=0x56 Toggle=1 Raw-Data=0x456 (16 bits)
+
+Protocol=RC6 Address=0x4 Command=0x56 Toggle=1 Repeat gap=99500us Raw-Data=0x456 (16 bits)
+
+Protocol=RC6 Address=0x4 Command=0x56 Toggle=1 Repeat gap=99350us Raw-Data=0x456 (16 bits)
+
+Protocol=SAMSUNG Address=0x304 Command=0x56 Raw-Data=0x560304 (32 bits)
+
+Protocol=SAMSUNG Address=0x304 Command=0x56 Repeat gap=46800us Raw-Data=0x0 (0 bits)
+
+Protocol=SAMSUNG Address=0x304 Command=0x56 Repeat gap=90600us Raw-Data=0x0 (0 bits)
+
+Protocol=JVC Address=0x4 Command=0x56 Raw-Data=0x5604 (16 bits)
+
+Protocol=JVC Address=0x2 Command=0x2B Repeat gap=15700us Raw-Data=0x2B02 (16 bits)
+
+Protocol=JVC Address=0x2 Command=0x2B Repeat gap=15550us Raw-Data=0x2B02 (16 bits)
+
+Protocol=LG Address=0x4 Command=0x56 Raw-Data=0x40056B (28 bits)
+
+Protocol=LG Address=0x4 Command=0x56 Repeat gap=44950us Raw-Data=0x0 (0 bits)
+
+Protocol=LG Address=0x4 Command=0x56 Repeat gap=90100us Raw-Data=0x0 (0 bits)
+
+Protocol=BOSEWAVE Address=0x0 Command=0x56 Raw-Data=0xA956 (16 bits)
+
+Protocol=BOSEWAVE Address=0x0 Command=0x56 Repeat gap=43600us Raw-Data=0xA956 (16 bits)
+
+Protocol=BOSEWAVE Address=0x0 Command=0x56 Repeat gap=44100us Raw-Data=0xA956 (16 bits)
+
+Protocol=LEGO_PF Address=0x41 Command=0x6 Raw-Data=0x416C (16 bits)
+
+Protocol=LEGO_PF Address=0x41 Command=0x6 Auto-repeat gap=25264us Raw-Data=0x416C (16 bits)
+
+Protocol=LEGO_PF Address=0x41 Command=0x6 Auto-repeat gap=25314us Raw-Data=0x416C (16 bits)
+
+Protocol=LEGO_PF Address=0x41 Command=0x6 Auto-repeat gap=25064us Raw-Data=0x416C (16 bits)
+
+Protocol=LEGO_PF Address=0x41 Command=0x6 Auto-repeat gap=25214us Raw-Data=0x416C (16 bits)
+

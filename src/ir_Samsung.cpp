@@ -79,7 +79,12 @@ void IRsend::sendSamsungRepeat() {
     interrupts();
 }
 
-void IRsend::sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
+void IRsend::sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+    if(aIsRepeat){
+        sendSamsungRepeat();
+        return;
+    }
+
     // Set IR carrier frequency
     enableIROut(38);
 

@@ -81,8 +81,13 @@ void IRsend::sendNECRepeat() {
  * Repeat commands should be sent in a 110 ms raster.
  * There is NO delay after the last sent repeat!
  * https://www.sbprojects.net/knowledge/ir/nec.php
+ * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
  */
-void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16AddressBits, uint8_t aNumberOfRepeats) {
+void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16AddressBits, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+    if(aIsRepeat){
+        sendNECRepeat();
+        return;
+    }
     // Set IR carrier frequency
     enableIROut(38);
 

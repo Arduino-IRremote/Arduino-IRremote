@@ -263,6 +263,7 @@ public:
     void initDecodedIRData();
 
     const char* getProtocolString();
+    void printResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t aLeadingSpaceDuration = 0);
     void printResultShort(Print *aSerial);
     void printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
@@ -433,10 +434,10 @@ public:
     //......................................................................
     void sendNECRepeat();
     void sendNEC(uint32_t data, uint8_t nbits, bool repeat = false);
-    void sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16AddressBits = false, uint8_t aNumberOfRepeats = 0);
+    void sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16AddressBits = false, uint8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
     //......................................................................
     void sendSony(unsigned long data, int nbits);
-    void sendSonyStandard(uint16_t aAddress, uint8_t aCommand, bool send8AddressBits = false, uint8_t aNumberOfRepeats = 0);
+    void sendSonyStandard(uint16_t aAddress, uint8_t aCommand, uint8_t numberOfBits, uint8_t aNumberOfRepeats = 0);
 
     //......................................................................
 #define PANASONIC_VENDOR_ID_CODE    0x2002
@@ -458,7 +459,7 @@ public:
     void sendSAMSUNG(unsigned long data, int nbits) __attribute__ ((deprecated ("Renamed to sendSamsung()"))); // deprecated
     void sendSamsung(uint32_t aData, uint8_t aNumberOfBits);
     void sendSamsungRepeat();
-    void sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats = 0);
+    void sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
 
     //......................................................................
     void sendWhynter(unsigned long data, int nbits);
@@ -550,7 +551,7 @@ public:
      * @param times Number of times to send the signal.
      */
     void sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats = 0);
-    void sendPronto_P(const char* str, uint8_t numberOfRepeats);
+    void sendPronto_P(const char *str, uint8_t numberOfRepeats);
 #endif
 
     void sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats = 0);

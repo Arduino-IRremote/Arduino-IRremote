@@ -14,6 +14,10 @@
 
 #include <IRremote.h>
 
+#if !defined(USE_STANDARD_DECODE)
+#warning "Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable this improved version of IRrecord example."
+#endif
+
 #if defined(ESP32)
 int IR_RECEIVE_PIN = 15;
 int SEND_BUTTON_PIN = 16; // RX2 pin
@@ -32,6 +36,16 @@ IRsend IrSender;
 #if defined(ARDUINO_ARCH_SAMD)
 #define Serial SerialUSB
 #endif
+
+// Storage for the recorded code
+IRData sStoredIRData;
+uint16_t rawCodes[RAW_BUFFER_LENGTH]; // The durations if raw
+uint8_t sSendRawCodeLength; // The length of the code
+
+int lastButtonState;
+
+void storeCode();
+void sendCode(bool aSendRepeat);
 
 void setup() {
     Serial.begin(115200);
@@ -61,99 +75,6 @@ void setup() {
 #endif
 }
 
-// Storage for the recorded code
-int codeType = -1; // The type of code
-uint32_t codeValue; // The code value if not raw
-uint16_t rawCodes[RAW_BUFFER_LENGTH]; // The durations if raw
-uint8_t codeLen; // The length of the code
-int toggle = 0; // The RC5/6 toggle state
-
-// Stores the code for later playback
-// Most of this code is just logging
-void storeCode() {
-    if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
-        Serial.println("Ignore repeat");
-        return;
-    }
-    codeType = IrReceiver.decodedIRData.protocol;
-
-    if (codeType == UNKNOWN) {
-        Serial.println("Received unknown code, saving as raw");
-        codeLen = IrReceiver.results.rawlen - 1;
-        // To store raw codes:
-        // Drop first value (gap)
-        // Convert from ticks to microseconds
-        // Tweak marks shorter, and spaces longer to cancel out IR receiver distortion
-        for (uint16_t i = 1; i <= codeLen; i++) {
-            if (i % 2) {
-                // Mark
-                rawCodes[i - 1] = IrReceiver.results.rawbuf[i] * MICROS_PER_TICK - MARK_EXCESS_MICROS;
-                Serial.print(" m");
-            } else {
-                // Space
-                rawCodes[i - 1] = IrReceiver.results.rawbuf[i] * MICROS_PER_TICK + MARK_EXCESS_MICROS;
-                Serial.print(" s");
-            }
-            Serial.print(rawCodes[i - 1], DEC);
-        }
-        Serial.println();
-    } else {
-        IrReceiver.printResultShort(&Serial);
-        Serial.println();
-
-        codeValue = IrReceiver.results.value;
-        codeLen = IrReceiver.decodedIRData.numberOfBits;
-    }
-}
-
-void sendCode(bool aSendRepeat) {
-    if (codeType == NEC) {
-        if (aSendRepeat) {
-            IrSender.sendNEC(REPEAT, codeLen);
-            Serial.println("Sent NEC repeat");
-        } else {
-            IrSender.sendNEC(codeValue, codeLen);
-            Serial.print("Sent NEC ");
-            Serial.println(codeValue, HEX);
-        }
-    } else if (codeType == SONY) {
-        IrSender.sendSony(codeValue, codeLen);
-        Serial.print("Sent Sony ");
-        Serial.println(codeValue, HEX);
-    } else if (codeType == PANASONIC) {
-        IrSender.sendPanasonic(codeValue, codeLen);
-        Serial.print("Sent Panasonic");
-        Serial.println(codeValue, HEX);
-    } else if (codeType == JVC) {
-        IrSender.sendJVC(codeValue, codeLen, false);
-        Serial.print("Sent JVC");
-        Serial.println(codeValue, HEX);
-    } else if (codeType == RC5 || codeType == RC6) {
-        if (!aSendRepeat) {
-            // Flip the toggle bit for a new button press
-            toggle = 1 - toggle;
-        }
-        // Put the toggle bit into the code to send
-        codeValue = codeValue & ~(1 << (codeLen - 1));
-        codeValue = codeValue | (toggle << (codeLen - 1));
-        if (codeType == RC5) {
-            Serial.print("Sent RC5 ");
-            Serial.println(codeValue, HEX);
-            IrSender.sendRC5(codeValue, codeLen);
-        } else {
-            IrSender.sendRC6(codeValue, codeLen);
-            Serial.print("Sent RC6 ");
-            Serial.println(codeValue, HEX);
-        }
-    } else if (codeType == UNKNOWN /* i.e. raw */) {
-        // Assume 38 KHz
-        IrSender.sendRaw(rawCodes, codeLen, 38);
-        Serial.println("Sent raw");
-    }
-}
-
-int lastButtonState;
-
 void loop() {
     // If button pressed, send the code.
     int buttonState = digitalRead(SEND_BUTTON_PIN); // Button pin is active LOW
@@ -174,3 +95,96 @@ void loop() {
     }
     lastButtonState = buttonState;
 }
+
+// Stores the code for later playback
+// Most of this code is just logging
+void storeCode() {
+    if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
+        Serial.println("Ignore repeat");
+        return;
+    }
+    if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
+        Serial.println("Ignore autorepeat");
+        return;
+    }
+    if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_PARITY_FAILED) {
+        Serial.println("Ignore parity error");
+        return;
+    }
+    /*
+     * Copy decoded data
+     */
+    sStoredIRData = IrReceiver.decodedIRData;
+
+    if (sStoredIRData.protocol == UNKNOWN) {
+        Serial.println("Received unknown code, saving as raw");
+        sSendRawCodeLength = IrReceiver.results.rawlen - 1;
+        // To store raw codes:
+        // Drop first value (gap)
+        // Convert from ticks to microseconds
+        // Tweak marks shorter, and spaces longer to cancel out IR receiver distortion
+        for (uint16_t i = 1; i <= sSendRawCodeLength; i++) {
+            if (i % 2) {
+                // Mark
+                rawCodes[i - 1] = IrReceiver.results.rawbuf[i] * MICROS_PER_TICK - MARK_EXCESS_MICROS;
+                Serial.print(" m");
+            } else {
+                // Space
+                rawCodes[i - 1] = IrReceiver.results.rawbuf[i] * MICROS_PER_TICK + MARK_EXCESS_MICROS;
+                Serial.print(" s");
+            }
+            Serial.print(rawCodes[i - 1], DEC);
+        }
+        Serial.println();
+    } else {
+        IrReceiver.printResultShort(&Serial);
+        sStoredIRData.flags = 0; // clear flags for later (not) printing
+        Serial.println();
+    }
+}
+
+void sendCode(bool aSendRepeat) {
+    if (sStoredIRData.protocol == UNKNOWN /* i.e. raw */) {
+        // Assume 38 KHz
+        IrSender.sendRaw(rawCodes, sSendRawCodeLength, 38);
+        Serial.println("Sent raw");
+    } else {
+
+        if (sStoredIRData.protocol == NEC) {
+            IrSender.sendNECStandard(sStoredIRData.address, sStoredIRData.command, true, 0, aSendRepeat);
+
+        } else if (sStoredIRData.protocol == SAMSUNG) {
+            IrSender.sendSamsungStandard(sStoredIRData.address, sStoredIRData.command, 0, aSendRepeat);
+
+        } else if (sStoredIRData.protocol == SONY) {
+            IrSender.sendSonyStandard(sStoredIRData.address, sStoredIRData.command, sStoredIRData.numberOfBits, 0);
+
+        } else if (sStoredIRData.protocol == PANASONIC) {
+            IrSender.sendPanasonicStandard(sStoredIRData.address, sStoredIRData.command, 0);
+
+        } else if (sStoredIRData.protocol == DENON) {
+            IrSender.sendDenonStandard(sStoredIRData.address, sStoredIRData.command, false, 0);
+
+        } else if (sStoredIRData.protocol == SHARP) {
+            IrSender.sendSharpStandard(sStoredIRData.address, sStoredIRData.command, 0);
+
+        } else if (sStoredIRData.protocol == SAMSUNG) {
+            IrSender.sendSamsungStandard(sStoredIRData.address, sStoredIRData.command, 0);
+
+        } else if (sStoredIRData.protocol == JVC) {
+            IrSender.sendJVCStandard(sStoredIRData.address, sStoredIRData.command, 0);
+
+        } else if (sStoredIRData.protocol == RC5 || sStoredIRData.protocol == RC6) {
+            // No toggle for repeats
+            if (sStoredIRData.protocol == RC5) {
+                IrSender.sendRC5Standard(sStoredIRData.address, sStoredIRData.command, !aSendRepeat, 0);
+            } else {
+                IrSender.sendRC6Standard(sStoredIRData.address, sStoredIRData.command, !aSendRepeat, 0);
+            }
+        }
+
+        Serial.print("Sent ");
+        IrReceiver.printResultShort(&Serial, &sStoredIRData);
+    }
+}
+
