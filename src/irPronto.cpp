@@ -45,7 +45,7 @@ static const unsigned int hexMask = 0xFU;
 static const uint32_t referenceFrequency = 4145146UL;
 static const uint16_t fallbackFrequency = 64767U; // To use with frequency = 0;
 static const uint32_t microsecondsInSeconds = 1000000UL;
-static const unsigned int RESULT_JUNK_COUNT = 1U;
+static const uint16_t PRONTO_DEFAULT_GAP = 45000;
 
 static unsigned int toFrequencyKHz(uint16_t code) {
     return ((referenceFrequency / code) + 500) / 1000;
@@ -106,7 +106,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, uint8_t numberO
     delay(durations[intros - 1] / 1000U); // equivalent to space(durations[intros - 1]); but allow bigger values for the gap
     for (unsigned int i = 0; i < numberOfRepeats; i++) {
         sendRaw(durations + intros, repeats - 1, khz);
-        if (i < numberOfRepeats - 1) { // skip last trailing space/gap, see above
+        if ((i + 1) < numberOfRepeats) { // skip last trailing space/gap, see above
             delay(durations[intros + repeats - 1] / 1000U);
         }
     }
@@ -130,22 +130,27 @@ void IRsend::sendPronto(const char *str, uint8_t numberOfRepeats) {
     sendPronto(data, len, numberOfRepeats);
 }
 
-#if HAS_FLASH_READ
+#if defined(__AVR__)
 void IRsend::sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats) {
-    size_t len = strlen_PF(STRCPY_PF_CAST(str));
+    size_t len = strlen_PF(str);
     char work[len + 1];
-    strncpy_PF(work, STRCPY_PF_CAST(str), len);
+    strncpy_PF(work, str, len);
     sendPronto(work, numberOfRepeats);
 }
-
-void IRsend::sendPronto_PF(const char *str, uint8_t numberOfRepeats) {
-    sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), numberOfRepeats); // to avoid infinite recursion
-}
-
-void IRsend::sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats) {
-    return sendPronto_PF(reinterpret_cast<uint_farptr_t>(str), numberOfRepeats);
+void IRsend::sendPronto_P(const char* str, uint8_t numberOfRepeats) {
+    size_t len = strlen_P(str);
+    char work[len + 1];
+    strncpy_P(work, str, len);
+    sendPronto(work, numberOfRepeats);
 }
 #endif
+
+void IRsend::sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats) {
+    size_t len = strlen_P(reinterpret_cast<const char*>(str));
+    char work[len + 1];
+    strncpy_P(work, reinterpret_cast<const char*>(str), len);
+    return sendPronto(work, numberOfRepeats);
+}
 
 static uint16_t effectiveFrequency(uint16_t frequency) {
     return frequency > 0 ? frequency : fallbackFrequency;
@@ -175,15 +180,27 @@ static void dumpNumber(Print *aSerial, uint16_t number) {
     aSerial->print(' ');
 }
 
-static void dumpDuration(Print *aSerial, uint16_t duration, uint16_t timebase) {
-    dumpNumber(aSerial, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
+static void dumpDuration(Print *aSerial, uint32_t duration, uint16_t timebase) {
+    dumpNumber(aSerial, (duration + timebase / 2) / timebase);
 }
 
+/*
+ * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
+ */
 static void dumpSequence(Print *aSerial, const volatile uint16_t *data, size_t length, uint16_t timebase) {
-    for (unsigned int i = 0; i < length; i++)
-        dumpDuration(aSerial, data[i], timebase);
+    for (uint8_t i = 0; i < length; i++) {
+        uint32_t tDuration = data[i] * MICROS_PER_TICK;
+        if (i & 1) {
+            // Mark
+            tDuration -= MARK_EXCESS_MICROS;
+        } else {
+            tDuration += MARK_EXCESS_MICROS;
+        }
+        dumpDuration(aSerial, tDuration, timebase);
+    }
 
-    dumpDuration(aSerial, _GAP, timebase);
+    // append a gap
+    dumpDuration(aSerial, PRONTO_DEFAULT_GAP, timebase);
 }
 
 /*
@@ -196,7 +213,7 @@ void IRrecv::dumpPronto(Print *aSerial, unsigned int frequency) {
     dumpNumber(aSerial, (results.rawlen + 1) / 2);
     dumpNumber(aSerial, 0);
     unsigned int timebase = toTimebase(frequency);
-    dumpSequence(aSerial, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
+    dumpSequence(aSerial, &results.rawbuf[1], results.rawlen - 1, timebase); // skip leading space
 }
 
 //+=============================================================================
@@ -232,18 +249,30 @@ static size_t dumpNumber(String *aString, uint16_t number) {
     return size;
 }
 
-static size_t dumpDuration(String *aString, uint16_t duration, uint16_t timebase) {
-    return dumpNumber(aString, (duration * MICROS_PER_TICK + timebase / 2) / timebase);
+/*
+ * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
+ */
+static size_t dumpDuration(String *aString, uint32_t duration, uint16_t timebase) {
+    return dumpNumber(aString, (duration + timebase / 2) / timebase);
 }
 
 static size_t dumpSequence(String *aString, const volatile uint16_t *data, size_t length, uint16_t timebase) {
 
     size_t size = 0;
 
-    for (unsigned int i = 0; i < length; i++)
-        size += dumpDuration(aString, data[i], timebase);
+    for (uint8_t i = 0; i < length; i++) {
+        uint32_t tDuration = data[i] * MICROS_PER_TICK;
+        if (i & 1) {
+            // Mark
+            tDuration -= MARK_EXCESS_MICROS;
+        } else {
+            tDuration += MARK_EXCESS_MICROS;
+        }
+        size += dumpDuration(aString, tDuration, timebase);
+    }
 
-    size += dumpDuration(aString, _GAP, timebase);
+    // append minimum gap
+    size += dumpDuration(aString, PRONTO_DEFAULT_GAP, timebase);
 
     return size;
 }
@@ -261,7 +290,7 @@ size_t IRrecv::dumpPronto(String *aString, unsigned int frequency) {
     size += dumpNumber(aString, toFrequencyCode(frequency));
     size += dumpNumber(aString, (results.rawlen + 1) / 2);
     size += dumpNumber(aString, 0);
-    size += dumpSequence(aString, results.rawbuf + RESULT_JUNK_COUNT, results.rawlen - RESULT_JUNK_COUNT, timebase);
+    size += dumpSequence(aString, &results.rawbuf[1], results.rawlen - 1, timebase); // skip leading space
 
     return size;
 }

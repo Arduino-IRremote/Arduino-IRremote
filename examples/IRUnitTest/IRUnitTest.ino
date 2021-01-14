@@ -25,7 +25,7 @@ void dump() {
         IrReceiver.printResultShort(&Serial);
 
         Serial.print(" (");
-        Serial.print(IrReceiver.results.bits, DEC);
+        Serial.print(IrReceiver.decodedIRData.numberOfBits, DEC);
         Serial.println(" bits)");
     }
     Serial.print("Raw (");
@@ -104,7 +104,7 @@ void verify(unsigned long val, unsigned int bits, unsigned int type) {
     IrReceiver.decode();
     Serial.print("Testing ");
     Serial.print(val, HEX);
-    if (IrReceiver.results.value == val && IrReceiver.results.bits == bits && IrReceiver.decodedIRData.protocol == type) {
+    if (IrReceiver.results.value == val && IrReceiver.decodedIRData.numberOfBits == bits && IrReceiver.decodedIRData.protocol == type) {
         Serial.println(": OK");
     } else {
         Serial.println(": Error");

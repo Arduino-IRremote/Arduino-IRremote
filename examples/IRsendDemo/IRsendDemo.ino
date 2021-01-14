@@ -65,6 +65,15 @@ void loop() {
     IrSender.sendNECStandard(sAddress, sCommand, true, sRepeats);
     delay(2000);
 
+    Serial.println(F("Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats"));
+    IrSender.sendPronto(F("0000 006D 0022 0000 015E 00AB " /* Pronto header + start bit */
+            "0017 0015 0017 0015 0017 0017 0015 0017 0017 0015 0017 0015 0017 0015 0017 003F " /* Lower address byte */
+            "0017 003F 0017 003E 0017 003F 0015 003F 0017 003E 0017 003F 0017 003E 0017 0015 " /* Upper address byte (inverted at 8 bit mode) */
+            "0017 003E 0017 0015 0017 003F 0017 0015 0017 0015 0017 0015 0017 003F 0017 0015 " /* command byte */
+            "0019 0013 0019 003C 0017 0015 0017 003F 0017 003E 0017 003F 0017 0015 0017 003E " /* inverted command byte */
+            "0017 0806"), 0); //stop bit, no repeat possible, because of missing repeat pattern
+    delay(2000);
+
     Serial.println(F("Send Panasonic"));
     IrSender.sendPanasonicStandard(sAddress, sCommand, sRepeats);
     delay(2000);

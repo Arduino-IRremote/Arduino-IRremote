@@ -68,14 +68,12 @@ void IRsend::sendBoseWaveStandard(uint8_t aCommand, uint8_t aNumberOfRepeats) {
 
 //+=============================================================================
 bool IRrecv::decodeBoseWave() {
-    uint8_t tOffset = 1;  // Index in to results; Skip first space.
 
     // Check header "mark"
-    if (!MATCH_MARK(results.rawbuf[tOffset], BOSEWAVE_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[1], BOSEWAVE_HEADER_MARK)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
-    tOffset++;
 
     // Check we have enough data +4 for initial gap, start bit mark and space + stop bit mark
     if (results.rawlen != (2 * BOSEWAVE_BITS) + 4) {
@@ -86,21 +84,20 @@ bool IRrecv::decodeBoseWave() {
         return false;
     }
     // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[tOffset], BOSEWAVE_HEADER_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[2], BOSEWAVE_HEADER_SPACE)) {
         DBG_PRINT("Bose: ");
         DBG_PRINTLN("Header space length is wrong");
         return false;
     }
-    tOffset++;
 
-    if (!decodePulseDistanceData(BOSEWAVE_BITS, tOffset, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_ZERO_SPACE, false)) {
+    if (!decodePulseDistanceData(BOSEWAVE_BITS, 3, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_ZERO_SPACE, false)) {
         DBG_PRINT("Bose: ");
         DBG_PRINTLN("Decode failed");
         return false;
     }
 
     // Stop bit
-    if (!MATCH_MARK(results.rawbuf[tOffset + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[3 + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {
         DBG_PRINT("Bose: ");
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
@@ -111,7 +108,7 @@ bool IRrecv::decodeBoseWave() {
     uint8_t tCommandNotInverted = tDecodedValue & 0xFF;
     uint8_t tCommandInverted = tDecodedValue >> 8;
     // parity check for command. Use this variant to avoid compiler warning "comparison of promoted ~unsigned with unsigned [-Wsign-compare]"
-        if ((tCommandNotInverted ^ tCommandInverted) != 0xFF) {
+    if ((tCommandNotInverted ^ tCommandInverted) != 0xFF) {
         DBG_PRINT("Bose: ");
         DBG_PRINT("Command and inverted command check failed");
         return false;

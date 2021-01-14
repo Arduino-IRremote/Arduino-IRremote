@@ -190,7 +190,7 @@ void dumpPulseParams() {
 
 void dumpSignalParams() {
     Serial.print(F("Minimum Gap between IR Signals: "));
-    Serial.print(_GAP);
+    Serial.print(RECORD_GAP_MICROS);
     Serial.println(F(" uSecs"));
 }
 

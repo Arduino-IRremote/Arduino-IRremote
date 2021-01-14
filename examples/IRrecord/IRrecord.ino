@@ -102,7 +102,7 @@ void storeCode() {
         Serial.println();
 
         codeValue = IrReceiver.results.value;
-        codeLen = IrReceiver.results.bits;
+        codeLen = IrReceiver.decodedIRData.numberOfBits;
     }
 }
 

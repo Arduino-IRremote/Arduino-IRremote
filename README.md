@@ -33,7 +33,8 @@ This is a quite old but maybe useful wiki for this library.
 In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors,
  [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
 - The default IR timer on AVR's is timer 2. Since the **Arduino Tone library** as well as **analogWrite() for pin 3 and pin 11** requires timer 2,
- this functionality cannot be used simultaneously. You can use tone() but after the tone has stopped, you must call IrReceiver.enableIRIn() to restore the timer settings for receive.
+ this functionality cannot be used simultaneously. You can use tone() but after the tone has stopped, you must call IrReceiver.enableIRIn() to restore the timer settings for receive.<br/>
+If you can live with the NEC protocol, you can try the MinimalReceiver example, it requires no timer.
 - You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
  The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
  This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.

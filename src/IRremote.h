@@ -156,7 +156,7 @@ struct decode_results {
     decode_type_t decode_type; // deprecated ///< UNKNOWN, NEC, SONY, RC5, ...
 //    uint16_t address;           ///< Used by Panasonic & Sharp & NEC_standard [16-bits]
     uint32_t value;             ///< Decoded value / command [max 32-bits]
-    uint8_t bits;               // deprecated ///< Number of bits in decoded value
+    uint8_t bits;               // deprecated - only for backwards compatibility ///< Number of bits in decoded value
 #if DECODE_MAGIQUEST
     uint16_t magnitude;         ///< Used by MagiQuest [16-bits]
 #endif
@@ -297,7 +297,7 @@ public:
 private:
     bool decodeHash();
     bool decodeHash(decode_results *aResults);
-    unsigned int compare(unsigned int oldval, unsigned int newval);
+    uint8_t compare(unsigned int oldval, unsigned int newval);
 
     //......................................................................
     /**
@@ -399,7 +399,7 @@ class IRsend {
 public:
 #if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
     IRsend(int pin = IR_SEND_PIN) {
-      sendPin = pin;
+        sendPin = pin;
     }
 #else
     IRsend() {
@@ -543,17 +543,17 @@ public:
 
     void sendPronto(const uint16_t *data, unsigned int length, uint8_t numberOfRepeats = 0);
 
-#if HAS_FLASH_READ || defined(DOXYGEN)
-    void sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats = 0);
-
+#if defined(__AVR__)
     /**
      * Version of sendPronto that reads from PROGMEM, saving RAM memory.
      * @param pronto C type string (null terminated) containing a Pronto Hex representation.
      * @param times Number of times to send the signal.
      */
-    void sendPronto_PF(const char *str, uint8_t numberOfRepeats = 0);
-    void sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats = 0);
+    void sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats = 0);
+    void sendPronto_P(const char* str, uint8_t numberOfRepeats);
 #endif
+
+    void sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats = 0);
 
     //......................................................................
     // Template functions :-)

@@ -140,7 +140,7 @@ bool IRrecv::decodeMagiQuest() {
 
     // Success
     decodedIRData.protocol = MAGIQUEST;
-    results.bits = offset / 2;
+    decodedIRData.numberOfBits = offset / 2;
     results.value = data.cmd.wand_id;
     results.magnitude = data.cmd.magnitude;
     decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;

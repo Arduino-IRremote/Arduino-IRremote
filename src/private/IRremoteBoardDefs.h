@@ -23,14 +23,6 @@
 #ifndef IRremoteBoardDefs_h
 #define IRremoteBoardDefs_h
 
-#ifdef ARDUINO_ARCH_AVR
-#include <avr/pgmspace.h>
-#define HAS_FLASH_READ 1
-#define STRCPY_PF_CAST(x) (x)
-#else
-#define HAS_FLASH_READ 0
-#endif
-
 // Define some defaults, that some boards may like to override
 // (This is to avoid negative logic, ! DONT_... is just awkward.)
 

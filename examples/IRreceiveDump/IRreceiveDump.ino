@@ -58,14 +58,14 @@ void loop() {
             Serial.println();
             IrReceiver.printResultShort(&Serial);
             Serial.println();
-            Serial.println(F("Result in internal ticks (50 us) - with leading gap"));
+            Serial.println(F("Raw result in internal ticks (50 us) - with leading gap"));
             IrReceiver.printIRResultRawFormatted(&Serial, false); // Output the results in RAW format
-            Serial.println(F("Result in microseconds - with leading gap"));
+            Serial.println(F("Raw result in microseconds - with leading gap"));
             IrReceiver.printIRResultRawFormatted(&Serial, true);  // Output the results in RAW format
             Serial.println();                               // blank line between entries
-            Serial.println(F("Result as internal ticks (50 us) array - always without leading gap"));
+            Serial.println(F("Result as internal ticks (50 us) array - compensated with MARK_EXCESS_MICROS"));
             IrReceiver.printIRResultAsCArray(&Serial, false);   // Output the results as uint8_t source code array of ticks
-            Serial.println(F("Result as microseconds array - with leading gap for IRremote versions 2.*"));
+            Serial.println(F("Result as microseconds array - compensated with MARK_EXCESS_MICROS"));
             IrReceiver.printIRResultAsCArray(&Serial, true);    // Output the results as uint16_t source code array of micros
             IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
 

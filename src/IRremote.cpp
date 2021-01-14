@@ -168,7 +168,7 @@ ISR (TIMER_INTR_NAME) {
     if (irparams.rcvstate == IR_REC_STATE_IDLE) { // In the middle of a gap
         if (irdata == MARK) {
             // check if we did not start in the middle of an command by checking the minimum length of leading space
-            if (irparams.timer > GAP_TICKS) {
+            if (irparams.timer > RECORD_GAP_TICKS) {
                 // Gap just ended; Record gap duration + start recording transmission
                 // Initialize all state machine variables
                 irparams.overflow = false;
@@ -203,7 +203,7 @@ ISR (TIMER_INTR_NAME) {
             irparams.timer = 0;
             irparams.rcvstate = IR_REC_STATE_MARK;
 
-        } else if (irparams.timer > GAP_TICKS) {
+        } else if (irparams.timer > RECORD_GAP_TICKS) {
             /*
              * A long Space, indicates gap between codes
              * Switch to IR_REC_STATE_STOP, which means current code is ready for processing

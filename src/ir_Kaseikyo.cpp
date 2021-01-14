@@ -256,7 +256,7 @@ bool IRrecv::decodePanasonic() {
     }
 
     decodedIRData.protocol = PANASONIC;
-    results.bits = KASEIKYO_BITS;
+    decodedIRData.numberOfBits = KASEIKYO_BITS;
 
     return true;
 }

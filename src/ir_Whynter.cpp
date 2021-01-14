@@ -71,7 +71,7 @@ bool IRrecv::decodeWhynter() {
     }
 
     // Success
-    results.bits = WHYNTER_BITS;
+    decodedIRData.numberOfBits = WHYNTER_BITS;
     decodedIRData.protocol = WHYNTER;
     decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;

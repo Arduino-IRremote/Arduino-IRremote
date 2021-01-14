@@ -90,10 +90,10 @@ extern struct irparams_struct irparams;
 #define UTOL            (100 + TOLERANCE)
 
 /** Minimum gap between IR transmissions, in microseconds */
-#define _GAP            5000
+#define RECORD_GAP_MICROS   5000 // Nec header space is 4500
 
 /** Minimum gap between IR transmissions, in MICROS_PER_TICK */
-#define GAP_TICKS       (_GAP/MICROS_PER_TICK)
+#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK)
 
 //#define TICKS_LOW(us)   ((int)(((us)*LTOL/MICROS_PER_TICK)))
 //#define TICKS_HIGH(us)  ((int)(((us)*UTOL/MICROS_PER_TICK + 1)))

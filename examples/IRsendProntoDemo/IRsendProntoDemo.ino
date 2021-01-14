@@ -1,14 +1,8 @@
-// Activate this, if you want to send from FLASH
-#define VAR_IN_PROGMEM
-
 #define NUMBER_OF_REPEATS 3U
 
 #include <IRremote.h>
 
-const char yamahaVolDown[]
-#if defined(VAR_IN_PROGMEM) && HAS_FLASH_READ
-PROGMEM
-#endif
+const char yamahaVolDown[] PROGMEM
 = "0000 006C 0022 0002 015B 00AD " /* Pronto header + start bit */
         "0016 0016 0016 0041 0016 0016 0016 0041 0016 0041 0016 0041 0016 0041 0016 0016 " /* Lower address byte */
         "0016 0041 0016 0016 0016 0041 0016 0016 0016 0016 0016 0016 0016 0016 0016 0041 " /* Upper address byte (inverted at 8 bit mode) */
@@ -32,29 +26,27 @@ void setup() {
 
 void loop() {
 
-#if defined(VAR_IN_PROGMEM) && HAS_FLASH_READ
-    Serial.println(F("Sending NEC from PROGMEM"));
-    irsend.sendPronto_PF(yamahaVolDown, NUMBER_OF_REPEATS);
+#if defined(__AVR__)
+    Serial.println(F("Sending NEC from PROGMEM: address 0x85, data 0x1B"));
+    irsend.sendPronto_P(yamahaVolDown, NUMBER_OF_REPEATS);
 #else
     Serial.println(F("Sending from normal memory"));
     irsend.sendPronto(yamahaVolDown, NUMBER_OF_REPEATS);
 #endif
 
     delay(2000);
-#if HAS_FLASH_READ
-    Serial.println(F("Sending the same NEC using the F()-form"));
+    Serial.println(F("Sending the NEC from PROGMEM using the F()-form: address 0x5, data 0x1A"));
     irsend.sendPronto(F("0000 006C 0022 0002 015B 00AD " /* Pronto header + start bit */
-            "0016 0016 0016 0041 0016 0016 0016 0041 0016 0041 0016 0041 0016 0041 0016 0016 " /* Lower address byte */
-            "0016 0041 0016 0016 0016 0041 0016 0016 0016 0016 0016 0016 0016 0016 0016 0041 " /* Upper address byte (inverted at 8 bit mode) */
-            "0016 0041 0016 0041 0016 0016 0016 0041 0016 0041 0016 0016 0016 0016 0016 0016 " /* command byte */
-            "0016 0016 0016 0016 0016 0041 0016 0016 0016 0016 0016 0041 0016 0041 0016 0041 0016 05F7 " /* inverted command byte + stop bit */
+            "0016 0016 0016 0041 0016 0016 0016 0041 0016 0041 0016 0041 0016 0041 0016 0041 " /* Lower address byte */
+            "0016 0041 0016 0016 0016 0041 0016 0016 0016 0016 0016 0016 0016 0016 0016 0016 " /* Upper address byte (inverted at 8 bit mode) */
+            "0016 0016 0016 0041 0016 0016 0016 0041 0016 0041 0016 0016 0016 0016 0016 0016 " /* command byte */
+            "0016 0041 0016 0016 0016 0041 0016 0016 0016 0016 0016 0041 0016 0041 0016 0041 0016 05F7 " /* inverted command byte + stop bit */
             "015B 0057 0016 0E6C"), /* NEC repeat pattern*/
     NUMBER_OF_REPEATS);
     delay(2000);
-#endif
 
     // send Nec code aquired by IRreceiveDump.cpp
-    Serial.println(F("Sending Nec: address 0xFF00, data 0x15"));
+    Serial.println(F("Sending NEC from RAM: address 0xFF00, data 0x15"));
     // 006D -> 38029 Hz
     irsend.sendPronto("0000 006D 0022 0000 015C 00AB " /* Pronto header + start bit */
             "0017 0015 0017 0015 0017 0015 0017 0015 0017 0015 0017 0015 0017 0015 0017 0015 " /* Lower address byte */
