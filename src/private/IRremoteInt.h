@@ -78,14 +78,6 @@ extern struct irparams_struct irparams;
 // Pulse parameters in uSec
 //
 
-/**
- * When received, marks  tend to be too long and spaces tend to be too short.
- * To compensate for this, MARK_EXCESS_MICROS is subtracted from all marks, and added to all spaces.
- * If you set MARK_EXCESS to approx. 50us then the TSOP4838 works best.
- * At 100us it also worked, but not as well.
- * Set MARK_EXCESS to 100us and the VS1838 doesn't work at all.
- */
-#define MARK_EXCESS_MICROS    50
 
 /** Relative tolerance (in percent) for some comparisons on measured data. */
 #define TOLERANCE       25

@@ -40,6 +40,16 @@
 #else
 //#define USE_STANDARD_DECODE // activate this to have the standard NEC and other decoders available.
 #endif
+
+/**
+ * When received, marks  tend to be too long and spaces tend to be too short.
+ * To compensate for this, MARK_EXCESS_MICROS is subtracted from all marks, and added to all spaces.
+ * If you set MARK_EXCESS to approx. 50us then the TSOP4838 works best.
+ * At 100us it also worked, but not as well.
+ * Set MARK_EXCESS to 100us and the VS1838 doesn't work at all.
+ */
+#define MARK_EXCESS_MICROS    50
+
 //------------------------------------------------------------------------------
 // Supported IR protocols
 // Each protocol you include costs memory and, during decode, costs time
@@ -399,8 +409,7 @@ public:
     void custom_delay_usec(unsigned long uSecs);
     void enableIROut(int khz);
     void sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
-            unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst = true, bool aSendStopBit =
-                    false);
+            unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst = true, bool aSendStopBit = false);
     void sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint8_t aNumberOfBits);
     void mark(uint16_t timeMicros);
     void mark_long(uint32_t timeMicros);
