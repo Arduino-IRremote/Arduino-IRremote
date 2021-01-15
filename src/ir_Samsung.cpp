@@ -42,8 +42,9 @@
 //             SSSS   A   A  M   M  SSSS    UUU   N   N   GGG
 //==============================================================================
 // see http://www.hifi-remote.com/wiki/index.php?title=DecodeIR#Samsung
+// https://www.mikrocontroller.net/articles/IRMP_-_english#SAMSUNG32
 // LSB first, 1 start bit + 16 bit address + 16,32,20 bit data + 1 stop bit.
-// repeats are like SAMSUNG but with 2 stop bits
+// repeats are like NEC but with 2 stop bits
 
 #define SAMSUNG_ADDRESS_BITS        16
 #define SAMSUNG_COMMAND16_BITS      16
@@ -79,7 +80,7 @@ void IRsend::sendSamsungRepeat() {
     interrupts();
 }
 
-void IRsend::sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
     if(aIsRepeat){
         sendSamsungRepeat();
         return;
@@ -100,7 +101,7 @@ void IRsend::sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aN
 
     // Command
 
-    // send 8 address bits and then 8 inverted address bits LSB first
+    // send 8 command bits and then 8 inverted command bits LSB first
     aCommand = aCommand & 0xFF;
     aCommand = ((~aCommand) << 8) | aCommand;
 
@@ -148,6 +149,9 @@ bool IRrecv::decodeSamsung() {
     }
 
     if (results.rawlen == (2 * SAMSUNG48_BITS) + 4) {
+        /*
+         * Samsung48
+         */
         // decode address
         if (!decodePulseDistanceData(SAMSUNG_ADDRESS_BITS, 3, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE, false)) {
             DBG_PRINT("Samsung: ");
@@ -164,7 +168,7 @@ bool IRrecv::decodeSamsung() {
         }
         LongUnion tValue;
         tValue.ULong = results.value;
-        // receive 2 * 8 bits then 8 inverted bits LSB first
+        // receive 2 * (8 bits then 8 inverted bits) LSB first
         if (tValue.UByte.HighByte != (uint8_t) (~tValue.UByte.MidHighByte)
                 && tValue.UByte.MidLowByte != (uint8_t) (~tValue.UByte.LowByte)) {
             decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
@@ -173,6 +177,9 @@ bool IRrecv::decodeSamsung() {
         decodedIRData.numberOfBits = SAMSUNG48_BITS;
 
     } else {
+        /*
+         * Samsung32
+         */
         if (!decodePulseDistanceData(SAMSUNG_BITS, 3, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE, false)) {
             DBG_PRINT("Samsung: ");
             DBG_PRINTLN("Decode failed");
@@ -251,10 +258,6 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
 #endif
 
 void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
-    sendSamsung(data, nbits);
-}
-
-void IRsend::sendSamsung(uint32_t aData, uint8_t aNumberOfBits) {
     // Set IR carrier frequency
     enableIROut(38);
 
@@ -263,5 +266,5 @@ void IRsend::sendSamsung(uint32_t aData, uint8_t aNumberOfBits) {
     space(SAMSUNG_HEADER_SPACE);
 
     // Data + stop bit
-    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aData, aNumberOfBits,true,true);
+    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits,true,true);
 }

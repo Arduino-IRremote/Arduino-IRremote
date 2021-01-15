@@ -7,6 +7,37 @@
  */
 #include <IRremote.h>
 
+
+    //......................................................................
+    //
+    //                       Bose Wave Radio CD Remote Control
+    //                    |-------------------------------------|
+    //                    |   On/Off        Sleep       VolUp   |
+    //                    |   Play/Pause    Stop       VolDown  |
+    //                    |      FM          AM          Aux    |
+    //                    |   Tune Down    Tune Up       Mute   |
+    //                    |       1           2           3     |
+    //                    |       4           5           6     |
+    //                    |-------------------------------------|
+#define BOSE_CMD_ON_OFF     0x00
+#define BOSE_CMD_MUTE       0x01
+#define BOSE_CMD_VOL_UP     0x02
+#define BOSE_CMD_VOL_DOWN   0x03
+#define BOSE_CMD_PRESET_6   0x04
+#define BOSE_CMD_SLEEP      0x05
+#define BOSE_CMD_FM         0x06
+#define BOSE_CMD_AUX        0x07
+#define BOSE_CMD_AM         0x08
+#define BOSE_CMD_PLAY_PAUSE 0x09
+#define BOSE_CMD_STOP       0x0A
+#define BOSE_CMD_TUNE_UP    0x0B
+#define BOSE_CMD_TUNE_DOWN  0x0C
+#define BOSE_CMD_PRESET_1   0x0D
+#define BOSE_CMD_PRESET_2   0x0E
+#define BOSE_CMD_PRESET_3   0x0F
+#define BOSE_CMD_PRESET_4   0x10
+#define BOSE_CMD_PRESET_5   0x11
+
 IRsend IrSender;
 
 // On the Zero and others we switch explicitly to SerialUSB
@@ -44,41 +75,41 @@ void loop() {
         if (answer == -1) {
             delay(300);
         } else if (answer == 48) {    // 0
-            IrSender.sendBoseWaveStandard(BOSE_CMD_ON_OFF);  // On/Off
+            IrSender.sendBoseWave(BOSE_CMD_ON_OFF);  // On/Off
         } else if (answer == 49) {    // 1
-            IrSender.sendBoseWaveStandard(BOSE_CMD_VOL_UP);  // Volume Up
+            IrSender.sendBoseWave(BOSE_CMD_VOL_UP);  // Volume Up
         } else if (answer == 50) {    // 2
-            IrSender.sendBoseWaveStandard(BOSE_CMD_VOL_DOWN);  // Volume Down
+            IrSender.sendBoseWave(BOSE_CMD_VOL_DOWN);  // Volume Down
         } else if (answer == 51) {    // 3
-            IrSender.sendBoseWaveStandard(BOSE_CMD_TUNE_UP);  // Tune Up
+            IrSender.sendBoseWave(BOSE_CMD_TUNE_UP);  // Tune Up
         } else if (answer == 52) {    // 4
-            IrSender.sendBoseWaveStandard(BOSE_CMD_TUNE_DOWN);  // Tune Down
+            IrSender.sendBoseWave(BOSE_CMD_TUNE_DOWN);  // Tune Down
         } else if (answer == 53) {    // 5
-            IrSender.sendBoseWaveStandard(BOSE_CMD_AM);  // AM
+            IrSender.sendBoseWave(BOSE_CMD_AM);  // AM
         } else if (answer == 54) {    // 6
-            IrSender.sendBoseWaveStandard(BOSE_CMD_FM);  // FM
+            IrSender.sendBoseWave(BOSE_CMD_FM);  // FM
         } else if (answer == 55) {    // 7
-            IrSender.sendBoseWaveStandard(BOSE_CMD_PRESET_1);  // Preset 1
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_1);  // Preset 1
         } else if (answer == 56) {    // 8
-            IrSender.sendBoseWaveStandard(BOSE_CMD_PRESET_2);  // Preset 2
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_2);  // Preset 2
         } else if (answer == 57) {    // 9
-            IrSender.sendBoseWaveStandard(BOSE_CMD_PRESET_3);  // Preset 3
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_3);  // Preset 3
         } else if (answer == 97) {    // a
-            IrSender.sendBoseWaveStandard(BOSE_CMD_PRESET_4);  // Preset 4
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_4);  // Preset 4
         } else if (answer == 98) {    // b
-            IrSender.sendBoseWaveStandard(BOSE_CMD_PRESET_5);  // Preset 5
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_5);  // Preset 5
         } else if (answer == 99) {    // c
-            IrSender.sendBoseWaveStandard(BOSE_CMD_PRESET_6);  // Preset 6
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_6);  // Preset 6
         } else if (answer == 100) {   // d
-            IrSender.sendBoseWaveStandard(BOSE_CMD_MUTE);  // Mute
+            IrSender.sendBoseWave(BOSE_CMD_MUTE);  // Mute
         } else if (answer == 101) {   // e
-            IrSender.sendBoseWaveStandard(BOSE_CMD_PLAY_PAUSE);  // Pause
+            IrSender.sendBoseWave(BOSE_CMD_PLAY_PAUSE);  // Pause
         } else if (answer == 102) {   // f
-            IrSender.sendBoseWaveStandard(BOSE_CMD_STOP);  // Stop
+            IrSender.sendBoseWave(BOSE_CMD_STOP);  // Stop
         } else if (answer == 103) {   // g
-            IrSender.sendBoseWaveStandard(BOSE_CMD_AUX);  // Aux
+            IrSender.sendBoseWave(BOSE_CMD_AUX);  // Aux
         } else if (answer == 104) {   // h
-            IrSender.sendBoseWaveStandard(BOSE_CMD_SLEEP);  // Sleep
+            IrSender.sendBoseWave(BOSE_CMD_SLEEP);  // Sleep
         } else {
             prompt = false;
         }

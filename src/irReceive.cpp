@@ -796,6 +796,13 @@ void IRrecv::printResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t 
         aSerial->print(F(" Command=0x"));
         aSerial->print(aDecodedDataPtr->command, HEX);
 
+#if defined(ENABLE_EXTRA_INFO)
+        if (aDecodedDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
+            aSerial->print(F(" Extra=0x"));
+            aSerial->print(aDecodedDataPtr->extra, HEX);
+        }
+#endif
+
         if (aDecodedDataPtr->flags & IRDATA_FLAGS_PARITY_FAILED) {
             aSerial->print(F(" Parity fail"));
         }
@@ -913,7 +920,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
  * Maximum is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
  * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
  */
-void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
+void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
     // Start declaration
     if (aOutputMicrosecondsInsteadOfTicks) {
         aSerial->print(F("uint16_t "));            // variable type
@@ -959,6 +966,31 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
 
 // Newline
     aSerial->println("");
+}
+
+/*
+ * Store the decode_results structure to be used for sendRaw().
+ * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
+ *
+ * Maximum foruint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
+ * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
+ */
+void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
+
+// Store data, skip leading space
+    for (unsigned int i = 1; i < results.rawlen; i++) {
+        uint32_t tDuration = results.rawbuf[i] * MICROS_PER_TICK;
+        if (i & 1) {
+            // Mark
+            tDuration -= MARK_EXCESS_MICROS;
+        } else {
+            tDuration += MARK_EXCESS_MICROS;
+        }
+
+        uint16_t tTicks = (tDuration + (MICROS_PER_TICK / 2)) / MICROS_PER_TICK;
+        *aArrayPtr = (tTicks > 0xFF) ? 0xFF : tTicks; // safety net
+        aArrayPtr++;
+    }
 }
 
 void IRrecv::printIRResultAsCVariables(Print *aSerial) {

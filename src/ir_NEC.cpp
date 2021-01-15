@@ -83,8 +83,8 @@ void IRsend::sendNECRepeat() {
  * https://www.sbprojects.net/knowledge/ir/nec.php
  * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
  */
-void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16AddressBits, uint8_t aNumberOfRepeats, bool aIsRepeat) {
-    if(aIsRepeat){
+void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+    if (aIsRepeat) {
         sendNECRepeat();
         return;
     }
@@ -96,8 +96,8 @@ void IRsend::sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16Add
     mark(NEC_HEADER_MARK);
     space(NEC_HEADER_SPACE);
     // Address 16 bit LSB first
-    if (!send16AddressBits) {
-        // send 8 address bits and then 8 inverted address bits LSB first
+    if ((aAddress & 0xFF00) == 0) {
+        // assume 8 bit address -> send 8 address bits and then 8 inverted address bits LSB first
         aAddress = aAddress & 0xFF;
         aAddress = ((~aAddress) << 8) | aAddress;
     }

@@ -46,7 +46,7 @@ void setup() {
  * so the uint16_t format has exact the same resolution but requires double space.
  * With the uint16_t format, you are able to modify the timings to meet the standards,
  * e.g. use 560 (instead of 11 * 50) for NEC or use 432 for Panasonic. But in this cases,
- * you better use the timing generation functions e.g. sendNECStandard() directly.
+ * you better use the timing generation functions e.g. sendNEC() directly.
  */
 const uint8_t irSignalP[] PROGMEM
 = { 180, 90 /*Start bit*/, 11, 11, 11, 11, 11, 34, 11, 34/*0011 0xC of address LSB first*/, 11, 11, 11, 11, 11, 11, 11, 11/*0000*/,
@@ -83,7 +83,7 @@ void loop() {
     delay(1000);
 
     Serial.println(F("Send NEC 16 bit address 0x0102, 8 bit data 0x34 with generated timing"));
-    IrSender.sendNECStandard(0x0102, 0x34, true, 0);
+    IrSender.sendNEC(0x0102, 0x34, true, 0);
 
     delay(3000);
 }

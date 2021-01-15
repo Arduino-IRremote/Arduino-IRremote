@@ -75,12 +75,12 @@
 #define DENON_HEADER_SPACE      (3 * DENON_UNIT) // 780 // The lenght of the Header:Space
 
 //+=============================================================================
-void IRsend::sendSharpStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
-    sendDenonStandard(aAddress, aCommand, true, aNumberOfRepeats);
+void IRsend::sendSharp(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
+    sendDenon(aAddress, aCommand, aNumberOfRepeats, true);
 }
 
 //+=============================================================================
-void IRsend::sendDenonStandard(uint8_t aAddress, uint8_t aCommand, bool aSendSharp, uint8_t aNumberOfRepeats) {
+void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp) {
     // Set IR carrier frequency
     enableIROut(38);
 
@@ -240,5 +240,5 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
 }
 
 void IRsend::sendSharp(unsigned int aAddress, unsigned int aCommand) {
-    sendDenonStandard(aAddress, aCommand, true, 0);
+    sendDenon(aAddress, aCommand, true, 0);
 }

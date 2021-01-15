@@ -64,9 +64,9 @@ void loop() {
             IrReceiver.printIRResultRawFormatted(&Serial, true);  // Output the results in RAW format
             Serial.println();                               // blank line between entries
             Serial.println(F("Result as internal ticks (50 us) array - compensated with MARK_EXCESS_MICROS"));
-            IrReceiver.printIRResultAsCArray(&Serial, false);   // Output the results as uint8_t source code array of ticks
+            IrReceiver.compensateAndPrintIRResultAsCArray(&Serial, false);   // Output the results as uint8_t source code array of ticks
             Serial.println(F("Result as microseconds array - compensated with MARK_EXCESS_MICROS"));
-            IrReceiver.printIRResultAsCArray(&Serial, true);    // Output the results as uint16_t source code array of micros
+            IrReceiver.compensateAndPrintIRResultAsCArray(&Serial, true);    // Output the results as uint16_t source code array of micros
             IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
 
             IrReceiver.printIRResultAsPronto(&Serial);

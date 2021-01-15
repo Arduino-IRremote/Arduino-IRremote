@@ -81,7 +81,7 @@
  * Send with LSB first
  * Address is sub-device << 8 + device
  */
-void IRsend::sendKaseikyoStandard(uint16_t aAddress, uint8_t aCommand, uint16_t aVendorCode, uint8_t aNumberOfRepeats) {
+void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, uint16_t aVendorCode) {
     // Set IR carrier frequency
     enableIROut(37); // 36.7kHz is the correct frequency
 
@@ -122,8 +122,8 @@ void IRsend::sendKaseikyoStandard(uint16_t aAddress, uint8_t aCommand, uint16_t 
     }
 }
 
-void IRsend::sendPanasonicStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
-    sendKaseikyoStandard(aAddress, aCommand, PANASONIC_VENDOR_ID_CODE, aNumberOfRepeats);
+void IRsend::sendPanasonic(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
+    sendKaseikyo(aAddress, aCommand, aNumberOfRepeats, PANASONIC_VENDOR_ID_CODE);
 }
 
 /*
@@ -176,7 +176,8 @@ bool IRrecv::decodeKaseikyo() {
     tVendorParity = (tVendorParity ^ (tVendorParity >> 4)) & 0xF;
 
     // decode address (device and subdevice) + command + parity
-    if (!decodePulseDistanceData(KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
+    if (!decodePulseDistanceData(
+    KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
             3 + (2 * KASEIKYO_VENDOR_ID_BITS), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
             KASEIKYO_ZERO_SPACE, false)) {
         DBG_PRINT("Kaseikyo: ");
@@ -201,8 +202,11 @@ bool IRrecv::decodeKaseikyo() {
     }
 
     if (tProtocol == KASEIKYO) {
+        decodedIRData.flags |= IRDATA_FLAGS_EXTRA_INFO;
+#if defined(ENABLE_EXTRA_INFO)
         // Include vendor ID in address
-        decodedIRData.address |= ((uint32_t) tVendorId) << KASEIKYO_ADDRESS_BITS;
+        decodedIRData.extra |= tVendorId;
+#endif
     }
 
     if (tValue.UByte.HighByte != tParity) {

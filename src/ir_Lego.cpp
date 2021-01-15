@@ -59,27 +59,29 @@
 // Supported Devices
 // LEGO Power Functions IR Receiver 8884
 
-// MSB first, 1 start bit + 8 bit control + 4 bit data + 4 bit parity + 1 stop bit.
-#define LEGO_CONTROL_BITS        8
-#define LEGO_COMMAND_BITS        4
-#define LEGO_PARITY_BITS         4
+// MSB first, 1 start bit + 4 bit channel, 4 bit mode + 4 bit command + 4 bit parity + 1 stop bit.
+#define LEGO_CHANNEL_BITS       4
+#define LEGO_MODE_BITS          4
+#define LEGO_COMMAND_BITS       4
+#define LEGO_PARITY_BITS        4
 
-#define LEGO_BITS                (LEGO_CONTROL_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)
+#define LEGO_BITS               (LEGO_CHANNEL_BITS + LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)
 
-#define LEGO_HEADER_MARK         158    //  6 cycles
-#define LEGO_HEADER_SPACE        1026   // 39 cycles
+#define LEGO_HEADER_MARK        158    //  6 cycles
+#define LEGO_HEADER_SPACE       1026   // 39 cycles
 
-#define LEGO_BIT_MARK            158    //  6 cycles
-#define LEGO_ONE_SPACE           553    // 21 cycles
-#define LEGO_ZERO_SPACE          263    // 10 cycles
+#define LEGO_BIT_MARK           158    //  6 cycles
+#define LEGO_ONE_SPACE          553    // 21 cycles
+#define LEGO_ZERO_SPACE         263    // 10 cycles
 
-#define LEGO_AVERAGE_DURATION    11000 // LEGO_HEADER_MARK + LEGO_HEADER_SPACE  + 16 * 600 + 158
+#define LEGO_AVERAGE_DURATION   11000 // LEGO_HEADER_MARK + LEGO_HEADER_SPACE  + 16 * 600 + 158
 
 #define LEGO_AUTO_REPEAT_PERIOD_MIN 110000 // Every frame is auto repeated 5 times.
 #define LEGO_AUTO_REPEAT_PERIOD_MAX 230000 // space for channel 3
 
-//+=============================================================================
-//
+/*
+ * Mode is stored in the upper nibble of command
+ */
 bool IRrecv::decodeLegoPowerFunctions() {
 
     // Check header "mark"
@@ -118,14 +120,14 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     // Success
     uint16_t tDecodedValue = results.value;
-    uint8_t tToggleEscapeChannel = tDecodedValue >> 12;
-    uint8_t tModeAddress = (tDecodedValue >> 8) & 0xF;
-    uint8_t tData = (tDecodedValue >> 4) & 0xF; // lego calls this field "data"
+    uint8_t tToggleEscapeChannel = tDecodedValue >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS);
+    uint8_t tMode = (tDecodedValue >> (LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0xF;
+    uint8_t tData = (tDecodedValue >> LEGO_PARITY_BITS) & 0xF; // lego calls this field "data"
     uint8_t tParityReceived = tDecodedValue & 0xF;
 
     // This is parity as defined in the specifications
     // But in some scans I saw 0x9 ^ .. as parity formula
-    uint8_t tParityComputed = 0xF ^ tToggleEscapeChannel ^ tModeAddress ^ tData;
+    uint8_t tParityComputed = 0xF ^ tToggleEscapeChannel ^ tMode ^ tData;
 
     // parity check
     if (tParityReceived != tParityComputed) {
@@ -139,7 +141,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
         DBG_PRINT(", 3 nibbles are 0x");
         DBG_PRINT(tToggleEscapeChannel, HEX);
         DBG_PRINT(", 0x");
-        DBG_PRINT(tModeAddress, HEX);
+        DBG_PRINT(tMode, HEX);
         DBG_PRINT(", 0x");
         DBG_PRINTLN(tData, HEX);
         // might not be an error, so just continue
@@ -152,8 +154,8 @@ bool IRrecv::decodeLegoPowerFunctions() {
     if (results.rawbuf[0] < (LEGO_AUTO_REPEAT_PERIOD_MAX / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_AUTO_REPEAT;
     }
-    decodedIRData.address = tDecodedValue >> 8;
-    decodedIRData.command = tData;
+    decodedIRData.address = tToggleEscapeChannel;
+    decodedIRData.command = tData | tMode << LEGO_COMMAND_BITS;
     decodedIRData.protocol = LEGO_PF;
     decodedIRData.numberOfBits = LEGO_BITS;
 
@@ -165,7 +167,7 @@ void logFunctionParameters(uint16_t data, bool repeat) {
     DBG_PRINT("sendLegoPowerFunctions(data=");
     DBG_PRINT(data);
     DBG_PRINT(", repeat=");
-    DBG_PRINTLN(repeat?"true)" : "false)");
+    DBG_PRINTLN(repeat ? "true)" : "false)");
 }
 } // anonymous namespace
 #endif // DEBUG
@@ -173,17 +175,19 @@ void logFunctionParameters(uint16_t data, bool repeat) {
 /*
  * Here toggle and escape bits are set to 0
  */
-void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aMode, uint8_t aCommand, bool aDoSend5Times) {
+void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t aMode, bool aDoSend5Times) {
     aChannel &= 0x0F; // allow toggle and escape bits too
     aCommand &= 0x0F;
     aMode &= 0x0F;
     uint8_t tParity = 0xF ^ aChannel ^ aMode ^ aCommand;
-    uint16_t tRawData = (((aChannel << 4) | aMode) << 8) | (aCommand << 4) | tParity;
+    // send 4 bit channel, 4 bit mode, 4 bit command, 4 bit parity
+    uint16_t tRawData = (((aChannel << LEGO_MODE_BITS) | aMode) << (LEGO_COMMAND_BITS + LEGO_PARITY_BITS))
+            | (aCommand << LEGO_PARITY_BITS) | tParity;
     sendLegoPowerFunctions(tRawData, aChannel, aDoSend5Times);
 }
 
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
-    sendLegoPowerFunctions(aRawData, (aRawData >> 12) & 0x3, aDoSend5Times);
+    sendLegoPowerFunctions(aRawData, (aRawData >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0x3, aDoSend5Times);
 }
 
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {

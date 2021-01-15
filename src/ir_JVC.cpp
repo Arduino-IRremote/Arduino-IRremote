@@ -65,7 +65,7 @@
 // JVC does NOT repeat by sending a separate code (like NEC does).
 // The JVC protocol repeats by skipping the header.
 //
-void IRsend::sendJVCStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
+void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
     // Set IR carrier frequency
     enableIROut(38);
 

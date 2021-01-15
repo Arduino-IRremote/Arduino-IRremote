@@ -148,7 +148,7 @@ The **durations** you receive are likely to be longer for marks and shorter for 
 but this depends on the receiver circuit in use. It's easy to be off-by-one with the last bit; the last space may be implicit.
 
 Try to make use of the template functions `decodePulseDistanceData()` and `sendPulseDistanceData()`.
-If your protocol supports address and code fields, try to reflect this in your api like it is done in [`sendNECStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats)`](https://github.com/z3t0/Arduino-IRremote/src/ir_NEC.cpp#L76) and [`decodeNECStandard()`](https://github.com/z3t0/Arduino-IRremote/src/ir_NEC.cpp#L165).<br/>
+If your protocol supports address and code fields, try to reflect this in your api like it is done in [`sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats)`](https://github.com/z3t0/Arduino-IRremote/src/ir_NEC.cpp#L76) and [`decodeNEC()`](https://github.com/z3t0/Arduino-IRremote/src/ir_NEC.cpp#L165).<br/>
 
 ### Integration
 To integrate your protocol, you need to extend the two functions `decode()` and `getProtocolString()` in *IRreceice.cpp*,

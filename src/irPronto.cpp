@@ -112,6 +112,23 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, uint8_t numberO
     }
 }
 
+/**
+ * Parse the string given as Pronto Hex, and send it a number of times given
+ * as the second argument. Thereby the division of the Pronto Hex into
+ * an intro-sequence and a repeat sequence is taken into account:
+ * First the intro sequence is sent, then the repeat sequence is sent times-1 times.
+ * However, if the intro sequence is empty, the repeat sequence is sent times times.
+ * <a href="http://www.harctoolbox.org/Glossary.html#ProntoSemantics">Reference</a>.
+ *
+ * Note: Using this function is very wasteful for the memory consumption on
+ * a small board.
+ * Normally it is a much better ide to use a tool like e.g. IrScrutinizer
+ * to transform Pronto type signals offline
+ * to a more memory efficient format.
+ *
+ * @param prontoHexString C type string (null terminated) containing a Pronto Hex representation.
+ * @param times Number of times to send the signal.
+ */
 void IRsend::sendPronto(const char *str, uint8_t numberOfRepeats) {
     size_t len = strlen(str) / (digitsInProntoNumber + 1) + 1;
     uint16_t data[len];
@@ -131,12 +148,20 @@ void IRsend::sendPronto(const char *str, uint8_t numberOfRepeats) {
 }
 
 #if defined(__AVR__)
+/**
+ * Version of sendPronto that reads from PROGMEM, saving RAM memory.
+ * @param pronto C type string (null terminated) containing a Pronto Hex representation.
+ * @param times Number of times to send the signal.
+ */
+//far pointer (? for ATMega2560 etc.)
 void IRsend::sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats) {
     size_t len = strlen_PF(str);
     char work[len + 1];
     strncpy_PF(work, str, len);
     sendPronto(work, numberOfRepeats);
 }
+
+//standard pointer
 void IRsend::sendPronto_P(const char* str, uint8_t numberOfRepeats) {
     size_t len = strlen_P(str);
     char work[len + 1];
@@ -187,7 +212,7 @@ static void dumpDuration(Print *aSerial, uint32_t duration, uint16_t timebase) {
 /*
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
  */
-static void dumpSequence(Print *aSerial, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *data, size_t length, uint16_t timebase) {
     for (uint8_t i = 0; i < length; i++) {
         uint32_t tDuration = data[i] * MICROS_PER_TICK;
         if (i & 1) {
@@ -213,7 +238,7 @@ void IRrecv::dumpPronto(Print *aSerial, unsigned int frequency) {
     dumpNumber(aSerial, (results.rawlen + 1) / 2);
     dumpNumber(aSerial, 0);
     unsigned int timebase = toTimebase(frequency);
-    dumpSequence(aSerial, &results.rawbuf[1], results.rawlen - 1, timebase); // skip leading space
+    compensateAndDumpSequence(aSerial, &results.rawbuf[1], results.rawlen - 1, timebase); // skip leading space
 }
 
 //+=============================================================================
@@ -256,7 +281,7 @@ static size_t dumpDuration(String *aString, uint32_t duration, uint16_t timebase
     return dumpNumber(aString, (duration + timebase / 2) / timebase);
 }
 
-static size_t dumpSequence(String *aString, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+static size_t compensateAndDumpSequence(String *aString, const volatile uint16_t *data, size_t length, uint16_t timebase) {
 
     size_t size = 0;
 
@@ -290,7 +315,7 @@ size_t IRrecv::dumpPronto(String *aString, unsigned int frequency) {
     size += dumpNumber(aString, toFrequencyCode(frequency));
     size += dumpNumber(aString, (results.rawlen + 1) / 2);
     size += dumpNumber(aString, 0);
-    size += dumpSequence(aString, &results.rawbuf[1], results.rawlen - 1, timebase); // skip leading space
+    size += compensateAndDumpSequence(aString, &results.rawbuf[1], results.rawlen - 1, timebase); // skip leading space
 
     return size;
 }

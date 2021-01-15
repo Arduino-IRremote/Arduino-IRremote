@@ -66,7 +66,7 @@ bool sLastSendToggleValue = false;
 /*
  * If Command is >=64 then we switch automatically to RC5X
  */
-void IRsend::sendRC5Standard(uint8_t aAddress, uint8_t aCommand, bool aEnableAutomaticToggle, uint8_t aNumberOfRepeats) {
+void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
     // Set IR carrier frequency
     enableIROut(36);
 
@@ -306,7 +306,7 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
 /*
  * We do not wait for the minimal trailing space of 2666 us
  */
-void IRsend::sendRC6Standard(uint8_t aAddress, uint8_t aCommand, bool aEnableAutomaticToggle, uint8_t aNumberOfRepeats) {
+void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
 
     LongUnion tIRRawData;
     tIRRawData.UByte.LowByte = aCommand;
@@ -596,7 +596,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
 }
 
 /*
- * Not longer required, use sendRC5Standard instead
+ * Not longer required, use sendRC5 instead
  */
 void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
 // Set IR carrier frequency

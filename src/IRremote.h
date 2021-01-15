@@ -38,7 +38,7 @@
 #if VERSION_IRREMOTE_MAJOR > 2
 #define USE_STANDARD_DECODE
 #else
-//#define USE_STANDARD_DECODE // activate this to have the standard NEC and other decoders available.
+//#define USE_STANDARD_DECODE // enables the standard NEC and other decoders.
 #endif
 
 /**
@@ -48,7 +48,10 @@
  * At 100us it also worked, but not as well.
  * Set MARK_EXCESS to 100us and the VS1838 doesn't work at all.
  */
-#define MARK_EXCESS_MICROS    50
+#if !defined(MARK_EXCESS_MICROS)
+//#define MARK_EXCESS_MICROS    50
+#define MARK_EXCESS_MICROS    20 // recommended for the cheap VS1838 modules
+#endif
 
 //------------------------------------------------------------------------------
 // Supported IR protocols
@@ -78,12 +81,15 @@
 #define DECODE_WHYNTER      1
 #define DECODE_HASH         1 // special decoder for all protocols
 
+#if DECODE_MAGIQUEST
+#define ENABLE_EXTRA_INFO // for magnitude
+#endif
+
 /**
  * An enum consisting of all supported formats.
  * You do NOT need to remove entries from this list when disabling protocols!
  */
-typedef enum {
-    UNKNOWN = -1,
+typedef enum {    UNKNOWN = -1,
     UNUSED = 0,
     BOSEWAVE,
     DENON,
@@ -107,6 +113,29 @@ typedef enum {
     SONY,
     WHYNTER,
 } decode_type_t;
+
+/*
+ * Result required by an application
+ */
+#define IRDATA_FLAGS_EMPTY              0x00
+#define IRDATA_FLAGS_IS_REPEAT          0x01
+#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
+#define IRDATA_FLAGS_PARITY_FAILED      0x04 // the current (autorepeat) frame violated parity check
+#define IRDATA_TOGGLE_BIT_MASK          0x08
+#define IRDATA_FLAGS_EXTRA_INFO         0x10 // there is unexpected extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
+#define IRDATA_FLAGS_WAS_OVERFLOW       0x40
+#define IRDATA_FLAGS_IS_OLD_DECODER     0x80
+
+struct IRData {
+    decode_type_t protocol;     ///< UNKNOWN, NEC, SONY, RC5, ...
+    uint16_t address;           ///< Decoded address
+    uint16_t command;           ///< Decoded command
+#if defined(ENABLE_EXTRA_INFO)
+    uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID
+#endif
+    uint8_t numberOfBits;    ///< Number of bits received for data (address + command + parity + etc.) to determine protocol length.
+    uint8_t flags;              ///< See definitions above
+};
 
 //#define DEBUG // Activate this for lots of lovely debug output.
 //------------------------------------------------------------------------------
@@ -150,7 +179,7 @@ bool MATCH_SPACE(uint16_t measured_ticks, unsigned int desired_us);
  *                     RECEIVING
  ****************************************************/
 /**
- * Results returned from the decoder !!!deprecated!!!
+ * Results returned from old decoders !!!deprecated!!!
  */
 struct decode_results {
     decode_type_t decode_type; // deprecated ///< UNKNOWN, NEC, SONY, RC5, ...
@@ -162,32 +191,10 @@ struct decode_results {
 #endif
     bool isRepeat;         // deprecated              ///< True if repeat of value is detected
 
-    // next 3 values are copies of irparams values - see IRremoteint.h
+// next 3 values are copies of irparams values - see IRremoteint.h
     uint16_t *rawbuf;           ///< Raw intervals in 50uS ticks
     uint16_t rawlen;            ///< Number of records in rawbuf
     bool overflow;              // deprecated ///< true if IR raw code too long
-};
-
-/*
- * Result required by an application
- */
-#define IRDATA_FLAGS_EMPTY              0x00
-#define IRDATA_FLAGS_IS_REPEAT          0x01
-#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
-#define IRDATA_FLAGS_PARITY_FAILED      0x04 // the current (autorepeat) frame violated parity check
-#define IRDATA_TOGGLE_BIT_MASK          0x08
-#define IRDATA_FLAGS_WAS_OVERFLOW       0x10
-#define IRDATA_FLAGS_IS_OLD_DECODER     0x80
-
-struct IRData {
-    decode_type_t protocol;     ///< UNKNOWN, NEC, SONY, RC5, ...
-    uint32_t address;           ///< Decoded address
-    uint32_t command;           ///< Decoded command
-#if DECODE_MAGIQUEST
-    uint16_t extra;             ///< Used by MagiQuest [16-bits]
-#endif
-    uint8_t numberOfBits;       ///< Number of bits received for data (address + command + parity + etc.)
-    uint8_t flags;              ///< See definitions above
 };
 
 /**
@@ -262,12 +269,14 @@ public:
      */
     void initDecodedIRData();
 
+    void compensateAndStoreIRResultInArray(uint8_t *aArrayPtr);
+
     const char* getProtocolString();
     void printResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t aLeadingSpaceDuration = 0);
     void printResultShort(Print *aSerial);
     void printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
-    void printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
+    void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
     /**
      * Print the result (second argument) as Pronto Hex on the Stream supplied as argument.
@@ -300,7 +309,7 @@ private:
     bool decodeHash(decode_results *aResults);
     uint8_t compare(unsigned int oldval, unsigned int newval);
 
-    //......................................................................
+//......................................................................
     /**
      * Try to decode the recently received IR signal as an RC5 signal-
      * @param results decode_results instance returning the decode, if any.
@@ -312,62 +321,62 @@ private:
     bool decodeRC6();
     bool decodeRC6(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeNEC();
     bool decodeNEC(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeSony();
     bool decodeSony(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeKaseikyo();
 
     bool decodePanasonic();
     bool decodePanasonic(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeDenon();
     bool decodeDenon(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeSharp();
 
-    //......................................................................
+//......................................................................
     bool decodeJVC();
     bool decodeJVC(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeSamsung();
     bool decodeSAMSUNG();
     __attribute__ ((deprecated ("Renamed to decodeSamsung()"))); // deprecated
     bool decodeSAMSUNG(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeWhynter();
     bool decodeWhynter(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeLG();
     bool decodeLG(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeSanyo();
     bool decodeSanyo(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeLegoPowerFunctions();
 
-    //......................................................................
+//......................................................................
     bool decodeBoseWave();
     bool decodeBoseWave(decode_results *aResults);
 
-    //......................................................................
+//......................................................................
     bool decodeMagiQuest();
     bool decodeMagiQuest(decode_results *aResults);
 
-    //......................................................................
-    // Template functions :-)
+//......................................................................
+// Template functions :-)
     bool decodeShuzu();
 
 };
@@ -393,6 +402,7 @@ private:
  * If USE_SOFT_SEND_PWM, use spin wait instead of delayMicros().
  */
 //#define USE_SPIN_WAIT
+#define NO_REPEATS  0
 /**
  * Main class for sending IR
  */
@@ -407,162 +417,99 @@ public:
     }
 #endif
 
-    void custom_delay_usec(unsigned long uSecs);
     void enableIROut(int khz);
+
     void sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
             unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst = true, bool aSendStopBit = false);
     void sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint8_t aNumberOfBits);
+
     void mark(uint16_t timeMicros);
-    void mark_long(uint32_t timeMicros);
     void space(uint16_t timeMicros);
-    void space_long(uint32_t timeMicros);
+
+// 8 Bit array
     void sendRaw(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz);
     void sendRaw_P(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz);
 
+// 16 Bit array
     void sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz);
     void sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz);
 
-    //......................................................................
-    void sendRC5(uint32_t data, uint8_t nbits);
-    void sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle);
-    void sendRC5Standard(uint8_t aAddress, uint8_t aCommand, bool aEnableAutomaticToggle = true, uint8_t aNumberOfRepeats = 0);
-
-    void sendRC6(uint32_t data, uint8_t nbits);
-    void sendRC6(uint64_t data, uint8_t nbits);
-    void sendRC6Standard(uint8_t aAddress, uint8_t aCommand, bool aEnableAutomaticToggle = true, uint8_t aNumberOfRepeats = 0);
-
-    //......................................................................
-    void sendNECRepeat();
-    void sendNEC(uint32_t data, uint8_t nbits, bool repeat = false);
-    void sendNECStandard(uint16_t aAddress, uint8_t aCommand, bool send16AddressBits = false, uint8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
-    //......................................................................
-    void sendSony(unsigned long data, int nbits);
-    void sendSonyStandard(uint16_t aAddress, uint8_t aCommand, uint8_t numberOfBits, uint8_t aNumberOfRepeats = 0);
-
-    //......................................................................
+    /*
+     * Constants for some protocols
+     */
 #define PANASONIC_VENDOR_ID_CODE    0x2002
 #define SHARP_VENDOR_ID_CODE        0x5AAA
 #define DENON_VENDOR_ID_CODE        0x3254
 #define MITSUBISHI_VENDOR_ID_CODE   0xCB23
 #define JVC_VENDOR_ID_CODE          0x0103
-    void sendPanasonic(uint16_t aAddress, uint32_t aData);
-    void sendPanasonicStandard(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats); // LSB first
-    void sendKaseikyoStandard(uint16_t aAddress, uint8_t aData, uint16_t aVendorCode, uint8_t aNumberOfRepeats); // LSB first
 
-    //......................................................................
-    // JVC does NOT repeat by sending a separate code (like NEC does).
-    // The JVC protocol repeats by skipping the header.
-    void sendJVC(unsigned long data, int nbits, bool repeat = false);
-    void sendJVCStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
+#define SIRCS_12_PROTOCOL       12
+#define SIRCS_20_PROTOCOL       20
 
-    //......................................................................
-    void sendSAMSUNG(unsigned long data, int nbits) __attribute__ ((deprecated ("Renamed to sendSamsung()"))); // deprecated
-    void sendSamsung(uint32_t aData, uint8_t aNumberOfBits);
-    void sendSamsungRepeat();
-    void sendSamsungStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
-
-    //......................................................................
-    void sendWhynter(unsigned long data, int nbits);
-
-    //......................................................................
-    void sendLG(unsigned long data, int nbits);
-    void sendLGRepeat();
-    void sendLGStandard(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats);
-
-    //......................................................................
-    void sendDISH(unsigned long data, int nbits);
-
-    //......................................................................
-    void sendSharpRaw(unsigned long data, int nbits);
-    void sendSharp(unsigned int address, unsigned int command);
-    void sendSharpStandard(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats = 0);
-
-    //......................................................................
-    void sendDenon(unsigned long data, int nbits);
-    void sendDenonStandard(uint8_t aAddress, uint8_t aCommand, bool aSendSharp, uint8_t aNumberOfRepeats = 0);
-
-    //......................................................................
 #define LEGO_MODE_EXTENDED  0
 #define LEGO_MODE_COMBO     1
 #define LEGO_MODE_SINGLE    0x4 // here the 2 LSB have meanings like Output A / Output B
-    void sendLegoPowerFunctions(uint8_t aChannel, uint8_t aMode, uint8_t tCommand, bool aDoSend5Times = true);
+
+    /*
+     * New send functions
+     */
+    void sendBoseWave(uint8_t aCommand, uint8_t aNumberOfRepeats = NO_REPEATS);
+    void sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp = false);
+    void sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
+
+    void sendLGRepeat();
+    void sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
+    void sendNECRepeat();
+    void sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
+
+    void sendPanasonic(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats); // LSB first
+    void sendKaseikyo(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats, uint16_t aVendorCode); // LSB first
+
+    void sendRC5(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
+    void sendRC6(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
+    void sendSamsungRepeat();
+    void sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
+    void sendSharp(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats); // redirected to sendDenon
+    void sendSony(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, uint8_t numberOfBits = SIRCS_12_PROTOCOL);
+
+    void sendLegoPowerFunctions(uint8_t aChannel, uint8_t tCommand, uint8_t aMode, bool aDoSend5Times = true);
     void sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times = true);
     void sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times = true);
 
-    //......................................................................
-    //
-    //                       Bose Wave Radio CD Remote Control
-    //                    |-------------------------------------|
-    //                    |   On/Off        Sleep       VolUp   |
-    //                    |   Play/Pause    Stop       VolDown  |
-    //                    |      FM          AM          Aux    |
-    //                    |   Tune Down    Tune Up       Mute   |
-    //                    |       1           2           3     |
-    //                    |       4           5           6     |
-    //                    |-------------------------------------|
-#define BOSE_CMD_ON_OFF     0x00
-#define BOSE_CMD_MUTE       0x01
-#define BOSE_CMD_VOL_UP     0x02
-#define BOSE_CMD_VOL_DOWN   0x03
-#define BOSE_CMD_PRESET_6   0x04
-#define BOSE_CMD_SLEEP      0x05
-#define BOSE_CMD_FM         0x06
-#define BOSE_CMD_AUX        0x07
-#define BOSE_CMD_AM         0x08
-#define BOSE_CMD_PLAY_PAUSE 0x09
-#define BOSE_CMD_STOP       0x0A
-#define BOSE_CMD_TUNE_UP    0x0B
-#define BOSE_CMD_TUNE_DOWN  0x0C
-#define BOSE_CMD_PRESET_1   0x0D
-#define BOSE_CMD_PRESET_2   0x0E
-#define BOSE_CMD_PRESET_3   0x0F
-#define BOSE_CMD_PRESET_4   0x10
-#define BOSE_CMD_PRESET_5   0x11
-    void sendBoseWaveStandard(uint8_t aCommand, uint8_t aNumberOfRepeats = 0);
-
-    //......................................................................
     void sendMagiQuest(uint32_t wand_id, uint16_t magnitude);
 
-    /**
-     * Parse the string given as Pronto Hex, and send it a number of times given
-     * as the second argument. Thereby the division of the Pronto Hex into
-     * an intro-sequence and a repeat sequence is taken into account:
-     * First the intro sequence is sent, then the repeat sequence is sent times-1 times.
-     * However, if the intro sequence is empty, the repeat sequence is sent times times.
-     * <a href="http://www.harctoolbox.org/Glossary.html#ProntoSemantics">Reference</a>.
-     *
-     * Note: Using this function is very wasteful for the memory consumption on
-     * a small board.
-     * Normally it is a much better ide to use a tool like e.g. IrScrutinizer
-     * to transform Pronto type signals offline
-     * to a more memory efficient format.
-     *
-     * @param prontoHexString C type string (null terminated) containing a Pronto Hex representation.
-     * @param times Number of times to send the signal.
-     */
-    void sendPronto(const char *prontoHexString, uint8_t numberOfRepeats = 0);
-
-    void sendPronto(const uint16_t *data, unsigned int length, uint8_t numberOfRepeats = 0);
-
+    void sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats = NO_REPEATS);
+    void sendPronto(const char *prontoHexString, uint8_t numberOfRepeats = NO_REPEATS);
+    void sendPronto(const uint16_t *data, unsigned int length, uint8_t numberOfRepeats = NO_REPEATS);
 #if defined(__AVR__)
-    /**
-     * Version of sendPronto that reads from PROGMEM, saving RAM memory.
-     * @param pronto C type string (null terminated) containing a Pronto Hex representation.
-     * @param times Number of times to send the signal.
-     */
-    void sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats = 0);
+    void sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats = NO_REPEATS);
     void sendPronto_P(const char *str, uint8_t numberOfRepeats);
 #endif
 
-    void sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats = 0);
+// Template protocol :-)
+    void sendShuzu(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
 
-    //......................................................................
-    // Template functions :-)
-    void sendShuzuStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
+    /*
+     * OLD send functions
+     */
+    void sendDenon(unsigned long data, int nbits);
+    void sendDISH(unsigned long data, int nbits);
+    void sendJVC(unsigned long data, int nbits, bool repeat = false);
+    void sendLG(unsigned long data, int nbits);
+    void sendNEC(uint32_t data, uint8_t nbits, bool repeat = false);
+    void sendPanasonic(uint16_t aAddress, uint32_t aData);
+    void sendRC5(uint32_t data, uint8_t nbits);
+    void sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle);
+    void sendRC6(uint32_t data, uint8_t nbits);
+    void sendRC6(uint64_t data, uint8_t nbits);
+    void sendSharpRaw(unsigned long data, int nbits);
+    void sendSharp(unsigned int address, unsigned int command);
+    void sendSAMSUNG(unsigned long data, int nbits);
+    void sendSony(unsigned long data, int nbits);
+    void sendWhynter(unsigned long data, int nbits);
 
-private:
     /**
-     *  This helper function is shared by RC5 and RC6
+     *  This helper function is shared by old RC5 and RC6decoders
      */
     int getRClevel(decode_results *results, unsigned int *offset, int *used, int t1);
 

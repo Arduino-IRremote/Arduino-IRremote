@@ -58,11 +58,11 @@ void loop() {
     Serial.println();
 
     Serial.println(F("Send NEC with 8 bit address"));
-    IrSender.sendNECStandard(sAddress, sCommand, false, sRepeats);
+    IrSender.sendNEC(sAddress & 0xFF, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Send NEC with 16 bit address"));
-    IrSender.sendNECStandard(sAddress, sCommand, true, sRepeats);
+    IrSender.sendNEC(sAddress, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats"));
@@ -75,62 +75,62 @@ void loop() {
     delay(2000);
 
     Serial.println(F("Send Panasonic"));
-    IrSender.sendPanasonicStandard(sAddress, sCommand, sRepeats);
+    IrSender.sendPanasonic(sAddress, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Send Kaseikyo with 0x4711 as Vendor ID"));
-    IrSender.sendKaseikyoStandard(sAddress, sCommand, 0x4711, sRepeats);
+    IrSender.sendKaseikyo(sAddress, sCommand, sRepeats, 0x4711);
     delay(2000);
 
     Serial.println(F("Send Denon"));
-    IrSender.sendDenonStandard(sAddress, sCommand, false, sRepeats);
+    IrSender.sendDenon(sAddress, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Send Denon/Sharp variant"));
-    IrSender.sendSharpStandard(sAddress, sCommand, sRepeats);
+    IrSender.sendSharp(sAddress, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
-    IrSender.sendSonyStandard(sAddress, sCommand, false, sRepeats);
+    IrSender.sendSony(sAddress, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Send Sony/SIRCS with 7 command and 13 address bits"));
-    IrSender.sendSonyStandard(sAddress, sCommand, true, sRepeats);
+    IrSender.sendSony(sAddress, sCommand, sRepeats, SIRCS_20_PROTOCOL);
     delay(2000);
 
     Serial.println(F("Send RC5"));
-    IrSender.sendRC5Standard(sAddress, sCommand, true, sRepeats);
+    IrSender.sendRC5(sAddress, sCommand, sRepeats, true);
     delay(2000);
 
     Serial.println(F("Send RC5X with command + 0x40"));
-    IrSender.sendRC5Standard(sAddress, sCommand + 0x40, true, sRepeats);
+    IrSender.sendRC5(sAddress, sCommand + 0x40, sRepeats, true);
     delay(2000);
 
     Serial.println(F("Send RC6"));
-    IrSender.sendRC6Standard(sAddress, sCommand, true, sRepeats);
+    IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(2000);
 
     Serial.println(F("Send Samsung"));
-    IrSender.sendSamsungStandard(sAddress, sCommand, sRepeats);
+    IrSender.sendSamsung(sAddress, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Send JVC"));
-    IrSender.sendJVCStandard(sAddress, sCommand, sRepeats);
+    IrSender.sendJVC(sAddress, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Send LG"));
-    IrSender.sendLGStandard(sAddress, sCommand, sRepeats);
+    IrSender.sendLG((uint8_t) sAddress, sCommand, sRepeats);
     delay(2000);
 
     Serial.println(F("Send Bosewave with 8 command bits"));
-    IrSender.sendBoseWaveStandard(sCommand, sRepeats);
+    IrSender.sendBoseWave(sCommand, sRepeats);
     delay(2000);
 
     /*
-     * !!LEGO is difficult to receive because of its short marks and spaces!!!
+     * LEGO is difficult to receive because of its short marks and spaces
      */
     Serial.println(F("Send Lego with 2 channel and with 4 command bits"));
-    IrSender.sendLegoPowerFunctions(sAddress, LEGO_MODE_COMBO, sCommand, true);
+    IrSender.sendLegoPowerFunctions(sAddress, sCommand, LEGO_MODE_COMBO, true);
     delay(2000);
 
     /*

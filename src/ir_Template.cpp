@@ -162,7 +162,7 @@
 
 //+=============================================================================
 //
-void IRsend::sendShuzuStandard(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
+void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
     // Set IR carrier frequency
     enableIROut(37); // 36.7kHz is the correct frequency
 

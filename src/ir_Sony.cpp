@@ -48,7 +48,7 @@
 #define SONY_EXTRA_BITS         8
 #define SONY_BITS_MIN           (SONY_COMMAND_BITS + SONY_ADDRESS_BITS)        // 12 bits
 #define SONY_BITS_15            (SONY_COMMAND_BITS + SONY_ADDRESS_BITS + 3)    // 15 bits
-#define SONY_BITS_MAX           (SONY_COMMAND_BITS + SONY_ADDRESS_BITS + SONY_EXTRA_BITS)    // 20 bits
+#define SONY_BITS_MAX           (SONY_COMMAND_BITS + SONY_ADDRESS_BITS + SONY_EXTRA_BITS)    // 20 bits == SIRCS_20_PROTOCOL
 #define SONY_UNIT               600
 
 #define SONY_HEADER_MARK        (4 * SONY_UNIT) //2400
@@ -65,7 +65,7 @@
  * There is NO delay after the last sent command / repeat!
  * @param send8AddressBits if false send only 5 address bits (standard is 12 bit SIRCS protocol)
  */
-void IRsend::sendSonyStandard(uint16_t aAddress, uint8_t aCommand, uint8_t numberOfBits, uint8_t aNumberOfRepeats) {
+void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, uint8_t numberOfBits) {
     // Set IR carrier frequency
     enableIROut(40);
 
@@ -81,7 +81,7 @@ void IRsend::sendSonyStandard(uint16_t aAddress, uint8_t aCommand, uint8_t numbe
         // send 7 command bits LSB first
         sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aCommand, SONY_COMMAND_BITS, false);
         // Address 16 bit LSB first
-        if (numberOfBits == SONY_BITS_MAX) {
+        if (numberOfBits == SIRCS_20_PROTOCOL) {
             sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress,
                     (SONY_ADDRESS_BITS + SONY_EXTRA_BITS), false);
         } else {

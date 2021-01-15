@@ -78,7 +78,11 @@ void IRsend::sendLGRepeat() {
  * Repeat commands should be sent in a 110 ms raster.
  * There is NO delay after the last sent repeat!
  */
-void IRsend::sendLGStandard(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats) {
+void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+    if (aIsRepeat) {
+        sendLGRepeat();
+        return;
+    }
     // Set IR carrier frequency
     enableIROut(38);
 
