@@ -27,9 +27,9 @@
 //------------------------------------------------------------------------------
 #include "private/IRremoteInt.h"
 
-#define VERSION_IRREMOTE "3.0.0"
-#define VERSION_IRREMOTE_MAJOR 3
-#define VERSION_IRREMOTE_MINOR 0
+#define VERSION_IRREMOTE "2.9.0"
+#define VERSION_IRREMOTE_MAJOR 2
+#define VERSION_IRREMOTE_MINOR 9
 
 /****************************************************
  *                     PROTOCOLS
