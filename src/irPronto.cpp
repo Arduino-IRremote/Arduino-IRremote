@@ -1,6 +1,6 @@
 /*
  * @file irPronto.cpp
- * @brief In this file, the functions IRrecv::dumpPronto and IRsend::sendPronto are defined.
+ * @brief In this file, the functions IRrecv::compensateAndPrintPronto and IRsend::sendPronto are defined.
  *
  * See http://www.harctoolbox.org/Glossary.html#ProntoSemantics
  * Pronto database http://www.remotecentral.com/search.htm
@@ -162,7 +162,7 @@ void IRsend::sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats) {
 }
 
 //standard pointer
-void IRsend::sendPronto_P(const char* str, uint8_t numberOfRepeats) {
+void IRsend::sendPronto_P(const char *str, uint8_t numberOfRepeats) {
     size_t len = strlen_P(str);
     char work[len + 1];
     strncpy_P(work, str, len);
@@ -228,27 +228,21 @@ static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *d
     dumpDuration(aSerial, PRONTO_DEFAULT_GAP, timebase);
 }
 
-/*
- * Using Print instead of Stream saves 1020 bytes program memory
- * Changed from & to * parameter type to be more transparent and consistent with other code of IRremote
+/**
+ * Print the result (second argument) as Pronto Hex on the Stream supplied as argument.
+ * @param stream The Stream on which to write, often Serial
+ * @param results the decode_results as delivered from irrecv.decode.
+ * @param frequency Modulation frequency in Hz. Often 38000Hz.
  */
-void IRrecv::dumpPronto(Print *aSerial, unsigned int frequency) {
+void IRrecv::compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int frequency) {
+    aSerial->println("Pronto Hex as string");
+    aSerial->print("char ProntoData[] = \"");
     dumpNumber(aSerial, frequency > 0 ? learnedToken : learnedNonModulatedToken);
     dumpNumber(aSerial, toFrequencyCode(frequency));
     dumpNumber(aSerial, (results.rawlen + 1) / 2);
     dumpNumber(aSerial, 0);
     unsigned int timebase = toTimebase(frequency);
     compensateAndDumpSequence(aSerial, &results.rawbuf[1], results.rawlen - 1, timebase); // skip leading space
-}
-
-//+=============================================================================
-// Dump out the raw data as Pronto Hex.
-// I know Stream * is locally inconsistent, but all global print functions use it
-//
-void IRrecv::printIRResultAsPronto(Print *aSerial, unsigned int frequency) {
-    aSerial->println("Pronto Hex as string");
-    aSerial->print("char ProntoData[] = \"");
-    dumpPronto(aSerial, frequency);
     aSerial->println("\"");
 }
 
@@ -306,7 +300,7 @@ static size_t compensateAndDumpSequence(String *aString, const volatile uint16_t
  * Writes Pronto HEX to a String object.
  * Returns the amount of characters added to the string.(360 characters for a NEC code!)
  */
-size_t IRrecv::dumpPronto(String *aString, unsigned int frequency) {
+size_t IRrecv::compensateAndStorePronto(String *aString, unsigned int frequency) {
 
     size_t size = 0;
     unsigned int timebase = toTimebase(frequency);

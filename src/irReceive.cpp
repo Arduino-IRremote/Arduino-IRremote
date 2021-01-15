@@ -33,6 +33,10 @@
 //#define DEBUG
 #include "IRremote.h"
 
+/*
+ * Is internally called by decode before calling decoders.
+ * Must be used to setup data, if you call decoders manually.
+ */
 void IRrecv::initDecodedIRData() {
     lastDecodedCommand = decodedIRData.command;
     lastDecodedAddress = decodedIRData.address;
@@ -49,10 +53,11 @@ void IRrecv::initDecodedIRData() {
 }
 
 //+=============================================================================
-// Decodes the received IR message
-// Returns 0 if no data ready, 1 if data ready.
-// Results of decoding are stored in results
-//
+/**
+ * Attempt to decode the recently receive IR signal
+ * @param results decode_results instance returning the decode, if any.
+ * @return 0 if no data ready, 1 if data ready. Results of decoding are stored in results
+ */
 bool IRrecv::decode() {
     if (irparams.rcvstate != IR_REC_STATE_STOP) {
         return false;
@@ -150,9 +155,15 @@ bool IRrecv::decode() {
 
 #if DECODE_SAMSUNG
     TRACE_PRINTLN("Attempting Samsung decode");
+#if defined(USE_STANDARD_DECODE)
     if (decodeSamsung()) {
         return true;
     }
+#else
+    if (decodeSAMSUNG()) {
+        return true;
+    }
+#endif
 #endif
     /*
      * Start of the exotic protocols
@@ -215,11 +226,19 @@ bool IRrecv::decode() {
 }
 
 //+=============================================================================
+/**
+ * Instantiate the IRrecv class. Multiple instantiation is not supported.
+ * @param recvpin Arduino pin to use. No sanity check is made.
+ */
 IRrecv::IRrecv(int recvpin) {
     irparams.recvpin = recvpin;
     irparams.blinkflag = 0;
 }
-
+/**
+ * Instantiate the IRrecv class. Multiple instantiation is not supported.
+ * @param recvpin Arduino pin to use, where a demodulating IR receiver is connected.
+ * @param blinkpin pin to blink when receiving IR. Not supported by all hardware. No sanity check is made.
+ */
 IRrecv::IRrecv(int recvpin, int blinkpin) {
     irparams.recvpin = recvpin;
     irparams.blinkpin = blinkpin;
@@ -231,8 +250,10 @@ IRrecv::IRrecv(int recvpin, int blinkpin) {
 // initialization
 //
 #ifdef USE_DEFAULT_ENABLE_IR_IN
+/**
+ * Enable IR reception.
+ */
 void IRrecv::enableIRIn() {
-// the interrupt Service Routine fires every 50 uS
     noInterrupts();
     // Setup pulse clock timer interrupt
     // Prescale /8 (16M/8 = 0.5 microseconds per tick)
@@ -255,6 +276,9 @@ void IRrecv::enableIRIn() {
     pinMode(irparams.recvpin, INPUT);
 }
 
+/**
+ * Disable IR reception.
+ */
 void IRrecv::disableIRIn() {
     TIMER_DISABLE_RECEIVE_INTR;
 }
@@ -274,12 +298,18 @@ void IRrecv::blink13(int blinkflag) {
 }
 
 //+=============================================================================
-// Return if receiving new IR signals
-//
+/**
+ * Returns status of reception
+ * @return true if no reception is on-going.
+ */
 bool IRrecv::isIdle() {
     return (irparams.rcvstate == IR_REC_STATE_IDLE || irparams.rcvstate == IR_REC_STATE_STOP) ? true : false;
 }
 
+/**
+ * Returns status of reception and copies IR-data to decode_results buffer if true.
+ * @return true if data is available.
+ */
 bool IRrecv::available() {
     if (irparams.rcvstate != IR_REC_STATE_STOP) {
         return false;
@@ -296,8 +326,10 @@ bool IRrecv::available() {
 }
 
 //+=============================================================================
-// Restart the ISR state machine
-//
+/**
+ * Restart the ISR state machine
+ * Called to re-enable IR reception.
+ */
 void IRrecv::resume() {
     irparams.rcvstate = IR_REC_STATE_IDLE;
 }
@@ -779,7 +811,7 @@ const char* IRrecv::getProtocolString() {
     }
 }
 
-void IRrecv::printResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t aLeadingSpaceDuration) {
+void IRrecv::printIRResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t aLeadingSpaceDuration) {
     aSerial->print(F("Protocol="));
     aSerial->print(getProtocolString());
     if (aDecodedDataPtr->protocol == UNKNOWN) {
@@ -844,8 +876,8 @@ void IRrecv::printResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t 
     }
 
 }
-void IRrecv::printResultShort(Print *aSerial) {
-    printResultShort(aSerial, &decodedIRData, results.rawbuf[0]);
+void IRrecv::printIRResultShort(Print *aSerial) {
+    printIRResultShort(aSerial, &decodedIRData, results.rawbuf[0]);
 }
 
 //+=============================================================================
@@ -962,7 +994,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
 
 // Comment
     aSerial->print(F("  // "));
-    printResultShort(aSerial);
+    printIRResultShort(aSerial);
 
 // Newline
     aSerial->println("");
@@ -1035,122 +1067,6 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
  * Contains no new (since 5/2020) protocols.
  */
 bool IRrecv::decode(decode_results *aResults) {
-    if (irparams.rcvstate != IR_REC_STATE_STOP) {
-        return false;
-    }
-
-    Serial.println(F("Use of decode(decode_results *aResults) is deprecated! Use decode() instead!"));
-    /*
-     * First copy 3 values from irparams to internal results structure
-     */
-    results.rawbuf = irparams.rawbuf;
-    results.rawlen = irparams.rawlen;
-    results.overflow = irparams.overflow;
-
-    initDecodedIRData();
-
-#if DECODE_NEC
-    DBG_PRINTLN("Attempting NEC decode");
-    if (decodeNEC(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_SONY
-    DBG_PRINTLN("Attempting Sony decode");
-    if (decodeSony(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_SANYO
-    DBG_PRINTLN("Attempting Sanyo decode");
-    if (decodeSanyo(aResults)) {
-        return true;
-    }
-#endif
-
-//#if DECODE_MITSUBISHI
-//    DBG_PRINTLN("Attempting Mitsubishi decode");
-//    if (decodeMitsubishi(aResults)) {
-//        return true;
-//    }
-//#endif
-
-#if DECODE_RC5
-    DBG_PRINTLN("Attempting RC5 decode");
-    if (decodeRC5(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_RC6
-    DBG_PRINTLN("Attempting RC6 decode");
-    if (decodeRC6(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_PANASONIC
-    DBG_PRINTLN("Attempting Panasonic decode");
-    if (decodePanasonic(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_LG
-    DBG_PRINTLN("Attempting LG decode");
-    if (decodeLG(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_JVC
-    DBG_PRINTLN("Attempting JVC decode");
-    if (decodeJVC(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_SAMSUNG
-    DBG_PRINTLN("Attempting SAMSUNG decode");
-    if (decodeSAMSUNG(aResults)) {
-        return true;
-    }
-#endif
-
-#if DECODE_WHYNTER
-    DBG_PRINTLN("Attempting Whynter decode");
-    if (decodeWhynter(aResults)) {
-        return true;
-    }
-#endif
-
-//#if DECODE_AIWA_RC_T501
-//    DBG_PRINTLN("Attempting Aiwa RC-T501 decode");
-//    if (decodeAiwaRCT501(aResults)) {
-//        return true;
-//    }
-//#endif
-
-#if DECODE_DENON
-    DBG_PRINTLN("Attempting Denon decode");
-    if (decodeDenon(aResults)) {
-        return true;
-    }
-#endif
-
-#if defined(DECODE_HASH)
-    DBG_PRINTLN("Hash decode");
-// decodeHash returns a hash on any input.
-// Thus, it needs to be last in the list.
-// If you add any decodes, add them before this.
-    if (decodeHash(aResults)) {
-        return true;
-    }
-#endif
-
-// Throw away and start over
-    resume();
-    return false;
+    (void) aResults;
+    return decode();
 }

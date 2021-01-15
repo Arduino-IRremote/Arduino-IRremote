@@ -209,9 +209,6 @@ bool IRrecv::decodeSamsung() {
 #warning "Old decoder functions decodeSAMSUNG() and decodeSAMSUNG(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeSamsung() instead."
 
 bool IRrecv::decodeSAMSUNG() {
-    return decodeSamsung();
-}
-bool IRrecv::decodeSamsung() {
     unsigned int offset = 1;  // Skip first space
 
     // Initial mark

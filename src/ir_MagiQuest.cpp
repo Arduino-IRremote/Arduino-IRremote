@@ -82,6 +82,9 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
 
 //+=============================================================================
 //
+/*
+ * decodes a 32 bit result, which is nor really compatible with standard decoder layout
+ */
 bool IRrecv::decodeMagiQuest() {
     magiquest_t data;  // Somewhere to build our code
     unsigned int offset = 1;  // Skip the gap reading
@@ -141,9 +144,10 @@ bool IRrecv::decodeMagiQuest() {
     // Success
     decodedIRData.protocol = MAGIQUEST;
     decodedIRData.numberOfBits = offset / 2;
-    results.value = data.cmd.wand_id;
+    decodedIRData.flags = IRDATA_FLAGS_EXTRA_INFO;
+    decodedIRData.extra = data.cmd.magnitude;
     results.magnitude = data.cmd.magnitude;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
+    results.value = data.cmd.wand_id;
 
     return true;
 }

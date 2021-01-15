@@ -123,7 +123,7 @@ void storeCode() {
         sSendRawCodeLength = IrReceiver.results.rawlen - 1;
         IrReceiver.compensateAndStoreIRResultInArray(rawCodes);
     } else {
-        IrReceiver.printResultShort(&Serial);
+        IrReceiver.printIRResultShort(&Serial);
         sStoredIRData.flags = 0; // clear flags for later (not) printing
         Serial.println();
     }
@@ -160,6 +160,7 @@ void sendCode(bool aSendRepeat) {
             IrSender.sendSharp(sStoredIRData.address, sStoredIRData.command, NO_REPEATS);
 
         } else if (sStoredIRData.protocol == JVC) {
+            // casts are required to specify the right function
             IrSender.sendJVC((uint8_t)sStoredIRData.address, (uint8_t)sStoredIRData.command, NO_REPEATS);
 
         } else if (sStoredIRData.protocol == RC5 || sStoredIRData.protocol == RC6) {
@@ -172,7 +173,7 @@ void sendCode(bool aSendRepeat) {
         }
 
         Serial.print(F("Sent: "));
-        IrReceiver.printResultShort(&Serial, &sStoredIRData);
+        IrReceiver.printIRResultShort(&Serial, &sStoredIRData);
     }
 }
 

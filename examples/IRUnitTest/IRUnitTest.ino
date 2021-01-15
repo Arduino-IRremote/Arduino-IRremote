@@ -22,7 +22,7 @@ void dump() {
     if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
         Serial.println("Could not decode message");
     } else {
-        IrReceiver.printResultShort(&Serial);
+        IrReceiver.printIRResultShort(&Serial);
 
         Serial.print(" (");
         Serial.print(IrReceiver.decodedIRData.numberOfBits, DEC);

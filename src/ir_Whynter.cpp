@@ -7,6 +7,7 @@
 //               W W W  H   H    Y   N  NN   T   E      R  R
 //                WWW   H   H    Y   N   N   T   EEEEE  R   R
 //==============================================================================
+// see https://docs.google.com/spreadsheets/d/1dsr4Jh-nzC6xvSKGpLlPBF0NRwvlpyw-ozg8eZU813w/edit#gid=0
 
 #define WHYNTER_BITS            32
 #define WHYNTER_HEADER_MARK   2850
@@ -32,15 +33,6 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 
     // Data + stop bit
     sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits, true, true);
-//    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-//        if (data & mask) {
-//            mark(WHYNTER_ONE_MARK);
-//            space(WHYNTER_ONE_SPACE);
-//        } else {
-//            mark(WHYNTER_ZERO_MARK);
-//            space(WHYNTER_ZERO_SPACE);
-//        }
-//    }
 
     interrupts();
 }

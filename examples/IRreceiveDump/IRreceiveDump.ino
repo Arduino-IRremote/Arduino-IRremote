@@ -56,7 +56,7 @@ void loop() {
         } else {
             Serial.println();                               // 2 blank lines between entries
             Serial.println();
-            IrReceiver.printResultShort(&Serial);
+            IrReceiver.printIRResultShort(&Serial);
             Serial.println();
             Serial.println(F("Raw result in internal ticks (50 us) - with leading gap"));
             IrReceiver.printIRResultRawFormatted(&Serial, false); // Output the results in RAW format
@@ -69,17 +69,18 @@ void loop() {
             IrReceiver.compensateAndPrintIRResultAsCArray(&Serial, true);    // Output the results as uint16_t source code array of micros
             IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
 
-            IrReceiver.printIRResultAsPronto(&Serial);
+            IrReceiver.compensateAndPrintIRResultAsPronto(&Serial);
 
             /*
+             * Example for using the compensateAndStorePronto() function.
              * Creating this String requires 2210 bytes program memory and 10 bytes RAM for the String class.
              * The String object itself requires additional 440 Bytes RAM from the heap.
              * This values are for an Arduino UNO.
              */
 //        Serial.println();                                     // blank line between entries
 //        String ProntoHEX = F("Pronto HEX contains: ");        // Assign string to ProtoHex string object
-//        if (int size = IrReceiver.dumpPronto(&ProntoHEX)) {   // Dump the content of the IReceiver Pronto HEX to the String object
-//            // Append dumpPronto() size information to the String object (requires 50 bytes heap)
+//        if (int size = IrReceiver.compensateAndStorePronto(&ProntoHEX)) {   // Dump the content of the IReceiver Pronto HEX to the String object
+//            // Append compensateAndStorePronto() size information to the String object (requires 50 bytes heap)
 //            ProntoHEX += F("\r\nProntoHEX is ");              // Add codes size information to the String object
 //            ProntoHEX += size;
 //            ProntoHEX += F(" characters long and contains "); // Add codes count information to the String object

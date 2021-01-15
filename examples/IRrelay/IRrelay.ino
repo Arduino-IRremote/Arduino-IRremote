@@ -64,7 +64,7 @@ void loop() {
                 Serial.println(F("off"));
             }
 
-            IrReceiver.printResultShort(&Serial);
+            IrReceiver.printIRResultShort(&Serial);
             Serial.println();
             if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                 // We have an unknown protocol, print more info

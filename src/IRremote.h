@@ -89,7 +89,8 @@
  * An enum consisting of all supported formats.
  * You do NOT need to remove entries from this list when disabling protocols!
  */
-typedef enum {    UNKNOWN = -1,
+typedef enum {
+    UNKNOWN = -1,
     UNUSED = 0,
     BOSEWAVE,
     DENON,
@@ -209,86 +210,47 @@ struct decode_results {
  */
 class IRrecv {
 public:
-    /**
-     * Instantiate the IRrecv class. Multiple instantiation is not supported.
-     * @param recvpin Arduino pin to use. No sanity check is made.
-     */
-    IRrecv(int recvpin);
-    /**
-     * Instantiate the IRrecv class. Multiple instantiation is not supported.
-     * @param recvpin Arduino pin to use, where a demodulating IR receiver is connected.
-     * @param blinkpin pin to blink when receiving IR. Not supported by all hardware. No sanity check is made.
-     */
-    IRrecv(int recvpin, int blinkpin);
 
-    /**
-     * @param blinkflag
-     */
+    IRrecv(int recvpin);
+    IRrecv(int recvpin, int blinkpin);
     void blink13(int blinkflag);
 
-    /**
-     * Attempt to decode the recently receive IR signal
-     * @param results decode_results instance returning the decode, if any.
-     * @return success of operation.
-     */
-    bool decode(decode_results *aResults);
-    __attribute__ ((deprecated ("You should use decode() without a parameter.")))
-    ;               // deprecated
-    bool decode();
-
-    /**
-     * Enable IR reception.
-     */
     void enableIRIn();
-
-    /**
-     * Disable IR reception.
-     */
     void disableIRIn();
+    void start(); // alias for enableIRIn
+    void stop(); // alias for disableIRIn
 
-    /**
-     * Returns status of reception
-     * @return true if no reception is on-going.
-     */
     bool isIdle();
-
-    /**
-     * Returns status of reception and copies IR-data to decode_results buffer if true.
-     * @return true if data is available.
-     */
     bool available();
 
-    /**
-     * Called to re-enable IR reception.
+    /*
+     * The main functions
      */
+    bool decode();
     void resume();
 
     /*
-     * Is internally called by decode before calling decoders.
-     * Must be used to setup data, if you call decoders manually.
+     * Useful info and print functions
      */
-    void initDecodedIRData();
+    void printIRResultShort(Print *aSerial);
+    void printIRResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t aLeadingSpaceDuration = 0);
+    void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
+    void printIRResultAsCVariables(Print *aSerial);
 
-    void compensateAndStoreIRResultInArray(uint8_t *aArrayPtr);
+    void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
+    void compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int frequency = 38000U);
 
     const char* getProtocolString();
-    void printResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t aLeadingSpaceDuration = 0);
-    void printResultShort(Print *aSerial);
-    void printIRResultRaw(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
-    void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
-    void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
-    void printIRResultAsCVariables(Print *aSerial);
-    /**
-     * Print the result (second argument) as Pronto Hex on the Stream supplied as argument.
-     * @param stream The Stream on which to write, often Serial
-     * @param results the decode_results as delivered from irrecv.decode.
-     * @param frequency Modulation frequency in Hz. Often 38000Hz.
+
+    /*
+     * Store the data for further processing
      */
-    void dumpPronto(Print *aSerial, unsigned int frequency = 38000U);
-    void printIRResultAsPronto(Print *aSerial, unsigned int frequency = 38000U);
+    void compensateAndStoreIRResultInArray(uint8_t *aArrayPtr);
+    size_t compensateAndStorePronto(String *aString, unsigned int frequency = 38000U);
 
-    size_t dumpPronto(String *aString, unsigned int frequency = 38000U);
-
+    /*
+     * The main decoding functions used by the individual decoders
+     */
     bool decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
             unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst = true);
 
@@ -298,87 +260,68 @@ public:
     bool decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
             unsigned int aBiphaseTimeUnit);
 
-    decode_results results;         // the instance for decoding
-    IRData decodedIRData;           // decoded IR data for the application, used by all new / updated decoders
-    uint32_t lastDecodedAddress;    // Last decoded IR data for repeat detection, used by all new / updated decoders
-    uint32_t lastDecodedCommand;    // Last decoded IR data for repeat detection, used by all new / updated decoders
-    uint8_t repeatCount;            // Used for Denon.
-
-private:
-    bool decodeHash();
-    bool decodeHash(decode_results *aResults);
-    uint8_t compare(unsigned int oldval, unsigned int newval);
-
-//......................................................................
-    /**
-     * Try to decode the recently received IR signal as an RC5 signal-
-     * @param results decode_results instance returning the decode, if any.
-     * @return Success of the operation.
+    /*
+     * All standard (decode address + command) protocol decoders
      */
-    bool decodeRC5();
-    bool decodeRC5(decode_results *aResults);
-
-    bool decodeRC6();
-    bool decodeRC6(decode_results *aResults);
-
-//......................................................................
-    bool decodeNEC();
-    bool decodeNEC(decode_results *aResults);
-
-//......................................................................
-    bool decodeSony();
-    bool decodeSony(decode_results *aResults);
-
-//......................................................................
-    bool decodeKaseikyo();
-
-    bool decodePanasonic();
-    bool decodePanasonic(decode_results *aResults);
-
-//......................................................................
+    bool decodeBoseWave();
     bool decodeDenon();
-    bool decodeDenon(decode_results *aResults);
-
-//......................................................................
-    bool decodeSharp();
-
-//......................................................................
     bool decodeJVC();
-    bool decodeJVC(decode_results *aResults);
-
-//......................................................................
-    bool decodeSamsung();
-    bool decodeSAMSUNG();
-    __attribute__ ((deprecated ("Renamed to decodeSamsung()"))); // deprecated
-    bool decodeSAMSUNG(decode_results *aResults);
-
-//......................................................................
-    bool decodeWhynter();
-    bool decodeWhynter(decode_results *aResults);
-
-//......................................................................
+    bool decodeKaseikyo();
+    bool decodeLegoPowerFunctions();
     bool decodeLG();
-    bool decodeLG(decode_results *aResults);
+    bool decodeMagiQuest(); // not completely standard
+    bool decodeNEC();
+    bool decodePanasonic();
+    bool decodeRC5();
+    bool decodeRC6();
+    bool decodeSamsung();
+    bool decodeSharp(); // redirected to decodeDenon()
+    bool decodeSony();
 
-//......................................................................
+    bool decodeHash();
+
+    // Template function :-)
+    bool decodeShuzu();
+
+    /*
+     * Old functions
+     */
+    bool decodeWhynter();
+
+    bool decode(decode_results *aResults) __attribute__ ((deprecated ("You should use decode() without a parameter."))); // deprecated
+    bool decodeBoseWave(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeDenon(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeJVC(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeLG(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeMagiQuest(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeNEC(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodePanasonic(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeRC5(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeRC6(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeSAMSUNG() __attribute__ ((deprecated ("Renamed to decodeSamsung()"))); // deprecated
+    bool decodeSAMSUNG(decode_results *aResults) __attribute__ ((deprecated ("You should use decodeSamsung() without a parameter."))); // deprecated
+    bool decodeSony(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeWhynter(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+    bool decodeHash(decode_results *aResults) __attribute__ ((deprecated ("You should use decode*() without a parameter."))); // deprecated
+
+// To be removed
     bool decodeSanyo();
     bool decodeSanyo(decode_results *aResults);
 
-//......................................................................
-    bool decodeLegoPowerFunctions();
+    /*
+     * Internal functions
+     */
+    void initDecodedIRData();
+    uint8_t compare(unsigned int oldval, unsigned int newval);
 
-//......................................................................
-    bool decodeBoseWave();
-    bool decodeBoseWave(decode_results *aResults);
+    decode_results results;         // the instance for the ISR which does the decoding
+    IRData decodedIRData;           // decoded IR data for the application, used by all new / updated decoders
 
-//......................................................................
-    bool decodeMagiQuest();
-    bool decodeMagiQuest(decode_results *aResults);
+    // Last decoded IR data for repeat detection, used by all new / updated decoders
+    uint32_t lastDecodedAddress;
+    uint32_t lastDecodedCommand;
 
-//......................................................................
-// Template functions :-)
-    bool decodeShuzu();
-
+    uint8_t repeatCount;            // Used for Denon decode for autorepeat decoding.
 };
 
 /****************************************************
@@ -402,7 +345,8 @@ private:
  * If USE_SOFT_SEND_PWM, use spin wait instead of delayMicros().
  */
 //#define USE_SPIN_WAIT
-#define NO_REPEATS  0
+//
+#define NO_REPEATS  0 // for better readability of code
 /**
  * Main class for sending IR
  */
@@ -507,11 +451,6 @@ public:
     void sendSAMSUNG(unsigned long data, int nbits);
     void sendSony(unsigned long data, int nbits);
     void sendWhynter(unsigned long data, int nbits);
-
-    /**
-     *  This helper function is shared by old RC5 and RC6decoders
-     */
-    int getRClevel(decode_results *results, unsigned int *offset, int *used, int t1);
 
 #if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
     uint8_t sendPin;

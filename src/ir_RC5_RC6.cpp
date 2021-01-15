@@ -153,9 +153,52 @@ bool IRrecv::decodeRC5() {
 
 #else
 
-int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int t1);
-
 #warning "Old decoder functions decodeRC5() and decodeRC5(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeRC5() instead."
+
+//+=============================================================================
+// Gets one undecoded level at a time from the raw buffer.
+// The RC5/6 decoding is easier if the data is broken into time intervals.
+// E.g. if the buffer has MARK for 2 time intervals and SPACE for 1,
+// successive calls to getRClevel will return MARK, MARK, SPACE.
+// offset and used are updated to keep track of the current position.
+// t1 is the time interval for a single bit in microseconds.
+// Returns -1 for error (measured time interval is not a multiple of t1).
+//
+#if (DECODE_RC5 || DECODE_RC6)
+int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int t1) {
+    unsigned int width;
+    int val;
+    int correction;
+    uint8_t avail;
+
+    if (*offset >= results->rawlen) {
+        return SPACE;  // After end of recorded buffer, assume SPACE.
+    }
+    width = results->rawbuf[*offset];
+    val = ((*offset) % 2) ? MARK : SPACE;
+    correction = (val == MARK) ? MARK_EXCESS_MICROS : - MARK_EXCESS_MICROS;
+
+    if (MATCH(width, (t1) + correction)) {
+        avail = 1;
+    } else if (MATCH(width, (2 * t1) + correction)) {
+        avail = 2;
+    } else if (MATCH(width, (3 * t1) + correction)) {
+        avail = 3;
+    } else {
+        return -1;
+    }
+
+    (*used)++;
+    if (*used >= avail) {
+        *used = 0;
+        (*offset)++;
+    }
+
+    TRACE_PRINTLN((val == MARK) ? "MARK" : "SPACE");
+
+    return val;
+}
+#endif
 
 //+=============================================================================
 bool IRrecv::decodeRC5() {
@@ -449,51 +492,6 @@ bool IRrecv::decodeRC6() {
 #else
 
 #warning "Old decoder functions decodeRC5() and decodeRC5(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeRC5() instead."
-
-//+=============================================================================
-// Gets one undecoded level at a time from the raw buffer.
-// The RC5/6 decoding is easier if the data is broken into time intervals.
-// E.g. if the buffer has MARK for 2 time intervals and SPACE for 1,
-// successive calls to getRClevel will return MARK, MARK, SPACE.
-// offset and used are updated to keep track of the current position.
-// t1 is the time interval for a single bit in microseconds.
-// Returns -1 for error (measured time interval is not a multiple of t1).
-//
-#if (DECODE_RC5 || DECODE_RC6)
-int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int t1) {
-    unsigned int width;
-    int val;
-    int correction;
-    uint8_t avail;
-
-    if (*offset >= results->rawlen) {
-        return SPACE;  // After end of recorded buffer, assume SPACE.
-    }
-    width = results->rawbuf[*offset];
-    val = ((*offset) % 2) ? MARK : SPACE;
-    correction = (val == MARK) ? MARK_EXCESS_MICROS : - MARK_EXCESS_MICROS;
-
-    if (MATCH(width, (t1) + correction)) {
-        avail = 1;
-    } else if (MATCH(width, (2 * t1) + correction)) {
-        avail = 2;
-    } else if (MATCH(width, (3 * t1) + correction)) {
-        avail = 3;
-    } else {
-        return -1;
-    }
-
-    (*used)++;
-    if (*used >= avail) {
-        *used = 0;
-        (*offset)++;
-    }
-
-    TRACE_PRINTLN((val == MARK) ? "MARK" : "SPACE");
-
-    return val;
-}
-#endif
 
 //+=============================================================================
 bool IRrecv::decodeRC6() {

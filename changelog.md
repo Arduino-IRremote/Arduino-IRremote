@@ -35,7 +35,7 @@
 - Optimized types in sendRC5ext and sendSharpAlt.
 - Added `DECODE_NEC_STANDARD` and `SEND_NEC_STANDARD`.
 - Renamed all IRrecv* examples to IRreceive*.
-- Added functions `printResultShort(&Serial)` and `getProtocolString(decode_type_t aDecodeType)`.
+- Added functions `printIRResultShort(&Serial)` and `getProtocolString(decode_type_t aDecodeType)`.
 - Added flag `decodedIRData.isRepeat`.
 - Updated examples.
 
