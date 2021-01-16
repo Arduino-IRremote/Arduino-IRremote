@@ -40,7 +40,6 @@ int IR_RECEIVE_PIN = 10;
 #else
 int IR_RECEIVE_PIN = 11;
 #endif
-IRrecv IrReceiver(IR_RECEIVE_PIN);
 
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
@@ -63,8 +62,8 @@ void setup() {
     // In case the interrupt driver crashes on setup, give a clue
     // to the user what's going on.
     Serial.println("Enabling IRin");
-    IrReceiver.enableIRIn();  // Start the receiver
-    IrReceiver.blink13(true); // Enable feedback LED
+    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver, enable feedback LED, take LED feedback pin from the internal boards definition
+
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);

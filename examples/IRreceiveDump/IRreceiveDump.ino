@@ -23,7 +23,6 @@ int IR_RECEIVE_PIN = 15;
 #else
 int IR_RECEIVE_PIN = 11;
 #endif
-IRrecv IrReceiver(IR_RECEIVE_PIN);
 
 //+=============================================================================
 // Configure the Arduino
@@ -38,8 +37,7 @@ void setup() {
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
-    IrReceiver.enableIRIn();  // Start the receiver
-    IrReceiver.blink13(true); // Enable feedback LED
+    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver, enable feedback LED, take LED feedback pin from the internal boards definition
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);
@@ -64,9 +62,9 @@ void loop() {
             IrReceiver.printIRResultRawFormatted(&Serial, true);  // Output the results in RAW format
             Serial.println();                               // blank line between entries
             Serial.println(F("Result as internal ticks (50 us) array - compensated with MARK_EXCESS_MICROS"));
-            IrReceiver.compensateAndPrintIRResultAsCArray(&Serial, false);   // Output the results as uint8_t source code array of ticks
+            IrReceiver.compensateAndPrintIRResultAsCArray(&Serial, false); // Output the results as uint8_t source code array of ticks
             Serial.println(F("Result as microseconds array - compensated with MARK_EXCESS_MICROS"));
-            IrReceiver.compensateAndPrintIRResultAsCArray(&Serial, true);    // Output the results as uint16_t source code array of micros
+            IrReceiver.compensateAndPrintIRResultAsCArray(&Serial, true); // Output the results as uint16_t source code array of micros
             IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
 
             IrReceiver.compensateAndPrintIRResultAsPronto(&Serial);

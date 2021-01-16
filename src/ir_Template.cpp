@@ -205,13 +205,13 @@ void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRep
 bool IRrecv::decodeShuzu() {
 
     // Check we have the right amount of data (28). The +4 is for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen != (2 * SHUZU_BITS) + 4) {
+    if (decodedIRData.rawDataPtr->rawlen != (2 * SHUZU_BITS) + 4) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
     // Check header "space"
-    if (!MATCH_MARK(results.rawbuf[1], SHUZU_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], SHUZU_HEADER_SPACE)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], SHUZU_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], SHUZU_HEADER_SPACE)) {
         DBG_PRINT("Shuzu: ");
         DBG_PRINTLN("Header mark or space length is wrong");
         return false;
@@ -225,20 +225,20 @@ bool IRrecv::decodeShuzu() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(results.rawbuf[3 + (2 * SHUZU_BITS)], SHUZU_BIT_MARK)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * SHUZU_BITS)], SHUZU_BIT_MARK)) {
         DBG_PRINT(F("Shuzu: "));
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
     // Success
-    uint8_t tCommand = results.value >> SHUZU_ADDRESS_BITS;  // upper 8 bits of LSB first value
-    uint8_t tAddress = results.value & 0xFFFF;    // lowest 16 bit of LSB first value
+    uint8_t tCommand = decodedIRData.decodedRawData >> SHUZU_ADDRESS_BITS;  // upper 8 bits of LSB first value
+    uint8_t tAddress = decodedIRData.decodedRawData & 0xFFFF;    // lowest 16 bit of LSB first value
 
     /*
      *  Check for repeat
      */
-    if (results.rawbuf[0] < ((SHUZU_REPEAT_SPACE + (SHUZU_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < ((SHUZU_REPEAT_SPACE + (SHUZU_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
     }
     decodedIRData.command = tCommand;

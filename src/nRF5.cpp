@@ -64,8 +64,7 @@ void IRrecv::enableIRIn() {
     // timerAttachInterrupt(timer, &IRTimer, 1);
 
     // Initialize state machine variables
-    irparams.rcvstate = IR_REC_STATE_IDLE;
-    irparams.rawlen = 0;
+    resume();
 
     // Set pin modes
     pinMode(irparams.recvpin, INPUT);

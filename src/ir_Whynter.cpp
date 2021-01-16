@@ -41,12 +41,12 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 bool IRrecv::decodeWhynter() {
 
     // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
-    if (results.rawlen != (2 * WHYNTER_BITS) + 4) {
+    if (decodedIRData.rawDataPtr->rawlen != (2 * WHYNTER_BITS) + 4) {
         return false;
     }
 
     // Sequence begins with a bit mark and a zero space
-    if (!MATCH_MARK(results.rawbuf[1], WHYNTER_BIT_MARK) || !MATCH_SPACE(results.rawbuf[2], WHYNTER_HEADER_SPACE)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], WHYNTER_BIT_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], WHYNTER_HEADER_SPACE)) {
         DBG_PRINT(F("Whynter: "));
         DBG_PRINTLN(F("Header mark or space length is wrong"));
         return false;
@@ -57,7 +57,7 @@ bool IRrecv::decodeWhynter() {
     }
 
     // trailing mark / stop bit
-    if (!MATCH_MARK(results.rawbuf[3 + (2 * WHYNTER_BITS)], WHYNTER_BIT_MARK)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * WHYNTER_BITS)], WHYNTER_BIT_MARK)) {
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
@@ -65,12 +65,5 @@ bool IRrecv::decodeWhynter() {
     // Success
     decodedIRData.numberOfBits = WHYNTER_BITS;
     decodedIRData.protocol = WHYNTER;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
-}
-
-bool IRrecv::decodeWhynter(decode_results *aResults) {
-    bool aReturnValue = decodeWhynter();
-    *aResults = results;
-    return aReturnValue;
 }

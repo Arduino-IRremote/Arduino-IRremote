@@ -104,7 +104,7 @@
 // Arduino Uno, Nano etc (previously default clause)
 #elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__)
 #define BLINKLED        LED_BUILTIN
-#define BLINKLED_ON()  (PORTB |= B00100000)
+#define BLINKLED_ON()   (PORTB |= B00100000)
 #define BLINKLED_OFF()  (PORTB &= B11011111)
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)

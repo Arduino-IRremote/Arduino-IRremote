@@ -85,21 +85,21 @@
 bool IRrecv::decodeLegoPowerFunctions() {
 
     // Check header "mark"
-    if (!MATCH_MARK(results.rawbuf[1], LEGO_HEADER_MARK)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], LEGO_HEADER_MARK)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
     // Check we have enough data - +4 for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen != (2 * LEGO_BITS) + 4) {
+    if (decodedIRData.rawDataPtr->rawlen != (2 * LEGO_BITS) + 4) {
         DBG_PRINT("LEGO: ");
         DBG_PRINT("Data length=");
-        DBG_PRINT(results.rawlen);
+        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
         DBG_PRINTLN(" is not 36");
         return false;
     }
     // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[2], LEGO_HEADER_SPACE)) {
+    if (!MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], LEGO_HEADER_SPACE)) {
         DBG_PRINT("LEGO: ");
         DBG_PRINTLN("Header space length is wrong");
         return false;
@@ -112,14 +112,14 @@ bool IRrecv::decodeLegoPowerFunctions() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(results.rawbuf[3 + (2 * LEGO_BITS)], LEGO_BIT_MARK)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LEGO_BITS)], LEGO_BIT_MARK)) {
         DBG_PRINT("LEGO: ");
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
     // Success
-    uint16_t tDecodedValue = results.value;
+    uint16_t tDecodedValue = decodedIRData.decodedRawData;
     uint8_t tToggleEscapeChannel = tDecodedValue >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS);
     uint8_t tMode = (tDecodedValue >> (LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0xF;
     uint8_t tData = (tDecodedValue >> LEGO_PARITY_BITS) & 0xF; // lego calls this field "data"
@@ -151,7 +151,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
     /*
      * Check for autorepeat (should happen 4 times for one press)
      */
-    if (results.rawbuf[0] < (LEGO_AUTO_REPEAT_PERIOD_MAX / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < (LEGO_AUTO_REPEAT_PERIOD_MAX / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_AUTO_REPEAT;
     }
     decodedIRData.address = tToggleEscapeChannel;
@@ -173,7 +173,21 @@ void logFunctionParameters(uint16_t data, bool repeat) {
 #endif // DEBUG
 
 /*
- * Here toggle and escape bits are set to 0
+ *  compatibility function for receive
+ */
+void IRsend::sendLegoPowerFunctions(IRData *aIRSendData, bool aDoSend5Times) {
+    sendLegoPowerFunctions(aIRSendData->address, aIRSendData->command, aIRSendData->command >> 4, aDoSend5Times);
+}
+
+/*
+ * Compatibility function for legacy code, this calls the send raw data function
+ */
+void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
+    sendLegoPowerFunctions(aRawData, (aRawData >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0x3, aDoSend5Times);
+}
+
+/*
+ * Here we process the structured data, and call the send raw data function
  */
 void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t aMode, bool aDoSend5Times) {
     aChannel &= 0x0F; // allow toggle and escape bits too
@@ -184,10 +198,6 @@ void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t 
     uint16_t tRawData = (((aChannel << LEGO_MODE_BITS) | aMode) << (LEGO_COMMAND_BITS + LEGO_PARITY_BITS))
             | (aCommand << LEGO_PARITY_BITS) | tParity;
     sendLegoPowerFunctions(tRawData, aChannel, aDoSend5Times);
-}
-
-void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
-    sendLegoPowerFunctions(aRawData, (aRawData >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0x3, aDoSend5Times);
 }
 
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {

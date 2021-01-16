@@ -1,7 +1,7 @@
 /*
  * irReceive.cpp
  *
- *  Contains common functions for receiving
+ *  Contains all IRrecv class functions
  *
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  *
@@ -33,23 +33,188 @@
 //#define DEBUG
 #include "IRremote.h"
 
+// The receiver instance
+IRrecv IrReceiver;
+
+//+=============================================================================
+/**
+ * Instantiate the IRrecv class. Multiple instantiation is not supported.
+ * @param recvpin Arduino pin to use. No sanity check is made.
+ */
+IRrecv::IRrecv() {
+    irparams.recvpin = 0;
+    irparams.blinkflag = false;
+}
+
+IRrecv::IRrecv(int recvpin) {
+    irparams.recvpin = recvpin;
+    irparams.blinkflag = false;
+}
+/**
+ * Instantiate the IRrecv class. Multiple instantiation is not supported.
+ * @param recvpin Arduino pin to use, where a demodulating IR receiver is connected.
+ * @param blinkpin pin to blink when receiving IR. Not supported by all hardware. No sanity check is made.
+ */
+IRrecv::IRrecv(int recvpin, int blinkpin) {
+    irparams.recvpin = recvpin;
+    irparams.blinkpin = blinkpin;
+    pinMode(blinkpin, OUTPUT);
+    irparams.blinkflag = false;
+}
+
+//+=============================================================================
+// Stream like API
+/*
+ * @ param aBlinkPin if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+ */
+void IRrecv::begin(uint8_t aReceivePin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
+
+    irparams.recvpin = aReceivePin;
+    irparams.blinkflag = aEnableLEDFeedback;
+    irparams.blinkpin = aLEDFeedbackPin; // default is 0
+
+    if (aEnableLEDFeedback) {
+        if (irparams.blinkpin != 0) {
+            pinMode(irparams.blinkpin, OUTPUT);
+#ifdef BLINKLED
+        } else {
+            pinMode(BLINKLED, OUTPUT);
+#endif
+        }
+    }
+    enableIRIn();
+}
+
+void IRrecv::start() {
+    enableIRIn();
+}
+
+void IRrecv::stop() {
+    disableIRIn();
+}
+void IRrecv::end() {
+    stop();
+    irparams.blinkflag = true;
+}
+
+//+=============================================================================
+// initialization
+//
+#ifdef USE_DEFAULT_ENABLE_IR_IN
+/**
+ * Enable IR reception.
+ */
+void IRrecv::enableIRIn() {
+
+    noInterrupts();
+
+    // Setup pulse clock timer interrupt
+    timerConfigForReceive();
+    TIMER_ENABLE_RECEIVE_INTR;  // Timer interrupt enable
+    TIMER_RESET_INTR_PENDING;   // NOP for most platforms
+
+    interrupts();
+
+    // Initialize state machine state
+    resume();
+
+    // Set pin modes
+    pinMode(irparams.recvpin, INPUT);
+}
+
+/**
+ * Disable IR reception.
+ */
+void IRrecv::disableIRIn() {
+    TIMER_DISABLE_RECEIVE_INTR;
+}
+#endif // USE_DEFAULT_ENABLE_IR_IN
+
+//+=============================================================================
+// Enable/disable blinking of pin 13 on IR processing
+//
+void IRrecv::blink13(bool aEnableLEDFeedback) {
+    irparams.blinkflag = aEnableLEDFeedback;
+    if (aEnableLEDFeedback) {
+        if (irparams.blinkpin != 0) {
+            pinMode(irparams.blinkpin, OUTPUT);
+#ifdef BLINKLED
+        } else {
+            pinMode(BLINKLED, OUTPUT);
+#endif
+        }
+    }
+}
+void IRrecv::setBlinkPin(uint8_t aBlinkPin) {
+    irparams.blinkpin = aBlinkPin;
+    pinMode(aBlinkPin, OUTPUT);
+}
+
+//+=============================================================================
+/**
+ * Returns status of reception
+ * @return true if no reception is on-going.
+ */
+bool IRrecv::isIdle() {
+    return (irparams.rcvstate == IR_REC_STATE_IDLE || irparams.rcvstate == IR_REC_STATE_STOP) ? true : false;
+}
+
+//+=============================================================================
+/**
+ * Restart the ISR state machine
+ * Enable receiving of the next value
+ */
+void IRrecv::resume() {
+    irparams.rcvstate = IR_REC_STATE_IDLE;
+}
+
 /*
  * Is internally called by decode before calling decoders.
  * Must be used to setup data, if you call decoders manually.
  */
 void IRrecv::initDecodedIRData() {
-    lastDecodedCommand = decodedIRData.command;
-    lastDecodedAddress = decodedIRData.address;
-    decodedIRData.command = 0;
-    decodedIRData.address = 0;
 
-    decodedIRData.numberOfBits = 0;
+    decodedIRData.rawDataPtr = &irparams;
+
     if (irparams.overflow) {
+        irparams.overflow = false;
+        irparams.rawlen = 0; // otherwise we have overflow again at next ISR call
         decodedIRData.flags = IRDATA_FLAGS_WAS_OVERFLOW;
+        DBG_PRINTLN("Overflow happend");
+
     } else {
         decodedIRData.flags = IRDATA_FLAGS_EMPTY;
+        // we have no new data so do not need to save old ones
+        lastDecodedCommand = decodedIRData.command;
+        lastDecodedAddress = decodedIRData.address;
+
     }
-    results.value = 0;
+    decodedIRData.command = 0;
+    decodedIRData.address = 0;
+    decodedIRData.decodedRawData = 0;
+    decodedIRData.numberOfBits = 0;
+}
+
+/**
+ * Returns status of reception and copies IR-data to decode_results buffer if true.
+ * @return true if data is available.
+ */
+bool IRrecv::available() {
+    return (irparams.rcvstate == IR_REC_STATE_STOP);
+}
+
+/**
+ *@return decoded IRData,
+ */
+IRData* IRrecv::read() {
+    if (irparams.rcvstate != IR_REC_STATE_STOP) {
+        return NULL;
+    }
+    if (decode()) {
+        return &decodedIRData;
+    } else {
+        return NULL;
+    }
 }
 
 //+=============================================================================
@@ -62,26 +227,23 @@ bool IRrecv::decode() {
     if (irparams.rcvstate != IR_REC_STATE_STOP) {
         return false;
     }
-    if (irparams.overflow) {
-        /*
-         * Do resume here, since the loop will not process any IR data if we return false.
-         */
-        results.overflow = irparams.overflow;
-        irparams.overflow = false;
-        irparams.rawlen = 0;
-        DBG_PRINTLN("Skip overflowed buffer");
-        resume();
-        return false;
-    }
 
     /*
-     * First copy 3 values from irparams to internal results structure
+     * First copy 3 values from irparams for legacy compatibility
      */
     results.rawbuf = irparams.rawbuf;
     results.rawlen = irparams.rawlen;
     results.overflow = irparams.overflow;
 
-    initDecodedIRData();
+    initDecodedIRData(); // sets IRDATA_FLAGS_WAS_OVERFLOW
+
+    if (decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
+        /*
+         * Set overflow flag and return true here, to let the loop call resume or print raw data.
+         */
+        decodedIRData.protocol = UNKNOWN;
+        return true;
+    }
 
 #if DECODE_NEC
     TRACE_PRINTLN("Attempting NEC decode");
@@ -98,10 +260,10 @@ bool IRrecv::decode() {
 #endif
 
 #if DECODE_KASEIKYO && !defined(USE_STANDARD_DECODE) // if USE_STANDARD_DECODE enabled, decodeKaseikyo() is already called by decodePanasonic()
-    TRACE_PRINTLN("Attempting Panasonic/Kaseikyo decode");
-    if (decodeKaseikyo()) {
-        return true;
-    }
+        TRACE_PRINTLN("Attempting Panasonic/Kaseikyo decode");
+        if (decodeKaseikyo()) {
+            return true;
+        }
 #endif
 
 #if DECODE_DENON
@@ -119,10 +281,10 @@ bool IRrecv::decode() {
 #endif
 
 #if DECODE_SHARP && ! DECODE_DENON
-    TRACE_PRINTLN("Attempting Denon/Sharp decode");
-    if (decodeSharp()) {
-        return true;
-    }
+        TRACE_PRINTLN("Attempting Denon/Sharp decode");
+        if (decodeSharp()) {
+            return true;
+        }
 #endif
 
 #if DECODE_RC5
@@ -160,21 +322,14 @@ bool IRrecv::decode() {
         return true;
     }
 #else
-    if (decodeSAMSUNG()) {
-        return true;
-    }
+        if (decodeSAMSUNG()) {
+            return true;
+        }
 #endif
 #endif
     /*
      * Start of the exotic protocols
      */
-
-#if DECODE_SANYO
-    TRACE_PRINTLN("Attempting Sanyo decode");
-    if (decodeSanyo()) {
-        return true;
-    }
-#endif
 
 #if DECODE_WHYNTER
     TRACE_PRINTLN("Attempting Whynter decode");
@@ -204,6 +359,14 @@ bool IRrecv::decode() {
     }
 #endif
 
+// to be removed!
+//#if DECODE_SANYO
+//    TRACE_PRINTLN("Attempting Sanyo decode");
+//    if (decodeSanyo()) {
+//        return true;
+//    }
+//#endif
+
     /*
      * Last resort is the universal hash decode which always return true
      */
@@ -223,115 +386,6 @@ bool IRrecv::decode() {
      */
     resume();
     return false;
-}
-
-//+=============================================================================
-/**
- * Instantiate the IRrecv class. Multiple instantiation is not supported.
- * @param recvpin Arduino pin to use. No sanity check is made.
- */
-IRrecv::IRrecv(int recvpin) {
-    irparams.recvpin = recvpin;
-    irparams.blinkflag = 0;
-}
-/**
- * Instantiate the IRrecv class. Multiple instantiation is not supported.
- * @param recvpin Arduino pin to use, where a demodulating IR receiver is connected.
- * @param blinkpin pin to blink when receiving IR. Not supported by all hardware. No sanity check is made.
- */
-IRrecv::IRrecv(int recvpin, int blinkpin) {
-    irparams.recvpin = recvpin;
-    irparams.blinkpin = blinkpin;
-    pinMode(blinkpin, OUTPUT);
-    irparams.blinkflag = 0;
-}
-
-//+=============================================================================
-// initialization
-//
-#ifdef USE_DEFAULT_ENABLE_IR_IN
-/**
- * Enable IR reception.
- */
-void IRrecv::enableIRIn() {
-    noInterrupts();
-    // Setup pulse clock timer interrupt
-    // Prescale /8 (16M/8 = 0.5 microseconds per tick)
-    // Therefore, the timer interval can range from 0.5 to 128 microseconds
-    // Depending on the reset value (255 to 0)
-    timerConfigForReceive();
-
-    // Timer2 Overflow Interrupt Enable
-    TIMER_ENABLE_RECEIVE_INTR;
-
-    TIMER_RESET_INTR_PENDING;
-
-    interrupts();
-
-    // Initialize state machine state
-    irparams.rcvstate = IR_REC_STATE_IDLE;
-    //    irparams.rawlen = 0; // not required
-
-    // Set pin modes
-    pinMode(irparams.recvpin, INPUT);
-}
-
-/**
- * Disable IR reception.
- */
-void IRrecv::disableIRIn() {
-    TIMER_DISABLE_RECEIVE_INTR;
-}
-
-#endif // USE_DEFAULT_ENABLE_IR_IN
-
-//+=============================================================================
-// Enable/disable blinking of pin 13 on IR processing
-//
-void IRrecv::blink13(int blinkflag) {
-#ifdef BLINKLED
-    irparams.blinkflag = blinkflag;
-    if (blinkflag) {
-        pinMode(BLINKLED, OUTPUT);
-    }
-#endif
-}
-
-//+=============================================================================
-/**
- * Returns status of reception
- * @return true if no reception is on-going.
- */
-bool IRrecv::isIdle() {
-    return (irparams.rcvstate == IR_REC_STATE_IDLE || irparams.rcvstate == IR_REC_STATE_STOP) ? true : false;
-}
-
-/**
- * Returns status of reception and copies IR-data to decode_results buffer if true.
- * @return true if data is available.
- */
-bool IRrecv::available() {
-    if (irparams.rcvstate != IR_REC_STATE_STOP) {
-        return false;
-    }
-    results.rawbuf = irparams.rawbuf;
-    results.rawlen = irparams.rawlen;
-
-    results.overflow = irparams.overflow;
-    if (!results.overflow) {
-        return true;
-    }
-    resume(); //skip overflowed buffer
-    return false;
-}
-
-//+=============================================================================
-/**
- * Restart the ISR state machine
- * Called to re-enable IR reception.
- */
-void IRrecv::resume() {
-    irparams.rcvstate = IR_REC_STATE_IDLE;
 }
 
 # if DECODE_HASH
@@ -374,7 +428,7 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
 bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aOneMarkMicros,
         unsigned int aZeroMarkMicros, unsigned int aBitSpaceMicros, bool aMSBfirst) {
 
-    uint16_t *tRawBufPointer = &results.rawbuf[aStartOffset];
+    uint16_t *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     uint32_t tDecodedData = 0;
 
     if (aMSBfirst) {
@@ -398,7 +452,7 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
             }
             tRawBufPointer++;
 
-            if (tRawBufPointer < &results.rawbuf[results.rawlen]) {
+            if (tRawBufPointer < &decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen]) {
                 // Assume that last space, which is not recorded, is correct, since we can not check it
                 // Check for constant length space
                 if (!MATCH_SPACE(*tRawBufPointer, aBitSpaceMicros)) {
@@ -435,7 +489,7 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
             }
             tRawBufPointer++;
 
-            if (tRawBufPointer < &results.rawbuf[results.rawlen]) {
+            if (tRawBufPointer < &decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen]) {
                 // Assume that last space, which is not recorded, is correct, since we can not check it
                 // Check for constant length space
                 if (!MATCH_SPACE(*tRawBufPointer, aBitSpaceMicros)) {
@@ -451,7 +505,7 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
         }
         TRACE_PRINTLN("");
     }
-    results.value = tDecodedData;
+    decodedIRData.decodedRawData = tDecodedData;
     return true;
 }
 
@@ -469,7 +523,7 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
 bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
         unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst) {
 
-    uint16_t *tRawBufPointer = &results.rawbuf[aStartOffset];
+    uint16_t *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     uint32_t tDecodedData = 0;
 
     if (aMSBfirst) {
@@ -540,7 +594,7 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
         }
         TRACE_PRINTLN("");
     }
-    results.value = tDecodedData;
+    decodedIRData.decodedRawData = tDecodedData;
     return true;
 }
 
@@ -560,7 +614,7 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
 bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
         unsigned int aBiphaseTimeUnit) {
 
-    uint16_t *tRawBufPointer = &results.rawbuf[aStartOffset];
+    uint16_t *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     bool tCheckMark = aStartOffset & 1;
     uint8_t tClockCount = 0; // assume that first transition is significant
     aValueOfSpaceToMarkTransition &= 1; // only 0 or 1 are valid
@@ -607,7 +661,8 @@ bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint
             /*
              * Check space - simulate last not recorded space
              */
-            if (tRawBufPointer == &results.rawbuf[results.rawlen] || MATCH_SPACE(*tRawBufPointer, aBiphaseTimeUnit)) {
+            if (tRawBufPointer == &decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen]
+                    || MATCH_SPACE(*tRawBufPointer, aBiphaseTimeUnit)) {
                 // we have a transition here from mark to space
                 tClockCount++;
                 if (tClockCount & 1) {
@@ -618,7 +673,7 @@ bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint
                 }
             } else if (MATCH_SPACE(*tRawBufPointer, 2 * aBiphaseTimeUnit)) {
                 // We have a double length space -> current bit value is 0 and changes to 1
-                tClockCount = 0; // can reset clock count here
+                tClockCount = 0;                // can reset clock count here
                 // We have a double length mark this includes two valid clock edges
                 if (tBitIndex == 0) {
                     TRACE_PRINT('S'); // do not put start bit into data
@@ -643,7 +698,7 @@ bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint
 
     }
     TRACE_PRINTLN("");
-    results.value = tDecodedData;
+    decodedIRData.decodedRawData = tDecodedData;
     return true;
 }
 //+=============================================================================
@@ -660,17 +715,17 @@ bool IRrecv::decodeHash() {
     long hash = FNV_BASIS_32;
 
 // Require at least 6 samples to prevent triggering on noise
-    if (results.rawlen < 6) {
+    if (decodedIRData.rawDataPtr->rawlen < 6) {
         return false;
     }
 
-    for (unsigned int i = 1; (i + 2) < results.rawlen; i++) {
-        uint8_t value = compare(results.rawbuf[i], results.rawbuf[i + 2]);
+    for (unsigned int i = 1; (i + 2) < decodedIRData.rawDataPtr->rawlen; i++) {
+        uint8_t value = compare(decodedIRData.rawDataPtr->rawbuf[i], decodedIRData.rawDataPtr->rawbuf[i + 2]);
         // Add value into the hash
         hash = (hash * FNV_PRIME_32) ^ value;
     }
 
-    results.value = hash;
+    decodedIRData.decodedRawData = hash;
     decodedIRData.numberOfBits = 32;
     decodedIRData.protocol = UNKNOWN;
 
@@ -678,7 +733,7 @@ bool IRrecv::decodeHash() {
 }
 #  else
 
-#warning "Old decoder functions decodeHash() and decodeHash(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeHash() instead."
+#warning "Old decoder function decodeHash() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeHash() instead."
 
 bool IRrecv::decodeHash() {
     long hash = FNV_BASIS_32;
@@ -700,17 +755,11 @@ bool IRrecv::decodeHash() {
 
     return true;
 }
-
-bool IRrecv::decodeHash(decode_results *aResults) {
-    bool aReturnValue = decodeHash();
-    *aResults = results;
-    return aReturnValue;
-}
 #  endif // defined(USE_STANDARD_DECODE)
 #endif // defined(DECODE_HASH)
 
-const char* IRrecv::getProtocolString() {
-    switch (decodedIRData.protocol) {
+const char* IRrecv::getProtocolString(decode_type_t aProtocol) {
+    switch (aProtocol) {
     default:
     case UNKNOWN:
         return ("UNKNOWN");
@@ -811,73 +860,70 @@ const char* IRrecv::getProtocolString() {
     }
 }
 
-void IRrecv::printIRResultShort(Print *aSerial, IRData *aDecodedDataPtr, uint16_t aLeadingSpaceDuration) {
+void IRrecv::printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpaceTicks) {
     aSerial->print(F("Protocol="));
-    aSerial->print(getProtocolString());
-    if (aDecodedDataPtr->protocol == UNKNOWN) {
+    aSerial->print(getProtocolString(aIRDataPtr->protocol));
+    if (aIRDataPtr->protocol == UNKNOWN) {
         aSerial->print(' ');
-        aSerial->print((results.rawlen + 1) / 2, DEC);
+        aSerial->print((aIRDataPtr->rawDataPtr->rawlen + 1) / 2, DEC);
         aSerial->println(F(" bits received"));
     } else {
         /*
          * New decoders have address and command
          */
         aSerial->print(F(" Address=0x"));
-        aSerial->print(aDecodedDataPtr->address, HEX);
+        aSerial->print(aIRDataPtr->address, HEX);
 
         aSerial->print(F(" Command=0x"));
-        aSerial->print(aDecodedDataPtr->command, HEX);
+        aSerial->print(aIRDataPtr->command, HEX);
 
 #if defined(ENABLE_EXTRA_INFO)
-        if (aDecodedDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
+        if (aIRDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
             aSerial->print(F(" Extra=0x"));
-            aSerial->print(aDecodedDataPtr->extra, HEX);
+            aSerial->print(aIRDataPtr->extra, HEX);
         }
 #endif
 
-        if (aDecodedDataPtr->flags & IRDATA_FLAGS_PARITY_FAILED) {
+        if (aIRDataPtr->flags & IRDATA_FLAGS_PARITY_FAILED) {
             aSerial->print(F(" Parity fail"));
         }
 
-        if (aDecodedDataPtr->flags & IRDATA_TOGGLE_BIT_MASK) {
+        if (aIRDataPtr->flags & IRDATA_TOGGLE_BIT_MASK) {
             aSerial->print(F(" Toggle=1"));
         }
 
-        if (aDecodedDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
+        if (aIRDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
             aSerial->print(F(" Auto-repeat gap="));
-            aSerial->print(aLeadingSpaceDuration * MICROS_PER_TICK);
+            aSerial->print(aLeadingSpaceTicks * MICROS_PER_TICK);
             aSerial->print(F("us"));
         }
 
-        if (aDecodedDataPtr->flags & IRDATA_FLAGS_IS_REPEAT) {
-            aSerial->print(F(" Repeat gap="));
-            aSerial->print((uint32_t) aLeadingSpaceDuration * MICROS_PER_TICK);
-            aSerial->print(F("us"));
+        if (aIRDataPtr->flags & IRDATA_FLAGS_IS_REPEAT) {
+            aSerial->print(F(" Repeat"));
+            if (aLeadingSpaceTicks != 0) {
+                aSerial->print(F(" gap="));
+                aSerial->print(aLeadingSpaceTicks * MICROS_PER_TICK);
+                aSerial->print(F("us"));
+            }
         }
 
         /*
          * Print raw data
          */
         aSerial->print(F(" Raw-Data=0x"));
-        aSerial->print(results.value, HEX);
+        aSerial->print(aIRDataPtr->decodedRawData, HEX);
 
         /*
          * Print number of bits processed
          */
         aSerial->print(F(" ("));
-        if (!(aDecodedDataPtr->flags & IRDATA_FLAGS_IS_OLD_DECODER)) {
-            // New decoder
-            aSerial->print(aDecodedDataPtr->numberOfBits, DEC);
-        } else {
-            // Old decoder
-            aSerial->print(results.bits, DEC);
-        }
+        aSerial->print(aIRDataPtr->numberOfBits, DEC);
         aSerial->println(F(" bits)"));
     }
 
 }
 void IRrecv::printIRResultShort(Print *aSerial) {
-    printIRResultShort(aSerial, &decodedIRData, results.rawbuf[0]);
+    printIRResultShort(aSerial, &decodedIRData, decodedIRData.rawDataPtr->rawbuf[0]);
 }
 
 //+=============================================================================
@@ -886,7 +932,7 @@ void IRrecv::printIRResultShort(Print *aSerial) {
 void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
     // Print Raw data
     aSerial->print(F("rawData["));
-    aSerial->print(results.rawlen, DEC);
+    aSerial->print(decodedIRData.rawDataPtr->rawlen, DEC);
     aSerial->println(F("]: "));
 
     uint32_t tDurationMicros;
@@ -895,18 +941,18 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
      * Print initial gap
      */
     if (aOutputMicrosecondsInsteadOfTicks) {
-        tDurationMicros = (uint32_t) results.rawbuf[0] * MICROS_PER_TICK;
+        tDurationMicros = (uint32_t) decodedIRData.rawDataPtr->rawbuf[0] * MICROS_PER_TICK;
     } else {
-        tDurationMicros = results.rawbuf[0];
+        tDurationMicros = decodedIRData.rawDataPtr->rawbuf[0];
     }
     aSerial->print(F("     -"));
     aSerial->println(tDurationMicros, DEC);
 
-    for (unsigned int i = 1; i < results.rawlen; i++) {
+    for (unsigned int i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
         if (aOutputMicrosecondsInsteadOfTicks) {
-            tDurationMicros = results.rawbuf[i] * MICROS_PER_TICK;
+            tDurationMicros = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
         } else {
-            tDurationMicros = results.rawbuf[i];
+            tDurationMicros = decodedIRData.rawDataPtr->rawbuf[i];
         }
         if (!(i & 1)) {  // even
             aSerial->print('-');
@@ -933,7 +979,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
                 aSerial->print(' ');
             }
             aSerial->print(tDurationMicros, DEC);
-            if (i + 1 < results.rawlen) {
+            if (i + 1 < decodedIRData.rawDataPtr->rawlen) {
                 aSerial->print(','); //',' not required for last one
             }
         }
@@ -962,12 +1008,12 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
         aSerial->print(F("rawTicks["));             // array name
     }
 
-    aSerial->print(results.rawlen - 1, DEC);    // array size
-    aSerial->print(F("] = {"));                    // Start declaration
+    aSerial->print(decodedIRData.rawDataPtr->rawlen - 1, DEC);    // array size
+    aSerial->print(F("] = {"));    // Start declaration
 
 // Dump data
-    for (unsigned int i = 1; i < results.rawlen; i++) {
-        uint32_t tDuration = results.rawbuf[i] * MICROS_PER_TICK;
+    for (unsigned int i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
+        uint32_t tDuration = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
 
         if (i & 1) {
             // Mark
@@ -983,7 +1029,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
             tTicks = (tTicks > 0xFF) ? 0xFF : tTicks; // safety net
             aSerial->print(tTicks);
         }
-        if (i + 1 < results.rawlen)
+        if (i + 1 < decodedIRData.rawDataPtr->rawlen)
             aSerial->print(',');                // ',' not required on last one
         if (!(i & 1))
             aSerial->print(' ');
@@ -1010,8 +1056,8 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
 void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
 
 // Store data, skip leading space
-    for (unsigned int i = 1; i < results.rawlen; i++) {
-        uint32_t tDuration = results.rawbuf[i] * MICROS_PER_TICK;
+    for (unsigned int i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
+        uint32_t tDuration = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
         if (i & 1) {
             // Mark
             tDuration -= MARK_EXCESS_MICROS;
@@ -1029,33 +1075,30 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
 // Now dump "known" codes
     if (decodedIRData.protocol != UNKNOWN) {
 
-        if (!(decodedIRData.flags & IRDATA_FLAGS_IS_OLD_DECODER)) {
-            /*
-             * New decoders have address and command
-             */
-            if (decodedIRData.address > 0xFFFF) {
-                aSerial->print(F("uint32_t"));
-            } else {
-                aSerial->print(F("uint16_t"));
-            }
-            aSerial->print(F(" address = 0x"));
-            aSerial->print(decodedIRData.address, HEX);
-            aSerial->println(';');
-
-            if (decodedIRData.command > 0xFFFF) {
-                aSerial->print(F("uint32_t"));
-            } else {
-                aSerial->print(F("uint16_t"));
-            }
-            aSerial->print(F(" command = 0x"));
-            aSerial->print(decodedIRData.command, HEX);
-            aSerial->println(';');
-
+        /*
+         * New decoders have address and command
+         */
+        if (decodedIRData.address > 0xFFFF) {
+            aSerial->print(F("uint32_t"));
+        } else {
+            aSerial->print(F("uint16_t"));
         }
+        aSerial->print(F(" address = 0x"));
+        aSerial->print(decodedIRData.address, HEX);
+        aSerial->println(';');
+
+        if (decodedIRData.command > 0xFFFF) {
+            aSerial->print(F("uint32_t"));
+        } else {
+            aSerial->print(F("uint16_t"));
+        }
+        aSerial->print(F(" command = 0x"));
+        aSerial->print(decodedIRData.command, HEX);
+        aSerial->println(';');
 
         // All protocols have data
         aSerial->print(F("uint32_t data = 0x"));
-        aSerial->print(results.value, HEX);
+        aSerial->print(decodedIRData.decodedRawData, HEX);
         aSerial->println(';');
         aSerial->println();
     }

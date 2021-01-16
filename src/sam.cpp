@@ -105,8 +105,7 @@ void IRrecv::enableIRIn() {
     //Serial.println("Started timer");
 
     // Initialize state machine variables
-    irparams.rcvstate = IR_REC_STATE_IDLE;
-    irparams.rawlen = 0;
+    resume();
 
     // Set pin modes
     pinMode(irparams.recvpin, INPUT);

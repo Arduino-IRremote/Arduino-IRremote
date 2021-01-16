@@ -15,7 +15,7 @@
 - Fixed bug in Sony decode introduced in 2.8.0.
 
 ## 2.8.0 2020/10
-- Changed License to MIT see https://github.com/z3t0/Arduino-IRremote/issues/397.
+- Changed License to MIT see https://github.com/Arduino-IRremote/Arduino-IRremote/issues/397.
 - Added ATtiny timer 1 support.
 - Changed wrong return code signature of decodePulseDistanceData() and its handling.
 - Removed Mitsubishi protocol, since the implementation is in contradiction with all documentation I could found and therefore supposed to be wrong.
@@ -58,7 +58,7 @@
 - Corrected keywords.txt.
 - BoseWave protocol added PR #690.
 - Formatting comply to the new stylesheet.
-- Renamed "boarddefs.h" [ISSUE #375](https://github.com/z3t0/Arduino-IRremote/issues/375).
+- Renamed "boarddefs.h" [ISSUE #375](https://github.com/Arduino-IRremote/Arduino-IRremote/issues/375).
 - Renamed `SEND_PIN` to `IR_SEND_PIN`.
 - Renamed state macros.
 - Enabled `DUTY_CYCLE` for send signal.
@@ -71,22 +71,22 @@ Changes from #268 by adamlhumphreys
 - Optimized by reducing floating point operations as suggested by @madmalkav (#193).
 - Optimized with macros when using default `MICROS_PER_TICK` and `TOLERANCE`.
 - Made decodeHash as a settable protocol defined by `DECODE_HASH`.
-- Added Philips Extended RC-5 protocol support [PR #522] (https://github.com/z3t0/Arduino-IRremote/pull/522)
+- Added Philips Extended RC-5 protocol support [PR #522] (https://github.com/Arduino-IRremote/Arduino-IRremote/pull/522)
 
 ## 2.4.0 - 2017/08/10
- - Cleanup of hardware dependencies. Merge in SAM support [PR #437](https://github.com/z3t0/Arduino-IRremote/pull/437)
+ - Cleanup of hardware dependencies. Merge in SAM support [PR #437](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/437)
 
 ## 2.3.3 - 2017/03/31
-- Added ESP32 IR receive support [PR #427](https://github.com/z3t0/Arduino-IRremote/pull/425)
+- Added ESP32 IR receive support [PR #427](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/425)
 
 ## 2.2.3 - 2017/03/27
-- Fix calculation of pause length in LEGO PF protocol [PR #427](https://github.com/z3t0/Arduino-IRremote/pull/427)
+- Fix calculation of pause length in LEGO PF protocol [PR #427](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/427)
 
 ## 2.2.2 - 2017/01/20
-- Fixed naming bug [PR #398](https://github.com/z3t0/Arduino-IRremote/pull/398)
+- Fixed naming bug [PR #398](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/398)
 
 ## 2.2.1 - 2016/07/27
-- Added tests for Lego Power Functions Protocol [PR #336](https://github.com/z3t0/Arduino-IRremote/pull/336)
+- Added tests for Lego Power Functions Protocol [PR #336](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/336)
 
 ## 2.2.0 - 2016/06/28
 - Added support for ATmega8535
@@ -99,23 +99,23 @@ Changes from #268 by adamlhumphreys
 - Added support for ATmega64
 - Added support for ATmega128
 
-[PR](https://github.com/z3t0/Arduino-IRremote/pull/324)
+[PR](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/324)
 
 ## 2.1.1 - 2016/05/04
-- Added Lego Power Functions Protocol [PR #309](https://github.com/z3t0/Arduino-IRremote/pull/309)
+- Added Lego Power Functions Protocol [PR #309](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/309)
 
 ## 2.1.0 - 2016/02/20
-- Improved Debugging [PR #258](https://github.com/z3t0/Arduino-IRremote/pull/258)
-- Display TIME instead of TICKS [PR #258](https://github.com/z3t0/Arduino-IRremote/pull/258)
+- Improved Debugging [PR #258](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/258)
+- Display TIME instead of TICKS [PR #258](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/258)
 
 ## 2.0.4 - 2016/02/20
-- Add Panasonic and JVC to IRrecord example [PR](https://github.com/z3t0/Arduino-IRremote/pull/54)
+- Add Panasonic and JVC to IRrecord example [PR](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/54)
 
 ## 2.0.3 - 2016/02/20
-- Change IRSend Raw parameter to const [PR](https://github.com/z3t0/Arduino-IRremote/pull/227)
+- Change IRSend Raw parameter to const [PR](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/227)
 
 ## 2.0.2 - 2015/12/02
-- Added IRremoteInfo Sketch - [PR](https://github.com/z3t0/Arduino-IRremote/pull/241)
+- Added IRremoteInfo Sketch - [PR](https://github.com/Arduino-IRremote/Arduino-IRremote/pull/241)
 - Enforcing changelog.md
 
 ## 2.0.1 - 2015/07/26 - [Release](https://github.com/shirriff/Arduino-IRremote/releases/tag/BETA)

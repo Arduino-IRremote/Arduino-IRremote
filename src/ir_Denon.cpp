@@ -142,21 +142,21 @@ bool IRrecv::decodeDenon() {
     }
 
     // Check for stop mark
-    if (!MATCH_MARK(results.rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
         DBG_PRINT("Denon: ");
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
     // Success
-    uint8_t tFrameBits = results.value & 0x03;
-    decodedIRData.command = results.value >> DENON_FRAME_BITS;
+    uint8_t tFrameBits = decodedIRData.decodedRawData & 0x03;
+    decodedIRData.command = decodedIRData.decodedRawData >> DENON_FRAME_BITS;
     decodedIRData.address = decodedIRData.command >> DENON_COMMAND_BITS;
     uint8_t tCommand = decodedIRData.command & 0xFF;
     decodedIRData.command = tCommand;
 
     // check for autorepeated inverted command
-    if (results.rawbuf[0] < ((DENON_AUTO_REPEAT_SPACE + (DENON_AUTO_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < ((DENON_AUTO_REPEAT_SPACE + (DENON_AUTO_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
         repeatCount++;
         if (tFrameBits == 0x3 || tFrameBits == 0x1) {
             // We are in the auto repeated frame with the inverted command
@@ -186,7 +186,7 @@ bool IRrecv::decodeDenon() {
 }
 #else
 
-#warning "Old decoder functions decodeDenon() and decodeDenon(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeDenon() instead."
+#warning "Old decoder function decodeDenon() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeDenon() instead."
 
 bool IRrecv::decodeDenon() {
     unsigned int offset = 1;  // Skip the gap reading
@@ -219,11 +219,6 @@ bool IRrecv::decodeDenon() {
     return true;
 }
 
-bool IRrecv::decodeDenon(decode_results *aResults) {
-    bool aReturnValue = decodeDenon();
-    *aResults = results;
-    return aReturnValue;
-}
 #endif
 
 void IRsend::sendDenon(unsigned long data, int nbits) {

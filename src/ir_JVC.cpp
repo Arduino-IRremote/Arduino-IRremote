@@ -101,18 +101,18 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
 bool IRrecv::decodeJVC() {
 
     // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark.
-    if (results.rawlen != ((2 * JVC_BITS) + 4) && results.rawlen != ((2 * JVC_BITS) + 2)) {
+    if (decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 4) && decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 2)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
 
-    if (results.rawlen == ((2 * JVC_BITS) + 2)) {
+    if (decodedIRData.rawDataPtr->rawlen == ((2 * JVC_BITS) + 2)) {
         /*
          * Check for repeat
          */
-        if (results.rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 2) / MICROS_PER_TICK))
-                && MATCH_MARK(results.rawbuf[1], JVC_BIT_MARK) && MATCH_MARK(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
+        if (decodedIRData.rawDataPtr->rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 2) / MICROS_PER_TICK))
+                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], JVC_BIT_MARK) && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen - 1], JVC_BIT_MARK)) {
             /*
              * We have a repeat here, so do not check for start bit
              */
@@ -121,7 +121,7 @@ bool IRrecv::decodeJVC() {
     } else {
 
         // Check header "mark" and "space"
-        if (!MATCH_MARK(results.rawbuf[1], JVC_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], JVC_HEADER_SPACE)) {
+        if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], JVC_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], JVC_HEADER_SPACE)) {
 //            DBG_PRINT("JVC: ");
 //            DBG_PRINTLN("Header mark or space length is wrong");
             return false;
@@ -136,8 +136,8 @@ bool IRrecv::decodeJVC() {
     }
 
     // Success
-    uint8_t tCommand = results.value >> JVC_ADDRESS_BITS;  // upper 8 bits of LSB first value
-    uint8_t tAddress = results.value & 0xFF;    // lowest 8 bit of LSB first value
+    uint8_t tCommand = decodedIRData.decodedRawData >> JVC_ADDRESS_BITS;  // upper 8 bits of LSB first value
+    uint8_t tAddress = decodedIRData.decodedRawData & 0xFF;    // lowest 8 bit of LSB first value
 
     decodedIRData.command = tCommand;
     decodedIRData.address = tAddress;
@@ -148,7 +148,7 @@ bool IRrecv::decodeJVC() {
 }
 #else
 
-#warning "Old decoder functions decodeJVC() and decodeJVC(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeJVC() instead."
+#warning "Old decoder function decodeJVC() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeJVC() instead."
 
 //+=============================================================================
 bool IRrecv::decodeJVC() {
@@ -203,11 +203,6 @@ bool IRrecv::decodeJVC() {
     return true;
 }
 
-bool IRrecv::decodeJVC(decode_results *aResults) {
-    bool aReturnValue = decodeJVC();
-    *aResults = results;
-    return aReturnValue;
-}
 #endif
 
 //+=============================================================================

@@ -135,13 +135,13 @@ void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepea
 bool IRrecv::decodeNEC() {
 
     // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
-    if (results.rawlen != ((2 * NEC_BITS) + 4) && (results.rawlen != 4)) {
+    if (decodedIRData.rawDataPtr->rawlen != ((2 * NEC_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
     // Check header "mark" and "space", this must be done for repeat and data
-    if (!MATCH_MARK(results.rawbuf[1], NEC_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], NEC_HEADER_SPACE)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], NEC_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], NEC_HEADER_SPACE)) {
         // TRACE_PRINT since I saw this too often
         TRACE_PRINT(F("NEC: "));
         TRACE_PRINTLN(F("Header mark or space length is wrong"));
@@ -149,8 +149,8 @@ bool IRrecv::decodeNEC() {
     }
 
     // Check for repeat
-    if (results.rawlen == 4) {
-        if (MATCH_MARK(results.rawbuf[3], NEC_BIT_MARK)) {
+    if (decodedIRData.rawDataPtr->rawlen == 4) {
+        if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], NEC_BIT_MARK)) {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
@@ -166,7 +166,7 @@ bool IRrecv::decodeNEC() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(results.rawbuf[3 + (2 * NEC_BITS)], NEC_BIT_MARK)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * NEC_BITS)], NEC_BIT_MARK)) {
         DBG_PRINT(F("NEC: "));
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
@@ -174,7 +174,7 @@ bool IRrecv::decodeNEC() {
 
     // Success
     LongUnion tValue;
-    tValue.ULong = results.value;
+    tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tValue.UByte.MidHighByte;
     // plausi check for command
     if (tValue.UByte.MidHighByte != (uint8_t) (~tValue.UByte.HighByte)) {
@@ -197,7 +197,7 @@ bool IRrecv::decodeNEC() {
 }
 #else
 
-#warning "Old decoder functions decodeNEC() and decodeNEC(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeNEC() instead."
+#warning "Old decoder function decodeNEC() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeNEC() instead."
 bool IRrecv::decodeNEC() {
     unsigned int offset = 1;  // Index in to results; Skip first space.
 
@@ -251,12 +251,6 @@ bool IRrecv::decodeNEC() {
     decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
 
     return true;
-}
-
-bool IRrecv::decodeNEC(decode_results *aResults) {
-    bool aReturnValue = decodeNEC();
-    *aResults = results;
-    return aReturnValue;
 }
 #endif
 

@@ -27,6 +27,15 @@ Protocols can be switched off and on by changing the lines in *IRremote.h*:
 # [Wiki](https://github.com/z3t0/Arduino-IRremote/wiki)
 This is a quite old but maybe useful wiki for this library.
 
+# Converting your program to the 3.x version
+- Now there is  an **IRreceiver** and **IRsender** object like the well known Arduino **Serial** object.
+- Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;`in your program.
+- Like for the Serial object, call `[IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);](https://github.com/Arduino-IRremote/Arduino-IRremote/examples/IRreceiveDemo/IRreceiveDemo.ino#L38)` or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK);` instead of the `IrReceiver.enableIRIn();` in setup().
+- Old `decode(decode_results *aResults)` is replaced by simple `decode()`.
+- Overflow and many other flags are now in [IrReceiver.receivedIRData.flags](https://github.com/Arduino-IRremote/Arduino-IRremote/src/IRremote.h#L126).
+
+If you discover more changes, which should be documented, please send me a mail to armin.arduino@gmail.com.
+
 # FAQ
 - IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)<br/>
  Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 µs.
@@ -76,6 +85,7 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `USE_SOFT_SEND_PWM` | IRremote.h | disabled | Use carrier PWM generation in software, instead of hardware PWM. |
 | `PULSE_CORRECTION_MICROS` | IRremote.h | 3 | If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses. |
 | `USE_SPIN_WAIT` | IRremote.h | disabled | If USE_SOFT_SEND_PWM, use spin wait instead of delayMicros(). |
+| `SUPPORT_SEND_EXOTIC_PROTOCOLS` | IRremote.h | enabled | If activated, BOSEWAVE and LEGO_PF are supported in the write method. Costs around 500 bytes program space. |
 | `RAW_BUFFER_LENGTH` | IRremoteint.h | 101 | Buffer size of raw input buffer. Must be odd! |
 | `IR_SEND_DUTY_CYCLE` | IRremoteBoardDefs.h | 30 | Duty cycle of IR send signal. |
 | `MICROS_PER_TICK` | IRremoteBoardDefs.h | 50 | Resolution of the raw input buffer data. |
@@ -83,6 +93,7 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
 | `DO_NOT_USE_FEEDBACK_LED` | TinyIRReceiver.h | disabled | Enable it to disable the feedback LED function. |
+
 
 ### Modifying compile options with Arduino IDE
 First use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>

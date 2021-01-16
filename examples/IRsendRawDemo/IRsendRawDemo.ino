@@ -17,8 +17,6 @@
 
 #include <IRremote.h>
 
-IRsend IrSender;
-
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
 #define Serial SerialUSB

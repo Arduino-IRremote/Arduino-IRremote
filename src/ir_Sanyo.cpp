@@ -44,7 +44,7 @@ bool IRrecv::decodeSanyo() {
         //Serial.print("IR Gap found: ");
         results.bits = 0;
         results.value = REPEAT;
-        decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER | IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = SANYO;
         return true;
     }
@@ -87,11 +87,5 @@ bool IRrecv::decodeSanyo() {
 
     results.value = data;
     decodedIRData.protocol = SANYO;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
-}
-bool IRrecv::decodeSanyo(decode_results *aResults) {
-    bool aReturnValue = decodeSanyo();
-    *aResults = results;
-    return aReturnValue;
 }

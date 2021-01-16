@@ -115,7 +115,7 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
 bool IRrecv::decodeRC5() {
 
     // Check we have the right amount of data (11 to 26). The +2 is for initial gap and start bit mark.
-    if (results.rawlen < MIN_RC5_MARKS + 2 && results.rawlen > ((2 * RC5_BITS) + 2)) {
+    if (decodedIRData.rawDataPtr->rawlen < MIN_RC5_MARKS + 2 && decodedIRData.rawDataPtr->rawlen > ((2 * RC5_BITS) + 2)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
@@ -129,7 +129,7 @@ bool IRrecv::decodeRC5() {
 
     // Success
     LongUnion tValue;
-    tValue.ULong = results.value;
+    tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tValue.UByte.LowByte & 0x3F;
     decodedIRData.address = (tValue.UWord.LowWord >> RC5_COMMAND_BITS) & 0x1F;
     if ((tValue.UWord.LowWord & (1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS))) == 0) {
@@ -141,7 +141,7 @@ bool IRrecv::decodeRC5() {
     }
 
     // check for repeat
-    if (results.rawbuf[0] < (RC5_REPEAT_PERIOD / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < (RC5_REPEAT_PERIOD / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
 
@@ -153,7 +153,7 @@ bool IRrecv::decodeRC5() {
 
 #else
 
-#warning "Old decoder functions decodeRC5() and decodeRC5(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeRC5() instead."
+#warning "Old decoder function decodeRC5() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeRC5() instead."
 
 //+=============================================================================
 // Gets one undecoded level at a time from the raw buffer.
@@ -244,11 +244,6 @@ bool IRrecv::decodeRC5() {
     decodedIRData.protocol = RC5;
     decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
-}
-bool IRrecv::decodeRC5(decode_results *aResults) {
-    bool aReturnValue = decodeRC5();
-    *aResults = results;
-    return aReturnValue;
 }
 #endif
 
@@ -392,13 +387,13 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
 bool IRrecv::decodeRC6() {
 
     // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space
-    if (results.rawlen < MIN_RC6_MARKS + 3 && results.rawlen > ((2 * RC6_BITS) + 3)) {
+    if (decodedIRData.rawDataPtr->rawlen < MIN_RC6_MARKS + 3 && decodedIRData.rawDataPtr->rawlen > ((2 * RC6_BITS) + 3)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
     // Check header "mark" and "space", this must be done for repeat and data
-    if (!MATCH_MARK(results.rawbuf[1], RC6_HEADER_MARK) || !MATCH_SPACE(results.rawbuf[2], RC6_HEADER_SPACE)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], RC6_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_SPACE)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
@@ -417,10 +412,10 @@ bool IRrecv::decodeRC6() {
         DBG_PRINTLN(F("Preamble mark or space length is wrong"));
         return false;
     }
-    if (results.value != 4) {
+    if (decodedIRData.decodedRawData != 4) {
         DBG_PRINT(F("RC6: "));
         DBG_PRINT(F("Preamble content "));
-        DBG_PRINT(results.value);
+        DBG_PRINT(decodedIRData.decodedRawData);
         DBG_PRINTLN(F(" is not 4"));
         return false;
     }
@@ -430,12 +425,12 @@ bool IRrecv::decodeRC6() {
      * Maybe we do not need to check all the timings
      */
     uint8_t tStartOffset;
-    if (MATCH_MARK(results.rawbuf[9], RC6_UNIT) && MATCH_SPACE(results.rawbuf[10], 2 * RC6_UNIT)) {
+    if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[9], RC6_UNIT) && MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[10], 2 * RC6_UNIT)) {
         // toggle = 0
-        if (MATCH_MARK(results.rawbuf[11], 2 * RC6_UNIT)) {
+        if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[11], 2 * RC6_UNIT)) {
             // Address MSB is 0
             tStartOffset = 13;
-        } else if (MATCH_MARK(results.rawbuf[11], 3 * RC6_UNIT)) {
+        } else if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[11], 3 * RC6_UNIT)) {
             // Address MSB is 1
             tStartOffset = 12;
         } else {
@@ -443,13 +438,13 @@ bool IRrecv::decodeRC6() {
             DBG_PRINTLN(F("Toggle mark or space length is wrong"));
             return false;
         }
-    } else if (MATCH_MARK(results.rawbuf[9], 3 * RC6_UNIT)) {
+    } else if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[9], 3 * RC6_UNIT)) {
         // Toggle = 1
         decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK;
-        if (MATCH_SPACE(results.rawbuf[10], 2 * RC6_UNIT)) {
+        if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[10], 2 * RC6_UNIT)) {
             // Address MSB is 1
             tStartOffset = 12;
-        } else if (MATCH_SPACE(results.rawbuf[10], 3 * RC6_UNIT)) {
+        } else if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[10], 3 * RC6_UNIT)) {
             // Address MSB is 0
             tStartOffset = 11;
         } else {
@@ -474,12 +469,12 @@ bool IRrecv::decodeRC6() {
 
     // Success
     LongUnion tValue;
-    tValue.ULong = results.value;
+    tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tValue.UByte.LowByte;
     decodedIRData.address = tValue.UByte.MidLowByte;
 
     // check for repeat, do not check toggle bit yet
-    if (results.rawbuf[0] < ((RC6_REPEAT_SPACE + (RC6_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < ((RC6_REPEAT_SPACE + (RC6_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
 
@@ -491,7 +486,7 @@ bool IRrecv::decodeRC6() {
 
 #else
 
-#warning "Old decoder functions decodeRC5() and decodeRC5(decode_results *aResults) are enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeRC5() instead."
+#warning "Old decoder function decodeRC5() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeRC5() instead."
 
 //+=============================================================================
 bool IRrecv::decodeRC6() {
@@ -557,12 +552,6 @@ bool IRrecv::decodeRC6() {
     decodedIRData.protocol = RC6;
     decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
-}
-
-bool IRrecv::decodeRC6(decode_results *aResults) {
-    bool aReturnValue = decodeRC6();
-    *aResults = results;
-    return aReturnValue;
 }
 #endif
 

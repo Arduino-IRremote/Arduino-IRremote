@@ -1,5 +1,9 @@
 //******************************************************************************
 // IRremote.cpp
+//
+//  Contains all IRreceiver static functions
+//
+//
 // Initially coded 2009 Ken Shirriff http://www.righto.com
 //
 // Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
@@ -15,7 +19,7 @@
 // LG added by Darryl Smith (based on the JVC protocol)
 // Whynter A/C ARC-110WD added by Francesco Meschia
 //******************************************************************************
- /************************************************************************************
+/************************************************************************************
  * MIT License
  *
  * Copyright (c) 2009-2021 Ken Shirriff, Rafi Khan, Armin Joachimsmeyer
@@ -155,7 +159,7 @@ ISR (TIMER_INTR_NAME) {
     irparams.timer++;  // One more 50uS tick
 
     // clip timer at maximum 0xFFFF
-    if(irparams.timer == 0) {
+    if (irparams.timer == 0) {
         irparams.timer--;
     }
 
@@ -220,23 +224,29 @@ ISR (TIMER_INTR_NAME) {
             irparams.timer = 0;  // Reset gap timer, to prepare for call of resume()
         }
     }
+    setFeedbackLED(irdata == MARK);
+}
 
-#ifdef BLINKLED
-    // If requested, flash LED while receiving IR data
+// If requested, flash LED while receiving IR data
+
+void setFeedbackLED(bool aSwitchLedOn) {
     if (irparams.blinkflag) {
-        if (irdata == MARK) {
+        if (aSwitchLedOn) {
             if (irparams.blinkpin) {
                 digitalWrite(irparams.blinkpin, HIGH); // Turn user defined pin LED on
+#ifdef BLINKLED_ON
             } else {
                 BLINKLED_ON();   // if no user defined LED pin, turn default LED pin for the hardware on
+#endif
             }
         } else {
             if (irparams.blinkpin) {
-                digitalWrite(irparams.blinkpin, LOW); // Turn user defined pin LED on
+                digitalWrite(irparams.blinkpin, LOW); // Turn user defined pin LED off
+#ifdef BLINKLED_OFF
             } else {
                 BLINKLED_OFF();   // if no user defined LED pin, turn default LED pin for the hardware on
+#endif
             }
         }
     }
-#endif // BLINKLED
 }

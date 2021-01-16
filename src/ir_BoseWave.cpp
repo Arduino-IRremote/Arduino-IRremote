@@ -70,21 +70,21 @@ void IRsend::sendBoseWave(uint8_t aCommand, uint8_t aNumberOfRepeats) {
 bool IRrecv::decodeBoseWave() {
 
     // Check header "mark"
-    if (!MATCH_MARK(results.rawbuf[1], BOSEWAVE_HEADER_MARK)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], BOSEWAVE_HEADER_MARK)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
     // Check we have enough data +4 for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen != (2 * BOSEWAVE_BITS) + 4) {
+    if (decodedIRData.rawDataPtr->rawlen != (2 * BOSEWAVE_BITS) + 4) {
         DBG_PRINT("Bose: ");
         DBG_PRINT("Data length=");
-        DBG_PRINT(results.rawlen);
+        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
         DBG_PRINTLN(" is not 36");
         return false;
     }
     // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[2], BOSEWAVE_HEADER_SPACE)) {
+    if (!MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], BOSEWAVE_HEADER_SPACE)) {
         DBG_PRINT("Bose: ");
         DBG_PRINTLN("Header space length is wrong");
         return false;
@@ -97,14 +97,14 @@ bool IRrecv::decodeBoseWave() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(results.rawbuf[3 + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {
         DBG_PRINT("Bose: ");
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
     // Success
-    uint16_t tDecodedValue = results.value;
+    uint16_t tDecodedValue = decodedIRData.decodedRawData;
     uint8_t tCommandNotInverted = tDecodedValue & 0xFF;
     uint8_t tCommandInverted = tDecodedValue >> 8;
     // parity check for command. Use this variant to avoid compiler warning "comparison of promoted ~unsigned with unsigned [-Wsign-compare]"
@@ -115,7 +115,7 @@ bool IRrecv::decodeBoseWave() {
     }
 
     // check for repeat
-    if (results.rawbuf[0] < ((BOSEWAVE_REPEAT_SPACE + (BOSEWAVE_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < ((BOSEWAVE_REPEAT_SPACE + (BOSEWAVE_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
     }
 

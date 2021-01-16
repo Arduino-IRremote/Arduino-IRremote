@@ -18,8 +18,6 @@
 #include "ATtinySerialOut.h"
 #endif
 
-IRsend IrSender;
-
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
 #define Serial SerialUSB
@@ -36,7 +34,8 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
-    Serial.println(F("Send with standard protocol encoders"));
+
+    IrSender.begin(true); // Enable feedback LED,
 }
 
 // Some protocols have 5, some 8 and some 16 bit Address
@@ -134,6 +133,16 @@ void loop() {
     delay(2000);
 
     /*
+     * Force buffer overflow
+     */
+    Serial.println(F("Force buffer overflow by sending 100 marks and spaces"));
+    for (int i = 0; i < RAW_BUFFER_LENGTH; ++i) {
+        IrSender.mark(400);
+        IrSender.space(400);
+    }
+    delay(2000);
+
+    /*
      * Increment values
      */
     sAddress += 0x0101;
@@ -144,5 +153,5 @@ void loop() {
         sRepeats = 4;
     }
 
-    delay(5000); //  second additional delay between each values
+    delay(4000); // additional delay at the end of each loop
 }

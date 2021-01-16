@@ -99,15 +99,15 @@ bool IRrecv::decodeMagiQuest() {
 #endif
 
     // Check we have enough data (102), + 6 for 2 start and 1 stop bit
-    if (results.rawlen != (2 * MAGIQUEST_BITS) + 6) {
+    if (decodedIRData.rawDataPtr->rawlen != (2 * MAGIQUEST_BITS) + 6) {
         return false;
     }
 
     // Read the bits in
     data.llword = 0;
-    while (offset + 1 < results.rawlen) {
-        mark_ = results.rawbuf[offset++];
-        space_ = results.rawbuf[offset++];
+    while (offset + 1 < decodedIRData.rawDataPtr->rawlen) {
+        mark_ = decodedIRData.rawDataPtr->rawbuf[offset++];
+        space_ = decodedIRData.rawDataPtr->rawbuf[offset++];
         ratio_ = space_ / mark_;
 
         DBG_PRINT("MagiQuest: ");
@@ -146,13 +146,7 @@ bool IRrecv::decodeMagiQuest() {
     decodedIRData.numberOfBits = offset / 2;
     decodedIRData.flags = IRDATA_FLAGS_EXTRA_INFO;
     decodedIRData.extra = data.cmd.magnitude;
-    results.magnitude = data.cmd.magnitude;
-    results.value = data.cmd.wand_id;
+    decodedIRData.decodedRawData = data.cmd.wand_id;
 
     return true;
-}
-bool IRrecv::decodeMagiQuest(decode_results *aResults) {
-    bool aReturnValue = decodeMagiQuest();
-    *aResults = results;
-    return aReturnValue;
 }

@@ -208,7 +208,11 @@ void measureTimingISR()
      * read level and give feedback
      */
     uint8_t tInputLevel = digitalRead(IR_INPUT_PIN);
+#if defined(__AVR_ATtiny3217__)
+    digitalWrite(LED_BUILTIN, (PinStatus)!tInputLevel);
+#else
     digitalWrite(LED_BUILTIN, !tInputLevel);
+#endif
 
     if (tMicrosDelta > 10000)
     {

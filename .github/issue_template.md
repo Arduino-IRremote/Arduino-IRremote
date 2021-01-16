@@ -43,7 +43,7 @@ Use [a gist](gist.github.com) if the code exceeds 30 lines
 **checklist:**
 - [] I have **read** the README.md file thoroughly
 - [] I have searched existing issues to see if there is anything I have missed.
-- [] The latest [release](https://github.com/z3t0/Arduino-IRremote/releases/latest) is used
+- [] The latest [repo version](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) is used
 - [] Any code referenced is provided and if over 30 lines a gist is linked INSTEAD of it being pasted in here
 - [] The title of the issue is helpful and relevant 
 
