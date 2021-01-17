@@ -40,6 +40,8 @@
 //==============================================================================
 // MSB first, timing and repeat is like NEC but 28 data bits
 // MSB! first, 1 start bit + 8 bit address + 16 bit command + 4 bit parity + 1 stop bit.
+// In https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/755 we saw no key repetition
+// and a intended parity error, or something I do not understand.
 #define LG_ADDRESS_BITS          8
 #define LG_COMMAND_BITS         16
 #define LG_CHECKSUM_BITS         4
@@ -79,6 +81,24 @@ void IRsend::sendLGRepeat() {
  * There is NO delay after the last sent repeat!
  */
 void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+    uint32_t tRawData = ((uint32_t) aAddress << (LG_COMMAND_BITS + LG_CHECKSUM_BITS)) | (aCommand << LG_CHECKSUM_BITS);
+    /*
+     * My guess of the checksum
+     */
+    uint8_t tChecksum = 0;
+    uint16_t tTempForChecksum = aCommand;
+    for (int i = 0; i < 4; ++i) {
+        tChecksum += tTempForChecksum & 0xF; // add low nibble
+        tTempForChecksum >>= 4; // shift by a nibble
+    }
+    tRawData |= tChecksum;
+    sendLG(tRawData, aNumberOfRepeats, aIsRepeat);
+}
+
+/*
+ * Here you can put your raw data, even one with "wrong" parity
+ */
+void IRsend::sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat) {
     if (aIsRepeat) {
         sendLGRepeat();
         return;
@@ -91,21 +111,8 @@ void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeat
     mark(LG_HEADER_MARK);
     space(LG_HEADER_SPACE);
 
-    uint32_t tData = ((uint32_t) aAddress << (LG_COMMAND_BITS + LG_CHECKSUM_BITS)) | (aCommand << LG_CHECKSUM_BITS);
-
-    /*
-     * My guess of the checksum
-     */
-    uint8_t tChecksum = 0;
-    uint16_t tTempForChecksum = aCommand;
-    for (int i = 0; i < 4; ++i) {
-        tChecksum += tTempForChecksum & 0xF; // add low nibble
-        tTempForChecksum >>= 4; // shift by a nibble
-    }
-    tData |= tChecksum;
-
     // MSB first
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, tData, LG_BITS, true, true);
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, true, true);
 
     interrupts();
 
@@ -146,7 +153,8 @@ bool IRrecv::decodeLG() {
 
     // Check for repeat - here we have another header space length
     if (decodedIRData.rawDataPtr->rawlen == 4) {
-        if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], LG_REPEAT_HEADER_SPACE) && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], LG_BIT_MARK)) {
+        if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], LG_REPEAT_HEADER_SPACE)
+                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], LG_BIT_MARK)) {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;

@@ -428,6 +428,7 @@ public:
 
     void sendLGRepeat();
     void sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
+    void sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
     void sendNECRepeat();
     void sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
 
