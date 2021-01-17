@@ -388,34 +388,6 @@ bool IRrecv::decode() {
     return false;
 }
 
-# if DECODE_HASH
-//+=============================================================================
-// hashdecode - decode an arbitrary IR code.
-// Instead of decoding using a standard encoding scheme
-// (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
-//
-// The algorithm: look at the sequence of MARK signals, and see if each one
-// is shorter (0), the same length (1), or longer (2) than the previous.
-// Do the same with the SPACE signals.  Hash the resulting sequence of 0's,
-// 1's, and 2's to a 32-bit value.  This will give a unique value for each
-// different code (probably), for most code systems.
-//
-// http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
-//
-// Compare two tick values, returning 0 if newval is shorter,
-// 1 if newval is equal, and 2 if newval is longer
-// Use a tolerance of 20% to enable 500 and 600 (NEC timing) to be equal
-//
-uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
-    if (newval * 10 < oldval * 8) {
-        return 0;
-    }
-    if (oldval * 10 < newval * 8) {
-        return 2;
-    }
-    return 1;
-}
-
 /*
  * Decode pulse width protocols.
  * The space (pause) has constant length, the length of the mark determines the bit value.
@@ -701,6 +673,34 @@ bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint
     decodedIRData.decodedRawData = tDecodedData;
     return true;
 }
+
+#if DECODE_HASH
+//+=============================================================================
+// hashdecode - decode an arbitrary IR code.
+// Instead of decoding using a standard encoding scheme
+// (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
+//
+// The algorithm: look at the sequence of MARK signals, and see if each one
+// is shorter (0), the same length (1), or longer (2) than the previous.
+// Do the same with the SPACE signals.  Hash the resulting sequence of 0's,
+// 1's, and 2's to a 32-bit value.  This will give a unique value for each
+// different code (probably), for most code systems.
+//
+// http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
+//
+// Compare two tick values, returning 0 if newval is shorter,
+// 1 if newval is equal, and 2 if newval is longer
+// Use a tolerance of 20% to enable 500 and 600 (NEC timing) to be equal
+//
+uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
+    if (newval * 10 < oldval * 8) {
+        return 0;
+    }
+    if (oldval * 10 < newval * 8) {
+        return 2;
+    }
+    return 1;
+}
 //+=============================================================================
 // Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
 // Converts the raw code values into a 32-bit hash code.
@@ -756,7 +756,7 @@ bool IRrecv::decodeHash() {
     return true;
 }
 #  endif // defined(USE_STANDARD_DECODE)
-#endif // defined(DECODE_HASH)
+#endif // DECODE_HASH
 
 const char* IRrecv::getProtocolString(decode_type_t aProtocol) {
     switch (aProtocol) {

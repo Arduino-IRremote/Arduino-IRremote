@@ -80,6 +80,70 @@
 #define LEGO_AUTO_REPEAT_PERIOD_MAX 230000 // space for channel 3
 
 /*
+ *  compatibility function
+ */
+void IRsend::sendLegoPowerFunctions(IRData *aIRSendData, bool aDoSend5Times) {
+    sendLegoPowerFunctions(aIRSendData->address, aIRSendData->command, aIRSendData->command >> 4, aDoSend5Times);
+}
+
+/*
+ * Compatibility function for legacy code, this calls the send raw data function
+ */
+void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
+    sendLegoPowerFunctions(aRawData, (aRawData >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0x3, aDoSend5Times);
+}
+
+/*
+ * Here we process the structured data, and call the send raw data function
+ */
+void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t aMode, bool aDoSend5Times) {
+    aChannel &= 0x0F; // allow toggle and escape bits too
+    aCommand &= 0x0F;
+    aMode &= 0x0F;
+    uint8_t tParity = 0xF ^ aChannel ^ aMode ^ aCommand;
+    // send 4 bit channel, 4 bit mode, 4 bit command, 4 bit parity
+    uint16_t tRawData = (((aChannel << LEGO_MODE_BITS) | aMode) << (LEGO_COMMAND_BITS + LEGO_PARITY_BITS))
+            | (aCommand << LEGO_PARITY_BITS) | tParity;
+    sendLegoPowerFunctions(tRawData, aChannel, aDoSend5Times);
+}
+
+void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
+    enableIROut(38);
+
+    DBG_PRINT("aRawData=0x");
+    DBG_PRINTLN(aRawData, HEX);
+
+    aChannel &= 0x03; // we have 4 channels
+
+    uint8_t tNumberOfCommands = 1;
+    if (aDoSend5Times) {
+        tNumberOfCommands = 5;
+    }
+// required for repeat timing, see http://www.hackvandedam.nl/blog/?page_id=559
+    uint8_t tRepeatPeriod = (110 - (LEGO_AVERAGE_DURATION / 1000)) + (aChannel * 40); // from 100 to 220
+
+    while (tNumberOfCommands > 0) {
+        noInterrupts();
+
+        // Header
+        mark(LEGO_HEADER_MARK);
+        space(LEGO_HEADER_SPACE);
+
+        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS, true, true); // MSB first
+
+        interrupts();
+
+        tNumberOfCommands--;
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            // send repeated command with a fixed space gap
+            delay(tRepeatPeriod);
+        }
+    }
+}
+
+#if DECODE_LEGO_PF
+/*
  * Mode is stored in the upper nibble of command
  */
 bool IRrecv::decodeLegoPowerFunctions() {
@@ -161,76 +225,5 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     return true;
 }
-#ifdef DEBUG
-namespace {
-void logFunctionParameters(uint16_t data, bool repeat) {
-    DBG_PRINT("sendLegoPowerFunctions(data=");
-    DBG_PRINT(data);
-    DBG_PRINT(", repeat=");
-    DBG_PRINTLN(repeat ? "true)" : "false)");
-}
-} // anonymous namespace
-#endif // DEBUG
 
-/*
- *  compatibility function for receive
- */
-void IRsend::sendLegoPowerFunctions(IRData *aIRSendData, bool aDoSend5Times) {
-    sendLegoPowerFunctions(aIRSendData->address, aIRSendData->command, aIRSendData->command >> 4, aDoSend5Times);
-}
-
-/*
- * Compatibility function for legacy code, this calls the send raw data function
- */
-void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
-    sendLegoPowerFunctions(aRawData, (aRawData >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0x3, aDoSend5Times);
-}
-
-/*
- * Here we process the structured data, and call the send raw data function
- */
-void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t aMode, bool aDoSend5Times) {
-    aChannel &= 0x0F; // allow toggle and escape bits too
-    aCommand &= 0x0F;
-    aMode &= 0x0F;
-    uint8_t tParity = 0xF ^ aChannel ^ aMode ^ aCommand;
-    // send 4 bit channel, 4 bit mode, 4 bit command, 4 bit parity
-    uint16_t tRawData = (((aChannel << LEGO_MODE_BITS) | aMode) << (LEGO_COMMAND_BITS + LEGO_PARITY_BITS))
-            | (aCommand << LEGO_PARITY_BITS) | tParity;
-    sendLegoPowerFunctions(tRawData, aChannel, aDoSend5Times);
-}
-
-void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
-    enableIROut(38);
-
-    DBG_PRINT("aRawData=0x");
-    DBG_PRINTLN(aRawData, HEX);
-
-    aChannel &= 0x03; // we have 4 channels
-
-    uint8_t tNumberOfCommands = 1;
-    if (aDoSend5Times) {
-        tNumberOfCommands = 5;
-    }
-// required for repeat timing, see http://www.hackvandedam.nl/blog/?page_id=559
-    uint8_t tRepeatPeriod = (110 - (LEGO_AVERAGE_DURATION / 1000)) + (aChannel * 40); // from 100 to 220
-
-    while (tNumberOfCommands > 0) {
-        noInterrupts();
-
-        // Header
-        mark(LEGO_HEADER_MARK);
-        space(LEGO_HEADER_SPACE);
-
-        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS, true, true); // MSB first
-
-        interrupts();
-
-        tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            // send repeated command with a fixed space gap
-            delay(tRepeatPeriod);
-        }
-    }
-}
+#endif // DECODE_LEGO_PF

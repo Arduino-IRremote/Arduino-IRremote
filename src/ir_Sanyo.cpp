@@ -1,6 +1,7 @@
 // to be removed
 #include "IRremote.h"
 
+#if DECODE_SANYO
 //==============================================================================
 //                      SSSS   AAA   N   N  Y   Y   OOO
 //                     S      A   A  NN  N   Y Y   O   O
@@ -89,3 +90,4 @@ bool IRrecv::decodeSanyo() {
     decodedIRData.protocol = SANYO;
     return true;
 }
+#endif // DECODE_SANYO

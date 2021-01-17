@@ -37,6 +37,7 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
     interrupts();
 }
 
+#if DECODE_WHYNTER
 //+=============================================================================
 bool IRrecv::decodeWhynter() {
 
@@ -67,3 +68,4 @@ bool IRrecv::decodeWhynter() {
     decodedIRData.protocol = WHYNTER;
     return true;
 }
+#endif // DECODE_WHYNTER

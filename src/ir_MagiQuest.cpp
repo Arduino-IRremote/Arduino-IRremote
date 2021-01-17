@@ -80,6 +80,7 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
     interrupts();
 }
 
+#if DECODE_MAGIQUEST
 //+=============================================================================
 //
 /*
@@ -150,3 +151,4 @@ bool IRrecv::decodeMagiQuest() {
 
     return true;
 }
+#endif // DECODE_MAGIQUEST
