@@ -431,6 +431,7 @@ public:
     void sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
     void sendNECRepeat();
     void sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
+    void sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat);
 
     void sendPanasonic(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats); // LSB first
     void sendKaseikyo(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats, uint16_t aVendorCode); // LSB first

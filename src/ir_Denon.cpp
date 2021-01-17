@@ -161,7 +161,7 @@ bool IRrecv::decodeDenon() {
         if (tFrameBits == 0x3 || tFrameBits == 0x1) {
             // We are in the auto repeated frame with the inverted command
             decodedIRData.flags = IRDATA_FLAGS_IS_AUTO_REPEAT;
-            // check parity
+            // Check parity of consecutive received commands. There is no parity in one data set.
             uint8_t tLastCommand = lastDecodedCommand;
             if (tLastCommand != (uint8_t) (~tCommand)) {
                 decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;

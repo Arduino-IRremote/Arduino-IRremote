@@ -121,6 +121,10 @@ void loop() {
     IrSender.sendLG((uint8_t) sAddress, sCommand, sRepeats);
     delay(2000);
 
+    Serial.println(F("Send LGRaw 0x88C0051 with \"parity error\""));
+    IrSender.sendLGRaw(0x88C0051, sRepeats);
+    delay(2000);
+
     Serial.println(F("Send Bosewave with 8 command bits"));
     IrSender.sendBoseWave(sCommand, sRepeats);
     delay(2000);

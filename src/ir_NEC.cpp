@@ -84,6 +84,24 @@ void IRsend::sendNECRepeat() {
  * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
  */
 void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+
+    LongUnion tRawData;
+
+    // Address 16 bit LSB first
+    if ((aAddress & 0xFF00) == 0) {
+        // assume 8 bit address -> send 8 address bits and then 8 inverted address bits LSB first
+        tRawData.UByte.LowByte = aAddress;
+        tRawData.UByte.MidLowByte = ~tRawData.UByte.LowByte;
+    }
+
+    // send 8 command bits and then 8 inverted command bits LSB first
+    tRawData.UByte.MidHighByte = aCommand;
+    tRawData.UByte.HighByte = ~aCommand;
+
+    sendNECRaw(tRawData.ULong, aNumberOfRepeats, aIsRepeat);
+}
+
+void IRsend::sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat) {
     if (aIsRepeat) {
         sendNECRepeat();
         return;
@@ -95,18 +113,9 @@ void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepea
     // Header
     mark(NEC_HEADER_MARK);
     space(NEC_HEADER_SPACE);
-    // Address 16 bit LSB first
-    if ((aAddress & 0xFF00) == 0) {
-        // assume 8 bit address -> send 8 address bits and then 8 inverted address bits LSB first
-        aAddress = aAddress & 0xFF;
-        aAddress = ((~aAddress) << 8) | aAddress;
-    }
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, aAddress, NEC_ADDRESS_BITS, false);
 
-    // send 8 command bits and then 8 inverted command bits LSB first
-    uint16_t tCommand = ((~aCommand) << 8) | aCommand;
-    // Command 16 bit LSB first
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, tCommand, NEC_COMMAND_BITS, false, true);
+    // LSB first
+    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, aRawData, NEC_BITS, false);
 
     interrupts();
 
@@ -140,11 +149,27 @@ bool IRrecv::decodeNEC() {
         return false;
     }
 
-    // Check header "mark" and "space", this must be done for repeat and data
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], NEC_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], NEC_HEADER_SPACE)) {
-        // TRACE_PRINT since I saw this too often
-        TRACE_PRINT(F("NEC: "));
-        TRACE_PRINTLN(F("Header mark or space length is wrong"));
+    // Check header "mark" this must be done for repeat and data
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], NEC_HEADER_MARK)) {
+        return false;
+    }
+
+    // Check for repeat - here we have another header space length
+    if (decodedIRData.rawDataPtr->rawlen == 4) {
+        if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], NEC_REPEAT_HEADER_SPACE)
+                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], NEC_BIT_MARK)) {
+            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+            decodedIRData.address = lastDecodedAddress;
+            decodedIRData.command = lastDecodedCommand;
+            return true;
+        }
+        return false;
+    }
+
+    // Check command header space
+    if (!MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], NEC_HEADER_SPACE)) {
+        DBG_PRINT(F("NEC: "));
+        DBG_PRINTLN(F("Header space length is wrong"));
         return false;
     }
 
