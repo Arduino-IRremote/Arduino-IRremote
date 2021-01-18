@@ -59,13 +59,13 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
     noInterrupts();
 
     // 2 start bits
-    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 2, true);
+    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 2, MSB_FIRST);
 
     // Data
     sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, wand_id,
-    MAGIQUEST_WAND_ID_BITS, true);
+    MAGIQUEST_WAND_ID_BITS, MSB_FIRST);
     sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, magnitude,
-    MAGIQUEST_MAGNITUDE_BITS, true, true);
+    MAGIQUEST_MAGNITUDE_BITS, MSB_FIRST, SEND_STOP_BIT);
 
 //    for (unsigned long long mask = MAGIQUEST_MASK; mask > 0; mask >>= 1) {
 //        if (data.llword & mask) {

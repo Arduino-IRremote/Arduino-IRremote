@@ -133,7 +133,7 @@ size_t IRsend::write(IRData *aIRSendData, uint8_t aNumberOfRepeats) {
 #endif
 
     }
-    return 0;
+    return 1;
 }
 
 #ifdef SENDING_SUPPORTED // from IRremoteBoardDefs.h
@@ -247,8 +247,10 @@ void inline IRsend::sleepUntilMicros(unsigned long targetTime) {
 #endif // USE_SOFT_SEND_PWM
 
 //+=============================================================================
-// Sends PulseDistance data
-//
+/*
+ * Sends PulseDistance data
+ * always ends with a space
+ */
 void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
         unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit) {
 
@@ -432,8 +434,7 @@ void IRsend::enableIROut(int khz) {
     pinMode(sendPin, OUTPUT);
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
-// Disable the Timer2 Interrupt (which is used for receiving IR)
-    TIMER_DISABLE_RECEIVE_INTR; //Timer2 Overflow Interrupt
+    TIMER_DISABLE_RECEIVE_INTR;
 
     pinMode(sendPin, OUTPUT);
 

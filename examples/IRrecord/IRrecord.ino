@@ -1,5 +1,7 @@
 /*
- * IRrecord: record and play back IR signals as a minimal
+ * IRrecord.cpp
+ *
+ * Record and play back IR signals as a minimal
  * An IR detector/demodulator must be connected to the input RECV_PIN.
  * An IR LED must be connected to the output PWM pin 3.
  * A button must be connected between the input SEND_BUTTON_PIN and ground.
@@ -10,13 +12,11 @@
  * If an IR code is received, record it.
  *
  * Initially coded 2009 Ken Shirriff http://www.righto.com
+ *
+ *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  */
 
 #include <IRremote.h>
-
-#if !defined(USE_STANDARD_DECODE)
-#warning "Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable this improved version of IRrecord example."
-#endif
 
 #if defined(ESP32)
 int IR_RECEIVE_PIN = 15;
@@ -48,8 +48,8 @@ void sendCode(storedIRDataStruct *aIRDataToSend);
 
 void setup() {
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)
-    delay(2000); // To be able to connect Serial monitor after reset and before first printout
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
+    delay(2000); // To be able to connect Serial monitor after reset or power up and before first printout
 #endif
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
@@ -145,7 +145,7 @@ void storeCode(IRData *aIRReceivedData) {
         IrReceiver.compensateAndStoreIRResultInArray(sStoredIRData.rawCode);
     } else {
         IrReceiver.printIRResultShort(&Serial);
-        sStoredIRData.receivedIRData.flags = 0; // clear flags for later (not) printing
+        sStoredIRData.receivedIRData.flags = 0; // clear flags -esp. repeat- for later sending
         Serial.println();
     }
 }

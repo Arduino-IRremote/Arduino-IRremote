@@ -79,7 +79,7 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
 
         // Address + command
         sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE,
-                aAddress | aCommand << JVC_ADDRESS_BITS, JVC_BITS, false, true); // false , true -> LSB first + stop bit
+                aAddress | aCommand << JVC_ADDRESS_BITS, JVC_BITS, LSB_FIRST, SEND_STOP_BIT);
 
         interrupts();
 
@@ -106,13 +106,13 @@ bool IRrecv::decodeJVC() {
         return false;
     }
 
-
     if (decodedIRData.rawDataPtr->rawlen == ((2 * JVC_BITS) + 2)) {
         /*
          * Check for repeat
          */
         if (decodedIRData.rawDataPtr->rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 2) / MICROS_PER_TICK))
-                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], JVC_BIT_MARK) && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen - 1], JVC_BIT_MARK)) {
+                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], JVC_BIT_MARK)
+                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen - 1], JVC_BIT_MARK)) {
             /*
              * We have a repeat here, so do not check for start bit
              */
@@ -121,7 +121,8 @@ bool IRrecv::decodeJVC() {
     } else {
 
         // Check header "mark" and "space"
-        if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], JVC_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], JVC_HEADER_SPACE)) {
+        if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], JVC_HEADER_MARK)
+                || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], JVC_HEADER_SPACE)) {
 //            DBG_PRINT("JVC: ");
 //            DBG_PRINTLN("Header mark or space length is wrong");
             return false;
@@ -220,6 +221,6 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
     }
 
     // Data + stop bit
-    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, true,true);
+    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, MSB_FIRST, SEND_STOP_BIT);
 
 }

@@ -95,7 +95,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOf
 
         // Vendor ID
         sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aVendorCode,
-        KASEIKYO_VENDOR_ID_BITS, false);
+        KASEIKYO_VENDOR_ID_BITS, LSB_FIRST);
 
         // Vendor Parity
         uint8_t tVendorParity = aVendorCode ^ (aVendorCode >> 8);
@@ -109,7 +109,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOf
 
         // Send address (device and subdevice) + command + parity + Stop bit
         sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, tSendValue.ULong,
-        KASEIKYO_ADDRESS_BITS + KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS, false, true);
+        KASEIKYO_ADDRESS_BITS + KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS, LSB_FIRST, SEND_STOP_BIT);
 
         interrupts();
 

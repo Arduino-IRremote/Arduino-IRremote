@@ -32,7 +32,8 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
     space(WHYNTER_HEADER_SPACE);
 
     // Data + stop bit
-    sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits, true, true);
+    sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits, MSB_FIRST,
+    SEND_STOP_BIT);
 
     interrupts();
 }
@@ -47,7 +48,8 @@ bool IRrecv::decodeWhynter() {
     }
 
     // Sequence begins with a bit mark and a zero space
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], WHYNTER_BIT_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], WHYNTER_HEADER_SPACE)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], WHYNTER_BIT_MARK)
+            || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], WHYNTER_HEADER_SPACE)) {
         DBG_PRINT(F("Whynter: "));
         DBG_PRINTLN(F("Header mark or space length is wrong"));
         return false;

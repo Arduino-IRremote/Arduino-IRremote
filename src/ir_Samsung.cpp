@@ -81,7 +81,7 @@ void IRsend::sendSamsungRepeat() {
 }
 
 void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
-    if(aIsRepeat){
+    if (aIsRepeat) {
         sendSamsungRepeat();
         return;
     }
@@ -97,7 +97,7 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOf
 
     // Address
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aAddress,
-    SAMSUNG_ADDRESS_BITS, false);
+    SAMSUNG_ADDRESS_BITS, LSB_FIRST);
 
     // Command
 
@@ -106,7 +106,7 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOf
     aCommand = ((~aCommand) << 8) | aCommand;
 
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aCommand,
-    SAMSUNG_COMMAND16_BITS, false, true);
+    SAMSUNG_COMMAND16_BITS, LSB_FIRST, SEND_STOP_BIT);
 
     interrupts();
 
@@ -128,12 +128,14 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOf
 bool IRrecv::decodeSamsung() {
 
     // Check we have enough data (68). The +4 is for initial gap, start bit mark and space + stop bit mark
-    if (decodedIRData.rawDataPtr->rawlen != ((2 * SAMSUNG_BITS) + 4) && decodedIRData.rawDataPtr->rawlen != ((2 * SAMSUNG48_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 6)) {
+    if (decodedIRData.rawDataPtr->rawlen != ((2 * SAMSUNG_BITS) + 4)
+            && decodedIRData.rawDataPtr->rawlen != ((2 * SAMSUNG48_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 6)) {
         return false;
     }
 
     // Check header "mark" + "space"
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], SAMSUNG_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], SAMSUNG_HEADER_SPACE)) {
+    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], SAMSUNG_HEADER_MARK)
+            || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], SAMSUNG_HEADER_SPACE)) {
         DBG_PRINT("Samsung: ");
         DBG_PRINTLN("Header mark or space length is wrong");
 
@@ -257,5 +259,6 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     space(SAMSUNG_HEADER_SPACE);
 
     // Data + stop bit
-    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits,true,true);
+    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits, MSB_FIRST,
+    SEND_STOP_BIT);
 }

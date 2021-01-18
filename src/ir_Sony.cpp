@@ -79,13 +79,14 @@ void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepe
         space(SONY_SPACE);
 
         // send 7 command bits LSB first
-        sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aCommand, SONY_COMMAND_BITS, false);
+        sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aCommand, SONY_COMMAND_BITS, LSB_FIRST);
         // Address 16 bit LSB first
         if (numberOfBits == SIRCS_20_PROTOCOL) {
             sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress,
-                    (SONY_ADDRESS_BITS + SONY_EXTRA_BITS), false);
+                    (SONY_ADDRESS_BITS + SONY_EXTRA_BITS), LSB_FIRST);
         } else {
-            sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress, SONY_ADDRESS_BITS, false);
+            sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress, SONY_ADDRESS_BITS,
+            LSB_FIRST);
         }
         interrupts();
 
@@ -223,7 +224,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
     mark(SONY_HEADER_MARK);
     space(SONY_SPACE);
 
-    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, true, false);
+    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, MSB_FIRST);
     /*
      * Pulse width coding, the short version.
      * Use this if you need to save program space and only require this protocol.

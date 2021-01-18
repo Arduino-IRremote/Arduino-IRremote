@@ -381,7 +381,7 @@ bool IRrecv::decode() {
 #endif
 
     /*
-     * Not reached, if Hash is enabled!!!
+     * Not reached, if Hash is enabled and rawlen >= 6!!!
      * Throw away received data and start over
      */
     resume();

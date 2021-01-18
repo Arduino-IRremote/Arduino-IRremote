@@ -114,8 +114,9 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRep
     mark(NEC_HEADER_MARK);
     space(NEC_HEADER_SPACE);
 
-    // LSB first
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, aRawData, NEC_BITS, false);
+    // LSB first + stop bit
+    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, aRawData, NEC_BITS, LSB_FIRST,
+    SEND_STOP_BIT);
 
     interrupts();
 
@@ -296,7 +297,7 @@ void IRsend::sendNEC(uint32_t data, uint8_t nbits, bool repeat) {
     mark(NEC_HEADER_MARK);
     space(NEC_HEADER_SPACE);
 
-    // Data + stop bit
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, true, true);
+    // Old version with MSB first Data + stop bit
+    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, MSB_FIRST, SEND_STOP_BIT);
 
 }

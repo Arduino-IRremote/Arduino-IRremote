@@ -4,6 +4,7 @@
  *  Receives IR protocol data of NEC protocol using pin change interrupts.
  *  NEC is the protocol of most cheap remote controls for Arduino.
  *
+ *  No parity check is done!
  *  On a completely received IR command, the user function handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition)
  *  is called in Interrupt context but with interrupts being enabled to enable use of delay() etc.
  *  !!!!!!!!!!!!!!!!!!!!!!
@@ -59,7 +60,11 @@ void IRPinChangeInterruptHandler(void)
     uint_fast8_t tIRLevel = digitalReadFast(IR_INPUT_PIN);
 
 #if !defined(DO_NOT_USE_FEEDBACK_LED) && defined(IR_FEEDBACK_LED_PIN)
+#  if defined(__AVR_ATtiny3217__) // TinyCore introduced PinStatus type
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, (PinStatus)!tIRLevel);
+#  else
     digitalWriteFast(IR_FEEDBACK_LED_PIN, !tIRLevel);
+#  endif
 #endif
 
     /*
@@ -156,12 +161,22 @@ void IRPinChangeInterruptHandler(void)
                 if (TinyIRReceiverControl.IRRawDataBitCounter >= NEC_BITS || TinyIRReceiverControl.IRRepeatDetected) {
                     /*
                      * Code complete -> call callback
+                     * No parity check
                      */
                     // can not check the length of trailing space
                     tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
 #if !defined(ARDUINO_ARCH_MBED)
                     interrupts();
 #endif
+                    /*
+                     * Address reduction to 8 bit
+                     */
+                    if (TinyIRReceiverControl.IRRawData.UByte.LowByte
+                            == (uint8_t) (~TinyIRReceiverControl.IRRawData.UByte.MidLowByte)) {
+                        // standard 8 bit address NEC protocol
+                        TinyIRReceiverControl.IRRawData.UByte.MidLowByte = 0; // Address is the first 8 bit
+                    }
+
                     handleReceivedTinyIRData(TinyIRReceiverControl.IRRawData.UWord.LowWord,
                             TinyIRReceiverControl.IRRawData.UByte.MidHighByte, TinyIRReceiverControl.IRRepeatDetected);
 
@@ -188,7 +203,10 @@ void initPCIInterruptForTinyReceiver() {
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #endif
 
-#if ! defined(__AVR__) || defined(TINY_RECEICER_USE_ARDUINO_ATTACH_INTERRUPT)
+#if defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
+    attachInterrupt(IR_INPUT_PIN, IRPinChangeInterruptHandler, CHANGE); // 2.2 us more than version configured with macros and not compatible
+
+#elif ! defined(__AVR__) || defined(TINY_RECEICER_USE_ARDUINO_ATTACH_INTERRUPT)
     // costs 112 bytes FLASH + 4bytes RAM
     attachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN), IRPinChangeInterruptHandler, CHANGE);
 #else

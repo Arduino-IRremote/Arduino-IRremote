@@ -80,7 +80,7 @@ void IRsend::sendSharp(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepe
 }
 
 //+=============================================================================
-void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp) {
+size_t IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp) {
     // Set IR carrier frequency
     enableIROut(38);
 
@@ -98,15 +98,15 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepe
         noInterrupts();
 
         // Data
-        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS, true,
-                true);
+        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS, MSB_FIRST,
+        SEND_STOP_BIT);
 
         // Inverted autorepeat frame
         interrupts();
         delay(DENON_AUTO_REPEAT_SPACE / 1000);
         noInterrupts();
         sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tInvertedData, DENON_BITS,
-                true, true);
+        MSB_FIRST, SEND_STOP_BIT);
 
         interrupts();
 
@@ -117,6 +117,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepe
             delay( DENON_AUTO_REPEAT_SPACE / 1000);
         }
     }
+    return DENON_BITS;
 }
 
 //+=============================================================================
@@ -230,7 +231,8 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
     space(DENON_HEADER_SPACE);
 
     // Data
-    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits, true, true);
+    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits, MSB_FIRST,
+    SEND_STOP_BIT);
 
 }
 

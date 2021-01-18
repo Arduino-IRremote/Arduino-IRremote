@@ -129,7 +129,8 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
         mark(LEGO_HEADER_MARK);
         space(LEGO_HEADER_SPACE);
 
-        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS, true, true); // MSB first
+        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS, MSB_FIRST,
+        SEND_STOP_BIT);
 
         interrupts();
 

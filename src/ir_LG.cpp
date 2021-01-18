@@ -112,7 +112,7 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepe
     space(LG_HEADER_SPACE);
 
     // MSB first
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, true, true);
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, MSB_FIRST, SEND_STOP_BIT);
 
     interrupts();
 
@@ -269,7 +269,7 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 //    mark(LG_BIT_MARK);
 
 // Data + stop bit
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, true, true);
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, MSB_FIRST, SEND_STOP_BIT);
 
 }
 

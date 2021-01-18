@@ -219,6 +219,12 @@ struct decode_results {
 #define DISABLE_LED_FEEDBACK false
 #define ENABLE_LED_FEEDBACK true
 
+#define LSB_FIRST false
+#define MSB_FIRST true
+
+#define SEND_STOP_BIT true
+
+
 /**
  * Main class for receiving IR
  */
@@ -423,7 +429,7 @@ public:
      * New send functions
      */
     void sendBoseWave(uint8_t aCommand, uint8_t aNumberOfRepeats = NO_REPEATS);
-    void sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp = false);
+    size_t sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp = false);
     void sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
 
     void sendLGRepeat();
