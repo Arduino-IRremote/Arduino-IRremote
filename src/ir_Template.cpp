@@ -32,7 +32,7 @@
  Now you must do a few things to add it to the IRremote system:
 
  1. Open IRremote.h and make the following changes:
- REMEMEBER to change occurrences of "SHUZU" with the name of your protocol
+ REMEMBER to change occurrences of "SHUZU" with the name of your protocol
 
  A. At the top, in the section "Supported Protocols", add:
  #define DECODE_SHUZU  1
@@ -148,7 +148,7 @@
 #define SHUZU_UNIT              560
 
 #define SHUZU_HEADER_MARK       (16 * SHUZU_UNIT) // The length of the Header:Mark
-#define SHUZU_HEADER_SPACE      (8 * SHUZU_UNIT)  // The lenght of the Header:Space
+#define SHUZU_HEADER_SPACE      (8 * SHUZU_UNIT)  // The length of the Header:Space
 
 #define SHUZU_BIT_MARK          SHUZU_UNIT        // The length of a Bit:Mark
 #define SHUZU_ONE_SPACE         (3 * SHUZU_UNIT)  // The length of a Bit:Space for 1's

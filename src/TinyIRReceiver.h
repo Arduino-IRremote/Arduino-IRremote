@@ -22,6 +22,9 @@
  *
  */
 
+#ifndef TINY_IR_RECEIVER_H
+#define TINY_IR_RECEIVER_H
+
 #include <Arduino.h>
 
 #include "LongUnion.h"
@@ -117,3 +120,6 @@ struct TinyIRReceiverStruct {
 
 void initPCIInterruptForTinyReceiver();
 
+#endif // TINY_IR_RECEIVER_H
+
+#pragma once

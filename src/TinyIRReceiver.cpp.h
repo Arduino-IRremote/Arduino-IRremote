@@ -33,6 +33,9 @@
  *
  */
 
+#ifndef TINY_IR_RECEIVER_CPP_H
+#define TINY_IR_RECEIVER_CPP_H
+
 #include <Arduino.h>
 
 #include "TinyIRReceiver.h"
@@ -334,3 +337,7 @@ ISR(PCINT1_vect)
     IRPinChangeInterruptHandler();
 }
 #endif // defined(__AVR__) && ! defined(IRMP_USE_ARDUINO_ATTACH_INTERRUPT)
+
+#endif // TINY_IR_RECEIVER_CPP_H
+
+#pragma once

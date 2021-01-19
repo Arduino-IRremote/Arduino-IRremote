@@ -10,6 +10,16 @@
 * [ ] Teensy board
 * [ ] Other - please specify
 
+<!-- Please specify board name if not included in board selection -->
+
+### IDE
+* [ ] Arduino IDE
+* [ ] Arduino Web Editor
+* [ ] Arduino Pro IDE
+* [ ] Sloeber IDE
+* [ ] PlatformIO IDE
+* [ ] Other - please specify
+
 ### Protocol
 * [ ] Unknown
 * [ ] BoseWave

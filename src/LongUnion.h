@@ -21,8 +21,8 @@
  *
  */
 
-#ifndef UNIONS_H_
-#define UNIONS_H_
+#ifndef LONG_UNION_H
+#define LONG_UNION_H
 
 #include <Arduino.h>
 #include <stdint.h>
@@ -84,6 +84,6 @@ union LongUnion {
     int32_t Long;
 };
 
-#endif // UNIONS_H_
+#endif // LONG_UNION_H
 
 #pragma once

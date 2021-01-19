@@ -180,7 +180,7 @@ void IRrecv::initDecodedIRData() {
         irparams.overflow = false;
         irparams.rawlen = 0; // otherwise we have overflow again at next ISR call
         decodedIRData.flags = IRDATA_FLAGS_WAS_OVERFLOW;
-        DBG_PRINTLN("Overflow happend");
+        DBG_PRINTLN("Overflow happened");
 
     } else {
         decodedIRData.flags = IRDATA_FLAGS_EMPTY;
