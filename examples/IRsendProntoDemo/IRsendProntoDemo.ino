@@ -45,7 +45,7 @@ void loop() {
     NUMBER_OF_REPEATS);
     delay(2000);
 
-    // send Nec code aquired by IRreceiveDump.cpp
+    // send Nec code acquired by IRreceiveDump.cpp
     Serial.println(F("Sending NEC from RAM: address 0xFF00, data 0x15"));
     // 006D -> 38029 Hz
     irsend.sendPronto("0000 006D 0022 0000 015C 00AB " /* Pronto header + start bit */

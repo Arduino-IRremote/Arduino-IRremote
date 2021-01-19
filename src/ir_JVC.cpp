@@ -53,7 +53,7 @@
 #define JVC_UNIT              526
 
 #define JVC_HEADER_MARK       (16 * JVC_UNIT) // The length of the Header:Mark
-#define JVC_HEADER_SPACE      (8 * JVC_UNIT)  // The lenght of the Header:Space
+#define JVC_HEADER_SPACE      (8 * JVC_UNIT)  // The length of the Header:Space
 
 #define JVC_BIT_MARK          JVC_UNIT        // The length of a Bit:Mark
 #define JVC_ONE_SPACE         (3 * JVC_UNIT)  // The length of a Bit:Space for 1's

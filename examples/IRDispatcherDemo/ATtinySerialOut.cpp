@@ -310,7 +310,7 @@ void writeFloat(double aFloat, uint8_t aDigits) {
 }
 
 /******************************************************
- * The TinySerialOut class fuctions which implements
+ * The TinySerialOut class functions which implements
  * the Serial + printHex() and printlnHex() functions
  ******************************************************/
 /*

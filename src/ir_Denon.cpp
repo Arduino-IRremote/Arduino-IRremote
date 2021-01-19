@@ -72,7 +72,7 @@
 
 // for old decoder
 #define DENON_HEADER_MARK       DENON_UNIT // The length of the Header:Mark
-#define DENON_HEADER_SPACE      (3 * DENON_UNIT) // 780 // The lenght of the Header:Space
+#define DENON_HEADER_SPACE      (3 * DENON_UNIT) // 780 // The length of the Header:Space
 
 //+=============================================================================
 void IRsend::sendSharp(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
