@@ -53,6 +53,7 @@ jobs:
           - arduino:megaavr:nona4809:mode=off
           - digistump:avr:digispark-tiny:clock=clock1
           - ATTinyCore:avr:attinyx5:chip=85,clock=1internal
+          - TinyCore:avr:tiny32
           - arduino:samd:arduino_zero_native
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os,clock=8MHz_internal # ATmega128
           - esp32:esp32:featheresp32:FlashFreq=80
@@ -90,6 +91,10 @@ jobs:
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx5:chip=85,clock=1internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             sketches-exclude: IR2Keyboard,IRUnitTest,IRrelay,IRrecord,IRreceiveDumpV2,IRsendProntoDemo,MicroGirs,IRreceiveDemo,BoseWaveSendDemo,IRDispatcherDemo # Does not fit in FLASH or RAM
+
+          - arduino-boards-fqbn: TinyCore:avr:tiny32
+            platform-url: https://raw.githubusercontent.com/xukangmin/TinyCore/master/avr/package/package_tinycore_index.json
+            sketches-exclude: IR2Keyboard
 
           - arduino-boards-fqbn: MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os,clock=8MHz_internal
             platform-url: https://mcudude.github.io/MegaCore/package_MCUdude_MegaCore_index.json

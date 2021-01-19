@@ -92,7 +92,7 @@ void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeat
         tTempForChecksum >>= 4; // shift by a nibble
     }
     tRawData |= tChecksum;
-    sendLG(tRawData, aNumberOfRepeats, aIsRepeat);
+    sendLGRaw(tRawData, aNumberOfRepeats, aIsRepeat);
 }
 
 /*
@@ -155,7 +155,7 @@ bool IRrecv::decodeLG() {
     if (decodedIRData.rawDataPtr->rawlen == 4) {
         if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], LG_REPEAT_HEADER_SPACE)
                 && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], LG_BIT_MARK)) {
-            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
             return true;
@@ -184,6 +184,7 @@ bool IRrecv::decodeLG() {
     }
 
     // Success
+    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
     decodedIRData.command = (decodedIRData.decodedRawData >> LG_CHECKSUM_BITS) & 0xFFFF;
     decodedIRData.address = decodedIRData.decodedRawData >> (LG_COMMAND_BITS + LG_CHECKSUM_BITS); // first 8 bit
 

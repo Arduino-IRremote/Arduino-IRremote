@@ -184,6 +184,9 @@ bool IRrecv::decodeKaseikyo() {
         DBG_PRINTLN("Address, command + parity decode failed");
         return false;
     }
+
+    // Success
+//    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     LongUnion tValue;
     tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.address = (tValue.UWord.LowWord >> KASEIKYO_VENDOR_ID_PARITY_BITS); // remove vendor parity
@@ -198,7 +201,7 @@ bool IRrecv::decodeKaseikyo() {
         DBG_PRINT(decodedIRData.decodedRawData, HEX);
         DBG_PRINT(" VendorID=0x");
         DBG_PRINTLN(tVendorId, HEX);
-        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED;
+        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
     }
 
     if (tProtocol == KASEIKYO) {
@@ -219,7 +222,7 @@ bool IRrecv::decodeKaseikyo() {
         DBG_PRINT(decodedIRData.address, HEX);
         DBG_PRINT(" command=0x");
         DBG_PRINTLN(decodedIRData.command, HEX);
-        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED;
+        decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
     }
 
     // check for repeat
@@ -267,6 +270,7 @@ bool IRrecv::decodePanasonic() {
 
 #endif
 
+// Old version with MSB first Data
 void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
     // Set IR carrier frequency
     enableIROut(37); // 36.7kHz is the correct frequency
@@ -275,13 +279,13 @@ void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
     mark(KASEIKYO_HEADER_MARK);
     space(KASEIKYO_HEADER_SPACE);
 
-    // Address
+    // Old version with MSB first Data Address
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aAddress,
-    KASEIKYO_ADDRESS_BITS);
+    KASEIKYO_ADDRESS_BITS, MSB_FIRST);
 
-    // Data + stop bit
+    // Old version with MSB first Data Data + stop bit
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aData,
-    KASEIKYO_DATA_BITS);
+    KASEIKYO_DATA_BITS, MSB_FIRST);
 
 }
 

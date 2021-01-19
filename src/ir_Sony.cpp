@@ -133,6 +133,7 @@ bool IRrecv::decodeSony() {
     }
 
     // Success
+//    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     uint8_t tCommand = decodedIRData.decodedRawData & 0x7F;  // first 7 bits
     uint8_t tAddress = decodedIRData.decodedRawData >> 7;    // next 5 or 8 bits
 
@@ -140,7 +141,7 @@ bool IRrecv::decodeSony() {
      *  Check for repeat
      */
     if (decodedIRData.rawDataPtr->rawbuf[0] < (SONY_REPEAT_PERIOD / MICROS_PER_TICK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
     }
     decodedIRData.command = tCommand;
     decodedIRData.address = tAddress;
@@ -216,6 +217,7 @@ bool IRrecv::decodeSony() {
 #endif
 
 //+=============================================================================
+//  Old version with MSB first Data
 void IRsend::sendSony(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(40);
@@ -224,18 +226,6 @@ void IRsend::sendSony(unsigned long data, int nbits) {
     mark(SONY_HEADER_MARK);
     space(SONY_SPACE);
 
+    // Old version with MSB first Data
     sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, MSB_FIRST);
-    /*
-     * Pulse width coding, the short version.
-     * Use this if you need to save program space and only require this protocol.
-     */
-//    for (unsigned long mask = 1UL << (nbits - 1); mask; mask >>= 1) {
-//        if (data & mask) {
-//            mark(SONY_ONE_MARK);
-//            space(SONY_SPACE);
-//        } else {
-//            mark(SONY_ZERO_MARK);
-//            space(SONY_SPACE);
-//        }
-//    }
 }

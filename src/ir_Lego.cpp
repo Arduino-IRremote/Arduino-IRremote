@@ -184,6 +184,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
     }
 
     // Success
+    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
     uint16_t tDecodedValue = decodedIRData.decodedRawData;
     uint8_t tToggleEscapeChannel = tDecodedValue >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS);
     uint8_t tMode = (tDecodedValue >> (LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0xF;
@@ -210,7 +211,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
         DBG_PRINT(", 0x");
         DBG_PRINTLN(tData, HEX);
         // might not be an error, so just continue
-        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED;
+        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_MSB_FIRST;
     }
 
     /*

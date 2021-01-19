@@ -104,6 +104,7 @@ bool IRrecv::decodeBoseWave() {
     }
 
     // Success
+//    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     uint16_t tDecodedValue = decodedIRData.decodedRawData;
     uint8_t tCommandNotInverted = tDecodedValue & 0xFF;
     uint8_t tCommandInverted = tDecodedValue >> 8;
@@ -116,7 +117,7 @@ bool IRrecv::decodeBoseWave() {
 
     // check for repeat
     if (decodedIRData.rawDataPtr->rawbuf[0] < ((BOSEWAVE_REPEAT_SPACE + (BOSEWAVE_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
     }
 
     decodedIRData.command = tCommandNotInverted;

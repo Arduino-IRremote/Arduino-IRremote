@@ -144,7 +144,7 @@ bool IRrecv::decodeSamsung() {
 
     // Check for repeat
     if (decodedIRData.rawDataPtr->rawlen == 6) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT| IRDATA_FLAGS_IS_LSB_FIRST;
         decodedIRData.address = lastDecodedAddress;
         decodedIRData.command = lastDecodedCommand;
         return true;
@@ -168,12 +168,15 @@ bool IRrecv::decodeSamsung() {
             DBG_PRINTLN("Decode failed");
             return false;
         }
+
+        // Success
+//    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
         LongUnion tValue;
         tValue.ULong = decodedIRData.decodedRawData;
         // receive 2 * (8 bits then 8 inverted bits) LSB first
         if (tValue.UByte.HighByte != (uint8_t) (~tValue.UByte.MidHighByte)
                 && tValue.UByte.MidLowByte != (uint8_t) (~tValue.UByte.LowByte)) {
-            decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
+            decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
         }
         decodedIRData.command = tValue.UByte.HighByte << 8 | tValue.UByte.MidLowByte;
         decodedIRData.numberOfBits = SAMSUNG48_BITS;
@@ -250,6 +253,7 @@ bool IRrecv::decodeSAMSUNG() {
 }
 #endif
 
+// Old version with MSB first
 void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(38);
@@ -258,7 +262,7 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     mark(SAMSUNG_HEADER_MARK);
     space(SAMSUNG_HEADER_SPACE);
 
-    // Data + stop bit
+    // Old version with MSB first Data + stop bit
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits, MSB_FIRST,
     SEND_STOP_BIT);
 }

@@ -159,7 +159,7 @@ bool IRrecv::decodeNEC() {
     if (decodedIRData.rawDataPtr->rawlen == 4) {
         if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], NEC_REPEAT_HEADER_SPACE)
                 && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], NEC_BIT_MARK)) {
-            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
             return true;
@@ -177,7 +177,7 @@ bool IRrecv::decodeNEC() {
     // Check for repeat
     if (decodedIRData.rawDataPtr->rawlen == 4) {
         if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], NEC_BIT_MARK)) {
-            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
             return true;
@@ -199,6 +199,7 @@ bool IRrecv::decodeNEC() {
     }
 
     // Success
+//    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     LongUnion tValue;
     tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tValue.UByte.MidHighByte;
@@ -210,7 +211,6 @@ bool IRrecv::decodeNEC() {
     }
     decodedIRData.protocol = NEC;
     decodedIRData.numberOfBits = NEC_BITS;
-
     if (tValue.UByte.LowByte == (uint8_t) (~tValue.UByte.MidLowByte)) {
         // standard 8 bit address NEC protocol
         decodedIRData.address = tValue.UByte.LowByte; // first 8 bit
@@ -281,8 +281,7 @@ bool IRrecv::decodeNEC() {
 #endif
 
 /*
- * Repeat commands should be sent in a 110 ms raster.
- * https://www.sbprojects.net/knowledge/ir/nec.php
+ * Old version with MSB first Data
  */
 void IRsend::sendNEC(uint32_t data, uint8_t nbits, bool repeat) {
     // Set IR carrier frequency

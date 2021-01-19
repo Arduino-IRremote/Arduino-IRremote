@@ -136,7 +136,7 @@ bool IRrecv::decodeDenon() {
     }
 
     // Read the bits in
-    if (!decodePulseDistanceData(DENON_BITS, 1, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE)) {
+    if (!decodePulseDistanceData(DENON_BITS, 1, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE, MSB_FIRST)) {
         DBG_PRINT("Denon: ");
         DBG_PRINTLN("Decode failed");
         return false;
@@ -150,6 +150,7 @@ bool IRrecv::decodeDenon() {
     }
 
     // Success
+    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
     uint8_t tFrameBits = decodedIRData.decodedRawData & 0x03;
     decodedIRData.command = decodedIRData.decodedRawData >> DENON_FRAME_BITS;
     decodedIRData.address = decodedIRData.command >> DENON_COMMAND_BITS;
@@ -161,7 +162,7 @@ bool IRrecv::decodeDenon() {
         repeatCount++;
         if (tFrameBits == 0x3 || tFrameBits == 0x1) {
             // We are in the auto repeated frame with the inverted command
-            decodedIRData.flags = IRDATA_FLAGS_IS_AUTO_REPEAT;
+            decodedIRData.flags = IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
             // Check parity of consecutive received commands. There is no parity in one data set.
             uint8_t tLastCommand = lastDecodedCommand;
             if (tLastCommand != (uint8_t) (~tCommand)) {

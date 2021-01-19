@@ -910,15 +910,26 @@ void IRrecv::printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLe
         /*
          * Print raw data
          */
-        aSerial->print(F(" Raw-Data=0x"));
-        aSerial->print(aIRDataPtr->decodedRawData, HEX);
+        if (!(aIRDataPtr->flags & IRDATA_FLAGS_IS_REPEAT) || aIRDataPtr->decodedRawData != 0) {
+            aSerial->print(F(" Raw-Data=0x"));
+            aSerial->print(aIRDataPtr->decodedRawData, HEX);
 
-        /*
-         * Print number of bits processed
-         */
-        aSerial->print(F(" ("));
-        aSerial->print(aIRDataPtr->numberOfBits, DEC);
-        aSerial->println(F(" bits)"));
+            /*
+             * Print number of bits processed
+             */
+            aSerial->print(F(" ("));
+            aSerial->print(aIRDataPtr->numberOfBits, DEC);
+            aSerial->print(F(" bits)"));
+
+            if (aIRDataPtr->flags & IRDATA_FLAGS_IS_MSB_FIRST) {
+                aSerial->println(F(" MSB first"));
+            } else {
+                aSerial->println(F(" LSB first"));
+
+            }
+        } else {
+            aSerial->println();
+        }
     }
 
 }

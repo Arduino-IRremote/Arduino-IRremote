@@ -36,18 +36,19 @@ bool sLastSendToggleValue = false;
 //uint8_t sLastReceiveToggleValue = 3; // 3 -> start value
 
 //==============================================================================
-// RRRR    CCCC  55555
-// R   R  C      5
-// RRRR   C      5555
-// R  R   C          5
-// R   R   CCCC  5555
+//     RRRR    CCCC  55555
+//     R   R  C      5
+//     RRRR   C      5555
+//     R  R   C          5
+//     R   R   CCCC  5555
+//==============================================================================
 //
+// see: https://www.sbprojects.net/knowledge/ir/rc5.php
 // 0 -> mark+space
 // 1 -> space+mark
-// 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit
+// MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit
 // duty factor is 25%,
 //
-
 #define RC5_ADDRESS_BITS        5
 #define RC5_COMMAND_BITS        6
 #define RC5_COMMAND_FIELD_BIT   1
@@ -128,6 +129,7 @@ bool IRrecv::decodeRC5() {
     }
 
     // Success
+    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
     LongUnion tValue;
     tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tValue.UByte.LowByte & 0x3F;
@@ -137,7 +139,7 @@ bool IRrecv::decodeRC5() {
     }
 
     if (tValue.UByte.MidLowByte & 0x8) {
-        decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK;
+        decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK | IRDATA_FLAGS_IS_MSB_FIRST;
     }
 
     // check for repeat
@@ -468,6 +470,7 @@ bool IRrecv::decodeRC6() {
     }
 
     // Success
+    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
     LongUnion tValue;
     tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tValue.UByte.LowByte;
@@ -475,7 +478,7 @@ bool IRrecv::decodeRC6() {
 
     // check for repeat, do not check toggle bit yet
     if (decodedIRData.rawDataPtr->rawbuf[0] < ((RC6_REPEAT_SPACE + (RC6_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
-        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
     }
 
     decodedIRData.protocol = RC6;

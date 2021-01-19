@@ -232,6 +232,7 @@ bool IRrecv::decodeShuzu() {
     }
 
     // Success
+//    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     uint8_t tCommand = decodedIRData.decodedRawData >> SHUZU_ADDRESS_BITS;  // upper 8 bits of LSB first value
     uint8_t tAddress = decodedIRData.decodedRawData & 0xFFFF;    // lowest 16 bit of LSB first value
 
@@ -239,7 +240,7 @@ bool IRrecv::decodeShuzu() {
      *  Check for repeat
      */
     if (decodedIRData.rawDataPtr->rawbuf[0] < ((SHUZU_REPEAT_SPACE + (SHUZU_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
     }
     decodedIRData.command = tCommand;
     decodedIRData.address = tAddress;

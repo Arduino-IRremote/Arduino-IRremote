@@ -79,7 +79,7 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
 
         // Address + command
         sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE,
-                aAddress | aCommand << JVC_ADDRESS_BITS, JVC_BITS, LSB_FIRST, SEND_STOP_BIT);
+                aAddress | (aCommand << JVC_ADDRESS_BITS), JVC_BITS, LSB_FIRST, SEND_STOP_BIT);
 
         interrupts();
 
@@ -116,7 +116,7 @@ bool IRrecv::decodeJVC() {
             /*
              * We have a repeat here, so do not check for start bit
              */
-            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
         }
     } else {
 
@@ -137,6 +137,7 @@ bool IRrecv::decodeJVC() {
     }
 
     // Success
+//    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     uint8_t tCommand = decodedIRData.decodedRawData >> JVC_ADDRESS_BITS;  // upper 8 bits of LSB first value
     uint8_t tAddress = decodedIRData.decodedRawData & 0xFF;    // lowest 8 bit of LSB first value
 
@@ -209,7 +210,7 @@ bool IRrecv::decodeJVC() {
 //+=============================================================================
 // JVC does NOT repeat by sending a separate code (like NEC does).
 // The JVC protocol repeats by skipping the header.
-//
+// Old version with MSB first Data
 void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
     // Set IR carrier frequency
     enableIROut(38);
@@ -220,7 +221,7 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
         space(JVC_HEADER_SPACE);
     }
 
-    // Data + stop bit
+    // Old version with MSB first Data
     sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, MSB_FIRST, SEND_STOP_BIT);
 
 }

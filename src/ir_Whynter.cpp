@@ -55,7 +55,7 @@ bool IRrecv::decodeWhynter() {
         return false;
     }
 
-    if (!decodePulseDistanceData(WHYNTER_BITS, 3, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE)) {
+    if (!decodePulseDistanceData(WHYNTER_BITS, 3, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE, MSB_FIRST)) {
         return false;
     }
 
@@ -66,6 +66,7 @@ bool IRrecv::decodeWhynter() {
     }
 
     // Success
+    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
     decodedIRData.numberOfBits = WHYNTER_BITS;
     decodedIRData.protocol = WHYNTER;
     return true;

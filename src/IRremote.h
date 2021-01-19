@@ -130,6 +130,8 @@ typedef enum {
 #define IRDATA_TOGGLE_BIT_MASK          0x08
 #define IRDATA_FLAGS_EXTRA_INFO         0x10 // there is unexpected extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
 #define IRDATA_FLAGS_WAS_OVERFLOW       0x40 // irparams.rawlen is 0 in this case to avoid endless overflow
+#define IRDATA_FLAGS_IS_LSB_FIRST       0x00
+#define IRDATA_FLAGS_IS_MSB_FIRST       0x80 // Just for info. Value is simply determined by the protocol
 
 struct IRData {
     decode_type_t protocol;     ///< UNKNOWN, NEC, SONY, RC5, ...
@@ -283,10 +285,10 @@ public:
      * The main decoding functions used by the individual decoders
      */
     bool decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
-            unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst = true);
+            unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst);
 
     bool decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aOneMarkMicros,
-            unsigned int aZeroMarkMicros, unsigned int aBitSpaceMicros, bool aMSBfirst = true);
+            unsigned int aZeroMarkMicros, unsigned int aBitSpaceMicros, bool aMSBfirst);
 
     bool decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
             unsigned int aBiphaseTimeUnit);
@@ -317,7 +319,7 @@ public:
     /*
      * Old functions
      */
-    bool decode(decode_results *aResults) __attribute__ ((deprecated ("You should use decode() without a parameter."))); // deprecated
+    bool decode(decode_results *aResults) __attribute__ ((deprecated ("Please use decode() without a parameter."))); // deprecated
     bool decodeWhynter();
 
     bool decodeSAMSUNG() __attribute__ ((deprecated ("Renamed to decodeSamsung()"))); // deprecated
@@ -395,7 +397,7 @@ public:
     void enableIROut(int khz);
 
     void sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
-            unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst = true, bool aSendStopBit = false);
+            unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit = false);
     void sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint8_t aNumberOfBits);
 
     void mark(uint16_t timeMicros);
@@ -472,18 +474,18 @@ public:
      */
     void sendDenon(unsigned long data, int nbits);
     void sendDISH(unsigned long data, int nbits);
-    void sendJVC(unsigned long data, int nbits, bool repeat = false);
+    void sendJVC(unsigned long data, int nbits, bool repeat = false) __attribute__ ((deprecated ("This old function sends MSB first! Please use sendJVC((uint8_t) aAddress, aCommand, aNumberOfRepeats).")));
     void sendLG(unsigned long data, int nbits);
-    void sendNEC(uint32_t data, uint8_t nbits, bool repeat = false);
-    void sendPanasonic(uint16_t aAddress, uint32_t aData);
+    void sendNEC(uint32_t data, uint8_t nbits, bool repeat = false) __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNECRaw().")));
+    void sendPanasonic(uint16_t aAddress, uint32_t aData) __attribute__ ((deprecated ("This old function sends MSB first! Please use sendPanasonic(aAddress, aCommand, aNumberOfRepeats).")));
     void sendRC5(uint32_t data, uint8_t nbits);
     void sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle);
     void sendRC6(uint32_t data, uint8_t nbits);
     void sendRC6(uint64_t data, uint8_t nbits);
     void sendSharpRaw(unsigned long data, int nbits);
     void sendSharp(unsigned int address, unsigned int command);
-    void sendSAMSUNG(unsigned long data, int nbits);
-    void sendSony(unsigned long data, int nbits);
+    void sendSAMSUNG(unsigned long data, int nbits); __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSamsung().")));
+    void sendSony(unsigned long data, int nbits) __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSony(aAddress, aCommand, aNumberOfRepeats).")));;
     void sendWhynter(unsigned long data, int nbits);
 
 #if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
