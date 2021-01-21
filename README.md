@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 3.0.0](https://github.com/z3t0/Arduino-IRremote/releases) - work in progress
+### [Version 3.0.0](https://github.com/z3t0/Arduino-IRremote/archive/master.zip) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/z3t0/Arduino-IRremote/latest)](https://github.com/z3t0/Arduino-IRremote/commits/master)
@@ -14,7 +14,7 @@ This library enables you to send and receive using infra-red signals on an Ardui
 Tutorials and more information will be made available on [the official homepage](https://arduino-irremote.github.io/Arduino-IRremote/).
 
 # Installation
-Click on the LibraryManager badge above to see the instructions.
+Click on the LibraryManager badge above to see the [instructions](https://www.ardu-badge.com/IRremote/zip).
 
 # Supported IR Protocols
 Denon, JVC, LG,  NEC, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sharp, Sony, (Pronto), BoseWave, Lego, Whynter, MagiQuest.<br/>
@@ -30,9 +30,9 @@ This is a quite old but maybe useful wiki for this library.
 # Converting your program to the 3.x version
 - Now there is  an **IRreceiver** and **IRsender** object like the well known Arduino **Serial** object.
 - Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;`in your program.
-- Like for the Serial object, call `[IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);](https://github.com/Arduino-IRremote/Arduino-IRremote/examples/IRreceiveDemo/IRreceiveDemo.ino#L38)` or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK);` instead of the `IrReceiver.enableIRIn();` in setup().
+- Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRreceiveDemo/IRreceiveDemo.ino#L38) or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK);` instead of the `IrReceiver.enableIRIn();` in setup().
 - Old `decode(decode_results *aResults)` is replaced by simple `decode()`.
-- Overflow and many other flags are now in [IrReceiver.receivedIRData.flags](https://github.com/Arduino-IRremote/Arduino-IRremote/src/IRremote.h#L126).
+- Overflow and many other flags are now in [IrReceiver.receivedIRData.flags](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L126).
 
 If you discover more changes, which should be documented, please send me a mail to armin.arduino@gmail.com.
 
@@ -59,9 +59,9 @@ The main reason is, that it was designed to fit inside MCUs with relatively low 
 
 ## Hints
 If you do not know which protocol your IR transmitter uses, you have several choices.
-- Use the [IRreceiveDumpV2 example](examples/IRreceiveDumpV2) to dump out the IR timing.
+- Use the [IRreceiveDump example](examples/IRreceiveDump) to dump out the IR timing.
  You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo).
- For **long codes** with more than 48 bits like from air conditioners, you can **change the length of the input buffer** in [IRremoteInt.h](src/private/IRremoteInt.h#L31).
+ For **long codes** with more than 48 bits like from air conditioners, you can **change the length of the input buffer** in [IRremote.h](src/IRremote.h#L27).
 - The [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) prints the protocol and data for one of the **40 supported protocols**.
  The same library can be used to send this codes.
 - If you have a bigger Arduino board at hand (> 100 kByte program space) you can try the
@@ -156,16 +156,16 @@ To add a new protocol is quite straightforward. Best is too look at the existing
 As a rule of thumb, it is easier to work with a description of the protocol rather than trying to entirely reverse-engineer the protocol.
 Please include a link to the description in the header, if you found one.<br/>
 The **durations** you receive are likely to be longer for marks and shorter for spaces than the protocol suggests,
-but this depends on the receiver circuit in use. It's easy to be off-by-one with the last bit; the last space may be implicit.
+but this depends on the receiver circuit in use. Most protocols use multiples of one time-unit for marks and spaces like e.g. [NEC](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_NEC.cpp#L50). It's easy to be off-by-one with the last bit, since the last space is not recorded by IRremote.
 
 Try to make use of the template functions `decodePulseDistanceData()` and `sendPulseDistanceData()`.
-If your protocol supports address and code fields, try to reflect this in your api like it is done in [`sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats)`](https://github.com/z3t0/Arduino-IRremote/src/ir_NEC.cpp#L76) and [`decodeNEC()`](https://github.com/z3t0/Arduino-IRremote/src/ir_NEC.cpp#L165).<br/>
+If your protocol supports address and code fields, try to reflect this in your api like it is done in [`sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat)`](https://github.com/z3t0/Arduino-IRremote/blob/master/src/ir_NEC.cpp#L86) and [`decodeNEC()`](https://github.com/z3t0/Arduino-IRremote/blob/master/src/ir_NEC.cpp#L145).<br/>
 
 ### Integration
 To integrate your protocol, you need to extend the two functions `decode()` and `getProtocolString()` in *IRreceice.cpp*,
 add macros and function declarations for sending and receiving and extend the `enum decode_type_t` in *IRremote.h*.<br/>
 And at least it would be wonderful if you can provide an example how to use the new protocol.
-A detailed description can be found in the [ir_Template.cpp](https://github.com/z3t0/Arduino-IRremote/src/ir_Template.cpp#L18) file.
+A detailed description can be found in the [ir_Template.cpp](https://github.com/z3t0/Arduino-IRremote/blob/master/src/ir_Template.cpp#L18) file.
 
 # Revision History
 Please see [changelog.md](https://github.com/z3t0/Arduino-IRremote/blob/master/changelog.md).

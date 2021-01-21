@@ -140,7 +140,7 @@ struct IRData {
 #if defined(ENABLE_EXTRA_INFO)
     uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID
 #endif
-    uint8_t numberOfBits;    ///< Number of bits received for data (address + command + parity + etc.) to determine protocol length.
+    uint8_t numberOfBits;       ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible (currently only Sony).
     uint8_t flags;              ///< See definitions above
     uint32_t decodedRawData;    ///< up to 32 bit decoded raw data, formerly used for send functions.
     irparams_struct *rawDataPtr; /// pointer of the raw timing data to be decoded
@@ -225,6 +225,7 @@ struct decode_results {
 #define MSB_FIRST true
 
 #define SEND_STOP_BIT true
+#define SEND_REPEAT_COMMAND true // used for e.g. NEC, where a repeat is different from just repeating the data.
 
 
 /**
@@ -436,10 +437,10 @@ public:
 
     void sendLGRepeat();
     void sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
-    void sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
+    void sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
     void sendNECRepeat();
     void sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
-    void sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat);
+    void sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
 
     void sendPanasonic(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats); // LSB first
     void sendKaseikyo(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats, uint16_t aVendorCode); // LSB first
@@ -474,18 +475,27 @@ public:
      */
     void sendDenon(unsigned long data, int nbits);
     void sendDISH(unsigned long data, int nbits);
-    void sendJVC(unsigned long data, int nbits, bool repeat = false) __attribute__ ((deprecated ("This old function sends MSB first! Please use sendJVC((uint8_t) aAddress, aCommand, aNumberOfRepeats).")));
+    void sendJVC(unsigned long data, int nbits,
+            bool repeat = false)
+                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendJVC((uint8_t) aAddress, aCommand, aNumberOfRepeats).")));
     void sendLG(unsigned long data, int nbits);
-    void sendNEC(uint32_t data, uint8_t nbits, bool repeat = false) __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNECRaw().")));
-    void sendPanasonic(uint16_t aAddress, uint32_t aData) __attribute__ ((deprecated ("This old function sends MSB first! Please use sendPanasonic(aAddress, aCommand, aNumberOfRepeats).")));
+    void sendNEC(uint32_t data, uint8_t nbits, bool repeat = false)
+            __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNECRaw().")));
+    void sendPanasonic(uint16_t aAddress,
+            uint32_t aData)
+                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendPanasonic(aAddress, aCommand, aNumberOfRepeats).")));
     void sendRC5(uint32_t data, uint8_t nbits);
     void sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle);
     void sendRC6(uint32_t data, uint8_t nbits);
     void sendRC6(uint64_t data, uint8_t nbits);
     void sendSharpRaw(unsigned long data, int nbits);
     void sendSharp(unsigned int address, unsigned int command);
-    void sendSAMSUNG(unsigned long data, int nbits); __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSamsung().")));
-    void sendSony(unsigned long data, int nbits) __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSony(aAddress, aCommand, aNumberOfRepeats).")));;
+    void sendSAMSUNG(unsigned long data, int nbits);
+    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSamsung().")));
+    void sendSony(unsigned long data,
+            int nbits)
+                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSony(aAddress, aCommand, aNumberOfRepeats).")));
+    ;
     void sendWhynter(unsigned long data, int nbits);
 
 #if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)

@@ -38,6 +38,8 @@
 //                               L      G   G
 //                               LLLLL   GGG
 //==============================================================================
+// see: https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/LGAirConditionerSendDemo
+// see: https://www.mikrocontroller.net/articles/IRMP_-_english#LGAIR
 // MSB first, timing and repeat is like NEC but 28 data bits
 // MSB! first, 1 start bit + 8 bit address + 16 bit command + 4 bit parity + 1 stop bit.
 // In https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/755 we saw no key repetition

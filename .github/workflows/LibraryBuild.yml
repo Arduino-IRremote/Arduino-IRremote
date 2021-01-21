@@ -86,11 +86,11 @@ jobs:
 
           - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock1
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
-            sketches-exclude: IR2Keyboard,IRUnitTest,IRrelay,IRsendDemo,IRrecord,IRreceiveDump,IRsendProntoDemo,MicroGirs,IRreceiveDemo,ReceiverTimingAnalysis,IRDispatcherDemo # Does not fit in FLASH or RAM # Comma separated list of example names to exclude in build
+            sketches-exclude: IR2Keyboard,IRUnitTest,IRrelay,IRsendDemo,IRrecord,IRreceiveDump,IRsendProntoDemo,MicroGirs,IRreceiveDemo,ReceiverTimingAnalysis,IRDispatcherDemo,LGAirConditionerSendDemo # Does not fit in FLASH or RAM # Comma separated list of example names to exclude in build
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx5:chip=85,clock=1internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: IR2Keyboard,IRUnitTest,IRrelay,IRrecord,IRreceiveDumpV2,IRsendProntoDemo,MicroGirs,IRreceiveDemo,BoseWaveSendDemo,IRDispatcherDemo # Does not fit in FLASH or RAM
+            sketches-exclude: IR2Keyboard,IRUnitTest,IRrelay,IRrecord,IRreceiveDumpV2,IRsendProntoDemo,MicroGirs,IRreceiveDemo,BoseWaveSendDemo,IRDispatcherDemo,LGAirConditionerSendDemo # Does not fit in FLASH or RAM
 
           - arduino-boards-fqbn: TinyCore:avr:tiny32
             platform-url: https://raw.githubusercontent.com/xukangmin/TinyCore/master/avr/package/package_tinycore_index.json
@@ -103,11 +103,11 @@ jobs:
 
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://dl.espressif.com/dl/package_esp32_index.json
-            sketches-exclude: IR2Keyboard,LGACSendDemo,MinimalReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
+            sketches-exclude: IR2Keyboard,LGAirConditionerSendDemo,MinimalReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
-            sketches-exclude: BoseWaveSendDemo,IR2Keyboard,IRDispatcherDemo,IRreceiveDemo,IRrecord,IRsendDemo,IRsendProntoDemo,IRsendRawDemo,IRUnitTest,LGACSendDemo,MicroGirs,MinimalReceiver # no sending yet, no tone()
+            sketches-exclude: BoseWaveSendDemo,IR2Keyboard,IRDispatcherDemo,IRreceiveDemo,IRrecord,IRsendDemo,IRsendProntoDemo,IRsendRawDemo,IRUnitTest,LGAirConditionerSendDemo,MicroGirs,MinimalReceiver,SimpleSender # no sending yet, no tone()
 
 
       # Do not cancel all jobs / architectures if one job fails

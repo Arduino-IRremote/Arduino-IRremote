@@ -1,6 +1,5 @@
 //******************************************************************************
 // IRremoteint.h
-// IRremote
 // Version 2.0.1 June, 2015
 // Initially coded 2009 Ken Shirriff http://www.righto.com
 //
@@ -87,7 +86,7 @@ extern struct irparams_struct irparams;
 #define UTOL            (100 + TOLERANCE)
 
 /** Minimum gap between IR transmissions, in microseconds */
-#define RECORD_GAP_MICROS   5000 // Nec header space is 4500
+#define RECORD_GAP_MICROS   5000 // NEC header space is 4500
 
 /** Minimum gap between IR transmissions, in MICROS_PER_TICK */
 #define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK)

@@ -4,7 +4,6 @@
  *  Demonstrates sending IR codes in standard format with address and command
  *
  * An IR LED must be connected to Arduino PWM pin 3 (IR_SEND_PIN).
- * To receive IR signals in compatible format, you must activate the line #define USE_STANDARD_DECODE in IRremote.h.
  *
  *
  *  Copyright (C) 2020-2021  Armin Joachimsmeyer
@@ -64,14 +63,23 @@ void loop() {
     IrSender.sendNEC(sAddress, sCommand, sRepeats);
     delay(2000);
 
-    Serial.println(F("Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats"));
-    IrSender.sendPronto(F("0000 006D 0022 0000 015E 00AB " /* Pronto header + start bit */
-            "0017 0015 0017 0015 0017 0017 0015 0017 0017 0015 0017 0015 0017 0015 0017 003F " /* Lower address byte */
-            "0017 003F 0017 003E 0017 003F 0015 003F 0017 003E 0017 003F 0017 003E 0017 0015 " /* Upper address byte (inverted at 8 bit mode) */
-            "0017 003E 0017 0015 0017 003F 0017 0015 0017 0015 0017 0015 0017 003F 0017 0015 " /* command byte */
-            "0019 0013 0019 003C 0017 0015 0017 003F 0017 003E 0017 003F 0017 0015 0017 003E " /* inverted command byte */
-            "0017 0806"), 0); //stop bit, no repeat possible, because of missing repeat pattern
-    delay(2000);
+    if (sRepeats == 0) {
+        /*
+         * Send constant values only once in this demo
+         */
+        Serial.println(F("Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats"));
+        IrSender.sendPronto(F("0000 006D 0022 0000 015E 00AB " /* Pronto header + start bit */
+                "0017 0015 0017 0015 0017 0017 0015 0017 0017 0015 0017 0015 0017 0015 0017 003F " /* Lower address byte */
+                "0017 003F 0017 003E 0017 003F 0015 003F 0017 003E 0017 003F 0017 003E 0017 0015 " /* Upper address byte (inverted at 8 bit mode) */
+                "0017 003E 0017 0015 0017 003F 0017 0015 0017 0015 0017 0015 0017 003F 0017 0015 " /* command byte */
+                "0019 0013 0019 003C 0017 0015 0017 003F 0017 003E 0017 003F 0017 0015 0017 003E " /* inverted command byte */
+                "0017 0806"), 0); //stop bit, no repeat possible, because of missing repeat pattern
+        delay(2000);
+
+        Serial.println(F("Send NECRaw 0xCC340102 with 16 bit address 0x102 and command 0x34 which results in a parity error, since CC != ~34"));
+        IrSender.sendNECRaw(0xCC340102, sRepeats);
+        delay(2000);
+    }
 
     Serial.println(F("Send Panasonic"));
     IrSender.sendPanasonic(sAddress, sCommand, sRepeats);
@@ -121,9 +129,17 @@ void loop() {
     IrSender.sendLG((uint8_t) sAddress, sCommand, sRepeats);
     delay(2000);
 
-    Serial.println(F("Send LGRaw 0x88C0051 with \"parity error\""));
-    IrSender.sendLGRaw(0x88C0051, sRepeats);
-    delay(2000);
+    if (sRepeats == 0) {
+        /*
+         * Send constant values only once in this demo
+         * This value is the valid LG turn off command which violates the parity rule
+         * All other commands obey this rule.
+         * see: https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/LGACSendDemo
+         */
+        Serial.println(F("Send LGRaw 0x88C0051 with \"parity error\" since C+0+0+5 != 1"));
+        IrSender.sendLGRaw(0x88C0051, sRepeats);
+        delay(2000);
+    }
 
     Serial.println(F("Send Bosewave with 8 command bits"));
     IrSender.sendBoseWave(sCommand, sRepeats);

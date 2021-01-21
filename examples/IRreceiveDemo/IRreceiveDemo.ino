@@ -17,6 +17,8 @@ int IR_RECEIVE_PIN = 10;
 int IR_RECEIVE_PIN = 11;
 #endif
 
+#define DEBUG_BUTTON_PIN 6 // if held low, print timing for each received data
+
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
 #define Serial SerialUSB
@@ -24,6 +26,7 @@ int IR_RECEIVE_PIN = 11;
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
 
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
@@ -63,7 +66,7 @@ void loop() {
         } else {
             // Print a short summary of received data
             IrReceiver.printIRResultShort(&Serial);
-            if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
+            if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
                 // We have an unknown protocol, print more info
                 IrReceiver.printIRResultRawFormatted(&Serial, true);
             }

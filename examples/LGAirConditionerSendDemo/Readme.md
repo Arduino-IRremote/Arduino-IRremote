@@ -14,17 +14,17 @@
 
 === *** ===
 - (0) : Cooling or Heating
-- (1) : fixed 
-- (2) : fixed
+- (1) : fixed address
+- (2) : fixed address
 - (3) : special(power, swing, air clean)
 - (4) : change air flow, temperature, cooling(0)/heating(4)
 - (5) : temperature ( 15 + (5) = )
 - (6) : air flow
-- (7) : crc ( 3 + 4 + 5 + 6 ) & B00001111
+- (7) : checksum ( 3 + 4 + 5 + 6 ) & B00001111
 
 
-°F = °C × 1.8 + 32
-°C = (°F − 32) / 1.8
+°F = °C × 1.8 + 32<br/>
+°C = (°F - 32) / 1.8
 
 
 === *** ===
