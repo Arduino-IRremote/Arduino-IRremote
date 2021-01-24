@@ -165,7 +165,10 @@ bool IRrecv::isIdle() {
  * Enable receiving of the next value
  */
 void IRrecv::resume() {
-    irparams.rcvstate = IR_REC_STATE_IDLE;
+    // check allows to call resume at arbitrary places or more than once
+    if (irparams.rcvstate == IR_REC_STATE_STOP) {
+        irparams.rcvstate = IR_REC_STATE_IDLE;
+    }
 }
 
 /*

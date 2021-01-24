@@ -7,6 +7,7 @@
 //               W W W  H   H    Y   N  NN   T   E      R  R
 //                WWW   H   H    Y   N   N   T   EEEEE  R   R
 //==============================================================================
+// Whynter A/C ARC-110WD added by Francesco Meschia
 // see https://docs.google.com/spreadsheets/d/1dsr4Jh-nzC6xvSKGpLlPBF0NRwvlpyw-ozg8eZU813w/edit#gid=0
 
 #define WHYNTER_BITS            32

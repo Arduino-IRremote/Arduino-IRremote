@@ -7,17 +7,10 @@
 // Initially coded 2009 Ken Shirriff http://www.righto.com
 //
 // Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
-// Modified  by Mitra Ardron <mitra@mitra.biz>
-// Added Sanyo and Mitsubishi controllers
-// Modified Sony to spot the repeat codes that some Sony's send
 //
 // Interrupt code based on NECIRrcv by Joe Knapp
 // http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
 // Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
-//
-// JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
-// LG added by Darryl Smith (based on the JVC protocol)
-// Whynter A/C ARC-110WD added by Francesco Meschia
 //******************************************************************************
 /************************************************************************************
  * MIT License

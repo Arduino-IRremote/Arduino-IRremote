@@ -38,6 +38,7 @@
 //                               L      G   G
 //                               LLLLL   GGG
 //==============================================================================
+// LG originally added by Darryl Smith (based on the JVC protocol)
 // see: https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/LGAirConditionerSendDemo
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#LGAIR
 // MSB first, timing and repeat is like NEC but 28 data bits

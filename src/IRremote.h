@@ -4,23 +4,31 @@
  *
  * This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  *
+ *
+************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2015-2021 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
-
-//******************************************************************************
-// IRremote
-// Version 2.0.1 June, 2015
-// Initially coded 2009 Ken Shirriff http://www.righto.com
-// Edited by Mitra to add new controller SANYO
-//
-// Interrupt code based on NECIRrcv by Joe Knapp
-// http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
-// Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
-//
-// JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
-// LG added by Darryl Smith (based on the JVC protocol)
-// Whynter A/C ARC-110WD added by Francesco Meschia
-// MagiQuest added by E. Stuart Hicks (based on code by mpflaga - https://github.com/mpflaga/Arduino-IRremote/)
-//******************************************************************************
 #ifndef IRremote_h
 #define IRremote_h
 

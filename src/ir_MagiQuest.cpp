@@ -1,8 +1,8 @@
 #include "IRremote.h"
 
+// MagiQuest added by E. Stuart Hicks
 // Based off the Magiquest fork of Arduino-IRremote by mpflaga
 // https://github.com/mpflaga/Arduino-IRremote/
-
 //==============================================================================
 //
 //
