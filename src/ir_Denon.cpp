@@ -79,8 +79,15 @@ void IRsend::sendSharp(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepe
     sendDenon(aAddress, aCommand, aNumberOfRepeats, true);
 }
 
+/*
+ * Only for backwards compatibility
+ */
+void IRsend::sendDenonRaw(uint16_t aRawData, uint8_t aNumberOfRepeats) {
+    sendDenon(aRawData >> (DENON_COMMAND_BITS + DENON_FRAME_BITS), aRawData & 0xFF, aNumberOfRepeats);
+}
+
 //+=============================================================================
-size_t IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp) {
+void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp) {
     // Set IR carrier frequency
     enableIROut(38);
 
@@ -117,7 +124,6 @@ size_t IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRe
             delay( DENON_AUTO_REPEAT_SPACE / 1000);
         }
     }
-    return DENON_BITS;
 }
 
 //+=============================================================================
@@ -226,6 +232,8 @@ bool IRrecv::decodeDenon() {
 void IRsend::sendDenon(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(38);
+    Serial.println(
+            "The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).");
 
     // Header
     mark(DENON_HEADER_MARK);

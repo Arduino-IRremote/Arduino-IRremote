@@ -57,18 +57,18 @@ const int AC_FAN_TOWER[3] = { 0, 4, 6 };
 const int AC_FAN_WALL[4] = { 0, 2, 4, 5 }; // 5 -> cycle
 
 void ACSendCode(uint16_t aCommand) {
-    Serial.print("Send code=");
+    Serial.print(F("Send code="));
     Serial.print(aCommand, HEX);
-    Serial.print(" | ");
+    Serial.print(F(" | "));
     Serial.println(aCommand, BIN);
     IrSender.sendLG((uint8_t) 0x88, aCommand, 0);
 }
 
 void sendCommand(uint8_t aTemperature, uint8_t aFanIntensity) {
 
-    Serial.print("Send temperature=");
+    Serial.print(F("Send temperature="));
     Serial.print(aTemperature);
-    Serial.print(" fan intensity=");
+    Serial.print(F(" fan intensity="));
     Serial.println(aFanIntensity);
 
     WordUnion tCommand;
@@ -92,7 +92,7 @@ void sendCommand(uint8_t aTemperature, uint8_t aFanIntensity) {
 }
 
 void sendAirSwing(bool aSwing) {
-    Serial.print("Send air swing=");
+    Serial.print(F("Send air swing="));
     Serial.println(aSwing);
     if (ACIsWallType) {
         if (aSwing) {
@@ -110,13 +110,13 @@ void sendAirSwing(bool aSwing) {
 }
 
 void SendPowerDown() {
-    Serial.println("Send power down");
+    Serial.println(F("Send power down"));
     IrSender.sendLGRaw(0x88C0051);
     ACPowerIsOn = false;
 }
 
 void sendAirClean(bool aStateAirClean) {
-    Serial.print("Send air clean=");
+    Serial.print(F("Send air clean="));
     Serial.println(aStateAirClean);
     if (aStateAirClean) {
         ACSendCode(0xC000);
@@ -127,7 +127,7 @@ void sendAirClean(bool aStateAirClean) {
 }
 
 void sendJet(bool aJetOn) {
-    Serial.print("Send jet on=");
+    Serial.print(F("Send jet on="));
     Serial.println(aJetOn);
     if (aJetOn) {
         ACSendCode(0x1008);
@@ -139,18 +139,17 @@ void sendJet(bool aJetOn) {
 void printMenu() {
     Serial.println();
     Serial.println();
-    Serial.println("Type command and optional parameter without a separator"
-            "");
-    Serial.println("0 Off");
-    Serial.println("1 On");
-    Serial.println("s Swing <0 or 1>");
-    Serial.println("c Air clean <0 or 1>");
-    Serial.println("j Jet <0 or 1>");
-    Serial.println("f Fan <0 to 2 or 3 for cycle>");
-    Serial.println("t Temperature <18 to 30>");
-    Serial.println("+ Temperature + 1");
-    Serial.println("- Temperature - 1");
-    Serial.println("e.g. \"s1\" or \"t23\" or \"+\"");
+    Serial.println(F("Type command and optional parameter without a separator"));
+    Serial.println(F("0 Off"));
+    Serial.println(F("1 On"));
+    Serial.println(F("s Swing <0 or 1>"));
+    Serial.println(F("c Air clean <0 or 1>"));
+    Serial.println(F("j Jet <0 or 1>"));
+    Serial.println(F("f Fan <0 to 2 or 3 for cycle>"));
+    Serial.println(F("t Temperature <18 to 30>"));
+    Serial.println(F("+ Temperature + 1"));
+    Serial.println(F("- Temperature - 1"));
+    Serial.println(F("e.g. \"s1\" or \"t23\" or \"+\""));
     Serial.println();
 
 }
@@ -206,7 +205,7 @@ void loop() {
             tParameter = sRequestString[1] - '0';
         }
 
-        Serial.print("Command=");
+        Serial.print(F("Command="));
         Serial.println(tCommand);
 
         switch (tCommand) {
@@ -253,7 +252,7 @@ void loop() {
         }
 
         if (tParameter != 0) {
-            Serial.print("Parameter=");
+            Serial.print(F("Parameter="));
             Serial.println(tParameter);
         }
 

@@ -20,7 +20,6 @@
  * Activate this line if your receiver has an external output driver transistor / "inverted" output
  */
 //#define IR_INPUT_IS_ACTIVE_HIGH
-
 //------------------------------------------------------------------------------
 // Include the Arduino header
 //
@@ -49,8 +48,12 @@ struct irparams_struct {
     uint8_t recvpin;                ///< Pin connected to IR data from detector
     uint8_t blinkpin;               ///< 0 means not valid pin
     bool blinkflag;                 ///< true -> enable blinking of pin on IR processing
-    uint16_t rawlen;                ///< counter of entries in rawbuf
-    uint16_t timer;                 ///< State timer, counts 50uS ticks.
+#if RAW_BUFFER_LENGTH <= 255        // saves around 75 bytes program space and speeds up ISR
+    uint8_t rawlen;                 ///< counter of entries in rawbuf
+#else
+    unsigned int rawlen;            ///< counter of entries in rawbuf
+#endif
+    uint16_t timer;                 ///< State timer, counts 50uS ticks. The value is copied into the rawbuf array on every transition.
     uint16_t rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
     uint8_t overflow;               ///< Raw buffer overflow occurred
 };
@@ -73,7 +76,6 @@ extern struct irparams_struct irparams;
 // First MARK is the one after the long gap
 // Pulse parameters in uSec
 //
-
 
 /** Relative tolerance (in percent) for some comparisons on measured data. */
 #define TOLERANCE       25

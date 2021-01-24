@@ -85,5 +85,5 @@ void loop() {
         sRepeats = 4;
     }
 
-    delay(5000); // additional delay at the end of each loop
+    delay(5000);  // delay must be greater than 5 ms (RECORD_GAP_MICROS), otherwise the receiver sees it as one long signal
 }

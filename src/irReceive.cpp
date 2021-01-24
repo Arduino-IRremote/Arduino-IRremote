@@ -1124,6 +1124,7 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
  * Contains no new (since 5/2020) protocols.
  */
 bool IRrecv::decode(decode_results *aResults) {
+    Serial.println("The function decode(&results)) is deprecated and may not work as expected! Just use decode() - without any parameter.");
     (void) aResults;
     return decode();
 }
