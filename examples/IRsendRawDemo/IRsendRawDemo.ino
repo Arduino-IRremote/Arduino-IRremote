@@ -68,7 +68,7 @@ void loop() {
             1690, 560, 1690, 560 }; // Using exact NEC timing
     IrSender.sendRaw(irSignal, sizeof(irSignal) / sizeof(irSignal[0]), NEC_KHZ); // Note the approach used to automatically calculate the size of the array.
 
-    delay(1000);
+    delay(1000); // delay must be greater than 5 ms (RECORD_GAP_MICROS), otherwise the receiver sees it as one long signal
 #endif
 
     /*
@@ -78,7 +78,7 @@ void loop() {
     Serial.println(F("Send NEC 16 bit address 0xFB0C, 0x18 with (50 us) tick resolution timing (8 bit array format) "));
     IrSender.sendRaw_P(irSignalP, sizeof(irSignalP) / sizeof(irSignalP[0]), NEC_KHZ);
 
-    delay(1000);
+    delay(1000); // delay must be greater than 5 ms (RECORD_GAP_MICROS), otherwise the receiver sees it as one long signal
 
     Serial.println(F("Send NEC 16 bit address 0x0102, 8 bit data 0x34 with generated timing"));
     IrSender.sendNEC(0x0102, 0x34, true, 0);

@@ -1,7 +1,7 @@
 /*
  * IRsendDemo.cpp
  *
- *  Demonstrates sending IR codes in standard format with address and command
+ * Demonstrates sending IR codes in standard format with address and command
  *
  * An IR LED must be connected to Arduino PWM pin 3 (IR_SEND_PIN).
  *
@@ -57,7 +57,7 @@ void loop() {
 
     Serial.println(F("Send NEC with 8 bit address"));
     IrSender.sendNEC(sAddress & 0xFF, sCommand, sRepeats);
-    delay(2000);
+    delay(2000); // delay must be greater than 5 ms (RECORD_GAP_MICROS), otherwise the receiver sees it as one long signal
 
     Serial.println(F("Send NEC with 16 bit address"));
     IrSender.sendNEC(sAddress, sCommand, sRepeats);
@@ -141,6 +141,7 @@ void loop() {
         delay(2000);
     }
 
+#if !defined(__AVR_ATtiny85__) // code does not fit in program space of ATtiny85
     Serial.println(F("Send Bosewave with 8 command bits"));
     IrSender.sendBoseWave(sCommand, sRepeats);
     delay(2000);
@@ -156,7 +157,7 @@ void loop() {
      * Force buffer overflow
      */
     Serial.println(F("Force buffer overflow by sending 100 marks and spaces"));
-    for (int i = 0; i < RAW_BUFFER_LENGTH; ++i) {
+    for (unsigned int i = 0; i < RAW_BUFFER_LENGTH; ++i) {
         IrSender.mark(400);
         IrSender.space(400);
     }
@@ -172,6 +173,7 @@ void loop() {
     if (sRepeats > 4) {
         sRepeats = 4;
     }
+#endif // !defined(__AVR_ATtiny85__)
 
     delay(4000); // additional delay at the end of each loop
 }

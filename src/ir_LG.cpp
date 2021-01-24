@@ -266,6 +266,7 @@ bool IRrecv::decodeLG() {
 void IRsend::sendLG(unsigned long data, int nbits) {
 // Set IR carrier frequency
     enableIROut(38);
+    Serial.println("The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats).");
 
 // Header
     mark(LG_HEADER_MARK);

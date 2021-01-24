@@ -235,8 +235,8 @@ static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *d
  * @param frequency Modulation frequency in Hz. Often 38000Hz.
  */
 void IRrecv::compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int frequency) {
-    aSerial->println("Pronto Hex as string");
-    aSerial->print("char ProntoData[] = \"");
+    aSerial->println(F("Pronto Hex as string"));
+    aSerial->print(F("char ProntoData[] = \""));
     dumpNumber(aSerial, frequency > 0 ? learnedToken : learnedNonModulatedToken);
     dumpNumber(aSerial, toFrequencyCode(frequency));
     dumpNumber(aSerial, (decodedIRData.rawDataPtr->rawlen + 1) / 2);

@@ -5,7 +5,7 @@
  * This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  *
  *
-************************************************************************************
+ ************************************************************************************
  * MIT License
  *
  * Copyright (c) 2015-2021 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
@@ -33,7 +33,7 @@
 #define IRremote_h
 
 #if ! defined(RAW_BUFFER_LENGTH)
-#define RAW_BUFFER_LENGTH  101  ///< Maximum length of raw duration buffer. Must be odd. Supports 48 bit codings.
+#define RAW_BUFFER_LENGTH  101  ///< Maximum length of raw duration buffer. Must be odd! 101 supports up to 48 bit codings.
 #endif
 
 //------------------------------------------------------------------------------
@@ -148,7 +148,7 @@ struct IRData {
 #if defined(ENABLE_EXTRA_INFO)
     uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID
 #endif
-    uint8_t numberOfBits;       ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible (currently only Sony).
+    uint8_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible (currently only Sony).
     uint8_t flags;              ///< See definitions above
     uint32_t decodedRawData;    ///< up to 32 bit decoded raw data, formerly used for send functions.
     irparams_struct *rawDataPtr; /// pointer of the raw timing data to be decoded
@@ -201,19 +201,19 @@ void setFeedbackLED(bool aSwitchLedOn);
  * Results returned from old decoders !!!deprecated!!!
  */
 struct decode_results {
-    decode_type_t decode_type; // deprecated ///< UNKNOWN, NEC, SONY, RC5, ...
-//    uint16_t address;           ///< Used by Panasonic & Sharp & NEC_standard [16-bits]
-    uint32_t value;             ///< Decoded value / command [max 32-bits]
-    uint8_t bits;               // deprecated - only for backwards compatibility ///< Number of bits in decoded value
+    decode_type_t decode_type;  // deprecated, moved to decodedIRData.protocol ///< UNKNOWN, NEC, SONY, RC5, ...
+//    uint16_t address;         ///< Used by Panasonic & Sharp & NEC_standard [16-bits]
+    uint32_t value;             // deprecated, moved to decodedIRData.decodedRawData ///< Decoded value / command [max 32-bits]
+    uint8_t bits;               // deprecated, moved to decodedIRData.numberOfBits ///< Number of bits in decoded value
 #if DECODE_MAGIQUEST
-    uint16_t magnitude;         ///< Used by MagiQuest [16-bits]
+    uint16_t magnitude;         // deprecated, moved to decodedIRData.extra ///< Used by MagiQuest [16-bits]
 #endif
-    bool isRepeat;         // deprecated              ///< True if repeat of value is detected
+    bool isRepeat;              // deprecated, moved to decodedIRData.flags ///< True if repeat of value is detected
 
 // next 3 values are copies of irparams values - see IRremoteint.h
-    uint16_t *rawbuf;           ///< Raw intervals in 50uS ticks
-    uint16_t rawlen;            ///< Number of records in rawbuf
-    bool overflow;              // deprecated ///< true if IR raw code too long
+    uint16_t *rawbuf;           // deprecated, moved to decodedIRData.rawDataPtr->rawbuf ///< Raw intervals in 50uS ticks
+    uint16_t rawlen;            // deprecated, moved to decodedIRData.rawDataPtr->rawlen ///< Number of records in rawbuf
+    bool overflow;              // deprecated, moved to decodedIRData.flags ///< true if IR raw code too long
 };
 
 /**
@@ -234,7 +234,6 @@ struct decode_results {
 
 #define SEND_STOP_BIT true
 #define SEND_REPEAT_COMMAND true // used for e.g. NEC, where a repeat is different from just repeating the data.
-
 
 /**
  * Main class for receiving IR
@@ -440,15 +439,17 @@ public:
      * New send functions
      */
     void sendBoseWave(uint8_t aCommand, uint8_t aNumberOfRepeats = NO_REPEATS);
-    size_t sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp = false);
+    void sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp = false);
+    void sendDenonRaw(uint16_t aRawData, uint8_t aNumberOfRepeats = 0); __attribute__ ((deprecated ("Please use sendDenon(aAddress, aCommand, aNumberOfRepeats).")));
     void sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
+    void sendJVCRaw(uint16_t aRawData, uint8_t aNumberOfRepeats = 0); __attribute__ ((deprecated ("Please use sendJVC(aAddress, aCommand, aNumberOfRepeats).")));
 
     void sendLGRepeat();
     void sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
     void sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
     void sendNECRepeat();
     void sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
-    void sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
+    void sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
 
     void sendPanasonic(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats); // LSB first
     void sendKaseikyo(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats, uint16_t aVendorCode); // LSB first

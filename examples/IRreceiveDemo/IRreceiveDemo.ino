@@ -17,7 +17,8 @@ int IR_RECEIVE_PIN = 10;
 int IR_RECEIVE_PIN = 11;
 #endif
 
-#define DEBUG_BUTTON_PIN 6 // if held low, print timing for each received data
+#define BUZZER_PIN          5
+#define DEBUG_BUTTON_PIN    6 // if held low, print timing for each received data
 
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
@@ -59,7 +60,7 @@ void loop() {
              * do double beep
              */
             IrReceiver.stop();
-            tone(5, 1100, 10);
+            tone(BUZZER_PIN, 1100, 10);
             delay(50);
 #endif
 
@@ -78,7 +79,7 @@ void loop() {
          * Play tone, wait and restore IR timer
          */
         IrReceiver.stop();
-        tone(5, 2200, 10);
+        tone(BUZZER_PIN, 2200, 10);
         delay(11);
         IrReceiver.start();
 #endif
