@@ -89,10 +89,12 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `RAW_BUFFER_LENGTH` | IRremoteint.h | 101 | Buffer size of raw input buffer. Must be odd! |
 | `IR_SEND_DUTY_CYCLE` | IRremoteBoardDefs.h | 30 | Duty cycle of IR send signal. |
 | `MICROS_PER_TICK` | IRremoteBoardDefs.h | 50 | Resolution of the raw input buffer data. |
+| `USE_CUSTOM_DELAY` | irSend.cpp | disabled | Use old custom_delay_usec() function for mark and space delays. |
 |-|-|-|-|
 | `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
 | `DO_NOT_USE_FEEDBACK_LED` | TinyIRReceiver.h | disabled | Enable it to disable the feedback LED function. |
+
 
 
 ### Modifying compile options with Arduino IDE

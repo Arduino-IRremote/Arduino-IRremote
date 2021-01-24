@@ -520,6 +520,8 @@ public:
 #else
     const uint8_t sendPin = IR_SEND_PIN;
 #endif
+private:
+    void custom_delay_usec(unsigned long uSecs);
 };
 
 // The sender instance

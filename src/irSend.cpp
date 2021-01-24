@@ -35,6 +35,8 @@
 // The sender instance
 IRsend IrSender;
 
+//#define USE_CUSTOM_DELAY // Use old custom_delay_usec() function for mark and space delays.
+
 /*
  * @ param aBlinkPin if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
  */
@@ -358,13 +360,21 @@ void IRsend::mark(uint16_t timeMicros) {
     ; // Enable pin 3 PWM output
 
     setFeedbackLED(true);
+
+#  if defined(USE_CUSTOM_DELAY)
+    // old code
+    if (timeMicros > 0) {
+        // custom delay does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
+        custom_delay_usec(timeMicros);
+    }
 // Arduino core does not implement delayMicroseconds() for 4 MHz :-(
-#  if F_CPU == 4000000L && defined(__AVR__)
+#  elif F_CPU == 4000000L && defined(__AVR__)
     // busy wait
     __asm__ __volatile__ (
             "1: sbiw %0,1" "\n\t"// 2 cycles
             "brne 1b" : "=w" (timeMicros) : "0" (timeMicros)// 2 cycles
     );
+
 #  else
     if (timeMicros >= 0x4000) {
         // The implementation of Arduino delayMicroseconds() overflows at 0x4000 / 16.384 @16MHz (wiring.c line 175)
@@ -374,7 +384,7 @@ void IRsend::mark(uint16_t timeMicros) {
     } else {
         delayMicroseconds(timeMicros);
     }
-#  endif // F_CPU == 4000000L && defined(__AVR__)
+#  endif // USE_CUSTOM_DELAY
 #endif //  USE_SOFT_SEND_PWM
 }
 
@@ -392,13 +402,20 @@ void IRsend::space(uint16_t timeMicros) {
 
     setFeedbackLED(false);
 
+#if defined(USE_CUSTOM_DELAY)
+    // old code
+    if (timeMicros > 0) {
+        // custom delay does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
+        custom_delay_usec(timeMicros);
+    }
 // Arduino core does not implement delayMicroseconds() for 4 MHz :-(
-#if F_CPU == 4000000L && defined(__AVR__)
+#elif F_CPU == 4000000L && defined(__AVR__)
     // busy wait
     __asm__ __volatile__ (
             "1: sbiw %0,1" "\n\t"// 2 cycles
             "brne 1b" : "=w" (timeMicros) : "0" (timeMicros)// 2 cycles
     );
+
 #else
     if (timeMicros >= 0x4000) {
         // The implementation of Arduino delayMicroseconds() overflows at 0x4000 / 16.384 @16MHz (wiring.c line 175)
@@ -408,7 +425,25 @@ void IRsend::space(uint16_t timeMicros) {
     } else {
         delayMicroseconds(timeMicros);
     }
-#endif // F_CPU == 4000000L && defined(__AVR__)
+#endif // USE_CUSTOM_DELAY
+}
+
+
+//+=============================================================================
+// Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit
+// It does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
+
+void IRsend::custom_delay_usec(unsigned long uSecs) {
+    if (uSecs > 4) {
+        unsigned long start = micros();
+        unsigned long endMicros = start + uSecs - 4;
+        if (endMicros < start) { // Check if overflow
+            while (micros() > start) {
+            } // wait until overflow
+        }
+        while (micros() < endMicros) {
+        } // normal wait
+    }
 }
 
 #ifdef USE_DEFAULT_ENABLE_IR_OUT
