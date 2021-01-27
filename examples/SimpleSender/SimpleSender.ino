@@ -6,30 +6,21 @@
  *
  * For Arduino Uno, Nano etc., an IR LED must be connected to PWM pin 3 (IR_SEND_PIN).
  *
- *
  *  Copyright (C) 2020-2021  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *
+ *  MIT License
  */
 
 #include <IRremote.h>
-#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#include "ATtinySerialOut.h"
-#endif
-
-// On the Zero and others we switch explicitly to SerialUSB
-#if defined(ARDUINO_ARCH_SAMD)
-#define Serial SerialUSB
-#endif
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
-    delay(2000); // To be able to connect Serial monitor after reset or power up and before first printout
-#endif
+
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
     Serial.print(F("Ready to send IR signals at pin "));
@@ -69,9 +60,9 @@ void loop() {
     // Results for the first loop to: Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 (32 bits)
 
     /*
-     * If you cannot avoid to send a raw value like 0xCB340102 you must use sendNECRaw()
+     * If you cannot avoid to send a raw value like e.g. 0xCB340102 you must use sendNECRaw()
      */
-    Serial.println(F("Send NECRaw 0xCB340102"));
+//    Serial.println(F("Send NECRaw 0xCB340102"));
 //    IrSender.sendNECRaw(0xCB340102, sRepeats);
 
     /*

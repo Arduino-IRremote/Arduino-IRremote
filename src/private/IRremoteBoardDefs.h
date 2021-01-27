@@ -1125,3 +1125,6 @@ static void timerConfigForReceive() {
 #endif
 
 #endif // ! IRremoteBoardDefs_h
+
+#pragma once
+

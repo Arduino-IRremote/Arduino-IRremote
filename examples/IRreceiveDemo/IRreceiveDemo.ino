@@ -87,12 +87,14 @@ void loop() {
         IrReceiver.resume(); // Enable receiving of the next value
 
         /*
-         * Finally check the received data and perform actions according to the received commands
+         * Finally check the received data and perform actions according to the received address and command
          */
-        if (IrReceiver.decodedIRData.command == 0x10) {
-            // do something
-        } else if (IrReceiver.decodedIRData.command == 0x11) {
-            // do something else
+        if (IrReceiver.decodedIRData.address == 0) {
+            if (IrReceiver.decodedIRData.command == 0x10) {
+                // do something
+            } else if (IrReceiver.decodedIRData.command == 0x11) {
+                // do something else
+            }
         }
     }
 }

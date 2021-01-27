@@ -37,6 +37,8 @@
 #endif
 
 //------------------------------------------------------------------------------
+#include "irProtocol.h"
+
 #include "private/IRremoteInt.h"
 
 #define VERSION_IRREMOTE "3.0.0"
@@ -98,35 +100,6 @@
 #if DECODE_MAGIQUEST
 #define ENABLE_EXTRA_INFO // for magnitude
 #endif
-
-/**
- * An enum consisting of all supported formats.
- * You do NOT need to remove entries from this list when disabling protocols!
- */
-typedef enum {
-    UNKNOWN = 0,
-    BOSEWAVE,
-    DENON,
-    DISH,
-    JVC,
-    LEGO_PF,
-    LG,
-    MAGIQUEST,
-    NEC,
-    PANASONIC,
-    KASEIKYO,
-    KASEIKYO_JVC,
-    KASEIKYO_DENON,
-    KASEIKYO_SHARP,
-    KASEIKYO_MITSUBISHI,
-    RC5,
-    RC6,
-    SAMSUNG,
-    SANYO,
-    SHARP,
-    SONY,
-    WHYNTER,
-} decode_type_t;
 
 /*
  * Result required by an application
@@ -229,9 +202,6 @@ struct decode_results {
 #define DISABLE_LED_FEEDBACK false
 #define ENABLE_LED_FEEDBACK true
 
-#define LSB_FIRST false
-#define MSB_FIRST true
-
 #define SEND_STOP_BIT true
 #define SEND_REPEAT_COMMAND true // used for e.g. NEC, where a repeat is different from just repeating the data.
 
@@ -274,14 +244,11 @@ public:
      * Useful info and print functions
      */
     void printIRResultShort(Print *aSerial);
-    static void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpaceDuration = 0);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
 
     void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int frequency = 38000U);
-
-    static const char* getProtocolString(decode_type_t aProtocol);
 
     /*
      * Store the data for further processing
@@ -353,6 +320,8 @@ public:
 
 // The receiver instance
 extern IRrecv IrReceiver;
+// static function
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpaceDuration = 0);
 
 /****************************************************
  *                     SENDING
@@ -420,29 +389,15 @@ public:
     void sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz);
 
     /*
-     * Constants for some protocols
-     */
-#define PANASONIC_VENDOR_ID_CODE    0x2002
-#define SHARP_VENDOR_ID_CODE        0x5AAA
-#define DENON_VENDOR_ID_CODE        0x3254
-#define MITSUBISHI_VENDOR_ID_CODE   0xCB23
-#define JVC_VENDOR_ID_CODE          0x0103
-
-#define SIRCS_12_PROTOCOL       12
-#define SIRCS_20_PROTOCOL       20
-
-#define LEGO_MODE_EXTENDED  0
-#define LEGO_MODE_COMBO     1
-#define LEGO_MODE_SINGLE    0x4 // here the 2 LSB have meanings like Output A / Output B
-
-    /*
      * New send functions
      */
     void sendBoseWave(uint8_t aCommand, uint8_t aNumberOfRepeats = NO_REPEATS);
     void sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aSendSharp = false);
-    void sendDenonRaw(uint16_t aRawData, uint8_t aNumberOfRepeats = 0); __attribute__ ((deprecated ("Please use sendDenon(aAddress, aCommand, aNumberOfRepeats).")));
+    void sendDenonRaw(uint16_t aRawData, uint8_t aNumberOfRepeats = 0);
+    __attribute__ ((deprecated ("Please use sendDenon(aAddress, aCommand, aNumberOfRepeats).")));
     void sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats);
-    void sendJVCRaw(uint16_t aRawData, uint8_t aNumberOfRepeats = 0); __attribute__ ((deprecated ("Please use sendJVC(aAddress, aCommand, aNumberOfRepeats).")));
+    void sendJVCRaw(uint16_t aRawData, uint8_t aNumberOfRepeats = 0);
+    __attribute__ ((deprecated ("Please use sendJVC(aAddress, aCommand, aNumberOfRepeats).")));
 
     void sendLGRepeat();
     void sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
@@ -529,3 +484,6 @@ private:
 extern IRsend IrSender;
 
 #endif // IRremote_h
+
+#pragma once
+

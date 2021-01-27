@@ -64,12 +64,10 @@
  if (decodeShuzu())  return true ;
  #endif
 
- B. In the function IRrecv::getProtocolString(), add
- #if DECODE_SHUZU
+ B. In the function getProtocolString(), add
  case SHUZU:
  return ("Shuzu");
  break;
- #endif
 
  C. Save your changes and close the file
 

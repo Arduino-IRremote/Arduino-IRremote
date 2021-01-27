@@ -761,109 +761,7 @@ bool IRrecv::decodeHash() {
 #  endif // defined(USE_STANDARD_DECODE)
 #endif // DECODE_HASH
 
-const char* IRrecv::getProtocolString(decode_type_t aProtocol) {
-    switch (aProtocol) {
-    default:
-    case UNKNOWN:
-        return ("UNKNOWN");
-        break;
-#if DECODE_BOSEWAVE
-    case BOSEWAVE:
-        return ("BOSEWAVE");
-        break;
-#endif
-#if DECODE_DENON
-    case DENON:
-        return ("DENON");
-        break;
-#endif
-#if DECODE_SHARP
-    case SHARP:
-        return ("SHARP");
-        break;
-#endif
-#if DECODE_JVC
-    case JVC:
-        return ("JVC");
-        break;
-#endif
-#if DECODE_LEGO_PF
-    case LEGO_PF:
-        return ("LEGO_PF");
-        break;
-#endif
-#if DECODE_LG
-    case LG:
-        return ("LG");
-        break;
-#endif
-#if DECODE_MAGIQUEST
-    case MAGIQUEST:
-        return ("MAGIQUEST");
-        break;
-#endif
-#if DECODE_NEC
-    case NEC:
-        return ("NEC");
-        break;
-#endif
-#if DECODE_PANASONIC
-    case PANASONIC:
-        return ("PANASONIC");
-        break;
-#endif
-#if DECODE_KASEIKYO
-    case KASEIKYO:
-        return ("KASEIKYO");
-        break;
-    case KASEIKYO_DENON:
-        return ("KASEIKYO_DENON");
-        break;
-    case KASEIKYO_SHARP:
-        return ("KASEIKYO_SHARP");
-        break;
-    case KASEIKYO_JVC:
-        return ("KASEIKYO_JVC");
-        break;
-    case KASEIKYO_MITSUBISHI:
-        return ("KASEIKYO_MITSUBISHI");
-        break;
-#endif
-#if DECODE_RC5
-    case RC5:
-        return ("RC5");
-        break;
-#endif
-#if DECODE_RC6
-    case RC6:
-        return ("RC6");
-        break;
-#endif
-#if DECODE_SAMSUNG
-    case SAMSUNG:
-        return ("SAMSUNG");
-        break;
-#endif
-#if DECODE_SANYO
-    case SANYO:
-        return ("SANYO");
-        break;
-#endif
-
-#if DECODE_SONY
-    case SONY:
-        return ("SONY");
-        break;
-#endif
-#if DECODE_WHYNTER
-    case WHYNTER:
-        return ("WHYNTER");
-        break;
-#endif
-    }
-}
-
-void IRrecv::printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpaceTicks) {
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpaceTicks) {
     aSerial->print(F("Protocol="));
     aSerial->print(getProtocolString(aIRDataPtr->protocol));
     if (aIRDataPtr->protocol == UNKNOWN) {
@@ -934,10 +832,10 @@ void IRrecv::printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLe
             aSerial->println();
         }
     }
-
 }
+
 void IRrecv::printIRResultShort(Print *aSerial) {
-    printIRResultShort(aSerial, &decodedIRData, decodedIRData.rawDataPtr->rawbuf[0]);
+    ::printIRResultShort(aSerial, &decodedIRData, decodedIRData.rawDataPtr->rawbuf[0]);
 }
 
 //+=============================================================================
@@ -1124,7 +1022,77 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
  * Contains no new (since 5/2020) protocols.
  */
 bool IRrecv::decode(decode_results *aResults) {
-    Serial.println("The function decode(&results)) is deprecated and may not work as expected! Just use decode() - without any parameter.");
+    Serial.println(
+            "The function decode(&results)) is deprecated and may not work as expected! Just use decode() - without any parameter.");
     (void) aResults;
     return decode();
+}
+
+const char* getProtocolString(decode_type_t aProtocol) {
+    switch (aProtocol) {
+    default:
+    case UNKNOWN:
+        return ("UNKNOWN");
+        break;
+    case BOSEWAVE:
+        return ("BOSEWAVE");
+        break;
+    case DENON:
+        return ("DENON");
+        break;
+    case SHARP:
+        return ("SHARP");
+        break;
+    case JVC:
+        return ("JVC");
+        break;
+    case LEGO_PF:
+        return ("LEGO_PF");
+        break;
+    case LG:
+        return ("LG");
+        break;
+    case MAGIQUEST:
+        return ("MAGIQUEST");
+        break;
+    case NEC:
+        return ("NEC");
+        break;
+    case PANASONIC:
+        return ("PANASONIC");
+        break;
+    case KASEIKYO:
+        return ("KASEIKYO");
+        break;
+    case KASEIKYO_DENON:
+        return ("KASEIKYO_DENON");
+        break;
+    case KASEIKYO_SHARP:
+        return ("KASEIKYO_SHARP");
+        break;
+    case KASEIKYO_JVC:
+        return ("KASEIKYO_JVC");
+        break;
+    case KASEIKYO_MITSUBISHI:
+        return ("KASEIKYO_MITSUBISHI");
+        break;
+    case RC5:
+        return ("RC5");
+        break;
+    case RC6:
+        return ("RC6");
+        break;
+    case SAMSUNG:
+        return ("SAMSUNG");
+        break;
+    case SANYO:
+        return ("SANYO");
+        break;
+    case SONY:
+        return ("SONY");
+        break;
+    case WHYNTER:
+        return ("WHYNTER");
+        break;
+    }
 }

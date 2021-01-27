@@ -1,6 +1,8 @@
 /*
  *  MinimalReceiver.cpp
  *
+ *  Small memory footprint and no timer usage!
+ *
  *  Receives IR protocol data of NEC protocol using pin change interrupts.
  *  On complete received IR command the function handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition)
  *  is called in Interrupt context but with interrupts being enabled to enable use of delay() etc.
@@ -10,7 +12,7 @@
  *  !!!!!!!!!!!!!!!!!!!!!
  *
  *
- *  Copyright (C) 2021  Armin Joachimsmeyer
+ *  Copyright (C) 2020-2021  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/ukw100/IRMP.

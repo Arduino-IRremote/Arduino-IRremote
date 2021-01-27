@@ -206,8 +206,11 @@ bool IRrecv::decodeNEC() {
     // plausi check for command
     if (tValue.UByte.MidHighByte != (uint8_t) (~tValue.UByte.HighByte)) {
         DBG_PRINT(F("NEC: "));
-        DBG_PRINTLN(F("Command and inverted command check failed"));
-        return false;
+        DBG_PRINT(F("Command=0x"));
+        DBG_PRINT(tValue.UByte.MidHighByte, HEX);
+        DBG_PRINT(F(" is not inverted value of 0x"));
+        DBG_PRINTLN(tValue.UByte.HighByte, HEX);
+        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
     }
     decodedIRData.protocol = NEC;
     decodedIRData.numberOfBits = NEC_BITS;

@@ -76,7 +76,9 @@ void loop() {
                 "0017 0806"), 0); //stop bit, no repeat possible, because of missing repeat pattern
         delay(2000);
 
-        Serial.println(F("Send NECRaw 0xCC340102 with 16 bit address 0x102 and command 0x34 which results in a parity error, since CC != ~34"));
+        Serial.println(
+                F(
+                        "Send NECRaw 0xCC340102 with 16 bit address 0x102 and command 0x34 which results in a parity error, since CC != ~34"));
         IrSender.sendNECRaw(0xCC340102, sRepeats);
         delay(2000);
     }
@@ -117,16 +119,31 @@ void loop() {
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(2000);
 
-    Serial.println(F("Send Samsung"));
-    IrSender.sendSamsung(sAddress, sCommand, sRepeats);
+    /*
+     * Next example how to use the IrSender.write function
+     */
+    IRData IRSendData;
+    // prepare data
+    IRSendData.address = sAddress;
+    IRSendData.command = sCommand;
+    IRSendData.flags = IRDATA_FLAGS_EMPTY;
+
+    IRSendData.protocol = SAMSUNG;
+    Serial.print(F("Send "));
+    Serial.println(getProtocolString(IRSendData.protocol));
+    IrSender.write(&IRSendData, sRepeats);
     delay(2000);
 
-    Serial.println(F("Send JVC"));
-    IrSender.sendJVC(sAddress, sCommand, sRepeats);
+    IRSendData.protocol = JVC; // switch protocol
+    Serial.print(F("Send "));
+    Serial.println(getProtocolString(IRSendData.protocol));
+    IrSender.write(&IRSendData, sRepeats);
     delay(2000);
 
-    Serial.println(F("Send LG"));
-    IrSender.sendLG((uint8_t) sAddress, sCommand, sRepeats);
+    IRSendData.protocol = LG;
+    Serial.print(F("Send "));
+    Serial.println(getProtocolString(IRSendData.protocol));
+    IrSender.write(&IRSendData, sRepeats);
     delay(2000);
 
     if (sRepeats == 0) {
@@ -142,8 +159,9 @@ void loop() {
     }
 
 #if !defined(__AVR_ATtiny85__) // code does not fit in program space of ATtiny85
-    Serial.println(F("Send Bosewave with 8 command bits"));
-    IrSender.sendBoseWave(sCommand, sRepeats);
+    IRSendData.protocol = BOSEWAVE;
+    Serial.println(F("Send Bosewave with no address and 8 command bits"));
+    IrSender.write(&IRSendData, sRepeats);
     delay(2000);
 
     /*

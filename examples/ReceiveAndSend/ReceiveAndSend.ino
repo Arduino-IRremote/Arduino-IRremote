@@ -1,5 +1,5 @@
 /*
- * IRrecord.cpp
+ * ReceiveAndSend.cpp
  *
  * Record and play back IR signals as a minimal
  * An IR detector/demodulator must be connected to the input RECV_PIN.
@@ -14,6 +14,30 @@
  * Initially coded 2009 Ken Shirriff http://www.righto.com
  *
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
 
 #include <IRremote.h>
@@ -37,6 +61,7 @@ int DELAY_BETWEEN_REPEAT = 50;
 // Storage for the recorded code
 struct storedIRDataStruct {
     IRData receivedIRData;
+    // extensions for sendRaw
     uint8_t rawCode[RAW_BUFFER_LENGTH]; // The durations if raw
     uint8_t rawCodeLength; // The length of the code
 } sStoredIRData;
@@ -160,10 +185,13 @@ void sendCode(storedIRDataStruct *aIRDataToSend) {
         Serial.println(F(" marks or spaces"));
     } else {
 
+        /*
+         * Use the write function, which does the switch for different protocols
+         */
         IrSender.write(&aIRDataToSend->receivedIRData, NO_REPEATS);
 
         Serial.print(F("Sent: "));
-        IrReceiver.printIRResultShort(&Serial, &aIRDataToSend->receivedIRData);
+        printIRResultShort(&Serial, &aIRDataToSend->receivedIRData);
     }
 }
 

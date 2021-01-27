@@ -116,3 +116,6 @@ extern struct irparams_struct irparams;
 #endif
 
 #endif
+
+#pragma once
+
