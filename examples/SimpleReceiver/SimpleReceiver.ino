@@ -11,6 +11,12 @@
  *  MIT License
  */
 
+/*
+ * Specify which protocol(s) should be used for decoding.
+ * If no protocol is defined, all protocols are active.
+ */
+#define DECODE_NEC          1
+
 #include <IRremote.h>
 
 int IR_RECEIVE_PIN = 11;

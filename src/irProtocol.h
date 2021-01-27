@@ -38,13 +38,10 @@
  */
 typedef enum {
     UNKNOWN = 0,
-    BOSEWAVE,
     DENON,
     DISH,
     JVC,
-    LEGO_PF,
     LG,
-    MAGIQUEST,
     NEC,
     PANASONIC,
     KASEIKYO,
@@ -55,16 +52,18 @@ typedef enum {
     RC5,
     RC6,
     SAMSUNG,
-    SANYO,
     SHARP,
     SONY,
+    BOSEWAVE,
+    LEGO_PF,
+    MAGIQUEST,
     WHYNTER,
 } decode_type_t;
 
 const char* getProtocolString(decode_type_t aProtocol);
 
-#define LSB_FIRST false
-#define MSB_FIRST true
+#define PROTOCOL_IS_LSB_FIRST false
+#define PROTOCOL_IS_MSB_FIRST true
 
 /*
  * Constants for some protocols

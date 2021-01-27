@@ -29,7 +29,7 @@
  *
  ************************************************************************************
  */
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 //==============================================================================
 //                               L       GGGG
@@ -115,7 +115,7 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepe
     space(LG_HEADER_SPACE);
 
     // MSB first
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, MSB_FIRST, SEND_STOP_BIT);
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
 
     interrupts();
 
@@ -134,7 +134,7 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepe
 //+=============================================================================
 // LGs has a repeat like NEC
 //
-#if defined(USE_STANDARD_DECODE)
+#if !defined(USE_OLD_DECODE)
 /*
  * First check for right data length
  * Next check start bit
@@ -219,8 +219,6 @@ bool IRrecv::decodeLG() {
 }
 #else
 
-#warning "Old decoder function decodeLG() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeLG() instead."
-
 //+=============================================================================
 bool IRrecv::decodeLG() {
     unsigned int offset = 1; // Skip first space
@@ -274,7 +272,7 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 //    mark(LG_BIT_MARK);
 
 // Data + stop bit
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, MSB_FIRST, SEND_STOP_BIT);
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
 
 }
 

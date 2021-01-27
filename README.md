@@ -82,9 +82,10 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 
 | Name | File | Default value | Description |
 |-|-|-|-|
-| `IR_INPUT_IS_ACTIVE_HIGH` | IRremoteint.h | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
-| `DEBUG` | IRremote.h | disabled | Enables lots of lovely debug output. |
-| `USE_NEC_STANDARD` | IRremote.h | disabled | Use LSB first, address/code schema for encoding. |
+| `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.h>` | disabled | If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. |
+| `MARK_EXCESS_MICROS` | Before `#include <IRremote.h>` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
+| `IR_INPUT_IS_ACTIVE_HIGH` | IRremoteInt.h | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
+| `DEBUG` | IRremote1.h | disabled | Enables lots of lovely debug output. |
 | `USE_NO_SEND_PWM` | IRremote.h | disabled | Use no carrier PWM, just simulate an active low receiver signal. |
 | `USE_SOFT_SEND_PWM` | IRremote.h | disabled | Use carrier PWM generation in software, instead of hardware PWM. |
 | `PULSE_CORRECTION_MICROS` | IRremote.h | 3 | If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses. |

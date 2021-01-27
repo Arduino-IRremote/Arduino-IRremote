@@ -125,7 +125,7 @@
  */
 
 //#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 //#define SEND_SHUZU  1 // for testing
 //#define DECODE_SHUZU  1 // for testing
@@ -175,11 +175,11 @@ void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRep
 
         // Address (device and subdevice)
         sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, aAddress,
-        SHUZU_ADDRESS_BITS, LSB_FIRST); // false -> LSB first
+        SHUZU_ADDRESS_BITS, PROTOCOL_IS_LSB_FIRST); // false -> LSB first
 
         // Command + stop bit
         sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, aCommand,
-        SHUZU_COMMAND_BITS, LSB_FIRST, SEND_STOP_BIT); // false, true -> LSB first, stop bit
+        SHUZU_COMMAND_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT); // false, true -> LSB first, stop bit
 
         interrupts();
 

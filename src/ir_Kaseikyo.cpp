@@ -31,7 +31,7 @@
  */
 
 //#define DEBUG // Activate this  for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 #include "LongUnion.h"
 
 //==============================================================================
@@ -95,7 +95,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOf
 
         // Vendor ID
         sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aVendorCode,
-        KASEIKYO_VENDOR_ID_BITS, LSB_FIRST);
+        KASEIKYO_VENDOR_ID_BITS, PROTOCOL_IS_LSB_FIRST);
 
         // Vendor Parity
         uint8_t tVendorParity = aVendorCode ^ (aVendorCode >> 8);
@@ -109,7 +109,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOf
 
         // Send address (device and subdevice) + command + parity + Stop bit
         sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, tSendValue.ULong,
-        KASEIKYO_ADDRESS_BITS + KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS, LSB_FIRST, SEND_STOP_BIT);
+        KASEIKYO_ADDRESS_BITS + KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
 
         interrupts();
 
@@ -206,10 +206,8 @@ bool IRrecv::decodeKaseikyo() {
 
     if (tProtocol == KASEIKYO) {
         decodedIRData.flags |= IRDATA_FLAGS_EXTRA_INFO;
-#if defined(ENABLE_EXTRA_INFO)
         // Include vendor ID in address
         decodedIRData.extra |= tVendorId;
-#endif
     }
 
     if (tValue.UByte.HighByte != tParity) {
@@ -238,9 +236,8 @@ bool IRrecv::decodeKaseikyo() {
 }
 
 //+=============================================================================
-#if !defined(USE_STANDARD_DECODE)
+#if defined(USE_OLD_DECODE)
 bool IRrecv::decodePanasonic() {
-    decodedIRData.flags |= IRDATA_FLAGS_IS_OLD_DECODER;
     unsigned int offset = 1;
 
     if (results.rawlen < (2 * KASEIKYO_BITS) + 2) {
@@ -258,7 +255,7 @@ bool IRrecv::decodePanasonic() {
 
     // decode address
     if (!decodePulseDistanceData(KASEIKYO_ADDRESS_BITS + KASEIKYO_DATA_BITS, offset, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
-    KASEIKYO_ZERO_SPACE)) {
+    KASEIKYO_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 
@@ -281,11 +278,11 @@ void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
 
     // Old version with MSB first Data Address
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aAddress,
-    KASEIKYO_ADDRESS_BITS, MSB_FIRST);
+    KASEIKYO_ADDRESS_BITS, PROTOCOL_IS_MSB_FIRST);
 
     // Old version with MSB first Data Data + stop bit
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aData,
-    KASEIKYO_DATA_BITS, MSB_FIRST);
+    KASEIKYO_DATA_BITS, PROTOCOL_IS_MSB_FIRST);
 
 }
 

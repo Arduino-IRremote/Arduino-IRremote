@@ -1,5 +1,6 @@
 /*
- * irReceive.cpp
+ * irReceive.cpp.h
+ * This file is exclusively included by IRremote.h to enable easy configuration of library switches
  *
  *  Contains all IRrecv class functions
  *
@@ -31,7 +32,6 @@
  */
 
 //#define DEBUG
-#include "IRremote.h"
 
 // The receiver instance
 IRrecv IrReceiver;
@@ -262,7 +262,7 @@ bool IRrecv::decode() {
     }
 #endif
 
-#if DECODE_KASEIKYO && !defined(USE_STANDARD_DECODE) // if USE_STANDARD_DECODE enabled, decodeKaseikyo() is already called by decodePanasonic()
+#if DECODE_KASEIKYO && defined(USE_OLD_DECODE) // if not USE_OLD_DECODE enabled, decodeKaseikyo() is already called by decodePanasonic()
         TRACE_PRINTLN("Attempting Panasonic/Kaseikyo decode");
         if (decodeKaseikyo()) {
             return true;
@@ -320,7 +320,7 @@ bool IRrecv::decode() {
 
 #if DECODE_SAMSUNG
     TRACE_PRINTLN("Attempting Samsung decode");
-#if defined(USE_STANDARD_DECODE)
+#if !defined(USE_OLD_DECODE)
     if (decodeSamsung()) {
         return true;
     }
@@ -361,14 +361,6 @@ bool IRrecv::decode() {
         return true;
     }
 #endif
-
-// to be removed!
-//#if DECODE_SANYO
-//    TRACE_PRINTLN("Attempting Sanyo decode");
-//    if (decodeSanyo()) {
-//        return true;
-//    }
-//#endif
 
     /*
      * Last resort is the universal hash decode which always return true
@@ -713,7 +705,7 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
 #define FNV_PRIME_32 16777619
 #define FNV_BASIS_32 2166136261
 
-#  if defined(USE_STANDARD_DECODE)
+#  if !defined(USE_OLD_DECODE)
 bool IRrecv::decodeHash() {
     long hash = FNV_BASIS_32;
 
@@ -736,8 +728,6 @@ bool IRrecv::decodeHash() {
 }
 #  else
 
-#warning "Old decoder function decodeHash() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeHash() instead."
-
 bool IRrecv::decodeHash() {
     long hash = FNV_BASIS_32;
 
@@ -758,7 +748,7 @@ bool IRrecv::decodeHash() {
 
     return true;
 }
-#  endif // defined(USE_STANDARD_DECODE)
+#  endif // !defined(USE_OLD_DECODE)
 #endif // DECODE_HASH
 
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpaceTicks) {
@@ -778,12 +768,10 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
         aSerial->print(F(" Command=0x"));
         aSerial->print(aIRDataPtr->command, HEX);
 
-#if defined(ENABLE_EXTRA_INFO)
         if (aIRDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
             aSerial->print(F(" Extra=0x"));
             aSerial->print(aIRDataPtr->extra, HEX);
         }
-#endif
 
         if (aIRDataPtr->flags & IRDATA_FLAGS_PARITY_FAILED) {
             aSerial->print(F(" Parity fail"));
@@ -1034,9 +1022,6 @@ const char* getProtocolString(decode_type_t aProtocol) {
     case UNKNOWN:
         return ("UNKNOWN");
         break;
-    case BOSEWAVE:
-        return ("BOSEWAVE");
-        break;
     case DENON:
         return ("DENON");
         break;
@@ -1046,14 +1031,8 @@ const char* getProtocolString(decode_type_t aProtocol) {
     case JVC:
         return ("JVC");
         break;
-    case LEGO_PF:
-        return ("LEGO_PF");
-        break;
     case LG:
         return ("LG");
-        break;
-    case MAGIQUEST:
-        return ("MAGIQUEST");
         break;
     case NEC:
         return ("NEC");
@@ -1085,14 +1064,22 @@ const char* getProtocolString(decode_type_t aProtocol) {
     case SAMSUNG:
         return ("SAMSUNG");
         break;
-    case SANYO:
-        return ("SANYO");
-        break;
     case SONY:
         return ("SONY");
+        break;
+#if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
+    case BOSEWAVE:
+        return ("BOSEWAVE");
+        break;
+    case LEGO_PF:
+        return ("LEGO_PF");
+        break;
+    case MAGIQUEST:
+        return ("MAGIQUEST");
         break;
     case WHYNTER:
         return ("WHYNTER");
         break;
+#endif
     }
 }

@@ -31,7 +31,7 @@
  */
 
 //#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 #include "LongUnion.h"
 
 //==============================================================================
@@ -97,7 +97,7 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOf
 
     // Address
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aAddress,
-    SAMSUNG_ADDRESS_BITS, LSB_FIRST);
+    SAMSUNG_ADDRESS_BITS, PROTOCOL_IS_LSB_FIRST);
 
     // Command
 
@@ -106,7 +106,7 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOf
     aCommand = ((~aCommand) << 8) | aCommand;
 
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aCommand,
-    SAMSUNG_COMMAND16_BITS, LSB_FIRST, SEND_STOP_BIT);
+    SAMSUNG_COMMAND16_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
 
     interrupts();
 
@@ -123,8 +123,6 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOf
 }
 
 //+=============================================================================
-#if defined(USE_STANDARD_DECODE)
-
 bool IRrecv::decodeSamsung() {
 
     // Check we have enough data (68). The +4 is for initial gap, start bit mark and space + stop bit mark
@@ -209,10 +207,6 @@ bool IRrecv::decodeSamsung() {
     return true;
 }
 
-#else
-
-#warning "Old decoder function decodeSAMSUNG() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeSamsung() instead."
-
 bool IRrecv::decodeSAMSUNG() {
     unsigned int offset = 1;  // Skip first space
 
@@ -226,8 +220,8 @@ bool IRrecv::decodeSAMSUNG() {
     if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[offset], 2250)
             && MATCH_MARK(results.rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
         results.bits = 0;
-        results.value = REPEAT;
-        decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER | IRDATA_FLAGS_IS_REPEAT;
+        results.value = 0xFFFFFFFF;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = SAMSUNG;
         return true;
     }
@@ -241,17 +235,15 @@ bool IRrecv::decodeSAMSUNG() {
     }
     offset++;
 
-    if (!decodePulseDistanceData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE)) {
+    if (!decodePulseDistanceData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 
 // Success
     results.bits = SAMSUNG_BITS;
     decodedIRData.protocol = SAMSUNG;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
-#endif
 
 // Old version with MSB first
 void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
@@ -263,6 +255,6 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     space(SAMSUNG_HEADER_SPACE);
 
     // Old version with MSB first Data + stop bit
-    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits, MSB_FIRST,
+    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
     SEND_STOP_BIT);
 }

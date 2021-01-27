@@ -1,4 +1,4 @@
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 //==============================================================================
 //               W   W  H   H  Y   Y N   N TTTTT EEEEE  RRRRR
@@ -33,13 +33,12 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
     space(WHYNTER_HEADER_SPACE);
 
     // Data + stop bit
-    sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits, MSB_FIRST,
+    sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
     SEND_STOP_BIT);
 
     interrupts();
 }
 
-#if DECODE_WHYNTER
 //+=============================================================================
 bool IRrecv::decodeWhynter() {
 
@@ -56,7 +55,7 @@ bool IRrecv::decodeWhynter() {
         return false;
     }
 
-    if (!decodePulseDistanceData(WHYNTER_BITS, 3, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE, MSB_FIRST)) {
+    if (!decodePulseDistanceData(WHYNTER_BITS, 3, WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 
@@ -72,4 +71,3 @@ bool IRrecv::decodeWhynter() {
     decodedIRData.protocol = WHYNTER;
     return true;
 }
-#endif // DECODE_WHYNTER

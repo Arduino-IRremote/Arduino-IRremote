@@ -1,5 +1,5 @@
 /*
- * irSend.cpp
+ * irSend.cpp.h
  *
  *  Contains common functions for sending
  *
@@ -30,12 +30,22 @@
  ************************************************************************************
  */
 //#define DEBUG
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 // The sender instance
 IRsend IrSender;
 
 //#define USE_CUSTOM_DELAY // Use old custom_delay_usec() function for mark and space delays.
+
+#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
+IRsend::IRsend(int pin) {
+    sendPin = pin;
+}
+#else
+    IRsend::IRsend() {
+        sendPin = IR_SEND_PIN;
+    }
+#endif
 
 /*
  * @ param aBlinkPin if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
@@ -126,7 +136,7 @@ size_t IRsend::write(IRData *aIRSendData, uint8_t aNumberOfRepeats) {
     } else if (tProtocol == RC6) {
         sendRC6(tAddress, tCommand, aNumberOfRepeats, !tSendRepeat); // No toggle for repeats
 
-#if defined(SUPPORT_SEND_EXOTIC_PROTOCOLS)
+#if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
     } else if (tProtocol == BOSEWAVE) {
         sendBoseWave(tCommand, aNumberOfRepeats);
 
@@ -354,6 +364,7 @@ void IRsend::mark(uint16_t timeMicros) {
         now = micros();
     }
 #elif defined(USE_NO_SEND_PWM)
+    (void) timeMicros;
     digitalWrite(sendPin, LOW); // Set output to active low.
 #else
     TIMER_ENABLE_SEND_PWM
@@ -428,7 +439,6 @@ void IRsend::space(uint16_t timeMicros) {
 #endif // USE_CUSTOM_DELAY
 }
 
-
 //+=============================================================================
 // Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit
 // It does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
@@ -448,24 +458,25 @@ void IRsend::custom_delay_usec(unsigned long uSecs) {
 
 #ifdef USE_DEFAULT_ENABLE_IR_OUT
 //+=============================================================================
-// Enables IR output.  The khz value controls the modulation frequency in kilohertz.
+// Enables IR output.  The kHz value controls the modulation frequency in kilohertz.
 // The IR output will be on pin 3 (OC2B).
-// This routine is designed for 36-40KHz; if you use it for other values, it's up to you
+// This routine is designed for 36-40 kHz; if you use it for other values, it's up to you
 // to make sure it gives reasonable results.  (Watch out for overflow / underflow / rounding.)
 // TIMER2 is used in phase-correct PWM mode, with OCR2A controlling the frequency and OCR2B
 // controlling the duty cycle.
-// There is no prescaling, so the output frequency is 16MHz / (2 * OCR2A)
+// There is no prescaling, so the output frequency is 16 MHz / (2 * OCR2A)
 // To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin.
 // A few hours staring at the ATmega documentation and this will all make sense.
 // See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
 //
-void IRsend::enableIROut(int khz) {
+void IRsend::enableIROut(int kHz) {
 #ifdef USE_SOFT_SEND_PWM
-    periodTimeMicros = (1000U + khz / 2) / khz; // = 1000/khz + 1/2 = round(1000.0/khz)
+    periodTimeMicros = (1000U + kHz / 2) / kHz; // = 1000/kHz + 1/2 = round(1000.0/kHz)
     periodOnTimeMicros = periodTimeMicros * IR_SEND_DUTY_CYCLE / 100U - PULSE_CORRECTION_MICROS;
 #endif
 
 #if defined(USE_NO_SEND_PWM)
+    (void) kHz;
     pinMode(sendPin, OUTPUT);
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
@@ -475,7 +486,7 @@ void IRsend::enableIROut(int khz) {
 
     SENDPIN_OFF(sendPin); // When not sending, we want it low
 
-    timerConfigForSend(khz);
+    timerConfigForSend(kHz);
 #endif // defined(USE_NO_SEND_PWM)
 }
 #endif // USE_DEFAULT_ENABLE_IR_OUT

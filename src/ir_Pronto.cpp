@@ -32,7 +32,7 @@
  ************************************************************************************
  */
 //#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 // DO NOT EXPORT from this file
 static const uint16_t MICROSECONDS_T_MAX = 0xFFFFU;
@@ -217,9 +217,9 @@ static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *d
         uint32_t tDuration = data[i] * MICROS_PER_TICK;
         if (i & 1) {
             // Mark
-            tDuration -= MARK_EXCESS_MICROS;
+            tDuration -= getMarkExcessMicros();
         } else {
-            tDuration += MARK_EXCESS_MICROS;
+            tDuration += getMarkExcessMicros();
         }
         dumpDuration(aSerial, tDuration, timebase);
     }
@@ -283,9 +283,9 @@ static size_t compensateAndDumpSequence(String *aString, const volatile uint16_t
         uint32_t tDuration = data[i] * MICROS_PER_TICK;
         if (i & 1) {
             // Mark
-            tDuration -= MARK_EXCESS_MICROS;
+            tDuration -= getMarkExcessMicros();
         } else {
-            tDuration += MARK_EXCESS_MICROS;
+            tDuration += getMarkExcessMicros();
         }
         size += dumpDuration(aString, tDuration, timebase);
     }

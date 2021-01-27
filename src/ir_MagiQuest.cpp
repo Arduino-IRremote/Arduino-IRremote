@@ -1,4 +1,4 @@
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 // MagiQuest added by E. Stuart Hicks
 // Based off the Magiquest fork of Arduino-IRremote by mpflaga
@@ -59,13 +59,13 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
     noInterrupts();
 
     // 2 start bits
-    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 2, MSB_FIRST);
+    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 2, PROTOCOL_IS_MSB_FIRST);
 
     // Data
     sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, wand_id,
-    MAGIQUEST_WAND_ID_BITS, MSB_FIRST);
+    MAGIQUEST_WAND_ID_BITS, PROTOCOL_IS_MSB_FIRST);
     sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, magnitude,
-    MAGIQUEST_MAGNITUDE_BITS, MSB_FIRST, SEND_STOP_BIT);
+    MAGIQUEST_MAGNITUDE_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
 
 //    for (unsigned long long mask = MAGIQUEST_MASK; mask > 0; mask >>= 1) {
 //        if (data.llword & mask) {
@@ -80,7 +80,6 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
     interrupts();
 }
 
-#if DECODE_MAGIQUEST
 //+=============================================================================
 //
 /*
@@ -151,4 +150,3 @@ bool IRrecv::decodeMagiQuest() {
 
     return true;
 }
-#endif // DECODE_MAGIQUEST

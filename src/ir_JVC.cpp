@@ -31,7 +31,7 @@
  */
 
 //#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 //==============================================================================
 //                             JJJJJ  V   V   CCCC
@@ -86,7 +86,7 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
 
         // Address + command
         sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE,
-                aAddress | (aCommand << JVC_ADDRESS_BITS), JVC_BITS, LSB_FIRST, SEND_STOP_BIT);
+                aAddress | (aCommand << JVC_ADDRESS_BITS), JVC_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
 
         interrupts();
 
@@ -99,7 +99,7 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
     }
 }
 
-#if defined(USE_STANDARD_DECODE)
+#if !defined(USE_OLD_DECODE)
 /*
  * First check for right data length
  * Next check start bit
@@ -136,8 +136,7 @@ bool IRrecv::decodeJVC() {
         }
     }
 
-    // false -> LSB first
-    if (!decodePulseDistanceData(JVC_BITS, 3, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE, false)) {
+    if (!decodePulseDistanceData(JVC_BITS, 3, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
         DBG_PRINT(F("JVC: "));
         DBG_PRINTLN(F("Decode failed"));
         return false;
@@ -157,8 +156,6 @@ bool IRrecv::decodeJVC() {
 }
 #else
 
-#warning "Old decoder function decodeJVC() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeJVC() instead."
-
 //+=============================================================================
 bool IRrecv::decodeJVC() {
     unsigned int offset = 1; // Skip first space
@@ -168,7 +165,7 @@ bool IRrecv::decodeJVC() {
             && MATCH_MARK(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
         results.bits = 0;
         results.value = REPEAT;
-        decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER | IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = JVC;
         return true;
     }
@@ -194,7 +191,7 @@ bool IRrecv::decodeJVC() {
     }
     offset++;
 
-    if (!decodePulseDistanceData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE)) {
+    if (!decodePulseDistanceData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 
@@ -207,7 +204,6 @@ bool IRrecv::decodeJVC() {
     // Success
     results.bits = JVC_BITS;
     decodedIRData.protocol = JVC;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
 
     return true;
 }
@@ -230,6 +226,6 @@ void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
     }
 
     // Old version with MSB first Data
-    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, MSB_FIRST, SEND_STOP_BIT);
+    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
 
 }

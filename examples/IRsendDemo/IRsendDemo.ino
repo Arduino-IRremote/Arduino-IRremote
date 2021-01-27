@@ -119,6 +119,7 @@ void loop() {
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(2000);
 
+#if !defined(__AVR_ATtiny85__) // code does not fit in program space of ATtiny85
     /*
      * Next example how to use the IrSender.write function
      */
@@ -158,7 +159,6 @@ void loop() {
         delay(2000);
     }
 
-#if !defined(__AVR_ATtiny85__) // code does not fit in program space of ATtiny85
     IRSendData.protocol = BOSEWAVE;
     Serial.println(F("Send Bosewave with no address and 8 command bits"));
     IrSender.write(&IRSendData, sRepeats);

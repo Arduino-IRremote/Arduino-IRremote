@@ -34,7 +34,7 @@
 // This file contains functions specific to the nRF5.
 // It uses Timer2 so you cannot use the Adafruit_Microbit display driver
 
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 // "Idiot check"
 #ifdef USE_DEFAULT_ENABLE_IR_IN

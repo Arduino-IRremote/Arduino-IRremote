@@ -31,7 +31,7 @@
  */
 
 //#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 //==============================================================================
 //         L       EEEEEE   EEEE    OOOO
@@ -129,7 +129,7 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
         mark(LEGO_HEADER_MARK);
         space(LEGO_HEADER_SPACE);
 
-        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS, MSB_FIRST,
+        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS, PROTOCOL_IS_MSB_FIRST,
         SEND_STOP_BIT);
 
         interrupts();
@@ -143,7 +143,6 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
     }
 }
 
-#if DECODE_LEGO_PF
 /*
  * Mode is stored in the upper nibble of command
  */
@@ -227,5 +226,3 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     return true;
 }
-
-#endif // DECODE_LEGO_PF

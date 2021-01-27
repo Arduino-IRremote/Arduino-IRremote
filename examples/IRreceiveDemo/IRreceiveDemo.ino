@@ -7,6 +7,19 @@
  *
  */
 
+/*
+ * Specify which protocol(s) should be used for decoding.
+ * If no protocol is defined, all protocols are active.
+ * This must be done before the #include <IRremote.h>
+ */
+//#define DECODE_LG           1
+//#define DECODE_NEC          1
+// etc. see IRremote.h
+
+//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 2000 bytes program space if all protocols are active
+
+#define MARK_EXCESS_MICROS    20 // recommended for the cheap VS1838 modules
+
 #include <IRremote.h>
 
 #if defined(ESP32)

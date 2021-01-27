@@ -249,9 +249,6 @@ void dumpProtocols() {
     Serial.print(F("LG:           "));
     printDecodeEnabled(DECODE_LG);
 
-    Serial.print(F("SANYO:        "));
-    printDecodeEnabled(DECODE_SANYO);
-
     Serial.print(F("SHARP:        "));
     printDecodeEnabled(DECODE_SHARP);
 

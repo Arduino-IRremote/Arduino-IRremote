@@ -1,5 +1,5 @@
 //******************************************************************************
-// IRremote.cpp
+// IRremote.cpp.h
 //
 //  Contains all IRreceiver static functions
 //
@@ -36,7 +36,7 @@
  *
  ************************************************************************************
  */
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 struct irparams_struct irparams; // the irparams instance
 
@@ -71,6 +71,11 @@ bool MATCH(unsigned int measured, unsigned int desired) {
     }
 #endif
     return passed;
+}
+
+// used for ir_Pronto
+int getMarkExcessMicros(){
+    return MARK_EXCESS_MICROS;
 }
 
 //+========================================================

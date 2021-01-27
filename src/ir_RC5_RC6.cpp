@@ -29,7 +29,7 @@
  */
 
 //#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 #include "LongUnion.h"
 
 bool sLastSendToggleValue = false;
@@ -112,7 +112,7 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
     }
 }
 
-#if defined(USE_STANDARD_DECODE)
+#if !defined(USE_OLD_DECODE)
 bool IRrecv::decodeRC5() {
 
     // Check we have the right amount of data (11 to 26). The +2 is for initial gap and start bit mark.
@@ -155,8 +155,6 @@ bool IRrecv::decodeRC5() {
 
 #else
 
-#warning "Old decoder function decodeRC5() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeRC5() instead."
-
 //+=============================================================================
 // Gets one undecoded level at a time from the raw buffer.
 // The RC5/6 decoding is easier if the data is broken into time intervals.
@@ -166,7 +164,6 @@ bool IRrecv::decodeRC5() {
 // t1 is the time interval for a single bit in microseconds.
 // Returns -1 for error (measured time interval is not a multiple of t1).
 //
-#if (DECODE_RC5 || DECODE_RC6)
 int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int t1) {
     unsigned int width;
     int val;
@@ -178,7 +175,7 @@ int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int
     }
     width = results->rawbuf[*offset];
     val = ((*offset) % 2) ? MARK : SPACE;
-    correction = (val == MARK) ? MARK_EXCESS_MICROS : - MARK_EXCESS_MICROS;
+    correction = (val == MARK) ? getMarkExcessMicros() : - getMarkExcessMicros();
 
     if (MATCH(width, (t1) + correction)) {
         avail = 1;
@@ -200,7 +197,6 @@ int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int
 
     return val;
 }
-#endif
 
 //+=============================================================================
 bool IRrecv::decodeRC5() {
@@ -244,7 +240,6 @@ bool IRrecv::decodeRC5() {
     results.bits = nbits;
     results.value = data;
     decodedIRData.protocol = RC5;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
 #endif
@@ -385,7 +380,7 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
     }
 }
 
-#if defined(USE_STANDARD_DECODE)
+#if !defined(USE_OLD_DECODE)
 bool IRrecv::decodeRC6() {
 
     // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space
@@ -489,8 +484,6 @@ bool IRrecv::decodeRC6() {
 
 #else
 
-#warning "Old decoder function decodeRC5() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeRC5() instead."
-
 //+=============================================================================
 bool IRrecv::decodeRC6() {
     unsigned int nbits;
@@ -553,7 +546,6 @@ bool IRrecv::decodeRC6() {
     results.bits = nbits;
     results.value = data;
     decodedIRData.protocol = RC6;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
 #endif

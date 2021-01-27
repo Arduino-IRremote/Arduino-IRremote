@@ -32,7 +32,7 @@
 #if defined(ARDUINO_ARCH_SAMD)
 // Support routines for SAM processor boards
 
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 // "Idiot check"
 #ifdef USE_DEFAULT_ENABLE_IR_IN
@@ -115,7 +115,7 @@ void IRrecv::disableIRIn() {
     TC3->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
 }
 
-void IRTimer(); // Defined in IRRemote as ISR(TIMER_INTR_NAME)
+void IRTimer(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
 
 void TC3_Handler(void) {
     TcCount16* TC = (TcCount16*) TC3;

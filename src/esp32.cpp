@@ -33,7 +33,7 @@
 
 // This file contains functions specific to the ESP32.
 
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 // "Idiot check"
 #ifdef USE_DEFAULT_ENABLE_IR_IN

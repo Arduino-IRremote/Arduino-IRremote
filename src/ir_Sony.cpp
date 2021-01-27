@@ -29,7 +29,7 @@
  */
 
 //#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 //==============================================================================
 //                           SSSS   OOO   N   N  Y   Y
@@ -79,14 +79,14 @@ void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepe
         space(SONY_SPACE);
 
         // send 7 command bits LSB first
-        sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aCommand, SONY_COMMAND_BITS, LSB_FIRST);
+        sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aCommand, SONY_COMMAND_BITS, PROTOCOL_IS_LSB_FIRST);
         // Address 16 bit LSB first
         if (numberOfBits == SIRCS_20_PROTOCOL) {
             sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress,
-                    (SONY_ADDRESS_BITS + SONY_EXTRA_BITS), LSB_FIRST);
+                    (SONY_ADDRESS_BITS + SONY_EXTRA_BITS), PROTOCOL_IS_LSB_FIRST);
         } else {
             sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress, SONY_ADDRESS_BITS,
-            LSB_FIRST);
+            PROTOCOL_IS_LSB_FIRST);
         }
         interrupts();
 
@@ -100,7 +100,7 @@ void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepe
 }
 
 //+=============================================================================
-#if defined(USE_STANDARD_DECODE)
+#if !defined(USE_OLD_DECODE)
 
 bool IRrecv::decodeSony() {
 
@@ -155,8 +155,6 @@ bool IRrecv::decodeSony() {
 
 #define SONY_DOUBLE_SPACE_USECS    500 // usually see 713 - not using ticks as get number wrap around
 
-#warning "Old decoder function decodeSony() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeSony() instead."
-
 bool IRrecv::decodeSony() {
     long data = 0;
     uint8_t bits = 0;
@@ -172,7 +170,7 @@ bool IRrecv::decodeSony() {
         DBG_PRINTLN("IR Gap found");
         results.bits = 0;
         results.value = REPEAT;
-        decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER | IRDATA_FLAGS_IS_REPEAT;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = UNKNOWN;
         return true;
     }
@@ -210,7 +208,6 @@ bool IRrecv::decodeSony() {
     results.bits = bits;
     results.value = data;
     decodedIRData.protocol = SONY;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
 
@@ -227,5 +224,5 @@ void IRsend::sendSony(unsigned long data, int nbits) {
     space(SONY_SPACE);
 
     // Old version with MSB first Data
-    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, MSB_FIRST);
+    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
 }

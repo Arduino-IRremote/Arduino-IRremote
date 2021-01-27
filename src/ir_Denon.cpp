@@ -31,7 +31,7 @@
  */
 
 //#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 
 //==============================================================================
 //                    DDDD   EEEEE  N   N   OOO   N   N
@@ -105,7 +105,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepe
         noInterrupts();
 
         // Data
-        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS, MSB_FIRST,
+        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS, PROTOCOL_IS_MSB_FIRST,
         SEND_STOP_BIT);
 
         // Inverted autorepeat frame
@@ -113,7 +113,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepe
         delay(DENON_AUTO_REPEAT_SPACE / 1000);
         noInterrupts();
         sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tInvertedData, DENON_BITS,
-        MSB_FIRST, SEND_STOP_BIT);
+        PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
 
         interrupts();
 
@@ -132,7 +132,7 @@ bool IRrecv::decodeSharp() {
 }
 
 //+=============================================================================
-#if defined(USE_STANDARD_DECODE)
+#if !defined(USE_OLD_DECODE)
 bool IRrecv::decodeDenon() {
 
     // we have no start bit, so check for the exact amount of data bits
@@ -142,7 +142,7 @@ bool IRrecv::decodeDenon() {
     }
 
     // Read the bits in
-    if (!decodePulseDistanceData(DENON_BITS, 1, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE, MSB_FIRST)) {
+    if (!decodePulseDistanceData(DENON_BITS, 1, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         DBG_PRINT("Denon: ");
         DBG_PRINTLN("Decode failed");
         return false;
@@ -194,10 +194,7 @@ bool IRrecv::decodeDenon() {
 }
 #else
 
-#warning "Old decoder function decodeDenon() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeDenon() instead."
-
 bool IRrecv::decodeDenon() {
-    unsigned int offset = 1;  // Skip the gap reading
 
     // Check we have the right amount of data
     if (irparams.rawlen != 1 + 2 + (2 * DENON_BITS) + 1) {
@@ -205,25 +202,22 @@ bool IRrecv::decodeDenon() {
     }
 
     // Check initial Mark+Space match
-    if (!MATCH_MARK(results.rawbuf[offset], DENON_HEADER_MARK)) {
+    if (!MATCH_MARK(results.rawbuf[1], DENON_HEADER_MARK)) {
         return false;
     }
-    offset++;
 
-    if (!MATCH_SPACE(results.rawbuf[offset], DENON_HEADER_SPACE)) {
+    if (!MATCH_SPACE(results.rawbuf[2], DENON_HEADER_SPACE)) {
         return false;
     }
-    offset++;
 
     // Read the bits in
-    if (!decodePulseDistanceData(DENON_BITS, offset, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE)) {
+    if (!decodePulseDistanceData(DENON_BITS, 3, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 
     // Success
     results.bits = DENON_BITS;
     decodedIRData.protocol = DENON;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
     return true;
 }
 
@@ -240,7 +234,7 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
     space(DENON_HEADER_SPACE);
 
     // Data
-    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits, MSB_FIRST,
+    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
     SEND_STOP_BIT);
 
 }

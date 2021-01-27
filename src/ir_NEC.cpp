@@ -29,7 +29,7 @@
  */
 
 //#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremote.h"
+#include "IRremoteInt.h"
 #include "LongUnion.h"
 
 //==============================================================================
@@ -115,7 +115,7 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRep
     space(NEC_HEADER_SPACE);
 
     // LSB first + stop bit
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, aRawData, NEC_BITS, LSB_FIRST,
+    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, aRawData, NEC_BITS, PROTOCOL_IS_LSB_FIRST,
     SEND_STOP_BIT);
 
     interrupts();
@@ -135,7 +135,7 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRep
 //+=============================================================================
 // NECs have a repeat only 4 items long
 //
-#if defined(USE_STANDARD_DECODE)
+#if !defined(USE_OLD_DECODE)
 /*
  * First check for right data length
  * Next check start bit
@@ -226,7 +226,6 @@ bool IRrecv::decodeNEC() {
 }
 #else
 
-#warning "Old decoder function decodeNEC() is enabled. Enable USE_STANDARD_DECODE on line 34 of IRremote.h to enable new version of decodeNEC() instead."
 bool IRrecv::decodeNEC() {
     unsigned int offset = 1;  // Index in to results; Skip first space.
 
@@ -240,8 +239,8 @@ bool IRrecv::decodeNEC() {
     if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[offset], NEC_REPEAT_HEADER_SPACE)
             && MATCH_MARK(results.rawbuf[offset + 1], NEC_BIT_MARK)) {
         results.bits = 0;
-        results.value = REPEAT;
-        decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER | IRDATA_FLAGS_IS_REPEAT;
+        results.value = 0xFFFFFFFF;
+        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = NEC;
         return true;
     }
@@ -263,7 +262,7 @@ bool IRrecv::decodeNEC() {
     }
     offset++;
 
-    if (!decodePulseDistanceData(NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE)) {
+    if (!decodePulseDistanceData(NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 
@@ -277,7 +276,6 @@ bool IRrecv::decodeNEC() {
 // Success
     results.bits = NEC_BITS;
     decodedIRData.protocol = NEC;
-    decodedIRData.flags = IRDATA_FLAGS_IS_OLD_DECODER;
 
     return true;
 }
@@ -291,7 +289,7 @@ void IRsend::sendNEC(uint32_t data, uint8_t nbits, bool repeat) {
     enableIROut(38);
     Serial.println("The function sendNEC(data, nbits) is deprecated and may not work as expected! Use sendNECRaw(data, NumberOfRepeats) or better sendNEC(Address, Command, NumberOfRepeats).");
 
-    if (data == REPEAT || repeat) {
+    if (data == 0xFFFFFFFF || repeat) {
         sendNECRepeat();
         return;
     }
@@ -301,6 +299,6 @@ void IRsend::sendNEC(uint32_t data, uint8_t nbits, bool repeat) {
     space(NEC_HEADER_SPACE);
 
     // Old version with MSB first Data + stop bit
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, MSB_FIRST, SEND_STOP_BIT);
+    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
 
 }
