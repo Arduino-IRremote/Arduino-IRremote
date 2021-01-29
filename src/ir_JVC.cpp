@@ -214,10 +214,9 @@ bool IRrecv::decodeJVC() {
 // JVC does NOT repeat by sending a separate code (like NEC does).
 // The JVC protocol repeats by skipping the header.
 // Old version with MSB first Data
-void IRsend::sendJVC(unsigned long data, int nbits, bool repeat) {
+void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
     // Set IR carrier frequency
     enableIROut(38);
-    Serial.println("The function sendJVC(data, nbits) is deprecated and may not work as expected! Use sendJVCRaw(data, NumberOfRepeats) or better sendJVC(Address, Command, NumberOfRepeats).");
 
     // Only send the Header if this is NOT a repeat command
     if (!repeat) {

@@ -27,18 +27,18 @@ Protocols can be switched off and on by changing the lines in *IRremote.h*:
 # [Wiki](https://github.com/z3t0/Arduino-IRremote/wiki)
 This is a quite old but maybe useful wiki for this library.
 
-# Converting your program to the 3.x version
+# Converting your 2.x program to the 3.x version
 - Now there is  an **IRreceiver** and **IRsender** object like the well known Arduino **Serial** object.
-- Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;` in your program, and replace all occurences of `IRrecv.` or `irrecv.` with `IrReceiver`.
-- Also remove the line `decode_results results` or similar, since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more.
+- Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;` in your program, and replace all occurrences of `IRrecv.` or `irrecv.` with `IrReceiver`.
+- Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
 - Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRreceiveDemo/IRreceiveDemo.ino#L38) or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK);` instead of the `IrReceiver.enableIRIn();` or `irrecv.enableIRIn();` in setup().
 - Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
-- `results.value` moved to `IrReceiver.decodedIRData.decodedRawData`.
-- `results.decode_type` moved to `IrReceiver.decodedIRData.decodedRawData`.
+- The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value`  and / or `results.decode_type` (and similar) to `IrReceiver.decodedIRData.decodedRawData` and / or `IrReceiver.decodedIRData.decodedRawData`.
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L126).
-- Seldomly used: `results.rawbuf` and `results.rawlen` moved to `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
-
-If you discover more changes, which should be documented, please send me a mail to armin.arduino@gmail.com.
+- Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
+- The old functions `sendNEC()` and `sendJVC()` are deprecated and renamed to `sendNECMSB()` and `sendJVCMSB()` to make it clearer that they send data with MSB first, which is not the standard for NEC and JVC.
+They are kept as well as other old send functions to enable usage of **old** 32 bit IR data codes.
+In the new version you will send NEC commands not by 32 bit codes but by a (constant) 8 bit address and an 8 bit command.
 
 # FAQ
 - IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)<br/>
@@ -82,7 +82,7 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 
 | Name | File | Default value | Description |
 |-|-|-|-|
-| `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.h>` | disabled | If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. |
+| `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.h>` | disabled | If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. Saves up to 900 bytes program space. |
 | `MARK_EXCESS_MICROS` | Before `#include <IRremote.h>` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
 | `IR_INPUT_IS_ACTIVE_HIGH` | IRremoteInt.h | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
 | `DEBUG` | IRremote1.h | disabled | Enables lots of lovely debug output. |

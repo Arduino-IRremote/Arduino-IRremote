@@ -40,6 +40,8 @@
  ************************************************************************************
  */
 
+//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 900 bytes program space
+
 #include <IRremote.h>
 
 #if defined(ESP32)

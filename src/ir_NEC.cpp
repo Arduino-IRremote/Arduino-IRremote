@@ -284,10 +284,9 @@ bool IRrecv::decodeNEC() {
 /*
  * Old version with MSB first Data
  */
-void IRsend::sendNEC(uint32_t data, uint8_t nbits, bool repeat) {
+void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     // Set IR carrier frequency
     enableIROut(38);
-    Serial.println("The function sendNEC(data, nbits) is deprecated and may not work as expected! Use sendNECRaw(data, NumberOfRepeats) or better sendNEC(Address, Command, NumberOfRepeats).");
 
     if (data == 0xFFFFFFFF || repeat) {
         sendNECRepeat();

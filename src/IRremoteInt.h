@@ -32,7 +32,6 @@
 #ifndef IRremoteInt_h
 #define IRremoteInt_h
 
-
 #if ! defined(RAW_BUFFER_LENGTH)
 #define RAW_BUFFER_LENGTH  101  ///< Maximum length of raw duration buffer. Must be odd! 101 supports up to 48 bit codings.
 #endif
@@ -53,7 +52,6 @@
  * Try to activate it, if you have legacy code to compile with version >= 3
  */
 //#define USE_OLD_DECODE // enables the old NEC and other old decoders.
-
 //------------------------------------------------------------------------------
 #include <Arduino.h>
 
@@ -189,6 +187,7 @@ struct decode_results {
 #define SEND_STOP_BIT true
 #define SEND_REPEAT_COMMAND true // used for e.g. NEC, where a repeat is different from just repeating the data.
 
+#define USE_DEFAULT_FEEDBACK_LED_PIN 0
 /**
  * Main class for receiving IR
  */
@@ -207,7 +206,7 @@ public:
     /*
      * Stream like API
      */
-    void begin(uint8_t aReceivePin, bool aEnableLEDFeedback = false, uint8_t aLEDFeedbackPin = 0); // if aBlinkPin == 0 then take board default BLINKPIN
+    void begin(uint8_t aReceivePin, bool aEnableLEDFeedback = false, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN); // if aBlinkPin == 0 then take board default BLINKPIN
     void start(); // alias for enableIRIn
     bool available();
     IRData* read(); // returns decoded data
@@ -325,7 +324,6 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
  * If USE_SOFT_SEND_PWM, use spin wait instead of delayMicros().
  */
 //#define USE_SPIN_WAIT
-
 /*
  * Just for better readability of code
  */
@@ -341,7 +339,7 @@ public:
     IRsend();
 #endif
 
-    void begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin = 0);
+    void begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN);
 
     size_t write(IRData *aIRSendData, uint8_t aNumberOfRepeats = NO_REPEATS);
 
@@ -413,12 +411,9 @@ public:
      */
     void sendDenon(unsigned long data, int nbits);
     void sendDISH(unsigned long data, int nbits);
-    void sendJVC(unsigned long data, int nbits,
-            bool repeat = false)
-                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendJVC((uint8_t) aAddress, aCommand, aNumberOfRepeats).")));
+    void sendJVCMSB(unsigned long data, int nbits, bool repeat = false);
     void sendLG(unsigned long data, int nbits);
-    void sendNEC(uint32_t data, uint8_t nbits, bool repeat = false)
-            __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNECRaw().")));
+    void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat = false);
     void sendPanasonic(uint16_t aAddress,
             uint32_t aData)
                     __attribute__ ((deprecated ("This old function sends MSB first! Please use sendPanasonic(aAddress, aCommand, aNumberOfRepeats).")));
@@ -461,8 +456,6 @@ extern IRsend IrSender;
  * Activate this line if your receiver has an external output driver transistor / "inverted" output
  */
 //#define IR_INPUT_IS_ACTIVE_HIGH
-
-
 
 //------------------------------------------------------------------------------
 // Defines for setting and clearing register bits

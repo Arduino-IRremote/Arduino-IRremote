@@ -35,12 +35,14 @@ void setup() {
 }
 
 /*
- * Be aware, that some protocols have 5, some 8 and some 16 bit Address
+ * Set up the data to be sent.
+ * For most protocols, the data is build up with a constant 8 (or 16 byte) address
+ * and a variable 8 bit command.
+ * There are exceptions like Sony and Denon, which have 5 bit address.
  */
 uint16_t sAddress = 0x0102;
 uint8_t sCommand = 0x34;
 uint8_t sRepeats = 0;
-// Results to Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 (32 bits)
 
 void loop() {
     /*
@@ -56,17 +58,19 @@ void loop() {
     Serial.println();
 
     Serial.println(F("Send NEC with 16 bit address"));
-    IrSender.sendNEC(sAddress, sCommand, sRepeats);
+
     // Results for the first loop to: Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 (32 bits)
+    IrSender.sendNEC(sAddress, sCommand, sRepeats);
 
     /*
-     * If you cannot avoid to send a raw value like e.g. 0xCB340102 you must use sendNECRaw()
+     * If you cannot avoid to send a raw value directly like e.g. 0xCB340102 you must use sendNECRaw()
      */
 //    Serial.println(F("Send NECRaw 0xCB340102"));
 //    IrSender.sendNECRaw(0xCB340102, sRepeats);
 
     /*
      * Increment send values
+     * Also increment address just for demonstration, which normally makes no sense
      */
     sAddress += 0x0101;
     sCommand += 0x11;

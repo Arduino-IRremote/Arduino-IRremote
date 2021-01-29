@@ -12,6 +12,8 @@
  *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
  */
 
+//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 240 bytes program space if IrSender.write is used
+
 #include <IRremote.h>
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #include "ATtinySerialOut.h"
@@ -37,7 +39,12 @@ void setup() {
     IrSender.begin(true); // Enable feedback LED,
 }
 
-// Some protocols have 5, some 8 and some 16 bit Address
+/*
+ * Set up the data to be sent.
+ * For most protocols, the data is build up with a constant 8 (or 16 byte) address
+ * and a variable 8 bit command.
+ * There are exceptions like Sony and Denon, which have 5 bit address.
+ */
 uint16_t sAddress = 0x0102;
 uint8_t sCommand = 0x34;
 uint8_t sRepeats = 0;
@@ -183,6 +190,7 @@ void loop() {
 
     /*
      * Increment values
+     * Also increment address just for demonstration, which normally makes no sense
      */
     sAddress += 0x0101;
     sCommand += 0x11;
