@@ -363,30 +363,33 @@ void IRsend::mark(uint16_t timeMicros) {
         sleepUntilMicros(nextPeriodEnding);
         now = micros();
     }
+    return;
+
 #elif defined(USE_NO_SEND_PWM)
-    (void) timeMicros;
     digitalWrite(sendPin, LOW); // Set output to active low.
+
 #else
     TIMER_ENABLE_SEND_PWM
     ; // Enable pin 3 PWM output
+#endif //  USE_SOFT_SEND_PWM
 
     setFeedbackLED(true);
 
-#  if defined(USE_CUSTOM_DELAY)
+#if defined(USE_CUSTOM_DELAY)
     // old code
     if (timeMicros > 0) {
         // custom delay does not work on an ATtiny85 with 1 MHz. It results in a delay of 760 us instead of the requested 560 us
         custom_delay_usec(timeMicros);
     }
 // Arduino core does not implement delayMicroseconds() for 4 MHz :-(
-#  elif F_CPU == 4000000L && defined(__AVR__)
+#elif F_CPU == 4000000L && defined(__AVR__)
     // busy wait
     __asm__ __volatile__ (
             "1: sbiw %0,1" "\n\t"// 2 cycles
             "brne 1b" : "=w" (timeMicros) : "0" (timeMicros)// 2 cycles
     );
 
-#  else
+#else
     if (timeMicros >= 0x4000) {
         // The implementation of Arduino delayMicroseconds() overflows at 0x4000 / 16.384 @16MHz (wiring.c line 175)
         // But for sendRaw() and external protocols values between 16.384 and 65.535 might be required
@@ -395,8 +398,7 @@ void IRsend::mark(uint16_t timeMicros) {
     } else {
         delayMicroseconds(timeMicros);
     }
-#  endif // USE_CUSTOM_DELAY
-#endif //  USE_SOFT_SEND_PWM
+#endif // USE_CUSTOM_DELAY
 }
 
 //+=============================================================================
