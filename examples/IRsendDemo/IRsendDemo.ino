@@ -13,7 +13,6 @@
  */
 
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 240 bytes program space if IrSender.write is used
-
 #include <IRremote.h>
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #include "ATtinySerialOut.h"
@@ -83,10 +82,24 @@ void loop() {
                 "0017 0806"), 0); //stop bit, no repeat possible, because of missing repeat pattern
         delay(2000);
 
+        /*
+         * With sendNECRaw() you can send even "forbidden" codes with parity errors
+         */
         Serial.println(
                 F(
-                        "Send NECRaw 0xCC340102 with 16 bit address 0x102 and command 0x34 which results in a parity error, since CC != ~34"));
-        IrSender.sendNECRaw(0xCC340102, sRepeats);
+                        "Send NEC with 16 bit address 0x0102 and command 0x34 with NECRaw(0xCC340102) which results in a parity error, since 34 == ~CB and not C0"));
+        IrSender.sendNECRaw(0xC0340102, sRepeats);
+        delay(2000);
+
+        /*
+         * With Send sendNECMSB() you can send your old 32 bit codes.
+         * To convert one into the other, you must reverse the byte positions and then reverse all positions of each byte.
+         * Example:
+         * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
+         *
+         */
+        Serial.println(F("NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first"));
+        IrSender.sendNECMSB(0x40802CD3, 32, false);
         delay(2000);
     }
 

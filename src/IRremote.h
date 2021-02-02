@@ -87,7 +87,7 @@
  */
 #if !defined(MARK_EXCESS_MICROS)
 //#define MARK_EXCESS_MICROS    50
-#define MARK_EXCESS_MICROS    20 // recommended for the cheap VS1838 modules
+#define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
 #endif
 
 //------------------------------------------------------------------------------

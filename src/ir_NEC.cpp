@@ -92,6 +92,8 @@ void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepea
         // assume 8 bit address -> send 8 address bits and then 8 inverted address bits LSB first
         tRawData.UByte.LowByte = aAddress;
         tRawData.UByte.MidLowByte = ~tRawData.UByte.LowByte;
+    } else {
+        tRawData.UWord.LowWord = aAddress;
     }
 
     // send 8 command bits and then 8 inverted command bits LSB first
