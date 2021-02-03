@@ -41,7 +41,7 @@ In the new version you will send NEC commands not by 32 bit codes but by a (cons
 
 # FAQ
 - IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)<br/>
- Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 µs.
+ Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 Âµs.
 In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors,
  [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
 - The default IR timer on AVR's is timer 2. Since the **Arduino Tone library** as well as **analogWrite() for pin 3 and pin 11** requires timer 2,
@@ -219,7 +219,7 @@ Check [here](https://github.com/z3t0/Arduino-IRremote/blob/master/Contributing.m
 Check [here](https://github.com/z3t0/Arduino-IRremote/blob/master/Contributors.md)
 
 # Contact
-Email: zetoslab@gmail.com
+Email: rafi@rafikhan.io
 Please only email me if it is more appropriate than creating an Issue / PR. I **will** not respond to requests for adding support for particular boards, unless of course you are the creator of the board and would like to cooperate on the project. I will also **ignore** any emails asking me to tell you how to implement your ideas. However, if you have a private inquiry that you would only apply to you and you would prefer it to be via email, by all means.
 
 # License
