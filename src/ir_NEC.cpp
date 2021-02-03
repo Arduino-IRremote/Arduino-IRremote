@@ -41,6 +41,8 @@
 //==============================================================================
 // see: https://www.sbprojects.net/knowledge/ir/nec.php
 
+// for Apple see https://en.wikipedia.org/wiki/Apple_Remote
+
 // LSB first, 1 start bit + 16 bit address + 8 bit command + 8 bit inverted command + 1 stop bit.
 //
 #define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
@@ -62,6 +64,7 @@
 #define NEC_REPEAT_DURATION     (NEC_HEADER_MARK  + NEC_HEADER_SPACE + NEC_BIT_MARK)
 #define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 
+#define APPLE_ADDRESS           0x87EE
 //+=============================================================================
 /*
  * Send repeat
@@ -99,6 +102,28 @@ void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepea
     // send 8 command bits and then 8 inverted command bits LSB first
     tRawData.UByte.MidHighByte = aCommand;
     tRawData.UByte.HighByte = ~aCommand;
+
+    sendNECRaw(tRawData.ULong, aNumberOfRepeats, aIsRepeat);
+}
+
+/*
+ * Repeat commands should be sent in a 110 ms raster.
+ * There is NO delay after the last sent repeat!
+ * https://en.wikipedia.org/wiki/Apple_Remote
+ * https://gist.github.com/darconeous/4437f79a34e3b6441628
+ * @param aAddress is the DeviceId*
+ * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
+ */
+void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+
+    LongUnion tRawData;
+
+    // Address 16 bit LSB first
+    tRawData.UWord.LowWord = APPLE_ADDRESS;
+
+    // send Apple code and then 8 command bits LSB first
+    tRawData.UByte.MidHighByte = aCommand;
+    tRawData.UByte.HighByte = aDeviceId; // e.g. 0xD7
 
     sendNECRaw(tRawData.ULong, aNumberOfRepeats, aIsRepeat);
 }
@@ -143,6 +168,8 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRep
  * Next check start bit
  * Next try the decode
  * Last check stop bit
+ *
+ * Decodes also Apple
  */
 bool IRrecv::decodeNEC() {
 
@@ -205,24 +232,38 @@ bool IRrecv::decodeNEC() {
     LongUnion tValue;
     tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tValue.UByte.MidHighByte;
-    // plausi check for command
-    if (tValue.UByte.MidHighByte != (uint8_t) (~tValue.UByte.HighByte)) {
-        DBG_PRINT(F("NEC: "));
-        DBG_PRINT(F("Command=0x"));
-        DBG_PRINT(tValue.UByte.MidHighByte, HEX);
-        DBG_PRINT(F(" is not inverted value of 0x"));
-        DBG_PRINTLN(tValue.UByte.HighByte, HEX);
-        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
-    }
-    decodedIRData.protocol = NEC;
-    decodedIRData.numberOfBits = NEC_BITS;
-    if (tValue.UByte.LowByte == (uint8_t) (~tValue.UByte.MidLowByte)) {
-        // standard 8 bit address NEC protocol
-        decodedIRData.address = tValue.UByte.LowByte; // first 8 bit
+    // Address
+    if (tValue.UWord.LowWord == APPLE_ADDRESS) {
+        /*
+         * Apple
+         */
+        decodedIRData.protocol = APPLE;
+        decodedIRData.command = tValue.UByte.MidHighByte;
+        decodedIRData.address = tValue.UByte.HighByte;
+
     } else {
-        // extended NEC protocol
-        decodedIRData.address = tValue.UWord.LowWord; // first 16 bit
+        /*
+         * NEC
+         */
+        decodedIRData.protocol = NEC;
+        if (tValue.UByte.LowByte == (uint8_t) (~tValue.UByte.MidLowByte)) {
+            // standard 8 bit address NEC protocol
+            decodedIRData.address = tValue.UByte.LowByte; // first 8 bit
+        } else {
+            // extended NEC protocol
+            decodedIRData.address = tValue.UWord.LowWord; // first 16 bit
+        }
+        // plausi check for command
+        if (tValue.UByte.MidHighByte != (uint8_t) (~tValue.UByte.HighByte)) {
+            DBG_PRINT(F("NEC: "));
+            DBG_PRINT(F("Command=0x"));
+            DBG_PRINT(tValue.UByte.MidHighByte, HEX);
+            DBG_PRINT(F(" is not inverted value of 0x"));
+            DBG_PRINTLN(tValue.UByte.HighByte, HEX);
+            decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
+        }
     }
+    decodedIRData.numberOfBits = NEC_BITS;
 
     return true;
 }
@@ -300,6 +341,7 @@ void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     space(NEC_HEADER_SPACE);
 
     // Old version with MSB first Data + stop bit
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
+    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
+    SEND_STOP_BIT);
 
 }

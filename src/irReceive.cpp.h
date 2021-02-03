@@ -32,7 +32,6 @@
  */
 
 //#define DEBUG
-
 // The receiver instance
 IRrecv IrReceiver;
 
@@ -978,20 +977,12 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
         /*
          * New decoders have address and command
          */
-        if (decodedIRData.address > 0xFFFF) {
-            aSerial->print(F("uint32_t"));
-        } else {
-            aSerial->print(F("uint16_t"));
-        }
+        aSerial->print(F("uint16_t"));
         aSerial->print(F(" address = 0x"));
         aSerial->print(decodedIRData.address, HEX);
         aSerial->println(';');
 
-        if (decodedIRData.command > 0xFFFF) {
-            aSerial->print(F("uint32_t"));
-        } else {
-            aSerial->print(F("uint16_t"));
-        }
+        aSerial->print(F("uint16_t"));
         aSerial->print(F(" command = 0x"));
         aSerial->print(decodedIRData.command, HEX);
         aSerial->println(';');
@@ -1066,6 +1057,9 @@ const char* getProtocolString(decode_type_t aProtocol) {
         break;
     case SONY:
         return ("SONY");
+        break;
+    case APPLE:
+        return ("APPLE");
         break;
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
     case BOSEWAVE:

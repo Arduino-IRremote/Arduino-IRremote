@@ -42,9 +42,9 @@ IRsend::IRsend(int pin) {
     sendPin = pin;
 }
 #else
-    IRsend::IRsend() {
-        sendPin = IR_SEND_PIN;
-    }
+IRsend::IRsend() {
+    sendPin = IR_SEND_PIN;
+}
 #endif
 
 /*
@@ -135,6 +135,9 @@ size_t IRsend::write(IRData *aIRSendData, uint8_t aNumberOfRepeats) {
 
     } else if (tProtocol == RC6) {
         sendRC6(tAddress, tCommand, aNumberOfRepeats, !tSendRepeat); // No toggle for repeats
+
+    } else if (tProtocol == APPLE) {
+        sendApple(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
 
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
     } else if (tProtocol == BOSEWAVE) {

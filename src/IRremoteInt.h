@@ -374,9 +374,12 @@ public:
     void sendLGRepeat();
     void sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
     void sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
+
     void sendNECRepeat();
     void sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
     void sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
+
+    void sendApple(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat = false);
 
     void sendPanasonic(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats); // LSB first
     void sendKaseikyo(uint16_t aAddress, uint8_t aData, uint8_t aNumberOfRepeats, uint16_t aVendorCode); // LSB first
@@ -456,7 +459,6 @@ extern IRsend IrSender;
  * Activate this line if your receiver has an external output driver transistor / "inverted" output
  */
 //#define IR_INPUT_IS_ACTIVE_HIGH
-
 //------------------------------------------------------------------------------
 // Defines for setting and clearing register bits
 //
