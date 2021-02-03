@@ -45,8 +45,8 @@
 
 // following based on setup from GitHub jdneo/timerInterrupt.ino
 
-static void setTimerFrequency(int frequencyHz) {
-    int compareValue = (SYSCLOCK / (TIMER_PRESCALER_DIV * frequencyHz)) - 1;
+static void setTimerFrequency(unsigned int aFrequencyHz) {
+    int compareValue = (SYSCLOCK / (TIMER_PRESCALER_DIV * aFrequencyHz)) - 1;
     //Serial.println(compareValue);
     TcCount16* TC = (TcCount16*) TC3;
     // Make sure the count is in a proportional position to where it was

@@ -45,7 +45,7 @@ IRrecv::IRrecv() {
     irparams.blinkflag = false;
 }
 
-IRrecv::IRrecv(int recvpin) {
+IRrecv::IRrecv(uint8_t recvpin) {
     irparams.recvpin = recvpin;
     irparams.blinkflag = false;
 }
@@ -54,7 +54,7 @@ IRrecv::IRrecv(int recvpin) {
  * @param recvpin Arduino pin to use, where a demodulating IR receiver is connected.
  * @param blinkpin pin to blink when receiving IR. Not supported by all hardware. No sanity check is made.
  */
-IRrecv::IRrecv(int recvpin, int blinkpin) {
+IRrecv::IRrecv(uint8_t recvpin, uint8_t blinkpin) {
     irparams.recvpin = recvpin;
     irparams.blinkpin = blinkpin;
     pinMode(blinkpin, OUTPUT);
@@ -391,14 +391,14 @@ bool IRrecv::decode() {
  * Input is     results.rawbuf
  * Output is    results.value
  */
-bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aOneMarkMicros,
-        unsigned int aZeroMarkMicros, unsigned int aBitSpaceMicros, bool aMSBfirst) {
+bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aOneMarkMicros,
+        uint16_t aZeroMarkMicros, uint16_t aBitSpaceMicros, bool aMSBfirst) {
 
     uint16_t *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     uint32_t tDecodedData = 0;
 
     if (aMSBfirst) {
-        for (uint8_t i = 0; i < aNumberOfBits; i++) {
+        for (uint_fast8_t i = 0; i < aNumberOfBits; i++) {
             // Check for variable length mark indicating a 0 or 1
             if (MATCH_MARK(*tRawBufPointer, aOneMarkMicros)) {
                 tDecodedData = (tDecodedData << 1) | 1;
@@ -486,14 +486,14 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
  * Output is    results.value
  * @return false if decoding failed
  */
-bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, unsigned int aBitMarkMicros,
-        unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst) {
+bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aBitMarkMicros,
+        uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst) {
 
     uint16_t *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     uint32_t tDecodedData = 0;
 
     if (aMSBfirst) {
-        for (uint8_t i = 0; i < aNumberOfBits; i++) {
+        for (uint_fast8_t i = 0; i < aNumberOfBits; i++) {
             // Check for constant length mark
             if (!MATCH_MARK(*tRawBufPointer, aBitMarkMicros)) {
                 DBG_PRINT(F("Mark="));
@@ -578,15 +578,15 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
  * Output is    results.value
  */
 bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
-        unsigned int aBiphaseTimeUnit) {
+        uint16_t aBiphaseTimeUnit) {
 
     uint16_t *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     bool tCheckMark = aStartOffset & 1;
-    uint8_t tClockCount = 0; // assume that first transition is significant
+    uint_fast8_t tClockCount = 0; // assume that first transition is significant
     aValueOfSpaceToMarkTransition &= 1; // only 0 or 1 are valid
     uint32_t tDecodedData = 0;
 
-    for (uint8_t tBitIndex = 0; tBitIndex < aNumberOfBits;) {
+    for (uint_fast8_t tBitIndex = 0; tBitIndex < aNumberOfBits;) {
         if (tCheckMark) {
             /*
              *  Check mark and determine current (and next) bit value

@@ -68,11 +68,11 @@
 /*
  * Only for backwards compatibility
  */
-void IRsend::sendJVCRaw(uint16_t aRawData, uint8_t aNumberOfRepeats) {
+void IRsend::sendJVCRaw(uint16_t aRawData, uint_fast8_t aNumberOfRepeats) {
     sendJVC((uint8_t)aRawData & 0xFF, (uint8_t)(aRawData >> JVC_ADDRESS_BITS), aNumberOfRepeats);
 }
 
-void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
+void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
     enableIROut(38);
 
@@ -81,7 +81,7 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
     mark(JVC_HEADER_MARK);
     space(JVC_HEADER_SPACE);
 
-    uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
         // Address + command

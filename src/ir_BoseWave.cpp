@@ -38,11 +38,11 @@
 
 //+=============================================================================
 
-void IRsend::sendBoseWave(uint8_t aCommand, uint8_t aNumberOfRepeats) {
+void IRsend::sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
     enableIROut(38);
 
-    uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
         noInterrupts();
 

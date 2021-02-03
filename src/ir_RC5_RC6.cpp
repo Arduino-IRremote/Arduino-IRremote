@@ -67,7 +67,7 @@ bool sLastSendToggleValue = false;
 /*
  * If Command is >=64 then we switch automatically to RC5X
  */
-void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
+void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
     // Set IR carrier frequency
     enableIROut(36);
 
@@ -93,7 +93,7 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
         }
     }
 
-    uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
         noInterrupts();
@@ -290,7 +290,7 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
 
 // Data
     uint32_t mask = 1UL << (nbits - 1);
-    for (uint8_t i = 1; mask; i++, mask >>= 1) {
+    for (uint_fast8_t i = 1; mask; i++, mask >>= 1) {
         // The fourth bit we send is a "double width trailer bit"
         unsigned int t = (i == 4) ? (RC6_UNIT * 2) : (RC6_UNIT);
         if (data & mask) {
@@ -302,7 +302,7 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
         }
     }
 
-    space(0);  // Always end with the LED off
+    ledOff();  // Always end with the LED off
     interrupts();
 }
 
@@ -322,7 +322,7 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
 
 // Data
     uint64_t mask = 1ULL << (nbits - 1);
-    for (uint8_t i = 1; mask; i++, mask >>= 1) {
+    for (uint_fast8_t i = 1; mask; i++, mask >>= 1) {
         // The fourth bit we send is a "double width trailer bit"
         unsigned int t = (i == 4) ? (RC6_UNIT * 2) : (RC6_UNIT);
         if (data & mask) {
@@ -334,14 +334,14 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
         }
     }
 
-    space(0);  // Always end with the LED off
+    ledOff();  // Always end with the LED off
     interrupts();
 }
 
 /*
  * We do not wait for the minimal trailing space of 2666 us
  */
-void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
+void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
 
     LongUnion tIRRawData;
     tIRRawData.UByte.LowByte = aCommand;
@@ -365,7 +365,7 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeat
     DBG_PRINT(F(" RawData="));
     DBG_PRINTLN(tIRRawData.ULong, HEX);
 
-    uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
         // start bit is sent by sendBiphaseData
@@ -573,7 +573,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
         }
     }
 
-    space(0);  // Always end with the LED off
+    ledOff();  // Always end with the LED off
     interrupts();
 }
 
@@ -623,7 +623,7 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
     }
 
 // Address
-    for (uint8_t mask = 1UL << (addressBits - 1); mask; mask >>= 1) {
+    for (uint_fast8_t mask = 1UL << (addressBits - 1); mask; mask >>= 1) {
         if (addr & mask) {
             space(RC5_UNIT); // 1 is space, then mark
             mark(RC5_UNIT);
@@ -634,7 +634,7 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
     }
 
 // Command
-    for (uint8_t mask = 1UL << (commandBits - 1); mask; mask >>= 1) {
+    for (uint_fast8_t mask = 1UL << (commandBits - 1); mask; mask >>= 1) {
         if (cmd & mask) {
             space(RC5_UNIT); // 1 is space, then mark
             mark(RC5_UNIT);
@@ -644,6 +644,6 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
         }
     }
 
-    space(0);  // Always end with the LED off
+    ledOff();  // Always end with the LED off
     interrupts();
 }

@@ -115,7 +115,7 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
 
     aChannel &= 0x03; // we have 4 channels
 
-    uint8_t tNumberOfCommands = 1;
+    uint_fast8_t tNumberOfCommands = 1;
     if (aDoSend5Times) {
         tNumberOfCommands = 5;
     }

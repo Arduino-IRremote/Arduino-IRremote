@@ -69,8 +69,8 @@ void IRrecv::disableIRIn() {
     timerDetachInterrupt(timer);
 }
 
-void IRsend::enableIROut(int khz) {
-    ledcSetup(LED_CHANNEL, khz * 1000, 8);  // 8 bit PWM resolution
+void IRsend::enableIROut(uint8_t aFrequencyKHz) {
+    ledcSetup(LED_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
     ledcAttachPin(IR_SEND_PIN, LED_CHANNEL); // bind pin to channel
 }
 

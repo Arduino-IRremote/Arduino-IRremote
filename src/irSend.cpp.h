@@ -65,7 +65,7 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     }
 }
 
-size_t IRsend::write(IRData *aIRSendData, uint8_t aNumberOfRepeats) {
+size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
 
     auto tProtocol = aIRSendData->protocol;
     auto tAddress = aIRSendData->address;
@@ -153,14 +153,14 @@ size_t IRsend::write(IRData *aIRSendData, uint8_t aNumberOfRepeats) {
 
 #ifdef SENDING_SUPPORTED // from IRremoteBoardDefs.h
 //+=============================================================================
-void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
+void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
     /*
      * Raw data starts with a mark.
      */
-    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
+    for (uint_fast8_t i = 0; i < aLengthOfBuffer; i++) {
         if (i & 1) {
             // Odd
             space(aBufferWithMicroseconds[i]);
@@ -169,18 +169,18 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOf
         }
     }
 
-    space(0);  // Always end with the LED off
+    ledOff();  // Always end with the LED off
 }
 
 /*
  * New function using an 8 byte buffer
  * Raw data starts with a Mark. No leading space any more.
  */
-void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
+void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
-    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
+    for (uint_fast8_t i = 0; i < aLengthOfBuffer; i++) {
         if (i & 1) {
             // Odd
             space(aBufferWithTicks[i] * MICROS_PER_TICK);
@@ -188,10 +188,10 @@ void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, 
             mark(aBufferWithTicks[i] * MICROS_PER_TICK);
         }
     }
-    space(0);  // Always end with the LED off
+    ledOff();  // Always end with the LED off
 }
 
-void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
+void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
     sendRaw(aBufferWithMicroseconds, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
 #else
@@ -200,7 +200,7 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLength
     /*
      * Raw data starts with a mark
      */
-    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
+    for (uint_fast8_t i = 0; i < aLengthOfBuffer; i++) {
         uint16_t duration = pgm_read_word(&aBufferWithMicroseconds[i]);
         if (i & 1) {
             // Odd
@@ -209,7 +209,7 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLength
             mark(duration);
         }
     }
-    space(0);  // Always end with the LED off
+    ledOff();  // Always end with the LED off
 #endif
 }
 
@@ -217,14 +217,14 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint8_t aLength
  * New function using an 8 byte buffer
  * Raw data starts with a Mark. No leading space any more.
  */
-void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer, uint8_t aIRFrequencyKilohertz) {
+void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
     sendRaw(aBufferWithTicks, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
 #else
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
-    for (uint8_t i = 0; i < aLengthOfBuffer; i++) {
+    for (uint_fast8_t i = 0; i < aLengthOfBuffer; i++) {
         uint16_t duration = pgm_read_byte(&aBufferWithTicks[i]) * (uint16_t) MICROS_PER_TICK;
         if (i & 1) {
             // Odd
@@ -233,7 +233,7 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint8_t aLengthOfBuffer
             mark(duration);
         }
     }
-    space(0);  // Always end with the LED off
+    ledOff();  // Always end with the LED off
 #endif
 }
 
@@ -283,7 +283,7 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
             }
         }
     } else {  // Send the Least Significant Bit (LSB) first / MSB last.
-        for (uint8_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
+        for (uint_fast8_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
             if (aData & 1) {  // Send a 1
                 TRACE_PRINT('1');
                 mark(aOneMarkMicros);
@@ -297,7 +297,7 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
     if (aSendStopBit) {
         TRACE_PRINT('S');
         mark(aZeroMarkMicros); // seems like this is used for stop bits
-        space(0); // Always end with the LED off
+        ledOff(); // Always end with the LED off
     }
     TRACE_PRINTLN("");
 }
@@ -307,7 +307,7 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
  * 0 -> mark+space
  * 1 -> space+mark
  */
-void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint8_t aNumberOfBits) {
+void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits) {
 
 // do not send the trailing space of the start bit
     mark(aBiphaseTimeUnit);
@@ -339,7 +339,7 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
             tLastBitValue = 0;
         }
     }
-    space(0);  // Always end with the LED off
+    ledOff();  // Always end with the LED off
     TRACE_PRINTLN("");
 }
 
@@ -347,7 +347,7 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
 // Sends an IR mark for the specified number of microseconds.
 // The mark output is modulated at the PWM frequency.
 //
-void IRsend::mark(uint16_t timeMicros) {
+void IRsend::mark(unsigned int timeMicros) {
 #ifdef USE_SOFT_SEND_PWM
     unsigned long start = micros();
     unsigned long stop = start + timeMicros;
@@ -404,12 +404,22 @@ void IRsend::mark(uint16_t timeMicros) {
 #endif // USE_CUSTOM_DELAY
 }
 
+void IRsend::ledOff() {
+#if defined(USE_NO_SEND_PWM)
+    digitalWrite(sendPin, HIGH); // Set output to inactive high.
+#else
+    TIMER_DISABLE_SEND_PWM; // Disable PWM output
+#endif // defined(USE_NO_SEND_PWM)
+
+    setFeedbackLED(false);
+}
+
 //+=============================================================================
 // Leave pin off for time (given in microseconds)
 // Sends an IR space for the specified number of microseconds.
 // A space is no output, so the PWM output is disabled.
 //
-void IRsend::space(uint16_t timeMicros) {
+void IRsend::space(unsigned int timeMicros) {
 #if defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
@@ -474,14 +484,14 @@ void IRsend::custom_delay_usec(unsigned long uSecs) {
 // A few hours staring at the ATmega documentation and this will all make sense.
 // See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
 //
-void IRsend::enableIROut(int kHz) {
+void IRsend::enableIROut(uint8_t aFrequencyKHz) {
 #ifdef USE_SOFT_SEND_PWM
-    periodTimeMicros = (1000U + kHz / 2) / kHz; // = 1000/kHz + 1/2 = round(1000.0/kHz)
+    periodTimeMicros = (1000U + aFrequencyKHz / 2) / aFrequencyKHz; // = 1000/kHz + 1/2 = round(1000.0/kHz)
     periodOnTimeMicros = periodTimeMicros * IR_SEND_DUTY_CYCLE / 100U - PULSE_CORRECTION_MICROS;
 #endif
 
 #if defined(USE_NO_SEND_PWM)
-    (void) kHz;
+    (void) aFrequencyKHz;
     pinMode(sendPin, OUTPUT);
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
@@ -491,7 +501,7 @@ void IRsend::enableIROut(int kHz) {
 
     SENDPIN_OFF(sendPin); // When not sending, we want it low
 
-    timerConfigForSend(kHz);
+    timerConfigForSend(aFrequencyKHz);
 #endif // defined(USE_NO_SEND_PWM)
 }
 #endif // USE_DEFAULT_ENABLE_IR_OUT

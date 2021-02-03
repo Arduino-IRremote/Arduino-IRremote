@@ -76,11 +76,11 @@ void IRsend::sendSamsungRepeat() {
     mark(SAMSUNG_BIT_MARK);
     space(SAMSUNG_ZERO_SPACE);
     mark(SAMSUNG_BIT_MARK);
-    space(0); // Always end with the LED off
+    ledOff(); // Always end with the LED off
     interrupts();
 }
 
-void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
     if (aIsRepeat) {
         sendSamsungRepeat();
         return;
@@ -110,7 +110,7 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint8_t aNumberOf
 
     interrupts();
 
-    for (uint8_t i = 0; i < aNumberOfRepeats; ++i) {
+    for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
         if (i == 0) {
             delay((SAMSUNG_REPEAT_PERIOD - SAMSUNG_AVERAGE_DURATION) / 1000);

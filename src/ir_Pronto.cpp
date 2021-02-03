@@ -54,7 +54,7 @@ static unsigned int toFrequencyKHz(uint16_t code) {
 /*
  * Parse the string given as Pronto Hex, and send it a number of times given as argument.
  */
-void IRsend::sendPronto(const uint16_t *data, unsigned int size, uint8_t numberOfRepeats) {
+void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t aNumberOfRepeats) {
     unsigned int timebase = (microsecondsInSeconds * data[1] + referenceFrequency / 2) / referenceFrequency;
     unsigned int khz;
     switch (data[0]) {
@@ -73,7 +73,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, uint8_t numberO
     DBG_PRINT(intros);
     DBG_PRINT(F(" repeats="));
     DBG_PRINTLN(repeats);
-    if (numbersInPreamble + intros + repeats != size) { // inconsistent sizes
+    if (numbersInPreamble + intros + repeats != length) { // inconsistent sizes
         return;
     }
 
@@ -95,7 +95,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, uint8_t numberO
         sendRaw(durations, intros - 1, khz);
     }
 
-    if (repeats == 0 || numberOfRepeats == 0) {
+    if (repeats == 0 || aNumberOfRepeats == 0) {
         // only send intro once
         return;
     }
@@ -104,9 +104,9 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, uint8_t numberO
      * Now send the trailing space/gap of the intro and all the repeats
      */
     delay(durations[intros - 1] / 1000U); // equivalent to space(durations[intros - 1]); but allow bigger values for the gap
-    for (unsigned int i = 0; i < numberOfRepeats; i++) {
+    for (unsigned int i = 0; i < aNumberOfRepeats; i++) {
         sendRaw(durations + intros, repeats - 1, khz);
-        if ((i + 1) < numberOfRepeats) { // skip last trailing space/gap, see above
+        if ((i + 1) < aNumberOfRepeats) { // skip last trailing space/gap, see above
             delay(durations[intros + repeats - 1] / 1000U);
         }
     }
@@ -129,7 +129,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int size, uint8_t numberO
  * @param prontoHexString C type string (null terminated) containing a Pronto Hex representation.
  * @param times Number of times to send the signal.
  */
-void IRsend::sendPronto(const char *str, uint8_t numberOfRepeats) {
+void IRsend::sendPronto(const char *str, uint_fast8_t aNumberOfRepeats) {
     size_t len = strlen(str) / (digitsInProntoNumber + 1) + 1;
     uint16_t data[len];
     const char *p = str;
@@ -144,7 +144,7 @@ void IRsend::sendPronto(const char *str, uint8_t numberOfRepeats) {
         data[i] = static_cast<uint16_t>(x); // If input is conforming, there can be no overflow!
         p = *endptr;
     }
-    sendPronto(data, len, numberOfRepeats);
+    sendPronto(data, len, aNumberOfRepeats);
 }
 
 #if defined(__AVR__)
@@ -154,27 +154,27 @@ void IRsend::sendPronto(const char *str, uint8_t numberOfRepeats) {
  * @param times Number of times to send the signal.
  */
 //far pointer (? for ATMega2560 etc.)
-void IRsend::sendPronto_PF(uint_farptr_t str, uint8_t numberOfRepeats) {
+void IRsend::sendPronto_PF(uint_farptr_t str, uint_fast8_t aNumberOfRepeats) {
     size_t len = strlen_PF(str);
     char work[len + 1];
     strncpy_PF(work, str, len);
-    sendPronto(work, numberOfRepeats);
+    sendPronto(work, aNumberOfRepeats);
 }
 
 //standard pointer
-void IRsend::sendPronto_P(const char *str, uint8_t numberOfRepeats) {
+void IRsend::sendPronto_P(const char *str, uint_fast8_t aNumberOfRepeats) {
     size_t len = strlen_P(str);
     char work[len + 1];
     strncpy_P(work, str, len);
-    sendPronto(work, numberOfRepeats);
+    sendPronto(work, aNumberOfRepeats);
 }
 #endif
 
-void IRsend::sendPronto(const __FlashStringHelper *str, uint8_t numberOfRepeats) {
+void IRsend::sendPronto(const __FlashStringHelper *str, uint_fast8_t aNumberOfRepeats) {
     size_t len = strlen_P(reinterpret_cast<const char*>(str));
     char work[len + 1];
     strncpy_P(work, reinterpret_cast<const char*>(str), len);
-    return sendPronto(work, numberOfRepeats);
+    return sendPronto(work, aNumberOfRepeats);
 }
 
 static uint16_t effectiveFrequency(uint16_t frequency) {
@@ -213,7 +213,7 @@ static void dumpDuration(Print *aSerial, uint32_t duration, uint16_t timebase) {
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
  */
 static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *data, size_t length, uint16_t timebase) {
-    for (uint8_t i = 0; i < length; i++) {
+    for (uint_fast8_t i = 0; i < length; i++) {
         uint32_t tDuration = data[i] * MICROS_PER_TICK;
         if (i & 1) {
             // Mark
@@ -279,7 +279,7 @@ static size_t compensateAndDumpSequence(String *aString, const volatile uint16_t
 
     size_t size = 0;
 
-    for (uint8_t i = 0; i < length; i++) {
+    for (uint_fast8_t i = 0; i < length; i++) {
         uint32_t tDuration = data[i] * MICROS_PER_TICK;
         if (i & 1) {
             // Mark

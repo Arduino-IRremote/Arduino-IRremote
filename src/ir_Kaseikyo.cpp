@@ -81,11 +81,11 @@
  * Send with LSB first
  * Address is sub-device << 8 + device
  */
-void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, uint16_t aVendorCode) {
+void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, uint16_t aVendorCode) {
     // Set IR carrier frequency
     enableIROut(37); // 36.7kHz is the correct frequency
 
-    uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
         noInterrupts();
@@ -122,7 +122,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOf
     }
 }
 
-void IRsend::sendPanasonic(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
+void IRsend::sendPanasonic(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     sendKaseikyo(aAddress, aCommand, aNumberOfRepeats, PANASONIC_VENDOR_ID_CODE);
 }
 

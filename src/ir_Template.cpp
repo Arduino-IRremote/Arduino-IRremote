@@ -51,7 +51,7 @@
  D. Further down in "Main class for sending IR", add:
  //......................................................................
  #if SEND_SHUZU
- void  sendShuzuStandard (uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) ;
+ void  sendShuzuStandard (uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) ;
  #endif
 
  E. Save your changes and close the file
@@ -160,11 +160,11 @@
 
 //+=============================================================================
 //
-void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats) {
+void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
     enableIROut(37); // 36.7kHz is the correct frequency
 
-    uint8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
         noInterrupts();

@@ -76,7 +76,7 @@ void IRsend::sendNECRepeat() {
     mark(NEC_HEADER_MARK);
     space(NEC_REPEAT_HEADER_SPACE);
     mark(NEC_BIT_MARK);
-    space(0); // Always end with the LED off
+    ledOff(); // Always end with the LED off
     interrupts();
 }
 
@@ -86,7 +86,7 @@ void IRsend::sendNECRepeat() {
  * https://www.sbprojects.net/knowledge/ir/nec.php
  * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
  */
-void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
 
     LongUnion tRawData;
 
@@ -114,7 +114,7 @@ void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint8_t aNumberOfRepea
  * @param aAddress is the DeviceId*
  * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
  */
-void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
 
     LongUnion tRawData;
 
@@ -128,7 +128,7 @@ void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, uint8_t aNumberOfRep
     sendNECRaw(tRawData.ULong, aNumberOfRepeats, aIsRepeat);
 }
 
-void IRsend::sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
     if (aIsRepeat) {
         sendNECRepeat();
         return;
@@ -147,7 +147,7 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRep
 
     interrupts();
 
-    for (uint8_t i = 0; i < aNumberOfRepeats; ++i) {
+    for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
         if (i == 0) {
             delay((NEC_REPEAT_PERIOD - NEC_AVERAGE_DURATION) / 1000);

@@ -75,7 +75,7 @@ void IRsend::sendLGRepeat() {
     mark(LG_HEADER_MARK);
     space(LG_REPEAT_HEADER_SPACE);
     mark(LG_BIT_MARK);
-    space(0); // Always end with the LED off
+    ledOff(); // Always end with the LED off
     interrupts();
 }
 
@@ -83,7 +83,7 @@ void IRsend::sendLGRepeat() {
  * Repeat commands should be sent in a 110 ms raster.
  * There is NO delay after the last sent repeat!
  */
-void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
     uint32_t tRawData = ((uint32_t) aAddress << (LG_COMMAND_BITS + LG_CHECKSUM_BITS)) | (aCommand << LG_CHECKSUM_BITS);
     /*
      * My guess of the checksum
@@ -101,7 +101,7 @@ void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint8_t aNumberOfRepeat
 /*
  * Here you can put your raw data, even one with "wrong" parity
  */
-void IRsend::sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
     if (aIsRepeat) {
         sendLGRepeat();
         return;
@@ -119,7 +119,7 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint8_t aNumberOfRepeats, bool aIsRepe
 
     interrupts();
 
-    for (uint8_t i = 0; i < aNumberOfRepeats; ++i) {
+    for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
         if (i == 0) {
             delay((LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) / 1000);
