@@ -98,10 +98,15 @@ void loop() {
          * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
          *
          */
-        Serial.println(F("NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first"));
+        Serial.println(F("Send NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first"));
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         delay(2000);
     }
+
+
+    Serial.println(F("Send Apple"));
+    IrSender.sendApple(sAddress, sCommand, sRepeats);
+    delay(2000);
 
     Serial.println(F("Send Panasonic"));
     IrSender.sendPanasonic(sAddress, sCommand, sRepeats);

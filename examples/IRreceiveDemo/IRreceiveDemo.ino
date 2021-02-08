@@ -18,7 +18,9 @@
 
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 670 bytes program space if all protocols are active
 
-#define MARK_EXCESS_MICROS    20 // recommended for the cheap VS1838 modules
+// MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
+// to compensate for the signal forming of different IR receiver modules.
+#define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
 
 #include <IRremote.h>
 
