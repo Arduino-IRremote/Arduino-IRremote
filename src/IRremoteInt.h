@@ -36,7 +36,7 @@
 #define RAW_BUFFER_LENGTH  101  ///< Maximum length of raw duration buffer. Must be odd! 101 supports up to 48 bit codings.
 #endif
 
-#define VERSION_IRREMOTE "3.0.0"
+#define VERSION_IRREMOTE "3.0.1"
 #define VERSION_IRREMOTE_MAJOR 3
 #define VERSION_IRREMOTE_MINOR 0
 /*
