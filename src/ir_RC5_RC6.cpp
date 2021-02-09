@@ -46,7 +46,7 @@ bool sLastSendToggleValue = false;
 // see: https://www.sbprojects.net/knowledge/ir/rc5.php
 // 0 -> mark+space
 // 1 -> space+mark
-// MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit
+// MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command (6 bit command + field bit for RC5X), no stop bit
 // duty factor is 25%,
 //
 #define RC5_ADDRESS_BITS        5

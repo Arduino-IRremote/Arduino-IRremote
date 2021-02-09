@@ -49,6 +49,7 @@ jobs:
           - arduino:avr:uno
           - arduino:avr:uno|DEBUG
           - arduino:avr:uno|USE_NO_SEND_PWM
+          - arduino:avr:uno|USE_OLD_DECODE
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
           - digistump:avr:digispark-tiny:clock=clock1
@@ -76,6 +77,11 @@ jobs:
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DUSE_NO_SEND_PWM
+
+          - arduino-boards-fqbn: arduino:avr:uno|USE_OLD_DECODE
+            sketches-exclude: IR2Keyboard
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              All: -DUSE_OLD_DECODE
 
           - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
             sketches-exclude: IR2Keyboard,MinimalReceiver,IRDispatcherDemo

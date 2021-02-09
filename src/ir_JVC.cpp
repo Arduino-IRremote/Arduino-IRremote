@@ -164,7 +164,7 @@ bool IRrecv::decodeJVC() {
     if ((results.rawlen - 1 == 33) && MATCH_MARK(results.rawbuf[offset], JVC_BIT_MARK)
             && MATCH_MARK(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
         results.bits = 0;
-        results.value = REPEAT;
+        results.value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = JVC;
         return true;

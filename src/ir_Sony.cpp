@@ -169,7 +169,7 @@ bool IRrecv::decodeSony() {
     if (results.rawbuf[0] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
         DBG_PRINTLN("IR Gap found");
         results.bits = 0;
-        results.value = REPEAT;
+        results.value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = UNKNOWN;
         return true;

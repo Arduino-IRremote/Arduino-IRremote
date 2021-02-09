@@ -809,12 +809,16 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
             aSerial->print(aIRDataPtr->numberOfBits, DEC);
             aSerial->print(F(" bits)"));
 
+#if !defined(USE_OLD_DECODE)
             if (aIRDataPtr->flags & IRDATA_FLAGS_IS_MSB_FIRST) {
                 aSerial->println(F(" MSB first"));
             } else {
                 aSerial->println(F(" LSB first"));
-
             }
+#else
+            aSerial->println();
+#endif
+
         } else {
             aSerial->println();
         }
