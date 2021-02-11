@@ -61,8 +61,9 @@
 #define NEC_REPEAT_HEADER_SPACE (4 * NEC_UNIT)  // 2250
 
 #define NEC_AVERAGE_DURATION    62000 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2,5 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
-#define NEC_REPEAT_DURATION     (NEC_HEADER_MARK  + NEC_HEADER_SPACE + NEC_BIT_MARK)
+#define NEC_REPEAT_DURATION     (NEC_HEADER_MARK  + NEC_REPEAT_HEADER_SPACE + NEC_BIT_MARK) // 12 ms
 #define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define NEC_REPEAT_SPACE        (NEC_REPEAT_PERIOD - NEC_AVERAGE_DURATION) // 48 ms
 
 #define APPLE_ADDRESS           0x87EE
 //+=============================================================================
@@ -150,7 +151,7 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool a
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
         if (i == 0) {
-            delay((NEC_REPEAT_PERIOD - NEC_AVERAGE_DURATION) / 1000);
+            delay(NEC_REPEAT_SPACE / 1000);
         } else {
             delay((NEC_REPEAT_PERIOD - NEC_REPEAT_DURATION) / 1000);
         }

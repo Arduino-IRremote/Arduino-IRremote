@@ -64,6 +64,17 @@
 // Information for the Interrupt Service Routine
 //
 
+/**
+ * Minimum gap between IR transmissions, in microseconds
+ * If too long,
+ */
+#if !defined(RECORD_GAP_MICROS)
+#define RECORD_GAP_MICROS   11000 // FREDRICH28AC header space is 9700, NEC header space is 4500
+#endif
+
+/** Minimum gap between IR transmissions, in MICROS_PER_TICK */
+#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK)
+
 // ISR State-Machine : Receiver States
 #define IR_REC_STATE_IDLE      0
 #define IR_REC_STATE_MARK      1
@@ -242,11 +253,11 @@ public:
     /*
      * The main decoding functions used by the individual decoders
      */
-    bool decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aBitMarkMicros,
-            uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst);
+    bool decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aBitMarkMicros, uint16_t aOneSpaceMicros,
+            uint16_t aZeroSpaceMicros, bool aMSBfirst);
 
-    bool decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aOneMarkMicros,
-            uint16_t aZeroMarkMicros, uint16_t aBitSpaceMicros, bool aMSBfirst);
+    bool decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aOneMarkMicros, uint16_t aZeroMarkMicros,
+            uint16_t aBitSpaceMicros, bool aMSBfirst);
 
     bool decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
             uint16_t aBiphaseTimeUnit);
@@ -486,12 +497,6 @@ extern IRsend IrSender;
 /** Upper tolerance for comparison of measured data */
 //#define UTOL            (1.0 + (TOLERANCE/100.))
 #define UTOL            (100 + TOLERANCE)
-
-/** Minimum gap between IR transmissions, in microseconds */
-#define RECORD_GAP_MICROS   5000 // NEC header space is 4500
-
-/** Minimum gap between IR transmissions, in MICROS_PER_TICK */
-#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK)
 
 //#define TICKS_LOW(us)   ((int)(((us)*LTOL/MICROS_PER_TICK)))
 //#define TICKS_HIGH(us)  ((int)(((us)*UTOL/MICROS_PER_TICK + 1)))

@@ -58,7 +58,7 @@
 
 #define SONY_AVERAGE_DURATION   21000 // SONY_HEADER_MARK + SONY_SPACE  + 12 * 2,5 * SONY_UNIT  // 2.5 because we assume more zeros than ones
 #define SONY_REPEAT_PERIOD      45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define SONY_REPEAT_SPACE       (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION)
+#define SONY_REPEAT_SPACE       (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION) // 24 ms
 
 /*
  * Repeat commands should be sent in a 45 ms raster.

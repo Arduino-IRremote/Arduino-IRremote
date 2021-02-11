@@ -63,6 +63,7 @@
 #define LG_AVERAGE_DURATION     58000 // LG_HEADER_MARK + LG_HEADER_SPACE  + 32 * 2,5 * LG_UNIT) + LG_UNIT // 2.5 because we assume more zeros than ones
 #define LG_REPEAT_DURATION      (LG_HEADER_MARK  + LG_REPEAT_HEADER_SPACE + LG_BIT_MARK)
 #define LG_REPEAT_PERIOD        110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define LG_REPEAT_SPACE         (LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) // 52 ms
 
 //+=============================================================================
 /*
@@ -122,7 +123,7 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
         if (i == 0) {
-            delay((LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) / 1000);
+            delay(LG_REPEAT_SPACE / 1000);
         } else {
             delay((LG_REPEAT_PERIOD - LG_REPEAT_DURATION) / 1000);
         }
