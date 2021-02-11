@@ -55,7 +55,7 @@ void loop() {
     if (IrReceiver.decode()) {  // Grab an IR code
         // Check if the buffer overflowed
         if (IrReceiver.results.overflow) {
-            Serial.println("IR code too long. Edit IRremote.h and increase RAW_BUFFER_LENGTH");
+            Serial.println("IR code too long. Edit IRremoteInt.h and increase RAW_BUFFER_LENGTH");
         } else {
             Serial.println();                               // 2 blank lines between entries
             Serial.println();
