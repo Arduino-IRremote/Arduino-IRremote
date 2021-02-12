@@ -50,7 +50,7 @@
 // Disable (set to 0) all the protocols you do not need/want!
 //
 #if(!(DECODE_DENON || DECODE_SHARP || DECODE_JVC || DECODE_KASEIKYO || DECODE_PANASONIC || DECODE_LG || DECODE_NEC \
-|| DECODE_SAMSUNG || DECODE_SONY || DECODE_RC5 || DECODE_RC6 || DECODE_HASH || DECODE_BOSEWAVE || DECODE_LEGO_PF || DECODE_MAGIQUEST || DECODE_WHYNTER|| DECODE_XIOMI))
+|| DECODE_SAMSUNG || DECODE_SONY || DECODE_RC5 || DECODE_RC6 || DECODE_HASH || DECODE_BOSEWAVE || DECODE_LEGO_PF || DECODE_MAGIQUEST || DECODE_WHYNTER|| DECODE_XIAOMI))
 #define DECODE_DENON        1
 #define DECODE_SHARP        1 // the same as DECODE_DENON
 #define DECODE_JVC          1
@@ -62,7 +62,7 @@
 #define DECODE_SONY         1
 #define DECODE_RC5          1
 #define DECODE_RC6          1
-#define DECODE_XIOMI        1
+#define DECODE_XIAOMI        1
 
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space
 #define DECODE_BOSEWAVE     1

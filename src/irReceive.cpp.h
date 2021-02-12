@@ -361,9 +361,9 @@ bool IRrecv::decode() {
     }
 #endif
 
-#if DECODE_XIOMI
-    TRACE_PRINTLN("Attempting Xiomi decode");
-    if (decodeXiomi()) {
+#if DECODE_XIAOMI
+    TRACE_PRINTLN("Attempting Xiaomi decode");
+    if (decodeXiaomi()) {
         return true;
     }
 #endif
@@ -1072,8 +1072,8 @@ const char* getProtocolString(decode_type_t aProtocol) {
     case APPLE:
         return ("APPLE");
         break;
-    case XIOMI:
-        return ("Xiomi");
+    case XIAOMI:
+        return ("Xiaomi");
         break;
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
     case BOSEWAVE:

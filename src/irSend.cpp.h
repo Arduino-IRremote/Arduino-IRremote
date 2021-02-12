@@ -139,8 +139,8 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
     } else if (tProtocol == APPLE) {
         sendApple(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
 
-    } else if (tProtocol == XIOMI) {
-        sendXiomi(tAddress, tCommand, aNumberOfRepeats);
+    } else if (tProtocol == XIAOMI) {
+        sendXiaomi(tAddress, tCommand, aNumberOfRepeats);
 
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
     } else if (tProtocol == BOSEWAVE) {

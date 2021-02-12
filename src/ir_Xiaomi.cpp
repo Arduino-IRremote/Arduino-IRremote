@@ -1,7 +1,7 @@
 /*
- * ir_Xiomi.cpp
+ * ir_Xiaomi.cpp
  *
- *  Contains functions for receiving and sending Xiomi IR Protocol in "raw" and 
+ *  Contains functions for receiving and sending Xiaomi IR Protocol in "raw" and 
  *  standard format with 12 address and 8 bit command.
  *  This is a remote control that also has the BLE function.
  *
@@ -38,8 +38,8 @@
 //#define DEBUG // Activate this for lots of lovely debug output.
 #include "IRremoteInt.h"
 
-//#define SEND_XIOMI  1 // for testing
-//#define DECODE_XIOMI  1 // for testing
+//#define SEND_XIAOMI  1 // for testing
+//#define DECODE_XIAOMI  1 // for testing
 //==============================================================================
 //                XX    XX IIIII  OOOOO  MM    MM IIIII 
 //                 XX  XX   III  OO   OO MMM  MMM  III  
@@ -50,26 +50,26 @@
 // see: https://www....
 
 // LSB first, 1 start bit + 16 bit address + 8 bit command + 1 stop bit.
-#define XIOMI_ADDRESS_BITS			12 // 16 bit address
-#define XIOMI_COMMAND_BITS			8 // Command
+#define XIAOMI_ADDRESS_BITS			12 // 16 bit address
+#define XIAOMI_COMMAND_BITS			8 // Command
 
-#define XIOMI_BITS					(XIOMI_ADDRESS_BITS + XIOMI_COMMAND_BITS) // The number of bits in the protocol
-#define XIOMI_UNIT					65
+#define XIAOMI_BITS					(XIAOMI_ADDRESS_BITS + XIAOMI_COMMAND_BITS) // The number of bits in the protocol
+#define XIAOMI_UNIT					65
 
-#define XIOMI_HEADER_MARK			(16 * XIOMI_UNIT) // The length of the Header:Mark
-#define XIOMI_HEADER_SPACE			(8 * XIOMI_UNIT)  // The length of the Header:Space
+#define XIAOMI_HEADER_MARK			(16 * XIAOMI_UNIT) // The length of the Header:Mark
+#define XIAOMI_HEADER_SPACE			(8 * XIAOMI_UNIT)  // The length of the Header:Space
 
-#define XIOMI_BIT_MARK				XIOMI_UNIT		// The length of a Bit:Mark
-#define XIOMI_MIN_SPACE_MARK		300
-#define XIOMI_MAX_SPACE_MARK		1800
-
-
-#define XIOMI_REPEAT_SPACE			13350
+#define XIAOMI_BIT_MARK				XIAOMI_UNIT		// The length of a Bit:Mark
+#define XIAOMI_MIN_SPACE_MARK		300
+#define XIAOMI_MAX_SPACE_MARK		1800
 
 
-#define XIOMI_QUEBRA_1			750//711
-#define XIOMI_QUEBRA_2			1000//948
-#define XIOMI_QUEBRA_3			1300//1287
+#define XIAOMI_REPEAT_SPACE			13350
+
+
+#define XIAOMI_QUEBRA_1			750//711
+#define XIAOMI_QUEBRA_2			1000//948
+#define XIAOMI_QUEBRA_3			1300//1287
 
 
 
@@ -91,14 +91,14 @@
 //+========================================================
 // MSB First
 //+========================================================
-bool IRrecv::decodePulseDistanceDataXiomi(){
+bool IRrecv::decodePulseDistanceDataXiaomi(){
 	uint8_t len;
 	uint32_t tDecodedData = 0, temp,value;
 	len = IrReceiver.decodedIRData.rawDataPtr->rawlen;
 	
 	for (uint16_t i = len-1; i > 3; i--) {
 		temp = IrReceiver.decodedIRData.rawDataPtr->rawbuf[i]* MICROS_PER_TICK;
-		if((temp < XIOMI_MIN_SPACE_MARK) || (temp > XIOMI_MAX_SPACE_MARK)) {
+		if((temp < XIAOMI_MIN_SPACE_MARK) || (temp > XIAOMI_MAX_SPACE_MARK)) {
 			DBG_PRINT("erro: ");
 			DBG_PRINT(i);
 			DBG_PRINT(" - ");
@@ -110,9 +110,9 @@ bool IRrecv::decodePulseDistanceDataXiomi(){
 			DBG_PRINT("\t");
 			DBG_PRINT(temp);
 			DBG_PRINT("\t");
-			if		(temp >= XIOMI_QUEBRA_3)	value = 0b11;
-			else if	(temp >= XIOMI_QUEBRA_2)	value = 0b01;
-			else if	(temp >= XIOMI_QUEBRA_1)	value = 0b10;
+			if		(temp >= XIAOMI_QUEBRA_3)	value = 0b11;
+			else if	(temp >= XIAOMI_QUEBRA_2)	value = 0b01;
+			else if	(temp >= XIAOMI_QUEBRA_1)	value = 0b10;
 			else						value = 0b00;
 			tDecodedData |= value << len - i-2;
 		}
@@ -123,7 +123,7 @@ bool IRrecv::decodePulseDistanceDataXiomi(){
 
 //+=============================================================================
 //
-void IRsend::sendXiomi(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendXiaomi(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
 	// Set IR carrier frequency
 	enableIROut(37); // 36.7kHz is the correct frequency
 
@@ -133,16 +133,16 @@ void IRsend::sendXiomi(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumber
 		noInterrupts();
 
 		// Header
-		mark(XIOMI_HEADER_MARK);
-		space(XIOMI_HEADER_SPACE);
+		mark(XIAOMI_HEADER_MARK);
+		space(XIAOMI_HEADER_SPACE);
 
 		// Address (device and subdevice)
-		//sendPulseDistanceWidthData(XIOMI_BIT_MARK, XIOMI_ONE_SPACE, XIOMI_BIT_MARK, XIOMI_ZERO_SPACE, aAddress,
-		//XIOMI_ADDRESS_BITS, PROTOCOL_IS_LSB_FIRST); // false -> LSB first
+		//sendPulseDistanceWidthData(XIAOMI_BIT_MARK, XIAOMI_ONE_SPACE, XIAOMI_BIT_MARK, XIAOMI_ZERO_SPACE, aAddress,
+		//XIAOMI_ADDRESS_BITS, PROTOCOL_IS_LSB_FIRST); // false -> LSB first
 
 		// Command + stop bit
-		//sendPulseDistanceWidthData(XIOMI_BIT_MARK, XIOMI_ONE_SPACE, XIOMI_BIT_MARK, XIOMI_ZERO_SPACE, aCommand,
-		//XIOMI_COMMAND_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT); // false, true -> LSB first, stop bit
+		//sendPulseDistanceWidthData(XIAOMI_BIT_MARK, XIAOMI_ONE_SPACE, XIAOMI_BIT_MARK, XIAOMI_ZERO_SPACE, aCommand,
+		//XIAOMI_COMMAND_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT); // false, true -> LSB first, stop bit
 
 		interrupts();
 
@@ -150,7 +150,7 @@ void IRsend::sendXiomi(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumber
 		// skip last delay!
 		if (tNumberOfCommands > 0) {
 			// send repeated command in a fixed raster
-			delay(XIOMI_REPEAT_SPACE / 1000);
+			delay(XIAOMI_REPEAT_SPACE / 1000);
 		}
 	}
 }
@@ -162,24 +162,24 @@ void IRsend::sendXiomi(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumber
  * Next try the decode
  * Last check stop bit
  */
-bool IRrecv::decodeXiomi() {
+bool IRrecv::decodeXiaomi() {
 
 	// Check we have the right amount of data (28). The +4 is for initial gap, start bit mark and space + stop bit mark
-	if (decodedIRData.rawDataPtr->rawlen != (XIOMI_BITS + 4)) {
+	if (decodedIRData.rawDataPtr->rawlen != (XIAOMI_BITS + 4)) {
 		// no debug output, since this check is mainly to determine the received protocol
 		return false;
 	}
 	
 	// Check header "space"
-	if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], XIOMI_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], XIOMI_HEADER_SPACE)) {
-		DBG_PRINT("Xiomi: ");
+	if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], XIAOMI_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], XIAOMI_HEADER_SPACE)) {
+		DBG_PRINT("Xiaomi: ");
 		DBG_PRINTLN("Header mark or space length is wrong");
 		return false;
 	}
 
 	// false -> LSB first
-	if (!decodePulseDistanceDataXiomi()) {
-		DBG_PRINT(F("Xiomi: "));
+	if (!decodePulseDistanceDataXiaomi()) {
+		DBG_PRINT(F("Xiaomi: "));
 		DBG_PRINTLN(F("Decode failed"));
 		return false;
 	}
@@ -187,19 +187,19 @@ bool IRrecv::decodeXiomi() {
 
 	// Success
 //	decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
-	uint16_t tAddress = decodedIRData.decodedRawData >> XIOMI_COMMAND_BITS;  // upper 16 bits of MSB first value
+	uint16_t tAddress = decodedIRData.decodedRawData >> XIAOMI_COMMAND_BITS;  // upper 16 bits of MSB first value
 	uint16_t tCommand = decodedIRData.decodedRawData & 0xFF;	// lowest 8 bit of MSB first value
 
 	/*
 	 *  Check for repeat
 	 */
-	/*if (decodedIRData.rawDataPtr->rawbuf[0] < ((XIOMI_REPEAT_SPACE + (XIOMI_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
+	/*if (decodedIRData.rawDataPtr->rawbuf[0] < ((XIAOMI_REPEAT_SPACE + (XIAOMI_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
 		decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
 	}*/
 	decodedIRData.command = tCommand;
 	decodedIRData.address = tAddress;
-	decodedIRData.numberOfBits = XIOMI_BITS;
-	decodedIRData.protocol = XIOMI; // we have no XIOMI code
+	decodedIRData.numberOfBits = XIAOMI_BITS;
+	decodedIRData.protocol = XIAOMI; // we have no XIAOMI code
 
 	return true;
 }
