@@ -361,6 +361,13 @@ bool IRrecv::decode() {
     }
 #endif
 
+#if DECODE_XIOMI
+    TRACE_PRINTLN("Attempting Xiomi decode");
+    if (decodeXiomi()) {
+        return true;
+    }
+#endif
+
     /*
      * Last resort is the universal hash decode which always return true
      */
@@ -1064,6 +1071,9 @@ const char* getProtocolString(decode_type_t aProtocol) {
         break;
     case APPLE:
         return ("APPLE");
+        break;
+    case XIOMI:
+        return ("Xiomi");
         break;
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
     case BOSEWAVE:

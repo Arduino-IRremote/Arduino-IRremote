@@ -59,6 +59,7 @@ typedef enum {
     LEGO_PF,
     MAGIQUEST,
     WHYNTER,
+    XIOMI,
 } decode_type_t;
 
 const char* getProtocolString(decode_type_t aProtocol);

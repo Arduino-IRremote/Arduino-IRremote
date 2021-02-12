@@ -251,6 +251,8 @@ public:
     bool decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
             uint16_t aBiphaseTimeUnit);
 
+    bool decodePulseDistanceDataXiomi();
+
     /*
      * All standard (decode address + command) protocol decoders
      */
@@ -268,6 +270,7 @@ public:
     bool decodeSamsung();
     bool decodeSharp(); // redirected to decodeDenon()
     bool decodeSony();
+    bool decodeXiomi();
 
     bool decodeHash();
 
@@ -402,6 +405,8 @@ public:
     void sendPronto(const __FlashStringHelper *str, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendPronto(const char *prontoHexString, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
+    void sendXiomi(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats);
+
 #if defined(__AVR__)
     void sendPronto_PF(uint_farptr_t str, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendPronto_P(const char *str, uint_fast8_t aNumberOfRepeats);
