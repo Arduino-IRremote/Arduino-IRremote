@@ -165,9 +165,10 @@ void storeCode(IRData *aIRReceivedData) {
     sStoredIRData.receivedIRData = *aIRReceivedData;
 
     if (sStoredIRData.receivedIRData.protocol == UNKNOWN) {
-        Serial.print(F("Received unknown code saving "));
+        Serial.print(F("Received unknown code and store "));
         Serial.print(IrReceiver.results.rawlen - 1);
-        Serial.println(F(" TickCounts as raw "));
+        Serial.println(F(" timing entries as raw "));
+        IrReceiver.printIRResultRawFormatted(&Serial, true); // Output the results in RAW format
         sStoredIRData.rawCodeLength = IrReceiver.results.rawlen - 1;
         IrReceiver.compensateAndStoreIRResultInArray(sStoredIRData.rawCode);
     } else {
