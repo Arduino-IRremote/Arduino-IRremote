@@ -36,10 +36,10 @@
 #include <Arduino.h>
 
 /*
- * First: set input pin definition.
+ * Set sensible receive pin for different CPU's
  */
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#include "ATtinySerialOut.h"
+#include "ATtinySerialOut.h" // Available as Arduino library "ATtinySerialOut"
 #  if defined(ARDUINO_AVR_DIGISPARKPRO)
 #define IR_INPUT_PIN    9 // PA3 - on Digispark board labeled as pin 9
 #  else
@@ -108,7 +108,7 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
     Serial.print(aAddress, HEX);
     Serial.print(F(" C=0x"));
     Serial.print(aCommand, HEX);
-//    Serial.print(F(" R="));
-//    Serial.print(isRepeat);
+    Serial.print(F(" R="));
+    Serial.print(isRepeat);
     Serial.println();
 }

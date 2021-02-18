@@ -238,6 +238,7 @@ public:
      * Useful info and print functions
      */
     void printIRResultShort(Print *aSerial);
+    void printIRResultMinimal(Print *aSerial);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
 

@@ -162,6 +162,7 @@ bool IRrecv::decodeLG() {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
+            decodedIRData.protocol = LG;
             return true;
         }
         return false;

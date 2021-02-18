@@ -255,4 +255,4 @@ From the version 2.8.0 the license is the MIT license.
 ## Copyright
 Initially coded 2009 Ken Shirriff http://www.righto.com
 Copyright (c) 2016 Rafi Khan
-Copyright (c) 2020 Armin Joachimsmeyer
+Copyright (c) 2020-2021 Armin Joachimsmeyer

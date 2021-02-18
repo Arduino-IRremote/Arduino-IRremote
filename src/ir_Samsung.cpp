@@ -145,6 +145,7 @@ bool IRrecv::decodeSamsung() {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT| IRDATA_FLAGS_IS_LSB_FIRST;
         decodedIRData.address = lastDecodedAddress;
         decodedIRData.command = lastDecodedCommand;
+        decodedIRData.protocol = SAMSUNG;
         return true;
     }
 

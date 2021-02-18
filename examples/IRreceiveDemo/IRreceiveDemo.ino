@@ -15,7 +15,9 @@
 //#define DECODE_LG           1
 //#define DECODE_NEC          1
 // etc. see IRremote.h
-
+#if defined(__AVR_ATtiny85__)
+#define EXCLUDE_EXOTIC_PROTOCOLS
+#endif
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 670 bytes program space if all protocols are active
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
@@ -24,7 +26,20 @@
 
 #include <IRremote.h>
 
-#if defined(ESP32)
+/*
+ * Set sensible receive pin for different CPU's
+ */
+#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
+// Serial output for Digispark boards is at pin 2
+#  if defined(ARDUINO_AVR_DIGISPARKPRO)
+#define IR_RECEIVE_PIN    9 // PA3 - on Digispark board labeled as pin 9
+#  else
+#define IR_RECEIVE_PIN    0
+#  endif
+#  if defined(ARDUINO_AVR_DIGISPARK)
+#define LED_BUILTIN PB1
+#  endif
+#elif defined(ESP32)
 int IR_RECEIVE_PIN = 15;
 #elif defined(ARDUINO_AVR_PROMICRO)
 int IR_RECEIVE_PIN = 10;
@@ -41,19 +56,21 @@ int IR_RECEIVE_PIN = 11;
 #endif
 
 void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
+#if !defined(__AVR_ATtiny85__)
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
+#endif
 
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
-    delay(2000); // To be able to connect Serial monitor after reset or power up and before first printout
+delay(2000); // To be able to connect Serial monitor after reset or power up and before first printout
 #endif
-    // Just to know which program is running on my Arduino
+// Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
-    // In case the interrupt driver crashes on setup, give a clue
-    // to the user what's going on.
-    Serial.println("Enabling IRin");
+// In case the interrupt driver crashes on setup, give a clue
+// to the user what's going on.
+    Serial.println(F("Enabling IRin"));
+
     /*
      * Start the receiver, enable feedback LED and (if not 3. parameter specified) take LED feedback pin from the internal boards definition
      */
@@ -73,30 +90,33 @@ void loop() {
      * and up to 32 bit raw data in IrReceiver.decodedIRData.decodedRawData
      */
     if (IrReceiver.decode()) {
+#if defined(__AVR_ATtiny85__)
+        // Print a minimal summary of received data
+        IrReceiver.printIRResultMinimal(&Serial);
+#else
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
-            // no need to call resume, this is already done by decode()
             Serial.println(F("Overflow detected"));
-#if !defined(ESP32)
+#  if !defined(ESP32)
             /*
              * do double beep
              */
             IrReceiver.stop();
             tone(BUZZER_PIN, 1100, 10);
             delay(50);
-#endif
+#  endif
 
         } else {
             // Print a short summary of received data
             IrReceiver.printIRResultShort(&Serial);
+
             if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
                 // We have an unknown protocol, print more info
                 IrReceiver.printIRResultRawFormatted(&Serial, true);
             }
         }
-        Serial.println();
 
-#if !defined(ESP32)
+#  if !defined(ESP32)
         /*
          * Play tone, wait and restore IR timer
          */
@@ -104,8 +124,10 @@ void loop() {
         tone(BUZZER_PIN, 2200, 10);
         delay(11);
         IrReceiver.start();
-#endif
+#  endif
+#endif // defined(__AVR_ATtiny85__)
 
+        Serial.println();
         /*
          * !!!Important!!! Enable receiving of the next value,
          * since receiving has stopped after the end of the current received data packet.

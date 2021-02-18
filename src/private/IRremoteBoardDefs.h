@@ -156,13 +156,9 @@
 //ATtiny85
 #elif defined(__AVR_ATtiny85__)
 #  if !defined(IR_USE_TIMER_TINY0) && !defined(IR_USE_TIMER_TINY1)
-#    if defined(TIMER_TO_USE_FOR_MILLIS) && (TIMER_TO_USE_FOR_MILLIS== 0)
-// standard ATTinyCore settings use timer 0 for millis() and micros()
+// standard Digispark and ATTinyCore settings use timer 0 for millis() and micros()
 #define IR_USE_TIMER_TINY1   // send pin = pin 4
-#    else
-#define IR_USE_TIMER_TINY0   // send pin = pin 1
-//#define IR_USE_TIMER_TINY1   // send pin = pin 4
-#    endif
+//#define IR_USE_TIMER_TINY0   // send pin = pin 1
 #  endif
 
 /*********************

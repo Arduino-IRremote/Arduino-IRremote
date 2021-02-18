@@ -375,11 +375,9 @@ bool IRrecv::decode() {
 #endif
 
     /*
-     * Not reached, if Hash is enabled and rawlen >= 6!!!
-     * Throw away received data and start over
+     * Return true here, to let the loop decide to call resume or to print raw data.
      */
-    resume();
-    return false;
+    return true;
 }
 
 /*
@@ -391,8 +389,8 @@ bool IRrecv::decode() {
  * Input is     results.rawbuf
  * Output is    results.value
  */
-bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aOneMarkMicros,
-        uint16_t aZeroMarkMicros, uint16_t aBitSpaceMicros, bool aMSBfirst) {
+bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aOneMarkMicros, uint16_t aZeroMarkMicros,
+        uint16_t aBitSpaceMicros, bool aMSBfirst) {
 
     uint16_t *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     uint32_t tDecodedData = 0;
@@ -486,8 +484,8 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
  * Output is    results.value
  * @return false if decoding failed
  */
-bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aBitMarkMicros,
-        uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst) {
+bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aBitMarkMicros, uint16_t aOneSpaceMicros,
+        uint16_t aZeroSpaceMicros, bool aMSBfirst) {
 
     uint16_t *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     uint32_t tDecodedData = 0;
@@ -754,6 +752,10 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
     aSerial->print(F("Protocol="));
     aSerial->print(getProtocolString(aIRDataPtr->protocol));
     if (aIRDataPtr->protocol == UNKNOWN) {
+#if DECODE_HASH
+        aSerial->print(F(" Hash=0x"));
+        aSerial->print(aIRDataPtr->decodedRawData, HEX);
+#endif
         aSerial->print(' ');
         aSerial->print((aIRDataPtr->rawDataPtr->rawlen + 1) / 2, DEC);
         aSerial->println(F(" bits received"));
@@ -781,13 +783,12 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
         }
 
         if (aIRDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
-            aSerial->print(F(" Auto-repeat gap="));
-            aSerial->print(aLeadingSpaceTicks * MICROS_PER_TICK);
-            aSerial->print(F("us"));
+            aSerial->print(F(" Auto-"));
+        } else {
+            aSerial->print(' ');
         }
-
-        if (aIRDataPtr->flags & IRDATA_FLAGS_IS_REPEAT) {
-            aSerial->print(F(" Repeat"));
+        if (aIRDataPtr->flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) {
+            aSerial->print(F("Repeat"));
             if (aLeadingSpaceTicks != 0) {
                 aSerial->print(F(" gap="));
                 aSerial->print(aLeadingSpaceTicks * MICROS_PER_TICK);
@@ -805,9 +806,9 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
             /*
              * Print number of bits processed
              */
-            aSerial->print(F(" ("));
+            aSerial->print(' ');
             aSerial->print(aIRDataPtr->numberOfBits, DEC);
-            aSerial->print(F(" bits)"));
+            aSerial->print(F(" bits"));
 
 #if !defined(USE_OLD_DECODE)
             if (aIRDataPtr->flags & IRDATA_FLAGS_IS_MSB_FIRST) {
@@ -827,6 +828,34 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
 
 void IRrecv::printIRResultShort(Print *aSerial) {
     ::printIRResultShort(aSerial, &decodedIRData, decodedIRData.rawDataPtr->rawbuf[0]);
+}
+
+void IRrecv::printIRResultMinimal(Print *aSerial) {
+    aSerial->print(F("P="));
+    aSerial->print(getProtocolString(decodedIRData.protocol));
+    if (decodedIRData.protocol == UNKNOWN) {
+#if DECODE_HASH
+        aSerial->print(F(" #=0x"));
+        aSerial->print(decodedIRData.decodedRawData, HEX);
+#endif
+        aSerial->print(' ');
+        aSerial->print((decodedIRData.rawDataPtr->rawlen + 1) / 2, DEC);
+        aSerial->println(F(" bits received"));
+    } else {
+        /*
+         * New decoders have address and command
+         */
+        aSerial->print(F(" A=0x"));
+        aSerial->print(decodedIRData.address, HEX);
+
+        aSerial->print(F(" C=0x"));
+        aSerial->print(decodedIRData.command, HEX);
+        aSerial->print(F(" Raw=0x"));
+        aSerial->print(decodedIRData.decodedRawData, HEX);
+        if (decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) {
+            aSerial->print(F(" R"));
+        }
+    }
 }
 
 //+=============================================================================
@@ -851,7 +880,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
     aSerial->print(F("     -"));
     aSerial->println(tDurationMicros, DEC);
 
-    for (unsigned int i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
+    for (uint8_t i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
         if (aOutputMicrosecondsInsteadOfTicks) {
             tDurationMicros = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
         } else {
@@ -859,33 +888,24 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
         }
         if (!(i & 1)) {  // even
             aSerial->print('-');
-            if (tDurationMicros < 1000) {
-                aSerial->print(' ');
-            }
-            if (tDurationMicros < 100) {
-                aSerial->print(' ');
-            }
-            if (tDurationMicros < 10) {
-                aSerial->print(' ');
-            }
-            aSerial->print(tDurationMicros, DEC);
         } else {  // odd
-            aSerial->print(F("     "));
-            aSerial->print('+');
-            if (tDurationMicros < 1000) {
-                aSerial->print(' ');
-            }
-            if (tDurationMicros < 100) {
-                aSerial->print(' ');
-            }
-            if (tDurationMicros < 10) {
-                aSerial->print(' ');
-            }
-            aSerial->print(tDurationMicros, DEC);
-            if (i + 1 < decodedIRData.rawDataPtr->rawlen) {
-                aSerial->print(','); //',' not required for last one
-            }
+            aSerial->print(F("     +"));
         }
+        if (tDurationMicros < 1000) {
+            aSerial->print(' ');
+        }
+        if (tDurationMicros < 100) {
+            aSerial->print(' ');
+        }
+        if (tDurationMicros < 10) {
+            aSerial->print(' ');
+        }
+        aSerial->print(tDurationMicros, DEC);
+
+        if ((i & 1) && (i + 1) < decodedIRData.rawDataPtr->rawlen) {
+            aSerial->print(','); //',' not required for last one
+        }
+
         if (!(i % 8)) {
             aSerial->println("");
         }
@@ -902,7 +922,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
  * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
  */
 void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
-    // Start declaration
+// Start declaration
     if (aOutputMicrosecondsInsteadOfTicks) {
         aSerial->print(F("uint16_t "));            // variable type
         aSerial->print(F("rawData["));            // array name

@@ -19,7 +19,26 @@
 
 #include <IRremote.h>
 
+/*
+ * Set sensible receive pin for different CPU's
+ */
+#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
+// Serial output for Digispark boards is at pin 2
+#  if defined(ARDUINO_AVR_DIGISPARKPRO)
+#define IR_RECEIVE_PIN    9 // PA3 - on Digispark board labeled as pin 9
+#  else
+#define IR_RECEIVE_PIN    0
+#  endif
+#  if defined(ARDUINO_AVR_DIGISPARK)
+#define LED_BUILTIN PB1
+#  endif
+#elif defined(ESP32)
+int IR_RECEIVE_PIN = 15;
+#elif defined(ARDUINO_AVR_PROMICRO)
+int IR_RECEIVE_PIN = 10;
+#else
 int IR_RECEIVE_PIN = 11;
+#endif
 
 void setup() {
     Serial.begin(115200);

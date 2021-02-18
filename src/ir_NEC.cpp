@@ -192,6 +192,7 @@ bool IRrecv::decodeNEC() {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
+            decodedIRData.protocol = NEC;
             return true;
         }
         return false;
@@ -201,17 +202,6 @@ bool IRrecv::decodeNEC() {
     if (!MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], NEC_HEADER_SPACE)) {
         DBG_PRINT(F("NEC: "));
         DBG_PRINTLN(F("Header space length is wrong"));
-        return false;
-    }
-
-    // Check for repeat
-    if (decodedIRData.rawDataPtr->rawlen == 4) {
-        if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], NEC_BIT_MARK)) {
-            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
-            decodedIRData.address = lastDecodedAddress;
-            decodedIRData.command = lastDecodedCommand;
-            return true;
-        }
         return false;
     }
 
