@@ -68,8 +68,7 @@
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 
-void setup()
-{
+void setup() {
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL) || defined(ARDUINO_attiny3217)
     delay(2000); // To be able to connect Serial monitor after reset or power up and before first printout
@@ -83,8 +82,7 @@ void setup()
 //    Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_INPUT_PIN)));
 }
 
-void loop()
-{
+void loop() {
     /*
      * Put your code here
      */
@@ -94,13 +92,11 @@ void loop()
  * This is the function is called if a complete command was received
  */
 #if defined(ESP8266)
-void ICACHE_RAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
+ICACHE_RAM_ATTR
 #elif defined(ESP32)
-void IRAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
-#else
-void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
+IRAM_ATTR
 #endif
-{
+void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat) {
     /*
      * Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
      */

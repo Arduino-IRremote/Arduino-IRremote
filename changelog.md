@@ -5,6 +5,7 @@
 - Improved handling for HASH decoder.
 - Tested for ATtiny85.
 - Added `printIRResultMinimal()`.
+- Added missing IRAM_ATTR for ESP32.
 
 ## 3.0.0 + 3.0.1 2021/02
 - Added SendRaw with byte data.

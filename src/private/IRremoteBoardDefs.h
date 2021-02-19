@@ -901,7 +901,7 @@ static void timerConfigForReceive() {
 #ifdef ISR
 #undef ISR
 #endif
-#define ISR(f) void IRAM_ATTR IRTimer()
+#define ISR(f) IRAM_ATTR void IRTimer()
 
 #elif defined(ARDUINO_ARCH_SAMD)
 // use timer 3 hardcoded at this time

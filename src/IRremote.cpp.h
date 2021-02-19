@@ -226,7 +226,9 @@ ISR (TIMER_INTR_NAME) {
 }
 
 // If requested, flash LED while receiving IR data
-
+#if defined(ESP32)
+IRAM_ATTR
+#endif
 void setFeedbackLED(bool aSwitchLedOn) {
     if (irparams.blinkflag) {
         if (aSwitchLedOn) {

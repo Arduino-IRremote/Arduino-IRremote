@@ -190,15 +190,14 @@ void loop()
  * Just add to the appropriate timing structure.
  */
 #if defined(ESP8266)
-void ICACHE_RAM_ATTR measureTimingISR()
+ICACHE_RAM_ATTR
 #elif defined(ESP32)
-void IRAM_ATTR measureTimingISR()
-#else
-#  if defined(EICRA) && defined(EIFR) && defined(EIMSK)
+IRAM_ATTR
+#endif
+#if defined(EICRA) && defined(EIFR) && defined(EIMSK)
 ISR(INT1_vect)
-#  else
+#else
 void measureTimingISR()
-#  endif
 #endif
 {
     uint32_t tMicros = micros();
