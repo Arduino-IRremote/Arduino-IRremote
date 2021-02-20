@@ -33,7 +33,10 @@
 #define IRremoteInt_h
 
 #if ! defined(RAW_BUFFER_LENGTH)
-#define RAW_BUFFER_LENGTH  101  ///< Maximum length of raw duration buffer. Must be odd! 101 supports up to 48 bit codings.
+#define RAW_BUFFER_LENGTH  100  ///< Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
+#endif
+#if RAW_BUFFER_LENGTH % 2 == 1
+#error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
 #endif
 
 #define VERSION_IRREMOTE "3.0.1"
@@ -46,7 +49,7 @@
 #define ENABLE_LED_FEEDBACK true
 
 #define SEND_STOP_BIT true
-#define SEND_REPEAT_COMMAND true // used for e.g. NEC, where a repeat is different from just repeating the data.
+#define SEND_REPEAT_COMMAND true ///< used for e.g. NEC, where a repeat is different from just repeating the data.
 
 /*
  * Try to activate it, if you have legacy code to compile with version >= 3
@@ -73,7 +76,7 @@
 #endif
 
 /** Minimum gap between IR transmissions, in MICROS_PER_TICK */
-#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK)
+#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK) // 221 for 1100
 
 // ISR State-Machine : Receiver States
 #define IR_REC_STATE_IDLE      0
@@ -219,6 +222,7 @@ public:
      */
     void begin(uint8_t aReceivePin, bool aEnableLEDFeedback = false, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN); // if aBlinkPin == 0 then take board default BLINKPIN
     void start(); // alias for enableIRIn
+    void start(uint16_t aMillisToAddToGapCounter);
     bool available();
     IRData* read(); // returns decoded data
     // write is a method of class IRsend below

@@ -88,6 +88,13 @@ void IRrecv::start() {
     enableIRIn();
 }
 
+void IRrecv::start(uint16_t aMillisToAddToGapCounter) {
+    enableIRIn();
+    noInterrupts();
+    irparams.timer += aMillisToAddToGapCounter / MICROS_PER_TICK;
+    interrupts();
+}
+
 void IRrecv::stop() {
     disableIRIn();
 }
@@ -791,7 +798,7 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
             aSerial->print(F("Repeat"));
             if (aLeadingSpaceTicks != 0) {
                 aSerial->print(F(" gap="));
-                aSerial->print(aLeadingSpaceTicks * MICROS_PER_TICK);
+                aSerial->print((uint32_t)aLeadingSpaceTicks * MICROS_PER_TICK);
                 aSerial->print(F("us"));
             }
         }
@@ -974,7 +981,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
  *
  * Maximum foruint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
- * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
+ * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (11 ms).
  */
 void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
 

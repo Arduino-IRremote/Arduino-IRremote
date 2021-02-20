@@ -123,7 +123,7 @@ void loop() {
         IrReceiver.stop();
         tone(BUZZER_PIN, 2200, 10);
         delay(11);
-        IrReceiver.start();
+        IrReceiver.start(11000); // to compensate for 11 ms stop of receiver. This enables a correct gap measurement.
 #  endif
 #endif // defined(__AVR_ATtiny85__)
 
