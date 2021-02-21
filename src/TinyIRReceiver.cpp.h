@@ -66,11 +66,7 @@ void IRPinChangeInterruptHandler(void) {
     uint_fast8_t tIRLevel = digitalReadFast(IR_INPUT_PIN);
 
 #if !defined(DO_NOT_USE_FEEDBACK_LED) && defined(IR_FEEDBACK_LED_PIN)
-#  if defined(__AVR_ATtiny3217__) // TinyCore introduced PinStatus type
-    digitalWriteFast(IR_FEEDBACK_LED_PIN, (PinStatus)!tIRLevel);
-#  else
     digitalWriteFast(IR_FEEDBACK_LED_PIN, !tIRLevel);
-#  endif
 #endif
 
     /*

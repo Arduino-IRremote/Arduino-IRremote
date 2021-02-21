@@ -1,4 +1,4 @@
-If you have handling problems or questions, consider to open a discussion https://github.com/Arduino-IRremote/Arduino-IRremote/discussions instead of an issue.
+If you have handling problems or questions, consider to open a discussion https://github.com/ukw100/IRMP/discussions instead of an issue.
 
 ### Board
 * [ ] Arduino ATmega328* board (UNO, Nano)
@@ -40,7 +40,13 @@ If you have handling problems or questions, consider to open a discussion https:
 * [ ] Whynter
 * [ ] Other - please specify
 
+### Version
+* [ ] Yes I use the [latest repo version](https://github.com/ukw100/IRMP/archive/master.zip) and verified this!
+* [ ] Other - please specify
+
 Please delete all unchecked lines above :-)
+
+### Pin(s) used for IR-receive, if not default
 
 **Code Block:**
 ```
@@ -54,17 +60,14 @@ Please delete all unchecked lines above :-)
 Use [a gist](gist.github.com) if the code exceeds 30 lines
 
 ### Current behavior
-<!-- Paste the code and output you run -->
+<!-- Paste the code or repository link, if applicable. -->
 
+<!-- Add a the serial output which indicates the error happened. -->
 
 <!-- Add a clear and concise description of the behavior. -->
 
-
 ### Expected behavior
 <!-- Add a clear and concise description of what you expected to happen. -->
-
-### Error output
-<!-- Add a the serial output which indicates the error happened. -->
 
 ### Additional context
 <!-- (Optional) Add any other context about the problem here. -->
@@ -73,7 +76,7 @@ Use [a gist](gist.github.com) if the code exceeds 30 lines
 **checklist:**
 - [] I have **read** the README.md file thoroughly.
 - [] I have searched existing issues to see if there is anything I have missed.
-- [] The latest [repo version](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) is used.
+- [] I have browsed the examples for one, that matches my use case.
 - [] Any code referenced is provided and if over 30 lines a gist is linked INSTEAD of it being pasted in here.
 - [] The title of the issue is helpful and relevant.
 - [] I checked, if at least one of the examples was working.
