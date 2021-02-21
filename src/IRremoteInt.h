@@ -39,7 +39,7 @@
 #error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
 #endif
 
-#define VERSION_IRREMOTE "3.0.1"
+#define VERSION_IRREMOTE "3.0.2"
 #define VERSION_IRREMOTE_MAJOR 3
 #define VERSION_IRREMOTE_MINOR 0
 /*
