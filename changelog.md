@@ -6,6 +6,8 @@
 - Tested for ATtiny85.
 - Added `printIRResultMinimal()`.
 - Added missing IRAM_ATTR for ESP32.
+- Adapted to TinyCore 0.0.7.
+- Fixed decodeSony 20 bit bug #811.
 
 ## 3.0.0 + 3.0.1 2021/02
 - Added SendRaw with byte data.

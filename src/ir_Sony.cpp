@@ -135,7 +135,7 @@ bool IRrecv::decodeSony() {
     // Success
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     uint8_t tCommand = decodedIRData.decodedRawData & 0x7F;  // first 7 bits
-    uint8_t tAddress = decodedIRData.decodedRawData >> 7;    // next 5 or 8 bits
+    uint16_t tAddress = decodedIRData.decodedRawData >> 7;    // next 5 or 8 or 13 bits
 
     /*
      *  Check for repeat

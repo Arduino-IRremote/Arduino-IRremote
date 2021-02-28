@@ -52,7 +52,7 @@ If you can live with the NEC protocol, you can try the MinimalReceiver example, 
  This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
 
 # Minimal version
-For applications only requiring NEC protocol, there is a receiver which has very **small codesize and does NOT require any timer**. See the MinimalReceiver and IRDispatcherDemo example how to use it.
+For applications only requiring NEC protocol, there is a receiver which has very **small codesize of 500 bytes and does NOT require any timer**. See the MinimalReceiver and IRDispatcherDemo example how to use it.
 
 # Handling unknown Protocols
 ## Disclaimer
