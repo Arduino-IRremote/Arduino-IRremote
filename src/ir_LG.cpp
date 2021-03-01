@@ -29,6 +29,7 @@
  *
  ************************************************************************************
  */
+//#define DEBUG
 #include "IRremoteInt.h"
 
 //==============================================================================
@@ -72,12 +73,10 @@
  */
 void IRsend::sendLGRepeat() {
     enableIROut(38);
-    noInterrupts();
     mark(LG_HEADER_MARK);
     space(LG_REPEAT_HEADER_SPACE);
     mark(LG_BIT_MARK);
     ledOff(); // Always end with the LED off
-    interrupts();
 }
 
 /*
@@ -95,7 +94,7 @@ void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfR
         tChecksum += tTempForChecksum & 0xF; // add low nibble
         tTempForChecksum >>= 4; // shift by a nibble
     }
-    tRawData |= tChecksum;
+    tRawData |= (tChecksum & 0xF);
     sendLGRaw(tRawData, aNumberOfRepeats, aIsRepeat);
 }
 
@@ -110,15 +109,12 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
     // Set IR carrier frequency
     enableIROut(38);
 
-    noInterrupts();
     // Header
     mark(LG_HEADER_MARK);
     space(LG_HEADER_SPACE);
 
     // MSB first
     sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-
-    interrupts();
 
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
@@ -162,7 +158,7 @@ bool IRrecv::decodeLG() {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
-            decodedIRData.protocol = LG;
+//            decodedIRData.protocol = LG; do not set it, because it can also be an NEC repeat
             return true;
         }
         return false;
@@ -203,7 +199,7 @@ bool IRrecv::decodeLG() {
         tTempForChecksum >>= 4; // shift by a nibble
     }
     // Parity check
-    if (tChecksum != (decodedIRData.decodedRawData & 0xF)) {
+    if ((tChecksum & 0xF) != (decodedIRData.decodedRawData & 0xF)) {
         DBG_PRINT(F("LG: "));
         DBG_PRINT("4 bit checksum is not correct. expected=0x");
         DBG_PRINT(tChecksum, HEX);
