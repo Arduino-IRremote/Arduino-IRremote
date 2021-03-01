@@ -69,10 +69,11 @@
 
 /**
  * Minimum gap between IR transmissions, in microseconds
- * If too long,
+ * Keep in mind that this is the delay between the end of the received command and the start of decoding
+ * and some of the protocols have gaps of around 20 ms.
  */
 #if !defined(RECORD_GAP_MICROS)
-#define RECORD_GAP_MICROS   11000 // FREDRICH28AC header space is 9700, NEC header space is 4500
+#define RECORD_GAP_MICROS   5000 // FREDRICH28AC header space is 9700, NEC header space is 4500
 #endif
 
 /** Minimum gap between IR transmissions, in MICROS_PER_TICK */
@@ -332,14 +333,11 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
 //#define USE_SOFT_SEND_PWM
 /**
  * If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses.
+ * It should be the time used for SENDPIN_OFF(sendPin) and the call to delayMicros()
  */
 #ifndef PULSE_CORRECTION_MICROS
 #define PULSE_CORRECTION_MICROS 3
 #endif
-/**
- * If USE_SOFT_SEND_PWM, use spin wait instead of delayMicros().
- */
-//#define USE_SPIN_WAIT
 /*
  * Just for better readability of code
  */
@@ -350,12 +348,14 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
 class IRsend {
 public:
 #if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
-    IRsend(int pin = IR_SEND_PIN);
+    IRsend(uint8_t aSendPin = IR_SEND_PIN);
+    void setSendPin(uint8_t aSendPinNumber);
+    void begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+
 #else
     IRsend();
-#endif
-
     void begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+#endif
 
     size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
 
@@ -365,8 +365,8 @@ public:
             unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit = false);
     void sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits);
 
-    void mark(unsigned int timeMicros);
-    void space(unsigned int timeMicros);
+    void mark(unsigned int aMarkMicros);
+    void space(unsigned int aSpaceMicros);
     void ledOff();
 
 // 8 Bit array
@@ -453,19 +453,13 @@ public:
 
     uint8_t sendPin;
 
-#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
-
-#  if defined(USE_SOFT_SEND_PWM)
+#if defined(USE_SOFT_SEND_PWM)
     unsigned int periodTimeMicros;
     unsigned int periodOnTimeMicros;
-
-    void sleepMicros(unsigned long us);
-    void sleepUntilMicros(unsigned long targetTime);
-#  endif
 #endif
 
 private:
-    void custom_delay_usec(unsigned long uSecs);
+    void customDelayMicroseconds(unsigned long aMicroseconds);
 };
 
 // The sender instance

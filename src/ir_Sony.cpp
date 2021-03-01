@@ -63,7 +63,7 @@
 /*
  * Repeat commands should be sent in a 45 ms raster.
  * There is NO delay after the last sent command / repeat!
- * @param send8AddressBits if false send only 5 address bits (standard is 12 bit SIRCS protocol)
+ * @param numberOfBits if == 20 send 13 address bits otherwise only 5 address bits
  */
 void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, uint8_t numberOfBits) {
     // Set IR carrier frequency
@@ -72,23 +72,21 @@ void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
-        noInterrupts();
-
         // Header
         mark(SONY_HEADER_MARK);
         space(SONY_SPACE);
 
         // send 7 command bits LSB first
         sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aCommand, SONY_COMMAND_BITS, PROTOCOL_IS_LSB_FIRST);
-        // Address 16 bit LSB first
         if (numberOfBits == SIRCS_20_PROTOCOL) {
+            // send 13 address bits LSB first
             sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress,
                     (SONY_ADDRESS_BITS + SONY_EXTRA_BITS), PROTOCOL_IS_LSB_FIRST);
         } else {
+            // send 5 address bits LSB first
             sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress, SONY_ADDRESS_BITS,
             PROTOCOL_IS_LSB_FIRST);
         }
-        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!

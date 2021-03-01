@@ -31,7 +31,11 @@ void setup() {
      * The Output pin is board specific and fixed at IR_SEND_PIN.
      * see https://github.com/Arduino-IRremote/Arduino-IRremote#hardware-specifications
      */
-    IrSender.begin(true); // Enable feedback LED,
+#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
+    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
+#else
+    IrSender.begin(true); // Enable feedback LED at default feedback LED pin
+#endif
 }
 
 /*

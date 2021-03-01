@@ -56,7 +56,11 @@ void setup() {
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
-    IrSender.begin(true); // Enable feedback LED,
+#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
+    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
+#else
+    IrSender.begin(true); // Enable feedback LED at default feedback LED pin
+#endif
 
     prompt = true;
 }

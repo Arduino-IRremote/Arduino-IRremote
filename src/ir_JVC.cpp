@@ -45,18 +45,18 @@
 // http://www.hifi-remote.com/johnsfine/DecodeIR.html#JVC
 // IRP: {38k,525}<1,-1|1,-3>(16,-8,(D:8,F:8,1,-45)+)
 // LSB first, 1 start bit + 8 bit address + 8 bit command + 1 stop bit.
-// The JVC protocol repeats by skipping the header.
+// The JVC protocol repeats by skipping the header mark and space -> this leads to a poor repeat detection for JVC protocol.
 #define JVC_ADDRESS_BITS      8 // 8 bit address
 #define JVC_COMMAND_BITS      8 // Command
 
-#define JVC_BITS              (JVC_ADDRESS_BITS + JVC_COMMAND_BITS) // The number of bits in the protocol
+#define JVC_BITS              (JVC_ADDRESS_BITS + JVC_COMMAND_BITS) // 16 - The number of bits in the protocol
 #define JVC_UNIT              526
 
-#define JVC_HEADER_MARK       (16 * JVC_UNIT) // The length of the Header:Mark
-#define JVC_HEADER_SPACE      (8 * JVC_UNIT)  // The length of the Header:Space
+#define JVC_HEADER_MARK       (16 * JVC_UNIT) // 8400
+#define JVC_HEADER_SPACE      (8 * JVC_UNIT)  // 4200
 
 #define JVC_BIT_MARK          JVC_UNIT        // The length of a Bit:Mark
-#define JVC_ONE_SPACE         (3 * JVC_UNIT)  // The length of a Bit:Space for 1's
+#define JVC_ONE_SPACE         (3 * JVC_UNIT)  // 1578 - The length of a Bit:Space for 1's
 #define JVC_ZERO_SPACE        JVC_UNIT        // The length of a Bit:Space for 0's
 
 #define JVC_REPEAT_SPACE      (uint16_t)(45 * JVC_UNIT)  // 23625 - Commands are repeated with a distance of 23 ms for as long as the key on the remote control is held down.
@@ -69,14 +69,13 @@
  * Only for backwards compatibility
  */
 void IRsend::sendJVCRaw(uint16_t aRawData, uint_fast8_t aNumberOfRepeats) {
-    sendJVC((uint8_t)aRawData & 0xFF, (uint8_t)(aRawData >> JVC_ADDRESS_BITS), aNumberOfRepeats);
+    sendJVC((uint8_t) aRawData & 0xFF, (uint8_t) (aRawData >> JVC_ADDRESS_BITS), aNumberOfRepeats);
 }
 
 void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
     enableIROut(38);
 
-    noInterrupts();
     // Header
     mark(JVC_HEADER_MARK);
     space(JVC_HEADER_SPACE);
@@ -87,8 +86,6 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
         // Address + command
         sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE,
                 aAddress | (aCommand << JVC_ADDRESS_BITS), JVC_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
-
-        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!
@@ -116,6 +113,7 @@ bool IRrecv::decodeJVC() {
     if (decodedIRData.rawDataPtr->rawlen == ((2 * JVC_BITS) + 2)) {
         /*
          * Check for repeat
+         * Check leading space and first and last mark length
          */
         if (decodedIRData.rawDataPtr->rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 2) / MICROS_PER_TICK))
                 && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], JVC_BIT_MARK)
@@ -124,6 +122,9 @@ bool IRrecv::decodeJVC() {
              * We have a repeat here, so do not check for start bit
              */
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
+            decodedIRData.address = lastDecodedAddress;
+            decodedIRData.command = lastDecodedCommand;
+            decodedIRData.protocol = JVC;
         }
     } else {
 
@@ -134,23 +135,23 @@ bool IRrecv::decodeJVC() {
 //            DBG_PRINTLN("Header mark or space length is wrong");
             return false;
         }
-    }
 
-    if (!decodePulseDistanceData(JVC_BITS, 3, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
-        DBG_PRINT(F("JVC: "));
-        DBG_PRINTLN(F("Decode failed"));
-        return false;
-    }
+        if (!decodePulseDistanceData(JVC_BITS, 3, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
+            DBG_PRINT(F("JVC: "));
+            DBG_PRINTLN(F("Decode failed"));
+            return false;
+        }
 
-    // Success
+        // Success
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
-    uint8_t tCommand = decodedIRData.decodedRawData >> JVC_ADDRESS_BITS;  // upper 8 bits of LSB first value
-    uint8_t tAddress = decodedIRData.decodedRawData & 0xFF;    // lowest 8 bit of LSB first value
+        uint8_t tCommand = decodedIRData.decodedRawData >> JVC_ADDRESS_BITS;  // upper 8 bits of LSB first value
+        uint8_t tAddress = decodedIRData.decodedRawData & 0xFF;    // lowest 8 bit of LSB first value
 
-    decodedIRData.command = tCommand;
-    decodedIRData.address = tAddress;
-    decodedIRData.numberOfBits = JVC_BITS;
-    decodedIRData.protocol = JVC;
+        decodedIRData.command = tCommand;
+        decodedIRData.address = tAddress;
+        decodedIRData.numberOfBits = JVC_BITS;
+        decodedIRData.protocol = JVC;
+    }
 
     return true;
 }
@@ -225,6 +226,7 @@ void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
     }
 
     // Old version with MSB first Data
-    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
+    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
+    SEND_STOP_BIT);
 
 }

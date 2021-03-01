@@ -89,7 +89,6 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `USE_NO_SEND_PWM` | IRremoteInt.h | disabled | Use no carrier PWM, just simulate an active low receiver signal. |
 | `USE_SOFT_SEND_PWM` | IRremoteInt.h | disabled | Use carrier PWM generation in software, instead of hardware PWM. |
 | `PULSE_CORRECTION_MICROS` | IRremoteInt.h | 3 | If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses. |
-| `USE_SPIN_WAIT` | IRremoteInt.h | disabled | If USE_SOFT_SEND_PWM, use spin wait instead of delayMicros(). |
 | `RAW_BUFFER_LENGTH` | IRremoteint.h | 101 | Buffer size of raw input buffer. Must be odd! |
 | `IR_SEND_DUTY_CYCLE` | IRremoteBoardDefs.h | 30 | Duty cycle of IR send signal. |
 | `MICROS_PER_TICK` | IRremoteBoardDefs.h | 50 | Resolution of the raw input buffer data. |

@@ -149,7 +149,7 @@ bool MATCH_SPACE(uint16_t measured_ticks, uint16_t desired_us) {
 //   Gap width is recorded; New logging starts.
 //
 //#define IR_MEASURE_TIMING
-//#define IR_TIMING_TEST_PIN 7
+//#define IR_TIMING_TEST_PIN 7 // do not forget to execute:  pinMode(7, OUTPUT);
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 #include "digitalWriteFast.h"
 #endif
@@ -181,6 +181,9 @@ ISR (TIMER_INTR_NAME) {
             if (irparams.timer > RECORD_GAP_TICKS) {
                 // Gap just ended; Record gap duration + start recording transmission
                 // Initialize all state machine variables
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+//                digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
                 irparams.overflow = false;
                 irparams.rawbuf[0] = irparams.timer;
                 irparams.rawlen = 1;
@@ -191,6 +194,9 @@ ISR (TIMER_INTR_NAME) {
 
     } else if (irparams.rcvstate == IR_REC_STATE_MARK) {  // Timing Mark
         if (irdata == SPACE) {   // Mark ended; Record time
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+//            digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
             irparams.rawbuf[irparams.rawlen++] = irparams.timer;
             irparams.rcvstate = IR_REC_STATE_SPACE;
             irparams.timer = 0;
@@ -203,6 +209,9 @@ ISR (TIMER_INTR_NAME) {
                 irparams.overflow = true;
                 irparams.rcvstate = IR_REC_STATE_STOP;
             } else {
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+//                digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
                 irparams.rawbuf[irparams.rawlen++] = irparams.timer;
                 irparams.rcvstate = IR_REC_STATE_MARK;
             }
@@ -210,8 +219,9 @@ ISR (TIMER_INTR_NAME) {
 
         } else if (irparams.timer > RECORD_GAP_TICKS) {
             /*
-             * A long Space, indicates gap between codes
-             * Switch to IR_REC_STATE_STOP, which means current code is ready for processing
+             * Current code is ready for processing!
+             * We received a long space, which indicates gap between codes.
+             * Switch to IR_REC_STATE_STOP
              * Don't reset timer; keep counting width of next leading space
              */
             irparams.rcvstate = IR_REC_STATE_STOP;
@@ -221,6 +231,9 @@ ISR (TIMER_INTR_NAME) {
          * Complete command received
          * stay here until resume() is called, which switches state to IR_REC_STATE_IDLE
          */
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+//        digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
         if (irdata == MARK) {
             irparams.timer = 0;  // Reset gap timer, to prepare for call of resume()
         }

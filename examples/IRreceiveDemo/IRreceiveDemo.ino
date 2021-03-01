@@ -62,7 +62,7 @@ void setup() {
 
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
-delay(2000); // To be able to connect Serial monitor after reset or power up and before first printout
+delay(4000); // To be able to connect Serial monitor after reset or power up and before first printout
 #endif
 // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
@@ -122,8 +122,8 @@ void loop() {
          */
         IrReceiver.stop();
         tone(BUZZER_PIN, 2200, 10);
-        delay(11);
-        IrReceiver.start(11000); // to compensate for 11 ms stop of receiver. This enables a correct gap measurement.
+        delay(8);
+        IrReceiver.start(8000); // to compensate for 11 ms stop of receiver. This enables a correct gap measurement.
 #  endif
 #endif // defined(__AVR_ATtiny85__)
 

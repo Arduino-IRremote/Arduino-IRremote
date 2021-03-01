@@ -119,10 +119,9 @@ void IRrecv::enableIRIn() {
     TIMER_ENABLE_RECEIVE_INTR;  // Timer interrupt enable
     TIMER_RESET_INTR_PENDING;   // NOP for most platforms
 
-    interrupts();
-
     // Initialize state machine state
     resume();
+    interrupts(); // after resume to avoid running through STOP state 1 time before switching to IDLE
 
     // Set pin modes
     pinMode(irparams.recvpin, INPUT);
@@ -789,16 +788,15 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
             aSerial->print(F(" Toggle=1"));
         }
 
-        if (aIRDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
-            aSerial->print(F(" Auto-"));
-        } else {
-            aSerial->print(' ');
-        }
         if (aIRDataPtr->flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) {
+            aSerial->print(' ');
+            if (aIRDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
+                aSerial->print(F("Auto-"));
+            }
             aSerial->print(F("Repeat"));
             if (aLeadingSpaceTicks != 0) {
                 aSerial->print(F(" gap="));
-                aSerial->print((uint32_t)aLeadingSpaceTicks * MICROS_PER_TICK);
+                aSerial->print((uint32_t) aLeadingSpaceTicks * MICROS_PER_TICK);
                 aSerial->print(F("us"));
             }
         }

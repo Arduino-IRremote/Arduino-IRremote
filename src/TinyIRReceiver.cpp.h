@@ -165,7 +165,7 @@ void IRPinChangeInterruptHandler(void) {
                      * Code complete -> call callback
                      * No parity check
                      */
-                    // can not check the length of trailing space
+                    // Set state for new start
                     tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
 #if !defined(ARDUINO_ARCH_MBED)
                     interrupts();

@@ -8,6 +8,9 @@
 - Added missing IRAM_ATTR for ESP32.
 - Adapted to TinyCore 0.0.7.
 - Fixed decodeSony 20 bit bug #811.
+- Replaced delayMicroseconds with customDelayMicroseconds and removed NoInterrupt() for send functions, removed SPIN_WAIT macro, sleepMicros() and sleepUntilMicros().
+- Fixed LG checksum error.
+- Fixed JVC repeat error.
 
 ## 3.0.0 + 3.0.1 2021/02
 - Added SendRaw with byte data.

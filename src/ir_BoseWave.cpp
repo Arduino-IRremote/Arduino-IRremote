@@ -44,7 +44,6 @@ void IRsend::sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
-        noInterrupts();
 
         // Header
         mark(BOSEWAVE_HEADER_MARK);
@@ -54,8 +53,6 @@ void IRsend::sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
 
         sendPulseDistanceWidthData(BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, tData,
         BOSEWAVE_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
-
-        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!

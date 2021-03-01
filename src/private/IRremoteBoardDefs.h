@@ -1064,8 +1064,6 @@ static void timerConfigForReceive() {
 #define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
 
 #define USE_SOFT_SEND_PWM
-// Define to use spin wait instead of delayMicros()
-//#define USE_SPIN_WAIT
 // Supply own enableIRIn()
 #undef USE_DEFAULT_ENABLE_IR_IN
 

@@ -50,6 +50,7 @@ jobs:
           - arduino:avr:uno|DEBUG
           - arduino:avr:uno|USE_NO_SEND_PWM
           - arduino:avr:uno|USE_OLD_DECODE
+          - arduino:avr:uno|USE_SOFT_SEND_PWM
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
           - digistump:avr:digispark-tiny:clock=clock1
@@ -83,6 +84,11 @@ jobs:
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DUSE_OLD_DECODE
 
+          - arduino-boards-fqbn: arduino:avr:uno|USE_SOFT_SEND_PWM
+            sketches-exclude: IR2Keyboard
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              All: -DUSE_SOFT_SEND_PWM
+
           - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
             sketches-exclude: IR2Keyboard,MinimalReceiver,IRDispatcherDemo
 
@@ -102,7 +108,7 @@ jobs:
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx5:chip=85,clock=1internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: IR2Keyboard,IRUnitTest,IRrelay,ReceiveAndSend,IRreceiveDump,IRsendProntoDemo,MicroGirs,IRDispatcherDemo,LGAirConditionerSendDemo # Does not fit in FLASH or RAM
+            sketches-exclude: IR2Keyboard,IRUnitTest,IRrelay,ReceiveAndSend,IRreceiveDump,IRsendProntoDemo,MicroGirs,IRDispatcherDemo,LGAirConditionerSendDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All:
                 -DEXCLUDE_EXOTIC_PROTOCOLS

@@ -70,14 +70,12 @@
  */
 void IRsend::sendSamsungRepeat() {
     enableIROut(38);
-    noInterrupts();
     mark(SAMSUNG_HEADER_MARK);
     space(SAMSUNG_HEADER_SPACE);
     mark(SAMSUNG_BIT_MARK);
     space(SAMSUNG_ZERO_SPACE);
     mark(SAMSUNG_BIT_MARK);
     ledOff(); // Always end with the LED off
-    interrupts();
 }
 
 void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
@@ -88,8 +86,6 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNum
 
     // Set IR carrier frequency
     enableIROut(38);
-
-    noInterrupts();
 
     // Header
     mark(SAMSUNG_HEADER_MARK);
@@ -107,8 +103,6 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNum
 
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aCommand,
     SAMSUNG_COMMAND16_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
-
-    interrupts();
 
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster

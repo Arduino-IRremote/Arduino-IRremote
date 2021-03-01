@@ -28,14 +28,18 @@ void setup() {
 
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
-    delay(2000); // To be able to connect Serial monitor after reset or power up and before first printout
+    delay(4000); // To be able to connect Serial monitor after reset or power up and before first printout
 #endif
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
 
-    IrSender.begin(true); // Enable feedback LED,
+#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
+    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
+#else
+    IrSender.begin(true); // Enable feedback LED at default feedback LED pin
+#endif
 }
 
 /*
@@ -60,6 +64,7 @@ void loop() {
     Serial.print(F(" repeats="));
     Serial.print(sRepeats);
     Serial.println();
+    Serial.flush();
 
     Serial.println(F("Send NEC with 8 bit address"));
     IrSender.sendNEC(sAddress & 0xFF, sCommand, sRepeats);
@@ -97,13 +102,11 @@ void loop() {
          * To convert one into the other, you must reverse the byte positions and then reverse all positions of each byte.
          * Example:
          * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
-         *
          */
         Serial.println(F("Send NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first"));
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         delay(2000);
     }
-
 
     Serial.println(F("Send Apple"));
     IrSender.sendApple(sAddress, sCommand, sRepeats);

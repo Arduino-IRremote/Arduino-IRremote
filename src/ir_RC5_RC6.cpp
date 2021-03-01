@@ -96,12 +96,8 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
-        noInterrupts();
-
         // start bit is sent by sendBiphaseData
         sendBiphaseData(RC5_UNIT, tIRData, RC5_BITS);
-
-        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!
@@ -278,8 +274,6 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
 // Set IR carrier frequency
     enableIROut(36);
 
-    noInterrupts();
-
 // Header
     mark(RC6_HEADER_MARK);
     space(RC6_HEADER_SPACE);
@@ -303,14 +297,11 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
     }
 
     ledOff();  // Always end with the LED off
-    interrupts();
 }
 
 void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
 // Set IR carrier frequency
     enableIROut(36);
-
-    noInterrupts();
 
 // Header
     mark(RC6_HEADER_MARK);
@@ -335,7 +326,6 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
     }
 
     ledOff();  // Always end with the LED off
-    interrupts();
 }
 
 /*
@@ -555,8 +545,6 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
     enableIROut(36);
 
-    noInterrupts();
-
     // Start
     mark(RC5_UNIT);
     space(RC5_UNIT);
@@ -574,7 +562,6 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
     }
 
     ledOff();  // Always end with the LED off
-    interrupts();
 }
 
 /*
@@ -589,8 +576,6 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
 //    unsigned long nbits = addressBits + commandBits;
 
 // Start
-    noInterrupts();
-
     mark(RC5_UNIT);
 
 // Bit #6 of the command part, but inverted!
@@ -645,5 +630,4 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
     }
 
     ledOff();  // Always end with the LED off
-    interrupts();
 }

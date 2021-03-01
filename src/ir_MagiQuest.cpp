@@ -56,8 +56,6 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
     // Set IR carrier frequency
     enableIROut(38);
 
-    noInterrupts();
-
     // 2 start bits
     sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 2, PROTOCOL_IS_MSB_FIRST);
 
@@ -77,7 +75,6 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
 //        }
 //    }
 
-    interrupts();
 }
 
 //+=============================================================================

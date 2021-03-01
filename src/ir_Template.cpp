@@ -168,8 +168,6 @@ void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumber
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
-        noInterrupts();
-
         // Header
         mark(SHUZU_HEADER_MARK);
         space(SHUZU_HEADER_SPACE);
@@ -181,8 +179,6 @@ void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumber
         // Command + stop bit
         sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, aCommand,
         SHUZU_COMMAND_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT); // false, true -> LSB first, stop bit
-
-        interrupts();
 
         tNumberOfCommands--;
         // skip last delay!

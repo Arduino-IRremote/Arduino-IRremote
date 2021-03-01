@@ -73,12 +73,10 @@
  */
 void IRsend::sendNECRepeat() {
     enableIROut(38);
-    noInterrupts();
     mark(NEC_HEADER_MARK);
     space(NEC_REPEAT_HEADER_SPACE);
     mark(NEC_BIT_MARK);
     ledOff(); // Always end with the LED off
-    interrupts();
 }
 
 /*
@@ -137,7 +135,6 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool a
     // Set IR carrier frequency
     enableIROut(38);
 
-    noInterrupts();
     // Header
     mark(NEC_HEADER_MARK);
     space(NEC_HEADER_SPACE);
@@ -145,8 +142,6 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool a
     // LSB first + stop bit
     sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, aRawData, NEC_BITS, PROTOCOL_IS_LSB_FIRST,
     SEND_STOP_BIT);
-
-    interrupts();
 
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
@@ -192,7 +187,7 @@ bool IRrecv::decodeNEC() {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
-            decodedIRData.protocol = NEC;
+//            decodedIRData.protocol = NEC; do not set it, because it can also be an LG repeat
             return true;
         }
         return false;
@@ -316,7 +311,10 @@ bool IRrecv::decodeNEC() {
 #endif
 
 /*
- * Old version with MSB first Data
+ * With Send sendNECMSB() you can send your old 32 bit codes.
+ * To convert one into the other, you must reverse the byte positions and then reverse all positions of each byte.
+ * Example:
+ * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
  */
 void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     // Set IR carrier frequency
