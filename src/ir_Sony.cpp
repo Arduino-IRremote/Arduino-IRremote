@@ -38,7 +38,7 @@
 //                              S  O   O  N  NN    Y
 //                          SSSS    OOO   N   N    Y
 //==============================================================================
-// see https://www.sbprojects.net/knowledge/ir/sirc.php - After counting 12 or 15 bits the receiver must wait at least 10ms to make sure that no more pulses follow.
+// see https://www.sbprojects.net/knowledge/ir/sirc.php
 // Here http://picprojects.org.uk/projects/sirc/ it is claimed, that many Sony remotes repeat each frame a minimum of 3 times
 
 // LSB first, start bit + 7 command + 5 to 13 address, no stop bit
@@ -77,16 +77,11 @@ void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
         space(SONY_SPACE);
 
         // send 7 command bits LSB first
-        sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aCommand, SONY_COMMAND_BITS, PROTOCOL_IS_LSB_FIRST);
-        if (numberOfBits == SIRCS_20_PROTOCOL) {
-            // send 13 address bits LSB first
-            sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress,
-                    (SONY_ADDRESS_BITS + SONY_EXTRA_BITS), PROTOCOL_IS_LSB_FIRST);
-        } else {
-            // send 5 address bits LSB first
-            sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress, SONY_ADDRESS_BITS,
-            PROTOCOL_IS_LSB_FIRST);
-        }
+        sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aCommand, SONY_COMMAND_BITS,
+        PROTOCOL_IS_LSB_FIRST);
+        // send 5, 8, 13 address bits LSB first
+        sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress,
+                (numberOfBits - SONY_COMMAND_BITS), PROTOCOL_IS_LSB_FIRST);
 
         tNumberOfCommands--;
         // skip last delay!

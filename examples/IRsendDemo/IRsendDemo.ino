@@ -132,6 +132,10 @@ void loop() {
     IrSender.sendSony(sAddress, sCommand, sRepeats);
     delay(2000);
 
+    Serial.println(F("Send Sony/SIRCS with 7 command and 8 address bits"));
+    IrSender.sendSony(sAddress, sCommand, sRepeats, SIRCS_15_PROTOCOL);
+    delay(2000);
+
     Serial.println(F("Send Sony/SIRCS with 7 command and 13 address bits"));
     IrSender.sendSony(sAddress, sCommand, sRepeats, SIRCS_20_PROTOCOL);
     delay(2000);

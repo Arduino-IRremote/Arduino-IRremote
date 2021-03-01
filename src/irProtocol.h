@@ -76,6 +76,7 @@ const char* getProtocolString(decode_type_t aProtocol);
 #define JVC_VENDOR_ID_CODE          0x0103
 
 #define SIRCS_12_PROTOCOL       12
+#define SIRCS_15_PROTOCOL       15
 #define SIRCS_20_PROTOCOL       20
 
 #define LEGO_MODE_EXTENDED  0
