@@ -39,9 +39,9 @@
 #error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
 #endif
 
-#define VERSION_IRREMOTE "3.0.2"
+#define VERSION_IRREMOTE "3.1.0"
 #define VERSION_IRREMOTE_MAJOR 3
-#define VERSION_IRREMOTE_MINOR 0
+#define VERSION_IRREMOTE_MINOR 1
 /*
  * Just for better readability of code
  */
@@ -323,21 +323,6 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
 /****************************************************
  *                     SENDING
  ****************************************************/
-/**
- * Define to use no carrier PWM, just simulate an active low receiver signal.
- */
-//#define USE_NO_SEND_PWM
-/**
- * Define to use carrier PWM generation in software, instead of hardware PWM.
- */
-//#define USE_SOFT_SEND_PWM
-/**
- * If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses.
- * It should be the time used for SENDPIN_OFF(sendPin) and the call to delayMicros()
- */
-#ifndef PULSE_CORRECTION_MICROS
-#define PULSE_CORRECTION_MICROS 3
-#endif
 /*
  * Just for better readability of code
  */
@@ -347,15 +332,14 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
  */
 class IRsend {
 public:
-#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
-    IRsend(uint8_t aSendPin = IR_SEND_PIN);
+    IRsend(uint8_t aSendPin);
     void setSendPin(uint8_t aSendPinNumber);
-    void begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+    void begin(uint8_t aSendPin, bool aEnableLEDFeedback = true, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN);
 
-#else
+
     IRsend();
     void begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN);
-#endif
+
 
     size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
 
@@ -453,10 +437,8 @@ public:
 
     uint8_t sendPin;
 
-#if defined(USE_SOFT_SEND_PWM)
     unsigned int periodTimeMicros;
     unsigned int periodOnTimeMicros;
-#endif
 
 private:
     void customDelayMicroseconds(unsigned long aMicroseconds);

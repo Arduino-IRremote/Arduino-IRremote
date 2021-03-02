@@ -1,3 +1,7 @@
+## 3.1.0
+- Replaced #define DECODE_NEC 1/0 by defining/not defining.
+- USE_SOFT_SEND_PWM is active by default.
+
 ## 3.0.2
 - Bug fix for USE_OLD_DECODE.
 - Increase RECORD_GAP_MICROS to 11000.

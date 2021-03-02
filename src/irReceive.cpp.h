@@ -253,77 +253,77 @@ bool IRrecv::decode() {
         return true;
     }
 
-#if DECODE_NEC
+#if defined(DECODE_NEC)
     TRACE_PRINTLN("Attempting NEC decode");
     if (decodeNEC()) {
         return true;
     }
 #endif
 
-#if DECODE_PANASONIC
+#if defined(DECODE_PANASONIC)
     TRACE_PRINTLN("Attempting Panasonic/Kaseikyo decode");
     if (decodeKaseikyo()) {
         return true;
     }
 #endif
 
-#if DECODE_KASEIKYO && defined(USE_OLD_DECODE) // if not USE_OLD_DECODE enabled, decodeKaseikyo() is already called by decodePanasonic()
+#if defined(DECODE_KASEIKYO) && defined(USE_OLD_DECODE) // if not USE_OLD_DECODE enabled, decodeKaseikyo() is already called by decodePanasonic()
         TRACE_PRINTLN("Attempting Panasonic/Kaseikyo decode");
         if (decodeKaseikyo()) {
             return true;
         }
 #endif
 
-#if DECODE_DENON
+#if defined(DECODE_DENON)
     TRACE_PRINTLN("Attempting Denon/Sharp decode");
     if (decodeDenon()) {
         return true;
     }
 #endif
 
-#if DECODE_SONY
+#if defined(DECODE_SONY)
     TRACE_PRINTLN("Attempting Sony decode");
     if (decodeSony()) {
         return true;
     }
 #endif
 
-#if DECODE_SHARP && ! DECODE_DENON
+#if defined(DECODE_SHARP) && ! defined(DECODE_DENON)
         TRACE_PRINTLN("Attempting Denon/Sharp decode");
         if (decodeSharp()) {
             return true;
         }
 #endif
 
-#if DECODE_RC5
+#if defined(DECODE_RC5)
     TRACE_PRINTLN("Attempting RC5 decode");
     if (decodeRC5()) {
         return true;
     }
 #endif
 
-#if DECODE_RC6
+#if defined(DECODE_RC6)
     TRACE_PRINTLN("Attempting RC6 decode");
     if (decodeRC6()) {
         return true;
     }
 #endif
 
-#if DECODE_LG
+#if defined(DECODE_LG)
     TRACE_PRINTLN("Attempting LG decode");
     if (decodeLG()) {
         return true;
     }
 #endif
 
-#if DECODE_JVC
+#if defined(DECODE_JVC)
     TRACE_PRINTLN("Attempting JVC decode");
     if (decodeJVC()) {
         return true;
     }
 #endif
 
-#if DECODE_SAMSUNG
+#if defined(DECODE_SAMSUNG)
     TRACE_PRINTLN("Attempting Samsung decode");
 #if !defined(USE_OLD_DECODE)
     if (decodeSamsung()) {
@@ -339,28 +339,28 @@ bool IRrecv::decode() {
      * Start of the exotic protocols
      */
 
-#if DECODE_WHYNTER
+#if defined(DECODE_WHYNTER)
     TRACE_PRINTLN("Attempting Whynter decode");
     if (decodeWhynter()) {
         return true;
     }
 #endif
 
-#if DECODE_LEGO_PF
+#if defined(DECODE_LEGO_PF)
     TRACE_PRINTLN("Attempting Lego Power Functions");
     if (decodeLegoPowerFunctions()) {
         return true;
     }
 #endif
 
-#if DECODE_BOSEWAVE
+#if defined(DECODE_BOSEWAVE)
     TRACE_PRINTLN("Attempting Bosewave  decode");
     if (decodeBoseWave()) {
         return true;
     }
 #endif
 
-#if DECODE_MAGIQUEST
+#if defined(DECODE_MAGIQUEST)
     TRACE_PRINTLN("Attempting MagiQuest decode");
     if (decodeMagiQuest()) {
         return true;
@@ -370,7 +370,7 @@ bool IRrecv::decode() {
     /*
      * Last resort is the universal hash decode which always return true
      */
-#if DECODE_HASH
+#if defined(DECODE_HASH)
     TRACE_PRINTLN("Hash decode");
     // decodeHash returns a hash on any input.
     // Thus, it needs to be last in the list.
@@ -672,7 +672,7 @@ bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint
     return true;
 }
 
-#if DECODE_HASH
+#if defined(DECODE_HASH)
 //+=============================================================================
 // hashdecode - decode an arbitrary IR code.
 // Instead of decoding using a standard encoding scheme
@@ -758,7 +758,7 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
     aSerial->print(F("Protocol="));
     aSerial->print(getProtocolString(aIRDataPtr->protocol));
     if (aIRDataPtr->protocol == UNKNOWN) {
-#if DECODE_HASH
+#if defined(DECODE_HASH)
         aSerial->print(F(" Hash=0x"));
         aSerial->print(aIRDataPtr->decodedRawData, HEX);
 #endif
@@ -839,7 +839,7 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
     aSerial->print(F("P="));
     aSerial->print(getProtocolString(decodedIRData.protocol));
     if (decodedIRData.protocol == UNKNOWN) {
-#if DECODE_HASH
+#if defined(DECODE_HASH)
         aSerial->print(F(" #=0x"));
         aSerial->print(decodedIRData.decodedRawData, HEX);
 #endif

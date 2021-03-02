@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 3.0.2](https://github.com/z3t0/Arduino-IRremote/archive/master.zip) - work in progress
+### [Version 3.1.0](https://github.com/z3t0/Arduino-IRremote/archive/master.zip) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/z3t0/Arduino-IRremote/latest)](https://github.com/z3t0/Arduino-IRremote/commits/master)
@@ -18,12 +18,21 @@ Click on the LibraryManager badge above to see the [instructions](https://www.ar
 
 # Supported IR Protocols
 Denon, JVC, LG,  NEC / Apple, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sharp, Sony, (Pronto), BoseWave, Lego, Whynter, MagiQuest.<br/>
-Protocols can be switched off and on by changing the lines in *IRremote.h*:
+Protocols can be switched off and on by definining macros like [here]((https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L18):
 
 ```
-#define DECODE_<PROTOCOL_NAME>  1
-#define SEND_<PROTOCOL_NAME>    1
+#define DECODE_NEC
+//#define DECODE_DENON
+#incude <IRremote.h>
 ```
+or by activating  the lines in [IRremote.h]((https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L54):
+
+```
+#define DECODE_<PROTOCO_NAME>
+#define SEND_<PROTOCO_NAME>
+```
+
+
 # [Wiki](https://github.com/z3t0/Arduino-IRremote/wiki)
 This is a quite old but maybe useful wiki for this library.
 
@@ -31,7 +40,7 @@ This is a quite old but maybe useful wiki for this library.
 - Now there is  an **IRreceiver** and **IRsender** object like the well known Arduino **Serial** object.
 - Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;` in your program, and replace all occurrences of `IRrecv.` or `irrecv.` with `IrReceiver`.
 - Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
-- Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRreceiveDemo/IRreceiveDemo.ino#L38) or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK);` instead of the `IrReceiver.enableIRIn();` or `irrecv.enableIRIn();` in setup().
+- ike for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABE_ED_FEEDBACK);`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRreceiveDemo/IRreceiveDemo.ino#L38) or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK);` instead of the `IrReceiver.enableIRIn();` or `irrecv.enableIRIn();` in setup().
 - Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
 - The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value`  and / or `results.decode_type` (and similar) to `IrReceiver.decodedIRData.decodedRawData` and / or `IrReceiver.decodedIRData.decodedRawData`.
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L126).
@@ -84,15 +93,13 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `USE_OLD_DECODE` | IRremoteInt.h | disabled | Enables the old decoder in order to be version 2.x compatible, where all protocols were MSB first. |
 | `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.h>` | disabled | If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. Saves up to 900 bytes program space. |
 | `MARK_EXCESS_MICROS` | Before `#include <IRremote.h>` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
+| `USE_NO_SEND_PWM` | Before `#include <IRremote.h>` | disabled | Use no carrier PWM, just simulate an active low receiver signal. |
+| `SEND_PWM_BY_TIMER` | Before `#include <IRremote.h>` | disabled | Disable carrier PWM generation in software and use (restricted) hardware PWM. |
 | `IR_INPUT_IS_ACTIVE_HIGH` | IRremoteInt.h | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
 | `DEBUG` | IRremoteInt.h | disabled | Enables lots of lovely debug output. |
-| `USE_NO_SEND_PWM` | IRremoteInt.h | disabled | Use no carrier PWM, just simulate an active low receiver signal. |
-| `USE_SOFT_SEND_PWM` | IRremoteInt.h | disabled | Use carrier PWM generation in software, instead of hardware PWM. |
-| `PULSE_CORRECTION_MICROS` | IRremoteInt.h | 3 | If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses. |
 | `RAW_BUFFER_LENGTH` | IRremoteint.h | 101 | Buffer size of raw input buffer. Must be odd! |
 | `IR_SEND_DUTY_CYCLE` | IRremoteBoardDefs.h | 30 | Duty cycle of IR send signal. |
 | `MICROS_PER_TICK` | IRremoteBoardDefs.h | 50 | Resolution of the raw input buffer data. |
-| `USE_CUSTOM_DELAY` | irSend.cpp | disabled | Use old custom_delay_usec() function for mark and space delays. |
 |-|-|-|-|
 | `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |

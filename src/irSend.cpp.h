@@ -35,9 +35,7 @@
 // The sender instance
 IRsend IrSender;
 
-//#define USE_CUSTOM_DELAY // Use old custom_delay_usec() function for mark and space delays.
 
-#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
 IRsend::IRsend(uint8_t aSendPin) {
     sendPin = aSendPin;
 }
@@ -62,7 +60,7 @@ void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedba
         }
     }
 }
-#else
+
 IRsend::IRsend() {
     sendPin = IR_SEND_PIN;
 }
@@ -84,7 +82,7 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
         }
     }
 }
-#endif
+
 
 size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
 

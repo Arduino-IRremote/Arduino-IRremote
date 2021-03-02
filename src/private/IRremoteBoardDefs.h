@@ -1063,7 +1063,6 @@ static void timerConfigForReceive() {
 #define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
 
-#define USE_SOFT_SEND_PWM
 // Supply own enableIRIn()
 #undef USE_DEFAULT_ENABLE_IR_IN
 

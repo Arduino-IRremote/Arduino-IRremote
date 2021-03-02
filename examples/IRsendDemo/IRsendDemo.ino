@@ -13,7 +13,10 @@
  */
 
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 240 bytes program space if IrSender.write is used
+//#define SEND_PWM_BY_TIMER
+
 #include <IRremote.h>
+
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #include "ATtinySerialOut.h"
 #endif
@@ -35,10 +38,10 @@ void setup() {
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
 
-#if defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)
-    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
-#else
+#if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
     IrSender.begin(true); // Enable feedback LED at default feedback LED pin
+#else
+    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
 #endif
 }
 

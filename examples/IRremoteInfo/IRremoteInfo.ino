@@ -25,12 +25,11 @@ void dumpArduinoIDE();
 void dumpDebugMode();
 void dumpProtocols();
 void dumpFooter();
-void printDecodeEnabled(int flag);
 
 void setup() {
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
-    delay(2000); // To be able to connect Serial monitor after reset or power up and before first printout
+    delay(4000); // To be able to connect Serial monitor after reset or power up and before first printout
 #endif
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
@@ -223,42 +222,91 @@ void dumpProtocols() {
     Serial.print(F("======== "));
     Serial.println(F("========"));
     Serial.print(F("RC5:          "));
-    printDecodeEnabled(DECODE_RC6);
+#if defined(DECODE_RC5)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("RC6:          "));
-    printDecodeEnabled(DECODE_RC5);
+#if defined(DECODE_RC6)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("NEC:          "));
-    printDecodeEnabled(DECODE_NEC);
+#if defined(DECODE_NEC)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("SONY:         "));
-    printDecodeEnabled(DECODE_SONY);
+#if defined(DECODE_SONY)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("PANASONIC:    "));
-    printDecodeEnabled(DECODE_PANASONIC);
+#if defined(DECODE_PANASONIC)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("JVC:          "));
-    printDecodeEnabled(DECODE_JVC);
+#if defined(DECODE_JVC)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("SAMSUNG:      "));
-    printDecodeEnabled(DECODE_SAMSUNG);
+#if defined(DECODE_SAMSUNG)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("LG:           "));
-    printDecodeEnabled(DECODE_LG);
+#if defined(DECODE_LG)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("SHARP:        "));
-    printDecodeEnabled(DECODE_SHARP);
+#if defined(DECODE_SHARP)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("DENON:        "));
-    printDecodeEnabled(DECODE_DENON);
+#if defined(DECODE_DENON)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space
 
     Serial.print(F("BOSEWAVE:     "));
-    printDecodeEnabled(DECODE_BOSEWAVE);
+#if defined(DECODE_BOSEWAVE)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 
     Serial.print(F("WHYNTER:      "));
-    printDecodeEnabled(DECODE_WHYNTER);
+#if defined(DECODE_WHYNTER)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
+
 #endif
 }
 

@@ -47,30 +47,32 @@
 //------------------------------------------------------------------------------
 // Supported IR protocols
 // Each protocol you include costs memory and, during decode, costs time
-// Disable (set to 0) all the protocols you do not need/want!
+// Disable (deactivate the line by adding a trailing comment "//") all the protocols you do not need/want!
 //
-#if(!(DECODE_DENON || DECODE_SHARP || DECODE_JVC || DECODE_KASEIKYO || DECODE_PANASONIC || DECODE_LG || DECODE_NEC \
-|| DECODE_SAMSUNG || DECODE_SONY || DECODE_RC5 || DECODE_RC6 || DECODE_HASH || DECODE_BOSEWAVE || DECODE_LEGO_PF || DECODE_MAGIQUEST || DECODE_WHYNTER))
-#define DECODE_DENON        1
-#define DECODE_SHARP        1 // the same as DECODE_DENON
-#define DECODE_JVC          1
-#define DECODE_KASEIKYO     1
-#define DECODE_PANASONIC    1 // the same as DECODE_KASEIKYO
-#define DECODE_LG           1
-#define DECODE_NEC          1
-#define DECODE_SAMSUNG      1
-#define DECODE_SONY         1
-#define DECODE_RC5          1
-#define DECODE_RC6          1
+#if (!(defined(DECODE_DENON) || defined(DECODE_SHARP) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
+|| defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \
+|| defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) || defined(DECODE_HASH) \
+|| defined(DECODE_BOSEWAVE) || defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_WHYNTER)))
+#define DECODE_DENON
+#define DECODE_SHARP        // the same as DECODE_DENON
+#define DECODE_JVC
+#define DECODE_KASEIKYO
+#define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
+#define DECODE_LG
+#define DECODE_NEC
+#define DECODE_SAMSUNG
+#define DECODE_SONY
+#define DECODE_RC5
+#define DECODE_RC6
 
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space
-#define DECODE_BOSEWAVE     1
-#define DECODE_LEGO_PF      1
-#define DECODE_MAGIQUEST    1
-#define DECODE_WHYNTER      1
+#define DECODE_BOSEWAVE
+#define DECODE_LEGO_PF
+#define DECODE_MAGIQUEST
+#define DECODE_WHYNTER
 #endif
 
-#define DECODE_HASH         1 // special decoder for all protocols
+#define DECODE_HASH         // special decoder for all protocols
 #endif
 
 /**
@@ -88,6 +90,27 @@
 #if !defined(MARK_EXCESS_MICROS)
 //#define MARK_EXCESS_MICROS    50
 #define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
+#endif
+
+/****************************************************
+ *                     SENDING
+ ****************************************************/
+/**
+ * Define to use no carrier PWM, just simulate an active low receiver signal.
+ */
+//#define USE_NO_SEND_PWM
+/**
+ * Define to use carrier PWM generation in software, instead of hardware PWM.
+ */
+#if !defined(SEND_PWM_BY_TIMER)
+#define USE_SOFT_SEND_PWM
+#endif
+/**
+ * If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses.
+ * It should be the time used for SENDPIN_OFF(sendPin) and the call to delayMicros()
+ */
+#ifndef PULSE_CORRECTION_MICROS
+#define PULSE_CORRECTION_MICROS 3
 #endif
 
 //------------------------------------------------------------------------------

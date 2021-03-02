@@ -8,7 +8,7 @@
  *  is called in Interrupt context but with interrupts being enabled to enable use of delay() etc.
  *  !!!!!!!!!!!!!!!!!!!!!!
  *  Functions called in interrupt context should be running as short as possible,
- *  so if you require longer action, save the data (address + command) and handle them in the main loop.
+ *  so if you require longer action, save the data (address + command) and handle it in the main loop.
  *  !!!!!!!!!!!!!!!!!!!!!
  *
  *
@@ -71,7 +71,7 @@
 void setup() {
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL) || defined(ARDUINO_attiny3217)
-    delay(2000); // To be able to connect Serial monitor after reset or power up and before first printout
+    delay(4000); // To be able to connect Serial monitor after reset or power up and before first printout
 #endif
     // Just to know which program is running on my Arduino
 #if defined(ESP8266)
