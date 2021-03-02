@@ -6,7 +6,7 @@
  * !!! All the macro values defined here can be overwritten with values     !!!
  * !!! the user defines in its source code BEFORE the #include <IRremote.h> !!!
  *
- * This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ * This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  *
  ************************************************************************************

@@ -4,7 +4,7 @@
  *
  *  Contains all IRrecv class functions
  *
- *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  ************************************************************************************
  * MIT License
@@ -88,10 +88,10 @@ void IRrecv::start() {
     enableIRIn();
 }
 
-void IRrecv::start(uint16_t aMillisToAddToGapCounter) {
+void IRrecv::start(uint16_t aMicrosecondsToAddToGapCounter) {
     enableIRIn();
     noInterrupts();
-    irparams.timer += aMillisToAddToGapCounter / MICROS_PER_TICK;
+    irparams.timer += aMicrosecondsToAddToGapCounter / MICROS_PER_TICK;
     interrupts();
 }
 
@@ -106,7 +106,6 @@ void IRrecv::end() {
 //+=============================================================================
 // initialization
 //
-#ifdef USE_DEFAULT_ENABLE_IR_IN
 /**
  * Enable IR reception.
  */
@@ -133,7 +132,6 @@ void IRrecv::enableIRIn() {
 void IRrecv::disableIRIn() {
     TIMER_DISABLE_RECEIVE_INTR;
 }
-#endif // USE_DEFAULT_ENABLE_IR_IN
 
 //+=============================================================================
 // Enable/disable blinking of pin 13 on IR processing

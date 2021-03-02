@@ -2,7 +2,7 @@
  * @file IRremoteInt.h
  * @brief Contains all declarations required for the internal functions.
  *
- * This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ * This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  *
  ************************************************************************************
@@ -223,7 +223,7 @@ public:
      */
     void begin(uint8_t aReceivePin, bool aEnableLEDFeedback = false, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN); // if aBlinkPin == 0 then take board default BLINKPIN
     void start(); // alias for enableIRIn
-    void start(uint16_t aMillisToAddToGapCounter);
+    void start(uint16_t aMicrosecondsToAddToGapCounter);
     bool available();
     IRData* read(); // returns decoded data
     // write is a method of class IRsend below

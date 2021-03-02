@@ -3,7 +3,7 @@
  *
  * Demonstrates receiving IR codes with IRrecv
  *
- *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  */
 
@@ -97,7 +97,7 @@ void loop() {
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
             Serial.println(F("Overflow detected"));
-#  if !defined(ESP32)
+#  if !defined(ESP32) && !defined(NRF5)
             /*
              * do double beep
              */
@@ -116,7 +116,7 @@ void loop() {
             }
         }
 
-#  if !defined(ESP32)
+#  if !defined(ESP32) && !defined(NRF5)
         /*
          * Play tone, wait and restore IR timer
          */

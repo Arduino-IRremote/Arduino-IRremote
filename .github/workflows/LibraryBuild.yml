@@ -50,7 +50,7 @@ jobs:
           - arduino:avr:uno|DEBUG
           - arduino:avr:uno|USE_NO_SEND_PWM
           - arduino:avr:uno|USE_OLD_DECODE
-          - arduino:avr:uno|USE_SOFT_SEND_PWM
+          - arduino:avr:uno|SEND_PWM_BY_TIMER
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
           - digistump:avr:digispark-tiny:clock=clock1
@@ -84,7 +84,7 @@ jobs:
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DUSE_OLD_DECODE
 
-          - arduino-boards-fqbn: arduino:avr:uno|USE_SOFT_SEND_PWM
+          - arduino-boards-fqbn: arduino:avr:uno|SEND_PWM_BY_TIMER
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DUSE_SOFT_SEND_PWM
@@ -128,7 +128,7 @@ jobs:
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
-            sketches-exclude: BoseWaveSendDemo,IR2Keyboard,IRDispatcherDemo,IRreceiveDemo,ReceiveAndSend,IRsendDemo,IRsendProntoDemo,IRsendRawDemo,IRUnitTest,LGAirConditionerSendDemo,MicroGirs,MinimalReceiver,SimpleSender # no sending yet, no tone()
+            sketches-exclude: BoseWaveSendDemo,IR2Keyboard,IRDispatcherDemo,ReceiveAndSend,IRsendProntoDemo,IRsendRawDemo,IRUnitTest,LGAirConditionerSendDemo,MicroGirs,MinimalReceiver,SimpleSender # no sending yet, no tone()
 
 
       # Do not cancel all jobs / architectures if one job fails

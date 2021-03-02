@@ -98,7 +98,7 @@
  *  Copyright (C) 2021  Shuzu Guru
  *  shuzu.guru@gmail.com
  *
- *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  ************************************************************************************
  * MIT License

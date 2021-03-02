@@ -3,7 +3,7 @@
  *
  *  Contains common functions for sending
  *
- *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  ************************************************************************************
  * MIT License
@@ -34,7 +34,6 @@
 
 // The sender instance
 IRsend IrSender;
-
 
 IRsend::IRsend(uint8_t aSendPin) {
     sendPin = aSendPin;
@@ -82,7 +81,6 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
         }
     }
 }
-
 
 size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
 
@@ -170,7 +168,6 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
     return 1;
 }
 
-#ifdef SENDING_SUPPORTED // from IRremoteBoardDefs.h
 //+=============================================================================
 void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 // Set IR carrier frequency
@@ -344,7 +341,7 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
 // The mark output is modulated at the PWM frequency.
 //
 void IRsend::mark(unsigned int aMarkMicros) {
-#ifdef USE_SOFT_SEND_PWM
+#if defined(USE_SOFT_SEND_PWM)
     unsigned long start = micros();
     unsigned long nextPeriodEnding = start;
     while (micros() - start < aMarkMicros) {
@@ -354,8 +351,8 @@ void IRsend::mark(unsigned int aMarkMicros) {
         SENDPIN_OFF(sendPin);
         interrupts(); // Enable interrupts for the longer off period
         nextPeriodEnding += periodTimeMicros;
-        while (micros() < nextPeriodEnding)
-            ;
+        while (micros() < nextPeriodEnding){
+        }
     }
 
 #else
@@ -374,7 +371,9 @@ void IRsend::mark(unsigned int aMarkMicros) {
 }
 
 void IRsend::ledOff() {
-#if defined(USE_NO_SEND_PWM)
+#if defined(USE_SOFT_SEND_PWM)
+    SENDPIN_OFF(sendPin);
+#elif defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
     TIMER_DISABLE_SEND_PWM; // Disable PWM output
@@ -389,13 +388,7 @@ void IRsend::ledOff() {
 // A space is no output, so the PWM output is disabled.
 //
 void IRsend::space(unsigned int aSpaceMicros) {
-#if defined(USE_NO_SEND_PWM)
-    digitalWrite(sendPin, HIGH); // Set output to inactive high.
-#else
-    TIMER_DISABLE_SEND_PWM; // Disable PWM output
-#endif // defined(USE_NO_SEND_PWM)
-
-    setFeedbackLED(false);
+    ledOff();
     customDelayMicroseconds(aSpaceMicros);
 }
 
@@ -410,7 +403,6 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
     }
 }
 
-#ifdef USE_DEFAULT_ENABLE_IR_OUT
 //+=============================================================================
 // Enables IR output.  The kHz value controls the modulation frequency in kilohertz.
 // The IR output will be on pin 3 (OC2B).
@@ -424,7 +416,7 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
 // See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
 //
 void IRsend::enableIROut(uint8_t aFrequencyKHz) {
-#ifdef USE_SOFT_SEND_PWM
+#if defined(USE_SOFT_SEND_PWM)
     periodTimeMicros = (1000U + aFrequencyKHz / 2) / aFrequencyKHz; // = 1000/kHz + 1/2 = round(1000.0/kHz)
     periodOnTimeMicros = ((periodTimeMicros * IR_SEND_DUTY_CYCLE) / 100U) - PULSE_CORRECTION_MICROS;
 #endif
@@ -433,15 +425,16 @@ void IRsend::enableIROut(uint8_t aFrequencyKHz) {
     (void) aFrequencyKHz;
     pinMode(sendPin, OUTPUT);
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
-#else
-    TIMER_DISABLE_RECEIVE_INTR;
+#endif
 
     pinMode(sendPin, OUTPUT);
     SENDPIN_OFF(sendPin); // When not sending, we want it low
 
+#if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
+#if defined(SEND_PWM_BY_TIMER_NOT_SUPPORTED)
+#error PWM generation by hardware not implemented for SAMD
+#endif
+    TIMER_DISABLE_RECEIVE_INTR;
     timerConfigForSend(aFrequencyKHz);
-#endif // defined(USE_NO_SEND_PWM)
+#endif
 }
-#endif // USE_DEFAULT_ENABLE_IR_OUT
-
-#endif // SENDING_SUPPORTED
