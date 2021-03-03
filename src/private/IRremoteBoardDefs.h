@@ -270,6 +270,19 @@
 #undef USE_DEFAULT_ENABLE_IR_IN
 
 /*********************
+ * STM32 Boards
+ *********************/
+#elif defined(ARDUINO_ARCH_STM32)
+
+// PWM generation by hardware tbd
+#define SEND_PWM_BY_TIMER_NOT_SUPPORTED
+
+// Supply own enbleIRIn
+#undef USE_DEFAULT_ENABLE_IR_IN
+
+
+
+/*********************
  * Particle Boards
  *********************/
 #elif defined(PARTICLE)
@@ -937,6 +950,30 @@ void timerConfigForReceive();
 
 #define SEND_PWM_BY_TIMER_NOT_SUPPORTED
 
+
+#elif  defined(ARDUINO_ARCH_STM32)
+//void setTimerFrequency(unsigned int aFrequencyHz);
+void timerConfigForReceive();
+
+#include <HardwareTimer.h>
+extern HardwareTimer hTim;
+
+// The default pin used used for sending. 3, A0 - left pad
+#define IR_SEND_PIN   3 // dummy since sending not yet supported
+
+#define TIMER_RESET_INTR_PENDING
+#define TIMER_ENABLE_RECEIVE_INTR   hTim.resume();
+#define TIMER_DISABLE_RECEIVE_INTR  hTim.pause();
+
+#  ifdef ISR
+#undef ISR
+#  endif
+#define ISR(f) void IRTimer(void)
+
+#define SEND_PWM_BY_TIMER_NOT_SUPPORTED
+
+
+
 // defines for Particle special IntervalTimer
 #elif defined(IR_USE_TIMER_PARTICLE)
 
@@ -1053,6 +1090,13 @@ static void timerConfigForReceive() {
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()   (digitalWrite(BLINKLED, HIGH))
 #define BLINKLED_OFF()  (digitalWrite(BLINKLED, LOW))
+
+// STM32
+#elif defined(ARDUINO_ARCH_STM32) 
+#define BLINKLED        LED_BUILTIN
+#define BLINKLED_ON()   (digitalWrite(BLINKLED, HIGH))
+#define BLINKLED_OFF()  (digitalWrite(BLINKLED, LOW))
+
 
 // TinyCore boards
 #elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)

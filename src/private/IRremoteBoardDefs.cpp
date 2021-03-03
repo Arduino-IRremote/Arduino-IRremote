@@ -9,7 +9,7 @@
  *************************************************************************************
  * MIT License
  *
- * Copyright (c) 2021 Armin Joachimsmeyer
+ * Copyright (c) 2021 pmalasp, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -151,5 +151,32 @@ void TIMER2_IRQHandler(void) {
     timer_pal();
 }
 }
+
+#elif defined(ARDUINO_ARCH_STM32)
+
+// Functions specific to the STM32.
+
+#include <HardwareTimer.h>
+
+void IRTimer(); // defined in IRremote.cpp, masqueraded as ISR(TIMER_INTR_NAME)
+
+HardwareTimer hTim(TIM4); // global variable for timer handle
+
+//+=============================================================================
+// initialization
+//
+void timerConfigForReceive() {
+
+
+    hTim.setOverflow(50, MICROSEC_FORMAT); // 50 uS
+    hTim.attachInterrupt(IRTimer);
+
+    hTim.resume();
+
+    // Set pin modes
+    pinMode(irparams.recvpin, INPUT);
+}
+
+
 
 #endif // defined(ESP32)
