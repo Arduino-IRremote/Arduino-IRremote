@@ -7,7 +7,7 @@
  * For Arduino Uno, Nano etc., an IR LED must be connected to PWM pin 3 (IR_SEND_PIN).
  *
  *
- *  This file is part of Arduino-IRremote https://github.com/z3t0/Arduino-IRremote.
+ *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  ************************************************************************************
  * MIT License
@@ -173,11 +173,7 @@ delay(4000); // To be able to connect Serial monitor after reset or power up and
     /*
      * The IR library setup. That's all!
      */
-#if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
-    IrSender.begin(true); // Enable feedback LED at default feedback LED pin
-#else
     IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
-#endif
 
     delay(1000);
 

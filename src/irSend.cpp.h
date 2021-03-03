@@ -32,6 +32,8 @@
 //#define DEBUG
 #include "IRremoteInt.h"
 
+__attribute((error("Version > 3.0.1"))) void UsageError(const char *details);
+
 // The sender instance
 IRsend IrSender;
 
@@ -46,7 +48,6 @@ void IRsend::setSendPin(uint8_t aSendPin) {
  */
 void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     sendPin = aSendPin;
-
     irparams.blinkflag = aEnableLEDFeedback;
     irparams.blinkpin = aLEDFeedbackPin; // default is 0
     if (aEnableLEDFeedback) {
@@ -68,6 +69,10 @@ IRsend::IRsend() {
  * @ param aBlinkPin if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
+    // must exclude NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
+#if (defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)) && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) && !defined(ARDUINO_ARCH_SAMD) && !defined(ESP32) && !defined(MEGATINYCORE)
+    UsageError("Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if USE_SOFT_SEND_PWM or USE_NO_SEND_PWM is defined!");
+#endif
 
     irparams.blinkflag = aEnableLEDFeedback;
     irparams.blinkpin = aLEDFeedbackPin; // default is 0
@@ -341,7 +346,7 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
 // The mark output is modulated at the PWM frequency.
 //
 void IRsend::mark(unsigned int aMarkMicros) {
-#if defined(USE_SOFT_SEND_PWM)
+#if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
     unsigned long start = micros();
     unsigned long nextPeriodEnding = start;
     while (micros() - start < aMarkMicros) {
@@ -371,7 +376,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
 }
 
 void IRsend::ledOff() {
-#if defined(USE_SOFT_SEND_PWM)
+#if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
     SENDPIN_OFF(sendPin);
 #elif defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
@@ -416,7 +421,7 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
 // See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
 //
 void IRsend::enableIROut(uint8_t aFrequencyKHz) {
-#if defined(USE_SOFT_SEND_PWM)
+#if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
     periodTimeMicros = (1000U + aFrequencyKHz / 2) / aFrequencyKHz; // = 1000/kHz + 1/2 = round(1000.0/kHz)
     periodOnTimeMicros = ((periodTimeMicros * IR_SEND_DUTY_CYCLE) / 100U) - PULSE_CORRECTION_MICROS;
 #endif

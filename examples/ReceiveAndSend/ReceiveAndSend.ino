@@ -83,11 +83,7 @@ void setup() {
 
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver, enable feedback LED, take LED feedback pin from the internal boards definition
 
-#if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
-    IrSender.begin(true); // Enable feedback LED at default feedback LED pin
-#else
     IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
-#endif
 
     pinMode(SEND_BUTTON_PIN, INPUT_PULLUP);
     pinMode(STATUS_PIN, OUTPUT);

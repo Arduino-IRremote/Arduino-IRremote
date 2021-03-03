@@ -1,5 +1,5 @@
 /**
- * @file IRremoteBoardDefs.hp
+ * @file IRremoteBoardDefs.cpp.h
  *
  * @brief All board specific definitions, which can not be static, should be contained in this file.
  * It was previously contained in esp32.cpp etc.
@@ -38,7 +38,7 @@ IRAM_ATTR void IRTimer(); // defined in IRremote.cpp, masqueraded as ISR(TIMER_I
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     ledcSetup(LED_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
-    ledcAttachPin(IR_SEND_PIN, LED_CHANNEL); // bind pin to channel
+    ledcAttachPin(IrSender.sendPin, LED_CHANNEL); // bind pin to channel
 }
 
 void timerConfigForReceive() {
@@ -115,7 +115,7 @@ void TC3_Handler(void) {
     }
 }
 
-#elif defined(NRF5)  || defined(ARDUINO_ARCH_NRF52840)
+#elif defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)
 
 void timerConfigForReceive() {
 // Interrupt Service Routine - Fires every 50uS

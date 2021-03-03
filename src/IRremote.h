@@ -75,6 +75,10 @@
 #define DECODE_HASH         // special decoder for all protocols
 #endif
 
+#if !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)
+#warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."
+#endif
+
 /**
  * MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
  * to compensate for the signal forming of different IR receiver modules
@@ -96,13 +100,17 @@
  *                     SENDING
  ****************************************************/
 /**
+ * Define to disable carrier PWM generation in software and use (restricted) hardware PWM.
+ */
+//#define SEND_PWM_BY_TIMER
+/**
  * Define to use no carrier PWM, just simulate an active low receiver signal.
  */
 //#define USE_NO_SEND_PWM
 /**
  * Define to use carrier PWM generation in software, instead of hardware PWM.
  */
-#if !defined(SEND_PWM_BY_TIMER)
+#if !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
 #define USE_SOFT_SEND_PWM
 #endif
 /**
@@ -122,6 +130,7 @@
 #include "irReceive.cpp.h"
 #include "irSend.cpp.h"
 #include "IRremote.cpp.h"
+#include "private/IRremoteBoardDefs.cpp.h"
 
 #endif // IRremote_h
 

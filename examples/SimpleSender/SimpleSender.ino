@@ -29,11 +29,7 @@ void setup() {
     /*
      * The IR library setup. That's all!
      */
-#if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
-    IrSender.begin(true); // Enable feedback LED at default feedback LED pin
-#else
     IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
-#endif
 }
 
 /*

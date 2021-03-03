@@ -30,6 +30,12 @@ Protocols can be switched off and on by definining macros before the line `#incu
 # [Wiki](https://github.com/Arduino-IRremote/Arduino-IRremote/wiki)
 This is a quite old but maybe useful wiki for this library.
 
+# Converting your program to the 3.1 version
+This must be done also for all versions > 3.0.1 if `USE_NO_SEND_PWM` is defined.<br/>
+Starting with this version, the generation of PWM is done by software, thus saving the hardware timer and enabling abitrary output pins.<br/>
+Therefore you must change all `IrSender.begin(true);` by `IrSender.begin(IR_SEND_PIN, true);`.
+For cores like MegaCore where you can choose between enabling or disabling lto, lto must be enabled, otherwise you will get an assertion.
+
 # Converting your 2.x program to the 3.x version
 - Now there is  an **IRreceiver** and **IRsender** object like the well known Arduino **Serial** object.
 - Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;` in your program, and replace all occurrences of `IRrecv.` or `irrecv.` with `IrReceiver`.
@@ -78,13 +84,32 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 - To **increase strength of sent output signal** you can increase the current through the send diode, and/or use 2 diodes in series,
  since one IR diode requires only 1.5 volt.
 
+# Examples
+### SimpleReceiver + SimpleSender
+This examples are a good starting point.
+
+### IRReceiveDemo + IRSendDemo 
+More complete examples for the advanced user.
+
+### ReceiveAndSend
+Like the name states...
+
+### MinimalReceiver + SmallReceiver
+If code size matters look at these examples.
+
+### DispatcherDemo
+Framework for calling different functions for different IR codes.
+
+### IRrelay
+Control a relay (connected to an output pin) with your remote.
+
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / macros available.<br/>
 Modify it by commenting them out or in, or change the values if applicable. Or define the macro with the -D compiler option for global compile (the latter is not possible with the Arduino IDE, so consider using [Sloeber](https://eclipse.baeyens.it).
 
 | Name | File | Default value | Description |
 |-|-|-|-|
-| `SEND_PWM_BY_TIMER` | Before `#include <IRremote.h>` | disabled | Disable carrier PWM generation in software and use (restricted) hardware PWM. |
+| `SEND_PWM_BY_TIMER` | Before `#include <IRremote.h>` | disabled | Disable carrier PWM generation in software and use (restricted) hardware PWM ecxept for ESP32 where both modes are using the flexible `hw_timer_t`. |
 | `USE_OLD_DECODE` | IRremoteInt.h | disabled | Enables the old decoder in order to be version 2.x compatible, where all protocols were MSB first. |
 | `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.h>` | disabled | If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. Saves up to 900 bytes program space. |
 | `MARK_EXCESS_MICROS` | Before `#include <IRremote.h>` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
@@ -98,8 +123,6 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
 | `DO_NOT_USE_FEEDBACK_LED` | TinyIRReceiver.h | disabled | Enable it to disable the feedback LED function. |
-
-
 
 ### Modifying compile options with Arduino IDE
 First use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>

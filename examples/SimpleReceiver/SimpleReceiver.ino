@@ -27,6 +27,13 @@
 //#define DECODE_RC5
 //#define DECODE_RC6
 
+//#define DECODE_BOSEWAVE
+//#define DECODE_LEGO_PF
+//#define DECODE_MAGIQUEST
+//#define DECODE_WHYNTER
+
+//#define DECODE_HASH         // special decoder for all protocols
+
 #include <IRremote.h>
 
 /*

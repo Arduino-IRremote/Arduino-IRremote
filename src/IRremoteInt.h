@@ -336,10 +336,8 @@ public:
     void setSendPin(uint8_t aSendPinNumber);
     void begin(uint8_t aSendPin, bool aEnableLEDFeedback = true, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN);
 
-
     IRsend();
-    void begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN);
-
+    void begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN) __attribute__ ((deprecated ("Please use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>)")));
 
     size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
 
