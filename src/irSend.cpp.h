@@ -70,7 +70,10 @@ IRsend::IRsend() {
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     // must exclude NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
-#if (defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)) && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) && !defined(ARDUINO_ARCH_SAMD) && !defined(ESP32) && !defined(MEGATINYCORE)
+#if (defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)) \
+    && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) && !defined(ARDUINO_ARCH_SAMD) \
+    && !defined(ESP32) && !defined(MEGATINYCORE) \
+    && !(defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1)) && !(defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32))
     UsageError("Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if USE_SOFT_SEND_PWM or USE_NO_SEND_PWM is defined!");
 #endif
 
@@ -436,9 +439,6 @@ void IRsend::enableIROut(uint8_t aFrequencyKHz) {
     SENDPIN_OFF(sendPin); // When not sending, we want it low
 
 #if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
-#if defined(SEND_PWM_BY_TIMER_NOT_SUPPORTED)
-#error PWM generation by hardware not implemented for SAMD
-#endif
     TIMER_DISABLE_RECEIVE_INTR;
     timerConfigForSend(aFrequencyKHz);
 #endif

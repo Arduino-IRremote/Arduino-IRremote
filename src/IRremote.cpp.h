@@ -153,7 +153,12 @@ bool MATCH_SPACE(uint16_t measured_ticks, uint16_t desired_us) {
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 #include "digitalWriteFast.h"
 #endif
-ISR (TIMER_INTR_NAME) {
+#if defined(TIMER_INTR_NAME)
+ISR (TIMER_INTR_NAME) // for ISR definitions
+#else
+ISR () // for functions definitions which are called by separate (board specific) ISR
+#endif
+{
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
     digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif

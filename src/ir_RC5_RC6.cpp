@@ -567,7 +567,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
 /*
  * Not longer required, use sendRC5 instead
  */
-void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle) {
+void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
 // Set IR carrier frequency
     enableIROut(36);
 

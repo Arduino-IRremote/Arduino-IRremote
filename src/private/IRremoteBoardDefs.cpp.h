@@ -31,28 +31,39 @@
  ************************************************************************************
  */
 #include "IRremoteInt.h"
+/***************************************
+ * ESP32 boards
+ ***************************************/
 #if defined(ESP32)
 // Variables specific to the ESP32.
 hw_timer_t *timer;
-IRAM_ATTR void IRTimer(); // defined in IRremote.cpp, masqueraded as ISR(TIMER_INTR_NAME)
+IRAM_ATTR void IRTimerInterruptHandler(); // defined in IRremote.cpp, masqueraded as ISR(TIMER_INTR_NAME)
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     ledcSetup(LED_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
     ledcAttachPin(IrSender.sendPin, LED_CHANNEL); // bind pin to channel
 }
 
+/*
+ * Set timer for interrupts every MICROS_PER_TICK (50 us)
+ */
 void timerConfigForReceive() {
-    // Interrupt Service Routine - Fires every 50uS
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
-    // 3 timers, choose #1, 80 divider nanosecond precision, 1 to count up
-    timer = timerBegin(1, 80, 1);
-    timerAttachInterrupt(timer, &IRTimer, 1);
-    // every 50ns, autoreload = true
-    timerAlarmWrite(timer, 50, true);
+    // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
+    timer = timerBegin(1, 80, true);
+    timerAttachInterrupt(timer, &IRTimerInterruptHandler, 1);
+    // every 50 us, autoreload = true
+    timerAlarmWrite(timer, MICROS_PER_TICK, true);
 }
 
+/***************************************
+ * SAMD boards like DUE and Zero
+ ***************************************/
 #elif defined(ARDUINO_ARCH_SAMD)
+#  if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
+#error PWM generation by hardware not implemented for SAMD
+#  endif
 // use timer 3 hard coded here
 
 // functions based on setup from GitHub jdneo/timerInterrupt.ino
@@ -72,6 +83,9 @@ void setTimerFrequency(unsigned int aFrequencyHz) {
     }
 }
 
+/*
+ * Set timer for interrupts every MICROS_PER_TICK (50 us)
+ */
 void timerConfigForReceive() {
     REG_GCLK_CLKCTRL = (uint16_t) (GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | GCLK_CLKCTRL_ID_TCC2_TC3);
     while (GCLK->STATUS.bit.SYNCBUSY == 1) {
@@ -103,7 +117,7 @@ void timerConfigForReceive() {
     TC->INTENSET.bit.MC0 = 1;
 }
 // ATSAMD Timer IRQ functions
-void IRTimer(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
+void IRTimerInterruptHandler(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
 
 void TC3_Handler(void) {
     TcCount16 *TC = (TcCount16*) TC3;
@@ -111,45 +125,108 @@ void TC3_Handler(void) {
     // we toggle the LED.
     if (TC->INTFLAG.bit.MC0 == 1) {
         TC->INTFLAG.bit.MC0 = 1;
-        IRTimer();
+        IRTimerInterruptHandler();
     }
 }
 
+/***************************************
+ * NRF5 boards like the BBC:Micro
+ ***************************************/
 #elif defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)
+#  if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
+#error PWM generation by hardware not implemented for NRF5
+#  endif
 
+/*
+ * Set timer for interrupts every MICROS_PER_TICK (50 us)
+ */
 void timerConfigForReceive() {
-// Interrupt Service Routine - Fires every 50uS
     NRF_TIMER2->MODE = TIMER_MODE_MODE_Timer;              // Set the timer in Timer Mode
     NRF_TIMER2->TASKS_CLEAR = 1;                           // clear the task first to be usable for later
     NRF_TIMER2->PRESCALER = 4;                             // f TIMER = 16 MHz / (2 ^ PRESCALER ) : 4 -> 1 MHz, 1 uS
     NRF_TIMER2->BITMODE = TIMER_BITMODE_BITMODE_16Bit;     //Set counter to 16 bit resolution
-    NRF_TIMER2->CC[0] = 50;                                //Set value for TIMER2 compare register 0, to trigger every 50 uS
+    NRF_TIMER2->CC[0] = MICROS_PER_TICK;                                //Set value for TIMER2 compare register 0, to trigger every 50 uS
     NRF_TIMER2->CC[1] = 0;                                 //Set value for TIMER2 compare register 1
 
     // Enable interrupt on Timer 2, for CC[0] compare match events
     NRF_TIMER2->INTENSET = (TIMER_INTENSET_COMPARE0_Enabled << TIMER_INTENSET_COMPARE0_Pos);
     NRF_TIMER2->TASKS_START = 1;               // Start TIMER2
 
-    // timerAttachInterrupt(timer, &IRTimer, 1);
+    // timerAttachInterrupt(timer, &IRTimerInterruptHandler, 1);
 }
 
-void IRTimer(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
-
-void timer_pal(void) {
-    if ((NRF_TIMER2->EVENTS_COMPARE[0] != 0) && ((NRF_TIMER2->INTENSET & TIMER_INTENSET_COMPARE0_Msk) != 0)) {
-        NRF_TIMER2->EVENTS_COMPARE[0] = 0;          //Clear compare register 0 event
-        IRTimer();                                  // call the IR-receive function
-        NRF_TIMER2->CC[0] += 50;
-    }
-}
+void IRTimerInterruptHandler(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
 
 /** TIMTER2 peripheral interrupt handler. This interrupt handler is called whenever there it a TIMER2 interrupt
  * Don't mess with this line. really.
  */
 extern "C" {
 void TIMER2_IRQHandler(void) {
-    timer_pal();
+    // Interrupt Service Routine - Fires every 50uS
+    if ((NRF_TIMER2->EVENTS_COMPARE[0] != 0) && ((NRF_TIMER2->INTENSET & TIMER_INTENSET_COMPARE0_Msk) != 0)) {
+        NRF_TIMER2->EVENTS_COMPARE[0] = 0;          //Clear compare register 0 event
+        IRTimerInterruptHandler();                                  // call the IR-receive function
+        NRF_TIMER2->CC[0] += 50;
+    }
 }
+}
+
+/**********************************************************************************************************************
+ * BluePill in 2 flavors see https://samuelpinches.com.au/3d-printer/cutting-through-some-confusion-on-stm32-and-arduino/
+ *
+ * Recommended original Arduino_STM32 by Roger Clark.
+ * http://dan.drown.org/stm32duino/package_STM32duino_index.json
+ * STM32F1 architecture for "Generic STM32F103C series" from "STM32F1 Boards (Arduino_STM32)" of Arduino Board manager
+ **********************************************************************************************************************/
+#elif defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1)
+#include <HardwareTimer.h> // 4 timers and 4. timer (4.channel) is used for tone()
+#  if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
+#error PWM generation by hardware not implemented for STM32
+#  endif
+/*
+ * Use timer 3 as IRMP timer.
+ * Timer 3 blocks PA6, PA7, PB0, PB1, so if you need one them as tone() or Servo output, you must choose another timer.
+ */
+HardwareTimer sSTM32Timer(3);
+void IRTimerInterruptHandler(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
+/*
+ * Set timer for interrupts every MICROS_PER_TICK (50 us)
+ */
+void timerConfigForReceive() {
+    sSTM32Timer.setMode(TIMER_CH1, TIMER_OUTPUT_COMPARE);
+    sSTM32Timer.setPrescaleFactor(1);
+    sSTM32Timer.setOverflow((F_CPU / 1000000) * MICROS_PER_TICK);
+    sSTM32Timer.attachInterrupt(TIMER_CH1, IRTimerInterruptHandler);
+    sSTM32Timer.refresh();
+}
+
+/**********************************************************************************************************************
+ * STM32duino by ST Microsystems.
+ * https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json
+ * stm32 architecture for "Generic STM32F1 series" from "STM32 Boards (selected from submenu)" of Arduino Board manager
+ **********************************************************************************************************************/
+#elif defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32)
+#include <HardwareTimer.h> // 4 timers and 3. timer is used for tone(), 2. for Servo
+#  if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
+#error PWM generation by hardware not implemented for STM32
+#  endif
+/*
+ * Use timer 4 as IRMP timer.
+ * Timer 4 blocks PB6, PB7, PB8, PB9, so if you need one them as Servo output, you must choose another timer.
+ */
+#  if defined(TIM4)
+HardwareTimer sSTM32Timer(TIM4);
+#  else
+HardwareTimer sSTM32Timer(TIM2);
+#  endif
+void IRTimerInterruptHandler(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
+/*
+ * Set timer for interrupts every MICROS_PER_TICK (50 us)
+ */
+void timerConfigForReceive() {
+    sSTM32Timer.setOverflow(MICROS_PER_TICK, MICROSEC_FORMAT); // 50 uS
+    sSTM32Timer.attachInterrupt(IRTimerInterruptHandler);
+    sSTM32Timer.resume();
 }
 
 #endif // defined(ESP32)

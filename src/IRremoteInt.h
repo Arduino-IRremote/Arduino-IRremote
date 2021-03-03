@@ -420,7 +420,7 @@ public:
             uint32_t aData)
                     __attribute__ ((deprecated ("This old function sends MSB first! Please use sendPanasonic(aAddress, aCommand, aNumberOfRepeats).")));
     void sendRC5(uint32_t data, uint8_t nbits);
-    void sendRC5ext(uint8_t addr, uint8_t cmd, boolean toggle);
+    void sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle);
     void sendRC6(uint32_t data, uint8_t nbits);
     void sendRC6(uint64_t data, uint8_t nbits);
     void sendSharpRaw(unsigned long data, int nbits);

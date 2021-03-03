@@ -6,34 +6,14 @@
  * pre-proccesor symbols.
  * It was previously contained within IRremoteInt.h.
  */
-// IRremote
-// Version 2.0.1 June, 2015
-// Copyright 2009 Ken Shirriff
-// For details, see http://arcfn.com/2009/08/multi-protocol-infrared-remote-library.html
-// Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
-//
-// Interrupt code based on NECIRrcv by Joe Knapp
-// http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
-// Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
-//
-// JVC and Panasonic protocol added by Kristian Lauszus (Thanks to zenwheel and other people at the original blog post)
-// Whynter A/C ARC-110WD added by Francesco Meschia
-// Sparkfun Pro Micro support by Alastair McCormack
-//******************************************************************************
+
 #ifndef IRremoteBoardDefs_h
 #define IRremoteBoardDefs_h
 
 /*
  * Define some defaults, portable but possibly slower than necessary,
  * that some boards may like to override
- * (This is to avoid negative logic, ! DONT_... is just awkward.)
  */
-
-/**
- * Defined if the standard enableIRIn function should be used.
- * Undefined for boards supplying their own.
- */
-#define USE_DEFAULT_ENABLE_IR_IN
 
 /*
  * digitalWrite() is supposed to be slow. If this is an issue, define faster,
@@ -152,7 +132,7 @@
 /*********************
  * SPARKFUN Boards
  *********************/
-// Sparkfun Pro Micro
+// Sparkfun Pro Micro support by Alastair McCormack
 #elif defined(ARDUINO_AVR_PROMICRO)
 #  if !defined(IR_USE_TIMER1) && !defined(IR_USE_TIMER3) && !defined(IR_USE_TIMER4_HS)
 //#define IR_USE_TIMER1     // send pin = pin 9
@@ -161,7 +141,7 @@
 #  endif
 
 /*********************
- * TEENSY Boards
+ * TEENSY Boards by Paul Stoffregen <paul@pjrc.com>
  *********************/
 // Teensy 1.0
 #elif defined(__AVR_AT90USB162__)
@@ -253,21 +233,8 @@
 /*********************
  * OTHER CPU's
  *********************/
-#elif defined(ESP32)
-#  if !defined(IR_USE_TIMER_ESP32)
-#define IR_USE_TIMER_ESP32
-#  endif
-
 #elif defined(ARDUINO_ARCH_SAMD)
 #define TIMER_PRESCALER_DIV 64
-
-#elif defined(NRF5) // nRF5 BBC MicroBit
-// It uses Timer2 so you cannot use the Adafruit_Microbit display driver
-// PWM generation by hardware not implemented
-#define SEND_PWM_BY_TIMER_NOT_SUPPORTED
-
-// Supply own enbleIRIn
-#undef USE_DEFAULT_ENABLE_IR_IN
 
 /*********************
  * Particle Boards
@@ -276,7 +243,8 @@
   #define IR_USE_TIMER_PARTICLE
   #define SYSCLOCK 16000000
 
-#else
+#elif !defined(ESP32) && !defined(NRF5) && !defined(ARDUINO_ARCH_NRF52840) \
+    && !defined(__STM32F1__) && !defined(ARDUINO_ARCH_STM32F1) && !defined(STM32F1xx) && !defined(ARDUINO_ARCH_STM32)
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 // ATmega48, ATmega88, ATmega168, ATmega328
 #define IR_USE_TIMER1   // send pin = pin 9
@@ -835,7 +803,13 @@ static void timerConfigForReceive() {
 
 #define IR_SEND_PIN        4
 
+/***************************************
+ * Nano Every, Uno WiFi Rev2
+ ***************************************/
 #elif defined(IR_USE_TIMER_4809_1)
+#  if !defined(IR_SEND_PIN)
+#define IR_SEND_PIN        6  /* Nano Every, Uno WiFi Rev2 */
+#  endif
 // ATmega4809 TCB0
 #define TIMER_RESET_INTR_PENDING    TCB0.INTFLAGS = TCB_CAPT_bm
 #define TIMER_ENABLE_SEND_PWM       TCB0.CNT = 0; (TCB0.CTRLB |= TCB_CCMPEN_bm)
@@ -860,118 +834,109 @@ static void timerConfigForReceive() {
     TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm);
 }
 
-#define IR_SEND_PIN        6  /* Nano Every, Uno WiFi Rev2 */
-//---------------------------------------------------------
-// ESP32 (ESP8266 should likely be added here too)
-//
-
-// ESP32 has it own timer API and does not use these macros, but to avoid ifdef'ing
-// them out in the common code, they are defined to no-op. This allows the code to compile
-// (which it wouldn't otherwise) but irsend will not work until ESP32 specific code is written
-//
-// The timer code is in the esp32.cpp file
-//
-// An IRremote version for ESP8266 and ESP32 is available at https://github.com/crankyoldgit/IRremoteESP8266
-#elif defined(IR_USE_TIMER_ESP32)
-void setTimerFrequency(unsigned int aFrequencyHz);
-void timerConfigForReceive();
-void timerConfigForSend(uint8_t aFrequencyKHz);
-#if !defined(IR_SEND_PIN)
+/***************************************
+ * ESP32 (ESP8266 should likely be added here too)
+ * An IRremote version for ESP8266 and ESP32 is available at https://github.com/crankyoldgit/IRremoteESP8266
+ ***************************************/
+#elif defined(ESP32)
+#  if !defined(IR_SEND_PIN)
 #define IR_SEND_PIN 4 // can use any pin, no timer restrictions
-#endif
+#  endif
 
 #if ! defined(LED_CHANNEL)
 #define LED_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
 #endif
-
-extern hw_timer_t *timer;
-extern IRAM_ATTR void IRTimer(); // defined in IRremote.cpp, masqueraded as ISR(TIMER_INTR_NAME)
 
 #define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(timer)
 #define TIMER_DISABLE_RECEIVE_INTR  timerEnd(timer); timerDetachInterrupt(timer)
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_SEND_PWM    ledcWrite(LED_CHANNEL, IR_SEND_DUTY_CYCLE) // we must use channel here not pin number
 #define TIMER_DISABLE_SEND_PWM   ledcWrite(LED_CHANNEL, 0)
-
-#ifdef ISR
+// Redefinition of ISR macro which creates a plain function now
+#  ifdef ISR
 #undef ISR
-#endif
-#define ISR(f) IRAM_ATTR void IRTimer()
+#  endif
+#define ISR() IRAM_ATTR void IRTimerInterruptHandler()
 
 #elif defined(ARDUINO_ARCH_SAMD)
-void setTimerFrequency(unsigned int aFrequencyHz);
-void timerConfigForReceive();
-
 #if !defined(IR_SEND_PIN)
 #define IR_SEND_PIN 9
 #endif
-
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_SEND_PWM     // Not presently used
-#define TIMER_DISABLE_SEND_PWM
 #define TIMER_ENABLE_RECEIVE_INTR   NVIC_EnableIRQ(TC3_IRQn)
 #define TIMER_DISABLE_RECEIVE_INTR  NVIC_DisableIRQ(TC3_IRQn) // or TC3->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
-#define TIMER_INTR_NAME             TC3_Handler // Not presently used
-
-#ifdef ISR
+// Redefinition of ISR macro which creates a plain function now
+#  ifdef ISR
 #undef ISR
-#endif
-
-#define ISR(f) void IRTimer(void)
-
-#define SEND_PWM_BY_TIMER_NOT_SUPPORTED
+#  endif
+#define ISR(f) void IRTimerInterruptHandler(void)
 
 #elif defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)
-void setTimerFrequency(unsigned int aFrequencyHz);
-void timerConfigForReceive();
 // The default pin used used for sending. 3, A0 - left pad
 #define IR_SEND_PIN   3 // dummy since sending not yet supported
-
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_RECEIVE_INTR   NVIC_EnableIRQ(TIMER2_IRQn);
 #define TIMER_DISABLE_RECEIVE_INTR  NVIC_DisableIRQ(TIMER2_IRQn);
 #  ifdef ISR
 #undef ISR
 #  endif
-#define ISR(f) void IRTimer(void)
+#define ISR(f) void IRTimerInterruptHandler(void)
 
-#define SEND_PWM_BY_TIMER_NOT_SUPPORTED
-
-// defines for Particle special IntervalTimer
-#elif defined(IR_USE_TIMER_PARTICLE)
-
-#  ifndef __INTERVALTIMER_H__
-#include "SparkIntervalTimer.h" // SparkIntervalTimer.h is required if PARTICLE is defined.
+#elif defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1) // Recommended original Arduino_STM32 by Roger Clark.
+#  if ! defined(strncpy_P)
+// this define is not included in the pgmspace.h file :-(
+#define strncpy_P(dest, src, size) strncpy((dest), (src), (size))
 #  endif
-
-#  ifndef IR_SEND_PIN
-#define IR_SEND_PIN         A5 // Particle supports multiple pins
+#  if !defined(IR_SEND_PIN)
+#define IR_SEND_PIN 3
 #  endif
-
-#  ifndef IR_OUT_KHZ
-#define IR_OUT_KHZ          38 // default set to 38 KHz
-#  endif
-
-extern IntervalTimer timer;
-extern int ir_send_pin;
-extern int ir_out_kHz;
-
-
-void IRTimer();
-
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_SEND_PWM       analogWrite(ir_send_pin, 128, ir_out_kHz*1000)
-#define TIMER_DISABLE_SEND_PWM      analogWrite(ir_send_pin, 0, ir_out_kHz*1000)
-#define TIMER_ENABLE_RECEIVE_INTR   timer.begin(IRTimer, 50, uSec);
-#define TIMER_DISABLE_RECEIVE_INTR  timer.end()
-
+#define TIMER_ENABLE_RECEIVE_INTR   sSTM32Timer.resume()
+#define TIMER_DISABLE_RECEIVE_INTR  sSTM32Timer.pause()
+// Redefinition of ISR macro which creates a plain function now
 #  ifdef ISR
 #undef ISR
 #  endif
-#define ISR(f)  IntervalTimer timer; \
-                ir_out_kHz = IR_OUT_KHZ; \
-                ir_send_pin = IR_SEND_PIN; \
-                void IRTimer(void)
+#define ISR() void IRTimerInterruptHandler(void)
+
+#elif defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32) // STM32duino by ST Microsystems.
+#if !defined(IR_SEND_PIN)
+#define IR_SEND_PIN 3
+#endif
+#define TIMER_RESET_INTR_PENDING
+#define TIMER_ENABLE_RECEIVE_INTR   sSTM32Timer.resume()
+#define TIMER_DISABLE_RECEIVE_INTR  sSTM32Timer.pause()
+// Redefinition of ISR macro which creates a plain function now
+#  ifdef ISR
+#undef ISR
+#  endif
+#define ISR() void IRTimerInterruptHandler(void)
+
+// defines for Particle special IntervalTimer
+#elif defined(IR_USE_TIMER_PARTICLE)
+#  ifndef __INTERVALTIMER_H__
+#include "SparkIntervalTimer.h" // SparkIntervalTimer.h is required if PARTICLE is defined.
+#  endif
+#  ifndef IR_SEND_PIN
+#define IR_SEND_PIN         A5 // Particle supports multiple pins
+#  endif
+#  ifndef IR_OUT_KHZ
+#define IR_OUT_KHZ          38 // default set to 38 KHz
+#  endif
+extern IntervalTimer timer;
+extern int ir_out_kHz;
+//void IRTimerInterruptHandler();
+
+#define TIMER_RESET_INTR_PENDING
+#define TIMER_ENABLE_SEND_PWM       analogWrite(IrSender.sendPin, 128, ir_out_kHz*1000)
+#define TIMER_DISABLE_SEND_PWM      analogWrite(IrSender.sendPin, 0, ir_out_kHz*1000)
+#define TIMER_ENABLE_RECEIVE_INTR   timer.begin(IRTimerInterruptHandler, MICROS_PER_TICK, uSec);
+#define TIMER_DISABLE_RECEIVE_INTR  timer.end()
+// Redefinition of ISR macro which creates a plain function now
+#  ifdef ISR
+#undef ISR
+#  endif
+#define ISR() void IRTimerInterruptHandler(void)
 
 static void timerConfigForSend(uint8_t aFrequencyKHz) {
   ir_out_kHz = aFrequencyKHz;
@@ -1009,11 +974,6 @@ static void timerConfigForReceive() {
  */
 #define BLINKLED_OFF()  digitalWrite(BLINKLED, LOW)
 
-#elif defined(CORE_LED0_PIN)
-#define BLINKLED        CORE_LED0_PIN
-#define BLINKLED_ON()   (digitalWrite(CORE_LED0_PIN, HIGH))
-#define BLINKLED_OFF()  (digitalWrite(CORE_LED0_PIN, LOW))
-
 // Sparkfun Pro Micro is __AVR_ATmega32U4__ but has different external circuit
 #elif defined(ARDUINO_AVR_PROMICRO)
 // We have no built in LED -> reuse RX LED
@@ -1048,12 +1008,6 @@ static void timerConfigForReceive() {
 #define BLINKLED_ON()   (PORTD |= B00000001)
 #define BLINKLED_OFF()  (PORTD &= B11111110)
 
-// Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
-#elif defined(__AVR_ATmega4809__) || defined(NRF5) || defined(ARDUINO_ARCH_NRF52840) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny85__)
-#define BLINKLED        LED_BUILTIN
-#define BLINKLED_ON()   (digitalWrite(BLINKLED, HIGH))
-#define BLINKLED_OFF()  (digitalWrite(BLINKLED, LOW))
-
 // TinyCore boards
 #elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
 // No LED available on the board, take LED_BUILTIN which is also the DAC output
@@ -1061,17 +1015,8 @@ static void timerConfigForReceive() {
 #define BLINKLED_ON()   (PORTC.OUTSET = _BV(6))
 #define BLINKLED_OFF()  (PORTC.OUTCLR = _BV(6))
 
-// Arduino Zero
-#elif defined(ARDUINO_ARCH_SAMD)
-#define BLINKLED        LED_BUILTIN
-#define BLINKLED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
-#define BLINKLED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
-
 #elif defined(ESP32)
 // No system LED on ESP32, disable blinking by NOT defining BLINKLED
-
-// Supply own enableIRIn() and enableIROut()
-#undef USE_DEFAULT_ENABLE_IR_IN
 
 #elif defined(PARTICLE)
 
@@ -1079,8 +1024,26 @@ static void timerConfigForReceive() {
 #define BLINKLED_ON()  digitalWrite(BLINKLED,1)
 #define BLINKLED_OFF() digitalWrite(BLINKLED,0)
 
-#else
+/*
+ * These are the boards for which the default case was verified and the warning below is suppressed
+ */
+// Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
+// Arduino Zero
+#elif !(defined(__AVR_ATmega4809__) || defined(NRF5) || defined(ARDUINO_ARCH_NRF52840) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny85__) \
+    || defined(ARDUINO_ARCH_SAMD) \
+    || defined(CORE_LED0_PIN) \
+    || defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1) \
+    || defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32) \
+    )
+/*
+ * print a warning
+ */
 #warning No blinking definition found. Check IRremoteBoardDefs.h.
+
+#else
+/*
+ * Default case
+ */
 #  ifdef LED_BUILTIN
 #define BLINKLED        LED_BUILTIN
 #define BLINKLED_ON()   digitalWrite(BLINKLED, HIGH)

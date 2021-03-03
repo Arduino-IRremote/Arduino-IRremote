@@ -26,15 +26,13 @@ Protocols can be switched off and on by definining macros before the line `#incu
 #incude <IRremote.h>
 ```
 
-
 # [Wiki](https://github.com/Arduino-IRremote/Arduino-IRremote/wiki)
 This is a quite old but maybe useful wiki for this library.
 
 # Converting your program to the 3.1 version
 This must be done also for all versions > 3.0.1 if `USE_NO_SEND_PWM` is defined.<br/>
-Starting with this version, the generation of PWM is done by software, thus saving the hardware timer and enabling abitrary output pins.<br/>
+Starting with this version, **the generation of PWM is done by software**, thus saving the hardware timer and **enabling abitrary output pins**.<br/>
 Therefore you must change all `IrSender.begin(true);` by `IrSender.begin(IR_SEND_PIN, true);`.
-For cores like MegaCore where you can choose between enabling or disabling lto, lto must be enabled, otherwise you will get an assertion.
 
 # Converting your 2.x program to the 3.x version
 - Now there is  an **IRreceiver** and **IRsender** object like the well known Arduino **Serial** object.

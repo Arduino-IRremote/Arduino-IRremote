@@ -1,6 +1,8 @@
 ## 3.1.0
 - Replaced #define DECODE_NEC 1/0 by defining/not defining.
 - USE_SOFT_SEND_PWM is active by default.
+- Added stm32 (by ST) support. Thanks to Paolo Malaspina.
+- Added STM32F1 by (Roger Clark) support.
 
 ## 3.0.2
 - Bug fix for USE_OLD_DECODE.

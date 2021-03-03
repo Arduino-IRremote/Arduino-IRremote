@@ -59,6 +59,9 @@ jobs:
           - arduino:samd:arduino_zero_native
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal # ATmega128
           - esp32:esp32:featheresp32:FlashFreq=80
+          - STM32:stm32:GenF1:pnum=BLUEPILL_F103C8
+          - STM32:stm32:GenL0:pnum=THUNDERPACK_L072
+          - stm32duino:STM32F1:genericSTM32F103C
           - SparkFun:avr:promicro
           - sandeepmistry:nRF5:BBCmicrobit
 
@@ -125,6 +128,18 @@ jobs:
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://dl.espressif.com/dl/package_esp32_index.json
             sketches-exclude: IR2Keyboard,MinimalReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
+
+          - arduino-boards-fqbn: STM32:stm32:GenF1:pnum=BLUEPILL_F103C8 # ST version
+            platform-url: https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json
+            sketches-exclude: IR2Keyboard,MinimalReceiver
+
+          - arduino-boards-fqbn: STM32:stm32:GenL0:pnum=THUNDERPACK_L072 # ST version
+            platform-url: https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json
+            sketches-exclude: IR2Keyboard,MinimalReceiver,IRDispatcherDemo
+
+          - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C # Roger Clark version
+            platform-url: http://dan.drown.org/stm32duino/package_STM32duino_index.json
+            sketches-exclude: IR2Keyboard,MinimalReceiver
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json

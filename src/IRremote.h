@@ -3,7 +3,7 @@
  * @brief Public API to the library.
  *
  *
- * !!! All the macro values defined here can be overwritten with values     !!!
+ * !!! All the macro values defined here can be overwritten with values,    !!!
  * !!! the user defines in its source code BEFORE the #include <IRremote.h> !!!
  *
  * This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -32,7 +32,13 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  ************************************************************************************
+ *
+ * For Ken Shiriffs original blog entry, see http://www.righto.com/2009/08/multi-protocol-infrared-remote-library.html
+ * Initially influenced by:
+ * http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
+ * and http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
  */
+
 #ifndef IRremote_h
 #define IRremote_h
 
@@ -123,6 +129,7 @@
 
 //------------------------------------------------------------------------------
 #include "IRremoteInt.h"
+#include "private/IRremoteBoardDefs.cpp.h"
 
 /*
  * Include the sources here to enable compilation with macro values set by user program.
@@ -130,7 +137,6 @@
 #include "irReceive.cpp.h"
 #include "irSend.cpp.h"
 #include "IRremote.cpp.h"
-#include "private/IRremoteBoardDefs.cpp.h"
 
 #endif // IRremote_h
 
