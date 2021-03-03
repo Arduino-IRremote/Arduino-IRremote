@@ -52,7 +52,7 @@ __attribute((error("Version > 3.0.1"))) void UsageError(const char *details);
  */
 void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
 #if !defined(__AVR_ATtiny85__) && !defined(ARDUINO_ARCH_SAMD)
-    if(aSendPin==true){
+    if(aSendPin==true || aSendPin==false){
         UsageError("Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if USE_SOFT_SEND_PWM or USE_NO_SEND_PWM is defined!");
     }
 #endif
