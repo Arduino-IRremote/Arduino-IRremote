@@ -18,7 +18,7 @@ Click on the LibraryManager badge above to see the [instructions](https://www.ar
 
 # Supported IR Protocols
 Denon, JVC, LG,  NEC / Apple, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sharp, Sony, (Pronto), BoseWave, Lego, Whynter, MagiQuest.<br/>
-Protocols can be switched off and on by definining macros before the line `#incude <IRremote.h>` like [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L18):
+Protocols can be switched off and on by definining macros before the line `#incude <IRremote.h>` like [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L14):
 
 ```
 #define DECODE_NEC
@@ -120,7 +120,7 @@ If you are using Sloeber as your IDE, you can easily define global symbols with 
 - ATmega64, 128
 - ATmega4809 (Nano every)
 - ATtiny84, 85
-- SAMD21 (receive only)
+- SAMD21 (DUE, Zero)
 - ESP32
 - [ESP8266 is supported in a fork](https://github.com/crankyoldgit/IRremoteESP8266) based on an old codebase. It works well given that perfectly timed sub millisecond interrupts are different on that chip.
 - Sparkfun Pro Micro
@@ -176,6 +176,12 @@ To integrate your protocol, you need to extend the two functions `decode()` and 
 add macros and function declarations for sending and receiving and extend the `enum decode_type_t` in *IRremote.h*.<br/>
 And at least it would be wonderful if you can provide an example how to use the new protocol.
 A detailed description can be found in the [ir_Template.cpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_Template.cpp#L18) file.
+
+# NEC encoding
+8 bit address NEC code
+![8 bit address NEC code](https://user-images.githubusercontent.com/6750655/108884951-78e42b80-7607-11eb-9513-b07173a169c0.png)
+16 bit address NEC code
+![16 bit address NEC code](https://user-images.githubusercontent.com/6750655/108885081-a6c97000-7607-11eb-8d35-274a7065b6c4.png)
 
 # Revision History
 Please see [changelog.md](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/changelog.md).
