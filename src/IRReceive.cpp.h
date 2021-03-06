@@ -1,5 +1,5 @@
 /*
- * irReceive.cpp.h
+ * IRReceive.cpp.h
  * This file is exclusively included by IRremote.h to enable easy configuration of library switches
  *
  *  Contains all IRrecv class functions

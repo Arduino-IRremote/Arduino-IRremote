@@ -124,7 +124,7 @@
 #define TONE_PIN        4
 #define IR_TIMING_TEST_PIN 6
 
-#elif defined(ARDUINO_ARCH_SAMD)
+#elif defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM)
 #define IR_RECEIVE_PIN  2 // To be compatible with interrupt example, pin 2 is chosen here.
 #define IR_SEND_PIN     3
 #define TONE_PIN        4

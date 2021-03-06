@@ -1,5 +1,5 @@
 /*
- * irSend.cpp.h
+ * IRSend.cpp.h
  *
  *  Contains common functions for sending
  *

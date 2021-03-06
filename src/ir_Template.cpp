@@ -37,7 +37,7 @@
  #define DECODE_SHUZU  1
  #define SEND_SHUZU    1
 
- 2. Open irProtocol.h and make the following change:
+ 2. Open IRProtocol.h and make the following change:
  In the section "An enum consisting of all supported formats", add:
  SHUZU,
  to the end of the list (notice there is a comma after the protocol name)
@@ -57,7 +57,7 @@
 
  4. Save your changes and close the files
 
- 5. Now open irReceive.cpp and make the following change:
+ 5. Now open IRReceive.cpp.h and make the following change:
 
  A. In the function IRrecv::decode(), add:
  #ifdef DECODE_SHUZU

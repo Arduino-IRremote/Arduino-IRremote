@@ -58,7 +58,7 @@
  */
 //#define USE_OLD_DECODE // enables the old NEC and other old decoders.
 //------------------------------------------------------------------------------
-#include "irProtocol.h"
+#include "IRProtocol.h"
 
 // All board specific stuff have been moved to its own file, included here.
 #include "private/IRremoteBoardDefs.h"

@@ -124,18 +124,18 @@
  * Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600
  */
 #ifndef PULSE_CORRECTION_NANOS
-#define PULSE_CORRECTION_NANOS (48000000000L / F_CPU) // 3000 @16MHz, 666 @72MHz
+#define PULSE_CORRECTION_NANOS (48000000000L / SYSCLOCK) // 3000 @16MHz, 666 @72MHz
 #endif
 
 //------------------------------------------------------------------------------
 #include "IRremoteInt.h"
-#include "private/IRremoteBoardDefs.cpp.h"
-
+#include "private/IRTimer.cpp.h"
+#include "IRFeedbackLED.cpp.h"
 /*
  * Include the sources here to enable compilation with macro values set by user program.
  */
-#include "irReceive.cpp.h"
-#include "irSend.cpp.h"
+#include "IRReceive.cpp.h"
+#include "IRSend.cpp.h"
 #include "IRremote.cpp.h"
 
 #endif // IRremote_h

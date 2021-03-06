@@ -2,6 +2,7 @@
 - Replaced #define DECODE_NEC 1/0 by defining/not defining.
 - USE_SOFT_SEND_PWM is active by default.
 - Refactored Board specific code.
+- Separated timer related code.
 - Added STM32F1 by (by Roger Clark) support.
 - Added stm32 (by ST) support. Thanks to Paolo Malaspina.
 - Refactored LED Feedback functions.
