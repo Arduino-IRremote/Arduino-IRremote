@@ -32,6 +32,8 @@
 #ifndef IRremoteInt_h
 #define IRremoteInt_h
 
+#include <Arduino.h>
+
 #if ! defined(RAW_BUFFER_LENGTH)
 #define RAW_BUFFER_LENGTH  100  ///< Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
 #endif
@@ -56,8 +58,6 @@
  */
 //#define USE_OLD_DECODE // enables the old NEC and other old decoders.
 //------------------------------------------------------------------------------
-#include <Arduino.h>
-
 #include "irProtocol.h"
 
 // All board specific stuff have been moved to its own file, included here.
@@ -87,21 +87,21 @@
 
 /**
  * This struct contains the data and control used for static functions and the ISR (interrupt service routine)
- * Only rcvstate needs to be volatile. All the other fields are not written by ISR during decoding in loop.
+ * Only StateForISR needs to be volatile. All the other fields are not written by ISR after data available and before start/resume.
  */
 struct irparams_struct {
     // The fields are ordered to reduce memory over caused by struct-padding
-    volatile uint8_t rcvstate;      ///< State Machine state
-    uint8_t recvpin;                ///< Pin connected to IR data from detector
-    uint8_t blinkpin;               ///< 0 means not valid pin
-    bool blinkflag;                 ///< true -> enable blinking of pin on IR processing
+    volatile uint8_t StateForISR;   ///< State Machine state
+    uint8_t IRReceivePin;           ///< Pin connected to IR data from detector
+    uint8_t FeedbackLEDPin;         ///< if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+    bool LedFeedbackEnabled;        ///< true -> enable blinking of pin on IR processing
 #if RAW_BUFFER_LENGTH <= 255        // saves around 75 bytes program space and speeds up ISR
     uint8_t rawlen;                 ///< counter of entries in rawbuf
 #else
     unsigned int rawlen;            ///< counter of entries in rawbuf
 #endif
-    uint16_t timer;              ///< State timer, counts 50uS ticks. The value is copied into the rawbuf array on every transition.
-    uint8_t overflow;               ///< Raw buffer overflow occurred
+    uint16_t TickCounterForISR;     ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
+    bool OverflowFlag;              ///< Raw buffer OverflowFlag occurred
     uint16_t rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
 };
 
@@ -116,7 +116,7 @@ extern struct irparams_struct irparams;
 #define IRDATA_FLAGS_PARITY_FAILED      0x04 // the current (autorepeat) frame violated parity check
 #define IRDATA_TOGGLE_BIT_MASK          0x08
 #define IRDATA_FLAGS_EXTRA_INFO         0x10 // there is unexpected extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
-#define IRDATA_FLAGS_WAS_OVERFLOW       0x40 // irparams.rawlen is 0 in this case to avoid endless overflow
+#define IRDATA_FLAGS_WAS_OVERFLOW       0x40 // irparams.rawlen is 0 in this case to avoid endless OverflowFlag
 #define IRDATA_FLAGS_IS_LSB_FIRST       0x00
 #define IRDATA_FLAGS_IS_MSB_FIRST       0x80 // Just for info. Value is simply determined by the protocol
 
@@ -125,10 +125,10 @@ struct IRData {
     uint16_t address;           ///< Decoded address
     uint16_t command;           ///< Decoded command
     uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID
-    uint8_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible (currently only Sony).
+    uint8_t numberOfBits;       ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible (currently only Sony).
     uint8_t flags;              ///< See definitions above
-    uint32_t decodedRawData;    ///< up to 32 bit decoded raw data, formerly used for send functions.
-    irparams_struct *rawDataPtr; /// pointer of the raw timing data to be decoded
+    uint32_t decodedRawData;    ///< Up to 32 bit decoded raw data, used for sendRaw functions.
+    irparams_struct *rawDataPtr; /// Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
 };
 
 //#define DEBUG // Activate this for lots of lovely debug output.
@@ -162,16 +162,27 @@ struct IRData {
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 
-//------------------------------------------------------------------------------
-// Mark & Space matching functions
-//
+/*
+ * Mark & Space matching functions
+ */
 bool MATCH(uint16_t measured, uint16_t desired);
 bool MATCH_MARK(uint16_t measured_ticks, uint16_t desired_us);
 bool MATCH_SPACE(uint16_t measured_ticks, uint16_t desired_us);
 
 int getMarkExcessMicros();
 
+/*
+ * Feedback LED related functions
+ */
 void setFeedbackLED(bool aSwitchLedOn);
+void LEDFeedback(bool aEnableLEDFeedback);
+void enableLEDFeedback();
+void disableLEDFeedback();
+void setFeedbackLEDPin(uint8_t aFeedbackLEDPin); // if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+
+void blink13(bool aEnableLEDFeedback) __attribute__ ((deprecated ("Please use LEDFeedback() or enableLEDFeedback() / disableLEDFeedback."))); // deprecated
+void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use setFeedbackLEDPin()."))); // deprecated
+
 
 /****************************************************
  *                     RECEIVING
@@ -210,10 +221,8 @@ class IRrecv {
 public:
 
     IRrecv();
-    IRrecv(uint8_t recvpin);
-    IRrecv(uint8_t recvpin, uint8_t blinkpin);
-    static void blink13(bool aEnableLEDFeedback);
-    static void setBlinkPin(uint8_t aBlinkPin); // if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+    IRrecv(uint8_t aReceivePin);
+    IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin);
 
     void enableIRIn();
     void disableIRIn();
@@ -221,7 +230,7 @@ public:
     /*
      * Stream like API
      */
-    void begin(uint8_t aReceivePin, bool aEnableLEDFeedback = false, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN); // if aBlinkPin == 0 then take board default BLINKPIN
+    void begin(uint8_t aReceivePin, bool aEnableLEDFeedback = false, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
     void start(); // alias for enableIRIn
     void start(uint16_t aMicrosecondsToAddToGapCounter);
     bool available();
@@ -305,14 +314,16 @@ public:
     void initDecodedIRData();
     uint8_t compare(unsigned int oldval, unsigned int newval);
 
-    decode_results results; // deprecated, only for legacy compatibility
-    IRData decodedIRData;           // decoded IR data for the application
+#if defined(USE_OLD_DECODE)
+    decode_results results;     // Only for legacy compatibility
+#endif
+    IRData decodedIRData;       // New: decoded IR data for the application
 
     // Last decoded IR data for repeat detection
     uint32_t lastDecodedAddress;
     uint32_t lastDecodedCommand;
 
-    uint8_t repeatCount;            // Used e.g. for Denon decode for autorepeat decoding.
+    uint8_t repeatCount;        // Used e.g. for Denon decode for autorepeat decoding.
 };
 
 // The receiver instance
@@ -334,10 +345,10 @@ class IRsend {
 public:
     IRsend(uint8_t aSendPin);
     void setSendPin(uint8_t aSendPinNumber);
-    void begin(uint8_t aSendPin, bool aEnableLEDFeedback = true, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+    void begin(uint8_t aSendPin, bool aEnableLEDFeedback = true, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
 
     IRsend();
-    void begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin = USE_DEFAULT_FEEDBACK_LED_PIN) __attribute__ ((deprecated ("Please use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>)")));
+    void begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN) __attribute__ ((deprecated ("Please use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>)")));
 
     size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
 

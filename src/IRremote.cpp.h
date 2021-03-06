@@ -3,14 +3,8 @@
 //
 //  Contains all IRreceiver static functions
 //
-//
 // Initially coded 2009 Ken Shirriff http://www.righto.com
 //
-// Modified by Paul Stoffregen <paul@pjrc.com> to support other boards and timers
-//
-// Interrupt code based on NECIRrcv by Joe Knapp
-// http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1210243556
-// Also influenced by http://zovirl.com/2008/11/12/building-a-universal-remote-with-an-arduino/
 //******************************************************************************
 /************************************************************************************
  * MIT License
@@ -164,74 +158,74 @@ ISR () // for functions definitions which are called by separate (board specific
 #endif
     // 7 - 8.5 us for ISR body (without pushes and pops) for ATmega328 @16MHz
 
-    TIMER_RESET_INTR_PENDING; // reset timer interrupt flag if required (currently only for Teensy and ATmega4809)
+    TIMER_RESET_INTR_PENDING;// reset TickCounterForISR interrupt flag if required (currently only for Teensy and ATmega4809)
 
     // Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
-    uint8_t irdata = (uint8_t) digitalRead(irparams.recvpin);
+    uint8_t irdata = (uint8_t) digitalRead(irparams.IRReceivePin);
 
-    // clip timer at maximum 0xFFFF / 3.2 seconds at 50 us ticks
-    if (irparams.timer < 0xFFFF) {
-        irparams.timer++;  // One more 50uS tick
+    // clip TickCounterForISR at maximum 0xFFFF / 3.2 seconds at 50 us ticks
+    if (irparams.TickCounterForISR < 0xFFFF) {
+        irparams.TickCounterForISR++;  // One more 50uS tick
     }
 
     /*
      * Due to a ESP32 compiler bug https://github.com/espressif/esp-idf/issues/1552 no switch statements are possible for ESP32
      * So we change the code to if / else if
      */
-//    switch (irparams.rcvstate) {
+//    switch (irparams.StateForISR) {
     //......................................................................
-    if (irparams.rcvstate == IR_REC_STATE_IDLE) { // In the middle of a gap
+    if (irparams.StateForISR == IR_REC_STATE_IDLE) { // In the middle of a gap
         if (irdata == MARK) {
             // check if we did not start in the middle of an command by checking the minimum length of leading space
-            if (irparams.timer > RECORD_GAP_TICKS) {
+            if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
                 // Gap just ended; Record gap duration + start recording transmission
                 // Initialize all state machine variables
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 //                digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-                irparams.overflow = false;
-                irparams.rawbuf[0] = irparams.timer;
+                irparams.OverflowFlag = false;
+                irparams.rawbuf[0] = irparams.TickCounterForISR;
                 irparams.rawlen = 1;
-                irparams.rcvstate = IR_REC_STATE_MARK;
+                irparams.StateForISR = IR_REC_STATE_MARK;
             }
-            irparams.timer = 0;
+            irparams.TickCounterForISR = 0;
         }
 
-    } else if (irparams.rcvstate == IR_REC_STATE_MARK) {  // Timing Mark
+    } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing Mark
         if (irdata == SPACE) {   // Mark ended; Record time
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 //            digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-            irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-            irparams.rcvstate = IR_REC_STATE_SPACE;
-            irparams.timer = 0;
+            irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
+            irparams.StateForISR = IR_REC_STATE_SPACE;
+            irparams.TickCounterForISR = 0;
         }
 
-    } else if (irparams.rcvstate == IR_REC_STATE_SPACE) {  // Timing Space
+    } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing Space
         if (irdata == MARK) {  // Space just ended; Record time
             if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
-                // Flag up a read overflow; Stop the State Machine
-                irparams.overflow = true;
-                irparams.rcvstate = IR_REC_STATE_STOP;
+                // Flag up a read OverflowFlag; Stop the State Machine
+                irparams.OverflowFlag = true;
+                irparams.StateForISR = IR_REC_STATE_STOP;
             } else {
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 //                digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-                irparams.rawbuf[irparams.rawlen++] = irparams.timer;
-                irparams.rcvstate = IR_REC_STATE_MARK;
+                irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
+                irparams.StateForISR = IR_REC_STATE_MARK;
             }
-            irparams.timer = 0;
+            irparams.TickCounterForISR = 0;
 
-        } else if (irparams.timer > RECORD_GAP_TICKS) {
+        } else if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
             /*
              * Current code is ready for processing!
              * We received a long space, which indicates gap between codes.
              * Switch to IR_REC_STATE_STOP
-             * Don't reset timer; keep counting width of next leading space
+             * Don't reset TickCounterForISR; keep counting width of next leading space
              */
-            irparams.rcvstate = IR_REC_STATE_STOP;
+            irparams.StateForISR = IR_REC_STATE_STOP;
         }
-    } else if (irparams.rcvstate == IR_REC_STATE_STOP) {
+    } else if (irparams.StateForISR == IR_REC_STATE_STOP) {
         /*
          * Complete command received
          * stay here until resume() is called, which switches state to IR_REC_STATE_IDLE
@@ -240,7 +234,7 @@ ISR () // for functions definitions which are called by separate (board specific
 //        digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
         if (irdata == MARK) {
-            irparams.timer = 0;  // Reset gap timer, to prepare for call of resume()
+            irparams.TickCounterForISR = 0;  // Reset gap TickCounterForISR, to prepare for call of resume()
         }
     }
     setFeedbackLED(irdata == MARK);
@@ -249,28 +243,80 @@ ISR () // for functions definitions which are called by separate (board specific
 #endif
 }
 
-// If requested, flash LED while receiving IR data
+/**
+ * Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR processing
+ * If FeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ */
+void LEDFeedback(bool aEnableLEDFeedback) {
+    irparams.LedFeedbackEnabled = aEnableLEDFeedback;
+    if (aEnableLEDFeedback) {
+        if (irparams.FeedbackLEDPin != 0) {
+            pinMode(irparams.FeedbackLEDPin, OUTPUT);
+#ifdef FEEDBACK_LED
+        } else {
+            pinMode(FEEDBACK_LED, OUTPUT);
+#endif
+        }
+    }
+}
+
+void enableLEDFeedback() {
+    irparams.LedFeedbackEnabled = true;
+}
+
+void disableLEDFeedback() {
+    irparams.LedFeedbackEnabled = false;
+}
+
+/*
+ * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ */
+void setFeedbackLEDPin(uint8_t aFeedbackLEDPin) {
+    irparams.FeedbackLEDPin = aFeedbackLEDPin;
+}
+
+/*
+ * Flash LED while receiving IR data, if enabled
+ */
 #if defined(ESP32)
 IRAM_ATTR
 #endif
 void setFeedbackLED(bool aSwitchLedOn) {
-    if (irparams.blinkflag) {
+    if (irparams.LedFeedbackEnabled) {
         if (aSwitchLedOn) {
-            if (irparams.blinkpin) {
-                digitalWrite(irparams.blinkpin, HIGH); // Turn user defined pin LED on
-#ifdef BLINKLED_ON
+            if (irparams.FeedbackLEDPin != 0) {
+#if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+                digitalWrite(irparams.FeedbackLEDPin, LOW); // Turn user defined pin LED on
+#else
+                digitalWrite(irparams.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
+#endif
+#ifdef FEEDBACK_LED_ON
             } else {
-                BLINKLED_ON();   // if no user defined LED pin, turn default LED pin for the hardware on
+                FEEDBACK_LED_ON();   // if no user defined LED pin, turn default LED pin for the hardware on
 #endif
             }
         } else {
-            if (irparams.blinkpin) {
-                digitalWrite(irparams.blinkpin, LOW); // Turn user defined pin LED off
-#ifdef BLINKLED_OFF
+            if (irparams.FeedbackLEDPin != 0) {
+#if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+                digitalWrite(irparams.FeedbackLEDPin, HIGH); // Turn user defined pin LED off
+#else
+                digitalWrite(irparams.FeedbackLEDPin, LOW); // Turn user defined pin LED off
+#endif
+#ifdef FEEDBACK_LED_OFF
             } else {
-                BLINKLED_OFF();   // if no user defined LED pin, turn default LED pin for the hardware on
+                FEEDBACK_LED_OFF();   // if no user defined LED pin, turn default LED pin for the hardware on
 #endif
             }
         }
     }
+}
+
+/*
+ * Old deprecated function names
+ */
+void blink13(bool aEnableLEDFeedback) {
+    LEDFeedback(aEnableLEDFeedback);
+}
+void setBlinkPin(uint8_t aBlinkPin) {
+    setFeedbackLEDPin(aBlinkPin);
 }

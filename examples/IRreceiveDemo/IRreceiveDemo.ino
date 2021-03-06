@@ -5,7 +5,31 @@
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
+#include <Arduino.h>
 
 /*
  * Specify which protocol(s) should be used for decoding.
@@ -24,28 +48,12 @@
 // to compensate for the signal forming of different IR receiver modules.
 #define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
 
-#include <IRremote.h>
-
 /*
- * Set sensible receive pin for different CPU's
+ * First define macros for input and output pin etc.
  */
-#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-// Serial output for Digispark boards is at pin 2
-#  if defined(ARDUINO_AVR_DIGISPARKPRO)
-#define IR_RECEIVE_PIN    9 // PA3 - on Digispark board labeled as pin 9
-#  else
-#define IR_RECEIVE_PIN    0
-#  endif
-#  if defined(ARDUINO_AVR_DIGISPARK)
-#define LED_BUILTIN PB1
-#  endif
-#elif defined(ESP32)
-int IR_RECEIVE_PIN = 15;
-#elif defined(ARDUINO_AVR_PROMICRO)
-int IR_RECEIVE_PIN = 10;
-#else
-int IR_RECEIVE_PIN = 11;
-#endif
+#include "PinDefinitionsAndMore.h"
+
+#include <IRremote.h>
 
 #define BUZZER_PIN          5
 #define DEBUG_BUTTON_PIN    6 // if held low, print timing for each received data
@@ -62,7 +70,7 @@ void setup() {
 
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
-delay(4000); // To be able to connect Serial monitor after reset or power up and before first printout
+    delay(4000); // To be able to connect Serial monitor after reset or power up and before first printout
 #endif
 // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
@@ -102,7 +110,7 @@ void loop() {
              * do double beep
              */
             IrReceiver.stop();
-            tone(BUZZER_PIN, 1100, 10);
+            tone(TONE_PIN, 1100, 10);
             delay(50);
 #  endif
 
@@ -121,7 +129,7 @@ void loop() {
          * Play tone, wait and restore IR timer
          */
         IrReceiver.stop();
-        tone(BUZZER_PIN, 2200, 10);
+        tone(TONE_PIN, 2200, 10);
         delay(8);
         IrReceiver.start(8000); // to compensate for 11 ms stop of receiver. This enables a correct gap measurement.
 #  endif

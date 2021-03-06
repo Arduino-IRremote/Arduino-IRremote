@@ -202,6 +202,7 @@ bool IRrecv::decodeSamsung() {
     return true;
 }
 
+#if defined(USE_OLD_DECODE)
 bool IRrecv::decodeSAMSUNG() {
     unsigned int offset = 1;  // Skip first space
 
@@ -239,6 +240,7 @@ bool IRrecv::decodeSAMSUNG() {
     decodedIRData.protocol = SAMSUNG;
     return true;
 }
+#endif //defined(USE_OLD_DECODE)
 
 // Old version with MSB first
 void IRsend::sendSAMSUNG(unsigned long data, int nbits) {

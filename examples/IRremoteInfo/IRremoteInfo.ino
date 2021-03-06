@@ -59,7 +59,7 @@ void dumpRAW_BUFFER_LENGTH() {
 }
 
 void dumpTIMER() {
-    boolean flag = false;
+    bool flag = false;
 #ifdef IR_USE_TIMER1
     Serial.print(F("Timer defined for use: "));
     Serial.println(F("Timer1"));

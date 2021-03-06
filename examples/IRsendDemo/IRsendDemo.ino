@@ -5,12 +5,38 @@
  *
  * An IR LED must be connected to Arduino PWM pin 3 (IR_SEND_PIN).
  *
- *
- *  Copyright (C) 2020-2021  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
- *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
+ *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
+#include <Arduino.h>
+
+/*
+ * Define macros for input and output pin etc.
+ */
+#include "PinDefinitionsAndMore.h"
 
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 240 bytes program space if IrSender.write is used
 //#define SEND_PWM_BY_TIMER
@@ -18,18 +44,7 @@
 
 #include <IRremote.h>
 
-#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#include "ATtinySerialOut.h"
-#endif
-
-// On the Zero and others we switch explicitly to SerialUSB
-#if defined(ARDUINO_ARCH_SAMD)
-#define Serial SerialUSB
-#endif
-
 void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
-
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first printout
@@ -40,6 +55,18 @@ void setup() {
     Serial.println(IR_SEND_PIN);
 
     IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
+
+#if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
+    /*
+     * Print internal signal generation info
+     */
+    IrSender.enableIROut(38);
+    Serial.print(F("Send signal mark duration is "));
+    Serial.print(IrSender.periodOnTimeMicros);
+    Serial.print(F(" us from a total period of "));
+    Serial.print(IrSender.periodTimeMicros);
+    Serial.println(F(" us"));
+#endif
 }
 
 /*

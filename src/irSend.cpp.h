@@ -37,6 +37,10 @@ __attribute((error("Version > 3.0.1"))) void UsageError(const char *details);
 // The sender instance
 IRsend IrSender;
 
+IRsend::IRsend() {
+    sendPin = IR_SEND_PIN; // take IR_SEND_PIN as default
+}
+
 IRsend::IRsend(uint8_t aSendPin) {
     sendPin = aSendPin;
 }
@@ -44,29 +48,16 @@ void IRsend::setSendPin(uint8_t aSendPin) {
     sendPin = aSendPin;
 }
 /*
- * @ param aBlinkPin if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+ * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     sendPin = aSendPin;
-    irparams.blinkflag = aEnableLEDFeedback;
-    irparams.blinkpin = aLEDFeedbackPin; // default is 0
-    if (aEnableLEDFeedback) {
-        if (irparams.blinkpin != 0) {
-            pinMode(irparams.blinkpin, OUTPUT);
-#ifdef BLINKLED
-        } else {
-            pinMode(BLINKLED, OUTPUT);
-#endif
-        }
-    }
-}
-
-IRsend::IRsend() {
-    sendPin = IR_SEND_PIN;
+    irparams.FeedbackLEDPin = aLEDFeedbackPin; // default is 0
+    LEDFeedback(aEnableLEDFeedback);
 }
 
 /*
- * @ param aBlinkPin if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+ * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     // must exclude NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
@@ -77,17 +68,8 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     UsageError("Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if USE_SOFT_SEND_PWM or USE_NO_SEND_PWM is defined!");
 #endif
 
-    irparams.blinkflag = aEnableLEDFeedback;
-    irparams.blinkpin = aLEDFeedbackPin; // default is 0
-    if (aEnableLEDFeedback) {
-        if (irparams.blinkpin != 0) {
-            pinMode(irparams.blinkpin, OUTPUT);
-#ifdef BLINKLED
-        } else {
-            pinMode(BLINKLED, OUTPUT);
-#endif
-        }
-    }
+    irparams.FeedbackLEDPin = aLEDFeedbackPin; // default is 0
+    LEDFeedback(aEnableLEDFeedback);
 }
 
 size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
@@ -349,13 +331,15 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
 // The mark output is modulated at the PWM frequency.
 //
 void IRsend::mark(unsigned int aMarkMicros) {
+    setFeedbackLED(true);
+
 #if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
     unsigned long start = micros();
     unsigned long nextPeriodEnding = start;
     while (micros() - start < aMarkMicros) {
-        noInterrupts(); // do not change the short on period
+        noInterrupts(); // do not let interrupts extend the short on period
         SENDPIN_ON(sendPin);
-        delayMicroseconds(periodOnTimeMicros); // this is normally implemented by a blocking wait and therefore guarantees a constant on period
+        delayMicroseconds(periodOnTimeMicros); // this is normally implemented by a blocking wait
         SENDPIN_OFF(sendPin);
         interrupts(); // Enable interrupts for the longer off period
         nextPeriodEnding += periodTimeMicros;
@@ -364,18 +348,16 @@ void IRsend::mark(unsigned int aMarkMicros) {
     }
 
 #else
-
 #  if defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, LOW); // Set output to active low.
 
 #  else
-    TIMER_ENABLE_SEND_PWM
-    ; // Enable pin 3 PWM output
+    TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
 #  endif //  USE_SOFT_SEND_PWM
 
-    setFeedbackLED(true);
     customDelayMicroseconds(aMarkMicros);
 #endif // USE_SOFT_SEND_PWM
+
 }
 
 void IRsend::ledOff() {
@@ -425,8 +407,8 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
 //
 void IRsend::enableIROut(uint8_t aFrequencyKHz) {
 #if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
-    periodTimeMicros = (1000U + aFrequencyKHz / 2) / aFrequencyKHz; // = 1000/kHz + 1/2 = round(1000.0/kHz)
-    periodOnTimeMicros = ((periodTimeMicros * IR_SEND_DUTY_CYCLE) / 100U) - PULSE_CORRECTION_MICROS;
+    periodTimeMicros = (1000U + aFrequencyKHz / 2) / aFrequencyKHz; // rounded value -> 26 for 38 kHz
+    periodOnTimeMicros = (((periodTimeMicros * IR_SEND_DUTY_CYCLE) + 50 - (PULSE_CORRECTION_NANOS / 10))/ 100U); // +50 for rounding
 #endif
 
 #if defined(USE_NO_SEND_PWM)

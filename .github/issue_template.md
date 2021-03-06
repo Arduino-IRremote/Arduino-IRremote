@@ -11,6 +11,7 @@ If you have handling problems or questions, consider to open a discussion https:
 * [ ] Arduino SAMD board (Zero, MKR*)
 * [ ] ESP32 board - first check https://github.com/crankyoldgit/IRremoteESP8266
 * [ ] Teensy board
+* [ ] STM32F1 board (BluePill)
 * [ ] Other - please specify
 
 <!-- Please specify board name if not included in board selection -->

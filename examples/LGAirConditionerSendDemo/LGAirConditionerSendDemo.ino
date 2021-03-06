@@ -33,6 +33,12 @@
  *
  ************************************************************************************
  */
+#include <Arduino.h>
+
+/*
+ * Define macros for input and output pin etc.
+ */
+#include "PinDefinitionsAndMore.h"
 
 #include <IRremote.h>
 #include "LongUnion.h"
@@ -47,7 +53,7 @@
 #endif
 
 bool ACIsWallType = false;      // false : TOWER, true : WALL
-boolean ACIsHeating = false;    // false : cooling, true : heating
+bool ACIsHeating = false;       // false : cooling, true : heating
 bool ACPowerIsOn = false;
 bool ACStateIsAirClean = false; // false : off, 1 : true --> power on
 uint8_t ACRequestedFanIntensity = 1;   // 0 : low, 1 : mid, 2 : high - if ACIsWallType==Wall then 3 -> cycle

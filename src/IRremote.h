@@ -8,7 +8,6 @@
  *
  * This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
- *
  ************************************************************************************
  * MIT License
  *
@@ -122,9 +121,10 @@
 /**
  * If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses.
  * It should be the time used for SENDPIN_OFF(sendPin) and the call to delayMicros()
+ * Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600
  */
-#ifndef PULSE_CORRECTION_MICROS
-#define PULSE_CORRECTION_MICROS 3
+#ifndef PULSE_CORRECTION_NANOS
+#define PULSE_CORRECTION_NANOS (48000000000L / F_CPU) // 3000 @16MHz, 666 @72MHz
 #endif
 
 //------------------------------------------------------------------------------

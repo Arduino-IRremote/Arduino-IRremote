@@ -13,6 +13,15 @@
  *
  *  MIT License
  */
+#include <Arduino.h>
+
+/*
+ * Define macros for input and output pin etc.
+ */
+#include "PinDefinitionsAndMore.h"
+
+//#define SEND_PWM_BY_TIMER
+//#define USE_NO_SEND_PWM
 
 #include <IRremote.h>
 

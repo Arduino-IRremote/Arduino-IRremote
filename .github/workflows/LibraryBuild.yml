@@ -97,8 +97,6 @@ jobs:
 
           - arduino-boards-fqbn: arduino:samd:arduino_zero_native
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              All: -DUSE_SOFT_SEND_PWM
 
           - arduino-boards-fqbn: SparkFun:avr:promicro
             arduino-platform: arduino:avr,SparkFun:avr
@@ -144,8 +142,6 @@ jobs:
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
             sketches-exclude: IR2Keyboard,IRDispatcherDemo,MicroGirs,MinimalReceiver # no tone()
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              All: -DUSE_SOFT_SEND_PWM
 
       # Do not cancel all jobs / architectures if one job fails
       fail-fast: false

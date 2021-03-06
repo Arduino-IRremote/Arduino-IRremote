@@ -1,8 +1,13 @@
 ## 3.1.0
 - Replaced #define DECODE_NEC 1/0 by defining/not defining.
 - USE_SOFT_SEND_PWM is active by default.
+- Refactored Board specific code.
+- Added STM32F1 by (by Roger Clark) support.
 - Added stm32 (by ST) support. Thanks to Paolo Malaspina.
-- Added STM32F1 by (Roger Clark) support.
+- Refactored LED Feedback functions.
+- Renamed most irparams_struct values.
+- Implemented feedback for send.
+- Removed decode_results results.
 
 ## 3.0.2
 - Bug fix for USE_OLD_DECODE.

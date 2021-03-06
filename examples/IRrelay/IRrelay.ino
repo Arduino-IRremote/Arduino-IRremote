@@ -3,25 +3,43 @@
  * Toggles an output pin at each command received
  * An IR detector/demodulator must be connected to the input RECV_PIN.
  * Initially coded 2009 Ken Shirriff http://www.righto.com
+ *
+ *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
+ *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
+#include <Arduino.h>
+
+/*
+ * Define macros for input and output pin etc.
+ */
+#include "PinDefinitionsAndMore.h"
 
 #include <IRremote.h>
 
-#if defined(ESP32)
-int IR_RECEIVE_PIN = 15;
-#else
-int IR_RECEIVE_PIN = 11;
-#endif
 int RELAY_PIN = 4; // is labeled D2 on the Chinese SAMD21 M0-Mini clone
-
-// On the Zero and others we switch explicitly to SerialUSB
-#if defined(ARDUINO_ARCH_SAMD)
-#define Serial SerialUSB
-// The Chinese SAMD21 M0-Mini clone has no led connected, if you connect it, it is on pin 24 like on the original board.
-// Attention! D2 and D4 are reversed on these boards
-//#undef LED_BUILTIN
-//#define LED_BUILTIN 25 // Or choose pin 25, it is the RX pin, but active low.
-#endif
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);

@@ -286,24 +286,24 @@ static void sendRaw(const microseconds_t intro[], unsigned lengthIntro,
  * @param stream Stream to read from, typically Serial.
  */
 static void receive(Stream& stream) {
-    irRecv.enableIRIn();
-    irRecv.resume(); // Receive the next value
+    IrReceiver.enableIRIn();
+    IrReceiver.resume(); // Receive the next value
 
-    while (!irRecv.decode()) {
+    while (!IrReceiver.decode()) {
     }
-    irRecv.disableIRIn();
+    IrReceiver.disableIRIn();
 
     dump(stream);
 }
 
 static void dump(Stream& stream) {
-    unsigned int count = irRecv.results.rawlen;
+    unsigned int count = IrReceiver.decodedIRData.rawDataPtr->rawlen;
     // If buffer gets full, count = RAW_BUFFER_LENGTH, which is odd,
     // and IrScrutinizer does not like that.
     count &=  ~1;
     for (unsigned int i = 1; i < count; i++) {
         stream.write(i & 1 ? '+' : '-');
-        stream.print(irRecv.results.rawbuf[i] * MICROS_PER_TICK, DEC);
+        stream.print(IrReceiver.decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK, DEC);
         stream.print(" ");
     }
     stream.print('-');
@@ -326,7 +326,8 @@ void setup() {
     // There is unfortunately no disableIRIn in IRremote.
     // Therefore, turn it on, and leave it on.
     // We _hope_ that it will not interfere with sending.
-    irRecv.enableIRIn();
+    IrReceiver.begin(INPUTPIN);
+    IrReceiver.enableIRIn();
 #endif
 */
 }

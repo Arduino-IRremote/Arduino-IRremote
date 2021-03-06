@@ -39,16 +39,20 @@
  *
  ************************************************************************************
  */
+#include <Arduino.h>
+
+/*
+ * Define macros for input and output pin etc.
+ */
+#include "PinDefinitionsAndMore.h"
 
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 900 bytes program space
 
 #include <IRremote.h>
 
 #if defined(ESP32)
-int IR_RECEIVE_PIN = 15;
 int SEND_BUTTON_PIN = 16; // RX2 pin
 #else
-int IR_RECEIVE_PIN = 11;
 int SEND_BUTTON_PIN = 12;
 #endif
 int STATUS_PIN = LED_BUILTIN;
@@ -166,10 +170,10 @@ void storeCode(IRData *aIRReceivedData) {
 
     if (sStoredIRData.receivedIRData.protocol == UNKNOWN) {
         Serial.print(F("Received unknown code and store "));
-        Serial.print(IrReceiver.results.rawlen - 1);
+        Serial.print(IrReceiver.decodedIRData.rawDataPtr->rawlen - 1);
         Serial.println(F(" timing entries as raw "));
         IrReceiver.printIRResultRawFormatted(&Serial, true); // Output the results in RAW format
-        sStoredIRData.rawCodeLength = IrReceiver.results.rawlen - 1;
+        sStoredIRData.rawCodeLength = IrReceiver.decodedIRData.rawDataPtr->rawlen - 1;
         IrReceiver.compensateAndStoreIRResultInArray(sStoredIRData.rawCode);
     } else {
         IrReceiver.printIRResultShort(&Serial);

@@ -38,49 +38,41 @@ IRrecv IrReceiver;
 //+=============================================================================
 /**
  * Instantiate the IRrecv class. Multiple instantiation is not supported.
- * @param recvpin Arduino pin to use. No sanity check is made.
+ * @param IRReceivePin Arduino pin to use. No sanity check is made.
  */
 IRrecv::IRrecv() {
-    irparams.recvpin = 0;
-    irparams.blinkflag = false;
+    irparams.IRReceivePin = 0;
+    irparams.LedFeedbackEnabled = false;
 }
 
-IRrecv::IRrecv(uint8_t recvpin) {
-    irparams.recvpin = recvpin;
-    irparams.blinkflag = false;
+IRrecv::IRrecv(uint8_t aReceivePin) {
+    irparams.IRReceivePin = aReceivePin;
+    irparams.LedFeedbackEnabled = false;
 }
 /**
  * Instantiate the IRrecv class. Multiple instantiation is not supported.
- * @param recvpin Arduino pin to use, where a demodulating IR receiver is connected.
- * @param blinkpin pin to blink when receiving IR. Not supported by all hardware. No sanity check is made.
+ * @param IRReceivePin Arduino pin to use, where a demodulating IR receiver is connected.
+ * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
-IRrecv::IRrecv(uint8_t recvpin, uint8_t blinkpin) {
-    irparams.recvpin = recvpin;
-    irparams.blinkpin = blinkpin;
-    pinMode(blinkpin, OUTPUT);
-    irparams.blinkflag = false;
+IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin) {
+    irparams.IRReceivePin = aReceivePin;
+    irparams.FeedbackLEDPin = aFeedbackLEDPin;
+    pinMode(aFeedbackLEDPin, OUTPUT);
+    irparams.LedFeedbackEnabled = false;
 }
 
 //+=============================================================================
 // Stream like API
 /*
- * @ param aBlinkPin if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+ * @param IRReceivePin Arduino pin to use, where a demodulating IR receiver is connected.
+ * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
-void IRrecv::begin(uint8_t aReceivePin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
+void IRrecv::begin(uint8_t aReceivePin, bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin) {
 
-    irparams.recvpin = aReceivePin;
-    irparams.blinkflag = aEnableLEDFeedback;
-    irparams.blinkpin = aLEDFeedbackPin; // default is 0
+    irparams.IRReceivePin = aReceivePin;
+    irparams.FeedbackLEDPin = aFeedbackLEDPin; // default is 0
+    LEDFeedback(aEnableLEDFeedback);
 
-    if (aEnableLEDFeedback) {
-        if (irparams.blinkpin != 0) {
-            pinMode(irparams.blinkpin, OUTPUT);
-#ifdef BLINKLED
-        } else {
-            pinMode(BLINKLED, OUTPUT);
-#endif
-        }
-    }
     enableIRIn();
 }
 
@@ -91,7 +83,7 @@ void IRrecv::start() {
 void IRrecv::start(uint16_t aMicrosecondsToAddToGapCounter) {
     enableIRIn();
     noInterrupts();
-    irparams.timer += aMicrosecondsToAddToGapCounter / MICROS_PER_TICK;
+    irparams.TickCounterForISR += aMicrosecondsToAddToGapCounter / MICROS_PER_TICK;
     interrupts();
 }
 
@@ -100,7 +92,7 @@ void IRrecv::stop() {
 }
 void IRrecv::end() {
     stop();
-    irparams.blinkflag = true;
+    irparams.LedFeedbackEnabled = true;
 }
 
 //+=============================================================================
@@ -113,7 +105,7 @@ void IRrecv::enableIRIn() {
 
     noInterrupts();
 
-    // Setup pulse clock timer interrupt
+    // Setup pulse clock TickCounterForISR interrupt
     timerConfigForReceive();
     TIMER_ENABLE_RECEIVE_INTR;  // Timer interrupt enable
     TIMER_RESET_INTR_PENDING;   // NOP for most platforms
@@ -123,7 +115,7 @@ void IRrecv::enableIRIn() {
     interrupts(); // after resume to avoid running through STOP state 1 time before switching to IDLE
 
     // Set pin modes
-    pinMode(irparams.recvpin, INPUT);
+    pinMode(irparams.IRReceivePin, INPUT);
 }
 
 /**
@@ -134,32 +126,12 @@ void IRrecv::disableIRIn() {
 }
 
 //+=============================================================================
-// Enable/disable blinking of pin 13 on IR processing
-//
-void IRrecv::blink13(bool aEnableLEDFeedback) {
-    irparams.blinkflag = aEnableLEDFeedback;
-    if (aEnableLEDFeedback) {
-        if (irparams.blinkpin != 0) {
-            pinMode(irparams.blinkpin, OUTPUT);
-#ifdef BLINKLED
-        } else {
-            pinMode(BLINKLED, OUTPUT);
-#endif
-        }
-    }
-}
-void IRrecv::setBlinkPin(uint8_t aBlinkPin) {
-    irparams.blinkpin = aBlinkPin;
-    pinMode(aBlinkPin, OUTPUT);
-}
-
-//+=============================================================================
 /**
  * Returns status of reception
  * @return true if no reception is on-going.
  */
 bool IRrecv::isIdle() {
-    return (irparams.rcvstate == IR_REC_STATE_IDLE || irparams.rcvstate == IR_REC_STATE_STOP) ? true : false;
+    return (irparams.StateForISR == IR_REC_STATE_IDLE || irparams.StateForISR == IR_REC_STATE_STOP) ? true : false;
 }
 
 //+=============================================================================
@@ -169,8 +141,8 @@ bool IRrecv::isIdle() {
  */
 void IRrecv::resume() {
     // check allows to call resume at arbitrary places or more than once
-    if (irparams.rcvstate == IR_REC_STATE_STOP) {
-        irparams.rcvstate = IR_REC_STATE_IDLE;
+    if (irparams.StateForISR == IR_REC_STATE_STOP) {
+        irparams.StateForISR = IR_REC_STATE_IDLE;
     }
 }
 
@@ -182,9 +154,9 @@ void IRrecv::initDecodedIRData() {
 
     decodedIRData.rawDataPtr = &irparams;
 
-    if (irparams.overflow) {
-        irparams.overflow = false;
-        irparams.rawlen = 0; // otherwise we have overflow again at next ISR call
+    if (irparams.OverflowFlag) {
+        irparams.OverflowFlag = false;
+        irparams.rawlen = 0; // otherwise we have OverflowFlag again at next ISR call
         decodedIRData.flags = IRDATA_FLAGS_WAS_OVERFLOW;
         DBG_PRINTLN("Overflow happened");
 
@@ -206,14 +178,14 @@ void IRrecv::initDecodedIRData() {
  * @return true if data is available.
  */
 bool IRrecv::available() {
-    return (irparams.rcvstate == IR_REC_STATE_STOP);
+    return (irparams.StateForISR == IR_REC_STATE_STOP);
 }
 
 /**
  *@return decoded IRData,
  */
 IRData* IRrecv::read() {
-    if (irparams.rcvstate != IR_REC_STATE_STOP) {
+    if (irparams.StateForISR != IR_REC_STATE_STOP) {
         return NULL;
     }
     if (decode()) {
@@ -230,22 +202,22 @@ IRData* IRrecv::read() {
  * @return 0 if no data ready, 1 if data ready. Results of decoding are stored in results
  */
 bool IRrecv::decode() {
-    if (irparams.rcvstate != IR_REC_STATE_STOP) {
+    if (irparams.StateForISR != IR_REC_STATE_STOP) {
         return false;
     }
 
-    /*
-     * First copy 3 values from irparams for legacy compatibility
-     */
+#if defined(USE_OLD_DECODE)
+    // Copy 3 values from irparams for legacy compatibility
     results.rawbuf = irparams.rawbuf;
     results.rawlen = irparams.rawlen;
-    results.overflow = irparams.overflow;
+    results.overflow = irparams.OverflowFlag;
+#endif
 
     initDecodedIRData(); // sets IRDATA_FLAGS_WAS_OVERFLOW
 
     if (decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
         /*
-         * Set overflow flag and return true here, to let the loop call resume or print raw data.
+         * Set OverflowFlag flag and return true here, to let the loop call resume or print raw data.
          */
         decodedIRData.protocol = UNKNOWN;
         return true;
