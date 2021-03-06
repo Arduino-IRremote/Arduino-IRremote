@@ -176,14 +176,14 @@ bool IRrecv::decodeNEC() {
     }
 
     // Check header "mark" this must be done for repeat and data
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], NEC_HEADER_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], NEC_HEADER_MARK)) {
         return false;
     }
 
     // Check for repeat - here we have another header space length
     if (decodedIRData.rawDataPtr->rawlen == 4) {
-        if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], NEC_REPEAT_HEADER_SPACE)
-                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], NEC_BIT_MARK)) {
+        if (matchSpace(decodedIRData.rawDataPtr->rawbuf[2], NEC_REPEAT_HEADER_SPACE)
+                && matchMark(decodedIRData.rawDataPtr->rawbuf[3], NEC_BIT_MARK)) {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
@@ -194,7 +194,7 @@ bool IRrecv::decodeNEC() {
     }
 
     // Check command header space
-    if (!MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], NEC_HEADER_SPACE)) {
+    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], NEC_HEADER_SPACE)) {
         DBG_PRINT(F("NEC: "));
         DBG_PRINTLN(F("Header space length is wrong"));
         return false;
@@ -207,7 +207,7 @@ bool IRrecv::decodeNEC() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * NEC_BITS)], NEC_BIT_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * NEC_BITS)], NEC_BIT_MARK)) {
         DBG_PRINT(F("NEC: "));
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
@@ -259,14 +259,14 @@ bool IRrecv::decodeNEC() {
     unsigned int offset = 1;  // Index in to results; Skip first space.
 
 // Check header "mark"
-    if (!MATCH_MARK(results.rawbuf[offset], NEC_HEADER_MARK)) {
+    if (!matchMark(results.rawbuf[offset], NEC_HEADER_MARK)) {
         return false;
     }
     offset++;
 
 // Check for repeat
-    if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[offset], NEC_REPEAT_HEADER_SPACE)
-            && MATCH_MARK(results.rawbuf[offset + 1], NEC_BIT_MARK)) {
+    if ((results.rawlen == 4) && matchSpace(results.rawbuf[offset], NEC_REPEAT_HEADER_SPACE)
+            && matchMark(results.rawbuf[offset + 1], NEC_BIT_MARK)) {
         results.bits = 0;
         results.value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
@@ -284,7 +284,7 @@ bool IRrecv::decodeNEC() {
     }
 
 // Check header "space"
-    if (!MATCH_SPACE(results.rawbuf[offset], NEC_HEADER_SPACE)) {
+    if (!matchSpace(results.rawbuf[offset], NEC_HEADER_SPACE)) {
         DBG_PRINT("NEC: ");
         DBG_PRINTLN("Header space length is wrong");
         return false;
@@ -296,7 +296,7 @@ bool IRrecv::decodeNEC() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(results.rawbuf[offset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
+    if (!matchMark(results.rawbuf[offset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
         DBG_PRINT("NEC: ");
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;

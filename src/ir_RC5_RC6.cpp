@@ -173,11 +173,11 @@ int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int
     val = ((*offset) % 2) ? MARK : SPACE;
     correction = (val == MARK) ? getMarkExcessMicros() : - getMarkExcessMicros();
 
-    if (MATCH(width, (t1) + correction)) {
+    if (matchTicks(width, (t1) + correction)) {
         avail = 1;
-    } else if (MATCH(width, (2 * t1) + correction)) {
+    } else if (matchTicks(width, (2 * t1) + correction)) {
         avail = 2;
-    } else if (MATCH(width, (3 * t1) + correction)) {
+    } else if (matchTicks(width, (3 * t1) + correction)) {
         avail = 3;
     } else {
         return -1;
@@ -380,7 +380,7 @@ bool IRrecv::decodeRC6() {
     }
 
     // Check header "mark" and "space", this must be done for repeat and data
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], RC6_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_SPACE)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], RC6_HEADER_MARK) || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_SPACE)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
@@ -412,12 +412,12 @@ bool IRrecv::decodeRC6() {
      * Maybe we do not need to check all the timings
      */
     uint8_t tStartOffset;
-    if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[9], RC6_UNIT) && MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[10], 2 * RC6_UNIT)) {
+    if (matchMark(decodedIRData.rawDataPtr->rawbuf[9], RC6_UNIT) && matchSpace(decodedIRData.rawDataPtr->rawbuf[10], 2 * RC6_UNIT)) {
         // toggle = 0
-        if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[11], 2 * RC6_UNIT)) {
+        if (matchMark(decodedIRData.rawDataPtr->rawbuf[11], 2 * RC6_UNIT)) {
             // Address MSB is 0
             tStartOffset = 13;
-        } else if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[11], 3 * RC6_UNIT)) {
+        } else if (matchMark(decodedIRData.rawDataPtr->rawbuf[11], 3 * RC6_UNIT)) {
             // Address MSB is 1
             tStartOffset = 12;
         } else {
@@ -425,13 +425,13 @@ bool IRrecv::decodeRC6() {
             DBG_PRINTLN(F("Toggle mark or space length is wrong"));
             return false;
         }
-    } else if (MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[9], 3 * RC6_UNIT)) {
+    } else if (matchMark(decodedIRData.rawDataPtr->rawbuf[9], 3 * RC6_UNIT)) {
         // Toggle = 1
         decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK;
-        if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[10], 2 * RC6_UNIT)) {
+        if (matchSpace(decodedIRData.rawDataPtr->rawbuf[10], 2 * RC6_UNIT)) {
             // Address MSB is 1
             tStartOffset = 12;
-        } else if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[10], 3 * RC6_UNIT)) {
+        } else if (matchSpace(decodedIRData.rawDataPtr->rawbuf[10], 3 * RC6_UNIT)) {
             // Address MSB is 0
             tStartOffset = 11;
         } else {
@@ -486,12 +486,12 @@ bool IRrecv::decodeRC6() {
     }
 
 // Initial mark
-    if (!MATCH_MARK(results.rawbuf[offset], RC6_HEADER_MARK)) {
+    if (!matchMark(results.rawbuf[offset], RC6_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results.rawbuf[offset], RC6_HEADER_SPACE)) {
+    if (!matchSpace(results.rawbuf[offset], RC6_HEADER_SPACE)) {
         return false;
     }
     offset++;

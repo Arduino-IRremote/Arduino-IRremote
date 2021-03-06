@@ -61,7 +61,7 @@
 #include "IRProtocol.h"
 
 // All board specific stuff have been moved to its own file, included here.
-#include "private/IRremoteBoardDefs.h"
+#include <private/IRBoardDefs.h>
 
 //------------------------------------------------------------------------------
 // Information for the Interrupt Service Routine
@@ -93,8 +93,6 @@ struct irparams_struct {
     // The fields are ordered to reduce memory over caused by struct-padding
     volatile uint8_t StateForISR;   ///< State Machine state
     uint8_t IRReceivePin;           ///< Pin connected to IR data from detector
-    uint8_t FeedbackLEDPin;         ///< if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
-    bool LedFeedbackEnabled;        ///< true -> enable blinking of pin on IR processing
 #if RAW_BUFFER_LENGTH <= 255        // saves around 75 bytes program space and speeds up ISR
     uint8_t rawlen;                 ///< counter of entries in rawbuf
 #else
@@ -156,14 +154,16 @@ struct IRData {
 #  define TRACE_PRINT(...) void()
 #  define TRACE_PRINTLN(...) void()
 #endif
-//------------------------------------------------------------------------------
-// Helper macro for getting a macro definition as string
-//
-#define STR_HELPER(x) #x
-#define STR(x) STR_HELPER(x)
 
 /*
  * Mark & Space matching functions
+ */
+bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
+bool matchMark(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
+bool matchSpace(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
+
+/*
+ * Old function names
  */
 bool MATCH(uint16_t measured, uint16_t desired);
 bool MATCH_MARK(uint16_t measured_ticks, uint16_t desired_us);
@@ -171,9 +171,9 @@ bool MATCH_SPACE(uint16_t measured_ticks, uint16_t desired_us);
 
 int getMarkExcessMicros();
 
-/*
+/****************************************************
  * Feedback LED related functions
- */
+ ****************************************************/
 void setFeedbackLED(bool aSwitchLedOn);
 void LEDFeedback(bool aEnableLEDFeedback);
 void enableLEDFeedback();

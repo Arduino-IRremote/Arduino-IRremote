@@ -52,7 +52,7 @@ void IRsend::setSendPin(uint8_t aSendPin) {
  */
 void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     sendPin = aSendPin;
-    irparams.FeedbackLEDPin = aLEDFeedbackPin; // default is 0
+    FeedbackLEDControl.FeedbackLEDPin = aLEDFeedbackPin; // default is 0
     LEDFeedback(aEnableLEDFeedback);
 }
 
@@ -68,7 +68,7 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     UsageError("Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if USE_SOFT_SEND_PWM or USE_NO_SEND_PWM is defined!");
 #endif
 
-    irparams.FeedbackLEDPin = aLEDFeedbackPin; // default is 0
+    FeedbackLEDControl.FeedbackLEDPin = aLEDFeedbackPin; // default is 0
     LEDFeedback(aEnableLEDFeedback);
 }
 

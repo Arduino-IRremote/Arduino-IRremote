@@ -44,8 +44,8 @@ bool IRrecv::decodeWhynter() {
     }
 
     // Sequence begins with a bit mark and a zero space
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], WHYNTER_BIT_MARK)
-            || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], WHYNTER_HEADER_SPACE)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], WHYNTER_BIT_MARK)
+            || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], WHYNTER_HEADER_SPACE)) {
         DBG_PRINT(F("Whynter: "));
         DBG_PRINTLN(F("Header mark or space length is wrong"));
         return false;
@@ -56,7 +56,7 @@ bool IRrecv::decodeWhynter() {
     }
 
     // trailing mark / stop bit
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * WHYNTER_BITS)], WHYNTER_BIT_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * WHYNTER_BITS)], WHYNTER_BIT_MARK)) {
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }

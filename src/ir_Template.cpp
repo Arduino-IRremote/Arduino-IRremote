@@ -206,7 +206,7 @@ bool IRrecv::decodeShuzu() {
     }
 
     // Check header "space"
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], SHUZU_HEADER_MARK) || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], SHUZU_HEADER_SPACE)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], SHUZU_HEADER_MARK) || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SHUZU_HEADER_SPACE)) {
         DBG_PRINT("Shuzu: ");
         DBG_PRINTLN("Header mark or space length is wrong");
         return false;
@@ -220,7 +220,7 @@ bool IRrecv::decodeShuzu() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * SHUZU_BITS)], SHUZU_BIT_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * SHUZU_BITS)], SHUZU_BIT_MARK)) {
         DBG_PRINT(F("Shuzu: "));
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;

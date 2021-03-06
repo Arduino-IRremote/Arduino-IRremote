@@ -116,8 +116,8 @@ bool IRrecv::decodeJVC() {
          * Check leading space and first and last mark length
          */
         if (decodedIRData.rawDataPtr->rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 2) / MICROS_PER_TICK))
-                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], JVC_BIT_MARK)
-                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen - 1], JVC_BIT_MARK)) {
+                && matchMark(decodedIRData.rawDataPtr->rawbuf[1], JVC_BIT_MARK)
+                && matchMark(decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen - 1], JVC_BIT_MARK)) {
             /*
              * We have a repeat here, so do not check for start bit
              */
@@ -129,8 +129,8 @@ bool IRrecv::decodeJVC() {
     } else {
 
         // Check header "mark" and "space"
-        if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], JVC_HEADER_MARK)
-                || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], JVC_HEADER_SPACE)) {
+        if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], JVC_HEADER_MARK)
+                || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], JVC_HEADER_SPACE)) {
 //            DBG_PRINT("JVC: ");
 //            DBG_PRINTLN("Header mark or space length is wrong");
             return false;
@@ -162,8 +162,8 @@ bool IRrecv::decodeJVC() {
     unsigned int offset = 1; // Skip first space
 
     // Check for repeat
-    if ((results.rawlen - 1 == 33) && MATCH_MARK(results.rawbuf[offset], JVC_BIT_MARK)
-            && MATCH_MARK(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
+    if ((results.rawlen - 1 == 33) && matchMark(results.rawbuf[offset], JVC_BIT_MARK)
+            && matchMark(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
         results.bits = 0;
         results.value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
@@ -172,7 +172,7 @@ bool IRrecv::decodeJVC() {
     }
 
     // Initial mark
-    if (!MATCH_MARK(results.rawbuf[offset], JVC_HEADER_MARK)) {
+    if (!matchMark(results.rawbuf[offset], JVC_HEADER_MARK)) {
         return false;
     }
     offset++;
@@ -187,7 +187,7 @@ bool IRrecv::decodeJVC() {
     }
 
     // Initial space
-    if (!MATCH_SPACE(results.rawbuf[offset], JVC_HEADER_SPACE)) {
+    if (!matchSpace(results.rawbuf[offset], JVC_HEADER_SPACE)) {
         return false;
     }
     offset++;
@@ -197,7 +197,7 @@ bool IRrecv::decodeJVC() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(results.rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
+    if (!matchMark(results.rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }

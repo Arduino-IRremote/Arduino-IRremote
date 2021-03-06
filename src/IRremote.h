@@ -136,7 +136,6 @@
  */
 #include "IRReceive.cpp.h"
 #include "IRSend.cpp.h"
-#include "IRremote.cpp.h"
 
 #endif // IRremote_h
 

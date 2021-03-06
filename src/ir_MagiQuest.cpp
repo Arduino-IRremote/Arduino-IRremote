@@ -115,7 +115,7 @@ bool IRrecv::decodeMagiQuest() {
         DBG_PRINT(" ratio=");
         DBG_PRINTLN(ratio_);
 
-        if (MATCH_MARK(space_ + mark_, MAGIQUEST_PERIOD)) {
+        if (matchMark(space_ + mark_, MAGIQUEST_PERIOD)) {
             if (ratio_ > 1) {
                 // It's a 0
                 data.llword <<= 1;

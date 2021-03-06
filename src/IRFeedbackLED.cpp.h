@@ -36,10 +36,10 @@
  * If FeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void LEDFeedback(bool aEnableLEDFeedback) {
-    irparams.LedFeedbackEnabled = aEnableLEDFeedback;
+    FeedbackLEDControl.LedFeedbackEnabled = aEnableLEDFeedback;
     if (aEnableLEDFeedback) {
-        if (irparams.FeedbackLEDPin != 0) {
-            pinMode(irparams.FeedbackLEDPin, OUTPUT);
+        if (FeedbackLEDControl.FeedbackLEDPin != 0) {
+            pinMode(FeedbackLEDControl.FeedbackLEDPin, OUTPUT);
 #ifdef FEEDBACK_LED
         } else {
             pinMode(FEEDBACK_LED, OUTPUT);
@@ -49,18 +49,18 @@ void LEDFeedback(bool aEnableLEDFeedback) {
 }
 
 void enableLEDFeedback() {
-    irparams.LedFeedbackEnabled = true;
+    FeedbackLEDControl.LedFeedbackEnabled = true;
 }
 
 void disableLEDFeedback() {
-    irparams.LedFeedbackEnabled = false;
+    FeedbackLEDControl.LedFeedbackEnabled = false;
 }
 
 /*
  * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void setFeedbackLEDPin(uint8_t aFeedbackLEDPin) {
-    irparams.FeedbackLEDPin = aFeedbackLEDPin;
+    FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin;
 }
 
 /*
@@ -70,13 +70,13 @@ void setFeedbackLEDPin(uint8_t aFeedbackLEDPin) {
 IRAM_ATTR
 #endif
 void setFeedbackLED(bool aSwitchLedOn) {
-    if (irparams.LedFeedbackEnabled) {
+    if (FeedbackLEDControl.LedFeedbackEnabled) {
         if (aSwitchLedOn) {
-            if (irparams.FeedbackLEDPin != 0) {
+            if (FeedbackLEDControl.FeedbackLEDPin != 0) {
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-                digitalWrite(irparams.FeedbackLEDPin, LOW); // Turn user defined pin LED on
+                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED on
 #else
-                digitalWrite(irparams.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
+                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
 #endif
 #ifdef FEEDBACK_LED_ON
             } else {
@@ -84,11 +84,11 @@ void setFeedbackLED(bool aSwitchLedOn) {
 #endif
             }
         } else {
-            if (irparams.FeedbackLEDPin != 0) {
+            if (FeedbackLEDControl.FeedbackLEDPin != 0) {
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-                digitalWrite(irparams.FeedbackLEDPin, HIGH); // Turn user defined pin LED off
+                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED off
 #else
-                digitalWrite(irparams.FeedbackLEDPin, LOW); // Turn user defined pin LED off
+                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED off
 #endif
 #ifdef FEEDBACK_LED_OFF
             } else {

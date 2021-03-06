@@ -143,7 +143,7 @@ bool IRrecv::decodeDenon() {
     }
 
     // Check for stop mark
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
         DBG_PRINT("Denon: ");
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
@@ -196,11 +196,11 @@ bool IRrecv::decodeDenon() {
     }
 
     // Check initial Mark+Space match
-    if (!MATCH_MARK(results.rawbuf[1], DENON_HEADER_MARK)) {
+    if (!matchMark(results.rawbuf[1], DENON_HEADER_MARK)) {
         return false;
     }
 
-    if (!MATCH_SPACE(results.rawbuf[2], DENON_HEADER_SPACE)) {
+    if (!matchSpace(results.rawbuf[2], DENON_HEADER_SPACE)) {
         return false;
     }
 

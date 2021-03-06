@@ -147,14 +147,14 @@ bool IRrecv::decodeLG() {
     }
 
     // Check header "mark" this must be done for repeat and data
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], LG_HEADER_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG_HEADER_MARK)) {
         return false;
     }
 
     // Check for repeat - here we have another header space length
     if (decodedIRData.rawDataPtr->rawlen == 4) {
-        if (MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], LG_REPEAT_HEADER_SPACE)
-                && MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3], LG_BIT_MARK)) {
+        if (matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LG_REPEAT_HEADER_SPACE)
+                && matchMark(decodedIRData.rawDataPtr->rawbuf[3], LG_BIT_MARK)) {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
@@ -165,7 +165,7 @@ bool IRrecv::decodeLG() {
     }
 
     // Check command header space
-    if (!MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], LG_HEADER_SPACE)) {
+    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LG_HEADER_SPACE)) {
         DBG_PRINT(F("LG: "));
         DBG_PRINTLN(F("Header space length is wrong"));
         return false;
@@ -178,7 +178,7 @@ bool IRrecv::decodeLG() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LG_BITS)], LG_BIT_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LG_BITS)], LG_BIT_MARK)) {
         DBG_PRINT(F("LG: "));
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
@@ -227,12 +227,12 @@ bool IRrecv::decodeLG() {
     }
 
 // Initial mark/space
-    if (!MATCH_MARK(results.rawbuf[offset], LG_HEADER_MARK)) {
+    if (!matchMark(results.rawbuf[offset], LG_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!MATCH_SPACE(results.rawbuf[offset], LG_HEADER_SPACE)) {
+    if (!matchSpace(results.rawbuf[offset], LG_HEADER_SPACE)) {
         return false;
     }
     offset++;
@@ -241,7 +241,7 @@ bool IRrecv::decodeLG() {
         return false;
     }
 // Stop bit
-    if (!MATCH_MARK(results.rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
+    if (!matchMark(results.rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }

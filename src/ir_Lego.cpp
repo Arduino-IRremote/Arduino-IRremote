@@ -146,7 +146,7 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
 bool IRrecv::decodeLegoPowerFunctions() {
 
     // Check header "mark"
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], LEGO_HEADER_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LEGO_HEADER_MARK)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
@@ -160,7 +160,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
         return false;
     }
     // Check header "space"
-    if (!MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], LEGO_HEADER_SPACE)) {
+    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LEGO_HEADER_SPACE)) {
         DBG_PRINT("LEGO: ");
         DBG_PRINTLN("Header space length is wrong");
         return false;
@@ -173,7 +173,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
     }
 
     // Stop bit
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LEGO_BITS)], LEGO_BIT_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LEGO_BITS)], LEGO_BIT_MARK)) {
         DBG_PRINT("LEGO: ");
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;

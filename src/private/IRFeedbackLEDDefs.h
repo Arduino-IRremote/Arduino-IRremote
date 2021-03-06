@@ -7,6 +7,16 @@
 #ifndef IRFeedbackLEDDefs_h
 #define IRFeedbackLEDDefs_h
 
+struct FeedbackLEDControlStruct {
+    uint8_t FeedbackLEDPin;         ///< if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+    bool LedFeedbackEnabled;        ///< true -> enable blinking of pin on IR processing
+};
+
+/*
+ * The feedback LED control instance
+ */
+struct FeedbackLEDControlStruct FeedbackLEDControl;
+
 #ifdef DOXYGEN
 /**
  * If defined, denotes pin number of LED that should be blinked during IR reception.

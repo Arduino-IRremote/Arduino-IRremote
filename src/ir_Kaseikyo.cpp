@@ -134,13 +134,13 @@ bool IRrecv::decodeKaseikyo() {
         return false;
     }
 
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], KASEIKYO_HEADER_MARK)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], KASEIKYO_HEADER_MARK)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Header mark length is wrong");
         return false;
     }
 
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[2], KASEIKYO_HEADER_SPACE)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[2], KASEIKYO_HEADER_SPACE)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Header space length is wrong");
         return false;
@@ -241,11 +241,11 @@ bool IRrecv::decodePanasonic() {
         return false;
     }
 
-    if (!MATCH_MARK(results.rawbuf[offset], KASEIKYO_HEADER_MARK)) {
+    if (!matchMark(results.rawbuf[offset], KASEIKYO_HEADER_MARK)) {
         return false;
     }
     offset++;
-    if (!MATCH_MARK(results.rawbuf[offset], KASEIKYO_HEADER_SPACE)) {
+    if (!matchMark(results.rawbuf[offset], KASEIKYO_HEADER_SPACE)) {
         return false;
     }
     offset++;

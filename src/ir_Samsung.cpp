@@ -126,8 +126,8 @@ bool IRrecv::decodeSamsung() {
     }
 
     // Check header "mark" + "space"
-    if (!MATCH_MARK(decodedIRData.rawDataPtr->rawbuf[1], SAMSUNG_HEADER_MARK)
-            || !MATCH_SPACE(decodedIRData.rawDataPtr->rawbuf[2], SAMSUNG_HEADER_SPACE)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], SAMSUNG_HEADER_MARK)
+            || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SAMSUNG_HEADER_SPACE)) {
         DBG_PRINT("Samsung: ");
         DBG_PRINTLN("Header mark or space length is wrong");
 
@@ -207,14 +207,14 @@ bool IRrecv::decodeSAMSUNG() {
     unsigned int offset = 1;  // Skip first space
 
     // Initial mark
-    if (!MATCH_MARK(results.rawbuf[offset], SAMSUNG_HEADER_MARK)) {
+    if (!matchMark(results.rawbuf[offset], SAMSUNG_HEADER_MARK)) {
         return false;
     }
     offset++;
 
 // Check for repeat -- like a NEC repeat
-    if ((results.rawlen == 4) && MATCH_SPACE(results.rawbuf[offset], 2250)
-            && MATCH_MARK(results.rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
+    if ((results.rawlen == 4) && matchSpace(results.rawbuf[offset], 2250)
+            && matchMark(results.rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
         results.bits = 0;
         results.value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
@@ -226,7 +226,7 @@ bool IRrecv::decodeSAMSUNG() {
     }
 
 // Initial space
-    if (!MATCH_SPACE(results.rawbuf[offset], SAMSUNG_HEADER_SPACE)) {
+    if (!matchSpace(results.rawbuf[offset], SAMSUNG_HEADER_SPACE)) {
         return false;
     }
     offset++;
