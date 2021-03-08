@@ -32,13 +32,13 @@ This is a quite old but maybe useful wiki for this library.
 # Converting your program to the 3.1 version
 This must be done also for all versions > 3.0.1 if `USE_NO_SEND_PWM` is defined.<br/>
 Starting with this version, **the generation of PWM is done by software**, thus saving the hardware timer and **enabling abitrary output pins**.<br/>
-Therefore you must change all `IrSender.begin(true);` by `IrSender.begin(IR_SEND_PIN, true);`.
+Therefore you must change all `IrSender.begin(true);` by `IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK);`.
 
 # Converting your 2.x program to the 3.x version
 - Now there is  an **IRreceiver** and **IRsender** object like the well known Arduino **Serial** object.
 - Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;` in your program, and replace all occurrences of `IRrecv.` or `irrecv.` with `IrReceiver`.
 - Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
-- Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABE_ED_FEEDBACK);`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRreceiveDemo/IRreceiveDemo.ino#L38) or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK);` instead of the `IrReceiver.enableIRIn();` or `irrecv.enableIRIn();` in setup().
+- Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABE_ED_FEEDBACK);`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L38) or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK);` instead of the `IrReceiver.enableIRIn();` or `irrecv.enableIRIn();` in setup().
 - Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
 - The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value`  and / or `results.decode_type` (and similar) to `IrReceiver.decodedIRData.decodedRawData` and / or `IrReceiver.decodedIRData.decodedRawData`.
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L126).
@@ -69,8 +69,8 @@ The main reason is, that it was designed to fit inside MCUs with relatively low 
 
 ## Hints
 If you do not know which protocol your IR transmitter uses, you have several choices.
-- Use the [IRreceiveDump example](examples/IRreceiveDump) to dump out the IR timing.
- You can then reproduce/send this timing with the [IRsendRawDemo example](examples/IRsendRawDemo).
+- Use the [IRreceiveDump example](examples/ReceiveDump) to dump out the IR timing.
+ You can then reproduce/send this timing with the [SendRawDemo example](examples/SendRawDemo).
  For **long codes** with more than 48 bits like from air conditioners, you can **change the length of the input buffer** in [IRremote.h](src/IRremoteInt.h#L36).
 - The [IRMP AllProtocol example](https://github.com/ukw100/IRMP#allprotocol-example) prints the protocol and data for one of the **40 supported protocols**.
  The same library can be used to send this codes.
@@ -86,7 +86,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 ### SimpleReceiver + SimpleSender
 This examples are a good starting point.
 
-### IRReceiveDemo + IRSendDemo 
+### ReceiveDemo + SendDemo
 More complete examples for the advanced user.
 
 ### ReceiveAndSend
@@ -95,7 +95,7 @@ Like the name states...
 ### MinimalReceiver + SmallReceiver
 If code size matters look at these examples.
 
-### DispatcherDemo
+### IRDispatcherDemo
 Framework for calling different functions for different IR codes.
 
 ### IRrelay
@@ -113,11 +113,12 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `MARK_EXCESS_MICROS` | Before `#include <IRremote.h>` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
 | `USE_NO_SEND_PWM` | Before `#include <IRremote.h>` | disabled | Use no carrier PWM, just simulate an active low receiver signal. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | Before `#include <IRremote.h>` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
+| `DISABLE_LED_FEEDBACK_FOR_RECEIVE` | Before `#include <IRremote.h>` | disabled | This disables the LED feedback code for receive, thus saving around 108 bytes program space and halving the receiver ISR processing time. |
 | `IR_INPUT_IS_ACTIVE_HIGH` | IRremoteInt.h | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
 | `RAW_BUFFER_LENGTH` | IRremoteint.h | 101 | Buffer size of raw input buffer. Must be odd! |
 | `DEBUG` | IRremoteInt.h | disabled | Enables lots of lovely debug output. |
-| `IR_SEND_DUTY_CYCLE` | IRremoteBoardDefs.h | 30 | Duty cycle of IR send signal. |
-| `MICROS_PER_TICK` | IRremoteBoardDefs.h | 50 | Resolution of the raw input buffer data. |
+| `IR_SEND_DUTY_CYCLE` | IRBoardDefs.h | 30 | Duty cycle of IR send signal. |
+| `MICROS_PER_TICK` | IRBoardDefs.h | 50 | Resolution of the raw input buffer data. |
 |-|-|-|-|
 | `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
@@ -158,7 +159,7 @@ The send PWM signal is by default generated by software. **Therefore every pin c
 ## Hardware-PWM signal generation for sending
 If you define `SEND_PWM_BY_TIMER`, the send PWM signal is generated by a hardware timer. The same timer as for the receiver is used.
 Since each hardware timer has its dedicated output pins, you must change timer to change PWN output.<br/>
-The timer and the pin usage can be adjusted in [IRremoteBoardDefs.h](src/private/IRremoteBoardDefs.h)
+The timer and the pin usage can be adjusted in [IRBoardDefs.h](src/private/IRBoardDefs.h)
 
 | Board/CPU                                                                | Hardware-PWM Pin    | Timers            |
 |--------------------------------------------------------------------------|---------------------|-------------------|

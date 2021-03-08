@@ -1,0 +1,151 @@
+START ../src/ReceiveDemo.cpp from Mar  8 2021
+Using library version 3.1.0
+Enabling IRin...
+Ready to receive IR signals at pin 2
+20 us are subtracted from all marks and added to all spaces for decoding
+Protocol=NEC Address=0x2 Command=0x34 Raw-Data=0xCB34FD02 32 bits LSB first
+
+Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
+
+Protocol=NEC Address=0x80 Command=0x45 Raw-Data=0xBA457F80 32 bits LSB first
+
+Protocol=NEC Address=0x102 Command=0x34 Parity fail Raw-Data=0xC0340102 32 bits LSB first
+
+Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
+
+Protocol=APPLE Address=0x2 Command=0x34 Raw-Data=0x23487EE 32 bits LSB first
+
+Protocol=PANASONIC Address=0x102 Command=0x34 Raw-Data=0x4341020 48 bits LSB first
+
+Protocol=KASEIKYO Address=0x102 Command=0x34 Extra=0x4711 Raw-Data=0x7341023 48 bits LSB first
+
+Protocol=DENON Address=0x2 Command=0x34 Raw-Data=0x8D0 15 bits MSB first
+
+Protocol=DENON Address=0x2 Command=0x34 Auto-Repeat gap=44550us Raw-Data=0xB2F 15 bits MSB first
+
+Protocol=SHARP Address=0x2 Command=0x34 Raw-Data=0x8D2 15 bits MSB first
+
+Protocol=SHARP Address=0x2 Command=0x34 Auto-Repeat gap=44600us Raw-Data=0xB2D 15 bits MSB first
+
+Protocol=SONY Address=0x2 Command=0x34 Raw-Data=0x134 12 bits LSB first
+
+Protocol=SONY Address=0x2 Command=0x34 Raw-Data=0x134 15 bits LSB first
+
+Protocol=SONY Address=0x0 Command=0x0 Raw-Data=0x0 0 bits LSB first
+
+Protocol=SONY Address=0x102 Command=0x34 Raw-Data=0x8134 20 bits LSB first
+
+Protocol=RC5 Address=0x2 Command=0x34 Toggle=1 Raw-Data=0x38B4 13 bits MSB first
+
+Protocol=RC5 Address=0x2 Command=0x74 Raw-Data=0x20B4 13 bits MSB first
+
+Protocol=RC6 Address=0x2 Command=0x34 Raw-Data=0x234 16 bits MSB first
+
+Protocol=SAMSUNG Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
+
+Protocol=JVC Address=0x2 Command=0x34 Raw-Data=0x3402 16 bits LSB first
+
+Protocol=LG Address=0x2 Command=0x34 Raw-Data=0x200347 28 bits MSB first
+
+Protocol=BOSEWAVE Address=0x0 Command=0x34 Raw-Data=0xCB34 16 bits LSB first
+
+Protocol=LEGO_PF Address=0x3 Command=0x14 Raw-Data=0x2148 16 bits MSB first
+
+Protocol=LEGO_PF Address=0x3 Command=0x14 Auto-Repeat gap=216800us Raw-Data=0x2148 16 bits MSB first
+
+Protocol=LEGO_PF Address=0x2 Command=0x14 Auto-Repeat gap=177200us Raw-Data=0x2148 16 bits MSB first
+
+Protocol=LEGO_PF Address=0x2 Command=0x14 Auto-Repeat gap=177200us Raw-Data=0x2148 16 bits MSB first
+
+Protocol=LEGO_PF Address=0x2 Command=0x14 Auto-Repeat gap=177200us Raw-Data=0x2148 16 bits MSB first
+
+Overflow detected
+
+Protocol=NEC Address=0x3 Command=0x45 Raw-Data=0xBA45FC03 32 bits LSB first
+
+Protocol=NEC Address=0x3 Command=0x45 Repeat gap=47550us
+
+Protocol=NEC Address=0x203 Command=0x45 Raw-Data=0xBA450203 32 bits LSB first
+
+Protocol=NEC Address=0x203 Command=0x45 Repeat gap=47550us
+
+Protocol=APPLE Address=0x3 Command=0x45 Raw-Data=0x34587EE 32 bits LSB first
+
+Protocol=APPLE Address=0x3 Command=0x45 Repeat gap=47550us
+
+Protocol=PANASONIC Address=0x203 Command=0x45 Raw-Data=0x55452030 48 bits LSB first
+
+Protocol=PANASONIC Address=0x203 Command=0x45 Repeat gap=73250us Raw-Data=0x55452030 48 bits LSB first
+
+Protocol=KASEIKYO Address=0x203 Command=0x45 Extra=0x4711 Raw-Data=0x56452033 48 bits LSB first
+
+Protocol=KASEIKYO Address=0x203 Command=0x45 Extra=0x4711 Repeat gap=73250us Raw-Data=0x56452033 48 bits LSB first
+
+Protocol=DENON Address=0x3 Command=0x45 Raw-Data=0xD14 15 bits MSB first
+
+Protocol=DENON Address=0x3 Command=0x45 Auto-Repeat gap=44550us Raw-Data=0xEEB 15 bits MSB first
+
+Protocol=DENON Address=0x3 Command=0x45 Repeat gap=44550us Raw-Data=0xD14 15 bits MSB first
+
+Protocol=DENON Address=0x3 Command=0x45 Auto-Repeat gap=44550us Raw-Data=0xEEB 15 bits MSB first
+
+Protocol=SHARP Address=0x3 Command=0x45 Raw-Data=0xD16 15 bits MSB first
+
+Protocol=SHARP Address=0x3 Command=0x45 Auto-Repeat gap=44550us Raw-Data=0xEE9 15 bits MSB first
+
+Protocol=SHARP Address=0x3 Command=0x45 Repeat gap=44550us Raw-Data=0xD16 15 bits MSB first
+
+Protocol=SHARP Address=0x3 Command=0x45 Auto-Repeat gap=44550us Raw-Data=0xEE9 15 bits MSB first
+
+Protocol=SONY Address=0x3 Command=0x45 Raw-Data=0x1C5 12 bits LSB first
+
+Protocol=SONY Address=0x3 Command=0x45 Repeat gap=24350us Raw-Data=0x1C5 12 bits LSB first
+
+Protocol=SONY Address=0x3 Command=0x45 Raw-Data=0x1C5 15 bits LSB first
+
+Protocol=SONY Address=0x3 Command=0x45 Repeat gap=24350us Raw-Data=0x1C5 15 bits LSB first
+
+Protocol=SONY Address=0x203 Command=0x45 Raw-Data=0x101C5 20 bits LSB first
+
+Protocol=SONY Address=0x203 Command=0x45 Repeat gap=24300us Raw-Data=0x101C5 20 bits LSB first
+
+Protocol=RC5 Address=0x3 Command=0x5 Raw-Data=0x30C5 13 bits MSB first
+
+Protocol=RC5 Address=0x3 Command=0x5 Repeat gap=99000us Raw-Data=0x30C5 13 bits MSB first
+
+Protocol=RC5 Address=0x3 Command=0x45 Toggle=1 Raw-Data=0x28C5 13 bits MSB first
+
+Protocol=RC5 Address=0x3 Command=0x45 Toggle=1 Repeat gap=98950us Raw-Data=0x28C5 13 bits MSB first
+
+Protocol=RC6 Address=0x3 Command=0x45 Raw-Data=0x345 16 bits MSB first
+
+Protocol=RC6 Address=0x3 Command=0x45 Repeat gap=106400us Raw-Data=0x345 16 bits MSB first
+
+Protocol=SAMSUNG Address=0x203 Command=0x45 Raw-Data=0xBA450203 32 bits LSB first
+
+Protocol=SAMSUNG Address=0x203 Command=0x45 Repeat gap=54500us
+
+Protocol=JVC Address=0x3 Command=0x45 Raw-Data=0x4503 16 bits LSB first
+
+Protocol=JVC Address=0x3 Command=0x45 Repeat gap=22750us
+
+Protocol=LG Address=0x3 Command=0x45 Raw-Data=0x300459 28 bits MSB first
+
+Protocol=LG Address=0x3 Command=0x45 Repeat gap=51500us
+
+Protocol=BOSEWAVE Address=0x0 Command=0x45 Raw-Data=0xBA45 16 bits LSB first
+
+Protocol=BOSEWAVE Address=0x0 Command=0x45 Repeat gap=51450us Raw-Data=0xBA45 16 bits LSB first
+
+Protocol=LEGO_PF Address=0x3 Command=0x15 Raw-Data=0x3158 16 bits MSB first
+
+Protocol=LEGO_PF Address=0x3 Command=0x15 Auto-Repeat gap=216800us Raw-Data=0x3158 16 bits MSB first
+
+Protocol=LEGO_PF Address=0x3 Command=0x15 Auto-Repeat gap=216800us Raw-Data=0x3158 16 bits MSB first
+
+Protocol=LEGO_PF Address=0x3 Command=0x15 Auto-Repeat gap=216800us Raw-Data=0x3158 16 bits MSB first
+
+Protocol=LEGO_PF Address=0x3 Command=0x15 Auto-Repeat gap=216800us Raw-Data=0x3158 16 bits MSB first
+
+Overflow detected
+

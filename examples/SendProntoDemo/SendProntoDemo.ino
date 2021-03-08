@@ -1,8 +1,8 @@
 /*
- * IRsendProntoDemo.cpp
+ * SendProntoDemo.cpp
  *
  *  Example for sending pronto codes with the IRremote library.
- *  The code used here is for NEC protocol.
+ *  The code used here, sends NEC protocol data.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -58,10 +58,11 @@ void setup() {
 
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
+
+    IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
+
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
-
-    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
 }
 
 void loop() {

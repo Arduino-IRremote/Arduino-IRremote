@@ -1,5 +1,6 @@
 /*
- * IRremote: IRrelay - demonstrates receiving IR codes with IRrecv
+ * ControlRelay.cpp
+ *
  * Toggles an output pin at each command received
  * An IR detector/demodulator must be connected to the input RECV_PIN.
  * Initially coded 2009 Ken Shirriff http://www.righto.com
@@ -9,7 +10,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ * Copyright (c) 2009-2021 Ken Shirriff, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +40,11 @@
 
 #include <IRremote.h>
 
-int RELAY_PIN = 4; // is labeled D2 on the Chinese SAMD21 M0-Mini clone
+#if defined(APPLICATION_PIN)
+#define RELAY_PIN   APPLICATION_PIN
+#else
+#define RELAY_PIN   5
+#endif
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);

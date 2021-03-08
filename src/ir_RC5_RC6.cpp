@@ -46,7 +46,7 @@ bool sLastSendToggleValue = false;
 // see: https://www.sbprojects.net/knowledge/ir/rc5.php
 // 0 -> mark+space
 // 1 -> space+mark
-// MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command (6 bit command + field bit for RC5X), no stop bit
+// MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command (6 bit command plus one field bit for RC5X), no stop bit
 // duty factor is 25%,
 //
 #define RC5_ADDRESS_BITS        5
@@ -248,12 +248,14 @@ bool IRrecv::decodeRC5() {
 // R   R   CCCC   666
 //
 //
+// https://www.sbprojects.net/knowledge/ir/rc6.php
+
 #define MIN_RC6_SAMPLES         1
 
 #define RC6_RPT_LENGTH      46000
 
 #define RC6_LEADING_BIT         1
-#define RC6_MODE_BITS           3
+#define RC6_MODE_BITS           3 // never seen others than all 0 for Philips TV
 #define RC6_TOGGLE_BIT          1
 #define RC6_ADDRESS_BITS        8
 #define RC6_COMMAND_BITS        8
@@ -268,7 +270,7 @@ bool IRrecv::decodeRC5() {
 #define RC6_TRAILING_SPACE      (6 * RC6_UNIT) // 2666
 #define MIN_RC6_MARKS           4 + ((RC6_ADDRESS_BITS + RC6_COMMAND_BITS) / 2) // 12, 4 are for preamble
 
-#define RC6_REPEAT_SPACE        107000 // just a guess
+#define RC6_REPEAT_SPACE        107000 // just a guess but > 2.666ms
 
 void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
 // Set IR carrier frequency
@@ -282,7 +284,7 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
     mark(RC6_UNIT);
     space(RC6_UNIT);
 
-// Data
+// Data MSB first
     uint32_t mask = 1UL << (nbits - 1);
     for (uint_fast8_t i = 1; mask; i++, mask >>= 1) {
         // The fourth bit we send is a "double width trailer bit"
@@ -311,7 +313,7 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
     mark(RC6_UNIT);
     space(RC6_UNIT);
 
-// Data
+// Data MSB first
     uint64_t mask = 1ULL << (nbits - 1);
     for (uint_fast8_t i = 1; mask; i++, mask >>= 1) {
         // The fourth bit we send is a "double width trailer bit"
@@ -358,7 +360,7 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
-        // start bit is sent by sendBiphaseData
+        // start and leading bits are sent by sendRC6
         sendRC6(tIRRawData.ULong, RC6_BITS - 1); // -1 since the leading bit is additionally sent by sendRC6
 
         tNumberOfCommands--;

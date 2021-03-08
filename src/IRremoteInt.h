@@ -57,15 +57,15 @@
  * Try to activate it, if you have legacy code to compile with version >= 3
  */
 //#define USE_OLD_DECODE // enables the old NEC and other old decoders.
-//------------------------------------------------------------------------------
+
 #include "IRProtocol.h"
 
 // All board specific stuff have been moved to its own file, included here.
 #include <private/IRBoardDefs.h>
 
-//------------------------------------------------------------------------------
-// Information for the Interrupt Service Routine
-//
+/*
+ * Information for the Interrupt Service Routine
+ */
 
 /**
  * Minimum gap between IR transmissions, in microseconds
@@ -93,6 +93,10 @@ struct irparams_struct {
     // The fields are ordered to reduce memory over caused by struct-padding
     volatile uint8_t StateForISR;   ///< State Machine state
     uint8_t IRReceivePin;           ///< Pin connected to IR data from detector
+#if defined(__AVR__)
+    volatile uint8_t *IRReceivePinPortInputRegister;
+    uint8_t IRReceivePinMask;
+#endif
 #if RAW_BUFFER_LENGTH <= 255        // saves around 75 bytes program space and speeds up ISR
     uint8_t rawlen;                 ///< counter of entries in rawbuf
 #else
@@ -123,16 +127,16 @@ struct IRData {
     uint16_t address;           ///< Decoded address
     uint16_t command;           ///< Decoded command
     uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID
-    uint8_t numberOfBits;       ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible (currently only Sony).
+    uint8_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible (currently only Sony).
     uint8_t flags;              ///< See definitions above
     uint32_t decodedRawData;    ///< Up to 32 bit decoded raw data, used for sendRaw functions.
     irparams_struct *rawDataPtr; /// Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
 };
 
 //#define DEBUG // Activate this for lots of lovely debug output.
-//------------------------------------------------------------------------------
-// Debug directives
-//
+/*
+ * Debug directives
+ */
 #ifdef DEBUG
 #  define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
 #  define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
@@ -175,14 +179,13 @@ int getMarkExcessMicros();
  * Feedback LED related functions
  ****************************************************/
 void setFeedbackLED(bool aSwitchLedOn);
-void LEDFeedback(bool aEnableLEDFeedback);
+void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback); // if aFeedbackLEDPin == 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
 void enableLEDFeedback();
 void disableLEDFeedback();
-void setFeedbackLEDPin(uint8_t aFeedbackLEDPin); // if 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
 
-void blink13(bool aEnableLEDFeedback) __attribute__ ((deprecated ("Please use LEDFeedback() or enableLEDFeedback() / disableLEDFeedback."))); // deprecated
-void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use setFeedbackLEDPin()."))); // deprecated
-
+void blink13(bool aEnableLEDFeedback)
+        __attribute__ ((deprecated ("Please use setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback."))); // deprecated
+void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use setLEDFeedback()."))); // deprecated
 
 /****************************************************
  *                     RECEIVING
@@ -223,6 +226,7 @@ public:
     IRrecv();
     IRrecv(uint8_t aReceivePin);
     IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin);
+    void setReceivePin(uint8_t aReceivePinNumber);
 
     void enableIRIn();
     void disableIRIn();
@@ -348,7 +352,8 @@ public:
     void begin(uint8_t aSendPin, bool aEnableLEDFeedback = true, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
 
     IRsend();
-    void begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN) __attribute__ ((deprecated ("Please use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>)")));
+    void begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN)
+            __attribute__ ((deprecated ("Please use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>)")));
 
     size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
 
@@ -461,9 +466,9 @@ extern IRsend IrSender;
  * Activate this line if your receiver has an external output driver transistor / "inverted" output
  */
 //#define IR_INPUT_IS_ACTIVE_HIGH
-//------------------------------------------------------------------------------
-// Defines for setting and clearing register bits
-//
+/*
+ * Defines for setting and clearing register bits
+ */
 #ifndef cbi
 #define cbi(sfr, bit)  (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
@@ -472,12 +477,11 @@ extern IRsend IrSender;
 #define sbi(sfr, bit)  (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
-//------------------------------------------------------------------------------
-// Pulse parms are ((X*50)-100) for the Mark and ((X*50)+100) for the Space.
-// First MARK is the one after the long gap
-// Pulse parameters in uSec
-//
-
+/*
+ * Pulse parms are ((X*50)-100) for the Mark and ((X*50)+100) for the Space.
+ * First MARK is the one after the long gap
+ * Pulse parameters in uSec
+ */
 /** Relative tolerance (in percent) for some comparisons on measured data. */
 #define TOLERANCE       25
 
@@ -498,8 +502,9 @@ extern IRsend IrSender;
     #define TICKS_HIGH(us)  ((uint16_t) ((long) (us) * UTOL / (MICROS_PER_TICK * 100) + 1))
 #endif
 
-//------------------------------------------------------------------------------
-// IR receivers on a board with an external output transistor may have "inverted" output
+/*
+ * IR receivers on a board with an external output transistor may have "inverted" output
+ */
 #ifdef IR_INPUT_IS_ACTIVE_HIGH
 // IR detector output is active high
 #define MARK   1 ///< Sensor output for a mark ("flash")

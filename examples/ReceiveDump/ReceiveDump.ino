@@ -1,5 +1,5 @@
 /*
- * IRreceiveDump.cpp
+ * ReceiveDump.cpp
  *
  * Dumps the received signal in different flavors.
  * Since the printing takes so much time, repeat signals may be skipped or interpreted as UNKNOWN.

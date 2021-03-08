@@ -9,7 +9,7 @@
  *
  *  This file is part of IRMP https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
- *  IRMP is free software: you can redistribute it and/or modify
+ *  Arduino-IRremote is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
@@ -44,19 +44,19 @@
 //
 #if defined(ESP8266)
 #define FEEDBACK_LED_IS_ACTIVE_LOW // The LED on my board is active LOW
-#define IR_RECEIVE_PIN  14 // D5
-#define IR_SEND_PIN     12 // D6 - D4/2 is internal LED
-#define tone(a,b) void() // tone() inhibits receive timer
+#define IR_RECEIVE_PIN      14 // D5
+#define IR_SEND_PIN         12 // D6 - D4/2 is internal LED
+#define tone(a,b) void()        // tone() inhibits receive timer
 #define noTone(a) void()
-#define TONE_PIN        42 // Dummy for examples using it
-#define IR_TIMING_TEST_PIN 13 // D7
+#define TONE_PIN            42 // Dummy for examples using it
+#define IR_TIMING_TEST_PIN  13 // D7
 
 #elif defined(ESP32)
-#define IR_RECEIVE_PIN  15  // D15
-#define IR_SEND_PIN      4  // D4
-#define tone(a,b) void() // no tone() available on ESP32
+#define IR_RECEIVE_PIN      15  // D15
+#define IR_SEND_PIN          4  // D4
+#define tone(a,b) void()        // no tone() available on ESP32
 #define noTone(a) void()
-#define TONE_PIN        42 // Dummy for examples using it
+#define TONE_PIN            42 // Dummy for examples using it
 
 #elif defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_STM32F1)
 // BluePill in 2 flavors
@@ -101,34 +101,58 @@
 #define IR_SEND_PIN     11
 #define TONE_PIN         3
 
+#  elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
+|| defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
+|| defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
+|| defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
+|| defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
+|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__) \
+|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) \
+|| defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2561__) \
+|| defined(__AVR_ATmega8515__) || defined(__AVR_ATmega162__)
+#define IR_RECEIVE_PIN      2
+#define IR_SEND_PIN        13
+#define TONE_PIN            4
+#define APPLICATION_PIN     5
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
+#define IR_TIMING_TEST_PIN  7
+
 #elif defined(ARDUINO_ARCH_APOLLO3)
 #define IR_RECEIVE_PIN  11
 #define IR_SEND_PIN     12
 #define TONE_PIN         5
 
 #elif defined(ARDUINO_ARCH_MBED) // Arduino Nano 33 BLE
-#define IR_RECEIVE_PIN  3
-#define IR_SEND_PIN     4
-#define TONE_PIN        5
-#define IR_TIMING_TEST_PIN 6
+#define IR_RECEIVE_PIN      2
+#define IR_SEND_PIN         3
+#define TONE_PIN            4
+#define APPLICATION_PIN     5
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
+#define IR_TIMING_TEST_PIN  7
 
 #elif defined(TEENSYDUINO)
-#define IR_RECEIVE_PIN  3
-#define IR_SEND_PIN     4
-#define TONE_PIN        5
-#define IR_TIMING_TEST_PIN 6
+#define IR_RECEIVE_PIN      2
+#define IR_SEND_PIN         3
+#define TONE_PIN            4
+#define APPLICATION_PIN     5
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
+#define IR_TIMING_TEST_PIN  7
 
 #elif defined(__AVR__)
-#define IR_RECEIVE_PIN  2 // To be compatible with interrupt example, pin 2 is chosen here.
-#define IR_SEND_PIN     3
-#define TONE_PIN        4
-#define IR_TIMING_TEST_PIN 6
+#define IR_RECEIVE_PIN      2 // To be compatible with interrupt example, pin 2 is chosen here.
+#define IR_SEND_PIN         3
+#define TONE_PIN            4
+#define APPLICATION_PIN     5
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
+#define IR_TIMING_TEST_PIN  7
 
 #elif defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM)
-#define IR_RECEIVE_PIN  2 // To be compatible with interrupt example, pin 2 is chosen here.
-#define IR_SEND_PIN     3
-#define TONE_PIN        4
-#define IR_TIMING_TEST_PIN 6
+#define IR_RECEIVE_PIN      2
+#define IR_SEND_PIN         3
+#define TONE_PIN            4
+#define APPLICATION_PIN     5
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
+#define IR_TIMING_TEST_PIN  7
 
 // On the Zero and others we switch explicitly to SerialUSB
 #define Serial SerialUSB
@@ -146,10 +170,12 @@
 #else
 #warning Board / CPU is not detected using pre-processor symbols -> using default values, which may not fit. Please extend PinDefinitionsAndMore.h.
 // Default valued for unidentified boards
-#define IR_RECEIVE_PIN  2
-#define IR_SEND_PIN     3
-#define TONE_PIN        4
-#define IR_TIMING_TEST_PIN 6
+#define IR_RECEIVE_PIN      2
+#define IR_SEND_PIN         3
+#define TONE_PIN            4
+#define APPLICATION_PIN     5
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
+#define IR_TIMING_TEST_PIN  7
 #endif // defined(ESP8266)
 
 /*

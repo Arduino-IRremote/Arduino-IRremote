@@ -206,6 +206,7 @@
 #  elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define IR_SEND_PIN  11             // Arduino Mega
 
+// MightyCore, MegaCore, MajorCore
 #  elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
 || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
@@ -215,7 +216,9 @@
 || defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) \
 || defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2561__) \
 || defined(__AVR_ATmega8515__) || defined(__AVR_ATmega162__)
-#define IR_SEND_PIN  13             // MightyCore, MegaCore, MajorCore
+#  if !defined(IR_SEND_PIN)
+#define IR_SEND_PIN  13
+#endif
 
 #  elif defined(__AVR_ATtiny84__)
 # define IR_SEND_PIN  6
@@ -228,7 +231,6 @@
 #define TIMER_ENABLE_SEND_PWM   TCNT1 = 0; (TCCR1A |= _BV(COM1A1))
 #define TIMER_DISABLE_SEND_PWM  (TCCR1A &= ~(_BV(COM1A1)))
 
-//-----------------
 #  if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8515__) \
 || defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) \
 || defined(__AVR_ATmega32__) || defined(__AVR_ATmega64__) \
@@ -688,13 +690,11 @@ void timerConfigForReceive() {
 #define TIMER_DISABLE_RECEIVE_INTR  NVIC_DISABLE_IRQ(IRQ_CMT)
 #define TIMER_INTR_NAME     cmt_isr
 
-//-----------------
 #  ifdef ISR
 #undef ISR
 #  endif
 #define ISR(f) void do_not_use__(void)
 
-//-----------------
 #define CMT_PPS_DIV  ((F_BUS + 7999999) / 8000000)
 #  if F_BUS < 8000000
 #error IRremote requires at least 8 MHz on Teensy 3.x

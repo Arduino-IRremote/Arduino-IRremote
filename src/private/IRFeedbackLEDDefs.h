@@ -106,7 +106,7 @@ struct FeedbackLEDControlStruct FeedbackLEDControl;
 /*
  * print a warning
  */
-#warning No blinking definition found. Check private/IRremoteBoardDefs.h.
+#warning No definition for default feedback LED found. Check private/IRFeedbackLEDDefs.h.
 
 #else
 /*

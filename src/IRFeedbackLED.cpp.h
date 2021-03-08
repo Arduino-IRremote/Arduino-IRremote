@@ -35,11 +35,13 @@
  * Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR processing
  * If FeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
-void LEDFeedback(bool aEnableLEDFeedback) {
+void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback) {
+    FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin; // default is 0
+
     FeedbackLEDControl.LedFeedbackEnabled = aEnableLEDFeedback;
     if (aEnableLEDFeedback) {
-        if (FeedbackLEDControl.FeedbackLEDPin != 0) {
-            pinMode(FeedbackLEDControl.FeedbackLEDPin, OUTPUT);
+        if (aFeedbackLEDPin != 0) {
+            pinMode(aFeedbackLEDPin, OUTPUT);
 #ifdef FEEDBACK_LED
         } else {
             pinMode(FEEDBACK_LED, OUTPUT);
@@ -54,13 +56,6 @@ void enableLEDFeedback() {
 
 void disableLEDFeedback() {
     FeedbackLEDControl.LedFeedbackEnabled = false;
-}
-
-/*
- * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
- */
-void setFeedbackLEDPin(uint8_t aFeedbackLEDPin) {
-    FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin;
 }
 
 /*
@@ -103,8 +98,8 @@ void setFeedbackLED(bool aSwitchLedOn) {
  * Old deprecated function names
  */
 void blink13(bool aEnableLEDFeedback) {
-    LEDFeedback(aEnableLEDFeedback);
+    setLEDFeedback(FeedbackLEDControl.FeedbackLEDPin, aEnableLEDFeedback);
 }
 void setBlinkPin(uint8_t aBlinkPin) {
-    setFeedbackLEDPin(aBlinkPin);
+    setLEDFeedback(aBlinkPin, FeedbackLEDControl.LedFeedbackEnabled);
 }

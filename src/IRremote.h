@@ -49,11 +49,11 @@
  *                     PROTOCOLS
  ****************************************************/
 
-//------------------------------------------------------------------------------
-// Supported IR protocols
-// Each protocol you include costs memory and, during decode, costs time
-// Disable (deactivate the line by adding a trailing comment "//") all the protocols you do not need/want!
-//
+/*
+ * Supported IR protocols
+ * Each protocol you include costs memory and, during decode, costs time
+ * Disable (deactivate the line by adding a trailing comment "//") all the protocols you do not need/want!
+ */
 #if (!(defined(DECODE_DENON) || defined(DECODE_SHARP) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \
 || defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) || defined(DECODE_HASH) \
@@ -88,9 +88,12 @@
  * MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
  * to compensate for the signal forming of different IR receiver modules
  * For Vishay TSOP*, marks tend to be too long and spaces tend to be too short.
- * If you set MARK_EXCESS to approx. 50us then the TSOP4838 works best.
+ * If you set MARK_EXCESS_MICROS to approx. 50us then the TSOP4838 works best.
  * At 100us it also worked, but not as well.
  * Set MARK_EXCESS to 100us and the VS1838 doesn't work at all.
+ *
+ * The right value is critical for IR codes using short pulses like Denon / Sharp / Lego
+ *
  *  Observed values:
  *  Delta of each signal type is around 50 up to 100 and at low signals up to 200. TSOP is better, especially at low IR signal level.
  *  VS1838      Mark Excess -50 to +50 us
@@ -98,7 +101,7 @@
  */
 #if !defined(MARK_EXCESS_MICROS)
 //#define MARK_EXCESS_MICROS    50
-#define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
+#define MARK_EXCESS_MICROS    20
 #endif
 
 /****************************************************
@@ -127,7 +130,6 @@
 #define PULSE_CORRECTION_NANOS (48000000000L / SYSCLOCK) // 3000 @16MHz, 666 @72MHz
 #endif
 
-//------------------------------------------------------------------------------
 #include "IRremoteInt.h"
 #include "private/IRTimer.cpp.h"
 #include "IRFeedbackLED.cpp.h"

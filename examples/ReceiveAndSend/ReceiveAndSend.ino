@@ -2,8 +2,8 @@
  * ReceiveAndSend.cpp
  *
  * Record and play back IR signals as a minimal
- * An IR detector/demodulator must be connected to the input RECV_PIN.
- * An IR LED must be connected to the output PWM pin 3.
+ * An IR detector/demodulator must be connected to the input IR_RECEIVE_PIN.
+
  * A button must be connected between the input SEND_BUTTON_PIN and ground.
  * A visible LED can be connected to STATUS_PIN to provide status.
  *
@@ -18,7 +18,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ * Copyright (c) 2009-2021 Ken Shirriff, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -87,23 +87,18 @@ void setup() {
 
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver, enable feedback LED, take LED feedback pin from the internal boards definition
 
-    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
 
-    pinMode(SEND_BUTTON_PIN, INPUT_PULLUP);
     pinMode(STATUS_PIN, OUTPUT);
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);
 
-#if defined(SENDING_SUPPORTED)
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.print(IR_SEND_PIN);
     Serial.print(F(" on press of button at pin "));
     Serial.println(SEND_BUTTON_PIN);
 
-#else
-    Serial.println(F("Sending not supported for this board!"));
-#endif
 }
 
 void loop() {

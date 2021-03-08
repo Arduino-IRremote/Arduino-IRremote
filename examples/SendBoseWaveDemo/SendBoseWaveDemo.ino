@@ -1,5 +1,5 @@
 /*
- * BoseWaveSendDemo.cpp
+ * SendBoseWaveDemo.cpp
  *
  * Prompt user for a code to send.  Make sure your 940-950nm IR LED is
  * connected to the default digital output.  Place your Bose Wave Radio
@@ -88,7 +88,10 @@ void setup() {
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
-    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
+
+    Serial.print(F("Ready to send IR signals at pin "));
+    Serial.println(IR_SEND_PIN);
 
     prompt = true;
 }

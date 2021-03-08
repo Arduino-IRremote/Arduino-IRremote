@@ -1,7 +1,7 @@
 /*
- * IRreceiveDemo.cpp
+ * ReceiveDemo.cpp
  *
- * Demonstrates receiving IR codes with IRrecv
+ * Demonstrates receiving IR codes with the IRremote library.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -39,6 +39,9 @@
 //#define DECODE_LG           1
 //#define DECODE_NEC          1
 // etc. see IRremote.h
+
+//#define DISABLE_LED_FEEDBACK_FOR_RECEIVE // saves 108 bytes program space
+
 #if defined(__AVR_ATtiny85__)
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #endif
@@ -55,8 +58,11 @@
 
 #include <IRremote.h>
 
-#define BUZZER_PIN          5
-#define DEBUG_BUTTON_PIN    6 // if held low, print timing for each received data
+#if defined(APPLICATION_PIN)
+#define DEBUG_BUTTON_PIN    APPLICATION_PIN // if held low, print timing for each received data
+#else
+#define DEBUG_BUTTON_PIN   6
+#endif
 
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
@@ -77,7 +83,7 @@ void setup() {
 
 // In case the interrupt driver crashes on setup, give a clue
 // to the user what's going on.
-    Serial.println(F("Enabling IRin"));
+    Serial.println(F("Enabling IRin..."));
 
     /*
      * Start the receiver, enable feedback LED and (if not 3. parameter specified) take LED feedback pin from the internal boards definition
@@ -86,6 +92,10 @@ void setup() {
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);
+
+    // infos for receive
+    Serial.print(MARK_EXCESS_MICROS);
+    Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
 }
 
 void loop() {
@@ -98,7 +108,7 @@ void loop() {
      * and up to 32 bit raw data in IrReceiver.decodedIRData.decodedRawData
      */
     if (IrReceiver.decode()) {
-#if defined(__AVR_ATtiny85__)
+#if FLASHEND <= 0x1FFF // For less equal than 8k flash, like ATtiny85
         // Print a minimal summary of received data
         IrReceiver.printIRResultMinimal(&Serial);
 #else
@@ -133,7 +143,7 @@ void loop() {
         delay(8);
         IrReceiver.start(8000); // to compensate for 11 ms stop of receiver. This enables a correct gap measurement.
 #  endif
-#endif // defined(__AVR_ATtiny85__)
+#endif // FLASHEND > 0x1FFF
 
         Serial.println();
         /*

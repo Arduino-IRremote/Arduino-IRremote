@@ -38,7 +38,10 @@ __attribute((error("Version > 3.0.1"))) void UsageError(const char *details);
 IRsend IrSender;
 
 IRsend::IRsend() {
+#if defined(IR_SEND_PIN)
     sendPin = IR_SEND_PIN; // take IR_SEND_PIN as default
+#endif
+    setLEDFeedback(0, false);
 }
 
 IRsend::IRsend(uint8_t aSendPin) {
@@ -52,8 +55,7 @@ void IRsend::setSendPin(uint8_t aSendPin) {
  */
 void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     sendPin = aSendPin;
-    FeedbackLEDControl.FeedbackLEDPin = aLEDFeedbackPin; // default is 0
-    LEDFeedback(aEnableLEDFeedback);
+    setLEDFeedback(aLEDFeedbackPin, aEnableLEDFeedback);
 }
 
 /*
@@ -68,8 +70,7 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     UsageError("Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if USE_SOFT_SEND_PWM or USE_NO_SEND_PWM is defined!");
 #endif
 
-    FeedbackLEDControl.FeedbackLEDPin = aLEDFeedbackPin; // default is 0
-    LEDFeedback(aEnableLEDFeedback);
+    setLEDFeedback(aLEDFeedbackPin, aEnableLEDFeedback);
 }
 
 size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
@@ -158,7 +159,6 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
     return 1;
 }
 
-//+=============================================================================
 void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
@@ -243,7 +243,6 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfB
 #endif
 }
 
-//+=============================================================================
 /*
  * Sends PulseDistance data
  * always ends with a space
@@ -326,10 +325,10 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
     TRACE_PRINTLN("");
 }
 
-//+=============================================================================
-// Sends an IR mark for the specified number of microseconds.
-// The mark output is modulated at the PWM frequency.
-//
+/**
+ * Sends an IR mark for the specified number of microseconds.
+ * The mark output is modulated at the PWM frequency.
+ */
 void IRsend::mark(unsigned int aMarkMicros) {
     setFeedbackLED(true);
 
@@ -341,7 +340,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
         SENDPIN_ON(sendPin);
         delayMicroseconds(periodOnTimeMicros); // this is normally implemented by a blocking wait
         SENDPIN_OFF(sendPin);
-        interrupts(); // Enable interrupts for the longer off period
+        interrupts(); // Enable interrupts -to keep micros correct- for the longer off period 3.4 us until receive ISR is active (for 7 us + pop's)
         nextPeriodEnding += periodTimeMicros;
         while (micros() < nextPeriodEnding){
         }
@@ -372,20 +371,19 @@ void IRsend::ledOff() {
     setFeedbackLED(false);
 }
 
-//+=============================================================================
-// Leave pin off for time (given in microseconds)
-// Sends an IR space for the specified number of microseconds.
-// A space is no output, so the PWM output is disabled.
-//
+/**
+ * Sends an IR space for the specified number of microseconds.
+ * A space is "no output", so the PWM output is disabled.
+ */
 void IRsend::space(unsigned int aSpaceMicros) {
     ledOff();
     customDelayMicroseconds(aSpaceMicros);
 }
 
-//+=============================================================================
-// Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit
-// and is (mostly) not extended by the duration of interrupt codes like the millis() interrupt
-
+/**
+ * Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit
+ * and is (mostly) not extended by the duration of interrupt codes like the millis() interrupt
+ */
 void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
     unsigned long start = micros();
     // overflow invariant comparison :-)
@@ -393,18 +391,18 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
     }
 }
 
-//+=============================================================================
-// Enables IR output.  The kHz value controls the modulation frequency in kilohertz.
-// The IR output will be on pin 3 (OC2B).
-// This routine is designed for 36-40 kHz; if you use it for other values, it's up to you
-// to make sure it gives reasonable results.  (Watch out for overflow / underflow / rounding.)
-// TIMER2 is used in phase-correct PWM mode, with OCR2A controlling the frequency and OCR2B
-// controlling the duty cycle.
-// There is no prescaling, so the output frequency is 16 MHz / (2 * OCR2A)
-// To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin.
-// A few hours staring at the ATmega documentation and this will all make sense.
-// See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
-//
+/**
+ * Enables IR output.  The kHz value controls the modulation frequency in kilohertz.
+ * The IR output will be on pin 3 (OC2B).
+ * This routine is designed for 36-40 kHz; if you use it for other values, it's up to you
+ * to make sure it gives reasonable results.  (Watch out for overflow / underflow / rounding.)
+ * TIMER2 is used in phase-correct PWM mode, with OCR2A controlling the frequency and OCR2B
+ * controlling the duty cycle.
+ * There is no prescaling, so the output frequency is 16 MHz / (2 * OCR2A)
+ * To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin.
+ * A few hours staring at the ATmega documentation and this will all make sense.
+ * See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
+ */
 void IRsend::enableIROut(uint8_t aFrequencyKHz) {
 #if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
     periodTimeMicros = (1000U + aFrequencyKHz / 2) / aFrequencyKHz; // rounded value -> 26 for 38 kHz

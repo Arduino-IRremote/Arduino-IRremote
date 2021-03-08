@@ -110,7 +110,7 @@ void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t 
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
     enableIROut(38);
 
-    DBG_PRINT("aRawData=0x");
+    DBG_PRINT("sendLego aRawData=0x");
     DBG_PRINTLN(aRawData, HEX);
 
     aChannel &= 0x03; // we have 4 channels

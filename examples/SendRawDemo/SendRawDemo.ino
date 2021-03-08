@@ -1,9 +1,5 @@
 /*
- * IRsendRawDemo.cpp - demonstrates sending IR codes with sendRaw
- * An IR LED must be connected to Arduino PWM pin 3.
- * Initially coded 2009 Ken Shirriff http://www.righto.com
- *
- * IRsendRawDemo - added by AnalysIR (via www.AnalysIR.com), 24 August 2015
+ * SendRawDemo.cpp - demonstrates sending IR codes with sendRaw
  *
  * This example shows how to send a RAW signal using the IRremote library.
  * The example signal is actually a 32 bit NEC signal.
@@ -62,10 +58,11 @@ void setup() {
 #endif
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
+
+    IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
+
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
-
-    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
 }
 
 /*

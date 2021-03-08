@@ -1,11 +1,8 @@
 /*
- * LGAirConditionerSendDemo.cpp
+ * SendLGAirConditionerDemo.cpp
  *
  *  Sending LG air conditioner IR codes controlled by Serial input
  *  Based on he old IRremote source from https://github.com/chaeplin
- *
- * For Arduino Uno, Nano etc., an IR LED must be connected to PWM pin 3 (IR_SEND_PIN).
- *
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -173,13 +170,14 @@ delay(4000); // To be able to connect Serial monitor after reset or power up and
 #endif
 // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
-    Serial.print(F("Ready to send IR signals at pin "));
-    Serial.println(IR_SEND_PIN);
 
     /*
      * The IR library setup. That's all!
      */
-    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
+
+    Serial.print(F("Ready to send IR signals at pin "));
+    Serial.println(IR_SEND_PIN);
 
     delay(1000);
 

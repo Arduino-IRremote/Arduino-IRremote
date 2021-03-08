@@ -47,13 +47,17 @@ struct irparams_struct irparams; // the irparams instance
  * @param IRReceivePin Arduino pin to use. No sanity check is made.
  */
 IRrecv::IRrecv() {
-    irparams.IRReceivePin = 0;
-    FeedbackLEDControl.LedFeedbackEnabled = false;
+    setReceivePin(0);
+#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+    setLEDFeedback(0, false);
+#endif
 }
 
 IRrecv::IRrecv(uint8_t aReceivePin) {
-    irparams.IRReceivePin = aReceivePin;
-    FeedbackLEDControl.LedFeedbackEnabled = false;
+    setReceivePin(aReceivePin);
+#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+    setLEDFeedback(0, false);
+#endif
 }
 /**
  * Instantiate the IRrecv class. Multiple instantiation is not supported.
@@ -61,10 +65,12 @@ IRrecv::IRrecv(uint8_t aReceivePin) {
  * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin) {
-    irparams.IRReceivePin = aReceivePin;
-    FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin;
-    pinMode(aFeedbackLEDPin, OUTPUT);
-    FeedbackLEDControl.LedFeedbackEnabled = false;
+    setReceivePin(aReceivePin);
+#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+    setLEDFeedback(aFeedbackLEDPin, false);
+#else
+    (void) aFeedbackLEDPin;
+#endif
 }
 
 /**********************************************************************************************************************
@@ -76,11 +82,23 @@ IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin) {
  */
 void IRrecv::begin(uint8_t aReceivePin, bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin) {
 
-    irparams.IRReceivePin = aReceivePin;
-    FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin; // default is 0
-    LEDFeedback(aEnableLEDFeedback);
+    setReceivePin(aReceivePin);
+#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+    setLEDFeedback(aFeedbackLEDPin, aEnableLEDFeedback);
+#else
+    (void) aEnableLEDFeedback;
+    (void) aFeedbackLEDPin;
+#endif
 
     enableIRIn();
+}
+
+void IRrecv::setReceivePin(uint8_t aReceivePinNumber) {
+    irparams.IRReceivePin = aReceivePinNumber;
+#if defined(__AVR__)
+    irparams.IRReceivePinMask = digitalPinToBitMask(aReceivePinNumber);
+    irparams.IRReceivePinPortInputRegister = portInputRegister(digitalPinToPort(aReceivePinNumber));
+#endif
 }
 
 void IRrecv::start() {
@@ -665,24 +683,24 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
     }
     return 1;
 }
-//+=============================================================================
-// hashdecode - decode an arbitrary IR code.
-// Instead of decoding using a standard encoding scheme
-// (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
-//
-// The algorithm: look at the sequence of MARK signals, and see if each one
-// is shorter (0), the same length (1), or longer (2) than the previous.
-// Do the same with the SPACE signals.  Hash the resulting sequence of 0's,
-// 1's, and 2's to a 32-bit value.  This will give a unique value for each
-// different code (probably), for most code systems.
-//
-// Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
-// Converts the raw code values into a 32-bit hash code.
-// Hopefully this code is unique for each button.
-// This isn't a "real" decoding, just an arbitrary value.
-//
-// see: http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
-//
+/**
+ * hashdecode - decode an arbitrary IR code.
+ * Instead of decoding using a standard encoding scheme
+ * (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
+ *
+ * The algorithm: look at the sequence of MARK signals, and see if each one
+ * is shorter (0), the same length (1), or longer (2) than the previous.
+ * Do the same with the SPACE signals.  Hash the resulting sequence of 0's,
+ * 1's, and 2's to a 32-bit value.  This will give a unique value for each
+ * different code (probably), for most code systems.
+ *
+ * Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
+ * Converts the raw code values into a 32-bit hash code.
+ * Hopefully this code is unique for each button.
+ * This isn't a "real" decoding, just an arbitrary value.
+ *
+ * see: http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
+*/
 #define FNV_PRIME_32 16777619
 #define FNV_BASIS_32 2166136261
 
@@ -829,7 +847,7 @@ bool MATCH_SPACE(uint16_t measured_ticks, uint16_t desired_us) {
     return matchSpace(measured_ticks, desired_us);
 }
 
-// used for ir_Pronto
+// Function used for ir_Pronto
 int getMarkExcessMicros() {
     return MARK_EXCESS_MICROS;
 }
@@ -947,9 +965,9 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
     }
 }
 
-//+=============================================================================
-// Dump out the decode_results structure
-//
+/**
+ * Dump out the decode_results structure
+ */
 void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
     // Print Raw data
     aSerial->print(F("rawData["));
@@ -1002,7 +1020,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
     aSerial->println("");                    // Newline
 }
 
-/*
+/**
  * Dump out the decode_results structure to be used for sendRaw().
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
  *
@@ -1058,7 +1076,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
     aSerial->println("");
 }
 
-/*
+/**
  * Store the decode_results structure to be used for sendRaw().
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
  *
@@ -1189,9 +1207,15 @@ const char* getProtocolString(decode_type_t aProtocol) {
  * As soon as one SPACE entry gets longer than RECORD_GAP_TICKS, state switches to STOP (frame received). Timing of SPACE continues.
  * A call of resume() switches from STOP to IDLE.
  * As soon as first MARK arrives in IDLE, gap width is recorded and new logging starts.
+ *
+ * With digitalRead and Feedback LED
+ * 15 pushs, 1 in, 1 eor before start of code = 2 us @16MHz + * 7.2 us computation time + * pop + reti = 2.25 us @16MHz => 11.5 us @16MHz
+ * With portInputRegister and mask and Feedback LED code commented
+ * 9 pushs, 1 in, 1 eor before start of code = 1.25 us @16MHz + * 2.25 us computation time + * pop + reti = 1.5 us @16MHz => 5 us @16MHz
+ *
  **********************************************************************************************************************/
 //#define IR_MEASURE_TIMING
-//#define IR_TIMING_TEST_PIN 7 // do not forget to execute:  pinMode(7, OUTPUT);
+//#define IR_TIMING_TEST_PIN 7 // do not forget to execute:  pinMode(IR_TIMING_TEST_PIN, OUTPUT);
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 #include "digitalWriteFast.h"
 #endif
@@ -1209,7 +1233,11 @@ ISR () // for functions definitions which are called by separate (board specific
     TIMER_RESET_INTR_PENDING;// reset TickCounterForISR interrupt flag if required (currently only for Teensy and ATmega4809)
 
     // Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
+#if defined(__AVR__)
+    uint8_t irdata = *irparams.IRReceivePinPortInputRegister & irparams.IRReceivePinMask;
+#else
     uint8_t irdata = (uint8_t) digitalRead(irparams.IRReceivePin);
+#endif
 
     // clip TickCounterForISR at maximum 0xFFFF / 3.2 seconds at 50 us ticks
     if (irparams.TickCounterForISR < 0xFFFF) {
@@ -1240,7 +1268,7 @@ ISR () // for functions definitions which are called by separate (board specific
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing Mark
-        if (irdata == SPACE) {   // Mark ended; Record time
+        if (irdata != MARK) {   // Mark ended; Record time
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 //            digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
@@ -1285,7 +1313,13 @@ ISR () // for functions definitions which are called by separate (board specific
             irparams.TickCounterForISR = 0;  // Reset gap TickCounterForISR, to prepare for call of resume()
         }
     }
-    setFeedbackLED(irdata == MARK);
+
+#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+    if (FeedbackLEDControl.LedFeedbackEnabled) {
+        setFeedbackLED(irdata == MARK);
+    }
+#endif
+
 #ifdef IR_MEASURE_TIMING
     digitalWriteFast(IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
 #endif

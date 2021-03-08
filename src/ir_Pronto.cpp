@@ -69,7 +69,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t 
     }
     unsigned int intros = 2 * data[2];
     unsigned int repeats = 2 * data[3];
-    DBG_PRINT(F("intros="));
+    DBG_PRINT(F("sendPronto intros="));
     DBG_PRINT(intros);
     DBG_PRINT(F(" repeats="));
     DBG_PRINTLN(repeats);

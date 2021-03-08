@@ -2,9 +2,7 @@
  * SimpleSender.cpp
  *
  *  Demonstrates sending IR codes in standard format with address and command
- *  An extended example for sending can be found as IRsendDemo.
- *
- * For Arduino Uno, Nano etc., an IR LED must be connected to PWM pin 3 (IR_SEND_PIN).
+ *  An extended example for sending can be found as SendDemo.
  *
  *  Copyright (C) 2020-2021  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
@@ -32,13 +30,14 @@ void setup() {
 
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
-    Serial.print(F("Ready to send IR signals at pin "));
-    Serial.println(IR_SEND_PIN);
 
     /*
      * The IR library setup. That's all!
      */
-    IrSender.begin(IR_SEND_PIN, true); // Specify send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
+
+    Serial.print(F("Ready to send IR signals at pin "));
+    Serial.println(IR_SEND_PIN);
 }
 
 /*
@@ -74,7 +73,6 @@ void loop() {
      */
 //    Serial.println(F("Send NECRaw 0xCB340102"));
 //    IrSender.sendNECRaw(0xCB340102, sRepeats);
-
     /*
      * Increment send values
      * Also increment address just for demonstration, which normally makes no sense
@@ -87,5 +85,5 @@ void loop() {
         sRepeats = 4;
     }
 
-    delay(5000);  // delay must be greater than 5 ms (RECORD_GAP_MICROS), otherwise the receiver sees it as one long signal
+    delay(1000);  // delay must be greater than 5 ms (RECORD_GAP_MICROS), otherwise the receiver sees it as one long signal
 }

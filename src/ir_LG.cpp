@@ -84,7 +84,7 @@ void IRsend::sendLGRepeat() {
  * There is NO delay after the last sent repeat!
  */
 void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
-    uint32_t tRawData = ((uint32_t) aAddress << (LG_COMMAND_BITS + LG_CHECKSUM_BITS)) | (aCommand << LG_CHECKSUM_BITS);
+    uint32_t tRawData = ((uint32_t) aAddress << (LG_COMMAND_BITS + LG_CHECKSUM_BITS)) | ((uint32_t) aCommand << LG_CHECKSUM_BITS);
     /*
      * My guess of the checksum
      */
