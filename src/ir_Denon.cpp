@@ -131,7 +131,7 @@ bool IRrecv::decodeDenon() {
 
     // we have no start bit, so check for the exact amount of data bits
     // Check we have the right amount of data (32). The + 2 is for initial gap + stop bit mark
-    if (irparams.rawlen != (2 * DENON_BITS) + 2) {
+    if (decodedIRData.rawDataPtr->rawlen != (2 * DENON_BITS) + 2) {
         return false;
     }
 
@@ -191,7 +191,7 @@ bool IRrecv::decodeDenon() {
 bool IRrecv::decodeDenon() {
 
     // Check we have the right amount of data
-    if (irparams.rawlen != 1 + 2 + (2 * DENON_BITS) + 1) {
+    if (decodedIRData.rawDataPtr->rawlen != 1 + 2 + (2 * DENON_BITS) + 1) {
         return false;
     }
 

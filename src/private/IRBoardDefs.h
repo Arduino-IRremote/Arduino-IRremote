@@ -50,20 +50,6 @@
 #define SENDPIN_OFF(pin) digitalWrite(pin, LOW)
 #endif
 
-/**
- * Duty cycle in percent for sent signals.
- */
-#if ! defined(IR_SEND_DUTY_CYCLE)
-#define IR_SEND_DUTY_CYCLE 30 // 30 saves power and is compatible to the old existing code
-#endif
-
-/**
- * microseconds per clock interrupt tick
- */
-#if ! defined(MICROS_PER_TICK)
-#define MICROS_PER_TICK    50
-#endif
-
 /***************************************
  * Settings and plausi checks for different boards
  ***************************************/

@@ -152,7 +152,7 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
         sendBoseWave(tCommand, aNumberOfRepeats);
 
     } else if (tProtocol == LEGO_PF) {
-        sendLegoPowerFunctions(aIRSendData); // send 5 autorepeats
+        sendLegoPowerFunctions(tAddress, tCommand, tCommand >> 4, tSendRepeat); // send 5 autorepeats
 #endif
 
     }

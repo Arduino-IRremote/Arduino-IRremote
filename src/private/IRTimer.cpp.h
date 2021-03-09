@@ -256,12 +256,12 @@
 #  endif
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
-    TCCR1A = _BV(WGM11);// PWM, Phase Correct, Top is ICR1
-    TCCR1B = _BV(WGM13) | _BV(CS10);// CS10 -> no prescaling
+    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz);    // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    TCCR1A = _BV(WGM11);                                            // PWM, Phase Correct, Top is ICR1
+    TCCR1B = _BV(WGM13) | _BV(CS10);                                // CS10 -> no prescaling
     ICR1 = pwmval - 1;
     OCR1A = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
-    TCNT1 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
+    TCNT1 = 0;      // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 void timerConfigForReceive() {
@@ -293,11 +293,11 @@ void timerConfigForReceive() {
 #  endif // defined(CORE_OC2B_PIN)
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_SEND_PWM       TCNT2 = 0; (TCCR2A |= _BV(COM2B1))    // Clear OC2B on Compare Match
-#define TIMER_DISABLE_SEND_PWM      (TCCR2A &= ~(_BV(COM2B1))) // Normal port operation, OC2B disconnected.
-#define TIMER_ENABLE_RECEIVE_INTR   (TIMSK2 = _BV(OCIE2B))  // Output Compare Match A Interrupt Enable
+#define TIMER_ENABLE_SEND_PWM       TCNT2 = 0; (TCCR2A |= _BV(COM2B1))  // Clear OC2B on Compare Match
+#define TIMER_DISABLE_SEND_PWM      (TCCR2A &= ~(_BV(COM2B1)))          // Normal port operation, OC2B disconnected.
+#define TIMER_ENABLE_RECEIVE_INTR   (TIMSK2 = _BV(OCIE2B))              // Output Compare Match A Interrupt Enable
 #define TIMER_DISABLE_RECEIVE_INTR  (TIMSK2 = 0)
-#define TIMER_INTR_NAME             TIMER2_COMPB_vect // We use TIMER2_COMPB_vect to be compatible with tone() library
+#define TIMER_INTR_NAME             TIMER2_COMPB_vect                   // We use TIMER2_COMPB_vect to be compatible with tone() library
 
 // The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -305,9 +305,9 @@ void timerConfigForReceive() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  */
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint16_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
-    TCCR2A = _BV(WGM20);// PWM, Phase Correct, Top is OCR2A
-    TCCR2B = _BV(WGM22) | _BV(CS20);// CS20 -> no prescaling
+    const uint16_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz);    // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    TCCR2A = _BV(WGM20);                                            // PWM, Phase Correct, Top is OCR2A
+    TCCR2B = _BV(WGM22) | _BV(CS20);                                // CS20 -> no prescaling
     OCR2A = pwmval - 1;
     OCR2B = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
     TCNT2 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible

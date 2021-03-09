@@ -41,6 +41,10 @@
 #ifndef IRremote_h
 #define IRremote_h
 
+#define VERSION_IRREMOTE "3.1.0"
+#define VERSION_IRREMOTE_MAJOR 3
+#define VERSION_IRREMOTE_MINOR 1
+
 /*
  * If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in decoding and in sending with IrSender.write
  */
@@ -84,6 +88,16 @@
 #warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."
 #endif
 
+/****************************************************
+ * For better readability of code
+ ****************************************************/
+#define DISABLE_LED_FEEDBACK false
+#define ENABLE_LED_FEEDBACK true
+#define USE_DEFAULT_FEEDBACK_LED_PIN 0
+
+/****************************************************
+ *                    RECEIVING
+ ****************************************************/
 /**
  * MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
  * to compensate for the signal forming of different IR receiver modules
@@ -104,6 +118,30 @@
 #define MARK_EXCESS_MICROS    20
 #endif
 
+/**
+ * Minimum gap between IR transmissions, in microseconds
+ * Keep in mind that this is the delay between the end of the received command and the start of decoding
+ * and some of the protocols have gaps of around 20 ms.
+ */
+#if !defined(RECORD_GAP_MICROS)
+#define RECORD_GAP_MICROS   5000 // FREDRICH28AC header space is 9700, NEC header space is 4500
+#endif
+/** Minimum gap between IR transmissions, in MICROS_PER_TICK */
+#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK) // 221 for 1100
+
+/*
+ * Activate this line if your receiver has an external output driver transistor / "inverted" output
+ */
+//#define IR_INPUT_IS_ACTIVE_HIGH
+#ifdef IR_INPUT_IS_ACTIVE_HIGH
+// IR detector output is active high
+#define MARK   1 ///< Sensor output for a mark ("flash")
+#define SPACE  0 ///< Sensor output for a space ("gap")
+#else
+// IR detector output is active low
+#define MARK   0 ///< Sensor output for a mark ("flash")
+#define SPACE  1 ///< Sensor output for a space ("gap")
+#endif
 /****************************************************
  *                     SENDING
  ****************************************************/

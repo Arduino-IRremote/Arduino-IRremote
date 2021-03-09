@@ -58,11 +58,11 @@ bool sLastSendToggleValue = false;
 
 #define RC5_UNIT                889 // (32 cycles of 36 kHz)
 
-#define MIN_RC5_MARKS           ((RC5_BITS + 1) / 2) // 7
+#define MIN_RC5_1S           ((RC5_BITS + 1) / 2) // 7
 
 #define RC5_DURATION            (15L * RC5_UNIT) // 13335
 #define RC5_REPEAT_PERIOD       (128L * RC5_UNIT) // 113792
-#define RC5_REPEAT_SPACE        (RC5_REPEAT_PERIOD - RC5_DURATION) // 100 ms
+#define RC5_REPEAT_0        (RC5_REPEAT_PERIOD - RC5_DURATION) // 100 ms
 
 /*
  * If Command is >=64 then we switch automatically to RC5X
@@ -103,7 +103,7 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay(RC5_REPEAT_SPACE / 1000);
+            delay(RC5_REPEAT_0 / 1000);
         }
     }
 }
@@ -112,7 +112,7 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
 bool IRrecv::decodeRC5() {
 
     // Check we have the right amount of data (11 to 26). The +2 is for initial gap and start bit mark.
-    if (decodedIRData.rawDataPtr->rawlen < MIN_RC5_MARKS + 2 && decodedIRData.rawDataPtr->rawlen > ((2 * RC5_BITS) + 2)) {
+    if (decodedIRData.rawDataPtr->rawlen < MIN_RC5_1S + 2 && decodedIRData.rawDataPtr->rawlen > ((2 * RC5_BITS) + 2)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
@@ -154,8 +154,8 @@ bool IRrecv::decodeRC5() {
 //+=============================================================================
 // Gets one undecoded level at a time from the raw buffer.
 // The RC5/6 decoding is easier if the data is broken into time intervals.
-// E.g. if the buffer has MARK for 2 time intervals and SPACE for 1,
-// successive calls to getRClevel will return MARK, MARK, SPACE.
+// E.g. if the buffer has 1 for 2 time intervals and 0 for 1,
+// successive calls to getRClevel will return 1, 1, 0.
 // offset and used are updated to keep track of the current position.
 // t1 is the time interval for a single bit in microseconds.
 // Returns -1 for error (measured time interval is not a multiple of t1).
@@ -167,11 +167,11 @@ int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int
     uint8_t avail;
 
     if (*offset >= results->rawlen) {
-        return SPACE;  // After end of recorded buffer, assume SPACE.
+        return 0;  // After end of recorded buffer, assume 0.
     }
     width = results->rawbuf[*offset];
-    val = ((*offset) % 2) ? MARK : SPACE;
-    correction = (val == MARK) ? getMarkExcessMicros() : - getMarkExcessMicros();
+    val = ((*offset) % 2) ? 1 : 0;
+    correction = (val == 1) ? getMarkExcessMicros() : - getMarkExcessMicros();
 
     if (matchTicks(width, (t1) + correction)) {
         avail = 1;
@@ -189,7 +189,7 @@ int getRClevel(decode_results *results, unsigned int *offset, uint8_t *used, int
         (*offset)++;
     }
 
-    TRACE_PRINTLN((val == MARK) ? "MARK" : "SPACE");
+    TRACE_PRINTLN((val == 1) ? "1" : "0");
 
     return val;
 }
@@ -201,18 +201,18 @@ bool IRrecv::decodeRC5() {
     uint8_t used = 0;
     unsigned int offset = 1;  // Skip gap space
 
-    if (results.rawlen < MIN_RC5_MARKS + 2) {
+    if (results.rawlen < MIN_RC5_1S + 2) {
         return false;
     }
 
 // Get start bits
-    if (getRClevel(&results, &offset, &used, RC5_UNIT) != MARK) {
+    if (getRClevel(&results, &offset, &used, RC5_UNIT) != 1) {
         return false;
     }
-    if (getRClevel(&results, &offset, &used, RC5_UNIT) != SPACE) {
+    if (getRClevel(&results, &offset, &used, RC5_UNIT) != 0) {
         return false;
     }
-    if (getRClevel(&results, &offset, &used, RC5_UNIT) != MARK) {
+    if (getRClevel(&results, &offset, &used, RC5_UNIT) != 1) {
         return false;
     }
 
@@ -223,9 +223,9 @@ bool IRrecv::decodeRC5() {
         int levelA = getRClevel(&results, &offset, &used, RC5_UNIT);
         int levelB = getRClevel(&results, &offset, &used, RC5_UNIT);
 
-        if ((levelA == SPACE) && (levelB == MARK)) {
+        if ((levelA == 0) && (levelB == 1)) {
             data = (data << 1) | 1;
-        } else if ((levelA == MARK) && (levelB == SPACE)) {
+        } else if ((levelA == 1) && (levelB == 0)) {
             data = (data << 1) | 0;
         } else {
             return false;
@@ -264,21 +264,21 @@ bool IRrecv::decodeRC5() {
 
 #define RC6_UNIT                444 // (16 cycles of 36 kHz)
 
-#define RC6_HEADER_MARK         (6 * RC6_UNIT) // 2666
-#define RC6_HEADER_SPACE        (2 * RC6_UNIT) // 889
+#define RC6_HEADER_1         (6 * RC6_UNIT) // 2666
+#define RC6_HEADER_0        (2 * RC6_UNIT) // 889
 
-#define RC6_TRAILING_SPACE      (6 * RC6_UNIT) // 2666
-#define MIN_RC6_MARKS           4 + ((RC6_ADDRESS_BITS + RC6_COMMAND_BITS) / 2) // 12, 4 are for preamble
+#define RC6_TRAILING_0      (6 * RC6_UNIT) // 2666
+#define MIN_RC6_1S           4 + ((RC6_ADDRESS_BITS + RC6_COMMAND_BITS) / 2) // 12, 4 are for preamble
 
-#define RC6_REPEAT_SPACE        107000 // just a guess but > 2.666ms
+#define RC6_REPEAT_0        107000 // just a guess but > 2.666ms
 
 void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
 // Set IR carrier frequency
     enableIROut(36);
 
 // Header
-    mark(RC6_HEADER_MARK);
-    space(RC6_HEADER_SPACE);
+    mark(RC6_HEADER_1);
+    space(RC6_HEADER_0);
 
 // Start bit
     mark(RC6_UNIT);
@@ -306,8 +306,8 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
     enableIROut(36);
 
 // Header
-    mark(RC6_HEADER_MARK);
-    space(RC6_HEADER_SPACE);
+    mark(RC6_HEADER_1);
+    space(RC6_HEADER_0);
 
 // Start bit
     mark(RC6_UNIT);
@@ -367,7 +367,7 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay(RC6_REPEAT_SPACE / 1000);
+            delay(RC6_REPEAT_0 / 1000);
         }
     }
 }
@@ -376,13 +376,13 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
 bool IRrecv::decodeRC6() {
 
     // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space
-    if (decodedIRData.rawDataPtr->rawlen < MIN_RC6_MARKS + 3 && decodedIRData.rawDataPtr->rawlen > ((2 * RC6_BITS) + 3)) {
+    if (decodedIRData.rawDataPtr->rawlen < MIN_RC6_1S + 3 && decodedIRData.rawDataPtr->rawlen > ((2 * RC6_BITS) + 3)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
 
     // Check header "mark" and "space", this must be done for repeat and data
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], RC6_HEADER_MARK) || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_SPACE)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], RC6_HEADER_1) || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_0)) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }
@@ -464,7 +464,7 @@ bool IRrecv::decodeRC6() {
     decodedIRData.address = tValue.UByte.MidLowByte;
 
     // check for repeat, do not check toggle bit yet
-    if (decodedIRData.rawDataPtr->rawbuf[0] < ((RC6_REPEAT_SPACE + (RC6_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < ((RC6_REPEAT_0 + (RC6_REPEAT_0 / 2)) / MICROS_PER_TICK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
     }
 
@@ -488,21 +488,21 @@ bool IRrecv::decodeRC6() {
     }
 
 // Initial mark
-    if (!matchMark(results.rawbuf[offset], RC6_HEADER_MARK)) {
+    if (!matchMark(results.rawbuf[offset], RC6_HEADER_1)) {
         return false;
     }
     offset++;
 
-    if (!matchSpace(results.rawbuf[offset], RC6_HEADER_SPACE)) {
+    if (!matchSpace(results.rawbuf[offset], RC6_HEADER_0)) {
         return false;
     }
     offset++;
 
 // Get start bit (1)
-    if (getRClevel(&results, &offset, &used, RC6_UNIT) != MARK) {
+    if (getRClevel(&results, &offset, &used, RC6_UNIT) != 1) {
         return false;
     }
-    if (getRClevel(&results, &offset, &used, RC6_UNIT) != SPACE) {
+    if (getRClevel(&results, &offset, &used, RC6_UNIT) != 0) {
         return false;
     }
 
@@ -525,9 +525,9 @@ bool IRrecv::decodeRC6() {
             }
         }
 
-        if ((levelA == MARK) && (levelB == SPACE)) {
+        if ((levelA == 1) && (levelB == 0)) {
             data = (data << 1) | 1;  // inverted compared to RC5
-        } else if ((levelA == SPACE) && (levelB == MARK)) {
+        } else if ((levelA == 0) && (levelB == 1)) {
             data = (data << 1) | 0;
         } else {
             return false;            // Error

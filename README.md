@@ -81,7 +81,8 @@ If you do not know which protocol your IR transmitter uses, you have several cho
  the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
 - To **increase strength of sent output signal** you can increase the current through the send diode, and/or use 2 diodes in series,
  since one IR diode requires only 1.5 volt.
- - The default software generated PWM has problems on ATtinies running with 8 MHz. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable.
+ - Activating line #include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for **Digispark boards** as well as enables serial output at 8MHz.
+ - The default software generated PWM has **problems on ATtinies running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
 
 # Examples
 ### SimpleReceiver + SimpleSender
@@ -115,11 +116,11 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `USE_NO_SEND_PWM` | Before `#include <IRremote.h>` | disabled | Use no carrier PWM, just simulate an active low receiver signal. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | Before `#include <IRremote.h>` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `DISABLE_LED_FEEDBACK_FOR_RECEIVE` | Before `#include <IRremote.h>` | disabled | This disables the LED feedback code for receive, thus saving around 108 bytes program space and halving the receiver ISR processing time. |
-| `IR_INPUT_IS_ACTIVE_HIGH` | IRremoteInt.h | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
+| `IR_INPUT_IS_ACTIVE_HIGH` | Before `#include <IRremote.h>` | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
 | `RAW_BUFFER_LENGTH` | IRremoteint.h | 101 | Buffer size of raw input buffer. Must be odd! |
 | `DEBUG` | IRremoteInt.h | disabled | Enables lots of lovely debug output. |
-| `IR_SEND_DUTY_CYCLE` | IRBoardDefs.h | 30 | Duty cycle of IR send signal. |
-| `MICROS_PER_TICK` | IRBoardDefs.h | 50 | Resolution of the raw input buffer data. |
+| `IR_SEND_DUTY_CYCLE` | IRremoteint.h | 30 | Duty cycle of IR send signal. |
+| `MICROS_PER_TICK` | IRremoteint.h | 50 | Resolution of the raw input buffer data. |
 |-|-|-|-|
 | `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |

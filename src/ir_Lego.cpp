@@ -80,13 +80,6 @@
 #define LEGO_AUTO_REPEAT_PERIOD_MAX 230000 // space for channel 3
 
 /*
- *  compatibility function
- */
-void IRsend::sendLegoPowerFunctions(IRData *aIRSendData, bool aDoSend5Times) {
-    sendLegoPowerFunctions(aIRSendData->address, aIRSendData->command, aIRSendData->command >> 4, aDoSend5Times);
-}
-
-/*
  * Compatibility function for legacy code, this calls the send raw data function
  */
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
