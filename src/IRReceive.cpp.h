@@ -175,6 +175,7 @@ void IRrecv::initDecodedIRData() {
     decodedIRData.rawDataPtr = &irparams;
 
     if (irparams.OverflowFlag) {
+        // Copy overflow flag to decodedIRData.flags
         irparams.OverflowFlag = false;
         irparams.rawlen = 0; // otherwise we have OverflowFlag again at next ISR call
         decodedIRData.flags = IRDATA_FLAGS_WAS_OVERFLOW;
@@ -1126,72 +1127,72 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
     }
 }
 
-const char* getProtocolString(decode_type_t aProtocol) {
+const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
     switch (aProtocol) {
     default:
     case UNKNOWN:
-        return ("UNKNOWN");
+        return (F("UNKNOWN"));
         break;
     case DENON:
-        return ("DENON");
+        return (F("DENON"));
         break;
     case SHARP:
-        return ("SHARP");
+        return (F("SHARP"));
         break;
     case JVC:
-        return ("JVC");
+        return (F("JVC"));
         break;
     case LG:
-        return ("LG");
+        return (F("LG"));
         break;
     case NEC:
-        return ("NEC");
+        return (F("NEC"));
         break;
     case PANASONIC:
-        return ("PANASONIC");
+        return (F("PANASONIC"));
         break;
     case KASEIKYO:
-        return ("KASEIKYO");
+        return (F("KASEIKYO"));
         break;
     case KASEIKYO_DENON:
-        return ("KASEIKYO_DENON");
+        return (F("KASEIKYO_DENON"));
         break;
     case KASEIKYO_SHARP:
-        return ("KASEIKYO_SHARP");
+        return (F("KASEIKYO_SHARP"));
         break;
     case KASEIKYO_JVC:
-        return ("KASEIKYO_JVC");
+        return (F("KASEIKYO_JVC"));
         break;
     case KASEIKYO_MITSUBISHI:
-        return ("KASEIKYO_MITSUBISHI");
+        return (F("KASEIKYO_MITSUBISHI"));
         break;
     case RC5:
-        return ("RC5");
+        return (F("RC5"));
         break;
     case RC6:
-        return ("RC6");
+        return (F("RC6"));
         break;
     case SAMSUNG:
-        return ("SAMSUNG");
+        return (F("SAMSUNG"));
         break;
     case SONY:
-        return ("SONY");
+        return (F("SONY"));
         break;
     case APPLE:
-        return ("APPLE");
+        return (F("APPLE"));
         break;
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
     case BOSEWAVE:
-        return ("BOSEWAVE");
+        return (F("BOSEWAVE"));
         break;
     case LEGO_PF:
-        return ("LEGO_PF");
+        return (F("LEGO_PF"));
         break;
     case MAGIQUEST:
-        return ("MAGIQUEST");
+        return (F("MAGIQUEST"));
         break;
     case WHYNTER:
-        return ("WHYNTER");
+        return (F("WHYNTER"));
         break;
 #endif
     }
@@ -1209,7 +1210,7 @@ const char* getProtocolString(decode_type_t aProtocol) {
  * As soon as first MARK arrives in IDLE, gap width is recorded and new logging starts.
  *
  * With digitalRead and Feedback LED
- * 15 pushs, 1 in, 1 eor before start of code = 2 us @16MHz + * 7.2 us computation time + * pop + reti = 2.25 us @16MHz => 11.5 us @16MHz
+ * 15 pushs, 1 in, 1 eor before start of code = 2 us @16MHz + * 7.2 us computation time (6us idle time) + * pop + reti = 2.25 us @16MHz => 10.3 to 11.5 us @16MHz
  * With portInputRegister and mask and Feedback LED code commented
  * 9 pushs, 1 in, 1 eor before start of code = 1.25 us @16MHz + * 2.25 us computation time + * pop + reti = 1.5 us @16MHz => 5 us @16MHz
  *
@@ -1228,18 +1229,18 @@ ISR () // for functions definitions which are called by separate (board specific
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
     digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-    // 7 - 8.5 us for ISR body (without pushes and pops) for ATmega328 @16MHz
+// 7 - 8.5 us for ISR body (without pushes and pops) for ATmega328 @16MHz
 
     TIMER_RESET_INTR_PENDING;// reset TickCounterForISR interrupt flag if required (currently only for Teensy and ATmega4809)
 
-    // Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
+// Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
 #if defined(__AVR__)
     uint8_t irdata = *irparams.IRReceivePinPortInputRegister & irparams.IRReceivePinMask;
 #else
     uint8_t irdata = (uint8_t) digitalRead(irparams.IRReceivePin);
 #endif
 
-    // clip TickCounterForISR at maximum 0xFFFF / 3.2 seconds at 50 us ticks
+// clip TickCounterForISR at maximum 0xFFFF / 3.2 seconds at 50 us ticks
     if (irparams.TickCounterForISR < 0xFFFF) {
         irparams.TickCounterForISR++;  // One more 50uS tick
     }
@@ -1249,7 +1250,7 @@ ISR () // for functions definitions which are called by separate (board specific
      * So we change the code to if / else if
      */
 //    switch (irparams.StateForISR) {
-    //......................................................................
+//......................................................................
     if (irparams.StateForISR == IR_REC_STATE_IDLE) { // In the middle of a gap
         if (irdata == MARK) {
             // check if we did not start in the middle of an command by checking the minimum length of leading space

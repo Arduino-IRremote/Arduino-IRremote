@@ -2,6 +2,7 @@
  * ReceiveDemo.cpp
  *
  * Demonstrates receiving IR codes with the IRremote library.
+ * If debug button is pressed (pin connected to ground) a long output is generated.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -39,13 +40,13 @@
 //#define DECODE_LG           1
 //#define DECODE_NEC          1
 // etc. see IRremote.h
-
+//
 //#define DISABLE_LED_FEEDBACK_FOR_RECEIVE // saves 108 bytes program space
-
-#if defined(__AVR_ATtiny85__)
+#if FLASHEND > 0x1FFF
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #endif
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 670 bytes program space if all protocols are active
+//#define IR_MEASURE_TIMING
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 // to compensate for the signal forming of different IR receiver modules.
@@ -59,7 +60,7 @@
 #include <IRremote.h>
 
 #if defined(APPLICATION_PIN)
-#define DEBUG_BUTTON_PIN    APPLICATION_PIN // if held low, print timing for each received data
+#define DEBUG_BUTTON_PIN    APPLICATION_PIN // if low, print timing for each received data set
 #else
 #define DEBUG_BUTTON_PIN   6
 #endif
@@ -70,7 +71,10 @@
 #endif
 
 void setup() {
-#if !defined(__AVR_ATtiny85__)
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+    pinMode(IR_TIMING_TEST_PIN, OUTPUT);
+#endif
+#if FLASHEND > 0x1FFF
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
 #endif
 
@@ -92,6 +96,11 @@ void setup() {
 
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);
+
+#if FLASHEND > 0x1FFF
+    Serial.print(F("Debug button pin is "));
+    Serial.println(DEBUG_BUTTON_PIN);
+#endif
 
     // infos for receive
     Serial.print(MARK_EXCESS_MICROS);

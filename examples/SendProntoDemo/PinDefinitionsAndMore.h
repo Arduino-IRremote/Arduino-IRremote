@@ -69,15 +69,15 @@
 #define IR_TIMING_TEST_PIN      PA5
 
 #elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-//#include "ATtinySerialOut.h"
 #  if  defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-#    if defined(ARDUINO_AVR_DIGISPARK)
+#    if defined(ARDUINO_AVR_DIGISPARK) // tested with 16 and 8 MHz
+//#include "ATtinySerialOut.h" // saves 370 bytes program space and 38 bytes RAM
 #define LED_BUILTIN     PB1
 #    endif
 #define IR_RECEIVE_PIN  0
 #define IR_SEND_PIN     4 // Pin 2 is serial output with ATtinySerialOut. Pin 1 is internal LED and Pin3 is USB+ with pullup on Digispark board.
 #define TONE_PIN        3
-//#define IR_TIMING_TEST_PIN 3
+#define IR_TIMING_TEST_PIN 3
 
 #  else
 // ATtiny87 + ATtiny167 here. For ATtiny167 Pins PB6 and PA3 are usable as interrupt source.

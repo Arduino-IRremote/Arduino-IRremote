@@ -225,6 +225,7 @@ void loop() {
     IrSender.sendLegoPowerFunctions(sAddress, sCommand, LEGO_MODE_COMBO, true);
     delay(DELAY_AFTER_SEND);
 
+#endif // FLASHEND > 0x1FFF
     /*
      * Force buffer overflow
      */
@@ -246,7 +247,7 @@ void loop() {
     if (sRepeats > 4) {
         sRepeats = 4;
     }
-#endif // FLASHEND > 0x1FFF
+
 
     delay(DELAY_AFTER_LOOP); // additional delay at the end of each loop
 }

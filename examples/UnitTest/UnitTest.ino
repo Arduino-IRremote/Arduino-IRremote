@@ -56,7 +56,7 @@
 
 void setup() {
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
-#if defined(IR_TIMING_TEST_PIN)
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
     pinMode(IR_TIMING_TEST_PIN, OUTPUT);
 #endif
 

@@ -81,6 +81,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
  the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
 - To **increase strength of sent output signal** you can increase the current through the send diode, and/or use 2 diodes in series,
  since one IR diode requires only 1.5 volt.
+ - The default software generated PWM has problems on ATtinies running with 8 MHz. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable.
 
 # Examples
 ### SimpleReceiver + SimpleSender

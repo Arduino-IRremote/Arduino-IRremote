@@ -61,7 +61,7 @@ typedef enum {
     WHYNTER,
 } decode_type_t;
 
-const char* getProtocolString(decode_type_t aProtocol);
+const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
 
 #define PROTOCOL_IS_LSB_FIRST false
 #define PROTOCOL_IS_MSB_FIRST true

@@ -86,7 +86,7 @@
 #define IR_REC_STATE_STOP      3
 
 /**
- * This struct contains the data and control used for static functions and the ISR (interrupt service routine)
+ * This struct contains the data and control used for receiver static functions and the ISR (interrupt service routine)
  * Only StateForISR needs to be volatile. All the other fields are not written by ISR after data available and before start/resume.
  */
 struct irparams_struct {

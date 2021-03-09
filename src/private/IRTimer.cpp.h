@@ -30,6 +30,9 @@
  ************************************************************************************
  */
 #include "IRremoteInt.h"
+#if defined(SEND_PWM_BY_TIMER) && !defined(ESP32)
+#undef IR_SEND_PIN // send pin is determined by timer except for ESP32
+#endif
 
 #ifdef DOXYGEN
 /**
@@ -101,9 +104,13 @@
 //ATtiny85
 #elif defined(__AVR_ATtiny85__)
 #  if !defined(IR_USE_AVR_TIMER_TINY0) && !defined(IR_USE_AVR_TIMER_TINY1)
-// standard Digispark and ATTinyCore settings use timer 0 for millis() and micros()
+#    if defined(ARDUINO_AVR_DIGISPARK) // tested with 16 and 8 MHz
+#define IR_USE_AVR_TIMER_TINY0   // send pin = pin 1
+// standard Digispark settings use timer 1 for millis() and micros()
+#    else
+// standard ATTinyCore settings use timer 0 for millis() and micros()
 #define IR_USE_AVR_TIMER_TINY1   // send pin = pin 4
-//#define IR_USE_AVR_TIMER_TINY0   // send pin = pin 1
+#    endif
 #  endif
 
 /***************************************
@@ -510,11 +517,11 @@ void timerConfigForReceive() {
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     const uint16_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
-    TCCR0A = _BV(WGM00);// PWM, Phase Correct, Top is OCR0A
-    TCCR0B = _BV(WGM02) | _BV(CS00);// CS00 -> no prescaling
+    TCCR0A = _BV(WGM00); // PWM, Phase Correct, Top is OCR0A
+    TCCR0B = _BV(WGM02) | _BV(CS00); // CS00 -> no prescaling
     OCR0A = pwmval - 1;
     OCR0B = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
-    TCNT0 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
+    TCNT0 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 #define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
