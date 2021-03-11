@@ -68,33 +68,36 @@
 #define TONE_PIN                PA3
 #define IR_TIMING_TEST_PIN      PA5
 
-#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#  if  defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-#    if defined(ARDUINO_AVR_DIGISPARK) // tested with 16 and 8 MHz
-//#include "ATtinySerialOut.h" // saves 370 bytes program space and 38 bytes RAM
-#define LED_BUILTIN     PB1
-#    endif
+#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+#include "ATtinySerialOut.h" // Available as Arduino library. saves 370 bytes program space and 38 bytes RAM
 #define IR_RECEIVE_PIN  0
 #define IR_SEND_PIN     4 // Pin 2 is serial output with ATtinySerialOut. Pin 1 is internal LED and Pin3 is USB+ with pullup on Digispark board.
 #define TONE_PIN        3
 #define IR_TIMING_TEST_PIN 3
 
-#  else
-// ATtiny87 + ATtiny167 here. For ATtiny167 Pins PB6 and PA3 are usable as interrupt source.
-#    if defined(ARDUINO_AVR_DIGISPARKPRO)
-#define LED_BUILTIN      1 // PB1 - on Digispark board labeled as pin 1 / for ATtinyCore lib use D9
+#elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
+#include "ATtinySerialOut.h"
+// For ATtiny167 Pins PB6 and PA3 are usable as interrupt source.
+#  if defined(ARDUINO_AVR_DIGISPARKPRO)
 #define IR_RECEIVE_PIN   9 // PA3 - on Digispark board labeled as pin 9
 //#define IR_RECEIVE_PIN  14 // PB6 / INT0 is connected to USB+ on DigisparkPro boards
 #define IR_SEND_PIN      8 // PA2 - on Digispark board labeled as pin 8
 #define TONE_PIN         5 // PA7
 #define IR_TIMING_TEST_PIN 10 // PA4
 
-#    else
+#  else
 #define IR_RECEIVE_PIN  3
 #define IR_SEND_PIN     2
 #define TONE_PIN        7
-#    endif
 #  endif
+
+#elif defined(__AVR_ATtiny88__) // MH-ET Tiny88 board
+#include "ATtinySerialOut.h" // Available as Arduino library. Saves 128 bytes program space
+// Pin 6 is TX pin 7 is RX
+#define IR_RECEIVE_PIN   3 // INT1
+#define IR_SEND_PIN      4
+#define TONE_PIN         9
+#define IR_TIMING_TEST_PIN 8
 
 #elif defined(__AVR_ATtiny3217__)
 #define IR_RECEIVE_PIN  10

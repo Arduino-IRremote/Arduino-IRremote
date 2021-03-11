@@ -30,7 +30,7 @@
 
 #if defined(USE_TINY_IR_RECEIVER_INSTEAD_OF_IRMP)
 #define USE_TINY_IR_RECEIVER // must be specified before including IRCommandDispatcher.cpp.h to define which IR library to use
-//#define TINY_RECEICER_USE_ARDUINO_ATTACH_INTERRUPT // costs 112 bytes FLASH + 4bytes RAM
+//#define TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT // costs 112 bytes FLASH + 4bytes RAM
 
 /*
  * Helper macro for getting a macro definition as string

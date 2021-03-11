@@ -43,10 +43,7 @@
 #  if defined(ARDUINO_AVR_DIGISPARKPRO)
 #define IR_INPUT_PIN    9 // PA3 - on Digispark board labeled as pin 9
 #  else
-#define IR_INPUT_PIN    0
-#  endif
-#  if defined(ARDUINO_AVR_DIGISPARK)
-#define LED_BUILTIN PB1
+#define IR_INPUT_PIN    0 // PCINT0
 #  endif
 
 #elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)

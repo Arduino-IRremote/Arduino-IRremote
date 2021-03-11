@@ -85,6 +85,8 @@ If you do not know which protocol your IR transmitter uses, you have several cho
  - The default software generated PWM has **problems on ATtinies running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
 
 # Examples
+In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.
+
 ### SimpleReceiver + SimpleSender
 This examples are a good starting point.
 

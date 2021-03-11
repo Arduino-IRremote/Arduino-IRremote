@@ -208,7 +208,7 @@ void initPCIInterruptForTinyReceiver() {
 #if defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
     attachInterrupt(IR_INPUT_PIN, IRPinChangeInterruptHandler, CHANGE); // 2.2 us more than version configured with macros and not compatible
 
-#elif ! defined(__AVR__) || defined(TINY_RECEICER_USE_ARDUINO_ATTACH_INTERRUPT)
+#elif ! defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
     // costs 112 bytes FLASH + 4bytes RAM
     attachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN), IRPinChangeInterruptHandler, CHANGE);
 #else
@@ -260,7 +260,7 @@ void initPCIInterruptForTinyReceiver() {
 
 #  else // defined(__AVR_ATtiny25__)
     /*
-     * ATmegas here
+     * ATmegas + ATtiny88 here
      */
 #    if (IR_INPUT_PIN == 2)
     // interrupt on any logical change
@@ -297,41 +297,43 @@ void initPCIInterruptForTinyReceiver() {
 /*
  * Specify the right INT0, INT1 or PCINT0 interrupt vector according to different pins and cores
  */
-#if defined(__AVR__) && !defined(TINY_RECEICER_USE_ARDUINO_ATTACH_INTERRUPT)
-#  if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+/*
+ * Specify the right INT0, INT1 or PCINT0 interrupt vector according to different pins and cores
+ */
+#if defined(__AVR__) && !defined(IRMP_USE_ARDUINO_ATTACH_INTERRUPT)
+#  if (IR_INPUT_PIN == 2)
+ISR(INT0_vect) // Pin 2 global assignment
+
+#  elif (IR_INPUT_PIN == 3)
+#    if  defined(ARDUINO_AVR_DIGISPARKPRO)
+ISR(INT0_vect) //  Pin 3 / PB6 / INT0 is connected to USB+ on DigisparkPro boards
+#    else
+ISR(INT1_vect) // Pin 3 global assignment
+#    endif
+
+#  elif (IR_INPUT_PIN == 9) && defined(ARDUINO_AVR_DIGISPARKPRO) // Digispark pro
+ISR(INT1_vect)
+
+#  elif (IR_INPUT_PIN == 14) && (defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))// For AVR_ATtiny167 INT0 is on pin 14 / PB6
+ISR(INT0_vect)
+
+#  elif (! defined(ISC10)) || ((defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)) && INT1_PIN != 3)
+// on ATtinyX5 we do not have a INT1_vect but we can use the PCINT0_vect
 ISR(PCINT0_vect)
-#  elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#    if defined(ARDUINO_AVR_DIGISPARKPRO)
-#      if (IR_INPUT_PIN == 3) //  PB6 / INT0 is connected to USB+ on DigisparkPro boards
-ISR(INT0_vect)
-#      endif
-#     if (IR_INPUT_PIN == 9)
-ISR(INT1_vect)
-#     endif
 
-#    else // defined(ARDUINO_AVR_DIGISPARKPRO)
-#      if (IR_INPUT_PIN == 14) // For AVR_ATtiny167 INT0 is on pin 14 / PB6
-ISR(INT0_vect)
-#      endif
-#    endif
-
-#  else // AVR_ATtiny167
-#    if (IR_INPUT_PIN == 2)
-ISR(INT0_vect)
-#    endif
-#    if (IR_INPUT_PIN == 3) && !defined(ARDUINO_AVR_DIGISPARKPRO)
-ISR(INT1_vect)
-#    elif IR_INPUT_PIN == 4 || IR_INPUT_PIN == 5 || IR_INPUT_PIN == 6 || IR_INPUT_PIN == 7
+#  elif IR_INPUT_PIN == 4 || IR_INPUT_PIN == 5 || IR_INPUT_PIN == 6 || IR_INPUT_PIN == 7
 // PCINT for ATmega328 Arduino pins 4 (PD4) to 7 (PD7) - (PCINT 20 to 23)
 ISR(PCINT2_vect)
-#    elif IR_INPUT_PIN == 8 || IR_INPUT_PIN == 9 || IR_INPUT_PIN == 10 || IR_INPUT_PIN == 11 || IR_INPUT_PIN == 12 || IR_INPUT_PIN == 13
+
+#  elif IR_INPUT_PIN == 8 || IR_INPUT_PIN == 9 || IR_INPUT_PIN == 10 || IR_INPUT_PIN == 11 || IR_INPUT_PIN == 12 || IR_INPUT_PIN == 13
 // PCINT for ATmega328 Arduino pins 8 (PB0) to 13 (PB5) - (PCINT 0 to 5)
 ISR(PCINT0_vect)
-#    elif IR_INPUT_PIN == A0 || IR_INPUT_PIN == A1 || IR_INPUT_PIN == A2 || IR_INPUT_PIN == A3 || IR_INPUT_PIN == A4 || IR_INPUT_PIN == A5
+
+# elif IR_INPUT_PIN == A0 || IR_INPUT_PIN == A1 || IR_INPUT_PIN == A2 || IR_INPUT_PIN == A3 || IR_INPUT_PIN == A4 || IR_INPUT_PIN == A5
 // PCINT for ATmega328 Arduino pins A1 (PC0) to A5 (PC5) - (PCINT 8 to 13)
 ISR(PCINT1_vect)
-#    endif
-#  endif // defined(__AVR_ATtiny25__)
+
+#  endif
 {
     IRPinChangeInterruptHandler();
 }

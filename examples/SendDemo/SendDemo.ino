@@ -108,7 +108,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     if (sRepeats == 0) {
-#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85
+#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
         /*
          * Send constant values only once in this demo
          */
@@ -185,7 +185,7 @@ void loop() {
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85
+#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
     /*
      * Next example how to use the IrSender.write function
      */

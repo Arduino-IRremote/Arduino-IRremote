@@ -29,10 +29,6 @@ jobs:
 
     runs-on: ubuntu-18.04 # I picked Ubuntu to use shell scripts.
 
-    env:
-      # Comma separated list without double quotes around the list.
-      REQUIRED_LIBRARIES: Keyboard
-
     strategy:
       matrix:
         # The matrix will produce one job for each configuration parameter of type `arduino-boards-fqbn`
@@ -104,13 +100,22 @@ jobs:
 
           - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock1
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
-            sketches-exclude: IR2Keyboard,UnitTest,ControlRelay,ReceiveAndSend,ReceiveDump,SendProntoDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM, missing digitalPinToInterrupt
+            required-libraries: ATtinySerialOut
+            sketches-exclude: IR2Keyboard,UnitTest,ControlRelay,ReceiveAndSend,ReceiveDump,SendProntoDemo,SendBoseWaveDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM, missing digitalPinToInterrupt
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              All: -DEXCLUDE_EXOTIC_PROTOCOLS
+
+          - arduino-boards-fqbn: digistump:avr:MHETtiny88  # ATtiny88 China clone board @16 MHz
+            platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
+            required-libraries: ATtinySerialOut
+            sketches-exclude: IR2Keyboard,UnitTest,ControlRelay,ReceiveAndSend,ReceiveDump,SendProntoDemo,SendBoseWaveDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM, missing digitalPinToInterrupt
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DEXCLUDE_EXOTIC_PROTOCOLS
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx5:chip=85,clock=1internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: IR2Keyboard,UnitTest,ReceiveAndSend,ReceiveDump,SendProntoDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM
+            required-libraries: ATtinySerialOut
+            sketches-exclude: IR2Keyboard,UnitTest,ReceiveAndSend,ReceiveDump,SendProntoDemo,SendBoseWaveDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DEXCLUDE_EXOTIC_PROTOCOLS
 
@@ -156,6 +161,6 @@ jobs:
           arduino-board-fqbn: ${{ matrix.arduino-boards-fqbn }}
           arduino-platform: ${{ matrix.arduino-platform }}
           platform-url: ${{ matrix.platform-url }}
-          required-libraries: ${{ env.REQUIRED_LIBRARIES }}
+          required-libraries: ${{ matrix.required-libraries }}
           sketches-exclude: ${{ matrix.sketches-exclude }}
           build-properties: ${{ toJson(matrix.build-properties) }}

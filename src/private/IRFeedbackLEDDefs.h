@@ -92,32 +92,22 @@ struct FeedbackLEDControlStruct FeedbackLEDControl;
 #define FEEDBACK_LED_ON()   digitalWrite(FEEDBACK_LED, LOW)
 #define FEEDBACK_LED_OFF()  digitalWrite(FEEDBACK_LED, HIGH)
 #  endif
-/*
- * These are the boards for which the default case was verified and the warning below is suppressed
- */
-// Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
-// Arduino Zero
-#elif !(defined(__AVR_ATmega4809__) || defined(NRF5) || defined(ARDUINO_ARCH_NRF52840) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny85__) \
-    || defined(ARDUINO_ARCH_SAMD) \
-    || defined(CORE_LED0_PIN) \
-    || defined(ARDUINO_ARCH_STM32F1) \
-    || defined(ARDUINO_ARCH_STM32) \
-    )
-/*
- * print a warning
- */
-#warning No definition for default feedback LED found. Check private/IRFeedbackLEDDefs.h.
 
 #else
 /*
  * Default case
  */
 #  ifdef LED_BUILTIN
-#     if !defined(FEEDBACK_LED)
+#    if !defined(FEEDBACK_LED)
 #define FEEDBACK_LED        LED_BUILTIN
 #    endif
 #define FEEDBACK_LED_ON()   digitalWrite(FEEDBACK_LED, HIGH)
 #define FEEDBACK_LED_OFF()  digitalWrite(FEEDBACK_LED, LOW)
+#  else
+/*
+ * print a warning
+ */
+#warning No definition for LED_BUILTIN or default feedback LED found. Check private/IRFeedbackLEDDefs.h.
 #  endif
 #endif
 

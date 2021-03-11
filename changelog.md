@@ -11,6 +11,7 @@
 - Removed decode_results results.
 - Added unit test and fixed LG send bug.
 - MATCH_MARK() etc. now available as matchMark().
+- Added ATtiny88 support.
 
 ## 3.0.2
 - Bug fix for USE_OLD_DECODE.

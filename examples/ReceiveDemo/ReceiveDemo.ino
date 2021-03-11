@@ -42,7 +42,7 @@
 // etc. see IRremote.h
 //
 //#define DISABLE_LED_FEEDBACK_FOR_RECEIVE // saves 108 bytes program space
-#if FLASHEND > 0x1FFF
+#if FLASHEND <= 0x1FFF
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #endif
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 670 bytes program space if all protocols are active
@@ -74,7 +74,7 @@ void setup() {
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
     pinMode(IR_TIMING_TEST_PIN, OUTPUT);
 #endif
-#if FLASHEND > 0x1FFF
+#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
 #endif
 
@@ -97,7 +97,7 @@ void setup() {
     Serial.print(F("Ready to receive IR signals at pin "));
     Serial.println(IR_RECEIVE_PIN);
 
-#if FLASHEND > 0x1FFF
+#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
     Serial.print(F("Debug button pin is "));
     Serial.println(DEBUG_BUTTON_PIN);
 #endif
