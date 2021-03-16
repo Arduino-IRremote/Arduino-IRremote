@@ -1,4 +1,4 @@
-If you have handling problems or questions, consider to open a discussion https://github.com/ukw100/IRMP/discussions instead of an issue.
+If you have handling problems or questions, consider to open a discussion https://github.com/Arduino-IRremote/Arduino-IRremote/discussions instead of an issue.
 
 ### Board
 * [ ] Arduino ATmega328* board (UNO, Nano)
@@ -42,7 +42,7 @@ If you have handling problems or questions, consider to open a discussion https:
 * [ ] Other - please specify
 
 ### Version
-* [ ] Yes I use the [latest repo version](https://github.com/ukw100/IRMP/archive/master.zip) and verified this!
+* [ ] Yes I use the [latest repo version](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) and verified this!
 * [ ] Other - please specify
 
 Please delete all unchecked lines above :-)

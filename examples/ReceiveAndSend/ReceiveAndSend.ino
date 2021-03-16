@@ -1,15 +1,18 @@
 /*
  * ReceiveAndSend.cpp
  *
- * Record and play back IR signals as a minimal
- * An IR detector/demodulator must be connected to the input IR_RECEIVE_PIN.
-
- * A button must be connected between the input SEND_BUTTON_PIN and ground.
- * A visible LED can be connected to STATUS_PIN to provide status.
- *
+ * Record and play back last received IR signal at button press.
  * The logic is:
  * If the button is pressed, send the IR code.
  * If an IR code is received, record it.
+ *
+ * An example for simultaneous receiving and sending is in the UnitTest example.
+ *
+ * An IR detector/demodulator must be connected to the input IR_RECEIVE_PIN.
+ *
+ * A button must be connected between the input SEND_BUTTON_PIN and ground.
+ * A visible LED can be connected to STATUS_PIN to provide status.
+ *
  *
  * Initially coded 2009 Ken Shirriff http://www.righto.com
  *
