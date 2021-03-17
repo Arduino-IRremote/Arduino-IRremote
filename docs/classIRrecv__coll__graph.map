@@ -1,0 +1,5 @@
+<map id="IRrecv" name="IRrecv">
+<area shape="rect" id="node1" title="Main class for receiving IR signals." alt="" coords="33,184,90,211"/>
+<area shape="rect" id="node2" href="$structIRData.html" title="Data structure for the user application, available as decodedIRData." alt="" coords="31,95,92,121"/>
+<area shape="rect" id="node3" href="$structirparams__struct.html" title="This struct contains the data and control used for receiver static functions and the ISR (interrupt s..." alt="" coords="5,5,117,32"/>
+</map>

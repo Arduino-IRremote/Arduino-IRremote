@@ -1,0 +1,5 @@
+<map id="TinyIRReceiverStruct" name="TinyIRReceiverStruct">
+<area shape="rect" id="node1" title="Control and data variables of the state machine for TinyReceiver." alt="" coords="5,213,148,240"/>
+<area shape="rect" id="node2" href="$unionLongUnion.html" title="Union to specify parts / manifestations of a 32 bit Long without casts and shifts." alt="" coords="35,124,118,151"/>
+<area shape="rect" id="node3" href="$unionWordUnion.html" title="Union to specify parts / manifestations of a 16 bit Word without casts and shifts." alt="" coords="33,5,120,32"/>
+</map>

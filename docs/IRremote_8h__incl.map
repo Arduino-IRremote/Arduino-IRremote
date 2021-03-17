@@ -1,0 +1,11 @@
+<map id="src/IRremote.h" name="src/IRremote.h">
+<area shape="rect" id="node1" title="Public API to the library." alt="" coords="191,5,297,32"/>
+<area shape="rect" id="node2" href="$IRremoteInt_8h.html" title="Contains all declarations required for the internal functions." alt="" coords="49,155,148,181"/>
+<area shape="rect" id="node5" href="$IRTimer_8cpp_8h.html" title="All timer specific definitions are contained in this file." alt="" coords="173,80,315,107"/>
+<area shape="rect" id="node6" href="$IRFeedbackLED_8cpp_8h.html" title="All Feedback LED specific functions are contained in this file." alt="" coords="479,80,631,107"/>
+<area shape="rect" id="node8" href="$IRReceive_8cpp_8h.html" title=" " alt="" coords="340,80,455,107"/>
+<area shape="rect" id="node9" href="$IRSend_8cpp_8h.html" title=" " alt="" coords="49,80,149,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,229,83,256"/>
+<area shape="rect" id="node4" href="$IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="107,229,200,256"/>
+<area shape="rect" id="node7" href="$IRFeedbackLEDDefs_8h.html" title="All feedback LED definitions are contained in this file." alt="" coords="457,155,652,181"/>
+</map>
