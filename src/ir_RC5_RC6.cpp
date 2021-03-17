@@ -298,7 +298,7 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
         }
     }
 
-    ledOff();  // Always end with the LED off
+//    ledOff();  // Always end with the LED off
 }
 
 void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
@@ -327,7 +327,7 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
         }
     }
 
-    ledOff();  // Always end with the LED off
+//    ledOff();  // Always end with the LED off
 }
 
 /*
@@ -563,7 +563,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
         }
     }
 
-    ledOff();  // Always end with the LED off
+//    ledOff();  // Always end with the LED off
 }
 
 /*
@@ -631,5 +631,5 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
         }
     }
 
-    ledOff();  // Always end with the LED off
+//    ledOff();  // Always end with the LED off
 }

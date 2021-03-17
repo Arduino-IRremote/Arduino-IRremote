@@ -58,7 +58,7 @@ PROJECT_LOGO           =
 # entered, it will be relative to the location where doxygen was started. If
 # left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       =
+OUTPUT_DIRECTORY       = ..\Arduino-IRremote_gh-pages
 
 # If the CREATE_SUBDIRS tag is set to YES then doxygen will create 4096 sub-
 # directories (in 2 levels) under the output directory of each output format and
@@ -815,7 +815,6 @@ WARN_LOGFILE           =
 
 INPUT                  = src \
                          src/private \
-                         examples/MicroGirs \
                          .
 
 # This tag can be used to specify the character encoding of the source files
@@ -1064,7 +1063,7 @@ VERBATIM_HEADERS       = YES
 # classes, structs, unions or interfaces.
 # The default value is: YES.
 
-ALPHABETICAL_INDEX     = YES
+ALPHABETICAL_INDEX     = NO
 
 # The COLS_IN_ALPHA_INDEX tag can be used to specify the number of columns in
 # which the alphabetical index list will be split.
@@ -1095,8 +1094,6 @@ GENERATE_HTML          = YES
 # it.
 # The default directory is: html.
 # This tag requires that the tag GENERATE_HTML is set to YES.
-
-# This name is selected to be able to easily publish with GitHub's gh-pages.
 
 HTML_OUTPUT            = docs
 
@@ -1457,7 +1454,7 @@ DISABLE_INDEX          = NO
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-GENERATE_TREEVIEW      = NO
+GENERATE_TREEVIEW      = YES
 
 # The ENUM_VALUES_PER_LINE tag can be used to set the number of enum values that
 # doxygen will group on one line in the generated HTML documentation.

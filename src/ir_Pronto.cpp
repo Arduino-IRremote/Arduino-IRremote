@@ -34,6 +34,14 @@
 //#define DEBUG // Activate this for lots of lovely debug output.
 #include "IRremoteInt.h"
 
+
+#if defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1) // Recommended original Arduino_STM32 by Roger Clark.
+#  if !defined(strncpy_P)
+// this define is not included in the pgmspace.h file see https://github.com/rogerclarkmelbourne/Arduino_STM32/issues/852
+#define strncpy_P(dest, src, size) strncpy((dest), (src), (size))
+#  endif
+#endif
+
 // DO NOT EXPORT from this file
 static const uint16_t MICROSECONDS_T_MAX = 0xFFFFU;
 static const uint16_t learnedToken = 0x0000U;
@@ -126,8 +134,8 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t 
  * to transform Pronto type signals offline
  * to a more memory efficient format.
  *
- * @param prontoHexString C type string (null terminated) containing a Pronto Hex representation.
- * @param times Number of times to send the signal.
+ * @param str C type string (null terminated) containing a Pronto Hex representation.
+ * @param aNumberOfRepeats Number of times to send the signal.
  */
 void IRsend::sendPronto(const char *str, uint_fast8_t aNumberOfRepeats) {
     size_t len = strlen(str) / (digitsInProntoNumber + 1) + 1;
@@ -150,8 +158,8 @@ void IRsend::sendPronto(const char *str, uint_fast8_t aNumberOfRepeats) {
 #if defined(__AVR__)
 /**
  * Version of sendPronto that reads from PROGMEM, saving RAM memory.
- * @param pronto C type string (null terminated) containing a Pronto Hex representation.
- * @param times Number of times to send the signal.
+ * @param str pronto C type string (null terminated) containing a Pronto Hex representation.
+ * @param aNumberOfRepeats Number of times to send the signal.
  */
 //far pointer (? for ATMega2560 etc.)
 void IRsend::sendPronto_PF(uint_farptr_t str, uint_fast8_t aNumberOfRepeats) {
@@ -229,19 +237,18 @@ static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *d
 }
 
 /**
- * Print the result (second argument) as Pronto Hex on the Stream supplied as argument.
- * @param stream The Stream on which to write, often Serial
- * @param results the decode_results as delivered from irrecv.decode.
- * @param frequency Modulation frequency in Hz. Often 38000Hz.
+ * Print the result (second argument) as Pronto Hex on the Print supplied as argument.
+ * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ * @param aFrequencyHertz Modulation frequency in Hz. Often 38000Hz.
  */
-void IRrecv::compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int frequency) {
+void IRrecv::compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int aFrequencyHertz) {
     aSerial->println(F("Pronto Hex as string"));
     aSerial->print(F("char ProntoData[] = \""));
-    dumpNumber(aSerial, frequency > 0 ? learnedToken : learnedNonModulatedToken);
-    dumpNumber(aSerial, toFrequencyCode(frequency));
+    dumpNumber(aSerial, aFrequencyHertz > 0 ? learnedToken : learnedNonModulatedToken);
+    dumpNumber(aSerial, toFrequencyCode(aFrequencyHertz));
     dumpNumber(aSerial, (decodedIRData.rawDataPtr->rawlen + 1) / 2);
     dumpNumber(aSerial, 0);
-    unsigned int timebase = toTimebase(frequency);
+    unsigned int timebase = toTimebase(aFrequencyHertz);
     compensateAndDumpSequence(aSerial, &decodedIRData.rawDataPtr->rawbuf[1], decodedIRData.rawDataPtr->rawlen - 1, timebase); // skip leading space
     aSerial->println("\"");
 }

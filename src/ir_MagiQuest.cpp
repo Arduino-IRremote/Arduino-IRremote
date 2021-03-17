@@ -11,6 +11,7 @@
 //
 //==============================================================================
 
+#if !defined (DOXYGEN)
 // MagiQuest packet is both Wand ID and magnitude of swish and flick
 union magiquest_t {
     uint64_t llword;
@@ -21,6 +22,7 @@ union magiquest_t {
         uint8_t scrap;  // just to pad the struct out to 64 bits so we can union with llword
     } cmd;
 };
+#endif // !defined (DOXYGEN)
 
 #define MAGIQUEST_MAGNITUDE_BITS   16     // The number of bits
 #define MAGIQUEST_WAND_ID_BITS     32     // The number of bits

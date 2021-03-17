@@ -1,5 +1,5 @@
 /*
- * Unions.h
+ * LongUnion.h
  *
  *  Copyright (C) 2020  Armin Joachimsmeyer
  *  Email: armin.joachimsmeyer@gmail.com
@@ -27,8 +27,9 @@
 #include <Arduino.h>
 #include <stdint.h>
 
-/*
- * Sometimes it helps the compiler if you use this unions
+/**
+ * Union to specify parts / manifestations of a 16 bit Word without casts and shifts.
+ * It also supports the compiler generating small code.
  */
 union WordUnion {
     struct {
@@ -46,6 +47,10 @@ union WordUnion {
     uint8_t * BytePointer;
 };
 
+/**
+ * Union to specify parts / manifestations of a 32 bit Long without casts and shifts.
+ * It also supports the compiler generating small code.
+ */
 union LongUnion {
     struct {
         uint8_t LowByte;

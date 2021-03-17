@@ -29,6 +29,9 @@
 
 #include "LongUnion.h"
 
+/** \addtogroup TinyReceiver Minimal receiver for NEC protocol
+ * @{
+ */
 /*
  * Set input pin and output pin definitions etc.
  */
@@ -101,15 +104,15 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
 #define IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE        3
 #define IR_RECEIVER_STATE_WAITING_FOR_DATA_MARK         4
 #define IR_RECEIVER_STATE_WAITING_FOR_STOP_MARK         5
-/*
- * The control and data structure of the state machine
+/**
+ * Control and data variables of the state machine for TinyReceiver
  */
 struct TinyIRReceiverStruct {
     /*
      * State machine
      */
-    uint32_t LastChangeMicros; // microseconds of last Pin Change Interrupt.
-    uint8_t IRReceiverState;
+    uint32_t LastChangeMicros;      ///< microseconds of last Pin Change Interrupt.
+    uint8_t IRReceiverState;        ///< the state of the state machine.
     uint8_t IRRawDataBitCounter;
     /*
      * Data
@@ -120,6 +123,8 @@ struct TinyIRReceiverStruct {
 };
 
 void initPCIInterruptForTinyReceiver();
+
+/** @}*/
 
 #endif // TINY_IR_RECEIVER_H
 

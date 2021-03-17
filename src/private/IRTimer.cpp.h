@@ -1,5 +1,5 @@
 /**
- * @file irTimer.cpp.h
+ * @file IRTimer.cpp.h
  *
  * @brief All timer specific definitions are contained in this file.
  *
@@ -30,15 +30,33 @@
  ************************************************************************************
  */
 #include "IRremoteInt.h"
+/** \addtogroup HardwareDependencies CPU / board dependent definitions
+ * @{
+ */
+/** \addtogroup Timer Usage of timers for the different CPU / boards
+ * @{
+ */
 #if defined(SEND_PWM_BY_TIMER) && !defined(ESP32)
 #undef IR_SEND_PIN // send pin is determined by timer except for ESP32
 #endif
 
-#ifdef DOXYGEN
+/*
+ * For backwards compatibility
+ */
+#if defined(SYSCLOCK) // allow for processor specific code to define F_CPU
+#undef F_CPU
 /**
- * If applicable, pin number for sending IR. Note that in most cases, this is not
- * used and ignored if set. Instead, the sending pin is determined by the timer
- * deployed.
+ * Clock frequency to be used for timing.
+ */
+#define F_CPU SYSCLOCK
+#endif
+#if defined(PARTICLE)
+  #define F_CPU 16000000
+#endif
+
+#if defined (DOXYGEN)
+/**
+ * Hardware / timer dependent pin number for sending IR if SEND_PWM_BY_TIMER is defined. Otherwise used as default for IrSender.sendPin.
  */
 #define IR_SEND_PIN
 
@@ -256,7 +274,7 @@
 #  endif
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz);    // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    const uint32_t pwmval = (F_CPU / 2000) / (aFrequencyKHz);    // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR1A = _BV(WGM11);                                            // PWM, Phase Correct, Top is ICR1
     TCCR1B = _BV(WGM13) | _BV(CS10);                                // CS10 -> no prescaling
     ICR1 = pwmval - 1;
@@ -267,7 +285,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
     TCCR1A = 0;
     TCCR1B = _BV(WGM12) | _BV(CS10);
-    OCR1A = SYSCLOCK * MICROS_PER_TICK / 1000000;
+    OCR1A = F_CPU * MICROS_PER_TICK / 1000000;
     TCNT1 = 0;
 }
 
@@ -301,21 +319,21 @@ void timerConfigForReceive() {
 #define TIMER_DISABLE_RECEIVE_INTR  (TIMSK2 = 0)
 #define TIMER_INTR_NAME             TIMER2_COMPB_vect                   // We use TIMER2_COMPB_vect to be compatible with tone() library
 
-// The top value for the timer.  The modulation frequency will be SYSCLOCK / 2 / OCR2A.
+// The top value for the timer.  The modulation frequency will be F_CPU / 2 / OCR2A.
 #pragma GCC diagnostic ignored "-Wunused-function"
 /*
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  */
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint16_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz);    // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    const uint16_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR2A = _BV(WGM20);                                            // PWM, Phase Correct, Top is OCR2A
     TCCR2B = _BV(WGM22) | _BV(CS20);                                // CS20 -> no prescaling
     OCR2A = pwmval - 1;
     OCR2B = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
-    TCNT2 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
+    TCNT2 = 0;                        // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
-#define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
+#define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / 1000000)
 /*
  * timerConfigForReceive() is used exclusively by IRrecv::enableIRIn()
  * It generates an interrupt each 50 (MICROS_PER_TICK) us.
@@ -364,7 +382,7 @@ void timerConfigForReceive() {
 #define TIMER_INTR_NAME             TIMER3_COMPB_vect
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    const uint32_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR3A = _BV(WGM31);
     TCCR3B = _BV(WGM33) | _BV(CS30);// PWM, Phase Correct, ICRn as TOP, complete period is double of pwmval
     ICR3 = pwmval - 1;
@@ -375,8 +393,8 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
     TCCR3A = 0;
     TCCR3B = _BV(WGM32) | _BV(CS30);
-    OCR3A = SYSCLOCK * MICROS_PER_TICK / 1000000;
-    OCR3B = SYSCLOCK * MICROS_PER_TICK / 1000000;
+    OCR3A = F_CPU * MICROS_PER_TICK / 1000000;
+    OCR3B = F_CPU * MICROS_PER_TICK / 1000000;
     TCNT3 = 0;
 }
 
@@ -402,7 +420,7 @@ void timerConfigForReceive() {
 #define TIMER_INTR_NAME             TIMER4_COMPA_vect
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    const uint32_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR4A = _BV(WGM41);
     TCCR4B = _BV(WGM43) | _BV(CS40);
     ICR4 = pwmval - 1;
@@ -413,7 +431,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
     TCCR4A = 0;
     TCCR4B = _BV(WGM42) | _BV(CS40);
-    OCR4A = SYSCLOCK * MICROS_PER_TICK / 1000000;
+    OCR4A = F_CPU * MICROS_PER_TICK / 1000000;
     TCNT4 = 0;
 }
 
@@ -447,7 +465,7 @@ void timerConfigForReceive() {
 #define TIMER_INTR_NAME             TIMER4_OVF_vect
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint32_t pwmval = ((SYSCLOCK / 2000) / (aFrequencyKHz)) - 1; // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    const uint32_t pwmval = ((F_CPU / 2000) / (aFrequencyKHz)) - 1; // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR4A = (1 << PWM4A);
     TCCR4B = _BV(CS40);
     TCCR4C = 0;
@@ -466,8 +484,8 @@ void timerConfigForReceive() {
     TCCR4C = 0;
     TCCR4D = 0;
     TCCR4E = 0;
-    TC4H = (SYSCLOCK * MICROS_PER_TICK / 1000000) >> 8;
-    OCR4C = (SYSCLOCK * MICROS_PER_TICK / 1000000) & 255;
+    TC4H = (F_CPU * MICROS_PER_TICK / 1000000) >> 8;
+    OCR4C = (F_CPU * MICROS_PER_TICK / 1000000) & 255;
     TC4H = 0;
     TCNT4 = 0;
 }
@@ -494,7 +512,7 @@ void timerConfigForReceive() {
 #define TIMER_INTR_NAME             TIMER5_COMPA_vect
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    const uint32_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR5A = _BV(WGM51);
     TCCR5B = _BV(WGM53) | _BV(CS50);
     ICR5 = pwmval - 1;
@@ -505,7 +523,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
     TCCR5A = 0;
     TCCR5B = _BV(WGM52) | _BV(CS50);
-    OCR5A = SYSCLOCK * MICROS_PER_TICK / 1000000;
+    OCR5A = F_CPU * MICROS_PER_TICK / 1000000;
     TCNT5 = 0;
 }
 
@@ -525,7 +543,7 @@ void timerConfigForReceive() {
 #define TIMER_INTR_NAME                 TIMER0_COMPA_vect
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint16_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    const uint16_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCCR0A = _BV(WGM00); // PWM, Phase Correct, Top is OCR0A
     TCCR0B = _BV(WGM02) | _BV(CS00); // CS00 -> no prescaling
     OCR0A = pwmval - 1;
@@ -533,7 +551,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
     TCNT0 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
-#define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
+#define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / 1000000)
 void timerConfigForReceive() {
 #  if (TIMER_COUNT_TOP < 256)
     TCCR0A = _BV(WGM01); // CTC, Top is OCR0A
@@ -564,15 +582,15 @@ void timerConfigForReceive() {
 #define TIMER_INTR_NAME             TIMER1_COMPB_vect
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-#  if (((SYSCLOCK / 1000) / 38) < 256)
-    const uint16_t pwmval = (SYSCLOCK / 1000) / (aFrequencyKHz); // 421 @16 MHz, 26 @1 MHz and 38 kHz
+#  if (((F_CPU / 1000) / 38) < 256)
+    const uint16_t pwmval = (F_CPU / 1000) / (aFrequencyKHz); // 421 @16 MHz, 26 @1 MHz and 38 kHz
     TCCR1 = _BV(CTC1) | _BV(CS10);// CTC1 = 1: TOP value set to OCR1C, CS10 No Prescaling
     OCR1C = pwmval - 1;
     OCR1B = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
     TCNT1 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
     GTCCR = _BV(PWM1B) | _BV(COM1B0);// PWM1B = 1: Enable PWM for OCR1B, COM1B0 Clear on compare match
 #  else
-    const uint16_t pwmval = ((SYSCLOCK / 2) / 1000) / (aFrequencyKHz); // 210 for 16 MHz and 38 kHz
+    const uint16_t pwmval = ((F_CPU / 2) / 1000) / (aFrequencyKHz); // 210 for 16 MHz and 38 kHz
     TCCR1 = _BV(CTC1) | _BV(CS11);// CTC1 = 1: TOP value set to OCR1C, CS11 Prescaling by 2
     OCR1C = pwmval - 1;
     OCR1B = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
@@ -581,7 +599,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #  endif
 }
 
-#define TIMER_COUNT_TOP  (SYSCLOCK * MICROS_PER_TICK / 1000000)
+#define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / 1000000)
 void timerConfigForReceive() {
 #  if (TIMER_COUNT_TOP < 256)
     TCCR1 = _BV(CTC1) | _BV(CS10); // Clear Timer/Counter on Compare Match, Top is OCR1C, No prescaling
@@ -613,7 +631,7 @@ void timerConfigForReceive() {
 #define TIMER_INTR_NAME             TCB0_INT_vect
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint32_t pwmval = (SYSCLOCK / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    const uint32_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
     TCB0.CTRLB = TCB_CNTMODE_PWM8_gc;
     TCB0.CCMPL = pwmval - 1;
     TCB0.CCMPH = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
@@ -623,7 +641,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 
 void timerConfigForReceive() {
     TCB0.CTRLB = (TCB_CNTMODE_INT_gc);
-    TCB0.CCMP = ((SYSCLOCK * MICROS_PER_TICK) / 1000000);
+    TCB0.CCMP = ((F_CPU * MICROS_PER_TICK) / 1000000);
     TCB0.INTCTRL = TCB_CAPT_bm;
     TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm);
 }
@@ -651,7 +669,7 @@ void timerEnablSendPWM() {
 }
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint32_t pwmval = (SYSCLOCK / 1000) / (aFrequencyKHz);    // 526,31 for 38 kHz @20 MHz clock
+    const uint32_t pwmval = (F_CPU / 1000) / (aFrequencyKHz);    // 526,31 for 38 kHz @20 MHz clock
     // use one ramp mode and overflow interrupt
     TCD0.CTRLA = 0;// reset enable bit in order to unprotect the other bits
 //    while ((TCD0.STATUS & TCD_ENRDY_bm) == 0);                      // Wait for Enable Ready to be high - I guess it is not required
@@ -673,7 +691,7 @@ void timerConfigForReceive() {
     TCD0.CTRLA = 0;                                                 // reset enable bit in order to unprotect the other bits
     TCD0.CTRLB = TCD_WGMODE_ONERAMP_gc;// must be set since it is used by PWM
 //    TCD0.CMPBSET = 80;
-    TCD0.CMPBCLR = ((SYSCLOCK * MICROS_PER_TICK) / 1000000) - 1;
+    TCD0.CMPBCLR = ((F_CPU * MICROS_PER_TICK) / 1000000) - 1;
 
     _PROTECTED_WRITE(TCD0.FAULTCTRL, 0);// must disable WOA output at pin 13/PA4
 
@@ -803,11 +821,11 @@ void timerConfigForReceive() {
 #undef ISR
 #  endif
 #define ISR() IRAM_ATTR void IRTimerInterruptHandler()
+IRAM_ATTR void IRTimerInterruptHandler();
 
 // Variables specific to the ESP32.
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
 hw_timer_t *timer;
-IRAM_ATTR void IRTimerInterruptHandler();// defined in IRremote.cpp, masqueraded as ISR(TIMER_INTR_NAME)
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     ledcSetup(LED_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
@@ -847,13 +865,15 @@ void timerConfigForReceive() {
 #undef ISR
 #  endif
 #define ISR(f) void IRTimerInterruptHandler(void)
+// ATSAMD Timer IRQ functions
+void IRTimerInterruptHandler();
 
 #define TIMER_PRESCALER_DIV 64
 // use timer 3 hard coded here
 
 // functions based on setup from GitHub jdneo/timerInterrupt.ino
 void setTimerFrequency(unsigned int aFrequencyHz) {
-    int compareValue = (SYSCLOCK / (TIMER_PRESCALER_DIV * aFrequencyHz)) - 1;
+    int compareValue = (F_CPU / (TIMER_PRESCALER_DIV * aFrequencyHz)) - 1;
     //Serial.println(compareValue);
     TcCount16 *TC = (TcCount16*) TC3;
     // Make sure the count is in a proportional position to where it was
@@ -901,8 +921,6 @@ void timerConfigForReceive() {
     TC->INTENSET.reg = 0;
     TC->INTENSET.bit.MC0 = 1;
 }
-// ATSAMD Timer IRQ functions
-void IRTimerInterruptHandler();// Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
 
 void TC3_Handler(void) {
     TcCount16 *TC = (TcCount16*) TC3;
@@ -934,6 +952,7 @@ void TC3_Handler(void) {
 #undef ISR
 #  endif
 #define ISR(f) void IRTimerInterruptHandler(void)
+void IRTimerInterruptHandler();
 
 /*
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
@@ -952,8 +971,6 @@ void timerConfigForReceive() {
 
     // timerAttachInterrupt(timer, &IRTimerInterruptHandler, 1);
 }
-
-void IRTimerInterruptHandler(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
 
 /** TIMTER2 peripheral interrupt handler. This interrupt handler is called whenever there it a TIMER2 interrupt
  * Don't mess with this line. really.
@@ -995,20 +1012,21 @@ extern "C" {
 #undef ISR
 #  endif
 #define ISR() void IRTimerInterruptHandler(void)
+void IRTimerInterruptHandler();
 
 /*
  * Use timer 3 as IRMP timer.
  * Timer 3 blocks PA6, PA7, PB0, PB1, so if you need one them as tone() or Servo output, you must choose another timer.
  */
 HardwareTimer sSTM32Timer(3);
-void IRTimerInterruptHandler(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
+
 /*
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
  */
 void timerConfigForReceive() {
     sSTM32Timer.setMode(TIMER_CH1, TIMER_OUTPUT_COMPARE);
     sSTM32Timer.setPrescaleFactor(1);
-    sSTM32Timer.setOverflow((SYSCLOCK / 1000000) * MICROS_PER_TICK);
+    sSTM32Timer.setOverflow((F_CPU / 1000000) * MICROS_PER_TICK);
     sSTM32Timer.attachInterrupt(TIMER_CH1, IRTimerInterruptHandler);
     sSTM32Timer.refresh();
 }
@@ -1037,6 +1055,8 @@ void timerConfigForReceive() {
 #undef ISR
 #  endif
 #define ISR() void IRTimerInterruptHandler(void)
+void IRTimerInterruptHandler();
+
 /*
  * Use timer 4 as IRMP timer.
  * Timer 4 blocks PB6, PB7, PB8, PB9, so if you need one them as Servo output, you must choose another timer.
@@ -1046,7 +1066,7 @@ HardwareTimer sSTM32Timer(TIM4);
 #  else
 HardwareTimer sSTM32Timer(TIM2);
 #  endif
-void IRTimerInterruptHandler(); // Defined in IRremoteBoardDefs.h as ISR(TIMER_INTR_NAME)
+
 /*
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
  */
@@ -1121,3 +1141,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
 }
 #endif // defined(DOXYGEN/CPU_TYPES)
+
+/** @}*/
+/** @}*/
+

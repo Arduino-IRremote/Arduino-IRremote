@@ -75,7 +75,7 @@ void IRsend::sendSamsungRepeat() {
     mark(SAMSUNG_BIT_MARK);
     space(SAMSUNG_ZERO_SPACE);
     mark(SAMSUNG_BIT_MARK);
-    ledOff(); // Always end with the LED off
+//    ledOff(); // Always end with the LED off
 }
 
 void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {

@@ -41,10 +41,17 @@
 #include "TinyIRReceiver.h"
 #include "digitalWriteFast.h"
 
+/** \addtogroup TinyReceiver Minimal receiver for NEC protocol
+ * @{
+ */
 //#define TRACE
 
 TinyIRReceiverStruct TinyIRReceiverControl;
 
+/*
+ * The callback function provided by the user application.
+ * It is called every time a complete IR command or repeat was received.
+ */
 #if defined(ESP8266)
 ICACHE_RAM_ATTR
 #elif defined(ESP32)
@@ -52,10 +59,10 @@ IRAM_ATTR
 #endif
 void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
 
-bool MatchDuration(uint16_t aDuration, uint16_t aLowerMatchValue, uint16_t aUpperMatchValue) {
-    return (aDuration >= aLowerMatchValue && aDuration <= aUpperMatchValue);
-}
-
+/**
+ * The ISR of TinyIRRreceiver.
+ * It handles the NEC protocol decoding and calls the user callback function on complete.
+ */
 #if defined(ESP8266)
 ICACHE_RAM_ATTR
 #elif defined(ESP32)
@@ -339,6 +346,6 @@ ISR(PCINT1_vect)
 }
 #endif // defined(__AVR__) && ! defined(IRMP_USE_ARDUINO_ATTACH_INTERRUPT)
 
-#endif // TINY_IR_RECEIVER_CPP_H
+/** @}*/
 
-#pragma once
+#endif // TINY_IR_RECEIVER_CPP_H

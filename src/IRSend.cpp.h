@@ -34,6 +34,10 @@
 
 __attribute((error("Version > 3.0.1"))) void UsageError(const char *details);
 
+/** \addtogroup Sending Sending IR data for multiple protocols
+ * @{
+ */
+
 // The sender instance
 IRsend IrSender;
 
@@ -50,16 +54,20 @@ IRsend::IRsend(uint8_t aSendPin) {
 void IRsend::setSendPin(uint8_t aSendPin) {
     sendPin = aSendPin;
 }
-/*
- * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+
+/**
+ * Initializes the send and feedback pin
+ * @param aSendPin The Arduino pin number, where a IR sender diode is connected.
+ * @param aLEDFeedbackPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     sendPin = aSendPin;
     setLEDFeedback(aLEDFeedbackPin, aEnableLEDFeedback);
 }
 
-/*
- * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+/**
+ * Deprecated function without send pin parameter
+ * @param aLEDFeedbackPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     // must exclude NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
@@ -73,6 +81,11 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     setLEDFeedback(aLEDFeedbackPin, aEnableLEDFeedback);
 }
 
+/**
+ * Deprecated function without send pin parameter
+ * @param aIRSendData The values of protocol, address, command and repeat flag are taken for sending.
+ * @param aNumberOfRepeats Number of repeats to send after the initial data.
+ */
 size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
 
     auto tProtocol = aIRSendData->protocol;
@@ -159,6 +172,10 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
     return 1;
 }
 
+/**
+ * Function using an 16 byte timing array for every purpose.
+ * Raw data starts with a Mark. No leading space as in received timing data!
+ */
 void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
@@ -175,12 +192,12 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLen
         }
     }
 
-    ledOff();  // Always end with the LED off
+//    ledOff();  // Always end with the LED off
 }
 
-/*
- * New function using an 8 byte buffer
- * Raw data starts with a Mark. No leading space any more.
+/**
+ * Function using an 8 byte timing array to save program space
+ * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 // Set IR carrier frequency
@@ -197,6 +214,10 @@ void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuf
     ledOff();  // Always end with the LED off
 }
 
+/**
+ * Function using an 16 byte timing array in FLASH for every purpose.
+ * Raw data starts with a Mark. No leading space as in received timing data!
+ */
 void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
     sendRaw(aBufferWithMicroseconds, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
@@ -215,13 +236,13 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aL
             mark(duration);
         }
     }
-    ledOff();  // Always end with the LED off
+//    ledOff();  // Always end with the LED off
 #endif
 }
 
-/*
- * New function using an 8 byte buffer
- * Raw data starts with a Mark. No leading space any more.
+/**
+ * Function using an 8 byte timing array in FLASH to save program space
+ * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
@@ -243,9 +264,9 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfB
 #endif
 }
 
-/*
+/**
  * Sends PulseDistance data
- * always ends with a space
+ * The output always ends with a space
  */
 void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
         unsigned int aZeroSpaceMicros, uint32_t aData, uint8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit) {
@@ -284,9 +305,11 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
 }
 
 /*
+ * Sends Biphase data MSB first
  * Always send start bit, do not send the trailing space of the start bit
  * 0 -> mark+space
  * 1 -> space+mark
+ * The output always ends with a space
  */
 void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits) {
 
@@ -321,13 +344,15 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
             tLastBitValue = 0;
         }
     }
-    ledOff();  // Always end with the LED off
+//    ledOff();  // Always end with the LED off
     TRACE_PRINTLN("");
 }
 
 /**
  * Sends an IR mark for the specified number of microseconds.
- * The mark output is modulated at the PWM frequency.
+ * The mark output is modulated at the PWM frequency if USE_NO_SEND_PWM is not defined.
+ * The output is guaranteed to be OFF / inactive after after the call of the function.
+ * This function may affect the state of feedback LED.
  */
 void IRsend::mark(unsigned int aMarkMicros) {
     setFeedbackLED(true);
@@ -336,32 +361,58 @@ void IRsend::mark(unsigned int aMarkMicros) {
     unsigned long start = micros();
     unsigned long nextPeriodEnding = start;
     while (micros() - start < aMarkMicros) {
+        // Output the PWM pulse
         noInterrupts(); // do not let interrupts extend the short on period
+#  ifdef SENDPIN_ON
         SENDPIN_ON(sendPin);
+#  else
+        digitalWrite(sendPin, HIGH);
+#  endif
         delayMicroseconds(periodOnTimeMicros); // this is normally implemented by a blocking wait
+
+        // Output the PWM pause
+#  ifdef SENDPIN_OFF
         SENDPIN_OFF(sendPin);
+#  else
+        digitalWrite(sendPin, LOW);
+#  endif
         interrupts(); // Enable interrupts -to keep micros correct- for the longer off period 3.4 us until receive ISR is active (for 7 us + pop's)
         nextPeriodEnding += periodTimeMicros;
         while (micros() < nextPeriodEnding){
+            ;
         }
     }
 
 #else
 #  if defined(USE_NO_SEND_PWM)
+#  ifdef SENDPIN_OFF
+    SENDPIN_OFF(sendPin);
+#  else
     digitalWrite(sendPin, LOW); // Set output to active low.
+#  endif
 
 #  else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
 #  endif //  USE_SOFT_SEND_PWM
 
     customDelayMicroseconds(aMarkMicros);
+    ledOff();
 #endif // USE_SOFT_SEND_PWM
 
 }
 
+/**
+ * Just switch the IR sending LED off to send an IR space
+ * A space is "no output", so the PWM output is disabled.
+ * This function may affect the state of feedback LED.
+ */
 void IRsend::ledOff() {
 #if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
+#  ifdef SENDPIN_OFF
     SENDPIN_OFF(sendPin);
+#  else
+    digitalWrite(sendPin, LOW);
+#  endif
 #elif defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
@@ -373,10 +424,9 @@ void IRsend::ledOff() {
 
 /**
  * Sends an IR space for the specified number of microseconds.
- * A space is "no output", so the PWM output is disabled.
+ * A space is "no output", so just wait.
  */
 void IRsend::space(unsigned int aSpaceMicros) {
-    ledOff();
     customDelayMicroseconds(aSpaceMicros);
 }
 
@@ -416,10 +466,12 @@ void IRsend::enableIROut(uint8_t aFrequencyKHz) {
 #endif
 
     pinMode(sendPin, OUTPUT);
-    SENDPIN_OFF(sendPin); // When not sending, we want it low
+    ledOff(); // When not sending, we want it low
 
 #if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
     TIMER_DISABLE_RECEIVE_INTR;
     timerConfigForSend(aFrequencyKHz);
 #endif
 }
+
+/** @}*/

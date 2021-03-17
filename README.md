@@ -11,7 +11,8 @@ Available as Arduino library "IRremote"
 
 This library enables you to send and receive using infra-red signals on an Arduino.
 
-Tutorials and more information will be made available on [the official homepage](https://arduino-irremote.github.io/Arduino-IRremote/).
+# API
+A Doxygen documentation of the sources is available on [project homepage](https://arduino-irremote.github.io/Arduino-IRremote/).
 
 # Installation
 Click on the LibraryManager badge above to see the [instructions](https://www.ardu-badge.com/IRremote/zip).
@@ -122,10 +123,10 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | Before `#include <IRremote.h>` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `DISABLE_LED_FEEDBACK_FOR_RECEIVE` | Before `#include <IRremote.h>` | disabled | This disables the LED feedback code for receive, thus saving around 108 bytes program space and halving the receiver ISR processing time. |
 | `IR_INPUT_IS_ACTIVE_HIGH` | Before `#include <IRremote.h>` | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
-| `RAW_BUFFER_LENGTH` | IRremoteint.h | 101 | Buffer size of raw input buffer. Must be odd! |
+| `RAW_BUFFER_LENGTH` | IRremoteInt.h | 101 | Buffer size of raw input buffer. Must be odd! |
 | `DEBUG` | IRremoteInt.h | disabled | Enables lots of lovely debug output. |
-| `IR_SEND_DUTY_CYCLE` | IRremoteint.h | 30 | Duty cycle of IR send signal. |
-| `MICROS_PER_TICK` | IRremoteint.h | 50 | Resolution of the raw input buffer data. |
+| `IR_SEND_DUTY_CYCLE` | IRremoteInt.h | 30 | Duty cycle of IR send signal. |
+| `MICROS_PER_TICK` | IRremoteInt.h | 50 | Resolution of the raw input buffer data. |
 |-|-|-|-|
 | `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
@@ -143,7 +144,7 @@ If you are using Sloeber as your IDE, you can easily define global symbols with 
 
 # Supported Boards
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
-- Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: @PaulStoffregen (Teensy Team)
+- Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: PaulStoffregen (Teensy Team)
 - Sanguino
 - ATmega8, 48, 88, 168, 328
 - ATmega8535, 16, 32, 164, 324, 644, 1284,
@@ -221,13 +222,11 @@ See [API reference in wiki](https://github.com/Arduino-IRremote/Arduino-IRremote
 
 To generate the API documentation,
 Doxygen, as well as [Graphviz](http://www.graphviz.org/) should be installed.
-(Note that on Windows, it may be necessary to add the Graphviz binary directory
-(something like `C:\Program Files\Graphviz2.38\bin`)
-to the `PATH` variable manually.)
+(Note that on Windows, it is useful to specify the installer to add Graphviz to PATH or to do it manually.
 With Doxygen and Graphviz installed, issue the command
 `doxygen` from the command line in the main project directory, which will
 generate the API documentation in HTML format.
-The just generated `api-doc/index.html` can now be opened in a browser.
+The just generated `docs/index.html` can now be opened in a browser.
 
 ## Why do we use 33% duty cycle
 We do it according to the statement in the [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf):

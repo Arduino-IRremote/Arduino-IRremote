@@ -76,7 +76,7 @@ void IRsend::sendNECRepeat() {
     mark(NEC_HEADER_MARK);
     space(NEC_REPEAT_HEADER_SPACE);
     mark(NEC_BIT_MARK);
-    ledOff(); // Always end with the LED off
+//    ledOff(); // Always end with the LED off
 }
 
 /*

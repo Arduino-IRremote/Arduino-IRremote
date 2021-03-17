@@ -1,5 +1,6 @@
 /**
  * @file IRremote.h
+ *
  * @brief Public API to the library.
  *
  *
@@ -88,9 +89,9 @@
 #warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."
 #endif
 
-/****************************************************
+/**
  * For better readability of code
- ****************************************************/
+ */
 #define DISABLE_LED_FEEDBACK false
 #define ENABLE_LED_FEEDBACK true
 #define USE_DEFAULT_FEEDBACK_LED_PIN 0
@@ -159,13 +160,14 @@
 #if !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
 #define USE_SOFT_SEND_PWM
 #endif
+
 /**
  * If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses.
  * It should be the time used for SENDPIN_OFF(sendPin) and the call to delayMicros()
  * Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600
  */
 #ifndef PULSE_CORRECTION_NANOS
-#define PULSE_CORRECTION_NANOS (48000000000L / SYSCLOCK) // 3000 @16MHz, 666 @72MHz
+#define PULSE_CORRECTION_NANOS (48000000000L / F_CPU) // 3000 @16MHz, 666 @72MHz
 #endif
 
 #include "IRremoteInt.h"

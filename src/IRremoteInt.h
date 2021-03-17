@@ -41,20 +41,11 @@
 #error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
 #endif
 
-/****************************************************
- * For better readability of code
- ****************************************************/
-#define SEND_STOP_BIT true
-#define SEND_REPEAT_COMMAND true ///< used for e.g. NEC, where a repeat is different from just repeating the data.
-
 /*
  * Try to activate it, if you have legacy code to compile with version >= 3
  */
 //#define USE_OLD_DECODE // enables the old NEC and other old decoders.
 #include "IRProtocol.h"
-
-// All board specific stuff have been moved to its own file, included here.
-#include <private/IRBoardDefs.h>
 
 /****************************************************
  * Declarations for the receiver Interrupt Service Routine
@@ -133,36 +124,43 @@ struct decode_results {
     bool overflow;              // deprecated, moved to decodedIRData.flags ///< true if IR raw code too long
 };
 
+
 /*
- * Data structure for the user application available as decodedIRData
- * Filled by decoders and read by print functions or user application
+ * Definitions for member IRData.flags
  */
-// Definitions for member IRData.flags
 #define IRDATA_FLAGS_EMPTY              0x00
 #define IRDATA_FLAGS_IS_REPEAT          0x01
 #define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
-#define IRDATA_FLAGS_PARITY_FAILED      0x04 // the current (autorepeat) frame violated parity check
+#define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
 #define IRDATA_TOGGLE_BIT_MASK          0x08
-#define IRDATA_FLAGS_EXTRA_INFO         0x10 // there is unexpected extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
-#define IRDATA_FLAGS_WAS_OVERFLOW       0x40 // irparams.rawlen is 0 in this case to avoid endless OverflowFlag
+#define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< there is unexpected extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
+#define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is 0 in this case to avoid endless OverflowFlag
 #define IRDATA_FLAGS_IS_LSB_FIRST       0x00
-#define IRDATA_FLAGS_IS_MSB_FIRST       0x80 // Just for info. Value is simply determined by the protocol
+#define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Just for info. Value is simply determined by the protocol
 
+/**
+ * Data structure for the user application, available as decodedIRData.
+ * Filled by decoders and read by print functions or user application.
+ */
 struct IRData {
     decode_type_t protocol;     ///< UNKNOWN, NEC, SONY, RC5, ...
     uint16_t address;           ///< Decoded address
     uint16_t command;           ///< Decoded command
     uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID
     uint8_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible (currently only Sony).
-    uint8_t flags;              ///< See definitions above
+    uint8_t flags;              ///< See IRDATA_FLAGS_* definitions above
     uint32_t decodedRawData;    ///< Up to 32 bit decoded raw data, used for sendRaw functions.
-    irparams_struct *rawDataPtr; /// Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
+    irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
 };
 
 /**
- * Main class for receiving IR
+ * Just for better readability of code
  */
 #define USE_DEFAULT_FEEDBACK_LED_PIN 0
+
+/**
+ * Main class for receiving IR signals
+ */
 class IRrecv {
 public:
 
@@ -344,12 +342,13 @@ extern IRrecv IrReceiver;
 /****************************************************
  *                     SENDING
  ****************************************************/
-/*
+
+/**
  * Just for better readability of code
  */
 #define NO_REPEATS  0
 #define SEND_STOP_BIT true
-#define SEND_REPEAT_COMMAND true // used for e.g. NEC, where a repeat is different from just repeating the data.
+#define SEND_REPEAT_COMMAND true ///< used for e.g. NEC, where a repeat is different from just repeating the data.
 
 /**
  * Duty cycle in percent for sent signals.
@@ -359,7 +358,7 @@ extern IRrecv IrReceiver;
 #endif
 
 /**
- * Main class for sending IR
+ * Main class for sending IR signals
  */
 class IRsend {
 public:

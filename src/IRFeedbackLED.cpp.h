@@ -1,7 +1,7 @@
 /**
- * @file IRFeedbackLed.cpp.h
+ * @file IRFeedbackLED.cpp.h
  *
- * @brief All Feedback LED specific definitions are contained in this file.
+ * @brief All Feedback LED specific functions are contained in this file.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -31,9 +31,24 @@
  */
 #include "private/IRFeedbackLEDDefs.h"
 
+/** \addtogroup FeedbackLEDFunctions Feedback LED functions
+ * @{
+ */
+
 /**
- * Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR processing
- * If FeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * Contains pin number and enable status of the feedback LED
+ */
+struct FeedbackLEDControlStruct {
+    uint8_t FeedbackLEDPin;         ///< if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+    bool LedFeedbackEnabled;        ///< true -> enable blinking of pin on IR processing
+};
+
+struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED control instance
+
+/**
+ * Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving
+ * @param aFeedbackLEDPin If aFeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aEnableLEDFeedback true -> enable blinking of Feedback LED
  */
 void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback) {
     FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin; // default is 0
@@ -42,9 +57,9 @@ void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback) {
     if (aEnableLEDFeedback) {
         if (aFeedbackLEDPin != 0) {
             pinMode(aFeedbackLEDPin, OUTPUT);
-#ifdef FEEDBACK_LED
+#ifdef LED_BUILTIN
         } else {
-            pinMode(FEEDBACK_LED, OUTPUT);
+            pinMode(LED_BUILTIN, OUTPUT);
 #endif
         }
     }
@@ -58,8 +73,9 @@ void disableLEDFeedback() {
     FeedbackLEDControl.LedFeedbackEnabled = false;
 }
 
-/*
- * Flash LED while receiving IR data, if enabled
+/**
+ * Flash LED while receiving IR data, if enabled.
+ * Handles the LedFeedbackEnabled flag as well as the 0 value of FeedbackLEDPin and the macro FEEDBACK_LED_IS_ACTIVE_LOW.
  */
 #if defined(ESP32)
 IRAM_ATTR
@@ -94,12 +110,17 @@ void setFeedbackLED(bool aSwitchLedOn) {
     }
 }
 
-/*
- * Old deprecated function names
+/**
+ * Old deprecated function name for setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback()
  */
 void blink13(bool aEnableLEDFeedback) {
     setLEDFeedback(FeedbackLEDControl.FeedbackLEDPin, aEnableLEDFeedback);
 }
+/**
+ * Old deprecated function name for setLEDFeedback()
+ */
 void setBlinkPin(uint8_t aBlinkPin) {
     setLEDFeedback(aBlinkPin, FeedbackLEDControl.LedFeedbackEnabled);
 }
+
+/** @}*/

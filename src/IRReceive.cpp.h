@@ -32,6 +32,10 @@
  */
 
 //#define DEBUG
+
+/** \addtogroup Receiving Receiving IR data for multiple protocols
+ * @{
+ */
 /**
  * The receiver instance
  */
@@ -61,8 +65,8 @@ IRrecv::IRrecv(uint8_t aReceivePin) {
 }
 /**
  * Instantiate the IRrecv class. Multiple instantiation is not supported.
- * @param IRReceivePin Arduino pin to use, where a demodulating IR receiver is connected.
- * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aReceivePin Arduino pin to use, where a demodulating IR receiver is connected.
+ * @param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin) {
     setReceivePin(aReceivePin);
@@ -76,9 +80,11 @@ IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin) {
 /**********************************************************************************************************************
  * Stream like API
  **********************************************************************************************************************/
-/*
- * @param IRReceivePin Arduino pin to use, where a demodulating IR receiver is connected.
- * @ param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+/**
+ * Initializes the receive and feedback pin
+ * @param aReceivePin The Arduino pin number, where a demodulating IR receiver is connected.
+ * @param aEnableLEDFeedback if true / ENABLE_LED_FEEDBACK, then let the feedback led blink on receiving IR signal
+ * @param aFeedbackLEDPin if 0 / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRrecv::begin(uint8_t aReceivePin, bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin) {
 
@@ -93,6 +99,9 @@ void IRrecv::begin(uint8_t aReceivePin, bool aEnableLEDFeedback, uint8_t aFeedba
     enableIRIn();
 }
 
+/**
+ * Sets / changes the receiver pin number
+ */
 void IRrecv::setReceivePin(uint8_t aReceivePinNumber) {
     irparams.IRReceivePin = aReceivePinNumber;
 #if defined(__AVR__)
@@ -101,10 +110,17 @@ void IRrecv::setReceivePin(uint8_t aReceivePinNumber) {
 #endif
 }
 
+/**
+ * Configures the timer and the state machine for IR reception.
+ */
 void IRrecv::start() {
     enableIRIn();
 }
 
+/**
+ * Configures the timer and the state machine for IR reception.
+ * @param aMicrosecondsToAddToGapCounter To compensate for microseconds the timer was stopped / disabled.
+ */
 void IRrecv::start(uint16_t aMicrosecondsToAddToGapCounter) {
     enableIRIn();
     noInterrupts();
@@ -112,16 +128,23 @@ void IRrecv::start(uint16_t aMicrosecondsToAddToGapCounter) {
     interrupts();
 }
 
+/**
+ * Disables the timer for IR reception.
+ * Alias for
+ */
 void IRrecv::stop() {
     disableIRIn();
 }
+
+/**
+ * Disables the timer for IR reception.
+ */
 void IRrecv::end() {
     stop();
-    FeedbackLEDControl.LedFeedbackEnabled = true;
 }
 
 /**
- * Enable IR reception.
+ * Configures the timer and the state machine for IR reception.
  */
 void IRrecv::enableIRIn() {
 
@@ -141,7 +164,7 @@ void IRrecv::enableIRIn() {
 }
 
 /**
- * Disable IR reception.
+ * Disables the timer for IR reception.
  */
 void IRrecv::disableIRIn() {
     TIMER_DISABLE_RECEIVE_INTR;
@@ -195,15 +218,14 @@ void IRrecv::initDecodedIRData() {
 }
 
 /**
- * Returns status of reception and copies IR-data to decode_results buffer if true.
- * @return true if data is available.
+ * Returns true if IR receiver data is available.
  */
 bool IRrecv::available() {
     return (irparams.StateForISR == IR_REC_STATE_STOP);
 }
 
 /**
- *@return decoded IRData,
+ * If IR receiver data is available, returns pointer to IrReceiver.decodedIRData, else NULL.
  */
 IRData* IRrecv::read() {
     if (irparams.StateForISR != IR_REC_STATE_STOP) {
@@ -216,12 +238,11 @@ IRData* IRrecv::read() {
     }
 }
 
-/**********************************************************************************************************************
- * The main decode function
- * Attempt to decode the recently receive IR signal
- * @param results decode_results instance returning the decode, if any.
- * @return 0 if no data ready, 1 if data ready. Results of decoding are stored in results
- **********************************************************************************************************************/
+/**
+ * The main decode function, attempts to decode the recently receive IR signal.
+ * @return false if no IR receiver data available, true if data available. Results of decoding are stored in IrReceiver.decodedIRData.
+ * The set of decoders used is determined by active definitions of the DECODE_<PROTOCOL> macros.
+ */
 bool IRrecv::decode() {
     if (irparams.StateForISR != IR_REC_STATE_STOP) {
         return false;
@@ -380,14 +401,16 @@ bool IRrecv::decode() {
 /**********************************************************************************************************************
  * Common decode functions
  **********************************************************************************************************************/
-/*
+/**
  * Decode pulse width protocols.
  * The space (pause) has constant length, the length of the mark determines the bit value.
  *      Each bit looks like: MARK_1 + SPACE -> 1 or : MARK_0 + SPACE -> 0
  *
- * Data is read MSB first if not otherwise enabled.
- * Input is     results.rawbuf
- * Output is    results.value
+ * Input is     IrReceiver.decodedIRData.rawDataPtr->rawbuf[]
+ * Output is    IrReceiver.decodedIRData.decodedRawData
+ *
+ * @param aStartOffset must point to a mark
+ * @return true if decoding was successful
  */
 bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aOneMarkMicros, uint16_t aZeroMarkMicros,
         uint16_t aBitSpaceMicros, bool aMSBfirst) {
@@ -473,16 +496,17 @@ bool IRrecv::decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, u
     return true;
 }
 
-/*
+/**
  * Decode pulse distance protocols.
  * The mark (pulse) has constant length, the length of the space determines the bit value.
  * Each bit looks like: MARK + SPACE_1 -> 1
  *                 or : MARK + SPACE_0 -> 0
- * @param aStartOffset must point to a mark
  *
- * Input is     results.rawbuf
- * Output is    results.value
- * @return false if decoding failed
+ * Input is     IrReceiver.decodedIRData.rawDataPtr->rawbuf[]
+ * Output is    IrReceiver.decodedIRData.decodedRawData
+ *
+ * @param aStartOffset must point to a mark
+ * @return true if decoding was successful
  */
 bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aBitMarkMicros, uint16_t aOneSpaceMicros,
         uint16_t aZeroSpaceMicros, bool aMSBfirst) {
@@ -566,14 +590,18 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
 //#  define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
 //#  define TRACE_PRINT(...)    Serial.print(__VA_ARGS__)
 //#  define TRACE_PRINTLN(...)  Serial.println(__VA_ARGS__)
-/*
+/**
+ * Decode Biphase protocols
  * We "regenerate" the clock and check changes on the significant clock transition
  * We assume that the transition from (aStartOffset -1) to aStartOffset is a significant clock transition
  *
  * The first bit is assumed as start bit and excluded for result
+ *
+ * Input is     IrReceiver.decodedIRData.rawDataPtr->rawbuf[]
+ * Output is    IrReceiver.decodedIRData.decodedRawData
+ *
  * @param aStartOffset must point to a mark
- * Input is     results.rawbuf
- * Output is    results.value
+ * @return true if decoding was successful
  */
 bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
         uint16_t aBiphaseTimeUnit) {
@@ -670,10 +698,10 @@ bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint
 /**********************************************************************************************************************
  * Internal Hash decode function
  **********************************************************************************************************************/
-/*
+/**
  * Compare two (tick) values
  * Use a tolerance of 20% to enable e.g. 500 and 600 (NEC timing) to be equal
- * @return:  0 if newval is shorter, 1 if newval is equal, and 2 if newval is longer
+ * @return  0 if newval is shorter, 1 if newval is equal, and 2 if newval is longer
  */
 uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
     if (newval * 10 < oldval * 8) {
@@ -684,8 +712,12 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
     }
     return 1;
 }
+
+#define FNV_PRIME_32 16777619   ///< used for decodeHash()
+#define FNV_BASIS_32 2166136261 ///< used for decodeHash()
+
 /**
- * hashdecode - decode an arbitrary IR code.
+ * decodeHash - decode an arbitrary IR code.
  * Instead of decoding using a standard encoding scheme
  * (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
  *
@@ -701,10 +733,7 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
  * This isn't a "real" decoding, just an arbitrary value.
  *
  * see: http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
-*/
-#define FNV_PRIME_32 16777619
-#define FNV_BASIS_32 2166136261
-
+ */
 #  if !defined(USE_OLD_DECODE)
 bool IRrecv::decodeHash() {
     long hash = FNV_BASIS_32;
@@ -754,7 +783,7 @@ bool IRrecv::decodeHash() {
 /**********************************************************************************************************************
  * Match functions
  **********************************************************************************************************************/
-/*
+/**
  * Match function without compensating for marks exceeded or spaces shortened by demodulator hardware
  * Currently not used
  */
@@ -782,7 +811,7 @@ bool MATCH(uint16_t measured_ticks, uint16_t desired_us) {
     return matchTicks(measured_ticks, desired_us);
 }
 
-/*
+/**
  * Compensate for marks exceeded by demodulator hardware
  */
 bool matchMark(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
@@ -815,7 +844,7 @@ bool MATCH_MARK(uint16_t measured_ticks, uint16_t desired_us) {
     return matchMark(measured_ticks, desired_us);
 }
 
-/*
+/**
  * Compensate for spaces shortened by demodulator hardware
  */
 bool matchSpace(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
@@ -848,7 +877,9 @@ bool MATCH_SPACE(uint16_t measured_ticks, uint16_t desired_us) {
     return matchSpace(measured_ticks, desired_us);
 }
 
-// Function used for ir_Pronto
+/**
+ * Getter function for MARK_EXCESS_MICROS
+ */
 int getMarkExcessMicros() {
     return MARK_EXCESS_MICROS;
 }
@@ -857,6 +888,11 @@ int getMarkExcessMicros() {
  * Print functions
  * Since a library should not allocate the "Serial" object, all functions require a pointer to a Print object.
  **********************************************************************************************************************/
+/**
+ * Internal function to print decoded result and flags in one line.
+ *
+ * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ */
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpaceTicks) {
     aSerial->print(F("Protocol="));
     aSerial->print(getProtocolString(aIRDataPtr->protocol));
@@ -934,10 +970,18 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
     }
 }
 
+/**
+ * Function to print values and flags of IrReceiver.decodedIRData in one line.
+ * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ */
 void IRrecv::printIRResultShort(Print *aSerial) {
     ::printIRResultShort(aSerial, &decodedIRData, decodedIRData.rawDataPtr->rawbuf[0]);
 }
 
+/**
+ * Function to print protocol, address, command,raw data and repeat flag of IrReceiver.decodedIRData in one short line.
+ * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ */
 void IRrecv::printIRResultMinimal(Print *aSerial) {
     aSerial->print(F("P="));
     aSerial->print(getProtocolString(decodedIRData.protocol));
@@ -958,8 +1002,10 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
 
         aSerial->print(F(" C=0x"));
         aSerial->print(decodedIRData.command, HEX);
+
         aSerial->print(F(" Raw=0x"));
         aSerial->print(decodedIRData.decodedRawData, HEX);
+
         if (decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) {
             aSerial->print(F(" R"));
         }
@@ -967,7 +1013,8 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
 }
 
 /**
- * Dump out the decode_results structure
+ * Dump out the timings in IrReceiver.decodedIRData.rawDataPtr->rawbuf[] array 8 values per line.
+ * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
     // Print Raw data
@@ -1022,21 +1069,24 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
 }
 
 /**
- * Dump out the decode_results structure to be used for sendRaw().
- * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
+ * Dump out the IrReceiver.decodedIRData.rawDataPtr->rawbuf[] to be used as C definition for sendRaw().
  *
+ * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
  * Print ticks in 8 bit format to save space.
  * Maximum is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
  * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
+ *
+ * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ * @param aOutputMicrosecondsInsteadOfTicks Output the (rawbuf_values * MICROS_PER_TICK) for better readability.
  */
 void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
 // Start declaration
     if (aOutputMicrosecondsInsteadOfTicks) {
-        aSerial->print(F("uint16_t "));            // variable type
-        aSerial->print(F("rawData["));            // array name
+        aSerial->print(F("uint16_t "));         // variable type
+        aSerial->print(F("rawData["));          // array name
     } else {
-        aSerial->print(F("uint8_t "));             // variable type
-        aSerial->print(F("rawTicks["));             // array name
+        aSerial->print(F("uint8_t "));          // variable type
+        aSerial->print(F("rawTicks["));         // array name
     }
 
     aSerial->print(decodedIRData.rawDataPtr->rawlen - 1, DEC);    // array size
@@ -1078,11 +1128,11 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
 }
 
 /**
- * Store the decode_results structure to be used for sendRaw().
- * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
+ * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding and store it in an array provided.
  *
  * Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
  * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
+ * @param aArrayPtr Address of an array provided by the caller.
  */
 void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
 
@@ -1102,6 +1152,15 @@ void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
     }
 }
 
+/**
+ * Store the decode_results structure to be used for sendRaw().
+ *
+ * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
+ * Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
+ * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
+ *
+ * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ */
 void IRrecv::printIRResultAsCVariables(Print *aSerial) {
 // Now dump "known" codes
     if (decodedIRData.protocol != UNKNOWN) {
@@ -1336,3 +1395,4 @@ bool IRrecv::decode(decode_results *aResults) {
     return decode();
 }
 
+/** @}*/

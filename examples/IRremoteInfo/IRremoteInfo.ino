@@ -105,7 +105,7 @@ void dumpTimerPin() {
 
 void dumpClock() {
     Serial.print(F("MCU Clock: "));
-    Serial.println(SYSCLOCK);
+    Serial.println(F_CPU);
 }
 
 void dumpPlatform() {

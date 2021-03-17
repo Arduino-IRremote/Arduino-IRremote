@@ -49,6 +49,8 @@ Please delete all unchecked lines above :-)
 
 ### Pin(s) used for IR-receive, if not default
 
+[Use code blocks](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code); **it helps us help you when we can read your code!**
+Please also refrain from pasting more than 50 lines of code in a post, instead **[create a gist](https://gist.github.com/) if you need to share large snippets**
 **Code Block:**
 ```
 
@@ -58,7 +60,6 @@ Please delete all unchecked lines above :-)
 
 ```
 
-Use [a gist](gist.github.com) if the code exceeds 30 lines
 
 ### Current behavior
 <!-- Paste the code or repository link, if applicable. -->
