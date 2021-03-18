@@ -124,9 +124,10 @@
  *
  ************************************************************************************
  */
+#include <Arduino.h>
 
-//#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremoteInt.h"
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 
 //#define SEND_SHUZU  1 // for testing
 //#define DECODE_SHUZU  1 // for testing

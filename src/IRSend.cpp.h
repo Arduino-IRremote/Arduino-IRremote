@@ -29,7 +29,7 @@
  *
  ************************************************************************************
  */
-//#define DEBUG
+
 #include "IRremoteInt.h"
 
 __attribute((error("Version > 3.0.1"))) void UsageError(const char *details);

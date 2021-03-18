@@ -29,11 +29,15 @@
  *
  ************************************************************************************
  */
+#include <Arduino.h>
 
-//#define DEBUG // Activate this  for lots of lovely debug output.
-#include "IRremoteInt.h"
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 #include "LongUnion.h"
 
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //==============================================================================
 //       PPPP    AAA   N   N   AAA    SSSS   OOO   N   N  IIIII   CCCC
 //       P   P  A   A  NN  N  A   A  S      O   O  NN  N    I    C
@@ -280,6 +284,6 @@ void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
     // Old version with MSB first Data Data + stop bit
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aData,
     KASEIKYO_DATA_BITS, PROTOCOL_IS_MSB_FIRST);
-
 }
 
+/** @}*/

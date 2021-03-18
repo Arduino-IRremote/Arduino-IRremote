@@ -1,5 +1,11 @@
-#include "IRremoteInt.h"
+#include <Arduino.h>
 
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //==============================================================================
 //               W   W  H   H  Y   Y N   N TTTTT EEEEE  RRRRR
 //               W   W  H   H   Y Y  NN  N   T   E      R   R
@@ -67,3 +73,5 @@ bool IRrecv::decodeWhynter() {
     decodedIRData.protocol = WHYNTER;
     return true;
 }
+
+/** @}*/

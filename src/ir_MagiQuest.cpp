@@ -1,4 +1,7 @@
-#include "IRremoteInt.h"
+#include <Arduino.h>
+
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 
 // MagiQuest added by E. Stuart Hicks
 // Based off the Magiquest fork of Arduino-IRremote by mpflaga

@@ -3,9 +3,10 @@
  *
  * @brief Public API to the library.
  *
- *
+ * @code
  * !!! All the macro values defined here can be overwritten with values,    !!!
  * !!! the user defines in its source code BEFORE the #include <IRremote.h> !!!
+ * @endcode
  *
  * This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -89,6 +90,8 @@
 #warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."
 #endif
 
+//#define DEBUG // Activate this for lots of lovely debug output from the IRremote core.
+
 /**
  * For better readability of code
  */
@@ -136,12 +139,10 @@
 //#define IR_INPUT_IS_ACTIVE_HIGH
 #ifdef IR_INPUT_IS_ACTIVE_HIGH
 // IR detector output is active high
-#define MARK   1 ///< Sensor output for a mark ("flash")
-#define SPACE  0 ///< Sensor output for a space ("gap")
+#define INPUT_MARK   1 ///< Sensor output for a mark ("flash")
 #else
 // IR detector output is active low
-#define MARK   0 ///< Sensor output for a mark ("flash")
-#define SPACE  1 ///< Sensor output for a space ("gap")
+#define INPUT_MARK   0 ///< Sensor output for a mark ("flash")
 #endif
 /****************************************************
  *                     SENDING

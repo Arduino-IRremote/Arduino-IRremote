@@ -6,10 +6,14 @@
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  */
+#include <Arduino.h>
 
-//#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremoteInt.h"
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //==============================================================================
 //                           BBBB    OOO    SSSS  EEEEE
 //                           B   B  O   O  S      E
@@ -123,3 +127,5 @@ bool IRrecv::decodeBoseWave() {
 
     return true;
 }
+
+/** @}*/

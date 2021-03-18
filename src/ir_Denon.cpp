@@ -29,10 +29,14 @@
  *
  ************************************************************************************
  */
+#include <Arduino.h>
 
-//#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremoteInt.h"
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //==============================================================================
 //                    DDDD   EEEEE  N   N   OOO   N   N
 //                     D  D  E      NN  N  O   O  NN  N
@@ -236,3 +240,5 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
 void IRsend::sendSharp(unsigned int aAddress, unsigned int aCommand) {
     sendDenon(aAddress, aCommand, true, 0);
 }
+
+/** @}*/

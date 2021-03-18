@@ -29,10 +29,14 @@
  *
  ************************************************************************************
  */
+#include <Arduino.h>
 
-//#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremoteInt.h"
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //==============================================================================
 //         L       EEEEEE   EEEE    OOOO
 //         L       E       E       O    O
@@ -216,3 +220,5 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     return true;
 }
+
+/** @}*/

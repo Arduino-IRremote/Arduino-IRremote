@@ -41,6 +41,9 @@
 #error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
 #endif
 
+#define MARK   1
+#define SPACE  0
+
 /*
  * Try to activate it, if you have legacy code to compile with version >= 3
  */
@@ -78,7 +81,7 @@ struct irparams_struct {
     uint16_t rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
 };
 
-//#define DEBUG // Activate this for lots of lovely debug output.
+//#define DEBUG // Activate this for lots of lovely debug output from the IRremote core and all protocol decoders.
 /*
  * Debug directives
  */
@@ -147,7 +150,7 @@ struct IRData {
     uint16_t address;           ///< Decoded address
     uint16_t command;           ///< Decoded command
     uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID
-    uint8_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible (currently only Sony).
+    uint8_t numberOfBits;       ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;              ///< See IRDATA_FLAGS_* definitions above
     uint32_t decodedRawData;    ///< Up to 32 bit decoded raw data, used for sendRaw functions.
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
@@ -219,8 +222,11 @@ public:
     bool decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aOneMarkMicros, uint16_t aZeroMarkMicros,
             uint16_t aBitSpaceMicros, bool aMSBfirst);
 
-    bool decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
+    bool decodeBiPhaseData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint_fast8_t aStartClockCount, uint_fast8_t aValueOfSpaceToMarkTransition,
             uint16_t aBiphaseTimeUnit);
+
+    void initBiphaselevel(uint8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit);
+    uint8_t getBiphaselevel();
 
     /*
      * All standard (decode address + command) protocol decoders
@@ -270,6 +276,8 @@ public:
 
     uint8_t repeatCount;        // Used e.g. for Denon decode for autorepeat decoding.
 };
+
+extern uint8_t sBiphaseDecodeRawbuffOffset; //
 
 /*
  * Mark & Space matching functions

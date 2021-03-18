@@ -105,7 +105,10 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
 // Print a short summary of received data
         IrReceiver.printIRResultShort(&Serial);
 
-        if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
+        if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
+            IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
+            Serial.println(F("Overflow detected"));
+        } else if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
             // We have an unknown protocol, print more info
             IrReceiver.printIRResultRawFormatted(&Serial, true);
         } else {
@@ -325,7 +328,6 @@ void loop() {
 //    IrSender.sendLegoPowerFunctions(sAddress, sCommand, LEGO_MODE_COMBO, true);
 //    checkReceive(sAddress, sCommand); // never has success for Lego protocol :-(
 //    delay(DELAY_AFTER_SEND);
-
     /*
      * Force buffer overflow
      */

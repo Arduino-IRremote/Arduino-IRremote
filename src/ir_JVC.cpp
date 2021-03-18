@@ -29,10 +29,14 @@
  *
  ************************************************************************************
  */
+#include <Arduino.h>
 
-//#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremoteInt.h"
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //==============================================================================
 //                             JJJJJ  V   V   CCCC
 //                               J    V   V  C
@@ -228,5 +232,6 @@ void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
     // Old version with MSB first Data
     sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
     SEND_STOP_BIT);
-
 }
+
+/** @}*/

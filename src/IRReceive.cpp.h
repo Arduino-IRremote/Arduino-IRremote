@@ -31,8 +31,6 @@
  ************************************************************************************
  */
 
-//#define DEBUG
-
 /** \addtogroup Receiving Receiving IR data for multiple protocols
  * @{
  */
@@ -586,112 +584,76 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
     return true;
 }
 
-//#  define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
-//#  define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
-//#  define TRACE_PRINT(...)    Serial.print(__VA_ARGS__)
-//#  define TRACE_PRINTLN(...)  Serial.println(__VA_ARGS__)
-/**
- * Decode Biphase protocols
- * We "regenerate" the clock and check changes on the significant clock transition
- * We assume that the transition from (aStartOffset -1) to aStartOffset is a significant clock transition
- *
- * The first bit is assumed as start bit and excluded for result
- *
- * Input is     IrReceiver.decodedIRData.rawDataPtr->rawbuf[]
- * Output is    IrReceiver.decodedIRData.decodedRawData
- *
- * @param aStartOffset must point to a mark
- * @return true if decoding was successful
+/*
+ * Static variables for the getBiphaselevel function
  */
-bool IRrecv::decodeBiPhaseData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint8_t aValueOfSpaceToMarkTransition,
-        uint16_t aBiphaseTimeUnit) {
+uint8_t sBiphaseDecodeRawbuffOffset;// Index into raw timing array
+uint16_t sCurrentTimingIntervals;   // Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
+uint8_t sUsedTimingIntervals;       // Number of already used intervals of sCurrentTimingIntervals.
+uint16_t sBiphaseTimeUnit;
 
-    uint16_t *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
-    bool tCheckMark = aStartOffset & 1;
-    uint_fast8_t tClockCount = 0; // assume that first transition is significant
-    aValueOfSpaceToMarkTransition &= 1; // only 0 or 1 are valid
-    uint32_t tDecodedData = 0;
+void IRrecv::initBiphaselevel(uint8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit) {
+    sBiphaseDecodeRawbuffOffset = aRCDecodeRawbuffOffset;
+    sBiphaseTimeUnit = aBiphaseTimeUnit;
+    sUsedTimingIntervals = 0;
+}
 
-    for (uint_fast8_t tBitIndex = 0; tBitIndex < aNumberOfBits;) {
-        if (tCheckMark) {
-            /*
-             *  Check mark and determine current (and next) bit value
-             */
-            if (matchMark(*tRawBufPointer, aBiphaseTimeUnit)) {
-                // we have a transition here from space to mark
-                tClockCount++;
-                // for BiPhaseCode, we have a transition at every odd clock count.
-                if (tClockCount & 1) {
-                    // valid clock edge
-                    tDecodedData = (tDecodedData << 1) | aValueOfSpaceToMarkTransition;
-                    TRACE_PRINT(aValueOfSpaceToMarkTransition);
-                    tBitIndex++;
-                }
-            } else if (matchMark(*tRawBufPointer, 2 * aBiphaseTimeUnit)) {
-                tClockCount = 0; // can reset clock count here
-                // We have a double length mark this includes two valid clock edges
-                tDecodedData = (tDecodedData << 1) | aValueOfSpaceToMarkTransition;
-                TRACE_PRINT(aValueOfSpaceToMarkTransition);
+/**
+ * Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer.
+ * The RC5/6 decoding is easier if the data is broken into time intervals.
+ * E.g. if the buffer has mark for 2 time intervals and space for 1,
+ * successive calls to getBiphaselevel will return 1, 1, 0.
+ *
+ *               _   _   _   _   _   _   _   _   _   _   _   _   _
+ *         _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |
+ *                ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    Significant clock edge
+ *               _     _   _   ___   _     ___     ___   _   - Mark
+ * Data    _____| |___| |_| |_|   |_| |___|   |___|   |_| |  - Data starts with a mark->space bit
+ *                1   0   0   0   1   1   0   1   0   1   1  - Space
+ * A mark to space at a significant clock edge results in a 1
+ * A space to mark at a significant clock edge results in a 0 (for RC6)
+ * Returns current level [MARK or SPACE] or -1 for error (measured time interval is not a multiple of sBiphaseTimeUnit).
+ */
+uint8_t IRrecv::getBiphaselevel() {
+    uint8_t tLevelOfCurrentInterval; // 0 (SPACE) or 1 (MARK)
 
-                tBitIndex++;
-
-            } else {
-                /*
-                 * Use TRACE_PRINT here, since this normally checks the length of the start bit and therefore will happen very often
-                 */
-                TRACE_PRINT(F("Mark="));
-                TRACE_PRINT(*tRawBufPointer * MICROS_PER_TICK);
-                TRACE_PRINT(F(" is not "));
-                TRACE_PRINT(aBiphaseTimeUnit);
-                TRACE_PRINT(F(" or "));
-                TRACE_PRINT(2 * aBiphaseTimeUnit);
-                TRACE_PRINT(' ');
-                return false;
-            }
-
-        } else {
-            /*
-             * Check space - simulate last not recorded space
-             */
-            if (tRawBufPointer == &decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen]
-                    || matchSpace(*tRawBufPointer, aBiphaseTimeUnit)) {
-                // we have a transition here from mark to space
-                tClockCount++;
-                if (tClockCount & 1) {
-                    // valid clock edge
-                    tDecodedData = (tDecodedData << 1) | (aValueOfSpaceToMarkTransition ^ 1);
-                    TRACE_PRINT((aValueOfSpaceToMarkTransition ^ 1));
-                    tBitIndex++;
-                }
-            } else if (matchSpace(*tRawBufPointer, 2 * aBiphaseTimeUnit)) {
-                // We have a double length space -> current bit value is 0 and changes to 1
-                tClockCount = 0;                // can reset clock count here
-                // We have a double length mark this includes two valid clock edges
-                if (tBitIndex == 0) {
-                    TRACE_PRINT('S'); // do not put start bit into data
-                } else {
-                    tDecodedData = (tDecodedData << 1) | (aValueOfSpaceToMarkTransition ^ 1);
-                    TRACE_PRINT((aValueOfSpaceToMarkTransition ^ 1));
-                }
-                tBitIndex++;
-            } else {
-                DBG_PRINT(F("Space="));
-                DBG_PRINT(*tRawBufPointer * MICROS_PER_TICK);
-                DBG_PRINT(F(" is not "));
-                DBG_PRINT(aBiphaseTimeUnit);
-                DBG_PRINT(F(" or "));
-                DBG_PRINT(2 * aBiphaseTimeUnit);
-                DBG_PRINT(' ');
-                return false;
-            }
-        }
-        tRawBufPointer++;
-        tCheckMark = !tCheckMark;
-
+    if (sBiphaseDecodeRawbuffOffset >= decodedIRData.rawDataPtr->rawlen) {
+        return SPACE;  // After end of recorded buffer, assume space.
     }
-    TRACE_PRINTLN("");
-    decodedIRData.decodedRawData = tDecodedData;
-    return true;
+
+    tLevelOfCurrentInterval = (sBiphaseDecodeRawbuffOffset) & 1; // on odd rawbuf offsets we have mark timings
+
+    /*
+     * Setup data if sUsedTimingIntervals is 0
+     */
+    if (sUsedTimingIntervals == 0) {
+        uint16_t tCurrentTimingWith = decodedIRData.rawDataPtr->rawbuf[sBiphaseDecodeRawbuffOffset];
+        uint16_t tMarkExcessCorrection = (tLevelOfCurrentInterval == MARK) ? MARK_EXCESS_MICROS : -MARK_EXCESS_MICROS;
+
+        if (matchTicks(tCurrentTimingWith, (sBiphaseTimeUnit) + tMarkExcessCorrection)) {
+            sCurrentTimingIntervals = 1;
+        } else if (matchTicks(tCurrentTimingWith, (2 * sBiphaseTimeUnit) + tMarkExcessCorrection)) {
+            sCurrentTimingIntervals = 2;
+        } else if (matchTicks(tCurrentTimingWith, (3 * sBiphaseTimeUnit) + tMarkExcessCorrection)) {
+            sCurrentTimingIntervals = 3;
+        } else {
+            return -1;
+        }
+    }
+
+    // We use another interval from tCurrentTimingIntervals
+    sUsedTimingIntervals++;
+
+    // keep track of current timing offset
+    if (sUsedTimingIntervals >= sCurrentTimingIntervals) {
+        // we have used all intervals of current timing, switch to next timing value
+        sUsedTimingIntervals = 0;
+        sBiphaseDecodeRawbuffOffset++;
+    }
+
+    TRACE_PRINTLN(tLevelOfCurrentInterval);
+
+    return tLevelOfCurrentInterval;
 }
 
 #if defined(DECODE_HASH)
@@ -979,12 +941,12 @@ void IRrecv::printIRResultShort(Print *aSerial) {
 }
 
 /**
- * Function to print protocol, address, command,raw data and repeat flag of IrReceiver.decodedIRData in one short line.
+ * Function to print protocol number, address, command, raw data and repeat flag of IrReceiver.decodedIRData in one short line.
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRResultMinimal(Print *aSerial) {
     aSerial->print(F("P="));
-    aSerial->print(getProtocolString(decodedIRData.protocol));
+    aSerial->print(decodedIRData.protocol);
     if (decodedIRData.protocol == UNKNOWN) {
 #if defined(DECODE_HASH)
         aSerial->print(F(" #=0x"));
@@ -1311,7 +1273,7 @@ ISR () // for functions definitions which are called by separate (board specific
 //    switch (irparams.StateForISR) {
 //......................................................................
     if (irparams.StateForISR == IR_REC_STATE_IDLE) { // In the middle of a gap
-        if (irdata == MARK) {
+        if (irdata == INPUT_MARK) {
             // check if we did not start in the middle of an command by checking the minimum length of leading space
             if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
                 // Gap just ended; Record gap duration + start recording transmission
@@ -1328,7 +1290,7 @@ ISR () // for functions definitions which are called by separate (board specific
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing Mark
-        if (irdata != MARK) {   // Mark ended; Record time
+        if (irdata != INPUT_MARK) {   // Mark ended; Record time
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 //            digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
@@ -1338,7 +1300,7 @@ ISR () // for functions definitions which are called by separate (board specific
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing Space
-        if (irdata == MARK) {  // Space just ended; Record time
+        if (irdata == INPUT_MARK) {  // Space just ended; Record time
             if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
                 // Flag up a read OverflowFlag; Stop the State Machine
                 irparams.OverflowFlag = true;
@@ -1369,14 +1331,14 @@ ISR () // for functions definitions which are called by separate (board specific
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 //        digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-        if (irdata == MARK) {
+        if (irdata == INPUT_MARK) {
             irparams.TickCounterForISR = 0;  // Reset gap TickCounterForISR, to prepare for call of resume()
         }
     }
 
 #if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
     if (FeedbackLEDControl.LedFeedbackEnabled) {
-        setFeedbackLED(irdata == MARK);
+        setFeedbackLED(irdata == INPUT_MARK);
     }
 #endif
 

@@ -31,10 +31,16 @@
  *
  ************************************************************************************
  */
-//#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremoteInt.h"
+#include <Arduino.h>
 
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT"
 
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
+
+// TODO remove 6/2021
 #if defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1) // Recommended original Arduino_STM32 by Roger Clark.
 #  if !defined(strncpy_P)
 // this define is not included in the pgmspace.h file see https://github.com/rogerclarkmelbourne/Arduino_STM32/issues/852
@@ -42,6 +48,7 @@
 #  endif
 #endif
 
+//! @cond
 // DO NOT EXPORT from this file
 static const uint16_t MICROSECONDS_T_MAX = 0xFFFFU;
 static const uint16_t learnedToken = 0x0000U;
@@ -54,6 +61,7 @@ static const uint32_t referenceFrequency = 4145146UL;
 static const uint16_t fallbackFrequency = 64767U; // To use with frequency = 0;
 static const uint32_t microsecondsInSeconds = 1000000UL;
 static const uint16_t PRONTO_DEFAULT_GAP = 45000;
+//! @endcond
 
 static unsigned int toFrequencyKHz(uint16_t code) {
     return ((referenceFrequency / code) + 500) / 1000;
@@ -320,3 +328,5 @@ size_t IRrecv::compensateAndStorePronto(String *aString, unsigned int frequency)
 
     return size;
 }
+
+/** @}*/

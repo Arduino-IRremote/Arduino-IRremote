@@ -27,10 +27,14 @@
  *
  ************************************************************************************
  */
+#include <Arduino.h>
 
-//#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremoteInt.h"
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //==============================================================================
 //                           SSSS   OOO   N   N  Y   Y
 //                          S      O   O  NN  N   Y Y
@@ -219,3 +223,5 @@ void IRsend::sendSony(unsigned long data, int nbits) {
     // Old version with MSB first Data
     sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
 }
+
+/** @}*/

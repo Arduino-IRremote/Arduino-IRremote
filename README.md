@@ -12,7 +12,7 @@ Available as Arduino library "IRremote"
 This library enables you to send and receive using infra-red signals on an Arduino.
 
 # API
-A Doxygen documentation of the sources is available on [project homepage](https://arduino-irremote.github.io/Arduino-IRremote/).
+A Doxygen documentation of the sources is available on the [project homepage](https://arduino-irremote.github.io/Arduino-IRremote/).
 
 # Installation
 Click on the LibraryManager badge above to see the [instructions](https://www.ardu-badge.com/IRremote/zip).
@@ -82,7 +82,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
  the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
 - To **increase strength of sent output signal** you can increase the current through the send diode, and/or use 2 diodes in series,
  since one IR diode requires only 1.5 volt.
- - The line #include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for **Digispark boards** as well as enables serial output at 8MHz.
+ - The line \#include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for **Digispark boards** as well as enables serial output at 8MHz.
  - The default software generated PWM has **problems on ATtinies running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
 
 # Examples

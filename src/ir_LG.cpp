@@ -29,9 +29,14 @@
  *
  ************************************************************************************
  */
-//#define DEBUG
-#include "IRremoteInt.h"
+#include <Arduino.h>
 
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //==============================================================================
 //                               L       GGGG
 //                               L      G
@@ -271,6 +276,6 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 
 // Data + stop bit
     sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-
 }
 
+/** @}*/

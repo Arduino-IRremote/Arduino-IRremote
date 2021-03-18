@@ -29,11 +29,15 @@
  *
  ************************************************************************************
  */
+#include <Arduino.h>
 
-//#define DEBUG // Activate this for lots of lovely debug output.
-#include "IRremoteInt.h"
+//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 #include "LongUnion.h"
 
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //==============================================================================
 //              SSSS   AAA    MMM    SSSS  U   U  N   N   GGGG
 //             S      A   A  M M M  S      U   U  NN  N  G
@@ -63,8 +67,8 @@
 #define SAMSUNG_REPEAT_DURATION     (SAMSUNG_HEADER_MARK  + SAMSUNG_HEADER_SPACE + SAMSUNG_BIT_MARK + SAMSUNG_ZERO_SPACE + SAMSUNG_BIT_MARK)
 #define SAMSUNG_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 
-//+=============================================================================
-/*
+
+/**
  * Send repeat
  * Repeat commands should be sent in a 110 ms raster.
  */
@@ -75,7 +79,6 @@ void IRsend::sendSamsungRepeat() {
     mark(SAMSUNG_BIT_MARK);
     space(SAMSUNG_ZERO_SPACE);
     mark(SAMSUNG_BIT_MARK);
-//    ledOff(); // Always end with the LED off
 }
 
 void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
@@ -255,3 +258,5 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
     SEND_STOP_BIT);
 }
+
+/** @}*/
