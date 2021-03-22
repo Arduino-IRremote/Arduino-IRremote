@@ -17,8 +17,9 @@
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/ukw100/IRMP.
+ *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
- *  IRMP is free software: you can redistribute it and/or modify
+ *  TinyIRReceiver is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
@@ -218,13 +219,13 @@ void initPCIInterruptForTinyReceiver() {
 #if defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
     attachInterrupt(IR_INPUT_PIN, IRPinChangeInterruptHandler, CHANGE); // 2.2 us more than version configured with macros and not compatible
 
-#elif ! defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
+#elif !defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
     // costs 112 bytes FLASH + 4bytes RAM
     attachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN), IRPinChangeInterruptHandler, CHANGE);
 #else
 #  if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-    // use PinChangeInterrupt
-    PCMSK |= _BV(IR_INPUT_PIN);
+    // use PinChangeInterrupt no INT0 for pin PB2
+    PCMSK = _BV(IR_INPUT_PIN);
     // clear interrupt bit
     GIFR |= 1 << PCIF;
     // enable interrupt on next change
@@ -301,13 +302,14 @@ void initPCIInterruptForTinyReceiver() {
 #      error "IR_INPUT_PIN not allowed."
 #    endif // if (IR_INPUT_PIN == 2)
 #  endif // defined(__AVR_ATtiny25__)
-#endif // ! defined(__AVR__) || defined(IRMP_USE_ARDUINO_ATTACH_INTERRUPT)
+#endif // ! defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
 }
 
 /*
- * Specify the right INT0, INT1 or PCINT0 interrupt vector according to different pins and cores
+ * Specify the right INT0, INT1 or PCINT0 interrupt vector according to different pins and cores.
+ * The default value of TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT is set in TinyIRReceiver.h
  */
-#if defined(__AVR__) && !defined(IRMP_USE_ARDUINO_ATTACH_INTERRUPT)
+#if defined(__AVR__) && !defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
 #  if (IR_INPUT_PIN == 2)
 ISR(INT0_vect) // Pin 2 global assignment
 
@@ -344,7 +346,7 @@ ISR(PCINT1_vect)
 {
     IRPinChangeInterruptHandler();
 }
-#endif // defined(__AVR__) && ! defined(IRMP_USE_ARDUINO_ATTACH_INTERRUPT)
+#endif // defined(__AVR__) && ! defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
 
 /** @}*/
 

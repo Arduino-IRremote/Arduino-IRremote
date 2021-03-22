@@ -74,9 +74,9 @@ void setup() {
 #if defined(ESP8266)
     Serial.println();
 #endif
-//    Serial.println(F("START " __FILE__ " from " __DATE__));
+    Serial.println(F("START " __FILE__ " from " __DATE__));
     initPCIInterruptForTinyReceiver();
-//    Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_INPUT_PIN)));
+    Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_INPUT_PIN)));
 }
 
 void loop() {
