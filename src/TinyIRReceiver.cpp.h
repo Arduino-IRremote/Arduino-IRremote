@@ -48,8 +48,8 @@
 
 TinyIRReceiverStruct TinyIRReceiverControl;
 
-/*
- * The callback function provided by the user application.
+/**
+ * Declaration of the callback function provided by the user application.
  * It is called every time a complete IR command or repeat was received.
  */
 #if defined(ESP8266)
@@ -205,6 +205,9 @@ void IRPinChangeInterruptHandler(void) {
     TinyIRReceiverControl.IRReceiverState = tState;
 }
 
+/**
+ * Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.
+ */
 void initPCIInterruptForTinyReceiver() {
     pinModeFast(IR_INPUT_PIN, INPUT_PULLUP);
 
@@ -301,9 +304,6 @@ void initPCIInterruptForTinyReceiver() {
 #endif // ! defined(__AVR__) || defined(IRMP_USE_ARDUINO_ATTACH_INTERRUPT)
 }
 
-/*
- * Specify the right INT0, INT1 or PCINT0 interrupt vector according to different pins and cores
- */
 /*
  * Specify the right INT0, INT1 or PCINT0 interrupt vector according to different pins and cores
  */
