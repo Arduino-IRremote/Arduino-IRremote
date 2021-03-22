@@ -31,6 +31,7 @@
  */
 
 #include "IRremoteInt.h"
+//#include "digitalWriteFast.h"
 
 __attribute((error("Version > 3.0.1"))) void UsageError(const char *details);
 
@@ -360,36 +361,27 @@ void IRsend::mark(unsigned int aMarkMicros) {
 #if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
     unsigned long start = micros();
     unsigned long nextPeriodEnding = start;
-    while (micros() - start < aMarkMicros) {
+    unsigned long tMicros;
+    do {
+//        digitalToggleFast(IR_TIMING_TEST_PIN);
         // Output the PWM pulse
         noInterrupts(); // do not let interrupts extend the short on period
-#  ifdef SENDPIN_ON
-        SENDPIN_ON(sendPin);
-#  else
-        digitalWrite(sendPin, HIGH);
-#  endif
+        digitalWrite(sendPin, HIGH); // 4.3 us from do{ to pin setting
         delayMicroseconds(periodOnTimeMicros); // this is normally implemented by a blocking wait
 
         // Output the PWM pause
-#  ifdef SENDPIN_OFF
-        SENDPIN_OFF(sendPin);
-#  else
         digitalWrite(sendPin, LOW);
-#  endif
         interrupts(); // Enable interrupts -to keep micros correct- for the longer off period 3.4 us until receive ISR is active (for 7 us + pop's)
         nextPeriodEnding += periodTimeMicros;
-        while (micros() < nextPeriodEnding){
-            ;
-        }
-    }
+        do {
+            tMicros = micros(); // we have only 4 us resolution for and AVR @16MHz
+//            digitalToggleFast(IR_TIMING_TEST_PIN); // 3.0 us per call @16MHz
+        } while (tMicros < nextPeriodEnding);  // 3.4 us @16MHz
+    } while (tMicros - start < aMarkMicros);
 
 #else
 #  if defined(USE_NO_SEND_PWM)
-#  ifdef SENDPIN_OFF
-    SENDPIN_OFF(sendPin);
-#  else
     digitalWrite(sendPin, LOW); // Set output to active low.
-#  endif
 
 #  else
     TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
@@ -408,11 +400,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
  */
 void IRsend::ledOff() {
 #if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
-#  ifdef SENDPIN_OFF
-    SENDPIN_OFF(sendPin);
-#  else
     digitalWrite(sendPin, LOW);
-#  endif
 #elif defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else

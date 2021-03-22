@@ -474,7 +474,7 @@ public:
     uint8_t sendPin;
 
     unsigned int periodTimeMicros;
-    unsigned int periodOnTimeMicros;
+    unsigned int periodOnTimeMicros; // compensated with PULSE_CORRECTION_NANOS for duration of digitalWrite.
 
     void customDelayMicroseconds(unsigned long aMicroseconds);
 };

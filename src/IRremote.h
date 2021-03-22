@@ -164,7 +164,7 @@
 
 /**
  * If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses.
- * It should be the time used for SENDPIN_OFF(sendPin) and the call to delayMicros()
+ * It should be the time used for digitalWrite(sendPin, LOW) and the call to delayMicros()
  * Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600
  */
 #ifndef PULSE_CORRECTION_NANOS

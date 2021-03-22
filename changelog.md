@@ -17,6 +17,7 @@ The latest version may not be released!
 - Added ATtiny88 support.
 - Use LED_BUILTIN instead of FEEDBACK_LED FeedbackLEDPin is 0.
 - Use F_CPU instead of SYSCLOCK.
+- Removed SENDPIN_ON and SENDPIN_OFF macros.
 
 ## 3.0.2
 - Bug fix for USE_OLD_DECODE.

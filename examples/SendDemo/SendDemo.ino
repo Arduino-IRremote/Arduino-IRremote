@@ -58,7 +58,7 @@ void setup() {
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
 
-    #if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
+#if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
     /*
      * Print internal signal generation info
      */
@@ -100,10 +100,12 @@ void loop() {
     Serial.flush();
 
     Serial.println(F("Send NEC with 8 bit address"));
+    Serial.flush();
     IrSender.sendNEC(sAddress & 0xFF, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND); // delay must be greater than 5 ms (RECORD_GAP_MICROS), otherwise the receiver sees it as one long signal
 
     Serial.println(F("Send NEC with 16 bit address"));
+    Serial.flush();
     IrSender.sendNEC(sAddress, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
@@ -113,6 +115,7 @@ void loop() {
          * Send constant values only once in this demo
          */
         Serial.println(F("Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats"));
+        Serial.flush();
         IrSender.sendPronto(F("0000 006D 0022 0000 015E 00AB " /* Pronto header + start bit */
                 "0017 0015 0017 0015 0017 0017 0015 0017 0017 0015 0017 0015 0017 0015 0017 003F " /* Lower address byte */
                 "0017 003F 0017 003E 0017 003F 0015 003F 0017 003E 0017 003F 0017 003E 0017 0015 " /* Upper address byte (inverted at 8 bit mode) */
@@ -127,6 +130,7 @@ void loop() {
         Serial.println(
                 F(
                         "Send NEC with 16 bit address 0x0102 and command 0x34 with NECRaw(0xCC340102) which results in a parity error, since 34 == ~CB and not C0"));
+        Serial.flush();
         IrSender.sendNECRaw(0xC0340102, sRepeats);
         delay(DELAY_AFTER_SEND);
 
@@ -136,52 +140,64 @@ void loop() {
          * Example:
          * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
          */
+        Serial.flush();
         Serial.println(F("Send NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first"));
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         delay(DELAY_AFTER_SEND);
     }
 
     Serial.println(F("Send Apple"));
+    Serial.flush();
     IrSender.sendApple(sAddress & 0xFF, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Panasonic"));
+    Serial.flush();
     IrSender.sendPanasonic(sAddress & 0xFFF, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Kaseikyo with 0x4711 as Vendor ID"));
+    Serial.flush();
     IrSender.sendKaseikyo(sAddress & 0xFFF, sCommand, sRepeats, 0x4711);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Denon"));
+    Serial.flush();
     IrSender.sendDenon(sAddress & 0x1F, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Denon/Sharp variant"));
+    Serial.flush();
     IrSender.sendSharp(sAddress & 0x1F, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
+    Serial.flush();
     IrSender.sendSony(sAddress & 0x1F, sCommand & 0x7F, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Sony/SIRCS with 7 command and 8 address bits"));
+    Serial.flush();
     IrSender.sendSony(sAddress & 0xFF, sCommand, sRepeats, SIRCS_15_PROTOCOL);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Sony/SIRCS with 7 command and 13 address bits"));
+    Serial.flush();
     IrSender.sendSony(sAddress & 0x1FFF, sCommand & 0x7F, sRepeats, SIRCS_20_PROTOCOL);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send RC5"));
+    Serial.flush();
     IrSender.sendRC5(sAddress & 0x1F, sCommand & 0x3F, sRepeats, true); // 5 address, 6 command bits
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send RC5X with 7.th MSB of command set"));
+    Serial.flush();
     IrSender.sendRC5(sAddress & 0x1F, (sCommand & 0x3F) + 0x40, sRepeats, true); // 5 address, 7 command bits
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send RC6"));
+    Serial.flush();
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(DELAY_AFTER_SEND);
 
@@ -204,17 +220,20 @@ void loop() {
     IRSendData.protocol = JVC; // switch protocol
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
+    Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     IRSendData.protocol = LG;
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
+    Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     IRSendData.protocol = BOSEWAVE;
     Serial.println(F("Send Bosewave with no address and 8 command bits"));
+    Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
 
@@ -222,6 +241,7 @@ void loop() {
      * LEGO is difficult to receive because of its short marks and spaces
      */
     Serial.println(F("Send Lego with 2 channel and with 4 command bits"));
+    Serial.flush();
     IrSender.sendLegoPowerFunctions(sAddress, sCommand, LEGO_MODE_COMBO, true);
     delay(DELAY_AFTER_SEND);
 
@@ -247,7 +267,6 @@ void loop() {
     if (sRepeats > 4) {
         sRepeats = 4;
     }
-
 
     delay(DELAY_AFTER_LOOP); // additional delay at the end of each loop
 }

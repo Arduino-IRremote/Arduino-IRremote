@@ -64,6 +64,7 @@ void ACSendCode(uint16_t aCommand) {
     Serial.print(aCommand, HEX);
     Serial.print(F(" | "));
     Serial.println(aCommand, BIN);
+    Serial.flush();
     IrSender.sendLG((uint8_t) 0x88, aCommand, 0);
 }
 

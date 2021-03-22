@@ -64,6 +64,7 @@ void loop() {
     Serial.println();
 
     Serial.println(F("Send NEC with 16 bit address"));
+    Serial.flush();
 
     // Results for the first loop to: Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 (32 bits)
     IrSender.sendNEC(sAddress, sCommand, sRepeats);
