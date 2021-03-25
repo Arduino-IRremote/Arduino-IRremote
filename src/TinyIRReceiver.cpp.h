@@ -46,7 +46,6 @@
  * @{
  */
 //#define TRACE
-
 TinyIRReceiverStruct TinyIRReceiverControl;
 
 /**
@@ -70,7 +69,10 @@ ICACHE_RAM_ATTR
 IRAM_ATTR
 #endif
 void IRPinChangeInterruptHandler(void) {
-    // save IR input level - negative logic, true means inactive / IR pause
+    /*
+     * Save IR input level
+     * Negative logic, true / HIGH means inactive / IR space, LOW / false means IR mark.
+     */
     uint_fast8_t tIRLevel = digitalReadFast(IR_INPUT_PIN);
 
 #if !defined(DO_NOT_USE_FEEDBACK_LED) && defined(IR_FEEDBACK_LED_PIN)
@@ -81,7 +83,7 @@ void IRPinChangeInterruptHandler(void) {
      * 1. compute microseconds after last change
      */
     uint32_t tCurrentMicros = micros();
-    uint16_t tDeltaMicros = tCurrentMicros - TinyIRReceiverControl.LastChangeMicros;
+    uint16_t tMicrosOfMarkOrSpace = tCurrentMicros - TinyIRReceiverControl.LastChangeMicros;
     TinyIRReceiverControl.LastChangeMicros = tCurrentMicros;
 
     uint8_t tState = TinyIRReceiverControl.IRReceiverState;
@@ -98,26 +100,34 @@ void IRPinChangeInterruptHandler(void) {
 
     if (tIRLevel == LOW) {
         /*
-         * We receive a signal now
+         * We have a mark here
          */
-        if (tDeltaMicros > 2 * NEC_HEADER_MARK) {
+        if (tMicrosOfMarkOrSpace > 2 * NEC_HEADER_MARK) {
             // timeout -> must reset state machine
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
         }
         if (tState == IR_RECEIVER_STATE_WAITING_FOR_START_MARK) {
+            // We are at the beginning of the header mark, check timing at the next transition
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_SPACE;
         }
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_FIRST_DATA_MARK) {
-            // Check start space length
-            if (tDeltaMicros >= lowerValue25Percent(NEC_HEADER_SPACE) && tDeltaMicros <= upperValue25Percent(NEC_HEADER_SPACE)) {
-                tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
+            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(NEC_HEADER_SPACE)
+                    && tMicrosOfMarkOrSpace <= upperValue25Percent(NEC_HEADER_SPACE)) {
+                /*
+                 * We have a valid data header space here -> initialize data
+                 */
                 TinyIRReceiverControl.IRRawDataBitCounter = 0;
                 TinyIRReceiverControl.IRRawData.ULong = 0;
                 TinyIRReceiverControl.IRRawDataMask = 1;
                 TinyIRReceiverControl.IRRepeatDetected = false;
-            } else if (tDeltaMicros >= lowerValue25Percent(NEC_REPEAT_HEADER_SPACE)
-                    && tDeltaMicros <= upperValue25Percent(NEC_REPEAT_HEADER_SPACE)) {
+                tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
+            } else if (tMicrosOfMarkOrSpace >= lowerValue25Percent(NEC_REPEAT_HEADER_SPACE)
+                    && tMicrosOfMarkOrSpace <= upperValue25Percent(NEC_REPEAT_HEADER_SPACE)
+                    && TinyIRReceiverControl.IRRawDataBitCounter >= NEC_BITS) {
+                /*
+                 * We have a repeat header here and no broken receive before -> set repeat flag
+                 */
                 TinyIRReceiverControl.IRRepeatDetected = true;
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
             } else {
@@ -129,15 +139,16 @@ void IRPinChangeInterruptHandler(void) {
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_MARK) {
             // Check data space length
-            if (tDeltaMicros >= lowerValue(NEC_ZERO_SPACE) && tDeltaMicros <= upperValue(NEC_ONE_SPACE)) {
-                // Here we have a valid bit
+            if (tMicrosOfMarkOrSpace >= lowerValue(NEC_ZERO_SPACE) && tMicrosOfMarkOrSpace <= upperValue(NEC_ONE_SPACE)) {
+                // We have a valid bit here
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
-                if (tDeltaMicros >= 2 * NEC_UNIT) {
+                if (tMicrosOfMarkOrSpace >= 2 * NEC_UNIT) {
                     // we received a 1
                     TinyIRReceiverControl.IRRawData.ULong |= TinyIRReceiverControl.IRRawDataMask;
                 } else {
-                    // we received a 0
+                    // we received a 0 - empty code for documentation
                 }
+                // prepare for next bit
                 TinyIRReceiverControl.IRRawDataMask = TinyIRReceiverControl.IRRawDataMask << 1;
                 TinyIRReceiverControl.IRRawDataBitCounter++;
             } else {
@@ -145,35 +156,39 @@ void IRPinChangeInterruptHandler(void) {
                 tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
             }
         } else {
-            // error wrong state for the received level (should not happen!) -> reset state
+            // error wrong state for the received level (should not happen!) -> reset state (2 checks costs 10 bytes programming space)
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
         }
     }
 
     else {
         /*
-         * We receive a space now
+         * We have a space here
          */
         if (tState == IR_RECEIVER_STATE_WAITING_FOR_START_SPACE) {
-            // Check start bit length
-            if (tDeltaMicros >= lowerValue25Percent(NEC_HEADER_MARK) && tDeltaMicros <= upperValue25Percent(NEC_HEADER_MARK)) {
+            /*
+             * Check length of header mark here
+             */
+            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(NEC_HEADER_MARK)
+                    && tMicrosOfMarkOrSpace <= upperValue25Percent(NEC_HEADER_MARK)) {
                 tState = IR_RECEIVER_STATE_WAITING_FOR_FIRST_DATA_MARK;
             } else {
-                // Wrong length -> reset state
+                // Wrong length of header mark -> reset state
                 tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
             }
         }
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE) {
-
-            // Check data bit length
-            if (tDeltaMicros >= lowerValue(NEC_BIT_MARK) && tDeltaMicros <= upperValue(NEC_BIT_MARK)) {
+            // Check data mark length
+            if (tMicrosOfMarkOrSpace >= lowerValue(NEC_BIT_MARK) && tMicrosOfMarkOrSpace <= upperValue(NEC_BIT_MARK)) {
+                /*
+                 * We have a valid mark here, check for transmission complete
+                 */
                 if (TinyIRReceiverControl.IRRawDataBitCounter >= NEC_BITS || TinyIRReceiverControl.IRRepeatDetected) {
                     /*
-                     * Code complete -> call callback
-                     * No parity check
+                     * Code complete -> call callback, no parity check!
                      */
-                    // Set state for new start
+                    // Reset state for new start
                     tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
 #if !defined(ARDUINO_ARCH_MBED)
                     interrupts();
@@ -187,10 +202,14 @@ void IRPinChangeInterruptHandler(void) {
                         TinyIRReceiverControl.IRRawData.UByte.MidLowByte = 0; // Address is the first 8 bit
                     }
 
+                    /*
+                     * Call user provided callback here
+                     */
                     handleReceivedTinyIRData(TinyIRReceiverControl.IRRawData.UWord.LowWord,
                             TinyIRReceiverControl.IRRawData.UByte.MidHighByte, TinyIRReceiverControl.IRRepeatDetected);
 
                 } else {
+                    // not finished yet
                     tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_MARK;
                 }
             } else {
@@ -198,7 +217,7 @@ void IRPinChangeInterruptHandler(void) {
                 tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
             }
         } else {
-            // error wrong state for the received level (should not happen!) -> reset state
+            // error wrong state for the received level (should not happen!) -> reset state (2 checks costs 10 bytes programming space)
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
         }
     }

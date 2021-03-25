@@ -316,9 +316,10 @@ bool IRrecv::decodeNEC() {
 
 /*
  * With Send sendNECMSB() you can send your old 32 bit codes.
- * To convert one into the other, you must reverse the byte positions and then reverse all positions of each byte.
+ * To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte.
+ * Or write it as one binary string and reverse/mirror it.
  * Example:
- * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
+ * 0xCB340102 byte reverse -> 02 01 34 CB bit reverse-> 40 80 2C D3. Bit reverse e.g. for CB = 1100 1011 -> (reverse/mirror bits) 1101 0011 = D3.
  */
 void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     // Set IR carrier frequency

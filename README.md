@@ -48,12 +48,12 @@ Therefore you must change all `IrSender.begin(true);` by `IrSender.begin(IR_SEND
 In the new version you will send NEC commands not by 32 bit codes but by a (constant) 8 bit address and an 8 bit command.
 
 # FAQ
-- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)<br/>
+- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 us).<br/>
  Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 µs.
 In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors,
  [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
 - The default IR timer on AVR's is timer 2. Since the **Arduino Tone library** as well as **analogWrite() for pin 3 and pin 11** requires timer 2,
- this functionality cannot be used simultaneously. You can use tone() but after the tone has stopped, you must call `IrReceiver.start()` or better `IrReceiver.start(<microsecondsOfToneDuration>)` to restore the timer settings for receive.<br/>
+ this functionality cannot be used simultaneously. You can use tone() but after the tone has stopped, you must call `IrReceiver.start()` or better `IrReceiver.start(<microsecondsOfToneDuration>)` to restore the timer settings for receive. Or you change the timer to timer 1 in private/IRTimer.cpp.h.<br/>
 If you can live with the NEC protocol, you can try the MinimalReceiver example, it requires no timer.
 - You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
  The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
@@ -133,7 +133,7 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `DO_NOT_USE_FEEDBACK_LED` | TinyIRReceiver.h | disabled | Enable it to disable the feedback LED function. |
 
 ### Modifying compile options with Arduino IDE
-First use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>
+First, use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>
 If you did not yet stored the example as your own sketch, then you are instantly in the right library folder.<br/>
 Otherwise you have to navigate to the parallel `libraries` folder and select the library you want to access.<br/>
 In both cases the library files itself are located in the `src` directory.<br/>
