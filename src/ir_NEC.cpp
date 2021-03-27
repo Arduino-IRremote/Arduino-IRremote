@@ -319,7 +319,10 @@ bool IRrecv::decodeNEC() {
  * To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte.
  * Or write it as one binary string and reverse/mirror it.
  * Example:
- * 0xCB340102 byte reverse -> 02 01 34 CB bit reverse-> 40 80 2C D3. Bit reverse e.g. for CB = 1100 1011 -> (reverse/mirror bits) 1101 0011 = D3.
+ * 0xCB340102 byte reverse -> 02 01 34 CB bit reverse-> 40 80 2C D3.
+ * 0xCB340102 is binary 11001011001101000000000100000010.
+ * 0x40802CD3 is binary 01000000100000000010110011010011.
+ * If you read the first binary sequence backwards (right to left), you get the second sequence.
  */
 void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     // Set IR carrier frequency
