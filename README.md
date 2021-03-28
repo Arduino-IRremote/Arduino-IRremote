@@ -18,7 +18,7 @@ A Doxygen documentation of the sources is available on the [project homepage](ht
 Click on the LibraryManager badge above to see the [instructions](https://www.ardu-badge.com/IRremote/zip).
 
 # Supported IR Protocols
-Denon, JVC, LG,  NEC / Apple, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sharp, Sony, (Pronto), BoseWave, Lego, Whynter, MagiQuest.<br/>
+Denon / Sharp, JVC, LG,  NEC / Apple, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sony, (Pronto), BoseWave, Lego, Whynter, MagiQuest.<br/>
 Protocols can be switched off and on by definining macros before the line `#incude <IRremote.h>` like [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L14):
 
 ```
@@ -34,6 +34,7 @@ This is a quite old but maybe useful wiki for this library.
 This must be done also for all versions > 3.0.1 if `USE_NO_SEND_PWM` is defined.<br/>
 Starting with this version, **the generation of PWM is done by software**, thus saving the hardware timer and **enabling abitrary output pins**.<br/>
 Therefore you must change all `IrSender.begin(true);` by `IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK);`.
+If you use a core that does not use the `-flto` flag for compile, you can activate the line `#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN` in IRRemote.h, if you get false error messages regarding begin() during compilation.
 
 # Converting your 2.x program to the 3.x version
 - Now there is  an **IRreceiver** and **IRsender** object like the well known Arduino **Serial** object.
@@ -84,6 +85,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
  since one IR diode requires only 1.5 volt.
  - The line \#include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for **Digispark boards** as well as enables serial output at 8MHz.
  - The default software generated PWM has **problems on ATtinies running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
+ - Minimal CPU frequency for receiving is 4 MHz, sive the 50 us timer ISR takes around 12 us on a 16 MHz ATmega.
 
 # Examples
 In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.

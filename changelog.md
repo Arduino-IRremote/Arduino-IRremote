@@ -2,22 +2,21 @@
 The latest version may not be released!
 
 ## 3.1.0
-- Replaced `#define DECODE_NEC 1/0` by defining/not defining.
 - USE_SOFT_SEND_PWM is active by default.
-- Refactored Board specific code.
-- Separated timer and feedback LED related code.
-- Added STM32F1 by (by Roger Clark) support.
-- Added stm32 (by ST) support. Thanks to Paolo Malaspina.
-- Refactored LED Feedback functions.
-- Renamed most irparams_struct values.
-- Implemented feedback for send.
 - Removed decode_results results.
-- Added unit test and fixed LG send bug.
-- MATCH_MARK() etc. now available as matchMark().
-- Added ATtiny88 support.
-- Use LED_BUILTIN instead of FEEDBACK_LED FeedbackLEDPin is 0.
+- Renamed most irparams_struct values.
+- Fixed LG send bug and added unit test.
+- Replaced `#define DECODE_NEC 1/0` by defining/not defining.
+- Use LED_BUILTIN instead of FEEDBACK_LED if FeedbackLEDPin is 0.
 - Use F_CPU instead of SYSCLOCK.
 - Removed SENDPIN_ON and SENDPIN_OFF macros.
+
+- Refactored board specific code for timer and feedback LED.
+- Extracted common LED feedback functions and implemented feedback for send.
+- MATCH_MARK() etc. now available as matchMark().
+- Added STM32F1 by (by Roger Clark) support.
+- Added stm32 (by ST) support. Thanks to Paolo Malaspina.
+- Added ATtiny88 support.
 
 ## 3.0.2
 - Bug fix for USE_OLD_DECODE.

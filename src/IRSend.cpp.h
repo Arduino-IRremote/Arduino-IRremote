@@ -71,9 +71,10 @@ void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedba
  * @param aLEDFeedbackPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
-    // must exclude NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
+    // must exclude MEGATINYCORE, NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
 #if (defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)) \
-    && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) && !defined(ARDUINO_ARCH_SAMD) \
+        && !defined(SUPPRESS_ERROR_MESSAGE_FOR_BEGIN) \
+        && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) && !defined(ARDUINO_ARCH_SAMD) \
     && !defined(ESP32) && !defined(MEGATINYCORE) \
     && !(defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1)) && !(defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32))
     UsageError("Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if USE_SOFT_SEND_PWM or USE_NO_SEND_PWM is defined!");

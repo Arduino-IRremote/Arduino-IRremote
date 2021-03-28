@@ -1,5 +1,5 @@
 /*
- *  TinIRReceiver.cpp.h
+ *  TinyIRReceiver.cpp.h
  *
  *  Receives IR protocol data of NEC protocol using pin change interrupts.
  *  NEC is the protocol of most cheap remote controls for Arduino.
@@ -42,6 +42,10 @@
 #include "TinyIRReceiver.h"
 #include "digitalWriteFast.h"
 
+//#define IR_MEASURE_TIMING
+//#define IR_TIMING_TEST_PIN 7
+//#define DO_NOT_USE_FEEDBACK_LED
+
 /** \addtogroup TinyReceiver Minimal receiver for NEC protocol
  * @{
  */
@@ -62,6 +66,7 @@ void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition
 /**
  * The ISR of TinyIRRreceiver.
  * It handles the NEC protocol decoding and calls the user callback function on complete.
+ * 5 us + 3 us for push + pop for a 16MHz ATmega
  */
 #if defined(ESP8266)
 ICACHE_RAM_ATTR
@@ -69,6 +74,9 @@ ICACHE_RAM_ATTR
 IRAM_ATTR
 #endif
 void IRPinChangeInterruptHandler(void) {
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+    digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
     /*
      * Save IR input level
      * Negative logic, true / HIGH means inactive / IR space, LOW / false means IR mark.
@@ -156,7 +164,7 @@ void IRPinChangeInterruptHandler(void) {
                 tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
             }
         } else {
-            // error wrong state for the received level (should not happen!) -> reset state (2 checks costs 10 bytes programming space)
+            // error wrong state for the received level, e.g. if we missed one change interrupt -> reset state
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
         }
     }
@@ -217,18 +225,24 @@ void IRPinChangeInterruptHandler(void) {
                 tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
             }
         } else {
-            // error wrong state for the received level (should not happen!) -> reset state (2 checks costs 10 bytes programming space)
+            // error wrong state for the received level, e.g. if we missed one change interrupt -> reset state
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
         }
     }
 
     TinyIRReceiverControl.IRReceiverState = tState;
+#ifdef IR_MEASURE_TIMING
+    digitalWriteFast(IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
+#endif
 }
 
 /**
  * Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.
  */
 void initPCIInterruptForTinyReceiver() {
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+    pinModeFast(IR_TIMING_TEST_PIN, OUTPUT);
+#endif
     pinModeFast(IR_INPUT_PIN, INPUT_PULLUP);
 
 #if !defined(DO_NOT_USE_FEEDBACK_LED) && defined(IR_FEEDBACK_LED_PIN)

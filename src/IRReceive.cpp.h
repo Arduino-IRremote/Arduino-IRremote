@@ -1234,6 +1234,7 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
  * 15 pushs, 1 in, 1 eor before start of code = 2 us @16MHz + * 7.2 us computation time (6us idle time) + * pop + reti = 2.25 us @16MHz => 10.3 to 11.5 us @16MHz
  * With portInputRegister and mask and Feedback LED code commented
  * 9 pushs, 1 in, 1 eor before start of code = 1.25 us @16MHz + * 2.25 us computation time + * pop + reti = 1.5 us @16MHz => 5 us @16MHz
+ * => Minimal CPU frequency is 4 MHz
  *
  **********************************************************************************************************************/
 //#define IR_MEASURE_TIMING

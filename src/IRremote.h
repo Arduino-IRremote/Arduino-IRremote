@@ -47,6 +47,9 @@
 #define VERSION_IRREMOTE_MAJOR 3
 #define VERSION_IRREMOTE_MINOR 1
 
+// activate it for all cores that does not use the -flto flag, if you get false error messages regarding begin() during compilation.
+//#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN
+
 /*
  * If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in decoding and in sending with IrSender.write
  */
