@@ -161,7 +161,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00044">44</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00045">45</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -181,7 +181,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00051">51</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00052">52</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -219,7 +219,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00072">72</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00073">73</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -264,7 +264,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00063">63</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00064">64</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -286,7 +286,7 @@ Variables</h2></td></tr>
 
 <p>Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit and is (mostly) not extended by the duration of interrupt codes like the millis() interrupt. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00437">437</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00425">425</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -309,7 +309,7 @@ Variables</h2></td></tr>
 <p>Enables IR output. </p>
 <p>The kHz value controls the modulation frequency in kilohertz. The IR output will be on pin 3 (OC2B). This routine is designed for 36-40 kHz; if you use it for other values, it's up to you to make sure it gives reasonable results. (Watch out for overflow / underflow / rounding.) TIMER2 is used in phase-correct PWM mode, with OCR2A controlling the frequency and OCR2B controlling the duty cycle. There is no prescaling, so the output frequency is 16 MHz / (2 * OCR2A) To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin. A few hours staring at the ATmega documentation and this will all make sense. See my Secrets of Arduino PWM at <a href="http://arcfn.com/2009/07/secrets-of-arduino-pwm.html">http://arcfn.com/2009/07/secrets-of-arduino-pwm.html</a> for details. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00456">456</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00444">444</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -331,7 +331,7 @@ Variables</h2></td></tr>
 <p>Just switch the IR sending LED off to send an IR space A space is "no output", so the PWM output is disabled. </p>
 <p>This function may affect the state of feedback LED. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00409">409</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00401">401</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -354,7 +354,7 @@ Variables</h2></td></tr>
 <p>Sends an IR mark for the specified number of microseconds. </p>
 <p>The mark output is modulated at the PWM frequency if USE_NO_SEND_PWM is not defined. The output is guaranteed to be OFF / inactive after after the call of the function. This function may affect the state of feedback LED. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00357">357</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00358">358</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -390,7 +390,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00314">314</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00315">315</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -458,7 +458,7 @@ Variables</h2></td></tr>
 
 <p>Sends PulseDistance data The output always ends with a space. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00271">271</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00272">272</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -497,7 +497,7 @@ Variables</h2></td></tr>
 <p>Function using an 16 byte timing array for every purpose. </p>
 <p>Raw data starts with a Mark. No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00179">179</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00180">180</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -536,7 +536,7 @@ Variables</h2></td></tr>
 <p>Function using an 8 byte timing array to save program space Raw data starts with a Mark. </p>
 <p>No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00202">202</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00203">203</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -575,7 +575,7 @@ Variables</h2></td></tr>
 <p>Function using an 16 byte timing array in FLASH for every purpose. </p>
 <p>Raw data starts with a Mark. No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00221">221</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00222">222</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -614,7 +614,7 @@ Variables</h2></td></tr>
 <p>Function using an 8 byte timing array in FLASH to save program space Raw data starts with a Mark. </p>
 <p>No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00247">247</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00248">248</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -634,7 +634,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00054">54</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00055">55</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -657,7 +657,7 @@ Variables</h2></td></tr>
 <p>Sends an IR space for the specified number of microseconds. </p>
 <p>A space is "no output", so just wait. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00429">429</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00417">417</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -696,7 +696,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00089">89</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00090">90</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -713,7 +713,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00042">42</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00043">43</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -722,7 +722,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Mar 18 2021 22:40:18 for IRremote by
+    <li class="footer">Generated on Sun Mar 28 2021 11:36:48 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

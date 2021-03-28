@@ -119,14 +119,14 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </ul>
 <h1>FAQ</h1>
 <ul>
-<li>IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B)<br  />
+<li>IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (&gt; 50 us).<br  />
  Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 µs. In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors, <a href="http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html">see this page from Marc MERLIN</a></li>
-<li>The default IR timer on AVR's is timer 2. Since the <b>Arduino Tone library</b> as well as <b>analogWrite() for pin 3 and pin 11</b> requires timer 2, this functionality cannot be used simultaneously. You can use tone() but after the tone has stopped, you must call <code>IrReceiver.start()</code> or better <code>IrReceiver.start(&lt;microsecondsOfToneDuration&gt;)</code> to restore the timer settings for receive.<br  />
+<li>The default IR timer on AVR's is timer 2. Since the <b>Arduino Tone library</b> as well as <b>analogWrite() for pin 3 and pin 11</b> requires timer 2, this functionality cannot be used simultaneously. You can use tone() but after the tone has stopped, you must call <code>IrReceiver.start()</code> or better <code>IrReceiver.start(&lt;microsecondsOfToneDuration&gt;)</code> to restore the timer settings for receive. Or you change the timer to timer 1 in <a class="el" href="IRTimer_8cpp_8h.html" title="All timer specific definitions are contained in this file.">private/IRTimer.cpp.h</a>.<br  />
  If you can live with the NEC protocol, you can try the MinimalReceiver example, it requires no timer.</li>
 <li>You can use <b>multiple IR receiver</b> by just connecting the output pins of several IR receivers together. The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC. This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.</li>
 </ul>
 <h1>Minimal version</h1>
-<p>For applications only requiring NEC protocol, there is a receiver which has very <b>small codesize of 500 bytes and does NOT require any timer</b>. See the MinimalReceiver and IRDispatcherDemo example how to use it.</p>
+<p>For applications only requiring NEC protocol, there is a receiver which has very <b>small codesize of 500 bytes and does NOT require any timer</b>. See the MinimalReceiver and IRDispatcherDemo example how to use it. Mapping of pins to interrupts can be found <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/src/TinyIRReceiver.cpp.h#L307">here</a>.</p>
 <h1>Handling unknown Protocols</h1>
 <h2>Disclaimer</h2>
 <p>This library was never designed to handle long codes like the ones used by air conditioners. See <a href="https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino">Recording long Infrared Remote control signals with Arduino</a>.<br  />
@@ -140,6 +140,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li>To <b>increase strength of sent output signal</b> you can increase the current through the send diode, and/or use 2 diodes in series, since one IR diode requires only 1.5 volt.<ul>
 <li>The line #include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for <b>Digispark boards</b> as well as enables serial output at 8MHz.</li>
 <li>The default software generated PWM has <b>problems on ATtinies running with 8 MHz</b>. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by <code>#define SEND_PWM_BY_TIMER</code>.</li>
+<li>Minimal CPU frequency for receiving is 4 MHz, sive the 50 us timer ISR takes around 12 us on a 16 MHz ATmega.</li>
 </ul>
 </li>
 </ul>
@@ -154,7 +155,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <h3>ReceiveAndSend</h3>
 <p>Record and play back last received IR signal at button press.</p>
 <h3>MinimalReceiver + SmallReceiver</h3>
-<p>If code size matters look at these examples.</p>
+<p>If code size matters, look at these examples.</p>
 <h3>IRDispatcherDemo</h3>
 <p>Framework for calling different functions for different IR codes.</p>
 <h3>IRrelay</h3>
@@ -199,7 +200,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <td class="markdownTableBodyNone"><code>DO_NOT_USE_FEEDBACK_LED</code> </td><td class="markdownTableBodyNone"><a class="el" href="TinyIRReceiver_8h.html">TinyIRReceiver.h</a> </td><td class="markdownTableBodyNone">disabled </td><td class="markdownTableBodyNone">Enable it to disable the feedback LED function.  </td></tr>
 </table>
 <h3>Modifying compile options with Arduino IDE</h3>
-<p>First use <em>Sketch &gt; Show Sketch Folder (Ctrl+K)</em>.<br  />
+<p>First, use <em>Sketch &gt; Show Sketch Folder (Ctrl+K)</em>.<br  />
  If you did not yet stored the example as your own sketch, then you are instantly in the right library folder.<br  />
  Otherwise you have to navigate to the parallel <code>libraries</code> folder and select the library you want to access.<br  />
  In both cases the library files itself are located in the <code>src</code> directory.<br  />
@@ -225,12 +226,18 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </ul>
 <p>We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.</p>
 <h1>Timer and pin usage</h1>
-<p>The receiver sample interval is generated by a timer. On many boards this must be a hardware timer, on some a software timer is available and used.<br  />
+<p>The receiver sample interval is generated by a timer. On many boards this must be a hardware timer, on some a software timer is available and used. The code for the timer and the timer selection is located in <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.cpp.h">private/IRTimer.cpp.h</a>.<br  />
  Every pin can be used for receiving.<br  />
- The send PWM signal is by default generated by software. <b>Therefore every pin can be used for sending</b>.</p>
+ The send PWM signal is by default generated by software. <b>Therefore every pin can be used for sending</b>. The PWM pulse length is guaranteed to be constant by using <code>delayMicroseconds()</code>. Take care not to generate interrupts during sending with software generated PWM, otherwise you will get jitter in the generated PWM. E.g. wait for a former <code>Serial.print()</code> statement to be finished by <code>Serial.flush()</code>. Since the Arduino <code>micros()</code> function has a resolution of 4 us at 16 MHz, we always see a small jitter in the signal, which seems to be OK for the receivers.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Software generated PWM showing small jitter because of the limited resolution of 4 us of the Arduino core <code>micros()</code> function for an ATmega328 </th><th class="markdownTableHeadNone">Detail (ATmega328 generated) showing 33% Duty cycle  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><img src="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IR_PWM_by_software_jitter.png" alt="Software PWM" class="inline"/> </td><td class="markdownTableBodyNone"><img src="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IR_PWM_by_software_detail.png" alt="Software PWM detail" class="inline"/>  </td></tr>
+</table>
 <h2>Hardware-PWM signal generation for sending</h2>
 <p>If you define <code>SEND_PWM_BY_TIMER</code>, the send PWM signal is generated by a hardware timer. The same timer as for the receiver is used. Since each hardware timer has its dedicated output pins, you must change timer to change PWN output.<br  />
- The timer and the pin usage can be adjusted in <a href="src/private/IRBoardDefs.h">IRBoardDefs.h</a></p>
+ The timer and the pin usage can be adjusted in <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.cpp.h">private/IRTimer.cpp.h</a></p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Board/CPU </th><th class="markdownTableHeadNone">Hardware-PWM Pin </th><th class="markdownTableHeadNone">Timers  </th></tr>
@@ -265,15 +272,15 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://www.sparkfun.com/products/12640">Sparkfun Pro Micro</a> </td><td class="markdownTableBodyNone"><b>5</b>, 9 </td><td class="markdownTableBodyNone">1, <b>3</b>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/">Teensy 1.0</a> </td><td class="markdownTableBodyNone"><b>17</b> </td><td class="markdownTableBodyNone"><b>1</b>  </td></tr>
+<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/pinout.html">Teensy 1.0</a> </td><td class="markdownTableBodyNone"><b>17</b> </td><td class="markdownTableBodyNone"><b>1</b>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/">Teensy 2.0</a> </td><td class="markdownTableBodyNone"><b>9</b>, 10, 14 </td><td class="markdownTableBodyNone">1, <b>3</b>, 4_HS  </td></tr>
+<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/pinout.html">Teensy 2.0</a> </td><td class="markdownTableBodyNone"><b>9</b>, 10, 14 </td><td class="markdownTableBodyNone">1, <b>3</b>, 4_HS  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/">Teensy++ 1.0 / 2.0</a> </td><td class="markdownTableBodyNone"><b>1</b>, 16, 25 </td><td class="markdownTableBodyNone">1, <b>2</b>, 3  </td></tr>
+<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/pinout.html">Teensy++ 1.0 / 2.0</a> </td><td class="markdownTableBodyNone"><b>1</b>, 16, 25 </td><td class="markdownTableBodyNone">1, <b>2</b>, 3  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/">Teensy 3.0 / 3.1</a> </td><td class="markdownTableBodyNone"><b>5</b> </td><td class="markdownTableBodyNone"><b>CMT</b>  </td></tr>
+<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/pinout.html">Teensy 3.0 / 3.1</a> </td><td class="markdownTableBodyNone"><b>5</b> </td><td class="markdownTableBodyNone"><b>CMT</b>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/">Teensy-LC</a> </td><td class="markdownTableBodyNone"><b>16</b> </td><td class="markdownTableBodyNone"><b>TPM1</b>  </td></tr>
+<td class="markdownTableBodyNone"><a href="https://www.pjrc.com/teensy/pinout.html">Teensy-LC</a> </td><td class="markdownTableBodyNone"><b>16</b> </td><td class="markdownTableBodyNone"><b>TPM1</b>  </td></tr>
 </table>
 <h1>Adding new protocols</h1>
 <p>To add a new protocol is quite straightforward. Best is too look at the existing protocols to find a similar one and modify it.<br  />
@@ -300,7 +307,8 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
  To keep the current, you must reduce the resistor by (5 - 1.3) / (5 - 2.6) = 1.5 e.g. from 150 ohm to 100 ohm for 25 mA and 2 diodes with 1.3 volt and a 5 volt supply.<br  />
  For 3 diodes it requires factor 2.5 e.g. from 150 ohm to 60 ohm.</p>
 <h1>Quick comparison of 4 Arduino IR receiving libraries</h1>
-<p><a href="https://github.com/crankyoldgit/IRremoteESP8266">Here</a> you find an <b>ESP8266/ESP32</b> version of IRremote with an <b><a href="https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md">impressive list of supported protocols</a></b>. </p><h2>This is a short comparison and may not be complete or correct</h2>
+<p><a href="https://github.com/crankyoldgit/IRremoteESP8266">Here</a> you find an <b>ESP8266/ESP32</b> version of IRremote with an <b><a href="https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md">impressive list of supported protocols</a></b>.</p>
+<h2>This is a short comparison and may not be complete or correct</h2>
 <p>I created this comparison matrix for <a href="https://github.com/ArminJo">myself</a> in order to choose a small IR lib for my project and to have a quick overview, when to choose which library.<br  />
  It is dated from <b>03.02.2021</b>. If you have complains about the data or request for extensions, please send a PM or open a discussion.</p>
 <table class="markdownTable">
@@ -373,7 +381,7 @@ Supports <b>Pronto</b> codes. </td><td class="markdownTableBodyNone">Requires no
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Mar 18 2021 22:40:19 for IRremote by
+    <li class="footer">Generated on Sun Mar 28 2021 11:36:48 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>
