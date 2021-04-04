@@ -254,7 +254,7 @@ public:
     /*
      * Old functions
      */
-    bool decode(decode_results *aResults) __attribute__ ((deprecated ("Please use decode() without a parameter."))); // deprecated
+    bool decode(decode_results *aResults) __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> ."))); // deprecated
     bool decodeWhynter();
 
     bool decodeSAMSUNG();
