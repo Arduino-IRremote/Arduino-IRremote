@@ -62,7 +62,7 @@ void setup() {
 
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL)  || defined(ARDUINO_attiny3217)
-    delay(4000); // To be able to connect Serial monitor after reset or power up and before first printout
+    delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
@@ -146,7 +146,7 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
  */
 uint16_t sAddress = 0xFFF1;
 uint8_t sCommand = 0x76;
-uint8_t sRepeats = 0;
+#define sRepeats  0 // no unit test for repeats
 
 void loop() {
     /*
@@ -157,8 +157,6 @@ void loop() {
     Serial.print(sAddress, HEX);
     Serial.print(F(" command=0x"));
     Serial.print(sCommand, HEX);
-    Serial.print(F(" repeats="));
-    Serial.println(sRepeats);
     Serial.println();
     Serial.println();
 
@@ -174,7 +172,7 @@ void loop() {
     checkReceive(sAddress, sCommand);
     delay(DELAY_AFTER_SEND);
 
-    if (sRepeats == 0) {
+    if (sAddress == 0xFFF1) {
         /*
          * Send constant values only once in this demo
          */
@@ -189,14 +187,14 @@ void loop() {
         checkReceive(0x80, 0x45);
         delay(DELAY_AFTER_SEND);
         /*
-         * With sendNECRaw() you can send even "forbidden" codes with parity errors
+         * With sendNECRaw() you can send 32 bit combined codes
          */
         Serial.println(
                 F(
-                        "Send NEC with 16 bit address 0x0102 and command 0x34 with NECRaw(0xCC340102) which results in a parity error, since 34 == ~CB and not C0"));
+                        "Send NEC / ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)"));
         Serial.flush();
-        IrSender.sendNECRaw(0xC0340102, sRepeats);
-        checkReceive(0x0102, 0x34);
+        IrSender.sendNECRaw(0x03040102, sRepeats);
+        checkReceive(0x0102, 0x304);
         delay(DELAY_AFTER_SEND);
 
         /*
@@ -211,6 +209,13 @@ void loop() {
         checkReceive(0x0102, 0x34);
         delay(DELAY_AFTER_SEND);
     }
+
+
+    Serial.println(F("Send Onkyo (NEC with 16 bit command)"));
+    Serial.flush();
+    IrSender.sendOnkyo(sAddress, sCommand << 8 | sCommand, sRepeats);
+    checkReceive(sAddress, sCommand << 8 | sCommand);
+    delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Apple"));
     Serial.flush();

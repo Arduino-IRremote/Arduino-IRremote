@@ -44,9 +44,8 @@
 //                           N   N  EEEEE   CCCC
 //==============================================================================
 // see: https://www.sbprojects.net/knowledge/ir/nec.php
-
 // for Apple see https://en.wikipedia.org/wiki/Apple_Remote
-
+// ONKYO like NEC but 16 independent command bits
 // LSB first, 1 start bit + 16 bit address + 8 bit command + 8 bit inverted command + 1 stop bit.
 //
 #define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
@@ -105,6 +104,23 @@ void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOf
     // send 8 command bits and then 8 inverted command bits LSB first
     tRawData.UByte.MidHighByte = aCommand;
     tRawData.UByte.HighByte = ~aCommand;
+
+    sendNECRaw(tRawData.ULong, aNumberOfRepeats, aIsRepeat);
+}
+
+/*
+ * Repeat commands should be sent in a 110 ms raster.
+ * There is NO delay after the last sent repeat!
+ * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
+ */
+void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
+
+    LongUnion tRawData;
+
+    // Address 16 bit LSB first
+    tRawData.UWord.LowWord = aAddress;
+    // Command 16 bit LSB first
+    tRawData.UWord.HighWord = aCommand;
 
     sendNECRaw(tRawData.ULong, aNumberOfRepeats, aIsRepeat);
 }
@@ -221,21 +237,19 @@ bool IRrecv::decodeNEC() {
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     LongUnion tValue;
     tValue.ULong = decodedIRData.decodedRawData;
-    decodedIRData.command = tValue.UByte.MidHighByte;
+    decodedIRData.command = tValue.UByte.MidHighByte; // 8 bit
     // Address
     if (tValue.UWord.LowWord == APPLE_ADDRESS) {
         /*
          * Apple
          */
         decodedIRData.protocol = APPLE;
-        decodedIRData.command = tValue.UByte.MidHighByte;
         decodedIRData.address = tValue.UByte.HighByte;
 
     } else {
         /*
          * NEC
          */
-        decodedIRData.protocol = NEC;
         if (tValue.UByte.LowByte == (uint8_t) (~tValue.UByte.MidLowByte)) {
             // standard 8 bit address NEC protocol
             decodedIRData.address = tValue.UByte.LowByte; // first 8 bit
@@ -243,14 +257,22 @@ bool IRrecv::decodeNEC() {
             // extended NEC protocol
             decodedIRData.address = tValue.UWord.LowWord; // first 16 bit
         }
-        // plausi check for command
-        if (tValue.UByte.MidHighByte != (uint8_t) (~tValue.UByte.HighByte)) {
-            DBG_PRINT(F("NEC: "));
-            DBG_PRINT(F("Command=0x"));
-            DBG_PRINT(tValue.UByte.MidHighByte, HEX);
-            DBG_PRINT(F(" is not inverted value of 0x"));
-            DBG_PRINTLN(tValue.UByte.HighByte, HEX);
-            decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
+        // Check for command if it is 8 bit NEC or 16 bit ONKYO
+        if (tValue.UByte.MidHighByte == (uint8_t) (~tValue.UByte.HighByte)) {
+            decodedIRData.protocol = NEC;
+        } else {
+            decodedIRData.protocol = ONKYO;
+            decodedIRData.command = tValue.UWord.HighWord; // 16 bit command
+
+/*
+ * Old NEC plausibility check below, now it is just ONKYO :-)
+ */
+//            DBG_PRINT(F("NEC: "));
+//            DBG_PRINT(F("Command=0x"));
+//            DBG_PRINT(tValue.UByte.MidHighByte, HEX);
+//            DBG_PRINT(F(" is not inverted value of 0x"));
+//            DBG_PRINTLN(tValue.UByte.HighByte, HEX);
+//            decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
         }
     }
     decodedIRData.numberOfBits = NEC_BITS;

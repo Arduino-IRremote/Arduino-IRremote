@@ -45,7 +45,7 @@
 #define SPACE  0
 
 /*
- * Try to activate it, if you have legacy code to compile with version >= 3
+ * Activate it, if you have legacy code to compile with version >= 3
  */
 //#define USE_OLD_DECODE // enables the old NEC and other old decoders.
 #include "IRProtocol.h"
@@ -416,7 +416,8 @@ public:
     void sendNECRepeat();
     void sendNEC(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false);
     void sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
-
+    // NEC variants
+    void sendOnkyo(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false);
     void sendApple(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false);
 
     void sendPanasonic(uint16_t aAddress, uint8_t aData, uint_fast8_t aNumberOfRepeats); // LSB first

@@ -54,6 +54,7 @@ typedef enum {
     SAMSUNG,
     SHARP,
     SONY,
+    ONKYO,
     APPLE,
     BOSEWAVE,
     LEGO_PF,

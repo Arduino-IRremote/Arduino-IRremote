@@ -587,8 +587,8 @@ bool IRrecv::decodePulseDistanceData(uint8_t aNumberOfBits, uint8_t aStartOffset
 /*
  * Static variables for the getBiphaselevel function
  */
-uint8_t sBiphaseDecodeRawbuffOffset;// Index into raw timing array
-uint16_t sCurrentTimingIntervals;   // Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
+uint8_t sBiphaseDecodeRawbuffOffset; // Index into raw timing array
+uint16_t sCurrentTimingIntervals; // Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
 uint8_t sUsedTimingIntervals;       // Number of already used intervals of sCurrentTimingIntervals.
 uint16_t sBiphaseTimeUnit;
 
@@ -1198,6 +1198,9 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
         break;
     case SONY:
         return (F("SONY"));
+        break;
+    case ONKYO:
+        return (F("ONKYO"));
         break;
     case APPLE:
         return (F("APPLE"));

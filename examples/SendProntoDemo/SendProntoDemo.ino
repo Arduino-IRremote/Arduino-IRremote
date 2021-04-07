@@ -41,6 +41,9 @@
 
 #define NUMBER_OF_REPEATS 3U
 
+// The first number, here 0000, denotes the type of the signal. 0000 denotes a raw IR signal with modulation.
+// The second number, here 006C, denotes a frequency code. 006C corresponds to 1000000/(0x006c * 0.241246) = 38381 Hertz.
+// The third and the forth number denote the number of pairs (= half the number of durations) in the start- and the repeat sequence respectively.
 const char yamahaVolDown[] PROGMEM
 = "0000 006C 0022 0002 015B 00AD " /* Pronto header + start bit */
         "0016 0016 0016 0041 0016 0016 0016 0041 0016 0041 0016 0041 0016 0041 0016 0016 " /* Lower address byte */

@@ -160,6 +160,9 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
     } else if (tProtocol == RC6) {
         sendRC6(tAddress, tCommand, aNumberOfRepeats, !tSendRepeat); // No toggle for repeats
 
+    } else if (tProtocol == ONKYO) {
+        sendOnkyo(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
+
     } else if (tProtocol == APPLE) {
         sendApple(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
 
@@ -390,6 +393,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
 //            digitalToggleFast(IR_TIMING_TEST_PIN); // 3.0 us per call @16MHz
         } while (tMicros < nextPeriodEnding);  // 3.4 us @16MHz
     } while (tMicros - start < aMarkMicros);
+    setFeedbackLED(false);
 #  endif
 }
 

@@ -43,7 +43,7 @@
 #ifndef IRremote_h
 #define IRremote_h
 
-#define VERSION_IRREMOTE "3.1.0"
+#define VERSION_IRREMOTE "3.1.1"
 #define VERSION_IRREMOTE_MAJOR 3
 #define VERSION_IRREMOTE_MINOR 1
 
