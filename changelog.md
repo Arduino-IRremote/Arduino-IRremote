@@ -1,8 +1,11 @@
 # Changelog
 The latest version may not be released!
 
+## 3.1.1
+- Fix for ESP32 send Error, removed `USE_SOFT_SEND_PWM` macro.
+
 ## 3.1.0
-- USE_SOFT_SEND_PWM is active by default.
+- Generation of PWM by software is active by default.
 - Removed decode_results results.
 - Renamed most irparams_struct values.
 - Fixed LG send bug and added unit test.

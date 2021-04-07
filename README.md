@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 3.1.0](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
+### [Version 3.1.2](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
@@ -118,10 +118,10 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | Name | File | Default value | Description |
 |-|-|-|-|
 | `SEND_PWM_BY_TIMER` | Before `#include <IRremote.h>` | disabled | Disable carrier PWM generation in software and use (restricted) hardware PWM ecxept for ESP32 where both modes are using the flexible `hw_timer_t`. |
+| `USE_NO_SEND_PWM` | Before `#include <IRremote.h>` | disabled | Use no carrier PWM, just simulate an active low receiver signal. Overrides `SEND_PWM_BY_TIMER` definition. |
 | `USE_OLD_DECODE` | IRremoteInt.h | disabled | Enables the old decoder in order to be version 2.x compatible, where all protocols were MSB first. |
 | `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.h>` | disabled | If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. Saves up to 900 bytes program space. |
 | `MARK_EXCESS_MICROS` | Before `#include <IRremote.h>` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
-| `USE_NO_SEND_PWM` | Before `#include <IRremote.h>` | disabled | Use no carrier PWM, just simulate an active low receiver signal. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | Before `#include <IRremote.h>` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `DISABLE_LED_FEEDBACK_FOR_RECEIVE` | Before `#include <IRremote.h>` | disabled | This disables the LED feedback code for receive, thus saving around 108 bytes program space and halving the receiver ISR processing time. |
 | `IR_INPUT_IS_ACTIVE_HIGH` | Before `#include <IRremote.h>` | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |

@@ -78,7 +78,7 @@ void setup() {
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
 
-#if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
+#if !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by ledcWrite() for each pin
     /*
      * Print internal signal generation info
      */

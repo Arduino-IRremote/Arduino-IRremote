@@ -158,15 +158,13 @@
  * Define to use no carrier PWM, just simulate an active low receiver signal.
  */
 //#define USE_NO_SEND_PWM
-/**
- * Define to use carrier PWM generation in software, instead of hardware PWM.
- */
-#if !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
-#define USE_SOFT_SEND_PWM
+#if defined(SEND_PWM_BY_TIMER) && defined(USE_NO_SEND_PWM)
+#undef SEND_PWM_BY_TIMER // USE_NO_SEND_PWM overrides SEND_PWM_BY_TIMER
+#warning "SEND_PWM_BY_TIMER and USE_NO_SEND_PWM are both defined -> undefine SEND_PWM_BY_TIMER now!"
 #endif
 
 /**
- * If USE_SOFT_SEND_PWM, this amount is subtracted from the on-time of the pulses.
+ * This amount is subtracted from the on-time of the pulses generated for software PWM generation.
  * It should be the time used for digitalWrite(sendPin, LOW) and the call to delayMicros()
  * Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600
  */

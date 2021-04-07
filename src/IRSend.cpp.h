@@ -72,12 +72,13 @@ void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedba
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     // must exclude MEGATINYCORE, NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
-#if (defined(USE_SOFT_SEND_PWM) || defined(USE_NO_SEND_PWM)) \
+#if (!defined(SEND_PWM_BY_TIMER) || defined(USE_NO_SEND_PWM)) \
         && !defined(SUPPRESS_ERROR_MESSAGE_FOR_BEGIN) \
         && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) && !defined(ARDUINO_ARCH_SAMD) \
     && !defined(ESP32) && !defined(MEGATINYCORE) \
     && !(defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1)) && !(defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32))
-    UsageError("Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if USE_SOFT_SEND_PWM or USE_NO_SEND_PWM is defined!");
+    UsageError(
+            "Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if SEND_PWM_BY_TIMER is not defined or USE_NO_SEND_PWM is defined!");
 #endif
 
     setLEDFeedback(aLEDFeedbackPin, aEnableLEDFeedback);
@@ -331,16 +332,16 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
 
         } else {
             TRACE_PRINT('0');
-#ifdef USE_SOFT_SEND_PWM
-            (void)tLastBitValue; // to avoid compiler warnings
-            mark(aBiphaseTimeUnit); // can not eventually delay here, we must call mark to generate the signal
-#else
+#if defined(SEND_PWM_BY_TIMER) || defined(USE_NO_SEND_PWM)
             if (tLastBitValue) {
                 // Extend the current mark in order to generate a continuous signal without short breaks
                 delayMicroseconds(aBiphaseTimeUnit);
             } else {
                 mark(aBiphaseTimeUnit);
             }
+#else
+            (void) tLastBitValue; // to avoid compiler warnings
+            mark(aBiphaseTimeUnit); // can not eventually delay here, we must call mark to generate the signal
 #endif
             space(aBiphaseTimeUnit);
             tLastBitValue = 0;
@@ -359,7 +360,17 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
 void IRsend::mark(unsigned int aMarkMicros) {
     setFeedbackLED(true);
 
-#if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
+#if defined(SEND_PWM_BY_TIMER) || defined(ESP32)
+    TIMER_ENABLE_SEND_PWM; // Enable timer or ledcWrite() generated PWM output
+    customDelayMicroseconds(aMarkMicros);
+    ledOff();
+
+#elif defined(USE_NO_SEND_PWM)
+    digitalWrite(sendPin, LOW); // Set output to active low.
+    customDelayMicroseconds(aMarkMicros);
+    ledOff();
+
+#else
     unsigned long start = micros();
     unsigned long nextPeriodEnding = start;
     unsigned long tMicros;
@@ -379,19 +390,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
 //            digitalToggleFast(IR_TIMING_TEST_PIN); // 3.0 us per call @16MHz
         } while (tMicros < nextPeriodEnding);  // 3.4 us @16MHz
     } while (tMicros - start < aMarkMicros);
-
-#else
-#  if defined(USE_NO_SEND_PWM)
-    digitalWrite(sendPin, LOW); // Set output to active low.
-
-#  else
-    TIMER_ENABLE_SEND_PWM; // Enable pin 3 PWM output
-#  endif //  USE_SOFT_SEND_PWM
-
-    customDelayMicroseconds(aMarkMicros);
-    ledOff();
-#endif // USE_SOFT_SEND_PWM
-
+#  endif
 }
 
 /**
@@ -400,13 +399,13 @@ void IRsend::mark(unsigned int aMarkMicros) {
  * This function may affect the state of feedback LED.
  */
 void IRsend::ledOff() {
-#if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
-    digitalWrite(sendPin, LOW);
+#if defined(SEND_PWM_BY_TIMER) || defined(ESP32)
+    TIMER_DISABLE_SEND_PWM; // Disable PWM output
 #elif defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
-    TIMER_DISABLE_SEND_PWM; // Disable PWM output
-#endif // defined(USE_NO_SEND_PWM)
+    digitalWrite(sendPin, LOW);
+#endif
 
     setFeedbackLED(false);
 }
@@ -443,24 +442,22 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
  * See my Secrets of Arduino PWM at http://arcfn.com/2009/07/secrets-of-arduino-pwm.html for details.
  */
 void IRsend::enableIROut(uint8_t aFrequencyKHz) {
-#if defined(USE_SOFT_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by hw_timer_t for each pin
-    periodTimeMicros = (1000U + aFrequencyKHz / 2) / aFrequencyKHz; // rounded value -> 26 for 38 kHz
-    periodOnTimeMicros = (((periodTimeMicros * IR_SEND_DUTY_CYCLE) + 50 - (PULSE_CORRECTION_NANOS / 10))/ 100U); // +50 for rounding
-#endif
-
-#if defined(USE_NO_SEND_PWM)
-    (void) aFrequencyKHz;
-    pinMode(sendPin, OUTPUT);
-    digitalWrite(sendPin, HIGH); // Set output to inactive high.
-#endif
-
-    pinMode(sendPin, OUTPUT);
-    ledOff(); // When not sending, we want it low
-
-#if defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM)
+#if defined(SEND_PWM_BY_TIMER) || defined(ESP32)
+#  if defined(SEND_PWM_BY_TIMER)
     TIMER_DISABLE_RECEIVE_INTR;
+#  endif
     timerConfigForSend(aFrequencyKHz);
+
+#elif defined(USE_NO_SEND_PWM)
+    (void) aFrequencyKHz;
+
+#else
+    periodTimeMicros = (1000U + aFrequencyKHz / 2) / aFrequencyKHz; // rounded value -> 26 for 38 kHz
+    periodOnTimeMicros = (((periodTimeMicros * IR_SEND_DUTY_CYCLE) + 50 - (PULSE_CORRECTION_NANOS / 10)) / 100U); // +50 for rounding
 #endif
+
+    pinMode(sendPin, OUTPUT);
+    ledOff(); // When not sending, we want it low/inactive
 }
 
 /** @}*/
