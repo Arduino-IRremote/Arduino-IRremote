@@ -69,7 +69,7 @@
 #define IR_TIMING_TEST_PIN      PA5
 
 #elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-#include "ATtinySerialOut.h" // Available as Arduino library. saves 370 bytes program space and 38 bytes RAM
+#include "ATtinySerialOut.h" // Available as Arduino library. saves 370 bytes program space and 38 bytes RAM for digistump core
 #define IR_RECEIVE_PIN  0
 #define IR_SEND_PIN     4 // Pin 2 is serial output with ATtinySerialOut. Pin 1 is internal LED and Pin3 is USB+ with pullup on Digispark board.
 #define TONE_PIN        3

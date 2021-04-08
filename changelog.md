@@ -39,6 +39,7 @@ The latest version may not be released!
 - Fixed JVC repeat error.
 
 ## 3.0.0 + 3.0.1 2021/02
+- New LSB first decoders are default.
 - Added SendRaw with byte data.
 - Fixed resume bug if irparams.rawlen >= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi
 - Added `dumpPronto(String *aString, unsigned int frequency)` with String object as argument. Thanks to Iosif Peterfi
@@ -60,10 +61,9 @@ The latest version may not be released!
 - Changed License to MIT see https://github.com/Arduino-IRremote/Arduino-IRremote/issues/397.
 - Added ATtiny timer 1 support.
 - Changed wrong return code signature of decodePulseDistanceData() and its handling.
-- Removed Mitsubishi protocol, since the implementation is in contradiction with all documentation I could found and therefore supposed to be wrong.
-- Removed AIWA implementation, since it is only for 1 device and at least sending implemented wrong.
+- Removed Mitsubishi protocol, since the implementation is in contradiction with all documentation I found and therefore supposed to be wrong.
+- Removed AIWA implementation, since it is only for 1 device and at least the sending was implemented wrong.
 - Added Lego_PF decode.
-- Added new example IR2Keyboard.
 - Changed internal usage of custom_delay_usec.
 - Moved dump/print functions from example to irReceiver.
 - irPronto.cpp: Using Print instead of Stream saves 1020 bytes program memory. Changed from & to * parameter type to be more transparent and consistent with other code of IRremote.

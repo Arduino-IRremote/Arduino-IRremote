@@ -36,7 +36,28 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 240 bytes program space if IrSender.write is used
+#if FLASHEND <= 0x1FFF      // For less equal than 8k flash, like ATtiny85
+#define DECODE_DENON        // Includes Sharp
+//#define DECODE_JVC
+#define DECODE_KASEIKYO
+//#define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
+//#define DECODE_LG
+#define DECODE_NEC          // Includes Apple and Onkyo
+//#define DECODE_SAMSUNG
+#if FLASHEND <= 0x1FFF && ! defined(CLOCK_SOURCE) // ATTinyCore is bigger than digispark core
+#define DECODE_SONY
+#endif
+//#define DECODE_RC5
+//#define DECODE_RC6
+
+//#define DECODE_BOSEWAVE
+//#define DECODE_LEGO_PF
+//#define DECODE_MAGIQUEST
+//#define DECODE_WHYNTER
+
+//#define DECODE_HASH         // special decoder for all protocols
+#endif
+
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
 //#define IR_MEASURE_TIMING
@@ -78,7 +99,7 @@ void setup() {
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
 
-#if !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by ledcWrite() for each pin
+#if FLASHEND > 0x1FFF && !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by ledcWrite() for each pin
     /*
      * Print internal signal generation info
      */
@@ -91,10 +112,11 @@ void setup() {
     Serial.print(F(" ns, total period is "));
     Serial.print(IrSender.periodTimeMicros);
     Serial.println(F(" us"));
-#endif
+
     // infos for receive
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
+#endif
 }
 
 void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
@@ -103,14 +125,21 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
 
     if (IrReceiver.decode()) {
 // Print a short summary of received data
+#if FLASHEND <= 0x1FFF // For less equal than 8k flash, like ATtiny85
+        // Print a minimal summary of received data
+        IrReceiver.printIRResultMinimal(&Serial);
+#else
         IrReceiver.printIRResultShort(&Serial);
+#endif
 
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
             Serial.println(F("Overflow detected"));
+#if FLASHEND > 0x1FFF // For less equal than 8k flash, like ATtiny85
         } else if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
             // We have an unknown protocol, print more info
             IrReceiver.printIRResultRawFormatted(&Serial, true);
+#endif
         } else {
             /*
              * Check address
@@ -131,6 +160,7 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
                 Serial.println(aSentCommand, HEX);
             }
         }
+
         IrReceiver.resume();
     } else {
         Serial.println(F("No data received"));
@@ -172,6 +202,8 @@ void loop() {
     checkReceive(sAddress, sCommand);
     delay(DELAY_AFTER_SEND);
 
+#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
+
     if (sAddress == 0xFFF1) {
         /*
          * Send constant values only once in this demo
@@ -189,9 +221,7 @@ void loop() {
         /*
          * With sendNECRaw() you can send 32 bit combined codes
          */
-        Serial.println(
-                F(
-                        "Send NEC / ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)"));
+        Serial.println(F("Send NEC / ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)"));
         Serial.flush();
         IrSender.sendNECRaw(0x03040102, sRepeats);
         checkReceive(0x0102, 0x304);
@@ -209,7 +239,7 @@ void loop() {
         checkReceive(0x0102, 0x34);
         delay(DELAY_AFTER_SEND);
     }
-
+#endif
 
     Serial.println(F("Send Onkyo (NEC with 16 bit command)"));
     Serial.flush();
@@ -247,12 +277,14 @@ void loop() {
     checkReceive(sAddress & 0x1F, sCommand);
     delay(DELAY_AFTER_SEND);
 
+#if FLASHEND <= 0x1FFF && ! defined(CLOCK_SOURCE) // ATTinyCore is bigger than digispark core
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0x1F, sCommand & 0x7F, sRepeats);
     checkReceive(sAddress & 0x1F, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
-
+#endif
+#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
     Serial.println(F("Send Sony/SIRCS with 7 command and 8 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0xFF, sCommand, sRepeats, SIRCS_15_PROTOCOL);
@@ -333,6 +365,8 @@ void loop() {
 //    IrSender.sendLegoPowerFunctions(sAddress, sCommand, LEGO_MODE_COMBO, true);
 //    checkReceive(sAddress, sCommand); // never has success for Lego protocol :-(
 //    delay(DELAY_AFTER_SEND);
+#endif // FLASHEND > 0x1FFF
+
     /*
      * Force buffer overflow
      */

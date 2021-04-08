@@ -96,7 +96,7 @@
 #  endif
 
 // Nano Every, Uno WiFi Rev2
-#elif defined(__AVR_ATmega4809__)
+#elif defined(__AVR_ATmega4809__) || defined(__AVR_ATtiny1604__)
 #  if !defined(IR_USE_AVR_TIMER_B)
 #define IR_USE_AVR_TIMER_B     //  send pin = pin 24
 #  endif
@@ -703,6 +703,8 @@ void timerConfigForReceive() {
     TCD0.CTRLA = TCD_ENABLE_bm | TCD_CLKSEL_SYSCLK_gc| TCD_CNTPRES_DIV1_gc;// System clock, no prescale, no synchronization prescaler
 }
 
+#else
+#error Internal code configuration error, no timer functions implemented for this AVR CPU / board
 #endif //defined(IR_USE_AVR_TIMER*)
 /**********************************************************************************************************************
  * End of AVR timers
@@ -1117,7 +1119,7 @@ void timerConfigForReceive() {
 }
 
  /***************************************
-  * Unknown Timer
+  * Unknown CPU coard
   ***************************************/
 #else
 #error Internal code configuration error, no timer functions implemented for this CPU / board
@@ -1140,7 +1142,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 }
 void timerConfigForReceive() {
 }
-#endif // defined(DOXYGEN/CPU_TYPES)
+#endif // defined(DOXYGEN / CPU_TYPES)
 
 /** @}*/
 /** @}*/

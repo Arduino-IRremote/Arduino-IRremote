@@ -46,6 +46,7 @@ jobs:
           - arduino:avr:uno|DEBUG
           - arduino:avr:uno|USE_NO_SEND_PWM
           - arduino:avr:uno|USE_OLD_DECODE
+          - arduino:avr:uno|NO_LEGACY_COMPATIBILITY
           - arduino:avr:uno|SEND_PWM_BY_TIMER
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
@@ -82,6 +83,11 @@ jobs:
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DUSE_OLD_DECODE
+
+          - arduino-boards-fqbn: arduino:avr:uno|NO_LEGACY_COMPATIBILITY
+            sketches-exclude: IR2Keyboard
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              All: -DNO_LEGACY_COMPATIBILITY
 
           - arduino-boards-fqbn: arduino:avr:uno|SEND_PWM_BY_TIMER
             sketches-exclude: IR2Keyboard
