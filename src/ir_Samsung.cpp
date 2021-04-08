@@ -205,31 +205,31 @@ bool IRrecv::decodeSamsung() {
     return true;
 }
 
-#if defined(USE_OLD_DECODE)
-bool IRrecv::decodeSAMSUNG() {
+#if !defined(NO_LEGACY_COMPATIBILITY)
+bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
     unsigned int offset = 1;  // Skip first space
 
     // Initial mark
-    if (!matchMark(results.rawbuf[offset], SAMSUNG_HEADER_MARK)) {
+    if (!matchMark(aResults->rawbuf[offset], SAMSUNG_HEADER_MARK)) {
         return false;
     }
     offset++;
 
 // Check for repeat -- like a NEC repeat
-    if ((results.rawlen == 4) && matchSpace(results.rawbuf[offset], 2250)
-            && matchMark(results.rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
-        results.bits = 0;
-        results.value = 0xFFFFFFFF;
+    if ((aResults->rawlen == 4) && matchSpace(aResults->rawbuf[offset], 2250)
+            && matchMark(aResults->rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
+        aResults->bits = 0;
+        aResults->value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = SAMSUNG;
         return true;
     }
-    if (results.rawlen < (2 * SAMSUNG_BITS) + 4) {
+    if (aResults->rawlen < (2 * SAMSUNG_BITS) + 4) {
         return false;
     }
 
 // Initial space
-    if (!matchSpace(results.rawbuf[offset], SAMSUNG_HEADER_SPACE)) {
+    if (!matchSpace(aResults->rawbuf[offset], SAMSUNG_HEADER_SPACE)) {
         return false;
     }
     offset++;
@@ -239,11 +239,13 @@ bool IRrecv::decodeSAMSUNG() {
     }
 
 // Success
-    results.bits = SAMSUNG_BITS;
+    aResults->value = decodedIRData.decodedRawData;
+    aResults->bits = SAMSUNG_BITS;
+    aResults->decode_type = SAMSUNG;
     decodedIRData.protocol = SAMSUNG;
     return true;
 }
-#endif //defined(USE_OLD_DECODE)
+#endif
 
 // Old version with MSB first
 void IRsend::sendSAMSUNG(unsigned long data, int nbits) {

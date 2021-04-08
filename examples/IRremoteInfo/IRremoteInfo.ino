@@ -275,13 +275,6 @@ void dumpProtocols() {
     Serial.println(F("Disabled"));
 #endif
 
-    Serial.print(F("SHARP:        "));
-#if defined(DECODE_SHARP)
-    Serial.println(F("Enabled"));
-#else
-    Serial.println(F("Disabled"));
-#endif
-
     Serial.print(F("DENON:        "));
 #if defined(DECODE_DENON)
     Serial.println(F("Enabled"));

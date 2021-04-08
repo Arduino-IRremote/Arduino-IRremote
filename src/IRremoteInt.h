@@ -44,10 +44,6 @@
 #define MARK   1
 #define SPACE  0
 
-/*
- * Activate it, if you have legacy code to compile with version >= 3
- */
-//#define USE_OLD_DECODE // enables the old NEC and other old decoders.
 #include "IRProtocol.h"
 
 /****************************************************
@@ -71,17 +67,19 @@ struct irparams_struct {
     volatile uint8_t *IRReceivePinPortInputRegister;
     uint8_t IRReceivePinMask;
 #endif
+    uint16_t TickCounterForISR;     ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
+
+    bool OverflowFlag;              ///< Raw buffer OverflowFlag occurred
 #if RAW_BUFFER_LENGTH <= 255        // saves around 75 bytes program space and speeds up ISR
     uint8_t rawlen;                 ///< counter of entries in rawbuf
 #else
     unsigned int rawlen;            ///< counter of entries in rawbuf
 #endif
-    uint16_t TickCounterForISR;     ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
-    bool OverflowFlag;              ///< Raw buffer OverflowFlag occurred
     uint16_t rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
 };
 
 //#define DEBUG // Activate this for lots of lovely debug output from the IRremote core and all protocol decoders.
+//#define TRACE // Activate this for more debug output.
 /*
  * Debug directives
  */
@@ -110,6 +108,12 @@ struct irparams_struct {
 /****************************************************
  *                     RECEIVING
  ****************************************************/
+/*
+ * Activating this saves 60 bytes program space and 14 bytes RAM
+ */
+//#define NO_LEGACY_COMPATIBILITY
+
+#if !defined(NO_LEGACY_COMPATIBILITY)
 /**
  * Results returned from old decoders !!!deprecated!!!
  */
@@ -126,7 +130,7 @@ struct decode_results {
     uint16_t rawlen;            // deprecated, moved to decodedIRData.rawDataPtr->rawlen ///< Number of records in rawbuf
     bool overflow;              // deprecated, moved to decodedIRData.flags ///< true if IR raw code too long
 };
-
+#endif
 
 /*
  * Definitions for member IRData.flags
@@ -239,7 +243,6 @@ public:
     bool decodeLG();
     bool decodeMagiQuest(); // not completely standard
     bool decodeNEC();
-    bool decodePanasonic();
     bool decodeRC5();
     bool decodeRC6();
     bool decodeSamsung();
@@ -254,10 +257,20 @@ public:
     /*
      * Old functions
      */
+#if !defined(NO_LEGACY_COMPATIBILITY)
+    bool decodeDenonOld(decode_results *aResults);
+    bool decodeJVCMSB(decode_results *aResults);
+    bool decodeLGMSB(decode_results *aResults);
+    bool decodeNECMSB(decode_results *aResults);
+    bool decodePanasonicMSB(decode_results *aResults);
+    bool decodeSonyMSB(decode_results *aResults);
+    bool decodeSAMSUNG(decode_results *aResults);
+    bool decodeHashOld(decode_results *aResults);
+
     bool decode(decode_results *aResults) __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> ."))); // deprecated
+#endif
     bool decodeWhynter();
 
-    bool decodeSAMSUNG();
 
     /*
      * Internal functions
@@ -265,9 +278,6 @@ public:
     void initDecodedIRData();
     uint8_t compare(unsigned int oldval, unsigned int newval);
 
-#if defined(USE_OLD_DECODE)
-    decode_results results;     // Only for legacy compatibility
-#endif
     IRData decodedIRData;       // New: decoded IR data for the application
 
     // Last decoded IR data for repeat detection

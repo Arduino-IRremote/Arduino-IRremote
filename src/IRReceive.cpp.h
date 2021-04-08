@@ -246,13 +246,6 @@ bool IRrecv::decode() {
         return false;
     }
 
-#if defined(USE_OLD_DECODE)
-    // Copy 3 values from irparams for legacy compatibility
-    results.rawbuf = irparams.rawbuf;
-    results.rawlen = irparams.rawlen;
-    results.overflow = irparams.OverflowFlag;
-#endif
-
     initDecodedIRData(); // sets IRDATA_FLAGS_WAS_OVERFLOW
 
     if (decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
@@ -270,18 +263,11 @@ bool IRrecv::decode() {
     }
 #endif
 
-#if defined(DECODE_PANASONIC)
+#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
     TRACE_PRINTLN("Attempting Panasonic/Kaseikyo decode");
     if (decodeKaseikyo()) {
         return true;
     }
-#endif
-
-#if defined(DECODE_KASEIKYO) && defined(USE_OLD_DECODE) // if not USE_OLD_DECODE enabled, decodeKaseikyo() is already called by decodePanasonic()
-        TRACE_PRINTLN("Attempting Panasonic/Kaseikyo decode");
-        if (decodeKaseikyo()) {
-            return true;
-        }
 #endif
 
 #if defined(DECODE_DENON)
@@ -296,13 +282,6 @@ bool IRrecv::decode() {
     if (decodeSony()) {
         return true;
     }
-#endif
-
-#if defined(DECODE_SHARP) && ! defined(DECODE_DENON)
-        TRACE_PRINTLN("Attempting Denon/Sharp decode");
-        if (decodeSharp()) {
-            return true;
-        }
 #endif
 
 #if defined(DECODE_RC5)
@@ -335,15 +314,9 @@ bool IRrecv::decode() {
 
 #if defined(DECODE_SAMSUNG)
     TRACE_PRINTLN("Attempting Samsung decode");
-#if !defined(USE_OLD_DECODE)
     if (decodeSamsung()) {
         return true;
     }
-#else
-        if (decodeSAMSUNG()) {
-            return true;
-        }
-#endif
 #endif
     /*
      * Start of the exotic protocols
@@ -696,7 +669,6 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
  *
  * see: http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
  */
-#  if !defined(USE_OLD_DECODE)
 bool IRrecv::decodeHash() {
     long hash = FNV_BASIS_32;
 
@@ -717,29 +689,30 @@ bool IRrecv::decodeHash() {
 
     return true;
 }
-#  else
 
-bool IRrecv::decodeHash() {
+#  if !defined(NO_LEGACY_COMPATIBILITY)
+bool IRrecv::decodeHashOld(decode_results *aResults) {
     long hash = FNV_BASIS_32;
 
 // Require at least 6 samples to prevent triggering on noise
-    if (results.rawlen < 6) {
+    if (aResults->rawlen < 6) {
         return false;
     }
 
-    for (unsigned int i = 1; (i + 2) < results.rawlen; i++) {
-        uint8_t value = compare(results.rawbuf[i], results.rawbuf[i + 2]);
+    for (unsigned int i = 1; (i + 2) < aResults->rawlen; i++) {
+        uint8_t value = compare(aResults->rawbuf[i], aResults->rawbuf[i + 2]);
         // Add value into the hash
         hash = (hash * FNV_PRIME_32) ^ value;
     }
 
-    results.value = hash;
-    results.bits = 32;
+    aResults->value = hash;
+    aResults->bits = 32;
+    aResults->decode_type = UNKNOWN;
     decodedIRData.protocol = UNKNOWN;
 
     return true;
 }
-#  endif // !defined(USE_OLD_DECODE)
+#  endif
 #endif // DECODE_HASH
 
 /**********************************************************************************************************************
@@ -916,15 +889,11 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
             aSerial->print(aIRDataPtr->numberOfBits, DEC);
             aSerial->print(F(" bits"));
 
-#if !defined(USE_OLD_DECODE)
             if (aIRDataPtr->flags & IRDATA_FLAGS_IS_MSB_FIRST) {
                 aSerial->println(F(" MSB first"));
             } else {
                 aSerial->println(F(" LSB first"));
             }
-#else
-            aSerial->println();
-#endif
 
         } else {
             aSerial->println();
@@ -1090,6 +1059,8 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
 }
 
 /**
+ * Store the decodedIRData to be used for sendRaw().
+ *
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding and store it in an array provided.
  *
  * Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
@@ -1115,12 +1086,7 @@ void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
 }
 
 /**
- * Store the decode_results structure to be used for sendRaw().
- *
- * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
- * Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
- * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
- *
+ * Print results as C variables to be used for sendXXX()
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRResultAsCVariables(Print *aSerial) {
@@ -1351,14 +1317,131 @@ ISR () // for functions definitions which are called by separate (board specific
 #endif
 }
 
+#if !defined(NO_LEGACY_COMPATIBILITY)
 /**********************************************************************************************************************
  * The DEPRECATED decode function with parameter aResults for backwards compatibility
  **********************************************************************************************************************/
 bool IRrecv::decode(decode_results *aResults) {
-    Serial.println(
-            "The function decode(&results)) is deprecated and may not work as expected! Just use decode() - without any parameter.");
-    (void) aResults;
-    return decode();
+    static bool sDeprecationMessageSent = false;
+
+    if (irparams.StateForISR != IR_REC_STATE_STOP) {
+        return false;
+    }
+
+    if (!sDeprecationMessageSent) {
+        Serial.println(
+                "The function decode(&results)) is deprecated and may not work as expected! Just use decode() without a parameter and IrReceiver.decodedIRData.<fieldname> .");
+        sDeprecationMessageSent = true;
+    }
+
+    // copy for usage by legacy programs
+    aResults->rawbuf = irparams.rawbuf;
+    aResults->rawlen = irparams.rawlen;
+    if (irparams.OverflowFlag) {
+        // Copy overflow flag to decodedIRData.flags
+        irparams.OverflowFlag = false;
+        irparams.rawlen = 0; // otherwise we have OverflowFlag again at next ISR call
+        DBG_PRINTLN("Overflow happened");
+    }
+    aResults->overflow = irparams.OverflowFlag;
+    aResults->value = 0;
+
+    decodedIRData.rawDataPtr = &irparams; // for decodePulseDistanceData() etc.
+    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST; // for print
+
+#if defined(DECODE_NEC)
+    DBG_PRINTLN("Attempting old NEC decode");
+    if (decodeNECMSB(aResults)) {
+        return true ;
+    }
+#endif
+
+#if defined(DECODE_SONY)
+    DBG_PRINTLN("Attempting old Sony decode");
+    if (decodeSonyMSB(aResults))  {
+        return true ;
+    }
+#endif
+
+//#if defined(DECODE_MITSUBISHI)
+//    DBG_PRINTLN("Attempting Mitsubishi decode");
+//    if (decodeMitsubishi(results))  return true ;
+//#endif
+
+#if defined(DECODE_RC5)
+    DBG_PRINTLN("Attempting RC5 decode");
+    if (decodeRC5()) {
+        aResults->bits = decodedIRData.numberOfBits;
+        aResults->value = decodedIRData.decodedRawData;
+        aResults->decode_type = RC5;
+
+        return true ;
+    }
+#endif
+
+#if defined(DECODE_RC6)
+    DBG_PRINTLN("Attempting RC6 decode");
+    if (decodeRC6())  {
+        aResults->bits = decodedIRData.numberOfBits;
+        aResults->value = decodedIRData.decodedRawData;
+        aResults->decode_type = RC6;
+        return true ;
+    }
+#endif
+
+#if defined( DECODE_PANASONIC)
+    DBG_PRINTLN("Attempting old Panasonic decode");
+    if (decodePanasonicMSB(aResults)) {
+        return true ;
+    }
+#endif
+
+#if defined(DECODE_LG)
+    DBG_PRINTLN("Attempting old LG decode");
+    if (decodeLGMSB(aResults)) { return true ;}
+#endif
+
+#if defined(DECODE_JVC)
+    DBG_PRINTLN("Attempting old JVC decode");
+    if (decodeJVCMSB(aResults)) {
+        return true ;
+    }
+#endif
+
+#if defined(DECODE_SAMSUNG)
+    DBG_PRINTLN("Attempting old SAMSUNG decode");
+    if (decodeSAMSUNG(aResults)) {
+        return true ;
+    }
+#endif
+
+//#if defined(DECODE_WHYNTER)
+//    DBG_PRINTLN("Attempting Whynter decode");
+//    if (decodeWhynter(results))  return true ;
+//#endif
+
+#if defined(DECODE_DENON)
+    DBG_PRINTLN("Attempting old Denon decode");
+    if (decodeDenonOld(aResults)) {
+        return true ;
+    }
+#endif
+
+//#if defined(DECODE_LEGO_PF)
+//    DBG_PRINTLN("Attempting Lego Power Functions");
+//    if (decodeLegoPowerFunctions(results))  return true ;
+//#endif
+
+    // decodeHash returns a hash on any input.
+    // Thus, it needs to be last in the list.
+    // If you add any decodes, add them before this.
+    if (decodeHashOld(aResults)) {
+        return true;
+    }
+    // Throw away and start over
+    resume();
+    return false;
 }
+#endif
 
 /** @}*/

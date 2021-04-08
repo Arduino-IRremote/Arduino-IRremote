@@ -44,7 +44,6 @@
 //                             J J     V V   C
 //                              J       V     CCCC
 //==============================================================================
-
 // https://www.sbprojects.net/knowledge/ir/jvc.php
 // http://www.hifi-remote.com/johnsfine/DecodeIR.html#JVC
 // IRP: {38k,525}<1,-1|1,-3>(16,-8,(D:8,F:8,1,-45)+)
@@ -100,7 +99,6 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
     }
 }
 
-#if !defined(USE_OLD_DECODE)
 /*
  * First check for right data length
  * Next check start bit
@@ -159,39 +157,38 @@ bool IRrecv::decodeJVC() {
 
     return true;
 }
-#else
 
-//+=============================================================================
-bool IRrecv::decodeJVC() {
+#if !defined(NO_LEGACY_COMPATIBILITY)
+bool IRrecv::decodeJVCMSB(decode_results *aResults) {
     unsigned int offset = 1; // Skip first space
 
     // Check for repeat
-    if ((results.rawlen - 1 == 33) && matchMark(results.rawbuf[offset], JVC_BIT_MARK)
-            && matchMark(results.rawbuf[results.rawlen - 1], JVC_BIT_MARK)) {
-        results.bits = 0;
-        results.value = 0xFFFFFFFF;
+    if ((aResults->rawlen - 1 == 33) && matchMark(aResults->rawbuf[offset], JVC_BIT_MARK)
+            && matchMark(aResults->rawbuf[aResults->rawlen - 1], JVC_BIT_MARK)) {
+        aResults->bits = 0;
+        aResults->value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = JVC;
         return true;
     }
 
     // Initial mark
-    if (!matchMark(results.rawbuf[offset], JVC_HEADER_MARK)) {
+    if (!matchMark(aResults->rawbuf[offset], JVC_HEADER_MARK)) {
         return false;
     }
     offset++;
 
     // Check we have enough data - +3 for start bit mark and space + stop bit mark
-    if (results.rawlen <= (2 * JVC_BITS) + 3) {
+    if (aResults->rawlen <= (2 * JVC_BITS) + 3) {
         DBG_PRINT("Data length=");
-        DBG_PRINT(results.rawlen);
+        DBG_PRINT(aResults->rawlen);
         DBG_PRINTLN(" is too small. >= 36 is required.");
 
         return false;
     }
 
     // Initial space
-    if (!matchSpace(results.rawbuf[offset], JVC_HEADER_SPACE)) {
+    if (!matchSpace(aResults->rawbuf[offset], JVC_HEADER_SPACE)) {
         return false;
     }
     offset++;
@@ -201,13 +198,15 @@ bool IRrecv::decodeJVC() {
     }
 
     // Stop bit
-    if (!matchMark(results.rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
+    if (!matchMark(aResults->rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
     // Success
-    results.bits = JVC_BITS;
+    aResults->value = decodedIRData.decodedRawData;
+    aResults->bits = JVC_BITS;
+    aResults->decode_type = JVC;
     decodedIRData.protocol = JVC;
 
     return true;

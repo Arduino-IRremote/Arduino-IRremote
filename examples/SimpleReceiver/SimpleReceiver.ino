@@ -15,13 +15,12 @@
  * Specify which protocol(s) should be used for decoding.
  * If no protocol is defined, all protocols are active.
  */
-//#define DECODE_DENON
-//#define DECODE_SHARP        // the same as DECODE_DENON
+//#define DECODE_DENON        // Includes Sharp
 //#define DECODE_JVC
 //#define DECODE_KASEIKYO
 //#define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
 //#define DECODE_LG
-#define DECODE_NEC
+#define DECODE_NEC          // Includes Apple and Onkyo
 //#define DECODE_SAMSUNG
 //#define DECODE_SONY
 //#define DECODE_RC5

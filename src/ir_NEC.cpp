@@ -178,7 +178,6 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool a
 //+=============================================================================
 // NECs have a repeat only 4 items long
 //
-#if !defined(USE_OLD_DECODE)
 /*
  * First check for right data length
  * Next check start bit
@@ -264,9 +263,9 @@ bool IRrecv::decodeNEC() {
             decodedIRData.protocol = ONKYO;
             decodedIRData.command = tValue.UWord.HighWord; // 16 bit command
 
-/*
- * Old NEC plausibility check below, now it is just ONKYO :-)
- */
+            /*
+             * Old NEC plausibility check below, now it is just ONKYO :-)
+             */
 //            DBG_PRINT(F("NEC: "));
 //            DBG_PRINT(F("Command=0x"));
 //            DBG_PRINT(tValue.UByte.MidHighByte, HEX);
@@ -279,62 +278,66 @@ bool IRrecv::decodeNEC() {
 
     return true;
 }
-#else
 
-bool IRrecv::decodeNEC() {
+#if !defined(NO_LEGACY_COMPATIBILITY)
+bool IRrecv::decodeNECMSB(decode_results *aResults) {
     unsigned int offset = 1;  // Index in to results; Skip first space.
 
 // Check header "mark"
-    if (!matchMark(results.rawbuf[offset], NEC_HEADER_MARK)) {
+    if (!matchMark(aResults->rawbuf[offset], NEC_HEADER_MARK)) {
         return false;
     }
     offset++;
 
 // Check for repeat
-    if ((results.rawlen == 4) && matchSpace(results.rawbuf[offset], NEC_REPEAT_HEADER_SPACE)
-            && matchMark(results.rawbuf[offset + 1], NEC_BIT_MARK)) {
-        results.bits = 0;
-        results.value = 0xFFFFFFFF;
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+    if ((aResults->rawlen == 4) && matchSpace(aResults->rawbuf[offset], NEC_REPEAT_HEADER_SPACE)
+            && matchMark(aResults->rawbuf[offset + 1], NEC_BIT_MARK)) {
+        aResults->bits = 0;
+        aResults->value = 0xFFFFFFFF;
+        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = NEC;
         return true;
     }
 
     // Check we have the right amount of data (32). +4 for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen != (2 * NEC_BITS) + 4) {
-        DBG_PRINT("NEC: ");
+    if (aResults->rawlen != (2 * NEC_BITS) + 4) {
+        DBG_PRINT("NEC MSB: ");
         DBG_PRINT("Data length=");
-        DBG_PRINT(results.rawlen);
+        DBG_PRINT(aResults->rawlen);
         DBG_PRINTLN(" is not 68");
         return false;
     }
 
 // Check header "space"
-    if (!matchSpace(results.rawbuf[offset], NEC_HEADER_SPACE)) {
-        DBG_PRINT("NEC: ");
+    if (!matchSpace(aResults->rawbuf[offset], NEC_HEADER_SPACE)) {
+        DBG_PRINT("NEC MSB: ");
         DBG_PRINTLN("Header space length is wrong");
         return false;
     }
     offset++;
 
     if (!decodePulseDistanceData(NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+        DBG_PRINT(F("NEC MSB: "));
+        DBG_PRINTLN(F("Decode failed"));
         return false;
     }
 
     // Stop bit
-    if (!matchMark(results.rawbuf[offset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
-        DBG_PRINT("NEC: ");
+    if (!matchMark(aResults->rawbuf[offset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
+        DBG_PRINT("NEC MSB: ");
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
 // Success
-    results.bits = NEC_BITS;
+    aResults->value = decodedIRData.decodedRawData;
+    aResults->bits = NEC_BITS;
+    aResults->decode_type = NEC;
     decodedIRData.protocol = NEC;
 
     return true;
 }
-#endif
+#endif // !defined(NO_LEGACY_COMPATIBILITY)
 
 /*
  * With Send sendNECMSB() you can send your old 32 bit codes.

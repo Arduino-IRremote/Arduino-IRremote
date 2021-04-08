@@ -44,7 +44,6 @@
 //==============================================================================
 // see https://www.sbprojects.net/knowledge/ir/sirc.php
 // Here http://picprojects.org.uk/projects/sirc/ it is claimed, that many Sony remotes repeat each frame a minimum of 3 times
-
 // LSB first, start bit + 7 command + 5 to 13 address, no stop bit
 //
 #define SONY_ADDRESS_BITS       5
@@ -97,7 +96,6 @@ void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
 }
 
 //+=============================================================================
-#if !defined(USE_OLD_DECODE)
 
 bool IRrecv::decodeSony() {
 
@@ -148,25 +146,23 @@ bool IRrecv::decodeSony() {
     return true;
 }
 
-#else
-
+#if !defined(NO_LEGACY_COMPATIBILITY)
 #define SONY_DOUBLE_SPACE_USECS    500 // usually see 713 - not using ticks as get number wrap around
-
-bool IRrecv::decodeSony() {
+bool IRrecv::decodeSonyMSB(decode_results *aResults) {
     long data = 0;
     uint8_t bits = 0;
     unsigned int offset = 0;  // Dont skip first space, check its size
 
-    if (results.rawlen < (2 * SONY_BITS_MIN) + 2) {
+    if (aResults->rawlen < (2 * SONY_BITS_MIN) + 2) {
         return false;
     }
 
     // Some Sony's deliver repeats fast after first
     // unfortunately can't spot difference from of repeat from two fast clicks
-    if (results.rawbuf[0] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
+    if (aResults->rawbuf[0] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
         DBG_PRINTLN("IR Gap found");
-        results.bits = 0;
-        results.value = 0xFFFFFFFF;
+        aResults->bits = 0;
+        aResults->value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
         decodedIRData.protocol = UNKNOWN;
         return true;
@@ -174,25 +170,25 @@ bool IRrecv::decodeSony() {
     offset++;
 
     // Check header "mark"
-    if (!matchMark(results.rawbuf[offset], SONY_HEADER_MARK)) {
+    if (!matchMark(aResults->rawbuf[offset], SONY_HEADER_MARK)) {
         return false;
     }
     offset++;
 
     // MSB first - Not compatible to standard, which says LSB first :-(
-    while (offset + 1 < results.rawlen) {
+    while (offset + 1 < aResults->rawlen) {
 
         // First check for the constant space length, we do not have a space at the end of raw data
         // we are lucky, since the start space is equal the data space.
-        if (!matchSpace(results.rawbuf[offset], SONY_SPACE)) {
+        if (!matchSpace(aResults->rawbuf[offset], SONY_SPACE)) {
             return false;
         }
         offset++;
 
         // bit value is determined by length of the mark
-        if (matchMark(results.rawbuf[offset], SONY_ONE_MARK)) {
+        if (matchMark(aResults->rawbuf[offset], SONY_ONE_MARK)) {
             data = (data << 1) | 1;
-        } else if (matchMark(results.rawbuf[offset], SONY_ZERO_MARK)) {
+        } else if (matchMark(aResults->rawbuf[offset], SONY_ZERO_MARK)) {
             data = (data << 1) | 0;
         } else {
             return false;
@@ -202,8 +198,9 @@ bool IRrecv::decodeSony() {
 
     }
 
-    results.bits = bits;
-    results.value = data;
+    aResults->bits = bits;
+    aResults->value = data;
+    aResults->decode_type = SONY;
     decodedIRData.protocol = SONY;
     return true;
 }

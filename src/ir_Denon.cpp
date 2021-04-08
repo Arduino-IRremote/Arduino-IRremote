@@ -130,7 +130,6 @@ bool IRrecv::decodeSharp() {
 }
 
 //+=============================================================================
-#if !defined(USE_OLD_DECODE)
 bool IRrecv::decodeDenon() {
 
     // we have no start bit, so check for the exact amount of data bits
@@ -190,9 +189,9 @@ bool IRrecv::decodeDenon() {
     }
     return true;
 }
-#else
 
-bool IRrecv::decodeDenon() {
+#if !defined(NO_LEGACY_COMPATIBILITY)
+bool IRrecv::decodeDenonOld(decode_results *aResults) {
 
     // Check we have the right amount of data
     if (decodedIRData.rawDataPtr->rawlen != 1 + 2 + (2 * DENON_BITS) + 1) {
@@ -200,11 +199,11 @@ bool IRrecv::decodeDenon() {
     }
 
     // Check initial Mark+Space match
-    if (!matchMark(results.rawbuf[1], DENON_HEADER_MARK)) {
+    if (!matchMark(aResults->rawbuf[1], DENON_HEADER_MARK)) {
         return false;
     }
 
-    if (!matchSpace(results.rawbuf[2], DENON_HEADER_SPACE)) {
+    if (!matchSpace(aResults->rawbuf[2], DENON_HEADER_SPACE)) {
         return false;
     }
 
@@ -214,11 +213,12 @@ bool IRrecv::decodeDenon() {
     }
 
     // Success
-    results.bits = DENON_BITS;
+    aResults->value = decodedIRData.decodedRawData;
+    aResults->bits = DENON_BITS;
+    aResults->decode_type = DENON;
     decodedIRData.protocol = DENON;
     return true;
 }
-
 #endif
 
 void IRsend::sendDenon(unsigned long data, int nbits) {

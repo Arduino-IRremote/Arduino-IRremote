@@ -30,6 +30,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+//#define TRACE // Activate this for more debug output from this decoder.
 #include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
 #include "LongUnion.h"
 
@@ -135,11 +136,17 @@ bool IRrecv::decodeRC5() {
     // Check we have the right amount of data (11 to 26). The +2 is for initial gap and start bit mark.
     if (decodedIRData.rawDataPtr->rawlen < MIN_RC5_MARKS + 2 && decodedIRData.rawDataPtr->rawlen > ((2 * RC5_BITS) + 2)) {
         // no debug output, since this check is mainly to determine the received protocol
+        TRACE_PRINT(F("RC5: "));
+        TRACE_PRINT("Data length=");
+        TRACE_PRINT(decodedIRData.rawDataPtr->rawlen);
+        TRACE_PRINTLN(" is not between 11 and 26");
         return false;
     }
 
 // Check start bit, the first space is included in the gap
     if (getBiphaselevel() != MARK) {
+        TRACE_PRINT(F("RC5: "));
+        TRACE_PRINTLN("first getBiphaselevel() is not MARK");
         return false;
     }
 
@@ -164,19 +171,12 @@ bool IRrecv::decodeRC5() {
         }
     }
 
-// Success
-#if defined(USE_OLD_DECODE)
-    results.bits = tBitIndex;
-    results.value = tDecodedRawData;
-#else
-
     // Success
     decodedIRData.numberOfBits = tBitIndex; // must be RC5_BITS
 
     LongUnion tValue;
     tValue.ULong = tDecodedRawData;
     decodedIRData.decodedRawData = tDecodedRawData;
-
     decodedIRData.command = tValue.UByte.LowByte & 0x3F;
     decodedIRData.address = (tValue.UWord.LowWord >> RC5_COMMAND_BITS) & 0x1F;
 
@@ -194,7 +194,7 @@ bool IRrecv::decodeRC5() {
     if (decodedIRData.rawDataPtr->rawbuf[0] < (RC5_REPEAT_PERIOD / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
-#endif
+
     decodedIRData.protocol = RC5;
     return true;
 }
@@ -354,6 +354,8 @@ bool IRrecv::decodeRC6() {
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], RC6_HEADER_MARK)
             || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_SPACE)) {
         // no debug output, since this check is mainly to determine the received protocol
+        TRACE_PRINT(F("RC6: "));
+        TRACE_PRINTLN("Header mark or space length is wrong");
         return false;
     }
 
@@ -362,9 +364,13 @@ bool IRrecv::decodeRC6() {
 
 // Process first bit, which is known to be a 1 (mark->space)
     if (getBiphaselevel() != MARK) {
+        TRACE_PRINT(F("RC6: "));
+        TRACE_PRINTLN("first getBiphaselevel() is not MARK");
         return false;
     }
     if (getBiphaselevel() != SPACE) {
+        TRACE_PRINT(F("RC6: "));
+        TRACE_PRINTLN("second getBiphaselevel() is not SPACE");
         return false;
     }
 
@@ -410,10 +416,6 @@ bool IRrecv::decodeRC6() {
     }
 
 // Success
-#if defined(USE_OLD_DECODE)
-    results.bits = tBitIndex;
-    results.value = tDecodedRawData;
-#else
     decodedIRData.numberOfBits = tBitIndex;
 
     LongUnion tValue;
@@ -446,7 +448,7 @@ bool IRrecv::decodeRC6() {
     if (decodedIRData.rawDataPtr->rawbuf[0] < ((RC6_REPEAT_SPACE + (RC6_REPEAT_SPACE / 2)) / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
-#endif
+
     decodedIRData.protocol = RC6;
     return true;
 }

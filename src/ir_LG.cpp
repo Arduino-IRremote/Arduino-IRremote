@@ -119,7 +119,8 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
     space(LG_HEADER_SPACE);
 
     // MSB first
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
+    SEND_STOP_BIT);
 
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
@@ -136,7 +137,6 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
 //+=============================================================================
 // LGs has a repeat like NEC
 //
-#if !defined(USE_OLD_DECODE)
 /*
  * First check for right data length
  * Next check start bit
@@ -220,24 +220,23 @@ bool IRrecv::decodeLG() {
 
     return true;
 }
-#else
 
-//+=============================================================================
-bool IRrecv::decodeLG() {
+#if !defined(NO_LEGACY_COMPATIBILITY)
+bool IRrecv::decodeLGMSB(decode_results *aResults) {
     unsigned int offset = 1; // Skip first space
 
 // Check we have enough data (60) - +4 for initial gap, start bit mark and space + stop bit mark
-    if (results.rawlen != (2 * LG_BITS) + 4) {
+    if (aResults->rawlen != (2 * LG_BITS) + 4) {
         return false;
     }
 
 // Initial mark/space
-    if (!matchMark(results.rawbuf[offset], LG_HEADER_MARK)) {
+    if (!matchMark(aResults->rawbuf[offset], LG_HEADER_MARK)) {
         return false;
     }
     offset++;
 
-    if (!matchSpace(results.rawbuf[offset], LG_HEADER_SPACE)) {
+    if (!matchSpace(aResults->rawbuf[offset], LG_HEADER_SPACE)) {
         return false;
     }
     offset++;
@@ -246,17 +245,15 @@ bool IRrecv::decodeLG() {
         return false;
     }
 // Stop bit
-    if (!matchMark(results.rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
+    if (!matchMark(aResults->rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
         DBG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
 // Success
-// no parity check yet :-(
-    decodedIRData.address = results.value >> (LG_COMMAND_BITS + LG_CHECKSUM_BITS);
-    decodedIRData.command = (results.value >> LG_COMMAND_BITS) & 0xFFFF;
-
-    decodedIRData.numberOfBits = LG_BITS;
+    aResults->value = decodedIRData.decodedRawData;
+    aResults->bits = LG_BITS;
+    aResults->decode_type = LG;
     decodedIRData.protocol = LG;
     return true;
 }
@@ -267,7 +264,8 @@ bool IRrecv::decodeLG() {
 void IRsend::sendLG(unsigned long data, int nbits) {
 // Set IR carrier frequency
     enableIROut(38);
-    Serial.println("The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats).");
+    Serial.println(
+            "The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats).");
 
 // Header
     mark(LG_HEADER_MARK);
@@ -275,7 +273,8 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 //    mark(LG_BIT_MARK);
 
 // Data + stop bit
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
+    SEND_STOP_BIT);
 }
 
 /** @}*/
