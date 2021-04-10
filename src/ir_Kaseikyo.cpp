@@ -123,6 +123,9 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNum
     }
 }
 
+/**
+ * Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE
+ */
 void IRsend::sendPanasonic(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     sendKaseikyo(aAddress, aCommand, aNumberOfRepeats, PANASONIC_VENDOR_ID_CODE);
 }
@@ -264,6 +267,7 @@ bool IRrecv::decodePanasonicMSB(decode_results *aResults) {
 
     aResults->bits = KASEIKYO_BITS;
     aResults->value = decodedIRData.decodedRawData;
+    aResults->address = PANASONIC_VENDOR_ID_CODE;
     aResults->decode_type = PANASONIC;
     decodedIRData.protocol = PANASONIC;
 
@@ -271,7 +275,9 @@ bool IRrecv::decodePanasonicMSB(decode_results *aResults) {
 }
 #endif
 
-// Old version with MSB first Data
+/**
+ * Old version with MSB first data
+ */
 void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
     // Set IR carrier frequency
     enableIROut(37); // 36.7kHz is the correct frequency

@@ -1319,7 +1319,11 @@ ISR () // for functions definitions which are called by separate (board specific
 
 #if !defined(NO_LEGACY_COMPATIBILITY)
 /**********************************************************************************************************************
- * The DEPRECATED decode function with parameter aResults for backwards compatibility
+ * The DEPRECATED decode function with parameter aResults ONLY for backwards compatibility!
+ * This function calls the old MSB first decoders and fills only the 3 variables:
+ * aResults->value
+ * aResults->bits
+ * aResults->decode_type
  **********************************************************************************************************************/
 bool IRrecv::decode(decode_results *aResults) {
     static bool sDeprecationMessageSent = false;

@@ -58,6 +58,7 @@
 #define tone(a,b,c) void()      // no tone() available on ESP32
 #define noTone(a) void()
 #define TONE_PIN            42 // Dummy for examples using it
+#define APPLICATION_PIN     16 // RX2 pin
 
 #elif defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_STM32F1)
 // BluePill in 2 flavors
@@ -108,6 +109,7 @@
 #elif defined(__AVR_ATtiny1604__)
 #define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.
 #define IR_SEND_PIN      3
+#define APPLICATION_PIN  5
 #define TONE_PIN        42 // Dummy for examples using it
 #define tone(a,b,c) void() // tone() uses the same vector as receive timer
 #define noTone(a) void()

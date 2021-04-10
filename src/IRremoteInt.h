@@ -112,14 +112,13 @@ struct irparams_struct {
  * Activating this saves 60 bytes program space and 14 bytes RAM
  */
 //#define NO_LEGACY_COMPATIBILITY
-
 #if !defined(NO_LEGACY_COMPATIBILITY)
 /**
  * Results returned from old decoders !!!deprecated!!!
  */
 struct decode_results {
     decode_type_t decode_type;  // deprecated, moved to decodedIRData.protocol ///< UNKNOWN, NEC, SONY, RC5, ...
-//    uint16_t address;         ///< Used by Panasonic & Sharp & NEC_standard [16-bits]
+    uint16_t address;           ///< Used by Panasonic & Sharp [16-bits]
     uint32_t value;             // deprecated, moved to decodedIRData.decodedRawData ///< Decoded value / command [max 32-bits]
     uint8_t bits;               // deprecated, moved to decodedIRData.numberOfBits ///< Number of bits in decoded value
     uint16_t magnitude;         // deprecated, moved to decodedIRData.extra ///< Used by MagiQuest [16-bits]
@@ -226,8 +225,8 @@ public:
     bool decodePulseWidthData(uint8_t aNumberOfBits, uint8_t aStartOffset, uint16_t aOneMarkMicros, uint16_t aZeroMarkMicros,
             uint16_t aBitSpaceMicros, bool aMSBfirst);
 
-    bool decodeBiPhaseData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint_fast8_t aStartClockCount, uint_fast8_t aValueOfSpaceToMarkTransition,
-            uint16_t aBiphaseTimeUnit);
+    bool decodeBiPhaseData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint_fast8_t aStartClockCount,
+            uint_fast8_t aValueOfSpaceToMarkTransition, uint16_t aBiphaseTimeUnit);
 
     void initBiphaselevel(uint8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit);
     uint8_t getBiphaselevel();
@@ -267,10 +266,11 @@ public:
     bool decodeSAMSUNG(decode_results *aResults);
     bool decodeHashOld(decode_results *aResults);
 
-    bool decode(decode_results *aResults) __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> ."))); // deprecated
+    bool decode(
+            decode_results *aResults)
+                    __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> ."))); // deprecated
 #endif
     bool decodeWhynter();
-
 
     /*
      * Internal functions
@@ -318,7 +318,6 @@ void disableLEDFeedback();
 void blink13(bool aEnableLEDFeedback)
         __attribute__ ((deprecated ("Please use setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback."))); // deprecated
 void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use setLEDFeedback()."))); // deprecated
-
 
 /**
  * microseconds per clock interrupt tick
@@ -413,11 +412,9 @@ public:
      */
     void sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendSharp = false);
-    void sendDenonRaw(uint16_t aRawData, uint_fast8_t aNumberOfRepeats = 0);
-    __attribute__ ((deprecated ("Please use sendDenon(aAddress, aCommand, aNumberOfRepeats).")));
+    void sendDenonRaw(uint16_t aRawData, uint_fast8_t aNumberOfRepeats = 0)
+            __attribute__ ((deprecated ("Please use sendDenon(aAddress, aCommand, aNumberOfRepeats).")));
     void sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats);
-    void sendJVCRaw(uint16_t aRawData, uint_fast8_t aNumberOfRepeats = 0);
-    __attribute__ ((deprecated ("Please use sendJVC(aAddress, aCommand, aNumberOfRepeats).")));
 
     void sendLGRepeat();
     void sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false);
@@ -462,8 +459,18 @@ public:
      */
     void sendDenon(unsigned long data, int nbits);
     void sendDISH(unsigned long data, int nbits);
+    void sendJVC(unsigned long data, int nbits, bool repeat)
+            __attribute__ ((deprecated ("This old function sends MSB first! Please use sendJVC(aAddress, aCommand, aNumberOfRepeats)."))) {
+        sendJVCMSB(data, nbits, repeat);
+    }
     void sendJVCMSB(unsigned long data, int nbits, bool repeat = false);
+
     void sendLG(unsigned long data, int nbits);
+
+    void sendNEC(uint32_t aRawData, uint8_t nbits)
+    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNEC(aAddress, aCommand, aNumberOfRepeats)."))) {
+        sendNECMSB(aRawData, nbits);
+    }
     void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat = false);
     void sendPanasonic(uint16_t aAddress,
             uint32_t aData)

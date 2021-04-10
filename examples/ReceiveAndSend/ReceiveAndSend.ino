@@ -53,11 +53,7 @@
 
 #include <IRremote.h>
 
-#if defined(ESP32)
-int SEND_BUTTON_PIN = 16; // RX2 pin
-#else
-int SEND_BUTTON_PIN = 12;
-#endif
+int SEND_BUTTON_PIN = APPLICATION_PIN;
 int STATUS_PIN = LED_BUILTIN;
 
 int DELAY_BETWEEN_REPEAT = 50;

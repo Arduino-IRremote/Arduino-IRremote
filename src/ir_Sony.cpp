@@ -207,8 +207,9 @@ bool IRrecv::decodeSonyMSB(decode_results *aResults) {
 
 #endif
 
-//+=============================================================================
-//  Old version with MSB first Data
+/**
+ * Old version with MSB first data
+ */
 void IRsend::sendSony(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut(40);

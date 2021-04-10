@@ -68,12 +68,6 @@
 // JVC does NOT repeat by sending a separate code (like NEC does).
 // The JVC protocol repeats by skipping the header.
 //
-/*
- * Only for backwards compatibility
- */
-void IRsend::sendJVCRaw(uint16_t aRawData, uint_fast8_t aNumberOfRepeats) {
-    sendJVC((uint8_t) aRawData & 0xFF, (uint8_t) (aRawData >> JVC_ADDRESS_BITS), aNumberOfRepeats);
-}
 
 void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
@@ -214,10 +208,16 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
 
 #endif
 
-//+=============================================================================
-// JVC does NOT repeat by sending a separate code (like NEC does).
-// The JVC protocol repeats by skipping the header.
-// Old version with MSB first Data
+/**
+ * With Send sendJVCMSB() you can send your old 32 bit codes.
+ * To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte.
+ * Or write it as one binary string and reverse/mirror it.
+ * Example:
+ * 0xCB340102 byte reverse -> 02 01 34 CB bit reverse-> 40 80 2C D3.
+ * 0xCB340102 is binary 11001011001101000000000100000010.
+ * 0x40802CD3 is binary 01000000100000000010110011010011.
+ * If you read the first binary sequence backwards (right to left), you get the second sequence.
+ */
 void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
     // Set IR carrier frequency
     enableIROut(38);

@@ -60,7 +60,7 @@ If you use a core that does not use the `-flto` flag for compile, you can activa
 - Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
 
 # Running your 2.x program with the 3.x library version
-If you program is of style:
+If you program is like:
 ```
 IRrecv irrecv(RECV_PIN);
 decode_results results;

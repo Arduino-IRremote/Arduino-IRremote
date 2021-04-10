@@ -180,6 +180,13 @@
 #include "IRReceive.cpp.h"
 #include "IRSend.cpp.h"
 
+/**
+ * Macros for legacy compatibility
+ */
+#define RAWBUF  101  // Maximum length of raw duration buffer
+#define REPEAT 0xFFFFFFFF
+#define USECPERTICK MICROS_PER_TICK
+#define MARK_EXCESS MARK_EXCESS_MICROS
 #endif // IRremote_h
 
 #pragma once

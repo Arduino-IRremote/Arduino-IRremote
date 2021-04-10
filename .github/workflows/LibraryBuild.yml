@@ -50,6 +50,7 @@ jobs:
           - arduino:avr:uno|SEND_PWM_BY_TIMER
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
+          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
           - digistump:avr:digispark-tiny:clock=clock1
           - ATTinyCore:avr:attinyx5:chip=85,clock=1internal
           - TinyCore:avr:tiny32
@@ -100,9 +101,9 @@ jobs:
           - arduino-boards-fqbn: arduino:samd:arduino_zero_native
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
 
-          - arduino-boards-fqbn: SparkFun:avr:promicro
-            arduino-platform: arduino:avr,SparkFun:avr
-            platform-url: https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json # Arduino URL is not required here
+          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
+            platform-url: http://drazzy.com/package_drazzy.com_index.json
+            sketches-exclude: MinimalReceiver,IRDispatcherDemo // digitalWriteFast.h not available for this board
 
           - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock1
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
@@ -149,6 +150,10 @@ jobs:
           - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C # Roger Clark version
             platform-url: http://dan.drown.org/stm32duino/package_STM32duino_index.json
             sketches-exclude: IR2Keyboard,MinimalReceiver
+
+          - arduino-boards-fqbn: SparkFun:avr:promicro
+            arduino-platform: arduino:avr,SparkFun:avr
+            platform-url: https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json # Arduino URL is not required here
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json

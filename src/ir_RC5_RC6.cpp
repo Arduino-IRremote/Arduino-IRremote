@@ -235,7 +235,10 @@ bool IRrecv::decodeRC5() {
 
 #define RC6_REPEAT_SPACE    107000 // just a guess but > 2.666ms
 
-void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
+/**
+ * Main RC6 send function
+ */
+void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
 // Set IR carrier frequency
     enableIROut(36);
 
@@ -248,11 +251,11 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
     space(RC6_UNIT);
 
 // Data MSB first
-    uint32_t mask = 1UL << (nbits - 1);
+    uint32_t mask = 1UL << (aNumberOfBitsToSend - 1);
     for (uint_fast8_t i = 1; mask; i++, mask >>= 1) {
         // The fourth bit we send is the "double width toggle bit"
         unsigned int t = (i == 4) ? (RC6_UNIT * 2) : (RC6_UNIT);
-        if (data & mask) {
+        if (aRawData & mask) {
             mark(t);
             space(t);
         } else {
@@ -263,7 +266,7 @@ void IRsend::sendRC6(uint32_t data, uint8_t nbits) {
 }
 
 /**
- * Send RC6 raw data
+ * Send RC6 64 bit raw data
  * We do not wait for the minimal trailing space of 2666 us
  */
 void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
@@ -453,7 +456,9 @@ bool IRrecv::decodeRC6() {
     return true;
 }
 
-//+=============================================================================
+/**
+ * Old version with 32 bit data
+ */
 void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
     enableIROut(36);
@@ -473,8 +478,6 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
             space(RC5_UNIT);
         }
     }
-
-//    ledOff();  // Always end with the LED off
 }
 
 /*

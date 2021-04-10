@@ -339,7 +339,7 @@ bool IRrecv::decodeNECMSB(decode_results *aResults) {
 }
 #endif // !defined(NO_LEGACY_COMPATIBILITY)
 
-/*
+/**
  * With Send sendNECMSB() you can send your old 32 bit codes.
  * To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte.
  * Or write it as one binary string and reverse/mirror it.
