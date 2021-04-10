@@ -6,6 +6,7 @@ The latest version may not be released!
 - Added Onkyo protocol.
 - Support for old 2.x code by backwards compatible `decode(decode_results *aResults)` function.
 - Removed USE_OLD_DECODE macro and added NO_LEGACY_COMPATIBILITY macro.
+- Added ATtiny1604 support.
 
 ## 3.1.0
 - Generation of PWM by software is active by default.

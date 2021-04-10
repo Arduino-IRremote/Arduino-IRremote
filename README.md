@@ -225,6 +225,7 @@ The timer and the pin usage can be adjusted in [private/IRTimer.cpp.h](https://g
 |--------------------------------------------------------------------------|---------------------|-------------------|
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
 | [ATtiny85 > 1 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **1**, 4            | **0**, 1          |
+| [ATtiny1604](https://github.com/SpenceKonde/megaTinyCore)                | %                   | **TCB0**          |
 | [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
 | [ATmega48, ATmega88, ATmega168, **ATmega328**](https://github.com/MCUdude/MiniCore) | **3**, 9 | 1, **2**          |
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |

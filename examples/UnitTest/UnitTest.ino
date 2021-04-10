@@ -36,26 +36,32 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-#if FLASHEND <= 0x1FFF      // For less equal than 8k flash, like ATtiny85
+#if FLASHEND >= 0x1FFF      // For less equal than 8k flash, like ATtiny85
 #define DECODE_DENON        // Includes Sharp
-//#define DECODE_JVC
 #define DECODE_KASEIKYO
-//#define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
-//#define DECODE_LG
 #define DECODE_NEC          // Includes Apple and Onkyo
-//#define DECODE_SAMSUNG
-#if FLASHEND <= 0x1FFF && ! defined(CLOCK_SOURCE) // ATTinyCore is bigger than digispark core
+#  if FLASHEND >= 0x1FFF && !defined(CLOCK_SOURCE) // ATTinyCore is bigger than digispark core
 #define DECODE_SONY
+#  endif
 #endif
-//#define DECODE_RC5
-//#define DECODE_RC6
 
-//#define DECODE_BOSEWAVE
-//#define DECODE_LEGO_PF
-//#define DECODE_MAGIQUEST
-//#define DECODE_WHYNTER
+#if FLASHEND >= 0x3FFF      // Additional code for less equal than 16k flash, like ATtiny1604
+#define DECODE_JVC
+#define DECODE_RC5
+#define DECODE_RC6
+#define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
+#define DECODE_SAMSUNG
+#define DECODE_LG
 
-//#define DECODE_HASH         // special decoder for all protocols
+#define DECODE_HASH         // special decoder for all protocols
+#endif
+
+#if FLASHEND >= 0x7FFF      // Additional code for less equal than 32k flash, like ATmega328
+
+#define DECODE_BOSEWAVE
+#define DECODE_LEGO_PF
+#define DECODE_MAGIQUEST
+#define DECODE_WHYNTER
 #endif
 
 //#define SEND_PWM_BY_TIMER
@@ -277,14 +283,14 @@ void loop() {
     checkReceive(sAddress & 0x1F, sCommand);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND <= 0x1FFF && ! defined(CLOCK_SOURCE) // ATTinyCore is bigger than digispark core
+#if FLASHEND > 0x1FFF || !defined(CLOCK_SOURCE) // ATTinyCore is bigger than digispark core
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0x1F, sCommand & 0x7F, sRepeats);
     checkReceive(sAddress & 0x1F, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
 #endif
-#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF      // Additional code for less equal than 16k flash, like ATtiny1604
     Serial.println(F("Send Sony/SIRCS with 7 command and 8 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0xFF, sCommand, sRepeats, SIRCS_15_PROTOCOL);
@@ -349,13 +355,16 @@ void loop() {
     IrSender.write(&IRSendData, sRepeats);
     checkReceive(IRSendData.address & 0xFF, IRSendData.command);
     delay(DELAY_AFTER_SEND);
+#endif // FLASHEND >= 0x3FFF
 
+#if FLASHEND >= 0x7FFF      // Additional code for less equal than 32k flash, like ATmega328
     IRSendData.protocol = BOSEWAVE;
     Serial.println(F("Send Bosewave with no address and 8 command bits"));
     Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
     checkReceive(0, IRSendData.command & 0xFF);
     delay(DELAY_AFTER_SEND);
+#endif // FLASHEND >= 0x7FFF
 
     /*
      * LEGO is difficult to receive because of its short marks and spaces
@@ -365,8 +374,6 @@ void loop() {
 //    IrSender.sendLegoPowerFunctions(sAddress, sCommand, LEGO_MODE_COMBO, true);
 //    checkReceive(sAddress, sCommand); // never has success for Lego protocol :-(
 //    delay(DELAY_AFTER_SEND);
-#endif // FLASHEND > 0x1FFF
-
     /*
      * Force buffer overflow
      */

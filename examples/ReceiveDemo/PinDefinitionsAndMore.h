@@ -34,6 +34,7 @@
  * ATtin167     9           8           5 // Digispark pro number schema
  * ATtin167     3           2           7
  * ATtin3217    10          11          3 // TinyCore schema
+ * ATtin1604    10          11          % // MegaTinyCore schema
  * SAMD21       3           4           5
  * ESP8266      14 // D5    12 // D6    %
  * ESP32        15          4           %
@@ -46,7 +47,7 @@
 #define FEEDBACK_LED_IS_ACTIVE_LOW // The LED on my board is active LOW
 #define IR_RECEIVE_PIN      14 // D5
 #define IR_SEND_PIN         12 // D6 - D4/2 is internal LED
-#define tone(a,b) void()        // tone() inhibits receive timer
+#define tone(a,b,c) void()     // tone() inhibits receive timer
 #define noTone(a) void()
 #define TONE_PIN            42 // Dummy for examples using it
 #define IR_TIMING_TEST_PIN  13 // D7
@@ -54,7 +55,7 @@
 #elif defined(ESP32)
 #define IR_RECEIVE_PIN      15  // D15
 #define IR_SEND_PIN          4  // D4
-#define tone(a,b) void()        // no tone() available on ESP32
+#define tone(a,b,c) void()      // no tone() available on ESP32
 #define noTone(a) void()
 #define TONE_PIN            42 // Dummy for examples using it
 
@@ -103,6 +104,13 @@
 #define IR_RECEIVE_PIN  10
 #define IR_SEND_PIN     11
 #define TONE_PIN         3
+
+#elif defined(__AVR_ATtiny1604__)
+#define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.
+#define IR_SEND_PIN      3
+#define TONE_PIN        42 // Dummy for examples using it
+#define tone(a,b,c) void() // tone() uses the same vector as receive timer
+#define noTone(a) void()
 
 #  elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
