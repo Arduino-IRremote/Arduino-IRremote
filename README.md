@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 3.1.2](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
+### [Version 3.1.1](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
@@ -201,7 +201,7 @@ If you are using Sloeber as your IDE, you can easily define global symbols with 
 - ATtiny84, 85
 - SAMD21 (DUE, Zero)
 - ESP32
-- [ESP8266 is supported in a fork](https://github.com/crankyoldgit/IRremoteESP8266) based on an old codebase. It works well given that perfectly timed sub millisecond interrupts are different on that chip.
+- ESP8266. [This fork](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md).
 - Sparkfun Pro Micro
 - Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
 
@@ -225,7 +225,7 @@ The timer and the pin usage can be adjusted in [private/IRTimer.cpp.h](https://g
 |--------------------------------------------------------------------------|---------------------|-------------------|
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
 | [ATtiny85 > 1 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **1**, 4            | **0**, 1          |
-| [ATtiny1604](https://github.com/SpenceKonde/megaTinyCore)                | %                   | **TCB0**          |
+| [ATtiny1604](https://github.com/SpenceKonde/megaTinyCore)                | **PA05**            | **TCB0**          |
 | [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
 | [ATmega48, ATmega88, ATmega168, **ATmega328**](https://github.com/MCUdude/MiniCore) | **3**, 9 | 1, **2**          |
 | [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
@@ -234,7 +234,7 @@ The timer and the pin usage can be adjusted in [private/IRTimer.cpp.h](https://g
 | [ATmega64, ATmega128, ATmega1281, ATmega2561](https://github.com/MCUdude/MegaCore) | **13**    | **1**             |
 | [ATmega8515, ATmega162](https://github.com/MCUdude/MajorCore)            | **13**              | **1**             |
 | ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
-| ATmega4809                                                               | 5, 6, **9**, 11, 46 | **TCB0**          |
+| ATmega4809                                                               | **A4**              | **TCB0**          |
 | Leonardo (Atmega32u4)                                                    | 5, **9**, 13        | 1, 3, **4_HS**    |
 | Zero (SAMD)                                                              | \*, **9**           | **TC3**           |
 | [ESP32](http://esp32.net/)                                               | **4**, all pins     | **1**             |

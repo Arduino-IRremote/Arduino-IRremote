@@ -67,7 +67,7 @@
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
 //#define IR_MEASURE_TIMING
-#define MARK_EXCESS_MICROS    -40 // for my VS1838 to get Denon right
+#define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
 #define DISABLE_LED_FEEDBACK_FOR_RECEIVE // halves ISR duration
 
 #include <IRremote.h>
@@ -101,9 +101,17 @@ void setup() {
     IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
 
     Serial.print(F("Ready to receive IR signals at pin "));
+#if defined(ARDUINO_ARCH_STM32) || defined(ESP8266)
+    Serial.println(IR_RECEIVE_PIN_STRING);
+#else
     Serial.println(IR_RECEIVE_PIN);
+#endif
     Serial.print(F("Ready to send IR signals at pin "));
-    Serial.println(IR_SEND_PIN);
+#if defined(ARDUINO_ARCH_STM32) || defined(ESP8266)
+    Serial.println(IR_SEND_PIN_STRING);
+#else
+    Serial.print(IR_SEND_PIN);
+#endif
 
 #if FLASHEND > 0x1FFF && !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by ledcWrite() for each pin
     /*

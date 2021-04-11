@@ -45,7 +45,7 @@
 #if FLASHEND <= 0x1FFF
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #endif
-//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 670 bytes program space if all protocols are active
+//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 670 bytes program space if all other protocols are active
 //#define IR_MEASURE_TIMING
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
@@ -95,7 +95,11 @@ void setup() {
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive IR signals at pin "));
+#if defined(ARDUINO_ARCH_STM32) || defined(ESP8266)
+    Serial.println(IR_RECEIVE_PIN_STRING);
+#else
     Serial.println(IR_RECEIVE_PIN);
+#endif
 
 #if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
     Serial.print(F("Debug button pin is "));
@@ -124,7 +128,7 @@ void loop() {
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
             Serial.println(F("Overflow detected"));
-#  if !defined(ESP32) && !defined(NRF5)
+#  if !defined(ESP32) && !defined(ESP8266) && !defined(NRF5)
             /*
              * do double beep
              */
@@ -143,7 +147,7 @@ void loop() {
             }
         }
 
-#  if !defined(ESP32) && !defined(NRF5)
+#  if !defined(ESP32) && !defined(ESP8266) && !defined(NRF5)
         /*
          * Play tone, wait and restore IR timer
          */

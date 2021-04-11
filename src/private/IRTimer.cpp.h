@@ -51,7 +51,7 @@
 #define F_CPU SYSCLOCK
 #endif
 #if defined(PARTICLE)
-  #define F_CPU 16000000
+#define F_CPU 16000000
 #endif
 
 #if defined (DOXYGEN)
@@ -98,7 +98,7 @@
 // Nano Every, Uno WiFi Rev2
 #elif defined(__AVR_ATmega4809__) || defined(__AVR_ATtiny1604__)
 #  if !defined(IR_USE_AVR_TIMER_B)
-#define IR_USE_AVR_TIMER_B     //  send pin = pin 24
+#define IR_USE_AVR_TIMER_B     //  send pin = pin 6
 #  endif
 
 // ATmega8u2, ATmega16U2, ATmega32U2
@@ -274,12 +274,12 @@
 #  endif
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    const uint32_t pwmval = (F_CPU / 2000) / (aFrequencyKHz);    // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
-    TCCR1A = _BV(WGM11);                                            // PWM, Phase Correct, Top is ICR1
-    TCCR1B = _BV(WGM13) | _BV(CS10);                                // CS10 -> no prescaling
+    const uint32_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    TCCR1A = _BV(WGM11);// PWM, Phase Correct, Top is ICR1
+    TCCR1B = _BV(WGM13) | _BV(CS10);// CS10 -> no prescaling
     ICR1 = pwmval - 1;
     OCR1A = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
-    TCNT1 = 0;      // not really required, since we have an 8 bit counter, but makes the signal more reproducible
+    TCNT1 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 void timerConfigForReceive() {
@@ -326,11 +326,11 @@ void timerConfigForReceive() {
  */
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     const uint16_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
-    TCCR2A = _BV(WGM20);                                            // PWM, Phase Correct, Top is OCR2A
-    TCCR2B = _BV(WGM22) | _BV(CS20);                                // CS20 -> no prescaling
+    TCCR2A = _BV(WGM20);// PWM, Phase Correct, Top is OCR2A
+    TCCR2B = _BV(WGM22) | _BV(CS20);// CS20 -> no prescaling
     OCR2A = pwmval - 1;
     OCR2B = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
-    TCNT2 = 0;                        // not really required, since we have an 8 bit counter, but makes the signal more reproducible
+    TCNT2 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 #define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / 1000000)
@@ -544,11 +544,11 @@ void timerConfigForReceive() {
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     const uint16_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
-    TCCR0A = _BV(WGM00); // PWM, Phase Correct, Top is OCR0A
-    TCCR0B = _BV(WGM02) | _BV(CS00); // CS00 -> no prescaling
+    TCCR0A = _BV(WGM00);// PWM, Phase Correct, Top is OCR0A
+    TCCR0B = _BV(WGM02) | _BV(CS00);// CS00 -> no prescaling
     OCR0A = pwmval - 1;
     OCR0B = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
-    TCNT0 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
+    TCNT0 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 #define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / 1000000)
@@ -603,12 +603,12 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
 #  if (TIMER_COUNT_TOP < 256)
     TCCR1 = _BV(CTC1) | _BV(CS10); // Clear Timer/Counter on Compare Match, Top is OCR1C, No prescaling
-    GTCCR = 0;// normal, non-PWM mode
+    GTCCR = 0; // normal, non-PWM mode
     OCR1C = TIMER_COUNT_TOP;
     TCNT1 = 0;
 #  else
     TCCR1 = _BV(CTC1) | _BV(CS12); // Clear Timer/Counter on Compare Match, Top is OCR1C, prescaling by 8
-    GTCCR = 0;// normal, non-PWM mode
+    GTCCR = 0; // normal, non-PWM mode
     OCR1C = TIMER_COUNT_TOP / 8;
     TCNT1 = 0;
 #  endif
@@ -619,7 +619,7 @@ void timerConfigForReceive() {
  */
 #elif defined(IR_USE_AVR_TIMER_B)
 #  if defined(SEND_PWM_BY_TIMER)
-#define IR_SEND_PIN        6
+#define IR_SEND_PIN        A4 // PA2 - A4 on Nano Every, PA5 on ATtiny1604
 #  endif
 
 // ATmega4809 TCB0
@@ -632,11 +632,11 @@ void timerConfigForReceive() {
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     const uint32_t pwmval = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
-    TCB0.CTRLB = TCB_CNTMODE_PWM8_gc;
-    TCB0.CCMPL = pwmval - 1;
-    TCB0.CCMPH = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1;
+    TCB0.CTRLB = TCB_CNTMODE_PWM8_gc;   // 8 bit PWM mode
+    TCB0.CCMPL = pwmval - 1;            // Period of 8 bit PWM
+    TCB0.CCMPH = ((pwmval * IR_SEND_DUTY_CYCLE) / 100) - 1; // Duty cycle of waveform of 8 bit PWM
     TCB0.CTRLA = (TCB_CLKSEL_CLKDIV2_gc) | (TCB_ENABLE_bm);
-    TCB0.CNT = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
+    TCB0.CNT = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
 void timerConfigForReceive() {
@@ -695,8 +695,8 @@ void timerConfigForReceive() {
 
     _PROTECTED_WRITE(TCD0.FAULTCTRL, 0);// must disable WOA output at pin 13/PA4
 
-    TCD0.INTFLAGS = TCD_OVF_bm;// reset interrupt flags
-    TCD0.INTCTRL = TCD_OVF_bm;// overflow interrupt
+    TCD0.INTFLAGS = TCD_OVF_bm;         // reset interrupt flags
+    TCD0.INTCTRL = TCD_OVF_bm;          // overflow interrupt
     // check enable ready
 //    while ((TCD0.STATUS & TCD_ENRDY_bm) == 0); // Wait for Enable Ready to be high - I guess it is not required
     // enable timer - this locks the other bits and static registers and activates values in double buffered registers
@@ -799,6 +799,39 @@ void timerConfigForReceive() {
     FTM1_MOD = (F_PLL / 40000) - 1;
     FTM1_C0V = 0;
     FTM1_SC = FTM_SC_CLKS(1) | FTM_SC_PS(0) | FTM_SC_TOF | FTM_SC_TOIE;
+}
+
+#elif defined(ESP8266)
+#define TIMER_RESET_INTR_PENDING
+#define TIMER_ENABLE_RECEIVE_INTR   timer1_attachInterrupt(&IRTimerInterruptHandler) // enables interrupt too
+#define TIMER_DISABLE_RECEIVE_INTR  timer1_detachInterrupt() // disables interrupt too
+
+// Redefinition of ISR macro which creates a plain function now
+#  ifdef ISR
+#undef ISR
+#  endif
+#define ISR() ICACHE_RAM_ATTR void IRTimerInterruptHandler()
+ICACHE_RAM_ATTR void IRTimerInterruptHandler();
+
+#ifdef SEND_PWM_BY_TIMER
+#error "No support for hardware PWM generation for ESP8266"
+#endif
+void timerConfigForSend(uint8_t aFrequencyKHz) {
+    (void) aFrequencyKHz;
+}
+
+/*
+ * Set timer for interrupts every MICROS_PER_TICK (50 us)
+ */
+void timerConfigForReceive() {
+    timer1_isr_init();
+    /*
+     * TIM_DIV1 = 0,   //80MHz (80 ticks/us - 104857.588 us max)
+     * TIM_DIV16 = 1,  //5MHz (5 ticks/us - 1677721.4 us max)
+     * TIM_DIV256 = 3  //312.5Khz (1 tick = 3.2us - 26843542.4 us max)
+     */
+    timer1_enable(TIM_DIV16, TIM_EDGE, TIM_LOOP);
+    timer1_write(((F_CPU / 1000000) / 16) * MICROS_PER_TICK); // 16 for TIM_DIV16 above
 }
 
 /***************************************

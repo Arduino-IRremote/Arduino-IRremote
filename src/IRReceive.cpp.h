@@ -1207,7 +1207,7 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
  *
  **********************************************************************************************************************/
 //#define IR_MEASURE_TIMING
-//#define IR_TIMING_TEST_PIN 7 // do not forget to execute:  pinMode(IR_TIMING_TEST_PIN, OUTPUT);
+//#define IR_TIMING_TEST_PIN 7 // do not forget to execute: "pinMode(IR_TIMING_TEST_PIN, OUTPUT);" if activated by line above
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 #include "digitalWriteFast.h"
 #endif
@@ -1226,9 +1226,9 @@ ISR () // for functions definitions which are called by separate (board specific
 
 // Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
 #if defined(__AVR__)
-    uint8_t irdata = *irparams.IRReceivePinPortInputRegister & irparams.IRReceivePinMask;
+    uint8_t tIRInputLevel = *irparams.IRReceivePinPortInputRegister & irparams.IRReceivePinMask;
 #else
-    uint8_t irdata = (uint8_t) digitalRead(irparams.IRReceivePin);
+    uint8_t tIRInputLevel = (uint8_t) digitalRead(irparams.IRReceivePin);
 #endif
 
 // clip TickCounterForISR at maximum 0xFFFF / 3.2 seconds at 50 us ticks
@@ -1243,7 +1243,7 @@ ISR () // for functions definitions which are called by separate (board specific
 //    switch (irparams.StateForISR) {
 //......................................................................
     if (irparams.StateForISR == IR_REC_STATE_IDLE) { // In the middle of a gap
-        if (irdata == INPUT_MARK) {
+        if (tIRInputLevel == INPUT_MARK) {
             // check if we did not start in the middle of an command by checking the minimum length of leading space
             if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
                 // Gap just ended; Record gap duration + start recording transmission
@@ -1260,7 +1260,7 @@ ISR () // for functions definitions which are called by separate (board specific
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing Mark
-        if (irdata != INPUT_MARK) {   // Mark ended; Record time
+        if (tIRInputLevel != INPUT_MARK) {   // Mark ended; Record time
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 //            digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
@@ -1270,7 +1270,7 @@ ISR () // for functions definitions which are called by separate (board specific
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing Space
-        if (irdata == INPUT_MARK) {  // Space just ended; Record time
+        if (tIRInputLevel == INPUT_MARK) {  // Space just ended; Record time
             if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
                 // Flag up a read OverflowFlag; Stop the State Machine
                 irparams.OverflowFlag = true;
@@ -1301,14 +1301,14 @@ ISR () // for functions definitions which are called by separate (board specific
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 //        digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-        if (irdata == INPUT_MARK) {
+        if (tIRInputLevel == INPUT_MARK) {
             irparams.TickCounterForISR = 0;  // Reset gap TickCounterForISR, to prepare for call of resume()
         }
     }
 
 #if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
     if (FeedbackLEDControl.LedFeedbackEnabled) {
-        setFeedbackLED(irdata == INPUT_MARK);
+        setFeedbackLED(tIRInputLevel == INPUT_MARK);
     }
 #endif
 
