@@ -81,7 +81,6 @@ void IRsend::sendLGRepeat() {
     mark(LG_HEADER_MARK);
     space(LG_REPEAT_HEADER_SPACE);
     mark(LG_BIT_MARK);
-    ledOff(); // Always end with the LED off
 }
 
 /*

@@ -72,10 +72,9 @@
 #define FEEDBACK_LED_ON()   digitalWrite(LED_BUILTIN, LOW)
 #define FEEDBACK_LED_OFF()  digitalWrite(LED_BUILTIN, HIGH)
 
-#elif defined(ESP32)
 #else
 /*
- * Default case
+ * Default case suitable for most boards
  */
 #define FEEDBACK_LED_ON()   digitalWrite(LED_BUILTIN, HIGH)
 #define FEEDBACK_LED_OFF()  digitalWrite(LED_BUILTIN, LOW)

@@ -397,7 +397,7 @@ public:
 
     void mark(unsigned int aMarkMicros);
     void space(unsigned int aSpaceMicros);
-    void ledOff();
+    void IRLedOff();
 
 // 8 Bit array
     void sendRaw(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz);

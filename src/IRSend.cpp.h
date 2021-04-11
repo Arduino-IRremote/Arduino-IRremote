@@ -217,7 +217,7 @@ void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuf
             mark(aBufferWithTicks[i] * MICROS_PER_TICK);
         }
     }
-    ledOff();  // Always end with the LED off
+    IRLedOff();  // Always end with the LED off
 }
 
 /**
@@ -266,7 +266,7 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfB
             mark(duration);
         }
     }
-    ledOff();  // Always end with the LED off
+    IRLedOff();  // Always end with the LED off
 #endif
 }
 
@@ -305,7 +305,6 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
     if (aSendStopBit) {
         TRACE_PRINT('S');
         mark(aZeroMarkMicros); // seems like this is used for stop bits
-        ledOff(); // Always end with the LED off
     }
     TRACE_PRINTLN("");
 }
@@ -350,7 +349,6 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
             tLastBitValue = 0;
         }
     }
-//    ledOff();  // Always end with the LED off
     TRACE_PRINTLN("");
 }
 
@@ -364,14 +362,14 @@ void IRsend::mark(unsigned int aMarkMicros) {
     setFeedbackLED(true);
 
 #if defined(SEND_PWM_BY_TIMER) || defined(ESP32)
-    TIMER_ENABLE_SEND_PWM; // Enable timer or ledcWrite() generated PWM output
+    ENABLE_SEND_PWM_BY_TIMER; // Enable timer or ledcWrite() generated PWM output
     customDelayMicroseconds(aMarkMicros);
-    ledOff();
+    IRLedOff();
 
 #elif defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, LOW); // Set output to active low.
     customDelayMicroseconds(aMarkMicros);
-    ledOff();
+    IRLedOff();
 
 #else
     unsigned long start = micros();
@@ -402,9 +400,9 @@ void IRsend::mark(unsigned int aMarkMicros) {
  * A space is "no output", so the PWM output is disabled.
  * This function may affect the state of feedback LED.
  */
-void IRsend::ledOff() {
+void IRsend::IRLedOff() {
 #if defined(SEND_PWM_BY_TIMER) || defined(ESP32)
-    TIMER_DISABLE_SEND_PWM; // Disable PWM output
+    DISABLE_SEND_PWM_BY_TIMER; // Disable PWM output
 #elif defined(USE_NO_SEND_PWM)
     digitalWrite(sendPin, HIGH); // Set output to inactive high.
 #else
@@ -461,7 +459,7 @@ void IRsend::enableIROut(uint8_t aFrequencyKHz) {
 #endif
 
     pinMode(sendPin, OUTPUT);
-    ledOff(); // When not sending, we want it low/inactive
+    IRLedOff(); // When not sending, we want it low/inactive
 }
 
 /** @}*/
