@@ -138,6 +138,10 @@ bool IRrecv::decodeKaseikyo() {
     decode_type_t tProtocol;
     // Check we have enough data (100)- +4 for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawDataPtr->rawlen != ((2 * KASEIKYO_BITS) + 4)) {
+        DBG_PRINT(F("Kaseikyo: "));
+        DBG_PRINT("Data length=");
+        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DBG_PRINTLN(" is not 100");
         return false;
     }
 

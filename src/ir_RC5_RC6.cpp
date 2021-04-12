@@ -136,17 +136,17 @@ bool IRrecv::decodeRC5() {
     // Check we have the right amount of data (11 to 26). The +2 is for initial gap and start bit mark.
     if (decodedIRData.rawDataPtr->rawlen < MIN_RC5_MARKS + 2 && decodedIRData.rawDataPtr->rawlen > ((2 * RC5_BITS) + 2)) {
         // no debug output, since this check is mainly to determine the received protocol
-        TRACE_PRINT(F("RC5: "));
-        TRACE_PRINT("Data length=");
-        TRACE_PRINT(decodedIRData.rawDataPtr->rawlen);
-        TRACE_PRINTLN(" is not between 11 and 26");
+        DBG_PRINT(F("RC5: "));
+        DBG_PRINT("Data length=");
+        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DBG_PRINTLN(" is not between 11 and 26");
         return false;
     }
 
 // Check start bit, the first space is included in the gap
     if (getBiphaselevel() != MARK) {
-        TRACE_PRINT(F("RC5: "));
-        TRACE_PRINTLN("first getBiphaselevel() is not MARK");
+        DBG_PRINT(F("RC5: "));
+        DBG_PRINTLN("first getBiphaselevel() is not MARK");
         return false;
     }
 
@@ -165,8 +165,8 @@ bool IRrecv::decodeRC5() {
             tDecodedRawData = (tDecodedRawData << 1) | 0;
         } else {
             // TRACE_PRINT since I saw this too often
-            TRACE_PRINT(F("RC5: "));
-            TRACE_PRINTLN(F("Decode failed"));
+            DBG_PRINT(F("RC5: "));
+            DBG_PRINTLN(F("Decode failed"));
             return false;
         }
     }
@@ -349,7 +349,10 @@ bool IRrecv::decodeRC6() {
 
     // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space
     if (decodedIRData.rawDataPtr->rawlen < MIN_RC6_MARKS + 3 && decodedIRData.rawDataPtr->rawlen > ((2 * RC6_BITS) + 3)) {
-        // no debug output, since this check is mainly to determine the received protocol
+        DBG_PRINT(F("RC6: "));
+        DBG_PRINT("Data length=");
+        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DBG_PRINTLN(" is not between 15 and 45");
         return false;
     }
 
@@ -357,8 +360,8 @@ bool IRrecv::decodeRC6() {
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], RC6_HEADER_MARK)
             || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_SPACE)) {
         // no debug output, since this check is mainly to determine the received protocol
-        TRACE_PRINT(F("RC6: "));
-        TRACE_PRINTLN("Header mark or space length is wrong");
+        DBG_PRINT(F("RC6: "));
+        DBG_PRINTLN("Header mark or space length is wrong");
         return false;
     }
 
@@ -367,13 +370,13 @@ bool IRrecv::decodeRC6() {
 
 // Process first bit, which is known to be a 1 (mark->space)
     if (getBiphaselevel() != MARK) {
-        TRACE_PRINT(F("RC6: "));
-        TRACE_PRINTLN("first getBiphaselevel() is not MARK");
+        DBG_PRINT(F("RC6: "));
+        DBG_PRINTLN("first getBiphaselevel() is not MARK");
         return false;
     }
     if (getBiphaselevel() != SPACE) {
-        TRACE_PRINT(F("RC6: "));
-        TRACE_PRINTLN("second getBiphaselevel() is not SPACE");
+        DBG_PRINT(F("RC6: "));
+        DBG_PRINTLN("second getBiphaselevel() is not SPACE");
         return false;
     }
 

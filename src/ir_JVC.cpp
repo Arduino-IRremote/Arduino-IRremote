@@ -100,9 +100,12 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
  */
 bool IRrecv::decodeJVC() {
 
-    // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark.
+    // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark. +2 is for repeats
     if (decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 4) && decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 2)) {
-        // no debug output, since this check is mainly to determine the received protocol
+        DBG_PRINT(F("JVC: "));
+        DBG_PRINT("Data length=");
+        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DBG_PRINTLN(" is not 34 or 36");
         return false;
     }
 
@@ -127,8 +130,8 @@ bool IRrecv::decodeJVC() {
         // Check header "mark" and "space"
         if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], JVC_HEADER_MARK)
                 || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], JVC_HEADER_SPACE)) {
-//            DBG_PRINT("JVC: ");
-//            DBG_PRINTLN("Header mark or space length is wrong");
+            DBG_PRINT("JVC: ");
+            DBG_PRINTLN("Header mark or space length is wrong");
             return false;
         }
 

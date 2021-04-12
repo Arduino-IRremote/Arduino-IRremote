@@ -95,7 +95,7 @@ The new decoders for **NEC, Panasonic, Sony, Samsung and JVC** `IrReceiver.decod
   If you read the first binary sequence backwards (right to left), you get the second sequence.
 
 # FAQ
-- IR does not work right when I use Neopixels (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 us).<br/>
+- IR does not work right when I use **Neopixels** (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 us).<br/>
  Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 탎.
 In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors,
  [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
@@ -105,6 +105,7 @@ If you can live with the NEC protocol, you can try the MinimalReceiver example, 
 - You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
  The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
  This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
+- The **minimal CPU frequency** for receiving is 4 MHz, since the 50 us timer ISR takes around 12 us on a 16 MHz ATmega.
 
 # Minimal version
 For applications only requiring NEC protocol, there is a receiver which has very **small codesize of 500 bytes and does NOT require any timer**. See the MinimalReceiver and IRDispatcherDemo example how to use it. Mapping of pins to interrupts can be found [here](https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/src/TinyIRReceiver.cpp.h#L307).
@@ -115,7 +116,14 @@ This library was never designed to handle long codes like the ones used by air c
 See [Recording long Infrared Remote control signals with Arduino](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).<br/>
 The main reason is, that it was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.
 
-## Hints
+## Protocol=UNKNOWN
+If you see something like `Protocol=UNKNOWN Hash=0x13BD886C 35 bits received` as output of e.g. the ReceiveDemo example, you either have a problem with decoding a protocol, or an unsupported protocol.
+
+- If you have an **odd number of bits** received, it is likely, that your receiver circuit has problems. Maybe because the IR signal is too weak.
+- If you see timings like `+ 600,- 600     + 550,- 150     + 200,- 100     + 750,- 550` then one 450 탎 space was split into two 150 and 100 탎 spaces with a spike / error signal of 200 탎 between. Maybe because of a defective receiver or a weak signal in conjunction with another light emitting source nearby.
+- To see more info supporting you to find the reason for your UNKNOWN protocol, you must enable the line `//#define DEBUG` in IRremoteInt.h.
+
+## How to deal with protocols not supported by IRremote
 If you do not know which protocol your IR transmitter uses, you have several choices.
 - Use the [IRreceiveDump example](examples/ReceiveDump) to dump out the IR timing.
  You can then reproduce/send this timing with the [SendRawDemo example](examples/SendRawDemo).
@@ -127,11 +135,12 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 - Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html).
  It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote,
  the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
+ 
+# Hints
 - To **increase strength of sent output signal** you can increase the current through the send diode, and/or use 2 diodes in series,
  since one IR diode requires only 1.5 volt.
  - The line \#include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for **Digispark boards** as well as enables serial output at 8MHz.
  - The default software generated PWM has **problems on ATtinies running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
- - Minimal CPU frequency for receiving is 4 MHz, since the 50 us timer ISR takes around 12 us on a 16 MHz ATmega.
 
 # Examples
 In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.
@@ -143,7 +152,7 @@ This examples are a good starting point.
 More complete examples for the advanced user.
 
 ### UnitTest
-ReceiveDemo + SendDemo in one program. Receiving while sending.
+ReceiveDemo + SendDemo in one program. **Receiving while sending**.
 
 ### ReceiveAndSend
 Record and play back last received IR signal at button press.

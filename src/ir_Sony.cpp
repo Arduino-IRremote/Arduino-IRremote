@@ -108,10 +108,10 @@ bool IRrecv::decodeSony() {
     if (decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MIN) + 2 && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MAX) + 2
             && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_15) + 2) {
         // TRACE_PRINT since I saw this too often
-        TRACE_PRINT("Sony: ");
-        TRACE_PRINT("Data length=");
-        TRACE_PRINT(decodedIRData.rawDataPtr->rawlen);
-        TRACE_PRINTLN(" is not 12, 15 or 20");
+        DBG_PRINT("Sony: ");
+        DBG_PRINT("Data length=");
+        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DBG_PRINTLN(" is not 12, 15 or 20");
         return false;
     }
     // Check header "space"
