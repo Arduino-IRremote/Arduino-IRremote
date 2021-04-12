@@ -125,6 +125,10 @@ bool IRrecv::decodeSamsung() {
     // Check we have enough data (68). The +4 is for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawDataPtr->rawlen != ((2 * SAMSUNG_BITS) + 4)
             && decodedIRData.rawDataPtr->rawlen != ((2 * SAMSUNG48_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 6)) {
+        DBG_PRINT(F("Samsung: "));
+        DBG_PRINT("Data length=");
+        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DBG_PRINTLN(" is not 68 or 100 or 6");
         return false;
     }
 

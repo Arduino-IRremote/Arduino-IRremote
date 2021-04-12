@@ -1071,10 +1071,6 @@ extern "C" {
 #error PWM generation by hardware not implemented for STM32
 #  endif
 
-#  if defined(SEND_PWM_BY_TIMER)
-#define IR_SEND_PIN 3
-#  endif
-
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_RECEIVE_INTR   sSTM32Timer.resume()
 #define TIMER_DISABLE_RECEIVE_INTR  sSTM32Timer.pause()
@@ -1088,7 +1084,7 @@ void IRTimerInterruptHandler();
 
 /*
  * Use timer 3 as IRMP timer.
- * Timer 3 blocks PA6, PA7, PB0, PB1, so if you need one them as tone() or Servo output, you must choose another timer.
+ * Timer 3 blocks PA6, PA7, PB0, PB1, so if you require one of them as tone() or Servo output, you must choose another timer.
  */
 HardwareTimer sSTM32Timer(3);
 
@@ -1114,10 +1110,6 @@ void timerConfigForReceive() {
 #error PWM generation by hardware not implemented for STM32
 #  endif
 
-#  if defined(SEND_PWM_BY_TIMER)
-#define IR_SEND_PIN 3
-#  endif
-
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_RECEIVE_INTR   sSTM32Timer.resume()
 #define TIMER_DISABLE_RECEIVE_INTR  sSTM32Timer.pause()
@@ -1131,7 +1123,7 @@ void IRTimerInterruptHandler();
 
 /*
  * Use timer 4 as IRMP timer.
- * Timer 4 blocks PB6, PB7, PB8, PB9, so if you need one them as Servo output, you must choose another timer.
+ * Timer 4 blocks PB6, PB7, PB8, PB9, so if you need one them as tone() or Servo output, you must choose another timer.
  */
 #  if defined(TIM4)
 HardwareTimer sSTM32Timer(TIM4);

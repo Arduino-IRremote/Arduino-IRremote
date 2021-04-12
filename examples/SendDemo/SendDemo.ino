@@ -59,7 +59,7 @@ void setup() {
 #if defined(ARDUINO_ARCH_STM32) || defined(ESP8266)
     Serial.println(IR_SEND_PIN_STRING);
 #else
-    Serial.print(IR_SEND_PIN);
+    Serial.println(IR_SEND_PIN);
 #endif
 
 #if !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by ledcWrite() for each pin

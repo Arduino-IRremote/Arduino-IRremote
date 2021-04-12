@@ -121,6 +121,7 @@ void loop() {
      * and up to 32 bit raw data in IrReceiver.decodedIRData.decodedRawData
      */
     if (IrReceiver.decode()) {
+        Serial.println();
 #if FLASHEND <= 0x1FFF // For less equal than 8k flash, like ATtiny85
         // Print a minimal summary of received data
         IrReceiver.printIRResultMinimal(&Serial);
@@ -158,7 +159,6 @@ void loop() {
 #  endif
 #endif // FLASHEND > 0x1FFF
 
-        Serial.println();
         /*
          * !!!Important!!! Enable receiving of the next value,
          * since receiving has stopped after the end of the current received data packet.
