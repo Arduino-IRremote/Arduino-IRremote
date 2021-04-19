@@ -64,7 +64,7 @@
 #define DENON_COMMAND_BITS      8
 #define DENON_FRAME_BITS        2 // 00/10 for 1. frame Denon/Sharp, inverted for autorepeat frame
 
-#define DENON_BITS              (DENON_ADDRESS_BITS + DENON_COMMAND_BITS + DENON_FRAME_BITS) // The number of bits in the command
+#define DENON_BITS              (DENON_ADDRESS_BITS + DENON_COMMAND_BITS + DENON_FRAME_BITS) // 15 - The number of bits in the command
 #define DENON_UNIT              260
 
 #define DENON_BIT_MARK          DENON_UNIT  // The length of a Bit:Mark

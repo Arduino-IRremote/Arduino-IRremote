@@ -868,7 +868,7 @@ void timerConfigForReceive() {
      * TIM_DIV256 = 3  //312.5Khz (1 tick = 3.2us - 26843542.4 us max)
      */
     timer1_enable(TIM_DIV16, TIM_EDGE, TIM_LOOP);
-    timer1_write(((F_CPU / 1000000) / 16) * MICROS_PER_TICK); // 16 for TIM_DIV16 above
+    timer1_write((80 / 16) * MICROS_PER_TICK); // 80 for 80 and 160! MHz clock, 16 for TIM_DIV16 above
 }
 
 /***************************************

@@ -1,12 +1,16 @@
 # Changelog
 The latest version may not be released!
+## 3.2.1
 
-## 3.1.1
+## 3.2.0
 - Fix for ESP32 send Error, removed `USE_SOFT_SEND_PWM` macro.
 - Added Onkyo protocol.
 - Support for old 2.x code by backwards compatible `decode(decode_results *aResults)` function.
 - Removed USE_OLD_DECODE macro and added NO_LEGACY_COMPATIBILITY macro.
 - Added ATtiny1604 support.
+- New SendAndReceive example.
+- Added ESP8266 support.
+- Extended DEBUG output
 
 ## 3.1.0
 - Generation of PWM by software is active by default.

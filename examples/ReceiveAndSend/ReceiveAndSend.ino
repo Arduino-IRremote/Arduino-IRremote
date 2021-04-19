@@ -176,6 +176,9 @@ void storeCode(IRData *aIRReceivedData) {
         Serial.println(F(" timing entries as raw "));
         IrReceiver.printIRResultRawFormatted(&Serial, true); // Output the results in RAW format
         sStoredIRData.rawCodeLength = IrReceiver.decodedIRData.rawDataPtr->rawlen - 1;
+        /*
+         * Store the current raw data in a dedicated array for later usage
+         */
         IrReceiver.compensateAndStoreIRResultInArray(sStoredIRData.rawCode);
     } else {
         IrReceiver.printIRResultShort(&Serial);

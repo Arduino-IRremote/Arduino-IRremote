@@ -1,7 +1,8 @@
 /*
  * UnitTest.cpp
  *
- * Demonstrates sending IR codes in standard format with address and command
+ * Demonstrates sending IR codes in standard format with address and command and
+ * simultaneously receiving. Both values are checked for consistency.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -29,6 +30,7 @@
  *
  ************************************************************************************
  */
+
 #include <Arduino.h>
 
 /*

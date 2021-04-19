@@ -125,9 +125,10 @@
 #endif
 
 /**
- * Minimum gap between IR transmissions, in microseconds
- * Keep in mind that this is the delay between the end of the received command and the start of decoding
- * and some of the protocols have gaps of around 20 ms.
+ * Minimum gap between IR transmissions, to detect the end of a protocol.
+ * Must be greater than any space of a protocol e.g. the NEC header space of 4500 us.
+ * Must be smaller than any gap between a command and a repeat e.g. the retransmission gap for Sony is around 24 ms.
+ * Keep in mind that this is the delay between the end of the received command and the start of decoding.
  */
 #if !defined(RECORD_GAP_MICROS)
 #define RECORD_GAP_MICROS   5000 // FREDRICH28AC header space is 9700, NEC header space is 4500

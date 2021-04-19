@@ -1,0 +1,38 @@
+START SendAndReceive.cpp from Apr 19 2021
+Using library version 3.1.1
+Ready to receive IR signals at pin D5
+Ready to send IR signals at pin D6
+Send signal mark duration is 7 us, pulse correction is 600 ns, total period is 26 us
+20 us are subtracted from all marks and added to all spaces for decoding
+
+address=0x102 command=0x34 repeats=1
+Sending: 0x102341
+Decoded protocol: NECDecoded raw data: CB340102, decoded address: 102, decoded command: 34
+
+address=0x203 command=0x45 repeats=2
+Sending: 0x203452
+Decoded protocol: NECDecoded raw data: BA450203, decoded address: 203, decoded command: 45
+
+address=0x304 command=0x56 repeats=3
+Sending: 0x304563
+Decoded protocol: NECDecoded raw data: A9560304, decoded address: 304, decoded command: 56
+
+address=0x405 command=0x67 repeats=4
+Sending: 0x405674
+Decoded protocol: NECDecoded raw data: 98670405, decoded address: 405, decoded command: 67
+
+address=0x506 command=0x78 repeats=5
+Sending: 0x506785
+Decoded protocol: NECDecoded raw data: 87780506, decoded address: 506, decoded command: 78
+
+address=0x607 command=0x89 repeats=5
+Sending: 0x607895
+Decoded protocol: NECDecoded raw data: 76890607, decoded address: 607, decoded command: 89
+
+address=0x708 command=0x9A repeats=5
+Sending: 0x7089A5
+Decoded protocol: NECDecoded raw data: 659A0708, decoded address: 708, decoded command: 9A
+
+address=0x809 command=0xAB repeats=5
+Sending: 0x809AB5
+Decoded protocol: NECDecoded raw data: 54AB0809, decoded address: 809, decoded command: AB
