@@ -55,10 +55,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "IRFeedbackLEDDefs_8h.html",
-"group__Decoder.html#ga01910d7deda73c7866abb73405e982d5",
-"group__Decoder.html#ga95abf0b48968f9aa3ce0582282cb53c8",
-"group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b",
-"unionLongUnion.html#a5404235118006061ae33de167803c70a"
+"group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63",
+"group__Decoder.html#ga8d06796444b99735c047301f52d5fcfc",
+"group__Receiving.html#ga51376b9bd8d1d9ac5c694f6a8c8ecc98",
+"structdecode__results.html#a821bc53c006bab3283c6b8592f0c43d3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

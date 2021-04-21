@@ -102,15 +102,15 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aaa76c636723e7d1937edac2f0f197dcb"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#aaa76c636723e7d1937edac2f0f197dcb">IRReceivePin</a></td></tr>
 <tr class="memdesc:aaa76c636723e7d1937edac2f0f197dcb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pin connected to IR data from detector.  <a href="structirparams__struct.html#aaa76c636723e7d1937edac2f0f197dcb">More...</a><br /></td></tr>
 <tr class="separator:aaa76c636723e7d1937edac2f0f197dcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0571ac479d1c38c79502651b0631432"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#af0571ac479d1c38c79502651b0631432">rawlen</a></td></tr>
-<tr class="memdesc:af0571ac479d1c38c79502651b0631432"><td class="mdescLeft">&#160;</td><td class="mdescRight">counter of entries in rawbuf  <a href="structirparams__struct.html#af0571ac479d1c38c79502651b0631432">More...</a><br /></td></tr>
-<tr class="separator:af0571ac479d1c38c79502651b0631432"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0b5caeae83ea38517415e7210829b85"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#ad0b5caeae83ea38517415e7210829b85">TickCounterForISR</a></td></tr>
 <tr class="memdesc:ad0b5caeae83ea38517415e7210829b85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts 50uS ticks. The value is copied into the rawbuf array on every transition.  <a href="structirparams__struct.html#ad0b5caeae83ea38517415e7210829b85">More...</a><br /></td></tr>
 <tr class="separator:ad0b5caeae83ea38517415e7210829b85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add9591d883df748c9ceeb46fa0de1ebc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#add9591d883df748c9ceeb46fa0de1ebc">OverflowFlag</a></td></tr>
 <tr class="memdesc:add9591d883df748c9ceeb46fa0de1ebc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raw buffer OverflowFlag occurred.  <a href="structirparams__struct.html#add9591d883df748c9ceeb46fa0de1ebc">More...</a><br /></td></tr>
 <tr class="separator:add9591d883df748c9ceeb46fa0de1ebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0571ac479d1c38c79502651b0631432"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#af0571ac479d1c38c79502651b0631432">rawlen</a></td></tr>
+<tr class="memdesc:af0571ac479d1c38c79502651b0631432"><td class="mdescLeft">&#160;</td><td class="mdescRight">counter of entries in rawbuf  <a href="structirparams__struct.html#af0571ac479d1c38c79502651b0631432">More...</a><br /></td></tr>
+<tr class="separator:af0571ac479d1c38c79502651b0631432"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7aa7b811dcc0fb5ab0da7c0bddaf97f8"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#a7aa7b811dcc0fb5ab0da7c0bddaf97f8">rawbuf</a> [<a class="el" href="IRremoteInt_8h.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a>]</td></tr>
 <tr class="memdesc:a7aa7b811dcc0fb5ab0da7c0bddaf97f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command  <a href="structirparams__struct.html#a7aa7b811dcc0fb5ab0da7c0bddaf97f8">More...</a><br /></td></tr>
 <tr class="separator:a7aa7b811dcc0fb5ab0da7c0bddaf97f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,7 +119,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>This struct contains the data and control used for receiver static functions and the ISR (interrupt service routine) Only StateForISR needs to be volatile. </p>
 <p>All the other fields are not written by ISR after data available and before start/resume. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00066">66</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00062">62</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="aaa76c636723e7d1937edac2f0f197dcb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaa76c636723e7d1937edac2f0f197dcb">&#9670;&nbsp;</a></span>IRReceivePin</h2>
@@ -135,7 +135,7 @@ Public Attributes</h2></td></tr>
 
 <p>Pin connected to IR data from detector. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00069">69</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00065">65</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -153,7 +153,7 @@ Public Attributes</h2></td></tr>
 
 <p>Raw buffer OverflowFlag occurred. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00080">80</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00072">72</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -171,7 +171,7 @@ Public Attributes</h2></td></tr>
 
 <p>raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00081">81</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00078">78</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -189,7 +189,7 @@ Public Attributes</h2></td></tr>
 
 <p>counter of entries in rawbuf </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00075">75</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00074">74</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -207,7 +207,7 @@ Public Attributes</h2></td></tr>
 
 <p>State Machine state. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00068">68</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00064">64</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -225,7 +225,7 @@ Public Attributes</h2></td></tr>
 
 <p>Counts 50uS ticks. The value is copied into the rawbuf array on every transition. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00079">79</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00070">70</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -238,7 +238,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structirparams__struct.html">irparams_struct</a></li>
-    <li class="footer">Generated on Sun Mar 28 2021 11:36:48 for IRremote by
+    <li class="footer">Generated on Wed Apr 21 2021 18:57:47 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

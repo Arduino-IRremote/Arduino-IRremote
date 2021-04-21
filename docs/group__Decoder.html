@@ -372,6 +372,8 @@ Macros</h2></td></tr>
 <tr class="separator:ga04bbfe2a8ffe2d8909f20223dc7ae573"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga99ad5f89aa2e68db38c3ee54d925673e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga99ad5f89aa2e68db38c3ee54d925673e">SONY_REPEAT_SPACE</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#ga04bbfe2a8ffe2d8909f20223dc7ae573">SONY_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#gaa2fa5f3ee92363009f82407872c42549">SONY_AVERAGE_DURATION</a>)</td></tr>
 <tr class="separator:ga99ad5f89aa2e68db38c3ee54d925673e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae8967821a9dae0e890bdb9d95a3ee6c0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae8967821a9dae0e890bdb9d95a3ee6c0">SONY_DOUBLE_SPACE_USECS</a>&#160;&#160;&#160;500</td></tr>
+<tr class="separator:gae8967821a9dae0e890bdb9d95a3ee6c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1c501f7c080c2cf8f5593ca1fb2f0b24"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga1c501f7c080c2cf8f5593ca1fb2f0b24">WHYNTER_BITS</a>&#160;&#160;&#160;32</td></tr>
 <tr class="separator:ga1c501f7c080c2cf8f5593ca1fb2f0b24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga27674e95707b010ac4b064524006f80e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga27674e95707b010ac4b064524006f80e">WHYNTER_HEADER_MARK</a>&#160;&#160;&#160;2850</td></tr>
@@ -419,33 +421,41 @@ Functions</h2></td></tr>
 <tr class="separator:gaf9a5bf8248971aca9d4f5b68f3e9f858"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga81b608682a7f7f89e0b1fd00756bb714"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga81b608682a7f7f89e0b1fd00756bb714">IRsend::sendSharp</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
 <tr class="separator:ga81b608682a7f7f89e0b1fd00756bb714"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3f42c7e514a85ab950c4537ec56e4a94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga3f42c7e514a85ab950c4537ec56e4a94">IRsend::sendDenonRaw</a> (uint16_t aRawData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0)</td></tr>
-<tr class="separator:ga3f42c7e514a85ab950c4537ec56e4a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga24eb15e28a8cbfa9a19e106ebd736731"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga24eb15e28a8cbfa9a19e106ebd736731">IRsend::sendDenonRaw</a> (uint16_t aRawData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;Please use <a class="el" href="group__Decoder.html#ga342baabd2418ed33d6d847ea5f53f165">sendDenon</a>(aAddress</td></tr>
+<tr class="separator:ga24eb15e28a8cbfa9a19e106ebd736731"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga342baabd2418ed33d6d847ea5f53f165"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga342baabd2418ed33d6d847ea5f53f165">IRsend::sendDenon</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aSendSharp=false)</td></tr>
 <tr class="separator:ga342baabd2418ed33d6d847ea5f53f165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7edfd9309ccd7f87762a17480635dcd6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6">IRrecv::decodeSharp</a> ()</td></tr>
 <tr class="separator:ga7edfd9309ccd7f87762a17480635dcd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga680c0090daf6945a85fd2658af84dfac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac">IRrecv::decodeDenon</a> ()</td></tr>
 <tr class="separator:ga680c0090daf6945a85fd2658af84dfac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5d11ba281c103fe66e0912c46276c26e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e">IRrecv::decodeDenonOld</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
+<tr class="separator:ga5d11ba281c103fe66e0912c46276c26e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab5a2c0a20071c7b37f0d1cd99680d513"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab5a2c0a20071c7b37f0d1cd99680d513">IRsend::sendDenon</a> (unsigned long data, int nbits)</td></tr>
 <tr class="separator:gab5a2c0a20071c7b37f0d1cd99680d513"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0b0933040532b8c1cbc7cbf17ab7edb5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga0b0933040532b8c1cbc7cbf17ab7edb5">IRsend::sendSharp</a> (unsigned int address, unsigned int command)</td></tr>
 <tr class="separator:ga0b0933040532b8c1cbc7cbf17ab7edb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac4f8874d0f52e7978c9c0e5d8c76550c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gac4f8874d0f52e7978c9c0e5d8c76550c">IRsend::sendJVCRaw</a> (uint16_t aRawData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0)</td></tr>
-<tr class="separator:gac4f8874d0f52e7978c9c0e5d8c76550c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5b226cb8ff607ec666fbab236fcd1ec9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5b226cb8ff607ec666fbab236fcd1ec9">IRsend::sendJVC</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
 <tr class="separator:ga5b226cb8ff607ec666fbab236fcd1ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad6ecf38f85cefea8f71090fce4dbbbed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed">IRrecv::decodeJVC</a> ()</td></tr>
 <tr class="separator:gad6ecf38f85cefea8f71090fce4dbbbed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad7512fb183efc882f493ce5ab4c2bd10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10">IRrecv::decodeJVCMSB</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
+<tr class="separator:gad7512fb183efc882f493ce5ab4c2bd10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae3ffaf23301bec85ca0c2c7499f484a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">IRsend::sendJVCMSB</a> (unsigned long data, int nbits, bool repeat=false)</td></tr>
+<tr class="memdesc:gae3ffaf23301bec85ca0c2c7499f484a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">With Send <a class="el" href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3" title="With Send sendJVCMSB() you can send your old 32 bit codes.">sendJVCMSB()</a> you can send your old 32 bit codes.  <a href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">More...</a><br /></td></tr>
 <tr class="separator:gae3ffaf23301bec85ca0c2c7499f484a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4b61477c5bd7a32ec7d005d7bb88c610"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4b61477c5bd7a32ec7d005d7bb88c610">IRsend::sendKaseikyo</a> (uint16_t aAddress, uint8_t aData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, uint16_t aVendorCode)</td></tr>
 <tr class="separator:ga4b61477c5bd7a32ec7d005d7bb88c610"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad3a14e1a94a402a4cbe0eeeded312173"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad3a14e1a94a402a4cbe0eeeded312173">IRsend::sendPanasonic</a> (uint16_t aAddress, uint8_t aData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gad3a14e1a94a402a4cbe0eeeded312173"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE.  <a href="group__Decoder.html#gad3a14e1a94a402a4cbe0eeeded312173">More...</a><br /></td></tr>
 <tr class="separator:gad3a14e1a94a402a4cbe0eeeded312173"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga099d67ab5fef881af8838d6cb11d0b14"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14">IRrecv::decodeKaseikyo</a> ()</td></tr>
 <tr class="separator:ga099d67ab5fef881af8838d6cb11d0b14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga205cb2e4005389ce19e769b25002b2a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga205cb2e4005389ce19e769b25002b2a2">IRsend::sendPanasonic</a> (uint16_t aAddress, uint32_t aData) <a class="el" href="classIRsend.html#a8813e955045af1a33eaf9fe9eeba403e">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use sendPanasonic(aAddress</td></tr>
+<tr class="memitem:ga5b0375df7166d1b6b1886891768a9379"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5b0375df7166d1b6b1886891768a9379">IRrecv::decodePanasonicMSB</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
+<tr class="memdesc:ga5b0375df7166d1b6b1886891768a9379"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old MSB first decoder.  <a href="group__Decoder.html#ga5b0375df7166d1b6b1886891768a9379">More...</a><br /></td></tr>
+<tr class="separator:ga5b0375df7166d1b6b1886891768a9379"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga205cb2e4005389ce19e769b25002b2a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga205cb2e4005389ce19e769b25002b2a2">IRsend::sendPanasonic</a> (uint16_t aAddress, uint32_t aData) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use sendPanasonic(aAddress</td></tr>
+<tr class="memdesc:ga205cb2e4005389ce19e769b25002b2a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old version with MSB first data.  <a href="group__Decoder.html#ga205cb2e4005389ce19e769b25002b2a2">More...</a><br /></td></tr>
 <tr class="separator:ga205cb2e4005389ce19e769b25002b2a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga315bc3587e7c4aa15629155b66e52728"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga315bc3587e7c4aa15629155b66e52728">IRsend::sendLegoPowerFunctions</a> (uint16_t aRawData, bool aDoSend5Times=true)</td></tr>
 <tr class="separator:ga315bc3587e7c4aa15629155b66e52728"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -463,19 +473,26 @@ Functions</h2></td></tr>
 <tr class="separator:gac42ab32888113eacde5b8d79199ec6b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac098ec62da77aa75ca9016d289f3d7aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa">IRrecv::decodeLG</a> ()</td></tr>
 <tr class="separator:gac098ec62da77aa75ca9016d289f3d7aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1db023ba20fabb7190751b66445cc872"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872">IRrecv::decodeLGMSB</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
+<tr class="separator:ga1db023ba20fabb7190751b66445cc872"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga88ecc2eb801abf6aa1428cc0669abe94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga88ecc2eb801abf6aa1428cc0669abe94">IRsend::sendLG</a> (unsigned long data, int nbits)</td></tr>
 <tr class="separator:ga88ecc2eb801abf6aa1428cc0669abe94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8fff4f1d8703ca18ea85a15289dc44c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae8fff4f1d8703ca18ea85a15289dc44c">IRsend::sendNECRepeat</a> ()</td></tr>
 <tr class="separator:gae8fff4f1d8703ca18ea85a15289dc44c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacc081690ddf61dec5d3f1c55000da7f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gacc081690ddf61dec5d3f1c55000da7f5">IRsend::sendNEC</a> (uint16_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false)</td></tr>
 <tr class="separator:gacc081690ddf61dec5d3f1c55000da7f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga857b05f2b99e8b705cb6d00470c4e78b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga857b05f2b99e8b705cb6d00470c4e78b">IRsend::sendOnkyo</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false)</td></tr>
+<tr class="separator:ga857b05f2b99e8b705cb6d00470c4e78b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga15fbc8a08b929395d6be6549cb296db5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga15fbc8a08b929395d6be6549cb296db5">IRsend::sendApple</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false)</td></tr>
 <tr class="separator:ga15fbc8a08b929395d6be6549cb296db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaeec0a3f8d592deee8746a5b06bc3454"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaaeec0a3f8d592deee8746a5b06bc3454">IRsend::sendNECRaw</a> (uint32_t aRawData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0, bool aIsRepeat=false)</td></tr>
 <tr class="separator:gaaeec0a3f8d592deee8746a5b06bc3454"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3f1a3a12862517a61341a92dfb0ea7f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8">IRrecv::decodeNEC</a> ()</td></tr>
 <tr class="separator:ga3f1a3a12862517a61341a92dfb0ea7f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b6633498c7e7b1ce64bb7f12a1ab4bd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd">IRrecv::decodeNECMSB</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
+<tr class="separator:ga2b6633498c7e7b1ce64bb7f12a1ab4bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0184d3edbfe2659b12fc157c3be0cd63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">IRsend::sendNECMSB</a> (uint32_t data, uint8_t nbits, bool repeat=false)</td></tr>
+<tr class="memdesc:ga0184d3edbfe2659b12fc157c3be0cd63"><td class="mdescLeft">&#160;</td><td class="mdescRight">With Send <a class="el" href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63" title="With Send sendNECMSB() you can send your old 32 bit codes.">sendNECMSB()</a> you can send your old 32 bit codes.  <a href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">More...</a><br /></td></tr>
 <tr class="separator:ga0184d3edbfe2659b12fc157c3be0cd63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4f221f872371078dd6d4f3ffa87b7b10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4f221f872371078dd6d4f3ffa87b7b10">IRsend::sendPronto</a> (const uint16_t *data, unsigned int length, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
 <tr class="separator:ga4f221f872371078dd6d4f3ffa87b7b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -495,9 +512,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga5720b53e427e0346ecc248e55c57e2b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to decode data as RC5 protocol.  <a href="group__Decoder.html#ga5720b53e427e0346ecc248e55c57e2b9">More...</a><br /></td></tr>
 <tr class="separator:ga5720b53e427e0346ecc248e55c57e2b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab2553414d8480f449762eb00a3ff7d6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab2553414d8480f449762eb00a3ff7d6d">IRsend::sendRC6</a> (uint32_t data, uint8_t nbits)</td></tr>
+<tr class="memdesc:gab2553414d8480f449762eb00a3ff7d6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main RC6 send function.  <a href="group__Decoder.html#gab2553414d8480f449762eb00a3ff7d6d">More...</a><br /></td></tr>
 <tr class="separator:gab2553414d8480f449762eb00a3ff7d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae6bfe6af18c1bb7f34fda4338882b435"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae6bfe6af18c1bb7f34fda4338882b435">IRsend::sendRC6</a> (uint64_t data, uint8_t nbits)</td></tr>
-<tr class="memdesc:gae6bfe6af18c1bb7f34fda4338882b435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send RC6 raw data We do not wait for the minimal trailing space of 2666 us.  <a href="group__Decoder.html#gae6bfe6af18c1bb7f34fda4338882b435">More...</a><br /></td></tr>
+<tr class="memdesc:gae6bfe6af18c1bb7f34fda4338882b435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send RC6 64 bit raw data We do not wait for the minimal trailing space of 2666 us.  <a href="group__Decoder.html#gae6bfe6af18c1bb7f34fda4338882b435">More...</a><br /></td></tr>
 <tr class="separator:gae6bfe6af18c1bb7f34fda4338882b435"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad26a55d87f9f8cc64a77b4571ae79e5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad26a55d87f9f8cc64a77b4571ae79e5f">IRsend::sendRC6</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aEnableAutomaticToggle=true)</td></tr>
 <tr class="memdesc:gad26a55d87f9f8cc64a77b4571ae79e5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble raw data for RC6 from parameters and toggle state and send We do not wait for the minimal trailing space of 2666 us.  <a href="group__Decoder.html#gad26a55d87f9f8cc64a77b4571ae79e5f">More...</a><br /></td></tr>
@@ -506,6 +524,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:gad98448418d525479e74c1a38725b498f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Try to decode data as RC6 protocol.  <a href="group__Decoder.html#gad98448418d525479e74c1a38725b498f">More...</a><br /></td></tr>
 <tr class="separator:gad98448418d525479e74c1a38725b498f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6168e3ad4e47c657c9f3de0e5d7590b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6168e3ad4e47c657c9f3de0e5d7590b3">IRsend::sendRC5</a> (uint32_t data, uint8_t nbits)</td></tr>
+<tr class="memdesc:ga6168e3ad4e47c657c9f3de0e5d7590b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old version with 32 bit data.  <a href="group__Decoder.html#ga6168e3ad4e47c657c9f3de0e5d7590b3">More...</a><br /></td></tr>
 <tr class="separator:ga6168e3ad4e47c657c9f3de0e5d7590b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaee1c9e1d8ab6dcf642d6707b4528385b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaee1c9e1d8ab6dcf642d6707b4528385b">IRsend::sendRC5ext</a> (uint8_t addr, uint8_t cmd, bool toggle)</td></tr>
 <tr class="separator:gaee1c9e1d8ab6dcf642d6707b4528385b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -516,13 +535,18 @@ Functions</h2></td></tr>
 <tr class="separator:ga5d194d783811b52669eb1c1ab17a3a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga06311ef402fe0a9cc85ad9defd35fdec"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec">IRrecv::decodeSamsung</a> ()</td></tr>
 <tr class="separator:ga06311ef402fe0a9cc85ad9defd35fdec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6bdd668914f10932bc87bc57c4059ccd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd">IRrecv::decodeSAMSUNG</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
+<tr class="separator:ga6bdd668914f10932bc87bc57c4059ccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7b4ca49d8fceaf6ccfa26df2d1b553d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7b4ca49d8fceaf6ccfa26df2d1b553d5">IRsend::sendSAMSUNG</a> (unsigned long data, int nbits)</td></tr>
 <tr class="separator:ga7b4ca49d8fceaf6ccfa26df2d1b553d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga64cfeb90c005e597c62586ea19b93b12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga64cfeb90c005e597c62586ea19b93b12">IRsend::sendSony</a> (uint16_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, uint8_t numberOfBits=<a class="el" href="IRProtocol_8h.html#a8a2dbf77031a92783a200b9902c8459b">SIRCS_12_PROTOCOL</a>)</td></tr>
 <tr class="separator:ga64cfeb90c005e597c62586ea19b93b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa4b87d095decf4ec8d9e4c445d6dfa27"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27">IRrecv::decodeSony</a> ()</td></tr>
 <tr class="separator:gaa4b87d095decf4ec8d9e4c445d6dfa27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8d1abfc5910cf3f0964498e8bf22bd4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga8d1abfc5910cf3f0964498e8bf22bd4e">IRsend::sendSony</a> (unsigned long data, int nbits) <a class="el" href="classIRsend.html#a8813e955045af1a33eaf9fe9eeba403e">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use sendSony(aAddress</td></tr>
+<tr class="memitem:ga7ea1a0eb3b832974be8fd6c2cbde602f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7ea1a0eb3b832974be8fd6c2cbde602f">IRrecv::decodeSonyMSB</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
+<tr class="separator:ga7ea1a0eb3b832974be8fd6c2cbde602f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d1abfc5910cf3f0964498e8bf22bd4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga8d1abfc5910cf3f0964498e8bf22bd4e">IRsend::sendSony</a> (unsigned long data, int nbits) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use sendSony(aAddress</td></tr>
+<tr class="memdesc:ga8d1abfc5910cf3f0964498e8bf22bd4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old version with MSB first data.  <a href="group__Decoder.html#ga8d1abfc5910cf3f0964498e8bf22bd4e">More...</a><br /></td></tr>
 <tr class="separator:ga8d1abfc5910cf3f0964498e8bf22bd4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8acfdbfc54f8b76d49acb799f5b40805"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga8acfdbfc54f8b76d49acb799f5b40805">IRsend::sendWhynter</a> (unsigned long data, int nbits)</td></tr>
 <tr class="separator:ga8acfdbfc54f8b76d49acb799f5b40805"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -548,7 +572,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00073">73</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00072">72</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -868,7 +892,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00054">54</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00053">53</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -884,7 +908,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00063">63</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00062">62</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -900,7 +924,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00057">57</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00056">56</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -916,7 +940,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00055">55</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00054">54</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -932,7 +956,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00060">60</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00059">59</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -948,7 +972,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00061">61</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00060">60</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -964,7 +988,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00064">64</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00063">63</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -980,7 +1004,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00067">67</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00066">66</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -996,7 +1020,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00058">58</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00057">57</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1012,7 +1036,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00064">64</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1028,7 +1052,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00064">64</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00063">63</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1044,7 +1068,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00077">77</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00076">76</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1060,7 +1084,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00073">73</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00072">72</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1076,7 +1100,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00067">67</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00066">66</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1092,7 +1116,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00064">64</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1108,7 +1132,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00082">82</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00081">81</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1124,7 +1148,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00070">70</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00069">69</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1140,7 +1164,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00071">71</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00070">70</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1156,7 +1180,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00074">74</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00073">73</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1172,7 +1196,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00066">66</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1188,7 +1212,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00078">78</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00077">77</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1204,7 +1228,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00079">79</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00078">78</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1220,7 +1244,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00068">68</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00067">67</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1236,7 +1260,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00062">62</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00061">61</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1252,7 +1276,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00063">63</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00062">62</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1268,7 +1292,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00075">75</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00074">74</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -1732,7 +1756,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00067">67</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00068">68</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -1780,7 +1804,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00053">53</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00052">52</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1796,7 +1820,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00068">68</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00067">67</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1812,7 +1836,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00062">62</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00061">61</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1828,7 +1852,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00056">56</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00055">55</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1844,7 +1868,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00054">54</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00053">53</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1860,7 +1884,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00059">59</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00058">58</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1876,7 +1900,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00060">60</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00059">59</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1892,7 +1916,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00063">63</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00062">62</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1908,7 +1932,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00069">69</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00068">68</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1924,7 +1948,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00066">66</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1940,7 +1964,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00070">70</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00069">69</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1956,7 +1980,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00071">71</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00070">70</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1972,7 +1996,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00057">57</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00056">56</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -1988,7 +2012,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00064">64</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00063">63</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -2004,7 +2028,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00058">58</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00059">59</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -2020,7 +2044,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00063">63</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00064">64</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -2036,7 +2060,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00059">59</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00060">60</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -2052,7 +2076,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00060">60</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00061">61</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -2068,7 +2092,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00069">69</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00070">70</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -2084,7 +2108,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00070">70</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00071">71</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -2100,7 +2124,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00071">71</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00072">72</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -2116,7 +2140,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00061">61</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00062">62</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -2132,7 +2156,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00066">66</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -2564,7 +2588,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00051">51</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00050">50</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2580,7 +2604,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00064">64</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00063">63</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2596,7 +2620,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00055">55</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00054">54</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2612,7 +2636,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00056">56</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00055">55</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2628,7 +2652,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00054">54</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00053">53</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2644,7 +2668,23 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00052">52</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00051">51</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+
+</div>
+</div>
+<a id="gae8967821a9dae0e890bdb9d95a3ee6c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae8967821a9dae0e890bdb9d95a3ee6c0">&#9670;&nbsp;</a></span>SONY_DOUBLE_SPACE_USECS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SONY_DOUBLE_SPACE_USECS&#160;&#160;&#160;500</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00151">151</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2660,7 +2700,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00053">53</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00052">52</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2676,7 +2716,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00059">59</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00058">58</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2692,7 +2732,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00060">60</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00059">59</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2708,7 +2748,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00064">64</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2724,7 +2764,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00066">66</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2740,7 +2780,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00062">62</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00061">61</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2756,7 +2796,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00057">57</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00056">56</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2772,7 +2812,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00061">61</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00060">60</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -2919,7 +2959,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00231">231</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00236">236</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -2969,7 +3009,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00293">293</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00298">298</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3008,7 +3048,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00252">252</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00257">257</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3038,7 +3078,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00318">318</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00323">323</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3076,7 +3116,27 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Denon_8cpp_source.html#l00134">134</a> of file <a class="el" href="ir__Denon_8cpp_source.html">ir_Denon.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Denon_8cpp_source.html#l00133">133</a> of file <a class="el" href="ir__Denon_8cpp_source.html">ir_Denon.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ga5d11ba281c103fe66e0912c46276c26e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5d11ba281c103fe66e0912c46276c26e">&#9670;&nbsp;</a></span>decodeDenonOld()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodeDenonOld </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdecode__results.html">decode_results</a> *&#160;</td>
+          <td class="paramname"><em>aResults</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__Denon_8cpp_source.html#l00198">198</a> of file <a class="el" href="ir__Denon_8cpp_source.html">ir_Denon.cpp</a>.</p>
 
 </div>
 </div>
@@ -3095,7 +3155,27 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00109">109</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00101">101</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+
+</div>
+</div>
+<a id="gad7512fb183efc882f493ce5ab4c2bd10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad7512fb183efc882f493ce5ab4c2bd10">&#9670;&nbsp;</a></span>decodeJVCMSB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodeJVCMSB </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdecode__results.html">decode_results</a> *&#160;</td>
+          <td class="paramname"><em>aResults</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00159">159</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -3114,7 +3194,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00133">133</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00136">136</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -3152,7 +3232,27 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00146">146</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00145">145</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ga1db023ba20fabb7190751b66445cc872"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1db023ba20fabb7190751b66445cc872">&#9670;&nbsp;</a></span>decodeLGMSB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodeLGMSB </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdecode__results.html">decode_results</a> *&#160;</td>
+          <td class="paramname"><em>aResults</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00227">227</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -3171,7 +3271,49 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00174">174</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00189">189</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ga2b6633498c7e7b1ce64bb7f12a1ab4bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2b6633498c7e7b1ce64bb7f12a1ab4bd">&#9670;&nbsp;</a></span>decodeNECMSB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodeNECMSB </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdecode__results.html">decode_results</a> *&#160;</td>
+          <td class="paramname"><em>aResults</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00286">286</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ga5b0375df7166d1b6b1886891768a9379"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5b0375df7166d1b6b1886891768a9379">&#9670;&nbsp;</a></span>decodePanasonicMSB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodePanasonicMSB </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdecode__results.html">decode_results</a> *&#160;</td>
+          <td class="paramname"><em>aResults</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Old MSB first decoder. </p>
+
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00250">250</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -3196,7 +3338,7 @@ Variables</h2></td></tr>
 <li>Space _ 1 Start bit for RC5X _____| ... </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00128">128</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00129">129</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -3217,7 +3359,7 @@ Variables</h2></td></tr>
 
 <p>Try to decode data as RC6 protocol. </p>
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00343">343</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00346">346</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -3237,6 +3379,26 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="ir__Samsung_8cpp_source.html#l00123">123</a> of file <a class="el" href="ir__Samsung_8cpp_source.html">ir_Samsung.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ga6bdd668914f10932bc87bc57c4059ccd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6bdd668914f10932bc87bc57c4059ccd">&#9670;&nbsp;</a></span>decodeSAMSUNG()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodeSAMSUNG </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdecode__results.html">decode_results</a> *&#160;</td>
+          <td class="paramname"><em>aResults</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__Samsung_8cpp_source.html#l00213">213</a> of file <a class="el" href="ir__Samsung_8cpp_source.html">ir_Samsung.cpp</a>.</p>
 
 </div>
 </div>
@@ -3274,7 +3436,27 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00102">102</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00100">100</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ga7ea1a0eb3b832974be8fd6c2cbde602f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7ea1a0eb3b832974be8fd6c2cbde602f">&#9670;&nbsp;</a></span>decodeSonyMSB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodeSonyMSB </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdecode__results.html">decode_results</a> *&#160;</td>
+          <td class="paramname"><em>aResults</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00151">151</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -3331,7 +3513,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00212">212</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00217">217</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3369,7 +3551,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00269">269</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00274">274</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3413,7 +3595,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00224">224</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00229">229</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3457,7 +3639,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00289">289</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00294">294</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3495,7 +3677,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00216">216</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00221">221</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3533,7 +3715,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00273">273</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00278">278</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3561,7 +3743,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00196">196</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00201">201</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3589,7 +3771,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00208">208</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00213">213</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -3631,7 +3813,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00120">120</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00136">136</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -3733,12 +3915,12 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Denon_8cpp_source.html#l00224">224</a> of file <a class="el" href="ir__Denon_8cpp_source.html">ir_Denon.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Denon_8cpp_source.html#l00228">228</a> of file <a class="el" href="ir__Denon_8cpp_source.html">ir_Denon.cpp</a>.</p>
 
 </div>
 </div>
-<a id="ga3f42c7e514a85ab950c4537ec56e4a94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3f42c7e514a85ab950c4537ec56e4a94">&#9670;&nbsp;</a></span>sendDenonRaw()</h2>
+<a id="ga24eb15e28a8cbfa9a19e106ebd736731"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga24eb15e28a8cbfa9a19e106ebd736731">&#9670;&nbsp;</a></span>sendDenonRaw()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3799,7 +3981,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00079">79</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00072">72</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -3835,37 +4017,10 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00222">222</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p>With Send <a class="el" href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3" title="With Send sendJVCMSB() you can send your old 32 bit codes.">sendJVCMSB()</a> you can send your old 32 bit codes. </p>
+<p>To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte. Or write it as one binary string and reverse/mirror it. Example: 0xCB340102 byte reverse -&gt; 02 01 34 CB bit reverse-&gt; 40 80 2C D3. 0xCB340102 is binary 11001011001101000000000100000010. 0x40802CD3 is binary 01000000100000000010110011010011. If you read the first binary sequence backwards (right to left), you get the second sequence. </p>
 
-</div>
-</div>
-<a id="gac4f8874d0f52e7978c9c0e5d8c76550c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac4f8874d0f52e7978c9c0e5d8c76550c">&#9670;&nbsp;</a></span>sendJVCRaw()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void IRsend::sendJVCRaw </td>
-          <td>(</td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>aRawData</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint_fast8_t&#160;</td>
-          <td class="paramname"><em>aNumberOfRepeats</em> = <code>0</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00075">75</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__JVC_8cpp_source.html#l00224">224</a> of file <a class="el" href="ir__JVC_8cpp_source.html">ir_JVC.cpp</a>.</p>
 
 </div>
 </div>
@@ -3907,7 +4062,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00088">88</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00087">87</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -4057,7 +4212,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00091">91</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00090">90</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -4087,7 +4242,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00267">267</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00266">266</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -4123,7 +4278,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00109">109</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00108">108</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -4184,7 +4339,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00092">92</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00091">91</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -4220,7 +4375,10 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00327">327</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p>With Send <a class="el" href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63" title="With Send sendNECMSB() you can send your old 32 bit codes.">sendNECMSB()</a> you can send your old 32 bit codes. </p>
+<p>To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte. Or write it as one binary string and reverse/mirror it. Example: 0xCB340102 byte reverse -&gt; 02 01 34 CB bit reverse-&gt; 40 80 2C D3. 0xCB340102 is binary 11001011001101000000000100000010. 0x40802CD3 is binary 01000000100000000010110011010011. If you read the first binary sequence backwards (right to left), you get the second sequence. </p>
+
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00355">355</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -4256,7 +4414,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00134">134</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00150">150</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -4275,7 +4433,49 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00078">78</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00077">77</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ga857b05f2b99e8b705cb6d00470c4e78b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga857b05f2b99e8b705cb6d00470c4e78b">&#9670;&nbsp;</a></span>sendOnkyo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IRsend::sendOnkyo </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aAddress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aCommand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aIsRepeat</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__NEC_8cpp_source.html#l00116">116</a> of file <a class="el" href="ir__NEC_8cpp_source.html">ir_NEC.cpp</a>.</p>
 
 </div>
 </div>
@@ -4305,7 +4505,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00272">272</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p>Old version with MSB first data. </p>
+
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00285">285</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -4341,7 +4543,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00126">126</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
+<p>Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE. </p>
+
+<p class="definition">Definition at line <a class="el" href="ir__Kaseikyo_8cpp_source.html#l00129">129</a> of file <a class="el" href="ir__Kaseikyo_8cpp_source.html">ir_Kaseikyo.cpp</a>.</p>
 
 </div>
 </div>
@@ -4371,7 +4575,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00189">189</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00194">194</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -4403,7 +4607,7 @@ Variables</h2></td></tr>
 
 <p>Parse the string given as Pronto Hex, and send it a number of times given as the second argument. </p>
 <p>Thereby the division of the Pronto Hex into an intro-sequence and a repeat sequence is taken into account: First the intro sequence is sent, then the repeat sequence is sent times-1 times. However, if the intro sequence is empty, the repeat sequence is sent times times. <a href="http://www.harctoolbox.org/Glossary.html#ProntoSemantics">Reference</a>.</p>
-<p>Note: Using this function is very wasteful for the memory consumption on a small board. Normally it is a much better ide to use a tool like e.g. IrScrutinizer to transform Pronto type signals offline to a more memory efficient format.</p>
+<p>Note: Using this function is very wasteful for the memory consumption on a small board. Normally it is a much better idea to use a tool like e.g. IrScrutinizer to transform Pronto type signals offline to a more memory efficient format.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">str</td><td>C type string (null terminated) containing a Pronto Hex representation. </td></tr>
@@ -4412,7 +4616,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00148">148</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00153">153</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -4448,7 +4652,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00073">73</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00076">76</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -4478,7 +4682,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00455">455</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p>Old version with 32 bit data. </p>
+
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00465">465</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -4526,7 +4732,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00075">75</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00076">76</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -4562,7 +4768,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00481">481</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00489">489</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -4592,7 +4798,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00238">238</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p>Main RC6 send function. </p>
+
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00241">241</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -4622,9 +4830,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Send RC6 raw data We do not wait for the minimal trailing space of 2666 us. </p>
+<p>Send RC6 64 bit raw data We do not wait for the minimal trailing space of 2666 us. </p>
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00269">269</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00272">272</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -4674,7 +4882,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00301">301</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00304">304</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -4746,7 +4954,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Samsung_8cpp_source.html#l00249">249</a> of file <a class="el" href="ir__Samsung_8cpp_source.html">ir_Samsung.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Samsung_8cpp_source.html#l00255">255</a> of file <a class="el" href="ir__Samsung_8cpp_source.html">ir_Samsung.cpp</a>.</p>
 
 </div>
 </div>
@@ -4833,7 +5041,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Denon_8cpp_source.html#l00240">240</a> of file <a class="el" href="ir__Denon_8cpp_source.html">ir_Denon.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Denon_8cpp_source.html#l00244">244</a> of file <a class="el" href="ir__Denon_8cpp_source.html">ir_Denon.cpp</a>.</p>
 
 </div>
 </div>
@@ -4875,7 +5083,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00072">72</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00071">71</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -4905,7 +5113,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00215">215</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
+<p>Old version with MSB first data. </p>
+
+<p class="definition">Definition at line <a class="el" href="ir__Sony_8cpp_source.html#l00213">213</a> of file <a class="el" href="ir__Sony_8cpp_source.html">ir_Sony.cpp</a>.</p>
 
 </div>
 </div>
@@ -4963,7 +5173,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00204">204</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00209">209</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -4991,7 +5201,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00066">66</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00069">69</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -5019,7 +5229,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00200">200</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Pronto_8cpp_source.html#l00205">205</a> of file <a class="el" href="ir__Pronto_8cpp_source.html">ir_Pronto.cpp</a>.</p>
 
 </div>
 </div>
@@ -5036,7 +5246,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00039">39</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__RC5__RC6_8cpp_source.html#l00040">40</a> of file <a class="el" href="ir__RC5__RC6_8cpp_source.html">ir_RC5_RC6.cpp</a>.</p>
 
 </div>
 </div>
@@ -5045,7 +5255,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Mar 28 2021 11:36:48 for IRremote by
+    <li class="footer">Generated on Wed Apr 21 2021 18:57:47 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

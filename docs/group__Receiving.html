@@ -190,13 +190,13 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga21364e5f35756fe0f72581c00b1b33b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dump out the IrReceiver.decodedIRData.rawDataPtr-&gt;rawbuf[] to be used as C definition for sendRaw().  <a href="group__Receiving.html#ga21364e5f35756fe0f72581c00b1b33b1">More...</a><br /></td></tr>
 <tr class="separator:ga21364e5f35756fe0f72581c00b1b33b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5a515633f91a505e621cba3bab5e53d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga5a515633f91a505e621cba3bab5e53d0">IRrecv::compensateAndStoreIRResultInArray</a> (uint8_t *aArrayPtr)</td></tr>
-<tr class="memdesc:ga5a515633f91a505e621cba3bab5e53d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding and store it in an array provided.  <a href="group__Receiving.html#ga5a515633f91a505e621cba3bab5e53d0">More...</a><br /></td></tr>
+<tr class="memdesc:ga5a515633f91a505e621cba3bab5e53d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the decodedIRData to be used for sendRaw().  <a href="group__Receiving.html#ga5a515633f91a505e621cba3bab5e53d0">More...</a><br /></td></tr>
 <tr class="separator:ga5a515633f91a505e621cba3bab5e53d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae24919a83cfbea5b2c53a851e1d3fed0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gae24919a83cfbea5b2c53a851e1d3fed0">IRrecv::printIRResultAsCVariables</a> (Print *aSerial)</td></tr>
-<tr class="memdesc:gae24919a83cfbea5b2c53a851e1d3fed0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the <a class="el" href="structdecode__results.html" title="Results returned from old decoders !!!deprecated!!!">decode_results</a> structure to be used for sendRaw().  <a href="group__Receiving.html#gae24919a83cfbea5b2c53a851e1d3fed0">More...</a><br /></td></tr>
+<tr class="memdesc:gae24919a83cfbea5b2c53a851e1d3fed0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print results as C variables to be used for sendXXX()  <a href="group__Receiving.html#gae24919a83cfbea5b2c53a851e1d3fed0">More...</a><br /></td></tr>
 <tr class="separator:gae24919a83cfbea5b2c53a851e1d3fed0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac46cc4b02d8db0d3b61355d36cd33db3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gac46cc4b02d8db0d3b61355d36cd33db3">IRrecv::decode</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults) __attribute__((deprecated(&quot;Please use decode() without a parameter.&quot;)))</td></tr>
-<tr class="separator:gac46cc4b02d8db0d3b61355d36cd33db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9705c2ae98b44014e6e8bf55191b2eba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga9705c2ae98b44014e6e8bf55191b2eba">IRrecv::decode</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults) __attribute__((deprecated(&quot;Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.&lt;fieldname&gt; .&quot;)))</td></tr>
+<tr class="separator:ga9705c2ae98b44014e6e8bf55191b2eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -405,7 +405,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01044">1044</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01013">1013</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -425,7 +425,8 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding and store it in an array provided. </p>
+<p>Store the decodedIRData to be used for sendRaw(). </p>
+<p>Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding and store it in an array provided.</p>
 <p>Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence. Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms). </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aArrayPtr</td><td>Address of an array provided by the caller. </td></tr>
@@ -433,7 +434,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01099">1099</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01070">1070</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -459,8 +460,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="gac46cc4b02d8db0d3b61355d36cd33db3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac46cc4b02d8db0d3b61355d36cd33db3">&#9670;&nbsp;</a></span>decode() <span class="overload">[2/2]</span></h2>
+<a id="ga9705c2ae98b44014e6e8bf55191b2eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9705c2ae98b44014e6e8bf55191b2eba">&#9670;&nbsp;</a></span>decode() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -475,7 +476,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01354">1354</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01328">1328</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -540,7 +541,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if decoding was successful </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00509">509</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00482">482</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -605,7 +606,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if decoding was successful </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00413">413</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00386">386</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -694,7 +695,7 @@ Variables</h2></td></tr>
           _     _   _   ___   _     ___     ___   _   - Mark
 </pre><p> Data _____| |___| |_| |_| |_| |___| |___| |_| | - Data starts with a mark-&gt;space bit 1 0 0 0 1 1 0 1 0 1 1 - Space A mark to space at a significant clock edge results in a 1 A space to mark at a significant clock edge results in a 0 (for RC6) Returns current level [MARK or SPACE] or -1 for error (measured time interval is not a multiple of sBiphaseTimeUnit). </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00617">617</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00590">590</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -715,7 +716,7 @@ Variables</h2></td></tr>
 
 <p>Getter function for MARK_EXCESS_MICROS. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00845">845</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00818">818</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -735,7 +736,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01151">1151</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01117">1117</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -765,7 +766,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00595">595</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00568">568</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -828,7 +829,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01248">1248</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01217">1217</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -858,7 +859,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00772">772</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00745">745</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -888,7 +889,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00805">805</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00778">778</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -918,7 +919,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00838">838</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00811">811</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -950,7 +951,7 @@ Variables</h2></td></tr>
 
 <p>Compensate for marks exceeded by demodulator hardware. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00779">779</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00752">752</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -982,7 +983,7 @@ Variables</h2></td></tr>
 
 <p>Compensate for spaces shortened by demodulator hardware. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00812">812</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00785">785</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1014,7 +1015,7 @@ Variables</h2></td></tr>
 
 <p>Match function without compensating for marks exceeded or spaces shortened by demodulator hardware Currently not used. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00752">752</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00725">725</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1034,8 +1035,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Store the <a class="el" href="structdecode__results.html" title="Results returned from old decoders !!!deprecated!!!">decode_results</a> structure to be used for sendRaw(). </p>
-<p>Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding! Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence. Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).</p>
+<p>Print results as C variables to be used for sendXXX() </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aSerial</td><td>The Print object on which to write, for Arduino you can use &amp;Serial. </td></tr>
@@ -1043,7 +1043,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01126">1126</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l01092">1092</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1071,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00947">947</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00916">916</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1109,7 +1109,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00981">981</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00950">950</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1137,7 +1137,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00939">939</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00908">908</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1181,7 +1181,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00858">858</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00831">831</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1367,7 +1367,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00590">590</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00563">563</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1383,7 +1383,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00593">593</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00566">566</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1399,7 +1399,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00591">591</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00564">564</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1415,7 +1415,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00592">592</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8cpp_8h_source.html#l00565">565</a> of file <a class="el" href="IRReceive_8cpp_8h_source.html">IRReceive.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -1424,7 +1424,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Mar 28 2021 11:36:48 for IRremote by
+    <li class="footer">Generated on Wed Apr 21 2021 18:57:47 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

@@ -6,7 +6,7 @@ var group__Sending =
     [ "begin", "group__Sending.html#ga07229be2d3e919b985a058aa6015aa2c", null ],
     [ "customDelayMicroseconds", "group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798", null ],
     [ "enableIROut", "group__Sending.html#ga42c04af63d252b320c017ffa2bfc90e5", null ],
-    [ "ledOff", "group__Sending.html#gae71cc5aa99f894785fb4f7abc05841b2", null ],
+    [ "IRLedOff", "group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0", null ],
     [ "mark", "group__Sending.html#ga7328943560a5f60f4e9e13d677716674", null ],
     [ "sendBiphaseData", "group__Sending.html#ga50162b158e0fa94b105d3717318b8b2c", null ],
     [ "sendPulseDistanceWidthData", "group__Sending.html#ga6904a411999a4c9f7306dba49851eb7b", null ],

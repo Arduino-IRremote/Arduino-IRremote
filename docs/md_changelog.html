@@ -86,24 +86,32 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>The latest version may not be released!</p>
+<h1>3.1.1</h1>
+<ul>
+<li>Fix for ESP32 send Error, removed <code>USE_SOFT_SEND_PWM</code> macro.</li>
+<li>Added Onkyo protocol.</li>
+<li>Support for old 2.x code by backwards compatible <code>decode(decode_results *aResults)</code> function.</li>
+<li>Removed USE_OLD_DECODE macro and added NO_LEGACY_COMPATIBILITY macro.</li>
+<li>Added ATtiny1604 support.</li>
+<li>New SendAndReceive example.</li>
+<li>Added ESP8266 support.</li>
+</ul>
 <h1>3.1.0</h1>
 <ul>
-<li>Replaced <code>#define DECODE_NEC 1/0</code> by defining/not defining.</li>
-<li>USE_SOFT_SEND_PWM is active by default.</li>
-<li>Refactored Board specific code.</li>
-<li>Separated timer and feedback LED related code.</li>
-<li>Added STM32F1 by (by Roger Clark) support.</li>
-<li>Added stm32 (by ST) support. Thanks to Paolo Malaspina.</li>
-<li>Refactored LED Feedback functions.</li>
-<li>Renamed most <a class="el" href="structirparams__struct.html" title="This struct contains the data and control used for receiver static functions and the ISR (interrupt s...">irparams_struct</a> values.</li>
-<li>Implemented feedback for send.</li>
+<li>Generation of PWM by software is active by default.</li>
 <li>Removed <a class="el" href="structdecode__results.html" title="Results returned from old decoders !!!deprecated!!!">decode_results</a> results.</li>
-<li>Added unit test and fixed LG send bug.</li>
-<li><a class="el" href="group__Receiving.html#gadab293a71386f20571db6d779d1d84b7">MATCH_MARK()</a> etc. now available as <a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware.">matchMark()</a>.</li>
-<li>Added ATtiny88 support.</li>
-<li>Use LED_BUILTIN instead of FEEDBACK_LED FeedbackLEDPin is 0.</li>
+<li>Renamed most <a class="el" href="structirparams__struct.html" title="This struct contains the data and control used for receiver static functions and the ISR (interrupt s...">irparams_struct</a> values.</li>
+<li>Fixed LG send bug and added unit test.</li>
+<li>Replaced <code>#define DECODE_NEC 1/0</code> by defining/not defining.</li>
+<li>Use LED_BUILTIN instead of FEEDBACK_LED if FeedbackLEDPin is 0.</li>
 <li>Use F_CPU instead of SYSCLOCK.</li>
 <li>Removed SENDPIN_ON and SENDPIN_OFF macros.</li>
+<li>Refactored board specific code for timer and feedback LED.</li>
+<li>Extracted common LED feedback functions and implemented feedback for send.</li>
+<li><a class="el" href="group__Receiving.html#gadab293a71386f20571db6d779d1d84b7">MATCH_MARK()</a> etc. now available as <a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware.">matchMark()</a>.</li>
+<li>Added STM32F1 by (by Roger Clark) support.</li>
+<li>Added stm32 (by ST) support. Thanks to Paolo Malaspina.</li>
+<li>Added ATtiny88 support.</li>
 </ul>
 <h1>3.0.2</h1>
 <ul>
@@ -122,6 +130,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </ul>
 <h1>3.0.0 + 3.0.1 2021/02</h1>
 <ul>
+<li>New LSB first decoders are default.</li>
 <li>Added SendRaw with byte data.</li>
 <li>Fixed resume bug if irparams.rawlen &gt;= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi</li>
 <li>Added <code>dumpPronto(String *aString, unsigned int frequency)</code> with String object as argument. Thanks to Iosif Peterfi</li>
@@ -145,10 +154,9 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Changed License to MIT see <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/issues/397">https://github.com/Arduino-IRremote/Arduino-IRremote/issues/397</a>.</li>
 <li>Added ATtiny timer 1 support.</li>
 <li>Changed wrong return code signature of decodePulseDistanceData() and its handling.</li>
-<li>Removed Mitsubishi protocol, since the implementation is in contradiction with all documentation I could found and therefore supposed to be wrong.</li>
-<li>Removed AIWA implementation, since it is only for 1 device and at least sending implemented wrong.</li>
+<li>Removed Mitsubishi protocol, since the implementation is in contradiction with all documentation I found and therefore supposed to be wrong.</li>
+<li>Removed AIWA implementation, since it is only for 1 device and at least the sending was implemented wrong.</li>
 <li>Added Lego_PF decode.</li>
-<li>Added new example IR2Keyboard.</li>
 <li>Changed internal usage of custom_delay_usec.</li>
 <li>Moved dump/print functions from example to irReceiver.</li>
 <li>irPronto.cpp: Using Print instead of Stream saves 1020 bytes program memory. Changed from &amp; to * parameter type to be more transparent and consistent with other code of IRremote.</li>
@@ -304,7 +312,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Mar 28 2021 11:36:48 for IRremote by
+    <li class="footer">Generated on Wed Apr 21 2021 18:57:47 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

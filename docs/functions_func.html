@@ -85,7 +85,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 
 <h3><a id="index__5F"></a>- _ -</h3><ul>
 <li>__attribute__()
-: <a class="el" href="classIRsend.html#a8813e955045af1a33eaf9fe9eeba403e">IRsend</a>
+: <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">IRsend</a>
 </li>
 </ul>
 
@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <h3><a id="index_b"></a>- b -</h3><ul>
 <li>begin()
 : <a class="el" href="group__Receiving.html#ga0358fc4a683ba3f8d31fdde1e22be724">IRrecv</a>
-, <a class="el" href="group__Sending.html#ga07229be2d3e919b985a058aa6015aa2c">IRsend</a>
+, <a class="el" href="group__Sending.html#gabe9278944eb22fa86f1dc234c293c361">IRsend</a>
 </li>
 </ul>
 
@@ -140,11 +140,20 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>decodeDenon()
 : <a class="el" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac">IRrecv</a>
 </li>
+<li>decodeDenonOld()
+: <a class="el" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e">IRrecv</a>
+</li>
 <li>decodeHash()
 : <a class="el" href="classIRrecv.html#ab33be9e29578a2eb95beb3da169228dc">IRrecv</a>
 </li>
+<li>decodeHashOld()
+: <a class="el" href="classIRrecv.html#acc379370caac8ca6ab6f1fd1a4cc4359">IRrecv</a>
+</li>
 <li>decodeJVC()
 : <a class="el" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed">IRrecv</a>
+</li>
+<li>decodeJVCMSB()
+: <a class="el" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10">IRrecv</a>
 </li>
 <li>decodeKaseikyo()
 : <a class="el" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14">IRrecv</a>
@@ -155,14 +164,20 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>decodeLG()
 : <a class="el" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa">IRrecv</a>
 </li>
+<li>decodeLGMSB()
+: <a class="el" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872">IRrecv</a>
+</li>
 <li>decodeMagiQuest()
 : <a class="el" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d">IRrecv</a>
 </li>
 <li>decodeNEC()
 : <a class="el" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8">IRrecv</a>
 </li>
-<li>decodePanasonic()
-: <a class="el" href="classIRrecv.html#aca15c5559e7256892a4dcdd6cb70cde9">IRrecv</a>
+<li>decodeNECMSB()
+: <a class="el" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd">IRrecv</a>
+</li>
+<li>decodePanasonicMSB()
+: <a class="el" href="group__Decoder.html#ga5b0375df7166d1b6b1886891768a9379">IRrecv</a>
 </li>
 <li>decodePulseDistanceData()
 : <a class="el" href="group__Receiving.html#gaf8c9cdb5f7280043a552f22265bdb2d5">IRrecv</a>
@@ -177,7 +192,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 : <a class="el" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f">IRrecv</a>
 </li>
 <li>decodeSAMSUNG()
-: <a class="el" href="classIRrecv.html#a9688b5cefe4b50f5e79a9772b2b1fda5">IRrecv</a>
+: <a class="el" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd">IRrecv</a>
 </li>
 <li>decodeSamsung()
 : <a class="el" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec">IRrecv</a>
@@ -190,6 +205,9 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 </li>
 <li>decodeSony()
 : <a class="el" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27">IRrecv</a>
+</li>
+<li>decodeSonyMSB()
+: <a class="el" href="group__Decoder.html#ga7ea1a0eb3b832974be8fd6c2cbde602f">IRrecv</a>
 </li>
 <li>decodeWhynter()
 : <a class="el" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142">IRrecv</a>
@@ -227,21 +245,17 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>initDecodedIRData()
 : <a class="el" href="group__Receiving.html#ga26e37f666387134ed18393fd930f68db">IRrecv</a>
 </li>
+<li>IRLedOff()
+: <a class="el" href="group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0">IRsend</a>
+</li>
 <li>IRrecv()
-: <a class="el" href="group__Receiving.html#ga78bb606b282e710d0d542e2aa44786d8">IRrecv</a>
+: <a class="el" href="group__Receiving.html#ga81eee3a1f9153578d595c771688003e8">IRrecv</a>
 </li>
 <li>IRsend()
-: <a class="el" href="group__Sending.html#gabf55f45c8cfe3558053130bea46e7f14">IRsend</a>
+: <a class="el" href="group__Sending.html#ga047d9e3f47864869afaa5076579c9f63">IRsend</a>
 </li>
 <li>isIdle()
 : <a class="el" href="group__Receiving.html#gacfbf39fb284cc2d200158f20747c4ae3">IRrecv</a>
-</li>
-</ul>
-
-
-<h3><a id="index_l"></a>- l -</h3><ul>
-<li>ledOff()
-: <a class="el" href="group__Sending.html#gae71cc5aa99f894785fb4f7abc05841b2">IRsend</a>
 </li>
 </ul>
 
@@ -293,7 +307,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 : <a class="el" href="group__Decoder.html#ga342baabd2418ed33d6d847ea5f53f165">IRsend</a>
 </li>
 <li>sendDenonRaw()
-: <a class="el" href="group__Decoder.html#ga3f42c7e514a85ab950c4537ec56e4a94">IRsend</a>
+: <a class="el" href="group__Decoder.html#ga24eb15e28a8cbfa9a19e106ebd736731">IRsend</a>
 </li>
 <li>sendDISH()
 : <a class="el" href="classIRsend.html#ac8b3fe0ba492391c8f142281165accec">IRsend</a>
@@ -304,9 +318,6 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>sendJVCMSB()
 : <a class="el" href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">IRsend</a>
 </li>
-<li>sendJVCRaw()
-: <a class="el" href="group__Decoder.html#gac4f8874d0f52e7978c9c0e5d8c76550c">IRsend</a>
-</li>
 <li>sendKaseikyo()
 : <a class="el" href="group__Decoder.html#ga4b61477c5bd7a32ec7d005d7bb88c610">IRsend</a>
 </li>
@@ -314,7 +325,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 : <a class="el" href="group__Decoder.html#gaa62e64650aaae09b6f001a53a31f00b8">IRsend</a>
 </li>
 <li>sendLG()
-: <a class="el" href="group__Decoder.html#ga214e0b5e88d7246841f7b7b5a7087d7b">IRsend</a>
+: <a class="el" href="group__Decoder.html#ga88ecc2eb801abf6aa1428cc0669abe94">IRsend</a>
 </li>
 <li>sendLGRaw()
 : <a class="el" href="group__Decoder.html#gac42ab32888113eacde5b8d79199ec6b7">IRsend</a>
@@ -336,6 +347,9 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 </li>
 <li>sendNECRepeat()
 : <a class="el" href="group__Decoder.html#gae8fff4f1d8703ca18ea85a15289dc44c">IRsend</a>
+</li>
+<li>sendOnkyo()
+: <a class="el" href="group__Decoder.html#ga857b05f2b99e8b705cb6d00470c4e78b">IRsend</a>
 </li>
 <li>sendPanasonic()
 : <a class="el" href="group__Decoder.html#gad3a14e1a94a402a4cbe0eeeded312173">IRsend</a>
@@ -359,7 +373,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 : <a class="el" href="group__Decoder.html#gaee1c9e1d8ab6dcf642d6707b4528385b">IRsend</a>
 </li>
 <li>sendRC6()
-: <a class="el" href="group__Decoder.html#gab2553414d8480f449762eb00a3ff7d6d">IRsend</a>
+: <a class="el" href="group__Decoder.html#gae6bfe6af18c1bb7f34fda4338882b435">IRsend</a>
 </li>
 <li>sendSamsung()
 : <a class="el" href="group__Decoder.html#ga5d194d783811b52669eb1c1ab17a3a0f">IRsend</a>
@@ -395,7 +409,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 : <a class="el" href="group__Sending.html#ga6a653dc4b2f718ce16a2ae87abdc2527">IRsend</a>
 </li>
 <li>start()
-: <a class="el" href="group__Receiving.html#ga2c06971f0e4e0c4131930c8903eb21dc">IRrecv</a>
+: <a class="el" href="group__Receiving.html#ga7a314c0e54679debce458088d76d35eb">IRrecv</a>
 </li>
 <li>stop()
 : <a class="el" href="group__Receiving.html#gaadb62786cd826cd539683c03734e46fe">IRrecv</a>
@@ -413,7 +427,7 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Mar 28 2021 11:36:49 for IRremote by
+    <li class="footer">Generated on Wed Apr 21 2021 18:57:48 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

@@ -31,6 +31,7 @@ var IRProtocol_8h =
       [ "SAMSUNG", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2b451b6e7bebbf070d0913ec77d5d438", null ],
       [ "SHARP", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaad63db67a2284cd7e3ffe382b6d6ea82", null ],
       [ "SONY", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada72d58193d4d25517202d22b7e57a65c3", null ],
+      [ "ONKYO", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada20603784a6e8d35a82b2476366010344", null ],
       [ "APPLE", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada5484ec37ffd1fcffb7aba549a4839910", null ],
       [ "BOSEWAVE", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada20736b037c0e7444d4dc7ff06e9dea54", null ],
       [ "LEGO_PF", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf47be4dad020b9c36aa255c582e25510", null ],

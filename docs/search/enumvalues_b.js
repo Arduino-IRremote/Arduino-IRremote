@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['unknown_798',['UNKNOWN',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6ce26a62afab55d7606ad4e92428b30c',1,'IRProtocol.h']]]
+  ['samsung_811',['SAMSUNG',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2b451b6e7bebbf070d0913ec77d5d438',1,'IRProtocol.h']]],
+  ['sharp_812',['SHARP',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaad63db67a2284cd7e3ffe382b6d6ea82',1,'IRProtocol.h']]],
+  ['sony_813',['SONY',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada72d58193d4d25517202d22b7e57a65c3',1,'IRProtocol.h']]]
 ];

@@ -8,7 +8,7 @@ var group__Receiving =
     [ "compensateAndPrintIRResultAsCArray", "group__Receiving.html#ga21364e5f35756fe0f72581c00b1b33b1", null ],
     [ "compensateAndStoreIRResultInArray", "group__Receiving.html#ga5a515633f91a505e621cba3bab5e53d0", null ],
     [ "decode", "group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36", null ],
-    [ "decode", "group__Receiving.html#gac46cc4b02d8db0d3b61355d36cd33db3", null ],
+    [ "decode", "group__Receiving.html#ga9705c2ae98b44014e6e8bf55191b2eba", null ],
     [ "decodePulseDistanceData", "group__Receiving.html#gaf8c9cdb5f7280043a552f22265bdb2d5", null ],
     [ "decodePulseWidthData", "group__Receiving.html#ga208047cf25c7850842984462bfa11cd0", null ],
     [ "disableIRIn", "group__Receiving.html#gaf828d23c733b1bde8f61e39230d9dbcd", null ],
