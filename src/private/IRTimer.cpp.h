@@ -253,8 +253,8 @@
 #  endif // defined(SEND_PWM_BY_TIMER)
 
 #define TIMER_RESET_INTR_PENDING
-#define ENABLE_SEND_PWM_BY_TIMERTCNT1 = 0; (TCCR1A |= _BV(COM1A1))  // Clear OC1A/OC1B on Compare Match when up-counting. Set OC1A/OC1B on Compare Match when downcounting.
-#define TIMER_DISABLE_SEND_PWM  (TCCR1A &= ~(_BV(COM1A1)))
+#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0; (TCCR1A |= _BV(COM1A1))  // Clear OC1A/OC1B on Compare Match when up-counting. Set OC1A/OC1B on Compare Match when downcounting.
+#define DISABLE_SEND_PWM_BY_TIMER  (TCCR1A &= ~(_BV(COM1A1)))
 
 #  if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8515__) \
 || defined(__AVR_ATmega8535__) || defined(__AVR_ATmega16__) \
@@ -757,8 +757,8 @@ void timerConfigForReceive() {
 
 // Special carrier modulator timer for Teensy 3.0 / Teensy 3.1
 #define TIMER_RESET_INTR_PENDING    uint8_t tmp __attribute__((unused)) = CMT_MSC; CMT_CMD2 = 30
-#define ENABLE_SEND_PWM_BY_TIMER  do { CORE_PIN5_CONFIG = PORT_PCR_MUX(2) | PORT_PCR_DSE | PORT_PCR_SRE; } while(0)
-#define TIMER_DISABLE_SEND_PWM  do { CORE_PIN5_CONFIG = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_SRE; } while(0)
+#define ENABLE_SEND_PWM_BY_TIMER    do { CORE_PIN5_CONFIG = PORT_PCR_MUX(2) | PORT_PCR_DSE | PORT_PCR_SRE; } while(0)
+#define DISABLE_SEND_PWM_BY_TIMER   do { CORE_PIN5_CONFIG = PORT_PCR_MUX(1) | PORT_PCR_DSE | PORT_PCR_SRE; } while(0)
 #define TIMER_ENABLE_RECEIVE_INTR   NVIC_ENABLE_IRQ(IRQ_CMT)
 #define TIMER_DISABLE_RECEIVE_INTR  NVIC_DISABLE_IRQ(IRQ_CMT)
 #define TIMER_INTR_NAME     cmt_isr
@@ -1190,7 +1190,7 @@ void timerConfigForReceive() {
  */
 #define TIMER_RESET_INTR_PENDING
 #define ENABLE_SEND_PWM_BY_TIMER
-#define TIMER_DISABLE_SEND_PWM
+#define DISABLE_SEND_PWM_BY_TIMER
 #define TIMER_ENABLE_RECEIVE_INTR
 #define TIMER_DISABLE_RECEIVE_INTR
 

@@ -78,10 +78,13 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
         && !defined(ESP32) && !defined(ESP8266) && !defined(MEGATINYCORE) \
     && !(defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1)) && !(defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32))
     /*
-     * This error shows up, if this function is really used/called by the user program. This check works only if lto is enabled.
+     * This error shows up, if this function is really used/called by the user program.
+     * This check works only if lto is enabled, otherwise it always pops up :-(.
+     * In this case activate the line #define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN in IRremote.h to suppress this message.
+     * I know now way to check for lto flag here.
      */
     UsageError(
-            "Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if SEND_PWM_BY_TIMER is not defined or USE_NO_SEND_PWM is defined!");
+            "Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if SEND_PWM_BY_TIMER is not defined or USE_NO_SEND_PWM is defined or enable lto or activate the line #define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN in IRremote.h.");
 #endif
 
     setLEDFeedback(aLEDFeedbackPin, aEnableLEDFeedback);

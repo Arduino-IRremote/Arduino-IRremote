@@ -1,6 +1,8 @@
 # Changelog
 The latest version may not be released!
 ## 3.2.1
+- Fix errors if LED_BUILTIN is not defined.
+- Fixed error for AVR timer1. Thanks to alexbarcelo.
 
 ## 3.2.0
 - Fix for ESP32 send Error, removed `USE_SOFT_SEND_PWM` macro.
@@ -10,7 +12,7 @@ The latest version may not be released!
 - Added ATtiny1604 support.
 - New SendAndReceive example.
 - Added ESP8266 support.
-- Extended DEBUG output
+- Extended DEBUG output.
 
 ## 3.1.0
 - Generation of PWM by software is active by default.
