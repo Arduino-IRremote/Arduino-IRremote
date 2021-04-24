@@ -105,6 +105,10 @@ struct irparams_struct {
 #  define TRACE_PRINTLN(...) void()
 #endif
 
+#if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4)
+#define COMPILER_HAS_PRAGMA_MESSAGE
+#endif
+
 /****************************************************
  *                     RECEIVING
  ****************************************************/

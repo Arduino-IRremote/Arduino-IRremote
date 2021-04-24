@@ -37,10 +37,6 @@
 #define FEEDBACK_LED_ON()   (PORTC |= B10000000)
 #define FEEDBACK_LED_OFF()  (PORTC &= B01111111)
 
-#elif defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega8U2__) || defined(__AVR_ATmega16U2__)  || defined(__AVR_ATmega32U2__)
-#define FEEDBACK_LED_ON()   (digitalWrite(LED_BUILTIN, HIGH))
-#define FEEDBACK_LED_OFF()  (digitalWrite(LED_BUILTIN, LOW))
-
 // Arduino Uno, Nano etc
 #elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__)
 #define FEEDBACK_LED_ON()   (PORTB |= B00100000)
@@ -64,8 +60,8 @@
 
 #elif defined(PARTICLE)
 #define LED_BUILTIN       D7
-#define FEEDBACK_LED_ON()  digitalWrite(LED_BUILTIN,1)
-#define FEEDBACK_LED_OFF() digitalWrite(LED_BUILTIN,0)
+#define FEEDBACK_LED_ON()  digitalWrite(LED_BUILTIN, 1)
+#define FEEDBACK_LED_OFF() digitalWrite(LED_BUILTIN, 0)
 
 // Arduino Zero and BluePill and ESP8266 have an LED which is active low
 #elif defined(__STM32F1__) || defined(STM32F1xx) || defined(ESP8266)
@@ -76,9 +72,10 @@
 /*
  * Default case suitable for most boards
  */
+#  if defined(LED_BUILTIN)
 #define FEEDBACK_LED_ON()   digitalWrite(LED_BUILTIN, HIGH)
 #define FEEDBACK_LED_OFF()  digitalWrite(LED_BUILTIN, LOW)
-#  ifndef LED_BUILTIN
+#  else
 /*
  * print a warning
  */
