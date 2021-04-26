@@ -71,11 +71,12 @@ void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aLEDFeedba
  * @param aLEDFeedbackPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
-    // must exclude MEGATINYCORE, NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
+    // must exclude cores by MCUdude, MEGATINYCORE, NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
 #if (!defined(SEND_PWM_BY_TIMER) || defined(USE_NO_SEND_PWM)) \
         && !defined(SUPPRESS_ERROR_MESSAGE_FOR_BEGIN) \
         && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) && !defined(ARDUINO_ARCH_SAMD) \
-        && !defined(ESP32) && !defined(ESP8266) && !defined(MEGATINYCORE) && !defined(MINICORE) \
+        && !defined(ESP32) && !defined(ESP8266) && !defined(MEGATINYCORE) \
+        && !defined(MINICORE) && !defined(MIGHTYCORE) && !defined(MEGACORE) && !defined(MAJORCORE) \
     && !(defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1)) && !(defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32))
     /*
      * This error shows up, if this function is really used/called by the user program.
@@ -466,6 +467,10 @@ void IRsend::enableIROut(uint8_t aFrequencyKHz) {
 
     pinMode(sendPin, OUTPUT);
     IRLedOff(); // When not sending, we want it low/inactive
+}
+
+unsigned int IRsend::getPulseCorrectionNanos() {
+    return PULSE_CORRECTION_NANOS;
 }
 
 /** @}*/

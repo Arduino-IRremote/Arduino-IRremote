@@ -506,6 +506,7 @@ public:
 
     unsigned int periodTimeMicros;
     unsigned int periodOnTimeMicros; // compensated with PULSE_CORRECTION_NANOS for duration of digitalWrite.
+    unsigned int getPulseCorrectionNanos();
 
     void customDelayMicroseconds(unsigned long aMicroseconds);
 };

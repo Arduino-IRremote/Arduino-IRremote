@@ -4,6 +4,7 @@ The latest version may not be released!
 - Fix errors if LED_BUILTIN is not defined.
 - Fixed error for AVR timer1. Thanks to alexbarcelo.
 - New example IRremoteExtensionTest.
+- Enabled megaAVR 0-series devices.
 
 ## 3.2.0
 - Fix for ESP32 send Error, removed `USE_SOFT_SEND_PWM` macro.

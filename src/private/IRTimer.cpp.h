@@ -95,8 +95,9 @@
 //#define IR_USE_AVR_TIMER4_HS  // send pin = pin 13
 #  endif
 
-// Nano Every, Uno WiFi Rev2
-#elif defined(__AVR_ATmega4809__) || defined(__AVR_ATtiny1604__)
+// Nano Every, Uno WiFi Rev2 and similar
+#elif defined(__AVR_ATmega808__) || defined(__AVR_ATmega809__) || defined(__AVR_ATmega3208__) || defined(__AVR_ATmega3209__) \
+     || defined(__AVR_ATmega1608__) || defined(__AVR_ATmega1609__) || defined(__AVR_ATmega4808__) || defined(__AVR_ATmega4809__) || defined(__AVR_ATtiny1604__)
 #  if !defined(IR_USE_AVR_TIMER_B)
 #define IR_USE_AVR_TIMER_B     //  send pin = pin 6
 #  endif
