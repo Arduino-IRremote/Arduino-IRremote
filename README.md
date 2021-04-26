@@ -140,7 +140,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 - To **increase strength of sent output signal** you can increase the current through the send diode, and/or use 2 diodes in series,
  since one IR diode requires only 1.5 volt.
  - The line \#include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for **Digispark boards** as well as enables serial output at 8MHz.
- - The default software generated PWM has **problems on ATtinies running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
+ - The default software generated PWM has **problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
 
 # Examples
 In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.
@@ -165,6 +165,9 @@ Framework for calling different functions for different IR codes.
 
 ### IRrelay
 Control a relay (connected to an output pin) with your remote.
+
+### IRremoteExtensionTest
+Example for a user defined class, which itself uses the IRrecv class from IRremote.
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / macros available.<br/>

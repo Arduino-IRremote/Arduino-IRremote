@@ -116,7 +116,7 @@ jobs:
           - arduino-boards-fqbn: digistump:avr:MHETtiny88  # ATtiny88 China clone board @16 MHz
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
             required-libraries: ATtinySerialOut
-            sketches-exclude: UnitTest,ControlRelay,ReceiveAndSend,ReceiveDump,SendProntoDemo,SendBoseWaveDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM, missing digitalPinToInterrupt
+            sketches-exclude: UnitTest,ControlRelay,ReceiveAndSend,ReceiveDump,SendProntoDemo,SendBoseWaveDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis,IRremoteExtensionTest # Does not fit in FLASH or RAM, missing digitalPinToInterrupt
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DEXCLUDE_EXOTIC_PROTOCOLS
 
