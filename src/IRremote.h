@@ -94,12 +94,6 @@
 
 //#define DEBUG // Activate this for lots of lovely debug output from the IRremote core.
 
-/**
- * For better readability of code
- */
-#define DISABLE_LED_FEEDBACK false
-#define ENABLE_LED_FEEDBACK true
-#define USE_DEFAULT_FEEDBACK_LED_PIN 0
 
 /****************************************************
  *                    RECEIVING

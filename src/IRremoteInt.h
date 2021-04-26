@@ -44,6 +44,13 @@
 #define MARK   1
 #define SPACE  0
 
+/**
+ * For better readability of code
+ */
+#define DISABLE_LED_FEEDBACK false
+#define ENABLE_LED_FEEDBACK true
+#define USE_DEFAULT_FEEDBACK_LED_PIN 0
+
 #include "IRProtocol.h"
 
 /****************************************************
@@ -157,7 +164,7 @@ struct IRData {
     uint16_t address;           ///< Decoded address
     uint16_t command;           ///< Decoded command
     uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID
-    uint8_t numberOfBits;       ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
+    uint8_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;              ///< See IRDATA_FLAGS_* definitions above
     uint32_t decodedRawData;    ///< Up to 32 bit decoded raw data, used for sendRaw functions.
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
@@ -463,16 +470,18 @@ public:
      */
     void sendDenon(unsigned long data, int nbits);
     void sendDISH(unsigned long data, int nbits);
-    void sendJVC(unsigned long data, int nbits, bool repeat)
-            __attribute__ ((deprecated ("This old function sends MSB first! Please use sendJVC(aAddress, aCommand, aNumberOfRepeats)."))) {
+    void sendJVC(unsigned long data, int nbits,
+            bool repeat)
+                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendJVC(aAddress, aCommand, aNumberOfRepeats)."))) {
         sendJVCMSB(data, nbits, repeat);
     }
     void sendJVCMSB(unsigned long data, int nbits, bool repeat = false);
 
     void sendLG(unsigned long data, int nbits);
 
-    void sendNEC(uint32_t aRawData, uint8_t nbits)
-    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNEC(aAddress, aCommand, aNumberOfRepeats)."))) {
+    void sendNEC(uint32_t aRawData,
+            uint8_t nbits)
+                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNEC(aAddress, aCommand, aNumberOfRepeats)."))) {
         sendNECMSB(aRawData, nbits);
     }
     void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat = false);
