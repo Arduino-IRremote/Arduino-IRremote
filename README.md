@@ -121,6 +121,7 @@ If you see something like `Protocol=UNKNOWN Hash=0x13BD886C 35 bits received` as
 
 - If you have an **odd number of bits** received, it is likely, that your receiver circuit has problems. Maybe because the IR signal is too weak.
 - If you see timings like `+ 600,- 600     + 550,- 150     + 200,- 100     + 750,- 550` then one 450 µs space was split into two 150 and 100 µs spaces with a spike / error signal of 200 µs between. Maybe because of a defective receiver or a weak signal in conjunction with another light emitting source nearby.
+- If you see timings like `+ 500,- 550     + 450,- 550     + 500,- 500     + 500,-1550`, then marks are generally shorter than spaces and therefore `MARK_EXCESS_MICROS` (specified in your ino file) should be **negative** to compensate for this at decoding.
 - To see more info supporting you to find the reason for your UNKNOWN protocol, you must enable the line `//#define DEBUG` in IRremoteInt.h.
 
 ## How to deal with protocols not supported by IRremote
