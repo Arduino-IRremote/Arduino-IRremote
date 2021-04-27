@@ -222,7 +222,7 @@ bool IRrecv::decodeNEC() {
         return false;
     }
 
-    if (!decodePulseDistanceData(NEC_BITS, 3, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, false)) {
+    if (!decodePulseDistanceData(NEC_BITS, 3, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
         DBG_PRINT(F("NEC: "));
         DBG_PRINTLN(F("Decode failed"));
         return false;

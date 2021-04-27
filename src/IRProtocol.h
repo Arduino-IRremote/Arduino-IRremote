@@ -56,6 +56,8 @@ typedef enum {
     SONY,
     ONKYO,
     APPLE,
+    PULSE_DISTANCE,
+    PULSE_WIDTH,
     BOSEWAVE,
     LEGO_PF,
     MAGIQUEST,

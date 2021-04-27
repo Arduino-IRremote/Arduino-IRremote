@@ -78,14 +78,17 @@
 #define DECODE_RC5
 #define DECODE_RC6
 
-#if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space
+#  if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF
 #define DECODE_MAGIQUEST
 #define DECODE_WHYNTER
-#endif
+#  endif
 
-#define DECODE_HASH         // special decoder for all protocols
+#  if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
+#define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program space
+#define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program space
+#  endif
 #endif
 
 #if !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)

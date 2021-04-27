@@ -155,7 +155,7 @@ bool IRrecv::decodeSamsung() {
          * Samsung48
          */
         // decode address
-        if (!decodePulseDistanceData(SAMSUNG_ADDRESS_BITS, 3, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE, false)) {
+        if (!decodePulseDistanceData(SAMSUNG_ADDRESS_BITS, 3, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
             DBG_PRINT("Samsung: ");
             DBG_PRINTLN("Decode failed");
             return false;
@@ -163,7 +163,7 @@ bool IRrecv::decodeSamsung() {
         decodedIRData.address = decodedIRData.decodedRawData;
 
         // decode 32 bit command
-        if (!decodePulseDistanceData(SAMSUNG_COMMAND32_BITS, 3, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE, false)) {
+        if (!decodePulseDistanceData(SAMSUNG_COMMAND32_BITS, 3, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
             DBG_PRINT("Samsung: ");
             DBG_PRINTLN("Decode failed");
             return false;
@@ -185,7 +185,7 @@ bool IRrecv::decodeSamsung() {
         /*
          * Samsung32
          */
-        if (!decodePulseDistanceData(SAMSUNG_BITS, 3, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE, false)) {
+        if (!decodePulseDistanceData(SAMSUNG_BITS, 3, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
             DBG_PRINT("Samsung: ");
             DBG_PRINTLN("Decode failed");
             return false;

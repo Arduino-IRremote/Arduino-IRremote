@@ -31,6 +31,7 @@
 //#define DECODE_MAGIQUEST
 //#define DECODE_WHYNTER
 
+//#define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols
 //#define DECODE_HASH         // special decoder for all protocols
 
 #include <Arduino.h>

@@ -158,7 +158,7 @@ bool IRrecv::decodeKaseikyo() {
     }
 
     // decode Vendor ID
-    if (!decodePulseDistanceData(KASEIKYO_VENDOR_ID_BITS, 3, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_ZERO_SPACE, false)) {
+    if (!decodePulseDistanceData(KASEIKYO_VENDOR_ID_BITS, 3, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Vendor ID decode failed");
         return false;
@@ -187,7 +187,7 @@ bool IRrecv::decodeKaseikyo() {
     if (!decodePulseDistanceData(
     KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
             3 + (2 * KASEIKYO_VENDOR_ID_BITS), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
-            KASEIKYO_ZERO_SPACE, false)) {
+            KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
         DBG_PRINT("Kaseikyo: ");
         DBG_PRINTLN("Address, command + parity decode failed");
         return false;

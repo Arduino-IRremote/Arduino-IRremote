@@ -163,7 +163,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
         return false;
     }
 
-    if (!decodePulseDistanceData(LEGO_BITS, 3, LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_ZERO_SPACE, true)) {
+    if (!decodePulseDistanceData(LEGO_BITS, 3, LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         DBG_PRINT("LEGO: ");
         DBG_PRINTLN("Decode failed");
         return false;

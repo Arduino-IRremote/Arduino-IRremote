@@ -178,7 +178,7 @@ bool IRrecv::decodeLG() {
         return false;
     }
 
-    if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, true)) {
+    if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         DBG_PRINT(F("LG: "));
         DBG_PRINTLN(F("Decode failed"));
         return false;
@@ -243,7 +243,7 @@ bool IRrecv::decodeLGMSB(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, true)) {
+    if (!decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 // Stop bit

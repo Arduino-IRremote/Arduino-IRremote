@@ -55,6 +55,7 @@
 #define DECODE_SAMSUNG
 #define DECODE_LG
 
+#define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols
 #define DECODE_HASH         // special decoder for all protocols
 #endif
 
@@ -69,6 +70,7 @@
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
 //#define IR_MEASURE_TIMING
+//#define DEBUG // Activate this for lots of lovely debug outputs.
 #define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
 #define DISABLE_LED_FEEDBACK_FOR_RECEIVE // halves ISR duration
 

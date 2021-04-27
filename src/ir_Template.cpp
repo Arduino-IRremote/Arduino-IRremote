@@ -214,7 +214,7 @@ bool IRrecv::decodeShuzu() {
     }
 
     // false -> LSB first
-    if (!decodePulseDistanceData(SHUZU_BITS, 3, SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_ZERO_SPACE, false)) {
+    if (!decodePulseDistanceData(SHUZU_BITS, 3, SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
         DBG_PRINT(F("Shuzu: "));
         DBG_PRINTLN(F("Decode failed"));
         return false;

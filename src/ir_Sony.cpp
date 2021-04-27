@@ -121,7 +121,7 @@ bool IRrecv::decodeSony() {
         return false;
     }
 
-    if (!decodePulseWidthData((decodedIRData.rawDataPtr->rawlen - 1) / 2, 3, SONY_ONE_MARK, SONY_ZERO_MARK, SONY_SPACE, false)) {
+    if (!decodePulseWidthData((decodedIRData.rawDataPtr->rawlen - 1) / 2, 3, SONY_ONE_MARK, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST)) {
         DBG_PRINT("Sony: ");
         DBG_PRINTLN("Decode failed");
         return false;

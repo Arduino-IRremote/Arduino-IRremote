@@ -351,6 +351,16 @@ bool IRrecv::decode() {
 #endif
 
     /*
+     * Try the universal decoder for pulse width or pulse distance protocols
+     */
+#if defined(DECODE_DISTANCE)
+    TRACE_PRINTLN("Attempting universal Distance decode");
+    if (decodeDistance()) {
+        return true;
+    }
+#endif
+
+    /*
      * Last resort is the universal hash decode which always return true
      */
 #if defined(DECODE_HASH)
@@ -373,7 +383,7 @@ bool IRrecv::decode() {
  * Common decode functions
  **********************************************************************************************************************/
 /**
- * Decode pulse width protocols.
+ * Decode pulse width protocols. Currently only used for sony protocol.
  * The space (pause) has constant length, the length of the mark determines the bit value.
  *      Each bit looks like: MARK_1 + SPACE -> 1 or : MARK_0 + SPACE -> 0
  *
@@ -1170,6 +1180,12 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
         break;
     case APPLE:
         return (F("APPLE"));
+        break;
+    case PULSE_DISTANCE:
+        return (F("PULSE_DISTANCE"));
+        break;
+    case PULSE_WIDTH:
+        return (F("PULSE_WIDTH"));
         break;
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
     case BOSEWAVE:

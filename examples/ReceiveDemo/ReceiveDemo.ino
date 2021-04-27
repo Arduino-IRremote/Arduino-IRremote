@@ -45,6 +45,7 @@
 //#define DISABLE_LED_FEEDBACK_FOR_RECEIVE // saves 108 bytes program space
 #if FLASHEND <= 0x1FFF
 #define EXCLUDE_EXOTIC_PROTOCOLS
+#define EXCLUDE_UNIVERSAL_PROTOCOLS
 #endif
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 670 bytes program space if all other protocols are active
 //#define IR_MEASURE_TIMING
@@ -52,6 +53,9 @@
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 // to compensate for the signal forming of different IR receiver modules.
 #define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
+
+//#define DEBUG // Activate this for lots of lovely debug outputs.
+//#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
 
 /*
  * First define macros for input and output pin etc.

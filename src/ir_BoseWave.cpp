@@ -91,7 +91,7 @@ bool IRrecv::decodeBoseWave() {
         return false;
     }
 
-    if (!decodePulseDistanceData(BOSEWAVE_BITS, 3, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_ZERO_SPACE, false)) {
+    if (!decodePulseDistanceData(BOSEWAVE_BITS, 3, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
         DBG_PRINT("Bose: ");
         DBG_PRINTLN("Decode failed");
         return false;
