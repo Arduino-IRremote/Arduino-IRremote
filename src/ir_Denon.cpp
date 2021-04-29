@@ -32,7 +32,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -135,24 +135,24 @@ bool IRrecv::decodeDenon() {
     // we have no start bit, so check for the exact amount of data bits
     // Check we have the right amount of data (32). The + 2 is for initial gap + stop bit mark
     if (decodedIRData.rawDataPtr->rawlen != (2 * DENON_BITS) + 2) {
-        DBG_PRINT(F("Denon: "));
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is not 32");
+        DEBUG_PRINT(F("Denon: "));
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is not 32");
         return false;
     }
 
     // Read the bits in
     if (!decodePulseDistanceData(DENON_BITS, 1, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-        DBG_PRINT("Denon: ");
-        DBG_PRINTLN("Decode failed");
+        DEBUG_PRINT("Denon: ");
+        DEBUG_PRINTLN("Decode failed");
         return false;
     }
 
     // Check for stop mark
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
-        DBG_PRINT("Denon: ");
-        DBG_PRINTLN(F("Stop bit mark length is wrong"));
+        DEBUG_PRINT("Denon: ");
+        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 

@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 
 // MagiQuest added by E. Stuart Hicks
 // Based off the Magiquest fork of Arduino-IRremote by mpflaga
@@ -112,13 +112,13 @@ bool IRrecv::decodeMagiQuest() {
         space_ = decodedIRData.rawDataPtr->rawbuf[offset++];
         ratio_ = space_ / mark_;
 
-        DBG_PRINT("MagiQuest: ");
-        DBG_PRINT("mark=");
-        DBG_PRINT(mark_ * MICROS_PER_TICK);
-        DBG_PRINT(" space=");
-        DBG_PRINT(space_ * MICROS_PER_TICK);
-        DBG_PRINT(" ratio=");
-        DBG_PRINTLN(ratio_);
+        DEBUG_PRINT("MagiQuest: ");
+        DEBUG_PRINT("mark=");
+        DEBUG_PRINT(mark_ * MICROS_PER_TICK);
+        DEBUG_PRINT(" space=");
+        DEBUG_PRINT(space_ * MICROS_PER_TICK);
+        DEBUG_PRINT(" ratio=");
+        DEBUG_PRINTLN(ratio_);
 
         if (matchMark(space_ + mark_, MAGIQUEST_PERIOD)) {
             if (ratio_ > 1) {
@@ -135,12 +135,12 @@ bool IRrecv::decodeMagiQuest() {
 #endif
             }
         } else {
-            DBG_PRINTLN("MATCH_MARK failed");
+            DEBUG_PRINTLN("MATCH_MARK failed");
             return false;
         }
     }
 #ifdef DEBUG
-    DBG_PRINTLN(bitstring);
+    DEBUG_PRINTLN(bitstring);
 #endif
 
     // Success

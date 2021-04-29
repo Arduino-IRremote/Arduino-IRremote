@@ -91,17 +91,17 @@ struct irparams_struct {
  * Debug directives
  */
 #ifdef DEBUG
-#  define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
-#  define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
+#  define DEBUG_PRINT(...)    Serial.print(__VA_ARGS__)
+#  define DEBUG_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else
 /**
  * If DEBUG, print the arguments, otherwise do nothing.
  */
-#  define DBG_PRINT(...) void()
+#  define DEBUG_PRINT(...) void()
 /**
  * If DEBUG, print the arguments as a line, otherwise do nothing.
  */
-#  define DBG_PRINTLN(...) void()
+#  define DEBUG_PRINTLN(...) void()
 #endif
 
 #ifdef TRACE
@@ -294,6 +294,7 @@ public:
     IRData decodedIRData;       // New: decoded IR data for the application
 
     // Last decoded IR data for repeat detection
+    decode_type_t lastDecodedProtocol;
     uint32_t lastDecodedAddress;
     uint32_t lastDecodedCommand;
 

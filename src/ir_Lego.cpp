@@ -32,7 +32,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -107,8 +107,8 @@ void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t 
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
     enableIROut(38);
 
-    DBG_PRINT("sendLego aRawData=0x");
-    DBG_PRINTLN(aRawData, HEX);
+    DEBUG_PRINT("sendLego aRawData=0x");
+    DEBUG_PRINTLN(aRawData, HEX);
 
     aChannel &= 0x03; // we have 4 channels
 
@@ -150,29 +150,29 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     // Check we have enough data - +4 for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawDataPtr->rawlen != (2 * LEGO_BITS) + 4) {
-        DBG_PRINT("LEGO: ");
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is not 36");
+        DEBUG_PRINT("LEGO: ");
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is not 36");
         return false;
     }
     // Check header "space"
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LEGO_HEADER_SPACE)) {
-        DBG_PRINT("LEGO: ");
-        DBG_PRINTLN("Header space length is wrong");
+        DEBUG_PRINT("LEGO: ");
+        DEBUG_PRINTLN("Header space length is wrong");
         return false;
     }
 
     if (!decodePulseDistanceData(LEGO_BITS, 3, LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-        DBG_PRINT("LEGO: ");
-        DBG_PRINTLN("Decode failed");
+        DEBUG_PRINT("LEGO: ");
+        DEBUG_PRINTLN("Decode failed");
         return false;
     }
 
     // Stop bit
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LEGO_BITS)], LEGO_BIT_MARK)) {
-        DBG_PRINT("LEGO: ");
-        DBG_PRINTLN(F("Stop bit mark length is wrong"));
+        DEBUG_PRINT("LEGO: ");
+        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
@@ -190,19 +190,19 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     // parity check
     if (tParityReceived != tParityComputed) {
-        DBG_PRINT("LEGO: ");
-        DBG_PRINT("Parity is not correct. expected=0x");
-        DBG_PRINT(tParityComputed, HEX);
-        DBG_PRINT(" received=0x");
-        DBG_PRINT(tParityReceived, HEX);
-        DBG_PRINT(", raw=0x");
-        DBG_PRINT(tDecodedValue, HEX);
-        DBG_PRINT(", 3 nibbles are 0x");
-        DBG_PRINT(tToggleEscapeChannel, HEX);
-        DBG_PRINT(", 0x");
-        DBG_PRINT(tMode, HEX);
-        DBG_PRINT(", 0x");
-        DBG_PRINTLN(tData, HEX);
+        DEBUG_PRINT("LEGO: ");
+        DEBUG_PRINT("Parity is not correct. expected=0x");
+        DEBUG_PRINT(tParityComputed, HEX);
+        DEBUG_PRINT(" received=0x");
+        DEBUG_PRINT(tParityReceived, HEX);
+        DEBUG_PRINT(", raw=0x");
+        DEBUG_PRINT(tDecodedValue, HEX);
+        DEBUG_PRINT(", 3 nibbles are 0x");
+        DEBUG_PRINT(tToggleEscapeChannel, HEX);
+        DEBUG_PRINT(", 0x");
+        DEBUG_PRINT(tMode, HEX);
+        DEBUG_PRINT(", 0x");
+        DEBUG_PRINTLN(tData, HEX);
         // might not be an error, so just continue
         decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_MSB_FIRST;
     }

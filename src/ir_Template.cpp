@@ -61,7 +61,7 @@
 
  A. In the function IRrecv::decode(), add:
  #ifdef DECODE_SHUZU
- DBG_PRINTLN("Attempting Shuzu decode");
+ DEBUG_PRINTLN("Attempting Shuzu decode");
  if (decodeShuzu())  return true ;
  #endif
 
@@ -127,7 +127,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 
 //#define SEND_SHUZU  1 // for testing
 //#define DECODE_SHUZU  1 // for testing
@@ -208,22 +208,22 @@ bool IRrecv::decodeShuzu() {
 
     // Check header "space"
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], SHUZU_HEADER_MARK) || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SHUZU_HEADER_SPACE)) {
-        DBG_PRINT("Shuzu: ");
-        DBG_PRINTLN("Header mark or space length is wrong");
+        DEBUG_PRINT("Shuzu: ");
+        DEBUG_PRINTLN("Header mark or space length is wrong");
         return false;
     }
 
     // false -> LSB first
     if (!decodePulseDistanceData(SHUZU_BITS, 3, SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
-        DBG_PRINT(F("Shuzu: "));
-        DBG_PRINTLN(F("Decode failed"));
+        DEBUG_PRINT(F("Shuzu: "));
+        DEBUG_PRINTLN(F("Decode failed"));
         return false;
     }
 
     // Stop bit
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * SHUZU_BITS)], SHUZU_BIT_MARK)) {
-        DBG_PRINT(F("Shuzu: "));
-        DBG_PRINTLN(F("Stop bit mark length is wrong"));
+        DEBUG_PRINT(F("Shuzu: "));
+        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 

@@ -43,9 +43,9 @@
 #ifndef IRremote_h
 #define IRremote_h
 
-#define VERSION_IRREMOTE "3.1.1"
+#define VERSION_IRREMOTE "3.3.0"
 #define VERSION_IRREMOTE_MAJOR 3
-#define VERSION_IRREMOTE_MINOR 1
+#define VERSION_IRREMOTE_MINOR 3
 
 // activate it for all cores that does not use the -flto flag, if you get false error messages regarding begin() during compilation.
 //#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN
@@ -117,19 +117,28 @@
  *  TSOP31238   Mark Excess 0 to +50
  */
 #if !defined(MARK_EXCESS_MICROS)
-//#define MARK_EXCESS_MICROS    50
+// To change this value, you simply can add a line #define "MARK_EXCESS_MICROS <My_new_value>" in your ino file before the line "#include <IRremote.h>"
 #define MARK_EXCESS_MICROS    20
 #endif
 
 /**
  * Minimum gap between IR transmissions, to detect the end of a protocol.
  * Must be greater than any space of a protocol e.g. the NEC header space of 4500 us.
- * Must be smaller than any gap between a command and a repeat e.g. the retransmission gap for Sony is around 24 ms.
- * Keep in mind that this is the delay between the end of the received command and the start of decoding.
+ * Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.
+ * Keep in mind, that this is the delay between the end of the received command and the start of decoding.
  */
 #if !defined(RECORD_GAP_MICROS)
+// To change this value, you simply can add a line #define "RECORD_GAP_MICROS <My_new_value>" in your ino file before the line "#include <IRremote.h>"
 #define RECORD_GAP_MICROS   5000 // FREDRICH28AC header space is 9700, NEC header space is 4500
 #endif
+/**
+ * Threshold for warnings at printIRResult*() to report about changing the RECORD_GAP_MICROS value to a higher value.
+ */
+#if !defined(RECORD_GAP_MICROS_WARNING_THRESHOLD)
+// To change this value, you simply can add a line #define "RECORD_GAP_MICROS_WARNING_THRESHOLD <My_new_value>" in your ino file before the line "#include <IRremote.h>"
+#define RECORD_GAP_MICROS_WARNING_THRESHOLD   20000
+#endif
+
 /** Minimum gap between IR transmissions, in MICROS_PER_TICK */
 #define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK) // 221 for 1100
 
@@ -165,7 +174,8 @@
  * It should be the time used for digitalWrite(sendPin, LOW) and the call to delayMicros()
  * Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600
  */
-#ifndef PULSE_CORRECTION_NANOS
+#if !defined(PULSE_CORRECTION_NANOS)
+// To change this value, you simply can add a line #define "PULSE_CORRECTION_NANOS <My_new_value>" in your ino file before the line "#include <IRremote.h>"
 #define PULSE_CORRECTION_NANOS (48000000000L / F_CPU) // 3000 @16MHz, 666 @72MHz
 #endif
 

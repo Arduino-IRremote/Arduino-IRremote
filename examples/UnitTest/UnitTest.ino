@@ -52,7 +52,6 @@
 #define DECODE_RC5
 #define DECODE_RC6
 #define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
-#define DECODE_SAMSUNG
 #define DECODE_LG
 
 #define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols
@@ -60,6 +59,7 @@
 #endif
 
 #if FLASHEND >= 0x7FFF      // Additional code for less equal than 32k flash, like ATmega328
+#define DECODE_SAMSUNG
 
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF
@@ -70,7 +70,6 @@
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
 //#define IR_MEASURE_TIMING
-//#define DEBUG // Activate this for lots of lovely debug outputs.
 #define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
 #define DISABLE_LED_FEEDBACK_FOR_RECEIVE // halves ISR duration
 
@@ -132,6 +131,8 @@ void setup() {
     Serial.println(F(" us"));
 
     // infos for receive
+    Serial.print(RECORD_GAP_MICROS);
+    Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
 #endif

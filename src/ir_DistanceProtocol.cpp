@@ -36,7 +36,7 @@
 //#define MSB_LSB_DECODING PROTOCOL_IS_MSB_FIRST // this resembles the JVC, Denon
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 //#include "LongUnion.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
@@ -100,11 +100,14 @@ bool aggregateArrayCounts(uint8_t aArray[], uint8_t aMaxIndex, uint8_t *aShortIn
 bool IRrecv::decodeDistance() {
     uint8_t tDurationArray[DURATION_ARRAY_SIZE];
 
+    /*
+     * Accept only protocols with at least 8 bits
+     */
     if (decodedIRData.rawDataPtr->rawlen < (2 * 8) + 4) {
-        DBG_PRINT("PULSE_DISTANCE: ");
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is less than 20");
+        DEBUG_PRINT("PULSE_DISTANCE: ");
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is less than 20");
         return false;
     }
 
@@ -128,8 +131,8 @@ bool IRrecv::decodeDistance() {
     uint8_t tSpaceTicksShort = 0;
     uint8_t tSpaceTicksLong = 0;
     if (!aggregateArrayCounts(tDurationArray, tMaxDurationIndex, &tSpaceTicksShort, &tSpaceTicksLong)) {
-        DBG_PRINT(F("PULSE_DISTANCE: "));
-        DBG_PRINTLN(F("Space aggregation failed, more than 2 distinct duration values found"));
+        DEBUG_PRINT(F("PULSE_DISTANCE: "));
+        DEBUG_PRINTLN(F("Space aggregation failed, more than 2 distinct duration values found"));
         return false;
     }
 
@@ -141,6 +144,7 @@ bool IRrecv::decodeDistance() {
     // Reset array
     memset(tDurationArray, 0, sizeof(tDurationArray));
 
+    tMaxDurationIndex = 0;
     // Count mark durations. Skip leading start and trailing stop bit.
     for (i = 3; i < decodedIRData.rawDataPtr->rawlen - 2; i += 2) {
         uint8_t tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
@@ -155,8 +159,8 @@ bool IRrecv::decodeDistance() {
     uint8_t tMarkTicksShort = 0;
     uint8_t tMarkTicksLong = 0;
     if (!aggregateArrayCounts(tDurationArray, tMaxDurationIndex, &tMarkTicksShort, &tMarkTicksLong)) {
-        DBG_PRINT(F("PULSE_DISTANCE: "));
-        DBG_PRINTLN(F("Mark aggregation failed, more than 2 distinct duration values found"));
+        DEBUG_PRINT(F("PULSE_DISTANCE: "));
+        DEBUG_PRINTLN(F("Mark aggregation failed, more than 2 distinct duration values found"));
     }
 
 #if defined(DEBUG)
@@ -175,28 +179,33 @@ bool IRrecv::decodeDistance() {
     }
 
     if (tSpaceTicksLong == 0) {
+        if (tMarkTicksLong == 0) {
+            DEBUG_PRINT(F("PULSE_DISTANCE: "));
+            DEBUG_PRINTLN(F("Only 1 distinct duration value for each space and mark found"));
+            return false;
+        }
 //        // check if last bit can be decoded as data or not, in this case take it as a stop bit
 //        if (decodePulseWidthData(1, decodedIRData.rawDataPtr->rawlen - 3, tMarkTicksLong * MICROS_PER_TICK,
 //                tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, MSB_LSB_DECODING)) {
 //            tNumberOfBits++;
 //        }
-        // decode without leading start bit.  Currently only seen for sony protocol
-        if (!decodePulseWidthData(tNumberOfBits, tStartIndex, tMarkTicksLong * MICROS_PER_TICK, tMarkTicksShort * MICROS_PER_TICK,
-                tSpaceTicksShort * MICROS_PER_TICK, MSB_LSB_DECODING)) {
-            DBG_PRINT(F("PULSE_WIDTH: "));
-            DBG_PRINTLN(F("Decode failed"));
-            return false;
-        }
-        DBG_PRINT(F("PULSE_WIDTH: "));
-        DBG_PRINT(F(" OneMarkMicros="));
-        DBG_PRINT(tMarkTicksLong * MICROS_PER_TICK);
-        DBG_PRINT(F(" ZeroMarkMicros="));
-        DBG_PRINT(tMarkTicksShort* MICROS_PER_TICK);
-        DBG_PRINT(F(" ZeroSpaceMicros="));
-        DBG_PRINTLN(tSpaceTicksShort* MICROS_PER_TICK);
-        // Store ticks used for decoding in extra
-        decodedIRData.extra = (tMarkTicksShort << 8) | tMarkTicksLong;
-        decodedIRData.protocol = PULSE_WIDTH;
+            // decode without leading start bit.  Currently only seen for sony protocol
+            if (!decodePulseWidthData(tNumberOfBits, tStartIndex, tMarkTicksLong * MICROS_PER_TICK,
+                    tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, MSB_LSB_DECODING)) {
+                DEBUG_PRINT(F("PULSE_WIDTH: "));
+                DEBUG_PRINTLN(F("Decode failed"));
+                return false;
+            }
+            DEBUG_PRINT(F("PULSE_WIDTH: "));
+            DEBUG_PRINT(F(" OneMarkMicros="));
+            DEBUG_PRINT(tMarkTicksLong * MICROS_PER_TICK);
+            DEBUG_PRINT(F(" ZeroMarkMicros="));
+            DEBUG_PRINT(tMarkTicksShort* MICROS_PER_TICK);
+            DEBUG_PRINT(F(" ZeroSpaceMicros="));
+            DEBUG_PRINTLN(tSpaceTicksShort* MICROS_PER_TICK);
+            // Store ticks used for decoding in extra
+            decodedIRData.extra = (tMarkTicksShort << 8) | tMarkTicksLong;
+            decodedIRData.protocol = PULSE_WIDTH;
     } else {
 //        // check if last bit can be decoded as data or not, in this case take it as a stop bit
 //        if (decodePulseDistanceData(1, decodedIRData.rawDataPtr->rawlen - 3, tMarkTicksShort * MICROS_PER_TICK,
@@ -204,22 +213,20 @@ bool IRrecv::decodeDistance() {
 //            Serial.print(F("tNumberOfBits++ "));
 //            tNumberOfBits++;
 //        }
-        Serial.print(F("tNumberOfBits="));
-        Serial.println(tNumberOfBits);
 
         if (!decodePulseDistanceData(tNumberOfBits, tStartIndex, tMarkTicksShort * MICROS_PER_TICK,
                 tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, MSB_LSB_DECODING)) {
-            DBG_PRINT(F("PULSE_DISTANCE: "));
-            DBG_PRINTLN(F("Decode failed"));
+            DEBUG_PRINT(F("PULSE_DISTANCE: "));
+            DEBUG_PRINTLN(F("Decode failed"));
             return false;
         }
-        DBG_PRINT(F("PULSE_DISTANCE: "));
-        DBG_PRINT(F("BitMarkMicros="));
-        DBG_PRINT(tMarkTicksShort* MICROS_PER_TICK);
-        DBG_PRINT(F(" OneSpaceMicros="));
-        DBG_PRINT(tSpaceTicksLong* MICROS_PER_TICK);
-        DBG_PRINT(F(" ZeroSpaceMicros="));
-        DBG_PRINTLN(tSpaceTicksShort* MICROS_PER_TICK);
+        DEBUG_PRINT(F("PULSE_DISTANCE: "));
+        DEBUG_PRINT(F("BitMarkMicros="));
+        DEBUG_PRINT(tMarkTicksShort* MICROS_PER_TICK);
+        DEBUG_PRINT(F(" OneSpaceMicros="));
+        DEBUG_PRINT(tSpaceTicksLong* MICROS_PER_TICK);
+        DEBUG_PRINT(F(" ZeroSpaceMicros="));
+        DEBUG_PRINTLN(tSpaceTicksShort* MICROS_PER_TICK);
         // Store ticks used for decoding in extra
         decodedIRData.extra = (tSpaceTicksShort << 8) | tSpaceTicksLong;
         decodedIRData.protocol = PULSE_DISTANCE;

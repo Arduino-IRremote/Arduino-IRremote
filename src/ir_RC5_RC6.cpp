@@ -31,7 +31,7 @@
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
 //#define TRACE // Activate this for more debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 #include "LongUnion.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
@@ -136,17 +136,17 @@ bool IRrecv::decodeRC5() {
     // Check we have the right amount of data (11 to 26). The +2 is for initial gap and start bit mark.
     if (decodedIRData.rawDataPtr->rawlen < MIN_RC5_MARKS + 2 && decodedIRData.rawDataPtr->rawlen > ((2 * RC5_BITS) + 2)) {
         // no debug output, since this check is mainly to determine the received protocol
-        DBG_PRINT(F("RC5: "));
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is not between 11 and 26");
+        DEBUG_PRINT(F("RC5: "));
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is not between 11 and 26");
         return false;
     }
 
 // Check start bit, the first space is included in the gap
     if (getBiphaselevel() != MARK) {
-        DBG_PRINT(F("RC5: "));
-        DBG_PRINTLN("first getBiphaselevel() is not MARK");
+        DEBUG_PRINT(F("RC5: "));
+        DEBUG_PRINTLN("first getBiphaselevel() is not MARK");
         return false;
     }
 
@@ -165,8 +165,8 @@ bool IRrecv::decodeRC5() {
             tDecodedRawData = (tDecodedRawData << 1) | 0;
         } else {
             // TRACE_PRINT since I saw this too often
-            DBG_PRINT(F("RC5: "));
-            DBG_PRINTLN(F("Decode failed"));
+            DEBUG_PRINT(F("RC5: "));
+            DEBUG_PRINTLN(F("Decode failed"));
             return false;
         }
     }
@@ -312,18 +312,18 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
         if (sLastSendToggleValue == 0) {
             sLastSendToggleValue = 1;
             // set toggled bit
-            DBG_PRINT(F("Set Toggle "));
+            DEBUG_PRINT(F("Set Toggle "));
             tIRRawData.UByte.MidHighByte = 1; // 3 Mode bits are 0
         } else {
             sLastSendToggleValue = 0;
         }
     }
 
-    DBG_PRINT(F("RC6: "));
-    DBG_PRINT(F("sLastSendToggleValue="));
-    DBG_PRINT(sLastSendToggleValue);
-    DBG_PRINT(F(" RawData="));
-    DBG_PRINTLN(tIRRawData.ULong, HEX);
+    DEBUG_PRINT(F("RC6: "));
+    DEBUG_PRINT(F("sLastSendToggleValue="));
+    DEBUG_PRINT(sLastSendToggleValue);
+    DEBUG_PRINT(F(" RawData="));
+    DEBUG_PRINTLN(tIRRawData.ULong, HEX);
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -349,10 +349,10 @@ bool IRrecv::decodeRC6() {
 
     // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space
     if (decodedIRData.rawDataPtr->rawlen < MIN_RC6_MARKS + 3 && decodedIRData.rawDataPtr->rawlen > ((2 * RC6_BITS) + 3)) {
-        DBG_PRINT(F("RC6: "));
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is not between 15 and 45");
+        DEBUG_PRINT(F("RC6: "));
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is not between 15 and 45");
         return false;
     }
 
@@ -360,8 +360,8 @@ bool IRrecv::decodeRC6() {
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], RC6_HEADER_MARK)
             || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_SPACE)) {
         // no debug output, since this check is mainly to determine the received protocol
-        DBG_PRINT(F("RC6: "));
-        DBG_PRINTLN("Header mark or space length is wrong");
+        DEBUG_PRINT(F("RC6: "));
+        DEBUG_PRINTLN("Header mark or space length is wrong");
         return false;
     }
 
@@ -370,13 +370,13 @@ bool IRrecv::decodeRC6() {
 
 // Process first bit, which is known to be a 1 (mark->space)
     if (getBiphaselevel() != MARK) {
-        DBG_PRINT(F("RC6: "));
-        DBG_PRINTLN("first getBiphaselevel() is not MARK");
+        DEBUG_PRINT(F("RC6: "));
+        DEBUG_PRINTLN("first getBiphaselevel() is not MARK");
         return false;
     }
     if (getBiphaselevel() != SPACE) {
-        DBG_PRINT(F("RC6: "));
-        DBG_PRINTLN("second getBiphaselevel() is not SPACE");
+        DEBUG_PRINT(F("RC6: "));
+        DEBUG_PRINTLN("second getBiphaselevel() is not SPACE");
         return false;
     }
 
@@ -388,8 +388,8 @@ bool IRrecv::decodeRC6() {
         if (tBitIndex == 3) {
             // Toggle bit is double wide; make sure second half is equal first half
             if (tStartLevel != getBiphaselevel()) {
-                DBG_PRINT(F("RC6: "));
-                DBG_PRINTLN(F("Toggle mark or space length is wrong"));
+                DEBUG_PRINT(F("RC6: "));
+                DEBUG_PRINTLN(F("Toggle mark or space length is wrong"));
                 return false;
             }
         }
@@ -398,8 +398,8 @@ bool IRrecv::decodeRC6() {
         if (tBitIndex == 3) {
             // Toggle bit is double wide; make sure second half matches
             if (tEndLevel != getBiphaselevel()) {
-                DBG_PRINT(F("RC6: "));
-                DBG_PRINTLN(F("Toggle mark or space length is wrong"));
+                DEBUG_PRINT(F("RC6: "));
+                DEBUG_PRINTLN(F("Toggle mark or space length is wrong"));
                 return false;
             }
         }
@@ -414,8 +414,8 @@ bool IRrecv::decodeRC6() {
             // we have a space to mark transition here
             tDecodedRawData = (tDecodedRawData << 1) | 0;
         } else {
-            DBG_PRINT(F("RC6: "));
-            DBG_PRINTLN(F("Decode failed"));
+            DEBUG_PRINT(F("RC6: "));
+            DEBUG_PRINTLN(F("Decode failed"));
             // we have no transition here or one level is -1 -> error
             return false;            // Error
         }
