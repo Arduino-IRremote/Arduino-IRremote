@@ -32,7 +32,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -102,10 +102,10 @@ bool IRrecv::decodeJVC() {
 
     // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark. +2 is for repeats
     if (decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 4) && decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 2)) {
-        DBG_PRINT(F("JVC: "));
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is not 34 or 36");
+        DEBUG_PRINT(F("JVC: "));
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is not 34 or 36");
         return false;
     }
 
@@ -130,14 +130,14 @@ bool IRrecv::decodeJVC() {
         // Check header "mark" and "space"
         if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], JVC_HEADER_MARK)
                 || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], JVC_HEADER_SPACE)) {
-            DBG_PRINT("JVC: ");
-            DBG_PRINTLN("Header mark or space length is wrong");
+            DEBUG_PRINT("JVC: ");
+            DEBUG_PRINTLN("Header mark or space length is wrong");
             return false;
         }
 
         if (!decodePulseDistanceData(JVC_BITS, 3, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
-            DBG_PRINT(F("JVC: "));
-            DBG_PRINTLN(F("Decode failed"));
+            DEBUG_PRINT(F("JVC: "));
+            DEBUG_PRINTLN(F("Decode failed"));
             return false;
         }
 
@@ -177,9 +177,9 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
 
     // Check we have enough data - +3 for start bit mark and space + stop bit mark
     if (aResults->rawlen <= (2 * JVC_BITS) + 3) {
-        DBG_PRINT("Data length=");
-        DBG_PRINT(aResults->rawlen);
-        DBG_PRINTLN(" is too small. >= 36 is required.");
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(aResults->rawlen);
+        DEBUG_PRINTLN(" is too small. >= 36 is required.");
 
         return false;
     }
@@ -196,7 +196,7 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
 
     // Stop bit
     if (!matchMark(aResults->rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
-        DBG_PRINTLN(F("Stop bit mark length is wrong"));
+        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 

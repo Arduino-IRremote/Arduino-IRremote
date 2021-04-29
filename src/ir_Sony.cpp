@@ -30,7 +30,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -108,22 +108,22 @@ bool IRrecv::decodeSony() {
     if (decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MIN) + 2 && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MAX) + 2
             && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_15) + 2) {
         // TRACE_PRINT since I saw this too often
-        DBG_PRINT("Sony: ");
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is not 12, 15 or 20");
+        DEBUG_PRINT("Sony: ");
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is not 12, 15 or 20");
         return false;
     }
     // Check header "space"
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SONY_SPACE)) {
-        DBG_PRINT("Sony: ");
-        DBG_PRINTLN("Header space length is wrong");
+        DEBUG_PRINT("Sony: ");
+        DEBUG_PRINTLN("Header space length is wrong");
         return false;
     }
 
     if (!decodePulseWidthData((decodedIRData.rawDataPtr->rawlen - 1) / 2, 3, SONY_ONE_MARK, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST)) {
-        DBG_PRINT("Sony: ");
-        DBG_PRINTLN("Decode failed");
+        DEBUG_PRINT("Sony: ");
+        DEBUG_PRINTLN("Decode failed");
         return false;
     }
 
@@ -160,11 +160,11 @@ bool IRrecv::decodeSonyMSB(decode_results *aResults) {
     // Some Sony's deliver repeats fast after first
     // unfortunately can't spot difference from of repeat from two fast clicks
     if (aResults->rawbuf[0] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
-        DBG_PRINTLN("IR Gap found");
+        DEBUG_PRINTLN("IR Gap found");
         aResults->bits = 0;
         aResults->value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
-        decodedIRData.protocol = UNKNOWN;
+        decodedIRData.protocol = SONY;
         return true;
     }
     offset++;

@@ -30,7 +30,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 #include "LongUnion.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
@@ -190,10 +190,10 @@ bool IRrecv::decodeNEC() {
 
     // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawDataPtr->rawlen != ((2 * NEC_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
-        DBG_PRINT(F("NEC: "));
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is not 68 or 4");
+        DEBUG_PRINT(F("NEC: "));
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is not 68 or 4");
         return false;
     }
 
@@ -209,7 +209,7 @@ bool IRrecv::decodeNEC() {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
-//            decodedIRData.protocol = NEC; do not set it, because it can also be an LG repeat
+            decodedIRData.protocol = lastDecodedProtocol;
             return true;
         }
         return false;
@@ -217,21 +217,21 @@ bool IRrecv::decodeNEC() {
 
     // Check command header space
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], NEC_HEADER_SPACE)) {
-        DBG_PRINT(F("NEC: "));
-        DBG_PRINTLN(F("Header space length is wrong"));
+        DEBUG_PRINT(F("NEC: "));
+        DEBUG_PRINTLN(F("Header space length is wrong"));
         return false;
     }
 
     if (!decodePulseDistanceData(NEC_BITS, 3, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
-        DBG_PRINT(F("NEC: "));
-        DBG_PRINTLN(F("Decode failed"));
+        DEBUG_PRINT(F("NEC: "));
+        DEBUG_PRINTLN(F("Decode failed"));
         return false;
     }
 
     // Stop bit
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * NEC_BITS)], NEC_BIT_MARK)) {
-        DBG_PRINT(F("NEC: "));
-        DBG_PRINTLN(F("Stop bit mark length is wrong"));
+        DEBUG_PRINT(F("NEC: "));
+        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
@@ -269,11 +269,11 @@ bool IRrecv::decodeNEC() {
             /*
              * Old NEC plausibility check below, now it is just ONKYO :-)
              */
-//            DBG_PRINT(F("NEC: "));
-//            DBG_PRINT(F("Command=0x"));
-//            DBG_PRINT(tValue.UByte.MidHighByte, HEX);
-//            DBG_PRINT(F(" is not inverted value of 0x"));
-//            DBG_PRINTLN(tValue.UByte.HighByte, HEX);
+//            DEBUG_PRINT(F("NEC: "));
+//            DEBUG_PRINT(F("Command=0x"));
+//            DEBUG_PRINT(tValue.UByte.MidHighByte, HEX);
+//            DEBUG_PRINT(F(" is not inverted value of 0x"));
+//            DEBUG_PRINTLN(tValue.UByte.HighByte, HEX);
 //            decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
         }
     }
@@ -304,31 +304,31 @@ bool IRrecv::decodeNECMSB(decode_results *aResults) {
 
     // Check we have the right amount of data (32). +4 for initial gap, start bit mark and space + stop bit mark
     if (aResults->rawlen != (2 * NEC_BITS) + 4) {
-        DBG_PRINT("NEC MSB: ");
-        DBG_PRINT("Data length=");
-        DBG_PRINT(aResults->rawlen);
-        DBG_PRINTLN(" is not 68");
+        DEBUG_PRINT("NEC MSB: ");
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(aResults->rawlen);
+        DEBUG_PRINTLN(" is not 68");
         return false;
     }
 
 // Check header "space"
     if (!matchSpace(aResults->rawbuf[offset], NEC_HEADER_SPACE)) {
-        DBG_PRINT("NEC MSB: ");
-        DBG_PRINTLN("Header space length is wrong");
+        DEBUG_PRINT("NEC MSB: ");
+        DEBUG_PRINTLN("Header space length is wrong");
         return false;
     }
     offset++;
 
     if (!decodePulseDistanceData(NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-        DBG_PRINT(F("NEC MSB: "));
-        DBG_PRINTLN(F("Decode failed"));
+        DEBUG_PRINT(F("NEC MSB: "));
+        DEBUG_PRINTLN(F("Decode failed"));
         return false;
     }
 
     // Stop bit
     if (!matchMark(aResults->rawbuf[offset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
-        DBG_PRINT("NEC MSB: ");
-        DBG_PRINTLN(F("Stop bit mark length is wrong"));
+        DEBUG_PRINT("NEC MSB: ");
+        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 

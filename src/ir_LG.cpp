@@ -32,7 +32,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -146,10 +146,10 @@ bool IRrecv::decodeLG() {
 
     // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawDataPtr->rawlen != ((2 * LG_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
-        DBG_PRINT(F("LG: "));
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is not 60 or 4");
+        DEBUG_PRINT(F("LG: "));
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is not 60 or 4");
         return false;
     }
 
@@ -165,7 +165,7 @@ bool IRrecv::decodeLG() {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
-//            decodedIRData.protocol = LG; do not set it, because it can also be an NEC repeat
+            decodedIRData.protocol = lastDecodedProtocol;
             return true;
         }
         return false;
@@ -173,21 +173,21 @@ bool IRrecv::decodeLG() {
 
     // Check command header space
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LG_HEADER_SPACE)) {
-        DBG_PRINT(F("LG: "));
-        DBG_PRINTLN(F("Header space length is wrong"));
+        DEBUG_PRINT(F("LG: "));
+        DEBUG_PRINTLN(F("Header space length is wrong"));
         return false;
     }
 
     if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-        DBG_PRINT(F("LG: "));
-        DBG_PRINTLN(F("Decode failed"));
+        DEBUG_PRINT(F("LG: "));
+        DEBUG_PRINTLN(F("Decode failed"));
         return false;
     }
 
     // Stop bit
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LG_BITS)], LG_BIT_MARK)) {
-        DBG_PRINT(F("LG: "));
-        DBG_PRINTLN(F("Stop bit mark length is wrong"));
+        DEBUG_PRINT(F("LG: "));
+        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
@@ -207,13 +207,13 @@ bool IRrecv::decodeLG() {
     }
     // Parity check
     if ((tChecksum & 0xF) != (decodedIRData.decodedRawData & 0xF)) {
-        DBG_PRINT(F("LG: "));
-        DBG_PRINT("4 bit checksum is not correct. expected=0x");
-        DBG_PRINT(tChecksum, HEX);
-        DBG_PRINT(" received=0x");
-        DBG_PRINT((decodedIRData.decodedRawData & 0xF), HEX);
-        DBG_PRINT(" data=0x");
-        DBG_PRINTLN(decodedIRData.command, HEX);
+        DEBUG_PRINT(F("LG: "));
+        DEBUG_PRINT("4 bit checksum is not correct. expected=0x");
+        DEBUG_PRINT(tChecksum, HEX);
+        DEBUG_PRINT(" received=0x");
+        DEBUG_PRINT((decodedIRData.decodedRawData & 0xF), HEX);
+        DEBUG_PRINT(" data=0x");
+        DEBUG_PRINTLN(decodedIRData.command, HEX);
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
     }
 
@@ -248,7 +248,7 @@ bool IRrecv::decodeLGMSB(decode_results *aResults) {
     }
 // Stop bit
     if (!matchMark(aResults->rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
-        DBG_PRINTLN(F("Stop bit mark length is wrong"));
+        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 

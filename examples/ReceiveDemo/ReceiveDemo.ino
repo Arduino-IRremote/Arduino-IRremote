@@ -54,7 +54,6 @@
 // to compensate for the signal forming of different IR receiver modules.
 #define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
 
-//#define DEBUG // Activate this for lots of lovely debug outputs.
 //#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
 
 /*
@@ -112,6 +111,8 @@ void setup() {
 #endif
 
     // infos for receive
+    Serial.print(RECORD_GAP_MICROS);
+    Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
 }
@@ -154,13 +155,17 @@ void loop() {
         }
 
 #  if !defined(ESP32) && !defined(ESP8266) && !defined(NRF5)
-        /*
-         * Play tone, wait and restore IR timer
-         */
-        IrReceiver.stop();
-        tone(TONE_PIN, 2200, 10);
-        delay(8);
-        IrReceiver.start(8000); // to compensate for 11 ms stop of receiver. This enables a correct gap measurement.
+        if (IrReceiver.decodedIRData.protocol != UNKNOWN) {
+            /*
+             * Play tone, wait and restore IR timer, if a valid protocol was received
+             * Otherwise do not disturb the detection of the gap between transmissions. This will give
+             * the next printIRResult* call a chance to report about changing the RECORD_GAP_MICROS value.
+             */
+            IrReceiver.stop();
+            tone(TONE_PIN, 2200, 10);
+            delay(8);
+            IrReceiver.start(8000); // to compensate for 8 ms stop of receiver. This enables a correct gap measurement.
+        }
 #  endif
 #endif // FLASHEND > 0x1FFF
 

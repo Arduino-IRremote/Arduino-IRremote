@@ -32,7 +32,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DBG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 #include "LongUnion.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
@@ -138,29 +138,29 @@ bool IRrecv::decodeKaseikyo() {
     decode_type_t tProtocol;
     // Check we have enough data (100)- +4 for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawDataPtr->rawlen != ((2 * KASEIKYO_BITS) + 4)) {
-        DBG_PRINT(F("Kaseikyo: "));
-        DBG_PRINT("Data length=");
-        DBG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DBG_PRINTLN(" is not 100");
+        DEBUG_PRINT(F("Kaseikyo: "));
+        DEBUG_PRINT("Data length=");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINTLN(" is not 100");
         return false;
     }
 
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], KASEIKYO_HEADER_MARK)) {
-        DBG_PRINT("Kaseikyo: ");
-        DBG_PRINTLN("Header mark length is wrong");
+        DEBUG_PRINT("Kaseikyo: ");
+        DEBUG_PRINTLN("Header mark length is wrong");
         return false;
     }
 
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[2], KASEIKYO_HEADER_SPACE)) {
-        DBG_PRINT("Kaseikyo: ");
-        DBG_PRINTLN("Header space length is wrong");
+        DEBUG_PRINT("Kaseikyo: ");
+        DEBUG_PRINTLN("Header space length is wrong");
         return false;
     }
 
     // decode Vendor ID
     if (!decodePulseDistanceData(KASEIKYO_VENDOR_ID_BITS, 3, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
-        DBG_PRINT("Kaseikyo: ");
-        DBG_PRINTLN("Vendor ID decode failed");
+        DEBUG_PRINT("Kaseikyo: ");
+        DEBUG_PRINTLN("Vendor ID decode failed");
         return false;
     }
 
@@ -188,8 +188,8 @@ bool IRrecv::decodeKaseikyo() {
     KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
             3 + (2 * KASEIKYO_VENDOR_ID_BITS), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
             KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
-        DBG_PRINT("Kaseikyo: ");
-        DBG_PRINTLN("Address, command + parity decode failed");
+        DEBUG_PRINT("Kaseikyo: ");
+        DEBUG_PRINTLN("Address, command + parity decode failed");
         return false;
     }
 
@@ -202,13 +202,13 @@ bool IRrecv::decodeKaseikyo() {
     uint8_t tParity = tValue.UByte.LowByte ^ tValue.UByte.MidLowByte ^ tValue.UByte.MidHighByte;
 
     if (tVendorParity != (tValue.UByte.LowByte & 0xF)) {
-        DBG_PRINT("Kaseikyo: ");
-        DBG_PRINT("4 bit VendorID Parity is not correct. expected=0x");
-        DBG_PRINT(tVendorParity, HEX);
-        DBG_PRINT(" received=0x");
-        DBG_PRINT(decodedIRData.decodedRawData, HEX);
-        DBG_PRINT(" VendorID=0x");
-        DBG_PRINTLN(tVendorId, HEX);
+        DEBUG_PRINT("Kaseikyo: ");
+        DEBUG_PRINT("4 bit VendorID Parity is not correct. expected=0x");
+        DEBUG_PRINT(tVendorParity, HEX);
+        DEBUG_PRINT(" received=0x");
+        DEBUG_PRINT(decodedIRData.decodedRawData, HEX);
+        DEBUG_PRINT(" VendorID=0x");
+        DEBUG_PRINTLN(tVendorId, HEX);
         decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
     }
 
@@ -219,15 +219,15 @@ bool IRrecv::decodeKaseikyo() {
     }
 
     if (tValue.UByte.HighByte != tParity) {
-        DBG_PRINT("Kaseikyo: ");
-        DBG_PRINT("8 bit Parity is not correct. expected=0x");
-        DBG_PRINT(tParity, HEX);
-        DBG_PRINT(" received=0x");
-        DBG_PRINT(decodedIRData.decodedRawData >> KASEIKYO_COMMAND_BITS, HEX);
-        DBG_PRINT(" address=0x");
-        DBG_PRINT(decodedIRData.address, HEX);
-        DBG_PRINT(" command=0x");
-        DBG_PRINTLN(decodedIRData.command, HEX);
+        DEBUG_PRINT("Kaseikyo: ");
+        DEBUG_PRINT("8 bit Parity is not correct. expected=0x");
+        DEBUG_PRINT(tParity, HEX);
+        DEBUG_PRINT(" received=0x");
+        DEBUG_PRINT(decodedIRData.decodedRawData >> KASEIKYO_COMMAND_BITS, HEX);
+        DEBUG_PRINT(" address=0x");
+        DEBUG_PRINT(decodedIRData.address, HEX);
+        DEBUG_PRINT(" command=0x");
+        DEBUG_PRINTLN(decodedIRData.command, HEX);
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
     }
 
