@@ -47,7 +47,7 @@
 #define FEEDBACK_LED_ON()   (PORTB |= B10000000)
 #define FEEDBACK_LED_OFF()  (PORTB &= B01111111)
 
-#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__)
+#elif defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644__) || defined(__AVR_ATtiny88__)
 #define LED_BUILTIN        0
 #define FEEDBACK_LED_ON()   (PORTD |= B00000001)
 #define FEEDBACK_LED_OFF()  (PORTD &= B11111110)
