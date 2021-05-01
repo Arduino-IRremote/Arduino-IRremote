@@ -51,8 +51,8 @@ jobs:
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
           - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-          - digistump:avr:digispark-tiny:clock=clock1
-          - ATTinyCore:avr:attinyx5:chip=85,clock=1internal
+          - digistump:avr:digispark-tiny:clock=clock16
+          - ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
           - TinyCore:avr:tiny32
           - arduino:samd:arduino_zero_native
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal # ATmega128
@@ -106,26 +106,20 @@ jobs:
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             sketches-exclude: MinimalReceiver,IRDispatcherDemo # digitalWriteFast.h not available for this board
 
-          - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock1
+          - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock16
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
             required-libraries: ATtinySerialOut
-            sketches-exclude: UnitTest,ControlRelay,ReceiveAndSend,SendAndReceive,ReceiveDump,SendProntoDemo,SendBoseWaveDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis,IRremoteExtensionTest # Does not fit in FLASH or RAM, missing digitalPinToInterrupt
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              All: -DEXCLUDE_EXOTIC_PROTOCOLS -DEXCLUDE_UNIVERSAL_PROTOCOLS
+            sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
 
           - arduino-boards-fqbn: digistump:avr:MHETtiny88  # ATtiny88 China clone board @16 MHz
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
             required-libraries: ATtinySerialOut
-            sketches-exclude: UnitTest,ControlRelay,ReceiveAndSend,SendAndReceive,ReceiveDump,SendProntoDemo,SendBoseWaveDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis,IRremoteExtensionTest # Does not fit in FLASH or RAM, missing digitalPinToInterrupt
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              All: -DEXCLUDE_EXOTIC_PROTOCOLS -DEXCLUDE_UNIVERSAL_PROTOCOLS
+            sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
 
-          - arduino-boards-fqbn: ATTinyCore:avr:attinyx5:chip=85,clock=1internal
+          - arduino-boards-fqbn: ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             required-libraries: ATtinySerialOut
-            sketches-exclude: UnitTest,ReceiveAndSend,ReceiveDump,SendProntoDemo,SendBoseWaveDemo,MicroGirs,IRDispatcherDemo,SendLGAirConditionerDemo,ReceiverTimingAnalysis # Does not fit in FLASH or RAM
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              All: -DEXCLUDE_EXOTIC_PROTOCOLS -DEXCLUDE_UNIVERSAL_PROTOCOLS
+            sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
 
           - arduino-boards-fqbn: TinyCore:avr:tiny32
             platform-url: https://raw.githubusercontent.com/xukangmin/TinyCore/master/avr/package/package_tinycore_index.json
@@ -177,5 +171,6 @@ jobs:
           arduino-platform: ${{ matrix.arduino-platform }}
           platform-url: ${{ matrix.platform-url }}
           required-libraries: ${{ matrix.required-libraries }}
+          sketch-names: ${{ matrix.sketch-names }}
           sketches-exclude: ${{ matrix.sketches-exclude }}
           build-properties: ${{ toJson(matrix.build-properties) }}

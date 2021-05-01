@@ -38,16 +38,19 @@
  * If no protocol is defined, all protocols are active.
  * This must be done before the #include <IRremote.h>
  */
-//#define DECODE_LG           1
-//#define DECODE_NEC          1
+//#define DECODE_LG
+//#define DECODE_NEC
 // etc. see IRremote.h
 //
 //#define DISABLE_LED_FEEDBACK_FOR_RECEIVE // saves 108 bytes program space
-#if FLASHEND <= 0x1FFF
+#if FLASHEND <= 0x1FFF  // For 8k flash or less, like ATtiny85. Exclude exotic protocols.
 #define EXCLUDE_EXOTIC_PROTOCOLS
-#define EXCLUDE_UNIVERSAL_PROTOCOLS
+#  if !defined(DIGISTUMPCORE) // ATTinyCore is bigger than Digispark core
+#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program space.
+#  endif
 #endif
-//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 670 bytes program space if all other protocols are active
+//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program space.
+//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program space if all other protocols are active
 //#define IR_MEASURE_TIMING
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
@@ -78,7 +81,7 @@ void setup() {
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
     pinMode(IR_TIMING_TEST_PIN, OUTPUT);
 #endif
-#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program space of ATtiny85 etc.
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
 #endif
 
@@ -105,7 +108,7 @@ void setup() {
     Serial.println(IR_RECEIVE_PIN);
 #endif
 
-#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program space of ATtiny85 etc.
     Serial.print(F("Debug button pin is "));
     Serial.println(DEBUG_BUTTON_PIN);
 #endif
@@ -128,10 +131,7 @@ void loop() {
      */
     if (IrReceiver.decode()) {
         Serial.println();
-#if FLASHEND <= 0x1FFF // For less equal than 8k flash, like ATtiny85
-        // Print a minimal summary of received data
-        IrReceiver.printIRResultMinimal(&Serial);
-#else
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
             Serial.println(F("Overflow detected"));
@@ -167,7 +167,10 @@ void loop() {
             IrReceiver.start(8000); // to compensate for 8 ms stop of receiver. This enables a correct gap measurement.
         }
 #  endif
-#endif // FLASHEND > 0x1FFF
+#else
+        // Print a minimal summary of received data
+        IrReceiver.printIRResultMinimal(&Serial);
+#endif // FLASHEND
 
         /*
          * !!!Important!!! Enable receiving of the next value,

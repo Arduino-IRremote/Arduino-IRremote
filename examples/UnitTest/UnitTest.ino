@@ -38,7 +38,7 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-#if FLASHEND >= 0x1FFF      // For less equal than 8k flash, like ATtiny85
+#if FLASHEND >= 0x1FFF      // For 8k flash or more, like ATtiny85
 #define DECODE_DENON        // Includes Sharp
 #define DECODE_KASEIKYO
 #define DECODE_NEC          // Includes Apple and Onkyo
@@ -47,7 +47,7 @@
 #  endif
 #endif
 
-#if FLASHEND >= 0x3FFF      // Additional code for less equal than 16k flash, like ATtiny1604
+#if FLASHEND >= 0x3FFF      // For 16k flash or more, like ATtiny1604
 #define DECODE_JVC
 #define DECODE_RC5
 #define DECODE_RC6
@@ -58,7 +58,7 @@
 #define DECODE_HASH         // special decoder for all protocols
 #endif
 
-#if FLASHEND >= 0x7FFF      // Additional code for less equal than 32k flash, like ATmega328
+#if FLASHEND >= 0x7FFF      // For 32k flash or more, like ATmega328
 #define DECODE_SAMSUNG
 
 #define DECODE_BOSEWAVE
@@ -116,19 +116,22 @@ void setup() {
     Serial.println(IR_SEND_PIN);
 #endif
 
-#if FLASHEND > 0x1FFF && !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by ledcWrite() for each pin
-    /*
-     * Print internal signal generation info
-     */
-    IrSender.enableIROut(38);
 
-    Serial.print(F("Send signal mark duration is "));
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
+// For esp32 we use PWM generation by ledcWrite() for each pin.
+#  if !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM) && !defined(ESP32)
+    /*
+     * Print internal software PWM generation info
+     */
+    IrSender.enableIROut(38); // Call it with 38 kHz to initialize the values printed below
+    Serial.print(F("Send signal mark duration for 38kHz  is "));
     Serial.print(IrSender.periodOnTimeMicros);
     Serial.print(F(" us, pulse correction is "));
     Serial.print(IrSender.getPulseCorrectionNanos());
     Serial.print(F(" ns, total period is "));
     Serial.print(IrSender.periodTimeMicros);
     Serial.println(F(" us"));
+#  endif
 
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);
@@ -144,17 +147,16 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
 
     if (IrReceiver.decode()) {
 // Print a short summary of received data
-#if FLASHEND <= 0x1FFF // For less equal than 8k flash, like ATtiny85
-        // Print a minimal summary of received data
-        IrReceiver.printIRResultMinimal(&Serial);
-#else
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
         IrReceiver.printIRResultShort(&Serial);
+#else
+        IrReceiver.printIRResultMinimal(&Serial);
 #endif
 
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
             Serial.println(F("Overflow detected"));
-#if FLASHEND > 0x1FFF // For less equal than 8k flash, like ATtiny85
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
         } else if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
             // We have an unknown protocol, print more info
             IrReceiver.printIRResultRawFormatted(&Serial, true);
@@ -221,7 +223,7 @@ void loop() {
     checkReceive(sAddress, sCommand);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program space of ATtiny85 etc.
 
     if (sAddress == 0xFFF1) {
         /*
@@ -230,11 +232,11 @@ void loop() {
         Serial.println(F("Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats"));
         Serial.flush();
         IrSender.sendPronto(F("0000 006D 0022 0000 015E 00AB " /* Pronto header + start bit */
-                "0017 0015 0017 0015 0017 0017 0015 0017 0017 0015 0017 0015 0017 0015 0017 003F " /* Lower address byte */
-                "0017 003F 0017 003E 0017 003F 0015 003F 0017 003E 0017 003F 0017 003E 0017 0015 " /* Upper address byte (inverted at 8 bit mode) */
-                "0017 003E 0017 0015 0017 003F 0017 0015 0017 0015 0017 0015 0017 003F 0017 0015 " /* command byte */
-                "0019 0013 0019 003C 0017 0015 0017 003F 0017 003E 0017 003F 0017 0015 0017 003E " /* inverted command byte */
-                "0017 0806"), 0); //stop bit, no repeat possible, because of missing repeat pattern
+                        "0017 0015 0017 0015 0017 0017 0015 0017 0017 0015 0017 0015 0017 0015 0017 003F " /* Lower address byte */
+                        "0017 003F 0017 003E 0017 003F 0015 003F 0017 003E 0017 003F 0017 003E 0017 0015 " /* Upper address byte (inverted at 8 bit mode) */
+                        "0017 003E 0017 0015 0017 003F 0017 0015 0017 0015 0017 0015 0017 003F 0017 0015 " /* command byte */
+                        "0019 0013 0019 003C 0017 0015 0017 003F 0017 003E 0017 003F 0017 0015 0017 003E " /* inverted command byte */
+                        "0017 0806"), 0); //stop bit, no repeat possible, because of missing repeat pattern
         checkReceive(0x80, 0x45);
         delay(DELAY_AFTER_SEND);
         /*
@@ -296,14 +298,14 @@ void loop() {
     checkReceive(sAddress & 0x1F, sCommand);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND > 0x1FFF || !defined(CLOCK_SOURCE) // ATTinyCore is bigger than digispark core
+#if FLASHEND >= 0x3FFF || defined(DIGISTUMPCORE) // ATTinyCore is bigger than Digispark core
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0x1F, sCommand & 0x7F, sRepeats);
     checkReceive(sAddress & 0x1F, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
 #endif
-#if FLASHEND >= 0x3FFF      // Additional code for less equal than 16k flash, like ATtiny1604
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
     Serial.println(F("Send Sony/SIRCS with 7 command and 8 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0xFF, sCommand, sRepeats, SIRCS_15_PROTOCOL);
@@ -324,7 +326,7 @@ void loop() {
 
     Serial.println(F("Send RC5X with 7.th MSB of command set"));
     Serial.flush();
-    IrSender.sendRC5(sAddress & 0x1F, (sCommand & 0x3F) + 0x40, sRepeats, true);  // 5 address, 7 command bits
+    IrSender.sendRC5(sAddress & 0x1F, (sCommand & 0x3F) + 0x40, sRepeats, true);// 5 address, 7 command bits
     checkReceive(sAddress & 0x1F, (sCommand & 0x3F) + 0x40);
     delay(DELAY_AFTER_SEND);
 
@@ -352,7 +354,7 @@ void loop() {
     checkReceive(IRSendData.address, IRSendData.command);
     delay(DELAY_AFTER_SEND);
 
-    IRSendData.protocol = JVC; // switch protocol
+    IRSendData.protocol = JVC;// switch protocol
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
@@ -361,7 +363,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     IRSendData.protocol = LG;
-    IRSendData.command = sCommand << 8 | sCommand; // LG supports 16 bit command
+    IRSendData.command = sCommand << 8 | sCommand;// LG supports 16 bit command
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
@@ -370,7 +372,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 #endif // FLASHEND >= 0x3FFF
 
-#if FLASHEND >= 0x7FFF      // Additional code for less equal than 32k flash, like ATmega328
+#if FLASHEND >= 0x7FFF      // For 32k flash or more, like ATmega328
     IRSendData.protocol = BOSEWAVE;
     Serial.println(F("Send Bosewave with no address and 8 command bits"));
     Serial.flush();

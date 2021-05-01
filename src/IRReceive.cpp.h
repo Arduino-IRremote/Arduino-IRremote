@@ -859,6 +859,7 @@ void CheckForRecordGapsMicros(Print *aSerial, IRData *aIRDataPtr) {
  **********************************************************************************************************************/
 /**
  * Internal function to print decoded result and flags in one line.
+ * Ends with println().
  *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
@@ -939,6 +940,8 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
 
 /**
  * Function to print values and flags of IrReceiver.decodedIRData in one line.
+ * Ends with println().
+ *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRResultShort(Print *aSerial) {
@@ -947,6 +950,8 @@ void IRrecv::printIRResultShort(Print *aSerial) {
 
 /**
  * Function to print protocol number, address, command, raw data and repeat flag of IrReceiver.decodedIRData in one short line.
+ * Does not print a Newline / does not end with println().
+ *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRResultMinimal(Print *aSerial) {
@@ -981,6 +986,7 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
 
 /**
  * Dump out the timings in IrReceiver.decodedIRData.rawDataPtr->rawbuf[] array 8 values per line.
+ *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {

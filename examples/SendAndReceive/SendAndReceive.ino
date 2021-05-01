@@ -32,12 +32,21 @@
 
 #include <Arduino.h>
 
+// select only NEC and the universal decoder for pulse width or pulse distance protocols
+#define DECODE_NEC          // Includes Apple and Onkyo
+#define DECODE_DISTANCE
+
 /*
  * Define macros for input and output pin etc.
  */
 #include "PinDefinitionsAndMore.h"
 
-//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 240 bytes program space if IrSender.write is used
+#if FLASHEND <= 0x1FFF  // For 8k flash or less, like ATtiny85. Exclude exotic protocols.
+#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program space.
+#define EXCLUDE_EXOTIC_PROTOCOLS
+#endif
+//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program space.
+//#define EXCLUDE_EXOTIC_PROTOCOLS
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
 
@@ -77,12 +86,13 @@ void setup() {
     Serial.println(IR_SEND_PIN);
 #endif
 
-#if FLASHEND > 0x1FFF && !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM) && !defined(ESP32) // for esp32 we use PWM generation by ledcWrite() for each pin
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
+// For esp32 we use PWM generation by ledcWrite() for each pin.
+#  if !defined(SEND_PWM_BY_TIMER) && !defined(USE_NO_SEND_PWM) && !defined(ESP32)
     /*
-     * Print internal signal generation info
+     * Print internal software PWM generation info
      */
-    IrSender.enableIROut(38);
-
+    IrSender.enableIROut(38); // Call it with 38 kHz to initialize the values printed below
     Serial.print(F("Send signal mark duration is "));
     Serial.print(IrSender.periodOnTimeMicros);
     Serial.print(F(" us, pulse correction is "));
@@ -90,6 +100,7 @@ void setup() {
     Serial.print(F(" ns, total period is "));
     Serial.print(IrSender.periodTimeMicros);
     Serial.println(F(" us"));
+#  endif
 
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);

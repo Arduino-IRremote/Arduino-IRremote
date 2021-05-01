@@ -33,6 +33,10 @@
  */
 #include <Arduino.h>
 
+#if FLASHEND <= 0x1FFF  // For 8k flash or less, like ATtiny85. Exclude exotic protocols.
+#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program space.
+#define EXCLUDE_EXOTIC_PROTOCOLS
+#endif
 /*
  * Define macros for input and output pin etc.
  */
@@ -81,12 +85,18 @@ void loop() {
                 Serial.println(F("off"));
             }
 
+#if FLASHEND >= 0x3FFF      // For 16k flash or more, like ATtiny1604
             IrReceiver.printIRResultShort(&Serial);
             Serial.println();
             if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                 // We have an unknown protocol, print more info
                 IrReceiver.printIRResultRawFormatted(&Serial, true);
             }
+#else
+            // Print a minimal summary of received data
+            IrReceiver.printIRResultMinimal(&Serial);
+            Serial.println();
+#endif // FLASHEND
         }
         last = millis();
         IrReceiver.resume(); // Enable receiving of the next value

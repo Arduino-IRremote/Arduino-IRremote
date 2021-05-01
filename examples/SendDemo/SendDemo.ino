@@ -67,8 +67,7 @@ void setup() {
     /*
      * Print internal signal generation info
      */
-    IrSender.enableIROut(38);
-
+    IrSender.enableIROut(38); // Call it with 38 kHz to initialize the values printed below
     Serial.print(F("Send signal mark duration is "));
     Serial.print(IrSender.periodOnTimeMicros);
     Serial.print(F(" us, pulse correction is "));
@@ -115,7 +114,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     if (sRepeats == 0) {
-#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program space of ATtiny85 etc.
         /*
          * Send constant values only once in this demo
          */
@@ -211,7 +210,7 @@ void loop() {
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND > 0x1FFF // For more than 8k flash. Code does not fit in program space of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program space of ATtiny85 etc.
     /*
      * Next example how to use the IrSender.write function
      */
@@ -255,7 +254,7 @@ void loop() {
     IrSender.sendLegoPowerFunctions(sAddress, sCommand, LEGO_MODE_COMBO, true);
     delay(DELAY_AFTER_SEND);
 
-#endif // FLASHEND > 0x1FFF
+#endif // FLASHEND
     /*
      * Force buffer overflow
      */
