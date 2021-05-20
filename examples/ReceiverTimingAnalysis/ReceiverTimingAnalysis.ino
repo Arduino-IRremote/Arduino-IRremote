@@ -174,7 +174,7 @@ void loop()
             Serial.print(MarkAndShortSpaceAverage);
             Serial.print(F("us   Delta (to NEC standard 560)="));
             Serial.print(MarkAndShortSpaceAverage - 560);
-            Serial.print(F("us\r\n Mark - Average -> MarkExcess="));
+            Serial.print(F("us\r\n Mark - Average -> MARK_EXCESS_MICROS="));
             Serial.print((int16_t) Mark.average - MarkAndShortSpaceAverage);
             Serial.print(F("us"));
             Serial.println();

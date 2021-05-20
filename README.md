@@ -137,7 +137,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 - Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html).
  It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote,
  the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
- 
+
 # Hints
 - To **increase strength of sent output signal** you can increase the current through the send diode, and/or use 2 diodes in series,
  since one IR diode requires only 1.5 volt.
@@ -160,7 +160,9 @@ ReceiveDemo + SendDemo in one program. **Receiving while sending**.
 Record and play back last received IR signal at button press.
 
 ### MinimalReceiver + SmallReceiver
-If code size matters, look at these examples.
+If code size matters, look at these examples.<br/>
+MinimalReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/projects/299034264157028877).
+Click on the receiver while simulation is running to specify individual IR codes.
 
 ### IRDispatcherDemo
 Framework for calling different functions for different IR codes.
@@ -170,6 +172,13 @@ Control a relay (connected to an output pin) with your remote.
 
 ### IRremoteExtensionTest
 Example for a user defined class, which itself uses the IRrecv class from IRremote.
+
+### ReceiverTimingAnalysis
+This example analyzes the signal delivered by your IR receiver module.
+Values can be used to determine the stability of the received signal as well as a hint for determining the protocol.<br/>
+It also computes the MARK_EXCESS_MICROS value, which is the extension of the mark (pulse) duration introduced by the IR receiver module.<br/>
+It can be tested online with [WOKWI](https://wokwi.com/arduino/projects/299033930562011656).
+Click on the receiver while simulation is running to specify individual IR codes.
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / macros available.<br/>
