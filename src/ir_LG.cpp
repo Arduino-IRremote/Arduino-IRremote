@@ -48,9 +48,8 @@
 // see: https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/LGAirConditionerSendDemo
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#LGAIR
 // MSB first, timing and repeat is like NEC but 28 data bits
-// MSB! first, 1 start bit + 8 bit address + 16 bit command + 4 bit parity + 1 stop bit.
-// In https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/755 we saw no key repetition
-// and a intended parity error, or something I do not understand.
+// MSB! first, 1 start bit + 8 bit address + 16 bit command + 4 bit checksum + 1 stop bit.
+// LG 32bit protocol is near identical to Samsung except for repeats.
 #define LG_ADDRESS_BITS          8
 #define LG_COMMAND_BITS         16
 #define LG_CHECKSUM_BITS         4
@@ -60,6 +59,11 @@
 
 #define LG_HEADER_MARK          (16 * LG_UNIT) // 9000
 #define LG_HEADER_SPACE         (8 * LG_UNIT)  // 4500
+
+// used for some LG air conditioners e.g. AKB75215403
+#define LG2_UNIT                500
+#define LG2_HEADER_MARK         (6 * LG2_UNIT)  // 3000
+#define LG2_HEADER_SPACE        (19 * LG2_UNIT) // 9500
 
 #define LG_BIT_MARK             LG_UNIT
 #define LG_ONE_SPACE            (3 * LG_UNIT)  // 1690
@@ -76,9 +80,13 @@
  * Send repeat
  * Repeat commands should be sent in a 110 ms raster.
  */
-void IRsend::sendLGRepeat() {
+void IRsend::sendLGRepeat(bool aUseLG2Protocol) {
     enableIROut(38);
-    mark(LG_HEADER_MARK);
+    if (aUseLG2Protocol) {
+        mark(LG2_HEADER_MARK);
+    } else {
+        mark(LG_HEADER_MARK);
+    }
     space(LG_REPEAT_HEADER_SPACE);
     mark(LG_BIT_MARK);
 }
@@ -87,10 +95,11 @@ void IRsend::sendLGRepeat() {
  * Repeat commands should be sent in a 110 ms raster.
  * There is NO delay after the last sent repeat!
  */
-void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat, bool aUseLG2Protocol) {
     uint32_t tRawData = ((uint32_t) aAddress << (LG_COMMAND_BITS + LG_CHECKSUM_BITS)) | ((uint32_t) aCommand << LG_CHECKSUM_BITS);
     /*
-     * My guess of the checksum
+     * My guess of the 4 bit checksum
+     * Addition of all 4 nibbles of the 16 bit command
      */
     uint8_t tChecksum = 0;
     uint16_t tTempForChecksum = aCommand;
@@ -99,13 +108,13 @@ void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfR
         tTempForChecksum >>= 4; // shift by a nibble
     }
     tRawData |= (tChecksum & 0xF);
-    sendLGRaw(tRawData, aNumberOfRepeats, aIsRepeat);
+    sendLGRaw(tRawData, aNumberOfRepeats, aIsRepeat, aUseLG2Protocol);
 }
 
 /*
- * Here you can put your raw data, even one with "wrong" parity
+ * Here you can put your raw data, even one with "wrong" checksum
  */
-void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aIsRepeat, bool aUseLG2Protocol) {
     if (aIsRepeat) {
         sendLGRepeat();
         return;
@@ -114,8 +123,13 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
     enableIROut(38);
 
     // Header
-    mark(LG_HEADER_MARK);
-    space(LG_HEADER_SPACE);
+    if (aUseLG2Protocol) {
+        mark(LG2_HEADER_MARK);
+        space(LG2_HEADER_SPACE);
+    } else {
+        mark(LG_HEADER_MARK);
+        space(LG_HEADER_SPACE);
+    }
 
     // MSB first
     sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
@@ -129,7 +143,7 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
             delay((LG_REPEAT_PERIOD - LG_REPEAT_DURATION) / 1000);
         }
         // send repeat
-        sendLGRepeat();
+        sendLGRepeat(aUseLG2Protocol);
     }
 }
 
@@ -143,8 +157,11 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
  * Last check stop bit
  */
 bool IRrecv::decodeLG() {
+    decode_type_t tProtocol = LG;
+    uint16_t tHeaderSpace = LG_HEADER_SPACE;
+    uint16_t tUnit = LG_UNIT;
 
-    // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
+// Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawDataPtr->rawlen != ((2 * LG_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
         DEBUG_PRINT(F("LG: "));
         DEBUG_PRINT("Data length=");
@@ -153,12 +170,20 @@ bool IRrecv::decodeLG() {
         return false;
     }
 
-    // Check header "mark" this must be done for repeat and data
+// Check header "mark" this must be done for repeat and data
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG_HEADER_MARK)) {
-        return false;
+        if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG2_HEADER_MARK)) {
+            DEBUG_PRINT(F("LG: "));
+            DEBUG_PRINTLN("Header mark is wrong");
+            return false;
+        } else {
+            tProtocol = LG2;
+            tHeaderSpace = LG2_HEADER_SPACE;
+            tUnit = LG2_UNIT;
+        }
     }
 
-    // Check for repeat - here we have another header space length
+// Check for repeat - here we have another header space length
     if (decodedIRData.rawDataPtr->rawlen == 4) {
         if (matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LG_REPEAT_HEADER_SPACE)
                 && matchMark(decodedIRData.rawDataPtr->rawbuf[3], LG_BIT_MARK)) {
@@ -168,30 +193,34 @@ bool IRrecv::decodeLG() {
             decodedIRData.protocol = lastDecodedProtocol;
             return true;
         }
+        DEBUG_PRINT(F("LG: "));
+        DEBUG_PRINT("Repeat header space is wrong");
         return false;
     }
 
-    // Check command header space
-    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LG_HEADER_SPACE)) {
+// Check command header space
+    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], tHeaderSpace)) {
         DEBUG_PRINT(F("LG: "));
         DEBUG_PRINTLN(F("Header space length is wrong"));
         return false;
     }
 
-    if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+//    if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceData(LG_BITS, 3, tUnit, 3 * tUnit, tUnit, PROTOCOL_IS_MSB_FIRST)) { // costs 20 bytes program space, compared with using constants
+        Serial.print("jgkjkj");
         DEBUG_PRINT(F("LG: "));
         DEBUG_PRINTLN(F("Decode failed"));
         return false;
     }
 
-    // Stop bit
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LG_BITS)], LG_BIT_MARK)) {
+// Stop bit
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LG_BITS)], tUnit)) {
         DEBUG_PRINT(F("LG: "));
         DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
-    // Success
+// Success
     decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
     decodedIRData.command = (decodedIRData.decodedRawData >> LG_CHECKSUM_BITS) & 0xFFFF;
     decodedIRData.address = decodedIRData.decodedRawData >> (LG_COMMAND_BITS + LG_CHECKSUM_BITS); // first 8 bit
@@ -205,7 +234,7 @@ bool IRrecv::decodeLG() {
         tChecksum += tTempForChecksum & 0xF; // add low nibble
         tTempForChecksum >>= 4; // shift by a nibble
     }
-    // Parity check
+// Checksum check
     if ((tChecksum & 0xF) != (decodedIRData.decodedRawData & 0xF)) {
         DEBUG_PRINT(F("LG: "));
         DEBUG_PRINT("4 bit checksum is not correct. expected=0x");
@@ -217,7 +246,7 @@ bool IRrecv::decodeLG() {
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
     }
 
-    decodedIRData.protocol = LG;
+    decodedIRData.protocol = tProtocol; // LG or LG2
     decodedIRData.numberOfBits = LG_BITS;
 
     return true;

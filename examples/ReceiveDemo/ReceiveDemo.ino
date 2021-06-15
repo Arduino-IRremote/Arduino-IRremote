@@ -57,7 +57,7 @@
 // to compensate for the signal forming of different IR receiver modules.
 #define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
 
-//#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
+#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
 
 /*
  * First define macros for input and output pin etc.
@@ -111,13 +111,14 @@ void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program space of ATtiny85 etc.
     Serial.print(F("Debug button pin is "));
     Serial.println(DEBUG_BUTTON_PIN);
-#endif
 
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);
     Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
+#endif
+
 }
 
 void loop() {

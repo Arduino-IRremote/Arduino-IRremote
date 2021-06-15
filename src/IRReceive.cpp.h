@@ -1174,6 +1174,9 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
     case LG:
         return (F("LG"));
         break;
+    case LG2:
+        return (F("LG2"));
+        break;
     case NEC:
         return (F("NEC"));
         break;

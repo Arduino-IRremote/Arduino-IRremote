@@ -44,6 +44,7 @@ typedef enum {
     DISH,
     JVC,
     LG,
+    LG2,
     NEC,
     PANASONIC,
     KASEIKYO,

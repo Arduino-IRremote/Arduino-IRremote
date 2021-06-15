@@ -32,8 +32,8 @@
 #define DURATION_ARRAY_SIZE 50
 
 // Switch the decoding according to your needs
-#define MSB_LSB_DECODING PROTOCOL_IS_LSB_FIRST // this results in the same decodedRawData as e.g. the NEC and Kaseikyo/Panasonic decoder
-//#define MSB_LSB_DECODING PROTOCOL_IS_MSB_FIRST // this resembles the JVC, Denon
+#define DISTANCE_DO_MSB_DECODING PROTOCOL_IS_LSB_FIRST // this results in the same decodedRawData as e.g. the NEC and Kaseikyo/Panasonic decoder
+//#define DISTANCE_DO_MSB_DECODING PROTOCOL_IS_MSB_FIRST // this resembles the JVC, Denon
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
 #include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
@@ -95,7 +95,11 @@ bool aggregateArrayCounts(uint8_t aArray[], uint8_t aMaxIndex, uint8_t *aShortIn
 }
 
 /*
- * First analyze all spaces and marks
+ * Try to decode a pulse width or pulse distance protocol.
+ * 1. analyze all space and mark length
+ * 2. decide if we have an pulse width or distance protocol
+ * 3. try to decode with the mark and space data found in step 1.
+ * No data and address, only raw data as result.
  */
 bool IRrecv::decodeDistance() {
     uint8_t tDurationArray[DURATION_ARRAY_SIZE];
@@ -178,6 +182,9 @@ bool IRrecv::decodeDistance() {
         tStartIndex = decodedIRData.rawDataPtr->rawlen - 65;
     }
 
+    /*
+     * decide, if we have an pulse width or distance protocol
+     */
     if (tSpaceTicksLong == 0) {
         if (tMarkTicksLong == 0) {
             DEBUG_PRINT(F("PULSE_DISTANCE: "));
@@ -186,12 +193,12 @@ bool IRrecv::decodeDistance() {
         }
 //        // check if last bit can be decoded as data or not, in this case take it as a stop bit
 //        if (decodePulseWidthData(1, decodedIRData.rawDataPtr->rawlen - 3, tMarkTicksLong * MICROS_PER_TICK,
-//                tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, MSB_LSB_DECODING)) {
+//                tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, DISTANCE_DO_MSB_DECODING)) {
 //            tNumberOfBits++;
 //        }
-            // decode without leading start bit.  Currently only seen for sony protocol
+            // decode without leading start bit. Currently only seen for sony protocol
             if (!decodePulseWidthData(tNumberOfBits, tStartIndex, tMarkTicksLong * MICROS_PER_TICK,
-                    tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, MSB_LSB_DECODING)) {
+                    tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, DISTANCE_DO_MSB_DECODING)) {
                 DEBUG_PRINT(F("PULSE_WIDTH: "));
                 DEBUG_PRINTLN(F("Decode failed"));
                 return false;
@@ -209,13 +216,13 @@ bool IRrecv::decodeDistance() {
     } else {
 //        // check if last bit can be decoded as data or not, in this case take it as a stop bit
 //        if (decodePulseDistanceData(1, decodedIRData.rawDataPtr->rawlen - 3, tMarkTicksShort * MICROS_PER_TICK,
-//                tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, MSB_LSB_DECODING)) {
+//                tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, DISTANCE_DO_MSB_DECODING)) {
 //            Serial.print(F("tNumberOfBits++ "));
 //            tNumberOfBits++;
 //        }
 
         if (!decodePulseDistanceData(tNumberOfBits, tStartIndex, tMarkTicksShort * MICROS_PER_TICK,
-                tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, MSB_LSB_DECODING)) {
+                tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, DISTANCE_DO_MSB_DECODING)) {
             DEBUG_PRINT(F("PULSE_DISTANCE: "));
             DEBUG_PRINTLN(F("Decode failed"));
             return false;
@@ -232,7 +239,7 @@ bool IRrecv::decodeDistance() {
         decodedIRData.protocol = PULSE_DISTANCE;
     }
 
-    if (MSB_LSB_DECODING) {
+    if (DISTANCE_DO_MSB_DECODING) {
         decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
     }
 

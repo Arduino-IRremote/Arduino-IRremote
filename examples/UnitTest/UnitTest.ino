@@ -52,7 +52,6 @@
 #define DECODE_RC5
 #define DECODE_RC6
 #define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
-#define DECODE_LG
 
 #define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols
 #define DECODE_HASH         // special decoder for all protocols
@@ -60,6 +59,7 @@
 
 #if FLASHEND >= 0x7FFF      // For 32k flash or more, like ATmega328
 #define DECODE_SAMSUNG
+#define DECODE_LG
 
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF

@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 3.3.1](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
+### [Version 3.4.0](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
@@ -43,13 +43,11 @@ This is a quite old but maybe useful wiki for this library.
 - Ability to generate a non PWM signal to just simulate an active low receiver signal for direct connect to existent receiving devices without using IR.
 - Easy configuration of protocols required, directly in your [source code[(https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L18-L34). This reduces the memory footprint and increases decoding time.
 
-# Converting your program to the 3.1 version
-This must be done also for all versions > 3.0.1 if `USE_NO_SEND_PWM` is defined.<br/>
-Starting with this version, **the generation of PWM is done by software**, thus saving the hardware timer and **enabling arbitrary output pins**.<br/>
-Therefore you must change all `IrSender.begin(true);` by `IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK);`.
-If you use a core that does not use the `-flto` flag for compile, you can activate the line `#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN` in IRRemote.h, if you get false error messages regarding begin() during compilation.
 
 # Converting your 2.x program to the 3.x version
+Starting with the 3.1 version, **the generation of PWM is done by software**, thus saving the hardware timer and **enabling arbitrary output pins**.<br/>
+If you use an (old) Arduino core that does not use the `-flto` flag for compile, you can activate the line `#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN` in IRRemote.h, if you get false error messages regarding begin() during compilation.
+
 - Now there is  an **IRreceiver** and **IRsender** object like the well known Arduino **Serial** object.
 - Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;` in your program, and replace all occurrences of `IRrecv.` or `irrecv.` with `IrReceiver`.
 - Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
@@ -59,8 +57,9 @@ If you use a core that does not use the `-flto` flag for compile, you can activa
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L126).
 - Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
 
-# Running your 2.x program with the 3.x library version
-If you program is like:
+# Do not convert your 2.x program and use the 3.x library version
+The 3.x versions try to be backwards compatible, so you can easily run your old examples. But some functions like e.g. `sendNEC()` -see below- could not made backwards compatible, so in this cases you must revisit your code and adapt it to the 3.x library.<br/>
+If you program look like:
 ```
 IRrecv irrecv(RECV_PIN);
 decode_results results;
@@ -80,17 +79,19 @@ void loop() {
   ...
 }
 ```
-it should run on the 3.1.1 version as before. The following decoders are available: Denon, JVC, LG,  NEC, Panasonic, RC5, RC6, Samsung, Sony.
-The `results.value` is set by the decoders for **NEC, Panasonic, Sony, Samsung and JVC** as MSB first like in 2.x.<br/>
+it runs on the 3.x version as before. But only the following decoders are available then: Denon, JVC, LG,  NEC, Panasonic, RC5, RC6, Samsung, Sony.
+The `results.value` is set by the decoders for **NEC, Panasonic, Sony, Samsung and JVC** as MSB first like in 2.x!<br/>
 - The old functions `sendNEC()` and `sendJVC()` are deprecated and renamed to `sendNECMSB()` and `sendJVCMSB()` to make it clearer that they send data with MSB first, which is not the standard for NEC and JVC. Use them to send your **old MSB-first 32 bit IR data codes**.
-In the new version you will send NEC commands not by 32 bit codes but by a (constant) 8 bit address and an 8 bit command.
+In the new version you will send NEC (and other) commands not by 32 bit codes but by a (constant) 8 bit address and an 8 bit command.
 
-# Convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes
-The new decoders for **NEC, Panasonic, Sony, Samsung and JVC** `IrReceiver.decodedIRData.decodedRawData` is now LSB-first, as the definition of these protocols suggests!
-  To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte or write it as one binary string and reverse/mirror it.<br/>
-  Example:<br/>
-  0xCB340102 byte reverse -> 02 01 34 CB bit reverse-> 40 80 2C D3.<br/>
-  0xCB340102 is binary 11001011001101000000000100000010.<br/>
+# How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes
+For the new decoders for **NEC, Panasonic, Sony, Samsung and JVC**, the result `IrReceiver.decodedIRData.decodedRawData` is now **LSB-first**, as the definition of these protocols suggests!<br/>
+To convert one into the other, you must reverse the byte/nibble positions and then reverse all bit positions of each byte/nibble or write it as one binary string and reverse/mirror it.<br/><br/>
+Example:
+- 0xCB340102 byte reverse -> 02 01 34 CB. Bit reverse of byte -> 40 80 2C D3.
+- 0xCB340102 nibble reverse -> 201043BC. Bit reverse of nibble -> 40802CD3.<br/>
+  Nibble reverse map: | 1->8 | 2->4 | 3->C | 4->2 | 5->A | 6->6 | 7->E | 8->1 | 9->9 | A->5 | B->D | C->3 | D->B | E->7 | F->F |
+- 0xCB340102 is binary 11001011001101000000000100000010.<br/>
   0x40802CD3 is binary 01000000100000000010110011010011.<br/>
   If you read the first binary sequence backwards (right to left), you get the second sequence.
 
@@ -165,7 +166,7 @@ MinimalReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/proj
 Click on the receiver while simulation is running to specify individual IR codes.
 
 ### IRDispatcherDemo
-Framework for calling different functions for different IR codes.
+Framework for calling different functions of **your program** for different IR codes.
 
 ### IRrelay
 Control a relay (connected to an output pin) with your remote.
@@ -178,7 +179,7 @@ This example analyzes the signal delivered by your IR receiver module.
 Values can be used to determine the stability of the received signal as well as a hint for determining the protocol.<br/>
 It also computes the MARK_EXCESS_MICROS value, which is the extension of the mark (pulse) duration introduced by the IR receiver module.<br/>
 It can be tested online with [WOKWI](https://wokwi.com/arduino/projects/299033930562011656).
-Click on the receiver while simulation is running to specify individual IR codes.
+Click on the receiver while simulation is running to specify individual NEC IR codes.
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / macros available.<br/>

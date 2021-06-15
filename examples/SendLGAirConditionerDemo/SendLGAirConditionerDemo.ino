@@ -32,6 +32,8 @@
  */
 #include <Arduino.h>
 
+#define USE_LG2_PROTOCOL // Try it if you do not have success with the default LG protocol
+
 /*
  * Define macros for input and output pin etc.
  */
@@ -59,13 +61,32 @@ uint8_t ACRequestedTemperature = 25;    // temperature : 18 ~ 30
 const int AC_FAN_TOWER[3] = { 0, 4, 6 };
 const int AC_FAN_WALL[4] = { 0, 2, 4, 5 }; // 5 -> cycle
 
+// from https://github.com/crankyoldgit/IRremoteESP8266/blob/master/src/ir_LG.h
+union LGProtocol{
+  uint32_t raw;  ///< The state of the IR remote in IR code form.
+  struct {
+    uint32_t Sum    :4;
+    uint32_t Fan    :3;
+    uint32_t FanExt :1;
+    uint32_t Temp   :4;
+    uint32_t Mode   :3;
+    uint32_t        :3;
+    uint32_t Power  :2;
+    uint32_t Signature :8; /*=0x88*/
+  };
+};
+
 void ACSendCode(uint16_t aCommand) {
     Serial.print(F("Send code="));
     Serial.print(aCommand, HEX);
     Serial.print(F(" | "));
     Serial.println(aCommand, BIN);
     Serial.flush();
-    IrSender.sendLG((uint8_t) 0x88, aCommand, 0);
+#if defined(USE_LG2_PROTOCOL)
+    IrSender.sendLG((uint8_t) 0x88, aCommand, 0, true);
+#else
+    IrSender.sendLG((uint8_t) 0x88, aCommand, 0, false);
+#endif
 }
 
 void sendCommand(uint8_t aTemperature, uint8_t aFanIntensity) {
@@ -81,7 +102,7 @@ void sendCommand(uint8_t aTemperature, uint8_t aFanIntensity) {
         // heating
         tCommand.UByte.HighByte = 0x4; // maybe cooling is 0x08????
     }
-    tCommand.UByte.LowByte = ((aTemperature - 15) << 4); // 18 -> 3, 30 -> F
+    tCommand.UByte.LowByte = ((aTemperature - 15) << 4); // 16 -> 0, 18 -> 3, 30 -> F
 
     if (ACIsWallType) {
         tCommand.UByte.LowByte |= AC_FAN_WALL[aFanIntensity];
@@ -115,7 +136,7 @@ void sendAirSwing(bool aSwing) {
 
 void SendPowerDown() {
     Serial.println(F("Send power down"));
-    IrSender.sendLGRaw(0x88C0051);
+    ACSendCode(0xC005);
     ACPowerIsOn = false;
 }
 

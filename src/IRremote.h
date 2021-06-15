@@ -129,7 +129,7 @@
  */
 #if !defined(RECORD_GAP_MICROS)
 // To change this value, you simply can add a line #define "RECORD_GAP_MICROS <My_new_value>" in your ino file before the line "#include <IRremote.h>"
-#define RECORD_GAP_MICROS   5000 // FREDRICH28AC header space is 9700, NEC header space is 4500
+#define RECORD_GAP_MICROS   5000 // FREDRICH28AC / LG2 header space is 9700, NEC header space is 4500
 #endif
 /**
  * Threshold for warnings at printIRResult*() to report about changing the RECORD_GAP_MICROS value to a higher value.

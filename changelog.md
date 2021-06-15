@@ -1,6 +1,7 @@
 # Changelog
 The latest version may not be released!
-## 3.3.1
+## 3.4.0
+- Added LG2 protocol.
 
 ## 3.3.0
 - Fix errors if LED_BUILTIN is not defined.

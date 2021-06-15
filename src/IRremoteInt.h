@@ -44,6 +44,9 @@
 #define MARK   1
 #define SPACE  0
 
+//#define DEBUG // Activate this for lots of lovely debug output from the IRremote core and all protocol decoders.
+//#define TRACE // Activate this for more debug output.
+
 /**
  * For better readability of code
  */
@@ -85,8 +88,6 @@ struct irparams_struct {
     uint16_t rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
 };
 
-//#define DEBUG // Activate this for lots of lovely debug output from the IRremote core and all protocol decoders.
-//#define TRACE // Activate this for more debug output.
 /*
  * Debug directives
  */
@@ -430,9 +431,10 @@ public:
             __attribute__ ((deprecated ("Please use sendDenon(aAddress, aCommand, aNumberOfRepeats).")));
     void sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats);
 
-    void sendLGRepeat();
-    void sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false);
-    void sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats = 0, bool aIsRepeat = false);
+    void sendLGRepeat(bool aUseLG2Protocol = false);
+    void sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false, bool aUseLG2Protocol =
+            false);
+    void sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats = 0, bool aIsRepeat = false, bool aUseLG2Protocol = false);
 
     void sendNECRepeat();
     void sendNEC(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false);
