@@ -16,6 +16,7 @@ var classIRrecv =
     [ "decodeBoseWave", "group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858", null ],
     [ "decodeDenon", "group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac", null ],
     [ "decodeDenonOld", "group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e", null ],
+    [ "decodeDistance", "group__Decoder.html#ga0d0267f8c89e3cffbecd103195b67f3c", null ],
     [ "decodeHash", "classIRrecv.html#ab33be9e29578a2eb95beb3da169228dc", null ],
     [ "decodeHashOld", "classIRrecv.html#acc379370caac8ca6ab6f1fd1a4cc4359", null ],
     [ "decodeJVC", "group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed", null ],
@@ -59,5 +60,6 @@ var classIRrecv =
     [ "decodedIRData", "classIRrecv.html#a19d71758b1b0e1fbee948ad917c5b828", null ],
     [ "lastDecodedAddress", "classIRrecv.html#a1cf9af80cfeba7c722155c82b2d05c65", null ],
     [ "lastDecodedCommand", "classIRrecv.html#ab82d9993e4791d7904ec3b62bb9bc1cf", null ],
+    [ "lastDecodedProtocol", "classIRrecv.html#ac557e8dec6b8429f95f282370c93eb03", null ],
     [ "repeatCount", "classIRrecv.html#a75a2cb038de23ec735c044f176c84b3a", null ]
 ];

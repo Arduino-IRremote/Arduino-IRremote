@@ -5,6 +5,7 @@ var dir_68267d1309a1af8e8297ef4c3efbcdba =
     [ "ir_BoseWave.cpp", "ir__BoseWave_8cpp.html", "ir__BoseWave_8cpp" ],
     [ "ir_Denon.cpp", "ir__Denon_8cpp.html", "ir__Denon_8cpp" ],
     [ "ir_Dish.cpp", "ir__Dish_8cpp.html", "ir__Dish_8cpp" ],
+    [ "ir_DistanceProtocol.cpp", "ir__DistanceProtocol_8cpp.html", "ir__DistanceProtocol_8cpp" ],
     [ "ir_JVC.cpp", "ir__JVC_8cpp.html", "ir__JVC_8cpp" ],
     [ "ir_Kaseikyo.cpp", "ir__Kaseikyo_8cpp.html", "ir__Kaseikyo_8cpp" ],
     [ "ir_Lego.cpp", "ir__Lego_8cpp.html", "ir__Lego_8cpp" ],

@@ -179,6 +179,9 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>decodedIRData
 : <a class="el" href="classIRrecv.html#a19d71758b1b0e1fbee948ad917c5b828">IRrecv</a>
 </li>
+<li>decodeDistance()
+: <a class="el" href="group__Decoder.html#ga0d0267f8c89e3cffbecd103195b67f3c">IRrecv</a>
+</li>
 <li>decodedRawData
 : <a class="el" href="structIRData.html#aeca55ebf36bf919312a933597b8734d8">IRData</a>
 </li>
@@ -230,11 +233,11 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>decodeRC6()
 : <a class="el" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f">IRrecv</a>
 </li>
-<li>decodeSAMSUNG()
-: <a class="el" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd">IRrecv</a>
-</li>
 <li>decodeSamsung()
 : <a class="el" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec">IRrecv</a>
+</li>
+<li>decodeSAMSUNG()
+: <a class="el" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd">IRrecv</a>
 </li>
 <li>decodeSharp()
 : <a class="el" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6">IRrecv</a>
@@ -286,6 +289,9 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <h3><a id="index_g"></a>- g -</h3><ul>
 <li>getBiphaselevel()
 : <a class="el" href="group__Receiving.html#ga7d26f9254747368762e4d4c09dc22fb0">IRrecv</a>
+</li>
+<li>getPulseCorrectionNanos()
+: <a class="el" href="group__Sending.html#ga39034e110ba58c6a5effb7711801d74a">IRsend</a>
 </li>
 </ul>
 
@@ -354,6 +360,9 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>lastDecodedCommand
 : <a class="el" href="classIRrecv.html#ab82d9993e4791d7904ec3b62bb9bc1cf">IRrecv</a>
 </li>
+<li>lastDecodedProtocol
+: <a class="el" href="classIRrecv.html#ac557e8dec6b8429f95f282370c93eb03">IRrecv</a>
+</li>
 <li>LedFeedbackEnabled
 : <a class="el" href="structFeedbackLEDControlStruct.html#a49467187b92e40e5122b14d82a9fa500">FeedbackLEDControlStruct</a>
 </li>
@@ -361,11 +370,11 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 : <a class="el" href="unionLongUnion.html#a987b9b0499e30d1ba84f33e38d4cb034">LongUnion</a>
 </li>
 <li>LowByte
-: <a class="el" href="unionLongUnion.html#a953d8a796924426954a56a4a324e35b6">LongUnion</a>
+: <a class="el" href="unionLongUnion.html#aa41368107679917a1c39f30999f4e9d9">LongUnion</a>
 , <a class="el" href="unionWordUnion.html#a7d81b9160cc06e310f7786666b5f680e">WordUnion</a>
 </li>
 <li>LowWord
-: <a class="el" href="unionLongUnion.html#a45adb668aa3c266c1caa869b64f5110f">LongUnion</a>
+: <a class="el" href="unionLongUnion.html#a9c0af1e73f44cf26341485cdac332bd2">LongUnion</a>
 </li>
 </ul>
 
@@ -490,10 +499,10 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 : <a class="el" href="group__Decoder.html#ga88ecc2eb801abf6aa1428cc0669abe94">IRsend</a>
 </li>
 <li>sendLGRaw()
-: <a class="el" href="group__Decoder.html#gac42ab32888113eacde5b8d79199ec6b7">IRsend</a>
+: <a class="el" href="group__Decoder.html#ga9f8683daf286269b2aafab5e86a8bfc1">IRsend</a>
 </li>
 <li>sendLGRepeat()
-: <a class="el" href="group__Decoder.html#gab56582adf45c6e54792f96cdcd918a8f">IRsend</a>
+: <a class="el" href="group__Decoder.html#ga59c09c7300fa34bc136b7be9bdebe2b5">IRsend</a>
 </li>
 <li>sendMagiQuest()
 : <a class="el" href="classIRsend.html#a7baa10d355a9a694a7e3cce942ff9f59">IRsend</a>
@@ -540,11 +549,11 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>sendRC6()
 : <a class="el" href="group__Decoder.html#gad26a55d87f9f8cc64a77b4571ae79e5f">IRsend</a>
 </li>
-<li>sendSamsung()
-: <a class="el" href="group__Decoder.html#ga5d194d783811b52669eb1c1ab17a3a0f">IRsend</a>
-</li>
 <li>sendSAMSUNG()
 : <a class="el" href="group__Decoder.html#ga7b4ca49d8fceaf6ccfa26df2d1b553d5">IRsend</a>
+</li>
+<li>sendSamsung()
+: <a class="el" href="group__Decoder.html#ga5d194d783811b52669eb1c1ab17a3a0f">IRsend</a>
 </li>
 <li>sendSamsungRepeat()
 : <a class="el" href="group__Decoder.html#ga4daa3f9a1c496072f2e17cdcf93f3906">IRsend</a>
@@ -632,16 +641,13 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>WordUnion
 : <a class="el" href="unionLongUnion.html#af22f1621f1b6086e1aba575404896c0a">LongUnion</a>
 </li>
-<li>write()
-: <a class="el" href="group__Sending.html#ga567f59869ebc6c7f53d0dc9b360dd4c3">IRsend</a>
-</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 21 2021 18:57:48 for IRremote by
+    <li class="footer">Generated on Wed Jun 16 2021 23:31:02 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

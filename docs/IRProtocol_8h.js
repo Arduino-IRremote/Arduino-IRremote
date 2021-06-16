@@ -15,10 +15,13 @@ var IRProtocol_8h =
     [ "SIRCS_20_PROTOCOL", "IRProtocol_8h.html#a4014bf0435ac7da04aa0bb1b0949eb8e", null ],
     [ "decode_type_t", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fad", [
       [ "UNKNOWN", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6ce26a62afab55d7606ad4e92428b30c", null ],
+      [ "PULSE_DISTANCE", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadab60e0c1f01cfceb2dc9d5f2005f6dfc0", null ],
+      [ "PULSE_WIDTH", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada783253fd89cb09e1dbdb2bcdbc0400e3", null ],
       [ "DENON", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2bda37b76abb290d1675c3e027e3c2e1", null ],
       [ "DISH", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadac27c6ac38ba872593af8e46ac2fdc85a", null ],
       [ "JVC", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada5b6f507fb4bbd70ee70be4e2e0b0371d", null ],
       [ "LG", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadadf6c249ac7d923229f9e623eff9a61f4", null ],
+      [ "LG2", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada8402547ec0b99b9b0efe97dec65badf9", null ],
       [ "NEC", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada0811f93a25b0873e21979d569eeac05e", null ],
       [ "PANASONIC", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf87c99938d26a1f77d4f082c070d4660", null ],
       [ "KASEIKYO", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf2d8443e083aa95f191f26d438c6b953", null ],

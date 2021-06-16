@@ -1,5 +1,8 @@
 var ir__LG_8cpp =
 [
+    [ "LG2_HEADER_MARK", "group__Decoder.html#ga5867052dc3896b7ec94b9c24a4c89cc8", null ],
+    [ "LG2_HEADER_SPACE", "group__Decoder.html#ga6d0d031a5d287ef60e683a09b7bf05bc", null ],
+    [ "LG2_UNIT", "group__Decoder.html#ga3a3f88b7597df982817532e4f36e7971", null ],
     [ "LG_ADDRESS_BITS", "group__Decoder.html#ga195b3b0d3512e9321d7bacc052207852", null ],
     [ "LG_AVERAGE_DURATION", "group__Decoder.html#gaba4191fd7407de304e799ce93d14ac93", null ],
     [ "LG_BIT_MARK", "group__Decoder.html#gacb12362c8e9ab1034036c4efc20d57f5", null ],

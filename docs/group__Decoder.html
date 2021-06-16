@@ -222,6 +222,12 @@ Macros</h2></td></tr>
 <tr class="separator:gae9e8390ffc6850202815112c8493a0f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5eccb52c8ef993ad228c6968953c583c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5eccb52c8ef993ad228c6968953c583c">LG_HEADER_SPACE</a>&#160;&#160;&#160;(8 * <a class="el" href="group__Decoder.html#ga677656ae675af73405b65e0228ce6bc9">LG_UNIT</a>)</td></tr>
 <tr class="separator:ga5eccb52c8ef993ad228c6968953c583c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3a3f88b7597df982817532e4f36e7971"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga3a3f88b7597df982817532e4f36e7971">LG2_UNIT</a>&#160;&#160;&#160;500</td></tr>
+<tr class="separator:ga3a3f88b7597df982817532e4f36e7971"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5867052dc3896b7ec94b9c24a4c89cc8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5867052dc3896b7ec94b9c24a4c89cc8">LG2_HEADER_MARK</a>&#160;&#160;&#160;(6 * <a class="el" href="group__Decoder.html#ga3a3f88b7597df982817532e4f36e7971">LG2_UNIT</a>)</td></tr>
+<tr class="separator:ga5867052dc3896b7ec94b9c24a4c89cc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d0d031a5d287ef60e683a09b7bf05bc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6d0d031a5d287ef60e683a09b7bf05bc">LG2_HEADER_SPACE</a>&#160;&#160;&#160;(19 * <a class="el" href="group__Decoder.html#ga3a3f88b7597df982817532e4f36e7971">LG2_UNIT</a>)</td></tr>
+<tr class="separator:ga6d0d031a5d287ef60e683a09b7bf05bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacb12362c8e9ab1034036c4efc20d57f5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gacb12362c8e9ab1034036c4efc20d57f5">LG_BIT_MARK</a>&#160;&#160;&#160;<a class="el" href="group__Decoder.html#ga677656ae675af73405b65e0228ce6bc9">LG_UNIT</a></td></tr>
 <tr class="separator:gacb12362c8e9ab1034036c4efc20d57f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5b41314206902e7eec1c396b3999eab9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5b41314206902e7eec1c396b3999eab9">LG_ONE_SPACE</a>&#160;&#160;&#160;(3 * <a class="el" href="group__Decoder.html#ga677656ae675af73405b65e0228ce6bc9">LG_UNIT</a>)</td></tr>
@@ -389,6 +395,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga90217576bd30a0755127207435731549"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga90217576bd30a0755127207435731549">aggregateArrayCounts</a> (uint8_t aArray[], uint8_t aMaxIndex, uint8_t *aShortIndex, uint8_t *aLongIndex)</td></tr>
+<tr class="separator:ga90217576bd30a0755127207435731549"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga01388575997ce2531098a606a8a25521"><td class="memItemLeft" align="right" valign="top">static unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga01388575997ce2531098a606a8a25521">toFrequencyKHz</a> (uint16_t code)</td></tr>
 <tr class="separator:ga01388575997ce2531098a606a8a25521"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1272f3783a3b8d2cf2241f1e76674c8a"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga1272f3783a3b8d2cf2241f1e76674c8a">effectiveFrequency</a> (uint16_t frequency)</td></tr>
@@ -435,6 +443,8 @@ Functions</h2></td></tr>
 <tr class="separator:gab5a2c0a20071c7b37f0d1cd99680d513"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0b0933040532b8c1cbc7cbf17ab7edb5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga0b0933040532b8c1cbc7cbf17ab7edb5">IRsend::sendSharp</a> (unsigned int address, unsigned int command)</td></tr>
 <tr class="separator:ga0b0933040532b8c1cbc7cbf17ab7edb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0d0267f8c89e3cffbecd103195b67f3c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga0d0267f8c89e3cffbecd103195b67f3c">IRrecv::decodeDistance</a> ()</td></tr>
+<tr class="separator:ga0d0267f8c89e3cffbecd103195b67f3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5b226cb8ff607ec666fbab236fcd1ec9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5b226cb8ff607ec666fbab236fcd1ec9">IRsend::sendJVC</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
 <tr class="separator:ga5b226cb8ff607ec666fbab236fcd1ec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad6ecf38f85cefea8f71090fce4dbbbed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed">IRrecv::decodeJVC</a> ()</td></tr>
@@ -465,12 +475,12 @@ Functions</h2></td></tr>
 <tr class="separator:gaea94765ecf1af29cf323354be4d74538"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae96d28d8682a352cb1118aae25d5bba5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5">IRrecv::decodeLegoPowerFunctions</a> ()</td></tr>
 <tr class="separator:gae96d28d8682a352cb1118aae25d5bba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab56582adf45c6e54792f96cdcd918a8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab56582adf45c6e54792f96cdcd918a8f">IRsend::sendLGRepeat</a> ()</td></tr>
-<tr class="separator:gab56582adf45c6e54792f96cdcd918a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga214e0b5e88d7246841f7b7b5a7087d7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga214e0b5e88d7246841f7b7b5a7087d7b">IRsend::sendLG</a> (uint8_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false)</td></tr>
-<tr class="separator:ga214e0b5e88d7246841f7b7b5a7087d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac42ab32888113eacde5b8d79199ec6b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gac42ab32888113eacde5b8d79199ec6b7">IRsend::sendLGRaw</a> (uint32_t aRawData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0, bool aIsRepeat=false)</td></tr>
-<tr class="separator:gac42ab32888113eacde5b8d79199ec6b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59c09c7300fa34bc136b7be9bdebe2b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga59c09c7300fa34bc136b7be9bdebe2b5">IRsend::sendLGRepeat</a> (bool aUseLG2Protocol=false)</td></tr>
+<tr class="separator:ga59c09c7300fa34bc136b7be9bdebe2b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf5095df5a6598fe2651510e4a8d5e018"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaf5095df5a6598fe2651510e4a8d5e018">IRsend::sendLG</a> (uint8_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false, bool aUseLG2Protocol=false)</td></tr>
+<tr class="separator:gaf5095df5a6598fe2651510e4a8d5e018"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9f8683daf286269b2aafab5e86a8bfc1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga9f8683daf286269b2aafab5e86a8bfc1">IRsend::sendLGRaw</a> (uint32_t aRawData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0, bool aIsRepeat=false, bool aUseLG2Protocol=false)</td></tr>
+<tr class="separator:ga9f8683daf286269b2aafab5e86a8bfc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac098ec62da77aa75ca9016d289f3d7aa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa">IRrecv::decodeLG</a> ()</td></tr>
 <tr class="separator:gac098ec62da77aa75ca9016d289f3d7aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1db023ba20fabb7190751b66445cc872"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872">IRrecv::decodeLGMSB</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
@@ -1504,6 +1514,54 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ga5867052dc3896b7ec94b9c24a4c89cc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5867052dc3896b7ec94b9c24a4c89cc8">&#9670;&nbsp;</a></span>LG2_HEADER_MARK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LG2_HEADER_MARK&#160;&#160;&#160;(6 * <a class="el" href="group__Decoder.html#ga3a3f88b7597df982817532e4f36e7971">LG2_UNIT</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00066">66</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ga6d0d031a5d287ef60e683a09b7bf05bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6d0d031a5d287ef60e683a09b7bf05bc">&#9670;&nbsp;</a></span>LG2_HEADER_SPACE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LG2_HEADER_SPACE&#160;&#160;&#160;(19 * <a class="el" href="group__Decoder.html#ga3a3f88b7597df982817532e4f36e7971">LG2_UNIT</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00067">67</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+
+</div>
+</div>
+<a id="ga3a3f88b7597df982817532e4f36e7971"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3a3f88b7597df982817532e4f36e7971">&#9670;&nbsp;</a></span>LG2_UNIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LG2_UNIT&#160;&#160;&#160;500</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+
+</div>
+</div>
 <a id="ga195b3b0d3512e9321d7bacc052207852"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga195b3b0d3512e9321d7bacc052207852">&#9670;&nbsp;</a></span>LG_ADDRESS_BITS</h2>
 
@@ -1516,7 +1574,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00055">55</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00054">54</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1532,7 +1590,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00070">70</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00074">74</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1548,7 +1606,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00069">69</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1564,7 +1622,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00058">58</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00057">57</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1580,7 +1638,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00057">57</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00056">56</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1596,7 +1654,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00056">56</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00055">55</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1612,7 +1670,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00062">62</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00061">61</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1628,7 +1686,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00063">63</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00062">62</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1644,7 +1702,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00066">66</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00070">70</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1660,7 +1718,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00071">71</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00075">75</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1676,7 +1734,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00069">69</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00073">73</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1692,7 +1750,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00072">72</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00076">76</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1708,7 +1766,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00073">73</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00077">77</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1724,7 +1782,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00060">60</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00059">59</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -1740,7 +1798,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00067">67</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00071">71</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -2913,6 +2971,48 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga90217576bd30a0755127207435731549"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga90217576bd30a0755127207435731549">&#9670;&nbsp;</a></span>aggregateArrayCounts()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool aggregateArrayCounts </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aArray</em>[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aMaxIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>aShortIndex</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>aLongIndex</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__DistanceProtocol_8cpp_source.html#l00065">65</a> of file <a class="el" href="ir__DistanceProtocol_8cpp_source.html">ir_DistanceProtocol.cpp</a>.</p>
+
+</div>
+</div>
 <a id="ga8a8a6b504851150df425d5b490d92640"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga8a8a6b504851150df425d5b490d92640">&#9670;&nbsp;</a></span>compensateAndDumpSequence() <span class="overload">[1/2]</span></h2>
 
@@ -3140,6 +3240,25 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ga0d0267f8c89e3cffbecd103195b67f3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0d0267f8c89e3cffbecd103195b67f3c">&#9670;&nbsp;</a></span>decodeDistance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodeDistance </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__DistanceProtocol_8cpp_source.html#l00104">104</a> of file <a class="el" href="ir__DistanceProtocol_8cpp_source.html">ir_DistanceProtocol.cpp</a>.</p>
+
+</div>
+</div>
 <a id="gad6ecf38f85cefea8f71090fce4dbbbed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gad6ecf38f85cefea8f71090fce4dbbbed">&#9670;&nbsp;</a></span>decodeJVC()</h2>
 
@@ -3232,7 +3351,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00145">145</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00159">159</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -3252,7 +3371,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00227">227</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00256">256</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -4174,8 +4293,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ga214e0b5e88d7246841f7b7b5a7087d7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga214e0b5e88d7246841f7b7b5a7087d7b">&#9670;&nbsp;</a></span>sendLG() <span class="overload">[1/2]</span></h2>
+<a id="gaf5095df5a6598fe2651510e4a8d5e018"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf5095df5a6598fe2651510e4a8d5e018">&#9670;&nbsp;</a></span>sendLG() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4202,7 +4321,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>aIsRepeat</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>aIsRepeat</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aUseLG2Protocol</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4212,7 +4337,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00090">90</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00098">98</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -4242,12 +4367,12 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00266">266</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00295">295</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
-<a id="gac42ab32888113eacde5b8d79199ec6b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac42ab32888113eacde5b8d79199ec6b7">&#9670;&nbsp;</a></span>sendLGRaw()</h2>
+<a id="ga9f8683daf286269b2aafab5e86a8bfc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9f8683daf286269b2aafab5e86a8bfc1">&#9670;&nbsp;</a></span>sendLGRaw()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4268,7 +4393,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>aIsRepeat</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>aIsRepeat</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aUseLG2Protocol</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -4278,12 +4409,12 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00108">108</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00117">117</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
-<a id="gab56582adf45c6e54792f96cdcd918a8f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab56582adf45c6e54792f96cdcd918a8f">&#9670;&nbsp;</a></span>sendLGRepeat()</h2>
+<a id="ga59c09c7300fa34bc136b7be9bdebe2b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga59c09c7300fa34bc136b7be9bdebe2b5">&#9670;&nbsp;</a></span>sendLGRepeat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4291,13 +4422,14 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">void IRsend::sendLGRepeat </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aUseLG2Protocol</em> = <code>false</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00079">79</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__LG_8cpp_source.html#l00083">83</a> of file <a class="el" href="ir__LG_8cpp_source.html">ir_LG.cpp</a>.</p>
 
 </div>
 </div>
@@ -5255,7 +5387,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 21 2021 18:57:47 for IRremote by
+    <li class="footer">Generated on Wed Jun 16 2021 23:31:01 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

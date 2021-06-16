@@ -1,5 +1,6 @@
 var IRReceive_8cpp_8h =
 [
+    [ "CheckForRecordGapsMicros", "group__Receiving.html#ga0ad570723cf65cad6721117ae1a6d598", null ],
     [ "getMarkExcessMicros", "group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863", null ],
     [ "getProtocolString", "group__Receiving.html#ga77bf675537483ace83da089dea3a50a2", null ],
     [ "ISR", "group__Receiving.html#gaa8c5af507063503eacfa11a27c993a90", null ],

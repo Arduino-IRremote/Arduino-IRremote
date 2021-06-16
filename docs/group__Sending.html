@@ -100,12 +100,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga07229be2d3e919b985a058aa6015aa2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga07229be2d3e919b985a058aa6015aa2c">IRsend::begin</a> (uint8_t aSendPin, bool aEnableLEDFeedback=true, uint8_t aFeedbackLEDPin=<a class="el" href="IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d">USE_DEFAULT_FEEDBACK_LED_PIN</a>)</td></tr>
 <tr class="memdesc:ga07229be2d3e919b985a058aa6015aa2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the send and feedback pin.  <a href="group__Sending.html#ga07229be2d3e919b985a058aa6015aa2c">More...</a><br /></td></tr>
 <tr class="separator:ga07229be2d3e919b985a058aa6015aa2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabe9278944eb22fa86f1dc234c293c361"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gabe9278944eb22fa86f1dc234c293c361">IRsend::begin</a> (bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin=<a class="el" href="IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d">USE_DEFAULT_FEEDBACK_LED_PIN</a>) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;Please use begin(&lt;<a class="el" href="classIRsend.html#a39f9782dd884b804bcf0034ab71ac202">sendPin</a>&gt;</td></tr>
-<tr class="memdesc:gabe9278944eb22fa86f1dc234c293c361"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deprecated function without send pin parameter.  <a href="group__Sending.html#gabe9278944eb22fa86f1dc234c293c361">More...</a><br /></td></tr>
-<tr class="separator:gabe9278944eb22fa86f1dc234c293c361"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga567f59869ebc6c7f53d0dc9b360dd4c3"><td class="memItemLeft" align="right" valign="top">void&lt; EnableLEDFeedback &gt;&lt; LEDFeedbackPin &gt; size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga567f59869ebc6c7f53d0dc9b360dd4c3">IRsend::write</a> (<a class="el" href="structIRData.html">IRData</a> *aIRSendData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
-<tr class="memdesc:ga567f59869ebc6c7f53d0dc9b360dd4c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deprecated function without send pin parameter.  <a href="group__Sending.html#ga567f59869ebc6c7f53d0dc9b360dd4c3">More...</a><br /></td></tr>
-<tr class="separator:ga567f59869ebc6c7f53d0dc9b360dd4c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga466097ca44126e8278a523c8903064be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga466097ca44126e8278a523c8903064be">IRsend::begin</a> (bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin=<a class="el" href="IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d">USE_DEFAULT_FEEDBACK_LED_PIN</a>) size_t write(<a class="el" href="structIRData.html">IRData</a> *aIRSendData</td></tr>
+<tr class="memdesc:ga466097ca44126e8278a523c8903064be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deprecated function without send pin parameter.  <a href="group__Sending.html#ga466097ca44126e8278a523c8903064be">More...</a><br /></td></tr>
+<tr class="separator:ga466097ca44126e8278a523c8903064be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacdb18ddcfd936246e214e0a9519209bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gacdb18ddcfd936246e214e0a9519209bf">IRsend::sendRaw</a> (const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz)</td></tr>
 <tr class="memdesc:gacdb18ddcfd936246e214e0a9519209bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function using an 16 byte timing array for every purpose.  <a href="group__Sending.html#gacdb18ddcfd936246e214e0a9519209bf">More...</a><br /></td></tr>
 <tr class="separator:gacdb18ddcfd936246e214e0a9519209bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,6 +135,8 @@ Functions</h2></td></tr>
 <tr class="memitem:ga42c04af63d252b320c017ffa2bfc90e5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga42c04af63d252b320c017ffa2bfc90e5">IRsend::enableIROut</a> (uint8_t aFrequencyKHz)</td></tr>
 <tr class="memdesc:ga42c04af63d252b320c017ffa2bfc90e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables IR output.  <a href="group__Sending.html#ga42c04af63d252b320c017ffa2bfc90e5">More...</a><br /></td></tr>
 <tr class="separator:ga42c04af63d252b320c017ffa2bfc90e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga39034e110ba58c6a5effb7711801d74a"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga39034e110ba58c6a5effb7711801d74a">IRsend::getPulseCorrectionNanos</a> ()</td></tr>
+<tr class="separator:ga39034e110ba58c6a5effb7711801d74a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -185,8 +184,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="gabe9278944eb22fa86f1dc234c293c361"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabe9278944eb22fa86f1dc234c293c361">&#9670;&nbsp;</a></span>begin() <span class="overload">[1/2]</span></h2>
+<a id="ga466097ca44126e8278a523c8903064be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga466097ca44126e8278a523c8903064be">&#9670;&nbsp;</a></span>begin() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -286,7 +285,7 @@ Variables</h2></td></tr>
 
 <p>Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit and is (mostly) not extended by the duration of interrupt codes like the millis() interrupt. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00427">427</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00435">435</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -309,7 +308,26 @@ Variables</h2></td></tr>
 <p>Enables IR output. </p>
 <p>The kHz value controls the modulation frequency in kilohertz. The IR output will be on pin 3 (OC2B). This routine is designed for 36-40 kHz; if you use it for other values, it's up to you to make sure it gives reasonable results. (Watch out for overflow / underflow / rounding.) TIMER2 is used in phase-correct PWM mode, with OCR2A controlling the frequency and OCR2B controlling the duty cycle. There is no prescaling, so the output frequency is 16 MHz / (2 * OCR2A) To turn the output on and off, we leave the PWM running, but connect and disconnect the output pin. A few hours staring at the ATmega documentation and this will all make sense. See my Secrets of Arduino PWM at <a href="http://arcfn.com/2009/07/secrets-of-arduino-pwm.html">http://arcfn.com/2009/07/secrets-of-arduino-pwm.html</a> for details. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00446">446</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00454">454</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+
+</div>
+</div>
+<a id="ga39034e110ba58c6a5effb7711801d74a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga39034e110ba58c6a5effb7711801d74a">&#9670;&nbsp;</a></span>getPulseCorrectionNanos()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned int IRsend::getPulseCorrectionNanos </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00473">473</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -331,7 +349,7 @@ Variables</h2></td></tr>
 <p>Just switch the IR sending LED off to send an IR space A space is "no output", so the PWM output is disabled. </p>
 <p>This function may affect the state of feedback LED. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00403">403</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00411">411</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -354,7 +372,7 @@ Variables</h2></td></tr>
 <p>Sends an IR mark for the specified number of microseconds. </p>
 <p>The mark output is modulated at the PWM frequency if USE_NO_SEND_PWM is not defined. The output is guaranteed to be OFF / inactive after after the call of the function. This function may affect the state of feedback LED. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00361">361</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00369">369</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -390,7 +408,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00319">319</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00327">327</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -458,7 +476,7 @@ Variables</h2></td></tr>
 
 <p>Sends PulseDistance data The output always ends with a space. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00277">277</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00285">285</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -497,7 +515,7 @@ Variables</h2></td></tr>
 <p>Function using an 16 byte timing array for every purpose. </p>
 <p>Raw data starts with a Mark. No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00185">185</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00193">193</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -536,7 +554,7 @@ Variables</h2></td></tr>
 <p>Function using an 8 byte timing array to save program space Raw data starts with a Mark. </p>
 <p>No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00208">208</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00216">216</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -575,7 +593,7 @@ Variables</h2></td></tr>
 <p>Function using an 16 byte timing array in FLASH for every purpose. </p>
 <p>Raw data starts with a Mark. No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00227">227</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00235">235</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -614,7 +632,7 @@ Variables</h2></td></tr>
 <p>Function using an 8 byte timing array in FLASH to save program space Raw data starts with a Mark. </p>
 <p>No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00253">253</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00261">261</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -657,46 +675,7 @@ Variables</h2></td></tr>
 <p>Sends an IR space for the specified number of microseconds. </p>
 <p>A space is "no output", so just wait. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00419">419</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
-
-</div>
-</div>
-<a id="ga567f59869ebc6c7f53d0dc9b360dd4c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga567f59869ebc6c7f53d0dc9b360dd4c3">&#9670;&nbsp;</a></span>write()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t IRsend::write </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structIRData.html">IRData</a> *&#160;</td>
-          <td class="paramname"><em>aIRSendData</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint_fast8_t&#160;</td>
-          <td class="paramname"><em>aNumberOfRepeats</em> = <code><a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a></code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Deprecated function without send pin parameter. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">aIRSendData</td><td>The values of protocol, address, command and repeat flag are taken for sending. </td></tr>
-    <tr><td class="paramname">aNumberOfRepeats</td><td>Number of repeats to send after the initial data. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00092">92</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8cpp_8h_source.html#l00427">427</a> of file <a class="el" href="IRSend_8cpp_8h_source.html">IRSend.cpp.h</a>.</p>
 
 </div>
 </div>
@@ -722,7 +701,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 21 2021 18:57:47 for IRremote by
+    <li class="footer">Generated on Wed Jun 16 2021 23:31:01 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

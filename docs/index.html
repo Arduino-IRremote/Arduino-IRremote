@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a>Available as Arduino library "IRremote"</p>
-<h2><a href="https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip">Version 3.1.1</a> - work in progress</h2>
+<h2><a href="https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip">Version 3.4.0</a> - work in progress</h2>
 <p><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master"><img src="https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest" alt="Commits since latest" class="inline"/></a> <a href="https://www.ardu-badge.com/IRremote"><img src="https://www.ardu-badge.com/badge/IRremote.svg?" alt="Installation instructions" style="pointer-events: none;" class="inline"/></a> <a href="https://gitter.im/Arduino-IRremote/Arduino-IRremote?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/Arduino-IRremote/Arduino-IRremote" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/actions"><img src="https://github.com/Arduino-IRremote/Arduino-IRremote/workflows/LibraryBuild/badge.svg" alt="LibraryBuild" style="pointer-events: none;" class="inline"/></a></p>
 <p>This library enables you to send and receive using infra-red signals on an Arduino.</p>
 <h1>API</h1>
@@ -115,11 +115,9 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li>Ability to generate a non PWM signal to just simulate an active low receiver signal for direct connect to existent receiving devices without using IR.</li>
 <li>Easy configuration of protocols required, directly in your [source code[(<a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L18-L34">https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L18-L34</a>). This reduces the memory footprint and increases decoding time.</li>
 </ul>
-<h1>Converting your program to the 3.1 version</h1>
-<p>This must be done also for all versions &gt; 3.0.1 if <code>USE_NO_SEND_PWM</code> is defined.<br  />
- Starting with this version, <b>the generation of PWM is done by software</b>, thus saving the hardware timer and <b>enabling arbitrary output pins</b>.<br  />
- Therefore you must change all <code>IrSender.begin(true);</code> by <code>IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK);</code>. If you use a core that does not use the <code>-flto</code> flag for compile, you can activate the line <code>#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN</code> in IRRemote.h, if you get false error messages regarding begin() during compilation.</p>
 <h1>Converting your 2.x program to the 3.x version</h1>
+<p>Starting with the 3.1 version, <b>the generation of PWM is done by software</b>, thus saving the hardware timer and <b>enabling arbitrary output pins</b>.<br  />
+ If you use an (old) Arduino core that does not use the <code>-flto</code> flag for compile, you can activate the line <code>#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN</code> in IRRemote.h, if you get false error messages regarding begin() during compilation.</p>
 <ul>
 <li>Now there is an <b>IRreceiver</b> and <b>IRsender</b> object like the well known Arduino <b>Serial</b> object.</li>
 <li>Just remove the line <code><a class="el" href="classIRrecv.html" title="Main class for receiving IR signals.">IRrecv</a> IrReceiver(IR_RECEIVE_PIN);</code> and/or <code><a class="el" href="classIRsend.html" title="Main class for sending IR signals.">IRsend</a> IrSender;</code> in your program, and replace all occurrences of <code><a class="el" href="classIRrecv.html" title="Main class for receiving IR signals.">IRrecv</a>.</code> or <code>irrecv.</code> with <code>IrReceiver</code>.</li>
@@ -130,8 +128,9 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li>Overflow, Repeat and other flags are now in <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L126"><code>IrReceiver.receivedIRData.flags</code></a>.</li>
 <li>Seldom used: <code>results.rawbuf</code> and <code>results.rawlen</code> must be replaced by <code>IrReceiver.decodedIRData.rawDataPtr-&gt;rawbuf</code> and <code>IrReceiver.decodedIRData.rawDataPtr-&gt;rawlen</code>.</li>
 </ul>
-<h1>Running your 2.x program with the 3.x library version</h1>
-<p>If you program is like: </p><div class="fragment"><div class="line">IRrecv irrecv(RECV_PIN);</div>
+<h1>Do not convert your 2.x program and use the 3.x library version</h1>
+<p>The 3.x versions try to be backwards compatible, so you can easily run your old examples. But some functions like e.g. <code>sendNEC()</code> -see below- could not made backwards compatible, so in this cases you must revisit your code and adapt it to the 3.x library.<br  />
+ If you program look like: </p><div class="fragment"><div class="line">IRrecv irrecv(RECV_PIN);</div>
 <div class="line">decode_results results;</div>
 <div class="line"> </div>
 <div class="line">void setup()</div>
@@ -148,17 +147,22 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="line">  }</div>
 <div class="line">  ...</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>it should run on the 3.1.1 version as before. The following decoders are available: Denon, JVC, LG, NEC, Panasonic, RC5, RC6, Samsung, Sony. The <code>results.value</code> is set by the decoders for <b>NEC, Panasonic, Sony, Samsung and JVC</b> as MSB first like in 2.x.<br  />
+</div><!-- fragment --><p>it runs on the 3.x version as before. But only the following decoders are available then: Denon, JVC, LG, NEC, Panasonic, RC5, RC6, Samsung, Sony. The <code>results.value</code> is set by the decoders for <b>NEC, Panasonic, Sony, Samsung and JVC</b> as MSB first like in 2.x!<br  />
 </p><ul>
-<li>The old functions <code>sendNEC()</code> and <code>sendJVC()</code> are deprecated and renamed to <code>sendNECMSB()</code> and <code>sendJVCMSB()</code> to make it clearer that they send data with MSB first, which is not the standard for NEC and JVC. Use them to send your <b>old MSB-first 32 bit IR data codes</b>. In the new version you will send NEC commands not by 32 bit codes but by a (constant) 8 bit address and an 8 bit command.</li>
+<li>The old functions <code>sendNEC()</code> and <code>sendJVC()</code> are deprecated and renamed to <code>sendNECMSB()</code> and <code>sendJVCMSB()</code> to make it clearer that they send data with MSB first, which is not the standard for NEC and JVC. Use them to send your <b>old MSB-first 32 bit IR data codes</b>. In the new version you will send NEC (and other) commands not by 32 bit codes but by a (constant) 8 bit address and an 8 bit command.</li>
 </ul>
-<h1>Convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes</h1>
-<p>The new decoders for <b>NEC, Panasonic, Sony, Samsung and JVC</b> <code>IrReceiver.decodedIRData.decodedRawData</code> is now LSB-first, as the definition of these protocols suggests! To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte or write it as one binary string and reverse/mirror it.<br  />
- Example:<br  />
- 0xCB340102 byte reverse -&gt; 02 01 34 CB bit reverse-&gt; 40 80 2C D3.<br  />
- 0xCB340102 is binary 11001011001101000000000100000010.<br  />
+<h1>How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes</h1>
+<p>For the new decoders for <b>NEC, Panasonic, Sony, Samsung and JVC</b>, the result <code>IrReceiver.decodedIRData.decodedRawData</code> is now <b>LSB-first</b>, as the definition of these protocols suggests!<br  />
+ To convert one into the other, you must reverse the byte/nibble positions and then reverse all bit positions of each byte/nibble or write it as one binary string and reverse/mirror it.<br  />
+<br  />
+ Example:</p><ul>
+<li>0xCB340102 byte reverse -&gt; 02 01 34 CB. Bit reverse of byte -&gt; 40 80 2C D3.</li>
+<li>0xCB340102 nibble reverse -&gt; 201043BC. Bit reverse of nibble -&gt; 40802CD3.<br  />
+ Nibble reverse map: | 1-&gt;8 | 2-&gt;4 | 3-&gt;C | 4-&gt;2 | 5-&gt;A | 6-&gt;6 | 7-&gt;E | 8-&gt;1 | 9-&gt;9 | A-&gt;5 | B-&gt;D | C-&gt;3 | D-&gt;B | E-&gt;7 | F-&gt;F |</li>
+<li>0xCB340102 is binary 11001011001101000000000100000010.<br  />
  0x40802CD3 is binary 01000000100000000010110011010011.<br  />
- If you read the first binary sequence backwards (right to left), you get the second sequence.</p>
+ If you read the first binary sequence backwards (right to left), you get the second sequence.</li>
+</ul>
 <h1>FAQ</h1>
 <ul>
 <li>IR does not work right when I use <b>Neopixels</b> (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (&gt; 50 us).<br  />
@@ -179,6 +183,8 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <ul>
 <li>If you have an <b>odd number of bits</b> received, it is likely, that your receiver circuit has problems. Maybe because the IR signal is too weak.</li>
 <li>If you see timings like <code>+ 600,- 600 + 550,- 150 + 200,- 100 + 750,- 550</code> then one 450 µs space was split into two 150 and 100 µs spaces with a spike / error signal of 200 µs between. Maybe because of a defective receiver or a weak signal in conjunction with another light emitting source nearby.</li>
+<li>If you see timings like <code>+ 500,- 550 + 450,- 550 + 500,- 500 + 500,-1550</code>, then marks are generally shorter than spaces and therefore <code>MARK_EXCESS_MICROS</code> (specified in your ino file) should be <b>negative</b> to compensate for this at decoding.</li>
+<li>If you see <code>Protocol=UNKNOWN Hash=0x0 1 bits received</code> it may be that the space after the initial mark is longer than <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L124"><code>RECORD_GAP_MICROS</code></a>. This was observed for some LG air conditioner protocols. Try again with a line e.g. <code>#define RECORD_GAP_MICROS 12000</code> before the line <code>#include &lt;<a class="el" href="IRremote_8h.html" title="Public API to the library.">IRremote.h</a>&gt;</code> in your ino file.</li>
 <li>To see more info supporting you to find the reason for your UNKNOWN protocol, you must enable the line <code>//#define DEBUG</code> in <a class="el" href="IRremoteInt_8h.html" title="Contains all declarations required for the internal functions.">IRremoteInt.h</a>.</li>
 </ul>
 <h2>How to deal with protocols not supported by IRremote</h2>
@@ -192,7 +198,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <ul>
 <li>To <b>increase strength of sent output signal</b> you can increase the current through the send diode, and/or use 2 diodes in series, since one IR diode requires only 1.5 volt.<ul>
 <li>The line #include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for <b>Digispark boards</b> as well as enables serial output at 8MHz.</li>
-<li>The default software generated PWM has <b>problems on ATtinies running with 8 MHz</b>. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by <code>#define SEND_PWM_BY_TIMER</code>.</li>
+<li>The default software generated PWM has <b>problems on AVR running with 8 MHz</b>. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by <code>#define SEND_PWM_BY_TIMER</code>.</li>
 </ul>
 </li>
 </ul>
@@ -207,11 +213,18 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <h3>ReceiveAndSend</h3>
 <p>Record and play back last received IR signal at button press.</p>
 <h3>MinimalReceiver + SmallReceiver</h3>
-<p>If code size matters, look at these examples.</p>
+<p>If code size matters, look at these examples.<br  />
+ MinimalReceiver can be tested online with <a href="https://wokwi.com/arduino/projects/299034264157028877">WOKWI</a>. Click on the receiver while simulation is running to specify individual IR codes.</p>
 <h3>IRDispatcherDemo</h3>
-<p>Framework for calling different functions for different IR codes.</p>
+<p>Framework for calling different functions of <b>your program</b> for different IR codes.</p>
 <h3>IRrelay</h3>
 <p>Control a relay (connected to an output pin) with your remote.</p>
+<h3>IRremoteExtensionTest</h3>
+<p>Example for a user defined class, which itself uses the <a class="el" href="classIRrecv.html" title="Main class for receiving IR signals.">IRrecv</a> class from IRremote.</p>
+<h3>ReceiverTimingAnalysis</h3>
+<p>This example analyzes the signal delivered by your IR receiver module. Values can be used to determine the stability of the received signal as well as a hint for determining the protocol.<br  />
+ It also computes the MARK_EXCESS_MICROS value, which is the extension of the mark (pulse) duration introduced by the IR receiver module.<br  />
+ It can be tested online with <a href="https://wokwi.com/arduino/projects/299033930562011656">WOKWI</a>. Click on the receiver while simulation is running to specify individual NEC IR codes.</p>
 <h1>Compile options / macros for this library</h1>
 <p>To customize the library to different requirements, there are some compile options / macros available.<br  />
  Modify it by commenting them out or in, or change the values if applicable. Or define the macro with the -D compiler option for global compile (the latter is not possible with the Arduino IDE, so consider using <a href="https://eclipse.baeyens.it">Sloeber</a>.</p>
@@ -225,9 +238,16 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>NO_LEGACY_COMPATIBILITY</code> </td><td class="markdownTableBodyNone"><a class="el" href="IRremoteInt_8h.html" title="Contains all declarations required for the internal functions.">IRremoteInt.h</a> </td><td class="markdownTableBodyNone">disabled </td><td class="markdownTableBodyNone">Disables the old decoder for version 2.x compatibility, where all protocols -especially NEC, Panasonic, Sony, Samsung and JVC- were MSB first. Saves around 60 bytes program space and 14 bytes RAM.  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>EXCLUDE_EXOTIC_PROTOCOLS</code> </td><td class="markdownTableBodyNone">Before <code>#include &lt;<a class="el" href="IRremote_8h.html" title="Public API to the library.">IRremote.h</a>&gt;</code> </td><td class="markdownTableBodyNone">disabled </td><td class="markdownTableBodyNone">If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in <code>decode()</code> and in sending with <code>IrSender.write()</code>. Saves up to 900 bytes program space.  </td></tr>
+<td class="markdownTableBodyNone"><code>EXCLUDE_EXOTIC_PROTOCOLS</code> </td><td class="markdownTableBodyNone">Before <code>#include &lt;<a class="el" href="IRremote_8h.html" title="Public API to the library.">IRremote.h</a>&gt;</code> </td><td class="markdownTableBodyNone">disabled </td><td class="markdownTableBodyNone">If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in <code>decode()</code> and in sending with <code>IrSender.write()</code>. Saves up to 650 bytes program space.  </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>EXCLUDE_UNIVERSAL_PROTOCOLS</code> </td><td class="markdownTableBodyNone">Before <code>#include &lt;<a class="el" href="IRremote_8h.html" title="Public API to the library.">IRremote.h</a>&gt;</code> </td><td class="markdownTableBodyNone">disabled </td><td class="markdownTableBodyNone">If activated, the universal decoder for pulse width or pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in <code>decode()</code>. Saves up to 1000 bytes program space.  </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>MARK_EXCESS_MICROS</code> </td><td class="markdownTableBodyNone">Before <code>#include &lt;<a class="el" href="IRremote_8h.html" title="Public API to the library.">IRremote.h</a>&gt;</code> </td><td class="markdownTableBodyNone">20 </td><td class="markdownTableBodyNone">MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>RECORD_GAP_MICROS</code> </td><td class="markdownTableBodyNone">Before <code>#include &lt;<a class="el" href="IRremote_8h.html" title="Public API to the library.">IRremote.h</a>&gt;</code> </td><td class="markdownTableBodyNone">5000 </td><td class="markdownTableBodyNone">Minimum gap between IR transmissions, to detect the end of a protocol.<br  />
+Must be greater than any space of a protocol e.g. the NEC header space of 4500 us.<br  />
+Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br  />
+Keep in mind, that this is the delay between the end of the received command and the start of decoding.  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>FEEDBACK_LED_IS_ACTIVE_LOW</code> </td><td class="markdownTableBodyNone">Before <code>#include &lt;<a class="el" href="IRremote_8h.html" title="Public API to the library.">IRremote.h</a>&gt;</code> </td><td class="markdownTableBodyNone">disabled </td><td class="markdownTableBodyNone">Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low.  </td></tr>
 <tr class="markdownTableRowOdd">
@@ -296,7 +316,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://github.com/SpenceKonde/ATTinyCore">ATtiny84</a> </td><td class="markdownTableBodyNone"><b>6</b> </td><td class="markdownTableBodyNone"><b>1</b>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><a href="https://github.com/SpenceKonde/ATTinyCore">ATtiny85 &gt; 1 MHz</a> </td><td class="markdownTableBodyNone"><b>1</b>, 4 </td><td class="markdownTableBodyNone"><b>0</b>, 1  </td></tr>
+<td class="markdownTableBodyNone"><a href="https://github.com/SpenceKonde/ATTinyCore">ATtiny85 &gt; 4 MHz</a> </td><td class="markdownTableBodyNone"><b>1</b>, 4 </td><td class="markdownTableBodyNone"><b>0</b>, 1  </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://github.com/SpenceKonde/megaTinyCore">ATtiny1604</a> </td><td class="markdownTableBodyNone"><b>PA05</b> </td><td class="markdownTableBodyNone"><b>TCB0</b>  </td></tr>
 <tr class="markdownTableRowEven">
@@ -435,7 +455,7 @@ Supports <b>Pronto</b> codes. </td><td class="markdownTableBodyNone">Requires no
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 21 2021 18:57:47 for IRremote by
+    <li class="footer">Generated on Wed Jun 16 2021 23:31:01 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

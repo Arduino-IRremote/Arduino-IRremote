@@ -5,6 +5,7 @@ var group__Receiving =
     [ "IRrecv", "group__Receiving.html#ga78bb606b282e710d0d542e2aa44786d8", null ],
     [ "available", "group__Receiving.html#gaa4f466138c416bf4e1548f5399be0298", null ],
     [ "begin", "group__Receiving.html#ga0358fc4a683ba3f8d31fdde1e22be724", null ],
+    [ "CheckForRecordGapsMicros", "group__Receiving.html#ga0ad570723cf65cad6721117ae1a6d598", null ],
     [ "compensateAndPrintIRResultAsCArray", "group__Receiving.html#ga21364e5f35756fe0f72581c00b1b33b1", null ],
     [ "compensateAndStoreIRResultInArray", "group__Receiving.html#ga5a515633f91a505e621cba3bab5e53d0", null ],
     [ "decode", "group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36", null ],

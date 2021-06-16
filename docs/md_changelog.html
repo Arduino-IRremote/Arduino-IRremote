@@ -85,8 +85,19 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <div class="title">Changelog </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The latest version may not be released!</p>
-<h1>3.1.1</h1>
+<div class="textblock"><p>The latest version may not be released! </p><h1>3.4.0</h1>
+<ul>
+<li>Added LG2 protocol.</li>
+</ul>
+<h1>3.3.0</h1>
+<ul>
+<li>Fix errors if LED_BUILTIN is not defined.</li>
+<li>Fixed error for AVR timer1. Thanks to alexbarcelo.</li>
+<li>New example IRremoteExtensionTest.</li>
+<li>Enabled megaAVR 0-series devices.</li>
+<li>Added universal decoder for pulse width or pulse distance protocols.</li>
+</ul>
+<h1>3.2.0</h1>
 <ul>
 <li>Fix for ESP32 send Error, removed <code>USE_SOFT_SEND_PWM</code> macro.</li>
 <li>Added Onkyo protocol.</li>
@@ -95,6 +106,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Added ATtiny1604 support.</li>
 <li>New SendAndReceive example.</li>
 <li>Added ESP8266 support.</li>
+<li>Extended DEBUG output.</li>
 </ul>
 <h1>3.1.0</h1>
 <ul>
@@ -312,7 +324,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 21 2021 18:57:47 for IRremote by
+    <li class="footer">Generated on Wed Jun 16 2021 23:31:01 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>
