@@ -32,7 +32,7 @@
  */
 #include <Arduino.h>
 
-#define USE_LG2_PROTOCOL // Try it if you do not have success with the default LG protocol
+//#define USE_LG2_PROTOCOL // Try it if you do not have success with the default LG protocol
 
 /*
  * Define macros for input and output pin etc.

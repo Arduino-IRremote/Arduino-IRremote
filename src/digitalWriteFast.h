@@ -407,7 +407,7 @@
 
 // --- ATtinyX4 + ATtinyX7 ---
 #elif  defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-# if defined(ARDUINO_AVR_DIGISPARKPRO)
+# if defined(ARDUINO_AVR_DIGISPARKPRO) || PIN_PA7 == 5
 // Strange enumeration of pins on Digispark board and core library
 #define __digitalPinToPortReg(P) (((P) <= 4) ? &PORTB : &PORTA)
 #define __digitalPinToDDRReg(P)  (((P) <= 4) ? &DDRB : &DDRA)

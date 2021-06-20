@@ -400,7 +400,9 @@ public:
 
     IRsend();
     void begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN)
+#if !defined (DOXYGEN)
             __attribute__ ((deprecated ("Please use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>)")));
+#endif
 
     size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
 
@@ -428,7 +430,9 @@ public:
     void sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendSharp = false);
     void sendDenonRaw(uint16_t aRawData, uint_fast8_t aNumberOfRepeats = 0)
+#if !defined (DOXYGEN)
             __attribute__ ((deprecated ("Please use sendDenon(aAddress, aCommand, aNumberOfRepeats).")));
+#endif
     void sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats);
 
     void sendLGRepeat(bool aUseLG2Protocol = false);

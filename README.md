@@ -217,6 +217,7 @@ If you are using Sloeber as your IDE, you can easily define global symbols with 
 ![Sloeber settings](https://github.com/ArminJo/ServoEasing/blob/master/pictures/SloeberDefineSymbols.png)
 
 # Supported Boards
+Digispark boards are tested with the recommended [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) using `New Style` pin mapping for the pro board.
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: PaulStoffregen (Teensy Team)
 - Sanguino
@@ -224,7 +225,7 @@ If you are using Sloeber as your IDE, you can easily define global symbols with 
 - ATmega8535, 16, 32, 164, 324, 644, 1284,
 - ATmega64, 128
 - ATmega4809 (Nano every)
-- ATtiny84, 85
+- ATtiny84, 85, 167 (Digispark + Digispark Pro)
 - SAMD21 (DUE, Zero)
 - ESP32
 - ESP8266. [This fork](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md).
