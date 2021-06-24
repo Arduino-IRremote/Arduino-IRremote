@@ -226,7 +226,7 @@ Digispark boards are tested with the recommended [ATTinyCore](https://github.com
 - ATmega64, 128
 - ATmega4809 (Nano every)
 - ATtiny84, 85, 167 (Digispark + Digispark Pro)
-- SAMD21 (DUE, Zero)
+- SAMD (Zero, MKR*, **but not DUE**)
 - ESP32
 - ESP8266. [This fork](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md).
 - Sparkfun Pro Micro
