@@ -2,6 +2,7 @@
 The latest version may not be released!
 ## 3.4.0
 - Added LG2 protocol.
+- Added ATtiny167 (Digispark Pro) support.
 
 ## 3.3.0
 - Fix errors if LED_BUILTIN is not defined.
