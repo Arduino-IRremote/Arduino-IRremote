@@ -76,7 +76,11 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
 //+=============================================================================
 //
 /*
+<<<<<<< HEAD
  * decodes a 56 bit result, which is not really compatible with standard decoder layout
+=======
+ * decodes a 32 bit result, which is not really compatible with standard decoder layout
+>>>>>>> 91f986e (a bit of cleanup & added my email address)
  */
 bool IRrecv::decodeMagiQuest() {
     magiquest_t data;  // Somewhere to build our code
