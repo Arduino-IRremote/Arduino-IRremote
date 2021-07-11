@@ -3,7 +3,7 @@
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
 #include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 
-// MagiQuest added by E. Stuart Hicks
+// MagiQuest added by E. Stuart Hicks <ehicks@binarymagi.com>
 // Based off the Magiquest fork of Arduino-IRremote by mpflaga
 // https://github.com/mpflaga/Arduino-IRremote/
 //==============================================================================
@@ -27,8 +27,8 @@ union magiquest_t {
 };
 #endif // !defined (DOXYGEN)
 
-#define MAGIQUEST_MAGNITUDE_BITS   16     // The number of bits
-#define MAGIQUEST_WAND_ID_BITS     32     // The number of bits
+#define MAGIQUEST_MAGNITUDE_BITS   (sizeof(magiquest_t.cmd.magnitude) * 8)   // The number of bits
+#define MAGIQUEST_WAND_ID_BITS     (sizeof(magiquest_t.cmd.wand_id) * 8)     // The number of bits
 
 #define MAGIQUEST_BITS        (MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS)     // The number of bits in the command itself
 #define MAGIQUEST_PERIOD      1150   // Length of time a full MQ "bit" consumes (1100 - 1200 usec)
@@ -40,52 +40,42 @@ union magiquest_t {
  *     1150 * 0.5 = 575 usec mark
  *     1150 - 575 = 575 usec space
  */
-#define MAGIQUEST_UNIT          288
+#define MAGIQUEST_UNIT          (MAGIQUEST_PERIOD / 4)
 
-#define MAGIQUEST_ONE_MARK      (2* MAGIQUEST_UNIT) // 576
-#define MAGIQUEST_ONE_SPACE     (2* MAGIQUEST_UNIT) // 576
+#define MAGIQUEST_ONE_MARK      (2 * MAGIQUEST_UNIT) // 576
+#define MAGIQUEST_ONE_SPACE     (2 * MAGIQUEST_UNIT) // 576
 #define MAGIQUEST_ZERO_MARK     MAGIQUEST_UNIT
-#define MAGIQUEST_ZERO_SPACE    (3* MAGIQUEST_UNIT) // 864
-
-//#define MAGIQUEST_MASK        (1ULL << (MAGIQUEST_BITS-1))
+#define MAGIQUEST_ZERO_SPACE    (3 * MAGIQUEST_UNIT) // 864
 
 //+=============================================================================
 //
 void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
-//    magiquest_t data;
-//
-//    data.llword = 0;
-//    data.cmd.wand_id = wand_id;
-//    data.cmd.magnitude = magnitude;
 
     // Set IR carrier frequency
     enableIROut(38);
 
     // 2 start bits
-    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 2, PROTOCOL_IS_MSB_FIRST);
+    sendPulseDistanceWidthData(
+        MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
+        0, 2, PROTOCOL_IS_MSB_FIRST
+	);
 
     // Data
-    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, wand_id,
-    MAGIQUEST_WAND_ID_BITS, PROTOCOL_IS_MSB_FIRST);
-    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, magnitude,
-    MAGIQUEST_MAGNITUDE_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-
-//    for (unsigned long long mask = MAGIQUEST_MASK; mask > 0; mask >>= 1) {
-//        if (data.llword & mask) {
-//            mark(MAGIQUEST_ONE_MARK);
-//            space(MAGIQUEST_ONE_SPACE);
-//        } else {
-//            mark(MAGIQUEST_ZERO_MARK);
-//            space(MAGIQUEST_ZERO_SPACE);
-//        }
-//    }
-
+    sendPulseDistanceWidthData(
+        MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
+        wand_id, MAGIQUEST_WAND_ID_BITS, PROTOCOL_IS_MSB_FIRST
+	);
+    sendPulseDistanceWidthData(
+        MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
+        magnitude, MAGIQUEST_MAGNITUDE_BITS, PROTOCOL_IS_MSB_FIRST,
+		SEND_STOP_BIT
+	);
 }
 
 //+=============================================================================
 //
 /*
- * decodes a 32 bit result, which is nor really compatible with standard decoder layout
+ * decodes a 32 bit result, which is not really compatible with standard decoder layout
  */
 bool IRrecv::decodeMagiQuest() {
     magiquest_t data;  // Somewhere to build our code
