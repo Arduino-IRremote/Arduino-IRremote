@@ -121,7 +121,7 @@ bool IRrecv::decodeDistance() {
 
     uint8_t tMaxDurationIndex = 0;
     // Count space durations. Skip leading start and trailing stop bit.
-    for (i = 4; i < decodedIRData.rawDataPtr->rawlen - 2; i += 2) {
+    for (i = 4; i < (uint_fast8_t) decodedIRData.rawDataPtr->rawlen - 2; i += 2) {
         uint8_t tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
         if (tDurationTicks < sizeof(tDurationArray)) {
             tDurationArray[tDurationTicks]++;
@@ -150,7 +150,7 @@ bool IRrecv::decodeDistance() {
 
     tMaxDurationIndex = 0;
     // Count mark durations. Skip leading start and trailing stop bit.
-    for (i = 3; i < decodedIRData.rawDataPtr->rawlen - 2; i += 2) {
+    for (i = 3; i < (uint_fast8_t) decodedIRData.rawDataPtr->rawlen - 2; i += 2) {
         uint8_t tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
         if (tDurationTicks < sizeof(tDurationArray)) {
             tDurationArray[tDurationTicks]++;

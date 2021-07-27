@@ -122,9 +122,9 @@
 
 #elif  defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #  if !defined(IR_USE_AVR_TIMER1)
-#define IR_USE_AVR_TIMER1
+#define IR_USE_AVR_TIMER1   // send pin = pin PB1 / 8
 #  endif
-#define USE_TIMER_CHANNEL_B   // send pin = pin PB1
+#define USE_TIMER_CHANNEL_B
 
 //ATtiny85
 #elif defined(__AVR_ATtiny85__)
@@ -258,7 +258,7 @@
 #define IR_SEND_PIN  8
 
 #    elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#define IR_SEND_PIN  PIN_PB1 // OC1BU at ATTinyCore (BU/PB1, BV/PB3, BW/PB5 and BX/PB7 are available) see ENABLE_SEND_PWM_BY_TIMER
+#define IR_SEND_PIN  PIN_PB1 // OC1BU / PB1 / Pin8 at ATTinyCore (BU/PB1, BV/PB3, BW/PB5 and BX/PB7 are available) see ENABLE_SEND_PWM_BY_TIMER
 
 #    else
 #define IR_SEND_PIN  9              // OC1A Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro, Leonardo, MH-ET Tiny88 etc.
