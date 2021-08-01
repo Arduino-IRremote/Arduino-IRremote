@@ -70,7 +70,7 @@
  * Plain AVR CPU's, no boards
  ***************************************/
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
-// ATmega48, ATmega88, ATmega168, ATmega328
+// ATmega328
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__)
 #  if !defined(IR_USE_AVR_TIMER1) && !defined(IR_USE_AVR_TIMER2)
 //#define IR_USE_AVR_TIMER1   // send pin = pin 9
@@ -122,9 +122,9 @@
 
 #elif  defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #  if !defined(IR_USE_AVR_TIMER1)
-#define IR_USE_AVR_TIMER1
+#define IR_USE_AVR_TIMER1   // send pin = pin PB1 / 8
 #  endif
-#define USE_TIMER_CHANNEL_B   // send pin = pin PB1
+#define USE_TIMER_CHANNEL_B
 
 //ATtiny85
 #elif defined(__AVR_ATtiny85__)
@@ -254,8 +254,11 @@
 #    elif defined(__AVR_ATtiny84__)
 #define IR_SEND_PIN  6
 
+#    elif defined(__AVR_ATtiny88__)
+#define IR_SEND_PIN  8
+
 #    elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#define IR_SEND_PIN  PIN_PB1 // OC1BU at ATTinyCore (BU/PB1, BV/PB3, BW/PB5 and BX/PB7 are available) see ENABLE_SEND_PWM_BY_TIMER
+#define IR_SEND_PIN  PIN_PB1 // OC1BU / PB1 / Pin8 at ATTinyCore (BU/PB1, BV/PB3, BW/PB5 and BX/PB7 are available) see ENABLE_SEND_PWM_BY_TIMER
 
 #    else
 #define IR_SEND_PIN  9              // OC1A Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro, Leonardo, MH-ET Tiny88 etc.
