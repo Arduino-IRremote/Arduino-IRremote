@@ -27,6 +27,9 @@ union magiquest_t {
 };
 #endif // !defined (DOXYGEN)
 
+// Override default raw buffer length since 100 isn't quite enough & we consistently overflow
+#define RAW_BUFFER_LENGTH     ((sizeof(magiquest_t) - sizeof(magiquest_t.scrap)) * 2)
+
 #define MAGIQUEST_MAGNITUDE_BITS   (sizeof(magiquest_t.cmd.magnitude) * 8)   // The number of bits
 #define MAGIQUEST_WAND_ID_BITS     (sizeof(magiquest_t.cmd.wand_id) * 8)     // The number of bits
 
