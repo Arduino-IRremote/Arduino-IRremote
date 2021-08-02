@@ -25,9 +25,6 @@ union magiquest_t {
     } cmd;
 };
 
-// Override default raw buffer length since 100 isn't quite enough & we consistently overflow
-#define RAW_BUFFER_LENGTH     ((sizeof(magiquest_t) - sizeof(magiquest_t.cmd.scrap)) * 8 * 2)
-
 #define MAGIQUEST_MAGNITUDE_BITS   (sizeof(uint16_t) * 8)   // magiquest_t.cmd.magnitude
 #define MAGIQUEST_WAND_ID_BITS     (sizeof(uint32_t) * 8)   // magiquest_t.cmd.wand_id
 
@@ -91,8 +88,14 @@ bool IRrecv::decodeMagiQuest() {
     memset(bitstring, 0, sizeof(bitstring));
 #endif
 
+    DEBUG_PRINTLN("MagiQuest: Entered decodeMagiQuest()");
+    TRACE_PRINTLN("MagiQuest: Entered decodeMagiQuest()");
+
     // Check we have enough data (102), + 6 for 2 start and 1 stop bit
     if (decodedIRData.rawDataPtr->rawlen != (2 * MAGIQUEST_BITS) + 6) {
+    	DEBUG_PRINT("MagiQuest: Bad packet length - got ");
+    	DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+    	DEBUG_PRINTLN(", expected (48 * 2) + 6 = 102");
         return false;
     }
 
@@ -103,8 +106,7 @@ bool IRrecv::decodeMagiQuest() {
         space_ = decodedIRData.rawDataPtr->rawbuf[offset++];
         ratio_ = space_ / mark_;
 
-        DEBUG_PRINT("MagiQuest: ");
-        DEBUG_PRINT("mark=");
+        DEBUG_PRINT("MagiQuest: mark=");
         DEBUG_PRINT(mark_ * MICROS_PER_TICK);
         DEBUG_PRINT(" space=");
         DEBUG_PRINT(space_ * MICROS_PER_TICK);
