@@ -14,7 +14,6 @@
 //
 //==============================================================================
 
-#if !defined (DOXYGEN)
 // MagiQuest packet is both Wand ID and magnitude of swish and flick
 union magiquest_t {
     uint64_t llword;
@@ -25,7 +24,6 @@ union magiquest_t {
         uint8_t scrap;  // just to pad the struct out to 64 bits so we can union with llword
     } cmd;
 };
-#endif // !defined (DOXYGEN)
 
 // Override default raw buffer length since 100 isn't quite enough & we consistently overflow
 #define RAW_BUFFER_LENGTH     ((sizeof(magiquest_t) - sizeof(magiquest_t.cmd.scrap)) * 8 * 2)
