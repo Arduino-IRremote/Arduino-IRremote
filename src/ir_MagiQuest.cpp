@@ -95,12 +95,23 @@ bool IRrecv::decodeMagiQuest() {
     bitstring[MAGIQUEST_PACKET_SIZE] = '\0';
 #endif
 
+<<<<<<< HEAD
     // Check we have the right amount of data
     if (decodedIRData.rawDataPtr->rawlen != MAGIQUEST_PACKET_SIZE) {
     	DEBUG_PRINT("MagiQuest: Bad packet length - got ");
     	DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
     	DEBUG_PRINT(", expected ");
     	DEBUG_PRINTLN(MAGIQUEST_PACKET_SIZE);
+=======
+    DEBUG_PRINTLN("MagiQuest: Entered decodeMagiQuest()");
+    TRACE_PRINTLN("MagiQuest: Entered decodeMagiQuest()");
+
+    // Check we have enough data (102), + 6 for 2 start and 1 stop bit
+    if (decodedIRData.rawDataPtr->rawlen != (2 * MAGIQUEST_BITS) + 6) {
+    	DEBUG_PRINT("MagiQuest: Bad packet length - got ");
+    	DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+    	DEBUG_PRINTLN(", expected (48 * 2) + 6 = 102");
+>>>>>>> db238bb (increased default raw_buffer_length when magiquest is enabled since 100)
         return false;
     }
 
@@ -111,12 +122,21 @@ bool IRrecv::decodeMagiQuest() {
         space_ = decodedIRData.rawDataPtr->rawbuf[offset++];
         ratio_ = space_ / mark_;
 
+<<<<<<< HEAD
         TRACE_PRINT("MagiQuest: mark=");
         TRACE_PRINT(mark_ * MICROS_PER_TICK);
         TRACE_PRINT(" space=");
         TRACE_PRINT(space_ * MICROS_PER_TICK);
         TRACE_PRINT(" ratio=");
         TRACE_PRINTLN(ratio_);
+=======
+        DEBUG_PRINT("MagiQuest: mark=");
+        DEBUG_PRINT(mark_ * MICROS_PER_TICK);
+        DEBUG_PRINT(" space=");
+        DEBUG_PRINT(space_ * MICROS_PER_TICK);
+        DEBUG_PRINT(" ratio=");
+        DEBUG_PRINTLN(ratio_);
+>>>>>>> db238bb (increased default raw_buffer_length when magiquest is enabled since 100)
 
         if (matchMark(space_ + mark_, MAGIQUEST_PERIOD)) {
             if (ratio_ > 1) {
