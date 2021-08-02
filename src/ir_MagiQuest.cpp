@@ -28,8 +28,8 @@ union magiquest_t {
 // Override default raw buffer length since 100 isn't quite enough & we consistently overflow
 #define RAW_BUFFER_LENGTH     ((sizeof(magiquest_t) - sizeof(magiquest_t.cmd.scrap)) * 8 * 2)
 
-#define MAGIQUEST_MAGNITUDE_BITS   (sizeof(magiquest_t.cmd.magnitude) * 8)   // The number of bits
-#define MAGIQUEST_WAND_ID_BITS     (sizeof(magiquest_t.cmd.wand_id) * 8)     // The number of bits
+#define MAGIQUEST_MAGNITUDE_BITS   (sizeof(uint16_t) * 8)   // magiquest_t.cmd.magnitude
+#define MAGIQUEST_WAND_ID_BITS     (sizeof(uint32_t) * 8)   // magiquest_t.cmd.wand_id
 
 #define MAGIQUEST_BITS        (MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS)     // The number of bits in the command itself
 #define MAGIQUEST_PERIOD      1150   // Length of time a full MQ "bit" consumes (1100 - 1200 usec)
