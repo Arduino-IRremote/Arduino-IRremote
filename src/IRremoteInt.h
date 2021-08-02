@@ -38,9 +38,13 @@
  * The length of the buffer where the IR timing data is stored before decoding
  * 100 is sufficient for most standard protocols, but air conditioners often send a longer protocol data stream
  */
-#if !defined(RAW_BUFFER_LENGTH)
+#if ! defined(RAW_BUFFER_LENGTH)
+#   if defined(DECODE_MAGIQUEST)
+#define RAW_BUFFER_LENGTH  112  // MagiQuest also needs slightly more than usual
+#   else
 #define RAW_BUFFER_LENGTH  100  ///< Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
 //#define RAW_BUFFER_LENGTH  750  // Value for air condition remotes.
+#   endif
 #endif
 #if RAW_BUFFER_LENGTH % 2 == 1
 #error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
