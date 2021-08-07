@@ -302,7 +302,8 @@ And at least it would be wonderful if you can provide an example how to use the 
 A detailed description can be found in the [ir_Template.cpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_Template.cpp#L18) file.
 
 # NEC encoding
-8 bit address NEC code
+Created with sigrok PulseView with IR_NEC decoder by DjordjeMandic.<br/>
+8 bit address NEC code 
 ![8 bit address NEC code](https://user-images.githubusercontent.com/6750655/108884951-78e42b80-7607-11eb-9513-b07173a169c0.png)
 16 bit address NEC code
 ![16 bit address NEC code](https://user-images.githubusercontent.com/6750655/108885081-a6c97000-7607-11eb-8d35-274a7065b6c4.png)
