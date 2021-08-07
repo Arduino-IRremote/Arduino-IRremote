@@ -158,9 +158,9 @@ void loop() {
 #  if !defined(ESP32) && !defined(ESP8266) && !defined(NRF5)
         if (IrReceiver.decodedIRData.protocol != UNKNOWN) {
             /*
-             * Play tone, wait and restore IR timer, if a valid protocol was received
-             * Otherwise do not disturb the detection of the gap between transmissions. This will give
-             * the next printIRResult* call a chance to report about changing the RECORD_GAP_MICROS value.
+             * If a valid protocol was received, play tone, wait and restore IR timer.
+             * Otherwise do not play a tone to get exact gap time between transmissions.
+             * This will give the next CheckForRecordGapsMicros() call a chance to eventually propose a change of the current RECORD_GAP_MICROS value.
              */
             IrReceiver.stop();
             tone(TONE_PIN, 2200, 10);

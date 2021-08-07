@@ -237,16 +237,23 @@ void IRPinChangeInterruptHandler(void) {
 }
 
 /**
- * Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.
+ * Sets IR_INPUT_PIN mode to INPUT_PULLUP, if required, sets feedback LED output mode and call enablePCIInterruptForTinyReceiver()
  */
 void initPCIInterruptForTinyReceiver() {
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
-    pinModeFast(IR_TIMING_TEST_PIN, OUTPUT);
-#endif
     pinModeFast(IR_INPUT_PIN, INPUT_PULLUP);
 
 #if !defined(DO_NOT_USE_FEEDBACK_LED) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#endif
+    enablePCIInterruptForTinyReceiver();
+}
+
+/**
+ * Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.
+ */
+void enablePCIInterruptForTinyReceiver() {
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+    pinModeFast(IR_TIMING_TEST_PIN, OUTPUT);
 #endif
 
 #if defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
@@ -331,6 +338,86 @@ void initPCIInterruptForTinyReceiver() {
     //ATmega328 (Uno, Nano ) etc. Enable pin change interrupt 8 to 13 for port PC0 to PC5 (Arduino pin A0 to A5)
         PCICR |= _BV(PCIE1);
         PCMSK1 = digitalPinToBitMask(IR_INPUT_PIN);
+#    else
+#      error "IR_INPUT_PIN not allowed."
+#    endif // if (IR_INPUT_PIN == 2)
+#  endif // defined(__AVR_ATtiny25__)
+#endif // ! defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
+}
+
+void disablePCIInterruptForTinyReceiver() {
+#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+    pinModeFast(IR_TIMING_TEST_PIN, OUTPUT);
+#endif
+
+#if defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
+    detachInterrupt(IR_INPUT_PIN);
+
+#elif !defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
+    // costs 112 bytes FLASH + 4bytes RAM
+    detachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN));
+#else
+#  if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+    // clear interrupt bit
+    GIFR |= 1 << PCIF;
+    // disable interrupt on next change
+    GIMSK &= ~(1 << PCIE);
+
+#  elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
+#    if defined(ARDUINO_AVR_DIGISPARKPRO)
+#      if (IR_INPUT_PIN == 3)
+    // clear interrupt bit
+    EIFR |= 1 << INTF0;
+    // disable interrupt on next change
+    EIMSK &= ~( 1 << INT0);
+#      elif (IR_INPUT_PIN == 9)
+    // clear interrupt bit
+    EIFR |= 1 << INTF1;
+    // disable interrupt on next change
+    EIMSK &= ~(1 << INT1);
+#      else
+#        error "IR_INPUT_PIN must be 9 or 3."
+#      endif // if (IR_INPUT_PIN == 9)
+
+#    else // defined(ARDUINO_AVR_DIGISPARKPRO)
+#      if (IR_INPUT_PIN == 14)
+    // clear interrupt bit
+    EIFR |= 1 << INTF0;
+    // disable interrupt on next change
+    EIMSK &= ~(1 << INT0);
+#      elif (IR_INPUT_PIN == 3)
+    // clear interrupt bit
+    EIFR |= 1 << INTF1;
+    // disable interrupt on next change
+    EIMSK &= ~(1 << INT1);
+#      else
+#        error "IR_INPUT_PIN must be 14 or 3."
+#      endif // if (IR_INPUT_PIN == 14)
+#    endif
+
+#  else // defined(__AVR_ATtiny25__)
+    /*
+     * ATmegas + ATtiny88 here
+     */
+#    if (IR_INPUT_PIN == 2)
+    // clear interrupt bit
+    EIFR |= 1 << INTF0;
+    // disable interrupt on next change
+    EIMSK &= ~(1 << INT0);
+#    elif (IR_INPUT_PIN == 3)
+    // clear interrupt bit
+    EIFR |= 1 << INTF1;
+    // disable interrupt on next change
+    EIMSK &= ~(1 << INT1);
+#    elif IR_INPUT_PIN == 4 || IR_INPUT_PIN == 5 || IR_INPUT_PIN == 6 || IR_INPUT_PIN == 7
+    //ATmega328 (Uno, Nano ) etc. disable pin change interrupt 20 to 23 for port PD4 to PD7 (Arduino pin 4 to 7)
+        PCICR &= ~(_BV(PCIE2));
+#    elif IR_INPUT_PIN == 8 || IR_INPUT_PIN == 9 || IR_INPUT_PIN == 10 || IR_INPUT_PIN == 11 || IR_INPUT_PIN == 12 || IR_INPUT_PIN == 13
+    //ATmega328 (Uno, Nano ) etc. disable pin change interrupt 0 to 5 for port PB0 to PB5 (Arduino pin 8 to 13)
+        PCICR &= ~(_BV(PCIE0));
+#    elif IR_INPUT_PIN == A0 || IR_INPUT_PIN == A1 || IR_INPUT_PIN == A2 || IR_INPUT_PIN == A3 || IR_INPUT_PIN == A4 || IR_INPUT_PIN == A5
+    //ATmega328 (Uno, Nano ) etc. disable pin change interrupt 8 to 13 for port PC0 to PC5 (Arduino pin A0 to A5)
+        PCICR &= ~(_BV(PCIE1));
 #    else
 #      error "IR_INPUT_PIN not allowed."
 #    endif // if (IR_INPUT_PIN == 2)

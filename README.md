@@ -6,7 +6,6 @@ Available as Arduino library "IRremote"
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
 [![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
-[![Join the chat at https://gitter.im/Arduino-IRremote/Arduino-IRremote](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Arduino-IRremote/Arduino-IRremote?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![LibraryBuild](https://github.com/Arduino-IRremote/Arduino-IRremote/workflows/LibraryBuild/badge.svg)](https://github.com/Arduino-IRremote/Arduino-IRremote/actions)
 
 This library enables you to send and receive using infra-red signals on an Arduino.
@@ -37,7 +36,7 @@ This is a quite old but maybe useful wiki for this library.
 - Protocol values comply to protocol standards, i.e. NEC, Panasonic, Sony, Samsung and JVC decode and send LSB first.
 - Supports more protocols, since adding a protocol is quite easy now.
 - Better documentation and more examples :-).
-- Compatible with tone() library, see [ReceiveDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L150-L153).
+- Compatible with tone() library, see [ReceiveDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/21b5747a58e9d47c9e3f1beb056d58c875a92b47/examples/ReceiveDemo/ReceiveDemo.ino#L159-L169).
 - Supports more platforms, since the new structure allows to easily add a new platform.
 - Feedback LED also for sending.
 - Ability to generate a non PWM signal to just simulate an active low receiver signal for direct connect to existent receiving devices without using IR.
@@ -100,9 +99,7 @@ Example:
  Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 µs.
 In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors,
  [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
-- The default IR timer on AVR's is timer 2. Since the **Arduino Tone library** as well as **analogWrite() for pin 3 and pin 11** requires timer 2,
- this functionality cannot be used simultaneously. You can use tone() but after the tone has stopped, you must call `IrReceiver.start()` or better `IrReceiver.start(<microsecondsOfToneDuration>)` to restore the timer settings for receive. Or you change the timer to timer 1 in private/IRTimer.cpp.h.<br/>
-If you can live with the NEC protocol, you can try the MinimalReceiver example, it requires no timer.
+- **Another library** is only working if I deactivate the line `IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);`. Please see [below](https://github.com/Arduino-IRremote/Arduino-IRremote#timer-and-pin-usage).
 - You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
  The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
  This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
@@ -204,6 +201,8 @@ Modify it by commenting them out or in, or change the values if applicable. Or d
 | `DEBUG` | IRremoteInt.h | disabled | Enables lots of lovely debug output. |
 | `IR_SEND_DUTY_CYCLE` | IRremoteInt.h | 30 | Duty cycle of IR send signal. |
 | `MICROS_PER_TICK` | IRremoteInt.h | 50 | Resolution of the raw input buffer data. |
+| `IR_USE_AVR_TIMER*` | private/IRTimer.cpp.h |  | Selection of timer to be used for generating IR receiving sample interval. |
+
 |-|-|-|-|
 | `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
@@ -214,6 +213,7 @@ First, use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>
 If you did not yet stored the example as your own sketch, then you are instantly in the right library folder.<br/>
 Otherwise you have to navigate to the parallel `libraries` folder and select the library you want to access.<br/>
 In both cases the library files itself are located in the `src` directory.<br/>
+The modification must be renewed for each new IRremote library version!
 
 ### Modifying compile options with Sloeber IDE
 If you are using Sloeber as your IDE, you can easily define global symbols with *Properties > Arduino > CompileOptions*.<br/>
@@ -241,7 +241,7 @@ We are open to suggestions for adding support to new boards, however we highly r
 # Timer and pin usage
 The **receiver sample interval is generated by a timer**. On many boards this must be a hardware timer, on some, where a software timer is available, the software timer is used.<br/>
 Every pin can be used for receiving.<br/>
-The code for the timer and the **timer selection** is located in [private/IRTimer.cpp.h](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.cpp.h).<br/>
+The code for the timer and the **timer selection** is located in [private/IRTimer.cpp.h](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.cpp.h). It can be adjusted here.<br/>
 **Be aware that the hardware timer used for receiving should not be used for analogWrite()!** See table below.
 
 The MinimalReceiver example uses the **TinyReceiver** library,  which can **only receive NEC codes, but does not require any timer**.
@@ -252,10 +252,35 @@ The **send PWM signal** is by default generated by software. **Therefore every p
 |-|-|
 | ![Software PWM](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IR_PWM_by_software_jitter.png) | ![Software PWM detail](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IR_PWM_by_software_detail.png) |
 
+### Incompatibilities to other libraries and Arduino commands like tone() and analogWrite()
+If you use a library which requires the same timer as IRremote, you have a problem, since **the timer resource cannot be shared simultaneously** by both libraries. The best approach is to change the timer used for IRremote, which can be accomplished by modifying the timer selection in [private/IRTimer.cpp.h](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.cpp.h).<br/>
+For the AVR platform the code to modify looks like:
+
+```
+// Arduino Mega
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#  if !defined(IR_USE_AVR_TIMER1) && !defined(IR_USE_AVR_TIMER2) && !defined(IR_USE_AVR_TIMER3) && !defined(IR_USE_AVR_TIMER4) && !defined(IR_USE_AVR_TIMER5)
+//#define IR_USE_AVR_TIMER1   // send pin = pin 11
+#define IR_USE_AVR_TIMER2     // send pin = pin 9
+//#define IR_USE_AVR_TIMER3   // send pin = pin 5
+//#define IR_USE_AVR_TIMER4   // send pin = pin 6
+//#define IR_USE_AVR_TIMER5   // send pin = pin 46
+#  endif
+```
+You **just have to modify the comments** of the current and desired timer line.
+But be aware that the new timer in turn might be incompatible with other libraries or commands.<br/>
+The modification must be renewed for each new IRremote library version, or you use an IDE like [Sloeber](https://github.com/Arduino-IRremote/Arduino-IRremote#modifying-compile-options-with-sloeber-ide).<br/>
+For other platforms you must modify the approriate section guarded by e.g. `#elif defined(ESP32)`.
+
+Another approach can be to share the timer **sequentially** if their functionality is used only for a short period of time like for the **Arduino tone() command**.
+An example can be seen [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/21b5747a58e9d47c9e3f1beb056d58c875a92b47/examples/ReceiveDemo/ReceiveDemo.ino#L159-L169), where the timer settings for IR receive are restored after the tone has stopped.
+For this we must call IrReceiver.start() or better IrReceiver.start(<microsecondsOfToneDuration>).<br/>
+This only works since each call to tone() completely initializes the timer 2 used by the `tone()` command.
+
 ### Hardware-PWM signal generation for sending
-If you define `SEND_PWM_BY_TIMER`, the send PWM signal is generated by a hardware timer. The same timer as for the receiver is used.
+If you define `SEND_PWM_BY_TIMER`, the send PWM signal is forced to be generated by a hardware timer. The same timer as for the receiver is used.
 Since each hardware timer has its dedicated output pins, you must change timer to change PWM output.<br/>
-The timer and the pin usage can be adjusted in [private/IRTimer.cpp.h](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.cpp.h)
+The timer and the pin usage can be adjusted in [private/IRTimer.cpp.h](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.cpp.h).
 
 | Board/CPU                                                                | Hardware-PWM Pin    | Receive<br/>& PWM Timers | analogWrite()<br/>pins occupied by timer |
 |--------------------------------------------------------------------------|---------------------|-------------------|-----------------------|
@@ -302,6 +327,7 @@ And at least it would be wonderful if you can provide an example how to use the 
 A detailed description can be found in the [ir_Template.cpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_Template.cpp#L18) file.
 
 # NEC encoding
+Created with sigrok PulseView with IR_NEC decoder by DjordjeMandic.<br/>
 8 bit address NEC code
 ![8 bit address NEC code](https://user-images.githubusercontent.com/6750655/108884951-78e42b80-7607-11eb-9513-b07173a169c0.png)
 16 bit address NEC code

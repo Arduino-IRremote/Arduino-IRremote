@@ -102,8 +102,10 @@ void sendCommand(uint8_t aTemperature, uint8_t aFanIntensity) {
         // heating
         tCommand.UByte.HighByte = 0x4; // maybe cooling is 0x08????
     }
-    tCommand.UByte.LowByte = ((aTemperature - 15) << 4); // 16 -> 0, 18 -> 3, 30 -> F
+    // Temperature is coded in the upper nibble of the LowByte
+    tCommand.UByte.LowByte = ((aTemperature - 15) << 4); // 16 -> 0x00, 18 -> 0x30, 30 -> 0xF0
 
+    // Fan intensity is coded in the lower nibble of the LowByte
     if (ACIsWallType) {
         tCommand.UByte.LowByte |= AC_FAN_WALL[aFanIntensity];
     } else {

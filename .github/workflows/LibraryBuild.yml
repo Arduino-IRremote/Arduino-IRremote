@@ -106,7 +106,7 @@ jobs:
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: MinimalReceiver,IRDispatcherDemo # digitalWriteFast.h not available for this board
+            sketches-exclude: MinimalReceiver,IRDispatcherDemo,MicroGirs  # digitalWriteFast.h not available for this board
 
           - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock16
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json

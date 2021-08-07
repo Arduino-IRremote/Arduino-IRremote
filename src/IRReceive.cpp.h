@@ -848,7 +848,7 @@ void CheckForRecordGapsMicros(Print *aSerial, IRData *aIRDataPtr) {
         aSerial->print(F(" but smaller than the minimal gap of "));
         aSerial->print(RECORD_GAP_MICROS_WARNING_THRESHOLD);
         aSerial->println(F(" known for a protocol."));
-        aSerial->println(F("Try to increase the RECORD_GAP_MICROS in IRremote.h."));
+        aSerial->println(F("If you get unexpected results, try to increase the RECORD_GAP_MICROS in IRremote.h."));
         aSerial->println();
     }
 }

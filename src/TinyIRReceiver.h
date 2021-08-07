@@ -38,10 +38,10 @@
  */
 #if !defined(IR_INPUT_PIN)
 #if defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
-#warning "IR_INPUT_PIN is not defined, we set it to 10"
+#warning "IR_INPUT_PIN is not defined, so it is set to 10"
 #define IR_INPUT_PIN    10
 #else
-#warning "IR_INPUT_PIN is not defined, we set it to 2"
+#warning "IR_INPUT_PIN is not defined, so it is set to 2"
 #define IR_INPUT_PIN    2
 #endif
 #endif
@@ -126,6 +126,8 @@ struct TinyIRReceiverStruct {
 };
 
 void initPCIInterruptForTinyReceiver();
+void enablePCIInterruptForTinyReceiver();
+void disablePCIInterruptForTinyReceiver();
 
 /** @}*/
 
