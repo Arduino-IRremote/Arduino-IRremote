@@ -170,6 +170,12 @@
 #endif
 
 /**
+ * Define to use or simulate open drain output mode at send pin.
+ * Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
+ */
+//#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
+
+/**
  * This amount is subtracted from the on-time of the pulses generated for software PWM generation.
  * It should be the time used for digitalWrite(sendPin, LOW) and the call to delayMicros()
  * Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600

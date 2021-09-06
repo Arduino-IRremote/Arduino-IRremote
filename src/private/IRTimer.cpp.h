@@ -979,6 +979,12 @@ void timerConfigForReceive() {
 #define IR_SEND_PIN 9
 #  endif
 
+// use Timer TC3 here
+#  if !defined(IR_SAMD_TIMER)
+#define IR_SAMD_TIMER       TC3
+#define IR_SAMD_TIMER_ID    GCLK_CLKCTRL_ID_TCC2_TC3
+#endif
+
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_RECEIVE_INTR   NVIC_EnableIRQ(TC3_IRQn)
 #define TIMER_DISABLE_RECEIVE_INTR  NVIC_DisableIRQ(TC3_IRQn) // or TC3->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
@@ -991,21 +997,13 @@ void timerConfigForReceive() {
 void IRTimerInterruptHandler();
 
 #define TIMER_PRESCALER_DIV 64
-// use timer 3 hard coded here
 
-// functions based on setup from GitHub jdneo/timerInterrupt.ino
 void setTimerFrequency(unsigned int aFrequencyHz) {
     int compareValue = (F_CPU / (TIMER_PRESCALER_DIV * aFrequencyHz)) - 1;
     //Serial.println(compareValue);
-    TcCount16 *TC = (TcCount16*) TC3;
-    // Make sure the count is in a proportional position to where it was
-    // to prevent any jitter or disconnect when changing the compare value.
-    TC->COUNT.reg = map(TC->COUNT.reg, 0, TC->CC[0].reg, 0, compareValue);
+    TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
+    TC->COUNT.reg = 0;
     TC->CC[0].reg = compareValue;
-    //Serial.print("COUNT.reg ");
-    //Serial.println(TC->COUNT.reg);
-    //Serial.print("CC[0].reg ");
-    //Serial.println(TC->CC[0].reg);
     while (TC->STATUS.bit.SYNCBUSY == 1) {
     }
 }
@@ -1014,11 +1012,12 @@ void setTimerFrequency(unsigned int aFrequencyHz) {
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
  */
 void timerConfigForReceive() {
-    REG_GCLK_CLKCTRL = (uint16_t) (GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | GCLK_CLKCTRL_ID_TCC2_TC3);
+    // Clock source is Generic clock generator 0; enable
+    REG_GCLK_CLKCTRL = (uint16_t) (GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | IR_SAMD_TIMER_ID);
     while (GCLK->STATUS.bit.SYNCBUSY == 1) {
     }
 
-    TcCount16 *TC = (TcCount16*) TC3;
+    TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER; // Timer 3
 
     // The TC should be disabled before the TC is reset in order to avoid undefined behavior.
     TC->CTRLA.reg &= ~TC_CTRLA_ENABLE;
@@ -1027,8 +1026,8 @@ void timerConfigForReceive() {
     } // wait for sync
       // Reset TCx
     TC->CTRLA.reg = TC_CTRLA_SWRST;
-      // When writing a ‘1’ to the CTRLA.SWRST bit it will immediately read as ‘1’.
-      // CTRL.SWRST will be cleared by hardware when the peripheral has been reset.
+    // When writing a ‘1’ to the CTRLA.SWRST bit it will immediately read as ‘1’.
+    // CTRL.SWRST will be cleared by hardware when the peripheral has been reset.
     while (TC->CTRLA.bit.SWRST) {
     }
 
@@ -1045,10 +1044,10 @@ void timerConfigForReceive() {
 }
 
 void TC3_Handler(void) {
-    TcCount16 *TC = (TcCount16*) TC3;
-    // If this interrupt is due to the compare register matching the timer count
-    // we toggle the LED.
+    TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
+    // Check for right interrupt bit
     if (TC->INTFLAG.bit.MC0 == 1) {
+        // reset bit for next turn
         TC->INTFLAG.bit.MC0 = 1;
         IRTimerInterruptHandler();
     }

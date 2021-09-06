@@ -1,4 +1,4 @@
-# LibraryBuild.yml
+# https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/.github/workflows/LibraryBuild.yml
 # Github workflow script to test compile all examples of an Arduino library repository.
 #
 # Copyright (C) 2020  Armin Joachimsmeyer
@@ -48,6 +48,7 @@ jobs:
           - arduino:avr:uno|USE_OLD_DECODE
           - arduino:avr:uno|NO_LEGACY_COMPATIBILITY
           - arduino:avr:uno|SEND_PWM_BY_TIMER
+          - arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
           - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
@@ -97,6 +98,11 @@ jobs:
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DSEND_PWM_BY_TIMER
+
+          - arduino-boards-fqbn: arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
+            sketches-exclude: IR2Keyboard
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              All: -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
 
           - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
