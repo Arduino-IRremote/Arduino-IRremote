@@ -286,6 +286,10 @@ public:
 #endif
     bool decodeWhynter();
 
+    // for backward compatibility. Now in IRFeedbackLED.cpp.h
+    void blink13(bool aEnableLEDFeedback)
+            __attribute__ ((deprecated ("Please use setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback()."))); // deprecated
+
     /*
      * Internal functions
      */
@@ -327,11 +331,10 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
  ****************************************************/
 void setFeedbackLED(bool aSwitchLedOn);
 void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback); // if aFeedbackLEDPin == 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+void setLEDFeedback(bool aEnableLEDFeedback); // Direct replacement for blink13()
 void enableLEDFeedback();
 void disableLEDFeedback();
 
-void blink13(bool aEnableLEDFeedback)
-        __attribute__ ((deprecated ("Please use setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback."))); // deprecated
 void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use setLEDFeedback()."))); // deprecated
 
 /**

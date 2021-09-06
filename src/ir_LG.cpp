@@ -47,9 +47,9 @@
 // LG originally added by Darryl Smith (based on the JVC protocol)
 // see: https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/LGAirConditionerSendDemo
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#LGAIR
-// MSB first, timing and repeat is like NEC but 28 data bits
-// MSB! first, 1 start bit + 8 bit address + 16 bit command + 4 bit checksum + 1 stop bit.
-// LG 32bit protocol is near identical to Samsung except for repeats.
+// MSB first, 1 start bit + 8 bit address + 16 bit command + 4 bit checksum + 1 stop bit (28 data bits).
+// Bit and repeat timing is like NEC
+// LG2 has different header timing and a shorter bit time
 #define LG_ADDRESS_BITS          8
 #define LG_COMMAND_BITS         16
 #define LG_CHECKSUM_BITS         4
@@ -68,6 +68,10 @@
 #define LG_BIT_MARK             LG_UNIT
 #define LG_ONE_SPACE            (3 * LG_UNIT)  // 1690
 #define LG_ZERO_SPACE           LG_UNIT
+
+#define LG2_BIT_MARK            LG2_UNIT
+#define LG2_ONE_SPACE           (3 * LG2_UNIT)  // 1500
+#define LG2_ZERO_SPACE          LG2_UNIT
 
 #define LG_REPEAT_HEADER_SPACE  (4 * LG_UNIT)  // 2250
 #define LG_AVERAGE_DURATION     58000 // LG_HEADER_MARK + LG_HEADER_SPACE  + 32 * 2,5 * LG_UNIT) + LG_UNIT // 2.5 because we assume more zeros than ones
@@ -91,9 +95,10 @@ void IRsend::sendLGRepeat(bool aUseLG2Protocol) {
     mark(LG_BIT_MARK);
 }
 
-/*
+/**
  * Repeat commands should be sent in a 110 ms raster.
  * There is NO delay after the last sent repeat!
+ * @param aUseLG2Protocol if true use LG2 protocol, which has a different header
  */
 void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat, bool aUseLG2Protocol) {
     uint32_t tRawData = ((uint32_t) aAddress << (LG_COMMAND_BITS + LG_CHECKSUM_BITS)) | ((uint32_t) aCommand << LG_CHECKSUM_BITS);
@@ -126,14 +131,16 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
     if (aUseLG2Protocol) {
         mark(LG2_HEADER_MARK);
         space(LG2_HEADER_SPACE);
+        // MSB first
+        sendPulseDistanceWidthData(LG2_BIT_MARK, LG2_ONE_SPACE, LG2_BIT_MARK, LG2_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
+        SEND_STOP_BIT);
     } else {
         mark(LG_HEADER_MARK);
         space(LG_HEADER_SPACE);
+        // MSB first
+        sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
+        SEND_STOP_BIT);
     }
-
-    // MSB first
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
-    SEND_STOP_BIT);
 
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
@@ -206,8 +213,7 @@ bool IRrecv::decodeLG() {
     }
 
 //    if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-    if (!decodePulseDistanceData(LG_BITS, 3, tUnit, 3 * tUnit, tUnit, PROTOCOL_IS_MSB_FIRST)) { // costs 20 bytes program space, compared with using constants
-        Serial.print("jgkjkj");
+    if (!decodePulseDistanceData(LG_BITS, 3, tUnit, 3 * tUnit, tUnit, PROTOCOL_IS_MSB_FIRST)) { // costs 20 bytes program space, compared with using constants for 1 protocol
         DEBUG_PRINT(F("LG: "));
         DEBUG_PRINTLN(F("Decode failed"));
         return false;

@@ -65,6 +65,13 @@ void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback) {
     }
 }
 
+/*
+ * Direct replacement for blink13()
+ */
+void setLEDFeedback(bool aEnableLEDFeedback) {
+    setLEDFeedback(FeedbackLEDControl.FeedbackLEDPin, aEnableLEDFeedback);
+}
+
 void enableLEDFeedback() {
     FeedbackLEDControl.LedFeedbackEnabled = true;
 }
@@ -113,7 +120,7 @@ void setFeedbackLED(bool aSwitchLedOn) {
 /**
  * Old deprecated function name for setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback()
  */
-void blink13(bool aEnableLEDFeedback) {
+void IRrecv::blink13(bool aEnableLEDFeedback) {
     setLEDFeedback(FeedbackLEDControl.FeedbackLEDPin, aEnableLEDFeedback);
 }
 /**
