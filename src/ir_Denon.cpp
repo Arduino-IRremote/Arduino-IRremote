@@ -93,7 +93,7 @@ void IRsend::sendDenonRaw(uint16_t aRawData, uint_fast8_t aNumberOfRepeats) {
 //+=============================================================================
 void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendSharp) {
     // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(DENON_KHZ); // 38 kHz
 
     // Shift command and add frame marker
     uint16_t tCommand = aCommand << DENON_FRAME_BITS; // the lowest bits are 00 for Denon and 10 for Sharp
@@ -227,7 +227,7 @@ bool IRrecv::decodeDenonOld(decode_results *aResults) {
 
 void IRsend::sendDenon(unsigned long data, int nbits) {
     // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(DENON_KHZ);
     Serial.println(
             "The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).");
 

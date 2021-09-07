@@ -44,7 +44,7 @@
 
 void IRsend::sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(BOSEWAVE_KHZ); // 38 kHz
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {

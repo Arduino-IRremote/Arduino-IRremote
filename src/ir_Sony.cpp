@@ -52,7 +52,7 @@
 #define SONY_BITS_MIN           (SONY_COMMAND_BITS + SONY_ADDRESS_BITS)        // 12 bits
 #define SONY_BITS_15            (SONY_COMMAND_BITS + SONY_ADDRESS_BITS + 3)    // 15 bits
 #define SONY_BITS_MAX           (SONY_COMMAND_BITS + SONY_ADDRESS_BITS + SONY_EXTRA_BITS)    // 20 bits == SIRCS_20_PROTOCOL
-#define SONY_UNIT               600
+#define SONY_UNIT               600 // 24 periods of 40kHz
 
 #define SONY_HEADER_MARK        (4 * SONY_UNIT) //2400
 #define SONY_ONE_MARK           (2 * SONY_UNIT) // 1200
@@ -70,7 +70,7 @@
  */
 void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, uint8_t numberOfBits) {
     // Set IR carrier frequency
-    enableIROut(40);
+    enableIROut(SONY_KHZ); // 40 kHz
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -212,7 +212,7 @@ bool IRrecv::decodeSonyMSB(decode_results *aResults) {
  */
 void IRsend::sendSony(unsigned long data, int nbits) {
     // Set IR carrier frequency
-    enableIROut(40);
+    enableIROut(SONY_KHZ);
 
     // Header
     mark(SONY_HEADER_MARK);

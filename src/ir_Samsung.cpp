@@ -56,7 +56,7 @@
 #define SAMSUNG_BITS                (SAMSUNG_ADDRESS_BITS + SAMSUNG_COMMAND16_BITS)
 #define SAMSUNG48_BITS              (SAMSUNG_ADDRESS_BITS + SAMSUNG_COMMAND32_BITS)
 
-#define SAMSUNG_UNIT                550
+#define SAMSUNG_UNIT                553 // 21 periods of 38 kHz (552,631)
 #define SAMSUNG_HEADER_MARK         (8 * SAMSUNG_UNIT) // 4400
 #define SAMSUNG_HEADER_SPACE        (8 * SAMSUNG_UNIT) // 4400
 #define SAMSUNG_BIT_MARK            SAMSUNG_UNIT
@@ -73,7 +73,7 @@
  * Repeat commands should be sent in a 110 ms raster.
  */
 void IRsend::sendSamsungRepeat() {
-    enableIROut(38);
+    enableIROut(SAMSUNG_KHZ); // 38 kHz
     mark(SAMSUNG_HEADER_MARK);
     space(SAMSUNG_HEADER_SPACE);
     mark(SAMSUNG_BIT_MARK);
@@ -88,7 +88,7 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNum
     }
 
     // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(SAMSUNG_KHZ);
 
     // Header
     mark(SAMSUNG_HEADER_MARK);
@@ -254,7 +254,7 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
 // Old version with MSB first
 void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(SAMSUNG_KHZ);
 
     // Header
     mark(SAMSUNG_HEADER_MARK);

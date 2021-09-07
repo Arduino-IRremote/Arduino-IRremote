@@ -45,7 +45,7 @@
 //       P      A   A  N  NN  A   A      S  O   O  N  NN    I    C
 //       P      A   A  N   N  A   A  SSSS    OOO   N   N  IIIII   CCCC
 //==============================================================================
-// see: http://www.hifi-remote.com/johnsfine/DecodeIR.html#Panasonic
+// see: http://www.hifi-remote.com/johnsfine/DecodeIR.html#Panasonic and http://www.hifi-remote.com/johnsfine/DecodeIR.html#Kaseikyo
 // IRP notation: {37k,432}<1,-1|1,-3>(8,-4,M:8,N:8,X:4,D:4,S:8,F:8,G:8,1,-173)+ {X=M:4:0^M:4:4^N:4:0^N:4:4}
 // see: http://www.remotecentral.com/cgi-bin/mboard/rc-pronto/thread.cgi?26152
 // The first two (8-bit) bytes are always 2 and 32 (These identify Panasonic within the Kaseikyo standard)
@@ -63,7 +63,7 @@
 #define KASEIKYO_COMMAND_BITS       8
 #define KASEIKYO_PARITY_BITS        8
 #define KASEIKYO_BITS               (KASEIKYO_VENDOR_ID_BITS + KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS)
-#define KASEIKYO_UNIT               432 // Pronto 0x70 / 0x10 - I measured 17 pulses
+#define KASEIKYO_UNIT               432 // 16 pulses of 37 kHz (432,432432)  - Pronto 0x70 / 0x10
 
 #define KASEIKYO_HEADER_MARK        (8 * KASEIKYO_UNIT) // 3456
 #define KASEIKYO_HEADER_SPACE       (4 * KASEIKYO_UNIT) // 1728
@@ -86,7 +86,7 @@
  */
 void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, uint16_t aVendorCode) {
     // Set IR carrier frequency
-    enableIROut(37); // 36.7kHz is the correct frequency
+    enableIROut(KASEIKYO_KHZ); // 37 kHz
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -284,7 +284,7 @@ bool IRrecv::decodePanasonicMSB(decode_results *aResults) {
  */
 void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
     // Set IR carrier frequency
-    enableIROut(37); // 36.7kHz is the correct frequency
+    enableIROut(KASEIKYO_KHZ); // 36.7kHz is the correct frequency
 
     // Header
     mark(KASEIKYO_HEADER_MARK);

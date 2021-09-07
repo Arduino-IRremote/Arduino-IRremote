@@ -53,7 +53,7 @@
 #define JVC_COMMAND_BITS      8 // Command
 
 #define JVC_BITS              (JVC_ADDRESS_BITS + JVC_COMMAND_BITS) // 16 - The number of bits in the protocol
-#define JVC_UNIT              526
+#define JVC_UNIT              526 // 20 periods of 38 kHz (526.315789)
 
 #define JVC_HEADER_MARK       (16 * JVC_UNIT) // 8400
 #define JVC_HEADER_SPACE      (8 * JVC_UNIT)  // 4200
@@ -71,7 +71,7 @@
 
 void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(JVC_KHZ); // 38 kHz
 
     // Header
     mark(JVC_HEADER_MARK);
@@ -223,7 +223,7 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
  */
 void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
     // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(JVC_KHZ);
 
     // Only send the Header if this is NOT a repeat command
     if (!repeat) {

@@ -70,7 +70,18 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
 #define PROTOCOL_IS_LSB_FIRST false
 #define PROTOCOL_IS_MSB_FIRST true
 
-#define NEC_KHZ     38 // 38kHz carrier frequency for the NEC protocol
+/*
+ * Carrier frequencies for various protocols
+ */
+#define SONY_KHZ        40
+#define BOSEWAVE_KHZ    38
+#define DENON_KHZ       38
+#define JVC_KHZ         38
+#define LG_KHZ          38
+#define NEC_KHZ         38
+#define SAMSUNG_KHZ     38
+#define KASEIKYO_KHZ    37
+#define RC5_RC6_KHZ     36
 
 /*
  * Constants for some protocols

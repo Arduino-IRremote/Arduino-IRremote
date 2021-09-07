@@ -32,6 +32,7 @@
  */
 #include <Arduino.h>
 
+// LG2 has different header timing and a shorter bit time
 //#define USE_LG2_PROTOCOL // Try it if you do not have success with the default LG protocol
 
 /*

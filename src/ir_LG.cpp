@@ -61,7 +61,8 @@
 #define LG_HEADER_SPACE         (8 * LG_UNIT)  // 4500
 
 // used for some LG air conditioners e.g. AKB75215403
-#define LG2_UNIT                500
+#define LG2_UNIT                500 // 19 periods of 38 kHz
+
 #define LG2_HEADER_MARK         (6 * LG2_UNIT)  // 3000
 #define LG2_HEADER_SPACE        (19 * LG2_UNIT) // 9500
 
@@ -85,7 +86,7 @@
  * Repeat commands should be sent in a 110 ms raster.
  */
 void IRsend::sendLGRepeat(bool aUseLG2Protocol) {
-    enableIROut(38);
+    enableIROut(LG_KHZ); // 38 kHz
     if (aUseLG2Protocol) {
         mark(LG2_HEADER_MARK);
     } else {
@@ -125,7 +126,7 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
         return;
     }
     // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(LG_KHZ);
 
     // Header
     if (aUseLG2Protocol) {
@@ -300,7 +301,7 @@ bool IRrecv::decodeLGMSB(decode_results *aResults) {
 //+=============================================================================
 void IRsend::sendLG(unsigned long data, int nbits) {
 // Set IR carrier frequency
-    enableIROut(38);
+    enableIROut(LG_KHZ);
     Serial.println(
             "The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats).");
 

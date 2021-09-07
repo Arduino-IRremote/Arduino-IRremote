@@ -1,5 +1,5 @@
 /*
- * ir_RC%_RC6.cpp
+ * ir_RC5_RC6.cpp
  *
  *  Contains functions for receiving and sending RC5, RC5X Protocols
  *
@@ -62,7 +62,7 @@ bool sLastSendToggleValue = false;
 
 #define RC5_BITS            (RC5_COMMAND_FIELD_BIT + RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS) // 13
 
-#define RC5_UNIT            889 // (32 cycles of 36 kHz)
+#define RC5_UNIT            889 // 32 periods of 36 kHz (888.8888)
 
 #define MIN_RC5_MARKS       ((RC5_BITS + 1) / 2) // 7
 
@@ -75,7 +75,7 @@ bool sLastSendToggleValue = false;
  */
 void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
     // Set IR carrier frequency
-    enableIROut(36);
+    enableIROut(RC5_RC6_KHZ);
 
     uint16_t tIRData = ((aAddress & 0x1F) << RC5_COMMAND_BITS);
 
@@ -225,7 +225,7 @@ bool IRrecv::decodeRC5() {
 
 #define RC6_BITS            (RC6_LEADING_BIT + RC6_MODE_BITS + RC6_TOGGLE_BIT + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // 13
 
-#define RC6_UNIT            444 // (16 cycles of 36 kHz)
+#define RC6_UNIT            444 // 16 periods of 36 kHz (444.4444)
 
 #define RC6_HEADER_MARK     (6 * RC6_UNIT) // 2666
 #define RC6_HEADER_SPACE    (2 * RC6_UNIT) // 889
@@ -240,7 +240,7 @@ bool IRrecv::decodeRC5() {
  */
 void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
 // Set IR carrier frequency
-    enableIROut(36);
+    enableIROut(RC5_RC6_KHZ);
 
 // Header
     mark(RC6_HEADER_MARK);
@@ -271,7 +271,7 @@ void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
  */
 void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
 // Set IR carrier frequency
-    enableIROut(36);
+    enableIROut(RC5_RC6_KHZ);
 
 // Header
     mark(RC6_HEADER_MARK);
@@ -464,7 +464,7 @@ bool IRrecv::decodeRC6() {
  */
 void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
-    enableIROut(36);
+    enableIROut(RC5_RC6_KHZ);
 
     // Start
     mark(RC5_UNIT);
@@ -488,7 +488,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
  */
 void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
 // Set IR carrier frequency
-    enableIROut(36);
+    enableIROut(RC5_RC6_KHZ);
 
     uint8_t addressBits = 5;
     uint8_t commandBits = 7;
