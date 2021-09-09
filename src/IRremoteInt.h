@@ -286,7 +286,7 @@ public:
 #endif
     bool decodeWhynter();
 
-    // for backward compatibility. Now in IRFeedbackLED.cpp.h
+    // for backward compatibility. Now in IRFeedbackLED.hpp
     void blink13(bool aEnableLEDFeedback)
             __attribute__ ((deprecated ("Please use setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback()."))); // deprecated
 

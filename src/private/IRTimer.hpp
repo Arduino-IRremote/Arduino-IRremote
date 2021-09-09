@@ -1,5 +1,5 @@
 /**
- * @file IRTimer.cpp.h
+ * @file IRTimer.hpp
  *
  * @brief All timer specific definitions are contained in this file.
  *

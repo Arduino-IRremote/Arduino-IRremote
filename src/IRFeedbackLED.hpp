@@ -1,5 +1,5 @@
 /**
- * @file IRFeedbackLED.cpp.h
+ * @file IRFeedbackLED.hpp
  *
  * @brief All Feedback LED specific functions are contained in this file.
  *

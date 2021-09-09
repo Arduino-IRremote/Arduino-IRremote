@@ -39,7 +39,7 @@
  * Set sensible receive pin for different CPU's
  */
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#include "ATtinySerialOut.h" // Available as Arduino library "ATtinySerialOut"
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
 #  if defined(ARDUINO_AVR_DIGISPARKPRO)
 #define IR_INPUT_PIN    9 // PA3 - on Digispark board labeled as pin 9
 #  else
@@ -57,7 +57,7 @@
 /*
  * Second: include the code and compile it.
  */
-#include "TinyIRReceiver.cpp.h"
+#include "TinyIRReceiver.hpp"
 
 /*
  * Helper macro for getting a macro definition as string

@@ -75,14 +75,14 @@
 #define APPLICATION_PIN         PA2
 
 #elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
-#include "ATtinySerialOut.h" // Available as Arduino library. saves 370 bytes program space and 38 bytes RAM for digistump core
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". saves 370 bytes program space and 38 bytes RAM for digistump core
 #define IR_RECEIVE_PIN  0
 #define IR_SEND_PIN     4 // Pin 2 is serial output with ATtinySerialOut. Pin 1 is internal LED and Pin3 is USB+ with pullup on Digispark board.
 #define TONE_PIN        3
 #define IR_TIMING_TEST_PIN 3
 
 #elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#include "ATtinySerialOut.h"
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
 // For ATtiny167 Pins PB6 and PA3 are usable as interrupt source.
 #  if defined(ARDUINO_AVR_DIGISPARKPRO)
 #define IR_RECEIVE_PIN   9 // PA3 - on Digispark board labeled as pin 9
@@ -97,7 +97,7 @@
 #  endif
 
 #elif defined(__AVR_ATtiny88__) // MH-ET Tiny88 board
-#include "ATtinySerialOut.h" // Available as Arduino library. Saves 128 bytes program space
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". Saves 128 bytes program space
 // Pin 6 is TX pin 7 is RX
 #define IR_RECEIVE_PIN   3 // INT1
 #define IR_SEND_PIN      4

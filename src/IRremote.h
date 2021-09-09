@@ -43,9 +43,9 @@
 #ifndef IRremote_h
 #define IRremote_h
 
-#define VERSION_IRREMOTE "3.3.0"
+#define VERSION_IRREMOTE "3.4.0"
 #define VERSION_IRREMOTE_MAJOR 3
-#define VERSION_IRREMOTE_MINOR 3
+#define VERSION_IRREMOTE_MINOR 4
 
 // activate it for all cores that does not use the -flto flag, if you get false error messages regarding begin() during compilation.
 //#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN
@@ -186,13 +186,13 @@
 #endif
 
 #include "IRremoteInt.h"
-#include "private/IRTimer.cpp.h"
-#include "IRFeedbackLED.cpp.h"
+#include "private/IRTimer.hpp"
+#include "IRFeedbackLED.hpp"
 /*
  * Include the sources here to enable compilation with macro values set by user program.
  */
-#include "IRReceive.cpp.h"
-#include "IRSend.cpp.h"
+#include "IRReceive.hpp"
+#include "IRSend.hpp"
 
 /**
  * Macros for legacy compatibility

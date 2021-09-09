@@ -29,7 +29,7 @@
 #define USE_TINY_IR_RECEIVER_INSTEAD_OF_IRMP // saves 1150 bytes programming space and 38 bytes RAM
 
 #if defined(USE_TINY_IR_RECEIVER_INSTEAD_OF_IRMP)
-#define USE_TINY_IR_RECEIVER // must be specified before including IRCommandDispatcher.cpp.h to define which IR library to use
+#define USE_TINY_IR_RECEIVER // must be specified before including IRCommandDispatcher.hpp to define which IR library to use
 //#define TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT // costs 112 bytes FLASH + 4bytes RAM
 
 /*
@@ -41,7 +41,7 @@
  * First: set input pin and other definition.
  */
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#include "ATtinySerialOut.h"
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
 #  if defined(ARDUINO_AVR_DIGISPARKPRO)
 #define IR_INPUT_PIN    9 // PA3 - on Digispark board labeled as pin 9
 #  else
@@ -60,7 +60,7 @@
 #endif
 
 #else // defined(USE_TINY_IR_RECEIVER_INSTEAD_OF_IRMP)
-#define USE_IRMP_LIBRARY // must be specified before including IRCommandDispatcher.cpp.h to define which IR library to use
+#define USE_IRMP_LIBRARY // must be specified before including IRCommandDispatcher.hpp to define which IR library to use
 
 #include "PinDefinitionsAndMore.h"
 #define IR_RECEIVER_PIN     IRMP_INPUT_PIN
@@ -82,7 +82,7 @@
 /*
  * After setting the definitions we can include the code and compile it.
  */
-#include <irmp.c.h>
+#include <irmp.hpp>
 void handleReceivedIRData();
 #endif // defined(USE_TINY_IR_RECEIVER_INSTEAD_OF_IRMP)
 
@@ -105,8 +105,8 @@ void doTone2200();
  */
 #define INFO // to see some informative output
 #include "IRCommandDispatcher.h" // Only for required declarations, the library itself is included below after the definitions of the commands
-#include "IRCommandMapping.h" // must be included before IRCommandDispatcher.cpp.h to define IR_ADDRESS and IRMapping and string "unknown".
-#include "IRCommandDispatcher.cpp.h"
+#include "IRCommandMapping.h" // must be included before IRCommandDispatcher.hpp to define IR_ADDRESS and IRMapping and string "unknown".
+#include "IRCommandDispatcher.hpp"
 
 void irmp_tone(uint8_t _pin, unsigned int frequency, unsigned long duration);
 
@@ -123,7 +123,7 @@ void setup()
 
     // Just to know which program is running on my Arduino
 #if defined(USE_TINY_IR_RECEIVER_INSTEAD_OF_IRMP)
-    Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing TinyIRReceiver.cpp.h"));
+    Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing TinyIRReceiver.hpp"));
 #else
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRMP));
 #endif

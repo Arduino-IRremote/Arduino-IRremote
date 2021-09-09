@@ -1,5 +1,5 @@
 /*
- * IRCommandDispatcher.cpp.h
+ * IRCommandDispatcher.hpp
  *
  * Library to process IR commands by calling functions specified in a mapping array.
  *
@@ -42,7 +42,7 @@
 IRCommandDispatcher IRDispatcher;
 
 #if defined(USE_TINY_IR_RECEIVER)
-#include "TinyIRReceiver.cpp.h"
+#include "TinyIRReceiver.hpp"
 
 void IRCommandDispatcher::init() {
     initPCIInterruptForTinyReceiver();

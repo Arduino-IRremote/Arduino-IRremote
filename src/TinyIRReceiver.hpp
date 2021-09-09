@@ -1,5 +1,5 @@
 /*
- *  TinyIRReceiver.cpp.h
+ *  TinyIRReceiver.hpp
  *
  *  Receives IR protocol data of NEC protocol using pin change interrupts.
  *  NEC is the protocol of most cheap remote controls for Arduino.
