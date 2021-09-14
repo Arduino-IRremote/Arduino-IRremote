@@ -272,7 +272,8 @@ void IRrecv::compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int aFr
  */
 
 static bool dumpDigit(String *aString, unsigned int number) {
-    return aString->concat(hexDigit(number));
+    aString->concat(hexDigit(number));
+    return number;
 }
 
 static size_t dumpNumber(String *aString, uint16_t number) {
@@ -283,7 +284,8 @@ static size_t dumpNumber(String *aString, uint16_t number) {
         unsigned int shifts = bitsInHexadecimal * (digitsInProntoNumber - 1 - i);
         size += dumpDigit(aString, (number >> shifts) & hexMask);
     }
-    size += aString->concat(' ');
+    aString->concat(' ');
+    size++;
 
     return size;
 }

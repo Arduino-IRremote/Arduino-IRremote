@@ -223,7 +223,7 @@ If you are using Sloeber as your IDE, you can easily define global symbols with 
 # Supported Boards
 Digispark boards are tested with the recommended [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) using `New Style` pin mapping for the pro board.
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
-- Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC; Credits: PaulStoffregen (Teensy Team)
+- Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC - but [limited support](https://forum.pjrc.com/threads/65912-Enable-Continuous-Integration-with-arduino-cli-for-3-party-libraries); Credits: PaulStoffregen (Teensy Team)
 - Sanguino
 - ATmega8, 48, 88, 168, 328
 - ATmega8535, 16, 32, 164, 324, 644, 1284,
