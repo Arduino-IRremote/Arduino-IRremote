@@ -89,11 +89,13 @@ void loop() {
  * This is the function is called if a complete command was received
  */
 #if defined(ESP8266)
-ICACHE_RAM_ATTR
+void ICACHE_RAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
 #elif defined(ESP32)
-IRAM_ATTR
+void IRAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
+#else
+void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
 #endif
-void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat) {
+{
     /*
      * Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
      */

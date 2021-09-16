@@ -56,7 +56,7 @@ If you use an (old) Arduino core that does not use the `-flto` flag for compile,
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L126).
 - Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
 
-# Do not convert your 2.x program and use the 3.x library version
+# Do not want to convert your 2.x program and use the 3.x library version?
 The 3.x versions try to be backwards compatible, so you can easily run your old examples. But some functions like e.g. `sendNEC()` -see below- could not made backwards compatible, so in this cases you must revisit your code and adapt it to the 3.x library.<br/>
 If you program look like:
 ```
@@ -93,6 +93,12 @@ Example:
 - 0xCB340102 is binary 11001011001101000000000100000010.<br/>
   0x40802CD3 is binary 01000000100000000010110011010011.<br/>
   If you read the first binary sequence backwards (right to left), you get the second sequence.
+
+# Sending IR codes
+Please do not use the old send*Raw() functions for sending like e.g. `IrSender.sendNECRaw(0xE61957A8,2)`,
+even if this functions are used in a lot of **(old)** tutorials. They are only kept for backward compatibility and unsupported and error prone.<br/>
+**Much better** is to use the **new structured functions** with address and command parameters like e.g. `IrSender.sendNEC(0xA8, 0x19, 2)`.
+Especially if you are able to receive these remote codes and get the address and command values. You will discover that **the address is a constant** and the commands sometimes are sensibly grouped.
 
 # FAQ
 - IR does not work right when I use **Neopixels** (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 us).<br/>

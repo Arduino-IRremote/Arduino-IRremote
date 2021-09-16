@@ -171,7 +171,7 @@ jobs:
             sketches-exclude: IRDispatcherDemo,MicroGirs,MinimalReceiver # no tone()
 
       # Do not cancel all jobs / architectures if one job fails
-      fail-fast: false
+#      fail-fast: false
 
     steps:
       - name: Checkout

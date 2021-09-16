@@ -52,11 +52,13 @@ void IRCommandDispatcher::init() {
  * This is the function is called if a complete command was received
  */
 #if defined(ESP8266)
-ICACHE_RAM_ATTR
+void ICACHE_RAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
 #elif defined(ESP32)
-IRAM_ATTR
+void IRAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
+#else
+void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
 #endif
-void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat) {
+{
     IRDispatcher.IRReceivedData.address = aAddress;
     IRDispatcher.IRReceivedData.command = aCommand;
     IRDispatcher.IRReceivedData.isRepeat = isRepeat;
@@ -91,11 +93,13 @@ void IRCommandDispatcher::init() {
  * This is the function is called if a complete command was received
  */
 #if defined(ESP8266)
-ICACHE_RAM_ATTR
+void ICACHE_RAM_ATTR handleReceivedIRData()
 #elif defined(ESP32)
-IRAM_ATTR
+void IRAM_ATTR handleReceivedIRData()
+#else
+void handleReceivedIRData()
 #endif
-void handleReceivedIRData() {
+{
     IRMP_DATA tTeporaryData;
     irmp_get_data(&tTeporaryData);
     IRDispatcher.IRReceivedData.address = tTeporaryData.address;

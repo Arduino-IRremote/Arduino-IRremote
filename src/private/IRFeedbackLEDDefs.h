@@ -27,7 +27,8 @@
 
 // Sparkfun Pro Micro is __AVR_ATmega32U4__ but has different external circuit
 #elif defined(ARDUINO_AVR_PROMICRO)
-// We have no built in LED -> reuse RX LED
+// We have no built in LED at pin 13 -> reuse RX LED
+#undef LED_BUILTIN
 #define LED_BUILTIN        LED_BUILTIN_RX
 #define FEEDBACK_LED_ON()   RXLED1
 #define FEEDBACK_LED_OFF()  RXLED0

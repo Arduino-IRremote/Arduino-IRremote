@@ -57,11 +57,12 @@ TinyIRReceiverStruct TinyIRReceiverControl;
  * It is called every time a complete IR command or repeat was received.
  */
 #if defined(ESP8266)
-ICACHE_RAM_ATTR
+void ICACHE_RAM_ATTR handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
 #elif defined(ESP32)
-IRAM_ATTR
-#endif
+void IRAM_ATTR handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
+#else
 void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
+#endif
 
 /**
  * The ISR of TinyIRRreceiver.
@@ -69,11 +70,13 @@ void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition
  * 5 us + 3 us for push + pop for a 16MHz ATmega
  */
 #if defined(ESP8266)
-ICACHE_RAM_ATTR
+void ICACHE_RAM_ATTR IRPinChangeInterruptHandler(void)
 #elif defined(ESP32)
-IRAM_ATTR
+void IRAM_ATTR IRPinChangeInterruptHandler(void)
+#else
+void IRPinChangeInterruptHandler(void)
 #endif
-void IRPinChangeInterruptHandler(void) {
+{
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
     digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
