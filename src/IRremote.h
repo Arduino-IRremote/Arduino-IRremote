@@ -61,7 +61,8 @@
 /*
  * Supported IR protocols
  * Each protocol you include costs memory and, during decode, costs time
- * Disable (deactivate the line by adding a trailing comment "//") all the protocols you do not need/want!
+ * Copy the lines with the protocols you need in your program before the  #include <IRremote.h> line
+ * See also SimpleReceiver example
  */
 #if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \

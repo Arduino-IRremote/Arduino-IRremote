@@ -92,7 +92,6 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
 }
 
 /**
- * Deprecated function without send pin parameter
  * @param aIRSendData The values of protocol, address, command and repeat flag are taken for sending.
  * @param aNumberOfRepeats Number of repeats to send after the initial data.
  */
@@ -166,6 +165,18 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
 
     } else if (tProtocol == RC6) {
         sendRC6(tAddress, tCommand, aNumberOfRepeats, !tSendRepeat); // No toggle for repeats
+
+    } else if (tProtocol == KASEIKYO_JVC) {
+        sendKaseikyo_JVC(tAddress, tCommand, aNumberOfRepeats);
+
+    } else if (tProtocol == KASEIKYO_DENON) {
+        sendKaseikyo_Denon(tAddress, tCommand, aNumberOfRepeats);
+
+    } else if (tProtocol == KASEIKYO_SHARP) {
+        sendKaseikyo_Sharp(tAddress, tCommand, aNumberOfRepeats);
+
+    } else if (tProtocol == KASEIKYO_MITSUBISHI) {
+        sendKaseikyo_Mitsubishi(tAddress, tCommand, aNumberOfRepeats);
 
     } else if (tProtocol == ONKYO) {
         sendOnkyo(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);

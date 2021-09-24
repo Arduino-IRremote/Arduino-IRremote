@@ -181,6 +181,11 @@ void loop() {
     IrSender.sendKaseikyo(sAddress & 0xFFF, sCommand, sRepeats, 0x4711);
     delay(DELAY_AFTER_SEND);
 
+    Serial.println(F("Send Kaseikyo_Denon variant"));
+    Serial.flush();
+    IrSender.sendKaseikyo_Denon(sAddress & 0xFFF, sCommand, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
     Serial.println(F("Send Denon"));
     Serial.flush();
     IrSender.sendDenon(sAddress & 0x1F, sCommand, sRepeats);

@@ -87,9 +87,9 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
  * Constants for some protocols
  */
 #define PANASONIC_VENDOR_ID_CODE    0x2002
-#define SHARP_VENDOR_ID_CODE        0x5AAA
 #define DENON_VENDOR_ID_CODE        0x3254
 #define MITSUBISHI_VENDOR_ID_CODE   0xCB23
+#define SHARP_VENDOR_ID_CODE        0x5AAA
 #define JVC_VENDOR_ID_CODE          0x0103
 
 #define SIRCS_12_PROTOCOL       12

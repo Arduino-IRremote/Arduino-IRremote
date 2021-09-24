@@ -9,6 +9,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - organized carrier frequencies.
 - Compiler switch USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN added.
 - Moved blink13() back to IRrecv class.
+- Added Kaseikyo convenience functions like sendKaseikyo_Denon().
 
 ## 3.3.0
 - Fix errors if LED_BUILTIN is not defined.

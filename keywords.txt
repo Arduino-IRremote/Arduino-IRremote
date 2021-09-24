@@ -48,7 +48,11 @@ sendNECRaw	KEYWORD2
 sendOnkyo	KEYWORD2
 sendApple	KEYWORD2
 sendPanasonic	KEYWORD2
-sendKaseikyo	KEYWORD2
+sendKaseikyo    KEYWORD2
+sendKaseikyo_Denon    KEYWORD2
+sendKaseikyo_Sharp    KEYWORD2
+sendKaseikyo_JVC    KEYWORD2
+sendKaseikyo_Mitsubishi    KEYWORD2
 sendRC5	KEYWORD2
 sendRC6	KEYWORD2
 sendSamsungRepeat	KEYWORD2
