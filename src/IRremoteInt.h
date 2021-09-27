@@ -34,8 +34,13 @@
 
 #include <Arduino.h>
 
-#if ! defined(RAW_BUFFER_LENGTH)
+/*
+ * The length of the buffer where the IR timing data is stored before decoding
+ * 100 is sufficient for most standard protocols, but air conditioners often send a longer protocol data stream
+ */
+#if !defined(RAW_BUFFER_LENGTH)
 #define RAW_BUFFER_LENGTH  100  ///< Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
+//#define RAW_BUFFER_LENGTH  750  // Value for air condition remotes.
 #endif
 #if RAW_BUFFER_LENGTH % 2 == 1
 #error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
@@ -63,7 +68,7 @@
 #define IR_REC_STATE_IDLE      0
 #define IR_REC_STATE_MARK      1
 #define IR_REC_STATE_SPACE     2
-#define IR_REC_STATE_STOP      3
+#define IR_REC_STATE_STOP      3 // set to IR_REC_STATE_IDLE only by resume()
 
 /**
  * This struct contains the data and control used for receiver static functions and the ISR (interrupt service routine)
@@ -80,13 +85,31 @@ struct irparams_struct {
     uint16_t TickCounterForISR;     ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
 
     bool OverflowFlag;              ///< Raw buffer OverflowFlag occurred
-#if RAW_BUFFER_LENGTH <= 255        // saves around 75 bytes program space and speeds up ISR
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
     uint8_t rawlen;                 ///< counter of entries in rawbuf
 #else
     unsigned int rawlen;            ///< counter of entries in rawbuf
 #endif
     uint16_t rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
 };
+
+/*
+ * Info directives
+ * Can be disabled to save program space
+ */
+#ifdef INFO
+#  define INFO_PRINT(...)    Serial.print(__VA_ARGS__)
+#  define INFO_PRINTLN(...)  Serial.println(__VA_ARGS__)
+#else
+/**
+ * If INFO, print the arguments, otherwise do nothing.
+ */
+#  define INFO_PRINT(...) void()
+/**
+ * If INFO, print the arguments as a line, otherwise do nothing.
+ */
+#  define INFO_PRINTLN(...) void()
+#endif
 
 /*
  * Debug directives
@@ -165,7 +188,7 @@ struct IRData {
     uint16_t address;           ///< Decoded address
     uint16_t command;           ///< Decoded command
     uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID.  Ticks used for decoding Distance protocol.
-    uint8_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
+    uint16_t numberOfBits;      ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;              ///< See IRDATA_FLAGS_* definitions above
     uint32_t decodedRawData;    ///< Up to 32 bit decoded raw data, used for sendRaw functions.
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
@@ -195,7 +218,7 @@ public:
      */
     void begin(uint8_t aReceivePin, bool aEnableLEDFeedback = false, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
     void start(); // alias for enableIRIn
-    void start(uint16_t aMicrosecondsToAddToGapCounter);
+    void start(uint32_t aMicrosecondsToAddToGapCounter);
     bool available();
     IRData* read(); // returns decoded data
     // write is a method of class IRsend below

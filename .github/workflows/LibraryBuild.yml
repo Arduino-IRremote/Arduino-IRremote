@@ -112,12 +112,12 @@ jobs:
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: MinimalReceiver,IRDispatcherDemo,MicroGirs  # digitalWriteFast.h not available for this board
+            sketches-exclude: MinimalReceiver,IRDispatcherDemo,MicroGirs,UnitTest  # digitalWriteFast.h not available for this board
 
           - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock16
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
             required-libraries: ATtinySerialOut
-            sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
+            sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
             platform-url: http://drazzy.com/package_drazzy.com_index.json

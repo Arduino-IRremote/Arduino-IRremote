@@ -122,7 +122,7 @@ void IRrecv::start() {
  * Configures the timer and the state machine for IR reception.
  * @param aMicrosecondsToAddToGapCounter To compensate for microseconds the timer was stopped / disabled.
  */
-void IRrecv::start(uint16_t aMicrosecondsToAddToGapCounter) {
+void IRrecv::start(uint32_t aMicrosecondsToAddToGapCounter) {
     enableIRIn();
     noInterrupts();
     irparams.TickCounterForISR += aMicrosecondsToAddToGapCounter / MICROS_PER_TICK;
@@ -197,7 +197,7 @@ void IRrecv::resume() {
 void IRrecv::initDecodedIRData() {
 
     if (irparams.OverflowFlag) {
-        // Copy overflow flag to decodedIRData.flags
+        // Copy overflow flag to decodedIRData.flags and reset it
         irparams.OverflowFlag = false;
         irparams.rawlen = 0; // otherwise we have OverflowFlag again at next ISR call
         decodedIRData.flags = IRDATA_FLAGS_WAS_OVERFLOW;
@@ -689,8 +689,12 @@ bool IRrecv::decodeHash() {
     if (decodedIRData.rawDataPtr->rawlen < 6) {
         return false;
     }
-
-    for (unsigned int i = 1; (i + 2) < decodedIRData.rawDataPtr->rawlen; i++) {
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
+    uint8_t i;
+#else
+    uint16_t i;
+#endif
+    for (i = 1; (i + 2) < decodedIRData.rawDataPtr->rawlen; i++) {
         uint8_t value = compare(decodedIRData.rawDataPtr->rawbuf[i], decodedIRData.rawDataPtr->rawbuf[i + 2]);
         // Add value into the hash
         hash = (hash * FNV_PRIME_32) ^ value;
@@ -1007,8 +1011,12 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
     }
     aSerial->print(F("     -"));
     aSerial->println(tDurationMicros, DEC);
-
-    for (uint8_t i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
+    uint8_t i;
+#else
+    uint16_t i;
+#endif
+    for (i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
         if (aOutputMicrosecondsInsteadOfTicks) {
             tDurationMicros = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
         } else {
@@ -1066,7 +1074,12 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
     aSerial->print(F("] = {"));    // Start declaration
 
 // Dump data
-    for (unsigned int i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
+    uint8_t i;
+#else
+    uint16_t i;
+#endif
+    for (i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
         uint32_t tDuration = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
 
         if (i & 1) {
@@ -1111,8 +1124,13 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
  */
 void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
 
-// Store data, skip leading space
-    for (unsigned int i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
+// Store data, skip leading space#
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
+    uint8_t i;
+#else
+    uint16_t i;
+#endif
+    for (i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
         uint32_t tDuration = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
         if (i & 1) {
             // Mark
@@ -1312,7 +1330,7 @@ ISR () // for functions definitions which are called by separate (board specific
             irparams.TickCounterForISR = 0;// reset counter in both cases
         }
 
-    } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing Mark
+    } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing mark
         if (tIRInputLevel != INPUT_MARK) {   // Mark ended; Record time
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
 //            digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
@@ -1322,10 +1340,10 @@ ISR () // for functions definitions which are called by separate (board specific
             irparams.TickCounterForISR = 0;
         }
 
-    } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing Space
+    } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing space
         if (tIRInputLevel == INPUT_MARK) {  // Space just ended; Record time
             if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
-                // Flag up a read OverflowFlag; Stop the State Machine
+                // Flag up a read OverflowFlag; Stop the state machine
                 irparams.OverflowFlag = true;
                 irparams.StateForISR = IR_REC_STATE_STOP;
             } else {

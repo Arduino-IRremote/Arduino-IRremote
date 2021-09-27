@@ -55,10 +55,11 @@
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 // to compensate for the signal forming of different IR receiver modules.
-#define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
+//#define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
 
-#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
+//#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
 
+//#define
 /*
  * First define macros for input and output pin etc.
  */
@@ -134,8 +135,9 @@ void loop() {
         Serial.println();
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
-            IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
             Serial.println(F("Overflow detected"));
+            Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value in IRremoteInt.h to 750."));
+            // see also https://github.com/Arduino-IRremote/Arduino-IRremote#modifying-compile-options-with-sloeber-ide
 #  if !defined(ESP32) && !defined(ESP8266) && !defined(NRF5)
             /*
              * do double beep
@@ -143,6 +145,9 @@ void loop() {
             IrReceiver.stop();
             tone(TONE_PIN, 1100, 10);
             delay(50);
+            tone(TONE_PIN, 1100, 10);
+            delay(50);
+            IrReceiver.start(100000); // to compensate for 100 ms stop of receiver. This enables a correct gap measurement.
 #  endif
 
         } else {

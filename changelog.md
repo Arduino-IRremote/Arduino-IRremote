@@ -10,6 +10,8 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Compiler switch USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN added.
 - Moved blink13() back to IRrecv class.
 - Added Kaseikyo convenience functions like sendKaseikyo_Denon().
+- Improved LG protocol and added class Aircondition_LG based on real hardware supplied by makerspace 201 (https://wiki.hackerspaces.org/ZwoNullEins) from Cologne.
+- Improved universal decoder for pulse width or pulse distance protocols to support more than 32 bits.
 
 ## 3.3.0
 - Fix errors if LED_BUILTIN is not defined.

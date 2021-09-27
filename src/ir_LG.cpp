@@ -50,29 +50,34 @@
 // MSB first, 1 start bit + 8 bit address + 16 bit command + 4 bit checksum + 1 stop bit (28 data bits).
 // Bit and repeat timing is like NEC
 // LG2 has different header timing and a shorter bit time
+/*
+ * LG remote measurements: Type AKB73315611, Ver1.1 from 2011.03.01
+ * Internal crystal: 4 MHz
+ * Header:  8.9 ms mark 4.15 ms space
+ * Data:    500 / 540 and 500 / 1580;
+ * Clock is nor synchronized with gate so you have 19 and sometimes 19 and a spike pulses for mark
+ * Duty:    9 us on 17 us off => around 33 % duty
+ * NO REPEAT: If value like temperature has changed during long press, the last value is send at button release
+ * If you do a double press -tested with the fan button-, the next value can be sent after 118 ms
+ *
+ * The codes of the LG air conditioner are documented in https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/ac_LG.cpp
+ */
 #define LG_ADDRESS_BITS          8
 #define LG_COMMAND_BITS         16
 #define LG_CHECKSUM_BITS         4
 #define LG_BITS                 (LG_ADDRESS_BITS + LG_COMMAND_BITS + LG_CHECKSUM_BITS) // 28
 
-#define LG_UNIT                 560 // like NEC
+#define LG_UNIT                 500 // 19 periods of 38 kHz
 
-#define LG_HEADER_MARK          (16 * LG_UNIT) // 9000
-#define LG_HEADER_SPACE         (8 * LG_UNIT)  // 4500
+#define LG_HEADER_MARK          (18 * LG_UNIT) // 9000
+#define LG_HEADER_SPACE         4200
 
-// used for some LG air conditioners e.g. AKB75215403
-#define LG2_UNIT                500 // 19 periods of 38 kHz
-
-#define LG2_HEADER_MARK         (6 * LG2_UNIT)  // 3000
-#define LG2_HEADER_SPACE        (19 * LG2_UNIT) // 9500
+#define LG2_HEADER_MARK         (6 * LG_UNIT)  // 3000
+#define LG2_HEADER_SPACE        (19 * LG_UNIT) // 9500
 
 #define LG_BIT_MARK             LG_UNIT
-#define LG_ONE_SPACE            (3 * LG_UNIT)  // 1690
-#define LG_ZERO_SPACE           LG_UNIT
-
-#define LG2_BIT_MARK            LG2_UNIT
-#define LG2_ONE_SPACE           (3 * LG2_UNIT)  // 1500
-#define LG2_ZERO_SPACE          LG2_UNIT
+#define LG_ONE_SPACE            1580  // 60 periods of 38 kHz
+#define LG_ZERO_SPACE           550
 
 #define LG_REPEAT_HEADER_SPACE  (4 * LG_UNIT)  // 2250
 #define LG_AVERAGE_DURATION     58000 // LG_HEADER_MARK + LG_HEADER_SPACE  + 32 * 2,5 * LG_UNIT) + LG_UNIT // 2.5 because we assume more zeros than ones
@@ -133,7 +138,7 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
         mark(LG2_HEADER_MARK);
         space(LG2_HEADER_SPACE);
         // MSB first
-        sendPulseDistanceWidthData(LG2_BIT_MARK, LG2_ONE_SPACE, LG2_BIT_MARK, LG2_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
+        sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
         SEND_STOP_BIT);
     } else {
         mark(LG_HEADER_MARK);
@@ -167,7 +172,6 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
 bool IRrecv::decodeLG() {
     decode_type_t tProtocol = LG;
     uint16_t tHeaderSpace = LG_HEADER_SPACE;
-    uint16_t tUnit = LG_UNIT;
 
 // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawDataPtr->rawlen != ((2 * LG_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
@@ -187,7 +191,6 @@ bool IRrecv::decodeLG() {
         } else {
             tProtocol = LG2;
             tHeaderSpace = LG2_HEADER_SPACE;
-            tUnit = LG2_UNIT;
         }
     }
 
@@ -213,15 +216,14 @@ bool IRrecv::decodeLG() {
         return false;
     }
 
-//    if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-    if (!decodePulseDistanceData(LG_BITS, 3, tUnit, 3 * tUnit, tUnit, PROTOCOL_IS_MSB_FIRST)) { // costs 20 bytes program space, compared with using constants for 1 protocol
+    if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         DEBUG_PRINT(F("LG: "));
         DEBUG_PRINTLN(F("Decode failed"));
         return false;
     }
 
 // Stop bit
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LG_BITS)], tUnit)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LG_BITS)], LG_BIT_MARK)) {
         DEBUG_PRINT(F("LG: "));
         DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;

@@ -131,22 +131,28 @@ void loop() {
         Serial.println(F("Send NEC 16 bit address=0xFB04 and command 0x08 with exact timing (16 bit array format)"));
         Serial.flush();
         const uint16_t irSignal[] = { 9000, 4500/*Start bit*/, 560, 560, 560, 560, 560, 1690, 560,
-                560/*0010 0x4 of 16 bit address LSB first*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000*/, 560, 1690, 560, 1690, 560,
-                560, 560, 1690/*1101 0xB*/, 560, 1690, 560, 1690, 560, 1690, 560, 1690/*1111*/, 560, 560, 560, 560, 560, 560, 560,
-                1690/*0001 0x08 of command LSB first*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000 0x00*/, 560, 1690, 560, 1690, 560,
-                1690, 560, 560/*1110 Inverted 8 of command*/, 560, 1690, 560, 1690, 560, 1690, 560, 1690/*1111 inverted 0 of command*/,
-                560 /*stop bit*/}; // Using exact NEC timing
+                560/*0010 0x4 of 16 bit address LSB first*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000*/, 560, 1690, 560, 1690,
+                560, 560, 560, 1690/*1101 0xB*/, 560, 1690, 560, 1690, 560, 1690, 560, 1690/*1111*/, 560, 560, 560, 560, 560, 560,
+                560, 1690/*0001 0x08 of command LSB first*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000 0x00*/, 560, 1690, 560,
+                1690, 560, 1690, 560, 560/*1110 Inverted 8 of command*/, 560, 1690, 560, 1690, 560, 1690, 560,
+                1690/*1111 inverted 0 of command*/, 560 /*stop bit*/}; // Using exact NEC timing
         IrSender.sendRaw(irSignal, sizeof(irSignal) / sizeof(irSignal[0]), NEC_KHZ); // Note the approach used to automatically calculate the size of the array.
         delay(DELAY_AFTER_SEND);
 #endif
         /*
          * With sendNECRaw() you can send 32 bit combined codes
          */
-        Serial.println(
-                F(
-                        "Send NEC / ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)"));
+        Serial.println(F("Send NEC / ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)"));
         Serial.flush();
         IrSender.sendNECRaw(0x03040102, sRepeats);
+        delay(DELAY_AFTER_SEND);
+
+        Serial.println(F("Send NEC with 16 bit address 0x0102 and 16 bit command 0x0304 with sendPulseDistanceWidthData()"));
+        // Header
+        IrSender.mark(9000);
+        IrSender.space(4500);
+        // LSB first + stop bit
+        IrSender.sendPulseDistanceWidthData(560, 1680, 560, 560, 0x03040102, 32, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
         delay(DELAY_AFTER_SEND);
 
         /*
