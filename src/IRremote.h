@@ -91,7 +91,7 @@
 #  endif
 #endif
 
-#if !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)
+#if defined(DECODE_NEC) && !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)
 #warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."
 #endif
 
