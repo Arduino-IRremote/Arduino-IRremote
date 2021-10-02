@@ -37,7 +37,7 @@ jobs:
         # Examples: arduino:avr:uno, arduino:avr:leonardo, arduino:avr:nano, arduino:avr:mega
         # arduino:sam:arduino_due_x, arduino:samd:arduino_zero_native"
         # ATTinyCore:avr:attinyx5:chip=85,clock=1internal, digistump:avr:digispark-tiny, digistump:avr:digispark-pro
-        # STM32:stm32:GenF1:pnum=BLUEPILL_F103C8
+        # STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8
         # esp8266:esp8266:huzzah:eesz=4M3M,xtal=80, esp32:esp32:featheresp32:FlashFreq=80
         # You may add a suffix behind the fqbn with "|" to specify one board for e.g. different compile options like arduino:avr:uno|trace
         #############################################################################################################
@@ -51,20 +51,22 @@ jobs:
           - arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
-          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
+          - arduino:samd:arduino_zero_native
+          - arduino:mbed:nano33ble
+          - arduino:mbed_rp2040:pico
           - digistump:avr:digispark-tiny:clock=clock16
           - ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
           - ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
           - ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
           - TinyCore:avr:tiny32
-          - arduino:samd:arduino_zero_native
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal # ATmega128
+          - SparkFun:avr:promicro
+          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
           - esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80
           - esp32:esp32:featheresp32:FlashFreq=80
-          - STM32:stm32:GenF1:pnum=BLUEPILL_F103C8
-          - STM32:stm32:GenL0:pnum=THUNDERPACK_L072
+          - STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8
+          - STMicroelectronics:stm32:GenL0:pnum=THUNDERPACK_L072
           - stm32duino:STM32F1:genericSTM32F103C
-          - SparkFun:avr:promicro
           - sandeepmistry:nRF5:BBCmicrobit
 
         # Specify parameters for each board.
@@ -147,15 +149,15 @@ jobs:
             sketches-exclude: MinimalReceiver
 
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
-            platform-url: https://dl.espressif.com/dl/package_esp32_index.json
+            platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             sketches-exclude: MinimalReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
 
-          - arduino-boards-fqbn: STM32:stm32:GenF1:pnum=BLUEPILL_F103C8 # ST version
-            platform-url: https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json
+          - arduino-boards-fqbn: STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8 # ST version
+            platform-url: https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json
             sketches-exclude: MinimalReceiver
 
-          - arduino-boards-fqbn: STM32:stm32:GenL0:pnum=THUNDERPACK_L072 # ST version
-            platform-url: https://github.com/stm32duino/BoardManagerFiles/raw/master/STM32/package_stm_index.json
+          - arduino-boards-fqbn: STMicroelectronics:stm32:GenL0:pnum=THUNDERPACK_L072 # ST version
+            platform-url: https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
 
           - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C # Roger Clark version

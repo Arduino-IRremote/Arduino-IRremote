@@ -180,8 +180,12 @@
  * Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600
  */
 #if !defined(PULSE_CORRECTION_NANOS)
+#  if defined(F_CPU)
 // To change this value, you simply can add a line #define "PULSE_CORRECTION_NANOS <My_new_value>" in your ino file before the line "#include <IRremote.h>"
 #define PULSE_CORRECTION_NANOS (48000000000L / F_CPU) // 3000 @16MHz, 666 @72MHz
+#  else
+#define PULSE_CORRECTION_NANOS 600
+#  endif
 #endif
 
 #include "IRremoteInt.h"

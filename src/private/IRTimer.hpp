@@ -975,10 +975,6 @@ void timerConfigForReceive() {
 #error PWM generation by hardware not implemented for SAMD
 #  endif
 
-#  if defined(SEND_PWM_BY_TIMER)
-#define IR_SEND_PIN 9
-#  endif
-
 // use Timer TC3 here
 #  if !defined(IR_SAMD_TIMER)
 #define IR_SAMD_TIMER       TC3
@@ -1051,6 +1047,35 @@ void TC3_Handler(void) {
         TC->INTFLAG.bit.MC0 = 1;
         IRTimerInterruptHandler();
     }
+}
+
+/***************************************
+ * Mbed based boards
+ ***************************************/
+#elif defined(ARDUINO_ARCH_MBED) // Arduino Nano 33 BLE + Sparkfun Apollo3
+#include "mbed.h"
+#  if defined(SEND_PWM_BY_TIMER)
+#error PWM generation by hardware not implemented for MBED
+#  endif
+
+#define TIMER_RESET_INTR_PENDING
+#define TIMER_ENABLE_RECEIVE_INTR   sMbedTimer.attach(IRTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
+#define TIMER_DISABLE_RECEIVE_INTR  sMbedTimer.detach();
+
+// Redefinition of ISR macro which creates a plain function now
+#  ifdef ISR
+#undef ISR
+#  endif
+#define ISR() void IRTimerInterruptHandler(void)
+void IRTimerInterruptHandler();
+
+mbed::Ticker sMbedTimer;
+
+/*
+ * Set timer for interrupts every MICROS_PER_TICK (50 us)
+ */
+void timerConfigForReceive() {
+    sMbedTimer.attach(IRTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
 }
 
 /***************************************

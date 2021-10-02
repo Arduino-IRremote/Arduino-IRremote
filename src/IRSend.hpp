@@ -74,7 +74,8 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
     // must exclude cores by MCUdude, MEGATINYCORE, NRF5, SAMD and ESP32 because they do not use the -flto flag for compile
 #if (!defined(SEND_PWM_BY_TIMER) || defined(USE_NO_SEND_PWM)) \
         && !defined(SUPPRESS_ERROR_MESSAGE_FOR_BEGIN) \
-        && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) && !defined(ARDUINO_ARCH_SAMD) \
+        && !(defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)) \
+        && !defined(ARDUINO_ARCH_SAMD) && !defined(ARDUINO_ARCH_RP2040) \
         && !defined(ESP32) && !defined(ESP8266) && !defined(MEGATINYCORE) \
         && !defined(MINICORE) && !defined(MIGHTYCORE) && !defined(MEGACORE) && !defined(MAJORCORE) \
     && !(defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1)) && !(defined(STM32F1xx) || defined(ARDUINO_ARCH_STM32))
@@ -85,7 +86,7 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aLEDFeedbackPin) {
      * I know now way to check for lto flag here.
      */
     UsageError(
-            "Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if SEND_PWM_BY_TIMER is not defined or USE_NO_SEND_PWM is defined or enable lto or activate the line #define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN in IRremote.h.");
+            "Error: You must use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>) if SEND_PWM_BY_TIMER is not defined or USE_NO_SEND_PWM is defined, OR enable lto or activate the line #define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN in IRremote.h.");
 #endif
 
     setLEDFeedback(aLEDFeedbackPin, aEnableLEDFeedback);

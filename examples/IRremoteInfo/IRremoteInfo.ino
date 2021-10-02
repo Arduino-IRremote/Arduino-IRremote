@@ -104,8 +104,10 @@ void dumpTimerPin() {
 }
 
 void dumpClock() {
+#if defined(F_CPU)
     Serial.print(F("MCU Clock: "));
     Serial.println(F_CPU);
+#endif
 }
 
 void dumpPlatform() {
