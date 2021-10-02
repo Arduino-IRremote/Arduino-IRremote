@@ -79,7 +79,7 @@
 #define LG_COMMAND_TEMPERATURE  't'
 #define LG_COMMAND_TEMPERATURE_PLUS '+'
 #define LG_COMMAND_TEMPERATURE_MINUS '-'
-#define LG_COMMAND_MODE         'M'
+#define LG_COMMAND_MODE         'm'
 #define LG_COMMAND_SLEEP        'S'
 #define LG_COMMAND_TIMER_ON     'T'
 #define LG_COMMAND_TIMER_OFF    'O'
@@ -88,11 +88,11 @@
 /*
  * The modes are encoded as character values for easy printing :-)
  */
-#define AC_MODE_COOLING         'C'
-#define AC_MODE_DEHUMIDIFIYING  'D'
-#define AC_MODE_FAN             'F'
-#define AC_MODE_AUTO            'A'
-#define AC_MODE_HEATING         'H'
+#define AC_MODE_COOLING         'c'
+#define AC_MODE_DEHUMIDIFIYING  'd'
+#define AC_MODE_FAN             'f'
+#define AC_MODE_AUTO            'a'
+#define AC_MODE_HEATING         'h'
 
 // see https://github.com/crankyoldgit/IRremoteESP8266/blob/master/src/ir_LG.h
 union LGProtocol {

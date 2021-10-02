@@ -51,12 +51,14 @@
  * NO REPEAT: If value like temperature has changed during long press, the last value is send at button release
  * If you do a double press -tested with the fan button-, the next value can be sent after 118 ms
  */
-
-const int AC_FAN_TOWER[3] = { 0, 4, 6 };
-const int AC_FAN_WALL[4] = { 0, 2, 4, 5 }; // 0 -> low, 4 high, 5 -> cycle
+#define SIZE_OF_FAN_SPEED_MAPPING_TABLE     4
+const int AC_FAN_TOWER[SIZE_OF_FAN_SPEED_MAPPING_TABLE] = { 0, 4, 6, 6 }; // last dummy entry to avoid out of bounds access
+const int AC_FAN_WALL[SIZE_OF_FAN_SPEED_MAPPING_TABLE] = { 0, 2, 4, 5 }; // 0 -> low, 4 high, 5 -> cycle
 
 void Aircondition_LG::setType(bool aIsWallType) {
     ACIsWallType = aIsWallType;
+    INFO_PRINT(F("Set wall type to "));
+    INFO_PRINTLN(aIsWallType);
 }
 
 void Aircondition_LG::printMenu() {
@@ -67,19 +69,20 @@ void Aircondition_LG::printMenu() {
     Serial.println(F("1 On"));
     Serial.println(F("s Swing <0 or 1>"));
     Serial.println(F("a Auto clean <0 or 1>"));
-    Serial.println(F("j Jet <0 or 1>"));
+    Serial.println(F("j Jet on"));
     Serial.println(F("e Energy saving <0 or 1>"));
-    Serial.println(F("l Light"));
-    Serial.println(F("f Fan speed <0 to 4 or 5 for cycle>"));
+    Serial.println(F("l Lights toggle"));
+    Serial.println(F("f Fan speed <0 to 2 or 3 for cycle>"));
     Serial.println(F("t Temperature <18 to 30> degree"));
     Serial.println(F("+ Temperature + 1"));
     Serial.println(F("- Temperature - 1"));
-    Serial.println(F("M <C(ool) or A(uto) or D(ehumidifying) or H(eating) or F(an) mode>"));
+    Serial.println(F("m <c(ool) or a(uto) or d(ehumidifying) or h(eating) or f(an) mode>"));
     Serial.println(F("S Sleep after <0 to 420> minutes"));
     Serial.println(F("T Timer on after <0 to 1439> minutes"));
     Serial.println(F("O Timer off after <0 to 1439> minutes"));
     Serial.println(F("C Clear all timer and sleep"));
-    Serial.println(F("e.g. \"s1\" or \"t23\" or \"O60\" or \"+\""));
+    Serial.println(F("e.g. \"s1\" or \"t23\" or \"mc\" or \"O60\" or \"+\""));
+    Serial.println(F("No plausibility check is made!"));
     Serial.println();
 }
 
@@ -189,7 +192,7 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
         break;
 
     case LG_COMMAND_FAN_SPEED:
-        if (aParameter <= 3) {
+        if (aParameter < SIZE_OF_FAN_SPEED_MAPPING_TABLE) {
             FanIntensity = aParameter;
             sendTemperatureFanSpeedAndMode();
         } else {
@@ -207,6 +210,7 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
         break;
 
     case LG_COMMAND_SLEEP:
+        // 420 = maximum I have recorded
         if (aParameter <= 420) {
             sendIRCommand(LG_SLEEP + aParameter);
         } else {
@@ -215,6 +219,7 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
         break;
 
     case LG_COMMAND_TIMER_ON:
+        // 1440 = minutes of a day
         if (aParameter <= 1439) {
             sendIRCommand(LG_TIMER_ON + aParameter);
         } else {
@@ -273,20 +278,20 @@ void Aircondition_LG::sendTemperatureFanSpeedAndMode() {
     }
 
     switch (Mode) {
-    case 'C':
+    case AC_MODE_COOLING:
         tIRCommand.UByte.HighByte = LG_MODE_COOLING >> 8;
         break;
-    case 'H':
+    case AC_MODE_HEATING:
         tIRCommand.UByte.HighByte = LG_MODE_HEATING >> 8;
         break;
-    case 'A':
+    case AC_MODE_AUTO:
         tIRCommand.UByte.HighByte = LG_MODE_AUTO >> 8;
         break;
-    case 'F':
+    case AC_MODE_FAN:
         tTemperature = 18;
         tIRCommand.UByte.HighByte = LG_MODE_FAN >> 8;
         break;
-    case 'D':
+    case AC_MODE_DEHUMIDIFIYING:
         tIRCommand.UWord = LG_MODE_DEHUMIDIFIYING;
         break;
     default:

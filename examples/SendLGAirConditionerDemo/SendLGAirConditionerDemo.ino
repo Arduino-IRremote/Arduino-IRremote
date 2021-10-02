@@ -125,6 +125,7 @@ void loop() {
         /*
          * Print command to send
          */
+        Serial.println();
         Serial.print(F("Command="));
         Serial.print(tCommand);
         if (tParameter != 0) {
