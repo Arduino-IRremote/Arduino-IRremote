@@ -34,8 +34,8 @@
  *
  */
 
-#ifndef TINY_IR_RECEIVER_CPP_H
-#define TINY_IR_RECEIVER_CPP_H
+#ifndef TINY_IR_RECEIVER_HPP
+#define TINY_IR_RECEIVER_HPP
 
 #include <Arduino.h>
 
@@ -76,7 +76,7 @@ void IRAM_ATTR IRPinChangeInterruptHandler(void)
 #else
 void IRPinChangeInterruptHandler(void)
 #endif
-{
+        {
 #if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
     digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
@@ -208,7 +208,7 @@ void IRPinChangeInterruptHandler(void)
                      * Address reduction to 8 bit
                      */
                     if (TinyIRReceiverControl.IRRawData.UByte.LowByte
-                            == (uint8_t) (~TinyIRReceiverControl.IRRawData.UByte.MidLowByte)) {
+                            == (uint8_t)(~TinyIRReceiverControl.IRRawData.UByte.MidLowByte)) {
                         // standard 8 bit address NEC protocol
                         TinyIRReceiverControl.IRRawData.UByte.MidLowByte = 0; // Address is the first 8 bit
                     }
@@ -237,6 +237,10 @@ void IRPinChangeInterruptHandler(void)
 #ifdef IR_MEASURE_TIMING
     digitalWriteFast(IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
 #endif
+}
+
+bool isTinyReceiverIdle() {
+    return (TinyIRReceiverControl.IRReceiverState == IR_RECEIVER_STATE_WAITING_FOR_START_MARK);
 }
 
 /**
@@ -473,4 +477,6 @@ ISR(PCINT1_vect)
 
 /** @}*/
 
-#endif // TINY_IR_RECEIVER_CPP_H
+#endif // TINY_IR_RECEIVER_HPP
+#pragma once
+

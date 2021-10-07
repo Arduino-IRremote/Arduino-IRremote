@@ -128,6 +128,7 @@ struct TinyIRReceiverStruct {
 void initPCIInterruptForTinyReceiver();
 void enablePCIInterruptForTinyReceiver();
 void disablePCIInterruptForTinyReceiver();
+bool isTinyReceiverIdle();
 
 /** @}*/
 

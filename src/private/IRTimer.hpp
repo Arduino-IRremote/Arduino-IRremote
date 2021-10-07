@@ -29,6 +29,9 @@
  *
  ************************************************************************************
  */
+#ifndef IR_TIMER_HPP
+#define IR_TIMER_HPP
+
 #include "IRremoteInt.h"
 /** \addtogroup HardwareDependencies CPU / board dependent definitions
  * @{
@@ -1283,4 +1286,5 @@ void timerConfigForReceive() {
 
 /** @}*/
 /** @}*/
-
+#endif // #ifndef IR_TIMER_HPP
+#pragma once

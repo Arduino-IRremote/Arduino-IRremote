@@ -153,11 +153,11 @@ jobs:
             sketches-exclude: MinimalReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
 
           - arduino-boards-fqbn: STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8 # ST version
-            platform-url: https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json
+            platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
             sketches-exclude: MinimalReceiver
 
           - arduino-boards-fqbn: STMicroelectronics:stm32:GenL0:pnum=THUNDERPACK_L072 # ST version
-            platform-url: https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json
+            platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
 
           - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C # Roger Clark version

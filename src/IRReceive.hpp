@@ -30,6 +30,8 @@
  *
  ************************************************************************************
  */
+#ifndef IR_RECEIVE_HPP
+#define IR_RECEIVE_HPP
 
 /** \addtogroup Receiving Receiving IR data for multiple protocols
  * @{
@@ -1520,3 +1522,5 @@ bool IRrecv::decode(decode_results *aResults) {
 #endif
 
 /** @}*/
+#endif // #ifndef IR_RECEIVE_HPP
+#pragma once

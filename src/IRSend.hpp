@@ -29,6 +29,8 @@
  *
  ************************************************************************************
  */
+#ifndef IR_SEND_HPP
+#define IR_SEND_HPP
 
 #include "IRremoteInt.h"
 //#include "digitalWriteFast.h"
@@ -527,3 +529,5 @@ unsigned int IRsend::getPulseCorrectionNanos() {
 }
 
 /** @}*/
+#endif // IR_SEND_HPP
+#pragma once

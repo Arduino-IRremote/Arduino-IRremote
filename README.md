@@ -108,7 +108,9 @@ You will discover that **the address is a constant** and the commands sometimes 
 # FAQ
 - IR does not work right when I use **Neopixels** (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 us).<br/>
  Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 µs.
-In turn, this stops the IR interrupt handler from running when it needs to. There are some solutions to this on some processors,
+In turn, this stops the IR interrupt handler from running when it needs to.<br/>
+You can try to wait for the IR receiver to be idle before you send the Neopixel data with `if (IrReceiver.isIdle()) { strip.show();}`. This prevents at least breaking a running IR transmission and -depending of the update rate of the Neopixel- may work quite well.<br/>
+There are some other solutions to this on more powerful processors,
  [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
 - **Another library** is only working if I deactivate the line `IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);`. Please see [below](https://github.com/Arduino-IRremote/Arduino-IRremote#timer-and-pin-usage).
 - You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
@@ -303,33 +305,33 @@ If you define `SEND_PWM_BY_TIMER`, the send PWM signal is forced to be generated
 Since each hardware timer has its dedicated output pins, you must change timer to change PWM output.<br/>
 The timer and the pin usage can be adjusted in [private/IRTimer.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.hpp).
 
-| Board/CPU                                                                | Hardware-PWM Pin    | Receive<br/>& PWM Timers | analogWrite()<br/>pins occupied by timer |
-|--------------------------------------------------------------------------|---------------------|-------------------|-----------------------|
-| [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **6**               | **1**             |
-| [ATtiny85 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **0**, 4            | **0**, 1          | **0**, 1 & 4          |
-| [ATtiny88 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **PB1 / 8**         | **1**             | **PB1 / 8 & PB2 / 9** |
-| [ATtiny167 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)           | **9**               | **1**             | **8 - 15**            |
-| [ATtiny1604](https://github.com/SpenceKonde/megaTinyCore)                | **PA05**            | **TCB0**          |
-| [ATmega8](https://github.com/MCUdude/MiniCore)                           | **9**               | **1**             |
-| ATmega168, **ATmega328**                                                 | 9, **3**            | 1, **2**          | 9 & 10, **3 & 11**    |
-| [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 13, 14, 6           | 1, **2**, 3       |
-| [ATmega164, ATmega324, ATmega644](https://github.com/MCUdude/MightyCore) | 13, **14**          | 1, **2**          |
-| [ATmega8535 ATmega16, ATmega32](https://github.com/MCUdude/MightyCore)   | **13**              | **1**             |
-| [ATmega64, ATmega128, ATmega1281, ATmega2561](https://github.com/MCUdude/MegaCore) | **13**    | **1**             |
-| [ATmega8515, ATmega162](https://github.com/MCUdude/MajorCore)            | **13**              | **1**             |
-| ATmega1280, ATmega2560                                                   | 5, 6, **9**, 11, 46 | 1, **2**, 3, 4, 5 |
-| ATmega4809                                                               | **A4**              | **TCB0**          |
-| Leonardo (Atmega32u4)                                                    | 5, **9**, 13        | 1, 3, **4_HS**    |
-| Zero (SAMD)                                                              | \*, **9**           | **TC3**           |
-| [ESP32](http://esp32.net/)                                               | **4**, all pins     | **1**             |
-| [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | **5**, 9            | 1, **3**          |
-| [Teensy 1.0](https://www.pjrc.com/teensy/pinout.html)                    | **17**              | **1**             |
-| [Teensy 2.0](https://www.pjrc.com/teensy/pinout.html)                    | **9**, 10, 14       | 1, **3**, 4_HS    |
-| [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/pinout.html)            | **1**, 16, 25       | 1, **2**, 3       |
-| [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/pinout.html)              | **5**               | **CMT**           |
-| [Teensy-LC](https://www.pjrc.com/teensy/pinout.html)                     | **16**              | **TPM1**          |
-| [BluePill / STM32F103C8T6](https://github.com/rogerclarkmelbourne/Arduino_STM32) | %           | **3**             | **PA6 & PA7 & PB0 & PB1** |
-| [BluePill / STM32F103C8T6](https://stm32-base.org/boards/STM32F103C8T6-Blue-Pill) | %          | **TIM4**          | **PB6 & PB7 & PB8 & PB9** |
+| Board/CPU                                                                | Receive<br/>& PWM Timers| Hardware-PWM Pin | analogWrite()<br/>pins occupied by timer |
+|--------------------------------------------------------------------------|-------------------|---------------------|-----------------------|
+| [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **1**             | **6**               |
+| [ATtiny85 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **0**, 1          | **0**, 4            | **0**, 1 & 4          |
+| [ATtiny88 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **1**             | **PB1 / 8**         | **PB1 / 8 & PB2 / 9** |
+| [ATtiny167 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)           | **1**             | **9**               | **8 - 15**            |
+| [ATtiny1604](https://github.com/SpenceKonde/megaTinyCore)                | **TCB0**          | **PA05**            |
+| [ATmega8](https://github.com/MCUdude/MiniCore)                           | **1**             | **9**               |
+| ATmega168, **ATmega328**                                                 | 1, **2**          | 9, **3**            | 9 & 10, **3 & 11**    |
+| [ATmega1284](https://github.com/MCUdude/MightyCore)                      | 1, **2**, 3       | 13, 14, 6           |
+| [ATmega164, ATmega324, ATmega644](https://github.com/MCUdude/MightyCore) | 1, **2**          | 13, **14**          |
+| [ATmega8535 ATmega16, ATmega32](https://github.com/MCUdude/MightyCore)   | **1**             | **13**              |
+| [ATmega64, ATmega128, ATmega1281, ATmega2561](https://github.com/MCUdude/MegaCore) | **1**   | **13**              |
+| [ATmega8515, ATmega162](https://github.com/MCUdude/MajorCore)            | **1**             | **13**              |
+| ATmega1280, ATmega2560                                                   | 1, **2**, 3, 4, 5 | 5, 6, **9**, 11, 46 |
+| ATmega4809                                                               | **TCB0**          | **A4**              |
+| Leonardo (Atmega32u4)                                                    | 1, 3, **4_HS**    | 5, **9**, 13        |
+| Zero (SAMD)                                                              | **TC3**           | \*, **9**           |
+| [ESP32](http://esp32.net/)                                               | **1**             | **4**, all pins     |
+| [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | 1, **3**          | **5**, 9            |
+| [Teensy 1.0](https://www.pjrc.com/teensy/pinout.html)                    | **1**             | **17**              |
+| [Teensy 2.0](https://www.pjrc.com/teensy/pinout.html)                    | 1, **3**, 4_HS    | **9**, 10, 14       |
+| [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/pinout.html)            | 1, **2**, 3       | **1**, 16, 25       |
+| [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/pinout.html)              | **CMT**           | **5**               |
+| [Teensy-LC](https://www.pjrc.com/teensy/pinout.html)                     | **TPM1**          | **16**              |
+| [BluePill / STM32F103C8T6](https://github.com/rogerclarkmelbourne/Arduino_STM32)  | **3**    | %                   | **PA6 & PA7 & PB0 & PB1** |
+| [BluePill / STM32F103C8T6](https://stm32-base.org/boards/STM32F103C8T6-Blue-Pill) | **TIM4** | %                   | **PB6 & PB7 & PB8 & PB9** |
 
 # Adding new protocols
 To add a new protocol is quite straightforward. Best is too look at the existing protocols to find a similar one and modify it.<br/>
