@@ -57,8 +57,8 @@
  * Data:    500 / 540 and 500 / 1580;
  * Clock is nor synchronized with gate so you have 19 and sometimes 19 and a spike pulses for mark
  * Duty:    9 us on 17 us off => around 33 % duty
- * NO REPEAT: If value like temperature has changed during long press, the last value is send at button release
- * If you do a double press -tested with the fan button-, the next value can be sent after 118 ms
+ * NO REPEAT: If value like temperature has changed during long press, the last value is send at button release.
+ * If you do a double press, the next value can be sent after around 118 ms. Tested with the fan button.
  *
  * The codes of the LG air conditioner are documented in https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/ac_LG.cpp
  */

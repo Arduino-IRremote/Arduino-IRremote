@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 3.4.0](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
+### [Version 3.4.1](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
