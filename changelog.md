@@ -3,6 +3,7 @@ The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
 ## 3.4.1
+- Improved ir_DistanceProtocol.
 
 ## 3.4.0
 - Added LG2 protocol.

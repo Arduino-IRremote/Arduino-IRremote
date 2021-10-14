@@ -123,9 +123,12 @@ For applications only requiring NEC protocol, there is a receiver which has very
 
 # Handling unknown Protocols
 ## Disclaimer
-This library was never designed to handle long codes like the ones used by air conditioners.
-See [Recording long Infrared Remote control signals with Arduino](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).<br/>
+**This library was never designed to handle long codes like the ones used by air conditioners.**<br/>
+For air condioners [see this fork](https://github.com/crankyoldgit/IRremoteESP8266) which supports an impressive set of protocols and a lot of air conditioners and the blog entry: ["Recording long Infrared Remote control signals with Arduino"](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).<br/>
 The main reason is, that it was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.
+
+## Protocol=PULSE_DISTANCE
+If you get something like this: `PULSE_DISTANCE: HeaderMarkMicros=8900 HeaderSpaceMicros=4450 MarkMicros=550 OneSpaceMicros=1700 ZeroSpaceMicros=600  NumberOfBits=56 0x43D8613C 0x3BC3BC`, then you have a code consisting of **56 bits**, which is probably from an air condioner remote. You can send it with calling sendPulseDistanceWidthData() twice, once for the first 32 bit and next for the remaining 24 bits.
 
 ## Protocol=UNKNOWN
 If you see something like `Protocol=UNKNOWN Hash=0x13BD886C 35 bits received` as output of e.g. the ReceiveDemo example, you either have a problem with decoding a protocol, or an unsupported protocol.
