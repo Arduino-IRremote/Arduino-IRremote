@@ -189,13 +189,9 @@
 #endif
 
 #include "IRremoteInt.h"
-#include "private/IRTimer.hpp"
-#include "IRFeedbackLED.hpp"
-/*
- * Include the sources here to enable compilation with macro values set by user program.
- */
-#include "IRReceive.hpp"
-#include "IRSend.hpp"
+// #include "private/IRTimer.hpp"
+#include "IRFeedbackLED.h"
+
 
 /**
  * Macros for legacy compatibility

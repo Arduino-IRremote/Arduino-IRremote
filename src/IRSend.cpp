@@ -1,5 +1,5 @@
 /*
- * IRSend.hpp
+ * IRSend.cpp
  *
  *  Contains common functions for sending
  *
@@ -29,10 +29,9 @@
  *
  ************************************************************************************
  */
-#ifndef IR_SEND_HPP
-#define IR_SEND_HPP
+#include "IRSend.h"
+#include "IRremote.h"
 
-#include "IRremoteInt.h"
 //#include "digitalWriteFast.h"
 
 __attribute((error("Version > 3.0.1"))) void UsageError(const char *details);
@@ -527,7 +526,3 @@ void IRsend::enableIROut(uint8_t aFrequencyKHz) {
 unsigned int IRsend::getPulseCorrectionNanos() {
     return PULSE_CORRECTION_NANOS;
 }
-
-/** @}*/
-#endif // IR_SEND_HPP
-#pragma once

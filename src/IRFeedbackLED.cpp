@@ -1,5 +1,5 @@
 /**
- * @file IRFeedbackLED.hpp
+ * @file IRFeedbackLED.cpp
  *
  * @brief All Feedback LED specific functions are contained in this file.
  *
@@ -29,21 +29,13 @@
  *
  ************************************************************************************
  */
-#ifndef IR_FEEDBACK_LED_HPP
-#define IR_FEEDBACK_LED_HPP
+#include "IRFeedbackLED.h"
 #include "private/IRFeedbackLEDDefs.h"
+#include "IRremoteInt.h"
 
 /** \addtogroup FeedbackLEDFunctions Feedback LED functions
  * @{
  */
-
-/**
- * Contains pin number and enable status of the feedback LED
- */
-struct FeedbackLEDControlStruct {
-    uint8_t FeedbackLEDPin;         ///< if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
-    bool LedFeedbackEnabled;        ///< true -> enable blinking of pin on IR processing
-};
 
 struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED control instance
 
@@ -132,8 +124,4 @@ void setBlinkPin(uint8_t aBlinkPin) {
     setLEDFeedback(aBlinkPin, FeedbackLEDControl.LedFeedbackEnabled);
 }
 
-/** @}*/
-
-#endif // #ifndef IR_FEEDBACK_LED_HPP
-#pragma once
 

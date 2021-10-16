@@ -1,5 +1,5 @@
 /*
- * IRReceive.hpp
+ * IRReceive.cpp
  * This file is exclusively included by IRremote.h to enable easy configuration of library switches
  *
  *  Contains all IRrecv class functions as well as other receiver related functions.
@@ -30,8 +30,9 @@
  *
  ************************************************************************************
  */
-#ifndef IR_RECEIVE_HPP
-#define IR_RECEIVE_HPP
+#include "IRReceive.h"
+#include "IRremote.h"
+#include "private/IRTimer.hpp"
 
 /** \addtogroup Receiving Receiving IR data for multiple protocols
  * @{
@@ -1522,5 +1523,3 @@ bool IRrecv::decode(decode_results *aResults) {
 #endif
 
 /** @}*/
-#endif // #ifndef IR_RECEIVE_HPP
-#pragma once
