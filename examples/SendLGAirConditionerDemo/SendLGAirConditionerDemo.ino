@@ -47,7 +47,7 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 #include "ac_LG.h"
 
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)

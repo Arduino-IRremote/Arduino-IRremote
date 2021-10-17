@@ -51,7 +51,7 @@
 
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 900 bytes program space
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 int SEND_BUTTON_PIN = APPLICATION_PIN;
 int STATUS_PIN = LED_BUILTIN;

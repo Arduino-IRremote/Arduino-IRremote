@@ -42,7 +42,7 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)
 #define RELAY_PIN   APPLICATION_PIN

@@ -73,7 +73,7 @@
 #define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
 #define DISABLE_LED_FEEDBACK_FOR_RECEIVE // halves ISR duration
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)
 #define DEBUG_BUTTON_PIN    APPLICATION_PIN // if held low, print timing for each received data

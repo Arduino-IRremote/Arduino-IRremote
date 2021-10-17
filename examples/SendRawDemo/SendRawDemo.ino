@@ -42,7 +42,7 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)

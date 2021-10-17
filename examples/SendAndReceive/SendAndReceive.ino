@@ -50,7 +50,7 @@
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 #define DELAY_AFTER_SEND 2000
 #define DELAY_AFTER_LOOP 5000

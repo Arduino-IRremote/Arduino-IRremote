@@ -46,7 +46,7 @@
 #define MARK_EXCESS_MICROS    20 // recommended for the cheap VS1838 modules
 
 //#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 //+=============================================================================
 // Configure the Arduino

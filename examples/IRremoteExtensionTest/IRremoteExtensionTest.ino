@@ -5,7 +5,7 @@
 
 #include "PinDefinitionsAndMore.h"
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 #include "IRremoteExtensionClass.h"
 

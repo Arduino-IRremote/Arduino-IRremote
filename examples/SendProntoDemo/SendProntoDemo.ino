@@ -37,7 +37,7 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 #define NUMBER_OF_REPEATS 3U
 

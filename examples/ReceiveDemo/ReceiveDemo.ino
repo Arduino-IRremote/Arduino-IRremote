@@ -36,7 +36,7 @@
 /*
  * Specify which protocol(s) should be used for decoding.
  * If no protocol is defined, all protocols are active.
- * This must be done before the #include <IRremote.h>
+ * This must be done before the #include <IRremote.hpp>
  */
 //#define DECODE_LG
 //#define DECODE_NEC
@@ -65,7 +65,7 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)
 #define DEBUG_BUTTON_PIN    APPLICATION_PIN // if low, print timing for each received data set

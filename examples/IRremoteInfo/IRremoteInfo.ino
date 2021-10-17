@@ -10,7 +10,7 @@
  * Original Author: AnalysIR - IR software & modules for Makers & Pros, visit http://www.AnalysIR.com
  */
 
-#include <IRremote.h>
+#include <IRremote.hpp>
 
 // Function declarations for non Arduino IDE's
 void dumpHeader();
