@@ -1407,8 +1407,10 @@ bool IRrecv::decode(decode_results *aResults) {
     }
 
     if (!sDeprecationMessageSent) {
+#if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
         Serial.println(
                 "The function decode(&results)) is deprecated and may not work as expected! Just use decode() without a parameter and IrReceiver.decodedIRData.<fieldname> .");
+#endif
         sDeprecationMessageSent = true;
     }
 

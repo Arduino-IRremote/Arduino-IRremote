@@ -4,6 +4,9 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 
 ## 3.4.1
 - Improved ir_DistanceProtocol.
+- Tone for ESP32.
+- 2. phase renamed *.cpp.h to .hpp.
+- No deprecation print for ATtinies.
 
 ## 3.4.0
 - Added LG2 protocol.
