@@ -37,7 +37,7 @@
  * ATtiny1604   2           PA5/3       %
  * SAMD21       3           4           5
  * ESP8266      14 // D5    12 // D6    %
- * ESP32        15          4           %
+ * ESP32        15          4           27
  * BluePill     PA6         PA7         PA3
  * APOLLO3      11          12          5
  */
@@ -53,15 +53,28 @@
 #define noTone(a) void()
 #define TONE_PIN                42 // Dummy for examples using it
 #define IR_TIMING_TEST_PIN      13 // D7
-#define APPLICATION_PIN         0 // D3
+#define APPLICATION_PIN          0 // D3
 
 #elif defined(ESP32)
+#include <Arduino.h>
+#define TONE_LEDC_CHANNEL        1  // Using channel 1 makes tone() independent of receiving timer -> No need to stop receiving timer.
+void tone(uint8_t _pin, unsigned int frequency){
+    ledcAttachPin(_pin, TONE_LEDC_CHANNEL);
+    ledcWriteTone(TONE_LEDC_CHANNEL, frequency);
+}
+void tone(uint8_t _pin, unsigned int frequency, unsigned long duration){
+    ledcAttachPin(_pin, TONE_LEDC_CHANNEL);
+    ledcWriteTone(TONE_LEDC_CHANNEL, frequency);
+    delay(duration);
+    ledcWriteTone(TONE_LEDC_CHANNEL, 0);
+}
+void noTone(uint8_t _pin){
+    ledcWriteTone(TONE_LEDC_CHANNEL, 0);
+}
 #define IR_RECEIVE_PIN          15  // D15
 #define IR_SEND_PIN              4  // D4
-#define tone(a,b,c) void()      // no tone() available on ESP32
-#define noTone(a) void()
-#define TONE_PIN                42 // Dummy for examples using it
-#define APPLICATION_PIN         16 // RX2 pin
+#define TONE_PIN                27  // D27 25 & 26 are DAC0 and 1
+#define APPLICATION_PIN         16  // RX2 pin
 
 #elif defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_STM32F1)
 // BluePill in 2 flavors

@@ -138,16 +138,20 @@ void loop() {
             Serial.println(F("Overflow detected"));
             Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value in IRremoteInt.h to 750."));
             // see also https://github.com/Arduino-IRremote/Arduino-IRremote#modifying-compile-options-with-sloeber-ide
-#  if !defined(ESP32) && !defined(ESP8266) && !defined(NRF5)
+#  if !defined(ESP8266) && !defined(NRF5)
             /*
              * do double beep
              */
-            IrReceiver.stop();
+#    if !defined(ESP32)
+            IrReceiver.stop(); // ESP32 uses another timer for tone()
+#    endif
             tone(TONE_PIN, 1100, 10);
             delay(50);
             tone(TONE_PIN, 1100, 10);
             delay(50);
+#    if !defined(ESP32)
             IrReceiver.start(100000); // to compensate for 100 ms stop of receiver. This enables a correct gap measurement.
+#    endif
 #  endif
 
         } else {
@@ -160,17 +164,21 @@ void loop() {
             }
         }
 
-#  if !defined(ESP32) && !defined(ESP8266) && !defined(NRF5)
+#  if  !defined(ESP8266) && !defined(NRF5)
         if (IrReceiver.decodedIRData.protocol != UNKNOWN) {
             /*
              * If a valid protocol was received, play tone, wait and restore IR timer.
              * Otherwise do not play a tone to get exact gap time between transmissions.
              * This will give the next CheckForRecordGapsMicros() call a chance to eventually propose a change of the current RECORD_GAP_MICROS value.
              */
-            IrReceiver.stop();
-            tone(TONE_PIN, 2200, 10);
+#    if !defined(ESP32)
+            IrReceiver.stop(); // ESP32 uses another timer for tone()
+#    endif
+            tone(TONE_PIN, 2200, 8);
+#    if !defined(ESP32)
             delay(8);
             IrReceiver.start(8000); // to compensate for 8 ms stop of receiver. This enables a correct gap measurement.
+#    endif
         }
 #  endif
 #else

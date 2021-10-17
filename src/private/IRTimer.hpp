@@ -930,13 +930,13 @@ void timerConfigForReceive() {
 #define IR_SEND_PIN 4 // can use any pin, no timer restrictions
 #endif
 
-#define ENABLE_SEND_PWM_BY_TIMER    ledcWrite(LED_CHANNEL, IR_SEND_DUTY_CYCLE) // we must use channel here not pin number
-#define DISABLE_SEND_PWM_BY_TIMER   ledcWrite(LED_CHANNEL, 0)
-//#  endif
-
 #  if ! defined(LED_CHANNEL)
 #define LED_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
 #  endif
+
+#define ENABLE_SEND_PWM_BY_TIMER    ledcWrite(LED_CHANNEL, IR_SEND_DUTY_CYCLE) // we must use channel here not pin number
+#define DISABLE_SEND_PWM_BY_TIMER   ledcWrite(LED_CHANNEL, 0)
+//#  endif
 
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(timer)

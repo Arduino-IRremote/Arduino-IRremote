@@ -157,6 +157,9 @@ If you do not know which protocol your IR transmitter uses, you have several cho
  since one IR diode requires only 1.5 volt.
  - The line \#include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for **Digispark boards** as well as enables serial output at 8MHz.
  - The default software generated PWM has **problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
+ 
+# Requiring IRremote.h in multiple files / avoiding "multiple definition" error
+Use #include <IRremote.h> only in the .ino file (the file containing main()) and use #include <IRremoteInt.h> in all other files.
 
 # Examples
 In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.
@@ -326,7 +329,7 @@ The timer and the pin usage can be adjusted in [private/IRTimer.hpp](https://git
 | ATmega4809                                                               | **TCB0**          | **A4**              |
 | Leonardo (Atmega32u4)                                                    | 1, 3, **4_HS**    | 5, **9**, 13        |
 | Zero (SAMD)                                                              | **TC3**           | \*, **9**           |
-| [ESP32](http://esp32.net/)                                               | **1**             | **4**, all pins     |
+| [ESP32](http://esp32.net/)                                               | **Ledc chan. 0**  | **4**, all pins     |
 | [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | 1, **3**          | **5**, 9            |
 | [Teensy 1.0](https://www.pjrc.com/teensy/pinout.html)                    | **1**             | **17**              |
 | [Teensy 2.0](https://www.pjrc.com/teensy/pinout.html)                    | 1, **3**, 4_HS    | **9**, 10, 14       |
