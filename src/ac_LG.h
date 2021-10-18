@@ -30,6 +30,9 @@
  ************************************************************************************
  */
 // see also: https://github.com/crankyoldgit/IRremoteESP8266/blob/master/src/ir_LG.h
+#ifndef AC_LG_H
+#define AC_LG_H
+
 #include <Arduino.h>
 
 /** \addtogroup Airconditoners Air conditioner special code
@@ -113,7 +116,7 @@ class Aircondition_LG {
 public:
     bool sendCommandAndParameter(char aCommand, int aParameter);
     void setType(bool aIsWallType);
-    void printMenu();
+    void printMenu(Print *aSerial);
     void sendIRCommand(uint16_t aCommand);
     void sendTemperatureFanSpeedAndMode();
     /*
@@ -132,3 +135,5 @@ public:
 };
 
 /** @}*/
+#endif // #ifndef AC_LG_H
+#pragma once

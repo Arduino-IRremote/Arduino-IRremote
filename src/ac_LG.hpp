@@ -1,5 +1,5 @@
 /*
- * ac_LG.cpp
+ * ac_LG.hpp
  *
  *  Contains functions for receiving and sending LG air conditioner IR Protocol
  *  There is no state plausibility check, e.g. you can send fan speed in Mode D and change temperature in mode F
@@ -30,12 +30,14 @@
  *
  ************************************************************************************
  */
+#ifndef AC_LG_HPP
+#define AC_LG_HPP
 #include <Arduino.h>
 
-#define INFO // Deactivate this to save program space and suppress info output.
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
+//#define INFO // save program space and suppress info output from the LG-AC driver.
+//#define DEBUG // for more output from the LG-AC driver.
 #include "IRremoteInt.h"
-#include "ac_LG.h" // evaluates the DEBUG for DEBUG_PRINT
+#include "ac_LG.h" // useful constants
 #include "LongUnion.h"
 
 /** \addtogroup Airconditoners Air conditioner special code
@@ -61,29 +63,29 @@ void Aircondition_LG::setType(bool aIsWallType) {
     INFO_PRINTLN(aIsWallType);
 }
 
-void Aircondition_LG::printMenu() {
-    Serial.println();
-    Serial.println();
-    Serial.println(F("Type command and optional parameter without a separator"));
-    Serial.println(F("0 Off"));
-    Serial.println(F("1 On"));
-    Serial.println(F("s Swing <0 or 1>"));
-    Serial.println(F("a Auto clean <0 or 1>"));
-    Serial.println(F("j Jet on"));
-    Serial.println(F("e Energy saving <0 or 1>"));
-    Serial.println(F("l Lights toggle"));
-    Serial.println(F("f Fan speed <0 to 2 or 3 for cycle>"));
-    Serial.println(F("t Temperature <18 to 30> degree"));
-    Serial.println(F("+ Temperature + 1"));
-    Serial.println(F("- Temperature - 1"));
-    Serial.println(F("m <c(ool) or a(uto) or d(ehumidifying) or h(eating) or f(an) mode>"));
-    Serial.println(F("S Sleep after <0 to 420> minutes"));
-    Serial.println(F("T Timer on after <0 to 1439> minutes"));
-    Serial.println(F("O Timer off after <0 to 1439> minutes"));
-    Serial.println(F("C Clear all timer and sleep"));
-    Serial.println(F("e.g. \"s1\" or \"t23\" or \"mc\" or \"O60\" or \"+\""));
-    Serial.println(F("No plausibility check is made!"));
-    Serial.println();
+void Aircondition_LG::printMenu(Print *aSerial) {
+    aSerial->println();
+    aSerial->println();
+    aSerial->println(F("Type command and optional parameter without a separator"));
+    aSerial->println(F("0 Off"));
+    aSerial->println(F("1 On"));
+    aSerial->println(F("s Swing <0 or 1>"));
+    aSerial->println(F("a Auto clean <0 or 1>"));
+    aSerial->println(F("j Jet on"));
+    aSerial->println(F("e Energy saving <0 or 1>"));
+    aSerial->println(F("l Lights toggle"));
+    aSerial->println(F("f Fan speed <0 to 2 or 3 for cycle>"));
+    aSerial->println(F("t Temperature <18 to 30> degree"));
+    aSerial->println(F("+ Temperature + 1"));
+    aSerial->println(F("- Temperature - 1"));
+    aSerial->println(F("m <c(ool) or a(uto) or d(ehumidifying) or h(eating) or f(an) mode>"));
+    aSerial->println(F("S Sleep after <0 to 420> minutes"));
+    aSerial->println(F("T Timer on after <0 to 1439> minutes"));
+    aSerial->println(F("O Timer off after <0 to 1439> minutes"));
+    aSerial->println(F("C Clear all timer and sleep"));
+    aSerial->println(F("e.g. \"s1\" or \"t23\" or \"mc\" or \"O60\" or \"+\""));
+    aSerial->println(F("No plausibility check is made!"));
+    aSerial->println();
 }
 
 /*
@@ -307,3 +309,5 @@ void Aircondition_LG::sendTemperatureFanSpeedAndMode() {
 }
 
 /** @}*/
+#endif // #ifndef AC_LG_HPP
+#pragma once

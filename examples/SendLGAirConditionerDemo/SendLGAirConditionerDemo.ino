@@ -48,11 +48,14 @@
 #include "PinDefinitionsAndMore.h"
 
 #include <IRremote.hpp>
-#include "ac_LG.h"
 
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
 #endif
+
+#define INFO // Deactivate this to save program space and suppress info output from the LG-AC driver.
+//#define DEBUG // Activate this for more output from the LG-AC driver.
+#include "ac_LG.hpp"
 
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
@@ -83,7 +86,7 @@ delay(4000); // To be able to connect Serial monitor after reset or power up and
     Serial.println(IR_SEND_PIN);
     Serial.println();
     MyLG_Aircondition.setType(LG_IS_WALL_TYPE);
-    MyLG_Aircondition.printMenu();
+    MyLG_Aircondition.printMenu(&Serial);
 
     delay(1000);
 
@@ -141,7 +144,7 @@ void loop() {
         }
 
         if (sShowmenuConter == 0) {
-            MyLG_Aircondition.printMenu();
+            MyLG_Aircondition.printMenu(&Serial);
             sShowmenuConter = NUMBER_OF_COMMANDS_BETWEEN_PRINT_OF_MENU;
         } else {
             sShowmenuConter--;

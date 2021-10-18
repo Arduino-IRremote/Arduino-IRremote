@@ -159,7 +159,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
  - The default software generated PWM has **problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
  
 # Requiring IRremote.h in multiple files / avoiding "multiple definition" error
-Use #include <IRremote.hpp> only in the .ino file (the file containing main()) and use #include <IRremoteInt.h> in all other files.
+Use `#include <IRremote.hpp>` only in one file, e.g. the .ino file (the file containing main()) and use `#include <IRremoteInt.h>` **in all other files**.
 
 # Examples
 In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.
@@ -249,7 +249,7 @@ If you are using Sloeber as your IDE, you can easily define global symbols with 
 ![Sloeber settings](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/SloeberDefineSymbols.png)
 
 # Supported Boards
-Digispark boards are tested with the recommended [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) using `New Style` pin mapping for the pro board.
+ATtiny and Digispark boards are only tested with the recommended [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) using `New Style` pin mapping for the pro board.
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC - but [limited support](https://forum.pjrc.com/threads/65912-Enable-Continuous-Integration-with-arduino-cli-for-3-party-libraries); Credits: PaulStoffregen (Teensy Team)
 - Sanguino

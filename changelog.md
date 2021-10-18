@@ -7,6 +7,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Tone for ESP32.
 - 2. phase renamed *.cpp.h to .hpp.
 - No deprecation print for ATtinies.
+- Renamed ac_LG.cpp to ac_LG.hpp.
 
 ## 3.4.0
 - Added LG2 protocol.
