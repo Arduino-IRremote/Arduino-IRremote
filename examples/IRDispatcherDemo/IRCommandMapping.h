@@ -3,12 +3,13 @@
  *
  * IR remote button codes, strings, and functions to call
  *
- *  Created on: 08.03.2019
- *      Author: Armin
+ *  Copyright (C) 2019-2021  Armin Joachimsmeyer
+ *  armin.joachimsmeyer@gmail.com
+ *
  */
 
-#ifndef IR_COMMAND_MAPING_H_
-#define IR_COMMAND_MAPING_H_
+#ifndef IR_COMMAND_MAPPING_H_
+#define IR_COMMAND_MAPPING_H_
 
 #include <Arduino.h>
 //#include "Commands.h" // includes all the commands used in the mapping arrays below
@@ -29,7 +30,11 @@
 #ifdef USE_KEYES_REMOTE_CLONE
 #define IR_REMOTE_NAME "KEYES_CLONE"
 // Codes for the KEYES CLONE remote control with 17 Keys with number pad above direction control
-#define IR_ADDRESS 0xFF00
+#if defined(USE_IRMP_LIBRARY)
+#define IR_ADDRESS 0xFF00 // IRMP interprets NEC addresses always as 16 bit
+#else
+#define IR_ADDRESS 0x00
+#endif
 
 #define IR_UP    0x18
 #define IR_DOWN  0x52
@@ -37,8 +42,8 @@
 #define IR_LEFT  0x08
 #define IR_OK    0x1C
 
-#define IR_1    0x46
-#define IR_2    0x45
+#define IR_1    0x45
+#define IR_2    0x46
 #define IR_3    0x47
 #define IR_4    0x44
 #define IR_5    0x40
@@ -83,7 +88,11 @@
  * IR code to button mapping for better reading. IR codes should only referenced here.
  */
 // Codes for the KEYES remote control with 17 keys and direction control above number pad
-#define IR_ADDRESS 0xFF00
+#if defined(USE_IRMP_LIBRARY)
+#define IR_ADDRESS 0xFF00 // IRMP interprets NEC addresses always as 16 bit
+#else
+#define IR_ADDRESS 0x00
+#endif
 
 #define IR_UP    0x46
 #define IR_DOWN  0x15
@@ -147,6 +156,7 @@ static const char decreaseBlink[] PROGMEM ="decrease blink frequency";
 
 static const char tone2200[] PROGMEM ="tone 2200";
 static const char tone1800[] PROGMEM ="tone 1800";
+static const char printMenu[] PROGMEM ="printMenu";
 
 static const char reset[] PROGMEM ="reset";
 static const char stop[] PROGMEM ="stop";
@@ -161,40 +171,26 @@ static const char unknown[] PROGMEM ="unknown";
  */
 const struct IRToCommandMappingStruct IRMapping[] =
 {
-{
-COMMAND_BLINK, IR_COMMAND_FLAG_REGULAR, &doLedBlink20times, blink20times },
-{
-COMMAND_ON, IR_COMMAND_FLAG_REGULAR, &doLedOn, LEDon },
-{
-COMMAND_OFF, IR_COMMAND_FLAG_REGULAR, &doLedOff, LEDoff },
-{ COMMAND_START, IR_COMMAND_FLAG_REGULAR, &doLedBlinkStart, blinkStart },
-#if !defined(ESP32)
-{
-COMMAND_TONE1, IR_COMMAND_FLAG_REGULAR, &doTone1800, tone1800 },
-#endif
+{ COMMAND_BLINK, IR_COMMAND_FLAG_BLOCKING, &doLedBlink20times, blink20times },
 
 /*
  * Short commands, which can be executed always
  */
-{
-COMMAND_RESET, IR_COMMAND_FLAG_EXECUTE_ALWAYS, &doReset, reset },
-{
-COMMAND_STOP, IR_COMMAND_FLAG_IS_STOP_COMMAND, &doStop, stop },
+{ COMMAND_TONE1, IR_COMMAND_FLAG_BLOCKING, &doTone1800, tone1800 },
+{ COMMAND_TONE3, IR_COMMAND_FLAG_BLOCKING, &doPrintMenu, printMenu },
+{ COMMAND_ON, IR_COMMAND_FLAG_NON_BLOCKING, &doLedOn, LEDon },
+{ COMMAND_OFF, IR_COMMAND_FLAG_NON_BLOCKING, &doLedOff, LEDoff },
+{ COMMAND_START, IR_COMMAND_FLAG_NON_BLOCKING, &doLedBlinkStart, blinkStart },
+{ COMMAND_RESET, IR_COMMAND_FLAG_NON_BLOCKING, &doResetBlinkFrequency, reset },
+{ COMMAND_STOP, IR_COMMAND_FLAG_IS_STOP_COMMAND, &doStop, stop },
 
 /*
  * Repeatable short commands
  */
-#if !defined(ESP32)
-{
-COMMAND_TONE2, IR_COMMAND_FLAG_REPEATABLE_EXECUTE_ALWAYS, &doTone2200, tone2200 },
-{
-COMMAND_TONE3, IR_COMMAND_FLAG_REPEATABLE_EXECUTE_ALWAYS, &doTone2200, tone2200 },
-#endif
-{
-COMMAND_INCREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_EXECUTE_ALWAYS, &doIncreaseBlinkFrequency, increaseBlink },
-{
-COMMAND_DECREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_EXECUTE_ALWAYS, &doDecreaseBlinkFrequency, decreaseBlink } };
+{ COMMAND_TONE2, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doTone2200, tone2200 },
+{ COMMAND_INCREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doIncreaseBlinkFrequency, increaseBlink },
+{ COMMAND_DECREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doDecreaseBlinkFrequency, decreaseBlink } };
 
-#endif /* IR_COMMAND_MAPING_H_ */
+#endif /* IR_COMMAND_MAPPING_H_ */
 
 #pragma once

@@ -128,7 +128,8 @@ For air condioners [see this fork](https://github.com/crankyoldgit/IRremoteESP82
 The main reason is, that it was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.
 
 ## Protocol=PULSE_DISTANCE
-If you get something like this: `PULSE_DISTANCE: HeaderMarkMicros=8900 HeaderSpaceMicros=4450 MarkMicros=550 OneSpaceMicros=1700 ZeroSpaceMicros=600  NumberOfBits=56 0x43D8613C 0x3BC3BC`, then you have a code consisting of **56 bits**, which is probably from an air condioner remote. You can send it with calling sendPulseDistanceWidthData() twice, once for the first 32 bit and next for the remaining 24 bits.
+If you get something like this: `PULSE_DISTANCE: HeaderMarkMicros=8900 HeaderSpaceMicros=4450 MarkMicros=550 OneSpaceMicros=1700 ZeroSpaceMicros=600  NumberOfBits=56 0x43D8613C 0x3BC3BC`, then you have a code consisting of **56 bits**, which is probably from an air condioner remote. You can send it with calling sendPulseDistanceWidthData() twice, once for the first 32 bit and next for the remaining 24 bits.<br/>
+**The PulseDistance or PulseWidth decoders just decode a timing steam to a bit stream**. They can not put any semantics like address, command or checksum on this bitstream, since it is no known protocol. But the bitstram is way more readable, than a timing stream. This bitstram is read **LSB first by default**. If this does not suit you for further research, you can change it [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_DistanceProtocol.cpp#L48). 
 
 ## Protocol=UNKNOWN
 If you see something like `Protocol=UNKNOWN Hash=0x13BD886C 35 bits received` as output of e.g. the ReceiveDemo example, you either have a problem with decoding a protocol, or an unsupported protocol.

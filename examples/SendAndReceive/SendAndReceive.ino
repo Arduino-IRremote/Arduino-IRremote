@@ -56,8 +56,8 @@
 #define DELAY_AFTER_LOOP 5000
 
 void setup() {
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
-    pinMode(IR_TIMING_TEST_PIN, OUTPUT);
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+    pinMode(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
 
     Serial.begin(115200);

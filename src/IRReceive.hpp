@@ -1277,9 +1277,9 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
  * => Minimal CPU frequency is 4 MHz
  *
  **********************************************************************************************************************/
-//#define IR_MEASURE_TIMING
-//#define IR_TIMING_TEST_PIN 7 // do not forget to execute: "pinMode(IR_TIMING_TEST_PIN, OUTPUT);" if activated by line above
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
+//#define _IR_MEASURE_TIMING
+//#define _IR_TIMING_TEST_PIN 7 // do not forget to execute: "pinMode(_IR_TIMING_TEST_PIN, OUTPUT);" if activated by line above
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 #include "digitalWriteFast.h"
 #endif
 #if defined(TIMER_INTR_NAME)
@@ -1288,8 +1288,8 @@ ISR (TIMER_INTR_NAME) // for ISR definitions
 ISR () // for functions definitions which are called by separate (board specific) ISR
 #endif
 {
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
-    digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+    digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
 // 7 - 8.5 us for ISR body (without pushes and pops) for ATmega328 @16MHz
 
@@ -1321,8 +1321,8 @@ ISR () // for functions definitions which are called by separate (board specific
             if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
                 // Gap just ended; Record gap duration + start recording transmission
                 // Initialize all state machine variables
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
-//                digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+//                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
                 irparams.OverflowFlag = false;
                 irparams.rawbuf[0] = irparams.TickCounterForISR;
@@ -1334,8 +1334,8 @@ ISR () // for functions definitions which are called by separate (board specific
 
     } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing mark
         if (tIRInputLevel != INPUT_MARK) {   // Mark ended; Record time
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
-//            digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+//            digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
             irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
             irparams.StateForISR = IR_REC_STATE_SPACE;
@@ -1349,8 +1349,8 @@ ISR () // for functions definitions which are called by separate (board specific
                 irparams.OverflowFlag = true;
                 irparams.StateForISR = IR_REC_STATE_STOP;
             } else {
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
-//                digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+//                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
                 irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
                 irparams.StateForISR = IR_REC_STATE_MARK;
@@ -1371,8 +1371,8 @@ ISR () // for functions definitions which are called by separate (board specific
          * Complete command received
          * stay here until resume() is called, which switches state to IR_REC_STATE_IDLE
          */
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
-//        digitalWriteFast(IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+//        digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
         if (tIRInputLevel == INPUT_MARK) {
             // Reset gap TickCounterForISR, to prepare for detection if we are in the middle of a transmission after call of resume()
@@ -1386,8 +1386,8 @@ ISR () // for functions definitions which are called by separate (board specific
     }
 #endif
 
-#ifdef IR_MEASURE_TIMING
-    digitalWriteFast(IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
+#ifdef _IR_MEASURE_TIMING
+    digitalWriteFast(_IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
 #endif
 }
 

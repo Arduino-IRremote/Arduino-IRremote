@@ -51,7 +51,7 @@
 #endif
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program space.
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program space if all other protocols are active
-//#define IR_MEASURE_TIMING
+//#define _IR_MEASURE_TIMING
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 // to compensate for the signal forming of different IR receiver modules.
@@ -79,8 +79,8 @@
 #endif
 
 void setup() {
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
-    pinMode(IR_TIMING_TEST_PIN, OUTPUT);
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+    pinMode(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program space of ATtiny85 etc.
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
@@ -164,7 +164,8 @@ void loop() {
             }
         }
 
-#  if  !defined(ESP8266) && !defined(NRF5)
+        // tone on esp8266 works once, then it disables the successful IrReceiver.start() / timerConfigForReceive().
+#  if !defined(ESP8266) && !defined(NRF5)
         if (IrReceiver.decodedIRData.protocol != UNKNOWN) {
             /*
              * If a valid protocol was received, play tone, wait and restore IR timer.

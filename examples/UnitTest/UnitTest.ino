@@ -69,7 +69,7 @@
 
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
-//#define IR_MEASURE_TIMING
+//#define _IR_MEASURE_TIMING
 #define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
 #define DISABLE_LED_FEEDBACK_FOR_RECEIVE // halves ISR duration
 
@@ -86,8 +86,8 @@
 
 void setup() {
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
-#if defined(IR_MEASURE_TIMING) && defined(IR_TIMING_TEST_PIN)
-    pinMode(IR_TIMING_TEST_PIN, OUTPUT);
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+    pinMode(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
 
     Serial.begin(115200);

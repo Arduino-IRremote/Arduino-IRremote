@@ -33,38 +33,6 @@
 /** \addtogroup TinyReceiver Minimal receiver for NEC protocol
  * @{
  */
-/*
- * Set input pin and output pin definitions etc.
- */
-#if !defined(IR_INPUT_PIN)
-#if defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
-#warning "IR_INPUT_PIN is not defined, so it is set to 10"
-#define IR_INPUT_PIN    10
-#else
-#warning "IR_INPUT_PIN is not defined, so it is set to 2"
-#define IR_INPUT_PIN    2
-#endif
-#endif
-
-#if !defined(IR_FEEDBACK_LED_PIN) && defined(LED_BUILTIN)
-#define IR_FEEDBACK_LED_PIN    LED_BUILTIN
-#endif
-
-//#define DO_NOT_USE_FEEDBACK_LED // Activate it if you do not want the feedback LED function. This saves 2 bytes code and 2 clock cycles per interrupt.
-
-#if (  defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)) /* ATtinyX5 */ \
-|| defined(__AVR_ATtiny88__) /* MH-ET LIVE Tiny88 */ \
-|| defined(__AVR_ATmega1280__) || defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega2561__) \
-|| defined(__AVR_ATmega16U4__) || defined(__AVR_ATmega32U4__) \
-|| defined(__AVR_ATmega8__) || defined(__AVR_ATmega48__) || defined(__AVR_ATmega48P__) || defined(__AVR_ATmega48PB__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega88PB__) \
-|| defined(__AVR_ATmega168__) || defined(__AVR_ATmega168PA__) || defined(__AVR_ATmega168PB__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) \
-  /* ATmegas with ports 0,1,2 above and ATtiny167 only 2 pins below */ \
-|| ( (defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)) && ( (defined(ARDUINO_AVR_DIGISPARKPRO) && ((IR_INPUT_PIN == 3) || (IR_INPUT_PIN == 9))) /*ATtinyX7(digisparkpro) and pin 3 or 9 */\
-        || (! defined(ARDUINO_AVR_DIGISPARKPRO) && ((IR_INPUT_PIN == 3) || (IR_INPUT_PIN == 14)))) ) /*ATtinyX7(ATTinyCore) and pin 3 or 14 */
-// In this cases we have code provided for generating interrupt on pin change.
-#else
-#define TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT // cannot use any static ISR vector here
-#endif
 
 /*
  * This function is called if a complete command was received and must be implemented by the including file (user code)

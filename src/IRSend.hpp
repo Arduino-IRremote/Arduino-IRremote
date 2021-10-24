@@ -402,7 +402,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
     unsigned long nextPeriodEnding = start;
     unsigned long tMicros;
     do {
-//        digitalToggleFast(IR_TIMING_TEST_PIN);
+//        digitalToggleFast(_IR_TIMING_TEST_PIN);
         // Output the PWM pulse
         noInterrupts(); // do not let interrupts extend the short on period
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
@@ -431,7 +431,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
         nextPeriodEnding += periodTimeMicros;
         do {
             tMicros = micros(); // we have only 4 us resolution for and AVR @16MHz
-//            digitalToggleFast(IR_TIMING_TEST_PIN); // 3.0 us per call @16MHz
+//            digitalToggleFast(_IR_TIMING_TEST_PIN); // 3.0 us per call @16MHz
         } while (tMicros < nextPeriodEnding);  // 3.4 us @16MHz
     } while (tMicros - start < aMarkMicros);
     setFeedbackLED(false);
