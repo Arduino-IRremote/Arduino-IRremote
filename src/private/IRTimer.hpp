@@ -897,8 +897,8 @@ void timerConfigForReceive() {
 #  ifdef ISR
 #undef ISR
 #  endif
-#define ISR() ICACHE_RAM_ATTR void IRTimerInterruptHandler()
-ICACHE_RAM_ATTR void IRTimerInterruptHandler();
+#define ISR() IRAM_ATTR void IRTimerInterruptHandler()
+IRAM_ATTR void IRTimerInterruptHandler();
 
 #ifdef SEND_PWM_BY_TIMER
 #error "No support for hardware PWM generation for ESP8266"
@@ -1160,7 +1160,7 @@ extern "C" {
 void IRTimerInterruptHandler();
 
 /*
- * Use timer 3 as IRMP timer.
+ * Use timer 3 as IR timer.
  * Timer 3 blocks PA6, PA7, PB0, PB1, so if you require one of them as tone() or Servo output, you must choose another timer.
  */
 HardwareTimer sSTM32Timer(3);
@@ -1199,7 +1199,7 @@ void timerConfigForReceive() {
 void IRTimerInterruptHandler();
 
 /*
- * Use timer 4 as IRMP timer.
+ * Use timer 4 as IR timer.
  * Timer 4 blocks PB6, PB7, PB8, PB9, so if you need one them as tone() or Servo output, you must choose another timer.
  */
 #  if defined(TIM4)

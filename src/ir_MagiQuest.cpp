@@ -3,7 +3,7 @@
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
 #include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 
-// MagiQuest added by E. Stuart Hicks
+// MagiQuest added by E. Stuart Hicks <ehicks@binarymagi.com>
 // Based off the Magiquest fork of Arduino-IRremote by mpflaga
 // https://github.com/mpflaga/Arduino-IRremote/
 //==============================================================================
@@ -27,11 +27,16 @@ union magiquest_t {
 };
 #endif // !defined (DOXYGEN)
 
-#define MAGIQUEST_MAGNITUDE_BITS   16     // The number of bits
-#define MAGIQUEST_WAND_ID_BITS     32     // The number of bits
+#define MAGIQUEST_MAGNITUDE_BITS   (sizeof(uint16_t) * 8)   // magiquest_t.cmd.magnitude
+#define MAGIQUEST_WAND_ID_BITS     (sizeof(uint32_t) * 8)   // magiquest_t.cmd.wand_id
+#define MAGIQUEST_PADDING_BITS     (sizeof(uint8_t) * 8)    // magiquest_t.cmd.padding
 
-#define MAGIQUEST_BITS        (MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS)     // The number of bits in the command itself
 #define MAGIQUEST_PERIOD      1150   // Length of time a full MQ "bit" consumes (1100 - 1200 usec)
+#define MAGIQUEST_BITS        (MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS)   // Size of the command itself
+
+// The total size of a packet is the sum of all 3 expected fields * 2 to support start/stop bits
+#define MAGIQUEST_PACKET_SIZE (2 * (MAGIQUEST_BITS + MAGIQUEST_PADDING_BITS))
+
 /*
  * 0 = 25% mark & 75% space across 1 period
  *     1150 * 0.25 = 288 usec mark
@@ -40,52 +45,38 @@ union magiquest_t {
  *     1150 * 0.5 = 575 usec mark
  *     1150 - 575 = 575 usec space
  */
-#define MAGIQUEST_UNIT          288
+#define MAGIQUEST_UNIT          (MAGIQUEST_PERIOD / 4)
 
-#define MAGIQUEST_ONE_MARK      (2* MAGIQUEST_UNIT) // 576
-#define MAGIQUEST_ONE_SPACE     (2* MAGIQUEST_UNIT) // 576
+#define MAGIQUEST_ONE_MARK      (2 * MAGIQUEST_UNIT) // 576
+#define MAGIQUEST_ONE_SPACE     (2 * MAGIQUEST_UNIT) // 576
 #define MAGIQUEST_ZERO_MARK     MAGIQUEST_UNIT
-#define MAGIQUEST_ZERO_SPACE    (3* MAGIQUEST_UNIT) // 864
-
-//#define MAGIQUEST_MASK        (1ULL << (MAGIQUEST_BITS-1))
+#define MAGIQUEST_ZERO_SPACE    (3 * MAGIQUEST_UNIT) // 864
 
 //+=============================================================================
 //
 void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
-//    magiquest_t data;
-//
-//    data.llword = 0;
-//    data.cmd.wand_id = wand_id;
-//    data.cmd.magnitude = magnitude;
 
     // Set IR carrier frequency
     enableIROut(38);
 
     // 2 start bits
-    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 2, PROTOCOL_IS_MSB_FIRST);
+    sendPulseDistanceWidthData(
+    MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 2, PROTOCOL_IS_MSB_FIRST);
 
     // Data
-    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, wand_id,
-    MAGIQUEST_WAND_ID_BITS, PROTOCOL_IS_MSB_FIRST);
-    sendPulseDistanceWidthData(MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, magnitude,
-    MAGIQUEST_MAGNITUDE_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-
-//    for (unsigned long long mask = MAGIQUEST_MASK; mask > 0; mask >>= 1) {
-//        if (data.llword & mask) {
-//            mark(MAGIQUEST_ONE_MARK);
-//            space(MAGIQUEST_ONE_SPACE);
-//        } else {
-//            mark(MAGIQUEST_ZERO_MARK);
-//            space(MAGIQUEST_ZERO_SPACE);
-//        }
-//    }
-
+    sendPulseDistanceWidthData(
+    MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, wand_id, MAGIQUEST_WAND_ID_BITS,
+    PROTOCOL_IS_MSB_FIRST);
+    sendPulseDistanceWidthData(
+    MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, magnitude, MAGIQUEST_MAGNITUDE_BITS,
+    PROTOCOL_IS_MSB_FIRST,
+    SEND_STOP_BIT);
 }
 
 //+=============================================================================
 //
 /*
- * decodes a 32 bit result, which is nor really compatible with standard decoder layout
+ * decodes a 56 bit result, which is not really compatible with standard decoder layout
  */
 bool IRrecv::decodeMagiQuest() {
     magiquest_t data;  // Somewhere to build our code
@@ -96,29 +87,32 @@ bool IRrecv::decodeMagiQuest() {
     unsigned int ratio_;
 
 #ifdef DEBUG
-    char bitstring[(2 * MAGIQUEST_BITS) + 6];
-    memset(bitstring, 0, sizeof(bitstring));
+    char bitstring[(MAGIQUEST_PACKET_SIZE + 1)];
+    bitstring[MAGIQUEST_PACKET_SIZE] = '\0';
 #endif
 
-    // Check we have enough data (102), + 6 for 2 start and 1 stop bit
-    if (decodedIRData.rawDataPtr->rawlen != (2 * MAGIQUEST_BITS) + 6) {
+    // Check we have the right amount of data
+    if (decodedIRData.rawDataPtr->rawlen != MAGIQUEST_PACKET_SIZE) {
+        DEBUG_PRINT("MagiQuest: Bad packet length - got ");
+        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        DEBUG_PRINT(", expected ");
+        DEBUG_PRINTLN(MAGIQUEST_PACKET_SIZE);
         return false;
     }
 
     // Read the bits in
     data.llword = 0;
-    while (offset + 1 < decodedIRData.rawDataPtr->rawlen) {
+    while (offset < (MAGIQUEST_PACKET_SIZE - 1)) {
         mark_ = decodedIRData.rawDataPtr->rawbuf[offset++];
         space_ = decodedIRData.rawDataPtr->rawbuf[offset++];
         ratio_ = space_ / mark_;
 
-        DEBUG_PRINT("MagiQuest: ");
-        DEBUG_PRINT("mark=");
-        DEBUG_PRINT(mark_ * MICROS_PER_TICK);
-        DEBUG_PRINT(" space=");
-        DEBUG_PRINT(space_ * MICROS_PER_TICK);
-        DEBUG_PRINT(" ratio=");
-        DEBUG_PRINTLN(ratio_);
+        TRACE_PRINT("MagiQuest: mark=");
+        TRACE_PRINT(mark_ * MICROS_PER_TICK);
+        TRACE_PRINT(" space=");
+        TRACE_PRINT(space_ * MICROS_PER_TICK);
+        TRACE_PRINT(" ratio=");
+        TRACE_PRINTLN(ratio_);
 
         if (matchMark(space_ + mark_, MAGIQUEST_PERIOD)) {
             if (ratio_ > 1) {
@@ -139,9 +133,7 @@ bool IRrecv::decodeMagiQuest() {
             return false;
         }
     }
-#ifdef DEBUG
     DEBUG_PRINTLN(bitstring);
-#endif
 
     // Success
     decodedIRData.protocol = MAGIQUEST;
