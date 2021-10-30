@@ -105,6 +105,9 @@ even if this functions are used in a lot of **(old)** tutorials. They are only k
 Especially if you are able to receive these remote codes and get the address and command values.
 You will discover that **the address is a constant** and the commands sometimes are sensibly grouped.
 
+### List of public IR code databases
+http://www.harctoolbox.org/IR-resources.html
+
 # FAQ
 - IR does not work right when I use **Neopixels** (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 us).<br/>
  Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 µs.
