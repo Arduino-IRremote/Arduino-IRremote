@@ -234,7 +234,7 @@ static void dumpDuration(Print *aSerial, uint32_t duration, uint16_t timebase) {
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
  */
 static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *data, size_t length, uint16_t timebase) {
-    for (uint_fast8_t i = 0; i < length; i++) {
+    for (size_t i = 0; i < length; i++) {
         uint32_t tDuration = data[i] * MICROS_PER_TICK;
         if (i & 1) {
             // Mark
@@ -263,7 +263,7 @@ void IRrecv::compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int aFr
     dumpNumber(aSerial, 0);
     unsigned int timebase = toTimebase(aFrequencyHertz);
     compensateAndDumpSequence(aSerial, &decodedIRData.rawDataPtr->rawbuf[1], decodedIRData.rawDataPtr->rawlen - 1, timebase); // skip leading space
-    aSerial->println("\"");
+    aSerial->println("\";");
 }
 
 /*
