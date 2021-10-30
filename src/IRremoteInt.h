@@ -351,7 +351,7 @@ bool MATCH_MARK(uint16_t measured_ticks, uint16_t desired_us);
 bool MATCH_SPACE(uint16_t measured_ticks, uint16_t desired_us);
 
 int getMarkExcessMicros();
-
+void printActiveIRProtocols(Print *aSerial);
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpaceDuration = 0);
 
 /****************************************************

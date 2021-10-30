@@ -63,7 +63,9 @@ void setup() {
 
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver, enable feedback LED, take LED feedback pin from the internal boards definition
 
-    Serial.print(F("Ready to receive IR signals at pin "));
+    Serial.print(F("Ready to receive IR signals of protocols: "));
+    printActiveIRProtocols(&Serial);
+    Serial.print(F("at pin "));
     Serial.println(IR_RECEIVE_PIN);
 }
 

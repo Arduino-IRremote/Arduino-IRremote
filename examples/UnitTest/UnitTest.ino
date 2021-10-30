@@ -103,7 +103,9 @@ void setup() {
     IrReceiver.begin(IR_RECEIVE_PIN);
     IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
 
-    Serial.print(F("Ready to receive IR signals at pin "));
+    Serial.print(F("Ready to receive IR signals of protocols: "));
+    printActiveIRProtocols(&Serial);
+    Serial.print(F("at pin "));
 #if defined(ARDUINO_ARCH_STM32) || defined(ESP8266)
     Serial.println(IR_RECEIVE_PIN_STRING);
 #else

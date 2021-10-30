@@ -90,7 +90,9 @@ void setup() {
 
     pinMode(STATUS_PIN, OUTPUT);
 
-    Serial.print(F("Ready to receive IR signals at pin "));
+    Serial.print(F("Ready to receive IR signals of protocols: "));
+    printActiveIRProtocols (&Serial);
+    Serial.print(F("at pin "));
 #if defined(ARDUINO_ARCH_STM32) || defined(ESP8266)
     Serial.println(IR_RECEIVE_PIN_STRING);
 #else

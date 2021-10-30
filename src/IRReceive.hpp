@@ -863,6 +863,56 @@ void CheckForRecordGapsMicros(Print *aSerial, IRData *aIRDataPtr) {
  * Print functions
  * Since a library should not allocate the "Serial" object, all functions require a pointer to a Print object.
  **********************************************************************************************************************/
+void printActiveIRProtocols(Print *aSerial) {
+#if defined(DECODE_NEC)
+    aSerial->print(F("NEC, "));
+#endif
+#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
+    aSerial->print(F("Panasonic/Kaseikyo, "));
+#endif
+#if defined(DECODE_DENON)
+    aSerial->print(F("Denon/Sharp, "));
+#endif
+#if defined(DECODE_SONY)
+    aSerial->print(F("Sony, "));
+#endif
+#if defined(DECODE_RC5)
+    aSerial->print(F("RC5, "));
+#endif
+#if defined(DECODE_RC6)
+    aSerial->print(F("RC6, "));
+#endif
+#if defined(DECODE_LG)
+    aSerial->print(F("LG, "));
+#endif
+#if defined(DECODE_JVC)
+    aSerial->print(F("JVC, "));
+#endif
+#if defined(DECODE_SAMSUNG)
+    aSerial->print(F("Samsung, "));
+#endif
+    /*
+     * Start of the exotic protocols
+     */
+#if defined(DECODE_WHYNTER)
+    aSerial->print(F("Whynter, "));
+#endif
+#if defined(DECODE_LEGO_PF)
+    aSerial->print(F("Lego Power Functions, "));
+#endif
+#if defined(DECODE_BOSEWAVE)
+    aSerial->print(F("Bosewave , "));
+#endif
+#if defined(DECODE_MAGIQUEST)
+    aSerial->print(F("MagiQuest, "));
+#endif
+#if defined(DECODE_DISTANCE)
+    aSerial->print(F("Universal Distance, "));
+#endif
+#if defined(DECODE_HASH)
+    aSerial->print(F("Hash "));
+#endif
+    }
 /**
  * Internal function to print decoded result and flags in one line.
  * Ends with println().

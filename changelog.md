@@ -10,6 +10,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Renamed ac_LG.cpp to ac_LG.hpp.
 - Maintained MagiQuest by E. Stuart Hicks.
 - Improved print Pronto by Asuki Kono.
+- Added printActiveIRProtocols() function.
 
 ## 3.4.0
 - Added LG2 protocol.
