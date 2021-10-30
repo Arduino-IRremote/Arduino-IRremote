@@ -263,7 +263,7 @@ void IRrecv::compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int aFr
     dumpNumber(aSerial, 0);
     unsigned int timebase = toTimebase(aFrequencyHertz);
     compensateAndDumpSequence(aSerial, &decodedIRData.rawDataPtr->rawbuf[1], decodedIRData.rawDataPtr->rawlen - 1, timebase); // skip leading space
-    aSerial->println("\"");
+    aSerial->println("\";");
 }
 
 /*
