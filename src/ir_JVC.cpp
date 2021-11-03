@@ -88,7 +88,7 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay(JVC_REPEAT_SPACE / 1000);
+            delay(JVC_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
 }

@@ -109,7 +109,7 @@ You will discover that **the address is a constant** and the commands sometimes 
 http://www.harctoolbox.org/IR-resources.html
 
 # FAQ
-- IR does not work right when I use **Neopixels** (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 us).<br/>
+- IR does not work right when I use **Neopixels** (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 탎).<br/>
  Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 탎.
 In turn, this stops the IR interrupt handler from running when it needs to.<br/>
 You can try to wait for the IR receiver to be idle before you send the Neopixel data with `if (IrReceiver.isIdle()) { strip.show();}`. This prevents at least breaking a running IR transmission and -depending of the update rate of the Neopixel- may work quite well.<br/>
@@ -119,7 +119,7 @@ There are some other solutions to this on more powerful processors,
 - You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
  The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
  This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
-- The **minimal CPU frequency** for receiving is 4 MHz, since the 50 us timer ISR takes around 12 us on a 16 MHz ATmega.
+- The **minimal CPU frequency** for receiving is 4 MHz, since the 50 탎 timer ISR takes around 12 탎 on a 16 MHz ATmega.
 
 # Minimal version
 For applications only requiring NEC protocol, there is a receiver which has very **small code size of 500 bytes and does NOT require any timer**. See the MinimalReceiver and IRDispatcherDemo example how to use it. Mapping of pins to interrupts can be found [here](https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/src/TinyIRReceiver.hpp#L307).
@@ -220,6 +220,7 @@ Or define the macro with the -D compiler option for global compile (the latter i
 
 | Name | File | Default value | Description |
 |-|-|-|-|
+| `IR_SEND_PIN` | Before `#include <IRremote.hpp>` | disabled | If specified (as constant), reduces program size and improves send timing for AVR. |
 | `SEND_PWM_BY_TIMER` | Before `#include <IRremote.hpp>` | disabled | Disable carrier PWM generation in software and use (restricted) hardware PWM except for ESP32 where both modes are using the flexible `hw_timer_t`. |
 | `USE_NO_SEND_PWM` | Before `#include <IRremote.hpp>` | disabled | Use no carrier PWM, just simulate an **active low** receiver signal. Overrides `SEND_PWM_BY_TIMER` definition. |
 | `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` | Before `#include <IRremote.hpp>` | disabled | Use or simulate open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
@@ -227,14 +228,14 @@ Or define the macro with the -D compiler option for global compile (the latter i
 | `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.hpp>` | disabled | If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. Saves up to 650 bytes program space. |
 | `EXCLUDE_UNIVERSAL_PROTOCOLS` | Before `#include <IRremote.hpp>` | disabled | If activated, the universal decoder for pulse width or pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in `decode()`. Saves up to 1000 bytes program space. |
 | `MARK_EXCESS_MICROS` | Before `#include <IRremote.hpp>` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
-| `RECORD_GAP_MICROS` | Before `#include <IRremote.hpp>` | 5000 | Minimum gap between IR transmissions, to detect the end of a protocol.<br/>Must be greater than any space of a protocol e.g. the NEC header space of 4500 us.<br/>Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br/>Keep in mind, that this is the delay between the end of the received command and the start of decoding. |
+| `RECORD_GAP_MICROS` | Before `#include <IRremote.hpp>` | 5000 | Minimum gap between IR transmissions, to detect the end of a protocol.<br/>Must be greater than any space of a protocol e.g. the NEC header space of 4500 탎.<br/>Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br/>Keep in mind, that this is the delay between the end of the received command and the start of decoding. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | Before `#include <IRremote.hpp>` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `DISABLE_LED_FEEDBACK_FOR_RECEIVE` | Before `#include <IRremote.hpp>` | disabled | This completely disables the LED feedback code for receive, thus saving around 108 bytes program space and halving the receiver ISR processing time. |
 | `IR_INPUT_IS_ACTIVE_HIGH` | Before `#include <IRremote.hpp>` | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
-| `RAW_BUFFER_LENGTH` | IRremoteInt.h | 101 | Buffer size of raw input buffer. Must be odd! |
+| `RAW_BUFFER_LENGTH` | IRremoteInt.h | 100 | Buffer size of raw input buffer. Must be even! |
 | `DEBUG` | IRremoteInt.h | disabled | Enables lots of lovely debug output. |
 | `IR_SEND_DUTY_CYCLE` | IRremoteInt.h | 30 | Duty cycle of IR send signal. |
-| `MICROS_PER_TICK` | IRremoteInt.h | 50 | Resolution of the raw input buffer data. |
+| `MICROS_PER_TICK` | IRremoteInt.h | 50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 탎 at 38 kHz. |
 | `IR_USE_AVR_TIMER*` | private/IRTimer.hpp |  | Selection of timer to be used for generating IR receiving sample interval. |
 |-|-|-|-|
 | `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
@@ -272,16 +273,16 @@ ATtiny and Digispark boards are only tested with the recommended [ATTinyCore](ht
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.
 
 # Timer and pin usage
-The **receiver sample interval is generated by a timer**. On many boards this must be a hardware timer, on some, where a software timer is available, the software timer is used.<br/>
+The **receiver sample interval of 50 탎 is generated by a timer**. On many boards this must be a hardware timer, on some, where a software timer is available, the software timer is used.<br/>
 Every pin can be used for receiving.<br/>
 The code for the timer and the **timer selection** is located in [private/IRTimer.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.hpp). It can be adjusted here.<br/>
 **Be aware that the hardware timer used for receiving should not be used for analogWrite()!** See table below.
 
 The MinimalReceiver example uses the **TinyReceiver** library,  which can **only receive NEC codes, but does not require any timer**.
 
-The **send PWM signal** is by default generated by software. **Therefore every pin can be used for sending**. The PWM pulse length is guaranteed to be constant by using `delayMicroseconds()`. Take care not to generate interrupts during sending with software generated PWM, otherwise you will get jitter in the generated PWM. E.g. wait for a former `Serial.print()` statement to be finished by `Serial.flush()`. Since the Arduino `micros()` function has a resolution of 4 us at 16 MHz, we always see a small jitter in the signal, which seems to be OK for the receivers.
+The **send PWM signal** is by default generated by software. **Therefore every pin can be used for sending**. The PWM pulse length is guaranteed to be constant by using `delayMicroseconds()`. Take care not to generate interrupts during sending with software generated PWM, otherwise you will get jitter in the generated PWM. E.g. wait for a former `Serial.print()` statement to be finished by `Serial.flush()`. Since the Arduino `micros()` function has a resolution of 4 탎 at 16 MHz, we always see a small jitter in the signal, which seems to be OK for the receivers.
 
-| Software generated PWM showing small jitter because of the limited resolution of 4 us of the Arduino core `micros()` function for an ATmega328 | Detail (ATmega328 generated) showing 33% Duty cycle |
+| Software generated PWM showing small jitter because of the limited resolution of 4 탎 of the Arduino core `micros()` function for an ATmega328 | Detail (ATmega328 generated) showing 33% Duty cycle |
 |-|-|
 | ![Software PWM](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IR_PWM_by_software_jitter.png) | ![Software PWM detail](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IR_PWM_by_software_detail.png) |
 
@@ -385,7 +386,7 @@ We do it according to the statement in the [Vishay datasheet](https://www.vishay
 - Carrier duty cycle 50 %, peak current of emitter IF = 200 mA, the resulting transmission distance is 25 m.
 - Carrier duty cycle 10 %, peak current of emitter IF = 800 mA, the resulting transmission distance is 29 m. - Factor 1.16
 The reason is, that it is not the pure energy of the fundamental which is responsible for the receiver to detect a signal.
-Due to automatic gain control and other bias effects high intensity and lower energy (duty cycle) of the 38 kHz pulse counts more than high low intensity and higher energy.
+Due to automatic gain control and other bias effects, high intensity of the 38 kHz pulse counts more than mediunm intensity (e.g. 50% duty cycle) at the same total energy.
 
 BTW, **the best way to increase the IR power** is to use 2 or 3 IR diodes in series. One diode requires 1.1 to 1.5 volt so you can supply 3 diodes with a 5 volt output.<br/>
 To keep the current, you must reduce the resistor by (5 - 1.3) / (5 - 2.6) = 1.5 e.g. from 150 ohm to 100 ohm for 25 mA and 2 diodes with 1.3 volt and a 5 volt supply.<br/>

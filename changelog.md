@@ -11,6 +11,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Maintained MagiQuest by E. Stuart Hicks.
 - Improved print Pronto by Asuki Kono.
 - Added printActiveIRProtocols() function.
+- Used IR_SEND_PIN to reduce code size and improved send timing for AVR.
 
 ## 3.4.0
 - Added LG2 protocol.

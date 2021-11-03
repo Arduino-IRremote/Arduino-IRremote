@@ -90,7 +90,7 @@ void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a 45 ms raster
-            delay(SONY_REPEAT_SPACE / 1000);
+            delay(SONY_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
 }
@@ -104,10 +104,10 @@ bool IRrecv::decodeSony() {
         return false;
     }
 
-    // Check we have enough data. +2 for initial gap and start bit mark and space minus the last/MSB space. NO stop bit!
+    // Check we have enough data. +2 for initial gap and start bit mark and space minus the last/MSB space. NO stop bit! 26, 32, 42
     if (decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MIN) + 2 && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MAX) + 2
             && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_15) + 2) {
-        // TRACE_PRINT since I saw this too often
+        // ??? TRACE_PRINT since I saw this too often
         DEBUG_PRINT("Sony: ");
         DEBUG_PRINT("Data length=");
         DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);

@@ -62,7 +62,7 @@ void IRsend::sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command with a fixed space gap
-            delay( BOSEWAVE_REPEAT_SPACE / 1000);
+            delay( BOSEWAVE_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
 }

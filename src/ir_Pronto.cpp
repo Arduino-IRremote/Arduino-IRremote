@@ -123,12 +123,12 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t 
      * Now send the trailing space/gap of the intro and all the repeats
      */
     if (intros >= 2) {
-        delay(durations[intros - 1] / 1000U); // equivalent to space(durations[intros - 1]); but allow bigger values for the gap
+        delay(durations[intros - 1] / MICROS_IN_ONE_MILLI); // equivalent to space(durations[intros - 1]); but allow bigger values for the gap
     }
     for (unsigned int i = 0; i < aNumberOfRepeats; i++) {
         sendRaw(durations + intros, repeats - 1, khz);
         if ((i + 1) < aNumberOfRepeats) { // skip last trailing space/gap, see above
-            delay(durations[intros + repeats - 1] / 1000U);
+            delay(durations[intros + repeats - 1] / MICROS_IN_ONE_MILLI);
         }
     }
 }
@@ -251,6 +251,7 @@ static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *d
 
 /**
  * Print the result (second argument) as Pronto Hex on the Print supplied as argument.
+ * Used in the ReceiveDump example.
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  * @param aFrequencyHertz Modulation frequency in Hz. Often 38000Hz.
  */

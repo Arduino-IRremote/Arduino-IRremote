@@ -110,9 +110,9 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNum
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
         if (i == 0) {
-            delay((SAMSUNG_REPEAT_PERIOD - SAMSUNG_AVERAGE_DURATION) / 1000);
+            delay((SAMSUNG_REPEAT_PERIOD - SAMSUNG_AVERAGE_DURATION) / MICROS_IN_ONE_MILLI);
         } else {
-            delay((SAMSUNG_REPEAT_PERIOD - SAMSUNG_REPEAT_DURATION) / 1000);
+            delay((SAMSUNG_REPEAT_PERIOD - SAMSUNG_REPEAT_DURATION) / MICROS_IN_ONE_MILLI);
         }
         // send repeat
         sendSamsungRepeat();

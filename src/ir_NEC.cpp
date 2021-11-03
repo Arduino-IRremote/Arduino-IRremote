@@ -166,9 +166,9 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool a
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
         if (i == 0) {
-            delay(NEC_REPEAT_SPACE / 1000);
+            delay(NEC_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         } else {
-            delay((NEC_REPEAT_PERIOD - NEC_REPEAT_DURATION) / 1000);
+            delay((NEC_REPEAT_PERIOD - NEC_REPEAT_DURATION) / MICROS_IN_ONE_MILLI);
         }
         // send repeat
         sendNECRepeat();

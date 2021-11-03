@@ -138,7 +138,8 @@ void loop() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             Serial.println(F("Overflow detected"));
-            Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value in IRremoteInt.h to 750."));
+            Serial.println(
+                    F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in IRremoteInt.h to 750."));
             // see also https://github.com/Arduino-IRremote/Arduino-IRremote#modifying-compile-options-with-sloeber-ide
 #  if !defined(ESP8266) && !defined(NRF5)
             /*

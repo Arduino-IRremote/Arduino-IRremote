@@ -43,20 +43,6 @@
 #undef IR_SEND_PIN // send pin is determined by timer except for ESP32
 #endif
 
-/*
- * For backwards compatibility
- */
-#if defined(SYSCLOCK) // allow for processor specific code to define F_CPU
-#undef F_CPU
-/**
- * Clock frequency to be used for timing.
- */
-#define F_CPU SYSCLOCK
-#endif
-#if defined(PARTICLE)
-#define F_CPU 16000000
-#endif
-
 #if defined (DOXYGEN)
 /**
  * Hardware / timer dependent pin number for sending IR if SEND_PWM_BY_TIMER is defined. Otherwise used as default for IrSender.sendPin.
@@ -333,7 +319,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
     TCCR1A = 0;
     TCCR1B = _BV(WGM12) | _BV(CS10);
-    OCR1A = F_CPU * MICROS_PER_TICK / 1000000;
+    OCR1A = F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND;
     TCNT1 = 0;
 }
 
@@ -391,7 +377,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #  endif
 }
 
-#define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / 1000000)
+#define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND)
 /*
  * timerConfigForReceive() is used exclusively by IRrecv::enableIRIn()
  * It generates an interrupt each 50 (MICROS_PER_TICK) us.
@@ -455,8 +441,8 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
     TCCR3A = 0;
     TCCR3B = _BV(WGM32) | _BV(CS30);
-    OCR3A = F_CPU * MICROS_PER_TICK / 1000000;
-    OCR3B = F_CPU * MICROS_PER_TICK / 1000000;
+    OCR3A = F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND;
+    OCR3B = F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND;
     TCNT3 = 0;
 }
 
@@ -497,7 +483,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
     TCCR4A = 0;
     TCCR4B = _BV(WGM42) | _BV(CS40);
-    OCR4A = F_CPU * MICROS_PER_TICK / 1000000;
+    OCR4A = F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND;
     TCNT4 = 0;
 }
 
@@ -554,8 +540,8 @@ void timerConfigForReceive() {
     TCCR4C = 0;
     TCCR4D = 0;
     TCCR4E = 0;
-    TC4H = (F_CPU * MICROS_PER_TICK / 1000000) >> 8;
-    OCR4C = (F_CPU * MICROS_PER_TICK / 1000000) & 255;
+    TC4H = (F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND) >> 8;
+    OCR4C = (F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND) & 255;
     TC4H = 0;
     TCNT4 = 0;
 }
@@ -597,7 +583,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 void timerConfigForReceive() {
     TCCR5A = 0;
     TCCR5B = _BV(WGM52) | _BV(CS50);
-    OCR5A = F_CPU * MICROS_PER_TICK / 1000000;
+    OCR5A = F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND;
     TCNT5 = 0;
 }
 
@@ -629,7 +615,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
     TCNT0 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
 }
 
-#define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / 1000000)
+#define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND)
 void timerConfigForReceive() {
 #  if (TIMER_COUNT_TOP < 256)
     TCCR0A = _BV(WGM01); // CTC, Top is OCR0A
@@ -678,7 +664,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #  endif
 }
 
-#define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / 1000000)
+#define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND)
 void timerConfigForReceive() {
 #  if (TIMER_COUNT_TOP < 256)
     TCCR1 = _BV(CTC1) | _BV(CS10); // Clear Timer/Counter on Compare Match, Top is OCR1C, No prescaling
@@ -725,7 +711,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 
 void timerConfigForReceive() {
     TCB0.CTRLB = (TCB_CNTMODE_INT_gc);  // Periodic interrupt mode
-    TCB0.CCMP = ((F_CPU * MICROS_PER_TICK) / 1000000);
+    TCB0.CCMP = ((F_CPU * MICROS_PER_TICK) / MICROS_IN_ONE_SECOND);
     TCB0.INTFLAGS = TCB_CAPT_bm;         // reset interrupt flags
     TCB0.CTRLA = (TCB_CLKSEL_CLKDIV1_gc) | (TCB_ENABLE_bm);
 }
@@ -776,7 +762,7 @@ void timerConfigForReceive() {
     TCD0.CTRLA = 0;                                                 // reset enable bit in order to unprotect the other bits
     TCD0.CTRLB = TCD_WGMODE_ONERAMP_gc;// must be set since it is used by PWM
 //    TCD0.CMPBSET = 80;
-    TCD0.CMPBCLR = ((F_CPU * MICROS_PER_TICK) / 1000000) - 1;
+    TCD0.CMPBCLR = ((F_CPU * MICROS_PER_TICK) / MICROS_IN_ONE_SECOND) - 1;
 
     _PROTECTED_WRITE(TCD0.FAULTCTRL, 0);// must disable WOA output at pin 13/PA4
 
@@ -954,7 +940,11 @@ hw_timer_t *timer;
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     ledcSetup(LED_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
+#if defined(IR_SEND_PIN)
+    ledcAttachPin(IR_SEND_PIN, LED_CHANNEL);// bind pin to channel
+#else
     ledcAttachPin(IrSender.sendPin, LED_CHANNEL);// bind pin to channel
+#endif
 }
 
 /*
@@ -1035,7 +1025,7 @@ void timerConfigForReceive() {
     // Set prescaler to 64
     TC->CTRLA.reg |= TC_CTRLA_MODE_COUNT16 | TC_CTRLA_WAVEGEN_MFRQ | TC_CTRLA_PRESCALER_DIV64 | TC_CTRLA_ENABLE;
 
-    setTimerFrequency(1000000 / MICROS_PER_TICK);
+    setTimerFrequency(MICROS_IN_ONE_SECOND / MICROS_PER_TICK);
 
     // Enable the compare interrupt
     TC->INTENSET.reg = 0;
@@ -1171,7 +1161,7 @@ HardwareTimer sSTM32Timer(3);
 void timerConfigForReceive() {
     sSTM32Timer.setMode(TIMER_CH1, TIMER_OUTPUT_COMPARE);
     sSTM32Timer.setPrescaleFactor(1);
-    sSTM32Timer.setOverflow((F_CPU / 1000000) * MICROS_PER_TICK);
+    sSTM32Timer.setOverflow((F_CPU / MICROS_IN_ONE_SECOND) * MICROS_PER_TICK);
     sSTM32Timer.attachInterrupt(TIMER_CH1, IRTimerInterruptHandler);
     sSTM32Timer.refresh();
 }
@@ -1228,9 +1218,13 @@ void timerConfigForReceive() {
 
 #  if defined(SEND_PWM_BY_TIMER)
 #define IR_SEND_PIN         A5 // Particle supports multiple pins
-
+#    if defined(IR_SEND_PIN)
+#define ENABLE_SEND_PWM_BY_TIMER    analogWrite(IR_SEND_PIN, 128, ir_out_kHz*1000)
+#define DISABLE_SEND_PWM_BY_TIMER   analogWrite(IR_SEND_PIN, 0, ir_out_kHz*1000)
+#    else
 #define ENABLE_SEND_PWM_BY_TIMER    analogWrite(IrSender.sendPin, 128, ir_out_kHz*1000)
 #define DISABLE_SEND_PWM_BY_TIMER   analogWrite(IrSender.sendPin, 0, ir_out_kHz*1000)
+#    endif
 #  endif
 
 #  ifndef IR_OUT_KHZ

@@ -54,7 +54,11 @@ void setup() {
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
+#if defined(IR_SEND_PIN)
+    IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
+#else
     IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
+#endif
 
     Serial.print(F("Ready to send IR signals at pin "));
 #if defined(ARDUINO_ARCH_STM32) || defined(ESP8266)
@@ -280,10 +284,12 @@ void loop() {
     /*
      * Force buffer overflow
      */
-    Serial.println(F("Force buffer overflow by sending 100 marks and spaces"));
-    for (unsigned int i = 0; i < RAW_BUFFER_LENGTH; ++i) {
-        IrSender.mark(400);
-        IrSender.space(400);
+    Serial.println(F("Force buffer overflow by sending 280 marks and spaces"));
+    for (unsigned int i = 0; i < 140; ++i) {
+        // 400 + 400 should be received as 8/8 and sometimes as 9/7 or 7/9 if compensation by MARK_EXCESS_MICROS is optimal.
+        // 210 + 540 = 750 should be received as 5/10 or 4/11 if compensation by MARK_EXCESS_MICROS is optimal.
+        IrSender.mark(210); // 8 pulses at 38 kHz
+        IrSender.space(540); // to fill up to 750 us
     }
     delay(DELAY_AFTER_SEND);
 
@@ -301,3 +307,4 @@ void loop() {
 
     delay(DELAY_AFTER_LOOP); // additional delay at the end of each loop
 }
+

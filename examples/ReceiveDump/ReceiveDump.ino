@@ -76,7 +76,10 @@ void loop() {
     if (IrReceiver.decode()) {  // Grab an IR code
         // Check if the buffer overflowed
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
-            Serial.println("IR code too long. Edit IRremoteInt.h and increase RAW_BUFFER_LENGTH");
+            Serial.println(F("Overflow detected"));
+            Serial.println(
+                    F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in IRremoteInt.h to 750."));
+            // see also https://github.com/Arduino-IRremote/Arduino-IRremote#modifying-compile-options-with-sloeber-ide
         } else {
             Serial.println();                               // 2 blank lines between entries
             Serial.println();

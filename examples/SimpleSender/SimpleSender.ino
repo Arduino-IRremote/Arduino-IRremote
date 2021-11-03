@@ -34,7 +34,7 @@ void setup() {
     /*
      * The IR library setup. That's all!
      */
-    IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK); // Specify send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
 
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);

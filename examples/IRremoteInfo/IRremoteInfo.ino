@@ -100,7 +100,11 @@ void dumpTIMER() {
 
 void dumpTimerPin() {
     Serial.print(F("IR Send Pin: "));
+#if defined(IR_SEND_PIN)
+    Serial.println(IR_SEND_PIN);
+#else
     Serial.println(IrSender.sendPin);
+#endif
 }
 
 void dumpClock() {

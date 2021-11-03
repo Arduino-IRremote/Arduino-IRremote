@@ -42,7 +42,8 @@
 #if !defined(RAW_BUFFER_LENGTH)
 
 #define RAW_BUFFER_LENGTH  100  ///< Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
-//#define RAW_BUFFER_LENGTH  750  // MagiQuest requires 112 bytes, 750 is the value for air condition remotes.
+//#define RAW_BUFFER_LENGTH  112  // MagiQuest requires 112 bytes.
+//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
 #endif
 #if RAW_BUFFER_LENGTH % 2 == 1
 #error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
@@ -50,6 +51,31 @@
 
 #define MARK   1
 #define SPACE  0
+
+#define MILLIS_IN_ONE_SECOND 1000L
+#define MICROS_IN_ONE_SECOND 1000000L
+#define MICROS_IN_ONE_MILLI 1000L
+
+#if defined(PARTICLE)
+#define F_CPU 16000000 // definition for a board for which F_CPU is not defined
+#elif defined(ARDUINO_ARCH_MBED_RP2040)
+#define F_CPU 133000000
+#elif defined(ARDUINO_ARDUINO_NANO33BLE)
+#define F_CPU 64000000
+#endif
+#if defined(F_CPU)
+#define CLOCKS_PER_MICRO (F_CPU / MICROS_IN_ONE_SECOND)
+#else
+#error F_CPU not defined, please define it for your board in IRremoteInt.h
+#endif
+
+/*
+ * For backwards compatibility
+ */
+#if defined(SYSCLOCK) // allow for processor specific code to define F_CPU
+#undef F_CPU
+#define F_CPU SYSCLOCK // Clock frequency to be used for timing.
+#endif
 
 //#define DEBUG // Activate this for lots of lovely debug output from the IRremote core and all protocol decoders.
 //#define TRACE // Activate this for more debug output.
@@ -138,10 +164,6 @@ struct irparams_struct {
 #  define TRACE_PRINTLN(...) void()
 #endif
 
-#if (__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 4)
-#define COMPILER_HAS_PRAGMA_MESSAGE
-#endif
-
 /****************************************************
  *                     RECEIVING
  ****************************************************/
@@ -189,8 +211,8 @@ struct IRData {
     decode_type_t protocol;     ///< UNKNOWN, NEC, SONY, RC5, ...
     uint16_t address;           ///< Decoded address
     uint16_t command;           ///< Decoded command
-    uint16_t extra;             ///< Used by MagiQuest and for Kaseikyo unknown vendor ID.  Ticks used for decoding Distance protocol.
-    uint16_t numberOfBits;      ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
+    uint16_t extra;           ///< Used by MagiQuest and for Kaseikyo unknown vendor ID.  Ticks used for decoding Distance protocol.
+    uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;              ///< See IRDATA_FLAGS_* definitions above
     uint32_t decodedRawData;    ///< Up to 32 bit decoded raw data, used for sendRaw functions.
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
@@ -422,15 +444,20 @@ extern IRrecv IrReceiver;
  */
 class IRsend {
 public:
+    IRsend();
+
+#if defined(IR_SEND_PIN) || defined(SEND_PWM_BY_TIMER)
+    void begin();
+#endif
+#if !defined(IR_SEND_PIN) && !defined(SEND_PWM_BY_TIMER)
     IRsend(uint8_t aSendPin);
     void setSendPin(uint8_t aSendPinNumber);
+#endif
+
+    void begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+    // Not guarded for backward compatibility
     void begin(uint8_t aSendPin, bool aEnableLEDFeedback = true, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
 
-    IRsend();
-    void begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN)
-#if !defined (DOXYGEN)
-            __attribute__ ((deprecated ("Please use begin(<sendPin>, <EnableLEDFeedback>, <LEDFeedbackPin>)")));
-#endif
 
     size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
 
@@ -543,8 +570,9 @@ public:
     ;
     void sendWhynter(unsigned long data, int nbits);
 
+#if !defined(IR_SEND_PIN) && !defined(SEND_PWM_BY_TIMER)
     uint8_t sendPin;
-
+#endif
     unsigned int periodTimeMicros;
     unsigned int periodOnTimeMicros; // compensated with PULSE_CORRECTION_NANOS for duration of digitalWrite.
     unsigned int getPulseCorrectionNanos();

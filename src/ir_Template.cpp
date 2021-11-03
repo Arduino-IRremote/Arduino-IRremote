@@ -185,7 +185,7 @@ void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumber
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay(SHUZU_REPEAT_SPACE / 1000);
+            delay(SHUZU_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
 }

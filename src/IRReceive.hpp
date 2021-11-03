@@ -682,7 +682,7 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
  * Hopefully this code is unique for each button.
  * This isn't a "real" decoding, just an arbitrary value.
  *
- * see: http://arcfn.com/2010/01/using-arbitrary-remotes-with-arduino.html
+ * see: http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html
  */
 bool IRrecv::decodeHash() {
     long hash = FNV_BASIS_32;

@@ -118,7 +118,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNum
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay(KASEIKYO_REPEAT_SPACE / 1000);
+            delay(KASEIKYO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
 }

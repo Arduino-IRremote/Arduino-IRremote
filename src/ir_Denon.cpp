@@ -111,7 +111,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
         SEND_STOP_BIT);
 
         // Inverted autorepeat frame
-        delay(DENON_AUTO_REPEAT_SPACE / 1000);
+        delay(DENON_AUTO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tInvertedData, DENON_BITS,
         PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
 
@@ -119,7 +119,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command with a fixed space gap
-            delay( DENON_AUTO_REPEAT_SPACE / 1000);
+            delay( DENON_AUTO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
 }

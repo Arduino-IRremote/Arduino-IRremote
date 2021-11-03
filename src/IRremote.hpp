@@ -159,7 +159,12 @@
 /**
  * Define to disable carrier PWM generation in software and use (restricted) hardware PWM.
  */
+#if defined(ESP32)
+#define SEND_PWM_BY_TIMER       // the best and default method for ESP32
+#else
 //#define SEND_PWM_BY_TIMER
+#endif
+
 /**
  * Define to use no carrier PWM, just simulate an active low receiver signal.
  */
@@ -182,7 +187,7 @@
 #if !defined(PULSE_CORRECTION_NANOS)
 #  if defined(F_CPU)
 // To change this value, you simply can add a line #define "PULSE_CORRECTION_NANOS <My_new_value>" in your ino file before the line "#include <IRremote.hpp>"
-#define PULSE_CORRECTION_NANOS (48000000000L / F_CPU) // 3000 @16MHz, 666 @72MHz
+#define PULSE_CORRECTION_NANOS (48000L / (F_CPU/MICROS_IN_ONE_SECOND)) // 3000 @16MHz, 666 @72MHz
 #  else
 #define PULSE_CORRECTION_NANOS 600
 #  endif
