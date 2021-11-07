@@ -912,6 +912,10 @@ void printActiveIRProtocols(Print *aSerial) {
 #if defined(DECODE_HASH)
     aSerial->print(F("Hash "));
 #endif
+#if defined(NO_DECODER) // for sending raw only
+    (void)aSerial; // to avoid compiler warnings
+#endif
+
     }
 /**
  * Internal function to print decoded result and flags in one line.

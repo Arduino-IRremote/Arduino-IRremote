@@ -49,6 +49,8 @@
 //#define EXCLUDE_EXOTIC_PROTOCOLS
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
+//#define DEBUG // Activate this for lots of lovely debug output from the decoders.
+#define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
 #include <IRremote.hpp>
 

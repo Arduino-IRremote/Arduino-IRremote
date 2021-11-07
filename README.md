@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 3.4.1](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
+### [Version 3.5.0](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
@@ -17,7 +17,7 @@ A Doxygen documentation of the sources is available on the [project homepage](ht
 Click on the LibraryManager badge above to see the [instructions](https://www.ardu-badge.com/IRremote/zip).
 
 # Supported IR Protocols
-Denon / Sharp, JVC, LG,  NEC / Onkyo / Apple, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sony, (Pronto), BoseWave, Lego, Whynter, MagiQuest.<br/>
+Denon / Sharp, JVC, LG,  NEC / Onkyo / Apple, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sony, (Pronto), BoseWave, Lego, Whynter and optional MagiQuest.<br/>
 Protocols can be switched off and on by defining macros before the line `#include <IRremote.hpp>` like [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L14):
 
 ```
@@ -163,7 +163,7 @@ If you do not know which protocol your IR transmitter uses, you have several cho
  - The default software generated PWM has **problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
  
 # Requiring IRremote.h in multiple files / avoiding "multiple definition" error
-Use `#include <IRremote.hpp>` only in one file, e.g. the .ino file (the file containing main()) and use `#include <IRremoteInt.h>` **in all other files**.
+Use `#include <IRremote.hpp>` only in one file, e.g. the .ino file (the file containing main()) and use `#include <IRremoteInt.h>` **in all other files**. Be careful to define these 3 macros `RAW_BUFFER_LENGTH` and `IR_SEND_PIN` and `SEND_PWM_BY_TIMER` in IRremoteInt.h consistent with the definitions in the .ino file!
 
 # Examples
 In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.
@@ -174,17 +174,20 @@ This examples are a good starting point.
 ### ReceiveDemo
 Receives all protocols and play a beep on each packet received. By connecting pin 5 to ground, you can see the raw values for each packet.
 
+### ReceiveDump
+Receives all protocols and dumps the received signal in different flavors. Since the printing takes so much time, repeat signals may be skipped or interpreted as UNKNOWN.
+
 ### SendDemo
 Sends all available protocols at least once.
 
-### ReceiveAndSend + UnitTest
+### SendAndReceive + UnitTest
 ReceiveDemo + SendDemo in one program. **Receiving while sending**.
 
 ### ReceiveAndSend
-Record and play back last received IR signal at button press.
+Record and **play back last received IR signal** at button press.
 
 ### SmallReceiver
-If code size matters, look at these example.<br/>
+If **code size** matters, look at these example.<br/>
 
 ### MinimalReceiver
 The MinimalReceiver example uses the **TinyReceiver** library  which can **only receive NEC codes, but does not require any timer**.<br/>
@@ -192,10 +195,10 @@ MinimalReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/proj
 Click on the receiver while simulation is running to specify individual IR codes.
 
 ### IRDispatcherDemo
-Framework for calling different functions of **your program** for different IR codes.
+Framework for **calling different functions of your program** for different IR codes.
 
 ### IRrelay
-Control a relay (connected to an output pin) with your remote.
+**Control a relay** (connected to an output pin) with your remote.
 
 ### IRremoteExtensionTest
 Example for a user defined class, which itself uses the IRrecv class from IRremote.
@@ -220,19 +223,19 @@ Or define the macro with the -D compiler option for global compile (the latter i
 
 | Name | File | Default value | Description |
 |-|-|-|-|
+| `RAW_BUFFER_LENGTH` | Before `#include <IRremote.hpp>` | 100 | Buffer size of raw input buffer. Must be even! 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. |
 | `IR_SEND_PIN` | Before `#include <IRremote.hpp>` | disabled | If specified (as constant), reduces program size and improves send timing for AVR. |
 | `SEND_PWM_BY_TIMER` | Before `#include <IRremote.hpp>` | disabled | Disable carrier PWM generation in software and use (restricted) hardware PWM except for ESP32 where both modes are using the flexible `hw_timer_t`. |
 | `USE_NO_SEND_PWM` | Before `#include <IRremote.hpp>` | disabled | Use no carrier PWM, just simulate an **active low** receiver signal. Overrides `SEND_PWM_BY_TIMER` definition. |
 | `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` | Before `#include <IRremote.hpp>` | disabled | Use or simulate open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
 | `NO_LEGACY_COMPATIBILITY` | IRremoteInt.h | disabled | Disables the old decoder for version 2.x compatibility, where all protocols -especially NEC, Panasonic, Sony, Samsung and JVC- were MSB first. Saves around 60 bytes program space and 14 bytes RAM. |
-| `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.hpp>` | disabled | If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. Saves up to 650 bytes program space. |
+| `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.hpp>` | disabled | If activated, BOSEWAVE, WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. Saves up to 650 bytes program space. |
 | `EXCLUDE_UNIVERSAL_PROTOCOLS` | Before `#include <IRremote.hpp>` | disabled | If activated, the universal decoder for pulse width or pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in `decode()`. Saves up to 1000 bytes program space. |
 | `MARK_EXCESS_MICROS` | Before `#include <IRremote.hpp>` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
 | `RECORD_GAP_MICROS` | Before `#include <IRremote.hpp>` | 5000 | Minimum gap between IR transmissions, to detect the end of a protocol.<br/>Must be greater than any space of a protocol e.g. the NEC header space of 4500 µs.<br/>Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br/>Keep in mind, that this is the delay between the end of the received command and the start of decoding. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | Before `#include <IRremote.hpp>` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `DISABLE_LED_FEEDBACK_FOR_RECEIVE` | Before `#include <IRremote.hpp>` | disabled | This completely disables the LED feedback code for receive, thus saving around 108 bytes program space and halving the receiver ISR processing time. |
 | `IR_INPUT_IS_ACTIVE_HIGH` | Before `#include <IRremote.hpp>` | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
-| `RAW_BUFFER_LENGTH` | IRremoteInt.h | 100 | Buffer size of raw input buffer. Must be even! |
 | `DEBUG` | IRremoteInt.h | disabled | Enables lots of lovely debug output. |
 | `IR_SEND_DUTY_CYCLE` | IRremoteInt.h | 30 | Duty cycle of IR send signal. |
 | `MICROS_PER_TICK` | IRremoteInt.h | 50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 µs at 38 kHz. |

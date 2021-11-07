@@ -43,9 +43,9 @@
 #ifndef IRremote_hpp
 #define IRremote_hpp
 
-#define VERSION_IRREMOTE "3.4.0"
+#define VERSION_IRREMOTE "3.5.0"
 #define VERSION_IRREMOTE_MAJOR 3
-#define VERSION_IRREMOTE_MINOR 4
+#define VERSION_IRREMOTE_MINOR 5
 
 // activate it for all cores that does not use the -flto flag, if you get false error messages regarding begin() during compilation.
 //#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN
@@ -63,10 +63,13 @@
  * Copy the lines with the protocols you need in your program before the  #include <IRremote.hpp> line
  * See also SimpleReceiver example
  */
+//#define DECODE_MAGIQUEST // This must be enabled explicitly, since it modifies the RAW_BUFFER_LENGTH from 100 to 112
+
+#if !defined(NO_DECODER) // for sending raw only
 #if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \
 || defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) || defined(DECODE_HASH) \
-|| defined(DECODE_BOSEWAVE) || defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_WHYNTER)))
+|| defined(DECODE_BOSEWAVE) || defined(DECODE_LEGO_PF) || defined(DECODE_WHYNTER)))
 #define DECODE_DENON        // Includes Sharp
 #define DECODE_JVC
 #define DECODE_KASEIKYO
@@ -81,7 +84,6 @@
 #  if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF
-#define DECODE_MAGIQUEST
 #define DECODE_WHYNTER
 #  endif
 
@@ -90,6 +92,7 @@
 #define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program space
 #  endif
 #endif
+#endif // !defined(NO_DECODER)
 
 #if defined(DECODE_NEC) && !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)
 #warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."
@@ -100,6 +103,22 @@
 /****************************************************
  *                    RECEIVING
  ****************************************************/
+
+/**
+ * The length of the buffer where the IR timing data is stored before decoding
+ * 100 is sufficient for most standard protocols, but air conditioners often send a longer protocol data stream
+ */
+#if !defined(RAW_BUFFER_LENGTH)
+#  if defined(DECODE_MAGIQUEST)
+#define RAW_BUFFER_LENGTH  112  // MagiQuest requires 112 bytes.
+#  else
+#define RAW_BUFFER_LENGTH  100  ///< Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
+//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
+#  endif
+#endif
+#if RAW_BUFFER_LENGTH % 2 == 1
+#error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
+#endif
 
 /**
  * MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
@@ -202,6 +221,53 @@
 #include "IRReceive.hpp"
 #include "IRSend.hpp"
 
+/*
+ * Include the sources of all decoders here to enable compilation with macro values set by user program.
+ */
+#if defined(DECODE_BOSEWAVE)
+#include "ir_BoseWave.hpp"
+#endif
+#if defined(DECODE_DENON )       // Includes Sharp
+#include "ir_Denon.hpp"
+#endif
+#if defined(DECODE_DISTANCE)     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program space
+#include "ir_DistanceProtocol.hpp"
+#endif
+#if defined(DECODE_JVC)
+#include "ir_JVC.hpp"
+#endif
+#if defined(DECODE_KASEIKYO) || defined(DECODE_PANASONIC)
+#include "ir_Kaseikyo.hpp"
+#endif
+#if defined(DECODE_LEGO_PF)
+#include "ir_Lego.hpp"
+#endif
+#if defined(DECODE_LG)
+#include "ir_LG.hpp"
+#endif
+#if defined(DECODE_MAGIQUEST)
+#include "ir_MagiQuest.hpp"
+#endif
+#if defined(DECODE_NEC)          // Includes Apple and Onkyo
+#include "ir_NEC.hpp"
+#endif
+#if defined(DECODE_RC5) || defined(DECODE_RC6)
+#include "ir_RC5_RC6.hpp"
+#endif
+#if defined(DECODE_SAMSUNG)
+#include "ir_Samsung.hpp"
+#endif
+#if defined(DECODE_SONY)
+#include "ir_Sony.hpp"
+#endif
+#if defined(DECODE_WHYNTER)
+#include "ir_Whynter.hpp"
+#endif
+
+#include "ir_Pronto.hpp" // pronto is an universal decoder and encoder
+
+#include "ir_Dish.hpp" // contains only sendDISH(unsigned long data, int nbits)
+
 /**
  * Macros for legacy compatibility
  */
@@ -209,6 +275,7 @@
 #define REPEAT 0xFFFFFFFF
 #define USECPERTICK MICROS_PER_TICK
 #define MARK_EXCESS MARK_EXCESS_MICROS
+
 #endif // IRremote_hpp
 
 #pragma once

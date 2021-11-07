@@ -1,5 +1,5 @@
 /*
- * ir_DistanceProtocol.cpp
+ * ir_DistanceProtocol.hpp
  *
  * This decoder tries to decode a pulse width or pulse distance protocol.
  * 1. Analyze all space and mark length
@@ -39,6 +39,9 @@
  *
  ************************************************************************************
  */
+#ifndef IR_DISTANCE_HPP
+#define IR_DISTANCE_HPP
+
 #include <Arduino.h>
 
 // accept durations up to 50 * 50 (MICROS_PER_TICK) 2500 microseconds
@@ -48,7 +51,7 @@
 #define DISTANCE_DO_MSB_DECODING PROTOCOL_IS_LSB_FIRST // this results in the same decodedRawData as e.g. the NEC and Kaseikyo/Panasonic decoder
 //#define DISTANCE_DO_MSB_DECODING PROTOCOL_IS_MSB_FIRST // this resembles the JVC, Denon
 
-#define INFO // Deactivate this to save program space and suppress info output.
+//#define INFO // Activate this to save program space and suppress info output.
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
 #include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
 //#include "LongUnion.h"
@@ -307,3 +310,5 @@ bool IRrecv::decodeDistance() {
 }
 
 /** @}*/
+#endif
+#pragma once

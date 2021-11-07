@@ -911,18 +911,19 @@ void timerConfigForReceive() {
  * ESP32 boards - can use any pin for timer
  ***************************************/
 #elif defined(ESP32)
-//#  if defined(SEND_PWM_BY_TIMER)
-#if !defined(IR_SEND_PIN)
-#define IR_SEND_PIN 4 // can use any pin, no timer restrictions
-#endif
 
-#  if ! defined(LED_CHANNEL)
-#define LED_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
+#  if ! defined(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL)
+#define SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
 #  endif
 
-#define ENABLE_SEND_PWM_BY_TIMER    ledcWrite(LED_CHANNEL, IR_SEND_DUTY_CYCLE) // we must use channel here not pin number
-#define DISABLE_SEND_PWM_BY_TIMER   ledcWrite(LED_CHANNEL, 0)
-//#  endif
+#  if defined(SEND_PWM_BY_TIMER)
+#    if !defined(IR_SEND_PIN)
+#define IR_SEND_PIN 4 // can use any pin, no timer restrictions
+#    endif
+
+#define ENABLE_SEND_PWM_BY_TIMER    ledcWrite(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL, IR_SEND_DUTY_CYCLE) // we must use channel here not pin number
+#define DISABLE_SEND_PWM_BY_TIMER   ledcWrite(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL, 0)
+#  endif
 
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(timer)
@@ -939,11 +940,11 @@ IRAM_ATTR void IRTimerInterruptHandler();
 hw_timer_t *timer;
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    ledcSetup(LED_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
+    ledcSetup(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
 #if defined(IR_SEND_PIN)
-    ledcAttachPin(IR_SEND_PIN, LED_CHANNEL);// bind pin to channel
+    ledcAttachPin(IR_SEND_PIN, SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL);// bind pin to channel
 #else
-    ledcAttachPin(IrSender.sendPin, LED_CHANNEL);// bind pin to channel
+    ledcAttachPin(IrSender.sendPin, SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL);// bind pin to channel
 #endif
 }
 

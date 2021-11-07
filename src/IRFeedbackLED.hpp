@@ -136,4 +136,3 @@ void setBlinkPin(uint8_t aBlinkPin) {
 
 #endif // #ifndef IR_FEEDBACK_LED_HPP
 #pragma once
-

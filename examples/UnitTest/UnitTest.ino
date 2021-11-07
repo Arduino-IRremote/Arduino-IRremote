@@ -33,6 +33,11 @@
 
 #include <Arduino.h>
 
+#if !defined(RAW_BUFFER_LENGTH)
+#define RAW_BUFFER_LENGTH  100  // Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
+//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
+#endif
+
 /*
  * Define macros for input and output pin etc.
  */
@@ -72,6 +77,8 @@
 //#define _IR_MEASURE_TIMING
 #define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
 #define DISABLE_LED_FEEDBACK_FOR_RECEIVE // halves ISR duration
+//#define DEBUG // Activate this for lots of lovely debug output from the decoders.
+#define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
 #include <IRremote.hpp>
 
@@ -157,8 +164,7 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
             Serial.println(F("Overflow detected"));
-            Serial.println(
-                    F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in IRremoteInt.h to 750."));
+            Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in " __FILE__));
             // see also https://github.com/Arduino-IRremote/Arduino-IRremote#modifying-compile-options-with-sloeber-ide        } else {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
         } else if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {

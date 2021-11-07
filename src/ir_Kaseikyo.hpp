@@ -1,5 +1,5 @@
 /*
- * ir_Kaseikyo.cpp
+ * ir_Kaseikyo.hpp
  *
  *  Contains functions for receiving and sending Kaseikyo/Panasonic IR Protocol in "raw" and standard format with 16 bit address + 8 bit command
  *
@@ -29,6 +29,9 @@
  *
  ************************************************************************************
  */
+#ifndef IR_KASEIKYO_HPP
+#define IR_KASEIKYO_HPP
+
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
@@ -329,3 +332,5 @@ void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
 }
 
 /** @}*/
+#endif
+#pragma once

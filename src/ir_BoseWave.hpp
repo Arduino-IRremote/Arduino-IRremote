@@ -6,6 +6,9 @@
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  */
+#ifndef IR_BOSEWAVE_HPP
+#define IR_BOSEWAVE_HPP
+
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
@@ -129,3 +132,5 @@ bool IRrecv::decodeBoseWave() {
 }
 
 /** @}*/
+#endif // #ifndef IR_BOSEWAVE_HPP
+#pragma once

@@ -2,10 +2,10 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
-## 3.4.1
+## 3.5.0
 - Improved ir_DistanceProtocol.
 - Tone for ESP32.
-- 2. phase renamed *.cpp.h to .hpp.
+- last phase renamed *.cpp.h to .hpp.
 - No deprecation print for ATtinies.
 - Renamed ac_LG.cpp to ac_LG.hpp.
 - Maintained MagiQuest by E. Stuart Hicks.

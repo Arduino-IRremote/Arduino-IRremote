@@ -1,5 +1,5 @@
 /*
- * ir_Lego.cpp
+ * ir_Lego.hpp
  *
  *  Contains functions for receiving and sending Lego Power Functions IR Protocol
  *
@@ -29,6 +29,9 @@
  *
  ************************************************************************************
  */
+#ifndef IR_LEGO_HPP
+#define IR_LEGO_HPP
+
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
@@ -222,3 +225,5 @@ bool IRrecv::decodeLegoPowerFunctions() {
 }
 
 /** @}*/
+#endif
+#pragma once

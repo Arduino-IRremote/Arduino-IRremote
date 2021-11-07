@@ -1,5 +1,5 @@
 /*
- * @file irPronto.cpp
+ * @file ir_Pronto.hpp
  * @brief In this file, the functions IRrecv::compensateAndPrintPronto and IRsend::sendPronto are defined.
  *
  * See http://www.harctoolbox.org/Glossary.html#ProntoSemantics
@@ -31,6 +31,8 @@
  *
  ************************************************************************************
  */
+#ifndef IR_PRONTO_HPP
+#define IR_PRONTO_HPP
 
 // The first number, here 0000, denotes the type of the signal. 0000 denotes a raw IR signal with modulation,
 // The second number, here 006C, denotes a frequency code
@@ -53,7 +55,6 @@
 
 //! @cond
 // DO NOT EXPORT from this file
-static const uint16_t MICROSECONDS_T_MAX = 0xFFFFU;
 static const uint16_t learnedToken = 0x0000U;
 static const uint16_t learnedNonModulatedToken = 0x0100U;
 static const unsigned int bitsInHexadecimal = 4U;
@@ -103,7 +104,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t 
     uint16_t durations[intros + repeats];
     for (unsigned int i = 0; i < intros + repeats; i++) {
         uint32_t duration = ((uint32_t) data[i + numbersInPreamble]) * timebase;
-        durations[i] = (unsigned int) ((duration <= MICROSECONDS_T_MAX) ? duration : MICROSECONDS_T_MAX);
+        durations[i] = (unsigned int) ((duration <= __UINT16_MAX__) ? duration : __UINT16_MAX__);
     }
 
     /*
@@ -339,3 +340,5 @@ size_t IRrecv::compensateAndStorePronto(String *aString, unsigned int frequency)
 }
 
 /** @}*/
+#endif
+#pragma once

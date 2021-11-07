@@ -75,46 +75,72 @@ jobs:
         include:
           - arduino-boards-fqbn: arduino:avr:uno
             sketches-exclude: IR2Keyboard
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: arduino:avr:uno|DEBUG
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
               All: -DEBUG
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_NO_SEND_PWM
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
               All: -DUSE_NO_SEND_PWM
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_OLD_DECODE
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
               All: -DUSE_OLD_DECODE
 
           - arduino-boards-fqbn: arduino:avr:uno|NO_LEGACY_COMPATIBILITY
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
               All: -DNO_LEGACY_COMPATIBILITY
 
           - arduino-boards-fqbn: arduino:avr:uno|SEND_PWM_BY_TIMER
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
               All: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
               All: -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
+
+          - arduino-boards-fqbn: arduino:avr:leonardo
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: arduino:samd:arduino_zero_native
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+
+          - arduino-boards-fqbn: arduino:mbed:nano33ble
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+
+          - arduino-boards-fqbn: arduino:mbed_rp2040:pico
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             sketches-exclude: MinimalReceiver,IRDispatcherDemo,MicroGirs,UnitTest  # digitalWriteFast.h not available for this board
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock16
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
@@ -138,39 +164,57 @@ jobs:
 
           - arduino-boards-fqbn: TinyCore:avr:tiny32
             platform-url: https://raw.githubusercontent.com/xukangmin/TinyCore/master/avr/package/package_tinycore_index.json
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal
             platform-url: https://mcudude.github.io/MegaCore/package_MCUdude_MegaCore_index.json
             arduino-platform: arduino:avr,MegaCore:avr # gcc is taken from arduino:avr
             sketches-exclude: MinimalReceiver,IRDispatcherDemo # digitalWriteFast.h not available for this board?
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80
             platform-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
             sketches-exclude: MinimalReceiver
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             sketches-exclude: MinimalReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8 # ST version
             platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
             sketches-exclude: MinimalReceiver
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: STMicroelectronics:stm32:GenL0:pnum=THUNDERPACK_L072 # ST version
             platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C # Roger Clark version
             platform-url: http://dan.drown.org/stm32duino/package_STM32duino_index.json
             sketches-exclude: MinimalReceiver
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: SparkFun:avr:promicro
             arduino-platform: arduino:avr,SparkFun:avr
             platform-url: https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json # Arduino URL is not required here
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
             sketches-exclude: IRDispatcherDemo,MicroGirs,MinimalReceiver # no tone()
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
       # Do not cancel all jobs / architectures if one job fails
 #      fail-fast: false

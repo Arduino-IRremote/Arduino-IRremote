@@ -1,5 +1,5 @@
 /*
- * IRremoteExtensionClass.h
+ * IRremoteExtensionClass.cpp
  *
  * Example for a class which itself uses the IRrecv class from IRremote
  *
@@ -31,13 +31,12 @@
  */
 #include <Arduino.h>
 
-#include <IRremoteInt.h>
+#include "IRremoteExtensionClass.h"
 
-class IRExtensionClass
-{
-public:
-    IRrecv * MyIrReceiver;
-    IRExtensionClass(IRrecv * aIrReceiver);
-    void resume();
-};
-
+IRExtensionClass::IRExtensionClass(IRrecv *aIrReceiver) {
+    MyIrReceiver = aIrReceiver;
+}
+void IRExtensionClass::resume() {
+    Serial.println(F("Call resume()"));
+    MyIrReceiver->resume();
+}
