@@ -20,7 +20,7 @@ Click on the LibraryManager badge above to see the [instructions](https://www.ar
 Denon / Sharp, JVC, LG,  NEC / Onkyo / Apple, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sony, (Pronto), BoseWave, Lego, Whynter and optional MagiQuest.<br/>
 Protocols can be switched off and on by defining macros before the line `#include <IRremote.hpp>` like [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L14):
 
-```
+```c++
 #define DECODE_NEC
 //#define DECODE_DENON
 #include <IRremote.hpp>
@@ -58,11 +58,12 @@ If you use an (old) Arduino core that does not use the `-flto` flag for compile,
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L126).
 - Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
 
-# Do not want to convert your 2.x program and use the 3.x library version?
-The 3.x versions try to be backwards compatible, so you can easily run your old examples. But some functions like e.g. `sendNEC()` -see below- could not made backwards compatible,
- so in this cases you must revisit your code and adapt it to the 3.x library.<br/>
-If you program look like:
-```
+## Example
+### 2.x program:
+
+```c++
+#include <IRremote.h>
+
 IRrecv irrecv(RECV_PIN);
 decode_results results;
 
@@ -81,9 +82,38 @@ void loop() {
   ...
 }
 ```
+
+### 3.x program:
+
+```c++
+#include <IRremote.hpp>
+
+void setup()
+{
+...
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver
+}
+
+void loop() {
+  if (IrReceiver.decode()) {
+      Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
+      IrReceiver.printIRResultShort(&Serial); // optional use new print version
+      ...
+      IrReceiver.resume(); // Enable receiving of the next value
+  }
+  ...
+}
+```
+
+# Do not want to convert your 2.x program and use the 3.x library version?
+The 3.x versions try to be backwards compatible, so you can easily run your old examples. But some functions like e.g. `sendNEC()` -see below- could not made backwards compatible,
+ so in this cases you must revisit your code and adapt it to the 3.x library.<br/>
+If you program look like:
+
 it runs on the 3.x version as before. But only the following decoders are available then: Denon, JVC, LG,  NEC, Panasonic, RC5, RC6, Samsung, Sony.
 The `results.value` is set by the decoders for **NEC, Panasonic, Sony, Samsung and JVC** as MSB first like in 2.x!<br/>
-- The old functions `sendNEC()` and `sendJVC()` are deprecated and renamed to `sendNECMSB()` and `sendJVCMSB()` to make it clearer that they send data with MSB first,
+
+The old functions `sendNEC()` and `sendJVC()` are deprecated and renamed to `sendNECMSB()` and `sendJVCMSB()` to make it clearer that they send data with MSB first,
  which is not the standard for NEC and JVC. Use them to send your **old MSB-first 32 bit IR data codes**.
 In the new version you will send NEC (and other) commands not by 32 bit codes but by a (constant) 8 bit address and an 8 bit command.
 
@@ -97,6 +127,27 @@ Example:
 - 0xCB340102 is binary 11001011001101000000000100000010.<br/>
   0x40802CD3 is binary 01000000100000000010110011010011.<br/>
   If you read the first binary sequence backwards (right to left), you get the second sequence.
+
+# Receiving IR codes
+Check for **available data** can be done by `if (IrReceiver.decode()) {`. This also decodes the received data.
+After successful decoding, the IR data is contained in the IRData structure, available as `IrReceiver.decodedIRData`.
+
+```c++
+struct IRData {
+    decode_type_t protocol;  // UNKNOWN, NEC, SONY, RC5, ...
+    uint16_t address;        // Decoded address
+    uint16_t command;        // Decoded command
+    uint16_t extra;          // Used by MagiQuest and for Kaseikyo unknown vendor ID.  Ticks used for decoding Distance protocol.
+    uint16_t numberOfBits;   // Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
+    uint8_t flags;               // See IRDATA_FLAGS_* definitions above
+    uint32_t decodedRawData;     // Up to 32 bit decoded raw data, used for sendRaw functions.
+    irparams_struct *rawDataPtr; // Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
+};
+```
+To access e.g. the **RAW data**, use `uint32_t myRawdata= IrReceiver.decodedIRData.decodedRawData;`.<br/>
+The content of the `IrReceiver.decodedIRData.flags` is described [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L204-L212).<br/>
+To **print all fields**, use `IrReceiver.printIRResultShort(&Serial);`.<br/>
+To print the **raw timing data** received, use `IrReceiver.printIRResultRawFormatted(&Serial, true);`.
 
 # Sending IR codes
 Please do not use the old send*Raw() functions for sending like e.g. `IrSender.sendNECRaw(0xE61957A8,2)`,
@@ -257,6 +308,8 @@ If you are using Sloeber as your IDE, you can easily define global symbols with 
 ![Sloeber settings](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/SloeberDefineSymbols.png)
 
 # Supported Boards
+**Issues and discussions with the content "Is it possible to use this library with the ATTinyXYZ? / board XYZ" without any reasonable explanations will be immediately closed without further notice.**<br/>
+<br/>
 ATtiny and Digispark boards are only tested with the recommended [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) using `New Style` pin mapping for the pro board.
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / Teensy-LC - but [limited support](https://forum.pjrc.com/threads/65912-Enable-Continuous-Integration-with-arduino-cli-for-3-party-libraries); Credits: PaulStoffregen (Teensy Team)
@@ -293,7 +346,7 @@ The **send PWM signal** is by default generated by software. **Therefore every p
 If you use a library which requires the same timer as IRremote, you have a problem, since **the timer resource cannot be shared simultaneously** by both libraries. The best approach is to change the timer used for IRremote, which can be accomplished by modifying the timer selection in [private/IRTimer.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.hpp).<br/>
 For the AVR platform the code to modify looks like:
 
-```
+```c++
 // Arduino Mega
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #  if !defined(IR_USE_AVR_TIMER1) && !defined(IR_USE_AVR_TIMER2) && !defined(IR_USE_AVR_TIMER3) && !defined(IR_USE_AVR_TIMER4) && !defined(IR_USE_AVR_TIMER5)

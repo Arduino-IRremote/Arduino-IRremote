@@ -209,7 +209,7 @@ bool IRrecv::decodeDistance() {
 //            tNumberOfBits++;
 //        }
         // decode without leading start bit. Currently only seen for sony protocol
-        for (uint8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
+        for (uint_fast8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
             uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;
             if (tNumberOfBitsForOneDecode > 32) {
                 tNumberOfBitsForOneDecode = 32;
@@ -260,7 +260,7 @@ bool IRrecv::decodeDistance() {
         /*
          * Decode in 32 bit chunks
          */
-        for (uint8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
+        for (uint_fast8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
             uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;
             if (tNumberOfBitsForOneDecode > 32) {
                 tNumberOfBitsForOneDecode = 32;

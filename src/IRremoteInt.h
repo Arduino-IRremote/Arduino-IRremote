@@ -176,6 +176,39 @@ struct irparams_struct {
  *                     RECEIVING
  ****************************************************/
 /*
+ * Definitions for member IRData.flags
+ */
+#define IRDATA_FLAGS_EMPTY              0x00
+#define IRDATA_FLAGS_IS_REPEAT          0x01
+#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
+#define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
+#define IRDATA_TOGGLE_BIT_MASK          0x08
+#define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< there is unexpected extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
+#define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is 0 in this case to avoid endless OverflowFlag
+#define IRDATA_FLAGS_IS_LSB_FIRST       0x00
+#define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Just for info. Value is simply determined by the protocol
+
+/**
+ * Data structure for the user application, available as decodedIRData.
+ * Filled by decoders and read by print functions or user application.
+ */
+struct IRData {
+    decode_type_t protocol;  ///< UNKNOWN, NEC, SONY, RC5, ...
+    uint16_t address;        ///< Decoded address
+    uint16_t command;        ///< Decoded command
+    uint16_t extra;          ///< Used by MagiQuest and for Kaseikyo unknown vendor ID. Ticks used for decoding Distance protocol.
+    uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
+    uint8_t flags;               ///< See IRDATA_FLAGS_* definitions above
+    uint32_t decodedRawData;     ///< Up to 32 bit decoded raw data, used for sendRaw functions.
+    irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
+};
+
+/**
+ * Just for better readability of code
+ */
+#define USE_DEFAULT_FEEDBACK_LED_PIN 0
+
+/*
  * Activating this saves 60 bytes program space and 14 bytes RAM
  */
 //#define NO_LEGACY_COMPATIBILITY
@@ -197,39 +230,6 @@ struct decode_results {
     bool overflow;              // deprecated, moved to decodedIRData.flags ///< true if IR raw code too long
 };
 #endif
-
-/*
- * Definitions for member IRData.flags
- */
-#define IRDATA_FLAGS_EMPTY              0x00
-#define IRDATA_FLAGS_IS_REPEAT          0x01
-#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
-#define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
-#define IRDATA_TOGGLE_BIT_MASK          0x08
-#define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< there is unexpected extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
-#define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is 0 in this case to avoid endless OverflowFlag
-#define IRDATA_FLAGS_IS_LSB_FIRST       0x00
-#define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Just for info. Value is simply determined by the protocol
-
-/**
- * Data structure for the user application, available as decodedIRData.
- * Filled by decoders and read by print functions or user application.
- */
-struct IRData {
-    decode_type_t protocol;     ///< UNKNOWN, NEC, SONY, RC5, ...
-    uint16_t address;           ///< Decoded address
-    uint16_t command;           ///< Decoded command
-    uint16_t extra;           ///< Used by MagiQuest and for Kaseikyo unknown vendor ID.  Ticks used for decoding Distance protocol.
-    uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
-    uint8_t flags;              ///< See IRDATA_FLAGS_* definitions above
-    uint32_t decodedRawData;    ///< Up to 32 bit decoded raw data, used for sendRaw functions.
-    irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
-};
-
-/**
- * Just for better readability of code
- */
-#define USE_DEFAULT_FEEDBACK_LED_PIN 0
 
 /**
  * Main class for receiving IR signals
@@ -465,7 +465,6 @@ public:
     void begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
     // Not guarded for backward compatibility
     void begin(uint8_t aSendPin, bool aEnableLEDFeedback = true, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
-
 
     size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
 

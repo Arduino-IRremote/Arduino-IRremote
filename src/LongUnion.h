@@ -44,7 +44,7 @@ union WordUnion {
     int8_t Bytes[2];
     uint16_t UWord;
     int16_t Word;
-    uint8_t * BytePointer;
+    uint8_t *BytePointer;
 };
 
 /**
