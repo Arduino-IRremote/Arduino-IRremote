@@ -303,7 +303,7 @@ static size_t compensateAndDumpSequence(String *aString, const volatile uint16_t
 
     size_t size = 0;
 
-    for (uint_fast8_t i = 0; i < length; i++) {
+    for (size_t i = 0; i < length; i++) {
         uint32_t tDuration = data[i] * MICROS_PER_TICK;
         if (i & 1) {
             // Mark
