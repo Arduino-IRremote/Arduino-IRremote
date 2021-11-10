@@ -258,7 +258,7 @@ static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *d
  */
 void IRrecv::compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int aFrequencyHertz) {
     aSerial->println(F("Pronto Hex as string"));
-    aSerial->print(F("char ProntoData[] = \""));
+    aSerial->print(F("char prontoData[] = \""));
     dumpNumber(aSerial, aFrequencyHertz > 0 ? learnedToken : learnedNonModulatedToken);
     dumpNumber(aSerial, toFrequencyCode(aFrequencyHertz));
     dumpNumber(aSerial, (decodedIRData.rawDataPtr->rawlen + 1) / 2);
