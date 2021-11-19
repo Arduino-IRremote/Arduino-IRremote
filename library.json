@@ -25,5 +25,5 @@
        "email":"ken.shirriff@gmail.com"
      }
   ],
-  "headers": "IRremote.h"
+  "headers": "IRRemote.hpp"
 }
