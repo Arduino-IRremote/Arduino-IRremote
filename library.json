@@ -1,6 +1,6 @@
 {
   "name": "IRremote",
-  "keywords": "infrared, ir, remote",
+  "keywords": "communication, infrared, ir, remote",
   "description": "Send and receive infrared signals with multiple protocols",
   "repository":
   {
@@ -24,5 +24,6 @@
        "name":"Ken Shirriff",
        "email":"ken.shirriff@gmail.com"
      }
-  ]
+  ],
+  "headers": "IRRemote.hpp"
 }
