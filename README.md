@@ -106,15 +106,16 @@ void loop() {
 ```
 
 # Do not want to convert your 2.x program and use the 3.x library version?
-The 3.x versions try to be backwards compatible, so you can easily run your old examples. But some functions like e.g. `sendNEC()` -see below- could not made backwards compatible,
- so in this cases you must revisit your code and adapt it to the 3.x library.<br/>
-If you program look like:
+First consider to just use the [original 2.4 release form 2017](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0)
+or the last backwards compatible [2.8 version](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/2.8.0) for you project.
+It may be sufficient and deals flawlessly with 32 bit IR codes.<br/>
+If not, the 3.x versions try to be backwards compatible, so you can easily run your old examples. But some functions like e.g. `sendNEC()` -see below- could not made backwards compatible.
+The (old and deprecated) call of `irrecv.decode(&results)` uses the old MSB first decoders like in 2.x and sets the 32 bit codes in `results.value`!<br/>
+But only the following decoders are available then: Denon, JVC, LG,  NEC, Panasonic, RC5, RC6, Samsung, Sony.
 
-it runs on the 3.x version as before. But only the following decoders are available then: Denon, JVC, LG,  NEC, Panasonic, RC5, RC6, Samsung, Sony.
-The `results.value` is set by the decoders for **NEC, Panasonic, Sony, Samsung and JVC** as MSB first like in 2.x!<br/>
-
-The old functions `sendNEC()` and `sendJVC()` are deprecated and renamed to `sendNECMSB()` and `sendJVCMSB()` to make it clearer that they send data with MSB first,
- which is not the standard for NEC and JVC. Use them to send your **old MSB-first 32 bit IR data codes**.
+The old functions `sendNEC()` and `sendJVC()` are deprecated and renamed to `sendNECMSB()` and `sendJVCMSB()`,
+to make it clearer that they send data with MSB first, which is not the standard for NEC and JVC.
+Use them to send your **old MSB-first 32 bit IR data codes**.
 In the new version you will send NEC (and other) commands not by 32 bit codes but by a (constant) 8 bit address and an 8 bit command.
 
 # How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes
