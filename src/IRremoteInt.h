@@ -134,42 +134,42 @@ struct irparams_struct {
  * Can be disabled to save program space
  */
 #ifdef INFO
-#  define INFO_PRINT(...)    Serial.print(__VA_ARGS__)
-#  define INFO_PRINTLN(...)  Serial.println(__VA_ARGS__)
+#  define IR_INFO_PRINT(...)    Serial.print(__VA_ARGS__)
+#  define IR_INFO_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else
 /**
  * If INFO, print the arguments, otherwise do nothing.
  */
-#  define INFO_PRINT(...) void()
+#  define IR_INFO_PRINT(...) void()
 /**
  * If INFO, print the arguments as a line, otherwise do nothing.
  */
-#  define INFO_PRINTLN(...) void()
+#  define IR_INFO_PRINTLN(...) void()
 #endif
 
 /*
  * Debug directives
  */
 #ifdef DEBUG
-#  define DEBUG_PRINT(...)    Serial.print(__VA_ARGS__)
-#  define DEBUG_PRINTLN(...)  Serial.println(__VA_ARGS__)
+#  define IR_DEBUG_PRINT(...)    Serial.print(__VA_ARGS__)
+#  define IR_DEBUG_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else
 /**
  * If DEBUG, print the arguments, otherwise do nothing.
  */
-#  define DEBUG_PRINT(...) void()
+#  define IR_DEBUG_PRINT(...) void()
 /**
  * If DEBUG, print the arguments as a line, otherwise do nothing.
  */
-#  define DEBUG_PRINTLN(...) void()
+#  define IR_DEBUG_PRINTLN(...) void()
 #endif
 
 #ifdef TRACE
-#  define TRACE_PRINT(...)    Serial.print(__VA_ARGS__)
-#  define TRACE_PRINTLN(...)  Serial.println(__VA_ARGS__)
+#  define IR_TRACE_PRINT(...)    Serial.print(__VA_ARGS__)
+#  define IR_TRACE_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else
-#  define TRACE_PRINT(...) void()
-#  define TRACE_PRINTLN(...) void()
+#  define IR_TRACE_PRINT(...) void()
+#  define IR_TRACE_PRINTLN(...) void()
 #endif
 
 /****************************************************

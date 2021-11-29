@@ -48,7 +48,8 @@
  */
 
 //#define DEBUG // to see if attachInterrupt used
-//#define TRACE
+//#define TRACE // to see the state of the ISR state machine
+
 //#define _IR_MEASURE_TIMING        // Activate this if you want to enable internal hardware timing measurement.
 //#define _IR_TIMING_TEST_PIN 7
 TinyIRReceiverStruct TinyIRReceiverControl;
@@ -321,6 +322,11 @@ void initPCIInterruptForTinyReceiver()
     enablePCIInterruptForTinyReceiver();
 }
 
+#if defined (DEBUG) && !defined(STR)
+// Helper macro for getting a macro definition as string
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+#endif
 /**
  * Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.
  */

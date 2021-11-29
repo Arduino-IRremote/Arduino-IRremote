@@ -53,7 +53,7 @@
 
 //#define INFO // Activate this to save program space and suppress info output.
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
 //#include "LongUnion.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
@@ -125,10 +125,10 @@ bool IRrecv::decodeDistance() {
      * Accept only protocols with at least 8 bits
      */
     if (decodedIRData.rawDataPtr->rawlen < (2 * 8) + 4) {
-        DEBUG_PRINT("PULSE_DISTANCE: ");
-        DEBUG_PRINT("Data length=");
-        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DEBUG_PRINTLN(" is less than 20");
+        IR_DEBUG_PRINT("PULSE_DISTANCE: ");
+        IR_DEBUG_PRINT("Data length=");
+        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINTLN(" is less than 20");
         return false;
     }
 
@@ -152,8 +152,8 @@ bool IRrecv::decodeDistance() {
     uint8_t tSpaceTicksShort = 0;
     uint8_t tSpaceTicksLong = 0;
     if (!aggregateArrayCounts(tDurationArray, tMaxDurationIndex, &tSpaceTicksShort, &tSpaceTicksLong)) {
-        DEBUG_PRINT(F("PULSE_DISTANCE: "));
-        DEBUG_PRINTLN(F("Space aggregation failed, more than 2 distinct duration values found"));
+        IR_DEBUG_PRINT(F("PULSE_DISTANCE: "));
+        IR_DEBUG_PRINTLN(F("Space aggregation failed, more than 2 distinct duration values found"));
         return false;
     }
 
@@ -180,8 +180,8 @@ bool IRrecv::decodeDistance() {
     uint8_t tMarkTicksShort = 0;
     uint8_t tMarkTicksLong = 0;
     if (!aggregateArrayCounts(tDurationArray, tMaxDurationIndex, &tMarkTicksShort, &tMarkTicksLong)) {
-        DEBUG_PRINT(F("PULSE_DISTANCE: "));
-        DEBUG_PRINTLN(F("Mark aggregation failed, more than 2 distinct duration values found"));
+        IR_DEBUG_PRINT(F("PULSE_DISTANCE: "));
+        IR_DEBUG_PRINTLN(F("Mark aggregation failed, more than 2 distinct duration values found"));
     }
 
 #if defined(DEBUG)
@@ -199,8 +199,8 @@ bool IRrecv::decodeDistance() {
      */
     if (tSpaceTicksLong == 0) {
         if (tMarkTicksLong == 0) {
-            DEBUG_PRINT(F("PULSE_DISTANCE: "));
-            DEBUG_PRINTLN(F("Only 1 distinct duration value for each space and mark found"));
+            IR_DEBUG_PRINT(F("PULSE_DISTANCE: "));
+            IR_DEBUG_PRINTLN(F("Only 1 distinct duration value for each space and mark found"));
             return false;
         }
 //        // check if last bit can be decoded as data or not, in this case take it as a stop bit
@@ -216,35 +216,35 @@ bool IRrecv::decodeDistance() {
             }
             if (!decodePulseWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksLong * MICROS_PER_TICK,
                     tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, DISTANCE_DO_MSB_DECODING)) {
-                DEBUG_PRINT(F("PULSE_WIDTH: "));
-                DEBUG_PRINTLN(F("Decode failed"));
+                IR_DEBUG_PRINT(F("PULSE_WIDTH: "));
+                IR_DEBUG_PRINTLN(F("Decode failed"));
                 return false;
             }
             if (i == 0) {
                 // Print protocol timing and length only once
-                INFO_PRINTLN();
-                INFO_PRINT(F("PULSE_WIDTH:"));
-                INFO_PRINT(F(" HeaderMarkMicros="));
-                INFO_PRINT(decodedIRData.rawDataPtr->rawbuf[1] * MICROS_PER_TICK);
-                INFO_PRINT(F(" HeaderSpaceMicros="));
-                INFO_PRINT(decodedIRData.rawDataPtr->rawbuf[2] * MICROS_PER_TICK);
-                INFO_PRINT(F(" OneMarkMicros="));
-                INFO_PRINT(tMarkTicksLong * MICROS_PER_TICK);
-                INFO_PRINT(F(" ZeroMarkMicros="));
-                INFO_PRINT(tMarkTicksShort * MICROS_PER_TICK);
-                INFO_PRINT(F(" SpaceMicros="));
-                INFO_PRINT(tSpaceTicksShort * MICROS_PER_TICK);
-                INFO_PRINT(F(" NumberOfBits="));
-                INFO_PRINT(decodedIRData.numberOfBits);
-                INFO_PRINT(F(" DecodedRawData:"));
+                IR_INFO_PRINTLN();
+                IR_INFO_PRINT(F("PULSE_WIDTH:"));
+                IR_INFO_PRINT(F(" HeaderMarkMicros="));
+                IR_INFO_PRINT(decodedIRData.rawDataPtr->rawbuf[1] * MICROS_PER_TICK);
+                IR_INFO_PRINT(F(" HeaderSpaceMicros="));
+                IR_INFO_PRINT(decodedIRData.rawDataPtr->rawbuf[2] * MICROS_PER_TICK);
+                IR_INFO_PRINT(F(" OneMarkMicros="));
+                IR_INFO_PRINT(tMarkTicksLong * MICROS_PER_TICK);
+                IR_INFO_PRINT(F(" ZeroMarkMicros="));
+                IR_INFO_PRINT(tMarkTicksShort * MICROS_PER_TICK);
+                IR_INFO_PRINT(F(" SpaceMicros="));
+                IR_INFO_PRINT(tSpaceTicksShort * MICROS_PER_TICK);
+                IR_INFO_PRINT(F(" NumberOfBits="));
+                IR_INFO_PRINT(decodedIRData.numberOfBits);
+                IR_INFO_PRINT(F(" DecodedRawData:"));
 
             }
-            INFO_PRINT(F(" 0x"));
-            INFO_PRINT(decodedIRData.decodedRawData, HEX);
+            IR_INFO_PRINT(F(" 0x"));
+            IR_INFO_PRINT(decodedIRData.decodedRawData, HEX);
             tStartIndex += 64;
             tNumberOfBits -= 32;
         }
-        INFO_PRINTLN();
+        IR_INFO_PRINTLN();
 
         // Store ticks used for decoding in extra
         decodedIRData.extra = (tMarkTicksShort << 8) | tMarkTicksLong;
@@ -267,34 +267,34 @@ bool IRrecv::decodeDistance() {
             }
             if (!decodePulseDistanceData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksShort * MICROS_PER_TICK,
                     tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, DISTANCE_DO_MSB_DECODING)) {
-                DEBUG_PRINT(F("PULSE_DISTANCE: "));
-                DEBUG_PRINTLN(F("Decode failed"));
+                IR_DEBUG_PRINT(F("PULSE_DISTANCE: "));
+                IR_DEBUG_PRINTLN(F("Decode failed"));
                 return false;
             } else {
                 if (i == 0) {
                     // Print protocol timing only once
-                    INFO_PRINTLN();
-                    INFO_PRINT(F("PULSE_DISTANCE:"));
-                    INFO_PRINT(F(" HeaderMarkMicros="));
-                    INFO_PRINT(decodedIRData.rawDataPtr->rawbuf[1] * MICROS_PER_TICK);
-                    INFO_PRINT(F(" HeaderSpaceMicros="));
-                    INFO_PRINT(decodedIRData.rawDataPtr->rawbuf[2] * MICROS_PER_TICK);
-                    INFO_PRINT(F(" MarkMicros="));
-                    INFO_PRINT(tMarkTicksShort * MICROS_PER_TICK);
-                    INFO_PRINT(F(" OneSpaceMicros="));
-                    INFO_PRINT(tSpaceTicksLong * MICROS_PER_TICK);
-                    INFO_PRINT(F(" ZeroSpaceMicros="));
-                    INFO_PRINT(tSpaceTicksShort * MICROS_PER_TICK);
-                    INFO_PRINT(F(" NumberOfBits="));
-                    INFO_PRINT(decodedIRData.numberOfBits);
-                    INFO_PRINT(F(" DecodedRawData:"));
+                    IR_INFO_PRINTLN();
+                    IR_INFO_PRINT(F("PULSE_DISTANCE:"));
+                    IR_INFO_PRINT(F(" HeaderMarkMicros="));
+                    IR_INFO_PRINT(decodedIRData.rawDataPtr->rawbuf[1] * MICROS_PER_TICK);
+                    IR_INFO_PRINT(F(" HeaderSpaceMicros="));
+                    IR_INFO_PRINT(decodedIRData.rawDataPtr->rawbuf[2] * MICROS_PER_TICK);
+                    IR_INFO_PRINT(F(" MarkMicros="));
+                    IR_INFO_PRINT(tMarkTicksShort * MICROS_PER_TICK);
+                    IR_INFO_PRINT(F(" OneSpaceMicros="));
+                    IR_INFO_PRINT(tSpaceTicksLong * MICROS_PER_TICK);
+                    IR_INFO_PRINT(F(" ZeroSpaceMicros="));
+                    IR_INFO_PRINT(tSpaceTicksShort * MICROS_PER_TICK);
+                    IR_INFO_PRINT(F(" NumberOfBits="));
+                    IR_INFO_PRINT(decodedIRData.numberOfBits);
+                    IR_INFO_PRINT(F(" DecodedRawData:"));
                 }
-                INFO_PRINT(F(" 0x"));
-                INFO_PRINT(decodedIRData.decodedRawData, HEX);
+                IR_INFO_PRINT(F(" 0x"));
+                IR_INFO_PRINT(decodedIRData.decodedRawData, HEX);
                 tStartIndex += 64;
                 tNumberOfBits -= 32;
             }
-            INFO_PRINTLN();
+            IR_INFO_PRINTLN();
         }
 
         // Store ticks used for decoding in extra

@@ -321,11 +321,11 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
         // send data from MSB to LSB until mask bit is shifted out
         for (uint32_t tMask = 1UL << (aNumberOfBits - 1); tMask; tMask >>= 1) {
             if (aData & tMask) {
-                TRACE_PRINT('1');
+                IR_TRACE_PRINT('1');
                 mark(aOneMarkMicros);
                 space(aOneSpaceMicros);
             } else {
-                TRACE_PRINT('0');
+                IR_TRACE_PRINT('0');
                 mark(aZeroMarkMicros);
                 space(aZeroSpaceMicros);
             }
@@ -333,20 +333,20 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
     } else {  // Send the Least Significant Bit (LSB) first / MSB last.
         for (uint_fast8_t bit = 0; bit < aNumberOfBits; bit++, aData >>= 1)
             if (aData & 1) {  // Send a 1
-                TRACE_PRINT('1');
+                IR_TRACE_PRINT('1');
                 mark(aOneMarkMicros);
                 space(aOneSpaceMicros);
             } else {  // Send a 0
-                TRACE_PRINT('0');
+                IR_TRACE_PRINT('0');
                 mark(aZeroMarkMicros);
                 space(aZeroSpaceMicros);
             }
     }
     if (aSendStopBit) {
-        TRACE_PRINT('S');
+        IR_TRACE_PRINT('S');
         mark(aZeroMarkMicros); // seems like this is used for stop bits
     }
-    TRACE_PRINTLN("");
+    IR_TRACE_PRINTLN("");
 }
 
 /*
@@ -361,19 +361,19 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
 // do not send the trailing space of the start bit
     mark(aBiphaseTimeUnit);
 
-    TRACE_PRINT('S');
+    IR_TRACE_PRINT('S');
     uint8_t tLastBitValue = 1; // Start bit is a 1
 
 // Data - Biphase code MSB first
     for (uint32_t tMask = 1UL << (aNumberOfBits - 1); tMask; tMask >>= 1) {
         if (aData & tMask) {
-            TRACE_PRINT('1');
+            IR_TRACE_PRINT('1');
             space(aBiphaseTimeUnit);
             mark(aBiphaseTimeUnit);
             tLastBitValue = 1;
 
         } else {
-            TRACE_PRINT('0');
+            IR_TRACE_PRINT('0');
 #if defined(SEND_PWM_BY_TIMER) || defined(USE_NO_SEND_PWM)
             if (tLastBitValue) {
                 // Extend the current mark in order to generate a continuous signal without short breaks
@@ -389,7 +389,7 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
             tLastBitValue = 0;
         }
     }
-    TRACE_PRINTLN("");
+    IR_TRACE_PRINTLN("");
 }
 
 /**

@@ -39,7 +39,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT"
+#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -89,10 +89,10 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t 
     }
     unsigned int intros = 2 * data[2];
     unsigned int repeats = 2 * data[3];
-    DEBUG_PRINT(F("sendPronto intros="));
-    DEBUG_PRINT(intros);
-    DEBUG_PRINT(F(" repeats="));
-    DEBUG_PRINTLN(repeats);
+    IR_DEBUG_PRINT(F("sendPronto intros="));
+    IR_DEBUG_PRINT(intros);
+    IR_DEBUG_PRINT(F(" repeats="));
+    IR_DEBUG_PRINTLN(repeats);
     if (numbersInPreamble + intros + repeats != length) { // inconsistent sizes
         return;
     }

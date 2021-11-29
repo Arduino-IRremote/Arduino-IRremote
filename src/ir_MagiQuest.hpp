@@ -36,7 +36,7 @@
 #include <Arduino.h>
 
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for DEBUG_PRINT
+#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
 
 //
 //==============================================================================
@@ -124,10 +124,10 @@ bool IRrecv::decodeMagiQuest() {
 
     // Check we have the right amount of data
     if (decodedIRData.rawDataPtr->rawlen != MAGIQUEST_PACKET_SIZE) {
-        DEBUG_PRINT("MagiQuest: Bad packet length - got ");
-        DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        DEBUG_PRINT(", expected ");
-        DEBUG_PRINTLN(MAGIQUEST_PACKET_SIZE);
+        IR_DEBUG_PRINT("MagiQuest: Bad packet length - got ");
+        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(", expected ");
+        IR_DEBUG_PRINTLN(MAGIQUEST_PACKET_SIZE);
         return false;
     }
 
@@ -138,12 +138,12 @@ bool IRrecv::decodeMagiQuest() {
         space_ = decodedIRData.rawDataPtr->rawbuf[offset++];
         ratio_ = space_ / mark_;
 
-        TRACE_PRINT("MagiQuest: mark=");
-        TRACE_PRINT(mark_ * MICROS_PER_TICK);
-        TRACE_PRINT(" space=");
-        TRACE_PRINT(space_ * MICROS_PER_TICK);
-        TRACE_PRINT(" ratio=");
-        TRACE_PRINTLN(ratio_);
+        IR_TRACE_PRINT("MagiQuest: mark=");
+        IR_TRACE_PRINT(mark_ * MICROS_PER_TICK);
+        IR_TRACE_PRINT(" space=");
+        IR_TRACE_PRINT(space_ * MICROS_PER_TICK);
+        IR_TRACE_PRINT(" ratio=");
+        IR_TRACE_PRINTLN(ratio_);
 
         if (matchMark(space_ + mark_, MAGIQUEST_PERIOD)) {
             if (ratio_ > 1) {
@@ -160,11 +160,11 @@ bool IRrecv::decodeMagiQuest() {
 #endif
             }
         } else {
-            DEBUG_PRINTLN("MATCH_MARK failed");
+            IR_DEBUG_PRINTLN("MATCH_MARK failed");
             return false;
         }
     }
-    DEBUG_PRINTLN(bitstring);
+    IR_DEBUG_PRINTLN(bitstring);
 
     // Success
     decodedIRData.protocol = MAGIQUEST;

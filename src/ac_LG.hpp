@@ -59,8 +59,8 @@ const int AC_FAN_WALL[SIZE_OF_FAN_SPEED_MAPPING_TABLE] = { 0, 2, 4, 5 }; // 0 ->
 
 void Aircondition_LG::setType(bool aIsWallType) {
     ACIsWallType = aIsWallType;
-    INFO_PRINT(F("Set wall type to "));
-    INFO_PRINTLN(aIsWallType);
+    IR_INFO_PRINT(F("Set wall type to "));
+    IR_INFO_PRINTLN(aIsWallType);
 }
 
 void Aircondition_LG::printMenu(Print *aSerial) {
@@ -107,7 +107,7 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
         return true;
 
     case LG_COMMAND_JET:
-        DEBUG_PRINTLN(F("Send jet on"));
+        IR_DEBUG_PRINTLN(F("Send jet on"));
         sendIRCommand(LG_JET_ON);
         return true;
 
@@ -145,7 +145,7 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
      * Now the commands which require a parameter
      */
     if (aParameter < 0) {
-        DEBUG_PRINT(F("Error: Parameter is less than 0"));
+        IR_DEBUG_PRINT(F("Error: Parameter is less than 0"));
         return false;
     }
     switch (aCommand) {
@@ -156,8 +156,8 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
         break;
 
     case LG_COMMAND_SWING:
-        DEBUG_PRINT(F("Send air swing="));
-        DEBUG_PRINTLN(aParameter);
+        IR_DEBUG_PRINT(F("Send air swing="));
+        IR_DEBUG_PRINTLN(aParameter);
         if (ACIsWallType) {
             if (aParameter) {
                 sendIRCommand(LG_WALL_SWING_ON);
@@ -174,8 +174,8 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
         break;
 
     case LG_COMMAND_AUTO_CLEAN:
-        DEBUG_PRINT(F("Send auto clean="));
-        DEBUG_PRINTLN(aParameter);
+        IR_DEBUG_PRINT(F("Send auto clean="));
+        IR_DEBUG_PRINTLN(aParameter);
         if (aParameter) {
             sendIRCommand(LG_AUTO_CLEAN_ON);
         } else {
@@ -184,8 +184,8 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
         break;
 
     case LG_COMMAND_ENERGY:
-        DEBUG_PRINT(F("Send energy saving on="));
-        DEBUG_PRINTLN(aParameter);
+        IR_DEBUG_PRINT(F("Send energy saving on="));
+        IR_DEBUG_PRINTLN(aParameter);
         if (aParameter) {
             sendIRCommand(LG_ENERGY_SAVING_ON);
         } else {
@@ -245,10 +245,10 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
 
 void Aircondition_LG::sendIRCommand(uint16_t aCommand) {
 
-    INFO_PRINT(F("Send code=0x"));
-    INFO_PRINT(aCommand, HEX);
-    INFO_PRINT(F(" | 0b"));
-    INFO_PRINTLN(aCommand, BIN);
+    IR_INFO_PRINT(F("Send code=0x"));
+    IR_INFO_PRINT(aCommand, HEX);
+    IR_INFO_PRINT(F(" | 0b"));
+    IR_INFO_PRINTLN(aCommand, BIN);
 
     IrSender.sendLG((uint8_t) LG_ADDRESS, aCommand, 0, false, useLG2Protocol);
 }
@@ -259,12 +259,12 @@ void Aircondition_LG::sendIRCommand(uint16_t aCommand) {
 void Aircondition_LG::sendTemperatureFanSpeedAndMode() {
 
     uint8_t tTemperature = Temperature;
-    INFO_PRINT(F("Send temperature="));
-    INFO_PRINT(tTemperature);
-    INFO_PRINT(F(" fan intensity="));
-    INFO_PRINT(FanIntensity);
-    INFO_PRINT(F(" mode="));
-    INFO_PRINTLN((char )Mode);
+    IR_INFO_PRINT(F("Send temperature="));
+    IR_INFO_PRINT(tTemperature);
+    IR_INFO_PRINT(F(" fan intensity="));
+    IR_INFO_PRINT(FanIntensity);
+    IR_INFO_PRINT(F(" mode="));
+    IR_INFO_PRINTLN((char )Mode);
 
     WordUnion tIRCommand;
     tIRCommand.UWord = 0;
