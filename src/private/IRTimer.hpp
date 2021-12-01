@@ -41,6 +41,7 @@
  */
 #if defined(SEND_PWM_BY_TIMER) && !defined(ESP32)
 #undef IR_SEND_PIN // send pin is determined by timer except for ESP32
+#warning Since SEND_PWM_BY_TIMER is defined, the existing value of IR_SEND_PIN is discarded and replaced by the value determined by timer used for PWM generation
 #endif
 
 #if defined (DOXYGEN)
@@ -88,7 +89,7 @@
 #elif defined(__AVR_ATmega808__) || defined(__AVR_ATmega809__) || defined(__AVR_ATmega3208__) || defined(__AVR_ATmega3209__) \
      || defined(__AVR_ATmega1608__) || defined(__AVR_ATmega1609__) || defined(__AVR_ATmega4808__) || defined(__AVR_ATmega4809__) || defined(__AVR_ATtiny1604__)
 #  if !defined(IR_USE_AVR_TIMER_B)
-#define IR_USE_AVR_TIMER_B     //  send pin = pin 6
+#define IR_USE_AVR_TIMER_B     //  send pin = pin 6 on ATmega4809 1 on ATmega4809
 #  endif
 
 // ATmega8u2, ATmega16U2, ATmega32U2
@@ -680,13 +681,17 @@ void timerConfigForReceive() {
 }
 
 /*
- * AVR TimerB for Nano Every, Uno WiFi Rev2 (8 bits)
+ * AVR TimerB  (8 bits) for ATmega4809 (Nano Every, Uno WiFi Rev2)
  */
 #elif defined(IR_USE_AVR_TIMER_B)
 #  if defined(SEND_PWM_BY_TIMER)
-#define IR_SEND_PIN        A4 // PA2 - A4 on Nano Every, PA5 on ATtiny1604
+#    if defined(__AVR_ATmega4808__) || defined(__AVR_ATmega4809__)
+#define IR_SEND_PIN        6 // PF4 on ATmega4809 / Nano Every (see pins_arduino.h digital_pin_to_timer)
+#    else
+#error SEND_PWM_BY_TIMER not yet supported for this CPU
+#    endif
 
-#define ENABLE_SEND_PWM_BY_TIMER    TCB0.CNT = 0; (TCB0.CTRLB |= TCB_CCMPEN_bm)
+#define ENABLE_SEND_PWM_BY_TIMER    TCB0.CNT = 0; (TCB0.CTRLB |= TCB_CCMPEN_bm) // set Compare/Capture Output Enable
 #define DISABLE_SEND_PWM_BY_TIMER   (TCB0.CTRLB &= ~(TCB_CCMPEN_bm))
 #  endif
 

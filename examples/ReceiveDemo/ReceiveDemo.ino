@@ -213,5 +213,14 @@ void loop() {
                 // do something else
             }
         }
-    }
+    } // if (IrReceiver.decode())
+
+    /*
+     * Your code here
+     * For all users of the FastLed library, use this code for strip.show() to improve receiving performance (which is still not 100%):
+     * if (IrReceiver.isIdle()) {
+     *     strip.show();
+     * }
+     */
+
 }

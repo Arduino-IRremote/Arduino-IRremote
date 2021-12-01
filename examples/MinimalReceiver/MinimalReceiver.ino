@@ -54,8 +54,8 @@
 //#define DO_NOT_USE_FEEDBACK_LED // activating saves 12 bytes
 #endif
 
-#define DEBUG // to see if attachInterrupt used
-#define TRACE // to see the state of the ISR state machine
+//#define DEBUG // to see if attachInterrupt is used
+//#define TRACE // to see the state of the ISR state machine
 
 /*
  * Second: include the code and compile it.
@@ -65,8 +65,10 @@
 /*
  * Helper macro for getting a macro definition as string
  */
+#if !defined(STR_HELPER)
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
+#endif
 
 void setup() {
     Serial.begin(115200);
