@@ -52,6 +52,15 @@
 #define TONE_PIN                42 // Dummy for examples using it
 #define _IR_TIMING_TEST_PIN     13 // D7
 #define APPLICATION_PIN          0 // D3
+void tone(uint8_t _pin, unsigned int frequency){
+    void();
+}
+void tone(uint8_t _pin, unsigned int frequency, unsigned long duration){
+    void();
+}
+void noTone(uint8_t _pin){
+    void();
+}
 
 #elif defined(ESP32)
 #include <Arduino.h>
@@ -125,9 +134,15 @@ void noTone(uint8_t _pin){
 #define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.
 #define IR_SEND_PIN      3
 #define APPLICATION_PIN  5
-#define TONE_PIN        42 // Dummy for examples using it
-#define tone(a,b,c) void() // tone() uses the same vector as receive timer
-#define noTone(a) void()
+#define TONE_PIN        42 // Dummy for examples using it. Define as void, since TCB0_INT_vect is also used by tone()
+void tone(uint8_t _pin, unsigned int frequency, unsigned long duration) {
+    (void) _pin;
+    (void) frequency;
+    (void) duration;
+}
+void noTone(uint8_t _pin) {
+    (void) _pin;
+}
 
 #  elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
@@ -166,7 +181,7 @@ void noTone(uint8_t _pin){
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
 #define _IR_TIMING_TEST_PIN  7
 
-#elif defined(__AVR__)
+#elif defined(__AVR__) // Default as for ATmega328 like on Uno, Nano etc.
 #define IR_RECEIVE_PIN      2 // To be compatible with interrupt example, pin 2 is chosen here.
 #define IR_SEND_PIN         3
 #define TONE_PIN            4
@@ -194,6 +209,23 @@ void noTone(uint8_t _pin){
 //#undef LED_BUILTIN
 //#define LED_BUILTIN 25 // PB03
 //#define FEEDBACK_LED_IS_ACTIVE_LOW // The RX LED on the M0-Mini is active LOW
+
+#elif defined (NRF51) // BBC micro:bit
+#define IR_RECEIVE_PIN      2
+#define IR_SEND_PIN         3
+#define TONE_PIN           42 // Dummy for examples using it
+#define APPLICATION_PIN     1
+#define _IR_TIMING_TEST_PIN  4
+
+void tone(uint8_t _pin, unsigned int frequency){
+    void();
+}
+void tone(uint8_t _pin, unsigned int frequency, unsigned long duration){
+    void();
+}
+void noTone(uint8_t _pin){
+    void();
+}
 
 #else
 #warning Board / CPU is not detected using pre-processor symbols -> using default values, which may not fit. Please extend PinDefinitionsAndMore.h.

@@ -238,6 +238,10 @@ ReceiveDemo + SendDemo in one program. **Receiving while sending**.
 ### ReceiveAndSend
 Record and **play back last received IR signal** at button press.
 
+### ReceiveOneAndSendMultiple
+Serves as a IR **remote macro expander**. Receives Samsung32 protocol and on receiving a specified input frame, it sends multiple Samsung32 frames with appropriate delays in between.
+This serves as a **Netflix-key emulation** for my old Samsung H5273 TV.
+
 ### SmallReceiver
 If **code size** matters, look at these example.<br/>
 

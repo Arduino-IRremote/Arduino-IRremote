@@ -49,9 +49,12 @@
 #define IR_RECEIVE_PIN_STRING   "D5"
 #define IR_SEND_PIN             12 // D6 - D4/pin 2 is internal LED
 #define IR_SEND_PIN_STRING      "D6"
-#define TONE_PIN                42 // Dummy for examples using it
 #define _IR_TIMING_TEST_PIN     13 // D7
 #define APPLICATION_PIN          0 // D3
+
+#define tone(...) void()      // tone() inhibits receive timer
+#define noTone(a) void()
+#define TONE_PIN                42 // Dummy for examples using it
 
 #elif defined(ESP32)
 #include <Arduino.h>
@@ -125,9 +128,10 @@ void noTone(uint8_t _pin){
 #define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.
 #define IR_SEND_PIN      3
 #define APPLICATION_PIN  5
-#define TONE_PIN        42 // Dummy for examples using it
-#define tone(a,b,c) void() // tone() uses the same vector as receive timer
+
+#define tone(...) void()      // Define as void, since TCB0_INT_vect is also used by tone()
 #define noTone(a) void()
+#define TONE_PIN        42 // Dummy for examples using it
 
 #  elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
 || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
@@ -166,7 +170,7 @@ void noTone(uint8_t _pin){
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
 #define _IR_TIMING_TEST_PIN  7
 
-#elif defined(__AVR__)
+#elif defined(__AVR__) // Default as for ATmega328 like on Uno, Nano etc.
 #define IR_RECEIVE_PIN      2 // To be compatible with interrupt example, pin 2 is chosen here.
 #define IR_SEND_PIN         3
 #define TONE_PIN            4
@@ -194,6 +198,16 @@ void noTone(uint8_t _pin){
 //#undef LED_BUILTIN
 //#define LED_BUILTIN 25 // PB03
 //#define FEEDBACK_LED_IS_ACTIVE_LOW // The RX LED on the M0-Mini is active LOW
+
+#elif defined (NRF51) // BBC micro:bit
+#define IR_RECEIVE_PIN      2
+#define IR_SEND_PIN         3
+#define APPLICATION_PIN     1
+#define _IR_TIMING_TEST_PIN  4
+
+#define tone(...) void()    // no tone() available
+#define noTone(a) void()
+#define TONE_PIN           42 // Dummy for examples using it
 
 #else
 #warning Board / CPU is not detected using pre-processor symbols -> using default values, which may not fit. Please extend PinDefinitionsAndMore.h.

@@ -15,12 +15,14 @@ on:
     - '**.ino'
     - '**.cpp'
     - '**.h'
+    - '**.hpp'
     - '**LibraryBuild.yml'
   pull_request:
     paths:
     - '**.ino'
     - '**.cpp'
     - '**.h'
+    - '**.hpp'
     - '**LibraryBuild.yml'
 
 jobs:
@@ -212,12 +214,12 @@ jobs:
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
-            sketches-exclude: IRDispatcherDemo,MicroGirs,MinimalReceiver # no tone()
+            sketches-exclude: IRDispatcherDemo,MicroGirs,MinimalReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
       # Do not cancel all jobs / architectures if one job fails
-#      fail-fast: false
+      fail-fast: false
 
     steps:
       - name: Checkout
