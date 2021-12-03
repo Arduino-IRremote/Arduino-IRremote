@@ -5,6 +5,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 ## 3.5.1
 - Renamed INFO_PRINT to IR_INFO_PRINT as well as for DEBUG and TRACE.
 - Fixed error with DEBUG in TinyIRReceiver.hpp.
+- Support for ATmega88 see  issue #923. Thanks to Dolmant.
 
 ## 3.5.0
 - Improved ir_DistanceProtocol.

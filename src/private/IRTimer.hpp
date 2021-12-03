@@ -60,8 +60,8 @@
  * Plain AVR CPU's, no boards
  ***************************************/
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
-// ATmega328
-#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__)
+// ATmega328 and ATmega88
+#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega88PB__)
 #  if !defined(IR_USE_AVR_TIMER1) && !defined(IR_USE_AVR_TIMER2)
 //#define IR_USE_AVR_TIMER1   // send pin = pin 9
 #define IR_USE_AVR_TIMER2     // send pin = pin 3
