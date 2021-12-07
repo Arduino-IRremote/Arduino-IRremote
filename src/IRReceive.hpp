@@ -663,8 +663,8 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
     return 1;
 }
 
-#define FNV_PRIME_32 16777619   ///< used for decodeHash()
-#define FNV_BASIS_32 2166136261 ///< used for decodeHash()
+#define FNV_PRIME_32 16777619UL   ///< used for decodeHash()
+#define FNV_BASIS_32 2166136261UL ///< used for decodeHash()
 
 /**
  * decodeHash - decode an arbitrary IR code.
@@ -685,7 +685,7 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
  * see: http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html
  */
 bool IRrecv::decodeHash() {
-    long hash = FNV_BASIS_32;
+    unsigned long hash = FNV_BASIS_32;
 
 // Require at least 6 samples to prevent triggering on noise
     if (decodedIRData.rawDataPtr->rawlen < 6) {
@@ -711,7 +711,7 @@ bool IRrecv::decodeHash() {
 
 #  if !defined(NO_LEGACY_COMPATIBILITY)
 bool IRrecv::decodeHashOld(decode_results *aResults) {
-    long hash = FNV_BASIS_32;
+    unsigned long hash = FNV_BASIS_32;
 
 // Require at least 6 samples to prevent triggering on noise
     if (aResults->rawlen < 6) {
