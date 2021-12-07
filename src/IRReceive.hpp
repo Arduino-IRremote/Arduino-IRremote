@@ -53,7 +53,7 @@ struct irparams_struct irparams; // the irparams instance
 IRrecv::IRrecv() {
     decodedIRData.rawDataPtr = &irparams; // for decodePulseDistanceData() etc.
     setReceivePin(0);
-#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+#if !defined(NO_LED_FEEDBACK_CODE)
     setLEDFeedback(0, false);
 #endif
 }
@@ -61,7 +61,7 @@ IRrecv::IRrecv() {
 IRrecv::IRrecv(uint8_t aReceivePin) {
     decodedIRData.rawDataPtr = &irparams; // for decodePulseDistanceData() etc.
     setReceivePin(aReceivePin);
-#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+#if !defined(NO_LED_FEEDBACK_CODE)
     setLEDFeedback(0, false);
 #endif
 }
@@ -73,7 +73,7 @@ IRrecv::IRrecv(uint8_t aReceivePin) {
 IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin) {
     decodedIRData.rawDataPtr = &irparams; // for decodePulseDistanceData() etc.
     setReceivePin(aReceivePin);
-#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+#if !defined(NO_LED_FEEDBACK_CODE)
     setLEDFeedback(aFeedbackLEDPin, false);
 #else
     (void) aFeedbackLEDPin;
@@ -92,7 +92,7 @@ IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin) {
 void IRrecv::begin(uint8_t aReceivePin, bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin) {
 
     setReceivePin(aReceivePin);
-#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+#if !defined(NO_LED_FEEDBACK_CODE)
     setLEDFeedback(aFeedbackLEDPin, aEnableLEDFeedback);
 #else
     (void) aEnableLEDFeedback;
@@ -685,7 +685,7 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
  * see: http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html
  */
 bool IRrecv::decodeHash() {
-    long hash = FNV_BASIS_32;
+    long hash = FNV_BASIS_32; // the result is the same no matter if we use a long or unsigned long variable
 
 // Require at least 6 samples to prevent triggering on noise
     if (decodedIRData.rawDataPtr->rawlen < 6) {
@@ -1434,7 +1434,7 @@ ISR () // for functions definitions which are called by separate (board specific
         }
     }
 
-#if !defined(DISABLE_LED_FEEDBACK_FOR_RECEIVE)
+#if !defined(NO_LED_FEEDBACK_CODE)
     if (FeedbackLEDControl.LedFeedbackEnabled) {
         setFeedbackLED(tIRInputLevel == INPUT_MARK);
     }

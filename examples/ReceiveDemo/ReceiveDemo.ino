@@ -42,15 +42,10 @@
 //#define DECODE_NEC
 // etc. see IRremote.hpp
 //
-#define DECODE_MAGIQUEST // This must be enabled explicitly, since it modifies the RAW_BUFFER_LENGTH from 100 to 112
 
-#if !defined(RAW_BUFFER_LENGTH)
-//#define RAW_BUFFER_LENGTH  100  // Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
-#define RAW_BUFFER_LENGTH  112    // MagiQuest requires 112 bytes.
 //#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
-#endif
 
-//#define DISABLE_LED_FEEDBACK_FOR_RECEIVE // saves 108 bytes program space
+//#define NO_LED_FEEDBACK_CODE // saves 92 bytes program space
 #if FLASHEND <= 0x1FFF  // For 8k flash or less, like ATtiny85. Exclude exotic protocols.
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #  if !defined(DIGISTUMPCORE) // ATTinyCore is bigger than Digispark core

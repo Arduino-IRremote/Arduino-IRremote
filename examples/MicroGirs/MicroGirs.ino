@@ -64,10 +64,7 @@
  */
 #include <Arduino.h>
 
-#if !defined(RAW_BUFFER_LENGTH)
-#define RAW_BUFFER_LENGTH  100  // Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
 //#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
-#endif
 
 /*
  * Define macros for input and output pin etc.

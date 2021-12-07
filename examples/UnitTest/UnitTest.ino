@@ -33,10 +33,7 @@
 
 #include <Arduino.h>
 
-#if !defined(RAW_BUFFER_LENGTH)
-#define RAW_BUFFER_LENGTH  100  // Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
 //#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
-#endif
 
 /*
  * Define macros for input and output pin etc.
@@ -76,7 +73,7 @@
 //#define USE_NO_SEND_PWM
 //#define _IR_MEASURE_TIMING
 #define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
-#define DISABLE_LED_FEEDBACK_FOR_RECEIVE // halves ISR duration
+#define NO_LED_FEEDBACK_CODE // halves ISR duration
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 #define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 

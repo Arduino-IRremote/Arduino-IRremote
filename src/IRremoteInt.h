@@ -1,8 +1,7 @@
 /**
  * @file IRremoteInt.h
  * @brief Contains all declarations required for the interface to IRremote.
- * Could not be named IRremote.h, since this has another semantic for old example code found in the wild,
- * because it must include all *.hpp files.
+ * Could not be named IRremote.h, since this has another semantic (it must include all *.hpp files) for old example code found in the wild.
  *
  * This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -36,26 +35,13 @@
 
 #include <Arduino.h>
 
-/*
- * !!! 3 macros which are evaluated in this file and must be consistent with the definitions in the ino file if they are not already defined !!!
- * RAW_BUFFER_LENGTH and IR_SEND_PIN and SEND_PWM_BY_TIMER
- * Modify or keep the 3 values below, if you use #include IRremoteInt.h in a file not containing main().
- * !!! RAW_BUFFER_LENGTH must have the same value for ALL compilation units !!!
- * Otherwise you will see warnings like: "warning: type 'struct irparams_struct' violates the C++ One Definition Rule"
- */
-#if !defined(RAW_BUFFER_LENGTH)
-//#define RAW_BUFFER_LENGTH  100 // 100 is default
-//#define RAW_BUFFER_LENGTH  112 //  MagiQuest requires 112 bytes. enable this if DECODE_MAGIQUEST is enabled
-#endif
-#if !defined(IR_SEND_PIN)
-//#define IR_SEND_PIN            // here it is only interesting if it is defined, the value does not matter here
-#endif
-#if !defined(SEND_PWM_BY_TIMER)
-//#define SEND_PWM_BY_TIMER      // here it is only interesting if it is defined, there is no value anyway
-#endif
 #if !defined(RAW_BUFFER_LENGTH)
 #error Seems you use #include IRremoteInt.h in a file not containing main(). Please define RAW_BUFFER_LENGTH with the same value as in the main program and check if the macros IR_SEND_PIN and SEND_PWM_BY_TIMER are defined in the main program.
 #endif
+//#define RAW_BUFFER_LENGTH  100 // 100 is default
+//#define RAW_BUFFER_LENGTH  112 //  MagiQuest requires 112 bytes. enable this if DECODE_MAGIQUEST is enabled
+//#define IR_SEND_PIN            // here it is only interesting if it is defined, the value does not matter here
+//#define SEND_PWM_BY_TIMER      // here it is only interesting if it is defined, there is no value anyway
 
 #define MARK   1
 #define SPACE  0
@@ -463,8 +449,10 @@ public:
 #endif
 
     void begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+    void begin(uint8_t aSendPin);
+
     // Not guarded for backward compatibility
-    void begin(uint8_t aSendPin, bool aEnableLEDFeedback = true, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+    void begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
 
     size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
 

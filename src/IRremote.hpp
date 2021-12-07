@@ -63,7 +63,6 @@
  * Copy the lines with the protocols you need in your program before the  #include <IRremote.hpp> line
  * See also SimpleReceiver example
  */
-//#define DECODE_MAGIQUEST // This must be enabled explicitly, since it modifies the RAW_BUFFER_LENGTH from 100 to 112
 
 #if !defined(NO_DECODER) // for sending raw only
 #if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
@@ -85,6 +84,7 @@
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF
 #define DECODE_WHYNTER
+#define DECODE_MAGIQUEST // It modifies the RAW_BUFFER_LENGTH from 100 to 112
 #  endif
 
 #  if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
@@ -112,7 +112,7 @@
 #  if defined(DECODE_MAGIQUEST)
 #define RAW_BUFFER_LENGTH  112  // MagiQuest requires 112 bytes.
 #  else
-#define RAW_BUFFER_LENGTH  100  ///< Maximum length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
+#define RAW_BUFFER_LENGTH  100  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
 //#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
 #  endif
 #endif
@@ -214,7 +214,9 @@
 
 #include "IRremoteInt.h"
 #include "private/IRTimer.hpp"
+#if !defined(NO_LED_FEEDBACK_CODE)
 #include "IRFeedbackLED.hpp"
+#endif
 /*
  * Include the sources here to enable compilation with macro values set by user program.
  */
