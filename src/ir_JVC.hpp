@@ -158,7 +158,6 @@ bool IRrecv::decodeJVC() {
     return true;
 }
 
-#if !defined(NO_LEGACY_COMPATIBILITY)
 bool IRrecv::decodeJVCMSB(decode_results *aResults) {
     unsigned int offset = 1; // Skip first space
 
@@ -211,8 +210,6 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
 
     return true;
 }
-
-#endif
 
 /**
  * With Send sendJVCMSB() you can send your old 32 bit codes.

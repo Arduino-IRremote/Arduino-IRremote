@@ -46,7 +46,7 @@
 
 #define IR_INPUT_PIN    2
 
-//#define DO_NOT_USE_FEEDBACK_LED // You can set it here, before the include of IRCommandDispatcher below
+//#define NO_LED_FEEDBACK_CODE // You can set it here, before the include of IRCommandDispatcher below
 
 #if defined(USE_TINY_IR_RECEIVER) && !defined(IR_INPUT_PIN)
   #if defined(IR_RECEIVE_PIN)

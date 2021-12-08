@@ -264,7 +264,6 @@ bool IRrecv::decodeLG() {
     return true;
 }
 
-#if !defined(NO_LEGACY_COMPATIBILITY)
 bool IRrecv::decodeLGMSB(decode_results *aResults) {
     unsigned int offset = 1; // Skip first space
 
@@ -300,8 +299,6 @@ bool IRrecv::decodeLGMSB(decode_results *aResults) {
     decodedIRData.protocol = LG;
     return true;
 }
-
-#endif
 
 //+=============================================================================
 void IRsend::sendLG(unsigned long data, int nbits) {

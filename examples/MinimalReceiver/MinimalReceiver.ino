@@ -51,7 +51,7 @@
 
 #else
 #define IR_INPUT_PIN    2
-//#define DO_NOT_USE_FEEDBACK_LED // activating saves 12 bytes
+//#define NO_LED_FEEDBACK_CODE // activating saves 14 bytes program space
 #endif
 
 //#define DEBUG // to see if attachInterrupt is used

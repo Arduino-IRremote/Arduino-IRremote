@@ -275,7 +275,6 @@ bool IRrecv::decodeKaseikyo() {
     return true;
 }
 
-#if !defined(NO_LEGACY_COMPATIBILITY)
 /**
  * Old MSB first decoder
  */
@@ -309,7 +308,6 @@ bool IRrecv::decodePanasonicMSB(decode_results *aResults) {
 
     return true;
 }
-#endif
 
 /**
  * Old version with MSB first data

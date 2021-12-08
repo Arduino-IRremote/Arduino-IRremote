@@ -47,8 +47,6 @@ jobs:
           - arduino:avr:uno
           - arduino:avr:uno|DEBUG
           - arduino:avr:uno|USE_NO_SEND_PWM
-          - arduino:avr:uno|USE_OLD_DECODE
-          - arduino:avr:uno|NO_LEGACY_COMPATIBILITY
           - arduino:avr:uno|SEND_PWM_BY_TIMER
           - arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
           - arduino:avr:leonardo
@@ -78,42 +76,30 @@ jobs:
           - arduino-boards-fqbn: arduino:avr:uno
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
 
           - arduino-boards-fqbn: arduino:avr:uno|DEBUG
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
               All: -DEBUG
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_NO_SEND_PWM
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
               All: -DUSE_NO_SEND_PWM
-
-          - arduino-boards-fqbn: arduino:avr:uno|USE_OLD_DECODE
-            sketches-exclude: IR2Keyboard
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
-              All: -DUSE_OLD_DECODE
-
-          - arduino-boards-fqbn: arduino:avr:uno|NO_LEGACY_COMPATIBILITY
-            sketches-exclude: IR2Keyboard
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
-              All: -DNO_LEGACY_COMPATIBILITY
 
           - arduino-boards-fqbn: arduino:avr:uno|SEND_PWM_BY_TIMER
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3 -DSEND_PWM_BY_TIMER
               All: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3 -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
               All: -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
 
           - arduino-boards-fqbn: arduino:avr:leonardo

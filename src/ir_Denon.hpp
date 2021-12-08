@@ -197,7 +197,6 @@ bool IRrecv::decodeDenon() {
     return true;
 }
 
-#if !defined(NO_LEGACY_COMPATIBILITY)
 bool IRrecv::decodeDenonOld(decode_results *aResults) {
 
     // Check we have the right amount of data
@@ -226,7 +225,6 @@ bool IRrecv::decodeDenonOld(decode_results *aResults) {
     decodedIRData.protocol = DENON;
     return true;
 }
-#endif
 
 void IRsend::sendDenon(unsigned long data, int nbits) {
     // Set IR carrier frequency

@@ -685,7 +685,7 @@ uint8_t IRrecv::compare(unsigned int oldval, unsigned int newval) {
  * see: http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html
  */
 bool IRrecv::decodeHash() {
-    long hash = FNV_BASIS_32; // the result is the same no matter if we use a long or unsigned long variable
+    unsigned long hash = FNV_BASIS_32; // the result is the same no matter if we use a long or unsigned long variable
 
 // Require at least 6 samples to prevent triggering on noise
     if (decodedIRData.rawDataPtr->rawlen < 6) {
@@ -709,9 +709,8 @@ bool IRrecv::decodeHash() {
     return true;
 }
 
-#  if !defined(NO_LEGACY_COMPATIBILITY)
 bool IRrecv::decodeHashOld(decode_results *aResults) {
-    long hash = FNV_BASIS_32;
+    unsigned long hash = FNV_BASIS_32;
 
 // Require at least 6 samples to prevent triggering on noise
     if (aResults->rawlen < 6) {
@@ -731,7 +730,6 @@ bool IRrecv::decodeHashOld(decode_results *aResults) {
 
     return true;
 }
-#  endif
 #endif // DECODE_HASH
 
 /**********************************************************************************************************************
@@ -1445,7 +1443,6 @@ ISR () // for functions definitions which are called by separate (board specific
 #endif
 }
 
-#if !defined(NO_LEGACY_COMPATIBILITY)
 /**********************************************************************************************************************
  * The DEPRECATED decode function with parameter aResults ONLY for backwards compatibility!
  * This function calls the old MSB first decoders and fills only the 3 variables:
@@ -1575,7 +1572,6 @@ bool IRrecv::decode(decode_results *aResults) {
     resume();
     return false;
 }
-#endif
 
 /** @}*/
 #endif // #ifndef IR_RECEIVE_HPP

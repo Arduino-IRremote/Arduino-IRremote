@@ -149,7 +149,6 @@ bool IRrecv::decodeSony() {
     return true;
 }
 
-#if !defined(NO_LEGACY_COMPATIBILITY)
 #define SONY_DOUBLE_SPACE_USECS    500 // usually see 713 - not using ticks as get number wrap around
 bool IRrecv::decodeSonyMSB(decode_results *aResults) {
     long data = 0;
@@ -207,8 +206,6 @@ bool IRrecv::decodeSonyMSB(decode_results *aResults) {
     decodedIRData.protocol = SONY;
     return true;
 }
-
-#endif
 
 /**
  * Old version with MSB first data

@@ -287,7 +287,6 @@ bool IRrecv::decodeNEC() {
     return true;
 }
 
-#if !defined(NO_LEGACY_COMPATIBILITY)
 bool IRrecv::decodeNECMSB(decode_results *aResults) {
     unsigned int offset = 1;  // Index in to results; Skip first space.
 
@@ -345,7 +344,6 @@ bool IRrecv::decodeNECMSB(decode_results *aResults) {
 
     return true;
 }
-#endif // !defined(NO_LEGACY_COMPATIBILITY)
 
 /**
  * With Send sendNECMSB() you can send your old 32 bit codes.

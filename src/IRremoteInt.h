@@ -40,8 +40,8 @@
 #endif
 //#define RAW_BUFFER_LENGTH  100 // 100 is default
 //#define RAW_BUFFER_LENGTH  112 //  MagiQuest requires 112 bytes. enable this if DECODE_MAGIQUEST is enabled
+//#define SEND_PWM_BY_TIMER
 //#define IR_SEND_PIN            // here it is only interesting if it is defined, the value does not matter here
-//#define SEND_PWM_BY_TIMER      // here it is only interesting if it is defined, there is no value anyway
 
 #define MARK   1
 #define SPACE  0
@@ -189,16 +189,7 @@ struct IRData {
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
 };
 
-/**
- * Just for better readability of code
- */
-#define USE_DEFAULT_FEEDBACK_LED_PIN 0
 
-/*
- * Activating this saves 60 bytes program space and 14 bytes RAM
- */
-//#define NO_LEGACY_COMPATIBILITY
-#if !defined(NO_LEGACY_COMPATIBILITY)
 /**
  * Results returned from old decoders !!!deprecated!!!
  */
@@ -215,7 +206,6 @@ struct decode_results {
     uint16_t rawlen;            // deprecated, moved to decodedIRData.rawDataPtr->rawlen ///< Number of records in rawbuf
     bool overflow;              // deprecated, moved to decodedIRData.flags ///< true if IR raw code too long
 };
-#endif
 
 /**
  * Main class for receiving IR signals
@@ -300,6 +290,7 @@ public:
     bool decodeSamsung();
     bool decodeSharp(); // redirected to decodeDenon()
     bool decodeSony();
+    bool decodeWhynter();
 
     bool decodeDistance();
 
@@ -311,7 +302,6 @@ public:
     /*
      * Old functions
      */
-#if !defined(NO_LEGACY_COMPATIBILITY)
     bool decodeDenonOld(decode_results *aResults);
     bool decodeJVCMSB(decode_results *aResults);
     bool decodeLGMSB(decode_results *aResults);
@@ -324,8 +314,6 @@ public:
     bool decode(
             decode_results *aResults)
                     __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> ."))); // deprecated
-#endif
-    bool decodeWhynter();
 
     // for backward compatibility. Now in IRFeedbackLED.hpp
     void blink13(bool aEnableLEDFeedback)
