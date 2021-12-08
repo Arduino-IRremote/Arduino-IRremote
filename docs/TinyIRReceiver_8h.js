@@ -1,6 +1,5 @@
 var TinyIRReceiver_8h =
 [
-    [ "IR_INPUT_PIN", "group__TinyReceiver.html#ga57d0c5b7d83f10557910205596d66dfb", null ],
     [ "IR_RECEIVER_STATE_WAITING_FOR_DATA_MARK", "group__TinyReceiver.html#gae237abb240b59b9c8dd7d853fc3c76b1", null ],
     [ "IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE", "group__TinyReceiver.html#gad3b7237c2aa120840c0eed233d5c627e", null ],
     [ "IR_RECEIVER_STATE_WAITING_FOR_FIRST_DATA_MARK", "group__TinyReceiver.html#gaecf505182d1fa2aa885fcde6cd4160bf", null ],
@@ -20,9 +19,11 @@ var TinyIRReceiver_8h =
     [ "NEC_REPEAT_PERIOD", "group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08", null ],
     [ "NEC_UNIT", "group__TinyReceiver.html#gaf3317b0cf5cf7d3063addbaa0a256158", null ],
     [ "NEC_ZERO_SPACE", "group__TinyReceiver.html#ga5ee46914e98bf7f87f32a7104843b243", null ],
-    [ "TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT", "group__TinyReceiver.html#gae7054616db7e69e979dfcd5ad38fb968", null ],
     [ "upperValue", "group__TinyReceiver.html#gaf6134d81e390f1e3dcd60e2aca9c9143", null ],
     [ "upperValue25Percent", "group__TinyReceiver.html#ga22a6cd77d395a6c06686eafdf9aa2b52", null ],
+    [ "disablePCIInterruptForTinyReceiver", "group__TinyReceiver.html#ga4217cae1ded4a9b2ed54bc3a1e8cd86e", null ],
+    [ "enablePCIInterruptForTinyReceiver", "group__TinyReceiver.html#gad23b935e2236a42a070a87379c7c36a4", null ],
     [ "handleReceivedTinyIRData", "group__TinyReceiver.html#ga5c751ad19033cb8c209d7253dccf34e7", null ],
-    [ "initPCIInterruptForTinyReceiver", "group__TinyReceiver.html#ga1f3913249343258d738ea0a48f7e1aed", null ]
+    [ "initPCIInterruptForTinyReceiver", "group__TinyReceiver.html#ga1f3913249343258d738ea0a48f7e1aed", null ],
+    [ "isTinyReceiverIdle", "group__TinyReceiver.html#gab65e33fe496d3bee4af897e5d8bd9420", null ]
 ];

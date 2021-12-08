@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tinyirreceiverstruct_584',['TinyIRReceiverStruct',['../structTinyIRReceiverStruct.html',1,'']]]
+  ['tinyirreceiverstruct_424',['TinyIRReceiverStruct',['../structTinyIRReceiverStruct.html',1,'']]]
 ];

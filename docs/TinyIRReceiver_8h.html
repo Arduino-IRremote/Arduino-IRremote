@@ -102,15 +102,6 @@ Include dependency graph for TinyIRReceiver.h:</div>
 <area shape="rect" title=" " alt="" coords="107,155,173,181"/>
 </map>
 </div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="TinyIRReceiver_8h__dep__incl.png" border="0" usemap="#src_2TinyIRReceiver_8hdep" alt=""/></div>
-<map name="src_2TinyIRReceiver_8hdep" id="src_2TinyIRReceiver_8hdep">
-<area shape="rect" title=" " alt="" coords="18,5,158,32"/>
-<area shape="rect" href="TinyIRReceiver_8cpp_8h.html" title=" " alt="" coords="5,80,171,107"/>
-</map>
-</div>
 </div>
 <p><a href="TinyIRReceiver_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -122,10 +113,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ga57d0c5b7d83f10557910205596d66dfb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga57d0c5b7d83f10557910205596d66dfb">IR_INPUT_PIN</a>&#160;&#160;&#160;2</td></tr>
-<tr class="separator:ga57d0c5b7d83f10557910205596d66dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae7054616db7e69e979dfcd5ad38fb968"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gae7054616db7e69e979dfcd5ad38fb968">TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT</a></td></tr>
-<tr class="separator:gae7054616db7e69e979dfcd5ad38fb968"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2ab110e480a4b16fe516c2afd16a1ea2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga2ab110e480a4b16fe516c2afd16a1ea2">NEC_ADDRESS_BITS</a>&#160;&#160;&#160;16</td></tr>
 <tr class="separator:ga2ab110e480a4b16fe516c2afd16a1ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga07e295da53565eb7146072bdfeb2ed32"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga07e295da53565eb7146072bdfeb2ed32">NEC_COMMAND_BITS</a>&#160;&#160;&#160;16</td></tr>
@@ -174,8 +161,13 @@ Functions</h2></td></tr>
 <tr class="memitem:ga5c751ad19033cb8c209d7253dccf34e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga5c751ad19033cb8c209d7253dccf34e7">handleReceivedTinyIRData</a> (uint16_t aAddress, uint8_t aCommand, bool isRepeat)</td></tr>
 <tr class="separator:ga5c751ad19033cb8c209d7253dccf34e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1f3913249343258d738ea0a48f7e1aed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga1f3913249343258d738ea0a48f7e1aed">initPCIInterruptForTinyReceiver</a> ()</td></tr>
-<tr class="memdesc:ga1f3913249343258d738ea0a48f7e1aed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.  <a href="group__TinyReceiver.html#ga1f3913249343258d738ea0a48f7e1aed">More...</a><br /></td></tr>
 <tr class="separator:ga1f3913249343258d738ea0a48f7e1aed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad23b935e2236a42a070a87379c7c36a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gad23b935e2236a42a070a87379c7c36a4">enablePCIInterruptForTinyReceiver</a> ()</td></tr>
+<tr class="separator:gad23b935e2236a42a070a87379c7c36a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4217cae1ded4a9b2ed54bc3a1e8cd86e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga4217cae1ded4a9b2ed54bc3a1e8cd86e">disablePCIInterruptForTinyReceiver</a> ()</td></tr>
+<tr class="separator:ga4217cae1ded4a9b2ed54bc3a1e8cd86e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab65e33fe496d3bee4af897e5d8bd9420"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gab65e33fe496d3bee4af897e5d8bd9420">isTinyReceiverIdle</a> ()</td></tr>
+<tr class="separator:gab65e33fe496d3bee4af897e5d8bd9420"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -183,7 +175,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="TinyIRReceiver_8h.html">TinyIRReceiver.h</a></li>
-    <li class="footer">Generated on Wed Jun 16 2021 23:31:01 for IRremote by
+    <li class="footer">Generated on Wed Dec 8 2021 14:58:14 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

@@ -86,139 +86,21 @@ $(document).ready(function(){initNavTree('IRremote_8h_source.html',''); initResi
 </div><!--header-->
 <div class="contents">
 <a href="IRremote_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#ifndef IRremote_h</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#define IRremote_h</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#define VERSION_IRREMOTE &quot;3.3.0&quot;</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="IRremote_8h.html#ad9f03906065f749788cc9e3f68fb6253">   47</a></span>&#160;<span class="preprocessor">#define VERSION_IRREMOTE_MAJOR 3</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a5fccc9834ba25cd17b7ca45e14aa7751">   48</a></span>&#160;<span class="preprocessor">#define VERSION_IRREMOTE_MINOR 3</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a824e2f61336bde09dd9b835e8606683f">   49</a></span>&#160; </div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// activate it for all cores that does not use the -flto flag, if you get false error messages regarding begin() during compilation.</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">//#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment"> * If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in decoding and in sending with IrSender.write</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">//#define EXCLUDE_EXOTIC_PROTOCOLS</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">/****************************************************</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment"> *                     PROTOCOLS</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment"> ****************************************************/</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="comment"> * Supported IR protocols</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="comment"> * Each protocol you include costs memory and, during decode, costs time</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="comment"> * Disable (deactivate the line by adding a trailing comment &quot;//&quot;) all the protocols you do not need/want!</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">|| defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">|| defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) || defined(DECODE_HASH) \</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">|| defined(DECODE_BOSEWAVE) || defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_WHYNTER)))</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#define DECODE_DENON        // Includes Sharp</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a589c5f91ad251aff0cbdc179a5faaa60">   71</a></span>&#160;<span class="preprocessor">#define DECODE_JVC</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="IRremote_8h.html#ac1f2b013768a77943b002953197cb573">   72</a></span>&#160;<span class="preprocessor">#define DECODE_KASEIKYO</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="IRremote_8h.html#acd46d28198948511f9c8b97328b5fdde">   73</a></span>&#160;<span class="preprocessor">#define DECODE_PANASONIC    // the same as DECODE_KASEIKYO</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a018b3df8bf49d3f6cc094db8491ad2ad">   74</a></span>&#160;<span class="preprocessor">#define DECODE_LG</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a54d5d4710700ef373384f64409df677f">   75</a></span>&#160;<span class="preprocessor">#define DECODE_NEC          // Includes Apple and Onkyo</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="IRremote_8h.html#ac1592db6a7ef80a046d9f33a5a2ed5d8">   76</a></span>&#160;<span class="preprocessor">#define DECODE_SAMSUNG</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="IRremote_8h.html#aa460f8aea781d305b7e0fef9b6748523">   77</a></span>&#160;<span class="preprocessor">#define DECODE_SONY</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a308d000d6a90fac72f4dcf47323bef21">   78</a></span>&#160;<span class="preprocessor">#define DECODE_RC5</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="IRremote_8h.html#aa1dbf245adf93ffa573dc4863ea29c5b">   79</a></span>&#160;<span class="preprocessor">#define DECODE_RC6</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a4f3761bb8157be080bee1d9e4c1bc8c8">   80</a></span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#  if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#define DECODE_BOSEWAVE</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a2935e3b14cf449b00b4166f71eecf8af">   83</a></span>&#160;<span class="preprocessor">#define DECODE_LEGO_PF</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a95bc1b009436547a892527e2c2f43384">   84</a></span>&#160;<span class="preprocessor">#define DECODE_MAGIQUEST</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a4f3f73855171522cc6a9fa5ba5f51896">   85</a></span>&#160;<span class="preprocessor">#define DECODE_WHYNTER</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="IRremote_8h.html#ad1f31ad2d36110ba06286b7fb1d1ddcf">   86</a></span>&#160;<span class="preprocessor">#  endif</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#  if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program space</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="IRremote_8h.html#ac56dd3a6901bd61a6a122e1f683e5105">   90</a></span>&#160;<span class="preprocessor">#define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program space</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a4ee00d8b9631462888e74c95712234e1">   91</a></span>&#160;<span class="preprocessor">#  endif</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#if !(~(~DECODE_NEC + 0) == 0 &amp;&amp; ~(~DECODE_NEC + 1) == 1)</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">#warning &quot;The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro.&quot;</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="comment">//#define DEBUG // Activate this for lots of lovely debug output from the IRremote core.</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">/****************************************************</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="comment"> *                    RECEIVING</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment"> ****************************************************/</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#if !defined(MARK_EXCESS_MICROS)</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="comment">// To change this value, you simply can add a line #define &quot;MARK_EXCESS_MICROS &lt;My_new_value&gt;&quot; in your ino file before the line &quot;#include &lt;IRremote.h&gt;&quot;</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#define MARK_EXCESS_MICROS    20</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a6cb4ad1bc3f0b5d2c4503615058a1d90">  122</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#if !defined(RECORD_GAP_MICROS)</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="comment">// To change this value, you simply can add a line #define &quot;RECORD_GAP_MICROS &lt;My_new_value&gt;&quot; in your ino file before the line &quot;#include &lt;IRremote.h&gt;&quot;</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#define RECORD_GAP_MICROS   5000 // FREDRICH28AC / LG2 header space is 9700, NEC header space is 4500</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a2eb6de0bae8bc6f19f3832c00e91f499">  133</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#if !defined(RECORD_GAP_MICROS_WARNING_THRESHOLD)</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="comment">// To change this value, you simply can add a line #define &quot;RECORD_GAP_MICROS_WARNING_THRESHOLD &lt;My_new_value&gt;&quot; in your ino file before the line &quot;#include &lt;IRremote.h&gt;&quot;</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">#define RECORD_GAP_MICROS_WARNING_THRESHOLD   20000</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a6afa54ea105253cce361d8c571da5fa9">  140</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="preprocessor">#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK) // 221 for 1100</span></div>
-<div class="line"><a name="l00144"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a1ba5a08e87f922d04e6acb5c07867386">  144</a></span>&#160; </div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment"> * Activate this line if your receiver has an external output driver transistor / &quot;inverted&quot; output</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="comment">//#define IR_INPUT_IS_ACTIVE_HIGH</span></div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">#ifdef IR_INPUT_IS_ACTIVE_HIGH</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="comment">// IR detector output is active high</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor">#define INPUT_MARK   1 </span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">// IR detector output is active low</span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="preprocessor">#define INPUT_MARK   0 </span></div>
-<div class="line"><a name="l00155"></a><span class="lineno"><a class="line" href="IRremote_8h.html#ace39503e8ded5ffb7a1c0d6f651f8d43">  155</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="comment">/****************************************************</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="comment"> *                     SENDING</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="comment"> ****************************************************/</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="comment">//#define SEND_PWM_BY_TIMER</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="comment"></span><span class="comment">//#define USE_NO_SEND_PWM</span></div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="preprocessor">#if defined(SEND_PWM_BY_TIMER) &amp;&amp; defined(USE_NO_SEND_PWM)</span></div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="preprocessor">#undef SEND_PWM_BY_TIMER // USE_NO_SEND_PWM overrides SEND_PWM_BY_TIMER</span></div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<span class="preprocessor">#warning &quot;SEND_PWM_BY_TIMER and USE_NO_SEND_PWM are both defined -&gt; undefine SEND_PWM_BY_TIMER now!&quot;</span></div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor">#if !defined(PULSE_CORRECTION_NANOS)</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="comment">// To change this value, you simply can add a line #define &quot;PULSE_CORRECTION_NANOS &lt;My_new_value&gt;&quot; in your ino file before the line &quot;#include &lt;IRremote.h&gt;&quot;</span></div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="preprocessor">#define PULSE_CORRECTION_NANOS (48000000000L / F_CPU) // 3000 @16MHz, 666 @72MHz</span></div>
-<div class="line"><a name="l00180"></a><span class="lineno"><a class="line" href="IRremote_8h.html#ac836377a7a04f6f4044daab71d9660f9">  180</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRremoteInt_8h.html">IRremoteInt.h</a>&quot;</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRTimer_8cpp_8h.html">private/IRTimer.cpp.h</a>&quot;</span></div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRFeedbackLED_8cpp_8h.html">IRFeedbackLED.cpp.h</a>&quot;</span></div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="comment"> * Include the sources here to enable compilation with macro values set by user program.</span></div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRReceive_8cpp_8h.html">IRReceive.cpp.h</a>&quot;</span></div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRSend_8cpp_8h.html">IRSend.cpp.h</a>&quot;</span></div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160; </div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="preprocessor">#define RAWBUF  101  // Maximum length of raw duration buffer</span></div>
-<div class="line"><a name="l00195"></a><span class="lineno"><a class="line" href="IRremote_8h.html#abb919079668bcc14433d4c857ab8a196">  195</a></span>&#160;<span class="preprocessor">#define REPEAT 0xFFFFFFFF</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno"><a class="line" href="IRremote_8h.html#a2c9384c67919c632913b8db2088f8341">  196</a></span>&#160;<span class="preprocessor">#define USECPERTICK MICROS_PER_TICK</span></div>
-<div class="line"><a name="l00197"></a><span class="lineno"><a class="line" href="IRremote_8h.html#aad2fcaac88c28bf54ecbd42146a56e3f">  197</a></span>&#160;<span class="preprocessor">#define MARK_EXCESS MARK_EXCESS_MICROS</span></div>
-<div class="line"><a name="l00198"></a><span class="lineno"><a class="line" href="IRremote_8h.html#ac21b48ddc487212fbce7d6474423e080">  198</a></span>&#160;<span class="preprocessor">#endif // IRremote_h</span></div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160; </div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="preprocessor">#pragma once</span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#ifndef IRremote_h</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#define IRremote_h</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;IRremote.hpp&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#endif // IRremote_h</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="aIRSend_8cpp_8h_html"><div class="ttname"><a href="IRSend_8cpp_8h.html">IRSend.cpp.h</a></div></div>
-<div class="ttc" id="aIRFeedbackLED_8cpp_8h_html"><div class="ttname"><a href="IRFeedbackLED_8cpp_8h.html">IRFeedbackLED.cpp.h</a></div><div class="ttdoc">All Feedback LED specific functions are contained in this file.</div></div>
-<div class="ttc" id="aIRReceive_8cpp_8h_html"><div class="ttname"><a href="IRReceive_8cpp_8h.html">IRReceive.cpp.h</a></div></div>
-<div class="ttc" id="aIRTimer_8cpp_8h_html"><div class="ttname"><a href="IRTimer_8cpp_8h.html">IRTimer.cpp.h</a></div><div class="ttdoc">All timer specific definitions are contained in this file.</div></div>
-<div class="ttc" id="aIRremoteInt_8h_html"><div class="ttname"><a href="IRremoteInt_8h.html">IRremoteInt.h</a></div><div class="ttdoc">Contains all declarations required for the internal functions.</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRremote_8h.html">IRremote.h</a></li>
-    <li class="footer">Generated on Wed Jun 16 2021 23:31:00 for IRremote by
+    <li class="footer">Generated on Wed Dec 8 2021 14:58:14 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

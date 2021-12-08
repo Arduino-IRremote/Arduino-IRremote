@@ -1,18 +1,27 @@
 var IRProtocol_8h =
 [
+    [ "BOSEWAVE_KHZ", "IRProtocol_8h.html#a5e8586b46bb336ab800f4239b9bc46d1", null ],
+    [ "DENON_KHZ", "IRProtocol_8h.html#ad2ebee0d7bd6593a38e1998ddd6b0c90", null ],
     [ "DENON_VENDOR_ID_CODE", "IRProtocol_8h.html#aeb3d85736eb3f3e60af419edd191e14d", null ],
+    [ "JVC_KHZ", "IRProtocol_8h.html#abcc6e2b61050500362daed1341bef91b", null ],
     [ "JVC_VENDOR_ID_CODE", "IRProtocol_8h.html#a3e456885d3a0286f50fb024b0b3f90a2", null ],
+    [ "KASEIKYO_KHZ", "IRProtocol_8h.html#ae59fcf8145e60472b2b94f7e72a1d441", null ],
     [ "LEGO_MODE_COMBO", "IRProtocol_8h.html#a47c92bffd09d8ad45b99db6c6eda8e0b", null ],
     [ "LEGO_MODE_EXTENDED", "IRProtocol_8h.html#acd9e7f1a67b4ac536be4b7754db8da62", null ],
     [ "LEGO_MODE_SINGLE", "IRProtocol_8h.html#a4b8e451f62edbd13839eec57242fa6bf", null ],
+    [ "LG_KHZ", "IRProtocol_8h.html#ada5cace06e49eefd0eceb54fa57ad824", null ],
     [ "MITSUBISHI_VENDOR_ID_CODE", "IRProtocol_8h.html#aca397cf0ba4543c581f0f5bfaf50ef25", null ],
+    [ "NEC_KHZ", "IRProtocol_8h.html#ae1333ec007e3f586daf2b4af76894fc9", null ],
     [ "PANASONIC_VENDOR_ID_CODE", "IRProtocol_8h.html#a310adca9c81e03bc122d77251a594440", null ],
     [ "PROTOCOL_IS_LSB_FIRST", "IRProtocol_8h.html#a8717702b4019c982727719bd40af7630", null ],
     [ "PROTOCOL_IS_MSB_FIRST", "IRProtocol_8h.html#a2db53e8319cd3f5de758337fa08552d0", null ],
+    [ "RC5_RC6_KHZ", "IRProtocol_8h.html#a1e8fcd1e00b7fa15e99fae5ea30f35ae", null ],
+    [ "SAMSUNG_KHZ", "IRProtocol_8h.html#ac386480bc33f2fa50193da38a023b8ce", null ],
     [ "SHARP_VENDOR_ID_CODE", "IRProtocol_8h.html#a2ee9972dc5425130b659242589ceb098", null ],
     [ "SIRCS_12_PROTOCOL", "IRProtocol_8h.html#a8a2dbf77031a92783a200b9902c8459b", null ],
     [ "SIRCS_15_PROTOCOL", "IRProtocol_8h.html#a75fe4989c11b3e3176262acfa9bce2ce", null ],
     [ "SIRCS_20_PROTOCOL", "IRProtocol_8h.html#a4014bf0435ac7da04aa0bb1b0949eb8e", null ],
+    [ "SONY_KHZ", "IRProtocol_8h.html#a5dcaa6ec48a7a0b663e5de0ce853a541", null ],
     [ "decode_type_t", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fad", [
       [ "UNKNOWN", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6ce26a62afab55d7606ad4e92428b30c", null ],
       [ "PULSE_DISTANCE", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadab60e0c1f01cfceb2dc9d5f2005f6dfc0", null ],
@@ -41,5 +50,5 @@ var IRProtocol_8h =
       [ "MAGIQUEST", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada3be750ce1687bc1a92fee05b0c511100", null ],
       [ "WHYNTER", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada458cdd7fa2b29dc8617c694696580c0c", null ]
     ] ],
-    [ "getProtocolString", "group__Receiving.html#ga77bf675537483ace83da089dea3a50a2", null ]
+    [ "getProtocolString", "IRProtocol_8h.html#a77bf675537483ace83da089dea3a50a2", null ]
 ];

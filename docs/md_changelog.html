@@ -85,9 +85,39 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <div class="title">Changelog </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The latest version may not be released! </p><h1>3.4.0</h1>
+<div class="textblock"><p>The latest version may not be released! See also the commit log at github: <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master">https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master</a></p>
+<h1>3.5.1</h1>
+<ul>
+<li>Renamed INFO_PRINT to IR_INFO_PRINT as well as for DEBUG and TRACE.</li>
+<li>Fixed error with DEBUG in TinyIRReceiver.hpp.</li>
+<li>Support for ATmega88 see issue #923. Thanks to Dolmant.</li>
+<li>NO_LED_FEEDBACK_CODE replaces and extends DISABLE_LED_FEEDBACK_FOR_RECEIVE.</li>
+<li>Removed NO_LEGACY_COMPATIBILITY macro, it was useless now.</li>
+</ul>
+<h1>3.5.0</h1>
+<ul>
+<li>Improved ir_DistanceProtocol.</li>
+<li>Tone for ESP32.</li>
+<li>last phase renamed *.cpp.h to .hpp.</li>
+<li>No deprecation print for ATtinies.</li>
+<li>Renamed ac_LG.cpp to ac_LG.hpp.</li>
+<li>Maintained MagiQuest by E. Stuart Hicks.</li>
+<li>Improved print Pronto by Asuki Kono.</li>
+<li>Added <a class="el" href="IRremoteInt_8h.html#ada0f2fe0704a217c16ee497ba7b3630e">printActiveIRProtocols()</a> function.</li>
+<li>Used IR_SEND_PIN to reduce code size and improved send timing for AVR.</li>
+</ul>
+<h1>3.4.0</h1>
 <ul>
 <li>Added LG2 protocol.</li>
+<li>Added ATtiny167 (Digispark Pro) support.</li>
+<li>Renamed *.cpp.h to .hpp.</li>
+<li>organized carrier frequencies.</li>
+<li>Compiler switch USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN added.</li>
+<li>Moved blink13() back to <a class="el" href="classIRrecv.html" title="Main class for receiving IR signals.">IRrecv</a> class.</li>
+<li>Added Kaseikyo convenience functions like sendKaseikyo_Denon().</li>
+<li>Improved / adjusted LG protocol and added class <a class="el" href="classAircondition__LG.html">Aircondition_LG</a> based on real hardware supplied by makerspace 201 (<a href="https://wiki.hackerspaces.org/ZwoNullEins">https://wiki.hackerspaces.org/ZwoNullEins</a>) from Cologne.</li>
+<li>Improved universal decoder for pulse width or pulse distance protocols to support more than 32 bits.</li>
+<li>Added mbed support.</li>
 </ul>
 <h1>3.3.0</h1>
 <ul>
@@ -120,7 +150,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Removed SENDPIN_ON and SENDPIN_OFF macros.</li>
 <li>Refactored board specific code for timer and feedback LED.</li>
 <li>Extracted common LED feedback functions and implemented feedback for send.</li>
-<li><a class="el" href="group__Receiving.html#gadab293a71386f20571db6d779d1d84b7">MATCH_MARK()</a> etc. now available as <a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware.">matchMark()</a>.</li>
+<li><a class="el" href="IRremoteInt_8h.html#adab293a71386f20571db6d779d1d84b7">MATCH_MARK()</a> etc. now available as <a class="el" href="IRremoteInt_8h.html#a4472564ea96b1ee10b51f594f60d7aeb">matchMark()</a>.</li>
 <li>Added STM32F1 by (by Roger Clark) support.</li>
 <li>Added stm32 (by ST) support. Thanks to Paolo Malaspina.</li>
 <li>Added ATtiny88 support.</li>
@@ -147,7 +177,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Fixed resume bug if irparams.rawlen &gt;= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi</li>
 <li>Added <code>dumpPronto(String *aString, unsigned int frequency)</code> with String object as argument. Thanks to Iosif Peterfi</li>
 <li>Removed Test2 example.</li>
-<li>Fixed swapped cases in <code><a class="el" href="group__Receiving.html#ga77bf675537483ace83da089dea3a50a2">getProtocolString()</a></code>. Thanks to Jim-2249</li>
+<li>Fixed swapped cases in <code><a class="el" href="IRProtocol_8h.html#a77bf675537483ace83da089dea3a50a2">getProtocolString()</a></code>. Thanks to Jim-2249</li>
 <li>Added compile option <code>IR_INPUT_IS_ACTIVE_HIGH</code>. Thanks to Jim-2249</li>
 <li>Corrected template. Thanks to Jim-2249</li>
 <li>Introduced standard decode and send functions.</li>
@@ -183,7 +213,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Optimized types in sendRC5ext and sendSharpAlt.</li>
 <li>Added <code>DECODE_NEC_STANDARD</code> and <code>SEND_NEC_STANDARD</code>.</li>
 <li>Renamed all IRrecv* examples to IRreceive*.</li>
-<li>Added functions <code>printIRResultShort(&amp;Serial)</code> and <code><a class="el" href="group__Receiving.html#ga77bf675537483ace83da089dea3a50a2">getProtocolString(decode_type_t aDecodeType)</a></code>.</li>
+<li>Added functions <code>printIRResultShort(&amp;Serial)</code> and <code><a class="el" href="IRProtocol_8h.html#a77bf675537483ace83da089dea3a50a2">getProtocolString(decode_type_t aDecodeType)</a></code>.</li>
 <li>Added flag <code>decodedIRData.isRepeat</code>.</li>
 <li>Updated examples.</li>
 </ul>
@@ -324,7 +354,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Jun 16 2021 23:31:01 for IRremote by
+    <li class="footer">Generated on Wed Dec 8 2021 14:58:14 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

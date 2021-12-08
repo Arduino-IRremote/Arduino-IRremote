@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['version_5firremote_980',['VERSION_IRREMOTE',['../IRremote_8h.html#ad9f03906065f749788cc9e3f68fb6253',1,'IRremote.h']]],
-  ['version_5firremote_5fmajor_981',['VERSION_IRREMOTE_MAJOR',['../IRremote_8h.html#a5fccc9834ba25cd17b7ca45e14aa7751',1,'IRremote.h']]],
-  ['version_5firremote_5fminor_982',['VERSION_IRREMOTE_MINOR',['../IRremote_8h.html#a824e2f61336bde09dd9b835e8606683f',1,'IRremote.h']]]
+  ['use_5fdefault_5ffeedback_5fled_5fpin_761',['USE_DEFAULT_FEEDBACK_LED_PIN',['../IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d',1,'IRremoteInt.h']]],
+  ['utol_762',['UTOL',['../IRremoteInt_8h.html#ad3a18e82bb4b51badb0727fce56a7557',1,'IRremoteInt.h']]]
 ];

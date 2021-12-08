@@ -1,18 +1,10 @@
 var searchData=
 [
-  ['magiquest_5fbits_901',['MAGIQUEST_BITS',['../ir__MagiQuest_8cpp.html#a5ad7278bb378f828e4ef743ce1611734',1,'ir_MagiQuest.cpp']]],
-  ['magiquest_5fmagnitude_5fbits_902',['MAGIQUEST_MAGNITUDE_BITS',['../ir__MagiQuest_8cpp.html#a64aeb7e87d7a2f844ca6ec967e6bdf34',1,'ir_MagiQuest.cpp']]],
-  ['magiquest_5fone_5fmark_903',['MAGIQUEST_ONE_MARK',['../ir__MagiQuest_8cpp.html#ab75301149b3c053390e08668e270574e',1,'ir_MagiQuest.cpp']]],
-  ['magiquest_5fone_5fspace_904',['MAGIQUEST_ONE_SPACE',['../ir__MagiQuest_8cpp.html#a1965f9aa88f57ed564f46654f8247103',1,'ir_MagiQuest.cpp']]],
-  ['magiquest_5fperiod_905',['MAGIQUEST_PERIOD',['../ir__MagiQuest_8cpp.html#a4816f5fc6dfc00a7f07213eff150652e',1,'ir_MagiQuest.cpp']]],
-  ['magiquest_5funit_906',['MAGIQUEST_UNIT',['../ir__MagiQuest_8cpp.html#ab55a5562099370a536d44962ad2db98a',1,'ir_MagiQuest.cpp']]],
-  ['magiquest_5fwand_5fid_5fbits_907',['MAGIQUEST_WAND_ID_BITS',['../ir__MagiQuest_8cpp.html#a6f9ee212ff850e280f9c241c5143cee5',1,'ir_MagiQuest.cpp']]],
-  ['magiquest_5fzero_5fmark_908',['MAGIQUEST_ZERO_MARK',['../ir__MagiQuest_8cpp.html#ac1bc4e99d5e1b697df724d180357095d',1,'ir_MagiQuest.cpp']]],
-  ['magiquest_5fzero_5fspace_909',['MAGIQUEST_ZERO_SPACE',['../ir__MagiQuest_8cpp.html#a95ff1854b629d4e2dce95224f470f031',1,'ir_MagiQuest.cpp']]],
-  ['mark_910',['MARK',['../IRremoteInt_8h.html#abeb214368f7f34cff98de9047aa6eb2f',1,'IRremoteInt.h']]],
-  ['mark_5fexcess_911',['MARK_EXCESS',['../IRremote_8h.html#ac21b48ddc487212fbce7d6474423e080',1,'IRremote.h']]],
-  ['mark_5fexcess_5fmicros_912',['MARK_EXCESS_MICROS',['../IRremote_8h.html#a6cb4ad1bc3f0b5d2c4503615058a1d90',1,'IRremote.h']]],
-  ['memcpy_5fp_913',['memcpy_P',['../digitalWriteFast_8h.html#ae0444ad0cb3250a5778a573dd10f41be',1,'digitalWriteFast.h']]],
-  ['micros_5fper_5ftick_914',['MICROS_PER_TICK',['../IRremoteInt_8h.html#a1c7eebb527483c272812530caa313d20',1,'IRremoteInt.h']]],
-  ['mitsubishi_5fvendor_5fid_5fcode_915',['MITSUBISHI_VENDOR_ID_CODE',['../IRProtocol_8h.html#aca397cf0ba4543c581f0f5bfaf50ef25',1,'IRProtocol.h']]]
+  ['lego_5fmode_5fcombo_703',['LEGO_MODE_COMBO',['../IRProtocol_8h.html#a47c92bffd09d8ad45b99db6c6eda8e0b',1,'IRProtocol.h']]],
+  ['lego_5fmode_5fextended_704',['LEGO_MODE_EXTENDED',['../IRProtocol_8h.html#acd9e7f1a67b4ac536be4b7754db8da62',1,'IRProtocol.h']]],
+  ['lego_5fmode_5fsingle_705',['LEGO_MODE_SINGLE',['../IRProtocol_8h.html#a4b8e451f62edbd13839eec57242fa6bf',1,'IRProtocol.h']]],
+  ['lg_5fis_5ftower_5ftype_706',['LG_IS_TOWER_TYPE',['../ac__LG_8h.html#af24e4af37feee6f77a7dbbf379b02705',1,'ac_LG.h']]],
+  ['lg_5fis_5fwall_5ftype_707',['LG_IS_WALL_TYPE',['../ac__LG_8h.html#a2e8eafcea40ac8c271441c6828ab3650',1,'ac_LG.h']]],
+  ['lg_5fkhz_708',['LG_KHZ',['../IRProtocol_8h.html#ada5cace06e49eefd0eceb54fa57ad824',1,'IRProtocol.h']]],
+  ['ltol_709',['LTOL',['../IRremoteInt_8h.html#abd2c46e5e893c0f5fd23fe9fed2ae49a',1,'IRremoteInt.h']]]
 ];

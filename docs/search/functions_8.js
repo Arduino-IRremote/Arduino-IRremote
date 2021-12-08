@@ -1,12 +1,11 @@
 var searchData=
 [
-  ['initbiphaselevel_677',['initBiphaselevel',['../group__Receiving.html#ga51376b9bd8d1d9ac5c694f6a8c8ecc98',1,'IRrecv']]],
-  ['initdecodedirdata_678',['initDecodedIRData',['../group__Receiving.html#ga26e37f666387134ed18393fd930f68db',1,'IRrecv']]],
-  ['initpciinterruptfortinyreceiver_679',['initPCIInterruptForTinyReceiver',['../group__TinyReceiver.html#ga1f3913249343258d738ea0a48f7e1aed',1,'TinyIRReceiver.cpp.h']]],
-  ['irledoff_680',['IRLedOff',['../group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0',1,'IRsend']]],
-  ['irpinchangeinterrupthandler_681',['IRPinChangeInterruptHandler',['../group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69',1,'TinyIRReceiver.cpp.h']]],
-  ['irrecv_682',['IRrecv',['../group__Receiving.html#ga81eee3a1f9153578d595c771688003e8',1,'IRrecv::IRrecv()'],['../group__Receiving.html#ga223c74ba081592e2fba4b5cd08c8a45c',1,'IRrecv::IRrecv(uint8_t aReceivePin)'],['../group__Receiving.html#ga78bb606b282e710d0d542e2aa44786d8',1,'IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin)']]],
-  ['irsend_683',['IRsend',['../group__Sending.html#gabf55f45c8cfe3558053130bea46e7f14',1,'IRsend::IRsend(uint8_t aSendPin)'],['../group__Sending.html#ga047d9e3f47864869afaa5076579c9f63',1,'IRsend::IRsend()']]],
-  ['isidle_684',['isIdle',['../group__Receiving.html#gacfbf39fb284cc2d200158f20747c4ae3',1,'IRrecv']]],
-  ['isr_685',['ISR',['../group__Receiving.html#gaa8c5af507063503eacfa11a27c993a90',1,'IRReceive.cpp.h']]]
+  ['initbiphaselevel_489',['initBiphaselevel',['../classIRrecv.html#a51376b9bd8d1d9ac5c694f6a8c8ecc98',1,'IRrecv']]],
+  ['initdecodedirdata_490',['initDecodedIRData',['../classIRrecv.html#a26e37f666387134ed18393fd930f68db',1,'IRrecv']]],
+  ['initpciinterruptfortinyreceiver_491',['initPCIInterruptForTinyReceiver',['../group__TinyReceiver.html#ga1f3913249343258d738ea0a48f7e1aed',1,'TinyIRReceiver.h']]],
+  ['irledoff_492',['IRLedOff',['../classIRsend.html#a5242741b8da4fbfaae237eee2b279dd0',1,'IRsend']]],
+  ['irrecv_493',['IRrecv',['../classIRrecv.html#a81eee3a1f9153578d595c771688003e8',1,'IRrecv::IRrecv()'],['../classIRrecv.html#a223c74ba081592e2fba4b5cd08c8a45c',1,'IRrecv::IRrecv(uint8_t aReceivePin)'],['../classIRrecv.html#a78bb606b282e710d0d542e2aa44786d8',1,'IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin)']]],
+  ['irsend_494',['IRsend',['../classIRsend.html#a047d9e3f47864869afaa5076579c9f63',1,'IRsend::IRsend()'],['../classIRsend.html#abf55f45c8cfe3558053130bea46e7f14',1,'IRsend::IRsend(uint8_t aSendPin)']]],
+  ['isidle_495',['isIdle',['../classIRrecv.html#acfbf39fb284cc2d200158f20747c4ae3',1,'IRrecv']]],
+  ['istinyreceiveridle_496',['isTinyReceiverIdle',['../group__TinyReceiver.html#gab65e33fe496d3bee4af897e5d8bd9420',1,'TinyIRReceiver.h']]]
 ];

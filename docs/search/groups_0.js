@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['cpu_20_2f_20board_20dependent_20definitions_983',['CPU / board dependent definitions',['../group__HardwareDependencies.html',1,'']]]
+  ['air_20conditioner_20special_20code_763',['Air conditioner special code',['../group__Airconditoners.html',1,'']]]
 ];

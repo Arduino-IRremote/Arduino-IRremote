@@ -97,27 +97,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="IRProtocol_8h__dep__incl.png" border="0" usemap="#src_2IRProtocol_8hdep" alt=""/></div>
 <map name="src_2IRProtocol_8hdep" id="src_2IRProtocol_8hdep">
-<area shape="rect" title="Common declarations for receiving and sending." alt="" coords="1382,5,1497,32"/>
-<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the internal functions." alt="" coords="1379,80,1500,107"/>
-<area shape="rect" href="ir__BoseWave_8cpp.html" title=" " alt="" coords="5,155,151,181"/>
-<area shape="rect" href="ir__Denon_8cpp.html" title=" " alt="" coords="175,155,295,181"/>
-<area shape="rect" href="ir__Dish_8cpp.html" title=" " alt="" coords="319,155,429,181"/>
-<area shape="rect" href="ir__DistanceProtocol_8cpp.html" title=" " alt="" coords="453,155,636,181"/>
-<area shape="rect" href="ir__JVC_8cpp.html" title=" " alt="" coords="661,155,767,181"/>
-<area shape="rect" href="ir__Kaseikyo_8cpp.html" title=" " alt="" coords="792,155,929,181"/>
-<area shape="rect" href="ir__Lego_8cpp.html" title=" " alt="" coords="953,155,1064,181"/>
-<area shape="rect" href="ir__LG_8cpp.html" title=" " alt="" coords="1088,155,1188,181"/>
-<area shape="rect" href="ir__MagiQuest_8cpp.html" title=" " alt="" coords="1213,155,1359,181"/>
-<area shape="rect" href="ir__NEC_8cpp.html" title=" " alt="" coords="1384,155,1495,181"/>
-<area shape="rect" href="ir__Pronto_8cpp.html" title=" " alt="" coords="1519,155,1640,181"/>
-<area shape="rect" href="ir__RC5__RC6_8cpp.html" title=" " alt="" coords="1664,155,1804,181"/>
-<area shape="rect" href="ir__Samsung_8cpp.html" title=" " alt="" coords="1829,155,1967,181"/>
-<area shape="rect" href="ir__Sony_8cpp.html" title=" " alt="" coords="1992,155,2105,181"/>
-<area shape="rect" href="ir__Template_8cpp.html" title=" " alt="" coords="2130,155,2266,181"/>
-<area shape="rect" href="ir__Whynter_8cpp.html" title=" " alt="" coords="2291,155,2423,181"/>
-<area shape="rect" href="IRremote_8h.html" title="Public API to the library." alt="" coords="2527,229,2634,256"/>
-<area shape="rect" href="IRTimer_8cpp_8h.html" title="All timer specific definitions are contained in this file." alt="" coords="2498,155,2663,181"/>
-<area shape="rect" href="IRSend_8cpp_8h.html" title=" " alt="" coords="2687,155,2810,181"/>
+<area shape="rect" title="Common declarations for receiving and sending." alt="" coords="9,5,123,32"/>
+<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="5,80,127,107"/>
 </map>
 </div>
 </div>
@@ -129,14 +110,32 @@ Macros</h2></td></tr>
 <tr class="separator:a8717702b4019c982727719bd40af7630"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2db53e8319cd3f5de758337fa08552d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a2db53e8319cd3f5de758337fa08552d0">PROTOCOL_IS_MSB_FIRST</a>&#160;&#160;&#160;true</td></tr>
 <tr class="separator:a2db53e8319cd3f5de758337fa08552d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dcaa6ec48a7a0b663e5de0ce853a541"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a5dcaa6ec48a7a0b663e5de0ce853a541">SONY_KHZ</a>&#160;&#160;&#160;40</td></tr>
+<tr class="separator:a5dcaa6ec48a7a0b663e5de0ce853a541"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e8586b46bb336ab800f4239b9bc46d1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a5e8586b46bb336ab800f4239b9bc46d1">BOSEWAVE_KHZ</a>&#160;&#160;&#160;38</td></tr>
+<tr class="separator:a5e8586b46bb336ab800f4239b9bc46d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2ebee0d7bd6593a38e1998ddd6b0c90"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#ad2ebee0d7bd6593a38e1998ddd6b0c90">DENON_KHZ</a>&#160;&#160;&#160;38</td></tr>
+<tr class="separator:ad2ebee0d7bd6593a38e1998ddd6b0c90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcc6e2b61050500362daed1341bef91b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#abcc6e2b61050500362daed1341bef91b">JVC_KHZ</a>&#160;&#160;&#160;38</td></tr>
+<tr class="separator:abcc6e2b61050500362daed1341bef91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada5cace06e49eefd0eceb54fa57ad824"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#ada5cace06e49eefd0eceb54fa57ad824">LG_KHZ</a>&#160;&#160;&#160;38</td></tr>
+<tr class="separator:ada5cace06e49eefd0eceb54fa57ad824"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1333ec007e3f586daf2b4af76894fc9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#ae1333ec007e3f586daf2b4af76894fc9">NEC_KHZ</a>&#160;&#160;&#160;38</td></tr>
+<tr class="separator:ae1333ec007e3f586daf2b4af76894fc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac386480bc33f2fa50193da38a023b8ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#ac386480bc33f2fa50193da38a023b8ce">SAMSUNG_KHZ</a>&#160;&#160;&#160;38</td></tr>
+<tr class="separator:ac386480bc33f2fa50193da38a023b8ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae59fcf8145e60472b2b94f7e72a1d441"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#ae59fcf8145e60472b2b94f7e72a1d441">KASEIKYO_KHZ</a>&#160;&#160;&#160;37</td></tr>
+<tr class="separator:ae59fcf8145e60472b2b94f7e72a1d441"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e8fcd1e00b7fa15e99fae5ea30f35ae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a1e8fcd1e00b7fa15e99fae5ea30f35ae">RC5_RC6_KHZ</a>&#160;&#160;&#160;36</td></tr>
+<tr class="separator:a1e8fcd1e00b7fa15e99fae5ea30f35ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a310adca9c81e03bc122d77251a594440"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a310adca9c81e03bc122d77251a594440">PANASONIC_VENDOR_ID_CODE</a>&#160;&#160;&#160;0x2002</td></tr>
 <tr class="separator:a310adca9c81e03bc122d77251a594440"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ee9972dc5425130b659242589ceb098"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a2ee9972dc5425130b659242589ceb098">SHARP_VENDOR_ID_CODE</a>&#160;&#160;&#160;0x5AAA</td></tr>
-<tr class="separator:a2ee9972dc5425130b659242589ceb098"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb3d85736eb3f3e60af419edd191e14d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#aeb3d85736eb3f3e60af419edd191e14d">DENON_VENDOR_ID_CODE</a>&#160;&#160;&#160;0x3254</td></tr>
 <tr class="separator:aeb3d85736eb3f3e60af419edd191e14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca397cf0ba4543c581f0f5bfaf50ef25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#aca397cf0ba4543c581f0f5bfaf50ef25">MITSUBISHI_VENDOR_ID_CODE</a>&#160;&#160;&#160;0xCB23</td></tr>
 <tr class="separator:aca397cf0ba4543c581f0f5bfaf50ef25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ee9972dc5425130b659242589ceb098"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a2ee9972dc5425130b659242589ceb098">SHARP_VENDOR_ID_CODE</a>&#160;&#160;&#160;0x5AAA</td></tr>
+<tr class="separator:a2ee9972dc5425130b659242589ceb098"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e456885d3a0286f50fb024b0b3f90a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a3e456885d3a0286f50fb024b0b3f90a2">JVC_VENDOR_ID_CODE</a>&#160;&#160;&#160;0x0103</td></tr>
 <tr class="separator:a3e456885d3a0286f50fb024b0b3f90a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a2dbf77031a92783a200b9902c8459b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a8a2dbf77031a92783a200b9902c8459b">SIRCS_12_PROTOCOL</a>&#160;&#160;&#160;12</td></tr>
@@ -194,8 +193,8 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga77bf675537483ace83da089dea3a50a2"><td class="memItemLeft" align="right" valign="top">const __FlashStringHelper *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga77bf675537483ace83da089dea3a50a2">getProtocolString</a> (<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fad">decode_type_t</a> aProtocol)</td></tr>
-<tr class="separator:ga77bf675537483ace83da089dea3a50a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77bf675537483ace83da089dea3a50a2"><td class="memItemLeft" align="right" valign="top">const __FlashStringHelper *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a77bf675537483ace83da089dea3a50a2">getProtocolString</a> (<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fad">decode_type_t</a> aProtocol)</td></tr>
+<tr class="separator:a77bf675537483ace83da089dea3a50a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Common declarations for receiving and sending. </p>
@@ -208,6 +207,38 @@ Functions</h2></td></tr>
 
 <p class="definition">Definition in file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a5e8586b46bb336ab800f4239b9bc46d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e8586b46bb336ab800f4239b9bc46d1">&#9670;&nbsp;</a></span>BOSEWAVE_KHZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BOSEWAVE_KHZ&#160;&#160;&#160;38</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00078">78</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="ad2ebee0d7bd6593a38e1998ddd6b0c90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2ebee0d7bd6593a38e1998ddd6b0c90">&#9670;&nbsp;</a></span>DENON_KHZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DENON_KHZ&#160;&#160;&#160;38</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00079">79</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
 <a id="aeb3d85736eb3f3e60af419edd191e14d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb3d85736eb3f3e60af419edd191e14d">&#9670;&nbsp;</a></span>DENON_VENDOR_ID_CODE</h2>
 
@@ -220,7 +251,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00079">79</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00091">91</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="abcc6e2b61050500362daed1341bef91b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcc6e2b61050500362daed1341bef91b">&#9670;&nbsp;</a></span>JVC_KHZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define JVC_KHZ&#160;&#160;&#160;38</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00080">80</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -236,7 +283,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00081">81</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00094">94</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="ae59fcf8145e60472b2b94f7e72a1d441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae59fcf8145e60472b2b94f7e72a1d441">&#9670;&nbsp;</a></span>KASEIKYO_KHZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define KASEIKYO_KHZ&#160;&#160;&#160;37</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00084">84</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -252,7 +315,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00088">88</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00101">101</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -268,7 +331,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00087">87</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00100">100</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -284,7 +347,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00089">89</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00102">102</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="ada5cace06e49eefd0eceb54fa57ad824"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ada5cace06e49eefd0eceb54fa57ad824">&#9670;&nbsp;</a></span>LG_KHZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LG_KHZ&#160;&#160;&#160;38</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00081">81</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -300,7 +379,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00080">80</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00092">92</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="ae1333ec007e3f586daf2b4af76894fc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1333ec007e3f586daf2b4af76894fc9">&#9670;&nbsp;</a></span>NEC_KHZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define NEC_KHZ&#160;&#160;&#160;38</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00082">82</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -316,7 +411,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00077">77</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00090">90</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -352,6 +447,38 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1e8fcd1e00b7fa15e99fae5ea30f35ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e8fcd1e00b7fa15e99fae5ea30f35ae">&#9670;&nbsp;</a></span>RC5_RC6_KHZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define RC5_RC6_KHZ&#160;&#160;&#160;36</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00085">85</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="ac386480bc33f2fa50193da38a023b8ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac386480bc33f2fa50193da38a023b8ce">&#9670;&nbsp;</a></span>SAMSUNG_KHZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SAMSUNG_KHZ&#160;&#160;&#160;38</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00083">83</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
 <a id="a2ee9972dc5425130b659242589ceb098"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2ee9972dc5425130b659242589ceb098">&#9670;&nbsp;</a></span>SHARP_VENDOR_ID_CODE</h2>
 
@@ -364,7 +491,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00078">78</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00093">93</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -380,7 +507,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00083">83</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00096">96</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -396,7 +523,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00084">84</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00097">97</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -412,7 +539,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00085">85</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00098">98</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="a5dcaa6ec48a7a0b663e5de0ce853a541"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dcaa6ec48a7a0b663e5de0ce853a541">&#9670;&nbsp;</a></span>SONY_KHZ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SONY_KHZ&#160;&#160;&#160;40</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00077">77</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -464,13 +607,32 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a77bf675537483ace83da089dea3a50a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77bf675537483ace83da089dea3a50a2">&#9670;&nbsp;</a></span>getProtocolString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const __FlashStringHelper* getProtocolString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fad">decode_type_t</a>&#160;</td>
+          <td class="paramname"><em>aProtocol</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRProtocol_8h.html">IRProtocol.h</a></li>
-    <li class="footer">Generated on Wed Jun 16 2021 23:31:01 for IRremote by
+    <li class="footer">Generated on Wed Dec 8 2021 14:58:14 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

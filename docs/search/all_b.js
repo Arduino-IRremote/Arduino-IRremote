@@ -1,24 +1,9 @@
 var searchData=
 [
-  ['kaseikyo_240',['KASEIKYO',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf2d8443e083aa95f191f26d438c6b953',1,'IRProtocol.h']]],
-  ['kaseikyo_5faddress_5fbits_241',['KASEIKYO_ADDRESS_BITS',['../group__Decoder.html#ga2980cf86e2d6c0af8df3c7a29ff9468f',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5faverage_5fduration_242',['KASEIKYO_AVERAGE_DURATION',['../group__Decoder.html#ga96b2393ae13bd45c6b13074a27e800eb',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fbit_5fmark_243',['KASEIKYO_BIT_MARK',['../group__Decoder.html#ga69ea9935d680733cf8e37181e7df9184',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fbits_244',['KASEIKYO_BITS',['../group__Decoder.html#ga592fb0e33827b607bb6c43072526575c',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fcommand_5fbits_245',['KASEIKYO_COMMAND_BITS',['../group__Decoder.html#ga46f7e707bf79a6b1657bd29bfaaa7522',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fdata_5fbits_246',['KASEIKYO_DATA_BITS',['../group__Decoder.html#gab8e6b6ef29172f2a9f2e3690fcdac4f3',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fdenon_247',['KASEIKYO_DENON',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada4cb93fe0fe3dbe0681b8764a9294733b',1,'IRProtocol.h']]],
-  ['kaseikyo_5fheader_5fmark_248',['KASEIKYO_HEADER_MARK',['../group__Decoder.html#gaced5ece1bb2d810f20f6a02142181699',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fheader_5fspace_249',['KASEIKYO_HEADER_SPACE',['../group__Decoder.html#ga5bad2bab824504b4289cf034c8070b60',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fjvc_250',['KASEIKYO_JVC',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6b221b79427a02288ea41683a7d04841',1,'IRProtocol.h']]],
-  ['kaseikyo_5fmitsubishi_251',['KASEIKYO_MITSUBISHI',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2516be3bdfd7614bb64961800fa49e43',1,'IRProtocol.h']]],
-  ['kaseikyo_5fone_5fspace_252',['KASEIKYO_ONE_SPACE',['../group__Decoder.html#ga70e2a773b7615e33846a98556ef5e43f',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fparity_5fbits_253',['KASEIKYO_PARITY_BITS',['../group__Decoder.html#ga4d69f0966b844257d734539d4547ea80',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5frepeat_5fperiod_254',['KASEIKYO_REPEAT_PERIOD',['../group__Decoder.html#gab8c7f8e151b67c06523fce7193dd5cdd',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5frepeat_5fspace_255',['KASEIKYO_REPEAT_SPACE',['../group__Decoder.html#ga33bd304970bafe120a91b03a08718ff9',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fsharp_256',['KASEIKYO_SHARP',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada181746513f88dba0d824c5dfeeec68b6',1,'IRProtocol.h']]],
-  ['kaseikyo_5funit_257',['KASEIKYO_UNIT',['../group__Decoder.html#ga902a330843509bcaff6a5f0bf4f38a9d',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fvendor_5fid_5fbits_258',['KASEIKYO_VENDOR_ID_BITS',['../group__Decoder.html#gaa40dc0f36a788a2347dd601eb421fac9',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fvendor_5fid_5fparity_5fbits_259',['KASEIKYO_VENDOR_ID_PARITY_BITS',['../group__Decoder.html#ga00026f9a2bcd232d4cb191b9e9ce9fdb',1,'ir_Kaseikyo.cpp']]],
-  ['kaseikyo_5fzero_5fspace_260',['KASEIKYO_ZERO_SPACE',['../group__Decoder.html#ga11d27c9a23d42f44d941e0e9a678fcf5',1,'ir_Kaseikyo.cpp']]]
+  ['kaseikyo_168',['KASEIKYO',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf2d8443e083aa95f191f26d438c6b953',1,'IRProtocol.h']]],
+  ['kaseikyo_5fdenon_169',['KASEIKYO_DENON',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada4cb93fe0fe3dbe0681b8764a9294733b',1,'IRProtocol.h']]],
+  ['kaseikyo_5fjvc_170',['KASEIKYO_JVC',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6b221b79427a02288ea41683a7d04841',1,'IRProtocol.h']]],
+  ['kaseikyo_5fkhz_171',['KASEIKYO_KHZ',['../IRProtocol_8h.html#ae59fcf8145e60472b2b94f7e72a1d441',1,'IRProtocol.h']]],
+  ['kaseikyo_5fmitsubishi_172',['KASEIKYO_MITSUBISHI',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2516be3bdfd7614bb64961800fa49e43',1,'IRProtocol.h']]],
+  ['kaseikyo_5fsharp_173',['KASEIKYO_SHARP',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada181746513f88dba0d824c5dfeeec68b6',1,'IRProtocol.h']]]
 ];

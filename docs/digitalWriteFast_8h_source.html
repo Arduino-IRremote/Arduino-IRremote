@@ -494,7 +494,7 @@ $(document).ready(function(){initNavTree('digitalWriteFast_8h_source.html',''); 
 <div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160; </div>
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="comment">// --- ATtinyX4 + ATtinyX7 ---</span></div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;<span class="preprocessor">#elif  defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)</span></div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="preprocessor"># if defined(ARDUINO_AVR_DIGISPARKPRO)</span></div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="preprocessor"># if defined(ARDUINO_AVR_DIGISPARKPRO) || PIN_PA7 == 5</span></div>
 <div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="comment">// Strange enumeration of pins on Digispark board and core library</span></div>
 <div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) (((P) &lt;= 4) ? &amp;PORTB : &amp;PORTA)</span></div>
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P)  (((P) &lt;= 4) ? &amp;DDRB : &amp;DDRA)</span></div>
@@ -526,7 +526,7 @@ $(document).ready(function(){initNavTree('digitalWriteFast_8h_source.html',''); 
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160; </div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160; </div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;<span class="preprocessor">#ifndef digitalWriteFast</span></div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;<span class="preprocessor">#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))</span></div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;<span class="preprocessor">#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) &amp;&amp; defined(__digitalPinToPortReg)</span></div>
 <div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;<span class="preprocessor">#define digitalWriteFast(P, V) \</span></div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;<span class="preprocessor">if (__builtin_constant_p(P)) { \</span></div>
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;<span class="preprocessor">  BIT_WRITE(*__digitalPinToPortReg(P), __digitalPinToBit(P), (V)); \</span></div>
@@ -540,7 +540,7 @@ $(document).ready(function(){initNavTree('digitalWriteFast_8h_source.html',''); 
 <div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160; </div>
 <div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160; </div>
 <div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;<span class="preprocessor">#ifndef pinModeFast</span></div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="preprocessor">#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))</span></div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="preprocessor">#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) &amp;&amp; defined(__digitalPinToPortReg)</span></div>
 <div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;<span class="preprocessor">#define pinModeFast(P, V) \</span></div>
 <div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;<span class="preprocessor">if (__builtin_constant_p(P) &amp;&amp; __builtin_constant_p(V)) { \</span></div>
 <div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;<span class="preprocessor">  if (V == INPUT_PULLUP) {\</span></div>
@@ -592,7 +592,7 @@ $(document).ready(function(){initNavTree('digitalWriteFast_8h_source.html',''); 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="digitalWriteFast_8h.html">digitalWriteFast.h</a></li>
-    <li class="footer">Generated on Wed Jun 16 2021 23:31:00 for IRremote by
+    <li class="footer">Generated on Wed Dec 8 2021 14:58:14 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>
