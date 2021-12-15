@@ -602,9 +602,7 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
  */
 void IRsend::enableIROut(uint8_t aFrequencyKHz) {
 #if defined(SEND_PWM_BY_TIMER)
-#  if defined(SEND_PWM_BY_TIMER)
-    TIMER_DISABLE_RECEIVE_INTR;
-#  endif
+    TIMER_DISABLE_RECEIVE_INTR; // Just in case receiving was active
     timerConfigForSend(aFrequencyKHz);
 
 #elif defined(USE_NO_SEND_PWM)

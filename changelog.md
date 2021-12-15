@@ -2,12 +2,15 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+## 3.5.2
+
 ## 3.5.1
 - Renamed INFO_PRINT to IR_INFO_PRINT as well as for DEBUG and TRACE.
 - Fixed error with DEBUG in TinyIRReceiver.hpp.
 - Support for ATmega88 see issue #923. Thanks to Dolmant.
 - NO_LED_FEEDBACK_CODE replaces and extends DISABLE_LED_FEEDBACK_FOR_RECEIVE.
 - Removed NO_LEGACY_COMPATIBILITY macro, it was useless now.
+- Fix ESP32 send bug see issue #927.
 
 ## 3.5.0
 - Improved ir_DistanceProtocol.

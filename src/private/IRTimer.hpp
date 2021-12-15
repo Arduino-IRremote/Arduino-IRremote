@@ -931,8 +931,8 @@ void timerConfigForReceive() {
 #  endif
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(timer)
-#define TIMER_DISABLE_RECEIVE_INTR  timerEnd(timer); timerDetachInterrupt(timer)
+#define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(sESP32Timer)
+#define TIMER_DISABLE_RECEIVE_INTR  if (sESP32Timer != NULL) {timerEnd(sESP32Timer); timerDetachInterrupt(sESP32Timer);}
 // Redefinition of ISR macro which creates a plain function now
 #  ifdef ISR
 #undef ISR
@@ -942,7 +942,7 @@ IRAM_ATTR void IRTimerInterruptHandler();
 
 // Variables specific to the ESP32.
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
-hw_timer_t *timer;
+hw_timer_t *sESP32Timer;
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     ledcSetup(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
@@ -960,10 +960,10 @@ void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
-    timer = timerBegin(1, 80, true);
-    timerAttachInterrupt(timer, &IRTimerInterruptHandler, 1);
+    sESP32Timer = timerBegin(1, 80, true);
+    timerAttachInterrupt(sESP32Timer, &IRTimerInterruptHandler, 1);
     // every 50 us, autoreload = true
-    timerAlarmWrite(timer, MICROS_PER_TICK, true);
+    timerAlarmWrite(sESP32Timer, MICROS_PER_TICK, true);
 }
 
 /***************************************
