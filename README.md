@@ -406,7 +406,7 @@ For other platforms you must modify the appropriate section guarded by e.g. `#el
 
 Another approach can be to share the timer **sequentially** if their functionality is used only for a short period of time like for the **Arduino tone() command**.
 An example can be seen [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/21b5747a58e9d47c9e3f1beb056d58c875a92b47/examples/ReceiveDemo/ReceiveDemo.ino#L159-L169), where the timer settings for IR receive are restored after the tone has stopped.
-For this we must call IrReceiver.start() or better IrReceiver.start(<microsecondsOfToneDuration>).<br/>
+For this we must call IrReceiver.start() or better IrReceiver.start(microsecondsOfToneDuration).<br/>
 This only works since each call to tone() completely initializes the timer 2 used by the `tone()` command.
 
 ### Hardware-PWM signal generation for sending
