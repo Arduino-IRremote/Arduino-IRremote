@@ -434,11 +434,12 @@ The timer and the pin usage can be adjusted in [private/IRTimer.hpp](https://git
 | Zero (SAMD)                                                              | **TC3**           | \*, **9**           |
 | [ESP32](http://esp32.net/)                                               | **Ledc chan. 0**  | **4**, all pins     |
 | [Sparkfun Pro Micro](https://www.sparkfun.com/products/12640)            | 1, **3**          | **5**, 9            |
-| [Teensy 1.0](https://www.pjrc.com/teensy/pinout.html)                    | **1**             | **17**              |
-| [Teensy 2.0](https://www.pjrc.com/teensy/pinout.html)                    | 1, **3**, 4_HS    | **9**, 10, 14       |
-| [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/pinout.html)            | 1, **2**, 3       | **1**, 16, 25       |
-| [Teensy 3.0 / 3.1](https://www.pjrc.com/teensy/pinout.html)              | **CMT**           | **5**               |
-| [Teensy-LC](https://www.pjrc.com/teensy/pinout.html)                     | **TPM1**          | **16**              |
+| [Teensy 1.0](https://www.pjrc.com/teensy/pinout.html)                    | **1**             | **17**              | 15, 18 |
+| [Teensy 2.0](https://www.pjrc.com/teensy/pinout.html)                    | 1, 3, **4_HS**    | 9, **10**, 14       | 12 |
+| [Teensy++ 1.0 / 2.0](https://www.pjrc.com/teensy/pinout.html)            | 1, **2**, 3       | **1**, 16, 25       | 0 |
+| [Teensy-LC](https://www.pjrc.com/teensy/pinout.html)                     | **TPM1**          | **16**              | 17 |
+| [Teensy 3.0 - 3.6](https://www.pjrc.com/teensy/pinout.html)              | **CMT**           | **5**               |
+| [Teensy 4.0 - 4.1](https://www.pjrc.com/teensy/pinout.html)              | **FlexPWM1.3**    | **8**               | 7, 25 |
 | [BluePill / STM32F103C8T6](https://github.com/rogerclarkmelbourne/Arduino_STM32)  | **3**    | %                   | **PA6 & PA7 & PB0 & PB1** |
 | [BluePill / STM32F103C8T6](https://stm32-base.org/boards/STM32F103C8T6-Blue-Pill) | **TIM4** | %                   | **PB6 & PB7 & PB8 & PB9** |
 
