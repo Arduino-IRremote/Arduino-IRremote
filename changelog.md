@@ -2,6 +2,8 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+## 3.5.3
+
 ## 3.5.2
 - Improved support for Teensy boards by Paul Stoffregen.
 

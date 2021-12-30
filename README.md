@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 Available as Arduino library "IRremote"
 
-### [Version 3.5.2](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
+### [Version 3.5.3](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
@@ -20,6 +20,7 @@ This library enables you to send and receive using infra-red signals on an Ardui
     + [Example](#example)
   * [Do not want to convert your 2.x program and use the 3.x library version?](#do-not-want-to-convert-your-2x-program-and-use-the-3x-library-version)
   * [How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes](#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes)
+- [Using the new *.hpp files](#using-the-new-hpp-files)
 - [Receiving IR codes](#receiving-ir-codes)
   * [Minimal NEC receiver](#minimal-nec-receiver)
 - [Sending IR codes](#sending-ir-codes)
@@ -38,8 +39,9 @@ This library enables you to send and receive using infra-red signals on an Ardui
 - [Timer and pin usage](#timer-and-pin-usage)
     + [Incompatibilities to other libraries and Arduino commands like tone() and analogWrite()](#incompatibilities-to-other-libraries-and-arduino-commands-like-tone-and-analogwrite)
     + [Hardware-PWM signal generation for sending](#hardware-pwm-signal-generation-for-sending)
-    + [Why do we use 33% duty cycle](#why-do-we-use-33-duty-cycle)
-    
+    + [Why do we use 33% duty cycle for sending](#why-do-we-use-33-duty-cycle-for-sending)
+
+- [How we decode signals](#how-we-decode-signals)
 - [NEC encoding diagrams](#nec-encoding-diagrams)
 - [Quick comparison of 4 Arduino IR receiving libraries](#quick-comparison-of-4-arduino-ir-receiving-libraries)
 - [Revision History](#revision-history)
@@ -170,6 +172,11 @@ Example:
   0x40802CD3 is binary 01000000100000000010110011010011.<br/>
   If you read the first binary sequence backwards (right to left), you get the second sequence.
 
+# Using the new *.hpp files
+In order to support [compile options](#compile-options--macros-for-this-library) more easily, the line `#include <IRremote.h>` must be changed to  `#include <IRremote.hpp>`, but only in your **main program (.ino file)**, like it is done in the examples.<br/>
+In **all other files** you must use `#include <IRremoteInt.h>`, otherwise you will get tons of **"multiple definition"** errors.
+Be careful to define these 3 macros `RAW_BUFFER_LENGTH` and `IR_SEND_PIN` and `SEND_PWM_BY_TIMER` in IRremoteInt.h consistent with the definitions in the .ino file!
+
 # Receiving IR codes
 Check for **available data** can be done by `if (IrReceiver.decode()) {`. This also decodes the received data.
 After successful decoding, the IR data is contained in the IRData structure, available as `IrReceiver.decodedIRData`.
@@ -220,7 +227,7 @@ There are some other solutions to this on more powerful processors,
  since one IR diode requires only 1.5 volt.
  - The line \#include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program space and 38 bytes RAM for **Digispark boards** as well as enables serial output at 8MHz.
  - The default software generated PWM has **problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
-- If you require **IRremote.hpp in multiple files** / want to **avoid "multiple definition" error**, use `#include <IRremote.hpp>` only in one file, e.g. the .ino file (the file containing main()) and use `#include <IRremoteInt.h>` **in all other files**. Be careful to define these 3 macros `RAW_BUFFER_LENGTH` and `IR_SEND_PIN` and `SEND_PWM_BY_TIMER` in IRremoteInt.h consistent with the definitions in the .ino file!
+
 
 # Handling unknown Protocols
 ## Disclaimer
@@ -305,14 +312,14 @@ The file *acLG.h* contains the command documentation of the LG air conditioner I
 ### ReceiverTimingAnalysis
 This example analyzes the signal delivered by your IR receiver module.
 Values can be used to determine the stability of the received signal as well as a hint for determining the protocol.<br/>
-It also computes the MARK_EXCESS_MICROS value, which is the extension of the mark (pulse) duration introduced by the IR receiver module.<br/>
+It also computes the `MARK_EXCESS_MICROS` value, which is the extension of the mark (pulse) duration introduced by the IR receiver module.<br/>
 It can be tested online with [WOKWI](https://wokwi.com/arduino/projects/299033930562011656).
 Click on the receiver while simulation is running to specify individual NEC IR codes.
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / macros available.<br/>
-Modify it by commenting them out or in, or change the values if applicable.
-Or define the macro with the -D compiler option for global compile (the latter is not possible with the Arduino IDE, so consider using [Sloeber](https://eclipse.baeyens.it).
+Most macros must be defined in your program before the line `#include <IRremote.hpp>` to take effect.
+Modify them by enabling / disabling them, or change the values if applicable.
 
 | Name | File | Default value | Description |
 |-|-|-|-|
@@ -333,9 +340,9 @@ Or define the macro with the -D compiler option for global compile (the latter i
 | `MICROS_PER_TICK` | IRremoteInt.h | 50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 탎 at 38 kHz. |
 | `IR_USE_AVR_TIMER*` | private/IRTimer.hpp |  | Selection of timer to be used for generating IR receiving sample interval. |
 |-|-|-|-|
-| `IR_INPUT_PIN` | TinyIRReceiver.h | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
-| `IR_FEEDBACK_LED_PIN` | TinyIRReceiver.h | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
-| `NO_LED_FEEDBACK_CODE` | TinyIRReceiver.h | disabled | Enable it to disable the feedback LED function. Saves 14 bytes program space. |
+| `IR_INPUT_PIN` | Before `#include <TinyIRReceiver.hpp>` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
+| `IR_FEEDBACK_LED_PIN` | Before `#include <TinyIRReceiver.hpp>` | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
+| `NO_LED_FEEDBACK_CODE` | Before `#include <TinyIRReceiver.hpp>` | disabled | Enable it to disable the feedback LED function. Saves 14 bytes program space. |
 
 ### Changing include (*.h) files with Arduino IDE
 First, use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>
@@ -344,7 +351,10 @@ Otherwise you have to navigate to the parallel `libraries` folder and select the
 In both cases the library source and include files are located in the libraries `src` directory.<br/>
 The modification must be renewed for each new library version!
 
-### Modifying compile options with Sloeber IDE
+### Modifying compile options / macros with PlatformIO
+If you are using PlatformIO, you can define the macros in the *[platformio.ini](https://docs.platformio.org/en/latest/projectconf/section_env_build.html)* file with `build_flags = -D MACRO_NAME` or `build_flags = -D MACRO_NAME=macroValue`.
+
+### Modifying compile options / macros with Sloeber IDE
 If you are using [Sloeber](https://eclipse.baeyens.it) as your IDE, you can easily define global symbols with *Properties > Arduino > CompileOptions*.<br/>
 ![Sloeber settings](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/SloeberDefineSymbols.png)
 
@@ -443,7 +453,7 @@ The timer and the pin usage can be adjusted in [private/IRTimer.hpp](https://git
 | [BluePill / STM32F103C8T6](https://github.com/rogerclarkmelbourne/Arduino_STM32)  | **3**    | %                   | **PA6 & PA7 & PB0 & PB1** |
 | [BluePill / STM32F103C8T6](https://stm32-base.org/boards/STM32F103C8T6-Blue-Pill) | **TIM4** | %                   | **PB6 & PB7 & PB8 & PB9** |
 
-### Why do we use 33% duty cycle
+### Why do we use 33% duty cycle for sending
 We do it according to the statement in the [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf):
 - Carrier duty cycle 50 %, peak current of emitter IF = 200 mA, the resulting transmission distance is 25 m.
 - Carrier duty cycle 10 %, peak current of emitter IF = 800 mA, the resulting transmission distance is 29 m. - Factor 1.16
@@ -453,6 +463,13 @@ Due to automatic gain control and other bias effects, high intensity of the 38 k
 BTW, **the best way to increase the IR power** is to use 2 or 3 IR diodes in series. One diode requires 1.1 to 1.5 volt so you can supply 3 diodes with a 5 volt output.<br/>
 To keep the current, you must reduce the resistor by (5 - 1.3) / (5 - 2.6) = 1.5 e.g. from 150 ohm to 100 ohm for 25 mA and 2 diodes with 1.3 volt and a 5 volt supply.<br/>
 For 3 diodes it requires factor 2.5 e.g. from 150 ohm to 60 ohm.
+
+# How we decode signals
+The IR signal is sampled at a **50 탎 interval**. For a constant 525 탎 pulse or pause we therefore get 10 or 11 samples, each with 50% probability.<br/>
+And belive me, if you send a 525 탎 signal, your receiver will output something between around 400 and 700 탎!<br/>
+Therefore **we decode by default with a +/- 25% margin** using the formulas [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L376-L399).<br/>
+E.g. for the NEC protocol with its 560 탎 unit length, we have TICKS_LOW = 8.358 and TICKS_HIGH = 15.0. This means, we accept any value between 8 ticks / 400 탎 and 15 ticks / 750 탎 (inclusive) as a mark or as a zero space. For a one space we have TICKS_LOW = 25.07 and TICKS_HIGH = 45.0.<br/>
+And since the receivers generated marks are longer or shorter than the spaces, we have introduced the [`MARK_EXCESS_MICROS` value]/https://github.com/Arduino-IRremote/Arduino-IRremote#protocolunknown) to compensate for this receiver (and signal stength as well as ambient light dependent :-( ) specific deviation. Welcome to the basics of **real world signal processing**.
 
 # NEC encoding diagrams
 Created with sigrok PulseView with IR_NEC decoder by DjordjeMandic.<br/>
