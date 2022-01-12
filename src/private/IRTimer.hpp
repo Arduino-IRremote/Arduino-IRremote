@@ -116,8 +116,8 @@
 #  endif
 #define USE_TIMER_CHANNEL_B
 
-//ATtiny85
-#elif defined(__AVR_ATtiny85__)
+//ATtiny85, 45, 25
+#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
 #  if !defined(IR_USE_AVR_TIMER_TINY0) && !defined(IR_USE_AVR_TIMER_TINY1)
 #    if defined(ARDUINO_AVR_DIGISPARK) // tested with 16 and 8 MHz
 #define IR_USE_AVR_TIMER_TINY0   // send pin = pin 1

@@ -189,7 +189,6 @@ struct IRData {
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
 };
 
-
 /**
  * Results returned from old decoders !!!deprecated!!!
  */
