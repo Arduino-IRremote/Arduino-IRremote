@@ -11,47 +11,48 @@ Available as Arduino library "IRremote"
 This library enables you to send and receive using infra-red signals on an Arduino.
 
 # Table of content
-- [API](#api)
-- [Installation](#installation)
-- [Supported IR Protocols](#supported-ir-protocols)
-- [Old Wiki](#old-wiki)
-- [Features of the 3.x version](#features-of-the-3x-version)
-  * [Converting your 2.x program to the 3.x version](#converting-your-2x-program-to-the-3x-version)
-    + [Example](#example)
-  * [Do not want to convert your 2.x program and use the 3.x library version?](#do-not-want-to-convert-your-2x-program-and-use-the-3x-library-version)
-  * [How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes](#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes)
-- [Using the new *.hpp files](#using-the-new-hpp-files)
-- [Receiving IR codes](#receiving-ir-codes)
-  * [Minimal NEC receiver](#minimal-nec-receiver)
-- [Sending IR codes](#sending-ir-codes)
-    + [List of public IR code databases](#list-of-public-ir-code-databases)
-- [FAQ and hints](#faq-and-hints)
-- [Handling unknown Protocols](#handling-unknown-protocols)
-  * [Disclaimer](#disclaimer)
-  * [Protocol=PULSE_DISTANCE](#protocolpulse_distance)
-  * [Protocol=UNKNOWN](#protocolunknown)
-  * [How to deal with protocols not supported by IRremote](#how-to-deal-with-protocols-not-supported-by-irremote)
-- [Examples for this library](#examples-for-this-library)
-- [Compile options / macros for this library](#compile-options--macros-for-this-library)
-    + [Changing include (*.h) files with Arduino IDE](#changing-include-h-files-with-arduino-ide)
-    + [Modifying compile options with Sloeber IDE](#modifying-compile-options-with-sloeber-ide)
-- [Supported Boards](#supported-boards)
-- [Timer and pin usage](#timer-and-pin-usage)
-    + [Incompatibilities to other libraries and Arduino commands like tone() and analogWrite()](#incompatibilities-to-other-libraries-and-arduino-commands-like-tone-and-analogwrite)
-    + [Hardware-PWM signal generation for sending](#hardware-pwm-signal-generation-for-sending)
-    + [Why do we use 33% duty cycle for sending](#why-do-we-use-33-duty-cycle-for-sending)
+- [API](https://github.com/Arduino-IRremote/Arduino-IRremote#api)
+- [Installation](https://github.com/Arduino-IRremote/Arduino-IRremote#installation)
+- [Supported IR Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote#supported-ir-protocols)
+- [Old Wiki](https://github.com/Arduino-IRremote/Arduino-IRremote#old-wiki)
+- [Features of the 3.x version](https://github.com/Arduino-IRremote/Arduino-IRremote#features-of-the-3x-version)
+  * [Converting your 2.x program to the 3.x version](https://github.com/Arduino-IRremote/Arduino-IRremote#converting-your-2x-program-to-the-3x-version)
+    + [Example](https://github.com/Arduino-IRremote/Arduino-IRremote#example)
+  * [Do not want to convert your 2.x program and use the 3.x library version?](https://github.com/Arduino-IRremote/Arduino-IRremote#do-not-want-to-convert-your-2x-program-and-use-the-3x-library-version)
+  * [How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes](https://github.com/Arduino-IRremote/Arduino-IRremote#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes)
+- [Using the new *.hpp files / how to avoid `multiple definitions` linker errors](https://github.com/Arduino-IRremote/Arduino-IRremote#using-the-new-hpp-files--how-to-avoid-multiple-definitions-linker-errors)
+- [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#receiving-ir-codes)
+  * [Minimal NEC receiver](https://github.com/Arduino-IRremote/Arduino-IRremote#minimal-nec-receiver)
+- [Sending IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#sending-ir-codes)
+    + [List of public IR code databases](https://github.com/Arduino-IRremote/Arduino-IRremote#list-of-public-ir-code-databases)
+- [FAQ and hints](https://github.com/Arduino-IRremote/Arduino-IRremote#faq-and-hints)
+- [Handling unknown Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote#handling-unknown-protocols)
+  * [Disclaimer](https://github.com/Arduino-IRremote/Arduino-IRremote#disclaimer)
+  * [Protocol=PULSE_DISTANCE](https://github.com/Arduino-IRremote/Arduino-IRremote#protocolpulse_distance)
+  * [Protocol=UNKNOWN](https://github.com/Arduino-IRremote/Arduino-IRremote#protocolunknown)
+  * [How to deal with protocols not supported by IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote#how-to-deal-with-protocols-not-supported-by-irremote)
+- [Examples for this library](https://github.com/Arduino-IRremote/Arduino-IRremote#examples-for-this-library)
+- [Issues and discussions](https://github.com/Arduino-IRremote/Arduino-IRremote#issues-and-discussions)
+- [Compile options / macros for this library](https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library)
+    + [Changing include (*.h) files with Arduino IDE](https://github.com/Arduino-IRremote/Arduino-IRremote#changing-include-h-files-with-arduino-ide)
+    + [Modifying compile options with Sloeber IDE](https://github.com/Arduino-IRremote/Arduino-IRremote#modifying-compile-options-with-sloeber-ide)
+- [Supported Boards](https://github.com/Arduino-IRremote/Arduino-IRremote#supported-boards)
+- [Timer and pin usage](https://github.com/Arduino-IRremote/Arduino-IRremote#timer-and-pin-usage)
+    + [Incompatibilities to other libraries and Arduino commands like tone() and analogWrite()](https://github.com/Arduino-IRremote/Arduino-IRremote#incompatibilities-to-other-libraries-and-arduino-commands-like-tone-and-analogwrite)
+    + [Hardware-PWM signal generation for sending](https://github.com/Arduino-IRremote/Arduino-IRremote#hardware-pwm-signal-generation-for-sending)
+    + [Why do we use 33% duty cycle for sending](https://github.com/Arduino-IRremote/Arduino-IRremote#why-do-we-use-33-duty-cycle-for-sending)
 
-- [How we decode signals](#how-we-decode-signals)
-- [NEC encoding diagrams](#nec-encoding-diagrams)
-- [Quick comparison of 4 Arduino IR receiving libraries](#quick-comparison-of-4-arduino-ir-receiving-libraries)
-- [Revision History](#revision-history)
-- [Contributing](#contributing)
-  * [Adding new protocols](#adding-new-protocols)
-    + [Integration](#integration)
-    + [Creating API documentation](#creating-api-documentation)
-  * [Contributors](#contributors)
-- [License](#license)
-  * [Copyright](#copyright)
+- [How we decode signals](https://github.com/Arduino-IRremote/Arduino-IRremote#how-we-decode-signals)
+- [NEC encoding diagrams](https://github.com/Arduino-IRremote/Arduino-IRremote#nec-encoding-diagrams)
+- [Quick comparison of 4 Arduino IR receiving libraries](https://github.com/Arduino-IRremote/Arduino-IRremote#quick-comparison-of-4-arduino-ir-receiving-libraries)
+- [Revision History](https://github.com/Arduino-IRremote/Arduino-IRremote#revision-history)
+- [Contributing](https://github.com/Arduino-IRremote/Arduino-IRremote#contributing)
+  * [Adding new protocols](https://github.com/Arduino-IRremote/Arduino-IRremote#adding-new-protocols)
+    + [Integration](https://github.com/Arduino-IRremote/Arduino-IRremote#integration)
+    + [Creating API documentation](https://github.com/Arduino-IRremote/Arduino-IRremote#creating-api-documentation)
+  * [Contributors](https://github.com/Arduino-IRremote/Arduino-IRremote#contributors)
+- [License](https://github.com/Arduino-IRremote/Arduino-IRremote#license)
+  * [Copyright](https://github.com/Arduino-IRremote/Arduino-IRremote#copyright)
 
 # API
 A Doxygen documentation of the sources is available on the [project homepage](https://arduino-irremote.github.io/Arduino-IRremote/classIRrecv.html).
@@ -172,7 +173,7 @@ Example:
   0x40802CD3 is binary 01000000100000000010110011010011.<br/>
   If you read the first binary sequence backwards (right to left), you get the second sequence.
 
-# Using the new *.hpp files
+# Using the new *.hpp files / how to avoid `multiple definitions` linker errors
 In order to support [compile options](#compile-options--macros-for-this-library) more easily, the line `#include <IRremote.h>` must be changed to  `#include <IRremote.hpp>`, but only in your **main program (.ino file)**, like it is done in the examples.<br/>
 In **all other files** you must use `#include <IRremoteInt.h>`, otherwise you will get tons of **"multiple definition"** errors.
 Be careful to define these 3 macros `RAW_BUFFER_LENGTH` and `IR_SEND_PIN` and `SEND_PWM_BY_TIMER` in IRremoteInt.h consistent with the definitions in the .ino file!
@@ -315,6 +316,11 @@ Values can be used to determine the stability of the received signal as well as 
 It also computes the `MARK_EXCESS_MICROS` value, which is the extension of the mark (pulse) duration introduced by the IR receiver module.<br/>
 It can be tested online with [WOKWI](https://wokwi.com/arduino/projects/299033930562011656).
 Click on the receiver while simulation is running to specify individual NEC IR codes.
+
+# Issues and discussions
+- Do not open an issue without first testing some of the examples!
+- If you have a problem, please post the MCVE (Minimal Complete Verifiable Example) showing this problem. My experience is, that most of the times you will find the problem while creating this MCVE :smile:.
+- [Use code blocks](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code); **it helps us help you when we can read your code!**
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / macros available.<br/>

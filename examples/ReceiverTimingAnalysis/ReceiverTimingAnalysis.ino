@@ -33,7 +33,8 @@
 
 #include <Arduino.h>
 
-#define IR_INPUT_PIN    3
+#define IR_INPUT_PIN    2
+//#define IR_INPUT_PIN    3
 
 /*
  * Helper macro for getting a macro definition as string
@@ -54,12 +55,15 @@ void setup()
     Serial.println(F("START " __FILE__ " from " __DATE__));
 
 #if defined(EICRA) && defined(EIFR) && defined(EIMSK)
-    // enable interrupt on pin3 on both edges for ATmega328
-    EICRA |= _BV(ISC10);
-    // clear interrupt bit
-    EIFR |= 1 << INTF1;
-    // enable interrupt on next change
-    EIMSK |= 1 << INT1;
+#  if (IR_INPUT_PIN == 2)
+    EICRA |= _BV(ISC00);  // interrupt on any logical change
+    EIFR |= _BV(INTF0);     // clear interrupt bit
+    EIMSK |= _BV(INT0);     // enable interrupt on next change
+#  elif (IR_INPUT_PIN == 3)
+    EICRA |= _BV(ISC10);    // enable interrupt on pin3 on both edges for ATmega328
+    EIFR |= _BV(INTF1);     // clear interrupt bit
+    EIMSK |= _BV(INT1);     // enable interrupt on next change
+#  endif
 #else
     attachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN), measureTimingISR, CHANGE);
 #endif
@@ -169,12 +173,12 @@ void loop()
              * Print analysis of mark and short spaces
              */
             Serial.println(F("Analysis  :"));
-            Serial.print(F(" Average (Mark + ShortSpace)/2="));
+            Serial.print(F(" (Average of mark + short space)/2 = "));
             int16_t MarkAndShortSpaceAverage = (Mark.average + ShortSpace.average) / 2;
             Serial.print(MarkAndShortSpaceAverage);
-            Serial.print(F("us   Delta (to NEC standard 560)="));
+            Serial.print(F(" us\r\n Delta (to NEC standard 560) = "));
             Serial.print(MarkAndShortSpaceAverage - 560);
-            Serial.print(F("us\r\n Mark - Average -> MARK_EXCESS_MICROS="));
+            Serial.print(F("us\r\n MARK_EXCESS_MICROS = (Average of mark - Average of mark and short space) = "));
             Serial.print((int16_t) Mark.average - MarkAndShortSpaceAverage);
             Serial.print(F("us"));
             Serial.println();
@@ -195,7 +199,11 @@ void ICACHE_RAM_ATTR measureTimingISR()
 void IRAM_ATTR measureTimingISR()
 #else
 #  if defined(EICRA) && defined(EIFR) && defined(EIMSK)
+#    if (IR_INPUT_PIN == 2)
+ISR(INT0_vect)
+#    elif (IR_INPUT_PIN == 3)
 ISR(INT1_vect)
+#    endif
 #  else
 void measureTimingISR()
 #  endif
