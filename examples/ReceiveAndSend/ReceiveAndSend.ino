@@ -57,6 +57,7 @@ int SEND_BUTTON_PIN = APPLICATION_PIN;
 int STATUS_PIN = LED_BUILTIN;
 
 int DELAY_BETWEEN_REPEAT = 50;
+int DEFAULT_NUMBER_OF_REPEATS_TO_SEND = 3;
 
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
@@ -202,7 +203,7 @@ void sendCode(storedIRDataStruct *aIRDataToSend) {
         /*
          * Use the write function, which does the switch for different protocols
          */
-        IrSender.write(&aIRDataToSend->receivedIRData, NO_REPEATS);
+        IrSender.write(&aIRDataToSend->receivedIRData, DEFAULT_NUMBER_OF_REPEATS_TO_SEND);
 
         Serial.print(F("Sent: "));
         printIRResultShort(&Serial, &aIRDataToSend->receivedIRData);
