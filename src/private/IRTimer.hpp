@@ -1150,6 +1150,34 @@ void timerConfigForReceive() {
 }
 
 /***************************************
+ * RP2040 based boards
+ ***************************************/
+#elif defined(ARDUINO_ARCH_RP2040) // Raspberry Pi Pico, Adafruit Feather RP2040, etc.
+#include "pico/time.h"
+#  if defined(SEND_PWM_BY_TIMER)
+#error PWM generation by hardware not implemented for RP2040
+#  endif
+
+#define TIMER_RESET_INTR_PENDING
+#define TIMER_ENABLE_RECEIVE_INTR  add_repeating_timer_us(MICROS_PER_TICK, IRTimerInterruptHandlerHelper, NULL, &sRP2040Timer);
+#define TIMER_DISABLE_RECEIVE_INTR  cancel_repeating_timer(&sRP2040Timer);
+
+// Redefinition of ISR macro which creates a plain function now
+#  ifdef ISR
+#undef ISR
+#  endif
+#define ISR() void IRTimerInterruptHandler(void)
+void IRTimerInterruptHandler();
+bool IRTimerInterruptHandlerHelper(repeating_timer_t *) {
+    IRTimerInterruptHandler();
+    return true;
+}
+
+repeating_timer_t sRP2040Timer;
+
+void timerConfigForReceive() {}
+
+/***************************************
  * NRF5 boards like the BBC:Micro
  ***************************************/
 #elif defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)
