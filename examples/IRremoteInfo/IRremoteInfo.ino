@@ -9,6 +9,7 @@
  * Version 1.0 November 2015
  * Original Author: AnalysIR - IR software & modules for Makers & Pros, visit http://www.AnalysIR.com
  */
+#include <Arduino.h>
 
 #include <IRremote.hpp>
 

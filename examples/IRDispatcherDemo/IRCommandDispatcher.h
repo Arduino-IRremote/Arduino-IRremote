@@ -36,7 +36,7 @@
  */
 #define IR_COMMAND_FLAG_BLOCKING        0x00 // default - blocking command, repeat not accepted, only one command at a time. Stops an already running command.
 #define IR_COMMAND_FLAG_REPEATABLE      0x01 // repeat accepted
-#define IR_COMMAND_FLAG_NON_BLOCKING    0x02 // (Non blocking / non regular) Command that can be processed any time and may interrupt other IR commands - used for stop etc.
+#define IR_COMMAND_FLAG_NON_BLOCKING    0x02 // (Non blocking / non regular) (short) command that can be processed any time and may interrupt other IR commands - used for stop, set direction etc.
 #define IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING (IR_COMMAND_FLAG_REPEATABLE | IR_COMMAND_FLAG_NON_BLOCKING)
 /*
  * if this command is received, requestToStopReceived is set until call of next loop.
@@ -67,6 +67,7 @@ struct IRDataForCommandDispatcherStruct {
 #define COMMAND_INVALID     0xFF // code for command received, but not in mapping
 
 #define RETURN_IF_STOP if (IRDispatcher.requestToStopReceived) return
+#define DELAY_AND_RETURN_IF_STOP(aDurationMillis) if (IRDispatcher.delayAndCheckForStop(aDurationMillis)) return
 
 class IRCommandDispatcher {
 public:

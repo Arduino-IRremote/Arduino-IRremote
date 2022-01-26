@@ -167,11 +167,9 @@ void loop() {
 
     if (doBlink) {
         digitalWrite(LED_BUILTIN, HIGH);
-        IRDispatcher.delayAndCheckForStop(sBlinkDelay);
-        RETURN_IF_STOP; // = if (IRDispatcher.requestToStopReceived) return;
+        DELAY_AND_RETURN_IF_STOP(sBlinkDelay);
         digitalWrite(LED_BUILTIN, LOW);
-        IRDispatcher.delayAndCheckForStop(sBlinkDelay);
-        RETURN_IF_STOP;
+        DELAY_AND_RETURN_IF_STOP(sBlinkDelay);
     }
 
     if (millis() - IRDispatcher.IRReceivedData.MillisOfLastCode > 120000)
@@ -236,11 +234,9 @@ void doLedBlinkStart() {
 void doLedBlink20times() {
     for (int i = 0; i < 20; ++i) {
         digitalWrite(LED_BUILTIN, HIGH);
-        IRDispatcher.delayAndCheckForStop(200);
-        RETURN_IF_STOP; // if (IRDispatcher.requestToStopReceived) return;
+        DELAY_AND_RETURN_IF_STOP(200);
         digitalWrite(LED_BUILTIN, LOW);
-        IRDispatcher.delayAndCheckForStop(200);
-        RETURN_IF_STOP;
+        DELAY_AND_RETURN_IF_STOP(200);
     }
 }
 

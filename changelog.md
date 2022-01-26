@@ -3,6 +3,11 @@ The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
 ## 3.5.3
+- RP2040 support added.
+- Refactored IRTimer.hpp.
+- Refactored IR_SEND_PIN and IrSender.sendPin handling.
+- Renamed IR_SEND_DUTY_CYCLE to IR_SEND_DUTY_CYCLE_PERCENT.
+- Fixed bugs for SEND_PWM_BY_TIMER active.
 
 ## 3.5.2
 - Improved support for Teensy boards by Paul Stoffregen.

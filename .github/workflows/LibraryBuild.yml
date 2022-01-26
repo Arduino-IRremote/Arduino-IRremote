@@ -54,7 +54,7 @@ jobs:
           - arduino:samd:arduino_zero_native
           - arduino:mbed:nano33ble
           - arduino:mbed_rp2040:pico
-          - rp2040:rp2040:rpipico:flash=2097152_0,freq=125,opt=Small,rtti=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk
+          - rp2040:rp2040:arduino_nano_connect
           - digistump:avr:digispark-tiny:clock=clock16
           - ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
           - ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
@@ -125,7 +125,7 @@ jobs:
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
-          - arduino-boards-fqbn: rp2040:rp2040:rpipico:flash=2097152_0,freq=125,opt=Small,rtti=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk
+          - arduino-boards-fqbn: rp2040:rp2040:arduino_nano_connect
             platform-url: https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DSEND_PWM_BY_TIMER

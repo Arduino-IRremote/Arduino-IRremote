@@ -31,6 +31,7 @@
  */
 #ifndef IR_FEEDBACK_LED_HPP
 #define IR_FEEDBACK_LED_HPP
+
 #include "private/IRFeedbackLEDDefs.h"
 
 /** \addtogroup FeedbackLEDFunctions Feedback LED functions

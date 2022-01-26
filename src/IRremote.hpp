@@ -13,7 +13,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2015-2021 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
+ * Copyright (c) 2015-2022 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,9 +43,9 @@
 #ifndef IRremote_hpp
 #define IRremote_hpp
 
-#define VERSION_IRREMOTE "3.5.0"
+#define VERSION_IRREMOTE "3.6.0"
 #define VERSION_IRREMOTE_MAJOR 3
-#define VERSION_IRREMOTE_MINOR 5
+#define VERSION_IRREMOTE_MINOR 6
 
 // activate it for all cores that does not use the -flto flag, if you get false error messages regarding begin() during compilation.
 //#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN
@@ -178,10 +178,11 @@
 /**
  * Define to disable carrier PWM generation in software and use (restricted) hardware PWM.
  */
-#if defined(ESP32)
+#if !defined(SEND_PWM_BY_TIMER) && (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE))
 #define SEND_PWM_BY_TIMER       // the best and default method for ESP32
+#warning For ESP32, RP2040 and particle boards SEND_PWM_BY_TIMER is enabled by default. If this is not intended, deactivate the line over this error message in file IRremote.hpp.
 #else
-//#define SEND_PWM_BY_TIMER
+//#define SEND_PWM_BY_TIMER // restricts send pin on many platforms to fixed pin numbers
 #endif
 
 /**
@@ -189,8 +190,8 @@
  */
 //#define USE_NO_SEND_PWM
 #if defined(SEND_PWM_BY_TIMER) && defined(USE_NO_SEND_PWM)
-#undef SEND_PWM_BY_TIMER // USE_NO_SEND_PWM overrides SEND_PWM_BY_TIMER
 #warning "SEND_PWM_BY_TIMER and USE_NO_SEND_PWM are both defined -> undefine SEND_PWM_BY_TIMER now!"
+#undef SEND_PWM_BY_TIMER // USE_NO_SEND_PWM overrides SEND_PWM_BY_TIMER
 #endif
 
 /**
@@ -198,6 +199,9 @@
  * Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
  */
 //#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
+#if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
+#warning Pin mode OUTPUT_OPEN_DRAIN is not supported on this platform -> fall back to mode OUTPUT.
+#endif
 /**
  * This amount is subtracted from the on-time of the pulses generated for software PWM generation.
  * It should be the time used for digitalWrite(sendPin, LOW) and the call to delayMicros()
@@ -212,8 +216,26 @@
 #  endif
 #endif
 
+/**
+ * Duty cycle in percent for sent signals.
+ */
+#if ! defined(IR_SEND_DUTY_CYCLE_PERCENT)
+#define IR_SEND_DUTY_CYCLE_PERCENT 30 // 30 saves power and is compatible to the old existing code
+#endif
+
+/**
+ * microseconds per clock interrupt tick
+ */
+#if ! defined(MICROS_PER_TICK)
+#define MICROS_PER_TICK    50
+#endif
+
+#define MILLIS_IN_ONE_SECOND 1000L
+#define MICROS_IN_ONE_SECOND 1000000L
+#define MICROS_IN_ONE_MILLI 1000L
+
 #include "IRremoteInt.h"
-#include "private/IRTimer.hpp"
+#include "private/IRTimer.hpp"  // defines IR_SEND_PIN for AVR and SEND_PWM_BY_TIMER
 #if !defined(NO_LED_FEEDBACK_CODE)
 #include "IRFeedbackLED.hpp"
 #endif

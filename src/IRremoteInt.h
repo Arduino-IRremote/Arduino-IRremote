@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2015-2021 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
+ * Copyright (c) 2015-2022 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,21 +46,11 @@
 #define MARK   1
 #define SPACE  0
 
-#define MILLIS_IN_ONE_SECOND 1000L
-#define MICROS_IN_ONE_SECOND 1000000L
-#define MICROS_IN_ONE_MILLI 1000L
-
 #if defined(PARTICLE)
 #define F_CPU 16000000 // definition for a board for which F_CPU is not defined
-#elif defined(ARDUINO_ARCH_MBED_RP2040)
-#define F_CPU 133000000
-#elif defined(ARDUINO_ARDUINO_NANO33BLE)
-#define F_CPU 64000000
 #endif
-#if defined(F_CPU)
+#if defined(F_CPU) // F_CPU is used to generate the receive send timings in some CPU's
 #define CLOCKS_PER_MICRO (F_CPU / MICROS_IN_ONE_SECOND)
-#else
-#error F_CPU not defined, please define it for your board in IRremoteInt.h
 #endif
 
 /*
@@ -365,13 +355,6 @@ void disableLEDFeedback();
 
 void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use setLEDFeedback()."))); // deprecated
 
-/**
- * microseconds per clock interrupt tick
- */
-#if ! defined(MICROS_PER_TICK)
-#define MICROS_PER_TICK    50
-#endif
-
 /*
  * Pulse parms are ((X*50)-MARK_EXCESS_MICROS) for the Mark and ((X*50)+MARK_EXCESS_MICROS) for the Space.
  * First MARK is the one after the long gap
@@ -414,29 +397,23 @@ extern IRrecv IrReceiver;
 #define SEND_REPEAT_COMMAND true ///< used for e.g. NEC, where a repeat is different from just repeating the data.
 
 /**
- * Duty cycle in percent for sent signals.
- */
-#if ! defined(IR_SEND_DUTY_CYCLE)
-#define IR_SEND_DUTY_CYCLE 30 // 30 saves power and is compatible to the old existing code
-#endif
-
-/**
  * Main class for sending IR signals
  */
 class IRsend {
 public:
     IRsend();
 
-#if defined(IR_SEND_PIN) || defined(SEND_PWM_BY_TIMER)
+    /*
+     * IR_SEND_PIN is defined
+     */
+#if defined(IR_SEND_PIN) || (defined(SEND_PWM_BY_TIMER) && !(defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)))
     void begin();
-#endif
-#if !defined(IR_SEND_PIN) && !defined(SEND_PWM_BY_TIMER)
-    IRsend(uint8_t aSendPin);
-    void setSendPin(uint8_t aSendPinNumber);
-#endif
-
     void begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+#else
+    IRsend(uint8_t aSendPin);
     void begin(uint8_t aSendPin);
+    void setSendPin(uint8_t aSendPinNumber); // required if we use IRsend() as constructor
+#endif
 
     // Not guarded for backward compatibility
     void begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
@@ -552,7 +529,7 @@ public:
     ;
     void sendWhynter(unsigned long data, int nbits);
 
-#if !defined(IR_SEND_PIN) && !defined(SEND_PWM_BY_TIMER)
+#if !defined(IR_SEND_PIN)
     uint8_t sendPin;
 #endif
     unsigned int periodTimeMicros;

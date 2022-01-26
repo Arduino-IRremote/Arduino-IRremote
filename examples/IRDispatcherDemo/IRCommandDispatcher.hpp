@@ -50,6 +50,14 @@ IRCommandDispatcher IRDispatcher;
 #if defined(USE_TINY_IR_RECEIVER)
 #include "TinyIRReceiver.hpp" // included in "IRremote" library
 
+#if defined(INFO)
+#define CD_INFO_PRINT(...)      Serial.print(__VA_ARGS__);
+#define CD_INFO_PRINTLN(...)    Serial.println(__VA_ARGS__);
+#else
+#define CD_INFO_PRINT(...)      void();
+#define CD_INFO_PRINTLN(...)    void();
+#endif
+
 void IRCommandDispatcher::init() {
     initPCIInterruptForTinyReceiver();
 }
@@ -70,26 +78,25 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
     IRDispatcher.IRReceivedData.command = aCommand;
     IRDispatcher.IRReceivedData.isRepeat = isRepeat;
     IRDispatcher.IRReceivedData.MillisOfLastCode = millis();
-#  ifdef INFO
-    Serial.print(F("A=0x"));
-    Serial.print(aAddress, HEX);
-    Serial.print(F(" C=0x"));
-    Serial.print(aCommand, HEX);
+
+    CD_INFO_PRINT(F("A=0x"));
+    CD_INFO_PRINT(aAddress, HEX);
+    CD_INFO_PRINT(F(" C=0x"));
+    CD_INFO_PRINT(aCommand, HEX);
     if (isRepeat) {
-        Serial.print(F("R"));
+        CD_INFO_PRINT(F("R"));
     }
-    Serial.println();
-#  endif
+    CD_INFO_PRINTLN();
+
     if (aAddress == IR_ADDRESS) { // IR_ADDRESS is defined in IRCommandMapping.h
         IRDispatcher.IRReceivedData.isAvailable = true;
         if(!IRDispatcher.doNotUseDispatcher) {
             IRDispatcher.checkAndCallCommand(false); // only short commands are executed directly
         }
-#  ifdef INFO
-        } else {
-        Serial.print(F("Wrong address. Expected 0x"));
-        Serial.println(IR_ADDRESS, HEX);
-#  endif
+
+    } else {
+        CD_INFO_PRINT(F("Wrong address. Expected 0x"));
+        CD_INFO_PRINTLN(IR_ADDRESS, HEX);
     }
 }
 
@@ -119,16 +126,16 @@ void handleReceivedIRData()
     IRDispatcher.IRReceivedData.command = tTeporaryData.command;
     IRDispatcher.IRReceivedData.isRepeat = tTeporaryData.flags & IRMP_FLAG_REPETITION;
     IRDispatcher.IRReceivedData.MillisOfLastCode = millis();
-#ifdef INFO
-    Serial.print(F("A=0x"));
-    Serial.print(IRDispatcher.IRReceivedData.address, HEX);
-    Serial.print(F(" C=0x"));
-    Serial.print(IRDispatcher.IRReceivedData.command, HEX);
+
+    CD_INFO_PRINT(F("A=0x"));
+    CD_INFO_PRINT(IRDispatcher.IRReceivedData.address, HEX);
+    CD_INFO_PRINT(F(" C=0x"));
+    CD_INFO_PRINT(IRDispatcher.IRReceivedData.command, HEX);
     if (IRDispatcher.IRReceivedData.isRepeat) {
-        Serial.print(F("R"));
+        CD_INFO_PRINT(F("R"));
     }
-    Serial.println();
-#endif
+    CD_INFO_PRINTLN();
+
     // To enable delay() for commands
 #if !defined(ARDUINO_ARCH_MBED)
     interrupts(); // be careful with always executable commands which lasts longer than the IR repeat duration.
@@ -138,8 +145,8 @@ void handleReceivedIRData()
         IRDispatcher.checkAndCallCommand(true);
 #ifdef INFO
         } else {
-        Serial.print(F("Wrong address. Expected 0x"));
-        Serial.println(IR_ADDRESS, HEX);
+        CD_INFO_PRINT(F("Wrong address. Expected 0x"));
+        CD_INFO_PRINTLN(IR_ADDRESS, HEX);
 #endif
     }
 }
@@ -194,9 +201,7 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
              */
             if (IRMapping[i].Flags & IR_COMMAND_FLAG_IS_STOP_COMMAND) {
                 requestToStopReceived = true;
-#ifdef INFO
-                Serial.println(F("Stop command received"));
-#endif
+                CD_INFO_PRINTLN(F("Stop command received"));
             } else {
                 // lets start a new turn
                 requestToStopReceived = false;
@@ -205,10 +210,8 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
             bool tIsNonBlockingCommand = (IRMapping[i].Flags & IR_COMMAND_FLAG_NON_BLOCKING);
             if (tIsNonBlockingCommand) {
                 // short command here, just call
-#ifdef INFO
-                Serial.print(F("Run non blocking command: "));
-                Serial.println(tCommandName);
-#endif
+                CD_INFO_PRINT(F("Run non blocking command: "));
+                CD_INFO_PRINTLN (tCommandName);
                 IRMapping[i].CommandToCall();
             } else {
                 if (!aCallAlsoBlockingCommands) {
@@ -217,18 +220,14 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
                      */
                     BlockingCommandToRunNext = IRReceivedData.command;
                     requestToStopReceived = true; // to stop running command
-#ifdef INFO
-                    Serial.print(F("Blocking command "));
-                    Serial.print(tCommandName);
-                    Serial.println(F(" stored as next command and requested stop"));
-#endif
+                    CD_INFO_PRINT(F("Blocking command "));
+                    CD_INFO_PRINT (tCommandName);
+                    CD_INFO_PRINTLN(F(" stored as next command and requested stop"));
                 } else {
                     if (executingBlockingCommand) {
                         // Logical error has happened
-#ifdef INFO
-                        Serial.println(
+                        CD_INFO_PRINTLN(
                                 F("Request to execute blocking command while another command is running. This should not happen!"));
-#endif
                         /*
                          * A blocking command may not be called as long as another blocking command is running.
                          * Try to stop again
@@ -247,10 +246,9 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
                     /*
                      * This call is blocking!!!
                      */
-#ifdef INFO
-                    Serial.print(F("Run blocking command: "));
-                    Serial.println(tCommandName);
-#endif
+                    CD_INFO_PRINT(F("Run blocking command: "));
+                    CD_INFO_PRINTLN (tCommandName);
+
                     IRMapping[i].CommandToCall();
 #ifdef TRACE
                     Serial.println(F("End of blocking command"));
@@ -289,10 +287,10 @@ void IRCommandDispatcher::checkAndRunSuspendedBlockingCommands() {
      * search IR code or take last rejected command and call associated function
      */
     if (BlockingCommandToRunNext != COMMAND_INVALID) {
-#ifdef INFO
-        Serial.print(F("Take stored command = 0x"));
-        Serial.println(BlockingCommandToRunNext, HEX);
-#endif
+
+        CD_INFO_PRINT(F("Take stored command = 0x"));
+        CD_INFO_PRINTLN(BlockingCommandToRunNext, HEX);
+
         IRReceivedData.command = BlockingCommandToRunNext;
         BlockingCommandToRunNext = COMMAND_INVALID;
         IRReceivedData.isRepeat = false;
@@ -301,8 +299,7 @@ void IRCommandDispatcher::checkAndRunSuspendedBlockingCommands() {
 }
 
 void IRCommandDispatcher::printIRCommandString(Print *aSerial) {
-#ifdef INFO
-    Serial.print(F("IRCommand="));
+    aSerial->print(F("IRCommand="));
     for (uint_fast8_t i = 0; i < sizeof(IRMapping) / sizeof(struct IRToCommandMappingStruct); ++i) {
         if (IRReceivedData.command == IRMapping[i].IRCode) {
             aSerial->println(reinterpret_cast<const __FlashStringHelper*>(IRMapping[i].CommandString));
@@ -310,7 +307,6 @@ void IRCommandDispatcher::printIRCommandString(Print *aSerial) {
         }
     }
     aSerial->println(reinterpret_cast<const __FlashStringHelper*>(unknown));
-#endif
 }
 
 void IRCommandDispatcher::setRequestToStopReceived() {

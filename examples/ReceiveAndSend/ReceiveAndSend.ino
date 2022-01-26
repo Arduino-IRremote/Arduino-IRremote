@@ -101,11 +101,11 @@ void setup() {
 #endif
 
     Serial.print(F("Ready to send IR signals at pin "));
-#if defined(ARDUINO_ARCH_STM32) || defined(ESP8266)
-    Serial.println(IR_SEND_PIN_STRING);
-#else
+#  if defined(IR_SEND_PIN_STRING)
+    Serial.print(IR_SEND_PIN_STRING);
+#  else
     Serial.print(IR_SEND_PIN);
-#endif
+#  endif
     Serial.print(F(" on press of button at pin "));
     Serial.println(SEND_BUTTON_PIN);
 

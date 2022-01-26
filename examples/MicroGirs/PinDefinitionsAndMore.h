@@ -34,15 +34,23 @@
  * ATtiny167    9           8           5 // Digispark pro number schema
  * ATtiny167    3           2           7
  * ATtiny3217   10          11          3 // TinyCore schema
- * ATtiny1604   2           PA5/3       %
+ * ATtiny1604   2           PA5|3       %
  * SAMD21       3           4           5
- * ESP8266      14 // D5    12 // D6    %
+ * ESP8266      14|D5       12|D6       %
  * ESP32        15          4           27
  * BluePill     PA6         PA7         PA3
  * APOLLO3      11          12          5
+ * RP2040       3|GPIO15    4|GPIO16    5|GPIO17
  */
 //#define _IR_MEASURE_TIMING // For debugging purposes.
-//
+
+/*
+ * We do not have pin restrictions for this CPU's, so lets use the hardware PWM for send carrier signal generation
+ */
+#if defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)
+#define SEND_PWM_BY_TIMER
+#endif
+
 #if defined(ESP8266)
 #define FEEDBACK_LED_IS_ACTIVE_LOW // The LED on my board (D4) is active LOW
 #define IR_RECEIVE_PIN          14 // D5
@@ -58,6 +66,7 @@
 
 #elif defined(ESP32)
 #include <Arduino.h>
+
 #define TONE_LEDC_CHANNEL        1  // Using channel 1 makes tone() independent of receiving timer -> No need to stop receiving timer.
 void tone(uint8_t _pin, unsigned int frequency){
     ledcAttachPin(_pin, TONE_LEDC_CHANNEL);
@@ -154,14 +163,34 @@ void noTone(uint8_t _pin){
 #define IR_SEND_PIN     12
 #define TONE_PIN         5
 
-#elif defined(ARDUINO_ARCH_MBED) // Arduino Nano 33 BLE
-#define IR_RECEIVE_PIN      2
-#define IR_SEND_PIN         3
-#define TONE_PIN            4
-#define APPLICATION_PIN     5
-#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN  7
+#elif defined(ARDUINO_ARCH_MBED) && defined(ARDUINO_ARCH_MBED_NANO)
+#define IR_RECEIVE_PIN      3   // GPIO15 Start with pin 3 since pin 2|GPIO25 is connected to LED on Pi pico
+#define IR_SEND_PIN         4   // GPIO16
+#define TONE_PIN            5
+#define APPLICATION_PIN     6
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 7 // E.g. used for examples which use LED_BUILDIN for example output.
+#define _IR_TIMING_TEST_PIN  8
 
+#elif defined(ARDUINO_ARCH_RP2040) // Pi Pico with arduino-pico core https://github.com/earlephilhower/arduino-pico
+#define IR_RECEIVE_PIN      15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
+#define IR_SEND_PIN         16
+#define TONE_PIN            17
+#define APPLICATION_PIN     18
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 19 // E.g. used for examples which use LED_BUILDIN for example output.
+#define _IR_TIMING_TEST_PIN  20
+
+// If you program the Nano RP2040 Connect with this core, then you must redefine LED_BUILTIN
+// and use the external reset with 1 kOhm to ground to enter UF2 mode
+#undef LED_BUILTIN
+#define LED_BUILTIN          6
+
+#elif defined(PARTICLE) // !!!UNTESTED!!!
+#define IR_RECEIVE_PIN      A4
+#define IR_SEND_PIN         A5 // Particle supports multiple pins
+
+/*
+ * 4 times the same (default) layout for easy adaption in the future
+ */
 #elif defined(TEENSYDUINO)
 #define IR_RECEIVE_PIN      2
 #define IR_SEND_PIN         3
@@ -172,6 +201,14 @@ void noTone(uint8_t _pin){
 
 #elif defined(__AVR__) // Default as for ATmega328 like on Uno, Nano etc.
 #define IR_RECEIVE_PIN      2 // To be compatible with interrupt example, pin 2 is chosen here.
+#define IR_SEND_PIN         3
+#define TONE_PIN            4
+#define APPLICATION_PIN     5
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
+#define _IR_TIMING_TEST_PIN  7
+
+#elif defined(ARDUINO_ARCH_MBED) // Arduino Nano 33 BLE
+#define IR_RECEIVE_PIN      2
 #define IR_SEND_PIN         3
 #define TONE_PIN            4
 #define APPLICATION_PIN     5

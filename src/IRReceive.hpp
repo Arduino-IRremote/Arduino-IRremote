@@ -151,19 +151,17 @@ void IRrecv::end() {
  */
 void IRrecv::enableIRIn() {
 
-    noInterrupts();
+    // Set pin mode
+    pinMode(irparams.IRReceivePin, INPUT);
 
-    // Setup pulse clock TickCounterForISR interrupt
-    timerConfigForReceive();
-    TIMER_ENABLE_RECEIVE_INTR;  // Timer interrupt enable
-    TIMER_RESET_INTR_PENDING;   // NOP for most platforms
+    // Setup for cyclic 50 us interrupt
+    timerConfigForReceive(); // no interrupts enabled here!
 
     // Initialize state machine state
     resume();
-    interrupts(); // after resume to avoid running through STOP state 1 time before switching to IDLE
 
-    // Set pin modes
-    pinMode(irparams.IRReceivePin, INPUT);
+    // Timer interrupt is enabled after state machine reset
+    TIMER_ENABLE_RECEIVE_INTR;
 }
 
 /**
@@ -914,7 +912,7 @@ void printActiveIRProtocols(Print *aSerial) {
     (void)aSerial; // to avoid compiler warnings
 #endif
 
-    }
+}
 /**
  * Internal function to print decoded result and flags in one line.
  * Ends with println().
@@ -931,7 +929,7 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
 #endif
         aSerial->print(' ');
         aSerial->print((aIRDataPtr->rawDataPtr->rawlen + 1) / 2, DEC);
-        aSerial->println(F(" bits received"));
+        aSerial->println(F(" bits (incl. gap and start) received"));
     } else {
         /*
          * New decoders have address and command
