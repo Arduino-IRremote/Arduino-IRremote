@@ -93,6 +93,17 @@ struct TinyIRReceiverStruct {
     bool IRRepeatDetected;
 };
 
+/*
+ * Can be used by the callback to transfer received data to main loop for further processing
+ * E.g. with volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
+ */
+struct TinyIRReceiverCallbackDataStruct {
+    uint16_t Address;
+    uint8_t Command;
+    bool isRepeat;
+    bool justWritten;
+};
+
 void initPCIInterruptForTinyReceiver();
 void enablePCIInterruptForTinyReceiver();
 void disablePCIInterruptForTinyReceiver();

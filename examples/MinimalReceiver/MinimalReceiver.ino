@@ -45,16 +45,16 @@
 #  else
 #define IR_INPUT_PIN    0 // PCINT0
 #  endif
-
 #elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
 #define IR_INPUT_PIN    10
-
+#elif defined(ESP8266)
+#define IR_INPUT_PIN    14 // D5
+#elif defined(ESP32)
+#define IR_INPUT_PIN    15
 #elif defined(ARDUINO_ARCH_MBED) && defined(ARDUINO_ARCH_MBED_NANO)
 #define IR_INPUT_PIN    3   // GPIO15 Use pin 3 since pin 2|GPIO25 is connected to LED on Pi pico
-
 #elif defined(ARDUINO_ARCH_RP2040) // Pi Pico with arduino-pico core https://github.com/earlephilhower/arduino-pico
 #define IR_INPUT_PIN    15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
-
 #else
 #define IR_INPUT_PIN    2
 //#define NO_LED_FEEDBACK_CODE // activating saves 14 bytes program space
@@ -76,9 +76,11 @@
 #define STR(x) STR_HELPER(x)
 #endif
 
+volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
+
 void setup() {
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB) || defined(SERIAL_PORT_USBVIRTUAL) || defined(ARDUINO_attiny3217)
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) || defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
     // Just to know which program is running on my Arduino
@@ -91,6 +93,17 @@ void setup() {
 }
 
 void loop() {
+    if (sCallbackData.justWritten) {
+        sCallbackData.justWritten = false;
+        Serial.print(F("Address=0x"));
+        Serial.print(sCallbackData.Address, HEX);
+        Serial.print(F(" Command=0x"));
+        Serial.print(sCallbackData.Command, HEX);
+        if (sCallbackData.isRepeat) {
+            Serial.print(F(" Repeat"));
+        }
+        Serial.println();
+    }
     /*
      * Put your code here
      */
@@ -107,11 +120,18 @@ void IRAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, boo
 #else
 void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
 #endif
-{
-    /*
-     * Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
-     */
-#if !defined(ARDUINO_ARCH_MBED) // For Mbed we get a kernel panic and "Error Message: Semaphore: 0x0, Not allowed in ISR context" for Serial.print()
+        {
+
+#if defined(ARDUINO_ARCH_MBED) || defined(ESP8266) || defined(ESP32)
+    // copy data
+    sCallbackData.Address = aAddress;
+    sCallbackData.Command = aCommand;
+    sCallbackData.isRepeat = isRepeat;
+    sCallbackData.justWritten = true;
+#else
+    // For Mbed we get a kernel panic and "Error Message: Semaphore: 0x0, Not allowed in ISR context" for Serial.print()
+    // for ESP32 we get a "Guru Meditation Error: Core  1 panic'ed" (we have an RTOS!)
+    //Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
     Serial.print(F("A=0x"));
     Serial.print(aAddress, HEX);
     Serial.print(F(" C=0x"));
