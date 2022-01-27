@@ -12,7 +12,7 @@
  *  !!!!!!!!!!!!!!!!!!!!!
  *
  *
- *  Copyright (C) 2020-2021  Armin Joachimsmeyer
+ *  Copyright (C) 2020-2022  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/ukw100/IRMP.
@@ -48,6 +48,12 @@
 
 #elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
 #define IR_INPUT_PIN    10
+
+#elif defined(ARDUINO_ARCH_MBED) && defined(ARDUINO_ARCH_MBED_NANO)
+#define IR_INPUT_PIN    3   // GPIO15 Use pin 3 since pin 2|GPIO25 is connected to LED on Pi pico
+
+#elif defined(ARDUINO_ARCH_RP2040) // Pi Pico with arduino-pico core https://github.com/earlephilhower/arduino-pico
+#define IR_INPUT_PIN    15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
 
 #else
 #define IR_INPUT_PIN    2
@@ -92,6 +98,7 @@ void loop() {
 
 /*
  * This is the function is called if a complete command was received
+ * It runs in an ISR context with interrupts enabled, so functions like delay() etc. are working here
  */
 #if defined(ESP8266)
 void ICACHE_RAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
@@ -104,6 +111,7 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
     /*
      * Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
      */
+#if !defined(ARDUINO_ARCH_MBED) // For Mbed we get a kernel panic and "Error Message: Semaphore: 0x0, Not allowed in ISR context" for Serial.print()
     Serial.print(F("A=0x"));
     Serial.print(aAddress, HEX);
     Serial.print(F(" C=0x"));
@@ -111,4 +119,5 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
     Serial.print(F(" R="));
     Serial.print(isRepeat);
     Serial.println();
+#endif
 }

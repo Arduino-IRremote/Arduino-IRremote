@@ -259,7 +259,7 @@ void IRPinChangeInterruptHandler(void)
                     // Reset state for new start
                     tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
 #if !defined(ARDUINO_ARCH_MBED)
-                    interrupts();
+                    interrupts(); // enable interrupts, so delay() etc. works in callback
 #endif
                     /*
                      * Address reduction to 8 bit
