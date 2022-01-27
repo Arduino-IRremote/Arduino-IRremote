@@ -1,9 +1,9 @@
-START ../src/UnitTest.cpp from Apr  8 2021
-Using library version 3.1.1
-Ready to receive IR signals at pin 2
-Ready to send IR signals at pin 3
-Send signal mark duration is 5 us, pulse correction is 3000 ns, total period is 26 us
--40 us are subtracted from all marks and added to all spaces for decoding
+START ../src/UnitTest.cpp from Jan 27 2022
+Using library version 3.6.0
+Ready to receive IR signals of protocols: NEC, Panasonic/Kaseikyo, Denon/Sharp, Sony, RC5, RC6, LG, JVC, Samsung, Whynter, Lego Power Functions, Bosewave , MagiQuest, Universal Distance, Hash at pin 3
+Send signal mark duration for 38kHz  is 8 us, pulse correction is 3000 ns, total period is 26 us
+5000 us is the (minimum) gap, after which the start of a new IR packet is assumed
+10 us are subtracted from all marks and added to all spaces for decoding
 
 address=0xFFF1 command=0x76
 
@@ -15,6 +15,9 @@ Protocol=NEC Address=0xFFF1 Command=0x76 Raw-Data=0x8976FFF1 32 bits LSB first
 
 Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats
 Protocol=NEC Address=0x80 Command=0x45 Raw-Data=0xBA457F80 32 bits LSB first
+
+Send NEC 16 bit address=0xFB04 and command 0x08 with exact timing (16 bit array format)
+Protocol=NEC Address=0x4 Command=0x8 Raw-Data=0xF708FB04 32 bits LSB first
 
 Send NEC / ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)
 Protocol=ONKYO Address=0x102 Command=0x304 Raw-Data=0x3040102 32 bits LSB first
@@ -29,10 +32,13 @@ Send Apple
 Protocol=APPLE Address=0xF1 Command=0x76 Raw-Data=0xF17687EE 32 bits LSB first
 
 Send Panasonic
-Protocol=PANASONIC Address=0xFF1 Command=0x76 Raw-Data=0x9976FF10 48 bits LSB first
+Protocol=PANASONIC Address=0xFF1 Command=0x76 Extra=0x2002 Raw-Data=0x9976FF10 48 bits LSB first
 
 Send Kaseikyo with 0x4711 as Vendor ID
-Protocol=KASEIKYO Address=0xFF1 Command=0x76 Extra=0x4711 Raw-Data=0x9A76FF13 48 bits LSB first
+Protocol=KASEIKYO Address=0xFF1 Command=0x76 Raw-Data=0x9A76FF13 48 bits LSB first
+
+Send Kaseikyo_Denon variant
+Protocol=KASEIKYO_DENON Address=0xFF1 Command=0x76 Extra=0x3256 Raw-Data=0x9976FF10 48 bits LSB first
 
 Send Denon
 Protocol=DENON Address=0x11 Command=0x76 Raw-Data=0x45D8 15 bits MSB first
@@ -70,9 +76,10 @@ Protocol=LG Address=0xF1 Command=0x7676 Raw-Data=0xF17676A 28 bits MSB first
 Send Bosewave with no address and 8 command bits
 Protocol=BOSEWAVE Address=0x0 Command=0x76 Raw-Data=0x8976 16 bits LSB first
 
-Force buffer overflow by sending 100 marks and spaces
-Protocol=UNKNOWN Hash=0x0 0 bits received
+Force buffer overflow by sending 280 marks and spaces
+Protocol=UNKNOWN Hash=0x0 0 bits (incl. gap and start) received
 Overflow detected
+Try to increase the "RAW_BUFFER_LENGTH" value of 112 in ../src/UnitTest.cpp
 
 
 address=0xF2 command=0x87
@@ -88,50 +95,4 @@ Protocol=ONKYO Address=0xF2 Command=0x8787 Raw-Data=0x878700F2 32 bits LSB first
 
 Send Apple
 Protocol=APPLE Address=0xF2 Command=0x87 Raw-Data=0xF28787EE 32 bits LSB first
-
-Send Panasonic
-Protocol=PANASONIC Address=0xF2 Command=0x87 Raw-Data=0xA8870F20 48 bits LSB first
-
-Send Kaseikyo with 0x4711 as Vendor ID
-Protocol=KASEIKYO Address=0xF2 Command=0x87 Extra=0x4711 Raw-Data=0xAB870F23 48 bits LSB first
-
-Send Denon
-Protocol=DENON Address=0x12 Command=0x87 Raw-Data=0x4A1C 15 bits MSB first
-
-Send Denon/Sharp variant
-Protocol=SHARP Address=0x12 Command=0x87 Raw-Data=0x4A1E 15 bits MSB first
-
-Send Sony/SIRCS with 7 command and 5 address bits
-Protocol=SONY Address=0x12 Command=0x7 Raw-Data=0x907 12 bits LSB first
-
-Send Sony/SIRCS with 7 command and 8 address bits
-Protocol=SONY Address=0xF2 Command=0x7 Raw-Data=0x7907 15 bits LSB first
-
-Send Sony/SIRCS with 7 command and 13 address bits
-Protocol=SONY Address=0xF2 Command=0x7 Raw-Data=0x7907 20 bits LSB first
-
-Send RC5
-Protocol=RC5 Address=0x12 Command=0x7 Raw-Data=0x1487 13 bits MSB first
-
-Send RC5X with 7.th MSB of command set
-Protocol=RC5 Address=0x12 Command=0x47 Toggle=1 Raw-Data=0xC87 13 bits MSB first
-
-Send RC6
-Protocol=RC6 Address=0xF2 Command=0x87 Raw-Data=0xF287 20 bits MSB first
-
-Send SAMSUNG
-Protocol=SAMSUNG Address=0xF2 Command=0x87 Raw-Data=0x788700F2 32 bits LSB first
-
-Send JVC
-Protocol=JVC Address=0xF2 Command=0x87 Raw-Data=0x87F2 16 bits LSB first
-
-Send LG
-Protocol=LG Address=0xF2 Command=0x8787 Raw-Data=0xF28787E 28 bits MSB first
-
-Send Bosewave with no address and 8 command bits
-Protocol=BOSEWAVE Address=0x0 Command=0x87 Raw-Data=0x7887 16 bits LSB first
-
-Force buffer overflow by sending 100 marks and spaces
-Protocol=UNKNOWN Hash=0x0 0 bits received
-Overflow detected
 

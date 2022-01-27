@@ -1316,52 +1316,13 @@ void timerConfigForReceive() {
 
 uint sSliceNumberForSendPWM;
 uint sChannelNumberForSendPWM;
-#define ENABLE_SEND_PWM_BY_TIMER    (enableSendPWM())
-#define DISABLE_SEND_PWM_BY_TIMER   (disableSendPWM())
-// pwm_advance_count(sSliceNumberForSendPWM); resets the timer forever :-(
-//#define DISABLE_SEND_PWM_BY_TIMER   pwm_set_chan_level(sSliceNumberForSendPWM, sChannelNumberForSendPWM, 0); pwm_advance_count(sSliceNumberForSendPWM); pwm_set_enabled(sSliceNumberForSendPWM, false)
-
-void enableSendPWM() {
-#    if defined(IR_SEND_PIN)
-    gpio_set_function(IR_SEND_PIN, GPIO_FUNC_PWM);
-#    else
-    gpio_set_function(IrSender.sendPin, GPIO_FUNC_PWM);
-#    endif
-    pwm_set_counter(sSliceNumberForSendPWM, 0);
-    pwm_set_enabled(sSliceNumberForSendPWM, true);
-}
+uint sIROutPuseWidth;
 
 /*
  * If we just disable the PWM, the counter stops and the output stays at the state is currently has
  */
-void disableSendPWM() {
-    /*
-     * Reset output pin like done in: IRsend::IRLedOff()
-     */
-#    if defined(IR_SEND_PIN)
-#      if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
-#        if defined(OUTPUT_OPEN_DRAIN)
-    digitalWrite(IR_SEND_PIN, HIGH); // Set output to inactive high.
-#        else
-    pinMode(IR_SEND_PIN, INPUT); // inactive state to mimic open drain
-#        endif
-#      else
-      digitalWrite(IR_SEND_PIN, LOW);
-#      endif
-
-#    else // defined(IR_SEND_PIN)
-#      if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
-#        if defined(OUTPUT_OPEN_DRAIN)
-    digitalWrite(IrSender.sendPin, HIGH); // Set output to inactive high.
-#        else
-    pinMode(IrSender.sendPin, INPUT); // inactive state to mimic open drain
-#        endif
-#      else
-      digitalWrite(IrSender.sendPin, LOW);
-#      endif
-#    endif // defined(IR_SEND_PIN)
-    pwm_set_enabled(sSliceNumberForSendPWM, false);
-}
+#define ENABLE_SEND_PWM_BY_TIMER    pwm_set_counter(sSliceNumberForSendPWM, 0); pwm_set_chan_level(sSliceNumberForSendPWM, sChannelNumberForSendPWM, sIROutPuseWidth);
+#define DISABLE_SEND_PWM_BY_TIMER   pwm_set_chan_level(sSliceNumberForSendPWM, sChannelNumberForSendPWM, 0); // this sets output also to LOW
 
 /*
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
@@ -1383,8 +1344,9 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
     pwm_config tPWMConfig = pwm_get_default_config();
     pwm_config_set_wrap(&tPWMConfig, tPWMWrapValue - 1);
     pwm_init(sSliceNumberForSendPWM, &tPWMConfig, false); // we do not want to send now
-
-    pwm_set_chan_level(sSliceNumberForSendPWM, sChannelNumberForSendPWM, ((tPWMWrapValue * IR_SEND_DUTY_CYCLE_PERCENT) / 100) - 1);
+    sIROutPuseWidth = ((tPWMWrapValue * IR_SEND_DUTY_CYCLE_PERCENT) / 100) - 1; // 985.84 for 38 kHz
+    pwm_set_chan_level(sSliceNumberForSendPWM, sChannelNumberForSendPWM, 0);
+    pwm_set_enabled(sSliceNumberForSendPWM, true);
 }
 #  endif // defined(SEND_PWM_BY_TIMER)
 

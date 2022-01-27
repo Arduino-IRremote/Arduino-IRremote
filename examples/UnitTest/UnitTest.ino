@@ -252,7 +252,7 @@ void loop() {
                 1690, 560, 1690, 560, 560/*1110 Inverted 8 of command*/, 560, 1690, 560, 1690, 560, 1690, 560,
                 1690/*1111 inverted 0 of command*/, 560 /*stop bit*/}; // Using exact NEC timing
         IrSender.sendRaw(irSignal, sizeof(irSignal) / sizeof(irSignal[0]), NEC_KHZ); // Note the approach used to automatically calculate the size of the array.
-        checkReceive(0xFB04, 0x08);
+        checkReceive(0xFB04 & 0xFF, 0x08);
         delay(DELAY_AFTER_SEND);
 #  endif
 
