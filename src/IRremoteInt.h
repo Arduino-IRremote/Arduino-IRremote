@@ -35,14 +35,6 @@
 
 #include <Arduino.h>
 
-#if !defined(RAW_BUFFER_LENGTH)
-#error Seems you use #include IRremoteInt.h in a file not containing main(). Please define RAW_BUFFER_LENGTH with the same value as in the main program and check if the macros IR_SEND_PIN and SEND_PWM_BY_TIMER are defined in the main program.
-#endif
-//#define RAW_BUFFER_LENGTH  100 // 100 is default
-//#define RAW_BUFFER_LENGTH  112 //  MagiQuest requires 112 bytes. enable this if DECODE_MAGIQUEST is enabled
-//#define SEND_PWM_BY_TIMER
-//#define IR_SEND_PIN            // here it is only interesting if it is defined, the value does not matter here
-
 #define MARK   1
 #define SPACE  0
 

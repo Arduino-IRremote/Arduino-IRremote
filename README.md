@@ -174,9 +174,15 @@ Example:
   If you read the first binary sequence backwards (right to left), you get the second sequence.
 
 # Using the new *.hpp files / how to avoid `multiple definitions` linker errors
-In order to support [compile options](#compile-options--macros-for-this-library) more easily, the line `#include <IRremote.h>` must be changed to  `#include <IRremote.hpp>`, but only in your **main program (.ino file)**, like it is done in the examples.<br/>
-In **all other files** you must use `#include <IRremoteInt.h>`, otherwise you will get tons of **"multiple definition"** errors.
-Be careful to define these 3 macros `RAW_BUFFER_LENGTH` and `IR_SEND_PIN` and `SEND_PWM_BY_TIMER` in IRremoteInt.h consistent with the definitions in the .ino file!
+In order to support [compile options](#compile-options--macros-for-this-library) more easily, the line `#include <IRremote.h>` must be changed to  `#include <IRremote.hpp>`, but only in your **main program (aka *.ino file with setup() and loop())**, like it is done in the examples.<br/>
+In **all other files** you must use
+
+```c++
+#define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE
+#include <IRremote.hpp>
+```
+otherwise you will get tons of **"multiple definition"** errors.<br/>
+Take care that all macros you define in yor main program before `#include <IRremote.hpp>`, especially: `RAW_BUFFER_LENGTH` and `IR_SEND_PIN` and `SEND_PWM_BY_TIMER` are set to default values in *IRremote.hpp* and should also be specified before this include!
 
 # Receiving IR codes
 Check for **available data** can be done by `if (IrReceiver.decode()) {`. This also decodes the received data.

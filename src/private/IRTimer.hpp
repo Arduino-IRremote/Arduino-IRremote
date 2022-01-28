@@ -1088,8 +1088,8 @@ void timerConfigForReceive() {
 #  endif
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(sESP32Timer)
-#define TIMER_DISABLE_RECEIVE_INTR  if (sESP32Timer != NULL) {timerEnd(sESP32Timer); timerDetachInterrupt(sESP32Timer);}
+#define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(s50usTimer)
+#define TIMER_DISABLE_RECEIVE_INTR  if (s50usTimer != NULL) {timerEnd(s50usTimer); timerDetachInterrupt(s50usTimer);}
 // Redefinition of ISR macro which creates a plain function now
 #  ifdef ISR
 #undef ISR
@@ -1099,7 +1099,7 @@ IRAM_ATTR void IRTimerInterruptHandler();
 
 // Variables specific to the ESP32.
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
-hw_timer_t *sESP32Timer;
+hw_timer_t *s50usTimer;
 
 /*
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
@@ -1108,10 +1108,10 @@ void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
-    sESP32Timer = timerBegin(1, 80, true);
-    timerAttachInterrupt(sESP32Timer, &IRTimerInterruptHandler, 1);
+    s50usTimer = timerBegin(1, 80, true);
+    timerAttachInterrupt(s50usTimer, &IRTimerInterruptHandler, 1);
     // every 50 us, autoreload = true
-    timerAlarmWrite(sESP32Timer, MICROS_PER_TICK, true);
+    timerAlarmWrite(s50usTimer, MICROS_PER_TICK, true);
 }
 
 #  if defined(SEND_PWM_BY_TIMER)
@@ -1236,8 +1236,8 @@ void TC3_Handler(void) {
 #include "mbed.h"
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_RECEIVE_INTR   sMbedTimer.attach(IRTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
-#define TIMER_DISABLE_RECEIVE_INTR  sMbedTimer.detach();
+#define TIMER_ENABLE_RECEIVE_INTR   s50usTimer.attach(IRTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
+#define TIMER_DISABLE_RECEIVE_INTR  s50usTimer.detach();
 
 // Redefinition of ISR macro which creates a plain function now
 #  ifdef ISR
@@ -1246,13 +1246,13 @@ void TC3_Handler(void) {
 #define ISR() void IRTimerInterruptHandler(void)
 void IRTimerInterruptHandler();
 
-mbed::Ticker sMbedTimer;
+mbed::Ticker s50usTimer;
 
 /*
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
  */
 void timerConfigForReceive() {
-    sMbedTimer.attach(IRTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
+    s50usTimer.attach(IRTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
 }
 
 #  if defined(SEND_PWM_BY_TIMER)
@@ -1289,11 +1289,11 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #elif defined(ARDUINO_ARCH_RP2040) // Raspberry Pi Pico, Adafruit Feather RP2040, etc.
 #include "pico/time.h"
 
-repeating_timer_t sRP2040Timer;
+repeating_timer_t s50usTimer;
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_RECEIVE_INTR   add_repeating_timer_us(MICROS_PER_TICK, IRTimerInterruptHandlerHelper, NULL, &sRP2040Timer);
-#define TIMER_DISABLE_RECEIVE_INTR  cancel_repeating_timer(&sRP2040Timer);
+#define TIMER_ENABLE_RECEIVE_INTR   add_repeating_timer_us(-(MICROS_PER_TICK), IRTimerInterruptHandlerHelper, NULL, &s50usTimer);
+#define TIMER_DISABLE_RECEIVE_INTR  cancel_repeating_timer(&s50usTimer);
 
 // Redefinition of ISR macro which creates a plain function now
 #  ifdef ISR
@@ -1413,8 +1413,8 @@ extern "C" {
 #  endif
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_RECEIVE_INTR   sSTM32Timer.resume()
-#define TIMER_DISABLE_RECEIVE_INTR  sSTM32Timer.pause()
+#define TIMER_ENABLE_RECEIVE_INTR   s50usTimer.resume()
+#define TIMER_DISABLE_RECEIVE_INTR  s50usTimer.pause()
 
 // Redefinition of ISR macro which creates a plain function now
 #  ifdef ISR
@@ -1427,17 +1427,17 @@ void IRTimerInterruptHandler();
  * Use timer 3 as IR timer.
  * Timer 3 blocks PA6, PA7, PB0, PB1, so if you require one of them as tone() or Servo output, you must choose another timer.
  */
-HardwareTimer sSTM32Timer(3);
+HardwareTimer s50usTimer(3);
 
 /*
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
  */
 void timerConfigForReceive() {
-    sSTM32Timer.setMode(TIMER_CH1, TIMER_OUTPUT_COMPARE);
-    sSTM32Timer.setPrescaleFactor(1);
-    sSTM32Timer.setOverflow((F_CPU / MICROS_IN_ONE_SECOND) * MICROS_PER_TICK);
-    sSTM32Timer.attachInterrupt(TIMER_CH1, IRTimerInterruptHandler);
-    sSTM32Timer.refresh();
+    s50usTimer.setMode(TIMER_CH1, TIMER_OUTPUT_COMPARE);
+    s50usTimer.setPrescaleFactor(1);
+    s50usTimer.setOverflow((F_CPU / MICROS_IN_ONE_SECOND) * MICROS_PER_TICK);
+    s50usTimer.attachInterrupt(TIMER_CH1, IRTimerInterruptHandler);
+    s50usTimer.refresh();
 }
 
 /**********************************************************************************************************************
@@ -1453,8 +1453,8 @@ void timerConfigForReceive() {
 #  endif
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_RECEIVE_INTR   sSTM32Timer.resume()
-#define TIMER_DISABLE_RECEIVE_INTR  sSTM32Timer.pause()
+#define TIMER_ENABLE_RECEIVE_INTR   s50usTimer.resume()
+#define TIMER_DISABLE_RECEIVE_INTR  s50usTimer.pause()
 
 // Redefinition of ISR macro which creates a plain function now
 #  ifdef ISR
@@ -1468,18 +1468,18 @@ void IRTimerInterruptHandler();
  * Timer 4 blocks PB6, PB7, PB8, PB9, so if you need one them as tone() or Servo output, you must choose another timer.
  */
 #  if defined(TIM4)
-HardwareTimer sSTM32Timer(TIM4);
+HardwareTimer s50usTimer(TIM4);
 #  else
-HardwareTimer sSTM32Timer(TIM2);
+HardwareTimer s50usTimer(TIM2);
 #  endif
 
 /*
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
  */
 void timerConfigForReceive() {
-    sSTM32Timer.setOverflow(MICROS_PER_TICK, MICROSEC_FORMAT); // 50 uS
-    sSTM32Timer.attachInterrupt(IRTimerInterruptHandler);
-    sSTM32Timer.resume();
+    s50usTimer.setOverflow(MICROS_PER_TICK, MICROSEC_FORMAT); // 50 uS
+    s50usTimer.attachInterrupt(IRTimerInterruptHandler);
+    s50usTimer.resume();
 }
 
 /***************************************
