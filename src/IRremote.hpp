@@ -238,6 +238,12 @@
 #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)
 #include "private/IRTimer.hpp"  // defines IR_SEND_PIN for AVR and SEND_PWM_BY_TIMER
 #  if !defined(NO_LED_FEEDBACK_CODE)
+#    if !defined(LED_BUILTIN)
+/*
+ * print a warning
+ */
+#warning INFO: No definition for LED_BUILTIN found -> default LED feedback is disabled.
+#    endif
 #include "IRFeedbackLED.hpp"
 #  endif
 /*

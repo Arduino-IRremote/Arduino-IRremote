@@ -78,7 +78,8 @@
 
 volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
 
-void setup() {
+void setup()
+{
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) || defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
@@ -92,14 +93,17 @@ void setup() {
     Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_INPUT_PIN)));
 }
 
-void loop() {
-    if (sCallbackData.justWritten) {
+void loop()
+{
+    if (sCallbackData.justWritten)
+    {
         sCallbackData.justWritten = false;
         Serial.print(F("Address=0x"));
         Serial.print(sCallbackData.Address, HEX);
         Serial.print(F(" Command=0x"));
         Serial.print(sCallbackData.Command, HEX);
-        if (sCallbackData.isRepeat) {
+        if (sCallbackData.isRepeat)
+        {
             Serial.print(F(" Repeat"));
         }
         Serial.println();
@@ -120,18 +124,21 @@ void IRAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, boo
 #else
 void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
 #endif
-        {
+{
 
-#if defined(ARDUINO_ARCH_MBED) || defined(ESP8266) || defined(ESP32)
-    // copy data
+#if defined(ARDUINO_ARCH_MBED) || defined(ESP32)
+    // Copy data for main loop, this is the recommended way for handling a callback :-)
     sCallbackData.Address = aAddress;
     sCallbackData.Command = aCommand;
     sCallbackData.isRepeat = isRepeat;
     sCallbackData.justWritten = true;
 #else
-    // For Mbed we get a kernel panic and "Error Message: Semaphore: 0x0, Not allowed in ISR context" for Serial.print()
-    // for ESP32 we get a "Guru Meditation Error: Core  1 panic'ed" (we have an RTOS!)
-    //Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
+    /*
+     * This is not allowed in ISR context for any kind of RTOS
+     * For Mbed we get a kernel panic and "Error Message: Semaphore: 0x0, Not allowed in ISR context" for Serial.print()
+     * for ESP32 we get a "Guru Meditation Error: Core  1 panic'ed" (we also have an RTOS running!)
+     */
+    // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
     Serial.print(F("A=0x"));
     Serial.print(aAddress, HEX);
     Serial.print(F(" C=0x"));

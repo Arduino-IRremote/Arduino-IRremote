@@ -31,7 +31,8 @@
  */
 #include <Arduino.h>
 
-#include <IRremoteInt.h>
+#define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE
+#include <IRremote.hpp>
 
 class IRExtensionClass
 {

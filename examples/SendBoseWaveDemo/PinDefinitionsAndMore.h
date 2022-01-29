@@ -127,11 +127,13 @@ void noTone(uint8_t _pin){
 #define TONE_PIN         9
 #define _IR_TIMING_TEST_PIN 8
 
-#elif defined(__AVR_ATtiny3217__)
+#elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // TinyCore boards
 #define IR_RECEIVE_PIN  10
 #define IR_SEND_PIN     11
 #define TONE_PIN         3
 #define APPLICATION_PIN  5
+
+#define LED_BUILTIN     15 // No LED available on the board, take the one on the programming board which is connected to the DAC output
 
 #elif defined(__AVR_ATtiny1604__)
 #define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.
@@ -156,7 +158,7 @@ void noTone(uint8_t _pin){
 #define TONE_PIN            4
 #define APPLICATION_PIN     5
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN  7
+#define _IR_TIMING_TEST_PIN 7
 
 #elif defined(ARDUINO_ARCH_APOLLO3)
 #define IR_RECEIVE_PIN  11
@@ -169,7 +171,7 @@ void noTone(uint8_t _pin){
 #define TONE_PIN            5
 #define APPLICATION_PIN     6
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 7 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN  8
+#define _IR_TIMING_TEST_PIN 8
 
 #elif defined(ARDUINO_ARCH_RP2040) // Pi Pico with arduino-pico core https://github.com/earlephilhower/arduino-pico
 #define IR_RECEIVE_PIN      15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
@@ -177,7 +179,7 @@ void noTone(uint8_t _pin){
 #define TONE_PIN            17
 #define APPLICATION_PIN     18
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 19 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN  20
+#define _IR_TIMING_TEST_PIN 20
 
 // If you program the Nano RP2040 Connect with this core, then you must redefine LED_BUILTIN
 // and use the external reset with 1 kOhm to ground to enter UF2 mode
@@ -188,6 +190,8 @@ void noTone(uint8_t _pin){
 #define IR_RECEIVE_PIN      A4
 #define IR_SEND_PIN         A5 // Particle supports multiple pins
 
+#define LED_BUILTIN         D7
+
 /*
  * 4 times the same (default) layout for easy adaption in the future
  */
@@ -197,7 +201,7 @@ void noTone(uint8_t _pin){
 #define TONE_PIN            4
 #define APPLICATION_PIN     5
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN  7
+#define _IR_TIMING_TEST_PIN 7
 
 #elif defined(__AVR__) // Default as for ATmega328 like on Uno, Nano etc.
 #define IR_RECEIVE_PIN      2 // To be compatible with interrupt example, pin 2 is chosen here.
@@ -205,7 +209,13 @@ void noTone(uint8_t _pin){
 #define TONE_PIN            4
 #define APPLICATION_PIN     5
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN  7
+#define _IR_TIMING_TEST_PIN 7
+
+#  if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro is __AVR_ATmega32U4__ but has different external circuit
+// We have no built in LED at pin 13 -> reuse RX LED
+#undef LED_BUILTIN
+#define LED_BUILTIN         LED_BUILTIN_RX
+#  endif
 
 #elif defined(ARDUINO_ARCH_MBED) // Arduino Nano 33 BLE
 #define IR_RECEIVE_PIN      2
@@ -213,7 +223,7 @@ void noTone(uint8_t _pin){
 #define TONE_PIN            4
 #define APPLICATION_PIN     5
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN  7
+#define _IR_TIMING_TEST_PIN 7
 
 #elif defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM)
 #define IR_RECEIVE_PIN      2
@@ -221,7 +231,7 @@ void noTone(uint8_t _pin){
 #define TONE_PIN            4
 #define APPLICATION_PIN     5
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN  7
+#define _IR_TIMING_TEST_PIN 7
 
 // On the Zero and others we switch explicitly to SerialUSB
 #define Serial SerialUSB
@@ -240,7 +250,7 @@ void noTone(uint8_t _pin){
 #define IR_RECEIVE_PIN      2
 #define IR_SEND_PIN         3
 #define APPLICATION_PIN     1
-#define _IR_TIMING_TEST_PIN  4
+#define _IR_TIMING_TEST_PIN 4
 
 #define tone(...) void()    // no tone() available
 #define noTone(a) void()
@@ -254,7 +264,7 @@ void noTone(uint8_t _pin){
 #define TONE_PIN            4
 #define APPLICATION_PIN     5
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN  7
+#define _IR_TIMING_TEST_PIN 7
 #endif // defined(ESP8266)
 
 #if !defined (FLASHEND)

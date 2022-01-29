@@ -32,8 +32,6 @@
 #ifndef IR_FEEDBACK_LED_HPP
 #define IR_FEEDBACK_LED_HPP
 
-#include "private/IRFeedbackLEDDefs.h"
-
 /** \addtogroup FeedbackLEDFunctions Feedback LED functions
  * @{
  */
@@ -50,11 +48,13 @@ struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED contro
 
 /**
  * Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving
- * @param aFeedbackLEDPin If aFeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aFeedbackLEDPin If aFeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ *                        If FeedbackLEDPin == 0 and no LED_BUILTIN defined, disable LED feedback
  * @param aEnableLEDFeedback true -> enable blinking of Feedback LED
  */
 void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback) {
-    FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin; // default is 0
+
+    FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin; // default is 0 -> use LED_BUILTIN if available, else disable feedback
 
     FeedbackLEDControl.LedFeedbackEnabled = aEnableLEDFeedback;
     if (aEnableLEDFeedback) {
@@ -63,6 +63,8 @@ void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback) {
 #ifdef LED_BUILTIN
         } else {
             pinMode(LED_BUILTIN, OUTPUT);
+#else
+            FeedbackLEDControl.LedFeedbackEnabled = false; // we have no LED_BUILTIN available
 #endif
         }
     }
@@ -99,9 +101,13 @@ void setFeedbackLED(bool aSwitchLedOn) {
 #else
                 digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
 #endif
-#ifdef FEEDBACK_LED_ON
+#ifdef LED_BUILTIN // use fast macros here
             } else {
-                FEEDBACK_LED_ON();   // if no user defined LED pin, turn default LED pin for the hardware on
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+                digitalWriteFast(LED_BUILTIN, LOW); // For AVR, this generates a single cbi command
+#  else
+                digitalWriteFast(LED_BUILTIN, HIGH); // For AVR, this generates a single sbi command
+#  endif
 #endif
             }
         } else {
@@ -111,9 +117,13 @@ void setFeedbackLED(bool aSwitchLedOn) {
 #else
                 digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED off
 #endif
-#ifdef FEEDBACK_LED_OFF
+#ifdef LED_BUILTIN // use fast macros here
             } else {
-                FEEDBACK_LED_OFF();   // if no user defined LED pin, turn default LED pin for the hardware on
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+                digitalWriteFast(LED_BUILTIN, HIGH); // For AVR, this generates a single sbi command
+#  else
+                digitalWriteFast(LED_BUILTIN, LOW); // For AVR, this generates a single cbi command
+#  endif
 #endif
             }
         }
