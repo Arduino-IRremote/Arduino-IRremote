@@ -67,8 +67,9 @@
 #if !defined(NO_DECODER) // for sending raw only
 #if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \
-|| defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) || defined(DECODE_HASH) \
-|| defined(DECODE_BOSEWAVE) || defined(DECODE_LEGO_PF) || defined(DECODE_WHYNTER)))
+|| defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) \
+|| defined(DECODE_DISTANCE) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
+|| defined(DECODE_LEGO_PF) || defined(DECODE_WHYNTER)))
 #define DECODE_DENON        // Includes Sharp
 #define DECODE_JVC
 #define DECODE_KASEIKYO
