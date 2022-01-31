@@ -34,17 +34,13 @@
 
 // select only NEC and the universal decoder for pulse width or pulse distance protocols
 #define DECODE_NEC          // Includes Apple and Onkyo
-#define DECODE_DISTANCE
+#define DECODE_DISTANCE     // in case NEC is not received correctly
 
 /*
  * Define macros for input and output pin etc.
  */
 #include "PinDefinitionsAndMore.h"
 
-#if FLASHEND <= 0x1FFF  // For 8k flash or less, like ATtiny85. Exclude exotic protocols.
-#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program space.
-#define EXCLUDE_EXOTIC_PROTOCOLS
-#endif
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program space.
 //#define EXCLUDE_EXOTIC_PROTOCOLS
 //#define SEND_PWM_BY_TIMER
@@ -122,6 +118,9 @@ uint16_t sAddress = 0x0102;
 uint8_t sCommand = 0x34;
 uint8_t sRepeats = 1;
 
+/*
+ * Send NEC IR protocol
+ */
 void send_ir_data() {
     Serial.print(F("Sending: 0x"));
     Serial.print(sAddress, HEX);

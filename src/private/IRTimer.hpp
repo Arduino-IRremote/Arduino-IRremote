@@ -96,6 +96,12 @@
 #define IR_USE_AVR_TIMER_B     //  send pin = pin 6 on ATmega4809 1 on ATmega4809
 #  endif
 
+#elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // e.g. TinyCore boards
+#  if !defined(IR_USE_AVR_TIMER_A) && !defined(IR_USE_AVR_TIMER_D)
+#define IR_USE_AVR_TIMER_A // use this if you use MegaTinyCore, Tone is on TCB and millis() on TCD
+//#define IR_USE_AVR_TIMER_D // use this if you use TinyCore
+#  endif
+
 // ATmega8u2, ATmega16U2, ATmega32U2
 #elif defined(__AVR_ATmega8U2__) || defined(__AVR_ATmega16U2__)  || defined(__AVR_ATmega32U2__)
 #  if !defined(IR_USE_AVR_TIMER1)
@@ -211,12 +217,6 @@
 #  if !defined(IR_USE_AVR_TIMER1)
 #define IR_USE_AVR_TIMER1     // send pin = pin 13
 #  endif
-
-/***************************************
- * CPU's with TinyCore
- ***************************************/
-#elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // TinyCore boards
-#define IR_USE_AVR_TIMER_D
 
 #endif // AVR CPU's
 /**********************************************************************************************************************
@@ -737,6 +737,29 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 }
 #  endif // defined(SEND_PWM_BY_TIMER)
 
+/*
+ * AVR TimerA for TinyCore 32 (16 bits)
+ */
+#elif defined(IR_USE_AVR_TIMER_A)
+#define TIMER_RESET_INTR_PENDING    TCA0.SINGLE.INTFLAGS = TCA_SINGLE_OVF_bm
+#define TIMER_ENABLE_RECEIVE_INTR   TCA0.SINGLE.INTCTRL = TCA_SINGLE_OVF_bm
+#define TIMER_DISABLE_RECEIVE_INTR  (TCA0.SINGLE.INTCTRL &= ~(TCA_SINGLE_OVF_bm))
+#define TIMER_INTR_NAME             TCA0_OVF_vect
+// For MegaTinyCore:
+// TCB1 is used by Tone()
+// TCB2 is used by Servo, but we cannot hijack the ISR, so we must use a dedicated timer for the 20 ms interrupt
+// TCB3 is used by millis()
+// Must use TCA0, since TCBx have only prescaler %2. Use single (16bit) mode, because it seems to be easier :-)
+void timerConfigForReceive() {
+    TCA0.SINGLE.CTRLD = 0; // Single mode - required at least for MegaTinyCore
+    TCA0.SINGLE.CTRLB = TCA_SINGLE_WGMODE_NORMAL_gc;                        // Normal mode, top = PER
+    TCA0.SINGLE.PER = (F_CPU / MICROS_IN_ONE_SECOND) * MICROS_PER_TICK;     // 800 at 16 MHz
+    TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;   // set prescaler to 1 and enable timer
+}
+
+#  ifdef SEND_PWM_BY_TIMER
+#error "No support for hardware PWM generation for ESP8266"
+#  endif // defined(SEND_PWM_BY_TIMER)
 
 /*
  * AVR TimerB  (8 bits) for ATmega4809 (Nano Every, Uno WiFi Rev2)
@@ -798,15 +821,14 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #define TIMER_INTR_NAME             TCD0_OVF_vect
 
 void timerConfigForReceive() {
-    TCD0.CTRLA = 0;                                                 // reset enable bit in order to unprotect the other bits
-    TCD0.CTRLB = TCD_WGMODE_ONERAMP_gc;// must be set since it is used by PWM
+    TCD0.CTRLA = 0;                     // reset enable bit in order to unprotect the other bits
+    TCD0.CTRLB = TCD_WGMODE_ONERAMP_gc; // must be set since it is used by PWM
 //    TCD0.CMPBSET = 80;
     TCD0.CMPBCLR = ((F_CPU * MICROS_PER_TICK) / MICROS_IN_ONE_SECOND) - 1;
 
-    _PROTECTED_WRITE(TCD0.FAULTCTRL, 0);// must disable WOA output at pin 13/PA4
+    _PROTECTED_WRITE(TCD0.FAULTCTRL, 0); // must disable WOA output at pin 13/PA4
 
-    TCD0.INTFLAGS = TCD_OVF_bm;// reset interrupt flags
-//    TCD0.INTCTRL = TCD_OVF_bm;          // overflow interrupt
+    TCD0.INTFLAGS = TCD_OVF_bm;         // reset interrupt flags
     // check enable ready
 //    while ((TCD0.STATUS & TCD_ENRDY_bm) == 0); // Wait for Enable Ready to be high - I guess it is not required
     // enable timer - this locks the other bits and static registers and activates values in double buffered registers

@@ -4,7 +4,7 @@
  *  Contains pin definitions for IRremote examples for various platforms
  *  as well as definitions for feedback LED and tone() and includes
  *
- *  Copyright (C) 2021  Armin Joachimsmeyer
+ *  Copyright (C) 2021-2022  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -27,14 +27,14 @@
 /*
  * Pin mapping table for different platforms
  *
- * Platform     IR input    IR output   Tone
- * -----------------------------------------
+ * Platform     IR input    IR output   Tone      Core/Pin schema
+ * --------------------------------------------------------------
  * DEFAULT/AVR  2           3           4
- * ATtinyX5     0           4           3
- * ATtiny167    9           8           5 // Digispark pro number schema
- * ATtiny167    3           2           7
- * ATtiny3217   10          11          3 // TinyCore schema
- * ATtiny1604   2           PA5|3       %
+ * ATtinyX5     0|PB0       4|PB4       3|PB3
+ * ATtiny167    3|PA3       2|PA2       7|PA7     ATTinyCore
+ * ATtiny167    9|PA3       8|PA2       5|PA7     Digispark pro
+ * ATtiny3217  18|PA1      19|PA2      20|PA3     MegaTinyCore
+ * ATtiny1604   2           3|PA5       %
  * SAMD21       3           4           5
  * ESP8266      14|D5       12|D6       %
  * ESP32        15          4           27
@@ -127,13 +127,13 @@ void noTone(uint8_t _pin){
 #define TONE_PIN         9
 #define _IR_TIMING_TEST_PIN 8
 
-#elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // TinyCore boards
-#define IR_RECEIVE_PIN  10
-#define IR_SEND_PIN     11
-#define TONE_PIN         3
-#define APPLICATION_PIN  5
-
-#define LED_BUILTIN     15 // No LED available on the board, take the one on the programming board which is connected to the DAC output
+#elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
+#define IR_RECEIVE_PIN  18
+#define IR_SEND_PIN     19
+#define TONE_PIN        20
+#define APPLICATION_PIN  0 // PA4
+#undef LED_BUILTIN         // No LED available on the TinyCore 32 board, take the one on the programming board which is connected to the DAC output
+#define LED_BUILTIN      2 // PA6
 
 #elif defined(__AVR_ATtiny1604__)
 #define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.

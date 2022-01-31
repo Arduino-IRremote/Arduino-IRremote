@@ -44,15 +44,13 @@
 #define DECODE_DENON        // Includes Sharp
 #define DECODE_KASEIKYO
 #define DECODE_NEC          // Includes Apple and Onkyo
-#  if FLASHEND >= 0x1FFF && !defined(CLOCK_SOURCE) // ATTinyCore is bigger than digispark core
-#define DECODE_SONY
-#  endif
 #endif
 
 #if FLASHEND >= 0x3FFF      // For 16k flash or more, like ATtiny1604
 #define DECODE_JVC
 #define DECODE_RC5
 #define DECODE_RC6
+#define DECODE_SONY
 #define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
 
 #define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols
@@ -320,14 +318,13 @@ void loop() {
     checkReceive(sAddress & 0x1F, sCommand);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND >= 0x3FFF || defined(DIGISTUMPCORE) // ATTinyCore is bigger than Digispark core
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0x1F, sCommand & 0x7F, sRepeats);
     checkReceive(sAddress & 0x1F, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
-#endif
-#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
+
     Serial.println(F("Send Sony/SIRCS with 7 command and 8 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0xFF, sCommand, sRepeats, SIRCS_15_PROTOCOL);
