@@ -66,8 +66,9 @@ struct IRDataForCommandDispatcherStruct {
 #define COMMAND_EMPTY       0xFE // code no command received
 #define COMMAND_INVALID     0xFF // code for command received, but not in mapping
 
-#define RETURN_IF_STOP if (IRDispatcher.requestToStopReceived) return
-#define DELAY_AND_RETURN_IF_STOP(aDurationMillis) if (IRDispatcher.delayAndCheckForStop(aDurationMillis)) return
+#define RETURN_IF_STOP  if (IRDispatcher.requestToStopReceived) return
+#define BREAK_IF_STOP   if (IRDispatcher.requestToStopReceived) break
+#define DELAY_AND_RETURN_IF_STOP(aDurationMillis)   if (IRDispatcher.delayAndCheckForStop(aDurationMillis)) return
 
 class IRCommandDispatcher {
 public:

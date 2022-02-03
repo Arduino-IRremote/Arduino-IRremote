@@ -9,7 +9,7 @@
 
 # This is the name of the workflow, visible on GitHub UI.
 name: LibraryBuild
-on:  
+on:
   push: # see: https://help.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-event-pull_request
     paths:
     - '**.ino'
@@ -139,7 +139,6 @@ jobs:
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
-#            sketches-exclude: MinimalReceiver,IRDispatcherDemo,MicroGirs,UnitTest  # digitalWriteFast.h not available for this board
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 

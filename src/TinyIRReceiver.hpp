@@ -13,7 +13,7 @@
  *  !!!!!!!!!!!!!!!!!!!!!
  *
  *
- *  Copyright (C) 2021  Armin Joachimsmeyer
+ *  Copyright (C) 2021-2022  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/ukw100/IRMP.
@@ -31,6 +31,15 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *
+ */
+/*
+ * This library can be configured at compile time by the following options / macros:
+ * For more details see: https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library (scroll down)
+ *
+ * - IR_INPUT_PIN           The pin number for TinyIRReceiver IR input.
+ * - IR_FEEDBACK_LED_PIN    The pin number for TinyIRReceiver feedback LED.
+ * - NO_LED_FEEDBACK_CODE   Disables the feedback LED function. Saves 14 bytes program space.
  *
  */
 
