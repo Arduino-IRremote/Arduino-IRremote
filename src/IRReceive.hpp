@@ -39,7 +39,7 @@
 /**
  * The receiver instance
  */
-IRrecv IrReceiver;
+extern IRrecv IrReceiver;
 
 /*
  * The control structure instance
