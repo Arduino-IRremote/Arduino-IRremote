@@ -118,7 +118,7 @@ void setFeedbackLED(bool aSwitchLedOn) {
         if (aSwitchLedOn) {
             if (FeedbackLEDControlSend.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED on
+                digitalWrite(FeedbackLEDControlSend.FeedbackLEDPin, LOW); // Turn user defined pin LED on
 #else
                 digitalWrite(FeedbackLEDControlSend.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
 #endif
@@ -134,7 +134,7 @@ void setFeedbackLED(bool aSwitchLedOn) {
         } else {
             if (FeedbackLEDControlSend.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED off
+                digitalWrite(FeedbackLEDControlSend.FeedbackLEDPin, HIGH); // Turn user defined pin LED off
 #else
                 digitalWrite(FeedbackLEDControlSend.FeedbackLEDPin, LOW); // Turn user defined pin LED off
 #endif
