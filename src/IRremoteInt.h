@@ -340,11 +340,12 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
  * Feedback LED related functions
  ****************************************************/
 void setFeedbackLED(bool aSwitchLedOn);
+void setFeedbackLEDRecv(bool aSwitchLedOn);
 void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback); // if aFeedbackLEDPin == 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+void setLEDFeedbackRecv(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback);
 void setLEDFeedback(bool aEnableLEDFeedback); // Direct replacement for blink13()
 void enableLEDFeedback();
 void disableLEDFeedback();
-
 void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use setLEDFeedback()."))); // deprecated
 
 /*
