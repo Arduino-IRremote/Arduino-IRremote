@@ -8,7 +8,7 @@
  *************************************************************************************
  * MIT License
  *
- * Copyright (c) 2021 Armin Joachimsmeyer
+ * Copyright (c) 2021-2022 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,30 +41,31 @@
  */
 struct FeedbackLEDControlStruct {
     uint8_t FeedbackLEDPin;         ///< if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
-    bool LedFeedbackEnabled;        ///< true -> enable blinking of pin on IR processing
+    uint8_t LedFeedbackEnabled;     ///< LED_FEEDBACK_ENABLED_FOR_RECEIVE or LED_FEEDBACK_ENABLED_FOR_SEND -> enable blinking of pin on IR processing
 };
 
 struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED control instance
 
 /**
- * Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving
+ * Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving
+ * Cannot disable it here!!! Use disableLEDFeedbackForReceive() or disableLEDFeedbackForSend()
  * @param aFeedbackLEDPin If aFeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  *                        If FeedbackLEDPin == 0 and no LED_BUILTIN defined, disable LED feedback
- * @param aEnableLEDFeedback true -> enable blinking of Feedback LED
+ * @param aEnableLEDFeedback If LED_FEEDBACK_ENABLED_FOR_RECEIVE or LED_FEEDBACK_ENABLED_FOR_SEND -> enable blinking of Feedback LED
  */
-void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback) {
+void setLEDFeedback(uint8_t aFeedbackLEDPin, uint8_t aEnableLEDFeedback) {
 
     FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin; // default is 0 -> use LED_BUILTIN if available, else disable feedback
 
-    FeedbackLEDControl.LedFeedbackEnabled = aEnableLEDFeedback;
-    if (aEnableLEDFeedback) {
+    if (aEnableLEDFeedback != DO_NOT_ENABLE_LED_FEEDBACK) {
+        FeedbackLEDControl.LedFeedbackEnabled |= aEnableLEDFeedback;
         if (aFeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
             pinMode(aFeedbackLEDPin, OUTPUT);
 #ifdef LED_BUILTIN
         } else {
             pinMode(LED_BUILTIN, OUTPUT);
 #else
-            FeedbackLEDControl.LedFeedbackEnabled = false; // we have no LED_BUILTIN available
+            FeedbackLEDControl.LedFeedbackEnabled = LED_FEEDBACK_DISABLED_COMPLETELY; // we have no LED_BUILTIN available
 #endif
         }
     }
@@ -74,32 +75,43 @@ void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback) {
  * Direct replacement for blink13()
  */
 void setLEDFeedback(bool aEnableLEDFeedback) {
-    setLEDFeedback(FeedbackLEDControl.FeedbackLEDPin, aEnableLEDFeedback);
+    bool tEnableLEDFeedback = LED_FEEDBACK_DISABLED_COMPLETELY;
+    if(aEnableLEDFeedback) {
+        tEnableLEDFeedback = LED_FEEDBACK_ENABLED_FOR_SEND | LED_FEEDBACK_ENABLED_FOR_RECEIVE;
+    }
+    setLEDFeedback(FeedbackLEDControl.FeedbackLEDPin, tEnableLEDFeedback);
 }
 
 void enableLEDFeedback() {
-    FeedbackLEDControl.LedFeedbackEnabled = true;
+    FeedbackLEDControl.LedFeedbackEnabled |= LED_FEEDBACK_ENABLED_FOR_RECEIVE;
 }
 
 void disableLEDFeedback() {
-    FeedbackLEDControl.LedFeedbackEnabled = false;
+    FeedbackLEDControl.LedFeedbackEnabled &= ~(LED_FEEDBACK_ENABLED_FOR_RECEIVE);
+}
+
+void enableLEDFeedbackForSend() {
+    FeedbackLEDControl.LedFeedbackEnabled |= LED_FEEDBACK_ENABLED_FOR_SEND;
+}
+
+void disableLEDFeedbackForSend() {
+    FeedbackLEDControl.LedFeedbackEnabled &= ~(LED_FEEDBACK_ENABLED_FOR_SEND);
 }
 
 /**
- * Flash LED while receiving IR data, if enabled.
- * Handles the LedFeedbackEnabled flag as well as the 0 value of FeedbackLEDPin and the macro FEEDBACK_LED_IS_ACTIVE_LOW.
+ * Flash LED while receiving or sending IR data. Does not check if enabled, this must be done by the caller.
+ * Handles the 0 value of FeedbackLEDPin and the macro FEEDBACK_LED_IS_ACTIVE_LOW.
  */
 #if defined(ESP32)
 IRAM_ATTR
 #endif
 void setFeedbackLED(bool aSwitchLedOn) {
-    if (FeedbackLEDControl.LedFeedbackEnabled) {
-        if (aSwitchLedOn) {
-            if (FeedbackLEDControl.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
+    if (aSwitchLedOn) {
+        if (FeedbackLEDControl.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
                 digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED on
 #else
-                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
+            digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
 #endif
 #ifdef LED_BUILTIN // use fast macros here
             } else {
@@ -109,13 +121,13 @@ void setFeedbackLED(bool aSwitchLedOn) {
                 digitalWriteFast(LED_BUILTIN, HIGH); // For AVR, this generates a single sbi command
 #  endif
 #endif
-            }
-        } else {
-            if (FeedbackLEDControl.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
+        }
+    } else {
+        if (FeedbackLEDControl.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
                 digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED off
 #else
-                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED off
+            digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED off
 #endif
 #ifdef LED_BUILTIN // use fast macros here
             } else {
@@ -125,7 +137,6 @@ void setFeedbackLED(bool aSwitchLedOn) {
                 digitalWriteFast(LED_BUILTIN, LOW); // For AVR, this generates a single cbi command
 #  endif
 #endif
-            }
         }
     }
 }
@@ -133,7 +144,7 @@ void setFeedbackLED(bool aSwitchLedOn) {
 /**
  * Old deprecated function name for setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback()
  */
-void IRrecv::blink13(bool aEnableLEDFeedback) {
+void IRrecv::blink13(uint8_t aEnableLEDFeedback) {
     setLEDFeedback(FeedbackLEDControl.FeedbackLEDPin, aEnableLEDFeedback);
 }
 /**

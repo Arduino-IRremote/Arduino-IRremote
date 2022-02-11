@@ -54,17 +54,17 @@ IRsend::IRsend() { // @suppress("Class members should be properly initialized")
 #endif
 
 #if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(0, false);
+    setLEDFeedback(0, DO_NOT_ENABLE_LED_FEEDBACK);
 #endif
 }
 
 #if defined(IR_SEND_PIN)
 /**
- * Simple start with defaults for constant send pin
+ * Simple start with defaults - LED feedback enabled! Used if IR_SEND_PIN is defined. Saves program memory.
  */
 void IRsend::begin(){
 #  if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(USE_DEFAULT_FEEDBACK_LED_PIN, true);
+    setLEDFeedback(USE_DEFAULT_FEEDBACK_LED_PIN, LED_FEEDBACK_ENABLED_FOR_SEND);
 #  endif
 }
 
@@ -73,7 +73,11 @@ void IRsend::begin(){
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin) {
 #if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(aFeedbackLEDPin, aEnableLEDFeedback);
+    bool tEnableLEDFeedback = DO_NOT_ENABLE_LED_FEEDBACK;
+    if(aEnableLEDFeedback) {
+        tEnableLEDFeedback = LED_FEEDBACK_ENABLED_FOR_SEND;
+    }
+    setLEDFeedback(aFeedbackLEDPin, tEnableLEDFeedback);
 #else
     (void) aEnableLEDFeedback;
     (void) aFeedbackLEDPin;
@@ -84,7 +88,7 @@ void IRsend::begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin) {
 IRsend::IRsend(uint8_t aSendPin) { // @suppress("Class members should be properly initialized")
     sendPin = aSendPin;
 #  if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(0, false);
+    setLEDFeedback(0, DO_NOT_ENABLE_LED_FEEDBACK);
 #  endif
 }
 
@@ -95,7 +99,7 @@ IRsend::IRsend(uint8_t aSendPin) { // @suppress("Class members should be properl
 void IRsend::begin(uint8_t aSendPin) {
     sendPin = aSendPin;
 #  if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(USE_DEFAULT_FEEDBACK_LED_PIN, true);
+    setLEDFeedback(USE_DEFAULT_FEEDBACK_LED_PIN, LED_FEEDBACK_ENABLED_FOR_SEND);
 #  endif
 }
 
@@ -117,7 +121,11 @@ void IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aFeedbackL
 #endif
 
 #if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(aFeedbackLEDPin, aEnableLEDFeedback);
+    bool tEnableLEDFeedback = DO_NOT_ENABLE_LED_FEEDBACK;
+    if(aEnableLEDFeedback) {
+        tEnableLEDFeedback = LED_FEEDBACK_ENABLED_FOR_SEND;
+    }
+    setLEDFeedback(aFeedbackLEDPin, tEnableLEDFeedback);
 #else
     (void) aEnableLEDFeedback;
     (void) aFeedbackLEDPin;
@@ -413,18 +421,24 @@ void IRsend::mark(unsigned int aMarkMicros) {
 
 #if defined(SEND_PWM_BY_TIMER)
 #  if !defined(NO_LED_FEEDBACK_CODE)
-    setFeedbackLED(true);
+    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+        setFeedbackLED(true);
+    }
 #  endif
     ENABLE_SEND_PWM_BY_TIMER; // Enable timer or ledcWrite() generated PWM output
     customDelayMicroseconds(aMarkMicros);
     IRLedOff();
 #  if !defined(NO_LED_FEEDBACK_CODE)
-    setFeedbackLED(false);
+    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+        setFeedbackLED(false);
+    }
 #  endif
 
 #elif defined(USE_NO_SEND_PWM)
 #  if !defined(NO_LED_FEEDBACK_CODE)
-    setFeedbackLED(true);
+    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+        setFeedbackLED(true);
+    }
 #  endif
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
     pinModeFast(sendPin, OUTPUT); // active state for mimicking open drain
@@ -435,7 +449,9 @@ void IRsend::mark(unsigned int aMarkMicros) {
     customDelayMicroseconds(aMarkMicros);
     IRLedOff();
 #  if !defined(NO_LED_FEEDBACK_CODE)
-    setFeedbackLED(false);
+    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+        setFeedbackLED(false);
+    }
 #  endif
 
 #else
@@ -482,7 +498,9 @@ void IRsend::mark(unsigned int aMarkMicros) {
          */
         if (!FeedbackLedIsActive) {
             FeedbackLedIsActive = true;
-            setFeedbackLED(true);
+            if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+                setFeedbackLED(true);
+            }
         }
 #  endif
         /*
@@ -498,14 +516,18 @@ void IRsend::mark(unsigned int aMarkMicros) {
 #  if !defined(NO_LED_FEEDBACK_CODE)
             if (tDeltaMicros >= aMarkMicros - (30 + (112 / CLOCKS_PER_MICRO))) { // 30 to be constant. Using periodTimeMicros increases program size too much.
             // reset feedback led in the last pause before end
-                setFeedbackLED(false);
+                if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+                    setFeedbackLED(false);
+                }
             }
 #  endif
             if (tDeltaMicros >= aMarkMicros - (112 / CLOCKS_PER_MICRO)) { // To compensate for call duration - 112 is an empirical value
 #else
             if (tDeltaMicros >= aMarkMicros) {
 #  if !defined(NO_LED_FEEDBACK_CODE)
-                setFeedbackLED(false);
+                if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+                    setFeedbackLED(false);
+                }
 #  endif
 #endif
                 return;
@@ -543,7 +565,9 @@ void IRsend::IRLedOff() {
 #  endif
 #endif
 #if !defined(NO_LED_FEEDBACK_CODE)
-    setFeedbackLED(false);
+    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+        setFeedbackLED(false);
+    }
 #endif
 }
 

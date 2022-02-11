@@ -59,9 +59,9 @@
 /**
  * For better readability of code
  */
-#define DISABLE_LED_FEEDBACK false
-#define ENABLE_LED_FEEDBACK true
-#define USE_DEFAULT_FEEDBACK_LED_PIN 0
+#define DISABLE_LED_FEEDBACK            false
+#define ENABLE_LED_FEEDBACK             true
+#define USE_DEFAULT_FEEDBACK_LED_PIN    0
 
 #include "IRProtocol.h"
 
@@ -297,7 +297,7 @@ public:
                     __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> ."))); // deprecated
 
     // for backward compatibility. Now in IRFeedbackLED.hpp
-    void blink13(bool aEnableLEDFeedback)
+    void blink13(uint8_t aEnableLEDFeedback)
             __attribute__ ((deprecated ("Please use setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback()."))); // deprecated
 
     /*
@@ -339,11 +339,19 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, uint16_t aLeadingSpa
 /****************************************************
  * Feedback LED related functions
  ****************************************************/
+#define DO_NOT_ENABLE_LED_FEEDBACK          0x00
+#define LED_FEEDBACK_DISABLED_COMPLETELY    0x00
+#define LED_FEEDBACK_ENABLED_FOR_RECEIVE    0x01
+#define LED_FEEDBACK_ENABLED_FOR_SEND       0x02
 void setFeedbackLED(bool aSwitchLedOn);
-void setLEDFeedback(uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback); // if aFeedbackLEDPin == 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+void setLEDFeedback(uint8_t aFeedbackLEDPin, uint8_t aEnableLEDFeedback); // if aFeedbackLEDPin == 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
 void setLEDFeedback(bool aEnableLEDFeedback); // Direct replacement for blink13()
 void enableLEDFeedback();
+constexpr auto enableLEDFeedbackForReceive = enableLEDFeedback; // alias for enableLEDFeedback
 void disableLEDFeedback();
+constexpr auto disableLEDFeedbackForReceive = disableLEDFeedback; // alias for enableLEDFeedback
+void enableLEDFeedbackForSend();
+void disableLEDFeedbackForSend();
 
 void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use setLEDFeedback()."))); // deprecated
 

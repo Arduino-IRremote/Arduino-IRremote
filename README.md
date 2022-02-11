@@ -8,7 +8,7 @@ This library enables you to send and receive using infra-red signals on an Ardui
 [![Installation instructions](https://www.ardu-badge.com/badge/IRremote.svg?)](https://www.ardu-badge.com/IRremote)
 [![LibraryBuild](https://github.com/Arduino-IRremote/Arduino-IRremote/workflows/LibraryBuild/badge.svg)](https://github.com/Arduino-IRremote/Arduino-IRremote/actions)
 
-Available as Arduino library "IRremote"
+Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libraries/i-rremote).
 
 # Table of content
 - [API](https://github.com/Arduino-IRremote/Arduino-IRremote#api)
@@ -263,7 +263,7 @@ If you see something like `Protocol=UNKNOWN Hash=0x13BD886C 35 bits received` as
 - If you have an **odd number of bits** received, it is likely, that your receiver circuit has problems. Maybe because the IR signal is too weak.
 - If you see timings like `+ 600,- 600     + 550,- 150     + 200,- 100     + 750,- 550` then one 450 탎 space was split into two 150 and 100 탎 spaces with a spike / error signal of 200 탎 between. Maybe because of a defective receiver or a weak signal in conjunction with another light emitting source nearby.
 - If you see timings like `+ 500,- 550     + 450,- 550     + 500,- 500     + 500,-1550`, then marks are generally shorter than spaces and therefore `MARK_EXCESS_MICROS` (specified in your ino file) should be **negative** to compensate for this at decoding.
-- If you see `Protocol=UNKNOWN Hash=0x0 1 bits received` it may be that the space after the initial mark is longer than [`RECORD_GAP_MICROS`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L124). 
+- If you see `Protocol=UNKNOWN Hash=0x0 1 bits received` it may be that the space after the initial mark is longer than [`RECORD_GAP_MICROS`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L124).
   This was observed for some LG air conditioner protocols. Try again with a line e.g. `#define RECORD_GAP_MICROS 12000` before the line `#include <IRremote.hpp>` in your ino file.
 - To see more info supporting you to find the reason for your UNKNOWN protocol, you must enable the line `//#define DEBUG` in IRremoteInt.h.
 
@@ -342,32 +342,35 @@ Click on the receiver while simulation is running to specify individual NEC IR c
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / macros available.<br/>
-Most macros must be defined in your program before the line `#include <IRremote.hpp>` to take effect.
+These macros must be defined in your program before the line `#include <IRremote.hpp>` to take effect.
 Modify them by enabling / disabling them, or change the values if applicable.
 
-| Name | File | Default value | Description |
-|-|-|-|-|
-| `RAW_BUFFER_LENGTH` | Before `#include <IRremote.hpp>` | 100 | Buffer size of raw input buffer. Must be even! 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. |
-| `IR_SEND_PIN` | Before `#include <IRremote.hpp>` | disabled | If specified (as constant), reduces program size and improves send timing for AVR. If you want to use a runtime variable send pin e.g. with `setSendPin(uint8_t aSendPinNumber)` , you must disable this macro. |
-| `SEND_PWM_BY_TIMER` | Before `#include <IRremote.hpp>` | disabled | Disable carrier PWM generation in software and use (restricted) hardware PWM. Enabled for ESP32 and RP2040 in all examples. |
-| `USE_NO_SEND_PWM` | Before `#include <IRremote.hpp>` | disabled | Use no carrier PWM, just simulate an **active low** receiver signal. Overrides `SEND_PWM_BY_TIMER` definition. |
-| `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` | Before `#include <IRremote.hpp>` | disabled | Use or simulate open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
-| `EXCLUDE_EXOTIC_PROTOCOLS` | Before `#include <IRremote.hpp>` | disabled | If activated, BOSEWAVE, WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. Saves up to 650 bytes program space. |
-| `EXCLUDE_UNIVERSAL_PROTOCOLS` | Before `#include <IRremote.hpp>` | disabled | If activated, the universal decoder for pulse width or pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in `decode()`. Saves up to 1000 bytes program space. |
-| `DECODE_<Protocol name>` | Before `#include <IRremote.hpp>` | all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |
-| `MARK_EXCESS_MICROS` | Before `#include <IRremote.hpp>` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
-| `RECORD_GAP_MICROS` | Before `#include <IRremote.hpp>` | 5000 | Minimum gap between IR transmissions, to detect the end of a protocol.<br/>Must be greater than any space of a protocol e.g. the NEC header space of 4500 탎.<br/>Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br/>Keep in mind, that this is the delay between the end of the received command and the start of decoding. |
-| `FEEDBACK_LED_IS_ACTIVE_LOW` | Before `#include <IRremote.hpp>` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
-| `NO_LED_FEEDBACK_CODE` | Before `#include <IRremote.hpp>` | disabled | This completely disables the LED feedback code for send and receive, thus saving around 100 bytes program space for receiving, around 500 bytes for sending and halving the receiver ISR processing time. |
-| `IR_INPUT_IS_ACTIVE_HIGH` | Before `#include <IRremote.hpp>` | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
-| `IR_SEND_DUTY_CYCLE_PERCENT` | Before `#include <IRremote.hpp>` | 30 | Duty cycle of IR send signal. |
-| `MICROS_PER_TICK` | Before `#include <IRremote.hpp>` | 50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 탎 at 38 kHz. |
-| `DEBUG` | IRremoteInt.h | disabled | Enables lots of lovely debug output. |
-| `IR_USE_AVR_TIMER*` | private/IRTimer.hpp |  | Selection of timer to be used for generating IR receiving sample interval. |
-|-|-|-|-|
-| `IR_INPUT_PIN` | Before `#include <TinyIRReceiver.hpp>` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
-| `IR_FEEDBACK_LED_PIN` | Before `#include <TinyIRReceiver.hpp>` | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
-| `NO_LED_FEEDBACK_CODE` | Before `#include <TinyIRReceiver.hpp>` | disabled | Enable it to disable the feedback LED function. Saves 14 bytes program space. |
+| Name | Default value | Description |
+|-|-|-|
+| `RAW_BUFFER_LENGTH` |  100 | Buffer size of raw input buffer. Must be even! 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. |
+| `IR_SEND_PIN` |  disabled | If specified (as constant), reduces program size and improves send timing for AVR. If you want to use a runtime variable send pin e.g. with `setSendPin(uint8_t aSendPinNumber)` , you must disable this macro. |
+| `SEND_PWM_BY_TIMER` |  disabled | Disable carrier PWM generation in software and use (restricted) hardware PWM. Enabled for ESP32 and RP2040 in all examples. |
+| `USE_NO_SEND_PWM` |  disabled | Use no carrier PWM, just simulate an **active low** receiver signal. Overrides `SEND_PWM_BY_TIMER` definition. |
+| `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` |  disabled | Use or simulate open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
+| `EXCLUDE_EXOTIC_PROTOCOLS` |  disabled | If activated, BOSEWAVE, WHYNTER and LEGO_PF are excluded in `decode()` and in sending with `IrSender.write()`. Saves up to 650 bytes program space. |
+| `EXCLUDE_UNIVERSAL_PROTOCOLS` |  disabled | If activated, the universal decoder for pulse width or pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in `decode()`. Saves up to 1000 bytes program space. |
+| `DECODE_<Protocol name>` |  all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |
+| `MARK_EXCESS_MICROS` |  20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
+| `RECORD_GAP_MICROS` |  5000 | Minimum gap between IR transmissions, to detect the end of a protocol.<br/>Must be greater than any space of a protocol e.g. the NEC header space of 4500 탎.<br/>Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br/>Keep in mind, that this is the delay between the end of the received command and the start of decoding. |
+| `FEEDBACK_LED_IS_ACTIVE_LOW` |  disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
+| `NO_LED_FEEDBACK_CODE` |  disabled | This completely disables the LED feedback code for send and receive, thus saving around 100 bytes program space for receiving, around 500 bytes for sending and halving the receiver ISR processing time. |
+| `IR_INPUT_IS_ACTIVE_HIGH` |  disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
+| `IR_SEND_DUTY_CYCLE_PERCENT` |  30 | Duty cycle of IR send signal. |
+| `MICROS_PER_TICK` |  50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 탎 at 38 kHz. |
+| `DEBUG` | disabled | Enables lots of lovely debug output. |
+| `IR_USE_AVR_TIMER*` |  | Selection of timer to be used for generating IR receiving sample interval. |
+
+These next macros for **TinyIRReceiver** must be defined in your program before the line `#include <TinyIRReceiver.hpp>` to take effect.
+| Name | Default value | Description |
+|-|-|-|
+| `IR_INPUT_PIN` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
+| `IR_FEEDBACK_LED_PIN` | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
+| `NO_LED_FEEDBACK_CODE` | disabled | Enable it to disable the feedback LED function. Saves 14 bytes program space. |
 
 ### Changing include (*.h) files with Arduino IDE
 First, use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>
@@ -497,8 +500,9 @@ Due to automatic gain control and other bias effects, high intensity of the 38 k
 
 ## Increase sending power
 **The best way to increase the IR power** is to use 2 or 3 IR diodes in series. One diode requires 1.1 to 1.5 volt so you can supply 3 diodes with a 5 volt output.<br/>
-To keep the current, you must reduce the resistor by (5 - 1.3) / (5 - 2.6) = 1.5 e.g. from 150 ohm to 100 ohm for 25 mA and 2 diodes with 1.3 volt and a 5 volt supply.<br/>
-For 3 diodes it requires factor 2.5 e.g. from 150 ohm to 60 ohm.
+To keep the current for 2 diodes with 1.3 volt and 25 mA and a 5 volt supply, you must reduce the resistor by factor: (5V - 1.3V) / (5V - 2.6V) = 1.5 e.g. from 150 ohm to 100 ohm.<br/>
+For 3 diodes it requires factor 2.5 e.g. from 150 ohm to 60 ohm.<br/>
+Or compute it directly with the **U = R * I formula**. Here U is (5V - <number_of_diodes> * 1.3V) at moderate current, at higher currents you must choose more than 1.3 volt. If you want to be exact, you must check the datasheet of your diode for the appropriate **forward voltage fo a given current**.
 
 # How we decode signals
 The IR signal is sampled at a **50 탎 interval**. For a constant 525 탎 pulse or pause we therefore get 10 or 11 samples, each with 50% probability.<br/>

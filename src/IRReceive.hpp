@@ -54,7 +54,7 @@ IRrecv::IRrecv() {
     decodedIRData.rawDataPtr = &irparams; // for decodePulseDistanceData() etc.
     setReceivePin(0);
 #if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(0, false);
+    setLEDFeedback(0, DO_NOT_ENABLE_LED_FEEDBACK);
 #endif
 }
 
@@ -62,7 +62,7 @@ IRrecv::IRrecv(uint8_t aReceivePin) {
     decodedIRData.rawDataPtr = &irparams; // for decodePulseDistanceData() etc.
     setReceivePin(aReceivePin);
 #if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(0, false);
+    setLEDFeedback(0, DO_NOT_ENABLE_LED_FEEDBACK);
 #endif
 }
 /**
@@ -74,7 +74,7 @@ IRrecv::IRrecv(uint8_t aReceivePin, uint8_t aFeedbackLEDPin) {
     decodedIRData.rawDataPtr = &irparams; // for decodePulseDistanceData() etc.
     setReceivePin(aReceivePin);
 #if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(aFeedbackLEDPin, false);
+    setLEDFeedback(aFeedbackLEDPin, DO_NOT_ENABLE_LED_FEEDBACK);
 #else
     (void) aFeedbackLEDPin;
 #endif
@@ -93,7 +93,11 @@ void IRrecv::begin(uint8_t aReceivePin, bool aEnableLEDFeedback, uint8_t aFeedba
 
     setReceivePin(aReceivePin);
 #if !defined(NO_LED_FEEDBACK_CODE)
-    setLEDFeedback(aFeedbackLEDPin, aEnableLEDFeedback);
+    bool tEnableLEDFeedback = DO_NOT_ENABLE_LED_FEEDBACK;
+    if(aEnableLEDFeedback) {
+        tEnableLEDFeedback = LED_FEEDBACK_ENABLED_FOR_RECEIVE;
+    }
+    setLEDFeedback(aFeedbackLEDPin, tEnableLEDFeedback);
 #else
     (void) aEnableLEDFeedback;
     (void) aFeedbackLEDPin;
@@ -1431,7 +1435,7 @@ ISR () // for functions definitions which are called by separate (board specific
     }
 
 #if !defined(NO_LED_FEEDBACK_CODE)
-    if (FeedbackLEDControl.LedFeedbackEnabled) {
+    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_RECEIVE) {
         setFeedbackLED(tIRInputLevel == INPUT_MARK);
     }
 #endif

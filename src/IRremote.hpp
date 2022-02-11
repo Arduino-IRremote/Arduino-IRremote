@@ -87,7 +87,7 @@
  */
 
 #if !defined(NO_DECODER) // for sending raw only
-#if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
+#  if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \
 || defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) \
 || defined(DECODE_DISTANCE) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
@@ -106,18 +106,18 @@
 #define DECODE_RC5
 #define DECODE_RC6
 
-#  if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space
+#    if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF
 #define DECODE_WHYNTER
 #define DECODE_MAGIQUEST // It modifies the RAW_BUFFER_LENGTH from 100 to 112
-#  endif
+#    endif
 
-#  if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
+#    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
 #define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program space
 #define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program space
+#    endif
 #  endif
-#endif
 #endif // !defined(NO_DECODER)
 
 #if defined(DECODE_NEC) && !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)

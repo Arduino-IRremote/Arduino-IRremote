@@ -33,6 +33,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
  *
  */
+
 /*
  * This library can be configured at compile time by the following options / macros:
  * For more details see: https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library (scroll down)
@@ -348,7 +349,7 @@ void enablePCIInterruptForTinyReceiver()
     attachInterrupt(IR_INPUT_PIN, IRPinChangeInterruptHandler, CHANGE); // 2.2 us more than version configured with macros and not compatible
 
 #elif !defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
-    // costs 112 bytes FLASH + 4bytes RAM
+    // costs 112 bytes program space + 4 bytes RAM
     attachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN), IRPinChangeInterruptHandler, CHANGE);
 #  ifdef DEBUG
     Serial.println(F("Use attachInterrupt for pin=" STR(IR_INPUT_PIN)));
@@ -449,7 +450,7 @@ void disablePCIInterruptForTinyReceiver()
     detachInterrupt(IR_INPUT_PIN);
 
 #elif !defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
-    // costs 112 bytes FLASH + 4bytes RAM
+    // costs 112 bytes program space + 4 bytes RAM
     detachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN));
 #else
 #  if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)

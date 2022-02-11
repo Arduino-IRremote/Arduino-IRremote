@@ -108,7 +108,7 @@ void loop() {
             /*
              * Example for using the compensateAndStorePronto() function.
              * Creating this String requires 2210 bytes program memory and 10 bytes RAM for the String class.
-             * The String object itself requires additional 440 Bytes RAM from the heap.
+             * The String object itself requires additional 440 bytes RAM from the heap.
              * This values are for an Arduino UNO.
              */
 //        Serial.println();                                     // blank line between entries

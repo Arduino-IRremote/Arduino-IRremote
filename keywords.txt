@@ -19,7 +19,9 @@ decodedIRData	KEYWORD1
 
 setFeedbackLED	KEYWORD2
 enableLEDFeedback	KEYWORD2
+enableLEDFeedbackForSend	KEYWORD2
 disableLEDFeedback	KEYWORD2
+disableLEDFeedbackForSend	KEYWORD2
 printIRResultShort	KEYWORD2
 begin	KEYWORD2
 start	KEYWORD2
