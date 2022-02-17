@@ -66,9 +66,7 @@ void IRCommandDispatcher::init() {
  * This is the TinyReceiver callback function which is called if a complete command was received
  * It checks for right address and then call the dispatcher
  */
-#  if defined(ESP8266)
-void ICACHE_RAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
-#  elif defined(ESP32)
+#if defined(ESP32) || defined(ESP8266)
 void IRAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
 #  else
 void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
@@ -112,9 +110,7 @@ void IRCommandDispatcher::init() {
 /*
  * This is the callback function is called if a complete command was received
  */
-#if defined(ESP8266)
-void ICACHE_RAM_ATTR handleReceivedIRData()
-#elif defined(ESP32)
+#if defined(ESP32) || defined(ESP8266)
 void IRAM_ATTR handleReceivedIRData()
 #else
 void handleReceivedIRData()

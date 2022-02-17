@@ -2,7 +2,7 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
-## 3.5.3
+## 3.6.0
 - Separated enable flag of send and receive feedback LED. Inspired by PR#970 from luvaihassanali.
 - RP2040 support added.
 - Refactored IRTimer.hpp.

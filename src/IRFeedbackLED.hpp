@@ -102,7 +102,7 @@ void disableLEDFeedbackForSend() {
  * Flash LED while receiving or sending IR data. Does not check if enabled, this must be done by the caller.
  * Handles the 0 value of FeedbackLEDPin and the macro FEEDBACK_LED_IS_ACTIVE_LOW.
  */
-#if defined(ESP32)
+#if defined(ESP32) || defined(ESP8266)
 IRAM_ATTR
 #endif
 void setFeedbackLED(bool aSwitchLedOn) {
