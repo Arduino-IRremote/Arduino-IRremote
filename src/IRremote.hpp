@@ -65,7 +65,7 @@
 #ifndef IRremote_hpp
 #define IRremote_hpp
 
-#define VERSION_IRREMOTE "3.6.0"
+#define VERSION_IRREMOTE "3.6.1"
 #define VERSION_IRREMOTE_MAJOR 3
 #define VERSION_IRREMOTE_MINOR 6
 

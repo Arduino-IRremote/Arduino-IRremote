@@ -10,7 +10,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020 Thomas Koch
+ * Copyright (c) 2020 Thomas Koch - 2022 AJ converted to inverted bits
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -70,13 +70,43 @@
 #define BOSE_CMD_PRESET_4   0x10
 #define BOSE_CMD_PRESET_5   0x11
 
+// Codes for Wave Music System
+// https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/BoseWaveMusicSystem.jpg)
+//#define BOSE_CMD_ON_OFF     0x4C
+//#define BOSE_CMD_MUTE       0x01
+//#define BOSE_CMD_VOL_UP     0x03
+//#define BOSE_CMD_VOL_DOWN   0x02
+//#define BOSE_CMD_SLEEP      0x54
+//#define BOSE_CMD_FM_AM      0x06
+//#define BOSE_CMD_CD         0x53
+//#define BOSE_CMD_AUX        0x0F
+//#define BOSE_CMD_TRACK_BW   0x18
+//#define BOSE_CMD_TRACK_FW   0x19
+//#define BOSE_CMD_PLAY_PAUSE 0x1B
+//#define BOSE_CMD_STOP_EJECT 0x1A
+//#define BOSE_CMD_TUNE_UP    0x58
+//#define BOSE_CMD_TUNE_DOWN  0x57
+//#define BOSE_CMD_PRESET_1   0x07
+//#define BOSE_CMD_PRESET_2   0x08
+//#define BOSE_CMD_PRESET_3   0x09
+//#define BOSE_CMD_PRESET_4   0x0A
+//#define BOSE_CMD_PRESET_5   0x0B
+//#define BOSE_CMD_PRESET_6   0x0C
+//#define BOSE_CMD_TIME_MINUS 0x9E
+//#define BOSE_CMD_TIME_PLUS  0x24
+//#define BOSE_CMD_PLAY_MODE  0x21
+//#define BOSE_CMD_ALARM_ON_OFF   0x22
+//#define BOSE_CMD_ALARM_WAKE_TO  0x70
+//#define BOSE_CMD_ALARM_TIME     0x23
+
+
 // On the Zero and others we switch explicitly to SerialUSB
 #if defined(ARDUINO_ARCH_SAMD)
 #define Serial SerialUSB
 #endif
 
-bool prompt;
-void menu();
+bool sPrintMenu;
+void printMenu();
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
@@ -93,64 +123,65 @@ void setup() {
     Serial.print(F("Ready to send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
 
-    prompt = true;
+    sPrintMenu = true;
 }
 
 void loop() {
-    if (prompt) {
-        prompt = false;
-        menu();
+    if (sPrintMenu) {
+        sPrintMenu = false;
+        printMenu();
     }
+    int tSerialCommandCharacter;
 
     if (Serial.available()) {
-        int answer = Serial.read();
-        prompt = true;
-        if (answer == -1) {
-            delay(300);
-        } else if (answer == 48) {    // 0
+        tSerialCommandCharacter = Serial.read();
+        sPrintMenu = true;
+        if (tSerialCommandCharacter == -1) {
+            Serial.print(F("available() was true, but no character read")); // should not happen
+        } else if (tSerialCommandCharacter == 48) {    // 0
             IrSender.sendBoseWave(BOSE_CMD_ON_OFF);  // On/Off
-        } else if (answer == 49) {    // 1
+        } else if (tSerialCommandCharacter == 49) {    // 1
             IrSender.sendBoseWave(BOSE_CMD_VOL_UP);  // Volume Up
-        } else if (answer == 50) {    // 2
+        } else if (tSerialCommandCharacter == 50) {    // 2
             IrSender.sendBoseWave(BOSE_CMD_VOL_DOWN);  // Volume Down
-        } else if (answer == 51) {    // 3
+        } else if (tSerialCommandCharacter == 51) {    // 3
             IrSender.sendBoseWave(BOSE_CMD_TUNE_UP);  // Tune Up
-        } else if (answer == 52) {    // 4
+        } else if (tSerialCommandCharacter == 52) {    // 4
             IrSender.sendBoseWave(BOSE_CMD_TUNE_DOWN);  // Tune Down
-        } else if (answer == 53) {    // 5
+        } else if (tSerialCommandCharacter == 53) {    // 5
             IrSender.sendBoseWave(BOSE_CMD_AM);  // AM
-        } else if (answer == 54) {    // 6
+        } else if (tSerialCommandCharacter == 54) {    // 6
             IrSender.sendBoseWave(BOSE_CMD_FM);  // FM
-        } else if (answer == 55) {    // 7
+        } else if (tSerialCommandCharacter == 55) {    // 7
             IrSender.sendBoseWave(BOSE_CMD_PRESET_1);  // Preset 1
-        } else if (answer == 56) {    // 8
+        } else if (tSerialCommandCharacter == 56) {    // 8
             IrSender.sendBoseWave(BOSE_CMD_PRESET_2);  // Preset 2
-        } else if (answer == 57) {    // 9
+        } else if (tSerialCommandCharacter == 57) {    // 9
             IrSender.sendBoseWave(BOSE_CMD_PRESET_3);  // Preset 3
-        } else if (answer == 97) {    // a
+        } else if (tSerialCommandCharacter == 97) {    // a
             IrSender.sendBoseWave(BOSE_CMD_PRESET_4);  // Preset 4
-        } else if (answer == 98) {    // b
+        } else if (tSerialCommandCharacter == 98) {    // b
             IrSender.sendBoseWave(BOSE_CMD_PRESET_5);  // Preset 5
-        } else if (answer == 99) {    // c
+        } else if (tSerialCommandCharacter == 99) {    // c
             IrSender.sendBoseWave(BOSE_CMD_PRESET_6);  // Preset 6
-        } else if (answer == 100) {   // d
+        } else if (tSerialCommandCharacter == 100) {   // d
             IrSender.sendBoseWave(BOSE_CMD_MUTE);  // Mute
-        } else if (answer == 101) {   // e
+        } else if (tSerialCommandCharacter == 101) {   // e
             IrSender.sendBoseWave(BOSE_CMD_PLAY_PAUSE);  // Pause
-        } else if (answer == 102) {   // f
+        } else if (tSerialCommandCharacter == 102) {   // f
             IrSender.sendBoseWave(BOSE_CMD_STOP);  // Stop
-        } else if (answer == 103) {   // g
+        } else if (tSerialCommandCharacter == 103) {   // g
             IrSender.sendBoseWave(BOSE_CMD_AUX);  // Aux
-        } else if (answer == 104) {   // h
+        } else if (tSerialCommandCharacter == 104) {   // h
             IrSender.sendBoseWave(BOSE_CMD_SLEEP);  // Sleep
         } else {
-            prompt = false;
+            sPrintMenu = false;
         }
         delay(300);
     }
 }
 
-void menu() {
+void printMenu() {
     Serial.println("0:  On / Off");
     Serial.println("1:  Volume Up");
     Serial.println("2:  Volume Down");

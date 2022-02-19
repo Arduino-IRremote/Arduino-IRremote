@@ -255,7 +255,7 @@ bool IRrecv::decodeNEC() {
 
     } else {
         /*
-         * NEC
+         * NEC LSB first, so first sent bit is also LSB of decodedIRData.decodedRawData
          */
         if (tValue.UByte.LowByte == (uint8_t) (~tValue.UByte.MidLowByte)) {
             // standard 8 bit address NEC protocol

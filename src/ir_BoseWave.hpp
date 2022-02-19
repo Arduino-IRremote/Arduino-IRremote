@@ -25,6 +25,7 @@
 //                           BBBB    OOO   SSSS   EEEEE
 //==============================================================================
 // see http://lirc.sourceforge.net/remotes/bose/WAVERADIO
+// see: https://www.mikrocontroller.net/articles/IRMP_-_english#BOSE
 //
 // Support for Bose Wave Radio CD initially provided by https://github.com/uvotguy.
 //
@@ -35,13 +36,13 @@
 // LSB first, 1 start bit + 8 bit data + 8 bit inverted data + 1 stop bit.
 #define BOSEWAVE_BITS             16 // Command and inverted command
 
-#define BOSEWAVE_HEADER_MARK    1060
-#define BOSEWAVE_HEADER_SPACE   1450
-#define BOSEWAVE_BIT_MARK        534
-#define BOSEWAVE_ONE_SPACE       468
-#define BOSEWAVE_ZERO_SPACE     1447
+#define BOSEWAVE_HEADER_MARK    1014    // 1014 are 39 clock periods (I counted 3 times!)
+#define BOSEWAVE_HEADER_SPACE   1468    // 1468(measured), 1456 are 56 clock periods
+#define BOSEWAVE_BIT_MARK        520    // 520 are 20 clock periods
+#define BOSEWAVE_ZERO_SPACE      468    // 468 are 18 clock periods
+#define BOSEWAVE_ONE_SPACE      1468    // 1468(measured), 1456 are 56 clock periods
 
-#define BOSEWAVE_REPEAT_SPACE  52000
+#define BOSEWAVE_REPEAT_SPACE  50000
 
 //+=============================================================================
 
@@ -110,7 +111,7 @@ bool IRrecv::decodeBoseWave() {
     // Success
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     uint16_t tDecodedValue = decodedIRData.decodedRawData;
-    uint8_t tCommandNotInverted = tDecodedValue & 0xFF;
+    uint8_t tCommandNotInverted = tDecodedValue & 0xFF; // comes first and is in the lower bits (LSB first :-))
     uint8_t tCommandInverted = tDecodedValue >> 8;
     // parity check for command. Use this variant to avoid compiler warning "comparison of promoted ~unsigned with unsigned [-Wsign-compare]"
     if ((tCommandNotInverted ^ tCommandInverted) != 0xFF) {
