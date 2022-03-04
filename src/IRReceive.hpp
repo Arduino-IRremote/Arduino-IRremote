@@ -1119,11 +1119,9 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
 void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
 // Start declaration
     if (aOutputMicrosecondsInsteadOfTicks) {
-        aSerial->print(F("uint16_t "));         // variable type
-        aSerial->print(F("rawData["));          // array name
+        aSerial->print(F("uint16_t rawData["));         // variable type, array name
     } else {
-        aSerial->print(F("uint8_t "));          // variable type
-        aSerial->print(F("rawTicks["));         // array name
+        aSerial->print(F("uint8_t rawTicks["));          // variable type, array name
     }
 
     aSerial->print(decodedIRData.rawDataPtr->rawlen - 1, DEC);    // array size
@@ -1149,7 +1147,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
             aSerial->print(tDuration);
         } else {
             uint16_t tTicks = (tDuration + (MICROS_PER_TICK / 2)) / MICROS_PER_TICK;
-            tTicks = (tTicks > 0xFF) ? 0xFF : tTicks; // safety net
+            tTicks = (tTicks > UINT8_MAX) ? UINT8_MAX : tTicks; // uint8_t rawTicks above are 8 bit
             aSerial->print(tTicks);
         }
         if (i + 1 < decodedIRData.rawDataPtr->rawlen)
@@ -1196,7 +1194,7 @@ void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
         }
 
         uint16_t tTicks = (tDuration + (MICROS_PER_TICK / 2)) / MICROS_PER_TICK;
-        *aArrayPtr = (tTicks > 0xFF) ? 0xFF : tTicks; // safety net
+        *aArrayPtr = (tTicks > UINT8_MAX) ? UINT8_MAX : tTicks; // we store it in an 8 bit array
         aArrayPtr++;
     }
 }
@@ -1359,7 +1357,7 @@ ISR () // for functions definitions which are called by separate (board specific
     /*
      * Increase TickCounter and clip it at maximum 0xFFFF / 3.2 seconds at 50 us ticks
      */
-    if (irparams.TickCounterForISR < 0xFFFF) {
+    if (irparams.TickCounterForISR < UINT16_MAX) {
         irparams.TickCounterForISR++;  // One more 50uS tick
     }
 
