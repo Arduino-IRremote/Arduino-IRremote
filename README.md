@@ -362,6 +362,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `IR_INPUT_IS_ACTIVE_HIGH` |  disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
 | `IR_SEND_DUTY_CYCLE_PERCENT` |  30 | Duty cycle of IR send signal. |
 | `MICROS_PER_TICK` |  50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 µs at 38 kHz. |
+| `TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING` | 25 | Relative tolerance (in percent) for matchTicks(), matchMark() and matchSpace() functions used for protocol decoding. |
 | `DEBUG` | disabled | Enables lots of lovely debug output. |
 | `IR_USE_AVR_TIMER*` |  | Selection of timer to be used for generating IR receiving sample interval. |
 
@@ -499,7 +500,7 @@ The reason is, that it is not the pure energy of the fundamental which is respon
 Due to automatic gain control and other bias effects, high intensity of the 38 kHz pulse counts more than medium intensity (e.g. 50% duty cycle) at the same total energy.
 
 ## Increase sending power
-**The best way to increase the IR power** is to use 2 or 3 IR diodes in series. One diode requires 1.1 to 1.5 volt so you can supply 3 diodes with a 5 volt output.<br/>
+**The best way to increase the IR power for free** is to use 2 or 3 IR diodes in series. One diode requires 1.1 to 1.5 volt so you can supply 3 diodes with a 5 volt output.<br/>
 To keep the current for 2 diodes with 1.3 volt and 25 mA and a 5 volt supply, you must reduce the resistor by factor: (5V - 1.3V) / (5V - 2.6V) = 1.5 e.g. from 150 ohm to 100 ohm.<br/>
 For 3 diodes it requires factor 2.5 e.g. from 150 ohm to 60 ohm.<br/>
 Or compute it directly with the **U = R * I formula**. Here U is (5V - <number_of_diodes> * 1.3V) at moderate current, at higher currents you must choose more than 1.3 volt. If you want to be exact, you must check the datasheet of your diode for the appropriate **forward voltage fo a given current**.

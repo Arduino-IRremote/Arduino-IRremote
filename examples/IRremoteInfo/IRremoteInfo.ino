@@ -188,7 +188,7 @@ void dumpPulseParams() {
     ;
     Serial.println(F(" uSecs"));
     Serial.print(F("Measurement tolerance: "));
-    Serial.print(TOLERANCE);
+    Serial.print(TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING);
     Serial.println(F("%"));
 }
 

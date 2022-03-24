@@ -360,24 +360,25 @@ void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please us
  * First MARK is the one after the long gap
  * Pulse parameters in microseconds
  */
-/** Relative tolerance (in percent) for some comparisons on measured data. */
-#define TOLERANCE       25
+#if !defined(TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING)
+#define TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING    25 // Relative tolerance (in percent) for matchTicks(), matchMark() and matchSpace() functions used for protocol decoding.
+#endif
 
 /** Lower tolerance for comparison of measured data */
 //#define LTOL            (1.0 - (TOLERANCE/100.))
-#define LTOL            (100 - TOLERANCE)
+#define LTOL            (100 - TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING)
 /** Upper tolerance for comparison of measured data */
 //#define UTOL            (1.0 + (TOLERANCE/100.))
-#define UTOL            (100 + TOLERANCE)
+#define UTOL            (100 + TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING)
 
 //#define TICKS_LOW(us)   ((int)(((us)*LTOL/MICROS_PER_TICK)))
 //#define TICKS_HIGH(us)  ((int)(((us)*UTOL/MICROS_PER_TICK + 1)))
-#if MICROS_PER_TICK == 50 && TOLERANCE == 25           // Defaults
+#if MICROS_PER_TICK == 50 && TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING == 25           // Defaults
 #define TICKS_LOW(us)   ((us)/67 )     // (us) / ((MICROS_PER_TICK:50 / LTOL:75 ) * 100)
 #define TICKS_HIGH(us)  (((us)/40) + 1)  // (us) / ((MICROS_PER_TICK:50 / UTOL:125) * 100) + 1
 #else
-    #define TICKS_LOW(us)   ((uint16_t) ((long) (us) * LTOL / (MICROS_PER_TICK * 100) ))
-    #define TICKS_HIGH(us)  ((uint16_t) ((long) (us) * UTOL / (MICROS_PER_TICK * 100) + 1))
+#define TICKS_LOW(us)   ((uint16_t) ((long) (us) * LTOL / (MICROS_PER_TICK * 100) ))
+#define TICKS_HIGH(us)  ((uint16_t) ((long) (us) * UTOL / (MICROS_PER_TICK * 100) + 1))
 #endif
 
 /*

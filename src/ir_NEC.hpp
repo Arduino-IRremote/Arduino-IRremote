@@ -51,7 +51,7 @@
 // see: https://www.sbprojects.net/knowledge/ir/nec.php
 // for Apple see https://en.wikipedia.org/wiki/Apple_Remote
 // ONKYO like NEC but 16 independent command bits
-// LSB first, 1 start bit + 16 bit address + 8 bit command + 8 bit inverted command + 1 stop bit.
+// LSB first, 1 start bit + 16 bit address (or 8 bit address and 8 bit inverted address) + 8 bit command + 8 bit inverted command + 1 stop bit.
 //
 #define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
 #define NEC_COMMAND_BITS        16 // Command and inverted command

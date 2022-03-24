@@ -651,7 +651,7 @@ uint8_t IRrecv::getBiphaselevel() {
  * Internal Hash decode function
  **********************************************************************************************************************/
 /**
- * Compare two (tick) values
+ * Compare two (tick) values for Hash decoder
  * Use a tolerance of 20% to enable e.g. 500 and 600 (NEC timing) to be equal
  * @return  0 if newval is shorter, 1 if newval is equal, and 2 if newval is longer
  */

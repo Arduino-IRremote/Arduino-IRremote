@@ -104,7 +104,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t 
     uint16_t durations[intros + repeats];
     for (unsigned int i = 0; i < intros + repeats; i++) {
         uint32_t duration = ((uint32_t) data[i + numbersInPreamble]) * timebase;
-        durations[i] = (unsigned int) ((duration <= __UINT16_MAX__) ? duration : __UINT16_MAX__);
+        durations[i] = (unsigned int) ((duration <= UINT16_MAX) ? duration : UINT16_MAX);
     }
 
     /*
