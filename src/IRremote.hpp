@@ -62,8 +62,8 @@
  * - IR_USE_AVR_TIMER*                  Selection of timer to be used for generating IR receiving sample interval.
  */
 
-#ifndef IRremote_hpp
-#define IRremote_hpp
+#ifndef _IR_REMOTE_HPP
+#define _IR_REMOTE_HPP
 
 #define VERSION_IRREMOTE "3.6.1"
 #define VERSION_IRREMOTE_MAJOR 3
@@ -106,7 +106,7 @@
 #define DECODE_RC5
 #define DECODE_RC6
 
-#    if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program space
+#    if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program memory
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF
 #define DECODE_WHYNTER
@@ -114,8 +114,8 @@
 #    endif
 
 #    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
-#define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program space
-#define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program space
+#define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program memory
+#define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program memory
 #    endif
 #  endif
 #endif // !defined(NO_DECODER)
@@ -191,7 +191,7 @@
  * Activate this line if your receiver has an external output driver transistor / "inverted" output
  */
 //#define IR_INPUT_IS_ACTIVE_HIGH
-#ifdef IR_INPUT_IS_ACTIVE_HIGH
+#if defined(IR_INPUT_IS_ACTIVE_HIGH)
 // IR detector output is active high
 #define INPUT_MARK   1 ///< Sensor output for a mark ("flash")
 #else
@@ -287,7 +287,7 @@
 #  if defined(DECODE_DENON )       // Includes Sharp
 #include "ir_Denon.hpp"
 #  endif
-#  if defined(DECODE_DISTANCE)     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program space
+#  if defined(DECODE_DISTANCE)     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program memory
 #include "ir_DistanceProtocol.hpp"
 #  endif
 #  if defined(DECODE_JVC)
@@ -334,7 +334,5 @@
 #define USECPERTICK MICROS_PER_TICK
 #define MARK_EXCESS MARK_EXCESS_MICROS
 
-#endif // IRremote_hpp
-
+#endif // _IR_REMOTE_HPP
 #pragma once
-

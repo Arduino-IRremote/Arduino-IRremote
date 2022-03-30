@@ -1,6 +1,8 @@
 # Changelog
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
+## 3.6.2
+- Changed TOLERANCE to TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING and documented it.
 
 ## 3.6.1
 - Switched Bose internal protocol timing for 0 and 1 -> old 1 timing is now 0 and vice versa.

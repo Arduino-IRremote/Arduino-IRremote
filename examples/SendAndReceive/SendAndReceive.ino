@@ -41,11 +41,11 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program space.
+//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 //#define EXCLUDE_EXOTIC_PROTOCOLS
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
-//#define NO_LED_FEEDBACK_CODE // saves 500 bytes program space
+//#define NO_LED_FEEDBACK_CODE // saves 500 bytes program memory
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 #define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 

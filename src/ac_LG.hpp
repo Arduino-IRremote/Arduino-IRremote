@@ -30,11 +30,11 @@
  *
  ************************************************************************************
  */
-#ifndef AC_LG_HPP
-#define AC_LG_HPP
+#ifndef _AC_LG_HPP
+#define _AC_LG_HPP
 #include <Arduino.h>
 
-//#define INFO // save program space and suppress info output from the LG-AC driver.
+//#define INFO // save program memory and suppress info output from the LG-AC driver.
 //#define DEBUG // for more output from the LG-AC driver.
 #include "IRremoteInt.h"
 #include "ac_LG.h" // useful constants
@@ -309,5 +309,5 @@ void Aircondition_LG::sendTemperatureFanSpeedAndMode() {
 }
 
 /** @}*/
-#endif // #ifndef AC_LG_HPP
+#endif // _AC_LG_HPP
 #pragma once

@@ -1,5 +1,5 @@
-#ifndef IR_WHYNTER_HPP
-#define IR_WHYNTER_HPP
+#ifndef _IR_WHYNTER_HPP
+#define _IR_WHYNTER_HPP
 
 #include <Arduino.h>
 
@@ -78,5 +78,5 @@ bool IRrecv::decodeWhynter() {
 }
 
 /** @}*/
-#endif
+#endif // _IR_WHYNTER_HPP
 #pragma once

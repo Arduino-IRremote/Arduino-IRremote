@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_NEC_HPP
-#define IR_NEC_HPP
+#ifndef _IR_NEC_HPP
+#define _IR_NEC_HPP
 
 #include <Arduino.h>
 
@@ -374,5 +374,5 @@ void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
 }
 
 /** @}*/
-#endif
+#endif // _IR_NEC_HPP
 #pragma once

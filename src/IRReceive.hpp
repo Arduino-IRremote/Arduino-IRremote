@@ -30,8 +30,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_RECEIVE_HPP
-#define IR_RECEIVE_HPP
+#ifndef _IR_RECEIVE_HPP
+#define _IR_RECEIVE_HPP
 
 /** \addtogroup Receiving Receiving IR data for multiple protocols
  * @{
@@ -693,7 +693,7 @@ bool IRrecv::decodeHash() {
     if (decodedIRData.rawDataPtr->rawlen < 6) {
         return false;
     }
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
     uint8_t i;
 #else
     uint16_t i;
@@ -742,7 +742,7 @@ bool IRrecv::decodeHashOld(decode_results *aResults) {
  * Currently not used
  */
 bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
-#ifdef TRACE
+#if defined(TRACE)
     Serial.print(F("Testing: "));
     Serial.print(TICKS_LOW(aMatchValueMicros), DEC);
     Serial.print(F(" <= "));
@@ -751,7 +751,7 @@ bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
     Serial.print(TICKS_HIGH(aMatchValueMicros), DEC);
 #endif
     bool passed = ((aMeasuredTicks >= TICKS_LOW(aMatchValueMicros)) && (aMeasuredTicks <= TICKS_HIGH(aMatchValueMicros)));
-#ifdef TRACE
+#if defined(TRACE)
     if (passed) {
         Serial.println(F("?; passed"));
     } else {
@@ -769,7 +769,7 @@ bool MATCH(uint16_t measured_ticks, uint16_t desired_us) {
  * Compensate for marks exceeded by demodulator hardware
  */
 bool matchMark(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
-#ifdef TRACE
+#if defined(TRACE)
     Serial.print(F("Testing mark (actual vs desired): "));
     Serial.print(aMeasuredTicks * MICROS_PER_TICK, DEC);
     Serial.print(F("us vs "));
@@ -784,7 +784,7 @@ bool matchMark(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
     // compensate for marks exceeded by demodulator hardware
     bool passed = ((aMeasuredTicks >= TICKS_LOW(aMatchValueMicros + MARK_EXCESS_MICROS))
             && (aMeasuredTicks <= TICKS_HIGH(aMatchValueMicros + MARK_EXCESS_MICROS)));
-#ifdef TRACE
+#if defined(TRACE)
     if (passed) {
         Serial.println(F("?; passed"));
     } else {
@@ -802,7 +802,7 @@ bool MATCH_MARK(uint16_t measured_ticks, uint16_t desired_us) {
  * Compensate for spaces shortened by demodulator hardware
  */
 bool matchSpace(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
-#ifdef TRACE
+#if defined(TRACE)
     Serial.print(F("Testing space (actual vs desired): "));
     Serial.print(aMeasuredTicks * MICROS_PER_TICK, DEC);
     Serial.print(F("us vs "));
@@ -817,7 +817,7 @@ bool matchSpace(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
     // compensate for spaces shortened by demodulator hardware
     bool passed = ((aMeasuredTicks >= TICKS_LOW(aMatchValueMicros - MARK_EXCESS_MICROS))
             && (aMeasuredTicks <= TICKS_HIGH(aMatchValueMicros - MARK_EXCESS_MICROS)));
-#ifdef TRACE
+#if defined(TRACE)
     if (passed) {
         Serial.println(F("?; passed"));
     } else {
@@ -1067,7 +1067,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
     }
     aSerial->print(F("     -"));
     aSerial->println(tDurationMicros, DEC);
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
     uint8_t i;
 #else
     uint16_t i;
@@ -1128,7 +1128,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
     aSerial->print(F("] = {"));    // Start declaration
 
 // Dump data
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
     uint8_t i;
 #else
     uint16_t i;
@@ -1179,7 +1179,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
 void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
 
 // Store data, skip leading space#
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
     uint8_t i;
 #else
     uint16_t i;
@@ -1574,5 +1574,5 @@ bool IRrecv::decode(decode_results *aResults) {
 }
 
 /** @}*/
-#endif // #ifndef IR_RECEIVE_HPP
+#endif // _IR_RECEIVE_HPP
 #pragma once

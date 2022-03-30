@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_PROTOCOL_H
-#define IR_PROTOCOL_H
+#ifndef _IR_PROTOCOL_H
+#define _IR_PROTOCOL_H
 
 /**
  * An enum consisting of all supported formats.
@@ -100,6 +100,5 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
 #define LEGO_MODE_COMBO     1
 #define LEGO_MODE_SINGLE    0x4 // here the 2 LSB have meanings like Output A / Output B
 
-#endif // IR_PROTOCOL_H
-
+#endif // _IR_PROTOCOL_H
 #pragma once

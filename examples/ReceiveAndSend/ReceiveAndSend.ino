@@ -49,7 +49,7 @@
  */
 #include "PinDefinitionsAndMore.h"
 
-//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 900 bytes program space
+//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 900 bytes program memory
 
 #include <IRremote.hpp>
 

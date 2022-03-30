@@ -30,8 +30,8 @@
  ************************************************************************************
  */
 // see also: https://github.com/crankyoldgit/IRremoteESP8266/blob/master/src/ir_LG.h
-#ifndef AC_LG_H
-#define AC_LG_H
+#ifndef _AC_LG_H
+#define _AC_LG_H
 
 #include <Arduino.h>
 
@@ -135,5 +135,5 @@ public:
 };
 
 /** @}*/
-#endif // #ifndef AC_LG_H
+#endif // _AC_LG_H
 #pragma once

@@ -39,8 +39,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_DISTANCE_HPP
-#define IR_DISTANCE_HPP
+#ifndef _IR_DISTANCE_HPP
+#define _IR_DISTANCE_HPP
 
 #include <Arduino.h>
 
@@ -51,7 +51,7 @@
 #define DISTANCE_DO_MSB_DECODING PROTOCOL_IS_LSB_FIRST // this results in the same decodedRawData as e.g. the NEC and Kaseikyo/Panasonic decoder
 //#define DISTANCE_DO_MSB_DECODING PROTOCOL_IS_MSB_FIRST // this resembles the JVC, Denon
 
-//#define INFO // Activate this to save program space and suppress info output.
+//#define INFO // Activate this to save program memory and suppress info output.
 //#define DEBUG // Activate this for lots of lovely debug output from this decoder.
 #include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
 //#include "LongUnion.h"
@@ -310,5 +310,5 @@ bool IRrecv::decodeDistance() {
 }
 
 /** @}*/
-#endif
+#endif // _IR_DISTANCE_HPP
 #pragma once

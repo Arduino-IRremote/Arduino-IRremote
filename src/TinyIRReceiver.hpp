@@ -40,12 +40,12 @@
  *
  * - IR_INPUT_PIN           The pin number for TinyIRReceiver IR input.
  * - IR_FEEDBACK_LED_PIN    The pin number for TinyIRReceiver feedback LED.
- * - NO_LED_FEEDBACK_CODE   Disables the feedback LED function. Saves 14 bytes program space.
+ * - NO_LED_FEEDBACK_CODE   Disables the feedback LED function. Saves 14 bytes program memory.
  *
  */
 
-#ifndef TINY_IR_RECEIVER_HPP
-#define TINY_IR_RECEIVER_HPP
+#ifndef _TINY_IR_RECEIVER_HPP
+#define _TINY_IR_RECEIVER_HPP
 
 #include <Arduino.h>
 
@@ -137,7 +137,7 @@ void IRPinChangeInterruptHandler(void)
 
     uint8_t tState = TinyIRReceiverControl.IRReceiverState;
 
-#ifdef TRACE
+#if defined(TRACE)
     Serial.print(tState);
     Serial.print(' ');
 //    Serial.print(F(" I="));
@@ -346,13 +346,13 @@ void enablePCIInterruptForTinyReceiver()
     attachInterrupt(IR_INPUT_PIN, IRPinChangeInterruptHandler, CHANGE); // 2.2 us more than version configured with macros and not compatible
 
 #elif !defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
-    // costs 112 bytes program space + 4 bytes RAM
+    // costs 112 bytes program memory + 4 bytes RAM
     attachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN), IRPinChangeInterruptHandler, CHANGE);
-#  ifdef DEBUG
+#  if defined(DEBUG)
     Serial.println(F("Use attachInterrupt for pin=" STR(IR_INPUT_PIN)));
 #  endif
 #else
-#  ifdef DEBUG
+#  if defined(DEBUG)
     Serial.println(F("Use static interrupt for pin=" STR(IR_INPUT_PIN)));
 #  endif
 #  if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
@@ -447,7 +447,7 @@ void disablePCIInterruptForTinyReceiver()
     detachInterrupt(IR_INPUT_PIN);
 
 #elif !defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
-    // costs 112 bytes program space + 4 bytes RAM
+    // costs 112 bytes program memory + 4 bytes RAM
     detachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN));
 #else
 #  if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
@@ -563,6 +563,5 @@ ISR(PCINT1_vect)
 
 /** @}*/
 
-#endif // TINY_IR_RECEIVER_HPP
+#endif // _TINY_IR_RECEIVER_HPP
 #pragma once
-

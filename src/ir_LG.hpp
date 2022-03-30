@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_LG_HPP
-#define IR_LG_HPP
+#ifndef _IR_LG_HPP
+#define _IR_LG_HPP
 
 #include <Arduino.h>
 
@@ -319,5 +319,5 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 }
 
 /** @}*/
-#endif
+#endif // _IR_LG_HPP
 #pragma once

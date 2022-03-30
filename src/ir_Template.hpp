@@ -5,89 +5,54 @@
  template without too much work. Some protocols are quite unique and will require
  considerably more work in this file! It is way beyond the scope of this text to
  explain how to reverse engineer "unusual" IR protocols. But, unless you own an
- oscilloscope, the starting point is probably to use the rawDump.ino sketch and
+ oscilloscope, the starting point is probably to use the ReceiveDump.ino sketch and
  try to spot the pattern!
 
  Before you start, make sure the IR library is working OK:
  # Open up the Arduino IDE
- # Load up the rawDump.ino example sketch
+ # Load up the ReceiveDump.ino example sketch
  # Run it
+ # Analyze your data to have an idea, what is the header timing, the bit timing, the address, the command and the checksum of your protocol.
 
  Now we can start to add our new protocol...
 
- 1. Copy this file to : ir_Shuzu.cpp
+ 1. Copy this file to : ir_<YourProtocolName>.hpp
 
  2. Replace all occurrences of "Shuzu" with the name of your protocol.
 
  3. Tweak the #defines to suit your protocol.
 
- 4. If you're lucky, tweaking the #defines will make the default send() function
+ 4. If you're lucky, tweaking the #defines will make the decode and send() function
  work.
 
- 5. Again, if you're lucky, tweaking the #defines will have made the default
- decode() function work.
+ You have now written the code to support your new protocol!
 
- You have written the code to support your new protocol!
+ To integrate it into the IRremote library, you must search for "BOSEWAVE"
+ and add your protocol in the same way as it is already done for BOSEWAVE.
 
- Now you must do a few things to add it to the IRremote system:
+ You have to change the following files:
+ IRSend.hpp     IRsend::write(IRData *aIRSendData + uint_fast8_t aNumberOfRepeats)
+ IRProtocol.h   Add it to decode_type_t
+ IRReceive.hpp  IRrecv::decode() + printActiveIRProtocols(Print *aSerial) + getProtocolString(decode_type_t aProtocol)
+ IRremote.hpp   At 3 occurrences of DECODE_XXX
+ IRremoteInt.h  Add the declaration of the decode and send function
 
- 1. Open IRremote.h and make the following change:
- REMEMBER to change occurrences of "SHUZU" with the name of your protocol
- At the top, in the section "Supported Protocols", add:
- #define DECODE_SHUZU  1
- #define SEND_SHUZU    1
-
- 2. Open IRProtocol.h and make the following change:
- In the section "An enum consisting of all supported formats", add:
- SHUZU,
- to the end of the list (notice there is a comma after the protocol name)
-
- 3. Open IRremoteInt.h and make the following changes:
- A. Further down in "Main class for receiving IR", add:
- //......................................................................
- #if DECODE_SHUZU
- bool  decodeShuzu () ;
- #endif
-
- B. Further down in "Main class for sending IR", add:
- //......................................................................
- #if SEND_SHUZU
- void  sendShuzuStandard (uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) ;
- #endif
-
- 4. Save your changes and close the files
-
- 5. Now open IRReceive.hpp and make the following change:
-
- A. In the function IRrecv::decode(), add:
- #ifdef DECODE_SHUZU
- IR_DEBUG_PRINTLN("Attempting Shuzu decode");
- if (decodeShuzu())  return true ;
- #endif
-
- B. In the function getProtocolString(), add
- case SHUZU:
- return ("Shuzu");
- break;
-
- C. Save your changes and close the file
-
- 6. Now open the Arduino IDE, load up the rawDump.ino sketch, and run it.
+ Now open the Arduino IDE, load up the ReceiveDump.ino sketch, and run it.
  Hopefully it will compile and upload.
- If it doesn't, you've done something wrong. Check your work.
- If you can't get it to work - seek help from somewhere.
+ If it doesn't, you've done something wrong. Check your work and look carefully at the error messages.
 
  If you get this far, I will assume you have successfully added your new protocol
- There is one last thing to do.
 
- 7. Delete this giant instructional comment.
+ At last, delete this giant instructional comment.
 
- 8. Send a copy of your work to us so we can include it in the library and
- others may benefit from your hard work and maybe even write a song about how
- great you are for helping them! :)
+ If you want us to include your work in the library so others may benefit
+ from your hard work, you have to extend the examples
+ IRremoteInfo, SmallReceiver, simple Receiver, SendDemo and UnitTest too
+ as well as the Readme.md
+ It is not an act, but required for completeness.
 
- Regards,
- BlueChip
+ Thanks
+ The maintainer
  */
 
 /*
@@ -95,7 +60,7 @@
  *
  *  Contains functions for receiving and sending Shuzu IR Protocol ...
  *
- *  Copyright (C) 2021  Shuzu Guru
+ *  Copyright (C) 2022  Shuzu Guru
  *  shuzu.guru@gmail.com
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -103,7 +68,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2021 Unknown Contributor :-)
+ * Copyright (c) 2022 Unknown Contributor :-)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -124,8 +89,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_SHUZU_HPP
-#define IR_SHUZU_HPP
+#ifndef _IR_SHUZU_HPP
+#define _IR_SHUZU_HPP
 
 #include <Arduino.h>
 
@@ -244,9 +209,9 @@ bool IRrecv::decodeShuzu() {
     decodedIRData.command = tCommand;
     decodedIRData.address = tAddress;
     decodedIRData.numberOfBits = SHUZU_BITS;
-    decodedIRData.protocol = LG; // we have no SHUZU code
+    decodedIRData.protocol = BOSEWAVE; // we have no SHUZU code
 
     return true;
 }
-#endif // #ifndef IR_SHUZU_HPP
+#endif // _IR_SHUZU_HPP
 #pragma once

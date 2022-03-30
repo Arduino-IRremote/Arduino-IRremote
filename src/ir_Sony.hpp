@@ -27,8 +27,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_SONY_HPP
-#define IR_SONY_HPP
+#ifndef _IR_SONY_HPP
+#define _IR_SONY_HPP
 
 #include <Arduino.h>
 
@@ -223,5 +223,5 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 }
 
 /** @}*/
-#endif
+#endif // _IR_SONY_HPP
 #pragma once

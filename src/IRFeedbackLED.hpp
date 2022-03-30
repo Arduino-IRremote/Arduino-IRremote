@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_FEEDBACK_LED_HPP
-#define IR_FEEDBACK_LED_HPP
+#ifndef _IR_FEEDBACK_LED_HPP
+#define _IR_FEEDBACK_LED_HPP
 
 /** \addtogroup FeedbackLEDFunctions Feedback LED functions
  * @{
@@ -61,7 +61,7 @@ void setLEDFeedback(uint8_t aFeedbackLEDPin, uint8_t aEnableLEDFeedback) {
         FeedbackLEDControl.LedFeedbackEnabled |= aEnableLEDFeedback;
         if (aFeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
             pinMode(aFeedbackLEDPin, OUTPUT);
-#ifdef LED_BUILTIN
+#if defined(LED_BUILTIN)
         } else {
             pinMode(LED_BUILTIN, OUTPUT);
 #else
@@ -113,7 +113,7 @@ void setFeedbackLED(bool aSwitchLedOn) {
 #else
             digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
 #endif
-#ifdef LED_BUILTIN // use fast macros here
+#if defined(LED_BUILTIN) // use fast macros here
             } else {
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
                 digitalWriteFast(LED_BUILTIN, LOW); // For AVR, this generates a single cbi command
@@ -129,7 +129,7 @@ void setFeedbackLED(bool aSwitchLedOn) {
 #else
             digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED off
 #endif
-#ifdef LED_BUILTIN // use fast macros here
+#if defined(LED_BUILTIN) // use fast macros here
             } else {
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
                 digitalWriteFast(LED_BUILTIN, HIGH); // For AVR, this generates a single sbi command
@@ -156,5 +156,5 @@ void setBlinkPin(uint8_t aBlinkPin) {
 
 /** @}*/
 
-#endif // #ifndef IR_FEEDBACK_LED_HPP
+#endif // _IR_FEEDBACK_LED_HPP
 #pragma once

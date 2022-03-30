@@ -31,8 +31,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_PRONTO_HPP
-#define IR_PRONTO_HPP
+#ifndef _IR_PRONTO_HPP
+#define _IR_PRONTO_HPP
 
 // The first number, here 0000, denotes the type of the signal. 0000 denotes a raw IR signal with modulation,
 // The second number, here 006C, denotes a frequency code
@@ -340,5 +340,5 @@ size_t IRrecv::compensateAndStorePronto(String *aString, unsigned int frequency)
 }
 
 /** @}*/
-#endif
+#endif // _IR_PRONTO_HPP
 #pragma once

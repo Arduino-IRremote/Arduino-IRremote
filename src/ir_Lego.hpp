@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_LEGO_HPP
-#define IR_LEGO_HPP
+#ifndef _IR_LEGO_HPP
+#define _IR_LEGO_HPP
 
 #include <Arduino.h>
 
@@ -225,5 +225,5 @@ bool IRrecv::decodeLegoPowerFunctions() {
 }
 
 /** @}*/
-#endif
+#endif // _IR_LEGO_HPP
 #pragma once

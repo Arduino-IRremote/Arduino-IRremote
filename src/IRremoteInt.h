@@ -30,8 +30,8 @@
  *
  ************************************************************************************
  */
-#ifndef IRremoteInt_h
-#define IRremoteInt_h
+#ifndef _IR_REMOTE_INT_H
+#define _IR_REMOTE_INT_H
 
 #include <Arduino.h>
 
@@ -89,7 +89,7 @@ struct irparams_struct {
     uint16_t TickCounterForISR;     ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
 
     bool OverflowFlag;              ///< Raw buffer OverflowFlag occurred
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program space and speeds up ISR
+#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
     uint8_t rawlen;                 ///< counter of entries in rawbuf
 #else
     unsigned int rawlen;            ///< counter of entries in rawbuf
@@ -99,9 +99,9 @@ struct irparams_struct {
 
 /*
  * Info directives
- * Can be disabled to save program space
+ * Can be disabled to save program memory
  */
-#ifdef INFO
+#if defined(INFO)
 #  define IR_INFO_PRINT(...)    Serial.print(__VA_ARGS__)
 #  define IR_INFO_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else
@@ -118,7 +118,7 @@ struct irparams_struct {
 /*
  * Debug directives
  */
-#ifdef DEBUG
+#if defined(DEBUG)
 #  define IR_DEBUG_PRINT(...)    Serial.print(__VA_ARGS__)
 #  define IR_DEBUG_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else
@@ -132,7 +132,7 @@ struct irparams_struct {
 #  define IR_DEBUG_PRINTLN(...) void()
 #endif
 
-#ifdef TRACE
+#if defined(TRACE)
 #  define IR_TRACE_PRINT(...)    Serial.print(__VA_ARGS__)
 #  define IR_TRACE_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else
@@ -545,7 +545,5 @@ public:
  */
 extern IRsend IrSender;
 
-#endif // IRremoteInt_h
-
+#endif // _IR_REMOTE_INT_H
 #pragma once
-

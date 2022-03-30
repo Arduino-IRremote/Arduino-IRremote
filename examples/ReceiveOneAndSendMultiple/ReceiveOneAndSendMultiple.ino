@@ -160,7 +160,7 @@ void sendSamsungSmartHubMacro(bool aDoSelect) {
     IrReceiver.stop(); // ESP32 uses another timer for tone()
 #    endif
     if (millis() < tWaitTimeAfterBoot) {
-        // division by 1000 and printing requires much (8%) program space
+        // division by 1000 and printing requires much (8%) program memory
         Serial.print(F("It is "));
         Serial.print(millis() / 1000);
         Serial.print(F(" seconds after boot, Samsung H5273 TV requires "));

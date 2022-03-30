@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_SAMSUNG_HPP
-#define IR_SAMSUNG_HPP
+#ifndef _IR_SAMSUNG_HPP
+#define _IR_SAMSUNG_HPP
 
 #include <Arduino.h>
 
@@ -267,5 +267,5 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 }
 
 /** @}*/
-#endif
+#endif // _IR_SAMSUNG_HPP
 #pragma once

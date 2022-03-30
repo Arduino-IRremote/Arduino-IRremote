@@ -72,7 +72,17 @@ void setup() {
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);
     Serial.print(F("at pin "));
+#if defined(ARDUINO_ARCH_STM32) || defined(ESP8266)
+    Serial.println(IR_RECEIVE_PIN_STRING);
+#else
     Serial.println(IR_RECEIVE_PIN);
+#endif
+
+    // infos for receive
+    Serial.print(RECORD_GAP_MICROS);
+    Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
+    Serial.print(MARK_EXCESS_MICROS);
+    Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
 }
 
 //+=============================================================================

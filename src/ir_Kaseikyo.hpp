@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_KASEIKYO_HPP
-#define IR_KASEIKYO_HPP
+#ifndef _IR_KASEIKYO_HPP
+#define _IR_KASEIKYO_HPP
 
 #include <Arduino.h>
 
@@ -330,5 +330,5 @@ void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
 }
 
 /** @}*/
-#endif
+#endif // _IR_KASEIKYO_HPP
 #pragma once

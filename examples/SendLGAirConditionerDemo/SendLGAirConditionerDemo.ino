@@ -53,7 +53,7 @@
 #include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
 #endif
 
-#define INFO // Deactivate this to save program space and suppress info output from the LG-AC driver.
+#define INFO // Deactivate this to save program memory and suppress info output from the LG-AC driver.
 //#define DEBUG // Activate this for more output from the LG-AC driver.
 #include "ac_LG.hpp"
 

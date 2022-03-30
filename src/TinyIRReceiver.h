@@ -23,8 +23,8 @@
  *
  */
 
-#ifndef TINY_IR_RECEIVER_H
-#define TINY_IR_RECEIVER_H
+#ifndef _TINY_IR_RECEIVER_H
+#define _TINY_IR_RECEIVER_H
 
 #include <Arduino.h>
 
@@ -111,6 +111,5 @@ bool isTinyReceiverIdle();
 
 /** @}*/
 
-#endif // TINY_IR_RECEIVER_H
-
+#endif // _TINY_IR_RECEIVER_H
 #pragma once

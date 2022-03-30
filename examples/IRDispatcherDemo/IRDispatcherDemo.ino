@@ -30,7 +30,7 @@
  * Choose the library to be used for IR receiving
  */
 #define USE_TINY_IR_RECEIVER // Recommended, but only for NEC protocol!!! If disabled and IRMP_INPUT_PIN is defined, the IRMP library is used for decoding
-//#define TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT // costs 112 bytes program space + 4 bytes RAM
+//#define TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT // costs 112 bytes program memory + 4 bytes RAM
 
 #include "PinDefinitionsAndMore.h"
 // Some kind of auto detect library if USE_TINY_IR_RECEIVER is deactivated
@@ -57,20 +57,22 @@
   #endif
 
 #elif defined(USE_IRMP_LIBRARY)
-#define IRMP_USE_COMPLETE_CALLBACK       1 // Enable callback functionality is required if IRMP library is used
-
+/*
+ * IRMP version
+ */
+#define IRMP_USE_COMPLETE_CALLBACK       1 // Enable callback functionality. It is required if IRMP library is used.
 #if defined(ALTERNATIVE_IR_FEEDBACK_LED_PIN)
 #define FEEDBACK_LED_PIN    ALTERNATIVE_IR_FEEDBACK_LED_PIN
 #endif
 
-//#define IRMP_ENABLE_PIN_CHANGE_INTERRUPT  // Enable interrupt functionality (not for all protocols) - requires around 376 additional bytes of program space
+//#define IRMP_ENABLE_PIN_CHANGE_INTERRUPT  // Enable interrupt functionality (not for all protocols) - requires around 376 additional bytes of program memory
 
-#define IRMP_PROTOCOL_NAMES 1               // Enable protocol number mapping to protocol strings - requires some program space. Must before #include <irmp*>
+#define IRMP_PROTOCOL_NAMES 1               // Enable protocol number mapping to protocol strings - requires some program memory. Must before #include <irmp*>
 
 #define IRMP_SUPPORT_NEC_PROTOCOL         1 // this enables only one protocol
 //#define IRMP_SUPPORT_KASEIKYO_PROTOCOL    1
 
-#  ifdef ALTERNATIVE_IR_FEEDBACK_LED_PIN
+#  if defined(ALTERNATIVE_IR_FEEDBACK_LED_PIN)
 #define IRMP_FEEDBACK_LED_PIN   ALTERNATIVE_IR_FEEDBACK_LED_PIN
 #  endif
 /*
@@ -150,7 +152,7 @@ void setup() {
     Serial.println(F("at pin " STR(IRMP_INPUT_PIN)));
 #  endif
 
-#  ifdef ALTERNATIVE_IR_FEEDBACK_LED_PIN
+#  if defined(ALTERNATIVE_IR_FEEDBACK_LED_PIN)
     irmp_irsnd_LEDFeedback(true); // Enable receive signal feedback at ALTERNATIVE_IR_FEEDBACK_LED_PIN
     Serial.println(F("IR feedback pin is " STR(ALTERNATIVE_IR_FEEDBACK_LED_PIN)));
 #  endif

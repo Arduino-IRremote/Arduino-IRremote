@@ -27,8 +27,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_RC5_RC6_HPP
-#define IR_RC5_RC6_HPP
+#ifndef _IR_RC5_RC6_HPP
+#define _IR_RC5_RC6_HPP
 
 #include <Arduino.h>
 
@@ -553,5 +553,5 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
 }
 
 /** @}*/
-#endif
+#endif // _IR_RC5_RC6_HPP
 #pragma once

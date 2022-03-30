@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_JVC_HPP
-#define IR_JVC_HPP
+#ifndef _IR_JVC_HPP
+#define _IR_JVC_HPP
 
 #include <Arduino.h>
 
@@ -237,5 +237,5 @@ void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
 }
 
 /** @}*/
-#endif
+#endif // _IR_JVC_HPP
 #pragma once

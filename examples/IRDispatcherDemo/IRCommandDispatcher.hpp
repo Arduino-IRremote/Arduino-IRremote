@@ -31,8 +31,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
  */
-#ifndef IR_COMMAND_DISPATCHER_HPP
-#define IR_COMMAND_DISPATCHER_HPP
+#ifndef _IR_COMMAND_DISPATCHER_HPP
+#define _IR_COMMAND_DISPATCHER_HPP
 
 #include <Arduino.h>
 
@@ -139,7 +139,7 @@ void handleReceivedIRData()
 
     if (IRDispatcher.IRReceivedData.address == IR_ADDRESS) {
         IRDispatcher.checkAndCallCommand(true);
-#ifdef INFO
+#if defined(INFO)
         } else {
         CD_INFO_PRINT(F("Wrong address. Expected 0x"));
         CD_INFO_PRINTLN(IR_ADDRESS, HEX);
@@ -165,14 +165,14 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
             /*
              * Command found
              */
-#ifdef INFO
+#if defined(INFO)
             const __FlashStringHelper *tCommandName = reinterpret_cast<const __FlashStringHelper*>(IRMapping[i].CommandString);
 #endif
             /*
              * Check for repeat and if it is allowed for the current command
              */
             if (IRReceivedData.isRepeat && !(IRMapping[i].Flags & IR_COMMAND_FLAG_REPEATABLE)) {
-#ifdef DEBUG
+#if defined(DEBUG)
                 Serial.print(F("Repeats of command \""));
                 Serial.print(tCommandName);
                 Serial.println("\" not accepted");
@@ -184,7 +184,7 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
              * Do not accept recursive call of the same command
              */
             if (currentBlockingCommandCalled == IRReceivedData.command) {
-#ifdef DEBUG
+#if defined(DEBUG)
                 Serial.print(F("Recursive command \""));
                 Serial.print(tCommandName);
                 Serial.println("\" not accepted");
@@ -246,7 +246,7 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
                     CD_INFO_PRINTLN (tCommandName);
 
                     IRMapping[i].CommandToCall();
-#ifdef TRACE
+#if defined(TRACE)
                     Serial.println(F("End of blocking command"));
 #endif
                     executingBlockingCommand = false;
@@ -309,5 +309,5 @@ void IRCommandDispatcher::setRequestToStopReceived() {
     requestToStopReceived = true;
 }
 
-#endif // #ifndef IR_COMMAND_DISPATCHER_HPP
+#endif // _IR_COMMAND_DISPATCHER_HPP
 #pragma once

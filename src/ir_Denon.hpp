@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_DENON_HPP
-#define IR_DENON_HPP
+#ifndef _IR_DENON_HPP
+#define _IR_DENON_HPP
 
 #include <Arduino.h>
 
@@ -249,5 +249,5 @@ void IRsend::sendSharp(unsigned int aAddress, unsigned int aCommand) {
 }
 
 /** @}*/
-#endif
+#endif // _IR_DENON_HPP
 #pragma once

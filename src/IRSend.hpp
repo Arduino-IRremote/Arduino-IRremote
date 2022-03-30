@@ -29,8 +29,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_SEND_HPP
-#define IR_SEND_HPP
+#ifndef _IR_SEND_HPP
+#define _IR_SEND_HPP
 
 /*
  * This improves readability of code by avoiding a lot of #if defined clauses
@@ -261,7 +261,7 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLen
 }
 
 /**
- * New function using an 8 byte tick timing array to save program space
+ * New function using an 8 byte tick timing array to save program memory
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
@@ -306,7 +306,7 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aL
 }
 
 /**
- * New function using an 8 byte tick timing array in FLASH to save program space
+ * New function using an 8 byte tick timing array in FLASH to save program memory
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
@@ -636,5 +636,5 @@ unsigned int IRsend::getPulseCorrectionNanos() {
 }
 
 /** @}*/
-#endif // IR_SEND_HPP
+#endif // _IR_SEND_HPP
 #pragma once

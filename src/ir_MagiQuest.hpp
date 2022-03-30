@@ -30,8 +30,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_MAGIQUEST_HPP
-#define IR_MAGIQUEST_HPP
+#ifndef _IR_MAGIQUEST_HPP
+#define _IR_MAGIQUEST_HPP
 
 #include <Arduino.h>
 
@@ -117,7 +117,7 @@ bool IRrecv::decodeMagiQuest() {
     unsigned int space_;
     unsigned int ratio_;
 
-#ifdef DEBUG
+#if defined(DEBUG)
     char bitstring[(MAGIQUEST_PACKET_SIZE + 1)];
     bitstring[MAGIQUEST_PACKET_SIZE] = '\0';
 #endif
@@ -149,13 +149,13 @@ bool IRrecv::decodeMagiQuest() {
             if (ratio_ > 1) {
                 // It's a 0
                 data.llword <<= 1;
-#ifdef DEBUG
+#if defined(DEBUG)
                 bitstring[(offset / 2) - 1] = '0';
 #endif
             } else {
                 // It's a 1
                 data.llword = (data.llword << 1) | 1;
-#ifdef DEBUG
+#if defined(DEBUG)
                 bitstring[(offset / 2) - 1] = '1';
 #endif
             }
@@ -175,5 +175,5 @@ bool IRrecv::decodeMagiQuest() {
 
     return true;
 }
-#endif
+#endif // _IR_MAGIQUEST_HPP
 #pragma once
