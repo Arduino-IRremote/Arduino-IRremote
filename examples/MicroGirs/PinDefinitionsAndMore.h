@@ -20,7 +20,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
  *
  */
 
@@ -54,9 +54,7 @@
 #if defined(ESP8266)
 #define FEEDBACK_LED_IS_ACTIVE_LOW // The LED on my board (D4) is active LOW
 #define IR_RECEIVE_PIN          14 // D5
-#define IR_RECEIVE_PIN_STRING   "D5"
 #define IR_SEND_PIN             12 // D6 - D4/pin 2 is internal LED
-#define IR_SEND_PIN_STRING      "D6"
 #define _IR_TIMING_TEST_PIN     13 // D7
 #define APPLICATION_PIN          0 // D3
 
@@ -89,15 +87,17 @@ void noTone(uint8_t _pin){
 #elif defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_STM32F1) // BluePill
 // Timer 3 blocks PA6, PA7, PB0, PB1 for use by Servo or tone()
 #define IR_RECEIVE_PIN          PA6
-#define IR_RECEIVE_PIN_STRING   "PA6"
 #define IR_SEND_PIN             PA7
-#define IR_SEND_PIN_STRING      "PA7"
 #define TONE_PIN                PA3
-#define _IR_TIMING_TEST_PIN      PA5
+#define _IR_TIMING_TEST_PIN     PA5
 #define APPLICATION_PIN         PA2
+#  if defined(ARDUINO_GENERIC_STM32F103C) || defined(ARDUINO_BLUEPILL_F103C8)
+// BluePill LED is active low
+#define FEEDBACK_LED_IS_ACTIVE_LOW
+#  endif
 
 #elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) // Digispark board
-#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". saves 370 bytes program space and 38 bytes RAM for digistump core
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". saves 370 bytes program memory and 38 bytes RAM for digistump core
 #define IR_RECEIVE_PIN  0
 #define IR_SEND_PIN     4 // Pin 2 is serial output with ATtinySerialOut. Pin 1 is internal LED and Pin3 is USB+ with pullup on Digispark board.
 #define TONE_PIN        3
@@ -119,7 +119,7 @@ void noTone(uint8_t _pin){
 #  endif
 
 #elif defined(__AVR_ATtiny88__) // MH-ET Tiny88 board
-#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". Saves 128 bytes program space
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". Saves 128 bytes program memory
 // Pin 6 is TX pin 7 is RX
 #define IR_RECEIVE_PIN   3 // INT1
 #define IR_SEND_PIN      4

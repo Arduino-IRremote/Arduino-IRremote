@@ -32,8 +32,8 @@
  *
  ************************************************************************************
  */
-#ifndef IR_TIMER_HPP
-#define IR_TIMER_HPP
+#ifndef _IR_TIMER_HPP
+#define _IR_TIMER_HPP
 
 /** \addtogroup HardwareDependencies CPU / board dependent definitions
  * @{
@@ -757,7 +757,7 @@ void timerConfigForReceive() {
     TCA0.SINGLE.CTRLA = TCA_SINGLE_CLKSEL_DIV1_gc | TCA_SINGLE_ENABLE_bm;   // set prescaler to 1 and enable timer
 }
 
-#  ifdef SEND_PWM_BY_TIMER
+#  if defined(SEND_PWM_BY_TIMER)
 #error "No support for hardware PWM generation for ESP8266"
 #  endif // defined(SEND_PWM_BY_TIMER)
 
@@ -893,7 +893,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #define TIMER_DISABLE_RECEIVE_INTR  NVIC_DISABLE_IRQ(IRQ_CMT)
 #define TIMER_INTR_NAME     cmt_isr
 
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR(f) void f(void)
@@ -954,7 +954,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #define TIMER_ENABLE_RECEIVE_INTR       NVIC_ENABLE_IRQ(IRQ_FTM1), NVIC_SET_PRIORITY(IRQ_FTM1, 0)
 #define TIMER_DISABLE_RECEIVE_INTR      NVIC_DISABLE_IRQ(IRQ_FTM1)
 #define TIMER_INTR_NAME                 ftm1_isr
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR(f) void f(void)
@@ -1005,7 +1005,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
                                         NVIC_SET_PRIORITY(IRQ_FLEXPWM1_3, 48)
 #define TIMER_DISABLE_RECEIVE_INTR      NVIC_DISABLE_IRQ(IRQ_FLEXPWM1_3)
 #define TIMER_INTR_NAME                 pwm1_3_isr
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR(f) void (f)(void)
@@ -1076,13 +1076,13 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #define TIMER_DISABLE_RECEIVE_INTR  timer1_detachInterrupt() // disables interrupt too
 
 // Redefinition of ISR macro which creates a plain function now
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR() IRAM_ATTR void IRTimerInterruptHandler()
 IRAM_ATTR void IRTimerInterruptHandler();
 
-#  ifdef SEND_PWM_BY_TIMER
+#  if defined(SEND_PWM_BY_TIMER)
 #error "No support for hardware PWM generation for ESP8266"
 #  endif // defined(SEND_PWM_BY_TIMER)
 
@@ -1113,7 +1113,7 @@ void timerConfigForReceive() {
 #define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(s50usTimer)
 #define TIMER_DISABLE_RECEIVE_INTR  if (s50usTimer != NULL) {timerEnd(s50usTimer); timerDetachInterrupt(s50usTimer);}
 // Redefinition of ISR macro which creates a plain function now
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR() IRAM_ATTR void IRTimerInterruptHandler()
@@ -1187,7 +1187,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #define TIMER_ENABLE_RECEIVE_INTR   NVIC_EnableIRQ(TC3_IRQn)
 #define TIMER_DISABLE_RECEIVE_INTR  NVIC_DisableIRQ(TC3_IRQn) // or TC3->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
 // Redefinition of ISR macro which creates a plain function now
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR(f) void IRTimerInterruptHandler(void)
@@ -1262,7 +1262,7 @@ void TC3_Handler(void) {
 #define TIMER_DISABLE_RECEIVE_INTR  s50usTimer.detach();
 
 // Redefinition of ISR macro which creates a plain function now
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR() void IRTimerInterruptHandler(void)
@@ -1318,7 +1318,7 @@ repeating_timer_t s50usTimer;
 #define TIMER_DISABLE_RECEIVE_INTR  cancel_repeating_timer(&s50usTimer);
 
 // Redefinition of ISR macro which creates a plain function now
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR() void IRTimerInterruptHandler(void)
@@ -1383,7 +1383,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_RECEIVE_INTR   NVIC_EnableIRQ(TIMER2_IRQn);
 #define TIMER_DISABLE_RECEIVE_INTR  NVIC_DisableIRQ(TIMER2_IRQn);
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR(f) void IRTimerInterruptHandler(void)
@@ -1439,7 +1439,7 @@ extern "C" {
 #define TIMER_DISABLE_RECEIVE_INTR  s50usTimer.pause()
 
 // Redefinition of ISR macro which creates a plain function now
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR() void IRTimerInterruptHandler(void)
@@ -1479,7 +1479,7 @@ void timerConfigForReceive() {
 #define TIMER_DISABLE_RECEIVE_INTR  s50usTimer.pause()
 
 // Redefinition of ISR macro which creates a plain function now
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR() void IRTimerInterruptHandler(void)
@@ -1520,7 +1520,7 @@ extern IntervalTimer timer;
 #define TIMER_DISABLE_RECEIVE_INTR  timer.end()
 
 // Redefinition of ISR macro which creates a plain function now
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR() void IRTimerInterruptHandler(void)
@@ -1567,7 +1567,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #define TIMER_ENABLE_RECEIVE_INTR
 #define TIMER_DISABLE_RECEIVE_INTR
 
-#  ifdef ISR
+#  if defined(ISR)
 #undef ISR
 #  endif
 #define ISR() void notImplemented(void)
@@ -1597,5 +1597,5 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 
 /** @}*/
 /** @}*/
-#endif // #ifndef IR_TIMER_HPP
+#endif // _IR_TIMER_HPP
 #pragma once

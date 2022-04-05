@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef IR_COMMAND_MAPPING_H_
-#define IR_COMMAND_MAPPING_H_
+#ifndef _IR_COMMAND_MAPPING_H
+#define _IR_COMMAND_MAPPING_H
 
 #include <Arduino.h>
 //#include "Commands.h" // includes all the commands used in the mapping arrays below
@@ -27,9 +27,9 @@
 #error "Please choose only one remote for compile"
 #endif
 
-#ifdef USE_KEYES_REMOTE_CLONE
+#if defined(USE_KEYES_REMOTE_CLONE)
 #define IR_REMOTE_NAME "KEYES_CLONE"
-// Codes for the KEYES CLONE remote control with 17 Keys with number pad above direction control
+// Codes for the KEYES CLONE remote control with 17 keys with number pad above direction control
 #if defined(USE_IRMP_LIBRARY)
 #define IR_ADDRESS 0xFF00 // IRMP interprets NEC addresses always as 16 bit
 #else
@@ -81,7 +81,7 @@
 
 #endif
 
-#ifdef USE_KEYES_REMOTE
+#if defined(USE_KEYES_REMOTE)
 #define IR_REMOTE_NAME "KEYES"
 /*
  * FIRST:
@@ -191,6 +191,5 @@ const struct IRToCommandMappingStruct IRMapping[] =
 { COMMAND_INCREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doIncreaseBlinkFrequency, increaseBlink },
 { COMMAND_DECREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doDecreaseBlinkFrequency, decreaseBlink } };
 
-#endif /* IR_COMMAND_MAPPING_H_ */
-
+#endif / _IR_COMMAND_MAPPING_H
 #pragma once

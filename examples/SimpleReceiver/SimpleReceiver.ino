@@ -75,8 +75,7 @@ void setup() {
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);
-    Serial.print(F("at pin "));
-    Serial.println(IR_RECEIVE_PIN);
+    Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
 }
 
 void loop() {

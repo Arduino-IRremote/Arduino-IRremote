@@ -106,14 +106,14 @@
 /**
  * The modules supported, as given by the "modules" command.
  */
-#ifdef TRANSMIT
-#ifdef RECEIVE
+#if defined(TRANSMIT)
+#if defined(RECEIVE)
 #define modulesSupported "base transmit receive"
 #else // ! RECEIVE
 #define modulesSupported "base transmit"
 #endif
 #else // !TRANSMIT
-#ifdef RECEIVE
+#if defined(RECEIVE)
 #define modulesSupported "base receive"
 #else // ! RECETVE
 #error At lease one of TRANSMIT and RECEIVE must be defined
@@ -148,8 +148,8 @@ typedef unsigned frequency_t; // max 65535, unless 32-bit
 typedef uint16_t microseconds_t; // max 65535
 
 static const microseconds_t DUMMYENDING = 40000U;
-static const frequency_t FREQUENCY_T_MAX = __UINT16_MAX__;
-static const frequency_t MICROSECONDS_T_MAX = __UINT16_MAX__;
+static const frequency_t FREQUENCY_T_MAX = UINT16_MAX;
+static const frequency_t MICROSECONDS_T_MAX = UINT16_MAX;
 
 /**
  * Our own tokenizer class. Breaks the command line into tokens.
@@ -226,7 +226,7 @@ frequency_t Tokenizer::getFrequency() {
 }
 ///////////////// end Tokenizer /////////////////////////////////
 
-#ifdef TRANSMIT
+#if defined(TRANSMIT)
 static inline unsigned hz2khz(frequency_t hz) {
     return (hz + 500) / 1000;
 }
@@ -260,7 +260,7 @@ static void sendRaw(const microseconds_t intro[], unsigned lengthIntro, const mi
 }
 #endif // TRANSMIT
 
-#ifdef RECEIVE
+#if defined(RECEIVE)
 
 static void dump(Stream &stream) {
     unsigned int count = IrReceiver.decodedIRData.rawDataPtr->rawlen;
@@ -305,7 +305,7 @@ void setup() {
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
-#ifdef RECEIVE
+#if defined(RECEIVE)
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 
@@ -343,7 +343,7 @@ static void processCommand(const String &line, Stream &stream) {
         stream.println(F(modulesSupported));
         break;
 
-#ifdef RECEIVE
+#if defined(RECEIVE)
     case 'r': // receive
         //case 'a':
         //case 'c':
@@ -351,7 +351,7 @@ static void processCommand(const String &line, Stream &stream) {
         break;
 #endif // RECEIVE
 
-#ifdef TRANSMIT
+#if defined(TRANSMIT)
     case 's': // send
     {
         // TODO: handle unparsable data gracefully

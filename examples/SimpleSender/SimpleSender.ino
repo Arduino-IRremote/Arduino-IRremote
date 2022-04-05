@@ -20,7 +20,7 @@
 
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
-//#define NO_LED_FEEDBACK_CODE // saves 418 bytes program space
+//#define NO_LED_FEEDBACK_CODE // saves 418 bytes program memory
 
 #include <IRremote.hpp>
 

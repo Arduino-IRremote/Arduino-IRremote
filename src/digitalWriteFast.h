@@ -10,33 +10,33 @@
 //#define SANGUINO_PINOUT //define for Sanguino pinout
 
 // general macros/defines
-#ifndef BIT_READ
+#if !defined(BIT_READ)
 # define BIT_READ(value, bit)            ((value) &   (1UL << (bit)))
 #endif
-#ifndef BIT_SET
+#if !defined(BIT_SET)
 # define BIT_SET(value, bit)             ((value) |=  (1UL << (bit)))
 #endif
-#ifndef BIT_CLEAR
+#if !defined(BIT_CLEAR)
 # define BIT_CLEAR(value, bit)           ((value) &= ~(1UL << (bit)))
 #endif
-#ifndef BIT_WRITE
+#if !defined(BIT_WRITE)
 # define BIT_WRITE(value, bit, bitvalue) (bitvalue ? BIT_SET(value, bit) : BIT_CLEAR(value, bit))
 #endif
 
-#ifndef SWAP
+#if !defined(SWAP)
 # define SWAP(x,y) do{ (x)=(x)^(y); (y)=(x)^(y); (x)=(x)^(y); }while(0)
 #endif
 
-#ifndef DEC
+#if !defined(DEC)
 # define DEC (10)
 #endif
-#ifndef HEX
+#if !defined(HEX)
 # define HEX (16)
 #endif
-#ifndef OCT
+#if !defined(OCT)
 # define OCT (8)
 #endif
-#ifndef BIN
+#if !defined(BIN)
 # define BIN (2)
 #endif
 
@@ -46,54 +46,54 @@
      defined(ARDUINO_ARCH_SAM) || \
      defined(ARDUINO_ARCH_SAMD))
 
-#ifndef PROGMEM
+#if !defined(PROGMEM)
 # define PROGMEM
 #endif
-#ifndef PGM_P
+#if !defined(PGM_P)
 # define PGM_P const char *
 #endif
-#ifndef PSTR
+#if !defined(PSTR)
 # define PSTR(str) (str)
 #endif
 
-#ifndef memcpy_P
+#if !defined(memcpy_P)
 # define memcpy_P(dest, src, num) memcpy((dest), (src), (num))
 #endif
-#ifndef strcpy_P
+#if !defined(strcpy_P)
 # define strcpy_P(dst, src)       strcpy((dst), (src))
 #endif
-#ifndef strcat_P
+#if !defined(strcat_P)
 # define strcat_P(dst, src)       strcat((dst), (src))
 #endif
-#ifndef strcmp_P
+#if !defined(strcmp_P)
 # define strcmp_P(a, b)           strcmp((a), (b))
 #endif
-#ifndef strcasecmp_P
+#if !defined(strcasecmp_P)
 # define strcasecmp_P(a, b)       strcasecmp((a), (b))
 #endif
-#ifndef strncmp_P
+#if !defined(strncmp_P)
 # define strncmp_P(a, b, n)       strncmp((a), (b), (n))
 #endif
-#ifndef strncasecmp_P
+#if !defined(strncasecmp_P)
 # define strncasecmp_P(a, b, n)   strncasecmp((a), (b), (n))
 #endif
-#ifndef strstr_P
+#if !defined(strstr_P)
 # define strstr_P(a, b)           strstr((a), (b))
 #endif
-#ifndef strlen_P
+#if !defined(strlen_P)
 # define strlen_P(a)              strlen((a))
 #endif
-#ifndef sprintf_P
+#if !defined(sprintf_P)
 # define sprintf_P(s, f, ...)     sprintf((s), (f), __VA_ARGS__)
 #endif
 
-#ifndef pgm_read_byte
+#if !defined(pgm_read_byte)
 # define pgm_read_byte(addr)      (*(const unsigned char *)(addr))
 #endif
-#ifndef pgm_read_word
+#if !defined(pgm_read_word)
 # define pgm_read_word(addr)      (*(const unsigned short *)(addr))
 #endif
-#ifndef pgm_read_dword
+#if !defined(pgm_read_dword)
 # define pgm_read_dword(addr)     (*(const unsigned long *)(addr))
 #endif
 
@@ -101,7 +101,7 @@
 
 
 // digital functions
-//#ifndef digitalPinToPortReg
+//#if !defined(digitalPinToPortReg)
 #define SPI_SW_SS_PIN   (10) //SS on Uno (for software SPI)
 #define SPI_SW_MOSI_PIN (11) //MOSI on Uno (for software SPI)
 #define SPI_SW_MISO_PIN (12) //MISO on Uno (for software SPI)
@@ -435,10 +435,10 @@
 
 
 #endif
-//#endif  //#ifndef digitalPinToPortReg
+//#endif  //#if !defined(digitalPinToPortReg)
 
 
-#ifndef digitalWriteFast
+#if !defined(digitalWriteFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
 #define digitalWriteFast(P, V) \
 if (__builtin_constant_p(P)) { \
@@ -452,7 +452,7 @@ if (__builtin_constant_p(P)) { \
 #endif
 
 
-#ifndef pinModeFast
+#if !defined(pinModeFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
 #define pinModeFast(P, V) \
 if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
@@ -471,7 +471,7 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 #endif
 
 
-#ifndef digitalReadFast
+#if !defined(digitalReadFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))
 #define digitalReadFast(P) ( (int) __digitalReadFast((P)) )
 #define __digitalReadFast(P ) \
@@ -484,7 +484,7 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 #endif
 
 
-#ifndef digitalToggleFast
+#if !defined(digitalToggleFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))
 #define digitalToggleFast(P) \
 if (__builtin_constant_p(P)) { \

@@ -10,19 +10,21 @@
 # This is the name of the workflow, visible on GitHub UI.
 name: LibraryBuild
 on:
+  workflow_dispatch: # To run it manually
+    description: 'manual build check'
   push: # see: https://help.github.com/en/actions/reference/events-that-trigger-workflows#pull-request-event-pull_request
     paths:
     - '**.ino'
     - '**.cpp'
-    - '**.h'
     - '**.hpp'
+    - '**.h'
     - '**LibraryBuild.yml'
   pull_request:
     paths:
     - '**.ino'
     - '**.cpp'
-    - '**.h'
     - '**.hpp'
+    - '**.h'
     - '**LibraryBuild.yml'
 
 jobs:
