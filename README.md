@@ -20,6 +20,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
     + [Example](https://github.com/Arduino-IRremote/Arduino-IRremote#example)
   * [Do not want to convert your 2.x program and use the 3.x library version?](https://github.com/Arduino-IRremote/Arduino-IRremote#do-not-want-to-convert-your-2x-program-and-use-the-3x-library-version)
   * [How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes](https://github.com/Arduino-IRremote/Arduino-IRremote#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes)
+-  [Errors with old tutorials and the 3.x versions](https://github.com/Arduino-IRremote/Arduino-IRremote#errors-with-old-tutorials-and-the-3x-versions)
 - [Using the new *.hpp files / how to avoid `multiple definitions` linker errors](https://github.com/Arduino-IRremote/Arduino-IRremote#using-the-new-hpp-files--how-to-avoid-multiple-definitions-linker-errors)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#receiving-ir-codes)
   * [Minimal NEC receiver](https://github.com/Arduino-IRremote/Arduino-IRremote#minimal-nec-receiver)
@@ -148,7 +149,6 @@ void loop() {
   ...
 }
 ```
-
 ## Do not want to convert your 2.x program and use the 3.x library version?
 First consider to just use the [original 2.4 release form 2017](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0)
 or the last backwards compatible [2.8 version](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/2.8.0) for you project.
@@ -172,6 +172,9 @@ Example:
 - 0xCB340102 is binary 11001011001101000000000100000010.<br/>
   0x40802CD3 is binary 01000000100000000010110011010011.<br/>
   If you read the first binary sequence backwards (right to left), you get the second sequence.
+
+# Errors with old tutorials and the 3.x versions
+If you suffer from errors with old tutorial code including `IRremote.h` instead of `IRremote.hpp`, just try to rollback to [version 2.4.0](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0). Most likely your code will run and you will not miss the new features...
 
 # Using the new *.hpp files / how to avoid `multiple definitions` linker errors
 In order to support [compile options](#compile-options--macros-for-this-library) more easily,
