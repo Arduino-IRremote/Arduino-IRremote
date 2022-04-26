@@ -136,4 +136,3 @@ public:
 
 /** @}*/
 #endif // _AC_LG_H
-#pragma once

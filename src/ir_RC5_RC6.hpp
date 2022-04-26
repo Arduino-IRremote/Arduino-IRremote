@@ -554,4 +554,3 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
 
 /** @}*/
 #endif // _IR_RC5_RC6_HPP
-#pragma once

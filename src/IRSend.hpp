@@ -637,4 +637,3 @@ unsigned int IRsend::getPulseCorrectionNanos() {
 
 /** @}*/
 #endif // _IR_SEND_HPP
-#pragma once

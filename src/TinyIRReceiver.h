@@ -112,4 +112,3 @@ bool isTinyReceiverIdle();
 /** @}*/
 
 #endif // _TINY_IR_RECEIVER_H
-#pragma once

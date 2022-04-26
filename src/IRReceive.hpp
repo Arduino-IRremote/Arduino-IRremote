@@ -1575,4 +1575,3 @@ bool IRrecv::decode(decode_results *aResults) {
 
 /** @}*/
 #endif // _IR_RECEIVE_HPP
-#pragma once

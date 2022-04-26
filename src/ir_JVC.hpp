@@ -238,4 +238,3 @@ void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
 
 /** @}*/
 #endif // _IR_JVC_HPP
-#pragma once

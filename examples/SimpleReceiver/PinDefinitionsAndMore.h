@@ -236,7 +236,7 @@ void noTone(uint8_t _pin){
 #define Serial SerialUSB
 
 // Definitions for the Chinese SAMD21 M0-Mini clone, which has no led connected to D13/PA17.
-// Attention!!! D2 and D4 are switched on these boards!!!
+// Attention!!! D2 and D4 are swapped on these boards!!!
 // If you connect the LED, it is on pin 24/PB11. In this case activate the next two lines.
 //#undef LED_BUILTIN
 //#define LED_BUILTIN 24 // PB11

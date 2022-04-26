@@ -1,7 +1,7 @@
 /*
  * ReceiveDemo.cpp
  *
- * Demonstrates receiving IR codes with the IRremote library.
+ * Demonstrates receiving IR codes with the IRremote library and the use of the Arduino tone() function with this library.
  * If debug button is pressed (pin connected to ground) a long output is generated.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.

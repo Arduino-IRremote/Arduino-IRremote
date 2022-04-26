@@ -79,4 +79,3 @@ bool IRrecv::decodeWhynter() {
 
 /** @}*/
 #endif // _IR_WHYNTER_HPP
-#pragma once

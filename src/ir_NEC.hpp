@@ -375,4 +375,3 @@ void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
 
 /** @}*/
 #endif // _IR_NEC_HPP
-#pragma once

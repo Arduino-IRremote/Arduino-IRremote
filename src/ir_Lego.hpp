@@ -226,4 +226,3 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
 /** @}*/
 #endif // _IR_LEGO_HPP
-#pragma once

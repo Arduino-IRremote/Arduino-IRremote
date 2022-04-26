@@ -214,4 +214,3 @@ bool IRrecv::decodeShuzu() {
     return true;
 }
 #endif // _IR_SHUZU_HPP
-#pragma once

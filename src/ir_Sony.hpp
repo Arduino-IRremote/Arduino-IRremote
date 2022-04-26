@@ -224,4 +224,3 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 
 /** @}*/
 #endif // _IR_SONY_HPP
-#pragma once

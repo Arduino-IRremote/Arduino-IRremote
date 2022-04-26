@@ -546,4 +546,3 @@ public:
 extern IRsend IrSender;
 
 #endif // _IR_REMOTE_INT_H
-#pragma once

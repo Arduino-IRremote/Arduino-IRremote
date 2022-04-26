@@ -250,4 +250,3 @@ void IRsend::sendSharp(unsigned int aAddress, unsigned int aCommand) {
 
 /** @}*/
 #endif // _IR_DENON_HPP
-#pragma once

@@ -335,4 +335,3 @@
 #define MARK_EXCESS MARK_EXCESS_MICROS
 
 #endif // _IR_REMOTE_HPP
-#pragma once

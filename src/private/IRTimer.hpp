@@ -1598,4 +1598,3 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 /** @}*/
 /** @}*/
 #endif // _IR_TIMER_HPP
-#pragma once

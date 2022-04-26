@@ -43,4 +43,3 @@ void IRsend::sendDISH(unsigned long data, int nbits) {
 }
 
 #endif // _IR_DISH_HPP
-#pragma once

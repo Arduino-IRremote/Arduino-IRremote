@@ -341,4 +341,3 @@ size_t IRrecv::compensateAndStorePronto(String *aString, unsigned int frequency)
 
 /** @}*/
 #endif // _IR_PRONTO_HPP
-#pragma once

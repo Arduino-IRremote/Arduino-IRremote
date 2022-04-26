@@ -310,4 +310,3 @@ void Aircondition_LG::sendTemperatureFanSpeedAndMode() {
 
 /** @}*/
 #endif // _AC_LG_HPP
-#pragma once

@@ -268,4 +268,3 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 
 /** @}*/
 #endif // _IR_SAMSUNG_HPP
-#pragma once

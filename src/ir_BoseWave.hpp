@@ -134,4 +134,3 @@ bool IRrecv::decodeBoseWave() {
 
 /** @}*/
 #endif // _IR_BOSEWAVE_HPP
-#pragma once
