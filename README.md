@@ -27,6 +27,11 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [Sending IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#sending-ir-codes)
     + [List of public IR code databases](https://github.com/Arduino-IRremote/Arduino-IRremote#list-of-public-ir-code-databases)
 - [FAQ and hints](https://github.com/Arduino-IRremote/Arduino-IRremote#faq-and-hints)
+  * [Problems with Neopixels, FastLed etc.](https://github.com/Arduino-IRremote/Arduino-IRremote#problems-with-neopixels-fastled-etc)
+  * [Does not work/compile with another library](https://github.com/Arduino-IRremote/Arduino-IRremote#does-not-workcompile-with-another-library)
+  * [Multiple IR receiver](https://github.com/Arduino-IRremote/Arduino-IRremote#multiple-ir-receiver)
+  * [Increase strength of sent output signal](https://github.com/Arduino-IRremote/Arduino-IRremote#increase-strength-of-sent-output-signal)
+  * [Minimal CPU frequency](https://github.com/Arduino-IRremote/Arduino-IRremote#minimal-cpu-frequency)
 - [Handling unknown Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote#handling-unknown-protocols)
   * [Disclaimer](https://github.com/Arduino-IRremote/Arduino-IRremote#disclaimer)
   * [Protocol=PULSE_DISTANCE](https://github.com/Arduino-IRremote/Arduino-IRremote#protocolpulse_distance)
@@ -226,22 +231,31 @@ You will discover that **the address is a constant** and the commands sometimes 
 http://www.harctoolbox.org/IR-resources.html
 
 # FAQ and hints
-- IR does not work right when I use **Neopixels** (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 탎).<br/>
- Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 탎.
+
+## Problems with Neopixels, FastLed etc.
+IR will not work right when you use **Neopixels** (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (> 50 탎).<br/>
+Whether you use the Adafruit Neopixel lib, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 탎.
 In turn, this stops the IR interrupt handler from running when it needs to.<br/>
 You can try to wait for the IR receiver to be idle before you send the Neopixel data with `if (IrReceiver.isIdle()) { strip.show();}`. This prevents at least breaking a running IR transmission and -depending of the update rate of the Neopixel- may work quite well.<br/>
 There are some other solutions to this on more powerful processors,
- [see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
-- **Another library** is only working if I deactivate the line `IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);`. Please see [below](https://github.com/Arduino-IRremote/Arduino-IRremote#timer-and-pin-usage).
-- You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
- The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
- This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
-- The **minimal CPU frequency** for receiving is 4 MHz, since the 50 탎 timer ISR takes around 12 탎 on a 16 MHz ATmega.
-- To **increase strength of sent output signal** you can increase the current through the send diode, and/or use 2 diodes in series,
- since one IR diode requires only 1.5 volt.
- - The line \#include "ATtinySerialOut.h" in PinDefinitionsAndMore.h (requires the library to be installed) saves 370 bytes program memory and 38 bytes RAM for **Digispark boards** as well as enables serial output at 8MHz.
- - The default software generated PWM has **problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
+[see this page from Marc MERLIN](http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html)
 
+## Does not work/compile with another library
+**Another library** is only working if you deactivate the line `IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);`. 
+This is often due to resource conflicts with the other library. Please see [below](https://github.com/Arduino-IRremote/Arduino-IRremote#timer-and-pin-usage).
+
+## Multiple IR receiver
+You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
+The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
+This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
+
+## Increase strength of sent output signal
+To **increase strength of sent output signal** you can increase the current through the send diode, and/or use 2 diodes in series,
+ since one IR diode requires only 1.5 volt.
+
+## Minimal CPU frequency
+For receiving, the **minimal CPU frequency is 4 MHz**, since the 50 탎 timer ISR takes around 12 탎 on a 16 MHz ATmega.<br/>
+For sending, the **default software generated PWM has problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
 
 # Handling unknown Protocols
 ## Disclaimer
@@ -290,7 +304,7 @@ In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Ardu
 This examples are a good starting point.
 
 ### ReceiveDemo
-Receives all protocols and play a beep on each packet received. By connecting pin 5 to ground, you can see the raw values for each packet.
+Receives all protocols and **generates a beep with the Arduino tone() function** on each packet received. By connecting pin 5 to ground, you can see the raw values for each packet. **Example how to use IRremote and tone() together**.
 
 ### ReceiveDump
 Receives all protocols and dumps the received signal in different flavors. Since the printing takes so much time, repeat signals may be skipped or interpreted as UNKNOWN.
