@@ -1108,10 +1108,10 @@ void timerConfigForReceive() {
 #  if !defined(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL)
 #define SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
 #  endif
-
+volatile byte espIRalarm=0;
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(s50usTimer)
-#define TIMER_DISABLE_RECEIVE_INTR  timerAlarmDisable(s50usTimer)
+#define TIMER_ENABLE_RECEIVE_INTR   if(!espIRalarm){timerAlarmEnable(s50usTimer);espIRalarm=1;}
+#define TIMER_DISABLE_RECEIVE_INTR  if(espIRalarm){timerAlarmDisable(s50usTimer);espIRalarm=0;}
 // Redefinition of ISR macro which creates a plain function now
 #  if defined(ISR)
 #undef ISR
@@ -1130,7 +1130,7 @@ void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
-    if (s50usTimer != NULL) {timerAlarmDisable(s50usTimer); timerEnd(s50usTimer); timerDetachInterrupt(s50usTimer);}
+    if (s50usTimer != NULL) {return;}
     s50usTimer = timerBegin(1, 80, true);
     timerAttachInterrupt(s50usTimer, &IRTimerInterruptHandler, 1);
     // every 50 us, autoreload = true
