@@ -1111,7 +1111,7 @@ void timerConfigForReceive() {
 
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(s50usTimer)
-#define TIMER_DISABLE_RECEIVE_INTR  if (s50usTimer != NULL) {timerEnd(s50usTimer); timerDetachInterrupt(s50usTimer);}
+#define TIMER_DISABLE_RECEIVE_INTR  timerAlarmDisable(s50usTimer)
 // Redefinition of ISR macro which creates a plain function now
 #  if defined(ISR)
 #undef ISR
@@ -1130,6 +1130,7 @@ void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
+    if (s50usTimer != NULL) {timerAlarmDisable(s50usTimer); timerEnd(s50usTimer); timerDetachInterrupt(s50usTimer);}
     s50usTimer = timerBegin(1, 80, true);
     timerAttachInterrupt(s50usTimer, &IRTimerInterruptHandler, 1);
     // every 50 us, autoreload = true
@@ -1224,7 +1225,7 @@ void timerConfigForReceive() {
     } // wait for sync
       // Reset TCx
     TC->CTRLA.reg = TC_CTRLA_SWRST;
-    // When writing a ‘1’ to the CTRLA.SWRST bit it will immediately read as ‘1’.
+    // When writing a Â‘1Â’ to the CTRLA.SWRST bit it will immediately read as Â‘1Â’.
     // CTRL.SWRST will be cleared by hardware when the peripheral has been reset.
     while (TC->CTRLA.bit.SWRST) {
     }
