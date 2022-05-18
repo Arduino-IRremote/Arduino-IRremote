@@ -66,17 +66,17 @@
 #include <Arduino.h>
 
 #define TONE_LEDC_CHANNEL        1  // Using channel 1 makes tone() independent of receiving timer -> No need to stop receiving timer.
-void tone(uint8_t _pin, unsigned int frequency){
-    ledcAttachPin(_pin, TONE_LEDC_CHANNEL);
-    ledcWriteTone(TONE_LEDC_CHANNEL, frequency);
+void tone(uint8_t aPinNumber, unsigned int aFrequency){
+    ledcAttachPin(aPinNumber, TONE_LEDC_CHANNEL);
+    ledcWriteTone(TONE_LEDC_CHANNEL, aFrequency);
 }
-void tone(uint8_t _pin, unsigned int frequency, unsigned long duration){
-    ledcAttachPin(_pin, TONE_LEDC_CHANNEL);
-    ledcWriteTone(TONE_LEDC_CHANNEL, frequency);
-    delay(duration);
+void tone(uint8_t aPinNumber, unsigned int aFrequency, unsigned long aDuration){
+    ledcAttachPin(aPinNumber, TONE_LEDC_CHANNEL);
+    ledcWriteTone(TONE_LEDC_CHANNEL, aFrequency);
+    delay(aDuration);
     ledcWriteTone(TONE_LEDC_CHANNEL, 0);
 }
-void noTone(uint8_t _pin){
+void noTone(uint8_t aPinNumber){
     ledcWriteTone(TONE_LEDC_CHANNEL, 0);
 }
 #define IR_RECEIVE_PIN          15  // D15
