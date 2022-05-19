@@ -36,6 +36,8 @@
  * @{
  */
 
+#include "digitalWriteFast.h"
+
 /**
  * Contains pin number and enable status of the feedback LED
  */

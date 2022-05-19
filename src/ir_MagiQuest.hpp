@@ -117,7 +117,6 @@ bool IRrecv::decodeMagiQuest() {
 
     unsigned int tMark;
     unsigned int tSpace;
-    unsigned int tRatio;
 
 #if defined(DEBUG)
     char bitstring[(MAGIQUEST_PACKET_SIZE + 1)];
@@ -135,11 +134,10 @@ bool IRrecv::decodeMagiQuest() {
 
     // Read the bits in
     data.llword = 0;
-    while (tOffset < decodedIRData.rawDataPtr->rawlen - 1) {
+    while (tOffset < (unsigned int)(decodedIRData.rawDataPtr->rawlen - 1)) {
         // get one mark and space pair
         tMark = decodedIRData.rawDataPtr->rawbuf[tOffset++];
         tSpace = decodedIRData.rawDataPtr->rawbuf[tOffset++];
-        tRatio = tSpace / tMark;
 
         IR_TRACE_PRINT("MagiQuest: mark=");
         IR_TRACE_PRINT(tMark * MICROS_PER_TICK);
@@ -149,7 +147,7 @@ bool IRrecv::decodeMagiQuest() {
         IR_TRACE_PRINTLN(tRatio);
 
         if (matchMark(tSpace + tMark, MAGIQUEST_PERIOD)) {
-            if (tRatio > 1) {
+            if (tSpace > tMark) {
                 // It's a 0
                 data.llword <<= 1;
 #if defined(DEBUG)
