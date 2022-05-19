@@ -35,7 +35,6 @@
 
 #include <Arduino.h>
 
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
 #include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
 
 //
@@ -117,7 +116,6 @@ bool IRrecv::decodeMagiQuest() {
 
     unsigned int tMark;
     unsigned int tSpace;
-    unsigned int tRatio;
 
 #if defined(DEBUG)
     char bitstring[(MAGIQUEST_PACKET_SIZE + 1)];
@@ -125,31 +123,28 @@ bool IRrecv::decodeMagiQuest() {
 #endif
 
     // Check we have the right amount of data, magnitude and ID bits and at least 2 start bits + 1 stop bit
-    if (decodedIRData.rawDataPtr->rawlen < 2 * (MAGIQUEST_BITS + 3) && decodedIRData.rawDataPtr->rawlen > 2 * (MAGIQUEST_PACKET_SIZE + 1)) {
-        IR_DEBUG_PRINT("MagiQuest: ");
-        IR_DEBUG_PRINT("Data length=");
+    if (decodedIRData.rawDataPtr->rawlen < (2 * (MAGIQUEST_BITS + 3)) || decodedIRData.rawDataPtr->rawlen > (2 * (MAGIQUEST_PACKET_SIZE + 1))) {
+        IR_DEBUG_PRINT(F("MagiQuest: "));
+        IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(" is not between 102 and 114");
+        IR_DEBUG_PRINTLN(F(" is not between 102 and 114"));
         return false;
     }
 
     // Read the bits in
     data.llword = 0;
-    while (tOffset < decodedIRData.rawDataPtr->rawlen - 1) {
+    while (tOffset < (unsigned int)(decodedIRData.rawDataPtr->rawlen - 1)) {
         // get one mark and space pair
         tMark = decodedIRData.rawDataPtr->rawbuf[tOffset++];
         tSpace = decodedIRData.rawDataPtr->rawbuf[tOffset++];
-        tRatio = tSpace / tMark;
 
-        IR_TRACE_PRINT("MagiQuest: mark=");
+        IR_TRACE_PRINT(F("MagiQuest: mark="));
         IR_TRACE_PRINT(tMark * MICROS_PER_TICK);
-        IR_TRACE_PRINT(" space=");
-        IR_TRACE_PRINT(tSpace * MICROS_PER_TICK);
-        IR_TRACE_PRINT(" ratio=");
-        IR_TRACE_PRINTLN(tRatio);
+        IR_TRACE_PRINT(F(" space="));
+        IR_TRACE_PRINTLN(tSpace * MICROS_PER_TICK);
 
         if (matchMark(tSpace + tMark, MAGIQUEST_PERIOD)) {
-            if (tRatio > 1) {
+            if (tSpace > tMark) {
                 // It's a 0
                 data.llword <<= 1;
 #if defined(DEBUG)
@@ -163,10 +158,11 @@ bool IRrecv::decodeMagiQuest() {
 #endif
             }
         } else {
-            IR_DEBUG_PRINTLN("Mark and space does not match the constant MagiQuest period");
+            IR_DEBUG_PRINTLN(F("Mark and space does not match the constant MagiQuest period"));
             return false;
         }
     }
+
     IR_DEBUG_PRINTLN(bitstring);
 
     // Success

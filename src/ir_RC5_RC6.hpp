@@ -140,16 +140,16 @@ bool IRrecv::decodeRC5() {
     if (decodedIRData.rawDataPtr->rawlen < MIN_RC5_MARKS + 2 && decodedIRData.rawDataPtr->rawlen > ((2 * RC5_BITS) + 2)) {
         // no debug output, since this check is mainly to determine the received protocol
         IR_DEBUG_PRINT(F("RC5: "));
-        IR_DEBUG_PRINT("Data length=");
+        IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(" is not between 11 and 26");
+        IR_DEBUG_PRINTLN(F(" is not between 11 and 26"));
         return false;
     }
 
 // Check start bit, the first space is included in the gap
     if (getBiphaselevel() != MARK) {
         IR_DEBUG_PRINT(F("RC5: "));
-        IR_DEBUG_PRINTLN("first getBiphaselevel() is not MARK");
+        IR_DEBUG_PRINTLN(F("first getBiphaselevel() is not MARK"));
         return false;
     }
 
@@ -353,9 +353,9 @@ bool IRrecv::decodeRC6() {
     // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space
     if (decodedIRData.rawDataPtr->rawlen < MIN_RC6_MARKS + 3 && decodedIRData.rawDataPtr->rawlen > ((2 * RC6_BITS) + 3)) {
         IR_DEBUG_PRINT(F("RC6: "));
-        IR_DEBUG_PRINT("Data length=");
+        IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(" is not between 15 and 45");
+        IR_DEBUG_PRINTLN(F(" is not between 15 and 45"));
         return false;
     }
 
@@ -364,7 +364,7 @@ bool IRrecv::decodeRC6() {
             || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_SPACE)) {
         // no debug output, since this check is mainly to determine the received protocol
         IR_DEBUG_PRINT(F("RC6: "));
-        IR_DEBUG_PRINTLN("Header mark or space length is wrong");
+        IR_DEBUG_PRINTLN(F("Header mark or space length is wrong"));
         return false;
     }
 
@@ -374,12 +374,12 @@ bool IRrecv::decodeRC6() {
 // Process first bit, which is known to be a 1 (mark->space)
     if (getBiphaselevel() != MARK) {
         IR_DEBUG_PRINT(F("RC6: "));
-        IR_DEBUG_PRINTLN("first getBiphaselevel() is not MARK");
+        IR_DEBUG_PRINTLN(F("first getBiphaselevel() is not MARK"));
         return false;
     }
     if (getBiphaselevel() != SPACE) {
         IR_DEBUG_PRINT(F("RC6: "));
-        IR_DEBUG_PRINTLN("second getBiphaselevel() is not SPACE");
+        IR_DEBUG_PRINTLN(F("second getBiphaselevel() is not SPACE"));
         return false;
     }
 

@@ -176,8 +176,8 @@ bool IRrecv::decodeShuzu() {
 
     // Check header "space"
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], SHUZU_HEADER_MARK) || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SHUZU_HEADER_SPACE)) {
-        IR_DEBUG_PRINT("Shuzu: ");
-        IR_DEBUG_PRINTLN("Header mark or space length is wrong");
+        IR_DEBUG_PRINT(F("Shuzu: "));
+        IR_DEBUG_PRINTLN(F("Header mark or space length is wrong"));
         return false;
     }
 

@@ -179,9 +179,9 @@ bool IRrecv::decodeLG() {
 // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawDataPtr->rawlen != ((2 * LG_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
         IR_DEBUG_PRINT(F("LG: "));
-        IR_DEBUG_PRINT("Data length=");
+        IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(" is not 60 or 4");
+        IR_DEBUG_PRINTLN(F(" is not 60 or 4"));
         return false;
     }
 
@@ -189,7 +189,7 @@ bool IRrecv::decodeLG() {
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG_HEADER_MARK)) {
         if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG2_HEADER_MARK)) {
             IR_DEBUG_PRINT(F("LG: "));
-            IR_DEBUG_PRINTLN("Header mark is wrong");
+            IR_DEBUG_PRINTLN(F("Header mark is wrong"));
             return false;
         } else {
             tProtocol = LG2;
@@ -208,7 +208,7 @@ bool IRrecv::decodeLG() {
             return true;
         }
         IR_DEBUG_PRINT(F("LG: "));
-        IR_DEBUG_PRINT("Repeat header space is wrong");
+        IR_DEBUG_PRINT(F("Repeat header space is wrong"));
         return false;
     }
 
@@ -249,11 +249,11 @@ bool IRrecv::decodeLG() {
 // Checksum check
     if ((tChecksum & 0xF) != (decodedIRData.decodedRawData & 0xF)) {
         IR_DEBUG_PRINT(F("LG: "));
-        IR_DEBUG_PRINT("4 bit checksum is not correct. expected=0x");
+        IR_DEBUG_PRINT(F("4 bit checksum is not correct. expected=0x"));
         IR_DEBUG_PRINT(tChecksum, HEX);
-        IR_DEBUG_PRINT(" received=0x");
+        IR_DEBUG_PRINT(F(" received=0x"));
         IR_DEBUG_PRINT((decodedIRData.decodedRawData & 0xF), HEX);
-        IR_DEBUG_PRINT(" data=0x");
+        IR_DEBUG_PRINT(F(" data=0x"));
         IR_DEBUG_PRINTLN(decodedIRData.command, HEX);
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
     }

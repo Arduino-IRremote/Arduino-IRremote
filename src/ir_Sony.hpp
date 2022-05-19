@@ -111,22 +111,22 @@ bool IRrecv::decodeSony() {
     if (decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MIN) + 2 && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MAX) + 2
             && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_15) + 2) {
         // ??? IR_TRACE_PRINT since I saw this too often
-        IR_DEBUG_PRINT("Sony: ");
-        IR_DEBUG_PRINT("Data length=");
+        IR_DEBUG_PRINT(F("Sony: "));
+        IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(" is not 12, 15 or 20");
+        IR_DEBUG_PRINTLN(F(" is not 12, 15 or 20"));
         return false;
     }
     // Check header "space"
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SONY_SPACE)) {
-        IR_DEBUG_PRINT("Sony: ");
-        IR_DEBUG_PRINTLN("Header space length is wrong");
+        IR_DEBUG_PRINT(F("Sony: "));
+        IR_DEBUG_PRINTLN(F("Header space length is wrong"));
         return false;
     }
 
     if (!decodePulseWidthData((decodedIRData.rawDataPtr->rawlen - 1) / 2, 3, SONY_ONE_MARK, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST)) {
-        IR_DEBUG_PRINT("Sony: ");
-        IR_DEBUG_PRINTLN("Decode failed");
+        IR_DEBUG_PRINT(F("Sony: "));
+        IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
     }
 
@@ -162,7 +162,7 @@ bool IRrecv::decodeSonyMSB(decode_results *aResults) {
     // Some Sony's deliver repeats fast after first
     // unfortunately can't spot difference from of repeat from two fast clicks
     if (aResults->rawbuf[0] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
-        IR_DEBUG_PRINTLN("IR Gap found");
+        IR_DEBUG_PRINTLN(F("IR Gap found"));
         aResults->bits = 0;
         aResults->value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;

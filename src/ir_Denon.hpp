@@ -139,22 +139,22 @@ bool IRrecv::decodeDenon() {
     // Check we have the right amount of data (32). The + 2 is for initial gap + stop bit mark
     if (decodedIRData.rawDataPtr->rawlen != (2 * DENON_BITS) + 2) {
         IR_DEBUG_PRINT(F("Denon: "));
-        IR_DEBUG_PRINT("Data length=");
+        IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(" is not 32");
+        IR_DEBUG_PRINTLN(F(" is not 32"));
         return false;
     }
 
     // Read the bits in
     if (!decodePulseDistanceData(DENON_BITS, 1, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-        IR_DEBUG_PRINT("Denon: ");
-        IR_DEBUG_PRINTLN("Decode failed");
+        IR_DEBUG_PRINT(F("Denon: "));
+        IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
     }
 
     // Check for stop mark
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
-        IR_DEBUG_PRINT("Denon: ");
+        IR_DEBUG_PRINT(F("Denon: "));
         IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }

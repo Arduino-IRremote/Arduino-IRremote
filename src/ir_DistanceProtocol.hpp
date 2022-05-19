@@ -125,10 +125,10 @@ bool IRrecv::decodeDistance() {
      * Accept only protocols with at least 8 bits
      */
     if (decodedIRData.rawDataPtr->rawlen < (2 * 8) + 4) {
-        IR_DEBUG_PRINT("PULSE_DISTANCE: ");
-        IR_DEBUG_PRINT("Data length=");
+        IR_DEBUG_PRINT(F("PULSE_DISTANCE: "));
+        IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(" is less than 20");
+        IR_DEBUG_PRINTLN(F(" is less than 20"));
         return false;
     }
 

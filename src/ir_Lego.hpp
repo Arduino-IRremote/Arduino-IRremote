@@ -110,7 +110,7 @@ void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t 
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
     enableIROut(38);
 
-    IR_DEBUG_PRINT("sendLego aRawData=0x");
+    IR_DEBUG_PRINT(F("sendLego aRawData=0x"));
     IR_DEBUG_PRINTLN(aRawData, HEX);
 
     aChannel &= 0x03; // we have 4 channels
@@ -153,28 +153,28 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     // Check we have enough data - +4 for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawDataPtr->rawlen != (2 * LEGO_BITS) + 4) {
-        IR_DEBUG_PRINT("LEGO: ");
-        IR_DEBUG_PRINT("Data length=");
+        IR_DEBUG_PRINT(F("LEGO: "));
+        IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(" is not 36");
+        IR_DEBUG_PRINTLN(F(" is not 36"));
         return false;
     }
     // Check header "space"
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LEGO_HEADER_SPACE)) {
-        IR_DEBUG_PRINT("LEGO: ");
-        IR_DEBUG_PRINTLN("Header space length is wrong");
+        IR_DEBUG_PRINT(F("LEGO: "));
+        IR_DEBUG_PRINTLN(F("Header space length is wrong"));
         return false;
     }
 
     if (!decodePulseDistanceData(LEGO_BITS, 3, LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-        IR_DEBUG_PRINT("LEGO: ");
-        IR_DEBUG_PRINTLN("Decode failed");
+        IR_DEBUG_PRINT(F("LEGO: "));
+        IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
     }
 
     // Stop bit
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LEGO_BITS)], LEGO_BIT_MARK)) {
-        IR_DEBUG_PRINT("LEGO: ");
+        IR_DEBUG_PRINT(F("LEGO: "));
         IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
@@ -193,18 +193,18 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     // parity check
     if (tParityReceived != tParityComputed) {
-        IR_DEBUG_PRINT("LEGO: ");
-        IR_DEBUG_PRINT("Parity is not correct. expected=0x");
+        IR_DEBUG_PRINT(F("LEGO: "));
+        IR_DEBUG_PRINT(F("Parity is not correct. expected=0x"));
         IR_DEBUG_PRINT(tParityComputed, HEX);
-        IR_DEBUG_PRINT(" received=0x");
+        IR_DEBUG_PRINT(F(" received=0x"));
         IR_DEBUG_PRINT(tParityReceived, HEX);
-        IR_DEBUG_PRINT(", raw=0x");
+        IR_DEBUG_PRINT(F(", raw=0x"));
         IR_DEBUG_PRINT(tDecodedValue, HEX);
-        IR_DEBUG_PRINT(", 3 nibbles are 0x");
+        IR_DEBUG_PRINT(F(", 3 nibbles are 0x"));
         IR_DEBUG_PRINT(tToggleEscapeChannel, HEX);
-        IR_DEBUG_PRINT(", 0x");
+        IR_DEBUG_PRINT(F(", 0x"));
         IR_DEBUG_PRINT(tMode, HEX);
-        IR_DEBUG_PRINT(", 0x");
+        IR_DEBUG_PRINT(F(", 0x"));
         IR_DEBUG_PRINTLN(tData, HEX);
         // might not be an error, so just continue
         decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_MSB_FIRST;
