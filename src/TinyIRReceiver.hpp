@@ -564,4 +564,3 @@ ISR(PCINT1_vect)
 /** @}*/
 
 #endif // _TINY_IR_RECEIVER_HPP
-#pragma once

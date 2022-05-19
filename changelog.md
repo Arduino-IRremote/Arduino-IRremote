@@ -1,8 +1,12 @@
 # Changelog
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
-## 3.6.2
+
+## 3.7.0
 - Changed TOLERANCE to TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING and documented it.
+- Changed last uint8_t to uint_fast8_t and uint16_t to unsigned integer.
+- Improved MagiQuest protocol.
+- Improved prints and documentation.
 
 ## 3.6.1
 - Switched Bose internal protocol timing for 0 and 1 -> old 1 timing is now 0 and vice versa.

@@ -68,11 +68,10 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
     // tone before IR setup, since it kills the IR timer settings
-    tone(TONE_PIN, 2200);
+    tone(TONE_PIN, 2200, 400);
     digitalWrite(LED_BUILTIN, HIGH);
     delay(400);
     digitalWrite(LED_BUILTIN, LOW);
-    noTone(TONE_PIN);
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
@@ -157,13 +156,10 @@ void sendSamsungSmartHubMacro(bool aDoSelect) {
         Serial.print(tWaitTimeAfterBoot / 1000);
         Serial.println(F(" seconds after boot to be ready for the command"));
 
-        tone(TONE_PIN, 2200);
+        tone(TONE_PIN, 2200, 100);
+        delay(200);
+        tone(TONE_PIN, 2200, 100);
         delay(100);
-        noTone(TONE_PIN);
-        delay(100);
-        tone(TONE_PIN, 2200);
-        delay(100);
-        noTone(TONE_PIN);
 
         if (millis() < tWaitTimeAfterBoot) {
             Serial.print(F("Now do a blocking wait for "));
@@ -174,9 +170,9 @@ void sendSamsungSmartHubMacro(bool aDoSelect) {
     }
 
     // Do beep feedback for special key to be received
-    tone(TONE_PIN, 2200);
+    tone(TONE_PIN, 2200, 200);
     delay(200);
-    noTone(TONE_PIN);
+
 #    if !defined(ESP32)
     IrReceiver.start(200000); // to compensate for 200 ms stop of receiver. This enables a correct gap measurement.
 #    endif

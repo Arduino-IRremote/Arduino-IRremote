@@ -38,11 +38,21 @@
 
 #include "IRCommandDispatcher.h"
 
-//#define INFO // activate this out to see serial info output
-//#define DEBUG // activate this out to see serial info output
-#if defined(DEBUG) && !defined(INFO)
-// Propagate level
-#define INFO
+/*
+ * Enable this to see information on each call.
+ * Since there should be no library which uses Serial, it should only be enabled for development purposes.
+ */
+#if defined(INFO)
+#define LOCAL_INFO
+#else
+//#define LOCAL_INFO // This enables info output only for this file
+#endif
+#if defined(DEBUG)
+#define LOCAL_DEBUG
+// Propagate debug level
+#define LOCAL_INFO
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
 #endif
 
 IRCommandDispatcher IRDispatcher;
@@ -277,10 +287,11 @@ bool IRCommandDispatcher::delayAndCheckForStop(uint16_t aDelayMillis) {
 
 /*
  * Intended to be called from main loop
+ * @return true, if command was called
  */
-void IRCommandDispatcher::checkAndRunSuspendedBlockingCommands() {
+bool IRCommandDispatcher::checkAndRunSuspendedBlockingCommands() {
     /*
-     * search IR code or take last rejected command and call associated function
+     * Take last rejected command and call associated function
      */
     if (BlockingCommandToRunNext != COMMAND_INVALID) {
 
@@ -291,7 +302,9 @@ void IRCommandDispatcher::checkAndRunSuspendedBlockingCommands() {
         BlockingCommandToRunNext = COMMAND_INVALID;
         IRReceivedData.isRepeat = false;
         checkAndCallCommand(true);
+        return true;
     }
+    return false;
 }
 
 void IRCommandDispatcher::printIRCommandString(Print *aSerial) {
@@ -309,5 +322,10 @@ void IRCommandDispatcher::setRequestToStopReceived() {
     requestToStopReceived = true;
 }
 
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
+#if defined(LOCAL_INFO)
+#undef LOCAL_INFO
+#endif
 #endif // _IR_COMMAND_DISPATCHER_HPP
-#pragma once

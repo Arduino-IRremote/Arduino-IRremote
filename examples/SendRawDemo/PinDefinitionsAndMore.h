@@ -65,20 +65,24 @@
 #elif defined(ESP32)
 #include <Arduino.h>
 
+// tone() is included in ESP32 core since 2.0.2
+#if ESP_ARDUINO_VERSION  <= ESP_ARDUINO_VERSION_VAL(2, 0, 2)
 #define TONE_LEDC_CHANNEL        1  // Using channel 1 makes tone() independent of receiving timer -> No need to stop receiving timer.
-void tone(uint8_t _pin, unsigned int frequency){
-    ledcAttachPin(_pin, TONE_LEDC_CHANNEL);
-    ledcWriteTone(TONE_LEDC_CHANNEL, frequency);
+void tone(uint8_t aPinNumber, unsigned int aFrequency){
+    ledcAttachPin(aPinNumber, TONE_LEDC_CHANNEL);
+    ledcWriteTone(TONE_LEDC_CHANNEL, aFrequency);
 }
-void tone(uint8_t _pin, unsigned int frequency, unsigned long duration){
-    ledcAttachPin(_pin, TONE_LEDC_CHANNEL);
-    ledcWriteTone(TONE_LEDC_CHANNEL, frequency);
-    delay(duration);
+void tone(uint8_t aPinNumber, unsigned int aFrequency, unsigned long aDuration){
+    ledcAttachPin(aPinNumber, TONE_LEDC_CHANNEL);
+    ledcWriteTone(TONE_LEDC_CHANNEL, aFrequency);
+    delay(aDuration);
     ledcWriteTone(TONE_LEDC_CHANNEL, 0);
 }
-void noTone(uint8_t _pin){
+void noTone(uint8_t aPinNumber){
     ledcWriteTone(TONE_LEDC_CHANNEL, 0);
 }
+#endif // ESP_ARDUINO_VERSION  <= ESP_ARDUINO_VERSION_VAL(2, 0, 2)
+
 #define IR_RECEIVE_PIN          15  // D15
 #define IR_SEND_PIN              4  // D4
 #define TONE_PIN                27  // D27 25 & 26 are DAC0 and 1
@@ -236,7 +240,7 @@ void noTone(uint8_t _pin){
 #define Serial SerialUSB
 
 // Definitions for the Chinese SAMD21 M0-Mini clone, which has no led connected to D13/PA17.
-// Attention!!! D2 and D4 are switched on these boards!!!
+// Attention!!! D2 and D4 are swapped on these boards!!!
 // If you connect the LED, it is on pin 24/PB11. In this case activate the next two lines.
 //#undef LED_BUILTIN
 //#define LED_BUILTIN 24 // PB11

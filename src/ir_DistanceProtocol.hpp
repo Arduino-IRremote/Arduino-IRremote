@@ -311,4 +311,3 @@ bool IRrecv::decodeDistance() {
 
 /** @}*/
 #endif // _IR_DISTANCE_HPP
-#pragma once

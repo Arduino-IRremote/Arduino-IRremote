@@ -191,5 +191,4 @@ const struct IRToCommandMappingStruct IRMapping[] =
 { COMMAND_INCREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doIncreaseBlinkFrequency, increaseBlink },
 { COMMAND_DECREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doDecreaseBlinkFrequency, decreaseBlink } };
 
-#endif / _IR_COMMAND_MAPPING_H
-#pragma once
+#endif // _IR_COMMAND_MAPPING_H

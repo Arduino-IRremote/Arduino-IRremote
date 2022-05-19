@@ -331,4 +331,3 @@ void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
 
 /** @}*/
 #endif // _IR_KASEIKYO_HPP
-#pragma once

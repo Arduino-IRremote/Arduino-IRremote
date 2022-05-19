@@ -44,6 +44,8 @@
 //                            M A G I Q U E S T
 //
 //==============================================================================
+// MSB first, 8 Start bits (zero), 32 wand id bits, 16 magnitude bits, one stop bit
+// Not all start bits must be received, since protocol is MSB first and so the LSB ends up always at the right position.
 
 #if !defined (DOXYGEN)
 // MagiQuest packet is both Wand ID and magnitude of swish and flick
@@ -52,21 +54,21 @@ union magiquest_t {
     struct {
         uint16_t magnitude;
         uint32_t wand_id;
-        uint8_t padding;
-        uint8_t scrap;  // just to pad the struct out to 64 bits so we can union with llword
+        uint8_t StartBits;  // first 8 MSB start bits are zero.
+        uint8_t HighByte;   // just to pad the struct out to 64 bits so we can union with llword
     } cmd;
 };
 #endif // !defined (DOXYGEN)
 
-#define MAGIQUEST_MAGNITUDE_BITS   (sizeof(uint16_t) * 8)   // magiquest_t.cmd.magnitude
-#define MAGIQUEST_WAND_ID_BITS     (sizeof(uint32_t) * 8)   // magiquest_t.cmd.wand_id
-#define MAGIQUEST_PADDING_BITS     (sizeof(uint8_t) * 8)    // magiquest_t.cmd.padding
+#define MAGIQUEST_MAGNITUDE_BITS   16   // magiquest_t.cmd.magnitude
+#define MAGIQUEST_WAND_ID_BITS     32   // magiquest_t.cmd.wand_id
+#define MAGIQUEST_START_BITS        8    // magiquest_t.cmd.StartBits
 
-#define MAGIQUEST_PERIOD      1150   // Length of time a full MQ "bit" consumes (1100 - 1200 usec)
-#define MAGIQUEST_BITS        (MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS)   // Size of the command itself
+#define MAGIQUEST_PERIOD      1150   // Time for a full MagiQuest "bit" (1100 - 1200 usec)
 
-// The total size of a packet is the sum of all 3 expected fields * 2 to support start/stop bits
-#define MAGIQUEST_PACKET_SIZE (2 * (MAGIQUEST_BITS + MAGIQUEST_PADDING_BITS))
+#define MAGIQUEST_BITS        (MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS) // 48 Size of the command without the start bits
+// The maximum size of a packet is the sum of all 3 expected fields * 2
+#define MAGIQUEST_PACKET_SIZE (MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) // 56
 
 /*
  * 0 = 25% mark & 75% space across 1 period
@@ -90,9 +92,9 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
     // Set IR carrier frequency
     enableIROut(38);
 
-    // 2 start bits
+    // 8 start bits
     sendPulseDistanceWidthData(
-    MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 2, PROTOCOL_IS_MSB_FIRST);
+    MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 8, PROTOCOL_IS_MSB_FIRST);
 
     // Data
     sendPulseDistanceWidthData(
@@ -111,56 +113,55 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
  */
 bool IRrecv::decodeMagiQuest() {
     magiquest_t data;  // Somewhere to build our code
-    unsigned int offset = 1;  // Skip the gap reading
+    unsigned int tOffset = 1;  // Skip the gap between packets
 
-    unsigned int mark_;
-    unsigned int space_;
-    unsigned int ratio_;
+    unsigned int tMark;
+    unsigned int tSpace;
 
 #if defined(DEBUG)
     char bitstring[(MAGIQUEST_PACKET_SIZE + 1)];
     bitstring[MAGIQUEST_PACKET_SIZE] = '\0';
 #endif
 
-    // Check we have the right amount of data
-    if (decodedIRData.rawDataPtr->rawlen != MAGIQUEST_PACKET_SIZE) {
-        IR_DEBUG_PRINT("MagiQuest: Bad packet length - got ");
+    // Check we have the right amount of data, magnitude and ID bits and at least 2 start bits + 1 stop bit
+    if (decodedIRData.rawDataPtr->rawlen < 2 * (MAGIQUEST_BITS + 3) && decodedIRData.rawDataPtr->rawlen > 2 * (MAGIQUEST_PACKET_SIZE + 1)) {
+        IR_DEBUG_PRINT("MagiQuest: ");
+        IR_DEBUG_PRINT("Data length=");
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINT(", expected ");
-        IR_DEBUG_PRINTLN(MAGIQUEST_PACKET_SIZE);
+        IR_DEBUG_PRINTLN(" is not between 102 and 114");
         return false;
     }
 
     // Read the bits in
     data.llword = 0;
-    while (offset < (MAGIQUEST_PACKET_SIZE - 1)) {
-        mark_ = decodedIRData.rawDataPtr->rawbuf[offset++];
-        space_ = decodedIRData.rawDataPtr->rawbuf[offset++];
-        ratio_ = space_ / mark_;
+    while (tOffset < (unsigned int)(decodedIRData.rawDataPtr->rawlen - 1)) {
+        // get one mark and space pair
+        tMark = decodedIRData.rawDataPtr->rawbuf[tOffset++];
+        tSpace = decodedIRData.rawDataPtr->rawbuf[tOffset++];
 
         IR_TRACE_PRINT("MagiQuest: mark=");
-        IR_TRACE_PRINT(mark_ * MICROS_PER_TICK);
+        IR_TRACE_PRINT(tMark * MICROS_PER_TICK);
         IR_TRACE_PRINT(" space=");
-        IR_TRACE_PRINT(space_ * MICROS_PER_TICK);
+        IR_TRACE_PRINT(tSpace * MICROS_PER_TICK);
         IR_TRACE_PRINT(" ratio=");
-        IR_TRACE_PRINTLN(ratio_);
+        IR_TRACE_PRINTLN(tRatio);
 
-        if (matchMark(space_ + mark_, MAGIQUEST_PERIOD)) {
-            if (ratio_ > 1) {
+        if (matchMark(tSpace + tMark, MAGIQUEST_PERIOD)) {
+            if (tSpace > tMark) {
                 // It's a 0
                 data.llword <<= 1;
 #if defined(DEBUG)
-                bitstring[(offset / 2) - 1] = '0';
+                bitstring[(tOffset / 2) - 1] = '0';
 #endif
             } else {
                 // It's a 1
                 data.llword = (data.llword << 1) | 1;
 #if defined(DEBUG)
-                bitstring[(offset / 2) - 1] = '1';
+                bitstring[(tOffset / 2) - 1] = '1';
 #endif
             }
         } else {
-            IR_DEBUG_PRINTLN("MATCH_MARK failed");
+            IR_DEBUG_PRINTLN("Mark and space does not match the constant MagiQuest period");
             return false;
         }
     }
@@ -168,12 +169,11 @@ bool IRrecv::decodeMagiQuest() {
 
     // Success
     decodedIRData.protocol = MAGIQUEST;
-    decodedIRData.numberOfBits = offset / 2;
-    decodedIRData.flags = IRDATA_FLAGS_EXTRA_INFO;
+    decodedIRData.numberOfBits = tOffset / 2;
+    decodedIRData.flags = IRDATA_FLAGS_EXTRA_INFO | IRDATA_FLAGS_IS_MSB_FIRST;
     decodedIRData.extra = data.cmd.magnitude;
     decodedIRData.decodedRawData = data.cmd.wand_id;
 
     return true;
 }
 #endif // _IR_MAGIQUEST_HPP
-#pragma once

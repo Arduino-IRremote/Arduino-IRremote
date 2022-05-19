@@ -320,4 +320,3 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 
 /** @}*/
 #endif // _IR_LG_HPP
-#pragma once

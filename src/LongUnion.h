@@ -95,4 +95,3 @@ union LongUnion {
 #endif // _LONG_UNION_H
 
 #endif //  !defined(_WORD_UNION_H) || !defined(_LONG_UNION_H)
-#pragma once
