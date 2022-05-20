@@ -94,7 +94,7 @@ void IRrecv::begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8
     setReceivePin(aReceivePin);
 #if !defined(NO_LED_FEEDBACK_CODE)
     bool tEnableLEDFeedback = DO_NOT_ENABLE_LED_FEEDBACK;
-    if(aEnableLEDFeedback) {
+    if (aEnableLEDFeedback) {
         tEnableLEDFeedback = LED_FEEDBACK_ENABLED_FOR_RECEIVE;
     }
     setLEDFeedback(aFeedbackLEDPin, tEnableLEDFeedback);
@@ -102,8 +102,10 @@ void IRrecv::begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8
     (void) aEnableLEDFeedback;
     (void) aFeedbackLEDPin;
 #endif
+    // Set pin mode once
+    pinMode(irparams.IRReceivePin, INPUT);
 
-    enableIRIn();
+    start();
 }
 
 /**
@@ -121,42 +123,6 @@ void IRrecv::setReceivePin(uint_fast8_t aReceivePinNumber) {
  * Configures the timer and the state machine for IR reception.
  */
 void IRrecv::start() {
-    enableIRIn();
-}
-
-/**
- * Configures the timer and the state machine for IR reception.
- * @param aMicrosecondsToAddToGapCounter To compensate for microseconds the timer was stopped / disabled.
- */
-void IRrecv::start(uint32_t aMicrosecondsToAddToGapCounter) {
-    enableIRIn();
-    noInterrupts();
-    irparams.TickCounterForISR += aMicrosecondsToAddToGapCounter / MICROS_PER_TICK;
-    interrupts();
-}
-
-/**
- * Disables the timer for IR reception.
- * Alias for
- */
-void IRrecv::stop() {
-    disableIRIn();
-}
-
-/**
- * Disables the timer for IR reception.
- */
-void IRrecv::end() {
-    stop();
-}
-
-/**
- * Configures the timer and the state machine for IR reception.
- */
-void IRrecv::enableIRIn() {
-
-    // Set pin mode
-    pinMode(irparams.IRReceivePin, INPUT);
 
     // Setup for cyclic 50 us interrupt
     timerConfigForReceive(); // no interrupts enabled here!
@@ -167,12 +133,41 @@ void IRrecv::enableIRIn() {
     // Timer interrupt is enabled after state machine reset
     TIMER_ENABLE_RECEIVE_INTR;
 }
+void IRrecv::enableIRIn() {
+    start();
+}
+
+/**
+ * Configures the timer and the state machine for IR reception.
+ * @param aMicrosecondsToAddToGapCounter To compensate for microseconds the timer was stopped / disabled.
+ */
+void IRrecv::start(uint32_t aMicrosecondsToAddToGapCounter) {
+    start();
+    noInterrupts();
+    irparams.TickCounterForISR += aMicrosecondsToAddToGapCounter / MICROS_PER_TICK;
+    interrupts();
+}
+
+/**
+ * Restarts receiver after send. Is a NOP if sending does nor require a timer
+ */
+void IRrecv::restartAfterSend() {
+#if defined(SEND_PWM_BY_TIMER) && !defined(SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER)
+    start();
+#endif
+}
 
 /**
  * Disables the timer for IR reception.
  */
-void IRrecv::disableIRIn() {
+void IRrecv::stop() {
     TIMER_DISABLE_RECEIVE_INTR;
+}
+void IRrecv::disableIRIn() {
+    stop();
+}
+void IRrecv::end() {
+    stop();
 }
 
 /**
@@ -193,7 +188,7 @@ void IRrecv::resume() {
         irparams.StateForISR = IR_REC_STATE_IDLE;
     }
 #if defined(SEND_PWM_BY_TIMER)
-    TIMER_ENABLE_RECEIVE_INTR;  // normally it is stopped by send()
+//    TIMER_ENABLE_RECEIVE_INTR;  // normally it is stopped by send()
 #endif
 }
 
@@ -403,8 +398,8 @@ bool IRrecv::decode() {
  * @param aStartOffset must point to a mark
  * @return true if decoding was successful
  */
-bool IRrecv::decodePulseWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int  aOneMarkMicros, unsigned int  aZeroMarkMicros,
-        unsigned int  aBitSpaceMicros, bool aMSBfirst) {
+bool IRrecv::decodePulseWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aOneMarkMicros,
+        unsigned int aZeroMarkMicros, unsigned int aBitSpaceMicros, bool aMSBfirst) {
 
     unsigned int *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     uint32_t tDecodedData = 0;
@@ -499,8 +494,8 @@ bool IRrecv::decodePulseWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStar
  * @param aStartOffset must point to a mark
  * @return true if decoding was successful
  */
-bool IRrecv::decodePulseDistanceData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int  aBitMarkMicros, unsigned int  aOneSpaceMicros,
-        unsigned int  aZeroSpaceMicros, bool aMSBfirst) {
+bool IRrecv::decodePulseDistanceData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aBitMarkMicros,
+        unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst) {
 
     unsigned int *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
     uint32_t tDecodedData = 0;
@@ -581,11 +576,11 @@ bool IRrecv::decodePulseDistanceData(uint_fast8_t aNumberOfBits, uint_fast8_t aS
  * Static variables for the getBiphaselevel function
  */
 uint_fast8_t sBiphaseDecodeRawbuffOffset; // Index into raw timing array
-unsigned int  sCurrentTimingIntervals; // Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
+unsigned int sCurrentTimingIntervals; // Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
 uint_fast8_t sUsedTimingIntervals;       // Number of already used intervals of sCurrentTimingIntervals.
-unsigned int  sBiphaseTimeUnit;
+unsigned int sBiphaseTimeUnit;
 
-void IRrecv::initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, unsigned int  aBiphaseTimeUnit) {
+void IRrecv::initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, unsigned int aBiphaseTimeUnit) {
     sBiphaseDecodeRawbuffOffset = aRCDecodeRawbuffOffset;
     sBiphaseTimeUnit = aBiphaseTimeUnit;
     sUsedTimingIntervals = 0;
@@ -620,8 +615,8 @@ uint_fast8_t IRrecv::getBiphaselevel() {
      * Setup data if sUsedTimingIntervals is 0
      */
     if (sUsedTimingIntervals == 0) {
-        unsigned int  tCurrentTimingWith = decodedIRData.rawDataPtr->rawbuf[sBiphaseDecodeRawbuffOffset];
-        unsigned int  tMarkExcessCorrection = (tLevelOfCurrentInterval == MARK) ? MARK_EXCESS_MICROS : -MARK_EXCESS_MICROS;
+        unsigned int tCurrentTimingWith = decodedIRData.rawDataPtr->rawbuf[sBiphaseDecodeRawbuffOffset];
+        unsigned int tMarkExcessCorrection = (tLevelOfCurrentInterval == MARK) ? MARK_EXCESS_MICROS : -MARK_EXCESS_MICROS;
 
         if (matchTicks(tCurrentTimingWith, (sBiphaseTimeUnit) + tMarkExcessCorrection)) {
             sCurrentTimingIntervals = 1;
@@ -1154,7 +1149,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
         if (aOutputMicrosecondsInsteadOfTicks) {
             aSerial->print(tDuration);
         } else {
-            unsigned int  tTicks = (tDuration + (MICROS_PER_TICK / 2)) / MICROS_PER_TICK;
+            unsigned int tTicks = (tDuration + (MICROS_PER_TICK / 2)) / MICROS_PER_TICK;
             tTicks = (tTicks > UINT8_MAX) ? UINT8_MAX : tTicks; // uint8_t rawTicks above are 8 bit
             aSerial->print(tTicks);
         }
@@ -1201,7 +1196,7 @@ void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
             tDuration += MARK_EXCESS_MICROS;
         }
 
-        unsigned int  tTicks = (tDuration + (MICROS_PER_TICK / 2)) / MICROS_PER_TICK;
+        unsigned int tTicks = (tDuration + (MICROS_PER_TICK / 2)) / MICROS_PER_TICK;
         *aArrayPtr = (tTicks > UINT8_MAX) ? UINT8_MAX : tTicks; // we store it in an 8 bit array
         aArrayPtr++;
     }

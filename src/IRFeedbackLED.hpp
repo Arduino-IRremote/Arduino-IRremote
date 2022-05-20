@@ -43,7 +43,7 @@
  */
 struct FeedbackLEDControlStruct {
     uint8_t FeedbackLEDPin;         ///< if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
-    uint8_t LedFeedbackEnabled;     ///< LED_FEEDBACK_ENABLED_FOR_RECEIVE or LED_FEEDBACK_ENABLED_FOR_SEND -> enable blinking of pin on IR processing
+    uint8_t LedFeedbackEnabled; ///< LED_FEEDBACK_ENABLED_FOR_RECEIVE or LED_FEEDBACK_ENABLED_FOR_SEND -> enable blinking of pin on IR processing
 };
 
 struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED control instance
@@ -78,7 +78,7 @@ void setLEDFeedback(uint8_t aFeedbackLEDPin, uint8_t aEnableLEDFeedback) {
  */
 void setLEDFeedback(bool aEnableLEDFeedback) {
     bool tEnableLEDFeedback = LED_FEEDBACK_DISABLED_COMPLETELY;
-    if(aEnableLEDFeedback) {
+    if (aEnableLEDFeedback) {
         tEnableLEDFeedback = LED_FEEDBACK_ENABLED_FOR_SEND | LED_FEEDBACK_ENABLED_FOR_RECEIVE;
     }
     setLEDFeedback(FeedbackLEDControl.FeedbackLEDPin, tEnableLEDFeedback);

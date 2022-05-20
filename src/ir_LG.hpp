@@ -102,6 +102,7 @@ void IRsend::sendLGRepeat(bool aUseLG2Protocol) {
     }
     space(LG_REPEAT_HEADER_SPACE);
     mark(LG_BIT_MARK);
+    IrReceiver.restartAfterSend();
 }
 
 /**
@@ -161,6 +162,7 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
         // send repeat
         sendLGRepeat(aUseLG2Protocol);
     }
+    IrReceiver.restartAfterSend();
 }
 
 //+=============================================================================
@@ -316,6 +318,7 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 // Data + stop bit
     sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
     SEND_STOP_BIT);
+    IrReceiver.restartAfterSend();
 }
 
 /** @}*/

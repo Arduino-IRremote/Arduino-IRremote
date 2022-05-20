@@ -32,7 +32,6 @@
 // As seen on my trusty oscilloscope, there is no repeat code.  Instead, when I
 // press and hold a button on my remote, it sends a command, makes a 51.2ms space,
 // and resends the command, etc, etc.
-
 // LSB first, 1 start bit + 8 bit data + 8 bit inverted data + 1 stop bit.
 #define BOSEWAVE_BITS             16 // Command and inverted command
 
@@ -69,6 +68,7 @@ void IRsend::sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
             delay( BOSEWAVE_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
+    IrReceiver.restartAfterSend();
 }
 
 //+=============================================================================
@@ -95,7 +95,8 @@ bool IRrecv::decodeBoseWave() {
         return false;
     }
 
-    if (!decodePulseDistanceData(BOSEWAVE_BITS, 3, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
+    if (!decodePulseDistanceData(BOSEWAVE_BITS, 3, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_ZERO_SPACE,
+            PROTOCOL_IS_LSB_FIRST)) {
         IR_DEBUG_PRINT(F("Bose: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;

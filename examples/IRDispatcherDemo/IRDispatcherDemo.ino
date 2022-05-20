@@ -32,7 +32,7 @@
 #define USE_TINY_IR_RECEIVER // Recommended, but only for NEC protocol!!! If disabled and IRMP_INPUT_PIN is defined, the IRMP library is used for decoding
 //#define TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT // costs 112 bytes program memory + 4 bytes RAM
 
-#include "PinDefinitionsAndMore.h"
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 // Some kind of auto detect library if USE_TINY_IR_RECEIVER is deactivated
 #if !defined(USE_TINY_IR_RECEIVER)
 #  if defined(IR_RECEIVE_PIN)

@@ -94,6 +94,7 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
             delay(JVC_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
+    IrReceiver.restartAfterSend();
 }
 
 /*
@@ -234,6 +235,7 @@ void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
     // Old version with MSB first Data
     sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
     SEND_STOP_BIT);
+    IrReceiver.restartAfterSend();
 }
 
 /** @}*/

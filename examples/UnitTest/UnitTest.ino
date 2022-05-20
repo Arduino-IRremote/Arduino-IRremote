@@ -35,10 +35,14 @@
 
 //#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
 
-/*
- * Define macros for input and output pin etc.
- */
-#include "PinDefinitionsAndMore.h"
+//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
+//#define EXCLUDE_EXOTIC_PROTOCOLS
+//#define SEND_PWM_BY_TIMER
+//#define USE_NO_SEND_PWM
+//#define NO_LED_FEEDBACK_CODE // saves 500 bytes program memory
+//#define TRACE // For internal usage
+//#define DEBUG // Activate this for lots of lovely debug output from the decoders.
+#define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
 #if FLASHEND >= 0x1FFF      // For 8k flash or more, like ATtiny85
 #define DECODE_DENON        // Includes Sharp
@@ -75,6 +79,7 @@
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 #define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)
@@ -85,6 +90,10 @@
 
 #define DELAY_AFTER_SEND 1000
 #define DELAY_AFTER_LOOP 5000
+
+#if defined(SEND_PWM_BY_TIMER) && !defined(SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER)
+#error Unit test cannot run if SEND_PWM_BY_TIMER is enabled i.e. receive timer us also used by send
+#endif
 
 void setup() {
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);

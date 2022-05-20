@@ -35,11 +35,6 @@
 //#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
 
 /*
- * Define macros for input and output pin etc.
- */
-#include "PinDefinitionsAndMore.h"
-
-/*
  * You can change this value accordingly to the receiver module you use.
  * The required value can be derived from the timings printed here.
  * Keep in mind that the timings may change with the distance
@@ -51,6 +46,7 @@
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 #define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 //+=============================================================================

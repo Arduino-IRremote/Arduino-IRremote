@@ -37,11 +37,8 @@
 #define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #endif
-/*
- * Define macros for input and output pin etc.
- */
-#include "PinDefinitionsAndMore.h"
 
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)

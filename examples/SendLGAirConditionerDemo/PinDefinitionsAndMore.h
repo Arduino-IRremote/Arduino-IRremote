@@ -44,13 +44,6 @@
  */
 //#define _IR_MEASURE_TIMING // For debugging purposes.
 
-/*
- * We do not have pin restrictions for this CPU's, so lets use the hardware PWM for send carrier signal generation
- */
-#if defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)
-#define SEND_PWM_BY_TIMER
-#endif
-
 #if defined(ESP8266)
 #define FEEDBACK_LED_IS_ACTIVE_LOW // The LED on my board (D4) is active LOW
 #define IR_RECEIVE_PIN          14 // D5
@@ -269,6 +262,14 @@ void noTone(uint8_t aPinNumber){
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
 #define _IR_TIMING_TEST_PIN 7
 #endif // defined(ESP8266)
+
+#if defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE) || defined(ARDUINO_ARCH_MBED)
+#define SEND_PWM_BY_TIMER // We do not have pin restrictions for this CPU's, so lets use the hardware PWM for send carrier signal generation
+#else
+# if defined(SEND_PWM_BY_TIMER)
+#undef IR_SEND_PIN // SendPin is determined by timer! This avoids warning in IRTimer.hpp
+#  endif
+#endif
 
 #if !defined (FLASHEND)
 #define FLASHEND 0xFFFF // Dummy value for platforms where FLASHEND is not defined

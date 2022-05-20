@@ -122,7 +122,7 @@ void IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t 
 
 #if !defined(NO_LED_FEEDBACK_CODE)
     bool tEnableLEDFeedback = DO_NOT_ENABLE_LED_FEEDBACK;
-    if(aEnableLEDFeedback) {
+    if (aEnableLEDFeedback) {
         tEnableLEDFeedback = LED_FEEDBACK_ENABLED_FOR_SEND;
     }
     setLEDFeedback(aFeedbackLEDPin, tEnableLEDFeedback);
@@ -257,7 +257,7 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aLen
         }
     }
 
-//    ledOff();  // Always end with the LED off
+    IrReceiver.restartAfterSend();
 }
 
 /**
@@ -277,6 +277,7 @@ void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfBuf
         }
     }
     IRLedOff();  // Always end with the LED off
+    IrReceiver.restartAfterSend();
 }
 
 /**
@@ -293,7 +294,7 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aL
      * Raw data starts with a mark
      */
     for (uint_fast8_t i = 0; i < aLengthOfBuffer; i++) {
-        unsigned int  duration = pgm_read_word(&aBufferWithMicroseconds[i]);
+        unsigned int duration = pgm_read_word(&aBufferWithMicroseconds[i]);
         if (i & 1) {
             // Odd
             space(duration);
@@ -301,7 +302,7 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast8_t aL
             mark(duration);
         }
     }
-//    ledOff();  // Always end with the LED off
+    IrReceiver.restartAfterSend();
 #endif
 }
 
@@ -317,7 +318,7 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfB
     enableIROut(aIRFrequencyKilohertz);
 
     for (uint_fast8_t i = 0; i < aLengthOfBuffer; i++) {
-        unsigned int  duration = pgm_read_byte(&aBufferWithTicks[i]) * (unsigned int ) MICROS_PER_TICK;
+        unsigned int duration = pgm_read_byte(&aBufferWithTicks[i]) * (unsigned int) MICROS_PER_TICK;
         if (i & 1) {
             // Odd
             space(duration);
@@ -326,6 +327,7 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast8_t aLengthOfB
         }
     }
     IRLedOff();  // Always end with the LED off
+    IrReceiver.restartAfterSend();
 #endif
 }
 
@@ -623,11 +625,18 @@ void IRsend::enableIROut(uint_fast8_t aFrequencyKHz) {
 #  endif
 #endif // defined(SEND_PWM_BY_TIMER)
 
-#if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && defined(OUTPUT_OPEN_DRAIN)
-    pinMode(sendPin, OUTPUT_OPEN_DRAIN); // the mode INPUT for mimicking open drain is set at IRLedOff()
-#elif !defined(SEND_PWM_BY_TIMER)
-// For SEND_PWM_BY_TIMER this is handled by the timerConfigForSend() function
+#if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && defined(OUTPUT_OPEN_DRAIN) // the mode INPUT for mimicking open drain is set at IRLedOff()
+#    if defined(IR_SEND_PIN)
+    pinModeFast(IR_SEND_PIN, OUTPUT_OPEN_DRAIN);
+#    else
+    pinModeFast(sendPin, OUTPUT_OPEN_DRAIN);
+#    endif
+#else
+#    if defined(IR_SEND_PIN)
+    pinModeFast(IR_SEND_PIN, OUTPUT);
+#    else
     pinModeFast(sendPin, OUTPUT);
+#    endif
 #endif // defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
 }
 

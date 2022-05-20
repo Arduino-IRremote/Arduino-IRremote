@@ -44,13 +44,9 @@
  */
 #include <Arduino.h>
 
-/*
- * Define macros for input and output pin etc.
- */
-#include "PinDefinitionsAndMore.h"
-
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 900 bytes program memory
 
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 int SEND_BUTTON_PIN = APPLICATION_PIN;

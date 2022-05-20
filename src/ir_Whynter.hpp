@@ -18,7 +18,6 @@
 //==============================================================================
 // Whynter A/C ARC-110WD added by Francesco Meschia
 // see https://docs.google.com/spreadsheets/d/1dsr4Jh-nzC6xvSKGpLlPBF0NRwvlpyw-ozg8eZU813w/edit#gid=0
-
 #define WHYNTER_BITS            32
 #define WHYNTER_HEADER_MARK   2850
 #define WHYNTER_HEADER_SPACE  2850
@@ -40,8 +39,10 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
     space(WHYNTER_HEADER_SPACE);
 
     // Data + stop bit
-    sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-    SEND_STOP_BIT);
+    sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits,
+            PROTOCOL_IS_MSB_FIRST,
+            SEND_STOP_BIT);
+    IrReceiver.restartAfterSend();
 }
 
 //+=============================================================================

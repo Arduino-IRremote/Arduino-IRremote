@@ -124,6 +124,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNum
             delay(KASEIKYO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
+    IrReceiver.restartAfterSend();
 }
 
 /**
@@ -327,6 +328,7 @@ void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
     // Old version with MSB first Data Data + stop bit
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aData,
     KASEIKYO_DATA_BITS, PROTOCOL_IS_MSB_FIRST);
+    IrReceiver.restartAfterSend();
 }
 
 /** @}*/

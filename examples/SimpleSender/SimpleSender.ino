@@ -13,15 +13,11 @@
  */
 #include <Arduino.h>
 
-/*
- * Define macros for input and output pin etc.
- */
-#include "PinDefinitionsAndMore.h"
-
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
 //#define NO_LED_FEEDBACK_CODE // saves 418 bytes program memory
 
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 void setup() {

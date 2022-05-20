@@ -6,8 +6,7 @@
 
 //#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
 
-#include "PinDefinitionsAndMore.h"
-
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #include "IRremoteExtensionClass.h"

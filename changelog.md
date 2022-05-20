@@ -7,6 +7,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Changed last uint8_t to uint_fast8_t and uint16_t to unsigned integer.
 - Improved MagiQuest protocol.
 - Improved prints and documentation.
+- Added IrReceiver.restartAfterSend() and inserted it in every send(). Closes #989
 
 ## 3.6.1
 - Switched Bose internal protocol timing for 0 and 1 -> old 1 timing is now 0 and vice versa.

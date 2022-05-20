@@ -56,11 +56,9 @@
 // Denon publish all their IR codes:
 //  https://www.google.co.uk/search?q=DENON+MASTER+IR+Hex+Command+Sheet
 //  -> http://assets.denon.com/documentmaster/us/denon%20master%20ir%20hex.xls
-
 // Having looked at the official Denon Pronto sheet and reverse engineered
 // the timing values from it, it is obvious that Denon have a range of
 // different timings and protocols ...the values here work for my AVR-3801 Amp!
-
 // MSB first, no start bit, 5 address + 8 command + 2 frame + 1 stop bit - each frame 2 times
 //
 #define DENON_ADDRESS_BITS      5
@@ -110,8 +108,9 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
     while (tNumberOfCommands > 0) {
 
         // Data
-        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS, PROTOCOL_IS_MSB_FIRST,
-        SEND_STOP_BIT);
+        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS,
+                PROTOCOL_IS_MSB_FIRST,
+                SEND_STOP_BIT);
 
         // Inverted autorepeat frame
         delay(DENON_AUTO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
@@ -125,6 +124,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
             delay( DENON_AUTO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
+    IrReceiver.restartAfterSend();
 }
 
 //+=============================================================================
@@ -239,9 +239,10 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
     space(DENON_HEADER_SPACE);
 
     // Data
-    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-    SEND_STOP_BIT);
-
+    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits,
+            PROTOCOL_IS_MSB_FIRST,
+            SEND_STOP_BIT);
+    IrReceiver.restartAfterSend();
 }
 
 void IRsend::sendSharp(unsigned int aAddress, unsigned int aCommand) {

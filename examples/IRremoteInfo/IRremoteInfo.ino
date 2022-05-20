@@ -11,6 +11,11 @@
  */
 #include <Arduino.h>
 
+//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 240 bytes program memory if IrSender.write is used
+//#define SEND_PWM_BY_TIMER
+//#define USE_NO_SEND_PWM
+//#define NO_LED_FEEDBACK_CODE // saves 566 bytes program memory
+
 #include <IRremote.hpp>
 
 // Function declarations for non Arduino IDE's

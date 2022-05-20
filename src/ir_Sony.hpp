@@ -96,6 +96,7 @@ void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
             delay(SONY_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
+    IrReceiver.restartAfterSend();
 }
 
 //+=============================================================================
@@ -124,7 +125,8 @@ bool IRrecv::decodeSony() {
         return false;
     }
 
-    if (!decodePulseWidthData((decodedIRData.rawDataPtr->rawlen - 1) / 2, 3, SONY_ONE_MARK, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST)) {
+    if (!decodePulseWidthData((decodedIRData.rawDataPtr->rawlen - 1) / 2, 3, SONY_ONE_MARK, SONY_ZERO_MARK, SONY_SPACE,
+            PROTOCOL_IS_LSB_FIRST)) {
         IR_DEBUG_PRINT(F("Sony: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -220,6 +222,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 
     // Old version with MSB first Data
     sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
+    IrReceiver.restartAfterSend();
 }
 
 /** @}*/

@@ -66,11 +66,6 @@
 
 //#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
 
-/*
- * Define macros for input and output pin etc.
- */
-#include "PinDefinitionsAndMore.h"
-
 // Change the following two entries if desired
 
 /**
@@ -80,6 +75,8 @@
 #define BAUDRATE 115200
 
 #define NO_DECODER
+
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include "IRremote.hpp"
 #include <limits.h>
 
@@ -281,12 +278,11 @@ static void dump(Stream &stream) {
  * @param stream Stream to read from, typically Serial.
  */
 static void receive(Stream &stream) {
-    IrReceiver.enableIRIn();
-    IrReceiver.resume(); // Receive the next value
+    IrReceiver.start();
 
     while (!IrReceiver.decode()) {
     }
-    IrReceiver.disableIRIn();
+    IrReceiver.stop();
 
     dump(stream);
 }

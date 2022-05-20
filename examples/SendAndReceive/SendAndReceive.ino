@@ -36,11 +36,6 @@
 #define DECODE_NEC          // Includes Apple and Onkyo
 #define DECODE_DISTANCE     // in case NEC is not received correctly
 
-/*
- * Define macros for input and output pin etc.
- */
-#include "PinDefinitionsAndMore.h"
-
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 //#define EXCLUDE_EXOTIC_PROTOCOLS
 //#define SEND_PWM_BY_TIMER
@@ -49,6 +44,7 @@
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 #define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #define DELAY_AFTER_SEND 2000

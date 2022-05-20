@@ -156,6 +156,7 @@ void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumber
             delay(SHUZU_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
         }
     }
+    IrReceiver.restartAfterSend();
 }
 
 //+=============================================================================
@@ -175,7 +176,8 @@ bool IRrecv::decodeShuzu() {
     }
 
     // Check header "space"
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], SHUZU_HEADER_MARK) || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SHUZU_HEADER_SPACE)) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], SHUZU_HEADER_MARK)
+            || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SHUZU_HEADER_SPACE)) {
         IR_DEBUG_PRINT(F("Shuzu: "));
         IR_DEBUG_PRINTLN(F("Header mark or space length is wrong"));
         return false;

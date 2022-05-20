@@ -64,10 +64,8 @@
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 #define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
-/*
- * First define macros for input and output pin etc.
- */
-#include "PinDefinitionsAndMore.h"
+
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)

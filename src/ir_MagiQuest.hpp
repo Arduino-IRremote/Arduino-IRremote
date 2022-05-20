@@ -103,6 +103,7 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
     MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, magnitude, MAGIQUEST_MAGNITUDE_BITS,
     PROTOCOL_IS_MSB_FIRST,
     SEND_STOP_BIT);
+    IrReceiver.restartAfterSend();
 }
 
 //+=============================================================================
@@ -123,7 +124,8 @@ bool IRrecv::decodeMagiQuest() {
 #endif
 
     // Check we have the right amount of data, magnitude and ID bits and at least 2 start bits + 1 stop bit
-    if (decodedIRData.rawDataPtr->rawlen < (2 * (MAGIQUEST_BITS + 3)) || decodedIRData.rawDataPtr->rawlen > (2 * (MAGIQUEST_PACKET_SIZE + 1))) {
+    if (decodedIRData.rawDataPtr->rawlen < (2 * (MAGIQUEST_BITS + 3))
+            || decodedIRData.rawDataPtr->rawlen > (2 * (MAGIQUEST_PACKET_SIZE + 1))) {
         IR_DEBUG_PRINT(F("MagiQuest: "));
         IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
@@ -133,7 +135,7 @@ bool IRrecv::decodeMagiQuest() {
 
     // Read the bits in
     data.llword = 0;
-    while (tOffset < (unsigned int)(decodedIRData.rawDataPtr->rawlen - 1)) {
+    while (tOffset < (unsigned int) (decodedIRData.rawDataPtr->rawlen - 1)) {
         // get one mark and space pair
         tMark = decodedIRData.rawDataPtr->rawbuf[tOffset++];
         tSpace = decodedIRData.rawDataPtr->rawbuf[tOffset++];

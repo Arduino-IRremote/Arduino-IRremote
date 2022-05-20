@@ -212,11 +212,21 @@
 /**
  * Define to disable carrier PWM generation in software and use (restricted) hardware PWM.
  */
-#if !defined(SEND_PWM_BY_TIMER) && (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE))
-#define SEND_PWM_BY_TIMER       // the best and default method for ESP32
-#warning For ESP32, RP2040 and particle boards SEND_PWM_BY_TIMER is enabled by default. If this is not intended, deactivate the line over this error message in file IRremote.hpp.
-#else
 //#define SEND_PWM_BY_TIMER // restricts send pin on many platforms to fixed pin numbers
+
+#if (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED)
+#  if !defined(SEND_PWM_BY_TIMER)
+#define SEND_PWM_BY_TIMER       // the best and default method for ESP32
+#warning INFO: For ESP32, RP2040, mbed and particle boards SEND_PWM_BY_TIMER is enabled by default. If this is not intended, deactivate the line over this warning message in file IRremote.hpp.
+#  endif
+#else
+#  if defined(SEND_PWM_BY_TIMER)
+#    if defined(IR_SEND_PIN)
+#undef IR_SEND_PIN // to avoid warning 3 lines later
+#warning Since SEND_PWM_BY_TIMER is defined, the existing value of IR_SEND_PIN is discarded and replaced by the value determined by timer used for PWM generation
+#    endif
+#define IR_SEND_PIN     DeterminedByTimer // must be set here, since it is evaluated at IRremoteInt.h, before the include of private/IRTimer.hpp
+#  endif
 #endif
 
 /**
@@ -269,8 +279,10 @@
 #define MICROS_IN_ONE_MILLI 1000L
 
 #include "IRremoteInt.h"
+
 #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)
 #include "private/IRTimer.hpp"  // defines IR_SEND_PIN for AVR and SEND_PWM_BY_TIMER
+
 #  if !defined(NO_LED_FEEDBACK_CODE)
 #    if !defined(LED_BUILTIN)
 /*

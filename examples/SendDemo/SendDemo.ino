@@ -32,16 +32,12 @@
 
 #include <Arduino.h>
 
-/*
- * Define macros for input and output pin etc.
- */
-#include "PinDefinitionsAndMore.h"
-
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 240 bytes program memory if IrSender.write is used
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
 //#define NO_LED_FEEDBACK_CODE // saves 566 bytes program memory
 
+#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #define DELAY_AFTER_SEND 2000
@@ -63,7 +59,7 @@ void setup() {
 #endif
 
 #if defined(IR_SEND_PIN)
-    Serial.println(F("Ready to send IR signals at pin "  STR(IR_SEND_PIN)));
+    Serial.println(F("Ready to send IR signals at pin " STR(IR_SEND_PIN)));
 #else
     Serial.println(F("Ready to send IR signals at pin 3"));
 #endif
@@ -158,6 +154,7 @@ void loop() {
         IrSender.space(4500);
         // LSB first + stop bit
         IrSender.sendPulseDistanceWidthData(560, 1680, 560, 560, 0x03040102, 32, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
+        IrReceiver.restartAfterSend();
         delay(DELAY_AFTER_SEND);
 
         /*

@@ -84,6 +84,7 @@ void IRsend::sendNECRepeat() {
     mark(NEC_HEADER_MARK);
     space(NEC_REPEAT_HEADER_SPACE);
     mark(NEC_BIT_MARK);
+    IrReceiver.restartAfterSend();
 //    ledOff(); // Always end with the LED off
 }
 
@@ -178,6 +179,7 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool a
         // send repeat
         sendNECRepeat();
     }
+    IrReceiver.restartAfterSend();
 }
 
 //+=============================================================================
@@ -371,6 +373,7 @@ void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     // Old version with MSB first Data + stop bit
     sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
     SEND_STOP_BIT);
+    IrReceiver.restartAfterSend();
 }
 
 /** @}*/

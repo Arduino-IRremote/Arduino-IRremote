@@ -199,21 +199,23 @@ public:
     IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin);
     void setReceivePin(uint_fast8_t aReceivePinNumber);
 
-    void enableIRIn();
-    void disableIRIn();
-
     /*
      * Stream like API
      */
-    void begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback = false, uint_fast8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
-    void start(); // alias for enableIRIn
+    void begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback = false, uint_fast8_t aFeedbackLEDPin =
+            USE_DEFAULT_FEEDBACK_LED_PIN);
+    void start();
+    void enableIRIn(); // alias for start
     void start(uint32_t aMicrosecondsToAddToGapCounter);
+    void restartAfterSend();
+
     bool available();
     IRData* read(); // returns decoded data
     // write is a method of class IRsend below
     // size_t write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
-    void stop(); // alias for disableIRIn
-    void end();
+    void stop();
+    void disableIRIn(); // alias for stop
+    void end(); // alias for stop
 
     bool isIdle();
 
@@ -243,16 +245,16 @@ public:
     /*
      * The main decoding functions used by the individual decoders
      */
-    bool decodePulseDistanceData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int  aBitMarkMicros, unsigned int  aOneSpaceMicros,
-            unsigned int  aZeroSpaceMicros, bool aMSBfirst);
+    bool decodePulseDistanceData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aBitMarkMicros,
+            unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst);
 
-    bool decodePulseWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int  aOneMarkMicros, unsigned int  aZeroMarkMicros,
-            unsigned int  aBitSpaceMicros, bool aMSBfirst);
+    bool decodePulseWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aOneMarkMicros,
+            unsigned int aZeroMarkMicros, unsigned int aBitSpaceMicros, bool aMSBfirst);
 
     bool decodeBiPhaseData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint_fast8_t aStartClockCount,
-            uint_fast8_t aValueOfSpaceToMarkTransition, unsigned int  aBiphaseTimeUnit);
+            uint_fast8_t aValueOfSpaceToMarkTransition, unsigned int aBiphaseTimeUnit);
 
-    void initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, unsigned int  aBiphaseTimeUnit);
+    void initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, unsigned int aBiphaseTimeUnit);
     uint_fast8_t getBiphaselevel();
 
     /*
@@ -321,20 +323,20 @@ extern uint_fast8_t sBiphaseDecodeRawbuffOffset; //
 /*
  * Mark & Space matching functions
  */
-bool matchTicks(unsigned int  aMeasuredTicks, unsigned int  aMatchValueMicros);
-bool matchMark(unsigned int  aMeasuredTicks, unsigned int  aMatchValueMicros);
-bool matchSpace(unsigned int  aMeasuredTicks, unsigned int  aMatchValueMicros);
+bool matchTicks(unsigned int aMeasuredTicks, unsigned int aMatchValueMicros);
+bool matchMark(unsigned int aMeasuredTicks, unsigned int aMatchValueMicros);
+bool matchSpace(unsigned int aMeasuredTicks, unsigned int aMatchValueMicros);
 
 /*
  * Old function names
  */
-bool MATCH(unsigned int  measured, unsigned int  desired);
-bool MATCH_MARK(unsigned int  measured_ticks, unsigned int  desired_us);
-bool MATCH_SPACE(unsigned int  measured_ticks, unsigned int  desired_us);
+bool MATCH(unsigned int measured, unsigned int desired);
+bool MATCH_MARK(unsigned int measured_ticks, unsigned int desired_us);
+bool MATCH_SPACE(unsigned int measured_ticks, unsigned int desired_us);
 
 int getMarkExcessMicros();
 void printActiveIRProtocols(Print *aSerial);
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, unsigned int  aLeadingSpaceDuration = 0);
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, unsigned int aLeadingSpaceDuration = 0);
 
 /****************************************************
  * Feedback LED related functions
@@ -407,13 +409,13 @@ public:
     /*
      * IR_SEND_PIN is defined
      */
-#if defined(IR_SEND_PIN) || (defined(SEND_PWM_BY_TIMER) && !(defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)))
+#if defined(IR_SEND_PIN)
     void begin();
     void begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
 #else
     IRsend(uint_fast8_t aSendPin);
     void begin(uint_fast8_t aSendPin);
-    void setSendPin(uint_fast8_t aSendPinNumber); // required if we use IRsend() as constructor
+    void setSendPin(uint_fast8_t aSendPin); // required if we use IRsend() as constructor
 #endif
 
     // Not guarded for backward compatibility

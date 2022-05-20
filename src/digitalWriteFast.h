@@ -1,7 +1,7 @@
 /*
-  Optimized digital functions for AVR microcontrollers
-  by Watterott electronic (www.watterott.com)
-  based on http://code.google.com/p/digitalwritefast
+ Optimized digital functions for AVR microcontrollers
+ by Watterott electronic (www.watterott.com)
+ based on http://code.google.com/p/digitalwritefast
  */
 
 #ifndef __digitalWriteFast_h_
@@ -39,7 +39,6 @@
 #if !defined(BIN)
 # define BIN (2)
 #endif
-
 
 // workarounds for ARM microcontrollers
 #if (!defined(__AVR__) || \
@@ -99,14 +98,12 @@
 
 #endif
 
-
 // digital functions
 //#if !defined(digitalPinToPortReg)
 #define SPI_SW_SS_PIN   (10) //SS on Uno (for software SPI)
 #define SPI_SW_MOSI_PIN (11) //MOSI on Uno (for software SPI)
 #define SPI_SW_MISO_PIN (12) //MISO on Uno (for software SPI)
 #define SPI_SW_SCK_PIN  (13) //SCK on Uno (for software SPI)
-
 
 // --- Arduino Due and SAM3X8E based boards ---
 #if (defined(ARDUINO_SAM_DUE) || \
@@ -346,7 +343,6 @@
 (((P) >= 0 && (P) <= 7) ? (P) : (((P) >= 8 && (P) <= 13) ? (P) - 8 : (P) - 14))
 #endif
 
-
 // --- Arduino Uno WiFi Rev 2, Nano Every ---
 #elif defined(__AVR_ATmega4809__)
 
@@ -437,7 +433,6 @@
 #endif
 //#endif  //#if !defined(digitalPinToPortReg)
 
-
 #if !defined(digitalWriteFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
 #define digitalWriteFast(P, V) \
@@ -450,7 +445,6 @@ if (__builtin_constant_p(P)) { \
 #define digitalWriteFast digitalWrite
 #endif
 #endif
-
 
 #if !defined(pinModeFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
@@ -470,7 +464,6 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 #endif
 #endif
 
-
 #if !defined(digitalReadFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))
 #define digitalReadFast(P) ( (int) __digitalReadFast((P)) )
@@ -482,7 +475,6 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 #define digitalReadFast digitalRead
 #endif
 #endif
-
 
 #if !defined(digitalToggleFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))
@@ -496,6 +488,5 @@ if (__builtin_constant_p(P)) { \
 #define digitalToggleFast(P) digitalWrite(P, ! digitalRead(P))
 #endif
 #endif
-
 
 #endif //__digitalWriteFast_h_

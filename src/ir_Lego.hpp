@@ -57,15 +57,12 @@
 // Low bit range 316 - 526 us
 // High bit range 526 – 947 us
 // Start/stop bit range 947 – 1579 us
-
 // If tm is the maximum message length (16ms) and Ch is the channel number, then
 // The delay before transmitting the first message is: (4 – Ch)*tm
 // The time from start to start for the next 2 messages is: 5*tm
 // The time from start to start for the following messages is: (6 + 2*Ch)*tm
-
 // Supported Devices
 // LEGO Power Functions IR Receiver 8884
-
 // MSB first, 1 start bit + 4 bit channel, 4 bit mode + 4 bit command + 4 bit parity + 1 stop bit.
 #define LEGO_CHANNEL_BITS       4
 #define LEGO_MODE_BITS          4
@@ -128,8 +125,9 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
         mark(LEGO_HEADER_MARK);
         space(LEGO_HEADER_SPACE);
 
-        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS, PROTOCOL_IS_MSB_FIRST,
-        SEND_STOP_BIT);
+        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS,
+                PROTOCOL_IS_MSB_FIRST,
+                SEND_STOP_BIT);
 
         tNumberOfCommands--;
         // skip last delay!
@@ -138,6 +136,7 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
             delay(tRepeatPeriod);
         }
     }
+    IrReceiver.restartAfterSend();
 }
 
 /*
