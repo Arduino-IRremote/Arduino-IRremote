@@ -98,7 +98,7 @@ struct irparams_struct {
 };
 
 /*
- * Info directives
+ * Info directives for all sources not only local!
  * Can be disabled to save program memory
  */
 #if defined(INFO)

@@ -60,7 +60,7 @@ IRCommandDispatcher IRDispatcher;
 #if defined(USE_TINY_IR_RECEIVER)
 #include "TinyIRReceiver.hpp" // included in "IRremote" library
 
-#if defined(INFO)
+#if defined(LOCAL_INFO)
 #define CD_INFO_PRINT(...)      Serial.print(__VA_ARGS__);
 #define CD_INFO_PRINTLN(...)    Serial.println(__VA_ARGS__);
 #else
@@ -149,11 +149,9 @@ void handleReceivedIRData()
 
     if (IRDispatcher.IRReceivedData.address == IR_ADDRESS) {
         IRDispatcher.checkAndCallCommand(true);
-#if defined(INFO)
-        } else {
+    } else {
         CD_INFO_PRINT(F("Wrong address. Expected 0x"));
         CD_INFO_PRINTLN(IR_ADDRESS, HEX);
-#endif
     }
 }
 #endif
@@ -175,14 +173,14 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
             /*
              * Command found
              */
-#if defined(INFO)
+#if defined(LOCAL_INFO)
             const __FlashStringHelper *tCommandName = reinterpret_cast<const __FlashStringHelper*>(IRMapping[i].CommandString);
 #endif
             /*
              * Check for repeat and if it is allowed for the current command
              */
             if (IRReceivedData.isRepeat && !(IRMapping[i].Flags & IR_COMMAND_FLAG_REPEATABLE)) {
-#if defined(DEBUG)
+#if defined(LOCAL_DEBUG)
                 Serial.print(F("Repeats of command \""));
                 Serial.print(tCommandName);
                 Serial.println("\" not accepted");
@@ -194,7 +192,7 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
              * Do not accept recursive call of the same command
              */
             if (currentBlockingCommandCalled == IRReceivedData.command) {
-#if defined(DEBUG)
+#if defined(LOCAL_DEBUG)
                 Serial.print(F("Recursive command \""));
                 Serial.print(tCommandName);
                 Serial.println("\" not accepted");
