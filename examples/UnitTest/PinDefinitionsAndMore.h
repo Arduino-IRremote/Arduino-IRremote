@@ -60,7 +60,7 @@
 
 // tone() is included in ESP32 core since 2.0.2
 #if !defined(ESP_ARDUINO_VERSION_VAL)
-#define ESP_ARDUINO_VERSION_VAL(major, minor, patch) 0
+#define ESP_ARDUINO_VERSION_VAL(major, minor, patch) 12345678
 #endif
 #if ESP_ARDUINO_VERSION  <= ESP_ARDUINO_VERSION_VAL(2, 0, 2)
 #define TONE_LEDC_CHANNEL        1  // Using channel 1 makes tone() independent of receiving timer -> No need to stop receiving timer.

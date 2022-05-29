@@ -258,7 +258,7 @@ bool IRrecv::decodeDistance() {
 //        }
 
         /*
-         * Decode in 32 bit chunks
+         * Here short and long space duration found. Decode in 32 bit chunks.
          */
         for (uint_fast8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
             uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;

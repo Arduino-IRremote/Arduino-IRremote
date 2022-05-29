@@ -1,7 +1,7 @@
 # IRremote Arduino Library
 This library enables you to send and receive using infra-red signals on an Arduino.
 
-### [Version 3.7.0](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
+### [Version 3.7.1](https://github.com/Arduino-IRremote/Arduino-IRremote/archive/master.zip) - work in progress
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
@@ -21,6 +21,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Do not want to convert your 2.x program and use the 3.x library version?](https://github.com/Arduino-IRremote/Arduino-IRremote#do-not-want-to-convert-your-2x-program-and-use-the-3x-library-version)
   * [How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes](https://github.com/Arduino-IRremote/Arduino-IRremote#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes)
 -  [Errors with old tutorials and the 3.x versions](https://github.com/Arduino-IRremote/Arduino-IRremote#errors-with-old-tutorials-and-the-3x-versions)
+- [Why *.hpp files instead of *.cpp files](https://github.com/Arduino-IRremote/Arduino-IRremote#why-hpp-files-instead-of-cpp-files)
 - [Using the new *.hpp files / how to avoid `multiple definitions` linker errors](https://github.com/Arduino-IRremote/Arduino-IRremote#using-the-new-hpp-files--how-to-avoid-multiple-definitions-linker-errors)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#receiving-ir-codes)
   * [Minimal NEC receiver](https://github.com/Arduino-IRremote/Arduino-IRremote#minimal-nec-receiver)
@@ -181,6 +182,20 @@ Example:
 
 # Errors with old tutorials and the 3.x versions
 If you suffer from errors with old tutorial code including `IRremote.h` instead of `IRremote.hpp`, just try to rollback to [version 2.4.0](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0). Most likely your code will run and you will not miss the new features...
+
+# Why *.hpp files instead of *.cpp files?
+**Every \*.cpp file is compiled separately** by a call of the compiler exclusively for this cpp file. These calls are managed by the IDE / make system.
+In the Arduino IDE the calls are executed when you click on *Verify* or *Upload*.<br/>
+And now our problem with Arduino is: **How to set [compile options](#compile-options--macros-for-this-library) for all *.cpp files, especially for libraries used?**<br/>
+IDE's like [Sloeber](https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-sloeber-ide) or [PlatformIO](https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-platformio) support this by allowing to specify a set of options per project.
+They add these options at each compiler call e.g. `-DTRACE`.<br/>
+But Arduino lacks this feature. So the **workaround** is not to compile all sources separately, but to concatenate them to one huge source file by including them in your source.
+This is done by e.g. `#include "ServoEasing.hpp"`.<br/>
+But why not `#include "ServoEasing.cpp"`?<br/>
+Try it and you will see tons of errors, because each function of the *.cpp file is now compiled twice,
+first by compiling the huge file and second by compiling the *.cpp file separately, like described above.
+So using the extension *cpp* is not longer possible, and one solution is to use *hpp* as extension, to show that it is an included *.cpp file.
+Every other extension e.g. *cinclude* would do, but *hpp* seems to be common sense.
 
 # Using the new *.hpp files / how to avoid `multiple definitions` linker errors
 In order to support [compile options](#compile-options--macros-for-this-library) more easily,
@@ -470,8 +485,8 @@ For other platforms you must modify the appropriate section guarded by e.g. `#el
 
 Another approach can be to share the timer **sequentially** if their functionality is used only for a short period of time like for the **Arduino tone() command**.
 An example can be seen [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/21b5747a58e9d47c9e3f1beb056d58c875a92b47/examples/ReceiveDemo/ReceiveDemo.ino#L159-L169), where the timer settings for IR receive are restored after the tone has stopped.
-For this we must call IrReceiver.start() or better IrReceiver.start(microsecondsOfToneDuration).<br/>
-This only works since each call to tone() completely initializes the timer 2 used by the `tone()` command.
+For this we must call `IrReceiver.start()` or better `IrReceiver.start(microsecondsOfToneDuration)`.<br/>
+This only works since each call to` tone()` completely initializes the timer 2 used by the `tone()` command.
 
 ## Hardware-PWM signal generation for sending
 If you define `SEND_PWM_BY_TIMER`, the send PWM signal is forced to be generated by a hardware timer. The same timer as for the receiver is used.
