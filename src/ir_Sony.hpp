@@ -57,7 +57,7 @@
 #define SONY_BITS_MAX           (SONY_COMMAND_BITS + SONY_ADDRESS_BITS + SONY_EXTRA_BITS)    // 20 bits == SIRCS_20_PROTOCOL
 #define SONY_UNIT               600 // 24 periods of 40kHz
 
-#define SONY_HEADER_MARK        (4 * SONY_UNIT) //2400
+#define SONY_HEADER_MARK        (4 * SONY_UNIT) // 2400
 #define SONY_ONE_MARK           (2 * SONY_UNIT) // 1200
 #define SONY_ZERO_MARK          SONY_UNIT
 #define SONY_SPACE              SONY_UNIT
@@ -118,6 +118,7 @@ bool IRrecv::decodeSony() {
         IR_DEBUG_PRINTLN(F(" is not 12, 15 or 20"));
         return false;
     }
+
     // Check header "space"
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SONY_SPACE)) {
         IR_DEBUG_PRINT(F("Sony: "));

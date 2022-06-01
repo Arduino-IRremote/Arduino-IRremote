@@ -388,7 +388,7 @@ bool IRrecv::decode() {
  * Common decode functions
  **********************************************************************************************************************/
 /**
- * Decode pulse width protocols. Currently only used for sony protocol.
+ * Decode pulse width protocols. Currently only used for sony protocol, which is LSB first.
  * The space (pause) has constant length, the length of the mark determines the bit value.
  *      Each bit looks like: MARK_1 + SPACE -> 1 or : MARK_0 + SPACE -> 0
  *
@@ -405,6 +405,9 @@ bool IRrecv::decodePulseWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStar
     uint32_t tDecodedData = 0;
 
     if (aMSBfirst) {
+        /*
+         * MSB first is currently optimized out by the compiler, since it is never used.
+         */
         for (uint_fast8_t i = 0; i < aNumberOfBits; i++) {
             // Check for variable length mark indicating a 0 or 1
             if (matchMark(*tRawBufPointer, aOneMarkMicros)) {
@@ -441,6 +444,7 @@ bool IRrecv::decodePulseWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStar
         }
         IR_TRACE_PRINTLN(F(""));
     } else {
+        // LSB first
         for (uint32_t tMask = 1UL; aNumberOfBits > 0; tMask <<= 1, aNumberOfBits--) {
 
             // Check for variable length mark indicating a 0 or 1

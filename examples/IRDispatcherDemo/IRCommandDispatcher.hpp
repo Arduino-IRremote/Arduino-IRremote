@@ -42,12 +42,12 @@
  * Enable this to see information on each call.
  * Since there should be no library which uses Serial, it should only be enabled for development purposes.
  */
-#if defined(INFO)
+#if defined(INFO) && !defined(LOCAL_INFO)
 #define LOCAL_INFO
 #else
 //#define LOCAL_INFO // This enables info output only for this file
 #endif
-#if defined(DEBUG)
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
 #define LOCAL_DEBUG
 // Propagate debug level
 #define LOCAL_INFO

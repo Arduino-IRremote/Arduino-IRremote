@@ -9,6 +9,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Improved prints and documentation.
 - Added IrReceiver.restartAfterSend() and inserted it in every send(). Closes #989
 - Use IRAM_ATTR instead of deprecated ICACHE_RAM_ATTR for ESP8266.
+- Removed pulse width decoding from ir_DistanceProtocol.
 
 ## 3.6.1
 - Switched Bose internal protocol timing for 0 and 1 -> old 1 timing is now 0 and vice versa.

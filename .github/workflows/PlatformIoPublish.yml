@@ -31,5 +31,8 @@ jobs:
       env:
         PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_TOKEN }}
       run: |
-        pio package pack
         pio package publish --owner arminjo --non-interactive
+#      run: |
+#        pio package pack
+#        pio package publish --owner arminjo --non-interactive
+        

@@ -57,13 +57,13 @@
 #define NEC_COMMAND_BITS        16 // Command and inverted command
 
 #define NEC_BITS                (NEC_ADDRESS_BITS + NEC_COMMAND_BITS)
-#define NEC_UNIT                560 // 21.28 periods of 38 kHz   TICKS_LOW = 8.358 TICKS_HIGH = 15.0
+#define NEC_UNIT                560             // 21.28 periods of 38 kHz, 11.2 ticks TICKS_LOW = 8.358 TICKS_HIGH = 15.0
 
-#define NEC_HEADER_MARK         (16 * NEC_UNIT) // 9000
-#define NEC_HEADER_SPACE        (8 * NEC_UNIT)  // 4500
+#define NEC_HEADER_MARK         (16 * NEC_UNIT) // 9000 / 180
+#define NEC_HEADER_SPACE        (8 * NEC_UNIT)  // 4500 / 90
 
 #define NEC_BIT_MARK            NEC_UNIT
-#define NEC_ONE_SPACE           (3 * NEC_UNIT)  // 1690   TICKS_LOW = 25.07 TICKS_HIGH = 45.0
+#define NEC_ONE_SPACE           (3 * NEC_UNIT)  // 1690 / 33.8  TICKS_LOW = 25.07 TICKS_HIGH = 45.0
 #define NEC_ZERO_SPACE          NEC_UNIT
 
 #define NEC_REPEAT_HEADER_SPACE (4 * NEC_UNIT)  // 2250

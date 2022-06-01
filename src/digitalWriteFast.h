@@ -162,7 +162,7 @@
 ((((P) >= 10 && (P) <= 13) || ((P) >= 50 && (P) <= 53)) ? &PORTB : \
 (((P) >= 30 && (P) <= 37) ? &PORTC : \
 ((((P) >= 18 && (P) <= 21) || (P) == 38) ? &PORTD : \
-((((P) >= 0 && (P) <= 3) || (P) == 5) ? &PORTE : \
+((((P) <= 3) || (P) == 5) ? &PORTE : \
 (((P) >= 54 && (P) <= 61) ? &PORTF : \
 ((((P) >= 39 && (P) <= 41) || (P) == 4) ? &PORTG : \
 ((((P) >= 6 && (P) <= 9) || (P) == 16 || (P) == 17) ? &PORTH : \
@@ -174,7 +174,7 @@
 ((((P) >= 10 && (P) <= 13) || ((P) >= 50 && (P) <= 53)) ? &DDRB : \
 (((P) >= 30 && (P) <= 37) ? &DDRC : \
 ((((P) >= 18 && (P) <= 21) || (P) == 38) ? &DDRD : \
-((((P) >= 0 && (P) <= 3) || (P) == 5) ? &DDRE : \
+((((P) <= 3) || (P) == 5) ? &DDRE : \
 (((P) >= 54 && (P) <= 61) ? &DDRF : \
 ((((P) >= 39 && (P) <= 41) || (P) == 4) ? &DDRG : \
 ((((P) >= 6 && (P) <= 9) || (P) == 16 || (P) == 17) ? &DDRH : \
@@ -186,7 +186,7 @@
 ((((P) >= 10 && (P) <= 13) || ((P) >= 50 && (P) <= 53)) ? &PINB : \
 (((P) >= 30 && (P) <= 37) ? &PINC : \
 ((((P) >= 18 && (P) <= 21) || (P) == 38) ? &PIND : \
-((((P) >= 0 && (P) <= 3) || (P) == 5) ? &PINE : \
+((((P) <= 3) || (P) == 5) ? &PINE : \
 (((P) >= 54 && (P) <= 61) ? &PINF : \
 ((((P) >= 39 && (P) <= 41) || (P) == 4) ? &PING : \
 ((((P) >= 6 && (P) <= 9) || (P) == 16 || (P) == 17) ? &PINH : \
@@ -241,31 +241,31 @@
 
 #if defined(__AVR_ATmega324PB__)
 #define __digitalPinToPortReg(P) \
-(((P) >= 0 && (P) <= 7) ? &PORTB : (((P) >= 8 && (P) <= 15) ? &PORTD : (((P) >= 16 && (P) <= 23) ? &PORTC : (((P) >= 24 && (P) <= 31) ? &PORTA : &PORTE))))
+(((P) <= 7) ? &PORTB : (((P) >= 8 && (P) <= 15) ? &PORTD : (((P) >= 16 && (P) <= 23) ? &PORTC : (((P) >= 24 && (P) <= 31) ? &PORTA : &PORTE))))
 #define __digitalPinToDDRReg(P) \
-(((P) >= 0 && (P) <= 7) ? &DDRB : (((P) >= 8 && (P) <= 15) ? &DDRD : (((P) >= 16 && (P) <= 23) ? &DDRC : (((P) >= 24 && (P) <= 31) ? &DDRA : &DDRE))))
+(((P) <= 7) ? &DDRB : (((P) >= 8 && (P) <= 15) ? &DDRD : (((P) >= 16 && (P) <= 23) ? &DDRC : (((P) >= 24 && (P) <= 31) ? &DDRA : &DDRE))))
 #define __digitalPinToPINReg(P) \
-(((P) >= 0 && (P) <= 7) ? &PINB : (((P) >= 8 && (P) <= 15) ? &PIND : (((P) >= 16 && (P) <= 23) ? &PINC : (((P) >= 24 && (P) <= 31) ? &PINA : &PINE))))
+(((P) <= 7) ? &PINB : (((P) >= 8 && (P) <= 15) ? &PIND : (((P) >= 16 && (P) <= 23) ? &PINC : (((P) >= 24 && (P) <= 31) ? &PINA : &PINE))))
 # if defined(SANGUINO_PINOUT)
 #define __digitalPinToBit(P) \
-(((P) >= 0 && (P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (((P) >= 16 && (P) <= 23) ? (7 - ((P) - 24)) : (P) - 32))))
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (((P) >= 16 && (P) <= 23) ? (7 - ((P) - 24)) : (P) - 32))))
 # else //MightyCore Pinout
 #define __digitalPinToBit(P) \
-(((P) >= 0 && (P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (((P) >= 16 && (P) <= 23) ? (P) - 24 : (P) - 32))))
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (((P) >= 16 && (P) <= 23) ? (P) - 24 : (P) - 32))))
 # endif
 #else
 #define __digitalPinToPortReg(P) \
-(((P) >= 0 && (P) <= 7) ? &PORTB : (((P) >= 8 && (P) <= 15) ? &PORTD : (((P) >= 16 && (P) <= 23) ? &PORTC : &PORTA)))
+(((P) <= 7) ? &PORTB : (((P) >= 8 && (P) <= 15) ? &PORTD : (((P) >= 16 && (P) <= 23) ? &PORTC : &PORTA)))
 #define __digitalPinToDDRReg(P) \
-(((P) >= 0 && (P) <= 7) ? &DDRB : (((P) >= 8 && (P) <= 15) ? &DDRD : (((P) >= 16 && (P) <= 23) ? &DDRC : &DDRA)))
+(((P) <= 7) ? &DDRB : (((P) >= 8 && (P) <= 15) ? &DDRD : (((P) >= 16 && (P) <= 23) ? &DDRC : &DDRA)))
 #define __digitalPinToPINReg(P) \
-(((P) >= 0 && (P) <= 7) ? &PINB : (((P) >= 8 && (P) <= 15) ? &PIND : (((P) >= 16 && (P) <= 23) ? &PINC : &PINA)))
+(((P) <= 7) ? &PINB : (((P) >= 8 && (P) <= 15) ? &PIND : (((P) >= 16 && (P) <= 23) ? &PINC : &PINA)))
 # if defined(SANGUINO_PINOUT)
 #define __digitalPinToBit(P) \
-(((P) >= 0 && (P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (7 - ((P) - 24)))))
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (7 - ((P) - 24)))))
 # else //MightyCore Pinout
 #define __digitalPinToBit(P) \
-(((P) >= 0 && (P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (P) - 24)))
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (P) - 24)))
 # endif
 #endif
 
@@ -287,11 +287,11 @@
 #define SPI_HW_SCK_PIN  (15) //PB1
 
 #define __digitalPinToPortReg(P) \
-((((P) >= 0 && (P) <= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &PORTD : (((P) == 5 || (P) == 13) ? &PORTC : (((P) >= 18 && (P) <= 23)) ? &PORTF : (((P) == 7) ? &PORTE : &PORTB)))
+((((P) <= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &PORTD : (((P) == 5 || (P) == 13) ? &PORTC : (((P) >= 18 && (P) <= 23)) ? &PORTF : (((P) == 7) ? &PORTE : &PORTB)))
 #define __digitalPinToDDRReg(P) \
-((((P) >= 0 && (P) <= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &DDRD : (((P) == 5 || (P) == 13) ? &DDRC : (((P) >= 18 && (P) <= 23)) ? &DDRF : (((P) == 7) ? &DDRE : &DDRB)))
+((((P) <= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &DDRD : (((P) == 5 || (P) == 13) ? &DDRC : (((P) >= 18 && (P) <= 23)) ? &DDRF : (((P) == 7) ? &DDRE : &DDRB)))
 #define __digitalPinToPINReg(P) \
-((((P) >= 0 && (P) <= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &PIND : (((P) == 5 || (P) == 13) ? &PINC : (((P) >= 18 && (P) <= 23)) ? &PINF : (((P) == 7) ? &PINE : &PINB)))
+((((P) <= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &PIND : (((P) == 5 || (P) == 13) ? &PINC : (((P) >= 18 && (P) <= 23)) ? &PINF : (((P) == 7) ? &PINE : &PINB)))
 #define __digitalPinToBit(P) \
 (((P) >= 8 && (P) <= 11) ? (P) - 4 : (((P) >= 18 && (P) <= 21) ? 25 - (P) : (((P) == 0) ? 2 : (((P) == 1) ? 3 : (((P) == 2) ? 1 : (((P) == 3) ? 0 : (((P) == 4) ? 4 : (((P) == 6) ? 7 : (((P) == 13) ? 7 : (((P) == 14) ? 3 : (((P) == 15) ? 1 : (((P) == 16) ? 2 : (((P) == 17) ? 0 : (((P) == 22) ? 1 : (((P) == 23) ? 0 : (((P) == 24) ? 4 : (((P) == 25) ? 7 : (((P) == 26) ? 4 : (((P) == 27) ? 5 : 6 )))))))))))))))))))
 
@@ -325,22 +325,22 @@
 
 #if defined(__AVR_ATmega48PB__) || defined(__AVR_ATmega88PB__) || defined(__AVR_ATmega168PB__) || defined(__AVR_ATmega328PB__)
 #define __digitalPinToPortReg(P) \
-(((P) >= 0 && (P) <= 7) ? &PORTD : (((P) >= 8 && (P) <= 13) ? &PORTB : (((P) >= 14 && (P) <= 19) ? &PORTC : &PORTE)))
+(((P) <= 7) ? &PORTD : (((P) >= 8 && (P) <= 13) ? &PORTB : (((P) >= 14 && (P) <= 19) ? &PORTC : &PORTE)))
 #define __digitalPinToDDRReg(P) \
-(((P) >= 0 && (P) <= 7) ? &DDRD : (((P) >= 8 && (P) <= 13) ? &DDRB : (((P) >= 14 && (P) <= 19) ? &DDRC : &DDRE)))
+(((P) <= 7) ? &DDRD : (((P) >= 8 && (P) <= 13) ? &DDRB : (((P) >= 14 && (P) <= 19) ? &DDRC : &DDRE)))
 #define __digitalPinToPINReg(P) \
-(((P) >= 0 && (P) <= 7) ? &PIND : (((P) >= 8 && (P) <= 13) ? &PINB : (((P) >= 14 && (P) <= 19) ? &PINC : &PINE)))
+(((P) <= 7) ? &PIND : (((P) >= 8 && (P) <= 13) ? &PINB : (((P) >= 14 && (P) <= 19) ? &PINC : &PINE)))
 #define __digitalPinToBit(P) \
-(((P) >= 0 && (P) <= 7) ? (P) : (((P) >= 8 && (P) <= 13) ? (P) - 8 : (((P) >= 14 && (P) <= 19) ? (P) - 14 : (((P) >= 20 && (P) <= 21) ? (P) - 18 : (P) - 22))))
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 13) ? (P) - 8 : (((P) >= 14 && (P) <= 19) ? (P) - 14 : (((P) >= 20 && (P) <= 21) ? (P) - 18 : (P) - 22))))
 #else
 #define __digitalPinToPortReg(P) \
-(((P) >= 0 && (P) <= 7) ? &PORTD : (((P) >= 8 && (P) <= 13) ? &PORTB : &PORTC))
+(((P) <= 7) ? &PORTD : (((P) >= 8 && (P) <= 13) ? &PORTB : &PORTC))
 #define __digitalPinToDDRReg(P) \
-(((P) >= 0 && (P) <= 7) ? &DDRD : (((P) >= 8 && (P) <= 13) ? &DDRB : &DDRC))
+(((P) <= 7) ? &DDRD : (((P) >= 8 && (P) <= 13) ? &DDRB : &DDRC))
 #define __digitalPinToPINReg(P) \
-(((P) >= 0 && (P) <= 7) ? &PIND : (((P) >= 8 && (P) <= 13) ? &PINB : &PINC))
+(((P) <= 7) ? &PIND : (((P) >= 8 && (P) <= 13) ? &PINB : &PINC))
 #define __digitalPinToBit(P) \
-(((P) >= 0 && (P) <= 7) ? (P) : (((P) >= 8 && (P) <= 13) ? (P) - 8 : (P) - 14))
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 13) ? (P) - 8 : (P) - 14))
 #endif
 
 // --- Arduino Uno WiFi Rev 2, Nano Every ---
@@ -462,7 +462,7 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 #else
 #define pinModeFast pinMode
 #endif
-#endif
+#endif // !defined(pinModeFast)
 
 #if !defined(digitalReadFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))
@@ -474,7 +474,7 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 #else
 #define digitalReadFast digitalRead
 #endif
-#endif
+#endif // !defined(digitalReadFast)
 
 #if !defined(digitalToggleFast)
 #if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))
@@ -487,6 +487,6 @@ if (__builtin_constant_p(P)) { \
 #else
 #define digitalToggleFast(P) digitalWrite(P, ! digitalRead(P))
 #endif
-#endif
+#endif // !defined(digitalToggleFast)
 
 #endif //__digitalWriteFast_h_
