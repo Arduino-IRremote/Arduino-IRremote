@@ -6,7 +6,7 @@
  *
  *  No parity check is done!
  *  On a completely received IR command, the user function handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition)
- *  is called in Interrupt context but with interrupts being enabled to enable use of delay() etc.
+ *  is called in interrupt context but with interrupts being enabled to enable use of delay() etc.
  *  !!!!!!!!!!!!!!!!!!!!!!
  *  Functions called in interrupt context should be running as short as possible,
  *  so if you require longer action, save the data (address + command) and handle them in the main loop.
@@ -187,7 +187,8 @@ void IRPinChangeInterruptHandler(void)
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_MARK) {
             // Check data space length
-            if (tMicrosOfMarkOrSpace >= lowerValue(NEC_ZERO_SPACE) && tMicrosOfMarkOrSpace <= upperValue(NEC_ONE_SPACE)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(NEC_ZERO_SPACE)
+                    && tMicrosOfMarkOrSpace <= upperValue50Percent(NEC_ONE_SPACE)) {
                 // We have a valid bit here
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
                 if (tMicrosOfMarkOrSpace >= 2 * NEC_UNIT) {
@@ -228,7 +229,8 @@ void IRPinChangeInterruptHandler(void)
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE) {
             // Check data mark length
-            if (tMicrosOfMarkOrSpace >= lowerValue(NEC_BIT_MARK) && tMicrosOfMarkOrSpace <= upperValue(NEC_BIT_MARK)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(NEC_BIT_MARK)
+                    && tMicrosOfMarkOrSpace <= upperValue50Percent(NEC_BIT_MARK)) {
                 /*
                  * We have a valid mark here, check for transmission complete
                  */

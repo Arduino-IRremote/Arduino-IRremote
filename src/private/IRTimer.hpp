@@ -922,7 +922,7 @@ void timerConfigForReceive() {
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
 void timerConfigForSend(uint8_t aFrequencyKHz) {
-    TIMER_DISABLE_RECEIVE_INTR; // TODO really required here? Do we have a common resource
+    TIMER_DISABLE_RECEIVE_INTR; // TODO really required here? Do we have a common resource for Teensy3.0, 3.1
 
     SIM_SCGC4 |= SIM_SCGC4_CMT;
     SIM_SOPT2 |= SIM_SOPT2_PTD7PAD;

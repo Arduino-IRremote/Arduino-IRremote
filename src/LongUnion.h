@@ -23,7 +23,6 @@
 
 #if !defined(_WORD_UNION_H) || !defined(_LONG_UNION_H)
 
-#include <Arduino.h>
 #include <stdint.h>
 
 #ifndef _WORD_UNION_H

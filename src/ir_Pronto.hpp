@@ -45,14 +45,6 @@
  * @{
  */
 
-// TODO remove 6/2021
-#if defined(__STM32F1__) || defined(ARDUINO_ARCH_STM32F1) // Recommended original Arduino_STM32 by Roger Clark.
-#  if !defined(strncpy_P)
-// this define is not included in the pgmspace.h file see https://github.com/rogerclarkmelbourne/Arduino_STM32/issues/852
-#define strncpy_P(dest, src, size) strncpy((dest), (src), (size))
-#  endif
-#endif
-
 //! @cond
 // DO NOT EXPORT from this file
 static const uint16_t learnedToken = 0x0000U;

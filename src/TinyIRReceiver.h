@@ -63,8 +63,8 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
  */
 #define lowerValue25Percent(aDuration)   (aDuration - (aDuration / 4))
 #define upperValue25Percent(aDuration)   (aDuration + (aDuration / 4))
-#define lowerValue(aDuration)   (aDuration - (aDuration / 2))
-#define upperValue(aDuration)   (aDuration + (aDuration / 2))
+#define lowerValue50Percent(aDuration)   (aDuration / 2) // (aDuration - (aDuration / 2))
+#define upperValue50Percent(aDuration)   (aDuration + (aDuration / 2))
 
 /*
  * The states for the state machine
