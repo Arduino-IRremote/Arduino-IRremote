@@ -63,7 +63,6 @@
 //#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
-#define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
 #include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
@@ -80,9 +79,6 @@
 #endif
 
 void setup() {
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-    pinMode(_IR_TIMING_TEST_PIN, OUTPUT);
-#endif
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
 #endif

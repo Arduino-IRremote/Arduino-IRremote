@@ -39,10 +39,11 @@
 //#define EXCLUDE_EXOTIC_PROTOCOLS
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
-//#define NO_LED_FEEDBACK_CODE // saves 500 bytes program memory
+#define NO_LED_FEEDBACK_CODE // saves 500 bytes program memory
+#define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
+
 //#define TRACE // For internal usage
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
-#define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
 #if FLASHEND >= 0x1FFF      // For 8k flash or more, like ATtiny85
 #define DECODE_DENON        // Includes Sharp
@@ -57,7 +58,7 @@
 #define DECODE_SONY
 #define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
 
-#define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols
+#define DECODE_DISTANCE     // universal decoder for pulse distance protocols
 #define DECODE_HASH         // special decoder for all protocols
 #endif
 
@@ -70,14 +71,6 @@
 #define DECODE_MAGIQUEST
 #define DECODE_WHYNTER
 #endif
-
-//#define SEND_PWM_BY_TIMER
-//#define USE_NO_SEND_PWM
-//#define _IR_MEASURE_TIMING
-#define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
-#define NO_LED_FEEDBACK_CODE // halves ISR duration
-//#define DEBUG // Activate this for lots of lovely debug output from the decoders.
-#define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
 #include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
@@ -97,9 +90,6 @@
 
 void setup() {
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-    pinMode(_IR_TIMING_TEST_PIN, OUTPUT);
-#endif
 
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/|| defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)

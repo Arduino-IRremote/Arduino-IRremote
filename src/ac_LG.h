@@ -105,7 +105,7 @@ union LGProtocol {
         uint32_t Fan :3;
         uint32_t FanExt :1;
         uint32_t Temp :4;
-        uint32_t Mode :4;
+        uint32_t Mode :4; // highest bit 1 => Set temperature and ventilation by mode
         uint32_t Function :3;
         uint32_t SwitchOnMask :1; /* Content is 0 when switching from off to on */
         uint32_t Signature :8; /* Content is 0x88, LG_ADDRESS */

@@ -32,7 +32,7 @@
 
 #include <Arduino.h>
 
-// select only NEC and the universal decoder for pulse width or pulse distance protocols
+// select only NEC and the universal decoder for pulse distance protocols
 #define DECODE_NEC          // Includes Apple and Onkyo
 #define DECODE_DISTANCE     // in case NEC is not received correctly
 
@@ -42,7 +42,6 @@
 //#define USE_NO_SEND_PWM
 //#define NO_LED_FEEDBACK_CODE // saves 500 bytes program memory
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
-#define INFO // To see valuable informations from universal decoder for pulse width or pulse distance protocols
 
 #include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
@@ -51,10 +50,6 @@
 #define DELAY_AFTER_LOOP 5000
 
 void setup() {
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-    pinMode(_IR_TIMING_TEST_PIN, OUTPUT);
-#endif
-
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/|| defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!

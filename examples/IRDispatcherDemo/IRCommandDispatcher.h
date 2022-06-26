@@ -29,6 +29,8 @@
 #ifndef _IR_COMMAND_DISPATCHER_H
 #define _IR_COMMAND_DISPATCHER_H
 
+#include <stdint.h>
+
 /*
  * For command mapping file
  */

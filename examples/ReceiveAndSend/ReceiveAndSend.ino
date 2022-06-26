@@ -192,7 +192,7 @@ void sendCode(storedIRDataStruct *aIRDataToSend) {
         IrSender.write(&aIRDataToSend->receivedIRData, DEFAULT_NUMBER_OF_REPEATS_TO_SEND);
 
         Serial.print(F("Sent: "));
-        printIRResultShort(&Serial, &aIRDataToSend->receivedIRData);
+        printIRResultShort(&Serial, &aIRDataToSend->receivedIRData, false);
     }
 }
 

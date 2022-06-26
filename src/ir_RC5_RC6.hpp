@@ -445,15 +445,13 @@ bool IRrecv::decodeRC6() {
         }
     } else {
         // RC6A
-        decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST | IRDATA_FLAGS_EXTRA_INFO;
+        decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
         if ((tValue.UByte.MidLowByte & 0x80) != 0) {
-            decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK | IRDATA_FLAGS_IS_MSB_FIRST | IRDATA_FLAGS_EXTRA_INFO;
+            decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK | IRDATA_FLAGS_IS_MSB_FIRST;
         }
         tValue.UByte.MidLowByte &= 0x87F; // mask toggle bit
         decodedIRData.command = tValue.UByte.LowByte;
         decodedIRData.address = tValue.UByte.MidLowByte;
-        // get extra info
-        decodedIRData.extra = tValue.UWord.HighWord;
     }
 
     // check for repeat, do not check toggle bit yet

@@ -50,7 +50,7 @@
  * - USE_NO_SEND_PWM                    Use no carrier PWM, just simulate an **active low** receiver signal. Overrides SEND_PWM_BY_TIMER definition.
  * - USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
  * - EXCLUDE_EXOTIC_PROTOCOLS           If activated, BOSEWAVE, WHYNTER and LEGO_PF are excluded in decode() and in sending with IrSender.write().
- * - EXCLUDE_UNIVERSAL_PROTOCOLS        If activated, the universal decoder for pulse width or pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in decode().
+ * - EXCLUDE_UNIVERSAL_PROTOCOLS        If activated, the universal decoder for pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in decode().
  * - DECODE_*                           Selection of individual protocols to be decoded. See below.
  * - MARK_EXCESS_MICROS                 Value is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules.
  * - RECORD_GAP_MICROS                  Minimum gap between IR transmissions, to detect the end of a protocol.
@@ -58,7 +58,7 @@
  * - NO_LED_FEEDBACK_CODE               This completely disables the LED feedback code for send and receive.
  * - IR_INPUT_IS_ACTIVE_HIGH            Enable it if you use a RF receiver, which has an active HIGH output signal.
  * - IR_SEND_DUTY_CYCLE_PERCENT         Duty cycle of IR send signal.
- * - MICROS_PER_TICK                    Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 µs at 38 kHz.
+ * - MICROS_PER_TICK                    Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 us at 38 kHz.
  * - IR_USE_AVR_TIMER*                  Selection of timer to be used for generating IR receiving sample interval.
  */
 
@@ -122,7 +122,7 @@
 #    endif
 
 #    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
-#define DECODE_DISTANCE     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program memory
+#define DECODE_DISTANCE     // universal decoder for pulse distance protocols - requires up to 750 bytes additional program memory
 #define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program memory
 #    endif
 #  endif
@@ -307,7 +307,7 @@
 #  if defined(DECODE_DENON )       // Includes Sharp
 #include "ir_Denon.hpp"
 #  endif
-#  if defined(DECODE_DISTANCE)     // universal decoder for pulse width or pulse distance protocols - requires up to 750 bytes additional program memory
+#  if defined(DECODE_DISTANCE)     // universal decoder for pulse distance protocols - requires up to 750 bytes additional program memory
 #include "ir_DistanceProtocol.hpp"
 #  endif
 #  if defined(DECODE_JVC)

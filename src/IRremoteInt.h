@@ -98,24 +98,6 @@ struct irparams_struct {
 };
 
 /*
- * Info directives for all sources not only local!
- * Can be disabled to save program memory
- */
-#if defined(INFO)
-#  define IR_INFO_PRINT(...)    Serial.print(__VA_ARGS__)
-#  define IR_INFO_PRINTLN(...)  Serial.println(__VA_ARGS__)
-#else
-/**
- * If INFO, print the arguments, otherwise do nothing.
- */
-#  define IR_INFO_PRINT(...) void()
-/**
- * If INFO, print the arguments as a line, otherwise do nothing.
- */
-#  define IR_INFO_PRINTLN(...) void()
-#endif
-
-/*
  * Debug directives
  */
 #if defined(DEBUG)
@@ -150,11 +132,11 @@ struct irparams_struct {
 #define IRDATA_FLAGS_IS_REPEAT          0x01
 #define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
 #define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
-#define IRDATA_TOGGLE_BIT_MASK          0x08
-#define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< there is unexpected extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
+#define IRDATA_TOGGLE_BIT_MASK          0x08 ///< is set if RC5 or RC6 toggle bit is set
+#define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< there is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
 #define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is 0 in this case to avoid endless OverflowFlag
 #define IRDATA_FLAGS_IS_LSB_FIRST       0x00
-#define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Just for info. Value is simply determined by the protocol
+#define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Just for info. Value is mainly determined by the protocol
 
 /**
  * Data structure for the user application, available as decodedIRData.
@@ -164,10 +146,10 @@ struct IRData {
     decode_type_t protocol;  ///< UNKNOWN, NEC, SONY, RC5, ...
     uint16_t address;        ///< Decoded address
     uint16_t command;        ///< Decoded command
-    uint16_t extra;          ///< Used by MagiQuest and for Kaseikyo unknown vendor ID. Ticks used for decoding Distance protocol.
+    uint16_t extra;          ///< Contains MagiQuest magnitude, Kaseikyo unknown vendor ID and Distance protocol (SpaceTicksShort << 8) | SpaceTicksLong.
     uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;               ///< See IRDATA_FLAGS_* definitions above
-    uint32_t decodedRawData;     ///< Up to 32 bit decoded raw data, used for sendRaw functions.
+    uint32_t decodedRawData;     ///< Up to 32 bit decoded raw data, to be used for send functions.
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
 };
 
@@ -183,8 +165,8 @@ struct decode_results {
     bool isRepeat;              // deprecated, moved to decodedIRData.flags ///< True if repeat of value is detected
 
 // next 3 values are copies of irparams values - see IRremoteint.h
-    unsigned int *rawbuf;           // deprecated, moved to decodedIRData.rawDataPtr->rawbuf ///< Raw intervals in 50uS ticks
-    uint_fast8_t rawlen;            // deprecated, moved to decodedIRData.rawDataPtr->rawlen ///< Number of records in rawbuf
+    unsigned int *rawbuf;       // deprecated, moved to decodedIRData.rawDataPtr->rawbuf ///< Raw intervals in 50uS ticks
+    uint_fast8_t rawlen;        // deprecated, moved to decodedIRData.rawDataPtr->rawlen ///< Number of records in rawbuf
     bool overflow;              // deprecated, moved to decodedIRData.flags ///< true if IR raw code too long
 };
 
@@ -336,7 +318,7 @@ bool MATCH_SPACE(unsigned int measured_ticks, unsigned int desired_us);
 
 int getMarkExcessMicros();
 void printActiveIRProtocols(Print *aSerial);
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, unsigned int aLeadingSpaceDuration = 0);
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap);
 
 /****************************************************
  * Feedback LED related functions

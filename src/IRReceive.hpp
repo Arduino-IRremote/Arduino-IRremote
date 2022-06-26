@@ -105,6 +105,9 @@ void IRrecv::begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8
     // Set pin mode once
     pinMode(irparams.IRReceivePin, INPUT);
 
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+    pinMode(_IR_TIMING_TEST_PIN, OUTPUT);
+#endif
     start();
 }
 
@@ -356,7 +359,7 @@ bool IRrecv::decode() {
 #endif
 
     /*
-     * Try the universal decoder for pulse width or pulse distance protocols
+     * Try the universal decoder for pulse distance protocols
      */
 #if defined(DECODE_DISTANCE)
     IR_TRACE_PRINTLN(F("Attempting universal Distance decode"));
@@ -854,13 +857,14 @@ void CheckForRecordGapsMicros(Print *aSerial, IRData *aIRDataPtr) {
      * Check if protocol is not detected and detected space between two transmissions
      * is smaller than known value for protocols (Sony with around 24 ms)
      */
-    if (aIRDataPtr->protocol <= PULSE_WIDTH && aIRDataPtr->rawDataPtr->rawbuf[0] < RECORD_GAP_MICROS_WARNING_THRESHOLD) {
+    if (aIRDataPtr->protocol <= PULSE_WIDTH
+            && aIRDataPtr->rawDataPtr->rawbuf[0] < (RECORD_GAP_MICROS_WARNING_THRESHOLD / MICROS_PER_TICK)) {
         aSerial->println();
-        aSerial->print(F("Space between two detected transmission is greater than "));
-        aSerial->print(RECORD_GAP_MICROS);
-        aSerial->print(F(" but smaller than the minimal gap of "));
+        aSerial->print(F("Space of "));
+        aSerial->print(aIRDataPtr->rawDataPtr->rawbuf[0] * MICROS_PER_TICK);
+        aSerial->print(F(" us between two detected transmission is smaller than the minimal gap of "));
         aSerial->print(RECORD_GAP_MICROS_WARNING_THRESHOLD);
-        aSerial->println(F(" known for a protocol."));
+        aSerial->println(F(" us known for a protocol."));
         aSerial->println(F("If you get unexpected results, try to increase the RECORD_GAP_MICROS in IRremote.h."));
         aSerial->println();
     }
@@ -930,7 +934,7 @@ void printActiveIRProtocols(Print *aSerial) {
  *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, unsigned int aLeadingSpaceTicks) {
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap) {
     aSerial->print(F("Protocol="));
     aSerial->print(getProtocolString(aIRDataPtr->protocol));
     if (aIRDataPtr->protocol == UNKNOWN) {
@@ -970,9 +974,9 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, unsigned int aLeadin
                 aSerial->print(F("Auto-"));
             }
             aSerial->print(F("Repeat"));
-            if (aLeadingSpaceTicks != 0) {
+            if (aPrintGap) {
                 aSerial->print(F(" gap="));
-                aSerial->print((uint32_t) aLeadingSpaceTicks * MICROS_PER_TICK);
+                aSerial->print((uint32_t) aIRDataPtr->rawDataPtr->rawbuf[0] * MICROS_PER_TICK);
                 aSerial->print(F("us"));
             }
         }
@@ -1012,7 +1016,7 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, unsigned int aLeadin
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRResultShort(Print *aSerial) {
-    ::printIRResultShort(aSerial, &decodedIRData, decodedIRData.rawDataPtr->rawbuf[0]);
+    ::printIRResultShort(aSerial, &decodedIRData, true);
 }
 
 /**

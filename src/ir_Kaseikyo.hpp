@@ -49,15 +49,17 @@
 //       P      A   A  N   N  A   A  SSSS    OOO   N   N  IIIII   CCCC
 //==============================================================================
 // see: http://www.hifi-remote.com/johnsfine/DecodeIR.html#Panasonic and http://www.hifi-remote.com/johnsfine/DecodeIR.html#Kaseikyo
-// IRP notation: {37k,432}<1,-1|1,-3>(8,-4,M:8,N:8,X:4,D:4,S:8,F:8,G:8,1,-173)+ {X=M:4:0^M:4:4^N:4:0^N:4:4}
 // see: http://www.remotecentral.com/cgi-bin/mboard/rc-pronto/thread.cgi?26152
-// The first two (8-bit) bytes are always 2 and 32 (These identify Panasonic within the Kaseikyo standard)
-// The next two bytes are 4 independent 4-bit fields or Device and Subdevice
-// The second to last byte is the function and the last byte is xor of the three bytes before it.
-// 0_______ 1_______  2______ 3_______ 4_______ 5
-// 76543210 76543210 76543210 76543210 76543210 76543210
-// 00000010 00100000 Dev____  Sub Dev  Fun____  XOR( B2, B3, B4)
-// LSB first, start bit + 16 Vendor + 4 Parity(of vendor) + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
+// The first two (8-bit) bytes contains the vendor code.
+// There are multiple interpretations of the next fields:
+// 1. IRP notation: {37k,432}<1,-1|1,-3>(8,-4,M:8,N:8,X:4,D:4,S:8,F:8,G:8,1,-173)+ {X=M:4:0^M:4:4^N:4:0^N:4:4}
+// 2. The next two bytes are 4 independent 4-bit fields or Device and Subdevice
+//    The second to last byte is the function and the last byte is xor of the three bytes before it.
+//    0_______ 1_______  2______ 3_______ 4_______ 5
+//    76543210 76543210 76543210 76543210 76543210 76543210
+//    00000010 00100000 Dev____  Sub Dev  Fun____  XOR( B2, B3, B4)
+// 3. LSB first, start bit + 16 Vendor + 4 Parity(of vendor) + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
+//
 // We reduce it to: start bit + 16 Vendor + 16 Address + 8 Command + 8 Parity + stop bit
 //
 #define KASEIKYO_VENDOR_ID_BITS     16
@@ -247,8 +249,7 @@ bool IRrecv::decodeKaseikyo() {
 
     if (tProtocol != KASEIKYO) {
         decodedIRData.flags |= IRDATA_FLAGS_EXTRA_INFO;
-        // Include vendor ID in address
-        decodedIRData.extra |= tVendorId;
+        decodedIRData.extra = tVendorId; // Store vendor ID
     }
 
     if (tValue.UByte.HighByte != tParity) {

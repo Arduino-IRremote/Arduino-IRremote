@@ -4,6 +4,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 
 ## 3.7.1
 - SendRaw now supports bufferlenght > 255.
+- Improved DistanceProtocol decoder output.
 
 ## 3.7.0
 - Changed TOLERANCE to TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING and documented it.
@@ -56,7 +57,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Moved blink13() back to IRrecv class.
 - Added Kaseikyo convenience functions like sendKaseikyo_Denon().
 - Improved / adjusted LG protocol and added class Aircondition_LG based on real hardware supplied by makerspace 201 (https://wiki.hackerspaces.org/ZwoNullEins) from Cologne.
-- Improved universal decoder for pulse width or pulse distance protocols to support more than 32 bits.
+- Improved universal decoder for pulse distance protocols to support more than 32 bits.
 - Added mbed support.
 
 ## 3.3.0
@@ -64,7 +65,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Fixed error for AVR timer1. Thanks to alexbarcelo.
 - New example IRremoteExtensionTest.
 - Enabled megaAVR 0-series devices.
-- Added universal decoder for pulse width or pulse distance protocols.
+- Added universal decoder for pulse distance protocols.
 
 ## 3.2.0
 - Fix for ESP32 send Error, removed `USE_SOFT_SEND_PWM` macro.

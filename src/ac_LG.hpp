@@ -1,7 +1,7 @@
 /*
  * ac_LG.hpp
  *
- *  Contains functions for receiving and sending LG air conditioner IR Protocol
+ *  Contains functions for sending LG air conditioner IR Protocol
  *  There is no state plausibility check, e.g. you can send fan speed in Mode D and change temperature in mode F
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2021 Armin Joachimsmeyer
+ * Copyright (c) 2021-2022 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,11 @@
 #define _AC_LG_HPP
 #include <Arduino.h>
 
-//#define INFO // save program memory and suppress info output from the LG-AC driver.
+#if defined(INFO) && !defined(LOCAL_INFO)
+#define LOCAL_INFO
+#else
+//#define LOCAL_INFO // This enables info output only for this file
+#endif
 //#define DEBUG // for more output from the LG-AC driver.
 #include "IRremoteInt.h"
 #include "ac_LG.h" // useful constants
@@ -59,8 +63,10 @@ const int AC_FAN_WALL[SIZE_OF_FAN_SPEED_MAPPING_TABLE] = { 0, 2, 4, 5 }; // 0 ->
 
 void Aircondition_LG::setType(bool aIsWallType) {
     ACIsWallType = aIsWallType;
-    IR_INFO_PRINT(F("Set wall type to "));
-    IR_INFO_PRINTLN(aIsWallType);
+#if defined(LOCAL_INFO)
+    Serial.print(F("Set wall type to "));
+    Serial.println(aIsWallType);
+#endif
 }
 
 void Aircondition_LG::printMenu(Print *aSerial) {
@@ -245,10 +251,12 @@ bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter) {
 
 void Aircondition_LG::sendIRCommand(uint16_t aCommand) {
 
-    IR_INFO_PRINT(F("Send code=0x"));
-    IR_INFO_PRINT(aCommand, HEX);
-    IR_INFO_PRINT(F(" | 0b"));
-    IR_INFO_PRINTLN(aCommand, BIN);
+#if defined(LOCAL_INFO)
+    Serial.print(F("Send code=0x"));
+    Serial.print(aCommand, HEX);
+    Serial.print(F(" | 0b"));
+    Serial.println(aCommand, BIN);
+#endif
 
     IrSender.sendLG((uint8_t) LG_ADDRESS, aCommand, 0, false, useLG2Protocol);
 }
@@ -259,12 +267,14 @@ void Aircondition_LG::sendIRCommand(uint16_t aCommand) {
 void Aircondition_LG::sendTemperatureFanSpeedAndMode() {
 
     uint8_t tTemperature = Temperature;
-    IR_INFO_PRINT(F("Send temperature="));
-    IR_INFO_PRINT(tTemperature);
-    IR_INFO_PRINT(F(" fan intensity="));
-    IR_INFO_PRINT(FanIntensity);
-    IR_INFO_PRINT(F(" mode="));
-    IR_INFO_PRINTLN((char )Mode);
+#if defined(LOCAL_INFO)
+    Serial.print(F("Send temperature="));
+    Serial.print(tTemperature);
+    Serial.print(F(" fan intensity="));
+    Serial.print(FanIntensity);
+    Serial.print(F(" mode="));
+    Serial.println((char )Mode);
+#endif
 
     WordUnion tIRCommand;
     tIRCommand.UWord = 0;
