@@ -5,6 +5,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 ## 3.7.1
 - SendRaw now supports bufferlenght > 255.
 - Improved DistanceProtocol decoder output.
+- Fixed ESP32 send bug for 2.x ESP32 cores.
 
 ## 3.7.0
 - Changed TOLERANCE to TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING and documented it.
