@@ -51,7 +51,7 @@
 // see http://www.hifi-remote.com/wiki/index.php?title=DecodeIR#Samsung
 // https://www.mikrocontroller.net/articles/IRMP_-_english#SAMSUNG32
 // LSB first, 1 start bit + 16 bit address + 16,32,20 bit data + 1 stop bit.
-// repeats are like NEC but with 2 stop bits
+// On my Samsung remote they are plain repeats of the complete frame.
 #define SAMSUNG_ADDRESS_BITS        16
 #define SAMSUNG_COMMAND16_BITS      16
 #define SAMSUNG_COMMAND32_BITS      32
@@ -66,10 +66,10 @@
 #define SAMSUNG_ZERO_SPACE          SAMSUNG_UNIT
 
 #define SAMSUNG_AVERAGE_DURATION    55000 // SAMSUNG_HEADER_MARK + SAMSUNG_HEADER_SPACE  + 32 * 2,5 * SAMSUNG_UNIT + SAMSUNG_UNIT // 2.5 because we assume more zeros than ones
-#define SAMSUNG_REPEAT_DURATION     (SAMSUNG_HEADER_MARK  + SAMSUNG_HEADER_SPACE + SAMSUNG_BIT_MARK + SAMSUNG_ZERO_SPACE + SAMSUNG_BIT_MARK)
 #define SAMSUNG_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 
 /**
+ * Please note me (armin.arduino@gmail.com) if you ever see this special repeat in the wild
  * Send repeat
  * Repeat commands should be sent in a 110 ms raster.
  */
@@ -83,41 +83,40 @@ void IRsend::sendSamsungRepeat() {
     IrReceiver.restartAfterSend();
 }
 
-void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
-    if (aIsRepeat) {
-        sendSamsungRepeat();
-        return;
-    }
+void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats) {
 
     // Set IR carrier frequency
     enableIROut(SAMSUNG_KHZ);
 
-    // Header
-    mark(SAMSUNG_HEADER_MARK);
-    space(SAMSUNG_HEADER_SPACE);
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+        unsigned long tStartOfFrameMillis = millis();
 
-    // Address
-    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aAddress,
-    SAMSUNG_ADDRESS_BITS, PROTOCOL_IS_LSB_FIRST);
+        // Header
+        mark(SAMSUNG_HEADER_MARK);
+        space(SAMSUNG_HEADER_SPACE);
 
-    // Command
+        // Address
+        sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aAddress,
+        SAMSUNG_ADDRESS_BITS, PROTOCOL_IS_LSB_FIRST);
 
-    // send 8 command bits and then 8 inverted command bits LSB first
-    aCommand = aCommand & 0xFF;
-    aCommand = ((~aCommand) << 8) | aCommand;
+        // Command
 
-    sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aCommand,
-    SAMSUNG_COMMAND16_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
+        // send 8 command bits and then 8 inverted command bits LSB first
+        aCommand = aCommand & 0xFF;
+        aCommand = ((~aCommand) << 8) | aCommand;
 
-    for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
-        // send repeat in a 110 ms raster
-        if (i == 0) {
-            delay((SAMSUNG_REPEAT_PERIOD - SAMSUNG_AVERAGE_DURATION) / MICROS_IN_ONE_MILLI);
-        } else {
-            delay((SAMSUNG_REPEAT_PERIOD - SAMSUNG_REPEAT_DURATION) / MICROS_IN_ONE_MILLI);
+        sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, aCommand,
+        SAMSUNG_COMMAND16_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
+
+        tNumberOfCommands--;
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            // send repeat in a 110 ms raster
+            while (millis() - tStartOfFrameMillis < (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI)) {
+                delay(1);
+            }
         }
-        // send repeat
-        sendSamsungRepeat();
     }
     IrReceiver.restartAfterSend();
 }
@@ -127,11 +126,11 @@ bool IRrecv::decodeSamsung() {
 
     // Check we have enough data (68). The +4 is for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawDataPtr->rawlen != ((2 * SAMSUNG_BITS) + 4)
-            && decodedIRData.rawDataPtr->rawlen != ((2 * SAMSUNG48_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 6)) {
+            && decodedIRData.rawDataPtr->rawlen != ((2 * SAMSUNG48_BITS) + 4)) {
         IR_DEBUG_PRINT(F("Samsung: "));
         IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 68 or 100 or 6"));
+        IR_DEBUG_PRINTLN(F(" is not 68 or 100"));
         return false;
     }
 
@@ -142,15 +141,6 @@ bool IRrecv::decodeSamsung() {
         IR_DEBUG_PRINTLN(F("Header mark or space length is wrong"));
 
         return false;
-    }
-
-    // Check for repeat
-    if (decodedIRData.rawDataPtr->rawlen == 6) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
-        decodedIRData.address = lastDecodedAddress;
-        decodedIRData.command = lastDecodedCommand;
-        decodedIRData.protocol = SAMSUNG;
-        return true;
     }
 
     if (decodedIRData.rawDataPtr->rawlen == (2 * SAMSUNG48_BITS) + 4) {
@@ -210,6 +200,11 @@ bool IRrecv::decodeSamsung() {
         decodedIRData.numberOfBits = SAMSUNG_BITS;
     }
 
+    // check for repeat
+    if (decodedIRData.rawDataPtr->rawbuf[0] < (SAMSUNG_REPEAT_PERIOD / MICROS_PER_TICK)) {
+        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
+    }
+
     decodedIRData.protocol = SAMSUNG;
 
     return true;
@@ -224,7 +219,7 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
     }
     offset++;
 
-// Check for repeat -- like a NEC repeat
+    // Check for repeat -- like a NEC repeat
     if ((aResults->rawlen == 4) && matchSpace(aResults->rawbuf[offset], 2250)
             && matchMark(aResults->rawbuf[offset + 1], SAMSUNG_BIT_MARK)) {
         aResults->bits = 0;
@@ -237,7 +232,7 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
         return false;
     }
 
-// Initial space
+    // Initial space
     if (!matchSpace(aResults->rawbuf[offset], SAMSUNG_HEADER_SPACE)) {
         return false;
     }
@@ -248,7 +243,7 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
         return false;
     }
 
-// Success
+    // Success
     aResults->value = decodedIRData.decodedRawData;
     aResults->bits = SAMSUNG_BITS;
     aResults->decode_type = SAMSUNG;
@@ -267,8 +262,7 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 
     // Old version with MSB first Data + stop bit
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits,
-            PROTOCOL_IS_MSB_FIRST,
-            SEND_STOP_BIT);
+            PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
     IrReceiver.restartAfterSend();
 }
 

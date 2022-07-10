@@ -147,7 +147,7 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
 //        sendNEC(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
 //        break;
 //    case SAMSUNG:
-//        sendSamsung(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
+//        sendSamsung(tAddress, tCommand, aNumberOfRepeats);
 //        break;
 //    case SONY:
 //        sendSony(tAddress, tCommand, aNumberOfRepeats, aIRSendData->numberOfBits);
@@ -181,7 +181,7 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
         sendNEC(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
 
     } else if (tProtocol == SAMSUNG) {
-        sendSamsung(tAddress, tCommand, aNumberOfRepeats, tSendRepeat);
+        sendSamsung(tAddress, tCommand, aNumberOfRepeats);
 
     } else if (tProtocol == SONY) {
         sendSony(tAddress, tCommand, aNumberOfRepeats, aIRSendData->numberOfBits);
