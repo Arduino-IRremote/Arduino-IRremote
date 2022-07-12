@@ -167,6 +167,23 @@ void loop() {
         Serial.println(F("Send NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first"));
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         delay(DELAY_AFTER_SEND);
+
+        /*
+         * Send 2 Panasonic codes as generic Pulse Distance data, once with LSB and once with MSB first
+         */
+        Serial.println(F("Send Panasonic 0xB, 0x10 as generic PulseDistance"));
+        Serial.println(F(" LSB first"));
+        Serial.flush();
+        uint32_t tRawData[] = { 0xB02002, 0xA010 };
+        IrSender.sendPulseDistance(3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, false, 0, 0);
+        delay(DELAY_AFTER_SEND);
+
+        // the same with MSB first
+        Serial.println(F(" MSB first"));
+        tRawData[0] = 0x40040D00;
+        tRawData[1] = 0x805;
+        IrSender.sendPulseDistance(3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, true, 0, 0);
+        delay(DELAY_AFTER_SEND);
     }
 
     Serial.println(F("Send Onkyo (NEC with 16 bit command)"));

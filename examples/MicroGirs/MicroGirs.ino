@@ -64,7 +64,7 @@
  */
 #include <Arduino.h>
 
-//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
+//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes. If DECODE_MAGIQUEST is enabled 112, otherwise 100 is default.
 
 // Change the following two entries if desired
 

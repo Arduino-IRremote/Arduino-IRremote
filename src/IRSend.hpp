@@ -183,6 +183,9 @@ size_t IRsend::write(IRData *aIRSendData, uint_fast8_t aNumberOfRepeats) {
     } else if (tProtocol == SAMSUNG) {
         sendSamsung(tAddress, tCommand, aNumberOfRepeats);
 
+    } else if (tProtocol == SAMSUNG_LG) {
+        sendSamsungLG(tAddress, tCommand, aNumberOfRepeats);
+
     } else if (tProtocol == SONY) {
         sendSony(tAddress, tCommand, aNumberOfRepeats, aIRSendData->numberOfBits);
 

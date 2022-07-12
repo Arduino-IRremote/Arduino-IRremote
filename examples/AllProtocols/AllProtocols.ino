@@ -1,7 +1,7 @@
 /*
- * ReceiveDemo.cpp
+ * AllProtocols.cpp
  *
- * Demonstrates receiving IR codes with the IRremote library and the use of the Arduino tone() function with this library.
+ * Modified ReceiveDemo.cpp with additional LCD output.
  * If debug button is pressed (pin connected to ground) a long output is generated.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2022 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,19 +33,13 @@
 
 #include <Arduino.h>
 
-/*
- * Specify which protocol(s) should be used for decoding.
- * If no protocol is defined, all protocols are active.
- * This must be done before the #include <IRremote.hpp>
- */
-//#define DECODE_LG
-//#define DECODE_NEC
-//#define DECODE_DISTANCE
-// etc. see IRremote.hpp
-//
-
-//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes. If DECODE_MAGIQUEST is enabled 112, otherwise 100 is default.
-
+#if RAMEND <= 0x4FF || RAMSIZE < 0x4FF
+#define RAW_BUFFER_LENGTH  350  // 750 is the value for air condition remotes. If DECODE_MAGIQUEST is enabled 112, otherwise 100 is default.
+#elif RAMEND <= 0x8FF || RAMSIZE < 0x8FF
+#define RAW_BUFFER_LENGTH  600  // 750 is the value for air condition remotes. If DECODE_MAGIQUEST is enabled 112, otherwise 100 is default.
+#else
+#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes. If DECODE_MAGIQUEST is enabled 112, otherwise 100 is default.
+#endif
 //#define NO_LED_FEEDBACK_CODE // saves 92 bytes program memory
 #if FLASHEND <= 0x1FFF  // For 8k flash or less, like ATtiny85. Exclude exotic protocols.
 #define EXCLUDE_EXOTIC_PROTOCOLS
@@ -78,6 +72,43 @@
 #if defined(ARDUINO_ARCH_SAMD)
 #define Serial SerialUSB
 #endif
+
+/*
+ * Activate the type of LCD you use
+ * Default is serial LCD with 2 rows of 16 characters (1602).
+ */
+//#define USE_NO_LCD
+//#define USE_PARALLEL_LCD
+#if defined(USE_PARALLEL_LCD)
+#include "LiquidCrystal.h"
+#elif !defined(USE_NO_LCD)
+#define USE_SERIAL_LCD
+#include "LiquidCrystal_I2C.h" // Use an up to date library version, which has the init method
+#endif
+
+#if defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
+#define USE_LCD
+// definitions for a 1602 LCD
+#define LCD_COLUMNS 16
+#define LCD_ROWS 2
+#  if defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
+// For cyclically display of VCC
+#include "ADCUtils.hpp"
+#define MILLIS_BETWEEN_VOLTAGE_PRINT 5000
+uint32_t volatile sMillisOfLastVoltagePrint;
+#  endif
+
+static uint8_t sLastProtocolIndex;
+#endif
+
+#if defined(USE_SERIAL_LCD)
+LiquidCrystal_I2C myLCD(0x27, LCD_COLUMNS, LCD_ROWS);  // set the LCD address to 0x27 for a 20 chars and 2 line display
+#endif
+#if defined(USE_PARALLEL_LCD)
+LiquidCrystal myLCD(4, 5, 6, 7, 8, 9);
+#endif
+
+void printIRResultOnLCD();
 
 void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
@@ -113,6 +144,25 @@ void setup() {
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
 #endif
 
+#if defined(USE_LCD) && defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
+    getVCCVoltageMillivoltSimple(); // to initialize ADC mux and reference
+#endif
+
+#if defined(USE_SERIAL_LCD)
+    myLCD.init();
+    myLCD.clear();
+    myLCD.backlight();
+#endif
+#if defined(USE_PARALLEL_LCD)
+    myLCD.begin(LCD_COLUMNS, LCD_ROWS);
+#endif
+
+#if defined(USE_LCD)
+    myLCD.print(F("IRRemote  v" VERSION_IRREMOTE));
+    myLCD.setCursor(0, 1);
+    myLCD.print(F(__DATE__));
+#endif
+
 }
 
 void loop() {
@@ -126,85 +176,140 @@ void loop() {
      */
     if (IrReceiver.decode()) {
         Serial.println();
-#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             Serial.println(F("Overflow detected"));
             Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in " __FILE__));
             // see also https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library
-#  if !defined(ESP8266) && !defined(NRF5)
-            /*
-             * do double beep
-             */
-#    if !defined(ESP32)
-            IrReceiver.stop(); // ESP32 uses another timer for tone()
-#    endif
-            tone(TONE_PIN, 1100, 10);
-            delay(50);
-            tone(TONE_PIN, 1100, 10);
-            delay(50);
-#    if !defined(ESP32)
-            IrReceiver.start(100000); // to compensate for 100 ms stop of receiver. This enables a correct gap measurement.
-#    endif
-#  endif
 
         } else {
             // Print a short summary of received data
             IrReceiver.printIRResultShort(&Serial);
-            IrReceiver.printIRSendUsage(&Serial);
 
             if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
                 // We have an unknown protocol, print more info
-                IrReceiver.printIRResultRawFormatted(&Serial, true);
+                IrReceiver.printIRResultRawFormatted(&Serial, false);
             }
+#if defined(USE_LCD)
+            printIRResultOnLCD();
+#endif
         }
-
-        // tone on esp8266 works once, then it disables the successful IrReceiver.start() / timerConfigForReceive().
-#  if !defined(ESP8266) && !defined(NRF5)
-        if (IrReceiver.decodedIRData.protocol != UNKNOWN) {
-            /*
-             * If a valid protocol was received, play tone, wait and restore IR timer.
-             * Otherwise do not play a tone to get exact gap time between transmissions.
-             * This will give the next CheckForRecordGapsMicros() call a chance to eventually propose a change of the current RECORD_GAP_MICROS value.
-             */
-#    if !defined(ESP32)
-            IrReceiver.stop(); // ESP32 uses another timer for tone()
-#    endif
-            tone(TONE_PIN, 2200, 8);
-#    if !defined(ESP32)
-            delay(8);
-            IrReceiver.start(8000); // to compensate for 8 ms stop of receiver. This enables a correct gap measurement.
-#    endif
-        }
-#  endif
-#else
-        // Print a minimal summary of received data
-        IrReceiver.printIRResultMinimal(&Serial);
-#endif // FLASHEND
 
         /*
          * !!!Important!!! Enable receiving of the next value,
          * since receiving has stopped after the end of the current received data packet.
          */
         IrReceiver.resume();
-
-        /*
-         * Finally check the received data and perform actions according to the received address and commands
-         */
-        if (IrReceiver.decodedIRData.address == 0) {
-            if (IrReceiver.decodedIRData.command == 0x10) {
-                // do something
-            } else if (IrReceiver.decodedIRData.command == 0x11) {
-                // do something else
-            }
-        }
     } // if (IrReceiver.decode())
 
+#if defined(USE_LCD) && defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
     /*
-     * Your code here
-     * For all users of the FastLed library, use this code for strip.show() to improve receiving performance (which is still not 100%):
-     * if (IrReceiver.isIdle()) {
-     *     strip.show();
-     * }
+     * Periodically print VCC
      */
+    if (millis() - sMillisOfLastVoltagePrint > MILLIS_BETWEEN_VOLTAGE_PRINT) {
+        sMillisOfLastVoltagePrint = millis();
+        uint16_t tVCC = getVCCVoltageMillivoltSimple();
+
+        myLCD.setCursor(10, 0);
+        myLCD.print(' ');
+        myLCD.print(tVCC / 1000);
+        myLCD.print('.');
+        myLCD.print(((tVCC + 5) / 10) % 100);
+        myLCD.print('V');
+
+        sLastProtocolIndex = 0; // enable new printing of protocol
+    }
+#endif
 
 }
+
+/*
+ * LCD output for 1602 LCDs
+ * 40 - 55 Milliseconds per initial output
+ * The expander runs at 100 kHz :-(
+ * 8 milliseconds for 8 bit; 10 ms for 16 bit code output
+ * 3 milliseconds for repeat output
+ *
+ */
+void printIRResultOnLCD() {
+#if defined(USE_LCD)
+    static uint16_t sLastProtocolAddress;
+    static uint16_t sLastCommand;
+    static uint8_t sLastCommandPrintPosition;
+
+    bool tDisplayWasCleared = false;
+
+    /*
+     * Print only if protocol or address has changed
+     */
+    if (sLastProtocolIndex != IrReceiver.decodedIRData.protocol || sLastProtocolAddress != IrReceiver.decodedIRData.address) {
+        sLastProtocolIndex = IrReceiver.decodedIRData.protocol;
+        sLastProtocolAddress = IrReceiver.decodedIRData.address;
+
+        myLCD.clear(); // includes a delay of 2 ms
+        tDisplayWasCleared = true;
+
+        /*
+         * Show protocol name
+         */
+        myLCD.setCursor(0, 0);
+        const __FlashStringHelper *tProtocolStringPtr = getProtocolString(IrReceiver.decodedIRData.protocol);
+        myLCD.print(tProtocolStringPtr);
+
+        /*
+         * Show address
+         */
+        myLCD.setCursor(0, 1);
+        myLCD.print(F("A=0x"));
+        myLCD.print(IrReceiver.decodedIRData.address, HEX);
+
+    } else {
+        /*
+         * Show or clear repetition flag
+         */
+        myLCD.setCursor(15, 1);
+        if (IrReceiver.decodedIRData.flags & (IRDATA_FLAGS_IS_REPEAT)) {
+            myLCD.print('R');
+            return; // Since it is a repetition, printed data has not changed
+        } else {
+            myLCD.print(' ');
+        }
+    }
+
+    /*
+     * Command prefix
+     */
+    uint16_t tCommand = IrReceiver.decodedIRData.command;
+
+    // check if prefix position must change
+    if (tDisplayWasCleared || (sLastCommand > 0x100 && tCommand < 0x100) || (sLastCommand < 0x100 && tCommand > 0x100)) {
+        sLastCommand = tCommand;
+        /*
+         * Print prefix of command
+         */
+        myLCD.setCursor(9, 1);
+
+        /*
+         * Print prefix for 8/16 bit commands
+         */
+        if (tCommand >= 0x100) {
+            myLCD.print(F("0x"));
+            sLastCommandPrintPosition = 11;
+        } else {
+            myLCD.print(F("C=0x"));
+            sLastCommandPrintPosition = 13;
+        }
+    }
+
+    /*
+     * Command data
+     */
+    myLCD.setCursor(sLastCommandPrintPosition, 1);
+    if (IrReceiver.decodedIRData.command < 0x10) {
+        // leading 0
+        myLCD.print('0');
+    }
+    myLCD.print(tCommand, HEX);
+
+#endif // defined(USE_LCD)
+}
+

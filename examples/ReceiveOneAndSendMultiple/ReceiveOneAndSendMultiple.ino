@@ -89,6 +89,7 @@ void loop() {
     if (IrReceiver.decode()) {
         // Print a short summary of received data
         IrReceiver.printIRResultShort(&Serial);
+        IrReceiver.printIRSendUsage(&Serial);
         Serial.println();
 
         /*

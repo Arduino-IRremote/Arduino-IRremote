@@ -138,18 +138,22 @@ struct irparams_struct {
 #define IRDATA_FLAGS_IS_LSB_FIRST       0x00
 #define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Just for info. Value is mainly determined by the protocol
 
+#define RAW_DATA_ARRAY_SIZE             ((((RAW_BUFFER_LENGTH - 2) - 1) / 64) + 1) // The -2 is for initial gap + stop bit mark, 64 mark + spaces for 32 bit.
 /**
  * Data structure for the user application, available as decodedIRData.
  * Filled by decoders and read by print functions or user application.
  */
 struct IRData {
     decode_type_t protocol;  ///< UNKNOWN, NEC, SONY, RC5, ...
-    uint16_t address;        ///< Decoded address
-    uint16_t command;        ///< Decoded command
-    uint16_t extra;          ///< Contains MagiQuest magnitude, Kaseikyo unknown vendor ID and Distance protocol (SpaceTicksShort << 8) | SpaceTicksLong.
+    uint16_t address;        ///< Decoded address, Distance protocol (OneMarkTicks << 8) | OneSpaceTicks
+    uint16_t command; ///< Decoded command, Distance protocol (ZeroMarkTicks << 8) | ZeroSpaceTicks
+    uint16_t extra; ///< Contains MagiQuest magnitude, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks << 8) | HeaderSpaceTicks.
     uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;               ///< See IRDATA_FLAGS_* definitions above
     uint32_t decodedRawData;     ///< Up to 32 bit decoded raw data, to be used for send functions.
+#if defined(DECODE_DISTANCE)
+    uint32_t decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; ///< 32 bit decoded raw data, to be used for send functions.
+#endif
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
 };
 
@@ -185,7 +189,7 @@ public:
      * Stream like API
      */
     void begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback = false, uint_fast8_t aFeedbackLEDPin =
-            USE_DEFAULT_FEEDBACK_LED_PIN);
+    USE_DEFAULT_FEEDBACK_LED_PIN);
     void start();
     void enableIRIn(); // alias for start
     void start(uint32_t aMicrosecondsToAddToGapCounter);
@@ -214,6 +218,7 @@ public:
     void printIRResultMinimal(Print *aSerial);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
+    void printIRSendUsage(Print *aSerial);
 
     void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int frequency = 38000U);
@@ -319,6 +324,7 @@ bool MATCH_SPACE(unsigned int measured_ticks, unsigned int desired_us);
 int getMarkExcessMicros();
 void printActiveIRProtocols(Print *aSerial);
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap);
+void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr);
 
 /****************************************************
  * Feedback LED related functions
@@ -437,6 +443,7 @@ public:
     void sendLGRepeat(bool aUseLG2Protocol = false);
     void sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false, bool aUseLG2Protocol =
             false);
+    void sendLG2(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false);
     void sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats = 0, bool aIsRepeat = false, bool aUseLG2Protocol = false);
 
     void sendNECRepeat();
@@ -457,6 +464,7 @@ public:
     void sendRC6(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
     void sendSamsungRepeat();
     void sendSamsung(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats);
+    void sendSamsungLG(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat = false);
     void sendSharp(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats); // redirected to sendDenon
     void sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, uint8_t numberOfBits = SIRCS_12_PROTOCOL);
 
@@ -469,6 +477,11 @@ public:
     void sendPronto(const __FlashStringHelper *str, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendPronto(const char *prontoHexString, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
+
+    void sendPulseDistance(unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros,
+            unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros,
+            uint32_t *aDecodedRawDataArray, unsigned int aNumberOfBits, bool aMSBfirst, unsigned int aRepeatSpaceMillis = 110,
+            uint_fast8_t aNumberOfRepeats = 0);
 #if defined(__AVR__)
     void sendPronto_PF(uint_farptr_t str, uint_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendPronto_P(const char *str, uint_fast8_t aNumberOfRepeats);

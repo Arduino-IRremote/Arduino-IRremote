@@ -724,13 +724,8 @@ bool IRrecv::decodeHashOld(decode_results *aResults) {
         return false;
     }
 
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
-    uint_fast8_t i;
-#else
-    unsigned int i;
-#endif
-    for (i = 1; i < aResults->rawlen - 2; i++) {
-        uint_fast8_t value = compare(aResults->rawbuf[i], aResults->rawbuf[i + 2]);
+    for (uint8_t i = 3; i < aResults->rawlen; i++) {
+        uint_fast8_t value = compare(aResults->rawbuf[i - 2], aResults->rawbuf[i]);
         // Add value into the hash
         hash = (hash * FNV_PRIME_32) ^ value;
     }
@@ -857,7 +852,7 @@ void CheckForRecordGapsMicros(Print *aSerial, IRData *aIRDataPtr) {
      * Check if protocol is not detected and detected space between two transmissions
      * is smaller than known value for protocols (Sony with around 24 ms)
      */
-    if (aIRDataPtr->protocol <= PULSE_WIDTH
+    if (aIRDataPtr->protocol <= PULSE_DISTANCE
             && aIRDataPtr->rawDataPtr->rawbuf[0] < (RECORD_GAP_MICROS_WARNING_THRESHOLD / MICROS_PER_TICK)) {
         aSerial->println();
         aSerial->print(F("Space of "));
@@ -918,7 +913,11 @@ void printActiveIRProtocols(Print *aSerial) {
     aSerial->print(F("MagiQuest, "));
 #endif
 #if defined(DECODE_DISTANCE)
+#  if defined(SUPPORT_PULSE_WIDTH_DECODING) // The only known pulse width protocol is Sony
     aSerial->print(F("Universal Distance, "));
+#  else
+    aSerial->print(F("Pulse Distance, "));
+#  endif
 #endif
 #if defined(DECODE_HASH)
     aSerial->print(F("Hash "));
@@ -926,8 +925,18 @@ void printActiveIRProtocols(Print *aSerial) {
 #if defined(NO_DECODER) // for sending raw only
     (void)aSerial; // to avoid compiler warnings
 #endif
-
 }
+
+/**
+ * Function to print values and flags of IrReceiver.decodedIRData in one line.
+ * Ends with println().
+ *
+ * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ */
+void IRrecv::printIRResultShort(Print *aSerial) {
+    ::printIRResultShort(aSerial, &decodedIRData, true);
+}
+
 /**
  * Internal function to print decoded result and flags in one line.
  * Ends with println().
@@ -946,6 +955,9 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap) {
         aSerial->print((aIRDataPtr->rawDataPtr->rawlen + 1) / 2, DEC);
         aSerial->println(F(" bits (incl. gap and start) received"));
     } else {
+#if defined(DECODE_DISTANCE)
+        if(aIRDataPtr->protocol != PULSE_DISTANCE) {
+#endif
         /*
          * New decoders have address and command
          */
@@ -967,7 +979,9 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap) {
         if (aIRDataPtr->flags & IRDATA_TOGGLE_BIT_MASK) {
             aSerial->print(F(" Toggle=1"));
         }
-
+#if defined(DECODE_DISTANCE)
+        }
+#endif
         if (aIRDataPtr->flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) {
             aSerial->print(' ');
             if (aIRDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
@@ -1015,8 +1029,74 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap) {
  *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
-void IRrecv::printIRResultShort(Print *aSerial) {
-    ::printIRResultShort(aSerial, &decodedIRData, true);
+void IRrecv::printIRSendUsage(Print *aSerial) {
+    ::printIRSendUsage(aSerial, &decodedIRData);
+}
+
+void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr) {
+    if (aIRDataPtr->protocol != UNKNOWN && (aIRDataPtr->flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) == 0x00) {
+#if defined(DECODE_DISTANCE)
+        aSerial->print(F("Send with: "));
+        if (aIRDataPtr->protocol == PULSE_DISTANCE) {
+            aSerial->print(F("uint32_t tRawData[]={0x"));
+            uint_fast8_t tNumberOf32BitChunks = ((aIRDataPtr->numberOfBits - 1) / 32) + 1;
+            for (uint_fast8_t i = 0; i < tNumberOf32BitChunks; ++i) {
+                aSerial->print(aIRDataPtr->decodedRawDataArray[i], HEX);
+                if (i != tNumberOf32BitChunks - 1) {
+                    aSerial->print(F(", 0x"));
+                }
+            }
+            aSerial->print(F("}; "));
+        }
+        aSerial->print(F("IrSender.send"));
+#else
+        aSerial->print(F("Send with: IrSender.send"));
+#endif
+        aSerial->print(getProtocolString(aIRDataPtr->protocol));
+#if defined(DECODE_DISTANCE)
+        if (aIRDataPtr->protocol != PULSE_DISTANCE) {
+#endif
+        aSerial->print(F("(0x"));
+        /*
+         * New decoders have address and command
+         */
+        aSerial->print(aIRDataPtr->address, HEX);
+
+        aSerial->print(F(", 0x"));
+        aSerial->print(aIRDataPtr->command, HEX);
+        aSerial->print(F(", <numberOfRepeats>"));
+
+        if (aIRDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
+            aSerial->print(F(", 0x"));
+            aSerial->print(aIRDataPtr->extra, HEX);
+        }
+#if defined(DECODE_DISTANCE)
+        } else {
+            aSerial->print('(');
+            aSerial->print((aIRDataPtr->extra >> 8) * MICROS_PER_TICK); // aHeaderMarkMicros
+            aSerial->print(F(", "));
+            aSerial->print((aIRDataPtr->extra & 0xFF) * MICROS_PER_TICK); // aHeaderSpaceMicros
+            aSerial->print(F(", "));
+            aSerial->print((aIRDataPtr->address >> 8) * MICROS_PER_TICK); // aOneMarkMicros
+            aSerial->print(F(", "));
+            aSerial->print((aIRDataPtr->address & 0xFF) * MICROS_PER_TICK); // aOneSpaceMicros
+            aSerial->print(F(", "));
+            aSerial->print((aIRDataPtr->command >> 8) * MICROS_PER_TICK); // aZeroMarkMicros
+            aSerial->print(F(", "));
+            aSerial->print((aIRDataPtr->command & 0xFF) * MICROS_PER_TICK); // aZeroSpaceMicros
+            aSerial->print(F(", &tRawData[0], "));
+            aSerial->print(aIRDataPtr->numberOfBits); // aNumberOfBits
+            aSerial->print(F(", "));
+            if (aIRDataPtr->flags & IRDATA_FLAGS_IS_MSB_FIRST) {
+                aSerial->print(F("true"));
+            } else {
+                aSerial->print(F("false"));
+            }
+            aSerial->print(F(", <millisBetweenRepeats>, <numberOfRepeats>"));
+        }
+#endif
+        aSerial->println(F(");"));
+    }
 }
 
 /**
@@ -1071,18 +1151,35 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
     /*
      * Print initial gap
      */
+    aSerial->print(F(" -"));
     if (aOutputMicrosecondsInsteadOfTicks) {
-        tDurationMicros = (uint32_t) decodedIRData.rawDataPtr->rawbuf[0] * MICROS_PER_TICK;
+        aSerial->println((uint32_t) decodedIRData.rawDataPtr->rawbuf[0] * MICROS_PER_TICK, DEC);
     } else {
-        tDurationMicros = decodedIRData.rawDataPtr->rawbuf[0];
+        aSerial->println(decodedIRData.rawDataPtr->rawbuf[0], DEC);
     }
-    aSerial->print(F("     -"));
-    aSerial->println(tDurationMicros, DEC);
 #if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
     uint_fast8_t i;
 #else
     unsigned int  i;
 #endif
+    // Newline is printed every 8. value, if tCounterForNewline % 8 == 0
+    uint_fast8_t tCounterForNewline = 6; // first newline is after the 2 values of the start bit
+
+    // check if we have a protocol with no or 8 start bits
+#if defined(DECODE_DENON) || defined(DECODE_MAGIQUEST)
+    if (
+#if defined(DECODE_DENON)
+            decodedIRData.protocol == DENON || decodedIRData.protocol == SHARP ||
+#endif
+#if defined(DECODE_MAGIQUEST)
+            decodedIRData.protocol == MAGIQUEST ||
+#endif
+             false) {
+        tCounterForNewline = 0; // no or 8 start bits
+    }
+#endif
+
+
     for (i = 1; i < decodedIRData.rawDataPtr->rawlen; i++) {
         if (aOutputMicrosecondsInsteadOfTicks) {
             tDurationMicros = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
@@ -1092,12 +1189,14 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
         if (!(i & 1)) {  // even
             aSerial->print('-');
         } else {  // odd
-            aSerial->print(F("     +"));
+            aSerial->print(F(" +"));
         }
-        if (tDurationMicros < 1000) {
+
+        // padding only for big values
+        if (aOutputMicrosecondsInsteadOfTicks && tDurationMicros < 1000) {
             aSerial->print(' ');
         }
-        if (tDurationMicros < 100) {
+        if (aOutputMicrosecondsInsteadOfTicks && tDurationMicros < 100) {
             aSerial->print(' ');
         }
         if (tDurationMicros < 10) {
@@ -1109,8 +1208,9 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
             aSerial->print(','); //',' not required for last one
         }
 
-        if (!(i % 8)) {
-            aSerial->println("");
+        tCounterForNewline++;
+        if ((tCounterForNewline % 8) == 0) {
+            aSerial->println();
         }
     }
     aSerial->println("");                    // Newline
@@ -1245,11 +1345,19 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
     case UNKNOWN:
         return (F("UNKNOWN"));
         break;
+#if defined(SUPPORT_PULSE_WIDTH_DECODING) // The only known pulse width protocol is Sony
+    case PULSE_WIDTH:
+        return (F("PulseWidth"));
+        break;
+#endif
+    case PULSE_DISTANCE:
+        return (F("PulseDistance"));
+        break;
     case DENON:
-        return (F("DENON"));
+        return (F("Denon"));
         break;
     case SHARP:
-        return (F("SHARP"));
+        return (F("Sharp"));
         break;
     case JVC:
         return (F("JVC"));
@@ -1264,22 +1372,22 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
         return (F("NEC"));
         break;
     case PANASONIC:
-        return (F("PANASONIC"));
+        return (F("Panasonic"));
         break;
     case KASEIKYO:
-        return (F("KASEIKYO"));
+        return (F("Kaseikyo"));
         break;
     case KASEIKYO_DENON:
-        return (F("KASEIKYO_DENON"));
+        return (F("Kaseikyo_Denon"));
         break;
     case KASEIKYO_SHARP:
-        return (F("KASEIKYO_SHARP"));
+        return (F("Kaseikyo_Sharp"));
         break;
     case KASEIKYO_JVC:
-        return (F("KASEIKYO_JVC"));
+        return (F("Kaseikyo_JVC"));
         break;
     case KASEIKYO_MITSUBISHI:
-        return (F("KASEIKYO_MITSUBISHI"));
+        return (F("Kaseikyo_Mitsubishi"));
         break;
     case RC5:
         return (F("RC5"));
@@ -1288,35 +1396,33 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
         return (F("RC6"));
         break;
     case SAMSUNG:
-        return (F("SAMSUNG"));
+        return (F("Samsung"));
+        break;
+    case SAMSUNG_LG:
+        return (F("SamsungLG"));
         break;
     case SONY:
-        return (F("SONY"));
+        return (F("Sony"));
         break;
     case ONKYO:
-        return (F("ONKYO"));
+        return (F("Onkyo"));
         break;
     case APPLE:
-        return (F("APPLE"));
+        return (F("Apple"));
         break;
-    case PULSE_DISTANCE:
-        return (F("PULSE_DISTANCE"));
-        break;
-    case PULSE_WIDTH:
-        return (F("PULSE_WIDTH"));
-        break;
+
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
     case BOSEWAVE:
-        return (F("BOSEWAVE"));
+        return (F("BoseWave"));
         break;
     case LEGO_PF:
-        return (F("LEGO_PF"));
+        return (F("Lego"));
         break;
     case MAGIQUEST:
-        return (F("MAGIQUEST"));
+        return (F("MagiQuest"));
         break;
     case WHYNTER:
-        return (F("WHYNTER"));
+        return (F("Whynter"));
         break;
 #endif
     }

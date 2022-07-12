@@ -171,6 +171,7 @@ void storeCode(IRData *aIRReceivedData) {
         IrReceiver.compensateAndStoreIRResultInArray(sStoredIRData.rawCode);
     } else {
         IrReceiver.printIRResultShort(&Serial);
+        IrReceiver.printIRSendUsage(&Serial);
         sStoredIRData.receivedIRData.flags = 0; // clear flags -esp. repeat- for later sending
         Serial.println();
     }

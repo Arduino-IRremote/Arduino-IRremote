@@ -3,7 +3,10 @@ The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
 ## 3.7.2
-- No reference found for Samsung "repeats are like NEC but with 2 stop bits", so changed to observed regular behavior.
+- Changed Samsung repeat handling. Old handling is available as SamsungLG.
+- Added function printIRSendUsage().
+- Reduced output size and improved format of printIRResultRawFormatted() to fasten up output (and getting repeats properly decoded).
+- Fixed Bug in sendDenonRaw() and improved decodeDenon().
 
 ## 3.7.1
 - SendRaw now supports bufferlenght > 255.

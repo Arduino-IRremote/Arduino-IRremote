@@ -1,6 +1,7 @@
-START ../src/UnitTest.cpp from Jan 27 2022
-Using library version 3.6.0
-Ready to receive IR signals of protocols: NEC, Panasonic/Kaseikyo, Denon/Sharp, Sony, RC5, RC6, LG, JVC, Samsung, Whynter, Lego Power Functions, Bosewave , MagiQuest, Universal Distance, Hash at pin 3
+START ../src/UnitTest.cpp from Jul 13 2022
+Using library version 3.8.0
+Ready to receive IR signals of protocols: NEC, Panasonic/Kaseikyo, Denon/Sharp, Sony, RC5, RC6, LG, JVC, Samsung, Whynter, Lego Power Functions, Bosewave , MagiQuest, Pulse Distance, Hash at pin 2
+Ready to send IR signals at pin 3
 Send signal mark duration for 38kHz  is 8 us, pulse correction is 3000 ns, total period is 26 us
 5000 us is the (minimum) gap, after which the start of a new IR packet is assumed
 10 us are subtracted from all marks and added to all spaces for decoding
@@ -9,72 +10,104 @@ address=0xFFF1 command=0x76
 
 Send NEC with 8 bit address
 Protocol=NEC Address=0xF1 Command=0x76 Raw-Data=0x89760EF1 32 bits LSB first
+Send with: IrSender.sendNEC(0xF1, 0x76, <numberOfRepeats>);
 
 Send NEC with 16 bit address
 Protocol=NEC Address=0xFFF1 Command=0x76 Raw-Data=0x8976FFF1 32 bits LSB first
+Send with: IrSender.sendNEC(0xFFF1, 0x76, <numberOfRepeats>);
 
 Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats
 Protocol=NEC Address=0x80 Command=0x45 Raw-Data=0xBA457F80 32 bits LSB first
+Send with: IrSender.sendNEC(0x80, 0x45, <numberOfRepeats>);
 
 Send NEC 16 bit address=0xFB04 and command 0x08 with exact timing (16 bit array format)
 Protocol=NEC Address=0x4 Command=0x8 Raw-Data=0xF708FB04 32 bits LSB first
+Send with: IrSender.sendNEC(0x4, 0x8, <numberOfRepeats>);
 
 Send NEC / ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)
-Protocol=ONKYO Address=0x102 Command=0x304 Raw-Data=0x3040102 32 bits LSB first
+Protocol=Onkyo Address=0x102 Command=0x304 Raw-Data=0x3040102 32 bits LSB first
+Send with: IrSender.sendOnkyo(0x102, 0x304, <numberOfRepeats>);
 
 Send NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first
 Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
+Send with: IrSender.sendNEC(0x102, 0x34, <numberOfRepeats>);
+
+Send Panasonic 0xB, 0x10 and 0x12 as generic PulseDistance
+ LSB first
+Protocol=Panasonic Address=0xB Command=0x10 Raw-Data=0xA01000B0 48 bits LSB first
+Send with: IrSender.sendPanasonic(0xB, 0x10, <numberOfRepeats>);
+
+ MSB first
+Protocol=Panasonic Address=0xB Command=0x10 Raw-Data=0xA01000B0 48 bits LSB first
+Send with: IrSender.sendPanasonic(0xB, 0x10, <numberOfRepeats>);
 
 Send Onkyo (NEC with 16 bit command)
-Protocol=ONKYO Address=0xFFF1 Command=0x7676 Raw-Data=0x7676FFF1 32 bits LSB first
+Protocol=Onkyo Address=0xFFF1 Command=0x7676 Raw-Data=0x7676FFF1 32 bits LSB first
+Send with: IrSender.sendOnkyo(0xFFF1, 0x7676, <numberOfRepeats>);
 
 Send Apple
-Protocol=APPLE Address=0xF1 Command=0x76 Raw-Data=0xF17687EE 32 bits LSB first
+Protocol=Apple Address=0xF1 Command=0x76 Raw-Data=0xF17687EE 32 bits LSB first
+Send with: IrSender.sendApple(0xF1, 0x76, <numberOfRepeats>);
 
 Send Panasonic
-Protocol=PANASONIC Address=0xFF1 Command=0x76 Extra=0x2002 Raw-Data=0x9976FF10 48 bits LSB first
+Protocol=Panasonic Address=0xFF1 Command=0x76 Raw-Data=0x9976FF10 48 bits LSB first
+Send with: IrSender.sendPanasonic(0xFF1, 0x76, <numberOfRepeats>);
 
 Send Kaseikyo with 0x4711 as Vendor ID
-Protocol=KASEIKYO Address=0xFF1 Command=0x76 Raw-Data=0x9A76FF13 48 bits LSB first
+Protocol=Kaseikyo Address=0xFF1 Command=0x76 Extra=0x4711 Raw-Data=0x9A76FF13 48 bits LSB first
+Send with: IrSender.sendKaseikyo(0xFF1, 0x76, <numberOfRepeats>, 0x4711);
 
 Send Kaseikyo_Denon variant
-Protocol=KASEIKYO_DENON Address=0xFF1 Command=0x76 Extra=0x3256 Raw-Data=0x9976FF10 48 bits LSB first
+Protocol=Kaseikyo_Denon Address=0xFF1 Command=0x76 Raw-Data=0x9976FF10 48 bits LSB first
+Send with: IrSender.sendKaseikyo_Denon(0xFF1, 0x76, <numberOfRepeats>);
 
 Send Denon
-Protocol=DENON Address=0x11 Command=0x76 Raw-Data=0x45D8 15 bits MSB first
+Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0x45D8 15 bits MSB first
+Send with: IrSender.sendDenon(0x11, 0x76, <numberOfRepeats>);
 
 Send Denon/Sharp variant
-Protocol=SHARP Address=0x11 Command=0x76 Raw-Data=0x45DA 15 bits MSB first
+Protocol=Sharp Address=0x11 Command=0x76 Raw-Data=0x45DA 15 bits MSB first
+Send with: IrSender.sendSharp(0x11, 0x76, <numberOfRepeats>);
 
 Send Sony/SIRCS with 7 command and 5 address bits
-Protocol=SONY Address=0x11 Command=0x76 Raw-Data=0x8F6 12 bits LSB first
+Protocol=Sony Address=0x11 Command=0x76 Raw-Data=0x8F6 12 bits LSB first
+Send with: IrSender.sendSony(0x11, 0x76, <numberOfRepeats>);
 
 Send Sony/SIRCS with 7 command and 8 address bits
-Protocol=SONY Address=0xF1 Command=0x76 Raw-Data=0x78F6 15 bits LSB first
+Protocol=Sony Address=0xF1 Command=0x76 Raw-Data=0x78F6 15 bits LSB first
+Send with: IrSender.sendSony(0xF1, 0x76, <numberOfRepeats>);
 
 Send Sony/SIRCS with 7 command and 13 address bits
-Protocol=SONY Address=0x1FF1 Command=0x76 Raw-Data=0xFF8F6 20 bits LSB first
+Protocol=Sony Address=0x1FF1 Command=0x76 Raw-Data=0xFF8F6 20 bits LSB first
+Send with: IrSender.sendSony(0x1FF1, 0x76, <numberOfRepeats>);
 
 Send RC5
 Protocol=RC5 Address=0x11 Command=0x36 Toggle=1 Raw-Data=0x1C76 13 bits MSB first
+Send with: IrSender.sendRC5(0x11, 0x36, <numberOfRepeats>);
 
 Send RC5X with 7.th MSB of command set
 Protocol=RC5 Address=0x11 Command=0x76 Raw-Data=0x476 13 bits MSB first
+Send with: IrSender.sendRC5(0x11, 0x76, <numberOfRepeats>);
 
 Send RC6
 Protocol=RC6 Address=0xF1 Command=0x76 Toggle=1 Raw-Data=0x1F176 20 bits MSB first
+Send with: IrSender.sendRC6(0xF1, 0x76, <numberOfRepeats>);
 
-Send SAMSUNG
-Protocol=SAMSUNG Address=0xFFF1 Command=0x76 Raw-Data=0x8976FFF1 32 bits LSB first
+Send Samsung
+Protocol=Samsung Address=0xFFF1 Command=0x76 Raw-Data=0x8976FFF1 32 bits LSB first
+Send with: IrSender.sendSamsung(0xFFF1, 0x76, <numberOfRepeats>);
 
 Send JVC
 Protocol=JVC Address=0xF1 Command=0x76 Raw-Data=0x76F1 16 bits LSB first
+Send with: IrSender.sendJVC(0xF1, 0x76, <numberOfRepeats>);
 
 Send LG
 Protocol=LG Address=0xF1 Command=0x7676 Raw-Data=0xF17676A 28 bits MSB first
+Send with: IrSender.sendLG(0xF1, 0x7676, <numberOfRepeats>);
 
 Send Bosewave with no address and 8 command bits
-Protocol=BOSEWAVE Address=0x0 Command=0x76 Raw-Data=0x8976 16 bits LSB first
+Protocol=BoseWave Address=0x0 Command=0x76 Raw-Data=0x8976 16 bits LSB first
+Send with: IrSender.sendBoseWave(0x0, 0x76, <numberOfRepeats>);
 
 Force buffer overflow by sending 280 marks and spaces
 Protocol=UNKNOWN Hash=0x0 0 bits (incl. gap and start) received
@@ -86,13 +119,21 @@ address=0xF2 command=0x87
 
 Send NEC with 8 bit address
 Protocol=NEC Address=0xF2 Command=0x87 Raw-Data=0x78870DF2 32 bits LSB first
+Send with: IrSender.sendNEC(0xF2, 0x87, <numberOfRepeats>);
 
 Send NEC with 16 bit address
 Protocol=NEC Address=0xF2 Command=0x87 Raw-Data=0x78870DF2 32 bits LSB first
+Send with: IrSender.sendNEC(0xF2, 0x87, <numberOfRepeats>);
 
 Send Onkyo (NEC with 16 bit command)
-Protocol=ONKYO Address=0xF2 Command=0x8787 Raw-Data=0x878700F2 32 bits LSB first
+Protocol=Onkyo Address=0xF2 Command=0x8787 Raw-Data=0x878700F2 32 bits LSB first
+Send with: IrSender.sendOnkyo(0xF2, 0x8787, <numberOfRepeats>);
 
 Send Apple
-Protocol=APPLE Address=0xF2 Command=0x87 Raw-Data=0xF28787EE 32 bits LSB first
+Protocol=Apple Address=0xF2 Command=0x87 Raw-Data=0xF28787EE 32 bits LSB first
+Send with: IrSender.sendApple(0xF2, 0x87, <numberOfRepeats>);
+
+Send Panasonic
+Protocol=Panasonic Address=0xF2 Command=0x87 Raw-Data=0xA8870F20 48 bits LSB first
+Send with: IrSender.sendPanasonic(0xF2, 0x87, <numberOfRepeats>);
 

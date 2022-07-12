@@ -86,6 +86,7 @@ void loop() {
 
 #if FLASHEND >= 0x3FFF      // For 16k flash or more, like ATtiny1604
             IrReceiver.printIRResultShort(&Serial);
+            IrReceiver.printIRSendUsage(&Serial);
             Serial.println();
             if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                 // We have an unknown protocol, print more info

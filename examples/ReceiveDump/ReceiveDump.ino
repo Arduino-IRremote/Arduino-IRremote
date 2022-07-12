@@ -32,7 +32,7 @@
  */
 #include <Arduino.h>
 
-//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
+//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes. If DECODE_MAGIQUEST is enabled 112, otherwise 100 is default.
 
 /*
  * You can change this value accordingly to the receiver module you use.
@@ -84,11 +84,13 @@ void loop() {
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             Serial.println(F("Overflow detected"));
             Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in " __FILE__));
-            // see also https://github.com/Arduino-IRremote/Arduino-IRremote#modifying-compile-options-with-sloeber-ide
+            // see also https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library
         } else {
             Serial.println();                               // 2 blank lines between entries
             Serial.println();
             IrReceiver.printIRResultShort(&Serial);
+            Serial.println();
+            IrReceiver.printIRSendUsage(&Serial);
             Serial.println();
             Serial.println(F("Raw result in internal ticks (50 us) - with leading gap"));
             IrReceiver.printIRResultRawFormatted(&Serial, false); // Output the results in RAW format

@@ -33,7 +33,7 @@
 
 #include <Arduino.h>
 
-//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
+//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes. If DECODE_MAGIQUEST is enabled 112, otherwise 100 is default.
 
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 //#define EXCLUDE_EXOTIC_PROTOCOLS
@@ -141,6 +141,7 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
 // Print a short summary of received data
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
         IrReceiver.printIRResultShort(&Serial);
+        IrReceiver.printIRSendUsage(&Serial);
 #else
         IrReceiver.printIRResultMinimal(&Serial);
 #endif
@@ -149,7 +150,7 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
             IrReceiver.decodedIRData.flags = false; // yes we have recognized the flag :-)
             Serial.println(F("Overflow detected"));
             Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in " __FILE__));
-            // see also https://github.com/Arduino-IRremote/Arduino-IRremote#modifying-compile-options-with-sloeber-ide        } else {
+            // see also https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
         } else if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
             // We have an unknown protocol, print more info
@@ -268,6 +269,25 @@ void loop() {
         Serial.flush();
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         checkReceive(0x0102, 0x34);
+        delay(DELAY_AFTER_SEND);
+
+        /*
+         * Send 2 Panasonic codes as generic Pulse Distance data, once with LSB and once with MSB first
+         */
+        Serial.println(F("Send Panasonic 0xB, 0x10 as generic PulseDistance"));
+        Serial.println(F(" LSB first"));
+        Serial.flush();
+        uint32_t tRawData[] = { 0xB02002, 0xA010 };
+        IrSender.sendPulseDistance(3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, false, 0, 0);
+        checkReceive(0x0B, 0x10);
+        delay(DELAY_AFTER_SEND);
+
+        // the same with MSB first
+        Serial.println(F(" MSB first"));
+        tRawData[0] = 0x40040D00;
+        tRawData[1] = 0x805;
+        IrSender.sendPulseDistance(3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, true, 0, 0);
+        checkReceive(0x0B, 0x10);
         delay(DELAY_AFTER_SEND);
     }
 #endif

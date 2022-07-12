@@ -126,6 +126,10 @@ void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfR
     sendLGRaw(tRawData, aNumberOfRepeats, aIsRepeat, aUseLG2Protocol);
 }
 
+void IRsend::sendLG2(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
+    sendLG(aAddress, aCommand, aNumberOfRepeats, aIsRepeat);
+}
+
 /*
  * Here you can put your raw data, even one with "wrong" checksum
  */
@@ -141,16 +145,13 @@ void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aI
     if (aUseLG2Protocol) {
         mark(LG2_HEADER_MARK);
         space(LG2_HEADER_SPACE);
-        // MSB first
-        sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
-        SEND_STOP_BIT);
     } else {
         mark(LG_HEADER_MARK);
         space(LG_HEADER_SPACE);
-        // MSB first
-        sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
-        SEND_STOP_BIT);
     }
+    // MSB first
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
+    SEND_STOP_BIT);
 
     for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
         // send repeat in a 110 ms raster
