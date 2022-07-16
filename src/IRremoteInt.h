@@ -100,7 +100,7 @@ struct irparams_struct {
 /*
  * Debug directives
  */
-#if defined(DEBUG)
+#if defined(DEBUG) || defined(TRACE)
 #  define IR_DEBUG_PRINT(...)    Serial.print(__VA_ARGS__)
 #  define IR_DEBUG_PRINTLN(...)  Serial.println(__VA_ARGS__)
 #else

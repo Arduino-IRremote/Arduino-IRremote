@@ -7,6 +7,8 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added function printIRSendUsage().
 - Reduced output size and improved format of printIRResultRawFormatted() to fasten up output (and getting repeats properly decoded).
 - Fixed Bug in sendDenonRaw() and improved decodeDenon().
+- Fixed potential bug in SendBiphase data for 1 bit.
+- Fixed bug in send for RP4020.
 
 ## 3.7.1
 - SendRaw now supports bufferlenght > 255.

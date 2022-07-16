@@ -923,6 +923,11 @@ void timerConfigForReceive() {
  */
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     TIMER_DISABLE_RECEIVE_INTR; // TODO really required here? Do we have a common resource for Teensy3.0, 3.1
+#    if defined(IR_SEND_PIN)
+    pinMode(IR_SEND_PIN, OUTPUT);
+#    else
+    pinMode(IrSender.sendPin, OUTPUT);
+#    endif
 
     SIM_SCGC4 |= SIM_SCGC4_CMT;
     SIM_SOPT2 |= SIM_SOPT2_PTD7PAD;
@@ -974,6 +979,11 @@ void timerConfigForReceive() {
  */
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     TIMER_DISABLE_RECEIVE_INTR;
+#    if defined(IR_SEND_PIN)
+    pinMode(IR_SEND_PIN, OUTPUT);
+#    else
+    pinMode(IrSender.sendPin, OUTPUT);
+#    endif
 
     SIM_SCGC6 |= SIM_SCGC6_TPM1;
     FTM1_SC = 0;
@@ -1039,6 +1049,11 @@ void timerConfigForReceive() {
  */
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     TIMER_DISABLE_RECEIVE_INTR;
+#    if defined(IR_SEND_PIN)
+    pinMode(IR_SEND_PIN, OUTPUT);
+#    else
+    pinMode(IrSender.sendPin, OUTPUT);
+#    endif
 
     uint32_t period = (float)F_BUS_ACTUAL / (float)((aFrequencyKHz) * 2000);
     uint32_t prescale = 0;
@@ -1136,7 +1151,7 @@ void timerConfigForReceive() {
 
 /*
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
- * Set output pin mode and disable receive interrupt if it uses the same resource
+ * ledcWrite since ESP 2.0.2 does not work if pin mode is set. Disable receive interrupt if it uses the same resource
  */
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     ledcSetup(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
@@ -1523,6 +1538,12 @@ extern int ir_out_kHz;
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
 void timerConfigForSend(uint8_t aFrequencyKHz) {
+    TIMER_DISABLE_RECEIVE_INTR;
+#    if defined(IR_SEND_PIN)
+    pinMode(IR_SEND_PIN, OUTPUT);
+#    else
+    pinMode(IrSender.sendPin, OUTPUT);
+#    endif
     ir_out_kHz = aFrequencyKHz;
 }
 #  endif // defined(SEND_PWM_BY_TIMER)
@@ -1556,6 +1577,11 @@ void timerConfigForReceive() {
 
 void timerConfigForSend(uint8_t aFrequencyKHz) {
     TIMER_DISABLE_RECEIVE_INTR;
+#    if defined(IR_SEND_PIN)
+    pinMode(IR_SEND_PIN, OUTPUT);
+#    else
+    pinMode(IrSender.sendPin, OUTPUT);
+#    endif
     (void) aFrequencyKHz;
 }
 #  endif // defined(SEND_PWM_BY_TIMER)

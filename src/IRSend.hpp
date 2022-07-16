@@ -380,19 +380,21 @@ void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned in
  * 0 -> mark+space
  * 1 -> space+mark
  * The output always ends with a space
+ * can only send 31 bit data, since we put the start bit as 32th bit on front
  */
 void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits) {
 
-// do not send the trailing space of the start bit
-    mark(aBiphaseTimeUnit);
+    IR_TRACE_PRINT(F("0x"));
+    IR_TRACE_PRINT(aData, HEX);
 
-    IR_TRACE_PRINT('S');
+    IR_TRACE_PRINT(F(" S"));
+
+    // Data - Biphase code MSB first
+    // prepare for start with sending the start bit, which is 1
+    uint32_t tMask = 1UL << aNumberOfBits; // mask is now set for the virtual start bit
     uint_fast8_t tLastBitValue = 1; // Start bit is a 1
-
-// Data - Biphase code MSB first
-    uint32_t tMask = 1UL << (aNumberOfBits - 1);
-    bool tNextBitIsOne = (aData & tMask) != 0;
-    for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
+    bool tNextBitIsOne = 1;         // Start bit is a 1
+    for (uint_fast8_t i = aNumberOfBits + 1; i > 0; i--) {
         bool tCurrentBitIsOne = tNextBitIsOne;
         tMask >>= 1;
         tNextBitIsOne = ((aData & tMask) != 0) || (i == 1); // true for last bit to avoid extension of mark
@@ -640,8 +642,10 @@ void IRsend::enableIROut(uint_fast8_t aFrequencyKHz) {
     pinModeFast(sendPin, OUTPUT_OPEN_DRAIN);
 #  endif
 #else
+
+    // For Non AVR platforms pin mode for SEND_PWM_BY_TIMER must be handled by the timerConfigForSend() function
     // ledcWrite since ESP 2.0.2 does not work if pin mode is set, and RP2040 requires gpio_set_function(IR_SEND_PIN, GPIO_FUNC_PWM);
-#  if !(defined(SEND_PWM_BY_TIMER) && (defined(ESP32) || defined(ARDUINO_ARCH_RP2040)))
+#  if defined(__AVR__) || !defined(SEND_PWM_BY_TIMER)
 #    if defined(IR_SEND_PIN)
     pinModeFast(IR_SEND_PIN, OUTPUT);
 #    else

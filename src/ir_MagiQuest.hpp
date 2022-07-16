@@ -164,8 +164,9 @@ bool IRrecv::decodeMagiQuest() {
             return false;
         }
     }
-
-    IR_DEBUG_PRINTLN(bitstring);
+#if defined(DEBUG)
+    Serial.println(bitstring);
+#endif
 
     // Success
     decodedIRData.protocol = MAGIQUEST;

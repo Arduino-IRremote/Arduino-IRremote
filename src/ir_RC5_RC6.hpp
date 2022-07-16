@@ -40,7 +40,7 @@
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
-bool sLastSendToggleValue = false;
+uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 //uint8_t sLastReceiveToggleValue = 3; // 3 -> start value
 
 //==============================================================================
@@ -55,7 +55,9 @@ bool sLastSendToggleValue = false;
 // https://en.wikipedia.org/wiki/Manchester_code
 // mark->space => 0
 // space->mark => 1
-// MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command (6 bit command plus one field bit for RC5X), no stop bit
+// MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit
+// Field bit is 1 for RC5 and inverted 7. command bit for RC5X. That way the first 64 commands of RC5X remain compatible with the original RC5.
+// SF TAAA  AACC CCCC
 // duty factor is 25%,
 //
 #define RC5_ADDRESS_BITS        5
@@ -83,13 +85,12 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
     uint16_t tIRData = ((aAddress & 0x1F) << RC5_COMMAND_BITS);
 
     if (aCommand < 0x40) {
-        // set field bit to lower field / set inverted upper command bit
+        // auto discovery of RC5, set field bit to 1
         tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS);
     } else {
-        // let field bit zero
+        // Mask bit 7 of command and let field bit 0
         aCommand &= 0x3F;
     }
-
     tIRData |= aCommand;
 
     if (aEnableAutomaticToggle) {
@@ -158,6 +159,7 @@ bool IRrecv::decodeRC5() {
      * Get data bits - MSB first
      */
     for (tBitIndex = 0; sBiphaseDecodeRawbuffOffset < decodedIRData.rawDataPtr->rawlen; tBitIndex++) {
+        // get next 2 levels and check for transition
         uint8_t tStartLevel = getBiphaselevel();
         uint8_t tEndLevel = getBiphaselevel();
 
@@ -168,9 +170,8 @@ bool IRrecv::decodeRC5() {
             // we have a mark to space transition here
             tDecodedRawData = (tDecodedRawData << 1) | 0;
         } else {
-            // IR_TRACE_PRINT since I saw this too often
             IR_DEBUG_PRINT(F("RC5: "));
-            IR_DEBUG_PRINTLN(F("Decode failed"));
+            IR_DEBUG_PRINTLN(F("no transition found, decode failed"));
             return false;
         }
     }
