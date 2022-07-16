@@ -287,7 +287,8 @@ void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBu
  * Function using an 16 byte microsecond timing array in FLASH for every purpose.
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
-void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
+void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer,
+        uint_fast8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
     sendRaw(aBufferWithMicroseconds, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
 #else
@@ -389,26 +390,28 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
     uint_fast8_t tLastBitValue = 1; // Start bit is a 1
 
 // Data - Biphase code MSB first
-    for (uint32_t tMask = 1UL << (aNumberOfBits - 1); tMask; tMask >>= 1) {
-        if (aData & tMask) {
+    uint32_t tMask = 1UL << (aNumberOfBits - 1);
+    bool tNextBitIsOne = (aData & tMask) != 0;
+    for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
+        bool tCurrentBitIsOne = tNextBitIsOne;
+        tMask >>= 1;
+        tNextBitIsOne = ((aData & tMask) != 0) || (i == 1); // true for last bit to avoid extension of mark
+        if (tCurrentBitIsOne) {
             IR_TRACE_PRINT('1');
             space(aBiphaseTimeUnit);
-            mark(aBiphaseTimeUnit);
+            if (tNextBitIsOne) {
+                mark(aBiphaseTimeUnit);
+            } else {
+                // if next bit is 0, extend the current mark in order to generate a continuous signal without short breaks
+                mark(2 * aBiphaseTimeUnit);
+            }
             tLastBitValue = 1;
 
         } else {
             IR_TRACE_PRINT('0');
-#if defined(SEND_PWM_BY_TIMER) || defined(USE_NO_SEND_PWM)
-            if (tLastBitValue) {
-                // Extend the current mark in order to generate a continuous signal without short breaks
-                delayMicroseconds(aBiphaseTimeUnit);
-            } else {
+            if (!tLastBitValue) {
                 mark(aBiphaseTimeUnit);
             }
-#else
-            (void) tLastBitValue; // to avoid compiler warnings
-            mark(aBiphaseTimeUnit); // can not eventually delay here, we must call mark to generate the signal
-#endif
             space(aBiphaseTimeUnit);
             tLastBitValue = 0;
         }
@@ -455,8 +458,8 @@ void IRsend::mark(unsigned int aMarkMicros) {
 #  endif
 
 #else
-    unsigned long startMicros = micros();
-    unsigned long nextPeriodEnding = startMicros;
+    unsigned long tStartMicros = micros();
+    unsigned long tNextPeriodEnding = tStartMicros;
     unsigned long tMicros;
 #  if !defined(NO_LED_FEEDBACK_CODE)
     bool FeedbackLedIsActive = false;
@@ -464,7 +467,9 @@ void IRsend::mark(unsigned int aMarkMicros) {
 
     do {
 //        digitalToggleFast(_IR_TIMING_TEST_PIN);
-        // Output the PWM pulse
+        /*
+         * Output the PWM pulse
+         */
         noInterrupts(); // do not let interrupts extend the short on period
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
 #    if defined(OUTPUT_OPEN_DRAIN)
@@ -477,9 +482,11 @@ void IRsend::mark(unsigned int aMarkMicros) {
         // 4.3 us from do{ to pin setting if sendPin is no constant
         digitalWriteFast(sendPin, HIGH);
 #  endif
-        delayMicroseconds (periodOnTimeMicros); // this is normally implemented by a blocking wait
+        delayMicroseconds(periodOnTimeMicros); // this is normally implemented by a blocking wait
 
-        // Output the PWM pause
+        /*
+         * Output the PWM pause
+         */
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
 #    if defined(OUTPUT_OPEN_DRAIN)
         digitalWriteFast(sendPin, HIGH); // Set output with pin mode OUTPUT_OPEN_DRAIN to inactive high.
@@ -490,7 +497,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
 #  else
         digitalWriteFast(sendPin, LOW);
 #  endif
-        interrupts(); // Enable interrupts -to keep micros correct- for the longer off period 3.4 us until receive ISR is active (for 7 us + pop's)
+        interrupts(); // Enable interrupts - to keep micros correct- for the longer off period 3.4 us until receive ISR is active (for 7 us + pop's)
 
 #  if !defined(NO_LED_FEEDBACK_CODE)
         /*
@@ -504,18 +511,20 @@ void IRsend::mark(unsigned int aMarkMicros) {
         }
 #  endif
         /*
-         * Pause timing
+         * PWM pause timing
          */
-        nextPeriodEnding += periodTimeMicros;
+        tNextPeriodEnding += periodTimeMicros;
         do {
             tMicros = micros(); // we have only 4 us resolution for AVR @16MHz
-            // check for aMarkMicros to be gone
-            unsigned int tDeltaMicros = tMicros - startMicros;
+            /*
+             * Exit the forever loop if aMarkMicros has reached
+             */
+            unsigned int tDeltaMicros = tMicros - tStartMicros;
 #if defined(__AVR__)
 //            tDeltaMicros += (160 / CLOCKS_PER_MICRO); // adding this once increases program size !
 #  if !defined(NO_LED_FEEDBACK_CODE)
             if (tDeltaMicros >= aMarkMicros - (30 + (112 / CLOCKS_PER_MICRO))) { // 30 to be constant. Using periodTimeMicros increases program size too much.
-            // reset feedback led in the last pause before end
+                // reset feedback led in the last pause before end
                 if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
                     setFeedbackLED(false);
                 }
@@ -533,8 +542,8 @@ void IRsend::mark(unsigned int aMarkMicros) {
                 return;
             }
 //            digitalToggleFast(_IR_TIMING_TEST_PIN); // 3.0 us per call @16MHz
-        } while (tMicros < nextPeriodEnding);  // 3.4 us @16MHz
-    } while (true);
+        }while (tMicros < tNextPeriodEnding);  // 3.4 us @16MHz
+    }while (true);
 #  endif
 }
 
@@ -549,7 +558,7 @@ void IRsend::IRLedOff() {
 #elif defined(USE_NO_SEND_PWM)
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
     digitalWriteFast(sendPin, LOW); // prepare for all next active states.
-    pinModeFast(sendPin, INPUT); // inactive state for open drain
+    pinModeFast(sendPin, INPUT);// inactive state for open drain
 #  else
     digitalWriteFast(sendPin, HIGH); // Set output to inactive high.
 #  endif
@@ -564,6 +573,7 @@ void IRsend::IRLedOff() {
     digitalWriteFast(sendPin, LOW);
 #  endif
 #endif
+
 #if !defined(NO_LED_FEEDBACK_CODE)
     if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
         setFeedbackLED(false);
@@ -630,7 +640,8 @@ void IRsend::enableIROut(uint_fast8_t aFrequencyKHz) {
     pinModeFast(sendPin, OUTPUT_OPEN_DRAIN);
 #  endif
 #else
-#  if !(defined(SEND_PWM_BY_TIMER) && defined(ESP32)) // ledcWrite since ESP 2.0.2 does not work if pin mode is set
+    // ledcWrite since ESP 2.0.2 does not work if pin mode is set, and RP2040 requires gpio_set_function(IR_SEND_PIN, GPIO_FUNC_PWM);
+#  if !(defined(SEND_PWM_BY_TIMER) && (defined(ESP32) || defined(ARDUINO_ARCH_RP2040)))
 #    if defined(IR_SEND_PIN)
     pinModeFast(IR_SEND_PIN, OUTPUT);
 #    else

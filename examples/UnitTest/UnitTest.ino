@@ -131,6 +131,8 @@ void setup() {
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
 #endif
+    delay(DELAY_AFTER_SEND);
+
 }
 
 void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {

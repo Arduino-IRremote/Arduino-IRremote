@@ -160,10 +160,10 @@ void loop() {
 
         // tone on esp8266 works once, then it disables the successful IrReceiver.start() / timerConfigForReceive().
 #  if !defined(ESP8266) && !defined(NRF5)
-        if (IrReceiver.decodedIRData.protocol != UNKNOWN) {
+        if (IrReceiver.decodedIRData.protocol != UNKNOWN && digitalRead(DEBUG_BUTTON_PIN) != LOW) {
             /*
-             * If a valid protocol was received, play tone, wait and restore IR timer.
-             * Otherwise do not play a tone to get exact gap time between transmissions.
+             * If no debug mode or a valid protocol was received, play tone, wait and restore IR timer.
+             * Otherwise do not play a tone to get exact gap time between transmissions and not running into repeat frames while wait for tone to end.
              * This will give the next CheckForRecordGapsMicros() call a chance to eventually propose a change of the current RECORD_GAP_MICROS value.
              */
 #    if !defined(ESP32)

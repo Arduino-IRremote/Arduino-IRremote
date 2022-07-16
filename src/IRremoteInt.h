@@ -531,7 +531,7 @@ public:
     uint8_t sendPin;
 #endif
     unsigned int periodTimeMicros;
-    unsigned int periodOnTimeMicros; // compensated with PULSE_CORRECTION_NANOS for duration of digitalWrite.
+    unsigned int periodOnTimeMicros; // compensated with PULSE_CORRECTION_NANOS for duration of digitalWrite. Around 8 microseconds for 38 kHz.
     unsigned int getPulseCorrectionNanos();
 
     void customDelayMicroseconds(unsigned long aMicroseconds);

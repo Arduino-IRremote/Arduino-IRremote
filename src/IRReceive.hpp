@@ -152,7 +152,7 @@ void IRrecv::start(uint32_t aMicrosecondsToAddToGapCounter) {
 }
 
 /**
- * Restarts receiver after send. Is a NOP if sending does nor require a timer
+ * Restarts receiver after send. Is a NOP if sending does not require a timer
  */
 void IRrecv::restartAfterSend() {
 #if defined(SEND_PWM_BY_TIMER) && !defined(SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER)

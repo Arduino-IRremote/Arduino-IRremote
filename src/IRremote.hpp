@@ -216,8 +216,8 @@
 
 #if (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED)
 #  if !defined(SEND_PWM_BY_TIMER)
-#define SEND_PWM_BY_TIMER       // the best and default method for ESP32
-#warning INFO: For ESP32, RP2040, mbed and particle boards SEND_PWM_BY_TIMER is enabled by default. If this is not intended, deactivate the line over this warning message in file IRremote.hpp.
+#define SEND_PWM_BY_TIMER       // the best and default method for ESP32 etc.
+#warning INFO: For ESP32, RP2040, mbed and particle boards SEND_PWM_BY_TIMER is enabled by default. If this is not intended, deactivate the line in IRremote.hpp over this warning message in file IRremote.hpp.
 #  endif
 #else
 #  if defined(SEND_PWM_BY_TIMER)

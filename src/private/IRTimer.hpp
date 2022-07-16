@@ -1322,8 +1322,8 @@ uint sIROutPuseWidth;
 /*
  * If we just disable the PWM, the counter stops and the output stays at the state is currently has
  */
-#define ENABLE_SEND_PWM_BY_TIMER    pwm_set_counter(sSliceNumberForSendPWM, 0); pwm_set_chan_level(sSliceNumberForSendPWM, sChannelNumberForSendPWM, sIROutPuseWidth);
-#define DISABLE_SEND_PWM_BY_TIMER   pwm_set_chan_level(sSliceNumberForSendPWM, sChannelNumberForSendPWM, 0); // this sets output also to LOW
+#define ENABLE_SEND_PWM_BY_TIMER        pwm_set_counter(sSliceNumberForSendPWM, 0); pwm_set_chan_level(sSliceNumberForSendPWM, sChannelNumberForSendPWM, sIROutPuseWidth);
+#define DISABLE_SEND_PWM_BY_TIMER       pwm_set_chan_level(sSliceNumberForSendPWM, sChannelNumberForSendPWM, 0); // this sets output also to LOW
 
 /*
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
@@ -1342,6 +1342,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
     sChannelNumberForSendPWM = pwm_gpio_to_channel(IrSender.sendPin);
 #    endif
     uint16_t tPWMWrapValue = (clock_get_hz(clk_sys)) / (aFrequencyKHz * 1000); // 3289.473 for 38 kHz @125 MHz clock. We have a 16 bit counter and use system clock (125 MHz)
+
     pwm_config tPWMConfig = pwm_get_default_config();
     pwm_config_set_wrap(&tPWMConfig, tPWMWrapValue - 1);
     pwm_init(sSliceNumberForSendPWM, &tPWMConfig, false); // we do not want to send now
