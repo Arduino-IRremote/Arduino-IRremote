@@ -336,7 +336,7 @@ void loop() {
     checkReceive(sAddress & 0x1F, sCommand);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
+#if defined(DECODE_SONY)
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0x1F, sCommand & 0x7F, sRepeats);
@@ -354,7 +354,9 @@ void loop() {
     IrSender.sendSony(sAddress & 0x1FFF, sCommand & 0x7F, sRepeats, SIRCS_20_PROTOCOL);
     checkReceive(sAddress & 0x1FFF, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
+#endif
 
+#if defined(DECODE_RC5)
     Serial.println(F("Send RC5"));
     Serial.flush();
     IrSender.sendRC5(sAddress & 0x1F, sCommand & 0x3F, sRepeats, true);  // 5 address, 6 command bits
@@ -366,13 +368,16 @@ void loop() {
     IrSender.sendRC5(sAddress & 0x1F, (sCommand & 0x3F) + 0x40, sRepeats, true);  // 5 address, 7 command bits
     checkReceive(sAddress & 0x1F, (sCommand & 0x3F) + 0x40);
     delay(DELAY_AFTER_SEND);
+#endif
 
+#if defined(DECODE_RC6)
     Serial.println(F("Send RC6"));
     // RC6 check does not work stable without the flush
     Serial.flush();
     IrSender.sendRC6(sAddress & 0xFF, sCommand, sRepeats, true);
     checkReceive(sAddress & 0xFF, sCommand);
     delay(DELAY_AFTER_SEND);
+#endif
 
     /*
      * Next example how to use the IrSender.write function
@@ -383,6 +388,7 @@ void loop() {
     IRSendData.command = sCommand;
     IRSendData.flags = IRDATA_FLAGS_EMPTY;
 
+#if defined(DECODE_SAMSUNG)
     IRSendData.protocol = SAMSUNG;
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
@@ -390,7 +396,9 @@ void loop() {
     IrSender.write(&IRSendData, sRepeats);
     checkReceive(IRSendData.address, IRSendData.command);
     delay(DELAY_AFTER_SEND);
+#endif
 
+#if defined(DECODE_JVC)
     IRSendData.protocol = JVC;  // switch protocol
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
@@ -398,7 +406,9 @@ void loop() {
     IrSender.write(&IRSendData, sRepeats);
     checkReceive(IRSendData.address & 0xFF, IRSendData.command);
     delay(DELAY_AFTER_SEND);
+#endif
 
+#if defined(DECODE_LG)
     IRSendData.protocol = LG;
     IRSendData.command = sCommand << 8 | sCommand;  // LG supports 16 bit command
     Serial.print(F("Send "));
@@ -407,19 +417,19 @@ void loop() {
     IrSender.write(&IRSendData, sRepeats);
     checkReceive(IRSendData.address & 0xFF, IRSendData.command);
     delay(DELAY_AFTER_SEND);
-#endif // FLASHEND >= 0x3FFF
+#endif
 
-#if FLASHEND >= 0x7FFF      // For 32k flash or more, like ATmega328
+#if defined(DECODE_BOSEWAVE)
     IRSendData.protocol = BOSEWAVE;
     Serial.println(F("Send Bosewave with no address and 8 command bits"));
     Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
     checkReceive(0, IRSendData.command & 0xFF);
     delay(DELAY_AFTER_SEND);
-#endif // FLASHEND >= 0x7FFF
+#endif
 
     /*
-     * LEGO is difficult to receive because of its short marks and spaces
+     * LEGO is skipped, since it is difficult to receive because of its short marks and spaces
      */
 //    Serial.println(F("Send Lego with 2 channel and with 4 command bits"));
 //    Serial.flush();

@@ -44,7 +44,86 @@
  */
 //#define _IR_MEASURE_TIMING // For debugging purposes.
 
-#if defined(ESP8266)
+#if defined(__AVR__)
+#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) // Digispark board
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". saves 370 bytes program memory and 38 bytes RAM for digistump core
+#define IR_RECEIVE_PIN  0
+#define IR_SEND_PIN     4 // Pin 2 is serial output with ATtinySerialOut. Pin 1 is internal LED and Pin3 is USB+ with pullup on Digispark board.
+#define TONE_PIN        3
+#define _IR_TIMING_TEST_PIN 3
+
+#  elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__) // Digispark pro board
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
+// For ATtiny167 Pins PB6 and PA3 are usable as interrupt source.
+#  if defined(ARDUINO_AVR_DIGISPARKPRO)
+#define IR_RECEIVE_PIN   9 // PA3 - on Digispark board labeled as pin 9
+//#define IR_RECEIVE_PIN  14 // PB6 / INT0 is connected to USB+ on DigisparkPro boards
+#define IR_SEND_PIN      8 // PA2 - on Digispark board labeled as pin 8
+#define TONE_PIN         5 // PA7
+#define _IR_TIMING_TEST_PIN 10 // PA4
+#  else
+#define IR_RECEIVE_PIN  3
+#define IR_SEND_PIN     2
+#define TONE_PIN        7
+#  endif
+
+#  elif defined(__AVR_ATtiny88__) // MH-ET Tiny88 board
+#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". Saves 128 bytes program memory
+// Pin 6 is TX pin 7 is RX
+#define IR_RECEIVE_PIN   3 // INT1
+#define IR_SEND_PIN      4
+#define TONE_PIN         9
+#define _IR_TIMING_TEST_PIN 8
+
+#  elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // Tiny Core Dev board
+#define IR_RECEIVE_PIN  18
+#define IR_SEND_PIN     19
+#define TONE_PIN        20
+#define APPLICATION_PIN  0 // PA4
+#undef LED_BUILTIN         // No LED available on the TinyCore 32 board, take the one on the programming board which is connected to the DAC output
+#define LED_BUILTIN      2 // PA6
+
+#  elif defined(__AVR_ATtiny1604__)
+#define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.
+#define IR_SEND_PIN      3
+#define APPLICATION_PIN  5
+
+#define tone(...) void()      // Define as void, since TCB0_INT_vect is also used by tone()
+#define noTone(a) void()
+#define TONE_PIN        42 // Dummy for examples using it
+
+#  elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
+|| defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
+|| defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
+|| defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
+|| defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
+|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__) \
+|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) \
+|| defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2561__) \
+|| defined(__AVR_ATmega8515__) || defined(__AVR_ATmega162__)
+#define IR_RECEIVE_PIN      2
+#define IR_SEND_PIN        13
+#define TONE_PIN            4
+#define APPLICATION_PIN     5
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
+#define _IR_TIMING_TEST_PIN 7
+
+#  else // Default as for ATmega328 like on Uno, Nano, Leonardo etc.
+#define IR_RECEIVE_PIN      2 // To be compatible with interrupt example, pin 2 is chosen here.
+#define IR_SEND_PIN         3
+#define TONE_PIN            4
+#define APPLICATION_PIN     5
+#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
+#define _IR_TIMING_TEST_PIN 7
+
+#    if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro is __AVR_ATmega32U4__ but has different external circuit
+// We have no built in LED at pin 13 -> reuse RX LED
+#undef LED_BUILTIN
+#define LED_BUILTIN         LED_BUILTIN_RX
+#    endif
+#  endif // defined(__AVR_ATtiny25__)...
+
+#elif defined(ESP8266)
 #define FEEDBACK_LED_IS_ACTIVE_LOW // The LED on my board (D4) is active LOW
 #define IR_RECEIVE_PIN          14 // D5
 #define IR_SEND_PIN             12 // D6 - D4/pin 2 is internal LED
@@ -96,69 +175,6 @@ void noTone(uint8_t aPinNumber){
 #define FEEDBACK_LED_IS_ACTIVE_LOW
 #  endif
 
-#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) // Digispark board
-#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". saves 370 bytes program memory and 38 bytes RAM for digistump core
-#define IR_RECEIVE_PIN  0
-#define IR_SEND_PIN     4 // Pin 2 is serial output with ATtinySerialOut. Pin 1 is internal LED and Pin3 is USB+ with pullup on Digispark board.
-#define TONE_PIN        3
-#define _IR_TIMING_TEST_PIN 3
-
-#elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__) // Digispark pro board
-#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
-// For ATtiny167 Pins PB6 and PA3 are usable as interrupt source.
-#  if defined(ARDUINO_AVR_DIGISPARKPRO)
-#define IR_RECEIVE_PIN   9 // PA3 - on Digispark board labeled as pin 9
-//#define IR_RECEIVE_PIN  14 // PB6 / INT0 is connected to USB+ on DigisparkPro boards
-#define IR_SEND_PIN      8 // PA2 - on Digispark board labeled as pin 8
-#define TONE_PIN         5 // PA7
-#define _IR_TIMING_TEST_PIN 10 // PA4
-#  else
-#define IR_RECEIVE_PIN  3
-#define IR_SEND_PIN     2
-#define TONE_PIN        7
-#  endif
-
-#elif defined(__AVR_ATtiny88__) // MH-ET Tiny88 board
-#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". Saves 128 bytes program memory
-// Pin 6 is TX pin 7 is RX
-#define IR_RECEIVE_PIN   3 // INT1
-#define IR_SEND_PIN      4
-#define TONE_PIN         9
-#define _IR_TIMING_TEST_PIN 8
-
-#elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // Tiny Core Dev board
-#define IR_RECEIVE_PIN  18
-#define IR_SEND_PIN     19
-#define TONE_PIN        20
-#define APPLICATION_PIN  0 // PA4
-#undef LED_BUILTIN         // No LED available on the TinyCore 32 board, take the one on the programming board which is connected to the DAC output
-#define LED_BUILTIN      2 // PA6
-
-#elif defined(__AVR_ATtiny1604__)
-#define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.
-#define IR_SEND_PIN      3
-#define APPLICATION_PIN  5
-
-#define tone(...) void()      // Define as void, since TCB0_INT_vect is also used by tone()
-#define noTone(a) void()
-#define TONE_PIN        42 // Dummy for examples using it
-
-#  elif defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
-|| defined(__AVR_ATmega644__) || defined(__AVR_ATmega644P__) \
-|| defined(__AVR_ATmega324P__) || defined(__AVR_ATmega324A__) \
-|| defined(__AVR_ATmega324PA__) || defined(__AVR_ATmega164A__) \
-|| defined(__AVR_ATmega164P__) || defined(__AVR_ATmega32__) \
-|| defined(__AVR_ATmega16__) || defined(__AVR_ATmega8535__) \
-|| defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) \
-|| defined(__AVR_ATmega1281__) || defined(__AVR_ATmega2561__) \
-|| defined(__AVR_ATmega8515__) || defined(__AVR_ATmega162__)
-#define IR_RECEIVE_PIN      2
-#define IR_SEND_PIN        13
-#define TONE_PIN            4
-#define APPLICATION_PIN     5
-#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN 7
-
 #elif defined(ARDUINO_ARCH_APOLLO3) // Sparkfun Apollo boards
 #define IR_RECEIVE_PIN  11
 #define IR_SEND_PIN     12
@@ -194,27 +210,13 @@ void noTone(uint8_t aPinNumber){
 /*
  * 4 times the same (default) layout for easy adaption in the future
  */
-#elif defined(TEENSYDUINO)
+#elif defined(TEENSYDUINO) // Teensy 2.0 is handled at default for ATmega328 like on Uno, Nano, Leonardo etc.
 #define IR_RECEIVE_PIN      2
 #define IR_SEND_PIN         3
 #define TONE_PIN            4
 #define APPLICATION_PIN     5
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
 #define _IR_TIMING_TEST_PIN 7
-
-#elif defined(__AVR__) // Default as for ATmega328 like on Uno, Nano etc.
-#define IR_RECEIVE_PIN      2 // To be compatible with interrupt example, pin 2 is chosen here.
-#define IR_SEND_PIN         3
-#define TONE_PIN            4
-#define APPLICATION_PIN     5
-#define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
-#define _IR_TIMING_TEST_PIN 7
-
-#  if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro is __AVR_ATmega32U4__ but has different external circuit
-// We have no built in LED at pin 13 -> reuse RX LED
-#undef LED_BUILTIN
-#define LED_BUILTIN         LED_BUILTIN_RX
-#  endif
 
 #elif defined(ARDUINO_ARCH_MBED) // Arduino Nano 33 BLE
 #define IR_RECEIVE_PIN      2

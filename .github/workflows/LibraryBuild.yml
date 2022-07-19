@@ -61,7 +61,6 @@ jobs:
           - ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
           - ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
           - ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
-          - TinyCore:avr:tiny32
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal # ATmega128
           - SparkFun:avr:promicro
           - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
@@ -136,7 +135,6 @@ jobs:
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
             platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: MinimalReceiver,IRDispatcherDemo,MicroGirs,UnitTest  # digitalWriteFast.h not available for this board
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
@@ -165,16 +163,9 @@ jobs:
             required-libraries: ATtinySerialOut
             sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
 
-          - arduino-boards-fqbn: TinyCore:avr:tiny32
-            platform-url: https://raw.githubusercontent.com/xukangmin/TinyCore/master/avr/package/package_tinycore_index.json
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              All: -DIR_USE_AVR_TIMER_D
-              IRremoteExtensionTest: -DIR_USE_AVR_TIMER_D -DRAW_BUFFER_LENGTH=100
-
           - arduino-boards-fqbn: MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal
             platform-url: https://mcudude.github.io/MegaCore/package_MCUdude_MegaCore_index.json
             arduino-platform: arduino:avr,MegaCore:avr # gcc is taken from arduino:avr
-            sketches-exclude: MinimalReceiver,IRDispatcherDemo # digitalWriteFast.h not available for this board?
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=300
               All: -DRAW_BUFFER_LENGTH=700

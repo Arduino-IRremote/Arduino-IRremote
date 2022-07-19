@@ -1,7 +1,9 @@
 /*
- Optimized digital functions for AVR microcontrollers
- by Watterott electronic (www.watterott.com)
- based on http://code.google.com/p/digitalwritefast
+ * digitalWriteFast.h
+ *
+ * Optimized digital functions for AVR microcontrollers
+ * by Watterott electronic (www.watterott.com)
+ * based on https://code.google.com/p/digitalwritefast
  */
 
 #ifndef __digitalWriteFast_h_
@@ -274,6 +276,34 @@
 #elif (defined(ARDUINO_AVR_LEONARDO) || \
        defined(__AVR_ATmega16U4__) || \
        defined(__AVR_ATmega32U4__))
+#  if defined(TEENSYDUINO)
+#define UART_RX_PIN     (7) //PD2
+#define UART_TX_PIN     (8) //PD3
+
+#define I2C_SDA_PIN     (6) //PD1
+#define I2C_SCL_PIN     (5) //PD0
+
+#define SPI_HW_SS_PIN   (0) //PB0
+#define SPI_HW_MOSI_PIN (2) //PB2
+#define SPI_HW_MISO_PIN (3) //PB3
+#define SPI_HW_SCK_PIN  (1) //PB1
+
+#define __digitalPinToPortReg(P) \
+((((P) <= 4) || ((P) >= 13 && (P) <= 15)) ? &PORTB : (((P) == 9 || (P) == 10) ? &PORTC : (((P) >= 16 && (P) <= 21)) ? &PORTF : &PORTD))
+#define __digitalPinToDDRReg(P) \
+((((P) <= 4) || ((P) >= 13 && (P) <= 15)) ? &DDRB : (((P) == 9 || (P) == 10) ? &DDRC : (((P) >= 16 && (P) <= 21)) ? &DDRF : &DDRD))
+#define __digitalPinToPINReg(P) \
+((((P) <= 4) || ((P) >= 13 && (P) <= 15)) ? &PINB : (((P) == 9 || (P) == 10) ? &PINC : (((P) >= 16 && (P) <= 21)) ? &PINF : &PIND))
+#define __digitalPinToBit(P) \
+(((P) <= 3) ? (P) : \
+(((P) == 4 || (P) == 12) ? 7 : \
+(((P) <= 8) ? (P) - 5 : \
+(((P) <= 10) ? (P) - 3 : \
+(((P) == 11) ? 6 : \
+(((P) <= 15) ? (P) - 9 : \
+(((P) <= 19) ? 23 - (P) : \
+(((P) <= 21) ? 21 - (P) : (P) - 18))))))))
+#  else
 
 #define UART_RX_PIN     (0) //PD2
 #define UART_TX_PIN     (1) //PD3
@@ -293,8 +323,12 @@
 #define __digitalPinToPINReg(P) \
 ((((P) <= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &PIND : (((P) == 5 || (P) == 13) ? &PINC : (((P) >= 18 && (P) <= 23)) ? &PINF : (((P) == 7) ? &PINE : &PINB)))
 #define __digitalPinToBit(P) \
-(((P) >= 8 && (P) <= 11) ? (P) - 4 : (((P) >= 18 && (P) <= 21) ? 25 - (P) : (((P) == 0) ? 2 : (((P) == 1) ? 3 : (((P) == 2) ? 1 : (((P) == 3) ? 0 : (((P) == 4) ? 4 : (((P) == 6) ? 7 : (((P) == 13) ? 7 : (((P) == 14) ? 3 : (((P) == 15) ? 1 : (((P) == 16) ? 2 : (((P) == 17) ? 0 : (((P) == 22) ? 1 : (((P) == 23) ? 0 : (((P) == 24) ? 4 : (((P) == 25) ? 7 : (((P) == 26) ? 4 : (((P) == 27) ? 5 : 6 )))))))))))))))))))
-
+(((P) >= 8 && (P) <= 11) ? (P) - 4 : \
+(((P) >= 18 && (P) <= 21) ? 25 - (P) : \
+(((P) == 0) ? 2 : (((P) == 1) ? 3 : (((P) == 2) ? 1 : (((P) == 3) ? 0 : (((P) == 4) ? 4 : (((P) == 6) ? 7 : (((P) == 13) ? 7 : \
+(((P) == 14) ? 3 : (((P) == 15) ? 1 : (((P) == 16) ? 2 : (((P) == 17) ? 0 : (((P) == 22) ? 1 : (((P) == 23) ? 0 : \
+(((P) == 24) ? 4 : (((P) == 25) ? 7 : (((P) == 26) ? 4 : (((P) == 27) ? 5 : 6 )))))))))))))))))))
+#  endif
 
 // --- Arduino Uno and ATmega168/328 based boards ---
 #elif (defined(ARDUINO_AVR_UNO) || \
@@ -434,20 +468,20 @@
 //#endif  //#if !defined(digitalPinToPortReg)
 
 #if !defined(digitalWriteFast)
-#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
+#  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
 #define digitalWriteFast(P, V) \
 if (__builtin_constant_p(P)) { \
   BIT_WRITE(*__digitalPinToPortReg(P), __digitalPinToBit(P), (V)); \
 } else { \
   digitalWrite((P), (V)); \
 }
-#else
+#  else
 #define digitalWriteFast digitalWrite
-#endif
+#  endif
 #endif
 
 #if !defined(pinModeFast)
-#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
+#  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
 #define pinModeFast(P, V) \
 if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
   if (V == INPUT_PULLUP) {\
@@ -459,34 +493,35 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 } else { \
   pinMode((P), (V)); \
 }
-#else
+#  else
 #define pinModeFast pinMode
-#endif
+#  endif
 #endif // !defined(pinModeFast)
 
 #if !defined(digitalReadFast)
-#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))
+#  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPINReg)
 #define digitalReadFast(P) ( (int) __digitalReadFast((P)) )
+// since we have return values, it is easier to implement it by ?:
 #define __digitalReadFast(P ) \
   (__builtin_constant_p(P) ) ? \
   (( BIT_READ(*__digitalPinToPINReg(P), __digitalPinToBit(P))) ? HIGH:LOW ) : \
   digitalRead((P))
-#else
+#  else
 #define digitalReadFast digitalRead
-#endif
+#  endif
 #endif // !defined(digitalReadFast)
 
 #if !defined(digitalToggleFast)
-#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))
+#  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPINReg)
 #define digitalToggleFast(P) \
 if (__builtin_constant_p(P)) { \
   BIT_SET(*__digitalPinToPINReg(P), __digitalPinToBit(P)); \
 } else { \
   digitalWrite(P, ! digitalRead(P)); \
 }
-#else
+#  else
 #define digitalToggleFast(P) digitalWrite(P, ! digitalRead(P))
-#endif
+#  endif
 #endif // !defined(digitalToggleFast)
 
 #endif //__digitalWriteFast_h_

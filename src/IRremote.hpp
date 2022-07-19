@@ -117,8 +117,8 @@
 #    if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program memory
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF
-#define DECODE_WHYNTER
 #define DECODE_MAGIQUEST // It modifies the RAW_BUFFER_LENGTH from 100 to 112
+#define DECODE_WHYNTER
 #    endif
 
 #    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
@@ -279,6 +279,11 @@
 #define MICROS_IN_ONE_MILLI 1000L
 
 #include "IRremoteInt.h"
+/*
+ * We always use digitalWriteFast() and digitalReadFast() functions to have a consistent mapping for pins.
+ * For most non AVR cpu's, it is just a mapping to digitalWrite() and digitalRead() functions.
+ */
+#include "digitalWriteFast.h"
 
 #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)
 #include "private/IRTimer.hpp"  // defines IR_SEND_PIN for AVR and SEND_PWM_BY_TIMER

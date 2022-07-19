@@ -41,7 +41,6 @@
 /** \addtogroup Timer Usage of timers for the different CPU / boards
  * @{
  */
-#include "digitalWriteFast.h"
 
 #if defined(SEND_PWM_BY_TIMER) && ( (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED) )
 #define SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER // Receive timer and send generation are independent, so it is recommended to always define SEND_PWM_BY_TIMER

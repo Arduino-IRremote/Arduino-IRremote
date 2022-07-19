@@ -39,8 +39,6 @@
 #define sendPin IR_SEND_PIN
 #endif
 
-#include "digitalWriteFast.h"
-
 /** \addtogroup Sending Sending IR data for multiple protocols
  * @{
  */

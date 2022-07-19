@@ -103,10 +103,10 @@ void IRrecv::begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8
     (void) aFeedbackLEDPin;
 #endif
     // Set pin mode once
-    pinMode(irparams.IRReceivePin, INPUT);
+    pinModeFast(irparams.IRReceivePin, INPUT);
 
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-    pinMode(_IR_TIMING_TEST_PIN, OUTPUT);
+    pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
     start();
 }
@@ -1447,10 +1447,7 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
  *
  **********************************************************************************************************************/
 //#define _IR_MEASURE_TIMING
-//#define _IR_TIMING_TEST_PIN 7 // do not forget to execute: "pinMode(_IR_TIMING_TEST_PIN, OUTPUT);" if activated by line above
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-#include "digitalWriteFast.h"
-#endif
+//#define _IR_TIMING_TEST_PIN 7 // do not forget to execute: "pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);" if activated by line above
 #if defined(TIMER_INTR_NAME)
 ISR (TIMER_INTR_NAME) // for ISR definitions
 #else
@@ -1468,7 +1465,7 @@ ISR () // for functions definitions which are called by separate (board specific
 #if defined(__AVR__)
     uint8_t tIRInputLevel = *irparams.IRReceivePinPortInputRegister & irparams.IRReceivePinMask;
 #else
-    uint_fast8_t tIRInputLevel = (uint_fast8_t) digitalRead(irparams.IRReceivePin);
+    uint_fast8_t tIRInputLevel = (uint_fast8_t) digitalReadFast(irparams.IRReceivePin);
 #endif
 
     /*

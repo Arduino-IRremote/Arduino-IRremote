@@ -2,13 +2,14 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
-## 3.7.2
+## 3.8.0
 - Changed Samsung repeat handling. Old handling is available as SamsungLG.
 - Added function printIRSendUsage().
 - Reduced output size and improved format of printIRResultRawFormatted() to fasten up output (and getting repeats properly decoded).
 - Fixed Bug in sendDenonRaw() and improved decodeDenon().
 - Fixed potential bug in SendBiphase data for 1 bit.
 - Fixed bug in send for RP4020.
+- Fixed pin mapping problems especially for Teensy 2.0.
 
 ## 3.7.1
 - SendRaw now supports bufferlenght > 255.

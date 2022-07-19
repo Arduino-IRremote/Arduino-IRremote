@@ -36,8 +36,6 @@
  * @{
  */
 
-#include "digitalWriteFast.h"
-
 /**
  * Contains pin number and enable status of the feedback LED
  */
@@ -62,10 +60,10 @@ void setLEDFeedback(uint8_t aFeedbackLEDPin, uint8_t aEnableLEDFeedback) {
     if (aEnableLEDFeedback != DO_NOT_ENABLE_LED_FEEDBACK) {
         FeedbackLEDControl.LedFeedbackEnabled |= aEnableLEDFeedback;
         if (aFeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
-            pinMode(aFeedbackLEDPin, OUTPUT);
+            pinModeFast(aFeedbackLEDPin, OUTPUT);
 #if defined(LED_BUILTIN)
         } else {
-            pinMode(LED_BUILTIN, OUTPUT);
+            pinModeFast(LED_BUILTIN, OUTPUT);
 #else
             FeedbackLEDControl.LedFeedbackEnabled = LED_FEEDBACK_DISABLED_COMPLETELY; // we have no LED_BUILTIN available
 #endif
@@ -111,9 +109,9 @@ void setFeedbackLED(bool aSwitchLedOn) {
     if (aSwitchLedOn) {
         if (FeedbackLEDControl.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED on
+                digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED on
 #else
-            digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
+            digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
 #endif
 #if defined(LED_BUILTIN) // use fast macros here
             } else {
@@ -127,11 +125,11 @@ void setFeedbackLED(bool aSwitchLedOn) {
     } else {
         if (FeedbackLEDControl.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-                digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED off
+            digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED off
 #else
-            digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED off
+            digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED off
 #endif
-#if defined(LED_BUILTIN) // use fast macros here
+#if defined(LED_BUILTIN)
             } else {
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
                 digitalWriteFast(LED_BUILTIN, HIGH); // For AVR, this generates a single sbi command
