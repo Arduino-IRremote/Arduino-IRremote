@@ -218,7 +218,13 @@ public:
     void printIRResultMinimal(Print *aSerial);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
+
+    /*
+     * Next 3 functions are also available as non member functions
+     */
     void printIRSendUsage(Print *aSerial);
+    void printActiveIRProtocols(Print *aSerial);
+    const __FlashStringHelper* getProtocolString();
 
     void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int frequency = 38000U);
@@ -322,6 +328,9 @@ bool MATCH_MARK(unsigned int measured_ticks, unsigned int desired_us);
 bool MATCH_SPACE(unsigned int measured_ticks, unsigned int desired_us);
 
 int getMarkExcessMicros();
+/*
+ * Next 3 functions are also available as member functions
+ */
 void printActiveIRProtocols(Print *aSerial);
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap);
 void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr);

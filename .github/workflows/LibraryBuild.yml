@@ -51,6 +51,7 @@ jobs:
           - arduino:avr:uno|USE_NO_SEND_PWM
           - arduino:avr:uno|SEND_PWM_BY_TIMER
           - arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
+          - arduino:avr:mega:cpu=atmega2560
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
           - arduino:samd:arduino_zero_native
@@ -104,6 +105,11 @@ jobs:
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3 -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
               All: -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
+
+          - arduino-boards-fqbn: arduino:avr:mega:cpu=atmega2560
+            sketches-exclude: IR2Keyboard
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
 
           - arduino-boards-fqbn: arduino:avr:leonardo
             build-properties: # the flags were put in compiler.cpp.extra_flags

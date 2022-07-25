@@ -869,6 +869,10 @@ void CheckForRecordGapsMicros(Print *aSerial, IRData *aIRDataPtr) {
  * Print functions
  * Since a library should not allocate the "Serial" object, all functions require a pointer to a Print object.
  **********************************************************************************************************************/
+void IRrecv::printActiveIRProtocols(Print *aSerial) {
+    // call no class function with same name
+    ::printActiveIRProtocols(aSerial);
+}
 void printActiveIRProtocols(Print *aSerial) {
 #if defined(DECODE_NEC)
     aSerial->print(F("NEC, "));
@@ -934,6 +938,7 @@ void printActiveIRProtocols(Print *aSerial) {
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRResultShort(Print *aSerial) {
+    // call no class function with same name
     ::printIRResultShort(aSerial, &decodedIRData, true);
 }
 
@@ -1030,6 +1035,7 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap) {
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRSendUsage(Print *aSerial) {
+    // call no class function with same name
     ::printIRSendUsage(aSerial, &decodedIRData);
 }
 
@@ -1337,6 +1343,11 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
         aSerial->println(';');
         aSerial->println();
     }
+}
+
+const __FlashStringHelper* IRrecv::getProtocolString() {
+    // call no class function with same name
+    return ::getProtocolString(decodedIRData.protocol);
 }
 
 const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {

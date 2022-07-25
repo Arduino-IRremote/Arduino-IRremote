@@ -436,7 +436,7 @@ ATtiny and Digispark boards are only tested with the recommended [ATTinyCore](ht
 - ATmega4809 (Nano every)
 - ATtiny3217 (Tiny Core 32 Dev Board)
 - ATtiny84, 85, 167 (Digispark + Digispark Pro)
-- SAMD (Zero, MKR*, **but not DUE, which is SAM architecture**)
+- SAMD21 (Zero, MKR*, **but not SAMD51 and not DUE, the latter is SAM architecture**)
 - ESP32 (ESP32 C3 since board package 2.0.2 from Espressif)
 - ESP8266 [This fork](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols and a lot of air conditioners](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md)
 - Sparkfun Pro Micro

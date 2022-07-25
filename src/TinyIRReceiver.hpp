@@ -56,8 +56,17 @@
  * @{
  */
 
-//#define DEBUG // to see if attachInterrupt used
-//#define TRACE // to see the state of the ISR state machine
+#if defined(DEBUG)
+#define LOCAL_DEBUG_ATTACH_INTERRUPT
+#else
+//#define LOCAL_DEBUG_ATTACH_INTERRUPT  // to see if attachInterrupt() or static interrupt (by register tweaking) is used
+#endif
+#if defined(TRACE)
+#define LOCAL_TRACE_STATE_MACHINE
+#else
+//#define LOCAL_TRACE_STATE_MACHINE  // to see the state of the ISR state machine
+#endif
+
 //#define _IR_MEASURE_TIMING        // Activate this if you want to enable internal hardware timing measurement.
 //#define _IR_TIMING_TEST_PIN 7
 TinyIRReceiverStruct TinyIRReceiverControl;
@@ -136,14 +145,13 @@ void IRPinChangeInterruptHandler(void)
 
     uint8_t tState = TinyIRReceiverControl.IRReceiverState;
 
-#if defined(TRACE)
+#if defined(LOCAL_TRACE_STATE_MACHINE)
     Serial.print(tState);
-    Serial.print(' ');
+    Serial.print(F(" D="));
+    Serial.print(tMicrosOfMarkOrSpace);
 //    Serial.print(F(" I="));
 //    Serial.print(tIRLevel);
-//    Serial.print(F(" D="));
-//    Serial.print(tDeltaMicros);
-//    Serial.println();
+    Serial.print('|');
 #endif
 
     if (tIRLevel == LOW) {
@@ -294,7 +302,7 @@ void initPCIInterruptForTinyReceiver() {
     enablePCIInterruptForTinyReceiver();
 }
 
-#if defined (DEBUG) && !defined(STR)
+#if defined (LOCAL_DEBUG_ATTACH_INTERRUPT) && !defined(STR)
 // Helper macro for getting a macro definition as string
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
@@ -313,11 +321,11 @@ void enablePCIInterruptForTinyReceiver() {
 #elif !defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
     // costs 112 bytes program memory + 4 bytes RAM
     attachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN), IRPinChangeInterruptHandler, CHANGE);
-#  if defined(DEBUG)
+#  if defined(LOCAL_DEBUG_ATTACH_INTERRUPT)
     Serial.println(F("Use attachInterrupt for pin=" STR(IR_INPUT_PIN)));
 #  endif
 #else
-#  if defined(DEBUG)
+#  if defined(LOCAL_DEBUG_ATTACH_INTERRUPT)
     Serial.println(F("Use static interrupt for pin=" STR(IR_INPUT_PIN)));
 #  endif
 #  if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
@@ -527,4 +535,10 @@ ISR(PCINT1_vect)
 
 /** @}*/
 
+#if defined(LOCAL_DEBUG_ATTACH_INTERRUPT)
+#undef LOCAL_DEBUG_ATTACH_INTERRUPT
+#endif
+#if defined(LOCAL_TRACE_STATE_MACHINE)
+#undef LOCAL_TRACE_STATE_MACHINE
+#endif
 #endif // _TINY_IR_RECEIVER_HPP
