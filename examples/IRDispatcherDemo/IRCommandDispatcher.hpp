@@ -316,8 +316,8 @@ void IRCommandDispatcher::printIRCommandString(Print *aSerial) {
     aSerial->println(reinterpret_cast<const __FlashStringHelper*>(unknown));
 }
 
-void IRCommandDispatcher::setRequestToStopReceived() {
-    requestToStopReceived = true;
+void IRCommandDispatcher::setRequestToStopReceived(bool aRequestToStopReceived) {
+    requestToStopReceived = aRequestToStopReceived;
 }
 
 #if defined(LOCAL_DEBUG)

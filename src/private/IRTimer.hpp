@@ -1195,8 +1195,7 @@ void setTimerFrequency(unsigned int aFrequencyHz) {
     TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
     TC->COUNT.reg = 0;
     TC->CC[0].reg = compareValue;
-    while (TC->STATUS.bit.SYNCBUSY == 1) {
-    }
+    while (TC->STATUS.bit.SYNCBUSY == 1);
 }
 
 /*
@@ -1205,22 +1204,19 @@ void setTimerFrequency(unsigned int aFrequencyHz) {
 void timerConfigForReceive() {
     // Clock source is Generic clock generator 0; enable
     REG_GCLK_CLKCTRL = (uint16_t) (GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | IR_SAMD_TIMER_ID);
-    while (GCLK->STATUS.bit.SYNCBUSY == 1) {
-    }
+    while (GCLK->STATUS.bit.SYNCBUSY == 1);
 
     TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER; // Timer 3
 
     // The TC should be disabled before the TC is reset in order to avoid undefined behavior.
     TC->CTRLA.reg &= ~TC_CTRLA_ENABLE;
     // When write-synchronization is ongoing for a register, any subsequent write attempts to this register will be discarded, and an error will be reported.
-    while (TC->STATUS.bit.SYNCBUSY == 1) {
-    } // wait for sync
+    while (TC->STATUS.bit.SYNCBUSY == 1); // wait for sync to ensure that we can write again to COUNT16.CTRLA.reg
       // Reset TCx
     TC->CTRLA.reg = TC_CTRLA_SWRST;
     // When writing a ‘1’ to the CTRLA.SWRST bit it will immediately read as ‘1’.
     // CTRL.SWRST will be cleared by hardware when the peripheral has been reset.
-    while (TC->CTRLA.bit.SWRST) {
-    }
+    while (TC->CTRLA.bit.SWRST);
 
     // Use the 16-bit timer
     // Use match mode so that the timer counter resets when the count matches the compare register

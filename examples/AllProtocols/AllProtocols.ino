@@ -130,7 +130,7 @@ void setup() {
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
-    printActiveIRProtocols(&Serial);
+    printActiveIRProtocols (&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
@@ -267,7 +267,10 @@ void printIRResultOnLCD() {
          * Show or clear repetition flag
          */
         myLCD.setCursor(15, 1);
-        if (IrReceiver.decodedIRData.flags & (IRDATA_FLAGS_IS_REPEAT)) {
+        if (IrReceiver.decodedIRData.flags & (IRDATA_FLAGS_IS_SPECIAL_REPEAT)) {
+            myLCD.print('S');
+            return; // Since it is a repetition, printed data has not changed
+        } else if (IrReceiver.decodedIRData.flags & (IRDATA_FLAGS_IS_REPEAT)) {
             myLCD.print('R');
             return; // Since it is a repetition, printed data has not changed
         } else {

@@ -52,6 +52,7 @@
 // for Apple see https://en.wikipedia.org/wiki/Apple_Remote
 // ONKYO like NEC but 16 independent command bits
 // LSB first, 1 start bit + 16 bit address (or 8 bit address and 8 bit inverted address) + 8 bit command + 8 bit inverted command + 1 stop bit.
+// Standard NEC send a special fixed repeat frame, but I have a DVD remote, which send the same full frame after the 110 ms.
 //
 #define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
 #define NEC_COMMAND_BITS        16 // Command and inverted command
@@ -69,9 +70,11 @@
 #define NEC_REPEAT_HEADER_SPACE (4 * NEC_UNIT)  // 2250
 
 #define NEC_AVERAGE_DURATION    62000 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2,5 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
+#define NEC_MINIMAL_DURATION    49900 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
 #define NEC_REPEAT_DURATION     (NEC_HEADER_MARK  + NEC_REPEAT_HEADER_SPACE + NEC_BIT_MARK) // 12 ms
 #define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define NEC_REPEAT_SPACE        (NEC_REPEAT_PERIOD - NEC_AVERAGE_DURATION) // 48 ms
+#define NEC_MAXIMUM_REPEAT_SPACE (NEC_REPEAT_PERIOD - NEC_MINIMAL_DURATION + 5) // 65 ms
 
 #define APPLE_ADDRESS           0x87EE
 //+=============================================================================
@@ -285,6 +288,11 @@ bool IRrecv::decodeNEC() {
         }
     }
     decodedIRData.numberOfBits = NEC_BITS;
+
+    // check for special repeat, do not check for same content ;-)
+    if (decodedIRData.rawDataPtr->rawbuf[0] < (NEC_MAXIMUM_REPEAT_SPACE / MICROS_PER_TICK)) {
+        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_SPECIAL_REPEAT;
+    }
 
     return true;
 }

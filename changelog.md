@@ -10,6 +10,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Fixed potential bug in SendBiphase data for 1 bit.
 - Fixed bug in send for RP4020.
 - Fixed pin mapping problems especially for Teensy 2.0.
+- Added support for decoding of "special" NEC repeats.
 
 ## 3.7.1
 - SendRaw now supports bufferlenght > 255.

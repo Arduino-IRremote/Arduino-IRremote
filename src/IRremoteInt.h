@@ -132,11 +132,15 @@ struct irparams_struct {
 #define IRDATA_FLAGS_IS_REPEAT          0x01
 #define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
 #define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
-#define IRDATA_TOGGLE_BIT_MASK          0x08 ///< is set if RC5 or RC6 toggle bit is set
+#define IRDATA_FLAGS_TOGGLE_BIT         0x08 ///< is set if RC5 or RC6 toggle bit is set
+#define IRDATA_FLAGS_IS_SPECIAL_REPEAT  0x08 ///< is set if we received a NEC special receive (full frame instead of repeat frame)
 #define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< there is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
 #define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is 0 in this case to avoid endless OverflowFlag
 #define IRDATA_FLAGS_IS_LSB_FIRST       0x00
 #define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Just for info. Value is mainly determined by the protocol
+
+// deprecated
+#define IRDATA_TOGGLE_BIT_MASK          0x08 ///< is set if RC5 or RC6 toggle bit is set
 
 #define RAW_DATA_ARRAY_SIZE             ((((RAW_BUFFER_LENGTH - 2) - 1) / 64) + 1) // The -2 is for initial gap + stop bit mark, 64 mark + spaces for 32 bit.
 /**
@@ -214,17 +218,17 @@ public:
     /*
      * Useful info and print functions
      */
-    void printIRResultShort(Print *aSerial);
     void printIRResultMinimal(Print *aSerial);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
 
     /*
-     * Next 3 functions are also available as non member functions
+     * Next 4 functions are also available as non member functions
      */
+    void printIRResultShort(Print *aSerial);
     void printIRSendUsage(Print *aSerial);
-    void printActiveIRProtocols(Print *aSerial);
     const __FlashStringHelper* getProtocolString();
+    static void printActiveIRProtocols(Print *aSerial);
 
     void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void compensateAndPrintIRResultAsPronto(Print *aSerial, unsigned int frequency = 38000U);
@@ -329,11 +333,12 @@ bool MATCH_SPACE(unsigned int measured_ticks, unsigned int desired_us);
 
 int getMarkExcessMicros();
 /*
- * Next 3 functions are also available as member functions
+ * Next 4 functions are also available as member functions
  */
-void printActiveIRProtocols(Print *aSerial);
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap);
 void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr);
+const __FlashStringHelper* getProtocolString();
+void printActiveIRProtocols(Print *aSerial);
 
 /****************************************************
  * Feedback LED related functions

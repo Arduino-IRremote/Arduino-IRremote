@@ -49,6 +49,8 @@
 
 #include <Arduino.h>
 
+// - DISABLE_NEC_SPECIAL_REPEAT_SUPPORT    // Activating this disables detection of full NEC frame repeats. Saves 40 bytes program memory.
+
 #include "TinyIRReceiver.h" // If not defined, it defines IR_INPUT_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
 
 #include "digitalWriteFast.h"
@@ -107,9 +109,9 @@ TinyIRReceiverStruct TinyIRReceiverControl;
  * It is called every time a complete IR command or repeat was received.
  */
 #if defined(ESP32) || defined(ESP8266)
-void IRAM_ATTR handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
+extern void IRAM_ATTR handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
 #else
-void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
+extern void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
 #endif
 
 /**
@@ -140,7 +142,12 @@ void IRPinChangeInterruptHandler(void)
      * 1. compute microseconds after last change
      */
     uint32_t tCurrentMicros = micros();
+#if defined(DISABLE_NEC_SPECIAL_REPEAT_SUPPORT)
     uint16_t tMicrosOfMarkOrSpace = tCurrentMicros - TinyIRReceiverControl.LastChangeMicros;
+#else
+    uint32_t tMicrosOfMarkOrSpace32 = tCurrentMicros - TinyIRReceiverControl.LastChangeMicros;
+    uint16_t tMicrosOfMarkOrSpace = tMicrosOfMarkOrSpace32;
+#endif
     TinyIRReceiverControl.LastChangeMicros = tCurrentMicros;
 
     uint8_t tState = TinyIRReceiverControl.IRReceiverState;
@@ -165,6 +172,12 @@ void IRPinChangeInterruptHandler(void)
         if (tState == IR_RECEIVER_STATE_WAITING_FOR_START_MARK) {
             // We are at the beginning of the header mark, check timing at the next transition
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_SPACE;
+            TinyIRReceiverControl.IRRepeatFrameDetected = false; // If we do it here, it saves 4 bytes
+#if !defined(DISABLE_NEC_SPECIAL_REPEAT_SUPPORT)
+            // Check for special repeat, where full frame is sent again after 110 ms
+            // Must use 32 bit arithmetic here!
+            TinyIRReceiverControl.IRRepeatDistanceDetected = (tMicrosOfMarkOrSpace32 < NEC_MAXIMUM_REPEAT_SPACE);
+#endif
         }
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_FIRST_DATA_MARK) {
@@ -176,7 +189,6 @@ void IRPinChangeInterruptHandler(void)
                 TinyIRReceiverControl.IRRawDataBitCounter = 0;
                 TinyIRReceiverControl.IRRawData.ULong = 0;
                 TinyIRReceiverControl.IRRawDataMask = 1;
-                TinyIRReceiverControl.IRRepeatDetected = false;
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
             } else if (tMicrosOfMarkOrSpace >= lowerValue25Percent(NEC_REPEAT_HEADER_SPACE)
                     && tMicrosOfMarkOrSpace <= upperValue25Percent(NEC_REPEAT_HEADER_SPACE)
@@ -184,7 +196,7 @@ void IRPinChangeInterruptHandler(void)
                 /*
                  * We have a repeat header here and no broken receive before -> set repeat flag
                  */
-                TinyIRReceiverControl.IRRepeatDetected = true;
+                TinyIRReceiverControl.IRRepeatFrameDetected = true;
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
             } else {
                 // This parts are optimized by the compiler into jumps to one code :-)
@@ -240,9 +252,9 @@ void IRPinChangeInterruptHandler(void)
             if (tMicrosOfMarkOrSpace >= lowerValue50Percent(NEC_BIT_MARK)
                     && tMicrosOfMarkOrSpace <= upperValue50Percent(NEC_BIT_MARK)) {
                 /*
-                 * We have a valid mark here, check for transmission complete
+                 * We have a valid mark here, check for transmission complete, i.e. the mark of the stop bit
                  */
-                if (TinyIRReceiverControl.IRRawDataBitCounter >= NEC_BITS || TinyIRReceiverControl.IRRepeatDetected) {
+                if (TinyIRReceiverControl.IRRawDataBitCounter >= NEC_BITS || TinyIRReceiverControl.IRRepeatFrameDetected) {
                     /*
                      * Code complete -> call callback, no parity check!
                      */
@@ -264,7 +276,11 @@ void IRPinChangeInterruptHandler(void)
                      * Call user provided callback here
                      */
                     handleReceivedTinyIRData(TinyIRReceiverControl.IRRawData.UWord.LowWord,
-                            TinyIRReceiverControl.IRRawData.UByte.MidHighByte, TinyIRReceiverControl.IRRepeatDetected);
+                            TinyIRReceiverControl.IRRawData.UByte.MidHighByte, (TinyIRReceiverControl.IRRepeatFrameDetected
+#if !defined(DISABLE_NEC_SPECIAL_REPEAT_SUPPORT)
+                                    || TinyIRReceiverControl.IRRepeatDistanceDetected
+#endif
+                            ));
 
                 } else {
                     // not finished yet

@@ -2,7 +2,7 @@
  *  TinyIRReceiver.h
  *
  *
- *  Copyright (C) 2021  Armin Joachimsmeyer
+ *  Copyright (C) 2021-2022  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/ukw100/IRMP.
@@ -27,6 +27,8 @@
 #define _TINY_IR_RECEIVER_H
 
 #include <Arduino.h>
+
+//#define DISABLE_NEC_SPECIAL_REPEAT_SUPPORT    // Activating this disables detection of full NEC frame repeats. Saves 40 bytes program memory.
 
 #include "LongUnion.h"
 
@@ -56,7 +58,9 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
 #define NEC_ZERO_SPACE          NEC_UNIT
 
 #define NEC_REPEAT_HEADER_SPACE (4 * NEC_UNIT)  // 2250
-#define NEC_REPEAT_PERIOD       110000 // Not used yet - Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define NEC_MINIMAL_DURATION    49900 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
+#define NEC_MAXIMUM_REPEAT_SPACE (NEC_REPEAT_PERIOD - NEC_MINIMAL_DURATION + 5) // 65 ms
 
 /*
  * Macros for comparing timing values
@@ -90,7 +94,10 @@ struct TinyIRReceiverStruct {
      */
     uint32_t IRRawDataMask;
     LongUnion IRRawData;
-    bool IRRepeatDetected;
+    bool IRRepeatFrameDetected;
+#if !defined(DISABLE_NEC_SPECIAL_REPEAT_SUPPORT)
+    bool IRRepeatDistanceDetected;
+#endif
 };
 
 /*
@@ -101,7 +108,7 @@ struct TinyIRReceiverCallbackDataStruct {
     uint16_t Address;
     uint8_t Command;
     bool isRepeat;
-    bool justWritten;
+    bool justWritten; // Is set true if new data is available. Used by the main loop, to avoid multiple evaluations of the same IR frame.
 };
 
 void initPCIInterruptForTinyReceiver();
