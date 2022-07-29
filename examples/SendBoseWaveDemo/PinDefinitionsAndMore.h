@@ -234,8 +234,10 @@ void noTone(uint8_t aPinNumber){
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
 #define _IR_TIMING_TEST_PIN 7
 
+#if !defined(ARDUINO_SAMD_ADAFRUIT)
 // On the Zero and others we switch explicitly to SerialUSB
 #define Serial SerialUSB
+#endif
 
 // Definitions for the Chinese SAMD21 M0-Mini clone, which has no led connected to D13/PA17.
 // Attention!!! D2 and D4 are swapped on these boards!!!

@@ -1167,18 +1167,24 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
  ***************************************/
 #elif defined(ARDUINO_ARCH_SAMD)
 #  if defined(SEND_PWM_BY_TIMER)
-#error PWM generation by hardware not implemented for SAMD
+#error PWM generation by hardware is not yet implemented for SAMD
 #  endif
 
-// use Timer TC3 here
 #  if !defined(IR_SAMD_TIMER)
+#    if defined(__SAMD51__)
+#define IR_SAMD_TIMER       TC5
+#define IR_SAMD_TIMER_IRQ   TC5_IRQn
+#    else
+// SAMD21
 #define IR_SAMD_TIMER       TC3
 #define IR_SAMD_TIMER_ID    GCLK_CLKCTRL_ID_TCC2_TC3
-#endif
+#define IR_SAMD_TIMER_IRQ   TC3_IRQn
+#    endif
+#  endif
 
 #define TIMER_RESET_INTR_PENDING
-#define TIMER_ENABLE_RECEIVE_INTR   NVIC_EnableIRQ(TC3_IRQn)
-#define TIMER_DISABLE_RECEIVE_INTR  NVIC_DisableIRQ(TC3_IRQn) // or TC3->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
+#define TIMER_ENABLE_RECEIVE_INTR   NVIC_EnableIRQ(IR_SAMD_TIMER_IRQ)
+#define TIMER_DISABLE_RECEIVE_INTR  NVIC_DisableIRQ(IR_SAMD_TIMER_IRQ) // or TC5->INTENCLR.bit.MC0 = 1; or TC5->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
 // Redefinition of ISR macro which creates a plain function now
 #  if defined(ISR)
 #undef ISR
@@ -1187,49 +1193,87 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 // ATSAMD Timer IRQ functions
 void IRTimerInterruptHandler();
 
-#define TIMER_PRESCALER_DIV 64
-
-void setTimerFrequency(unsigned int aFrequencyHz) {
-    int compareValue = (F_CPU / (TIMER_PRESCALER_DIV * aFrequencyHz)) - 1;
-    //Serial.println(compareValue);
-    TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
-    TC->COUNT.reg = 0;
-    TC->CC[0].reg = compareValue;
-    while (TC->STATUS.bit.SYNCBUSY == 1);
-}
-
+/**
+ * Adafruit M4 code (cores/arduino/startup.c) configures these clock generators:
+ * GCLK0 = F_CPU
+ * GCLK2 = 100 MHz
+ * GCLK1 = 48 MHz // This Clock is present in SAMD21 and SAMD51
+ * GCLK4 = 12 MHz
+ * GCLK3 = XOSC32K
+ */
 /*
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
  */
 void timerConfigForReceive() {
-    // Clock source is Generic clock generator 0; enable
+    TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
+
+#  if defined(__SAMD51__)
+    // Enable the TC5 clock, use generic clock generator 0 (F_CPU) for TC5
+    GCLK->PCHCTRL[TC5_GCLK_ID].reg = GCLK_PCHCTRL_GEN_GCLK0_Val | (1 << GCLK_PCHCTRL_CHEN_Pos);
+
+    // The TC should be disabled before the TC is reset in order to avoid undefined behavior.
+    TC->CTRLA.reg &= ~TC_CTRLA_ENABLE; // Disable the Timer
+    while (TC->SYNCBUSY.bit.ENABLE)
+        ; // Wait for disabled
+    // Reset TCx
+    TC->CTRLA.reg = TC_CTRLA_SWRST;
+    // When writing a '1' to the CTRLA.SWRST bit it will immediately read as '1'.
+    while (TC->SYNCBUSY.bit.SWRST)
+        ; // CTRL.SWRST will be cleared by hardware when the peripheral has been reset.
+
+    // SAMD51 has F_CPU = 120 MHz
+    TC->CC[0].reg = ((MICROS_PER_TICK * (F_CPU / MICROS_IN_ONE_SECOND)) / 16) - 1;   // (375 - 1);
+
+    /*
+     * Set timer counter mode to 16 bits, set mode as match frequency, prescaler is DIV16 => 7.5 MHz clock, start counter
+     */
+    TC->CTRLA.reg |= TC_CTRLA_MODE_COUNT16 | TC_WAVE_WAVEGEN_MFRQ | TC_CTRLA_PRESCALER_DIV16 | TC_CTRLA_ENABLE;
+//    while (TC5->COUNT16.STATUS.bit.SYNCBUSY == 1);                                // The next commands do an implicit wait :-)
+#  else
+    // Enable GCLK and select GCLK0 (F_CPU) as clock for TC4 and TC5
     REG_GCLK_CLKCTRL = (uint16_t) (GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | IR_SAMD_TIMER_ID);
     while (GCLK->STATUS.bit.SYNCBUSY == 1);
-
-    TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER; // Timer 3
 
     // The TC should be disabled before the TC is reset in order to avoid undefined behavior.
     TC->CTRLA.reg &= ~TC_CTRLA_ENABLE;
     // When write-synchronization is ongoing for a register, any subsequent write attempts to this register will be discarded, and an error will be reported.
     while (TC->STATUS.bit.SYNCBUSY == 1); // wait for sync to ensure that we can write again to COUNT16.CTRLA.reg
-      // Reset TCx
+    // Reset TCx
     TC->CTRLA.reg = TC_CTRLA_SWRST;
     // When writing a ‘1’ to the CTRLA.SWRST bit it will immediately read as ‘1’.
-    // CTRL.SWRST will be cleared by hardware when the peripheral has been reset.
-    while (TC->CTRLA.bit.SWRST);
+    while (TC->CTRLA.bit.SWRST); // CTRL.SWRST will be cleared by hardware when the peripheral has been reset.
 
-    // Use the 16-bit timer
-    // Use match mode so that the timer counter resets when the count matches the compare register
-    // Set prescaler to 64
-    TC->CTRLA.reg |= TC_CTRLA_MODE_COUNT16 | TC_CTRLA_WAVEGEN_MFRQ | TC_CTRLA_PRESCALER_DIV64 | TC_CTRLA_ENABLE;
+    // SAMD51 has F_CPU = 48 MHz
+    TC->CC[0].reg = ((MICROS_PER_TICK * (F_CPU / MICROS_IN_ONE_SECOND)) / 16) - 1;   // (150 - 1);
 
-    setTimerFrequency(MICROS_IN_ONE_SECOND / MICROS_PER_TICK);
+    /*
+     * Set timer counter mode to 16 bits, set mode as match frequency, prescaler is DIV16 => 3 MHz clock, start counter
+     */
+    TC->CTRLA.reg |= TC_CTRLA_MODE_COUNT16 | TC_CTRLA_WAVEGEN_MFRQ | TC_CTRLA_PRESCALER_DIV16 | TC_CTRLA_ENABLE;
+
+#  endif
+    // Configure interrupt request
+    NVIC_DisableIRQ (IR_SAMD_TIMER_IRQ);
+    NVIC_ClearPendingIRQ(IR_SAMD_TIMER_IRQ);
+    NVIC_SetPriority(IR_SAMD_TIMER_IRQ, 0);
+    NVIC_EnableIRQ(IR_SAMD_TIMER_IRQ);
 
     // Enable the compare interrupt
-    TC->INTENSET.reg = 0;
     TC->INTENSET.bit.MC0 = 1;
+
 }
 
+#  if defined(__SAMD51__)
+void TC5_Handler(void) {
+    TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
+    // Check for right interrupt bit
+    if (TC->INTFLAG.bit.MC0 == 1) {
+        // reset bit for next turn
+        TC->INTFLAG.bit.MC0 = 1;
+        IRTimerInterruptHandler();
+    }
+}
+#  else
 void TC3_Handler(void) {
     TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
     // Check for right interrupt bit
@@ -1239,6 +1283,7 @@ void TC3_Handler(void) {
         IRTimerInterruptHandler();
     }
 }
+#  endif // defined(__SAMD51__)
 
 /***************************************
  * Mbed based boards

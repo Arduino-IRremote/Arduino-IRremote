@@ -68,11 +68,6 @@
 #define DEBUG_BUTTON_PIN   6
 #endif
 
-// On the Zero and others we switch explicitly to SerialUSB
-#if defined(ARDUINO_ARCH_SAMD)
-#define Serial SerialUSB
-#endif
-
 /*
  * Activate the type of LCD you use
  * Default is serial LCD with 2 rows of 16 characters (1602).

@@ -55,6 +55,7 @@ jobs:
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
           - arduino:samd:arduino_zero_native
+          - adafruit:samd:adafruit_metro_m4:cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off
           - arduino:mbed:nano33ble
           - arduino:mbed_rp2040:pico
           - rp2040:rp2040:arduino_nano_connect
@@ -124,6 +125,10 @@ jobs:
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+
+          - arduino-boards-fqbn: adafruit:samd:adafruit_metro_m4:cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off
+            platform-url: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+            sketches-exclude: MinimalReceiver,IRDispatcherDemo
 
           - arduino-boards-fqbn: arduino:mbed:nano33ble
             build-properties: # the flags were put in compiler.cpp.extra_flags

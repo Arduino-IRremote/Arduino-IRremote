@@ -95,12 +95,6 @@
 //#define BOSE_CMD_ALARM_WAKE_TO  0x70
 //#define BOSE_CMD_ALARM_TIME     0x23
 
-
-// On the Zero and others we switch explicitly to SerialUSB
-#if defined(ARDUINO_ARCH_SAMD)
-#define Serial SerialUSB
-#endif
-
 bool sPrintMenu;
 void printMenu();
 

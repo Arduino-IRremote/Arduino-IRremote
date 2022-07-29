@@ -40,11 +40,6 @@
 #include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
-// On the Zero and others we switch explicitly to SerialUSB
-#if defined(ARDUINO_ARCH_SAMD)
-#define Serial SerialUSB
-#endif
-
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 

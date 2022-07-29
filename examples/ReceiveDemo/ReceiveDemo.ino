@@ -74,11 +74,6 @@
 #define DEBUG_BUTTON_PIN   6
 #endif
 
-// On the Zero and others we switch explicitly to SerialUSB
-#if defined(ARDUINO_ARCH_SAMD)
-#define Serial SerialUSB
-#endif
-
 void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);

@@ -54,11 +54,6 @@
 
 #include "ac_LG.hpp"
 
-// On the Zero and others we switch explicitly to SerialUSB
-#if defined(ARDUINO_ARCH_SAMD)
-#define Serial SerialUSB
-#endif
-
 #define SIZE_OF_RECEIVE_BUFFER 10
 char sRequestString[SIZE_OF_RECEIVE_BUFFER];
 
