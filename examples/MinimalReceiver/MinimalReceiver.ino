@@ -47,6 +47,8 @@
 #  endif
 #elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
 #define IR_INPUT_PIN    10
+#elif (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__))
+#define IR_INPUT_PIN    21 // INT0
 #elif defined(ESP8266)
 #define IR_INPUT_PIN    14 // D5
 #elif defined(ESP32)
@@ -56,7 +58,7 @@
 #elif defined(ARDUINO_ARCH_RP2040) // Pi Pico with arduino-pico core https://github.com/earlephilhower/arduino-pico
 #define IR_INPUT_PIN    15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
 #else
-#define IR_INPUT_PIN    2
+#define IR_INPUT_PIN    2   // INT0
 //#define NO_LED_FEEDBACK_CODE   // Activate this if you want to suppress LED feedback or if you do not have a LED. This saves 14 bytes code and 2 clock cycles per interrupt.
 #endif
 
@@ -89,7 +91,9 @@ void setup()
     Serial.println();
 #endif
     Serial.println(F("START " __FILE__ " from " __DATE__));
-    initPCIInterruptForTinyReceiver();
+    if(!initPCIInterruptForTinyReceiver()){
+        Serial.println(F("No interrupt available for pin " STR(IR_INPUT_PIN))); // optimized out by the compiler, if not required :-)
+    }
     Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_INPUT_PIN)));
 }
 

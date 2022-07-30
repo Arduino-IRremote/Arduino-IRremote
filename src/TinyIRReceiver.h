@@ -111,8 +111,8 @@ struct TinyIRReceiverCallbackDataStruct {
     bool justWritten; // Is set true if new data is available. Used by the main loop, to avoid multiple evaluations of the same IR frame.
 };
 
-void initPCIInterruptForTinyReceiver();
-void enablePCIInterruptForTinyReceiver();
+bool initPCIInterruptForTinyReceiver();
+bool enablePCIInterruptForTinyReceiver();
 void disablePCIInterruptForTinyReceiver();
 bool isTinyReceiverIdle();
 

@@ -11,6 +11,8 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Fixed bug in send for RP4020.
 - Fixed pin mapping problems especially for Teensy 2.0.
 - Added support for decoding of "special" NEC repeats.
+- Added SAMD51 support.
+- Improved pin mapping for TinyReceiver.
 
 ## 3.7.1
 - SendRaw now supports bufferlenght > 255.
