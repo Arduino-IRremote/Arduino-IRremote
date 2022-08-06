@@ -362,6 +362,9 @@ bool initPCIInterruptForTinyReceiver() {
 #define USE_INT0
 #    elif (IR_INPUT_PIN == 20)
 #define USE_INT1
+#    else
+#warning "No pin mapping for IR_INPUT_PIN to interrupt found -> attachInterrupt() is used now."
+#define USE_ATTACH_INTERRUPT
 #    endif
 
 #  else // defined(__AVR_ATtiny25__)
@@ -384,7 +387,7 @@ bool initPCIInterruptForTinyReceiver() {
 #define USE_PCINT1
 
 #    else
-#      warning "No pin mapping for IR_INPUT_PIN to interrupt found -> use attachInterrupt()."
+#warning "No pin mapping for IR_INPUT_PIN to interrupt found -> attachInterrupt() is used now."
 #define USE_ATTACH_INTERRUPT
 #    endif // if (IR_INPUT_PIN == 2)
 #  endif // defined(__AVR_ATtiny25__)
@@ -522,6 +525,8 @@ ISR(PCINT0_vect)
 ISR(PCINT1_vect)
 #  elif defined(USE_PCINT2)
 ISR(PCINT2_vect)
+#  else
+void dummyFunctionToAvoidCompilerErrors()
 #  endif
 {
     IRPinChangeInterruptHandler();

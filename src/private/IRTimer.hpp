@@ -258,8 +258,8 @@
 
 void timerConfigForReceive() {
     TCCR1A = 0;
-    TCCR1B = _BV(WGM12) | _BV(CS10);
-    OCR1A = F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND;
+    TCCR1B = _BV(WGM12) | _BV(CS10); // CTC mode, no prescaling
+    OCR1A = (F_CPU * MICROS_PER_TICK) / MICROS_IN_ONE_SECOND; // 16 * 50 = 800
     TCNT1 = 0;
 }
 

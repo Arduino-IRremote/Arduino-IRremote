@@ -80,19 +80,19 @@
  */
 struct irparams_struct {
     // The fields are ordered to reduce memory over caused by struct-padding
-    volatile uint8_t StateForISR;   ///< State Machine state
-    uint_fast8_t IRReceivePin;           ///< Pin connected to IR data from detector
+    volatile uint8_t StateForISR;       ///< State Machine state
+    uint_fast8_t IRReceivePin;          ///< Pin connected to IR data from detector
 #if defined(__AVR__)
     volatile uint8_t *IRReceivePinPortInputRegister;
     uint8_t IRReceivePinMask;
 #endif
-    uint_fast16_t TickCounterForISR;     ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
+    uint_fast16_t TickCounterForISR;    ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
 
-    bool OverflowFlag;              ///< Raw buffer OverflowFlag occurred
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
-    uint_fast8_t rawlen;                 ///< counter of entries in rawbuf
+    bool OverflowFlag;                  ///< Raw buffer OverflowFlag occurred
+#if RAW_BUFFER_LENGTH <= 254            // saves around 75 bytes program memory and speeds up ISR
+    uint_fast8_t rawlen;                ///< counter of entries in rawbuf
 #else
-    uint_fast16_t rawlen;            ///< counter of entries in rawbuf
+    uint_fast16_t rawlen;               ///< counter of entries in rawbuf
 #endif
     unsigned int rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
 };
@@ -148,13 +148,13 @@ struct irparams_struct {
  * Filled by decoders and read by print functions or user application.
  */
 struct IRData {
-    decode_type_t protocol;  ///< UNKNOWN, NEC, SONY, RC5, ...
-    uint16_t address;        ///< Decoded address, Distance protocol (OneMarkTicks << 8) | OneSpaceTicks
-    uint16_t command; ///< Decoded command, Distance protocol (ZeroMarkTicks << 8) | ZeroSpaceTicks
-    uint16_t extra; ///< Contains MagiQuest magnitude, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks << 8) | HeaderSpaceTicks.
-    uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
-    uint8_t flags;               ///< See IRDATA_FLAGS_* definitions above
-    uint32_t decodedRawData;     ///< Up to 32 bit decoded raw data, to be used for send functions.
+    decode_type_t protocol; ///< UNKNOWN, NEC, SONY, RC5, ...
+    uint16_t address;       ///< Decoded address, Distance protocol (OneMarkTicks << 8) | OneSpaceTicks
+    uint16_t command;       ///< Decoded command, Distance protocol (ZeroMarkTicks << 8) | ZeroSpaceTicks
+    uint16_t extra;         ///< Contains MagiQuest magnitude, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks << 8) | HeaderSpaceTicks.
+    uint16_t numberOfBits;  ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
+    uint8_t flags;          ///< See IRDATA_FLAGS_* definitions above
+    uint32_t decodedRawData; ///< Up to 32 bit decoded raw data, to be used for send functions.
 #if defined(DECODE_DISTANCE)
     uint32_t decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; ///< 32 bit decoded raw data, to be used for send functions.
 #endif
@@ -166,7 +166,7 @@ struct IRData {
  */
 struct decode_results {
     decode_type_t decode_type;  // deprecated, moved to decodedIRData.protocol ///< UNKNOWN, NEC, SONY, RC5, ...
-    uint16_t address;           ///< Used by Panasonic & Sharp [16-bits]
+    uint16_t address;           // Used by Panasonic & Sharp [16-bits]
     uint32_t value;             // deprecated, moved to decodedIRData.decodedRawData ///< Decoded value / command [max 32-bits]
     uint8_t bits;               // deprecated, moved to decodedIRData.numberOfBits ///< Number of bits in decoded value
     uint16_t magnitude;         // deprecated, moved to decodedIRData.extra ///< Used by MagiQuest [16-bits]

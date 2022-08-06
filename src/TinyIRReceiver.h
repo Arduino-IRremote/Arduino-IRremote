@@ -86,29 +86,29 @@ struct TinyIRReceiverStruct {
     /*
      * State machine
      */
-    uint32_t LastChangeMicros;      ///< microseconds of last Pin Change Interrupt.
-    uint8_t IRReceiverState;        ///< the state of the state machine.
-    uint8_t IRRawDataBitCounter;
+    uint32_t LastChangeMicros;      ///< Microseconds of last Pin Change Interrupt.
+    uint8_t IRReceiverState;        ///< The state of the state machine.
+    uint8_t IRRawDataBitCounter;    ///< How many bits are currently contained in raw data.
     /*
      * Data
      */
-    uint32_t IRRawDataMask;
-    LongUnion IRRawData;
-    bool IRRepeatFrameDetected;
+    uint32_t IRRawDataMask;         ///< The corresponding bit mask for IRRawDataBitCounter.
+    LongUnion IRRawData;            ///< The current raw data. LongUnion helps with decoding of address and command.
+    bool IRRepeatFrameDetected;     ///< A "standard" NEC repeat frame was detected.
 #if !defined(DISABLE_NEC_SPECIAL_REPEAT_SUPPORT)
-    bool IRRepeatDistanceDetected;
+    bool IRRepeatDistanceDetected;  ///< A small gap between two frames is detected -> assume a "non standard" repeat.
 #endif
 };
 
-/*
- * Can be used by the callback to transfer received data to main loop for further processing
+/**
+ * Can be used by the callback to transfer received data to main loop for further processing.
  * E.g. with volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
  */
 struct TinyIRReceiverCallbackDataStruct {
     uint16_t Address;
     uint8_t Command;
     bool isRepeat;
-    bool justWritten; // Is set true if new data is available. Used by the main loop, to avoid multiple evaluations of the same IR frame.
+    bool justWritten;   ///< Is set true if new data is available. Used by the main loop, to avoid multiple evaluations of the same IR frame.
 };
 
 bool initPCIInterruptForTinyReceiver();
