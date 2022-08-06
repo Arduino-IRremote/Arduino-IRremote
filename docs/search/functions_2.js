@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['begin_440',['begin',['../classIRrecv.html#a0358fc4a683ba3f8d31fdde1e22be724',1,'IRrecv::begin()'],['../classIRsend.html#a28a0bb05c6b5d7330b2185c8447ef7a2',1,'IRsend::begin(bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin=USE_DEFAULT_FEEDBACK_LED_PIN)'],['../classIRsend.html#a7db69257658d7ee780a5319bc463dbe9',1,'IRsend::begin(uint8_t aSendPin)'],['../classIRsend.html#af2fb03ebe7de801ffc2c1ea0a7ea1cbf',1,'IRsend::begin(uint8_t aSendPin, bool aEnableLEDFeedback, uint8_t aFeedbackLEDPin=USE_DEFAULT_FEEDBACK_LED_PIN)']]],
-  ['blink13_441',['blink13',['../classIRrecv.html#a1519a6ae287c97cf2764666d3250b074',1,'IRrecv']]]
+  ['begin_740',['begin',['../group__Receiving.html#gae15cd27543814209aba08637c943a14c',1,'IRrecv::begin()'],['../group__Sending.html#ga170701fb079d24717aded137dee808e7',1,'IRsend::begin(uint_fast8_t aSendPin)'],['../group__Sending.html#ga1d7c36404b9a3cdb2b742fb8e9e37681',1,'IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin=USE_DEFAULT_FEEDBACK_LED_PIN)']]],
+  ['blink13_741',['blink13',['../group__FeedbackLEDFunctions.html#gac7fc50c7e08b8c339b2c1c912a0c6e89',1,'IRrecv']]]
 ];

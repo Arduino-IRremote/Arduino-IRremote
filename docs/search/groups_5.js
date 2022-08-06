@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sending_20ir_20data_20for_20multiple_20protocols_989',['Sending IR data for multiple protocols',['../group__Sending.html',1,'']]]
+  ['receiving_20ir_20data_20for_20multiple_20protocols_1172',['Receiving IR data for multiple protocols',['../group__Receiving.html',1,'']]]
 ];

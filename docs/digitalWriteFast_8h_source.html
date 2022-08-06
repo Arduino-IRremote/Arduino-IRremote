@@ -86,513 +86,539 @@ $(document).ready(function(){initNavTree('digitalWriteFast_8h_source.html',''); 
 </div><!--header-->
 <div class="contents">
 <a href="digitalWriteFast_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">  Optimized digital functions for AVR microcontrollers</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">  by Watterott electronic (www.watterott.com)</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">  based on http://code.google.com/p/digitalwritefast</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#ifndef __digitalWriteFast_h_</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#define __digitalWriteFast_h_ 1</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">//#define SANGUINO_PINOUT //define for Sanguino pinout</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * digitalWriteFast.h</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * Optimized digital functions for AVR microcontrollers</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * by Watterott electronic (www.watterott.com)</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * based on https://code.google.com/p/digitalwritefast</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#ifndef __digitalWriteFast_h_</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#define __digitalWriteFast_h_ 1</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">// general macros/defines</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#ifndef BIT_READ</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor"># define BIT_READ(value, bit)            ((value) &amp;   (1UL &lt;&lt; (bit)))</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#abe4c93bdf909706a57a177f6786af897">   15</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#ifndef BIT_SET</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor"># define BIT_SET(value, bit)             ((value) |=  (1UL &lt;&lt; (bit)))</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ab94522870cd3d40d76ae0a8778166017">   18</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#ifndef BIT_CLEAR</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor"># define BIT_CLEAR(value, bit)           ((value) &amp;= ~(1UL &lt;&lt; (bit)))</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a00bda5613fe59582e9cd36d07b8f2851">   21</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#ifndef BIT_WRITE</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"># define BIT_WRITE(value, bit, bitvalue) (bitvalue ? BIT_SET(value, bit) : BIT_CLEAR(value, bit))</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a1c73c74b64f4d1b6538a8de13f95a2e6">   24</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#ifndef SWAP</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"># define SWAP(x,y) do{ (x)=(x)^(y); (y)=(x)^(y); (x)=(x)^(y); }while(0)</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a5d9d454d4b9f2ff8106d5199ac0d0186">   28</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#ifndef DEC</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor"># define DEC (10)</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#afe38ec6126e35e40049e27fdf4586ba5">   32</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#ifndef HEX</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor"># define HEX (16)</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a9075d93e0ab26ccd6e059fa06aa4e3de">   35</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#ifndef OCT</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor"># define OCT (8)</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a904777e8f3d21de0a6679d2c9f0f1eec">   38</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifndef BIN</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"># define BIN (2)</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a75267cdfa3fa9e52c7c1f1094f9387b7">   41</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// workarounds for ARM microcontrollers</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#if (!defined(__AVR__) || \</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">     defined(ARDUINO_ARCH_SAM) || \</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">     defined(ARDUINO_ARCH_SAMD))</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#ifndef PROGMEM</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"># define PROGMEM</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a75acaba9e781937468d0911423bc0c35">   51</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#ifndef PGM_P</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"># define PGM_P const char *</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a963f816fc88a5d8479c285ed4c630229">   54</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#ifndef PSTR</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor"># define PSTR(str) (str)</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a73809107539df84eaf01f6a4dea4fbff">   57</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#ifndef memcpy_P</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"># define memcpy_P(dest, src, num) memcpy((dest), (src), (num))</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ae0444ad0cb3250a5778a573dd10f41be">   61</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#ifndef strcpy_P</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"># define strcpy_P(dst, src)       strcpy((dst), (src))</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ab00bda73e5853cc61868501fe37fa9b7">   64</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#ifndef strcat_P</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor"># define strcat_P(dst, src)       strcat((dst), (src))</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a37c1666c2ccbf210e3829bbebc2b16e4">   67</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#ifndef strcmp_P</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor"># define strcmp_P(a, b)           strcmp((a), (b))</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#abbb2cd396dde2d1575948bb16ce2853a">   70</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#ifndef strcasecmp_P</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"># define strcasecmp_P(a, b)       strcasecmp((a), (b))</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ae97e89b6ed4b46ade2eca9cafc6abd8d">   73</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#ifndef strncmp_P</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor"># define strncmp_P(a, b, n)       strncmp((a), (b), (n))</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a83b1e057d9ee4c5160557575be07c41f">   76</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#ifndef strncasecmp_P</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor"># define strncasecmp_P(a, b, n)   strncasecmp((a), (b), (n))</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a6986d443d13df0a4f28c6d1b52effb7d">   79</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#ifndef strstr_P</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor"># define strstr_P(a, b)           strstr((a), (b))</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#aca1ecbfa8b94eba4b5228f0a6a18a888">   82</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#ifndef strlen_P</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor"># define strlen_P(a)              strlen((a))</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a76ea3b30093856a6482a978d9214142d">   85</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#ifndef sprintf_P</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor"># define sprintf_P(s, f, ...)     sprintf((s), (f), __VA_ARGS__)</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a45ba8afa17fe1ae5ab9327dbb6ca05b9">   88</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">#ifndef pgm_read_byte</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor"># define pgm_read_byte(addr)      (*(const unsigned char *)(addr))</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a48c60b057902adf805797f183286728d">   92</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">#ifndef pgm_read_word</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor"># define pgm_read_word(addr)      (*(const unsigned short *)(addr))</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a910fb5f01313d339d3b835d45e1e5ad0">   95</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#ifndef pgm_read_dword</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor"># define pgm_read_dword(addr)     (*(const unsigned long *)(addr))</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a73cf3e57e32321cb193b3cc4b041cc6c">   98</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">//#define SANGUINO_PINOUT //define for Sanguino pinout</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">// general macros/defines</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#if !defined(BIT_READ)</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor"># define BIT_READ(value, bit)            ((value) &amp;   (1UL &lt;&lt; (bit)))</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#abe4c93bdf909706a57a177f6786af897">   17</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#if !defined(BIT_SET)</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor"># define BIT_SET(value, bit)             ((value) |=  (1UL &lt;&lt; (bit)))</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ab94522870cd3d40d76ae0a8778166017">   20</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#if !defined(BIT_CLEAR)</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor"># define BIT_CLEAR(value, bit)           ((value) &amp;= ~(1UL &lt;&lt; (bit)))</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a00bda5613fe59582e9cd36d07b8f2851">   23</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#if !defined(BIT_WRITE)</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor"># define BIT_WRITE(value, bit, bitvalue) (bitvalue ? BIT_SET(value, bit) : BIT_CLEAR(value, bit))</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a1c73c74b64f4d1b6538a8de13f95a2e6">   26</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#if !defined(SWAP)</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"># define SWAP(x,y) do{ (x)=(x)^(y); (y)=(x)^(y); (x)=(x)^(y); }while(0)</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a5d9d454d4b9f2ff8106d5199ac0d0186">   30</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#if !defined(DEC)</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor"># define DEC (10)</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#afe38ec6126e35e40049e27fdf4586ba5">   34</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#if !defined(HEX)</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"># define HEX (16)</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a9075d93e0ab26ccd6e059fa06aa4e3de">   37</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#if !defined(OCT)</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"># define OCT (8)</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a904777e8f3d21de0a6679d2c9f0f1eec">   40</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#if !defined(BIN)</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"># define BIN (2)</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a75267cdfa3fa9e52c7c1f1094f9387b7">   43</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// workarounds for ARM microcontrollers</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">#if (!defined(__AVR__) || \</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">     defined(ARDUINO_ARCH_SAM) || \</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">     defined(ARDUINO_ARCH_SAMD))</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#if !defined(PROGMEM)</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"># define PROGMEM</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a75acaba9e781937468d0911423bc0c35">   52</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#if !defined(PGM_P)</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor"># define PGM_P const char *</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a963f816fc88a5d8479c285ed4c630229">   55</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#if !defined(PSTR)</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor"># define PSTR(str) (str)</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a73809107539df84eaf01f6a4dea4fbff">   58</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#if !defined(memcpy_P)</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor"># define memcpy_P(dest, src, num) memcpy((dest), (src), (num))</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ae0444ad0cb3250a5778a573dd10f41be">   62</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#if !defined(strcpy_P)</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"># define strcpy_P(dst, src)       strcpy((dst), (src))</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ab00bda73e5853cc61868501fe37fa9b7">   65</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#if !defined(strcat_P)</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor"># define strcat_P(dst, src)       strcat((dst), (src))</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a37c1666c2ccbf210e3829bbebc2b16e4">   68</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#if !defined(strcmp_P)</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor"># define strcmp_P(a, b)           strcmp((a), (b))</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#abbb2cd396dde2d1575948bb16ce2853a">   71</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#if !defined(strcasecmp_P)</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor"># define strcasecmp_P(a, b)       strcasecmp((a), (b))</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ae97e89b6ed4b46ade2eca9cafc6abd8d">   74</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#if !defined(strncmp_P)</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor"># define strncmp_P(a, b, n)       strncmp((a), (b), (n))</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a83b1e057d9ee4c5160557575be07c41f">   77</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#if !defined(strncasecmp_P)</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor"># define strncasecmp_P(a, b, n)   strncasecmp((a), (b), (n))</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a6986d443d13df0a4f28c6d1b52effb7d">   80</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#if !defined(strstr_P)</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor"># define strstr_P(a, b)           strstr((a), (b))</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#aca1ecbfa8b94eba4b5228f0a6a18a888">   83</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#if !defined(strlen_P)</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor"># define strlen_P(a)              strlen((a))</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a76ea3b30093856a6482a978d9214142d">   86</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#if !defined(sprintf_P)</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor"># define sprintf_P(s, f, ...)     sprintf((s), (f), __VA_ARGS__)</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a45ba8afa17fe1ae5ab9327dbb6ca05b9">   89</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#if !defined(pgm_read_byte)</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor"># define pgm_read_byte(addr)      (*(const unsigned char *)(addr))</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a48c60b057902adf805797f183286728d">   93</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">#if !defined(pgm_read_word)</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor"># define pgm_read_word(addr)      (*(const unsigned short *)(addr))</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a910fb5f01313d339d3b835d45e1e5ad0">   96</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#if !defined(pgm_read_dword)</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor"># define pgm_read_dword(addr)     (*(const unsigned long *)(addr))</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a73cf3e57e32321cb193b3cc4b041cc6c">   99</a></span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="comment">// digital functions</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">//#ifndef digitalPinToPortReg</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">//#if !defined(digitalPinToPortReg)</span></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#define SPI_SW_SS_PIN   (10) //SS on Uno (for software SPI)</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a8e4c6098d073922d247087549c084efd">  106</a></span>&#160;<span class="preprocessor">#define SPI_SW_MOSI_PIN (11) //MOSI on Uno (for software SPI)</span></div>
 <div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a590704782aba04d0b90e20dc2e06bfe1">  107</a></span>&#160;<span class="preprocessor">#define SPI_SW_MISO_PIN (12) //MISO on Uno (for software SPI)</span></div>
 <div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ad80cac0c04cae5a4106da0daaefe8392">  108</a></span>&#160;<span class="preprocessor">#define SPI_SW_SCK_PIN  (13) //SCK on Uno (for software SPI)</span></div>
 <div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#aaa5382681cbe8124588319a841015562">  109</a></span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// --- Arduino Due and SAM3X8E based boards ---</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#if (defined(ARDUINO_SAM_DUE) || \</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">     defined(__SAM3X8E__))</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0)</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1)</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (20)</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (21)</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (78) //SS0:77, SS1:87, SS2:86, SS3:78</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (75) //75</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (74) //74</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (76) //76</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">// --- Arduino Due and SAM3X8E based boards ---</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">#if (defined(ARDUINO_SAM_DUE) || \</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">     defined(__SAM3X8E__))</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0)</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1)</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (20)</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (21)</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (78) //SS0:77, SS1:87, SS2:86, SS3:78</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (75) //75</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (74) //74</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (76) //76</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="comment">// --- Arduino Zero and SAMD21G18 based boards ---</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#elif (defined(ARDUINO_SAMD_ZERO) || \</span></div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">       defined(__SAMD21G18A__))</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0)</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1)</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160; </div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (16)</span></div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (17)</span></div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160; </div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (14) //14</span></div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (21) //21</span></div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (18) //18</span></div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (20) //20</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="comment">// --- Arduino Zero and SAMD21G18 based boards ---</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#elif (defined(ARDUINO_SAMD_ZERO) || \</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">       defined(__SAMD21G18A__))</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0)</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1)</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (16)</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (17)</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (14) //14</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (21) //21</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (18) //18</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (20) //20</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160; </div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="comment">// --- Arduino Mega and ATmega128x/256x based boards ---</span></div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="preprocessor">#elif (defined(ARDUINO_AVR_MEGA) || \</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="preprocessor">       defined(ARDUINO_AVR_MEGA1280) || \</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="preprocessor">       defined(ARDUINO_AVR_MEGA2560) || \</span></div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega1280__) || \</span></div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega1281__) || \</span></div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega2560__) || \</span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega2561__))</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0) //PE0</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1) //PE1</span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (20)</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (21)</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (53) //PB0</span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (51) //PB2</span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (50) //PB3</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (52) //PB1</span></div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="preprocessor">(((P) &gt;= 22 &amp;&amp; (P) &lt;= 29) ? &amp;PORTA : \</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="preprocessor">((((P) &gt;= 10 &amp;&amp; (P) &lt;= 13) || ((P) &gt;= 50 &amp;&amp; (P) &lt;= 53)) ? &amp;PORTB : \</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">(((P) &gt;= 30 &amp;&amp; (P) &lt;= 37) ? &amp;PORTC : \</span></div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="preprocessor">((((P) &gt;= 18 &amp;&amp; (P) &lt;= 21) || (P) == 38) ? &amp;PORTD : \</span></div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="preprocessor">((((P) &gt;= 0 &amp;&amp; (P) &lt;= 3) || (P) == 5) ? &amp;PORTE : \</span></div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<span class="preprocessor">(((P) &gt;= 54 &amp;&amp; (P) &lt;= 61) ? &amp;PORTF : \</span></div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="preprocessor">((((P) &gt;= 39 &amp;&amp; (P) &lt;= 41) || (P) == 4) ? &amp;PORTG : \</span></div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="preprocessor">((((P) &gt;= 6 &amp;&amp; (P) &lt;= 9) || (P) == 16 || (P) == 17) ? &amp;PORTH : \</span></div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="preprocessor">(((P) == 14 || (P) == 15) ? &amp;PORTJ : \</span></div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="preprocessor">(((P) &gt;= 62 &amp;&amp; (P) &lt;= 69) ? &amp;PORTK : &amp;PORTL))))))))))</span></div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="preprocessor">(((P) &gt;= 22 &amp;&amp; (P) &lt;= 29) ? &amp;DDRA : \</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor">((((P) &gt;= 10 &amp;&amp; (P) &lt;= 13) || ((P) &gt;= 50 &amp;&amp; (P) &lt;= 53)) ? &amp;DDRB : \</span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="preprocessor">(((P) &gt;= 30 &amp;&amp; (P) &lt;= 37) ? &amp;DDRC : \</span></div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="preprocessor">((((P) &gt;= 18 &amp;&amp; (P) &lt;= 21) || (P) == 38) ? &amp;DDRD : \</span></div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="preprocessor">((((P) &gt;= 0 &amp;&amp; (P) &lt;= 3) || (P) == 5) ? &amp;DDRE : \</span></div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="preprocessor">(((P) &gt;= 54 &amp;&amp; (P) &lt;= 61) ? &amp;DDRF : \</span></div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="preprocessor">((((P) &gt;= 39 &amp;&amp; (P) &lt;= 41) || (P) == 4) ? &amp;DDRG : \</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="preprocessor">((((P) &gt;= 6 &amp;&amp; (P) &lt;= 9) || (P) == 16 || (P) == 17) ? &amp;DDRH : \</span></div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="preprocessor">(((P) == 14 || (P) == 15) ? &amp;DDRJ : \</span></div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="preprocessor">(((P) &gt;= 62 &amp;&amp; (P) &lt;= 69) ? &amp;DDRK : &amp;DDRL))))))))))</span></div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160; </div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="preprocessor">(((P) &gt;= 22 &amp;&amp; (P) &lt;= 29) ? &amp;PINA : \</span></div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="preprocessor">((((P) &gt;= 10 &amp;&amp; (P) &lt;= 13) || ((P) &gt;= 50 &amp;&amp; (P) &lt;= 53)) ? &amp;PINB : \</span></div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="preprocessor">(((P) &gt;= 30 &amp;&amp; (P) &lt;= 37) ? &amp;PINC : \</span></div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="preprocessor">((((P) &gt;= 18 &amp;&amp; (P) &lt;= 21) || (P) == 38) ? &amp;PIND : \</span></div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="preprocessor">((((P) &gt;= 0 &amp;&amp; (P) &lt;= 3) || (P) == 5) ? &amp;PINE : \</span></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="preprocessor">(((P) &gt;= 54 &amp;&amp; (P) &lt;= 61) ? &amp;PINF : \</span></div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="preprocessor">((((P) &gt;= 39 &amp;&amp; (P) &lt;= 41) || (P) == 4) ? &amp;PING : \</span></div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="preprocessor">((((P) &gt;= 6 &amp;&amp; (P) &lt;= 9) || (P) == 16 || (P) == 17) ? &amp;PINH : \</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="preprocessor">(((P) == 14 || (P) == 15) ? &amp;PINJ : \</span></div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="preprocessor">(((P) &gt;= 62 &amp;&amp; (P) &lt;= 69) ? &amp;PINK : &amp;PINL))))))))))</span></div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="preprocessor">(((P) &gt;=  7 &amp;&amp; (P) &lt;=  9) ? (P) - 3 : \</span></div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="preprocessor">(((P) &gt;= 10 &amp;&amp; (P) &lt;= 13) ? (P) - 6 : \</span></div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="preprocessor">(((P) &gt;= 22 &amp;&amp; (P) &lt;= 29) ? (P) - 22 : \</span></div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="preprocessor">(((P) &gt;= 30 &amp;&amp; (P) &lt;= 37) ? 37 - (P) : \</span></div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="preprocessor">(((P) &gt;= 39 &amp;&amp; (P) &lt;= 41) ? 41 - (P) : \</span></div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="preprocessor">(((P) &gt;= 42 &amp;&amp; (P) &lt;= 49) ? 49 - (P) : \</span></div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="preprocessor">(((P) &gt;= 50 &amp;&amp; (P) &lt;= 53) ? 53 - (P) : \</span></div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="preprocessor">(((P) &gt;= 54 &amp;&amp; (P) &lt;= 61) ? (P) - 54 : \</span></div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="preprocessor">(((P) &gt;= 62 &amp;&amp; (P) &lt;= 69) ? (P) - 62 : \</span></div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="preprocessor">(((P) == 0 || (P) == 15 || (P) == 17 || (P) == 21) ? 0 : \</span></div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="preprocessor">(((P) == 1 || (P) == 14 || (P) == 16 || (P) == 20) ? 1 : \</span></div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="preprocessor">(((P) == 19) ? 2 : \</span></div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="preprocessor">(((P) == 5 || (P) == 6 || (P) == 18) ? 3 : \</span></div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="preprocessor">(((P) == 2) ? 4 : \</span></div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;<span class="preprocessor">(((P) == 3 || (P) == 4) ? 5 : 7)))))))))))))))</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="comment">// --- Arduino Mega and ATmega128x/256x based boards ---</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="preprocessor">#elif (defined(ARDUINO_AVR_MEGA) || \</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="preprocessor">       defined(ARDUINO_AVR_MEGA1280) || \</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="preprocessor">       defined(ARDUINO_AVR_MEGA2560) || \</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega1280__) || \</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega1281__) || \</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega2560__) || \</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega2561__))</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0) //PE0</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1) //PE1</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160; </div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (20)</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (21)</span></div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (53) //PB0</span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (51) //PB2</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (50) //PB3</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (52) //PB1</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="preprocessor">(((P) &gt;= 22 &amp;&amp; (P) &lt;= 29) ? &amp;PORTA : \</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="preprocessor">((((P) &gt;= 10 &amp;&amp; (P) &lt;= 13) || ((P) &gt;= 50 &amp;&amp; (P) &lt;= 53)) ? &amp;PORTB : \</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="preprocessor">(((P) &gt;= 30 &amp;&amp; (P) &lt;= 37) ? &amp;PORTC : \</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">((((P) &gt;= 18 &amp;&amp; (P) &lt;= 21) || (P) == 38) ? &amp;PORTD : \</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="preprocessor">((((P) &lt;= 3) || (P) == 5) ? &amp;PORTE : \</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="preprocessor">(((P) &gt;= 54 &amp;&amp; (P) &lt;= 61) ? &amp;PORTF : \</span></div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<span class="preprocessor">((((P) &gt;= 39 &amp;&amp; (P) &lt;= 41) || (P) == 4) ? &amp;PORTG : \</span></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="preprocessor">((((P) &gt;= 6 &amp;&amp; (P) &lt;= 9) || (P) == 16 || (P) == 17) ? &amp;PORTH : \</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="preprocessor">(((P) == 14 || (P) == 15) ? &amp;PORTJ : \</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="preprocessor">(((P) &gt;= 62 &amp;&amp; (P) &lt;= 69) ? &amp;PORTK : &amp;PORTL))))))))))</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="preprocessor">(((P) &gt;= 22 &amp;&amp; (P) &lt;= 29) ? &amp;DDRA : \</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="preprocessor">((((P) &gt;= 10 &amp;&amp; (P) &lt;= 13) || ((P) &gt;= 50 &amp;&amp; (P) &lt;= 53)) ? &amp;DDRB : \</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor">(((P) &gt;= 30 &amp;&amp; (P) &lt;= 37) ? &amp;DDRC : \</span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="preprocessor">((((P) &gt;= 18 &amp;&amp; (P) &lt;= 21) || (P) == 38) ? &amp;DDRD : \</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="preprocessor">((((P) &lt;= 3) || (P) == 5) ? &amp;DDRE : \</span></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="preprocessor">(((P) &gt;= 54 &amp;&amp; (P) &lt;= 61) ? &amp;DDRF : \</span></div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="preprocessor">((((P) &gt;= 39 &amp;&amp; (P) &lt;= 41) || (P) == 4) ? &amp;DDRG : \</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="preprocessor">((((P) &gt;= 6 &amp;&amp; (P) &lt;= 9) || (P) == 16 || (P) == 17) ? &amp;DDRH : \</span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="preprocessor">(((P) == 14 || (P) == 15) ? &amp;DDRJ : \</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="preprocessor">(((P) &gt;= 62 &amp;&amp; (P) &lt;= 69) ? &amp;DDRK : &amp;DDRL))))))))))</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="preprocessor">(((P) &gt;= 22 &amp;&amp; (P) &lt;= 29) ? &amp;PINA : \</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="preprocessor">((((P) &gt;= 10 &amp;&amp; (P) &lt;= 13) || ((P) &gt;= 50 &amp;&amp; (P) &lt;= 53)) ? &amp;PINB : \</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="preprocessor">(((P) &gt;= 30 &amp;&amp; (P) &lt;= 37) ? &amp;PINC : \</span></div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="preprocessor">((((P) &gt;= 18 &amp;&amp; (P) &lt;= 21) || (P) == 38) ? &amp;PIND : \</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="preprocessor">((((P) &lt;= 3) || (P) == 5) ? &amp;PINE : \</span></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="preprocessor">(((P) &gt;= 54 &amp;&amp; (P) &lt;= 61) ? &amp;PINF : \</span></div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="preprocessor">((((P) &gt;= 39 &amp;&amp; (P) &lt;= 41) || (P) == 4) ? &amp;PING : \</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="preprocessor">((((P) &gt;= 6 &amp;&amp; (P) &lt;= 9) || (P) == 16 || (P) == 17) ? &amp;PINH : \</span></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="preprocessor">(((P) == 14 || (P) == 15) ? &amp;PINJ : \</span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="preprocessor">(((P) &gt;= 62 &amp;&amp; (P) &lt;= 69) ? &amp;PINK : &amp;PINL))))))))))</span></div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;<span class="preprocessor">(((P) &gt;=  7 &amp;&amp; (P) &lt;=  9) ? (P) - 3 : \</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="preprocessor">(((P) &gt;= 10 &amp;&amp; (P) &lt;= 13) ? (P) - 6 : \</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="preprocessor">(((P) &gt;= 22 &amp;&amp; (P) &lt;= 29) ? (P) - 22 : \</span></div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;<span class="preprocessor">(((P) &gt;= 30 &amp;&amp; (P) &lt;= 37) ? 37 - (P) : \</span></div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<span class="preprocessor">(((P) &gt;= 39 &amp;&amp; (P) &lt;= 41) ? 41 - (P) : \</span></div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;<span class="preprocessor">(((P) &gt;= 42 &amp;&amp; (P) &lt;= 49) ? 49 - (P) : \</span></div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;<span class="preprocessor">(((P) &gt;= 50 &amp;&amp; (P) &lt;= 53) ? 53 - (P) : \</span></div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="preprocessor">(((P) &gt;= 54 &amp;&amp; (P) &lt;= 61) ? (P) - 54 : \</span></div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;<span class="preprocessor">(((P) &gt;= 62 &amp;&amp; (P) &lt;= 69) ? (P) - 62 : \</span></div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<span class="preprocessor">(((P) == 0 || (P) == 15 || (P) == 17 || (P) == 21) ? 0 : \</span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="preprocessor">(((P) == 1 || (P) == 14 || (P) == 16 || (P) == 20) ? 1 : \</span></div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;<span class="preprocessor">(((P) == 19) ? 2 : \</span></div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;<span class="preprocessor">(((P) == 5 || (P) == 6 || (P) == 18) ? 3 : \</span></div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="preprocessor">(((P) == 2) ? 4 : \</span></div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<span class="preprocessor">(((P) == 3 || (P) == 4) ? 5 : 7)))))))))))))))</span></div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160; </div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="comment">// --- Arduino MightyCore standard pinout ---</span></div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="preprocessor">#elif (defined(__AVR_ATmega1284P__) || \</span></div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega1284__)  || \</span></div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega644P__)  || \</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega644A__)  || \</span></div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega644__)   || \</span></div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega324PB__) || \</span></div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega324PA__) || \</span></div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega324P__)  || \</span></div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega324A__)  || \</span></div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega164P__)  || \</span></div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega164A__)  || \</span></div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega32__)    || \</span></div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega16__)    || \</span></div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega8535__))  &amp;&amp; \</span></div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;<span class="preprocessor">      !defined(BOBUINO_PINOUT)</span></div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (8) //PD0</span></div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (9) //PD1</span></div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (17) //PC1</span></div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (16) //PC0</span></div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160; </div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (4) //PB4</span></div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (5) //PB5</span></div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (6) //PB6</span></div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (7) //PB7</span></div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;<span class="preprocessor">#if defined(__AVR_ATmega324PB__)</span></div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;PORTB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;PORTD : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;PORTC : (((P) &gt;= 24 &amp;&amp; (P) &lt;= 31) ? &amp;PORTA : &amp;PORTE))))</span></div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;DDRB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;DDRD : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;DDRC : (((P) &gt;= 24 &amp;&amp; (P) &lt;= 31) ? &amp;DDRA : &amp;DDRE))))</span></div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;PINB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;PIND : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;PINC : (((P) &gt;= 24 &amp;&amp; (P) &lt;= 31) ? &amp;PINA : &amp;PINE))))</span></div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="preprocessor"># if defined(SANGUINO_PINOUT)</span></div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? (P) - 8 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 16 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (7 - ((P) - 24)) : (P) - 32))))</span></div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="preprocessor"># else //MightyCore Pinout</span></div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? (P) - 8 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 16 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 24 : (P) - 32))))</span></div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="preprocessor"># endif</span></div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;PORTB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;PORTD : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;PORTC : &amp;PORTA)))</span></div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;DDRB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;DDRD : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;DDRC : &amp;DDRA)))</span></div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;PINB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;PIND : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;PINC : &amp;PINA)))</span></div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="preprocessor"># if defined(SANGUINO_PINOUT)</span></div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? (P) - 8 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 16 : (7 - ((P) - 24)))))</span></div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="preprocessor"># else //MightyCore Pinout</span></div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? (P) - 8 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 16 : (P) - 24)))</span></div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="preprocessor"># endif</span></div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="comment">// --- Arduino MightyCore standard pinout ---</span></div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="preprocessor">#elif (defined(__AVR_ATmega1284P__) || \</span></div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega1284__)  || \</span></div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega644P__)  || \</span></div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega644A__)  || \</span></div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega644__)   || \</span></div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega324PB__) || \</span></div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega324PA__) || \</span></div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega324P__)  || \</span></div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega324A__)  || \</span></div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega164P__)  || \</span></div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega164A__)  || \</span></div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega32__)    || \</span></div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega16__)    || \</span></div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega8535__))  &amp;&amp; \</span></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;<span class="preprocessor">      !defined(BOBUINO_PINOUT)</span></div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160; </div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (8) //PD0</span></div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (9) //PD1</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160; </div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (17) //PC1</span></div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (16) //PC0</span></div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160; </div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (4) //PB4</span></div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (5) //PB5</span></div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (6) //PB6</span></div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (7) //PB7</span></div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;<span class="preprocessor">#if defined(__AVR_ATmega324PB__)</span></div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;PORTB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;PORTD : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;PORTC : (((P) &gt;= 24 &amp;&amp; (P) &lt;= 31) ? &amp;PORTA : &amp;PORTE))))</span></div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;DDRB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;DDRD : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;DDRC : (((P) &gt;= 24 &amp;&amp; (P) &lt;= 31) ? &amp;DDRA : &amp;DDRE))))</span></div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;PINB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;PIND : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;PINC : (((P) &gt;= 24 &amp;&amp; (P) &lt;= 31) ? &amp;PINA : &amp;PINE))))</span></div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;<span class="preprocessor"># if defined(SANGUINO_PINOUT)</span></div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? (P) - 8 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 16 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (7 - ((P) - 24)) : (P) - 32))))</span></div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="preprocessor"># else //MightyCore Pinout</span></div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? (P) - 8 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 16 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 24 : (P) - 32))))</span></div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="preprocessor"># endif</span></div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;PORTB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;PORTD : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;PORTC : &amp;PORTA)))</span></div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;DDRB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;DDRD : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;DDRC : &amp;DDRA)))</span></div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;PINB : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? &amp;PIND : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? &amp;PINC : &amp;PINA)))</span></div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="preprocessor"># if defined(SANGUINO_PINOUT)</span></div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? (P) - 8 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 16 : (7 - ((P) - 24)))))</span></div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="preprocessor"># else //MightyCore Pinout</span></div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 15) ? (P) - 8 : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 23) ? (P) - 16 : (P) - 24)))</span></div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="preprocessor"># endif</span></div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160; </div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="comment">// --- Arduino Leonardo and ATmega16U4/32U4 based boards ---</span></div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="preprocessor">#elif (defined(ARDUINO_AVR_LEONARDO) || \</span></div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega16U4__) || \</span></div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega32U4__))</span></div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0) //PD2</span></div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1) //PD3</span></div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160; </div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (2) //PD1</span></div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (3) //PD0</span></div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (17) //PB0</span></div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (16) //PB2</span></div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (14) //PB3</span></div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (15) //PB1</span></div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="preprocessor">((((P) &gt;= 0 &amp;&amp; (P) &lt;= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &amp;PORTD : (((P) == 5 || (P) == 13) ? &amp;PORTC : (((P) &gt;= 18 &amp;&amp; (P) &lt;= 23)) ? &amp;PORTF : (((P) == 7) ? &amp;PORTE : &amp;PORTB)))</span></div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="preprocessor">((((P) &gt;= 0 &amp;&amp; (P) &lt;= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &amp;DDRD : (((P) == 5 || (P) == 13) ? &amp;DDRC : (((P) &gt;= 18 &amp;&amp; (P) &lt;= 23)) ? &amp;DDRF : (((P) == 7) ? &amp;DDRE : &amp;DDRB)))</span></div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="preprocessor">((((P) &gt;= 0 &amp;&amp; (P) &lt;= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &amp;PIND : (((P) == 5 || (P) == 13) ? &amp;PINC : (((P) &gt;= 18 &amp;&amp; (P) &lt;= 23)) ? &amp;PINF : (((P) == 7) ? &amp;PINE : &amp;PINB)))</span></div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="preprocessor">(((P) &gt;= 8 &amp;&amp; (P) &lt;= 11) ? (P) - 4 : (((P) &gt;= 18 &amp;&amp; (P) &lt;= 21) ? 25 - (P) : (((P) == 0) ? 2 : (((P) == 1) ? 3 : (((P) == 2) ? 1 : (((P) == 3) ? 0 : (((P) == 4) ? 4 : (((P) == 6) ? 7 : (((P) == 13) ? 7 : (((P) == 14) ? 3 : (((P) == 15) ? 1 : (((P) == 16) ? 2 : (((P) == 17) ? 0 : (((P) == 22) ? 1 : (((P) == 23) ? 0 : (((P) == 24) ? 4 : (((P) == 25) ? 7 : (((P) == 26) ? 4 : (((P) == 27) ? 5 : 6 )))))))))))))))))))</span></div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="comment">// --- Arduino Uno and ATmega168/328 based boards ---</span></div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="preprocessor">#elif (defined(ARDUINO_AVR_UNO) || \</span></div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="preprocessor">       defined(ARDUINO_AVR_DUEMILANOVE) || \</span></div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega8__) || \</span></div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega48__) || \</span></div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega48P__) || \</span></div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega48PB__) || \</span></div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega88P__) || \</span></div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega88PB__) || \</span></div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega168__) || \</span></div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega168PA__) || \</span></div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega168PB__) || \</span></div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega328__) || \</span></div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega328P__) || \</span></div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega328PB__))</span></div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0) //PD0</span></div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1) //PD1</span></div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (18) //A4</span></div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (19) //A5</span></div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (10) //PB0</span></div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (11) //PB2</span></div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (12) //PB3</span></div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (13) //PB1</span></div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="preprocessor">#if defined(__AVR_ATmega48PB__) || defined(__AVR_ATmega88PB__) || defined(__AVR_ATmega168PB__) || defined(__AVR_ATmega328PB__)</span></div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;PORTD : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;PORTB : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 19) ? &amp;PORTC : &amp;PORTE)))</span></div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;DDRD : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;DDRB : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 19) ? &amp;DDRC : &amp;DDRE)))</span></div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;PIND : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;PINB : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 19) ? &amp;PINC : &amp;PINE)))</span></div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? (P) - 8 : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 19) ? (P) - 14 : (((P) &gt;= 20 &amp;&amp; (P) &lt;= 21) ? (P) - 18 : (P) - 22))))</span></div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;PORTD : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;PORTB : &amp;PORTC))</span></div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;DDRD : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;DDRB : &amp;DDRC))</span></div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? &amp;PIND : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;PINB : &amp;PINC))</span></div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;<span class="preprocessor">(((P) &gt;= 0 &amp;&amp; (P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? (P) - 8 : (P) - 14))</span></div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="comment">// --- Arduino Leonardo and ATmega16U4/32U4 based boards ---</span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="preprocessor">#elif (defined(ARDUINO_AVR_LEONARDO) || \</span></div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega16U4__) || \</span></div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega32U4__))</span></div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="preprocessor">#  if defined(TEENSYDUINO)</span></div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (7) //PD2</span></div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (8) //PD3</span></div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (6) //PD1</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (5) //PD0</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (0) //PB0</span></div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (2) //PB2</span></div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (3) //PB3</span></div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (1) //PB1</span></div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160; </div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">((((P) &lt;= 4) || ((P) &gt;= 13 &amp;&amp; (P) &lt;= 15)) ? &amp;PORTB : (((P) == 9 || (P) == 10) ? &amp;PORTC : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 21)) ? &amp;PORTF : &amp;PORTD))</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">((((P) &lt;= 4) || ((P) &gt;= 13 &amp;&amp; (P) &lt;= 15)) ? &amp;DDRB : (((P) == 9 || (P) == 10) ? &amp;DDRC : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 21)) ? &amp;DDRF : &amp;DDRD))</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="preprocessor">((((P) &lt;= 4) || ((P) &gt;= 13 &amp;&amp; (P) &lt;= 15)) ? &amp;PINB : (((P) == 9 || (P) == 10) ? &amp;PINC : (((P) &gt;= 16 &amp;&amp; (P) &lt;= 21)) ? &amp;PINF : &amp;PIND))</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="preprocessor">(((P) &lt;= 3) ? (P) : \</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="preprocessor">(((P) == 4 || (P) == 12) ? 7 : \</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="preprocessor">(((P) &lt;= 8) ? (P) - 5 : \</span></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="preprocessor">(((P) &lt;= 10) ? (P) - 3 : \</span></div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="preprocessor">(((P) == 11) ? 6 : \</span></div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="preprocessor">(((P) &lt;= 15) ? (P) - 9 : \</span></div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="preprocessor">(((P) &lt;= 19) ? 23 - (P) : \</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="preprocessor">(((P) &lt;= 21) ? 21 - (P) : (P) - 18))))))))</span></div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="preprocessor">#  else</span></div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160; </div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0) //PD2</span></div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1) //PD3</span></div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160; </div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (2) //PD1</span></div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (3) //PD0</span></div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160; </div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (17) //PB0</span></div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (16) //PB2</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (14) //PB3</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (15) //PB1</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="preprocessor">((((P) &lt;= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &amp;PORTD : (((P) == 5 || (P) == 13) ? &amp;PORTC : (((P) &gt;= 18 &amp;&amp; (P) &lt;= 23)) ? &amp;PORTF : (((P) == 7) ? &amp;PORTE : &amp;PORTB)))</span></div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="preprocessor">((((P) &lt;= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &amp;DDRD : (((P) == 5 || (P) == 13) ? &amp;DDRC : (((P) &gt;= 18 &amp;&amp; (P) &lt;= 23)) ? &amp;DDRF : (((P) == 7) ? &amp;DDRE : &amp;DDRB)))</span></div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;<span class="preprocessor">((((P) &lt;= 4) || (P) == 6 || (P) == 12 || (P) == 24 || (P) == 25 || (P) == 29) ? &amp;PIND : (((P) == 5 || (P) == 13) ? &amp;PINC : (((P) &gt;= 18 &amp;&amp; (P) &lt;= 23)) ? &amp;PINF : (((P) == 7) ? &amp;PINE : &amp;PINB)))</span></div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="preprocessor">(((P) &gt;= 8 &amp;&amp; (P) &lt;= 11) ? (P) - 4 : \</span></div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;<span class="preprocessor">(((P) &gt;= 18 &amp;&amp; (P) &lt;= 21) ? 25 - (P) : \</span></div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;<span class="preprocessor">(((P) == 0) ? 2 : (((P) == 1) ? 3 : (((P) == 2) ? 1 : (((P) == 3) ? 0 : (((P) == 4) ? 4 : (((P) == 6) ? 7 : (((P) == 13) ? 7 : \</span></div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="preprocessor">(((P) == 14) ? 3 : (((P) == 15) ? 1 : (((P) == 16) ? 2 : (((P) == 17) ? 0 : (((P) == 22) ? 1 : (((P) == 23) ? 0 : \</span></div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;<span class="preprocessor">(((P) == 24) ? 4 : (((P) == 25) ? 7 : (((P) == 26) ? 4 : (((P) == 27) ? 5 : 6 )))))))))))))))))))</span></div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="preprocessor">#  endif</span></div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;<span class="comment">// --- Arduino Uno and ATmega168/328 based boards ---</span></div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;<span class="preprocessor">#elif (defined(ARDUINO_AVR_UNO) || \</span></div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;<span class="preprocessor">       defined(ARDUINO_AVR_DUEMILANOVE) || \</span></div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega8__) || \</span></div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega48__) || \</span></div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega48P__) || \</span></div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega48PB__) || \</span></div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega88P__) || \</span></div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega88PB__) || \</span></div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega168__) || \</span></div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega168PA__) || \</span></div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega168PB__) || \</span></div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega328__) || \</span></div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega328P__) || \</span></div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="preprocessor">       defined(__AVR_ATmega328PB__))</span></div>
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160; </div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;<span class="comment">// --- Arduino Uno WiFi Rev 2, Nano Every ---</span></div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;<span class="preprocessor">#elif defined(__AVR_ATmega4809__)</span></div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0) //PB0</span></div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1) //PB1</span></div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160; </div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (22) //PA2</span></div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (23) //PA3</span></div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160; </div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (8)  //PE3</span></div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (11) //PE0</span></div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (12) //PE1</span></div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (13) //PE2</span></div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160; </div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;<span class="preprocessor">(((P) == 2 || (P) == 7 ) ? &amp;VPORTA.OUT : ((P) == 5 || (P) == 9 || (P) == 10) ? &amp;VPORTB.OUT : ((P) == 4) ? &amp;VPORTC.OUT : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 17) || (P) == 20 || (P) == 21) ? &amp;VPORTD.OUT : ((P) == 8 || (P) == 11 || (P) == 12 || (P) == 13) ? &amp;VPORTE.OUT : &amp;VPORTF.OUT)</span></div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;<span class="preprocessor">(((P) == 2 || (P) == 7 ) ? &amp;VPORTA.DIR : ((P) == 5 || (P) == 9 || (P) == 10) ? &amp;VPORTB.DIR : ((P) == 4) ? &amp;VPORTC.DIR : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 17) || (P) == 20 || (P) == 21) ? &amp;VPORTD.DIR : ((P) == 8 || (P) == 11 || (P) == 12 || (P) == 13) ? &amp;VPORTE.DIR : &amp;VPORTF.DIR)</span></div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="preprocessor">(((P) == 2 || (P) == 7 ) ? &amp;VPORTA.IN : ((P) == 5 || (P) == 9 || (P) == 10) ? &amp;VPORTB.IN : ((P) == 4) ? &amp;VPORTC.IN : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 17) || (P) == 20 || (P) == 21) ? &amp;VPORTD.IN : ((P) == 8 || (P) == 11 || (P) == 12 || (P) == 13) ? &amp;VPORTE.IN : &amp;VPORTF.IN)</span></div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;<span class="preprocessor">(((P) == 2 || (P) == 9 || (P) == 11 || (P) == 17) ? 0 : ((P) == 7 || (P) == 10 || (P) == 12 || (P) == 16) ? 1 : ((P) == 5 || (P) == 13 || (P) == 15 || (P) == 18) ? 2 : ((P) == 9 || (P) == 14 || (P) == 19) ? 3 : ((P) == 6 || (P) == 20) ? 4 : ((P) == 3 || (P) == 21) ? 5 :  6 )</span></div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160; </div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160; </div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="comment">// TinyCore</span></div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="comment">// https://raw.githubusercontent.com/xukangmin/TinyCore/master/avr/package/package_tinycore_index.json</span></div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="comment">// https://docs.tinycore.dev/en/latest/</span></div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="preprocessor">#elif  defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)</span></div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) ((P) &lt;= 5 ? &amp;VPORTB.OUT : ((P) &lt;= 9 ? &amp;VPORTC.OUT : ((P) &lt;= 16 ? &amp;VPORTA.OUT : ((P) &lt;= 18 ? &amp;VPORTB.OUT : &amp;VPORTC.OUT))))</span></div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) ((P) &lt;= 5 ? &amp;VPORTB.DIR : ((P) &lt;= 9 ? &amp;VPORTC.DIR : ((P) &lt;= 16 ? &amp;VPORTA.DIR : ((P) &lt;= 18 ? &amp;VPORTB.DIR : &amp;VPORTC.DIR))))</span></div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) ((P) &lt;= 5 ? &amp;VPORTB.IN : ((P) &lt;= 9 ? &amp;VPORTC.IN : ((P) &lt;= 16 ? &amp;VPORTA.IN : ((P) &lt;= 18 ? &amp;VPORTB.IN : &amp;VPORTC.IN))))</span></div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) ( (P) &lt;= 3 ? (3 - P) : ((P) &lt;= 5 ? (P) : ((P) &lt;= 9 ? (P - 6) : ((P) &lt;= 16 ? ((P) - 9) : ((P) &lt;= 18 ? ((P) - 11) : ((P) - 15))))) )</span></div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0) //PD0</span></div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1) //PD1</span></div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160; </div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (18) //A4</span></div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (19) //A5</span></div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (10) //PB0</span></div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (11) //PB2</span></div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (12) //PB3</span></div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (13) //PB1</span></div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160; </div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;<span class="preprocessor">#if defined(__AVR_ATmega48PB__) || defined(__AVR_ATmega88PB__) || defined(__AVR_ATmega168PB__) || defined(__AVR_ATmega328PB__)</span></div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;PORTD : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;PORTB : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 19) ? &amp;PORTC : &amp;PORTE)))</span></div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;DDRD : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;DDRB : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 19) ? &amp;DDRC : &amp;DDRE)))</span></div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;PIND : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;PINB : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 19) ? &amp;PINC : &amp;PINE)))</span></div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? (P) - 8 : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 19) ? (P) - 14 : (((P) &gt;= 20 &amp;&amp; (P) &lt;= 21) ? (P) - 18 : (P) - 22))))</span></div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;PORTD : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;PORTB : &amp;PORTC))</span></div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;DDRD : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;DDRB : &amp;DDRC))</span></div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? &amp;PIND : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? &amp;PINB : &amp;PINC))</span></div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;<span class="preprocessor">(((P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? (P) - 8 : (P) - 14))</span></div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160; </div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;<span class="comment">// --- Arduino Uno WiFi Rev 2, Nano Every ---</span></div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;<span class="preprocessor">#elif defined(__AVR_ATmega4809__)</span></div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160; </div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160; </div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;<span class="comment">// --- ATtinyX5 ---</span></div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="preprocessor">#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)</span></div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;<span class="comment">// we have only PORTB</span></div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) (&amp;PORTB)</span></div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P)  (&amp;DDRB)</span></div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P)  (&amp;PINB)</span></div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P)     (((P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? (P) - 8 : (P) - 14))</span></div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160; </div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160; </div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;<span class="comment">// --- ATtiny88 ---</span></div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;<span class="preprocessor">#elif defined(__AVR_ATtiny88__)</span></div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;<span class="preprocessor"># if defined(ARDUINO_AVR_DIGISPARKPRO)</span></div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) ((P) &lt;= 7 ? &amp;PORTD : ((P) &lt;= 14 ? &amp;PORTB : ((P) &lt;= 18 ? &amp;PORTA : &amp;PORTC)))</span></div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P)  ((P) &lt;= 7 ? &amp;DDRD : ((P) &lt;= 14 ? &amp;DDRB : ((P) &lt;= 18 ? &amp;DDRA : &amp;DDRC)))</span></div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P)  ((P) &lt;= 7 ? &amp;PIND : ((P) &lt;= 14 ? &amp;PINB : ((P) &lt;= 18 ? &amp;PINA : &amp;PINC)))</span></div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) ( (P) &lt;= 7 ? (P) : ((P) &lt;= 13 ? ((P) - 8) : ((P) == 14 ? 7 : ((P) &lt;= 16 ? ((P) - 14) : ((P) &lt;= 18 ? ((P) - 17) : ((P) == 25 ? 7 : ((P) - 19)))))) )</span></div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;<span class="preprocessor"># else</span></div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) ((P) &lt;= 7 ? &amp;PORTD : ((P) &lt;= 15 ? &amp;PORTB : ((P) &lt;= 22 ? &amp;PORTC : ((P) &lt;= 26 ? &amp;PORTA : &amp;PORTC))))</span></div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) ((P) &lt;= 7 ? &amp;DDRD : ((P) &lt;= 15 ? &amp;DDRB : ((P) &lt;= 22 ? &amp;DDRC : ((P) &lt;= 26 ? &amp;DDRA : &amp;DDRC))))</span></div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) ((P) &lt;= 7 ? &amp;PIND : ((P) &lt;= 15 ? &amp;PINB : ((P) &lt;= 22 ? &amp;PINC : ((P) &lt;= 26 ? &amp;PINA : &amp;PINC))))</span></div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) ((P) &lt;= 15 ? ((P) &amp; 0x7) : ((P) == 16 ? (7) : ((P) &lt;= 22 ? ((P) - 17) : ((P) == 27 ? (6) : ((P) - 23)))))</span></div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;<span class="preprocessor"># endif</span></div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160; </div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160; </div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="comment">// --- ATtinyX4 + ATtinyX7 ---</span></div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;<span class="preprocessor">#elif  defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)</span></div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="preprocessor"># if defined(ARDUINO_AVR_DIGISPARKPRO) || PIN_PA7 == 5</span></div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="comment">// Strange enumeration of pins on Digispark board and core library</span></div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) (((P) &lt;= 4) ? &amp;PORTB : &amp;PORTA)</span></div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P)  (((P) &lt;= 4) ? &amp;DDRB : &amp;DDRA)</span></div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P)  (((P) &lt;= 4) ? &amp;PINB : &amp;PINA)</span></div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P)     (((P) &lt;= 2) ? (P) : (((P) == 3) ? 6 : (((P) == 4) ? 3 : (((P) == 5) ? 7 : (P) - 6 ))))</span></div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;<span class="preprocessor"># else</span></div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;<span class="comment">// ATtinyX4: PORTA for 0 to 7, PORTB for 8 to 11</span></div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;<span class="comment">// ATtinyX7: PORTA for 0 to 7, PORTB for 8 to 15</span></div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) (((P) &lt;= 7) ? &amp;PORTA : &amp;PORTB)</span></div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P)  (((P) &lt;= 7) ? &amp;DDRA : &amp;DDRB)</span></div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P)  (((P) &lt;= 7) ? &amp;PINA : &amp;PINB)</span></div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P)     (((P) &lt;= 7) ? (P) : (P) - 8 )</span></div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;<span class="preprocessor"># endif</span></div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160; </div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;<span class="comment">// --- Other ---</span></div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160; </div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     SDA</span></div>
-<div class="line"><a name="l00429"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a2cade698267beb86ccaa38c14d35ab0f">  429</a></span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     SCL</span></div>
-<div class="line"><a name="l00430"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a0e4e08bab2fb484136d18b067bef372c">  430</a></span>&#160; </div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   SS</span></div>
-<div class="line"><a name="l00432"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#aa48cf672323b7a1784a973d1a4fd891e">  432</a></span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN MOSI</span></div>
-<div class="line"><a name="l00433"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#abde5a3df1fb9cf0e46476ea7ac10b48a">  433</a></span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN MISO</span></div>
-<div class="line"><a name="l00434"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a32f0a77e5800213b4d059bb700302d42">  434</a></span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  SCK</span></div>
-<div class="line"><a name="l00435"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ac26ddd8cd6a7cd10b23f08ea6e8f7032">  435</a></span>&#160; </div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;<span class="preprocessor">#define UART_RX_PIN     (0) //PB0</span></div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;<span class="preprocessor">#define UART_TX_PIN     (1) //PB1</span></div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160; </div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     (22) //PA2</span></div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     (23) //PA3</span></div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   (8)  //PE3</span></div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN (11) //PE0</span></div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN (12) //PE1</span></div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  (13) //PE2</span></div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160; </div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) \</span></div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;<span class="preprocessor">(((P) == 2 || (P) == 7 ) ? &amp;VPORTA.OUT : ((P) == 5 || (P) == 9 || (P) == 10) ? &amp;VPORTB.OUT : ((P) == 4) ? &amp;VPORTC.OUT : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 17) || (P) == 20 || (P) == 21) ? &amp;VPORTD.OUT : ((P) == 8 || (P) == 11 || (P) == 12 || (P) == 13) ? &amp;VPORTE.OUT : &amp;VPORTF.OUT)</span></div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) \</span></div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;<span class="preprocessor">(((P) == 2 || (P) == 7 ) ? &amp;VPORTA.DIR : ((P) == 5 || (P) == 9 || (P) == 10) ? &amp;VPORTB.DIR : ((P) == 4) ? &amp;VPORTC.DIR : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 17) || (P) == 20 || (P) == 21) ? &amp;VPORTD.DIR : ((P) == 8 || (P) == 11 || (P) == 12 || (P) == 13) ? &amp;VPORTE.DIR : &amp;VPORTF.DIR)</span></div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) \</span></div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;<span class="preprocessor">(((P) == 2 || (P) == 7 ) ? &amp;VPORTA.IN : ((P) == 5 || (P) == 9 || (P) == 10) ? &amp;VPORTB.IN : ((P) == 4) ? &amp;VPORTC.IN : (((P) &gt;= 14 &amp;&amp; (P) &lt;= 17) || (P) == 20 || (P) == 21) ? &amp;VPORTD.IN : ((P) == 8 || (P) == 11 || (P) == 12 || (P) == 13) ? &amp;VPORTE.IN : &amp;VPORTF.IN)</span></div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) \</span></div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;<span class="preprocessor">(((P) == 2 || (P) == 9 || (P) == 11 || (P) == 17) ? 0 : ((P) == 7 || (P) == 10 || (P) == 12 || (P) == 16) ? 1 : ((P) == 5 || (P) == 13 || (P) == 15 || (P) == 18) ? 2 : ((P) == 9 || (P) == 14 || (P) == 19) ? 3 : ((P) == 6 || (P) == 20) ? 4 : ((P) == 3 || (P) == 21) ? 5 :  6 )</span></div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160; </div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160; </div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;<span class="comment">// TinyCore</span></div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;<span class="comment">// https://raw.githubusercontent.com/xukangmin/TinyCore/master/avr/package/package_tinycore_index.json</span></div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;<span class="comment">// https://docs.tinycore.dev/en/latest/</span></div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;<span class="preprocessor">#elif  defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)</span></div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) ((P) &lt;= 5 ? &amp;VPORTB.OUT : ((P) &lt;= 9 ? &amp;VPORTC.OUT : ((P) &lt;= 16 ? &amp;VPORTA.OUT : ((P) &lt;= 18 ? &amp;VPORTB.OUT : &amp;VPORTC.OUT))))</span></div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) ((P) &lt;= 5 ? &amp;VPORTB.DIR : ((P) &lt;= 9 ? &amp;VPORTC.DIR : ((P) &lt;= 16 ? &amp;VPORTA.DIR : ((P) &lt;= 18 ? &amp;VPORTB.DIR : &amp;VPORTC.DIR))))</span></div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) ((P) &lt;= 5 ? &amp;VPORTB.IN : ((P) &lt;= 9 ? &amp;VPORTC.IN : ((P) &lt;= 16 ? &amp;VPORTA.IN : ((P) &lt;= 18 ? &amp;VPORTB.IN : &amp;VPORTC.IN))))</span></div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) ( (P) &lt;= 3 ? (3 - P) : ((P) &lt;= 5 ? (P) : ((P) &lt;= 9 ? (P - 6) : ((P) &lt;= 16 ? ((P) - 9) : ((P) &lt;= 18 ? ((P) - 11) : ((P) - 15))))) )</span></div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160; </div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160; </div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="comment">// --- ATtinyX5 ---</span></div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="preprocessor">#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)</span></div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;<span class="comment">// we have only PORTB</span></div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) (&amp;PORTB)</span></div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P)  (&amp;DDRB)</span></div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P)  (&amp;PINB)</span></div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P)     (((P) &lt;= 7) ? (P) : (((P) &gt;= 8 &amp;&amp; (P) &lt;= 13) ? (P) - 8 : (P) - 14))</span></div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160; </div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160; </div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;<span class="comment">// --- ATtiny88 ---</span></div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="preprocessor">#elif defined(__AVR_ATtiny88__)</span></div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;<span class="preprocessor"># if defined(ARDUINO_AVR_DIGISPARKPRO)</span></div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) ((P) &lt;= 7 ? &amp;PORTD : ((P) &lt;= 14 ? &amp;PORTB : ((P) &lt;= 18 ? &amp;PORTA : &amp;PORTC)))</span></div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P)  ((P) &lt;= 7 ? &amp;DDRD : ((P) &lt;= 14 ? &amp;DDRB : ((P) &lt;= 18 ? &amp;DDRA : &amp;DDRC)))</span></div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P)  ((P) &lt;= 7 ? &amp;PIND : ((P) &lt;= 14 ? &amp;PINB : ((P) &lt;= 18 ? &amp;PINA : &amp;PINC)))</span></div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) ( (P) &lt;= 7 ? (P) : ((P) &lt;= 13 ? ((P) - 8) : ((P) == 14 ? 7 : ((P) &lt;= 16 ? ((P) - 14) : ((P) &lt;= 18 ? ((P) - 17) : ((P) == 25 ? 7 : ((P) - 19)))))) )</span></div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;<span class="preprocessor"># else</span></div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) ((P) &lt;= 7 ? &amp;PORTD : ((P) &lt;= 15 ? &amp;PORTB : ((P) &lt;= 22 ? &amp;PORTC : ((P) &lt;= 26 ? &amp;PORTA : &amp;PORTC))))</span></div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P) ((P) &lt;= 7 ? &amp;DDRD : ((P) &lt;= 15 ? &amp;DDRB : ((P) &lt;= 22 ? &amp;DDRC : ((P) &lt;= 26 ? &amp;DDRA : &amp;DDRC))))</span></div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P) ((P) &lt;= 7 ? &amp;PIND : ((P) &lt;= 15 ? &amp;PINB : ((P) &lt;= 22 ? &amp;PINC : ((P) &lt;= 26 ? &amp;PINA : &amp;PINC))))</span></div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P) ((P) &lt;= 15 ? ((P) &amp; 0x7) : ((P) == 16 ? (7) : ((P) &lt;= 22 ? ((P) - 17) : ((P) == 27 ? (6) : ((P) - 23)))))</span></div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;<span class="preprocessor"># endif</span></div>
 <div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160; </div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;<span class="comment">//#endif  //#ifndef digitalPinToPortReg</span></div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160; </div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160; </div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;<span class="preprocessor">#ifndef digitalWriteFast</span></div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;<span class="preprocessor">#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) &amp;&amp; defined(__digitalPinToPortReg)</span></div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;<span class="preprocessor">#define digitalWriteFast(P, V) \</span></div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;<span class="preprocessor">if (__builtin_constant_p(P)) { \</span></div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;<span class="preprocessor">  BIT_WRITE(*__digitalPinToPortReg(P), __digitalPinToBit(P), (V)); \</span></div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;<span class="preprocessor">} else { \</span></div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;<span class="preprocessor">  digitalWrite((P), (V)); \</span></div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;<span class="preprocessor">}</span></div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;<span class="preprocessor">#define digitalWriteFast digitalWrite</span></div>
-<div class="line"><a name="l00451"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a9bef074dfc5a83ffbb27929185ef9597">  451</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160; </div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160; </div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;<span class="comment">// --- ATtinyX4 + ATtinyX7 ---</span></div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;<span class="preprocessor">#elif  defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)</span></div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;<span class="preprocessor"># if defined(ARDUINO_AVR_DIGISPARKPRO) || PIN_PA7 == 5</span></div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;<span class="comment">// Strange enumeration of pins on Digispark board and core library</span></div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) (((P) &lt;= 4) ? &amp;PORTB : &amp;PORTA)</span></div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P)  (((P) &lt;= 4) ? &amp;DDRB : &amp;DDRA)</span></div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P)  (((P) &lt;= 4) ? &amp;PINB : &amp;PINA)</span></div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P)     (((P) &lt;= 2) ? (P) : (((P) == 3) ? 6 : (((P) == 4) ? 3 : (((P) == 5) ? 7 : (P) - 6 ))))</span></div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;<span class="preprocessor"># else</span></div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;<span class="comment">// ATtinyX4: PORTA for 0 to 7, PORTB for 8 to 11</span></div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;<span class="comment">// ATtinyX7: PORTA for 0 to 7, PORTB for 8 to 15</span></div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;<span class="preprocessor">#define __digitalPinToPortReg(P) (((P) &lt;= 7) ? &amp;PORTA : &amp;PORTB)</span></div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;<span class="preprocessor">#define __digitalPinToDDRReg(P)  (((P) &lt;= 7) ? &amp;DDRA : &amp;DDRB)</span></div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;<span class="preprocessor">#define __digitalPinToPINReg(P)  (((P) &lt;= 7) ? &amp;PINA : &amp;PINB)</span></div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;<span class="preprocessor">#define __digitalPinToBit(P)     (((P) &lt;= 7) ? (P) : (P) - 8 )</span></div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;<span class="preprocessor"># endif</span></div>
 <div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160; </div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;<span class="preprocessor">#ifndef pinModeFast</span></div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="preprocessor">#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) &amp;&amp; defined(__digitalPinToPortReg)</span></div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;<span class="preprocessor">#define pinModeFast(P, V) \</span></div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;<span class="preprocessor">if (__builtin_constant_p(P) &amp;&amp; __builtin_constant_p(V)) { \</span></div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;<span class="preprocessor">  if (V == INPUT_PULLUP) {\</span></div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;<span class="preprocessor">    BIT_CLEAR(*__digitalPinToDDRReg(P), __digitalPinToBit(P)); \</span></div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;<span class="preprocessor">    BIT_SET(*__digitalPinToPortReg(P), __digitalPinToBit(P)); \</span></div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;<span class="preprocessor">  } else { \</span></div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;<span class="preprocessor">    BIT_WRITE(*__digitalPinToDDRReg(P), __digitalPinToBit(P), (V)); \</span></div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;<span class="preprocessor">  } \</span></div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;<span class="preprocessor">} else { \</span></div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;<span class="preprocessor">  pinMode((P), (V)); \</span></div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;<span class="preprocessor">}</span></div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;<span class="preprocessor">#define pinModeFast pinMode</span></div>
-<div class="line"><a name="l00470"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a99fa3e1d72f2f1a9ffba996b06767a39">  470</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160; </div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160; </div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;<span class="preprocessor">#ifndef digitalReadFast</span></div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;<span class="preprocessor">#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))</span></div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;<span class="preprocessor">#define digitalReadFast(P) ( (int) __digitalReadFast((P)) )</span></div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;<span class="preprocessor">#define __digitalReadFast(P ) \</span></div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;<span class="preprocessor">  (__builtin_constant_p(P) ) ? \</span></div>
-<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;<span class="preprocessor">  (( BIT_READ(*__digitalPinToPINReg(P), __digitalPinToBit(P))) ? HIGH:LOW ) : \</span></div>
-<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;<span class="preprocessor">  digitalRead((P))</span></div>
-<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;<span class="preprocessor">#define digitalReadFast digitalRead</span></div>
-<div class="line"><a name="l00483"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a3d35ce09bbea79b9f4e9fb0c291da92c">  483</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160; </div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160; </div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;<span class="preprocessor">#ifndef digitalToggleFast</span></div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;<span class="preprocessor">#if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR))</span></div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;<span class="preprocessor">#define digitalToggleFast(P) \</span></div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;<span class="preprocessor">if (__builtin_constant_p(P)) { \</span></div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;<span class="preprocessor">  BIT_SET(*__digitalPinToPINReg(P), __digitalPinToBit(P)); \</span></div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;<span class="preprocessor">} else { \</span></div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;<span class="preprocessor">  digitalWrite(P, ! digitalRead(P)); \</span></div>
-<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;<span class="preprocessor">}</span></div>
-<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;<span class="preprocessor">#define digitalToggleFast(P) digitalWrite(P, ! digitalRead(P))</span></div>
-<div class="line"><a name="l00497"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a37533a4829c5931c2ea20fe4282bb910">  497</a></span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160; </div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;<span class="comment">// --- Other ---</span></div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160; </div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;<span class="preprocessor">#define I2C_SDA_PIN     SDA</span></div>
+<div class="line"><a name="l00459"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a2cade698267beb86ccaa38c14d35ab0f">  459</a></span>&#160;<span class="preprocessor">#define I2C_SCL_PIN     SCL</span></div>
+<div class="line"><a name="l00460"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a0e4e08bab2fb484136d18b067bef372c">  460</a></span>&#160; </div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;<span class="preprocessor">#define SPI_HW_SS_PIN   SS</span></div>
+<div class="line"><a name="l00462"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#aa48cf672323b7a1784a973d1a4fd891e">  462</a></span>&#160;<span class="preprocessor">#define SPI_HW_MOSI_PIN MOSI</span></div>
+<div class="line"><a name="l00463"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#abde5a3df1fb9cf0e46476ea7ac10b48a">  463</a></span>&#160;<span class="preprocessor">#define SPI_HW_MISO_PIN MISO</span></div>
+<div class="line"><a name="l00464"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a32f0a77e5800213b4d059bb700302d42">  464</a></span>&#160;<span class="preprocessor">#define SPI_HW_SCK_PIN  SCK</span></div>
+<div class="line"><a name="l00465"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#ac26ddd8cd6a7cd10b23f08ea6e8f7032">  465</a></span>&#160; </div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160; </div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;<span class="comment">//#endif  //#if !defined(digitalPinToPortReg)</span></div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160; </div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;<span class="preprocessor">#if !defined(digitalWriteFast)</span></div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;<span class="preprocessor">#  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) &amp;&amp; defined(__digitalPinToPortReg)</span></div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;<span class="preprocessor">#define digitalWriteFast(P, V) \</span></div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;<span class="preprocessor">if (__builtin_constant_p(P)) { \</span></div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;<span class="preprocessor">  BIT_WRITE(*__digitalPinToPortReg(P), __digitalPinToBit(P), (V)); \</span></div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;<span class="preprocessor">} else { \</span></div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;<span class="preprocessor">  digitalWrite((P), (V)); \</span></div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;<span class="preprocessor">}</span></div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;<span class="preprocessor">#  else</span></div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;<span class="preprocessor">#define digitalWriteFast digitalWrite</span></div>
+<div class="line"><a name="l00480"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a9bef074dfc5a83ffbb27929185ef9597">  480</a></span>&#160;<span class="preprocessor">#  endif</span></div>
+<div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160; </div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;<span class="preprocessor">#if !defined(pinModeFast)</span></div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;<span class="preprocessor">#  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) &amp;&amp; defined(__digitalPinToPortReg)</span></div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;<span class="preprocessor">#define pinModeFast(P, V) \</span></div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;<span class="preprocessor">if (__builtin_constant_p(P) &amp;&amp; __builtin_constant_p(V)) { \</span></div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;<span class="preprocessor">  if (V == INPUT_PULLUP) {\</span></div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;<span class="preprocessor">    BIT_CLEAR(*__digitalPinToDDRReg(P), __digitalPinToBit(P)); \</span></div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;<span class="preprocessor">    BIT_SET(*__digitalPinToPortReg(P), __digitalPinToBit(P)); \</span></div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;<span class="preprocessor">  } else { \</span></div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;<span class="preprocessor">    BIT_WRITE(*__digitalPinToDDRReg(P), __digitalPinToBit(P), (V)); \</span></div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;<span class="preprocessor">  } \</span></div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;<span class="preprocessor">} else { \</span></div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;<span class="preprocessor">  pinMode((P), (V)); \</span></div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;<span class="preprocessor">}</span></div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;<span class="preprocessor">#  else</span></div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;<span class="preprocessor">#define pinModeFast pinMode</span></div>
+<div class="line"><a name="l00498"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a99fa3e1d72f2f1a9ffba996b06767a39">  498</a></span>&#160;<span class="preprocessor">#  endif</span></div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;<span class="preprocessor">#endif // !defined(pinModeFast)</span></div>
 <div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160; </div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;<span class="preprocessor">#endif //__digitalWriteFast_h_</span></div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;<span class="preprocessor">#if !defined(digitalReadFast)</span></div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;<span class="preprocessor">#  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) &amp;&amp; defined(__digitalPinToPINReg)</span></div>
+<div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;<span class="preprocessor">#define digitalReadFast(P) ( (int) __digitalReadFast((P)) )</span></div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;<span class="comment">// since we have return values, it is easier to implement it by ?:</span></div>
+<div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;<span class="preprocessor">#define __digitalReadFast(P ) \</span></div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;<span class="preprocessor">  (__builtin_constant_p(P) ) ? \</span></div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;<span class="preprocessor">  (( BIT_READ(*__digitalPinToPINReg(P), __digitalPinToBit(P))) ? HIGH:LOW ) : \</span></div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;<span class="preprocessor">  digitalRead((P))</span></div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;<span class="preprocessor">#  else</span></div>
+<div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;<span class="preprocessor">#define digitalReadFast digitalRead</span></div>
+<div class="line"><a name="l00511"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a3d35ce09bbea79b9f4e9fb0c291da92c">  511</a></span>&#160;<span class="preprocessor">#  endif</span></div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;<span class="preprocessor">#endif // !defined(digitalReadFast)</span></div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160; </div>
+<div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;<span class="preprocessor">#if !defined(digitalToggleFast)</span></div>
+<div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;<span class="preprocessor">#  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) &amp;&amp; defined(__digitalPinToPINReg)</span></div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;<span class="preprocessor">#define digitalToggleFast(P) \</span></div>
+<div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;<span class="preprocessor">if (__builtin_constant_p(P)) { \</span></div>
+<div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;<span class="preprocessor">  BIT_SET(*__digitalPinToPINReg(P), __digitalPinToBit(P)); \</span></div>
+<div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;<span class="preprocessor">} else { \</span></div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;<span class="preprocessor">  digitalWrite(P, ! digitalRead(P)); \</span></div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;<span class="preprocessor">}</span></div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;<span class="preprocessor">#  else</span></div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;<span class="preprocessor">#define digitalToggleFast(P) digitalWrite(P, ! digitalRead(P))</span></div>
+<div class="line"><a name="l00524"></a><span class="lineno"><a class="line" href="digitalWriteFast_8h.html#a37533a4829c5931c2ea20fe4282bb910">  524</a></span>&#160;<span class="preprocessor">#  endif</span></div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;<span class="preprocessor">#endif // !defined(digitalToggleFast)</span></div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160; </div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;<span class="preprocessor">#endif //__digitalWriteFast_h_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="digitalWriteFast_8h.html">digitalWriteFast.h</a></li>
-    <li class="footer">Generated on Wed Dec 8 2021 14:58:14 for IRremote by
+    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

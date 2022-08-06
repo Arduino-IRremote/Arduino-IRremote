@@ -1,4 +1,23 @@
 <map id="src/IRProtocol.h" name="src/IRProtocol.h">
-<area shape="rect" id="node1" title="Common declarations for receiving and sending." alt="" coords="9,5,123,32"/>
-<area shape="rect" id="node2" href="$IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="5,80,127,107"/>
+<area shape="rect" id="node1" title="Common declarations for receiving and sending." alt="" coords="1197,5,1312,32"/>
+<area shape="rect" id="node2" href="$IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="1194,80,1315,107"/>
+<area shape="rect" id="node3" href="$ac__LG_8hpp.html" title=" " alt="" coords="5,155,112,181"/>
+<area shape="rect" id="node4" href="$ir__BoseWave_8hpp.html" title=" " alt="" coords="137,155,282,181"/>
+<area shape="rect" id="node5" href="$IRremote_8hpp.html" title="Public API to the library." alt="" coords="1194,229,1315,256"/>
+<area shape="rect" id="node7" href="$ir__Denon_8hpp.html" title=" " alt="" coords="357,155,477,181"/>
+<area shape="rect" id="node8" href="$ir__Dish_8hpp.html" title=" " alt="" coords="501,155,611,181"/>
+<area shape="rect" id="node9" href="$ir__DistanceProtocol_8hpp.html" title=" " alt="" coords="635,155,818,181"/>
+<area shape="rect" id="node10" href="$ir__JVC_8hpp.html" title=" " alt="" coords="843,155,949,181"/>
+<area shape="rect" id="node11" href="$ir__Kaseikyo_8hpp.html" title=" " alt="" coords="974,155,1111,181"/>
+<area shape="rect" id="node12" href="$ir__Lego_8hpp.html" title=" " alt="" coords="1135,155,1246,181"/>
+<area shape="rect" id="node13" href="$ir__LG_8hpp.html" title=" " alt="" coords="1270,155,1370,181"/>
+<area shape="rect" id="node14" href="$ir__MagiQuest_8hpp.html" title=" " alt="" coords="1395,155,1541,181"/>
+<area shape="rect" id="node15" href="$ir__NEC_8hpp.html" title=" " alt="" coords="1566,155,1677,181"/>
+<area shape="rect" id="node16" href="$ir__Pronto_8hpp.html" title=" " alt="" coords="1701,155,1822,181"/>
+<area shape="rect" id="node17" href="$ir__RC5__RC6_8hpp.html" title=" " alt="" coords="1846,155,1986,181"/>
+<area shape="rect" id="node18" href="$ir__Samsung_8hpp.html" title=" " alt="" coords="2011,155,2149,181"/>
+<area shape="rect" id="node19" href="$ir__Sony_8hpp.html" title=" " alt="" coords="2174,155,2287,181"/>
+<area shape="rect" id="node20" href="$ir__Template_8hpp.html" title=" " alt="" coords="2312,155,2448,181"/>
+<area shape="rect" id="node21" href="$ir__Whynter_8hpp.html" title=" " alt="" coords="2473,155,2605,181"/>
+<area shape="rect" id="node6" href="$IRremote_8h.html" title="Stub for backward compatibility." alt="" coords="1201,304,1308,331"/>
 </map>

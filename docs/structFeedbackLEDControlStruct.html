@@ -92,21 +92,21 @@ $(document).ready(function(){initNavTree('structFeedbackLEDControlStruct.html','
 <p>Contains pin number and enable status of the feedback LED.  
  <a href="structFeedbackLEDControlStruct.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a759f018b8bdb93695bd4ebb0d61a3c4c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFeedbackLEDControlStruct.html#a759f018b8bdb93695bd4ebb0d61a3c4c">FeedbackLEDPin</a></td></tr>
-<tr class="memdesc:a759f018b8bdb93695bd4ebb0d61a3c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">if 0, then take board specific <a class="el" href="group__FeedbackLEDHardware.html#gaa50fbed29c2410ad6d6185a86cf88cf5" title="Board dependent macro to turn LED_BUILTIN on.">FEEDBACK_LED_ON()</a> and <a class="el" href="group__FeedbackLEDHardware.html#gabff30102e0a56a5abd21369c912dda4a" title="Board dependent macro to turn LED_BUILTIN off.">FEEDBACK_LED_OFF()</a> functions  <a href="structFeedbackLEDControlStruct.html#a759f018b8bdb93695bd4ebb0d61a3c4c">More...</a><br /></td></tr>
+<tr class="memdesc:a759f018b8bdb93695bd4ebb0d61a3c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions  <a href="structFeedbackLEDControlStruct.html#a759f018b8bdb93695bd4ebb0d61a3c4c">More...</a><br /></td></tr>
 <tr class="separator:a759f018b8bdb93695bd4ebb0d61a3c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49467187b92e40e5122b14d82a9fa500"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFeedbackLEDControlStruct.html#a49467187b92e40e5122b14d82a9fa500">LedFeedbackEnabled</a></td></tr>
-<tr class="memdesc:a49467187b92e40e5122b14d82a9fa500"><td class="mdescLeft">&#160;</td><td class="mdescRight">true -&gt; enable blinking of pin on IR processing  <a href="structFeedbackLEDControlStruct.html#a49467187b92e40e5122b14d82a9fa500">More...</a><br /></td></tr>
-<tr class="separator:a49467187b92e40e5122b14d82a9fa500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaca16b47301e6cc0fcd0c76216f76417"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFeedbackLEDControlStruct.html#aaca16b47301e6cc0fcd0c76216f76417">LedFeedbackEnabled</a></td></tr>
+<tr class="memdesc:aaca16b47301e6cc0fcd0c76216f76417"><td class="mdescLeft">&#160;</td><td class="mdescRight">LED_FEEDBACK_ENABLED_FOR_RECEIVE or LED_FEEDBACK_ENABLED_FOR_SEND -&gt; enable blinking of pin on IR processing.  <a href="structFeedbackLEDControlStruct.html#aaca16b47301e6cc0fcd0c76216f76417">More...</a><br /></td></tr>
+<tr class="separator:aaca16b47301e6cc0fcd0c76216f76417"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains pin number and enable status of the feedback LED. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00041">41</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00042">42</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a759f018b8bdb93695bd4ebb0d61a3c4c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a759f018b8bdb93695bd4ebb0d61a3c4c">&#9670;&nbsp;</a></span>FeedbackLEDPin</h2>
@@ -120,32 +120,32 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>if 0, then take board specific <a class="el" href="group__FeedbackLEDHardware.html#gaa50fbed29c2410ad6d6185a86cf88cf5" title="Board dependent macro to turn LED_BUILTIN on.">FEEDBACK_LED_ON()</a> and <a class="el" href="group__FeedbackLEDHardware.html#gabff30102e0a56a5abd21369c912dda4a" title="Board dependent macro to turn LED_BUILTIN off.">FEEDBACK_LED_OFF()</a> functions </p>
+<p>if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions </p>
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00042">42</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00043">43</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a49467187b92e40e5122b14d82a9fa500"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49467187b92e40e5122b14d82a9fa500">&#9670;&nbsp;</a></span>LedFeedbackEnabled</h2>
+<a id="aaca16b47301e6cc0fcd0c76216f76417"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaca16b47301e6cc0fcd0c76216f76417">&#9670;&nbsp;</a></span>LedFeedbackEnabled</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool FeedbackLEDControlStruct::LedFeedbackEnabled</td>
+          <td class="memname">uint8_t FeedbackLEDControlStruct::LedFeedbackEnabled</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>true -&gt; enable blinking of pin on IR processing </p>
+<p>LED_FEEDBACK_ENABLED_FOR_RECEIVE or LED_FEEDBACK_ENABLED_FOR_SEND -&gt; enable blinking of pin on IR processing. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00043">43</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00044">44</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/<a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a></li>
+<li>src/<a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -153,7 +153,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structFeedbackLEDControlStruct.html">FeedbackLEDControlStruct</a></li>
-    <li class="footer">Generated on Wed Jun 16 2021 23:31:01 for IRremote by
+    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

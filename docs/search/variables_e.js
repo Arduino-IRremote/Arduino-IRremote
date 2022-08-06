@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['sbiphasedecoderawbuffoffset_618',['sBiphaseDecodeRawbuffOffset',['../IRremoteInt_8h.html#a3f8125d5a7cde4fca3ece58e361296f9',1,'IRremoteInt.h']]],
-  ['sendpin_619',['sendPin',['../classIRsend.html#a39f9782dd884b804bcf0034ab71ac202',1,'IRsend']]],
-  ['signature_620',['Signature',['../unionLGProtocol.html#ac12b1f007fa0ce8a728e1259256a3334',1,'LGProtocol']]],
-  ['stateforisr_621',['StateForISR',['../structirparams__struct.html#aea7300a6d0cd2e463887a8595c6c1e2e',1,'irparams_struct']]],
-  ['switchonmask_622',['SwitchOnMask',['../unionLGProtocol.html#ac4af7b6a94f13b8a7fb8f20e8bbe80ce',1,'LGProtocol']]]
+  ['raw_943',['raw',['../unionLGProtocol.html#a3255b9b6a3069f7b749b98ed22bf5378',1,'LGProtocol']]],
+  ['rawbuf_944',['rawbuf',['../structirparams__struct.html#a6652c81270d0bbcb0d81e7631770fc02',1,'irparams_struct::rawbuf()'],['../structdecode__results.html#a54d2e781bb257f55dc68b2d97365051d',1,'decode_results::rawbuf()']]],
+  ['rawdataptr_945',['rawDataPtr',['../structIRData.html#a8d7c987d63874731ff2e1120b21a1a08',1,'IRData']]],
+  ['rawlen_946',['rawlen',['../structirparams__struct.html#a98a83a61e15fc371e5ce7db12dbd0475',1,'irparams_struct::rawlen()'],['../structdecode__results.html#a17bf90d204708de6c490dfe3ab887103',1,'decode_results::rawlen()']]],
+  ['repeatcount_947',['repeatCount',['../classIRrecv.html#a75a2cb038de23ec735c044f176c84b3a',1,'IRrecv']]]
 ];

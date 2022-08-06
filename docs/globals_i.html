@@ -91,7 +91,10 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 : <a class="el" href="digitalWriteFast_8h.html#a2cade698267beb86ccaa38c14d35ab0f">digitalWriteFast.h</a>
 </li>
 <li>initPCIInterruptForTinyReceiver()
-: <a class="el" href="group__TinyReceiver.html#ga1f3913249343258d738ea0a48f7e1aed">TinyIRReceiver.h</a>
+: <a class="el" href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">TinyIRReceiver.h</a>
+</li>
+<li>INPUT_MARK
+: <a class="el" href="IRremote_8hpp.html#ace39503e8ded5ffb7a1c0d6f651f8d43">IRremote.hpp</a>
 </li>
 <li>IR_DEBUG_PRINT
 : <a class="el" href="IRremoteInt_8h.html#a093a1c04e9dd4d6845a48163554143a0">IRremoteInt.h</a>
@@ -99,11 +102,8 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 <li>IR_DEBUG_PRINTLN
 : <a class="el" href="IRremoteInt_8h.html#aebf95fa57eb370cfe65ce6a9728b6e1f">IRremoteInt.h</a>
 </li>
-<li>IR_INFO_PRINT
-: <a class="el" href="IRremoteInt_8h.html#aba66faba11cfd0d64b57de6d734f3d74">IRremoteInt.h</a>
-</li>
-<li>IR_INFO_PRINTLN
-: <a class="el" href="IRremoteInt_8h.html#ac118c2eff8dfdd56b2be1b5b839ad5e9">IRremoteInt.h</a>
+<li>IR_INPUT_PIN
+: <a class="el" href="group__TinyReceiver.html#ga57d0c5b7d83f10557910205596d66dfb">TinyIRReceiver.hpp</a>
 </li>
 <li>IR_REC_STATE_IDLE
 : <a class="el" href="IRremoteInt_8h.html#a92edad56cde0f027e20711dcf83da843">IRremoteInt.h</a>
@@ -135,8 +135,11 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 <li>IR_RECEIVER_STATE_WAITING_FOR_STOP_MARK
 : <a class="el" href="group__TinyReceiver.html#ga2f6f17e18c7b5f1ef4b9cfc907d086e4">TinyIRReceiver.h</a>
 </li>
-<li>IR_SEND_DUTY_CYCLE
-: <a class="el" href="IRremoteInt_8h.html#ac534825448d4687e6471c3855bf71cf5">IRremoteInt.h</a>
+<li>IR_SEND_DUTY_CYCLE_PERCENT
+: <a class="el" href="IRremote_8hpp.html#a6be706039d9083db8cb072478e0a09f8">IRremote.hpp</a>
+</li>
+<li>IR_SEND_PIN
+: <a class="el" href="group__Timer.html#ga4cb394b3b749f9302940902fb05bd920">IRTimer.hpp</a>
 </li>
 <li>IR_TRACE_PRINT
 : <a class="el" href="IRremoteInt_8h.html#af7b7c32d41d80a578f482d2828b05326">IRremoteInt.h</a>
@@ -162,8 +165,14 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 <li>IRDATA_FLAGS_IS_REPEAT
 : <a class="el" href="IRremoteInt_8h.html#aaa9952cd64b58083c28873484c494abf">IRremoteInt.h</a>
 </li>
+<li>IRDATA_FLAGS_IS_SPECIAL_REPEAT
+: <a class="el" href="IRremoteInt_8h.html#a7c32476f27490a9051fc6c3b76be260e">IRremoteInt.h</a>
+</li>
 <li>IRDATA_FLAGS_PARITY_FAILED
 : <a class="el" href="IRremoteInt_8h.html#a1a60f95f0885b1865dc5514ddd80e093">IRremoteInt.h</a>
+</li>
+<li>IRDATA_FLAGS_TOGGLE_BIT
+: <a class="el" href="IRremoteInt_8h.html#a169a0ae23ab363f24027f769881db0b0">IRremoteInt.h</a>
 </li>
 <li>IRDATA_FLAGS_WAS_OVERFLOW
 : <a class="el" href="IRremoteInt_8h.html#a1acaa14d5a437ad317e17489e845f401">IRremoteInt.h</a>
@@ -171,11 +180,22 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 <li>IRDATA_TOGGLE_BIT_MASK
 : <a class="el" href="IRremoteInt_8h.html#a6a8eaa19dc6174814fedc9d5b495560c">IRremoteInt.h</a>
 </li>
+<li>irparams
+: <a class="el" href="group__Receiving.html#ga938046a49af083b7d470e61fd77e12ed">IRReceive.hpp</a>
+</li>
+<li>IRPinChangeInterruptHandler()
+: <a class="el" href="group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69">TinyIRReceiver.hpp</a>
+</li>
 <li>IrReceiver
-: <a class="el" href="IRremoteInt_8h.html#a6813a2b456e5359ce674699c85a61cf9">IRremoteInt.h</a>
+: <a class="el" href="group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9">IRremoteInt.h</a>
+, <a class="el" href="group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9">IRReceive.hpp</a>
 </li>
 <li>IrSender
-: <a class="el" href="IRremoteInt_8h.html#afba8232b747be85f72c1c4612780d5cf">IRremoteInt.h</a>
+: <a class="el" href="group__Sending.html#gafba8232b747be85f72c1c4612780d5cf">IRSend.hpp</a>
+, <a class="el" href="group__Sending.html#gafba8232b747be85f72c1c4612780d5cf">IRremoteInt.h</a>
+</li>
+<li>ISR()
+: <a class="el" href="group__Receiving.html#gaa8c5af507063503eacfa11a27c993a90">IRReceive.hpp</a>
 </li>
 <li>isTinyReceiverIdle()
 : <a class="el" href="group__TinyReceiver.html#gab65e33fe496d3bee4af897e5d8bd9420">TinyIRReceiver.h</a>
@@ -186,7 +206,7 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Dec 8 2021 14:58:14 for IRremote by
+    <li class="footer">Generated on Sat Aug 6 2022 14:36:22 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

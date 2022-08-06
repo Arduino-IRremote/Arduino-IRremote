@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['oct_719',['OCT',['../digitalWriteFast_8h.html#a904777e8f3d21de0a6679d2c9f0f1eec',1,'digitalWriteFast.h']]]
+  ['nec_5fkhz_1094',['NEC_KHZ',['../IRProtocol_8h.html#ae1333ec007e3f586daf2b4af76894fc9',1,'IRProtocol.h']]],
+  ['no_5frepeats_1095',['NO_REPEATS',['../IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2',1,'IRremoteInt.h']]]
 ];

@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['enableirin_479',['enableIRIn',['../classIRrecv.html#a69d3e9314aea4a37b43b74a0b4f3f976',1,'IRrecv']]],
-  ['enableirout_480',['enableIROut',['../classIRsend.html#a42c04af63d252b320c017ffa2bfc90e5',1,'IRsend']]],
-  ['enableledfeedback_481',['enableLEDFeedback',['../IRremoteInt_8h.html#a1150b1e371cd7d424d53dbcae6619e54',1,'IRremoteInt.h']]],
-  ['enablepciinterruptfortinyreceiver_482',['enablePCIInterruptForTinyReceiver',['../group__TinyReceiver.html#gad23b935e2236a42a070a87379c7c36a4',1,'TinyIRReceiver.h']]],
-  ['end_483',['end',['../classIRrecv.html#a8ffd22c2d4c6e93918d987a4b7c3ba5b',1,'IRrecv']]]
+  ['effectivefrequency_785',['effectiveFrequency',['../group__Decoder.html#ga1272f3783a3b8d2cf2241f1e76674c8a',1,'ir_Pronto.hpp']]],
+  ['enableirin_786',['enableIRIn',['../group__Receiving.html#ga69d3e9314aea4a37b43b74a0b4f3f976',1,'IRrecv']]],
+  ['enableirout_787',['enableIROut',['../group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15',1,'IRsend']]],
+  ['enableledfeedback_788',['enableLEDFeedback',['../group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54',1,'enableLEDFeedback():&#160;IRFeedbackLED.hpp'],['../group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54',1,'enableLEDFeedback():&#160;IRFeedbackLED.hpp']]],
+  ['enableledfeedbackforsend_789',['enableLEDFeedbackForSend',['../group__FeedbackLEDFunctions.html#ga69bc794d3cfd1600a264a1dbbdd28ef7',1,'enableLEDFeedbackForSend():&#160;IRFeedbackLED.hpp'],['../group__FeedbackLEDFunctions.html#ga69bc794d3cfd1600a264a1dbbdd28ef7',1,'enableLEDFeedbackForSend():&#160;IRFeedbackLED.hpp']]],
+  ['enablepciinterruptfortinyreceiver_790',['enablePCIInterruptForTinyReceiver',['../group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10',1,'TinyIRReceiver.hpp']]],
+  ['end_791',['end',['../group__Receiving.html#ga8ffd22c2d4c6e93918d987a4b7c3ba5b',1,'IRrecv']]]
 ];

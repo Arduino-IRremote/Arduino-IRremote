@@ -25,23 +25,22 @@ var IRProtocol_8h =
     [ "decode_type_t", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fad", [
       [ "UNKNOWN", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6ce26a62afab55d7606ad4e92428b30c", null ],
       [ "PULSE_DISTANCE", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadab60e0c1f01cfceb2dc9d5f2005f6dfc0", null ],
-      [ "PULSE_WIDTH", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada783253fd89cb09e1dbdb2bcdbc0400e3", null ],
       [ "DENON", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2bda37b76abb290d1675c3e027e3c2e1", null ],
-      [ "DISH", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadac27c6ac38ba872593af8e46ac2fdc85a", null ],
+      [ "SHARP", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaad63db67a2284cd7e3ffe382b6d6ea82", null ],
       [ "JVC", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada5b6f507fb4bbd70ee70be4e2e0b0371d", null ],
       [ "LG", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadadf6c249ac7d923229f9e623eff9a61f4", null ],
       [ "LG2", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada8402547ec0b99b9b0efe97dec65badf9", null ],
       [ "NEC", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada0811f93a25b0873e21979d569eeac05e", null ],
       [ "PANASONIC", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf87c99938d26a1f77d4f082c070d4660", null ],
       [ "KASEIKYO", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf2d8443e083aa95f191f26d438c6b953", null ],
-      [ "KASEIKYO_JVC", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6b221b79427a02288ea41683a7d04841", null ],
       [ "KASEIKYO_DENON", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada4cb93fe0fe3dbe0681b8764a9294733b", null ],
       [ "KASEIKYO_SHARP", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada181746513f88dba0d824c5dfeeec68b6", null ],
+      [ "KASEIKYO_JVC", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6b221b79427a02288ea41683a7d04841", null ],
       [ "KASEIKYO_MITSUBISHI", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2516be3bdfd7614bb64961800fa49e43", null ],
       [ "RC5", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadac3c0a3883a1488209bcd91730ece33b2", null ],
       [ "RC6", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada7f7247f15587eb3812846f424b941abe", null ],
       [ "SAMSUNG", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2b451b6e7bebbf070d0913ec77d5d438", null ],
-      [ "SHARP", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaad63db67a2284cd7e3ffe382b6d6ea82", null ],
+      [ "SAMSUNG_LG", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada1b8f950b7f75e9b76ad4a5092575b4f4", null ],
       [ "SONY", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada72d58193d4d25517202d22b7e57a65c3", null ],
       [ "ONKYO", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada20603784a6e8d35a82b2476366010344", null ],
       [ "APPLE", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada5484ec37ffd1fcffb7aba549a4839910", null ],
@@ -50,5 +49,5 @@ var IRProtocol_8h =
       [ "MAGIQUEST", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada3be750ce1687bc1a92fee05b0c511100", null ],
       [ "WHYNTER", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada458cdd7fa2b29dc8617c694696580c0c", null ]
     ] ],
-    [ "getProtocolString", "IRProtocol_8h.html#a77bf675537483ace83da089dea3a50a2", null ]
+    [ "getProtocolString", "group__Receiving.html#ga77bf675537483ace83da089dea3a50a2", null ]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['wordunion_425',['WordUnion',['../unionWordUnion.html',1,'']]]
+  ['tinyirreceivercallbackdatastruct_700',['TinyIRReceiverCallbackDataStruct',['../structTinyIRReceiverCallbackDataStruct.html',1,'']]],
+  ['tinyirreceiverstruct_701',['TinyIRReceiverStruct',['../structTinyIRReceiverStruct.html',1,'']]]
 ];

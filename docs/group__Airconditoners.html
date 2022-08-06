@@ -83,7 +83,9 @@ $(document).ready(function(){initNavTree('group__Airconditoners.html',''); initR
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">Air conditioner special code</div>  </div>
 </div><!--header-->
@@ -184,6 +186,28 @@ Macros</h2></td></tr>
 <tr class="separator:ga5e3517bd87cdd71f3faedd5648f3869a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4d1f100bd13d68bbff9165cfeb1d011c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Airconditoners.html#ga4d1f100bd13d68bbff9165cfeb1d011c">AC_MODE_HEATING</a>&#160;&#160;&#160;'h'</td></tr>
 <tr class="separator:ga4d1f100bd13d68bbff9165cfeb1d011c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d745a4e59f5d14e9983d174b6e9705a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Airconditoners.html#ga6d745a4e59f5d14e9983d174b6e9705a">SIZE_OF_FAN_SPEED_MAPPING_TABLE</a>&#160;&#160;&#160;4</td></tr>
+<tr class="separator:ga6d745a4e59f5d14e9983d174b6e9705a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga75056e4f4dfa299b6f328df460f3f174"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Airconditoners.html#ga75056e4f4dfa299b6f328df460f3f174">Aircondition_LG::setType</a> (bool aIsWallType)</td></tr>
+<tr class="separator:ga75056e4f4dfa299b6f328df460f3f174"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0210285f615ce3a1ac9b26fd1af51dd9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Airconditoners.html#ga0210285f615ce3a1ac9b26fd1af51dd9">Aircondition_LG::printMenu</a> (Print *aSerial)</td></tr>
+<tr class="separator:ga0210285f615ce3a1ac9b26fd1af51dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga65bba14a0302268cc515831d37e95b7a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Airconditoners.html#ga65bba14a0302268cc515831d37e95b7a">Aircondition_LG::sendCommandAndParameter</a> (char aCommand, int aParameter)</td></tr>
+<tr class="separator:ga65bba14a0302268cc515831d37e95b7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga113704b3b19c8477635210341163bf9e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Airconditoners.html#ga113704b3b19c8477635210341163bf9e">Aircondition_LG::sendIRCommand</a> (uint16_t aCommand)</td></tr>
+<tr class="separator:ga113704b3b19c8477635210341163bf9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga83d18e2597cc2ea78f25889bc6c060e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Airconditoners.html#ga83d18e2597cc2ea78f25889bc6c060e3">Aircondition_LG::sendTemperatureFanSpeedAndMode</a> ()</td></tr>
+<tr class="separator:ga83d18e2597cc2ea78f25889bc6c060e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga9e4c45659819db87363cdef65209ee56"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Airconditoners.html#ga9e4c45659819db87363cdef65209ee56">AC_FAN_TOWER</a> [<a class="el" href="group__Airconditoners.html#ga6d745a4e59f5d14e9983d174b6e9705a">SIZE_OF_FAN_SPEED_MAPPING_TABLE</a>] = { 0, 4, 6, 6 }</td></tr>
+<tr class="separator:ga9e4c45659819db87363cdef65209ee56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga06d1cb86267a1aa639caa670ba813600"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Airconditoners.html#ga06d1cb86267a1aa639caa670ba813600">AC_FAN_WALL</a> [<a class="el" href="group__Airconditoners.html#ga6d745a4e59f5d14e9983d174b6e9705a">SIZE_OF_FAN_SPEED_MAPPING_TABLE</a>] = { 0, 2, 4, 5 }</td></tr>
+<tr class="separator:ga06d1cb86267a1aa639caa670ba813600"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -875,12 +899,171 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="ga6d745a4e59f5d14e9983d174b6e9705a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6d745a4e59f5d14e9983d174b6e9705a">&#9670;&nbsp;</a></span>SIZE_OF_FAN_SPEED_MAPPING_TABLE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SIZE_OF_FAN_SPEED_MAPPING_TABLE&#160;&#160;&#160;4</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ac__LG_8hpp_source.html#l00061">61</a> of file <a class="el" href="ac__LG_8hpp_source.html">ac_LG.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga0210285f615ce3a1ac9b26fd1af51dd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0210285f615ce3a1ac9b26fd1af51dd9">&#9670;&nbsp;</a></span>printMenu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Aircondition_LG::printMenu </td>
+          <td>(</td>
+          <td class="paramtype">Print *&#160;</td>
+          <td class="paramname"><em>aSerial</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ac__LG_8hpp_source.html#l00072">72</a> of file <a class="el" href="ac__LG_8hpp_source.html">ac_LG.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga65bba14a0302268cc515831d37e95b7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga65bba14a0302268cc515831d37e95b7a">&#9670;&nbsp;</a></span>sendCommandAndParameter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Aircondition_LG::sendCommandAndParameter </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>aCommand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>aParameter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ac__LG_8hpp_source.html#l00102">102</a> of file <a class="el" href="ac__LG_8hpp_source.html">ac_LG.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga113704b3b19c8477635210341163bf9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga113704b3b19c8477635210341163bf9e">&#9670;&nbsp;</a></span>sendIRCommand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Aircondition_LG::sendIRCommand </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aCommand</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ac__LG_8hpp_source.html#l00252">252</a> of file <a class="el" href="ac__LG_8hpp_source.html">ac_LG.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga83d18e2597cc2ea78f25889bc6c060e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga83d18e2597cc2ea78f25889bc6c060e3">&#9670;&nbsp;</a></span>sendTemperatureFanSpeedAndMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Aircondition_LG::sendTemperatureFanSpeedAndMode </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ac__LG_8hpp_source.html#l00267">267</a> of file <a class="el" href="ac__LG_8hpp_source.html">ac_LG.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga75056e4f4dfa299b6f328df460f3f174"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga75056e4f4dfa299b6f328df460f3f174">&#9670;&nbsp;</a></span>setType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Aircondition_LG::setType </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aIsWallType</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ac__LG_8hpp_source.html#l00064">64</a> of file <a class="el" href="ac__LG_8hpp_source.html">ac_LG.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ga9e4c45659819db87363cdef65209ee56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9e4c45659819db87363cdef65209ee56">&#9670;&nbsp;</a></span>AC_FAN_TOWER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int AC_FAN_TOWER[<a class="el" href="group__Airconditoners.html#ga6d745a4e59f5d14e9983d174b6e9705a">SIZE_OF_FAN_SPEED_MAPPING_TABLE</a>] = { 0, 4, 6, 6 }</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ac__LG_8hpp_source.html#l00061">61</a> of file <a class="el" href="ac__LG_8hpp_source.html">ac_LG.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga06d1cb86267a1aa639caa670ba813600"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga06d1cb86267a1aa639caa670ba813600">&#9670;&nbsp;</a></span>AC_FAN_WALL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int AC_FAN_WALL[<a class="el" href="group__Airconditoners.html#ga6d745a4e59f5d14e9983d174b6e9705a">SIZE_OF_FAN_SPEED_MAPPING_TABLE</a>] = { 0, 2, 4, 5 }</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ac__LG_8hpp_source.html#l00062">62</a> of file <a class="el" href="ac__LG_8hpp_source.html">ac_LG.hpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Dec 8 2021 14:58:14 for IRremote by
+    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

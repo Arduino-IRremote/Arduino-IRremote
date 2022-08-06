@@ -98,22 +98,28 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaa5949b509ec061d9239867caa628cfec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#gaa5949b509ec061d9239867caa628cfec">setLEDFeedback</a> (uint8_t aFeedbackLEDPin, bool aEnableLEDFeedback)</td></tr>
-<tr class="memdesc:gaa5949b509ec061d9239867caa628cfec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving.  <a href="group__FeedbackLEDFunctions.html#gaa5949b509ec061d9239867caa628cfec">More...</a><br /></td></tr>
-<tr class="separator:gaa5949b509ec061d9239867caa628cfec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae8f13aac6ecee8b3c1e59d4a2e0bb019"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019">setLEDFeedback</a> (uint8_t aFeedbackLEDPin, uint8_t aEnableLEDFeedback)</td></tr>
+<tr class="memdesc:gae8f13aac6ecee8b3c1e59d4a2e0bb019"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot disable it here!!! Use <a class="el" href="IRremoteInt_8h.html#a2e95485771d665e8227a4f42418db3f8">disableLEDFeedbackForReceive()</a> or <a class="el" href="group__FeedbackLEDFunctions.html#ga880ead90165a961244c8fc7da2375083">disableLEDFeedbackForSend()</a>  <a href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019">More...</a><br /></td></tr>
+<tr class="separator:gae8f13aac6ecee8b3c1e59d4a2e0bb019"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga53e5ec641a900f2c572c8bffd42da921"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921">setLEDFeedback</a> (bool aEnableLEDFeedback)</td></tr>
+<tr class="separator:ga53e5ec641a900f2c572c8bffd42da921"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1150b1e371cd7d424d53dbcae6619e54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback</a> ()</td></tr>
 <tr class="separator:ga1150b1e371cd7d424d53dbcae6619e54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab72e6123a449de7feaaa1c3dcb9f8630"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback</a> ()</td></tr>
 <tr class="separator:gab72e6123a449de7feaaa1c3dcb9f8630"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69bc794d3cfd1600a264a1dbbdd28ef7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga69bc794d3cfd1600a264a1dbbdd28ef7">enableLEDFeedbackForSend</a> ()</td></tr>
+<tr class="separator:ga69bc794d3cfd1600a264a1dbbdd28ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga880ead90165a961244c8fc7da2375083"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga880ead90165a961244c8fc7da2375083">disableLEDFeedbackForSend</a> ()</td></tr>
+<tr class="separator:ga880ead90165a961244c8fc7da2375083"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga072624eeba964d8aa105822da00090ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba">setFeedbackLED</a> (bool aSwitchLedOn)</td></tr>
-<tr class="memdesc:ga072624eeba964d8aa105822da00090ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flash LED while receiving IR data, if enabled.  <a href="group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba">More...</a><br /></td></tr>
+<tr class="memdesc:ga072624eeba964d8aa105822da00090ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flash LED while receiving or sending IR data.  <a href="group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba">More...</a><br /></td></tr>
 <tr class="separator:ga072624eeba964d8aa105822da00090ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5e5e9b8c7f3d8280d3ed6314eee64645"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga5e5e9b8c7f3d8280d3ed6314eee64645">blink13</a> (bool aEnableLEDFeedback)</td></tr>
-<tr class="memdesc:ga5e5e9b8c7f3d8280d3ed6314eee64645"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gaa5949b509ec061d9239867caa628cfec" title="Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving...">setLEDFeedback()</a> or <a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback()</a> / <a class="el" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback()</a>  <a href="group__FeedbackLEDFunctions.html#ga5e5e9b8c7f3d8280d3ed6314eee64645">More...</a><br /></td></tr>
-<tr class="separator:ga5e5e9b8c7f3d8280d3ed6314eee64645"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5f1d479f43dcd56febf146e97a3904db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">setBlinkPin</a> (uint8_t aBlinkPin)</td></tr>
-<tr class="memdesc:ga5f1d479f43dcd56febf146e97a3904db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gaa5949b509ec061d9239867caa628cfec" title="Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving...">setLEDFeedback()</a>  <a href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">More...</a><br /></td></tr>
+<tr class="memdesc:ga5f1d479f43dcd56febf146e97a3904db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019" title="Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot ...">setLEDFeedback()</a>  <a href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">More...</a><br /></td></tr>
 <tr class="separator:ga5f1d479f43dcd56febf146e97a3904db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac7fc50c7e08b8c339b2c1c912a0c6e89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#gac7fc50c7e08b8c339b2c1c912a0c6e89">IRrecv::blink13</a> (uint8_t aEnableLEDFeedback) __attribute__((deprecated(&quot;Please use <a class="el" href="group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921">setLEDFeedback</a>() or <a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback</a>() / <a class="el" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback</a>().&quot;)))</td></tr>
+<tr class="memdesc:gac7fc50c7e08b8c339b2c1c912a0c6e89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019" title="Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot ...">setLEDFeedback()</a> or <a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback()</a> / <a class="el" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback()</a>  <a href="group__FeedbackLEDFunctions.html#gac7fc50c7e08b8c339b2c1c912a0c6e89">More...</a><br /></td></tr>
+<tr class="separator:gac7fc50c7e08b8c339b2c1c912a0c6e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -123,25 +129,25 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga5e5e9b8c7f3d8280d3ed6314eee64645"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5e5e9b8c7f3d8280d3ed6314eee64645">&#9670;&nbsp;</a></span>blink13()</h2>
+<a id="gac7fc50c7e08b8c339b2c1c912a0c6e89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac7fc50c7e08b8c339b2c1c912a0c6e89">&#9670;&nbsp;</a></span>blink13()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void blink13 </td>
+          <td class="memname">void IRrecv::blink13 </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">uint8_t&#160;</td>
           <td class="paramname"><em>aEnableLEDFeedback</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gaa5949b509ec061d9239867caa628cfec" title="Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving...">setLEDFeedback()</a> or <a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback()</a> / <a class="el" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback()</a> </p>
+<p>Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019" title="Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot ...">setLEDFeedback()</a> or <a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback()</a> / <a class="el" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback()</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00116">116</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00147">147</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
@@ -160,7 +166,26 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00072">72</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00089">89</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga880ead90165a961244c8fc7da2375083"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga880ead90165a961244c8fc7da2375083">&#9670;&nbsp;</a></span>disableLEDFeedbackForSend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void disableLEDFeedbackForSend </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00097">97</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
@@ -179,7 +204,26 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00068">68</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00085">85</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga69bc794d3cfd1600a264a1dbbdd28ef7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga69bc794d3cfd1600a264a1dbbdd28ef7">&#9670;&nbsp;</a></span>enableLEDFeedbackForSend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void enableLEDFeedbackForSend </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00093">93</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
@@ -199,9 +243,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gaa5949b509ec061d9239867caa628cfec" title="Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving...">setLEDFeedback()</a> </p>
+<p>Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019" title="Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot ...">setLEDFeedback()</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00122">122</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00153">153</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
@@ -221,15 +265,35 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Flash LED while receiving IR data, if enabled. </p>
-<p>Handles the LedFeedbackEnabled flag as well as the 0 value of FeedbackLEDPin and the macro FEEDBACK_LED_IS_ACTIVE_LOW. </p>
+<p>Flash LED while receiving or sending IR data. </p>
+<p>Does not check if enabled, this must be done by the caller. Handles the 0 value of FeedbackLEDPin and the macro FEEDBACK_LED_IS_ACTIVE_LOW. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00083">83</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00108">108</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
-<a id="gaa5949b509ec061d9239867caa628cfec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa5949b509ec061d9239867caa628cfec">&#9670;&nbsp;</a></span>setLEDFeedback()</h2>
+<a id="ga53e5ec641a900f2c572c8bffd42da921"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga53e5ec641a900f2c572c8bffd42da921">&#9670;&nbsp;</a></span>setLEDFeedback() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setLEDFeedback </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aEnableLEDFeedback</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00077">77</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gae8f13aac6ecee8b3c1e59d4a2e0bb019"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae8f13aac6ecee8b3c1e59d4a2e0bb019">&#9670;&nbsp;</a></span>setLEDFeedback() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -243,7 +307,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
+          <td class="paramtype">uint8_t&#160;</td>
           <td class="paramname"><em>aEnableLEDFeedback</em>&#160;</td>
         </tr>
         <tr>
@@ -254,16 +318,16 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Enable/disable blinking of Feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving. </p>
+<p>Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot disable it here!!! Use <a class="el" href="IRremoteInt_8h.html#a2e95485771d665e8227a4f42418db3f8">disableLEDFeedbackForReceive()</a> or <a class="el" href="group__FeedbackLEDFunctions.html#ga880ead90165a961244c8fc7da2375083">disableLEDFeedbackForSend()</a> </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">aFeedbackLEDPin</td><td>If aFeedbackLEDPin == 0, then take board specific <a class="el" href="group__FeedbackLEDHardware.html#gaa50fbed29c2410ad6d6185a86cf88cf5" title="Board dependent macro to turn LED_BUILTIN on.">FEEDBACK_LED_ON()</a> and <a class="el" href="group__FeedbackLEDHardware.html#gabff30102e0a56a5abd21369c912dda4a" title="Board dependent macro to turn LED_BUILTIN off.">FEEDBACK_LED_OFF()</a> functions </td></tr>
-    <tr><td class="paramname">aEnableLEDFeedback</td><td>true -&gt; enable blinking of Feedback LED </td></tr>
+    <tr><td class="paramname">aFeedbackLEDPin</td><td>If aFeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions If FeedbackLEDPin == 0 and no LED_BUILTIN defined, disable LED feedback </td></tr>
+    <tr><td class="paramname">aEnableLEDFeedback</td><td>If LED_FEEDBACK_ENABLED_FOR_RECEIVE or LED_FEEDBACK_ENABLED_FOR_SEND -&gt; enable blinking of Feedback LED </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00053">53</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00056">56</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
@@ -282,7 +346,7 @@ Variables</h2></td></tr>
 
 <p>The feedback LED control instance. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8cpp_8h_source.html#l00001">1</a> of file <a class="el" href="IRFeedbackLED_8cpp_8h_source.html">IRFeedbackLED.cpp.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00001">1</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
@@ -291,7 +355,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Jun 16 2021 23:31:01 for IRremote by
+    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

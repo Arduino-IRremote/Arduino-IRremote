@@ -12,11 +12,11 @@ var group__Airconditoners =
       [ "Temp", "unionLGProtocol.html#ae556c7e3100b062ec21581cbe61f126a", null ]
     ] ],
     [ "Aircondition_LG", "classAircondition__LG.html", [
-      [ "printMenu", "classAircondition__LG.html#a0210285f615ce3a1ac9b26fd1af51dd9", null ],
-      [ "sendCommandAndParameter", "classAircondition__LG.html#a65bba14a0302268cc515831d37e95b7a", null ],
-      [ "sendIRCommand", "classAircondition__LG.html#a113704b3b19c8477635210341163bf9e", null ],
-      [ "sendTemperatureFanSpeedAndMode", "classAircondition__LG.html#a83d18e2597cc2ea78f25889bc6c060e3", null ],
-      [ "setType", "classAircondition__LG.html#a75056e4f4dfa299b6f328df460f3f174", null ],
+      [ "printMenu", "group__Airconditoners.html#ga0210285f615ce3a1ac9b26fd1af51dd9", null ],
+      [ "sendCommandAndParameter", "group__Airconditoners.html#ga65bba14a0302268cc515831d37e95b7a", null ],
+      [ "sendIRCommand", "group__Airconditoners.html#ga113704b3b19c8477635210341163bf9e", null ],
+      [ "sendTemperatureFanSpeedAndMode", "group__Airconditoners.html#ga83d18e2597cc2ea78f25889bc6c060e3", null ],
+      [ "setType", "group__Airconditoners.html#ga75056e4f4dfa299b6f328df460f3f174", null ],
       [ "ACIsWallType", "classAircondition__LG.html#aa4afac70cfc80f7915b26bbd1c269bc9", null ],
       [ "FanIntensity", "classAircondition__LG.html#a285204d81a347cf3017ed98a60621b9e", null ],
       [ "Mode", "classAircondition__LG.html#a953f8d7dd483a1c406cf808a9c1ffe9a", null ],
@@ -66,5 +66,13 @@ var group__Airconditoners =
     [ "LG_TIMER_OFF", "group__Airconditoners.html#ga953e35300b777bf9b39ecb1c97fbe92b", null ],
     [ "LG_TIMER_ON", "group__Airconditoners.html#ga0d3fa053a91e0ccdbf82607d6f191884", null ],
     [ "LG_WALL_SWING_OFF", "group__Airconditoners.html#gac4018dd9d884ac5f47a72f8f97a30013", null ],
-    [ "LG_WALL_SWING_ON", "group__Airconditoners.html#ga6e9da9436e1330717c4e521c3274f9e7", null ]
+    [ "LG_WALL_SWING_ON", "group__Airconditoners.html#ga6e9da9436e1330717c4e521c3274f9e7", null ],
+    [ "SIZE_OF_FAN_SPEED_MAPPING_TABLE", "group__Airconditoners.html#ga6d745a4e59f5d14e9983d174b6e9705a", null ],
+    [ "printMenu", "group__Airconditoners.html#ga0210285f615ce3a1ac9b26fd1af51dd9", null ],
+    [ "sendCommandAndParameter", "group__Airconditoners.html#ga65bba14a0302268cc515831d37e95b7a", null ],
+    [ "sendIRCommand", "group__Airconditoners.html#ga113704b3b19c8477635210341163bf9e", null ],
+    [ "sendTemperatureFanSpeedAndMode", "group__Airconditoners.html#ga83d18e2597cc2ea78f25889bc6c060e3", null ],
+    [ "setType", "group__Airconditoners.html#ga75056e4f4dfa299b6f328df460f3f174", null ],
+    [ "AC_FAN_TOWER", "group__Airconditoners.html#ga9e4c45659819db87363cdef65209ee56", null ],
+    [ "AC_FAN_WALL", "group__Airconditoners.html#ga06d1cb86267a1aa639caa670ba813600", null ]
 ];

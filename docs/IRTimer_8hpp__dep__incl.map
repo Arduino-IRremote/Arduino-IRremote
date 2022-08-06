@@ -1,0 +1,5 @@
+<map id="src/private/IRTimer.hpp" name="src/private/IRTimer.hpp">
+<area shape="rect" id="node1" title="All timer specific definitions are contained in this file. Sets IR_SEND_PIN if required,..." alt="" coords="5,5,160,32"/>
+<area shape="rect" id="node2" href="$IRremote_8hpp.html" title="Public API to the library." alt="" coords="22,80,143,107"/>
+<area shape="rect" id="node3" href="$IRremote_8h.html" title="Stub for backward compatibility." alt="" coords="29,155,136,181"/>
+</map>

@@ -109,13 +109,13 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a703592faec26bab5cbe465f53ef14245"><td class="mdescLeft">&#160;</td><td class="mdescRight">UNKNOWN, NEC, SONY, RC5, ...  <a href="structIRData.html#a703592faec26bab5cbe465f53ef14245">More...</a><br /></td></tr>
 <tr class="separator:a703592faec26bab5cbe465f53ef14245"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1255a5b7d704d34fda83dcabcb903d4c"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a1255a5b7d704d34fda83dcabcb903d4c">address</a></td></tr>
-<tr class="memdesc:a1255a5b7d704d34fda83dcabcb903d4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decoded address.  <a href="structIRData.html#a1255a5b7d704d34fda83dcabcb903d4c">More...</a><br /></td></tr>
+<tr class="memdesc:a1255a5b7d704d34fda83dcabcb903d4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decoded address, Distance protocol (OneMarkTicks &lt;&lt; 8) | OneSpaceTicks.  <a href="structIRData.html#a1255a5b7d704d34fda83dcabcb903d4c">More...</a><br /></td></tr>
 <tr class="separator:a1255a5b7d704d34fda83dcabcb903d4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0ce2b36765ea429e8c4bfa0706a45e7"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#ab0ce2b36765ea429e8c4bfa0706a45e7">command</a></td></tr>
-<tr class="memdesc:ab0ce2b36765ea429e8c4bfa0706a45e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decoded command.  <a href="structIRData.html#ab0ce2b36765ea429e8c4bfa0706a45e7">More...</a><br /></td></tr>
+<tr class="memdesc:ab0ce2b36765ea429e8c4bfa0706a45e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decoded command, Distance protocol (ZeroMarkTicks &lt;&lt; 8) | ZeroSpaceTicks.  <a href="structIRData.html#ab0ce2b36765ea429e8c4bfa0706a45e7">More...</a><br /></td></tr>
 <tr class="separator:ab0ce2b36765ea429e8c4bfa0706a45e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b71fa1a17e3ab0ae9bc9462b795213f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a0b71fa1a17e3ab0ae9bc9462b795213f">extra</a></td></tr>
-<tr class="memdesc:a0b71fa1a17e3ab0ae9bc9462b795213f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used by MagiQuest and for Kaseikyo unknown vendor ID. Ticks used for decoding Distance protocol.  <a href="structIRData.html#a0b71fa1a17e3ab0ae9bc9462b795213f">More...</a><br /></td></tr>
+<tr class="memdesc:a0b71fa1a17e3ab0ae9bc9462b795213f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains MagiQuest magnitude, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks &lt;&lt; 8) | HeaderSpaceTicks.  <a href="structIRData.html#a0b71fa1a17e3ab0ae9bc9462b795213f">More...</a><br /></td></tr>
 <tr class="separator:a0b71fa1a17e3ab0ae9bc9462b795213f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a945c41b8463a36cf00b0f38b0aa73200"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a945c41b8463a36cf00b0f38b0aa73200">numberOfBits</a></td></tr>
 <tr class="memdesc:a945c41b8463a36cf00b0f38b0aa73200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.  <a href="structIRData.html#a945c41b8463a36cf00b0f38b0aa73200">More...</a><br /></td></tr>
@@ -124,7 +124,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:aaaad48fc0d90e5c6daec601987848a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">See IRDATA_FLAGS_* definitions above.  <a href="structIRData.html#aaaad48fc0d90e5c6daec601987848a51">More...</a><br /></td></tr>
 <tr class="separator:aaaad48fc0d90e5c6daec601987848a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeca55ebf36bf919312a933597b8734d8"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#aeca55ebf36bf919312a933597b8734d8">decodedRawData</a></td></tr>
-<tr class="memdesc:aeca55ebf36bf919312a933597b8734d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Up to 32 bit decoded raw data, used for sendRaw functions.  <a href="structIRData.html#aeca55ebf36bf919312a933597b8734d8">More...</a><br /></td></tr>
+<tr class="memdesc:aeca55ebf36bf919312a933597b8734d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Up to 32 bit decoded raw data, to be used for send functions.  <a href="structIRData.html#aeca55ebf36bf919312a933597b8734d8">More...</a><br /></td></tr>
 <tr class="separator:aeca55ebf36bf919312a933597b8734d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d7c987d63874731ff2e1120b21a1a08"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structirparams__struct.html">irparams_struct</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a8d7c987d63874731ff2e1120b21a1a08">rawDataPtr</a></td></tr>
 <tr class="memdesc:a8d7c987d63874731ff2e1120b21a1a08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.  <a href="structIRData.html#a8d7c987d63874731ff2e1120b21a1a08">More...</a><br /></td></tr>
@@ -134,7 +134,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Data structure for the user application, available as decodedIRData. </p>
 <p>Filled by decoders and read by print functions or user application. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00181">181</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00150">150</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a1255a5b7d704d34fda83dcabcb903d4c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1255a5b7d704d34fda83dcabcb903d4c">&#9670;&nbsp;</a></span>address</h2>
@@ -148,9 +148,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Decoded address. </p>
+<p>Decoded address, Distance protocol (OneMarkTicks &lt;&lt; 8) | OneSpaceTicks. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00183">183</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00152">152</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -166,9 +166,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Decoded command. </p>
+<p>Decoded command, Distance protocol (ZeroMarkTicks &lt;&lt; 8) | ZeroSpaceTicks. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00184">184</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00153">153</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -184,9 +184,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Up to 32 bit decoded raw data, used for sendRaw functions. </p>
+<p>Up to 32 bit decoded raw data, to be used for send functions. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00188">188</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00157">157</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -202,9 +202,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Used by MagiQuest and for Kaseikyo unknown vendor ID. Ticks used for decoding Distance protocol. </p>
+<p>Contains MagiQuest magnitude, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks &lt;&lt; 8) | HeaderSpaceTicks. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00185">185</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00154">154</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -222,7 +222,7 @@ Public Attributes</h2></td></tr>
 
 <p>See IRDATA_FLAGS_* definitions above. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00187">187</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00156">156</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -240,7 +240,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00186">186</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00155">155</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -258,7 +258,7 @@ Public Attributes</h2></td></tr>
 
 <p>UNKNOWN, NEC, SONY, RC5, ... </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00182">182</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00151">151</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -276,7 +276,7 @@ Public Attributes</h2></td></tr>
 
 <p>Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00189">189</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00161">161</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -289,7 +289,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structIRData.html">IRData</a></li>
-    <li class="footer">Generated on Wed Dec 8 2021 14:58:14 for IRremote by
+    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['receiving_20ir_20data_20for_20multiple_20protocols_988',['Receiving IR data for multiple protocols',['../group__Receiving.html',1,'']]]
+  ['minimal_20receiver_20for_20nec_20protocol_1171',['Minimal receiver for NEC protocol',['../group__TinyReceiver.html',1,'']]]
 ];

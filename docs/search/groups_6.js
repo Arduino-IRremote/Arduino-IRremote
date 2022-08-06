@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['usage_20of_20timers_20for_20the_20different_20cpu_20_2f_20boards_990',['Usage of timers for the different CPU / boards',['../group__Timer.html',1,'']]]
+  ['sending_20ir_20data_20for_20multiple_20protocols_1173',['Sending IR data for multiple protocols',['../group__Sending.html',1,'']]]
 ];

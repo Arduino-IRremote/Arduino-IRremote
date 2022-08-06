@@ -1,5 +1,23 @@
 var searchData=
 [
-  ['nec_5fkhz_717',['NEC_KHZ',['../IRProtocol_8h.html#ae1333ec007e3f586daf2b4af76894fc9',1,'IRProtocol.h']]],
-  ['no_5frepeats_718',['NO_REPEATS',['../IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2',1,'IRremoteInt.h']]]
+  ['magiquest_5fbits_1074',['MAGIQUEST_BITS',['../ir__MagiQuest_8hpp.html#a5ad7278bb378f828e4ef743ce1611734',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5fmagnitude_5fbits_1075',['MAGIQUEST_MAGNITUDE_BITS',['../ir__MagiQuest_8hpp.html#a64aeb7e87d7a2f844ca6ec967e6bdf34',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5fone_5fmark_1076',['MAGIQUEST_ONE_MARK',['../ir__MagiQuest_8hpp.html#ab75301149b3c053390e08668e270574e',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5fone_5fspace_1077',['MAGIQUEST_ONE_SPACE',['../ir__MagiQuest_8hpp.html#a1965f9aa88f57ed564f46654f8247103',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5fpacket_5fsize_1078',['MAGIQUEST_PACKET_SIZE',['../ir__MagiQuest_8hpp.html#ab0e21cd13f5bde3d08248afbc05ccffc',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5fperiod_1079',['MAGIQUEST_PERIOD',['../ir__MagiQuest_8hpp.html#a4816f5fc6dfc00a7f07213eff150652e',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5fstart_5fbits_1080',['MAGIQUEST_START_BITS',['../ir__MagiQuest_8hpp.html#abc1cd828f421b96ee1d83411585471e4',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5funit_1081',['MAGIQUEST_UNIT',['../ir__MagiQuest_8hpp.html#ab55a5562099370a536d44962ad2db98a',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5fwand_5fid_5fbits_1082',['MAGIQUEST_WAND_ID_BITS',['../ir__MagiQuest_8hpp.html#a6f9ee212ff850e280f9c241c5143cee5',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5fzero_5fmark_1083',['MAGIQUEST_ZERO_MARK',['../ir__MagiQuest_8hpp.html#ac1bc4e99d5e1b697df724d180357095d',1,'ir_MagiQuest.hpp']]],
+  ['magiquest_5fzero_5fspace_1084',['MAGIQUEST_ZERO_SPACE',['../ir__MagiQuest_8hpp.html#a95ff1854b629d4e2dce95224f470f031',1,'ir_MagiQuest.hpp']]],
+  ['mark_1085',['MARK',['../IRremoteInt_8h.html#abeb214368f7f34cff98de9047aa6eb2f',1,'IRremoteInt.h']]],
+  ['mark_5fexcess_1086',['MARK_EXCESS',['../IRremote_8hpp.html#ac21b48ddc487212fbce7d6474423e080',1,'IRremote.hpp']]],
+  ['mark_5fexcess_5fmicros_1087',['MARK_EXCESS_MICROS',['../IRremote_8hpp.html#a6cb4ad1bc3f0b5d2c4503615058a1d90',1,'IRremote.hpp']]],
+  ['memcpy_5fp_1088',['memcpy_P',['../digitalWriteFast_8h.html#ae0444ad0cb3250a5778a573dd10f41be',1,'digitalWriteFast.h']]],
+  ['micros_5fin_5fone_5fmilli_1089',['MICROS_IN_ONE_MILLI',['../IRremote_8hpp.html#ae9ba0b7dd556e22688f7da01019bba68',1,'IRremote.hpp']]],
+  ['micros_5fin_5fone_5fsecond_1090',['MICROS_IN_ONE_SECOND',['../IRremote_8hpp.html#af33c8a218dd35ede965cf20a68a0068d',1,'IRremote.hpp']]],
+  ['micros_5fper_5ftick_1091',['MICROS_PER_TICK',['../IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20',1,'IRremote.hpp']]],
+  ['millis_5fin_5fone_5fsecond_1092',['MILLIS_IN_ONE_SECOND',['../IRremote_8hpp.html#a551a361e5f7fbdcf8ec8e9679976b462',1,'IRremote.hpp']]],
+  ['mitsubishi_5fvendor_5fid_5fcode_1093',['MITSUBISHI_VENDOR_ID_CODE',['../IRProtocol_8h.html#aca397cf0ba4543c581f0f5bfaf50ef25',1,'IRProtocol.h']]]
 ];
