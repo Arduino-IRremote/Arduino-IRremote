@@ -504,35 +504,110 @@ To support **[Compile Options][Section Compile Options]** more easily, adjust th
 <br>
 <br>
 
-# Receiving IR codes
+## Receiving IR Codes
 
-Check for **available data** can be done by `if (IrReceiver.decode()) {`. This also decodes the received data.
-After successful decoding, the IR data is contained in the IRData structure, available as `IrReceiver.decodedIRData`.
+You can check available data with:
 
-```c++
-struct IRData {
-    decode_type_t protocol;  // UNKNOWN, NEC, SONY, RC5, ...
-    uint16_t address;        // Decoded address
-    uint16_t command;        // Decoded command
-    uint16_t extra;          // Used by MagiQuest and for Kaseikyo unknown vendor ID.  Ticks used for decoding Distance protocol.
-    uint16_t numberOfBits;   // Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
-    uint8_t flags;               // See IRDATA_FLAGS_* definitions above
-    uint32_t decodedRawData;     // Up to 32 bit decoded raw data, used for sendRaw functions.
-    uint32_t decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; // 32 bit decoded raw data, to be used for send function.
-    irparams_struct *rawDataPtr; // Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
-};
+```C++
+if(IrReceiver.decode()){}
 ```
-
-To access e.g. the **RAW data**, use `uint32_t myRawdata= IrReceiver.decodedIRData.decodedRawData;`.<br/>
-The content of the `IrReceiver.decodedIRData.flags` is described [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L164-L175).<br/>
-To **print all fields**, use `IrReceiver.printIRResultShort(&Serial);`.<br/>
-To print the **raw timing data** received, use `IrReceiver.printIRResultRawFormatted(&Serial, true);`.
+    
+*This also decodes the received data.*
 
 <br>
 
-## Minimal NEC receiver
+### Data Format
 
-For applications only requiring NEC protocol, there is a receiver which has very **small code size of 500 bytes and does NOT require any timer**. See the MinimalReceiver and IRDispatcherDemo example how to use it.
+After successful decoding, the IR data is contained in the <br>
+IRData structure, available as `IrReceiver.decodedIRData`.
+
+```C++
+struct IRData {
+    
+    // UNKNOWN , NEC , SONY , RC5 , ...
+    
+    decode_type_t protocol;
+    
+    uint16_t address;
+    
+    uint16_t command;
+    
+    /*
+     *  Used by MagiQuest and for Kaseikyo unknown vendor ID.
+     *  Ticks used for decoding Distance protocol.
+     */
+    
+    uint16_t extra;
+    
+    /*
+     *  Number of data bits received 
+     *  `address + command + parity - protocol length`
+     *  If different lengths are possible.
+     */
+    
+    uint16_t numberOfBits;        
+    
+    // See IRDATA_FLAGS_* definitions above
+    
+    uint8_t flags;
+    
+    /*
+     *  Up to 32 bit decoded raw data, 
+     *  used for the `sendRaw` functions.
+     */
+    
+    uint32_t decodedRawData;
+    
+    /*
+     *  Pointer of the raw timing data to be decoded.
+     *  Mainly the data buffer filled by receiving ISR.
+     */
+    
+    irparams_struct * rawDataPtr;    
+};
+```
+
+<br>
+
+#### Access Raw Data
+
+```C++
+uint32_t myRawdata = IrReceiver.decodedIRData.decodedRawData;
+```
+
+*» Check out the content of [ `IrReceiver.decodedIRData.flags`][Decode Flags]*
+
+<br>
+
+#### Print All Fields
+
+```C++
+IrReceiver.printIRResultShort(& Serial);
+```
+
+<br>
+
+#### Print Raw Timing Data
+
+```C++
+IrReceiver.printIRResultRawFormatted(& Serial,true);
+```
+
+<br>
+
+### Minimal NEC Receiver
+
+For applications that only require a NEC protocol, you can use <br>
+the following examples that demonstrate the minimal receiver <br>
+that only requires `500 Bytes` and doesn't require a timer.
+
+*» Check out the MinimalReceiver & IRDispatcherDemo examples.*
+
+<!----------------------------------------------------------------------------->
+
+[Decode Flags]: https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L164-L175
+
+<!----------------------------------------------------------------------------->
 
 <br>
 <br>
