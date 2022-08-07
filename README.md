@@ -496,8 +496,8 @@ To customize the library to different requirements, there are some compile optio
 These macros must be defined in your program **before** the line `#include <IRremote.hpp>` to take effect.<br/>
 Modify them by enabling / disabling them, or change the values if applicable.
 
-| Name | Default value | Description |
-|:---|---:|----|
+| Name | Default Value | Description |
+|:----:|:-------------:|:------------|
 | `RAW_BUFFER_LENGTH` |  100 | Buffer size of raw input buffer. Must be even! 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. |
 | `EXCLUDE_UNIVERSAL_PROTOCOLS` |  disabled | Excludes the universal decoder for pulse distance protocols and decodeHash (special decoder for all protocols) from `decode()`. Saves up to 1000 bytes program memory. |
 | `DECODE_<Protocol name>` |  all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |
@@ -518,8 +518,9 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `IR_USE_AVR_TIMER*` |  | Selection of timer to be used for generating IR receiving sample interval. |
 
 These next macros for **TinyIRReceiver** must be defined in your program before the line `#include <TinyIRReceiver.hpp>` to take effect.
-| Name | Default value | Description |
-|:---|---:|----|
+
+| Name | Default | Description |
+|:----:|:-------:|:------------|
 | `IR_INPUT_PIN` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the feedback LED function. Saves 14 bytes program memory. |
