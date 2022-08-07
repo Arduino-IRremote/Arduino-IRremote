@@ -108,6 +108,11 @@
 - [License](https://github.com/Arduino-IRremote/Arduino-IRremote#license)
 - [Copyright](https://github.com/Arduino-IRremote/Arduino-IRremote#copyright)
 
+<!----------------------------------------------------------------------------->
+
+[Section Compile Options]: #compile-options--macros-for-this-library
+
+<!----------------------------------------------------------------------------->
 
 <br>
 <br>
@@ -306,6 +311,8 @@ should still work fine.
 
 ### Deprecated 
 
+    <br>
+
 -   `sendNEC()` is not compatible
 
     <br>
@@ -379,7 +386,7 @@ or write it as one binary string and reverse / mirror it.
     ⤷ `11001011001101000000000100000010` Binary
 
     `0x40802CD3` <br>
-    ⤷ `01000000100000000010110011010011` Binary.<br/>
+    ⤷ `01000000100000000010110011010011` Binary
 
     *If you read the first binary sequence backwards* <br>
     *- from right to left - you get the second sequence.*
@@ -398,73 +405,102 @@ or write it as one binary string and reverse / mirror it.
 <br>
 <br>
 
-# Errors with old tutorials and the 3.x versions
+## Errors with Old Tutorials + 3.x
 
-If you suffer from errors with old tutorial code including `IRremote.h` instead of `IRremote.hpp`, just try to rollback to [version 2.4.0](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0). Most likely your code will run and you will not miss the new features...
+If you suffer from errors with old tutorial code including <br>
+`IRremote.h` instead of `IRremote.hpp`, just try to rollback <br>
+to **[Version 2.4.0][2.4.0]**.
+
+*Most likely your code will run and you won't miss the new features..*
 
 <br>
 <br>
 
-# Why *.hpp files instead of *.cpp files?
+## Why `*.hpp` instead of `*.cpp` ?
 
-**Every \*.cpp file is compiled separately** by a call of the compiler exclusively for this cpp file. These calls are managed by the IDE / make system.
-In the Arduino IDE the calls are executed when you click on *Verify* or *Upload*.<br/>
-And now our problem with Arduino is: **How to set [compile options](#compile-options--macros-for-this-library) for all *.cpp files, especially for libraries used?**<br/>
-IDE's like [Sloeber](https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-sloeber-ide) or [PlatformIO](https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-platformio) support this by allowing to specify a set of options per project.
-They add these options at each compiler call e.g. `-DTRACE`.<br/>
-But Arduino lacks this feature. So the **workaround** is not to compile all sources separately, but to concatenate them to one huge source file by including them in your source.
-This is done by e.g. `#include "IRremote.hpp"`.
-<br/>
+**Every \*.cpp file is compiled separately** by a <br>
+call of the compiler exclusively for this cpp file.
 
-# Errors with using the 3.x versions for old tutorials
-If you suffer from errors with old tutorial code which includes `IRremote.h` instead of `IRremote.hpp`, just try to rollback to [version 2.4.0](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0).<br/>
-Most likely your code will run and you will not miss the new features...
+These calls are managed by the IDE / make system.
 
-<br/>
-
-# Why *.hpp instead of *.cpp?
-**Every \*.cpp file is compiled separately** by a call of the compiler exclusively for this cpp file. These calls are managed by the IDE / make system.
 In the Arduino IDE the calls are executed when you click on *Verify* or *Upload*.
 
-And now our problem with Arduino is:<br/>
-**How to set [compile options](#compile-options--macros-for-this-library) for all *.cpp files, especially for libraries used?**<br/>
-IDE's like [Sloeber](https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-sloeber-ide) or [PlatformIO](https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-platformio) support this by allowing to specify a set of options per project.
+And now our problem with Arduino is:
+
+**How to set [Compile Options][Section Compile Options] for all *.cpp files, especially for libraries used?**
+
+IDE's like **[Sloeber][ServoEasing Sloeber]** or **[PlatformIO][ServoEasing PlatformIO]** support this by allowing to specify a set of options per project.
+
 They add these options at each compiler call e.g. `-DTRACE`.
 
-But Arduino lacks this feature. 
-So the **workaround** is not to compile all sources separately, but to concatenate them to one huge source file by including them in your source.
+But Arduino lacks this feature. So the **workaround** is not to compile all sources separately, but to concatenate them to one huge source file by including them in your source.
+
 This is done by e.g. `#include "IRremote.hpp"`.
 
-But why not `#include "IRremote.cpp"`?<br/>
+
+But why not `#include "IRremote.cpp"`?
+
 Try it and you will see tons of errors, because each function of the *.cpp file is now compiled twice,
-first by compiling the huge file and second by compiling the *.cpp file separately, like described above.<br/>
-So using the extension *cpp* is not longer possible, and one solution is to use *hpp* as extension, to show that it is an included *.cpp file.<br/>
+first by compiling the huge file and second by compiling the *.cpp file separately, like described above.
+
+So using the extension *cpp* is not longer possible, and one solution is to use *hpp* as extension, to show that it is an included *.cpp file.
+
 Every other extension e.g. *cinclude* would do, but *hpp* seems to be common sense.
 
+<!----------------------------------------------------------------------------->
+
+[ServoEasing PlatformIO]: https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-platformio
+[ServoEasing Sloeber]: https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-sloeber-ide
+
+<!----------------------------------------------------------------------------->
+
 <br>
 <br>
 
-# Using the new *.hpp files / how to avoid `multiple definitions` linker errors
+## Using the new `*.hpp` files
 
-In order to support [compile options](#compile-options--macros-for-this-library) more easily,
-the line `#include <IRremote.h>` must be changed to  `#include <IRremote.hpp>` in your main program (aka *.ino file with setup() and loop()).
+*How to avoid `multiple definitions` linker errors.*
 
-In **all other files** you must use the following, to **prevent `multiple definitions` linker errors**:
+<br>
 
-```c++
-#define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE
-#include <IRremote.hpp>
-```
+To support **[Compile Options][Section Compile Options]** more easily, adjust the following:
 
-Ensure that all macros in your main program are defined before any `#include <IRremote.hpp>`.
+-   Replace the following line in your main program.
 
-The following macros will definitely be overridden with default values otherwise:
-- `RAW_BUFFER_LENGTH`
-- `IR_SEND_PIN`
-- `SEND_PWM_BY_TIMER`
+    ```C++
+    #include <IRremote.h>
+    ```
+    
+         **🠓**
+    
+    ```C++
+    #include <IRremote.hpp>
+    ```
+    
+    <br>
 
-<br/>
+-   In all other files you must use the following <br>
+    to prevent `multiple definition` errors.
 
+    ```C++
+    #define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE
+    #include <IRremote.hpp>
+    ```
+    
+    <br>
+
+-   Ensure that all macros in your main program <br>
+    are defined before `#include <IRremote.hpp>`
+    
+    The following macros will definitely be <br>
+    overridden with default values otherwise:
+    
+    -   `SEND_PWM_BY_TIMER`
+    
+    -   `RAW_BUFFER_LENGTH`
+    
+    -   `IR_SEND_PIN`
+    
 <br>
 <br>
 
