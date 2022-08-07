@@ -154,128 +154,246 @@
 <br>
 <br>
 
-# Features of the 3.x version
+## Features
 
-- You can use any pin for sending now, like you are used with receiving.
-- Simultaneous sending and receiving. See the [SendAndReceive](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendAndReceive/SendAndReceive.ino#L167-L170) example.
-- Supports **more platforms**.
-- Allows for the generation of non PWM signal to just **simulate an active low receiver signal** for direct connect to existent receiving devices without using IR.
-- Easy protocol configuration, **directly in your [source code](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L33-L57)**.<br/>
-  Reduces memory footprint and decreases decoding time.
-- Contains a [very small NEC only decoder](https://github.com/Arduino-IRremote/Arduino-IRremote#minimal-nec-receiver), which **does not require any timer resource**.
-  
-[-> Feature comparison of 5 Arduino IR libraries](https://github.com/Arduino-IRremote/Arduino-IRremote#quick-comparison-of-5-arduino-ir-receiving-libraries).
+-   Any pin can be used for sending / receiving.
+
+-   [Simultaneous sending and receiving][Example Send & Receive].
+
+-   No more need to use 32 bit hex values in your code.
+
+    Instead a (8 bit) command value is provided for decoding <br>
+    (as well as an 16 bit address and a protocol number).
+
+-   Protocol values comply to protocol standards
+    
+    *NEC, Panasonic, Sony, Samsung and JVC decode & send LSB first.*
+
+-   [Compatible with the tone() library.][Example Tone Compatible]
+
+-   New protocols & platforms can easily be added.
+
+-   Feedback LED can be used for sending.
+
+-   Allows for the generation of non PWM signals to just simulate <br>
+    an active low receiver signal for direct connection to an existent <br>
+    receiving devices without using IR.
+
+-   [Easy protocol configuration][Example Configuration]
+
+    *Reduces memory footprint but increases decoding time.*
 
 <br>
 
-## Converting your 2.x program to the 3.x version
+## Converting 2.x 🠖 3.x Programs
 
-Starting with the 3.1 version, **the generation of PWM for sending is done by software**, thus saving the hardware timer and **enabling arbitrary output pins for sending**.<br/>
-If you use an (old) Arduino core that does not use the `-flto` flag for compile, you can activate the line `#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN` in IRRemote.h, if you get false error messages regarding begin() during compilation.
+Starting with version **3.1** the generation of PWM for sending is <br>
+done by software, thus saving the hardware timer and enabling <br>
+arbitrary output pins for sending.
 
-- **IRreceiver** and **IRsender** object have been added and can be used without defining them, like the well known Arduino **Serial** object.
-- Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;` in your program, and replace all occurrences of `IRrecv.` or `irrecv.` with `IrReceiver` and replace all `IRsend` or `irsend` with `IrSender`.
-- Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
-- Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK)`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L106)
+If you use an old Arduino core that doesn't use the <br>
+`-flto` flag for compile, you can activate the line <br>
+`#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN` <br>
+in `IRRemote.h`, if you get false error messages <br>
+regarding `begin()` during compilation.
+
+-   **IRreceiver** / **IRsender** have been added, <br>
+    similar to Arduino's **Serial** object.
+
+-   Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and / or `IRsend IrSender;` in your program, and replace all occurrences of `IRrecv.` or `irrecv.` with `IrReceiver` and replace all `IRsend` or `irsend` with `IrSender`.
+
+-   Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
+
+-   Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK)`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L106)
  or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK)` instead of the `IrReceiver.enableIRIn()` or `irrecv.enableIRIn()` in setup().<br/>
 For sending, call `IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK);` or `IrSender.begin(IR_SEND_PIN, DISABLE_LED_FEEDBACK);` in setup().
-- Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
-- The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value` and `results.decode_type` (and similar) to
+
+-   Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
+
+-   The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value` and `results.decode_type` (and similar) to
  `IrReceiver.decodedIRData.decodedRawData` and `IrReceiver.decodedIRData.protocol`.
-- Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L164-L187).
-- Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
+
+-   Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L164-L187).
+
+-   Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
 
 <br>
 
 ### Example
 
-#### 2.x program:
+#### 2.x Program
 
-```c++
+```C++
 #include <IRremote.h>
 
 IRrecv irrecv(RECV_PIN);
 decode_results results;
 
-void setup()
-{
-...
-  irrecv.enableIRIn(); // Start the receiver
+void setup(){
+    
+    ...
+    
+    // Start the receiver
+    irrecv.enableIRIn();
 }
 
-void loop() {
-  if (irrecv.decode(&results)) {
-      Serial.println(results.value, HEX);
-      ...
-      irrecv.resume(); // Receive the next value
-  }
-  ...
+void loop(){
+    
+    if(irrecv.decode(& results)){
+        
+        Serial.println(results.value,HEX);
+        
+        ...
+        
+        // Receive the next value
+        irrecv.resume();
+    }
+    
+    ...
 }
 ```
 
 <br>
 
-#### 3.x program:
+#### 3.x Program
 
-```c++
+```C++
 #include <IRremote.hpp>
 
-void setup()
-{
-...
-  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver
+void setup(){
+
+    ...
+
+    // Start the receiver
+    IrReceiver.begin(IR_RECEIVE_PIN,ENABLE_LED_FEEDBACK);
 }
 
-void loop() {
-  if (IrReceiver.decode()) {
-      Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
-      IrReceiver.printIRResultShort(&Serial); // optional use new print version
-      ...
-      IrReceiver.resume(); // Enable receiving of the next value
-  }
-  ...
+void loop(){
+    
+    if(IrReceiver.decode()){
+        
+        Serial.println(IrReceiver.decodedIRData.decodedRawData,HEX);
+        
+        // Optional use new print version
+        IrReceiver.printIRResultShort(& Serial); 
+        
+        ...
+        
+        // Enable receiving of the next value
+        IrReceiver.resume();
+    }
+    
+    ...
 }
 ```
 
 <br>
 
-## Do not want to convert your 2.x program and use the 3.x library version?
+## Staying on 2.x
 
-First consider to just use the [original 2.4 release form 2017](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0)
-or the last backwards compatible [2.8 version](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/2.8.0) for you project.
-It may be sufficient and deals flawlessly with 32 bit IR codes.<br/>
-If this doesn't fit your case, be assured that 3.x is at least trying to be backwards compatible, so your old examples should still work fine.
+Consider using the original **[2.4 Release][2.4.0]** release from <br>
+2017 or the last backwards compatible **[2.8 Release][2.8.0]**.
 
-### Drawbacks
-- Only the following decoders are available:<br/>
-  ` NEC ` &nbsp; &nbsp; ` Denon ` &nbsp; &nbsp; ` Panasonic ` &nbsp; &nbsp; ` JVC ` &nbsp; &nbsp; ` LG `<br/>
-  ` RC5 ` &nbsp; &nbsp; ` RC6 ` &nbsp; &nbsp; ` Samsung ` &nbsp; &nbsp; ` Sony `
-- The call of `irrecv.decode(&results)` uses the old MSB first decoders like in 2.x and sets the 32 bit codes in `results.value`!<br/>
-- The old functions `sendNEC()` and `sendJVC()` are renamed to `sendNECMSB()` and `sendJVCMSB()`.
-  Use them to send your **old MSB-first 32 bit IR data codes**.
-- No decoding by a (constant) 8/16 bit address and an 8 bit command.
+*It may be sufficient and deals flawlessly with 32 bit IR codes.*
 
 <br>
 
-## How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes
+If this doesn't fit your case, be assured that **3.x** is at least <br>
+trying to be backwards compatible, so your old examples <br>
+should still work fine.
 
-For the new decoders for **NEC, Panasonic, Sony, Samsung and JVC**, the result `IrReceiver.decodedIRData.decodedRawData` is now **LSB-first**, as the definition of these protocols suggests!<br/>
-<br/>
-To convert one into the other, you must reverse the byte/nibble positions and then reverse all bit positions of each byte/nibble or write it as one binary string and reverse/mirror it.<br/><br/>
-Example:
-- 0xCB 34 01 02<br/>
-  0x20 10 43 BC after nibble reverse<br/>
-  0x40 80 2C D3 after bit reverse of each nibble<br/><br/>
-  Nibble reverse map:
-```
- 0->0   1->8   2->4   3->C
- 4->2   5->A   6->6   7->E
- 8->1   9->9   A->5   B->D
- C->3   D->B   E->7   F->F
-```
-- 0xCB340102 is binary 1100 1011 0011 0100 0000 0001 0000 0010.<br/>
-  0x40802CD3 is binary 0100 0000 1000 0000 0010 1100 1101 0011.<br/>
-If you read the first binary sequence backwards (right to left), you get the second sequence.
+<br>
+
+### Deprecated 
+
+-   `sendNEC()` is not compatible
+
+    <br>
+
+-   The old and deprecated call of `irrecv.decode(&results)` <br>
+    uses the old MSB first decoders like in 2.x and sets the 32 <br>
+    bit codes in `results.value`!
+
+    But only the following decoders are available:
+    
+    <kbd>  Denon  </kbd>  
+    <kbd>  JVC  </kbd>  
+    <kbd>  LG  </kbd>  
+    <kbd>  NEC  </kbd>  
+    <kbd>  Sony  </kbd>  
+    
+    <kbd>  Panasonic  </kbd>  
+    <kbd>  RC5  </kbd>  
+    <kbd>  RC6  </kbd>  
+    <kbd>  Samsung  </kbd>  
+
+    <br>
+
+-   `sendNEC()` / `sendJVC()` are deprecated have been renamed to <br>
+    `sendNECMSB()` / `sendJVCMSB()`, to make it clearer that they send <br>
+    data with MSB first, which is not the standard for NEC and JVC.
+
+    Use them to send your **old MSB-first 32 bit IR data codes**.
+
+    In the new version you will send NEC and other commands not <br>
+    by 32 bit codes but by a constant 8 bit addresses / command.
+
+<br>
+
+## Old 🠖 New MSB Conversion
+
+For the **NEC, Panasonic, Sony, Samsung and JVC** decoders, <br>
+the result `IrReceiver.decodedIRData.decodedRawData` is <br>
+now **LSB-first**, as the definition of these protocols suggests!
+
+To convert one into the other, you must reverse the byte / nibble <br>
+positions and then reverse all bit positions of each byte / nibble <br>
+or write it as one binary string and reverse / mirror it.
+
+<br>
+
+### Example
+
+-   `0xCB340102` <br> 
+    ⤷ `02 01 34 CB` Byte Reverse <br>
+    ⤷ `40 80 2C D3` Bit Reverse
+    
+    <br>
+
+-   `0xCB340102` <br>
+    ⤷ `201043BC` Nibble Reverse
+    ⤷ `40802CD3` Bit Reverse
+
+    #### Nibble Reverse Map
+    
+    ```
+    1 🠖 8   5 🠖 A   9 🠖 9   D 🠖 B
+    2 🠖 4   6 🠖 6   A 🠖 5   E 🠖 7
+    3 🠖 C   7 🠖 E   B 🠖 D   F 🠖 F
+    4 🠖 2   8 🠖 1   C 🠖 3
+    ```
+    
+    <br>
+  
+-   `0xCB340102` <br>
+    ⤷ `11001011001101000000000100000010` Binary
+
+    `0x40802CD3` <br>
+    ⤷ `01000000100000000010110011010011` Binary.<br/>
+
+    *If you read the first binary sequence backwards* <br>
+    *- from right to left - you get the second sequence.*
+
+<!----------------------------------------------------------------------------->
+
+[Example Tone Compatible]: https://github.com/Arduino-IRremote/Arduino-IRremote/blob/21b5747a58e9d47c9e3f1beb056d58c875a92b47/examples/ReceiveDemo/ReceiveDemo.ino#L159-L169
+[Example Send & Receive]: https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendAndReceive/SendAndReceive.ino#L167-L170
+[Example Configuration]: https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L33-L57
+
+[2.4.0]: https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0
+[2.8.0]: https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/2.8.0
+
+<!----------------------------------------------------------------------------->
 
 <br>
 <br>
