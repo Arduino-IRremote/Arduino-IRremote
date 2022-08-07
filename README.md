@@ -23,6 +23,11 @@
 <br>
 <br>
 
+[![Button Install]][ArduBadge]   
+[![Button API]][API]   
+[![Button Changelog]][Changelog]   
+[![Button Contribute]][Contribute]
+
 </div>
 
 <!----------------------------------------------------------------------------->
@@ -32,7 +37,10 @@
 [Releases]: https://www.arduinolibraries.info/libraries/i-rremote
 [Actions]: https://github.com/Arduino-IRremote/Arduino-IRremote/actions
 [Ukraine]: https://stand-with-ukraine.pp.ua
+[API]: https://arduino-irremote.github.io/Arduino-IRremote/classIRrecv.html
 
+[Contribute]: Contributing.md
+[Changelog]: changelog.md
 [License]: LICENSE
 
 <!----------------------------------[ Badges ]--------------------------------->
@@ -43,6 +51,11 @@
 
 <!---------------------------------[ Buttons ]--------------------------------->
 
+[Button Contribute]: https://img.shields.io/badge/Contribute-752a61?style=for-the-badge&logoColor=white&logo=GitHub
+[Button Changelog]: https://img.shields.io/badge/Changelog-00557f?style=for-the-badge&logoColor=white&logo=AzureArtifacts
+[Button Install]: https://img.shields.io/badge/Install-yellow?style=for-the-badge&logoColor=white&logo=GitBook
+[Button API]: https://img.shields.io/badge/API-1c8840?style=for-the-badge&logoColor=white&logo=OpenStreetMap
+
 <!----------------------------------------------------------------------------->
 
 <br>
@@ -50,8 +63,6 @@
 
 # Overview
 
-- [API](https://github.com/Arduino-IRremote/Arduino-IRremote#api)
-- [Installation](https://github.com/Arduino-IRremote/Arduino-IRremote#installation)
 - [Supported IR Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote#supported-ir-protocols)
 - [Features](https://github.com/Arduino-IRremote/Arduino-IRremote#features)
   * [New features with version 3.x](https://github.com/Arduino-IRremote/Arduino-IRremote#new-features-with-version-3x)
@@ -96,8 +107,6 @@
 - [Contributors](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/Contributors.md)
 - [License](https://github.com/Arduino-IRremote/Arduino-IRremote#license)
 - [Copyright](https://github.com/Arduino-IRremote/Arduino-IRremote#copyright)
-
-<br/>
 
 # Supported IR Protocols
 ` NEC / Onkyo / Apple ` &nbsp; &nbsp; ` Denon / Sharp ` &nbsp; &nbsp; ` Panasonic / Kaseikyo `
@@ -711,6 +720,9 @@ It is dated from **24.06.2022**. If you have complains about the data or request
 - ["Recording long Infrared Remote control signals with Arduino"](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino)
 - The original blog post of Ken Shirriff [A Multi-Protocol Infrared Remote Library for the Arduino](http://www.arcfn.com/2009/08/multi-protocol-infrared-remote-library.html)
 - [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf)
+
+## Contributors
+Check [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/Contributors.md)
 
 # License
 Up to the version 2.7.0, the License is GPLv2.

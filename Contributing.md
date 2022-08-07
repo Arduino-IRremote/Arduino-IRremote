@@ -1,4 +1,15 @@
-# Contribution Guidelines
+
+# Contributing
+
+If you want to contribute to this project:
+- Report bugs and errors
+- Ask for enhancements
+- Create issues and pull requests
+- Tell other people about this library
+- Contribute new protocols
+
+
+## Guidelines
 
 This library is the culmination of the expertise of many members of the open source community who have dedicated their time and hard work.
 
