@@ -112,17 +112,44 @@
 <br>
 <br>
 
-# Supported IR Protocols
+## Supported Protocols
 
-Denon / Sharp, JVC, LG,  NEC / Onkyo / Apple, Panasonic / Kaseikyo, RC5, RC6, Samsung, Sony, (Pronto), BoseWave, Lego, Whynter and optional MagiQuest.<br/>
-Protocols can be switched off and on by defining macros before the line `#include <IRremote.hpp>` like [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L14):
+<kbd>  Denon / Sharp  </kbd>  
+<kbd>  JVC  </kbd>  
+<kbd>  LG  </kbd>  
+<kbd>  JVC  </kbd>  
+<kbd>  NEC / Onkyo / Apple  </kbd>  
 
-```c++
+<kbd>  Panasonic / Kaseikyo  </kbd>  
+<kbd>  RC5  </kbd>  
+<kbd>  RC6  </kbd>  
+<kbd>  Samsung  </kbd>  
+<kbd>  Sony  </kbd>  
+
+<kbd>  Pronto  </kbd>  
+<kbd>  BoseWave  </kbd>  
+<kbd>  Lego  </kbd>  
+<kbd>  Whynter  </kbd>  
+<kbd>  MagiQuest  </kbd>
+
+<br>
+
+### Enabling
+
+*You can turn on the use of a protocol by **[Adding A Define Statement][Example Protocol]**.*
+
+```C++
 #define DECODE_NEC
 //#define DECODE_DENON
 #include <IRremote.hpp>
 ```
 <br/>
+
+<!----------------------------------------------------------------------------->
+
+[Example Protocol]: https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L14
+
+<!----------------------------------------------------------------------------->
 
 <br>
 <br>
