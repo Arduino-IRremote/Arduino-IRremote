@@ -25,6 +25,6 @@ These are the active contributors of this project that you may contact if there 
 - [eshicks4](https://github.com/eshicks4)
 - [Jim-2249](https://github.com/Jim-2249)
 - [pmalasp](https://github.com/pmalasp )
-
+- [ElectronicsArchiver}(https://github.com/ElectronicsArchiver) improving documentation
 
 Note: Please let [ArminJo](https://github.com/ArminJo) know if you have been missed.

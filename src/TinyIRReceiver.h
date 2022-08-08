@@ -5,7 +5,7 @@
  *  Copyright (C) 2021-2022  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
- *  This file is part of IRMP https://github.com/ukw100/IRMP.
+ *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  *  TinyIRReceiver is free software: you can redistribute it and/or modify

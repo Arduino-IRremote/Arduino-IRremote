@@ -2,6 +2,9 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+## 3.8.1
+- Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).
+
 ## 3.8.0
 - Changed Samsung repeat handling. Old handling is available as SamsungLG.
 - Added function printIRSendUsage().
