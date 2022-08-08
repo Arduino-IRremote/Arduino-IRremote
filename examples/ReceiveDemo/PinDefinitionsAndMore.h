@@ -108,7 +108,7 @@
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
 #define _IR_TIMING_TEST_PIN 7
 
-#  else // Default as for ATmega328 like on Uno, Nano, Leonardo etc.
+#  else // Default as for ATmega328 like on Uno, Nano, Leonardo, Teensy 2.0 etc.
 #define IR_RECEIVE_PIN      2 // To be compatible with interrupt example, pin 2 is chosen here.
 #define IR_SEND_PIN         3
 #define TONE_PIN            4
@@ -189,8 +189,8 @@ void noTone(uint8_t aPinNumber){
 #define _IR_TIMING_TEST_PIN 8
 
 #elif defined(ARDUINO_ARCH_RP2040) // Arduino Nano Connect, Pi Pico with arduino-pico core https://github.com/earlephilhower/arduino-pico
-#define IR_RECEIVE_PIN      15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
-#define IR_SEND_PIN         16
+#define IR_RECEIVE_PIN      15  // GPIO15 to be compatible with the Arduino Nano RP2040 Connect (pin3)
+#define IR_SEND_PIN         16  // GPIO16
 #define TONE_PIN            17
 #define APPLICATION_PIN     18
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 19 // E.g. used for examples which use LED_BUILDIN for example output.
