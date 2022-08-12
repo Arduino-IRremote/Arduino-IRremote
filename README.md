@@ -191,14 +191,16 @@ If this doesn't fit your case, be assured that 3.x is at least trying to be back
 - The call of `irrecv.decode(&results)` uses the old MSB first decoders like in 2.x and sets the 32 bit codes in `results.value`!<br/>
 - The old functions `sendNEC()` and `sendJVC()` are renamed to `sendNECMSB()` and `sendJVCMSB()`.
   Use them to send your **old MSB-first 32 bit IR data codes**.
-- No decoding by a (constant) 8/16 bit address and an 8 bit command possible.
+- No decoding by a (constant) 8/16 bit address and an 8 bit command.
 
 ## How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes
 For the new decoders for **NEC, Panasonic, Sony, Samsung and JVC**, the result `IrReceiver.decodedIRData.decodedRawData` is now **LSB-first**, as the definition of these protocols suggests!<br/>
 <br/>
 To convert one into the other, you must reverse the byte/nibble positions and then reverse all bit positions of each byte/nibble or write it as one binary string and reverse/mirror it.<br/><br/>
 Example:
-- 0xCB 34 01 02: nibble reverse -> 20 10 43 BC. &nbsp; &nbsp; Bit reverse of each nibble -> 40 80 2C D3.<br/>
+- 0xCB 34 01 02<br/>
+  nibble reverse -> 20 10 43 BC.<br/>
+  Bit reverse of each nibble -> 40 80 2C D3.<br/><br/>
   Nibble reverse map:
 ```
  0->0   1->8   2->4   3->C
@@ -208,7 +210,7 @@ Example:
 ```
 - 0xCB340102 is binary 1100 1011 0011 0100 0000 0001 0000 0010.<br/>
   0x40802CD3 is binary 0100 0000 1000 0000 0010 1100 1101 0011.<br/>
-  If you read the first binary sequence backwards (right to left), you get the second sequence.
+If you read the first binary sequence backwards (right to left), you get the second sequence.
 
 <br/>
 
@@ -279,14 +281,14 @@ struct IRData {
 };
 ```
 To access e.g. the **RAW data**, use <br/>
-`uint32_t myRawdata= IrReceiver.decodedIRData.decodedRawData;`<br/>
+`uint32_t myRawdata= IrReceiver.decodedIRData.decodedRawData;`
 
-The content of the `IrReceiver.decodedIRData.flags` is described [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L128-L140).<br/>
+The content of the `IrReceiver.decodedIRData.flags` is described [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L128-L140).
 
-#### print all fields
+#### Print all fields:
 `IrReceiver.printIRResultShort(&Serial);`
 
-#### To print the raw timing data received
+#### Print the raw timing data received:
 `IrReceiver.printIRResultRawFormatted(&Serial, true);`
 
 <br/>
