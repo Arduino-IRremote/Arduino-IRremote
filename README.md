@@ -199,8 +199,8 @@ For the new decoders for **NEC, Panasonic, Sony, Samsung and JVC**, the result `
 To convert one into the other, you must reverse the byte/nibble positions and then reverse all bit positions of each byte/nibble or write it as one binary string and reverse/mirror it.<br/><br/>
 Example:
 - 0xCB 34 01 02<br/>
-  nibble reverse -> 20 10 43 BC.<br/>
-  Bit reverse of each nibble -> 40 80 2C D3.<br/><br/>
+  0x20 10 43 BC after nibble reverse<br/>
+  0x40 80 2C D3 after bit reverse of each nibble<br/><br/>
   Nibble reverse map:
 ```
  0->0   1->8   2->4   3->C

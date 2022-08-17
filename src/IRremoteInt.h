@@ -156,7 +156,7 @@ struct IRData {
     uint8_t flags;          ///< See IRDATA_FLAGS_* definitions above
     uint32_t decodedRawData; ///< Up to 32 bit decoded raw data, to be used for send functions.
 #if defined(DECODE_DISTANCE)
-    uint32_t decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; ///< 32 bit decoded raw data, to be used for send functions.
+    uint32_t decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; ///< 32 bit decoded raw data, to be used for send function.
 #endif
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
 };

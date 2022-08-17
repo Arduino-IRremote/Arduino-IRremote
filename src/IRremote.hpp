@@ -147,7 +147,7 @@
 #define RAW_BUFFER_LENGTH  112  // MagiQuest requires 112 bytes.
 #  else
 #define RAW_BUFFER_LENGTH  100  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
-//#define RAW_BUFFER_LENGTH  750  // 750 is the value for air condition remotes.
+//#define RAW_BUFFER_LENGTH  750  // 750 (600 if we have only 2k RAM) is the value for air condition remotes.
 #  endif
 #endif
 #if RAW_BUFFER_LENGTH % 2 == 1

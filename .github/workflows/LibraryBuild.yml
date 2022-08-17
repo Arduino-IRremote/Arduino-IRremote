@@ -115,6 +115,7 @@ jobs:
           - arduino-boards-fqbn: arduino:avr:leonardo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+#            sketches-exclude: ReceiveAndSend # Not enough RAM for default RAW_BUFFER_LENGTH
 
           - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
             sketches-exclude: MinimalReceiver,IRDispatcherDemo

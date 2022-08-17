@@ -44,7 +44,36 @@
  */
 #include <Arduino.h>
 
-//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 900 bytes program memory
+/*
+ * Specify which protocol(s) should be used for decoding.
+ * If no protocol is defined, all protocols are active.
+ * This must be done before the #include <IRremote.hpp>
+ */
+//#define DECODE_LG
+//#define DECODE_NEC
+//#define DECODE_DISTANCE
+// etc. see IRremote.hpp
+//
+
+#if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
+#define RAW_BUFFER_LENGTH  120
+#elif RAMEND <= 0xAFF || (defined(RAMSIZE) && RAMSIZE < 0xAFF) // 0xAFF for LEONARDO
+#define RAW_BUFFER_LENGTH  500 // 600 is too much here, because we have additional uint8_t rawCode[RAW_BUFFER_LENGTH];
+#else
+#define RAW_BUFFER_LENGTH  750
+#endif
+
+//#define NO_LED_FEEDBACK_CODE // saves 92 bytes program memory
+//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
+//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
+
+// MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
+// to compensate for the signal forming of different IR receiver modules.
+//#define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
+
+//#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
+
+//#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
 #include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
