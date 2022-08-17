@@ -432,22 +432,27 @@ void IRsend::sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint
  */
 void IRsend::mark(unsigned int aMarkMicros) {
 
-#if defined(SEND_PWM_BY_TIMER)
+#if defined(SEND_PWM_BY_TIMER) || defined(USE_NO_SEND_PWM)
 #  if !defined(NO_LED_FEEDBACK_CODE)
     if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
         setFeedbackLED(true);
     }
 #  endif
+#endif
+
+#if defined(SEND_PWM_BY_TIMER)
+    /*
+     * Generate hardware PWM signal
+     */
     ENABLE_SEND_PWM_BY_TIMER; // Enable timer or ledcWrite() generated PWM output
     customDelayMicroseconds(aMarkMicros);
-    IRLedOff(); // manages also feedback LED
+    IRLedOff(); // disables hardware PWM and manages feedback LED
+    return;
 
 #elif defined(USE_NO_SEND_PWM)
-#  if !defined(NO_LED_FEEDBACK_CODE)
-    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
-        setFeedbackLED(true);
-    }
-#  endif
+    /*
+     * Here we generate no carrier PWM, just simulate an active low receiver signal.
+     */
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
     pinModeFast(sendPin, OUTPUT); // active state for mimicking open drain
 #  else
@@ -460,9 +465,13 @@ void IRsend::mark(unsigned int aMarkMicros) {
     if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
         setFeedbackLED(false);
     }
+    return;
 #  endif
 
-#else
+#else // defined(SEND_PWM_BY_TIMER)
+    /*
+     * Generate PWM by bit banging
+     */
     unsigned long tStartMicros = micros();
     unsigned long tNextPeriodEnding = tStartMicros;
     unsigned long tMicros;
@@ -478,7 +487,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
         noInterrupts(); // do not let interrupts extend the short on period
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
 #    if defined(OUTPUT_OPEN_DRAIN)
-        digitalWriteFast(sendPin, LOW); // active state for open drain
+        digitalWriteFast(sendPin, LOW); // set output with pin mode OUTPUT_OPEN_DRAIN to active low
 #    else
         pinModeFast(sendPin, OUTPUT); // active state for mimicking open drain
 #    endif

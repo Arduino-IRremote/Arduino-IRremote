@@ -37,6 +37,11 @@
  */
 #include <Arduino.h>
 
+//#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
+//#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
+//#define NO_LED_FEEDBACK_CODE      // Saves 566 bytes program memory
+//#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN // Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
+
 #include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>
 

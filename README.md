@@ -459,7 +459,7 @@ Click on the receiver while simulation is running to specify individual NEC IR c
 
 # Compile options / macros for this library
 To customize the library to different requirements, there are some compile options / macros available.<br/>
-These macros must be defined in your program before the line `#include <IRremote.hpp>` to take effect.
+These macros must be defined in your program **before** the line `#include <IRremote.hpp>` to take effect.<br/>
 Modify them by enabling / disabling them, or change the values if applicable.
 
 | Name | Default value | Description |

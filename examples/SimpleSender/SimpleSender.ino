@@ -13,9 +13,8 @@
  */
 #include <Arduino.h>
 
-//#define SEND_PWM_BY_TIMER
-//#define USE_NO_SEND_PWM
-//#define NO_LED_FEEDBACK_CODE // saves 418 bytes program memory
+//#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
+//#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
 
 #include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
 #include <IRremote.hpp>

@@ -244,7 +244,7 @@
  */
 //#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
 #if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
-#warning Pin mode OUTPUT_OPEN_DRAIN is not supported on this platform -> fall back to mode OUTPUT.
+#warning Pin mode OUTPUT_OPEN_DRAIN is not supported on this platform -> mimick open drain mode by switching between INPUT and OUTPUT mode.
 #endif
 /**
  * This amount is subtracted from the on-time of the pulses generated for software PWM generation.

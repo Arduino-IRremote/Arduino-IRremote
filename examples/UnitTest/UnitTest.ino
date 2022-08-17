@@ -42,11 +42,11 @@
 #endif
 
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
-//#define EXCLUDE_EXOTIC_PROTOCOLS
-//#define SEND_PWM_BY_TIMER
-//#define USE_NO_SEND_PWM
-#define NO_LED_FEEDBACK_CODE // saves 500 bytes program memory
-#define MARK_EXCESS_MICROS    10 // Adapt it to your IR receiver module. See also IRremote.h.
+//#define EXCLUDE_EXOTIC_PROTOCOLS  // Saves around 240 bytes program memory if IrSender.write is used
+//#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
+//#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
+#define NO_LED_FEEDBACK_CODE        // Saves 344 bytes program memory
+#define MARK_EXCESS_MICROS    10    // Adapt it to your IR receiver module. See also IRremote.h.
 
 //#define TRACE // For internal usage
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
