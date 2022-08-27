@@ -105,38 +105,21 @@ void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t 
 }
 
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
-    enableIROut(38);
 
     IR_DEBUG_PRINT(F("sendLego aRawData=0x"));
     IR_DEBUG_PRINTLN(aRawData, HEX);
 
     aChannel &= 0x03; // we have 4 channels
 
-    uint_fast8_t tNumberOfCommands = 1;
+    uint_fast8_t tNumberOfRepeats = 0;
     if (aDoSend5Times) {
-        tNumberOfCommands = 5;
+        tNumberOfRepeats = 4;
     }
 // required for repeat timing, see http://www.hackvandedam.nl/blog/?page_id=559
-    uint8_t tRepeatPeriod = (110 - (LEGO_AVERAGE_DURATION / MICROS_IN_ONE_MILLI)) + (aChannel * 40); // from 100 to 220
+    uint8_t tRepeatPeriod = (LEGO_AUTO_REPEAT_PERIOD_MIN / MICROS_IN_ONE_MILLI) + (aChannel * 40); // from 110 to 230
 
-    while (tNumberOfCommands > 0) {
-
-        // Header
-        mark(LEGO_HEADER_MARK);
-        space(LEGO_HEADER_SPACE);
-
-        sendPulseDistanceWidthData(LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, aRawData, LEGO_BITS,
-                PROTOCOL_IS_MSB_FIRST,
-                SEND_STOP_BIT);
-
-        tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            // send repeated command with a fixed space gap
-            delay(tRepeatPeriod);
-        }
-    }
-    IrReceiver.restartAfterSend();
+    sendPulseDistanceWidth(38, LEGO_HEADER_MARK, LEGO_HEADER_SPACE, LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE,
+            aRawData, LEGO_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, tRepeatPeriod, tNumberOfRepeats);
 }
 
 /*

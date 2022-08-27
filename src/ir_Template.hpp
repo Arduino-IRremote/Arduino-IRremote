@@ -143,7 +143,7 @@ void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumber
 
         // Address (device and subdevice)
         sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, aAddress,
-        SHUZU_ADDRESS_BITS, PROTOCOL_IS_LSB_FIRST); // false -> LSB first
+        SHUZU_ADDRESS_BITS, PROTOCOL_IS_LSB_FIRST, SEND_NO_STOP_BIT); // false -> LSB first
 
         // Command + stop bit
         sendPulseDistanceWidthData(SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, aCommand,

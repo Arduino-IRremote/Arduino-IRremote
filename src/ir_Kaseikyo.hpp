@@ -48,21 +48,24 @@
 //       P      A   A  N  NN  A   A      S  O   O  N  NN    I    C
 //       P      A   A  N   N  A   A  SSSS    OOO   N   N  IIIII   CCCC
 //==============================================================================
-// see: http://www.hifi-remote.com/johnsfine/DecodeIR.html#Panasonic and http://www.hifi-remote.com/johnsfine/DecodeIR.html#Kaseikyo
+// http://www.hifi-remote.com/johnsfine/DecodeIR.html#Panasonic
+// http://www.hifi-remote.com/johnsfine/DecodeIR.html#Kaseikyo
 // The first two (8-bit) bytes contains the vendor code.
 // There are multiple interpretations of the next fields:
-// 1. IRP notation: {37k,432}<1,-1|1,-3>(8,-4,M:8,N:8,X:4,D:4,S:8,F:8,G:8,1,-173)+ {X=M:4:0^M:4:4^N:4:0^N:4:4}
-// 2. The next two bytes are 4 independent 4-bit fields or Device and Subdevice
-//    The second to last byte is the function and the last byte is xor of the three bytes before it.
+// IRP: {37k,432}<1,-1|1,-3>(8,-4,M:8,N:8,X:4,D:4,S:8,F:8,G:8,1,-173)+ {X=M:4:0^M:4:4^N:4:0^N:4:4}
+// 1. interpretation: After the vendor code, the next byte is 4 bit VendorID parity and 4 bit Device and Subdevice
+//    The 5th byte is the function and the last (6.th) byte is xor of the three bytes before it.
 //    0_______ 1_______  2______ 3_______ 4_______ 5
 //    01234567 89ABCDEF  01234567 01234567 01234567 01234567
 //    01000000 00100100  Dev____  Sub_Dev_ Fun____  XOR( B2, B3, B4) - showing Panasonic vendor code 0x2002
 // see: http://www.remotecentral.com/cgi-bin/mboard/rc-pronto/thread.cgi?26152
 //
-// 3. LSB first, start bit + 16 VendorID + 4 VendorID parity + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
+// 2. interpretation: LSB first, start bit + 16 VendorID + 4 VendorID parity + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#KASEIKYO
 //
-// We reduce it to: start bit + 16 VendorID + 4 VendorID parity + 12 Address + 8 Command + 8 Parity of VendorID parity, Address and Command + stop bit
+//
+// We reduce it to: IRP: {37k,432}<1,-1|1,-3>(8,-4,V:16,X:4,D:4,S:8,F:8,(X^D^S^F):8,1,-173)+ {X=M:4:0^M:4:4^N:4:0^N:4:4}
+// start bit + 16 VendorID + 4 VendorID parity + 12 Address + 8 Command + 8 Parity of VendorID parity, Address and Command + stop bit
 //
 #define KASEIKYO_VENDOR_ID_BITS     16
 #define KASEIKYO_VENDOR_ID_PARITY_BITS   4
@@ -70,7 +73,7 @@
 #define KASEIKYO_COMMAND_BITS       8
 #define KASEIKYO_PARITY_BITS        8
 #define KASEIKYO_BITS               (KASEIKYO_VENDOR_ID_BITS + KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS)
-#define KASEIKYO_UNIT               432 // 16 pulses of 37 kHz (432,432432)  - Pronto 0x70 / 0x10
+#define KASEIKYO_UNIT               432 // 16 pulses of 37 kHz (432,432432)  - Pronto 0x70 | 0x10
 
 #define KASEIKYO_HEADER_MARK        (8 * KASEIKYO_UNIT) // 3456
 #define KASEIKYO_HEADER_SPACE       (4 * KASEIKYO_UNIT) // 1728
@@ -104,7 +107,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNum
 
         // Vendor ID
         sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aVendorCode,
-        KASEIKYO_VENDOR_ID_BITS, PROTOCOL_IS_LSB_FIRST);
+        KASEIKYO_VENDOR_ID_BITS, PROTOCOL_IS_LSB_FIRST, SEND_NO_STOP_BIT);
 
         // Vendor Parity
         uint8_t tVendorParity = aVendorCode ^ (aVendorCode >> 8);
@@ -268,7 +271,7 @@ bool IRrecv::decodeKaseikyo() {
     }
 
     // check for repeat
-    if (decodedIRData.rawDataPtr->rawbuf[0] < (KASEIKYO_REPEAT_PERIOD / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < ((KASEIKYO_REPEAT_SPACE + (KASEIKYO_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
 
@@ -326,11 +329,11 @@ void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
 
     // Old version with MSB first Data Address
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aAddress,
-    KASEIKYO_ADDRESS_BITS, PROTOCOL_IS_MSB_FIRST);
+    KASEIKYO_ADDRESS_BITS, PROTOCOL_IS_MSB_FIRST, SEND_NO_STOP_BIT);
 
     // Old version with MSB first Data Data + stop bit
     sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aData,
-    KASEIKYO_DATA_BITS, PROTOCOL_IS_MSB_FIRST);
+    KASEIKYO_DATA_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
     IrReceiver.restartAfterSend();
 }
 

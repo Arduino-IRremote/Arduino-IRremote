@@ -40,8 +40,7 @@ void IRsend::sendWhynter(unsigned long data, int nbits) {
 
     // Data + stop bit
     sendPulseDistanceWidthData(WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, data, nbits,
-            PROTOCOL_IS_MSB_FIRST,
-            SEND_STOP_BIT);
+    PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
     IrReceiver.restartAfterSend();
 }
 

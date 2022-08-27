@@ -110,8 +110,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
 
         // Data
         sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS,
-        PROTOCOL_IS_MSB_FIRST,
-        SEND_STOP_BIT);
+        PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
 
         // Inverted autorepeat frame
         delay(DENON_AUTO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
@@ -244,8 +243,7 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
 
     // Data
     sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits,
-    PROTOCOL_IS_MSB_FIRST,
-    SEND_STOP_BIT);
+    PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
     IrReceiver.restartAfterSend();
 }
 

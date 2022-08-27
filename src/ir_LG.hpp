@@ -54,7 +54,7 @@
 // Bit and repeat timing is like NEC
 // LG2 has different header timing and a shorter bit time
 /*
- * LG remote measurements: Type AKB73315611, Ver1.1 from 2011.03.01
+ * LG remote IR-LED measurements: Type AKB73315611, Ver1.1 from 2011.03.01
  * Internal crystal: 4 MHz
  * Header:  8.9 ms mark 4.15 ms space
  * Data:    500 / 540 and 500 / 1580;
@@ -110,7 +110,7 @@ void IRsend::sendLGRepeat(bool aUseLG2Protocol) {
  * There is NO delay after the last sent repeat!
  * @param aUseLG2Protocol if true use LG2 protocol, which has a different header
  */
-void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat, bool aUseLG2Protocol) {
+void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialLGRepeat, bool aUseLG2Protocol) {
     uint32_t tRawData = ((uint32_t) aAddress << (LG_COMMAND_BITS + LG_CHECKSUM_BITS)) | ((uint32_t) aCommand << LG_CHECKSUM_BITS);
     /*
      * My guess of the 4 bit checksum
@@ -123,18 +123,18 @@ void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfR
         tTempForChecksum >>= 4; // shift by a nibble
     }
     tRawData |= (tChecksum & 0xF);
-    sendLGRaw(tRawData, aNumberOfRepeats, aIsRepeat, aUseLG2Protocol);
+    sendLGRaw(tRawData, aNumberOfRepeats, aSendOnlySpecialLGRepeat, aUseLG2Protocol);
 }
 
-void IRsend::sendLG2(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
-    sendLG(aAddress, aCommand, aNumberOfRepeats, aIsRepeat);
+void IRsend::sendLG2(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialLGRepeat) {
+    sendLG(aAddress, aCommand, aNumberOfRepeats, aSendOnlySpecialLGRepeat);
 }
 
 /*
  * Here you can put your raw data, even one with "wrong" checksum
  */
-void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aIsRepeat, bool aUseLG2Protocol) {
-    if (aIsRepeat) {
+void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialLGRepeat, bool aUseLG2Protocol) {
+    if (aSendOnlySpecialLGRepeat) {
         sendLGRepeat();
         return;
     }

@@ -48,11 +48,20 @@
 //                           N  NN  E      C
 //                           N   N  EEEEE   CCCC
 //==============================================================================
-// see: https://www.sbprojects.net/knowledge/ir/nec.php
+// http://www.hifi-remote.com/wiki/index.php/NEC
+// https://www.sbprojects.net/knowledge/ir/nec.php
 // for Apple see https://en.wikipedia.org/wiki/Apple_Remote
 // ONKYO like NEC but 16 independent command bits
+// PIONEER (not implemented) is NEC2 with 40 kHz
 // LSB first, 1 start bit + 16 bit address (or 8 bit address and 8 bit inverted address) + 8 bit command + 8 bit inverted command + 1 stop bit.
-// Standard NEC send a special fixed repeat frame, but I have a DVD remote, which send the same full frame after the 110 ms.
+// Standard NEC (or NEC1) sends a special fixed repeat frame, but I have a DVD remote with NEC2, which send the same full frame after the 110 ms.
+// IRP: NEC  {38.0k,564}<1,-1|1,-3>(16,-8,D:8,S:8,F:8,~F:8,1,^108m,(16,-4,1,^108m)*)  ==> "*" means send special repeat frames o ore more times
+// IRP: NEC2 {38.0k,564}<1,-1|1,-3>(16,-8,D:8,S:8,F:8,~F:8,1,^108m)+   ==> "+" means send frame 1 or more times (special repeat is missing here!)
+// {38.0k,564} ==> 38.0k -> Frequency , 564 -> unit in microseconds (we use 560), no "msb", so "lsb" is assumed
+// <1,-1|1,-3> ==> Zero is 1 unit mark and space | One is 1 unit mark and 3 units space
+// 16,-8 ==> Start bit durations
+// D:8,S:8,F:8,~F:8 ==> D:8 -> 8 bit bitfield for Device, S:8 -> 8 bit bitfield for Subdevice, F:8 -> 8 bit bitfield for Function, ~F:8 -> 8 bit inverted bitfield for Function
+// 1,^108m ==> 1 -> unit mark Stop bit, ^108m -> wait until 108 milliseconds after start of protocol (we use 110)
 //
 #define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
 #define NEC_COMMAND_BITS        16 // Command and inverted command
@@ -60,11 +69,11 @@
 #define NEC_BITS                (NEC_ADDRESS_BITS + NEC_COMMAND_BITS)
 #define NEC_UNIT                560             // 21.28 periods of 38 kHz, 11.2 ticks TICKS_LOW = 8.358 TICKS_HIGH = 15.0
 
-#define NEC_HEADER_MARK         (16 * NEC_UNIT) // 9000 / 180
-#define NEC_HEADER_SPACE        (8 * NEC_UNIT)  // 4500 / 90
+#define NEC_HEADER_MARK         (16 * NEC_UNIT) // 9000 | 180
+#define NEC_HEADER_SPACE        (8 * NEC_UNIT)  // 4500 | 90
 
 #define NEC_BIT_MARK            NEC_UNIT
-#define NEC_ONE_SPACE           (3 * NEC_UNIT)  // 1690 / 33.8  TICKS_LOW = 25.07 TICKS_HIGH = 45.0
+#define NEC_ONE_SPACE           (3 * NEC_UNIT)  // 1690 | 33.8  TICKS_LOW = 25.07 TICKS_HIGH = 45.0
 #define NEC_ZERO_SPACE          NEC_UNIT
 
 #define NEC_REPEAT_HEADER_SPACE (4 * NEC_UNIT)  // 2250
@@ -95,9 +104,9 @@ void IRsend::sendNECRepeat() {
  * Repeat commands should be sent in a 110 ms raster.
  * There is NO delay after the last sent repeat!
  * https://www.sbprojects.net/knowledge/ir/nec.php
- * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
+ * @param aSendOnlySpecialNECRepeat if true, send only one repeat frame without leading and trailing space
  */
-void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialNECRepeat) {
 
     LongUnion tRawData;
 
@@ -114,15 +123,61 @@ void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOf
     tRawData.UByte.MidHighByte = aCommand;
     tRawData.UByte.HighByte = ~aCommand;
 
-    sendNECRaw(tRawData.ULong, aNumberOfRepeats, aIsRepeat);
+    sendNECRaw(tRawData.ULong, aNumberOfRepeats, aSendOnlySpecialNECRepeat);
 }
 
 /*
  * Repeat commands should be sent in a 110 ms raster.
  * There is NO delay after the last sent repeat!
- * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
+ * @param aSendOnlySpecialNECRepeat if true, send only one repeat frame without leading and trailing space
  */
-void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendNEC2(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+
+    LongUnion tRawData;
+
+    // Address 16 bit LSB first
+    if ((aAddress & 0xFF00) == 0) {
+        // assume 8 bit address -> send 8 address bits and then 8 inverted address bits LSB first
+        tRawData.UByte.LowByte = aAddress;
+        tRawData.UByte.MidLowByte = ~tRawData.UByte.LowByte;
+    } else {
+        tRawData.UWord.LowWord = aAddress;
+    }
+
+    // send 8 command bits and then 8 inverted command bits LSB first
+    tRawData.UByte.MidHighByte = aCommand;
+    tRawData.UByte.HighByte = ~aCommand;
+    // Set IR carrier frequency
+    enableIROut(NEC_KHZ);
+
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+
+        // Header
+        mark(NEC_HEADER_MARK);
+        space(NEC_HEADER_SPACE);
+
+        // LSB first + stop bit
+        sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, tRawData.ULong, NEC_BITS,
+        PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
+
+        tNumberOfCommands--;
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            // send repeated command in a fixed raster
+            delay(NEC_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
+        }
+    }
+    IrReceiver.restartAfterSend();
+
+}
+
+/*
+ * Repeat commands should be sent in a 110 ms raster.
+ * There is NO delay after the last sent repeat!
+ * @param aSendOnlySpecialNECRepeat if true, send only one repeat frame without leading and trailing space
+ */
+void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialNECRepeat) {
 
     LongUnion tRawData;
 
@@ -131,7 +186,7 @@ void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumbe
     // Command 16 bit LSB first
     tRawData.UWord.HighWord = aCommand;
 
-    sendNECRaw(tRawData.ULong, aNumberOfRepeats, aIsRepeat);
+    sendNECRaw(tRawData.ULong, aNumberOfRepeats, aSendOnlySpecialNECRepeat);
 }
 
 /*
@@ -140,9 +195,9 @@ void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumbe
  * https://en.wikipedia.org/wiki/Apple_Remote
  * https://gist.github.com/darconeous/4437f79a34e3b6441628
  * @param aAddress is the DeviceId*
- * @param aIsRepeat if true, send only one repeat frame without leading and trailing space
+ * @param aSendOnlySpecialNECRepeat if true, send only one repeat frame without leading and trailing space
  */
-void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
+void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialNECRepeat) {
 
     LongUnion tRawData;
 
@@ -153,11 +208,14 @@ void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, uint_fast8_t aNumber
     tRawData.UByte.MidHighByte = aCommand;
     tRawData.UByte.HighByte = aDeviceId; // e.g. 0xD7
 
-    sendNECRaw(tRawData.ULong, aNumberOfRepeats, aIsRepeat);
+    sendNECRaw(tRawData.ULong, aNumberOfRepeats, aSendOnlySpecialNECRepeat);
 }
 
-void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aIsRepeat) {
-    if (aIsRepeat) {
+/*
+ * Sends NEC1 protocol
+ */
+void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialNECRepeat) {
+    if (aSendOnlySpecialNECRepeat) {
         sendNECRepeat();
         return;
     }
@@ -179,14 +237,14 @@ void IRsend::sendNECRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool a
         } else {
             delay((NEC_REPEAT_PERIOD - NEC_REPEAT_DURATION) / MICROS_IN_ONE_MILLI);
         }
-        // send repeat
+        // send special NEC repeats
         sendNECRepeat();
     }
     IrReceiver.restartAfterSend();
 }
 
 //+=============================================================================
-// NECs have a repeat only 4 items long
+// NEC1 has a repeat only 4 items long
 //
 /*
  * First check for right data length
@@ -289,9 +347,10 @@ bool IRrecv::decodeNEC() {
     }
     decodedIRData.numberOfBits = NEC_BITS;
 
-    // check for special repeat, do not check for same content ;-)
+    // check for NEC2 repeat, do not check for same content ;-)
     if (decodedIRData.rawDataPtr->rawbuf[0] < (NEC_MAXIMUM_REPEAT_SPACE / MICROS_PER_TICK)) {
-        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_SPECIAL_REPEAT;
+        decodedIRData.protocol = NEC2;
+        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
 
     return true;

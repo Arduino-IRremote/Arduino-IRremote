@@ -2,8 +2,13 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
-## 3.8.1
+## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).
+- Added NEC2 protocol.
+- Improved Magiquest protocol.
+- Renamed sendSamsungRepeat() to sendSamsungLGRepeat().
+- Added function sendPulseDistanceWidth().
+- Improved repeat detection for some protocols.
 
 ## 3.8.0
 - Changed Samsung repeat handling. Old handling is available as SamsungLG.
