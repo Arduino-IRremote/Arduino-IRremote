@@ -311,7 +311,7 @@ should still work fine.
 
 ### Deprecated 
 
-    <br>
+<br>
 
 -   `sendNEC()` is not compatible
 
