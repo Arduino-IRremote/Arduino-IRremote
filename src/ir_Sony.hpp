@@ -45,9 +45,24 @@
 //                              S  O   O  N  NN    Y
 //                          SSSS    OOO   N   N    Y
 //==============================================================================
+/*
+ * Protocol=Sony Address=0x4B9 Command=0x7 Raw-Data=0x25C87 20 bits LSB first
+ +2550,- 400
+ +1300,- 450 +1350,- 450 +1300,- 450 + 700,- 450
+ + 700,- 450 + 750,- 450 + 700,- 400
+ --13 address bits--
+ +1300,- 500
+ + 700,- 450 + 700,- 450 +1300,- 500 +1300,- 450
+ +1300,- 450 + 700,- 450 +1350,- 400 + 750,- 450
+ + 700,- 450 +1300,- 450 + 700,- 450 + 700
+ Sum: 31100
+ */
 // see https://www.sbprojects.net/knowledge/ir/sirc.php
 // Here http://picprojects.org.uk/projects/sirc/ it is claimed, that many Sony remotes repeat each frame a minimum of 3 times
 // LSB first, start bit + 7 command + 5 to 13 address, no stop bit
+// IRP: Sony12 {40k,600}<1,-1|2,-1>(4,-1,F:7,D:5,^45m)+ ==> 40 kHz, Unit is 600, LSB, One mark is 2 units, Start bit is 4 units, 7 bit Function, 5 bit Device, no Stop bit, every 45 milliseconds
+// IRP: Sony15 {40k,600}<1,-1|2,-1>(4,-1,F:7,D:8,^45m)+ ==> 8 bit Device
+// IRP: Sony20 {40k,600}<1,-1|2,-1>(4,-1,F:7,D:5,S:8,^45m)+ ==> 5 bit Device, 8 bit Subdevice
 //
 #define SONY_ADDRESS_BITS       5
 #define SONY_COMMAND_BITS       7
@@ -62,9 +77,10 @@
 #define SONY_ZERO_MARK          SONY_UNIT
 #define SONY_SPACE              SONY_UNIT
 
-#define SONY_AVERAGE_DURATION   21000 // SONY_HEADER_MARK + SONY_SPACE  + 12 * 2,5 * SONY_UNIT  // 2.5 because we assume more zeros than ones
-#define SONY_REPEAT_PERIOD      45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define SONY_REPEAT_SPACE       (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION) // 24 ms
+#define SONY_AVERAGE_DURATION_MIN   21000 // SONY_HEADER_MARK + SONY_SPACE  + 12 * 2,5 * SONY_UNIT  // 2.5 because we assume more zeros than ones
+#define SONY_AVERAGE_DURATION_MAX   33000 // SONY_HEADER_MARK + SONY_SPACE  + 20 * 2,5 * SONY_UNIT  // 2.5 because we assume more zeros than ones
+#define SONY_REPEAT_PERIOD          45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define SONY_REPEAT_SPACE_MAX       (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION_MIN) // 24 ms
 
 /*
  * Repeat commands should be sent in a 45 ms raster.
@@ -72,31 +88,10 @@
  * @param numberOfBits if == 20 send 13 address bits otherwise only 5 address bits
  */
 void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, uint8_t numberOfBits) {
-    // Set IR carrier frequency
-    enableIROut(SONY_KHZ); // 40 kHz
-
-    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
-    while (tNumberOfCommands > 0) {
-
-        // Header
-        mark(SONY_HEADER_MARK);
-        space(SONY_SPACE);
-
-        // send 7 command bits LSB first
-        sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aCommand, SONY_COMMAND_BITS,
-        PROTOCOL_IS_LSB_FIRST);
-        // send 5, 8, 13 address bits LSB first
-        sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, aAddress,
-                (numberOfBits - SONY_COMMAND_BITS), PROTOCOL_IS_LSB_FIRST);
-
-        tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            // send repeated command in a 45 ms raster
-            delay(SONY_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
-        }
-    }
-    IrReceiver.restartAfterSend();
+    uint32_t tData = (uint32_t)aAddress << 7 | aCommand;
+    // send 5, 8, 13 address bits LSB first
+    sendPulseDistanceWidth(SONY_KHZ, SONY_HEADER_MARK, SONY_SPACE, SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, tData,
+            numberOfBits, PROTOCOL_IS_LSB_FIRST, SEND_NO_STOP_BIT, SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI, aNumberOfRepeats);
 }
 
 //+=============================================================================
@@ -127,7 +122,7 @@ bool IRrecv::decodeSony() {
     }
 
     if (!decodePulseWidthData((decodedIRData.rawDataPtr->rawlen - 1) / 2, 3, SONY_ONE_MARK, SONY_ZERO_MARK, SONY_SPACE,
-            PROTOCOL_IS_LSB_FIRST)) {
+    PROTOCOL_IS_LSB_FIRST)) {
         IR_DEBUG_PRINT(F("Sony: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -141,7 +136,7 @@ bool IRrecv::decodeSony() {
     /*
      *  Check for repeat
      */
-    if (decodedIRData.rawDataPtr->rawbuf[0] < (SONY_REPEAT_PERIOD / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < ((SONY_REPEAT_SPACE_MAX + (SONY_REPEAT_SPACE_MAX / 4)) / MICROS_PER_TICK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
     }
     decodedIRData.command = tCommand;
@@ -222,7 +217,8 @@ void IRsend::sendSony(unsigned long data, int nbits) {
     space(SONY_SPACE);
 
     // Old version with MSB first Data
-    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
+    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
+    SEND_NO_STOP_BIT);
     IrReceiver.restartAfterSend();
 }
 

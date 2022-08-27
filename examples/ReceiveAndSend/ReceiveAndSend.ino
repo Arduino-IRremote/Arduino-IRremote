@@ -75,7 +75,7 @@
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
-#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 int SEND_BUTTON_PIN = APPLICATION_PIN;

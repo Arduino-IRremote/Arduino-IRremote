@@ -43,7 +43,7 @@
 //#define NO_LED_FEEDBACK_CODE // saves 500 bytes program memory
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
-#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #define DELAY_AFTER_SEND 2000

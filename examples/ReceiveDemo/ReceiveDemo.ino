@@ -45,7 +45,7 @@
 //
 
 #if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
-#define RAW_BUFFER_LENGTH  180  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
+#define RAW_BUFFER_LENGTH  150  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
 #define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
 #elif RAMEND <= 0x8FF || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
 #define RAW_BUFFER_LENGTH  600  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
@@ -65,7 +65,7 @@
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
-#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)

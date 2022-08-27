@@ -51,7 +51,7 @@
 //#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
-#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 //+=============================================================================

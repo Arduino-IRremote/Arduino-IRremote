@@ -58,7 +58,7 @@
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
-#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)
@@ -261,10 +261,7 @@ void printIRResultOnLCD() {
          * Show or clear repetition flag
          */
         myLCD.setCursor(15, 1);
-        if (IrReceiver.decodedIRData.flags & (IRDATA_FLAGS_IS_SPECIAL_REPEAT)) {
-            myLCD.print('S');
-            return; // Since it is a repetition, printed data has not changed
-        } else if (IrReceiver.decodedIRData.flags & (IRDATA_FLAGS_IS_REPEAT)) {
+        if (IrReceiver.decodedIRData.flags & (IRDATA_FLAGS_IS_REPEAT)) {
             myLCD.print('R');
             return; // Since it is a repetition, printed data has not changed
         } else {

@@ -38,7 +38,7 @@
 //#define NO_LED_FEEDBACK_CODE      // Saves 566 bytes program memory
 //#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN // Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
 
-#include "PinDefinitionsAndMore.h"  //Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h"  // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #define DELAY_AFTER_SEND 2000
@@ -170,20 +170,20 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 
         /*
-         * Send 2 Panasonic codes as generic Pulse Distance data, once with LSB and once with MSB first
+         * Send 2 Panasonic 48 bit codes as generic Pulse Distance data, once with LSB and once with MSB first
          */
-        Serial.println(F("Send Panasonic 0xB, 0x10 as generic PulseDistance"));
+        Serial.println(F("Send Panasonic 0xB, 0x10 as generic 48 bit PulseDistance"));
         Serial.println(F(" LSB first"));
         Serial.flush();
-        uint32_t tRawData[] = { 0xB02002, 0xA010 };
-        IrSender.sendPulseDistance(3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, false, 0, 0);
+        uint32_t tRawData[] = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
+        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, false, 0, 0);
         delay(DELAY_AFTER_SEND);
 
-        // the same with MSB first
+        // The same with MSB first. Use bit reversed raw data of LSB first part
         Serial.println(F(" MSB first"));
-        tRawData[0] = 0x40040D00;
+        tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;
-        IrSender.sendPulseDistance(3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, true, 0, 0);
+        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, true, 0, 0);
         delay(DELAY_AFTER_SEND);
     }
 

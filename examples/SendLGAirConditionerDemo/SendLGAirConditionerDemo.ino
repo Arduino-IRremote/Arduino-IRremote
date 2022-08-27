@@ -45,7 +45,7 @@
 #define INFO // Deactivate this to save program memory and suppress info output from the LG-AC driver.
 //#define DEBUG // Activate this for more output from the LG-AC driver.
 
-#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)

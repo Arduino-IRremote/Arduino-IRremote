@@ -38,7 +38,7 @@
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #endif
 
-#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)

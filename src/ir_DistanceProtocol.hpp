@@ -58,45 +58,6 @@
  * @{
  */
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#Codings
-/*
- * Send function for up to 64 bit
- */
-void IRsend::sendPulseDistance(unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros,
-        unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, uint32_t *aDecodedRawDataArray,
-        unsigned int aNumberOfBits, bool aMSBfirst, unsigned int aRepeatSpaceMillis, uint_fast8_t aNumberOfRepeats) {
-    // Set IR carrier frequency
-    enableIROut(38);
-
-    // Header
-    mark(aHeaderMarkMicros);
-    space(aHeaderSpaceMicros);
-
-    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
-    uint_fast8_t tNumberOf32BitChunks = ((aNumberOfBits - 1) / 32) + 1;
-
-    while (tNumberOfCommands > 0) {
-
-        for (uint_fast8_t i = 0; i < tNumberOf32BitChunks; ++i) {
-            uint8_t tNumberOfBitsForOneSend;
-            if (aNumberOfBits > 32) {
-                tNumberOfBitsForOneSend = 32;
-            } else {
-                tNumberOfBitsForOneSend = aNumberOfBits;
-            }
-            sendPulseDistanceWidthData(aOneMarkMicros, aOneSpaceMicros, aZeroMarkMicros, aZeroSpaceMicros, aDecodedRawDataArray[i],
-                    tNumberOfBitsForOneSend, aMSBfirst, (i == (tNumberOf32BitChunks - 1)));
-
-            aNumberOfBits -= 32;
-        }
-
-        tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            delay(aRepeatSpaceMillis);
-        }
-    }
-    IrReceiver.restartAfterSend();
-}
 
 #if defined(DEBUG)
 void printDurations(uint8_t aArray[], uint8_t aMaxIndex) {

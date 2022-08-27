@@ -41,34 +41,18 @@
 #define BOSEWAVE_ZERO_SPACE      468    // 468 are 18 clock periods
 #define BOSEWAVE_ONE_SPACE      1468    // 1468(measured), 1456 are 56 clock periods
 
+#define BOSEWAVE_REPEAT_PERIOD 75000
 #define BOSEWAVE_REPEAT_SPACE  50000
 
 //+=============================================================================
 
 void IRsend::sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
-    // Set IR carrier frequency
-    enableIROut(BOSEWAVE_KHZ); // 38 kHz
 
-    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
-    while (tNumberOfCommands > 0) {
-
-        // Header
-        mark(BOSEWAVE_HEADER_MARK);
-        space(BOSEWAVE_HEADER_SPACE);
-        // send 8 command bits and then 8 inverted command bits LSB first
-        uint16_t tData = ((~aCommand) << 8) | aCommand;
-
-        sendPulseDistanceWidthData(BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, tData,
-        BOSEWAVE_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
-
-        tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            // send repeated command with a fixed space gap
-            delay( BOSEWAVE_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
-        }
-    }
-    IrReceiver.restartAfterSend();
+    // send 8 command bits and then 8 inverted command bits LSB first
+    uint16_t tData = ((~aCommand) << 8) | aCommand;
+    sendPulseDistanceWidth(BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK, BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE,
+    BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, tData, BOSEWAVE_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT,
+    BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI, aNumberOfRepeats);
 }
 
 //+=============================================================================
@@ -96,7 +80,7 @@ bool IRrecv::decodeBoseWave() {
     }
 
     if (!decodePulseDistanceData(BOSEWAVE_BITS, 3, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_ZERO_SPACE,
-            PROTOCOL_IS_LSB_FIRST)) {
+    PROTOCOL_IS_LSB_FIRST)) {
         IR_DEBUG_PRINT(F("Bose: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;

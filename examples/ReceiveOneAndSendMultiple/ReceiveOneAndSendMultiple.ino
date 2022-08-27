@@ -48,7 +48,7 @@
 #define DECODE_SAMSUNG
 #define ADDRESS_OF_SAMSUNG_REMOTE   0x0707 // The value you see as address in printIRResultShort()
 
-#include "PinDefinitionsAndMore.h" //Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 void sendSamsungSmartHubMacro(bool aDoSelect);

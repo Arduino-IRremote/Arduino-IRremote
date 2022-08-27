@@ -1,5 +1,4 @@
-# Contribution Guidelines
-
+# Contributing
 This library is the culmination of the expertise of many members of the open source community who have dedicated their time and hard work.
 
 If you want to contribute to this project:
@@ -9,6 +8,7 @@ If you want to contribute to this project:
 - Tell other people about this library
 - Contribute new protocols
 
+## Guidelines
 The following are some guidelines to observe when creating discussions / PRs:
 - Be friendly; it is important that we can all enjoy a safe space as we are all working on the same project and **it is okay for people to have different ideas**.
 - Use reasonable titles; refrain from using overly long or capitalized titles as they are usually annoying and do little to encourage others to help :smile:.

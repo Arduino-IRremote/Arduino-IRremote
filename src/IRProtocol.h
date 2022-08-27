@@ -59,6 +59,7 @@ typedef enum {
     SAMSUNG,
     SAMSUNG_LG,
     SONY,
+    NEC2, /* NEC with full frame as repeat */
     ONKYO,
     APPLE,
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)

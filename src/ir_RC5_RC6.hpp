@@ -196,7 +196,7 @@ bool IRrecv::decodeRC5() {
     }
 
     // check for repeat
-    if (decodedIRData.rawDataPtr->rawbuf[0] < (RC5_REPEAT_PERIOD / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < ((RC5_REPEAT_SPACE + (RC5_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
 
