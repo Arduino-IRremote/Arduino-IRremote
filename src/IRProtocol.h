@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2021 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -70,22 +70,6 @@ typedef enum {
 #endif
 } decode_type_t;
 
-struct PulsePauseWidthProtocolConstants {
-    decode_type_t ProtocolIndex;
-    uint_fast8_t FrequencyKHz;
-    unsigned int HeaderMarkMicros;
-    unsigned int HeaderSpaceMicros;
-    unsigned int OneMarkMicros;
-    unsigned int OneSpaceMicros;
-    unsigned int ZeroMarkMicros;
-    unsigned int ZeroSpaceMicros;
-    bool isMSBFirst;
-    bool hasStopBit;
-    unsigned int RepeatPeriodMillis;
-    void (*SpecialSendRepeatFunction)(); // using non member functions here saves up to 250 bytes for send demo
-//    void (IRsend::*SpecialSendRepeatFunction)();
-};
-
 const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
 
 #define PROTOCOL_IS_LSB_FIRST false
@@ -116,5 +100,9 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
 #define SIRCS_12_PROTOCOL       12
 #define SIRCS_15_PROTOCOL       15
 #define SIRCS_20_PROTOCOL       20
+
+#define LEGO_MODE_EXTENDED  0
+#define LEGO_MODE_COMBO     1
+#define LEGO_MODE_SINGLE    0x4 // here the 2 LSB have meanings like Output A / Output B
 
 #endif // _IR_PROTOCOL_H
