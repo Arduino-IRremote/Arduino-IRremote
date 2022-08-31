@@ -33,10 +33,6 @@
 #ifndef _IR_MAGIQUEST_HPP
 #define _IR_MAGIQUEST_HPP
 
-#include <Arduino.h>
-
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
-
 #if defined(DEBUG) && !defined(LOCAL_DEBUG)
 #define LOCAL_DEBUG
 #else
@@ -107,6 +103,10 @@ union magiquest_t {
 #define MAGIQUEST_ZERO_MARK     MAGIQUEST_UNIT       // 287.5
 #define MAGIQUEST_ZERO_SPACE    (3 * MAGIQUEST_UNIT) // 864
 
+// assume 110 as repeat period
+struct PulsePauseWidthProtocolConstants MagiQuestProtocolConstants = { MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
+MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_NO_STOP_BIT, 110,
+NULL };
 //+=============================================================================
 //
 void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
@@ -115,17 +115,10 @@ void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
     enableIROut(38);
 
     // 8 start bits
-    sendPulseDistanceWidthData(
-    MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, 0, 8, PROTOCOL_IS_MSB_FIRST,
-    SEND_NO_STOP_BIT);
-
+    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, 0, 8);
     // Data
-    sendPulseDistanceWidthData(
-    MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, wand_id, MAGIQUEST_WAND_ID_BITS,
-    PROTOCOL_IS_MSB_FIRST, SEND_NO_STOP_BIT);
-    sendPulseDistanceWidthData(
-    MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, magnitude, MAGIQUEST_MAGNITUDE_BITS,
-    PROTOCOL_IS_MSB_FIRST, SEND_NO_STOP_BIT);
+    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, wand_id, MAGIQUEST_WAND_ID_BITS);
+    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, magnitude, MAGIQUEST_MAGNITUDE_BITS);
     IrReceiver.restartAfterSend();
 }
 
@@ -203,7 +196,7 @@ bool IRrecv::decodeMagiQuest() {
     decodedIRData.decodedRawData = data.cmd.wand_id;    // 32 bit wand_id
     decodedIRData.address = data.cmd.wand_id;           // lower 16 bit of wand_id
     decodedIRData.extra = data.cmd.wand_id << 16;       // upper 16 bit of wand_id
-    decodedIRData.command = data.cmd.magnitude;         // seems to be always 205 https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1017
+    decodedIRData.command = data.cmd.magnitude; // seems to be always 205 https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1017
 
     return true;
 }

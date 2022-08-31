@@ -30,11 +30,6 @@
 #ifndef _IR_SONY_HPP
 #define _IR_SONY_HPP
 
-#include <Arduino.h>
-
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
-
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -82,42 +77,39 @@
 #define SONY_REPEAT_PERIOD          45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define SONY_REPEAT_SPACE_MAX       (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION_MIN) // 24 ms
 
-/*
- * Repeat commands should be sent in a 45 ms raster.
- * There is NO delay after the last sent command / repeat!
- * @param numberOfBits if == 20 send 13 address bits otherwise only 5 address bits
- */
-void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, uint8_t numberOfBits) {
-    uint32_t tData = (uint32_t)aAddress << 7 | aCommand;
-    // send 5, 8, 13 address bits LSB first
-    sendPulseDistanceWidth(SONY_KHZ, SONY_HEADER_MARK, SONY_SPACE, SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, tData,
-            numberOfBits, PROTOCOL_IS_LSB_FIRST, SEND_NO_STOP_BIT, SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI, aNumberOfRepeats);
-}
+#define SIRCS_12_PROTOCOL       12
+#define SIRCS_15_PROTOCOL       15
+#define SIRCS_20_PROTOCOL       20
 
-//+=============================================================================
+struct PulsePauseWidthProtocolConstants SonyProtocolConstants = { SONY, SONY_KHZ, SONY_HEADER_MARK, SONY_SPACE, SONY_ONE_MARK,
+SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_NO_STOP_BIT, (SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+
+/************************************
+ * Start of send and decode functions
+ ************************************/
+
+/**
+ * @param numberOfBits should be one of SIRCS_12_PROTOCOL, SIRCS_15_PROTOCOL, SIRCS_20_PROTOCOL. Not checked! 20 -> send 13 address bits
+ */
+void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t numberOfBits) {
+    uint32_t tData = (uint32_t) aAddress << 7 | aCommand;
+    // send 5, 8, 13 address bits LSB first
+    sendPulseDistanceWidth(&SonyProtocolConstants, tData, numberOfBits, aNumberOfRepeats);
+}
 
 bool IRrecv::decodeSony() {
 
-    // Check header "mark"
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], SONY_HEADER_MARK)) {
+    if (!checkHeader(&SonyProtocolConstants)) {
         return false;
     }
 
     // Check we have enough data. +2 for initial gap and start bit mark and space minus the last/MSB space. NO stop bit! 26, 32, 42
     if (decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MIN) + 2 && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_MAX) + 2
             && decodedIRData.rawDataPtr->rawlen != (2 * SONY_BITS_15) + 2) {
-        // ??? IR_TRACE_PRINT since I saw this too often
         IR_DEBUG_PRINT(F("Sony: "));
         IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
         IR_DEBUG_PRINTLN(F(" is not 12, 15 or 20"));
-        return false;
-    }
-
-    // Check header "space"
-    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], SONY_SPACE)) {
-        IR_DEBUG_PRINT(F("Sony: "));
-        IR_DEBUG_PRINTLN(F("Header space length is wrong"));
         return false;
     }
 
@@ -130,8 +122,10 @@ bool IRrecv::decodeSony() {
 
     // Success
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
-    uint8_t tCommand = decodedIRData.decodedRawData & 0x7F;  // first 7 bits
-    uint16_t tAddress = decodedIRData.decodedRawData >> 7;    // next 5 or 8 or 13 bits
+    decodedIRData.command = decodedIRData.decodedRawData & 0x7F;  // first 7 bits
+    decodedIRData.address = decodedIRData.decodedRawData >> 7;    // next 5 or 8 or 13 bits
+    decodedIRData.numberOfBits = (decodedIRData.rawDataPtr->rawlen - 1) / 2;
+    decodedIRData.protocol = SONY;
 
     /*
      *  Check for repeat
@@ -139,14 +133,17 @@ bool IRrecv::decodeSony() {
     if (decodedIRData.rawDataPtr->rawbuf[0] < ((SONY_REPEAT_SPACE_MAX + (SONY_REPEAT_SPACE_MAX / 4)) / MICROS_PER_TICK)) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
     }
-    decodedIRData.command = tCommand;
-    decodedIRData.address = tAddress;
-    decodedIRData.numberOfBits = (decodedIRData.rawDataPtr->rawlen - 1) / 2;
-    decodedIRData.protocol = SONY;
 
     return true;
 }
 
+/*********************************************************************************
+ * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
+ *********************************************************************************/
+
+/*
+ * Old version with MSB first data
+ */
 #define SONY_DOUBLE_SPACE_USECS    500 // usually see 713 - not using ticks as get number wrap around
 bool IRrecv::decodeSonyMSB(decode_results *aResults) {
     long data = 0;

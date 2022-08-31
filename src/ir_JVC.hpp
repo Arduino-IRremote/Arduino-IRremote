@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2021 Kristian Lauszus, Armin Joachimsmeyer
+ * Copyright (c) 2017-2022 Kristian Lauszus, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,11 +31,6 @@
  */
 #ifndef _IR_JVC_HPP
 #define _IR_JVC_HPP
-
-#include <Arduino.h>
-
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -68,28 +63,33 @@
 #define JVC_REPEAT_SPACE      (uint16_t)(45 * JVC_UNIT)  // 23625 - Commands are repeated with a distance of 23 ms for as long as the key on the remote control is held down.
 #define JVC_REPEAT_PERIOD     65000 // assume around 40 ms for a JVC frame
 
-struct ProtocolConstants JVCProtocolConstants = { JVC, JVC_KHZ, JVC_HEADER_MARK, JVC_HEADER_SPACE, JVC_BIT_MARK, JVC_ONE_SPACE,
-JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI) };
+struct PulsePauseWidthProtocolConstants JVCProtocolConstants = { JVC, JVC_KHZ, JVC_HEADER_MARK, JVC_HEADER_SPACE, JVC_BIT_MARK,
+JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
-//+=============================================================================
-// JVC does NOT repeat by sending a separate code (like NEC does).
-// The JVC protocol repeats by skipping the header.
-//
+/************************************
+ * Start of send and decode functions
+ ************************************/
 
-void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+/**
+ * The JVC protocol repeats by skipping the header mark and space -> this leads to a poor repeat detection for JVC protocol.
+ */
+void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
     enableIROut(JVC_KHZ); // 38 kHz
 
-    // The JVC protocol repeats by skipping the header.
-    mark(JVC_HEADER_MARK);
-    space(JVC_HEADER_SPACE);
+    if (aNumberOfRepeats < 0) {
+        // The JVC protocol repeats by skipping the header.
+        aNumberOfRepeats = 0;
+    } else {
+        mark(JVC_HEADER_MARK);
+        space(JVC_HEADER_SPACE);
+    }
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
         // Address + command
-        sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE,
-                aAddress | (aCommand << JVC_ADDRESS_BITS), JVC_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
+        sendPulseDistanceWidthData(&JVCProtocolConstants, aAddress | (aCommand << JVC_ADDRESS_BITS), JVC_BITS);
 
         tNumberOfCommands--;
         // skip last delay!
@@ -101,14 +101,11 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfR
     IrReceiver.restartAfterSend();
 }
 
-/*
- * First check for right data length
- * Next check start bit
- * Next try the decode
- */
 bool IRrecv::decodeJVC() {
 
-    // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark. +2 is for repeats
+//    uint_fast8_t tRawlen = decodedIRData.rawDataPtr->rawlen; // does not improve code size
+
+    // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark. +4 is for first frame, +2 is for repeats
     if (decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 4) && decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 2)) {
         IR_DEBUG_PRINT(F("JVC: "));
         IR_DEBUG_PRINT(F("Data length="));
@@ -135,15 +132,11 @@ bool IRrecv::decodeJVC() {
         }
     } else {
 
-        // Check header "mark" and "space"
-        if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], JVC_HEADER_MARK)
-                || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], JVC_HEADER_SPACE)) {
-            IR_DEBUG_PRINT(F("JVC: "));
-            IR_DEBUG_PRINTLN(F("Header mark or space length is wrong"));
+        if (!checkHeader(&JVCProtocolConstants)) {
             return false;
         }
 
-        if (!decodePulseDistanceData(JVC_BITS, 3, JVC_BIT_MARK, JVC_ONE_SPACE, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
+        if (!decodePulseDistanceData(&JVCProtocolConstants, JVC_BITS)) {
             IR_DEBUG_PRINT(F("JVC: "));
             IR_DEBUG_PRINTLN(F("Decode failed"));
             return false;
@@ -151,11 +144,8 @@ bool IRrecv::decodeJVC() {
 
         // Success
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
-        uint8_t tCommand = decodedIRData.decodedRawData >> JVC_ADDRESS_BITS;  // upper 8 bits of LSB first value
-        uint8_t tAddress = decodedIRData.decodedRawData & 0xFF;    // lowest 8 bit of LSB first value
-
-        decodedIRData.command = tCommand;
-        decodedIRData.address = tAddress;
+        decodedIRData.command = decodedIRData.decodedRawData >> JVC_ADDRESS_BITS;  // upper 8 bits of LSB first value
+        decodedIRData.address = decodedIRData.decodedRawData & 0xFF;    // lowest 8 bit of LSB first value
         decodedIRData.numberOfBits = JVC_BITS;
         decodedIRData.protocol = JVC;
     }
@@ -163,6 +153,9 @@ bool IRrecv::decodeJVC() {
     return true;
 }
 
+/*********************************************************************************
+ * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
+ *********************************************************************************/
 bool IRrecv::decodeJVCMSB(decode_results *aResults) {
     unsigned int offset = 1; // Skip first space
 

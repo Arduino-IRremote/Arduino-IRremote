@@ -65,10 +65,10 @@
 #ifndef _IR_REMOTE_HPP
 #define _IR_REMOTE_HPP
 
-#define VERSION_IRREMOTE "3.9.0"
+#define VERSION_IRREMOTE "3.9.1"
 #define VERSION_IRREMOTE_MAJOR 3
 #define VERSION_IRREMOTE_MINOR 9
-#define VERSION_IRREMOTE_PATCH 0
+#define VERSION_IRREMOTE_PATCH 1
 
 /*
  * Macro to convert 3 version parts into an integer
@@ -213,7 +213,6 @@
  * Define to disable carrier PWM generation in software and use (restricted) hardware PWM.
  */
 //#define SEND_PWM_BY_TIMER // restricts send pin on many platforms to fixed pin numbers
-
 #if (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED)
 #  if !defined(SEND_PWM_BY_TIMER)
 #define SEND_PWM_BY_TIMER       // the best and default method for ESP32 etc.
@@ -297,6 +296,9 @@
 #    endif
 #include "IRFeedbackLED.hpp"
 #  endif
+
+#include "LongUnion.h" // used in most decoders
+
 /*
  * Include the sources here to enable compilation with macro values set by user program.
  */
@@ -306,49 +308,23 @@
 /*
  * Include the sources of all decoders here to enable compilation with macro values set by user program.
  */
-#  if defined(DECODE_BOSEWAVE)
 #include "ir_BoseWave.hpp"
-#  endif
-#  if defined(DECODE_DENON )       // Includes Sharp
 #include "ir_Denon.hpp"
-#  endif
+#include "ir_JVC.hpp"
+#include "ir_Kaseikyo.hpp"
+#include "ir_Lego.hpp"
+#include "ir_LG.hpp"
+#include "ir_MagiQuest.hpp"
+#include "ir_NEC.hpp"
+#include "ir_RC5_RC6.hpp"
+#include "ir_Samsung.hpp"
+#include "ir_Sony.hpp"
+#include "ir_Others.hpp"
+#include "ir_Pronto.hpp" // pronto is an universal decoder and encoder
 #  if defined(DECODE_DISTANCE)     // universal decoder for pulse distance protocols - requires up to 750 bytes additional program memory
 #include "ir_DistanceProtocol.hpp"
 #  endif
-#  if defined(DECODE_JVC)
-#include "ir_JVC.hpp"
-#  endif
-#  if defined(DECODE_KASEIKYO) || defined(DECODE_PANASONIC)
-#include "ir_Kaseikyo.hpp"
-#  endif
-#  if defined(DECODE_LEGO_PF)
-#include "ir_Lego.hpp"
-#  endif
-#  if defined(DECODE_LG)
-#include "ir_LG.hpp"
-#  endif
-#  if defined(DECODE_MAGIQUEST)
-#include "ir_MagiQuest.hpp"
-#  endif
-#  if defined(DECODE_NEC)          // Includes Apple and Onkyo
-#include "ir_NEC.hpp"
-#  endif
-#  if defined(DECODE_RC5) || defined(DECODE_RC6)
-#include "ir_RC5_RC6.hpp"
-#  endif
-#  if defined(DECODE_SAMSUNG)
-#include "ir_Samsung.hpp"
-#  endif
-#  if defined(DECODE_SONY)
-#include "ir_Sony.hpp"
-#  endif
-#  if defined(DECODE_WHYNTER)
-#include "ir_Whynter.hpp"
-#  endif
 
-#include "ir_Pronto.hpp" // pronto is an universal decoder and encoder
-
-#include "ir_Dish.hpp" // contains only sendDISH(unsigned long data, int nbits)
 #endif // #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)
 
 /**

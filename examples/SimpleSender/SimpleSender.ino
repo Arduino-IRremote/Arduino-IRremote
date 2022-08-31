@@ -4,7 +4,7 @@
  *  Demonstrates sending IR codes in standard format with address and command
  *  An extended example for sending can be found as SendDemo.
  *
- *  Copyright (C) 2020-2021  Armin Joachimsmeyer
+ *  Copyright (C) 2020-2022  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -62,11 +62,11 @@ void loop() {
     Serial.println(F("Send NEC with 16 bit address"));
     Serial.flush();
 
-    // Results for the first loop to: Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 (32 bits)
+    // Receiver output for the first loop must be: Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 (32 bits)
     IrSender.sendNEC(sAddress, sCommand, sRepeats);
 
     /*
-     * If you cannot avoid to send a raw value directly like e.g. 0xCB340102 you must use sendNECRaw()
+     * If you must send a raw value directly like e.g. 0xCB340102, you have to use sendNECRaw()
      */
 //    Serial.println(F("Send NECRaw 0xCB340102"));
 //    IrSender.sendNECRaw(0xCB340102, sRepeats);

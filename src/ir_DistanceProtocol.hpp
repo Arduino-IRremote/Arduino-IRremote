@@ -1,10 +1,13 @@
 /*
  * ir_DistanceProtocol.hpp
  *
+ * Contains only the decoder functions!
+ *
  * This decoder tries to decode a pulse width or pulse distance protocol.
  * 1. Analyze all space and mark length
  * 2. Decide if we have an pulse width or distance protocol
  * 3. Try to decode with the mark and space data found in step 1
+ * 4. Assume one start bit / header and one stop bit, since pulse distance data must have a stop bit!
  * No data and address decoding, only raw data as result.
  *
  * Pulse distance data can be sent with the generic function:
@@ -42,7 +45,6 @@
 #ifndef _IR_DISTANCE_HPP
 #define _IR_DISTANCE_HPP
 
-#include <Arduino.h>
 
 // accept durations up to 50 * 50 (MICROS_PER_TICK) 2500 microseconds
 #define DURATION_ARRAY_SIZE 50
@@ -50,16 +52,18 @@
 // Switch the decoding according to your needs
 //#define DISTANCE_DO_MSB_DECODING // If active, it resembles the JVC + Denon, otherwise LSB first as e.g. for NEC and Kaseikyo/Panasonic
 
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
-//#include "LongUnion.h"
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#Codings
 
-#if defined(DEBUG)
+#if defined(LOCAL_DEBUG)
 void printDurations(uint8_t aArray[], uint8_t aMaxIndex) {
     for (uint_fast8_t i = 0; i <= aMaxIndex; i++) {
         if (i % 10 == 0) {
@@ -159,7 +163,7 @@ bool IRrecv::decodeDistance() {
     uint8_t tMarkTicksShort = 0;
     uint8_t tMarkTicksLong = 0;
     bool tSuccess = aggregateArrayCounts(tDurationArray, tMaxDurationIndex, &tMarkTicksShort, &tMarkTicksLong);
-#if defined(DEBUG)
+#if defined(LOCAL_DEBUG)
     Serial.println(F("Mark:"));
     printDurations(tDurationArray, tMaxDurationIndex);
 #endif
@@ -192,7 +196,7 @@ bool IRrecv::decodeDistance() {
     uint8_t tSpaceTicksShort = 0;
     uint8_t tSpaceTicksLong = 0;
     tSuccess = aggregateArrayCounts(tDurationArray, tMaxDurationIndex, &tSpaceTicksShort, &tSpaceTicksLong);
-#if defined(DEBUG)
+#if defined(LOCAL_DEBUG)
     Serial.println(F("Space:"));
     printDurations(tDurationArray, tMaxDurationIndex);
 #endif
@@ -203,7 +207,7 @@ bool IRrecv::decodeDistance() {
         return false;
     }
 
-    // skip leading start and trailing stop bit.
+    // skip leading start bit and trailing stop bit for decoding.
     uint16_t tNumberOfBits = (decodedIRData.rawDataPtr->rawlen / 2) - 2;
     // Store data to reproduce frame for sending
     decodedIRData.numberOfBits = tNumberOfBits;
@@ -222,21 +226,22 @@ bool IRrecv::decodeDistance() {
      * Kaseikyo:    48.  69, 35,  9,  0,  9, 26
      * Sony:  12|15|20,  48, 12, 12, 24, 12,  0 // the only known pulse width protocol
      */
-    IR_DEBUG_PRINT(F("Protocol characteristics for a " STR(MICROS_PER_TICK) " us tick: "));
-    IR_DEBUG_PRINT(decodedIRData.numberOfBits);
-    IR_DEBUG_PRINT(F(", "));
-    IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawbuf[1]);
-    IR_DEBUG_PRINT(F(", "));
-    IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawbuf[2]);
-    IR_DEBUG_PRINT(F(", "));
-    IR_DEBUG_PRINT(tMarkTicksShort);
-    IR_DEBUG_PRINT(F(", "));
-    IR_DEBUG_PRINT(tMarkTicksLong);
-    IR_DEBUG_PRINT(F(", "));
-    IR_DEBUG_PRINT(tSpaceTicksShort);
-    IR_DEBUG_PRINT(F(", "));
-    IR_DEBUG_PRINTLN(tSpaceTicksLong);
-
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("Protocol constants for a " STR(MICROS_PER_TICK) " us tick: "));
+    Serial.print(decodedIRData.numberOfBits);
+    Serial.print(F(" bits, "));
+    Serial.print(decodedIRData.rawDataPtr->rawbuf[1]);
+    Serial.print(F(", "));
+    Serial.print(decodedIRData.rawDataPtr->rawbuf[2]);
+    Serial.print(F(", "));
+    Serial.print(tMarkTicksLong);
+    Serial.print(F(", "));
+    Serial.println(tSpaceTicksLong);
+    Serial.print(F(", "));
+    Serial.print(tMarkTicksShort);
+    Serial.print(F(", "));
+    Serial.print(tSpaceTicksShort);
+#endif
     uint8_t tStartIndex = 3;
     uint8_t tNumberOfAdditionalLong = (tNumberOfBits - 1) / 32;
 

@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ * Copyright (c) 2020-2022 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,11 +31,6 @@
  */
 #ifndef _IR_DENON_HPP
 #define _IR_DENON_HPP
-
-#include <Arduino.h>
-
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -80,20 +75,19 @@
 #define DENON_HEADER_MARK       DENON_UNIT // The length of the Header:Mark
 #define DENON_HEADER_SPACE      (3 * DENON_UNIT) // 780 // The length of the Header:Space
 
-//+=============================================================================
-void IRsend::sendSharp(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+struct PulsePauseWidthProtocolConstants DenonProtocolConstants = { DENON, DENON_KHZ, DENON_HEADER_MARK, DENON_HEADER_SPACE,
+DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (DENON_REPEAT_PERIOD
+        / MICROS_IN_ONE_MILLI), NULL };
+
+/************************************
+ * Start of send and decode functions
+ ************************************/
+
+void IRsend::sendSharp(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendDenon(aAddress, aCommand, aNumberOfRepeats, true);
 }
 
-/*
- * Only for backwards compatibility
- */
-void IRsend::sendDenonRaw(uint16_t aRawData, uint_fast8_t aNumberOfRepeats) {
-    sendDenon(aRawData >> (DENON_COMMAND_BITS + DENON_FRAME_BITS), (aRawData >> DENON_FRAME_BITS) & 0xFF, aNumberOfRepeats);
-}
-
-//+=============================================================================
-void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendSharp) {
+void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aSendSharp) {
     // Set IR carrier frequency
     enableIROut(DENON_KHZ); // 38 kHz
 
@@ -109,13 +103,11 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
     while (tNumberOfCommands > 0) {
 
         // Data
-        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tData, DENON_BITS,
-        PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
+        sendPulseDistanceWidthData(&DenonProtocolConstants, tData, DENON_BITS);
 
         // Inverted autorepeat frame
         delay(DENON_AUTO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
-        sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, tInvertedData, DENON_BITS,
-        PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
+        sendPulseDistanceWidthData(&DenonProtocolConstants, tInvertedData, DENON_BITS);
 
         tNumberOfCommands--;
         // skip last delay!
@@ -127,12 +119,10 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberO
     IrReceiver.restartAfterSend();
 }
 
-//+=============================================================================
 bool IRrecv::decodeSharp() {
     return decodeDenon();
 }
 
-//+=============================================================================
 bool IRrecv::decodeDenon() {
 
     // we have no start bit, so check for the exact amount of data bits
@@ -146,7 +136,7 @@ bool IRrecv::decodeDenon() {
     }
 
     // Read the bits in
-    if (!decodePulseDistanceData(DENON_BITS, 1, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceData(&DenonProtocolConstants, DENON_BITS, 1)) {
         IR_DEBUG_PRINT(F("Denon: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -200,6 +190,44 @@ bool IRrecv::decodeDenon() {
     return true;
 }
 
+/*********************************************************************************
+ * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
+ *********************************************************************************/
+/*
+ * Only for backwards compatibility
+ */
+void IRsend::sendDenonRaw(uint16_t aRawData, int_fast8_t aNumberOfRepeats) {
+    sendDenon(aRawData >> (DENON_COMMAND_BITS + DENON_FRAME_BITS), (aRawData >> DENON_FRAME_BITS) & 0xFF, aNumberOfRepeats);
+}
+
+/*
+ * Old function with parameter data
+ */
+void IRsend::sendDenon(unsigned long data, int nbits) {
+    // Set IR carrier frequency
+    enableIROut(DENON_KHZ);
+#if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
+    Serial.println(
+            "The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).");
+#endif
+
+    // Header
+    mark(DENON_HEADER_MARK);
+    space(DENON_HEADER_SPACE);
+
+    // Data
+    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits,
+    PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
+    IrReceiver.restartAfterSend();
+}
+
+/*
+ * Old function without parameter aNumberOfRepeats
+ */
+void IRsend::sendSharp(unsigned int aAddress, unsigned int aCommand) {
+    sendDenon(aAddress, aCommand, true, 0);
+}
+
 bool IRrecv::decodeDenonOld(decode_results *aResults) {
 
     // Check we have the right amount of data
@@ -227,28 +255,6 @@ bool IRrecv::decodeDenonOld(decode_results *aResults) {
     aResults->decode_type = DENON;
     decodedIRData.protocol = DENON;
     return true;
-}
-
-void IRsend::sendDenon(unsigned long data, int nbits) {
-    // Set IR carrier frequency
-    enableIROut(DENON_KHZ);
-#if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
-    Serial.println(
-            "The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).");
-#endif
-
-    // Header
-    mark(DENON_HEADER_MARK);
-    space(DENON_HEADER_SPACE);
-
-    // Data
-    sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits,
-    PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-    IrReceiver.restartAfterSend();
-}
-
-void IRsend::sendSharp(unsigned int aAddress, unsigned int aCommand) {
-    sendDenon(aAddress, aCommand, true, 0);
 }
 
 /** @}*/

@@ -9,11 +9,6 @@
 #ifndef _IR_BOSEWAVE_HPP
 #define _IR_BOSEWAVE_HPP
 
-#include <Arduino.h>
-
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
-
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -44,23 +39,24 @@
 #define BOSEWAVE_REPEAT_PERIOD 75000
 #define BOSEWAVE_REPEAT_SPACE  50000
 
-//+=============================================================================
+struct PulsePauseWidthProtocolConstants BoseWaveProtocolConstants = { BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
+BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
+SEND_STOP_BIT, (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
-void IRsend::sendBoseWave(uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+/************************************
+ * Start of send and decode functions
+ ************************************/
+
+void IRsend::sendBoseWave(uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
 
     // send 8 command bits and then 8 inverted command bits LSB first
     uint16_t tData = ((~aCommand) << 8) | aCommand;
-    sendPulseDistanceWidth(BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK, BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE,
-    BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, tData, BOSEWAVE_BITS, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT,
-    BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI, aNumberOfRepeats);
+    sendPulseDistanceWidth(&BoseWaveProtocolConstants, tData, BOSEWAVE_BITS, aNumberOfRepeats);
 }
 
-//+=============================================================================
 bool IRrecv::decodeBoseWave() {
 
-    // Check header "mark"
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], BOSEWAVE_HEADER_MARK)) {
-        // no debug output, since this check is mainly to determine the received protocol
+    if (!checkHeader(&BoseWaveProtocolConstants)) {
         return false;
     }
 
@@ -72,15 +68,8 @@ bool IRrecv::decodeBoseWave() {
         IR_DEBUG_PRINTLN(F(" is not 36"));
         return false;
     }
-    // Check header "space"
-    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], BOSEWAVE_HEADER_SPACE)) {
-        IR_DEBUG_PRINT(F("Bose: "));
-        IR_DEBUG_PRINTLN(F("Header space length is wrong"));
-        return false;
-    }
 
-    if (!decodePulseDistanceData(BOSEWAVE_BITS, 3, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_ZERO_SPACE,
-    PROTOCOL_IS_LSB_FIRST)) {
+    if (!decodePulseDistanceData(&BoseWaveProtocolConstants, BOSEWAVE_BITS)) {
         IR_DEBUG_PRINT(F("Bose: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;

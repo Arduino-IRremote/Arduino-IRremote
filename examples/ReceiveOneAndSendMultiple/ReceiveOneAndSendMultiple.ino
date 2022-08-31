@@ -34,8 +34,8 @@
  */
 
 // Digispark ATMEL ATTINY85
-// Piezo speaker must have a 270 Ohm resistor in series for USB programming and running at the Samsung TV.
-// IR LED has a 270 Ohm resistor in series.
+// Piezo speaker must have a 270 ohm resistor in series for USB programming and running at the Samsung TV.
+// IR LED has a 270 ohm resistor in series.
 //                                                    +-\/-+
 //                                   !RESET (5) PB5  1|    |8  Vcc
 // USB+ 3.6V Z-Diode, 1.5kOhm to VCC  Piezo (3) PB3  2|    |7  PB2 (2) TX Debug output

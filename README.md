@@ -309,9 +309,14 @@ Check out the [MinimalReceiver](https://github.com/Arduino-IRremote/Arduino-IRre
 # Sending IR codes
 Please do not use the old send*Raw() functions for sending like e.g. `IrSender.sendNECRaw(0xE61957A8,2)`,
 even if this functions are used in a lot of **(old)** tutorials. They are only kept for backward compatibility and unsupported as well as error prone.<br/>
-**It is recommended** to use the **new structured functions** with address and command parameters like e.g. `IrSender.sendNEC(0xA8, 0x19, 2)`.
+**It is recommended** to use the **new structured functions** with address, command and repeat count parameters like e.g. `IrSender.sendNEC(0xA8, 0x19, 2)`.
 Especially if you are able to receive these remote codes and get the address and command values.
 You will discover that **the address is a constant** and the commands sometimes are sensibly grouped.
+
+**All sending functions support the sending of repeats** (if sensible). 
+Repeat frames are sent at a fixed period determined by the protocol. e.g. 110 ms from start to start for NEC.<br/>
+Keep in mind, that **there is no delay after the last sent mark**. 
+If you handle the sending of repeat frames by your own, you must insert sensible delays before the repeat frames to enable correct decoding.
 
 ### List of public IR code databases
 http://www.harctoolbox.org/IR-resources.html
@@ -703,7 +708,7 @@ It is dated from **24.06.2022**. If you have complains about the data or request
 # Useful links
 - [List of public IR code databases](http://www.harctoolbox.org/IR-resources.html)
 - [LIRC database](http://lirc-remotes.sourceforge.net/remotes-table.html)
-- [IRMP list of IR protocols](https://www.mikrocontroller.net/articles/IRMP_-_english#IR_Protocols]
+- [IRMP list of IR protocols](https://www.mikrocontroller.net/articles/IRMP_-_english#IR_Protocols)
 - [IR Remote Control Theory and some protocols (upper right hamburger icon)](https://www.sbprojects.net/knowledge/ir/)
 - [Interpreting Decoded IR Signals (v2.45)](http://www.hifi-remote.com/johnsfine/DecodeIR.html)
 - ["Recording long Infrared Remote control signals with Arduino"](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino)

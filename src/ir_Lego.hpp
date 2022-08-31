@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ * Copyright (c) 2020-2022 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,11 +31,6 @@
  */
 #ifndef _IR_LEGO_HPP
 #define _IR_LEGO_HPP
-
-#include <Arduino.h>
-
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -83,15 +78,20 @@
 #define LEGO_AUTO_REPEAT_PERIOD_MIN 110000 // Every frame is auto repeated 5 times.
 #define LEGO_AUTO_REPEAT_PERIOD_MAX 230000 // space for channel 3
 
-/*
- * Compatibility function for legacy code, this calls the send raw data function
- */
-void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
-    sendLegoPowerFunctions(aRawData, (aRawData >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0x3, aDoSend5Times);
-}
+#define LEGO_MODE_EXTENDED  0
+#define LEGO_MODE_COMBO     1
+#define LEGO_MODE_SINGLE    0x4 // here the 2 LSB have meanings like Output A / Output B
 
+struct PulsePauseWidthProtocolConstants LegoProtocolConstants = { LEGO_PF, 38, LEGO_HEADER_MARK, LEGO_HEADER_SPACE, LEGO_BIT_MARK,
+LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (LEGO_AUTO_REPEAT_PERIOD_MIN
+        / MICROS_IN_ONE_MILLI), NULL };
+
+/************************************
+ * Start of send and decode functions
+ ************************************/
 /*
  * Here we process the structured data, and call the send raw data function
+ * @param aMode one of LEGO_MODE_EXTENDED, LEGO_MODE_COMBO, LEGO_MODE_SINGLE
  */
 void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t aMode, bool aDoSend5Times) {
     aChannel &= 0x0F; // allow toggle and escape bits too
@@ -117,9 +117,8 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
     }
 // required for repeat timing, see http://www.hackvandedam.nl/blog/?page_id=559
     uint8_t tRepeatPeriod = (LEGO_AUTO_REPEAT_PERIOD_MIN / MICROS_IN_ONE_MILLI) + (aChannel * 40); // from 110 to 230
-
-    sendPulseDistanceWidth(38, LEGO_HEADER_MARK, LEGO_HEADER_SPACE, LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE,
-            aRawData, LEGO_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, tRepeatPeriod, tNumberOfRepeats);
+    LegoProtocolConstants.RepeatPeriodMillis = tRepeatPeriod;
+    sendPulseDistanceWidth(&LegoProtocolConstants, aRawData, LEGO_BITS, tNumberOfRepeats);
 }
 
 /*
@@ -127,9 +126,7 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aD
  */
 bool IRrecv::decodeLegoPowerFunctions() {
 
-    // Check header "mark"
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LEGO_HEADER_MARK)) {
-        // no debug output, since this check is mainly to determine the received protocol
+    if (!checkHeader(&LegoProtocolConstants)) {
         return false;
     }
 
@@ -141,14 +138,8 @@ bool IRrecv::decodeLegoPowerFunctions() {
         IR_DEBUG_PRINTLN(F(" is not 36"));
         return false;
     }
-    // Check header "space"
-    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LEGO_HEADER_SPACE)) {
-        IR_DEBUG_PRINT(F("LEGO: "));
-        IR_DEBUG_PRINTLN(F("Header space length is wrong"));
-        return false;
-    }
 
-    if (!decodePulseDistanceData(LEGO_BITS, 3, LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceData(&LegoProtocolConstants, LEGO_BITS)) {
         IR_DEBUG_PRINT(F("LEGO: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -204,6 +195,14 @@ bool IRrecv::decodeLegoPowerFunctions() {
     decodedIRData.numberOfBits = LEGO_BITS;
 
     return true;
+}
+
+/*********************************************************************************
+ * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
+ *********************************************************************************/
+
+void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
+    sendLegoPowerFunctions(aRawData, (aRawData >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0x3, aDoSend5Times);
 }
 
 /** @}*/

@@ -73,9 +73,9 @@
 #define DECODE_LG
 
 #define DECODE_BOSEWAVE
-#define DECODE_LEGO_PF
+//#define DECODE_LEGO_PF
 #define DECODE_MAGIQUEST
-#define DECODE_WHYNTER
+//#define DECODE_WHYNTER
 #endif
 
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
@@ -166,24 +166,28 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
                 IrReceiver.printIRResultRawFormatted(&Serial, true);
             }
 #endif
-            if (IrReceiver.decodedIRData.protocol != UNKNOWN && IrReceiver.decodedIRData.protocol != PULSE_DISTANCE) {
-                /*
-                 * Check address
-                 */
-                if (IrReceiver.decodedIRData.address != aSentAddress) {
-                    Serial.print(F("ERROR: Received address=0x"));
-                    Serial.print(IrReceiver.decodedIRData.address, HEX);
-                    Serial.print(F(" != sent address=0x"));
-                    Serial.println(aSentAddress, HEX);
-                }
-                /*
-                 * Check command
-                 */
-                if (IrReceiver.decodedIRData.command != aSentCommand) {
-                    Serial.print(F("ERROR: Received command=0x"));
-                    Serial.print(IrReceiver.decodedIRData.command, HEX);
-                    Serial.print(F(" != sent command=0x"));
-                    Serial.println(aSentCommand, HEX);
+            if (IrReceiver.decodedIRData.protocol != PULSE_DISTANCE) {
+                if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
+                    Serial.println(F("ERROR: Unknown protocol"));
+                } else {
+                    /*
+                     * Check address
+                     */
+                    if (IrReceiver.decodedIRData.address != aSentAddress) {
+                        Serial.print(F("ERROR: Received address=0x"));
+                        Serial.print(IrReceiver.decodedIRData.address, HEX);
+                        Serial.print(F(" != sent address=0x"));
+                        Serial.println(aSentAddress, HEX);
+                    }
+                    /*
+                     * Check command
+                     */
+                    if (IrReceiver.decodedIRData.command != aSentCommand) {
+                        Serial.print(F("ERROR: Received command=0x"));
+                        Serial.print(IrReceiver.decodedIRData.command, HEX);
+                        Serial.print(F(" != sent command=0x"));
+                        Serial.println(aSentCommand, HEX);
+                    }
                 }
             }
         }
@@ -236,7 +240,7 @@ void loop() {
         /*
          * Send constant values only once in this demo
          */
-        Serial.println(F("Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats"));
+        Serial.println(F("Send NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats"));
         Serial.flush();
         IrSender.sendPronto(F("0000 006D 0022 0000 015E 00AB " /* Pronto header + start bit */
                 "0017 0015 0017 0015 0017 0017 0015 0017 0017 0015 0017 0015 0017 0015 0017 003F " /* Lower address byte */
@@ -247,8 +251,8 @@ void loop() {
         checkReceive(0x80, 0x45);
         delay(DELAY_AFTER_SEND);
 
-
-        Serial.println(F("Send NEC 16 bit address=0xFB04 and command 0x08 with exact timing (16 bit array format)"));
+        Serial.println(
+                F("Send NEC sendRaw data with 8 bit address=0xFB04 and command 0x08 and exact timing (16 bit array format)"));
         Serial.flush();
         const uint16_t irSignal[] = { 9000, 4500/*Start bit*/, 560, 560, 560, 560, 560, 1690, 560,
                 560/*0010 0x4 of 16 bit address LSB first*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000*/, 560, 1690, 560, 1690,
@@ -262,9 +266,9 @@ void loop() {
 #  endif
 
         /*
-         * With sendNECRaw() you can send 32 bit combined codes
+         * With sendNECRaw() you can send 32 bit codes directly, i.e. without parity etc.
          */
-        Serial.println(F("Send NEC / ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)"));
+        Serial.println(F("Send ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)"));
         Serial.flush();
         IrSender.sendNECRaw(0x03040102, sRepeats);
         checkReceive(0x0102, 0x304);
@@ -276,10 +280,17 @@ void loop() {
          * Example:
          * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
          */
-        Serial.println(F("Send NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first"));
+        Serial.println(F("Send NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first (0x40802CD3)"));
         Serial.flush();
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         checkReceive(0x0102, 0x34);
+        delay(DELAY_AFTER_SEND);
+
+        Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
+        Serial.flush();
+        uint32_t tRawData[] = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
+        IrSender.sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawData[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        checkReceive(0x0B, 0x10);
         delay(DELAY_AFTER_SEND);
 
         /*
@@ -288,8 +299,8 @@ void loop() {
         Serial.println(F("Send Panasonic 0xB, 0x10 as generic 48 bit PulseDistance"));
         Serial.println(F(" LSB first"));
         Serial.flush();
-        uint32_t tRawData[] = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
-        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_LSB_FIRST, 0, 0);
+        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT,
+                0, NO_REPEATS);
         checkReceive(0x0B, 0x10);
         delay(DELAY_AFTER_SEND);
 
@@ -297,7 +308,8 @@ void loop() {
         Serial.println(F(" MSB first"));
         tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;
-        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_MSB_FIRST, 0, 0);
+        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT,
+                0, NO_REPEATS);
         checkReceive(0x0B, 0x10);
         delay(DELAY_AFTER_SEND);
 
@@ -305,7 +317,8 @@ void loop() {
         Serial.flush();
         tRawData[0] = 0x43D8613C;
         tRawData[1] = 0x3BC3BC;
-        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 56, PROTOCOL_IS_LSB_FIRST, 0, 0);
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 56, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT,
+                0, NO_REPEATS);
         checkReceive(0x0, 0x0); // No real check, only printing of received result
         delay(DELAY_AFTER_SEND);
     }

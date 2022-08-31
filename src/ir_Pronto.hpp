@@ -34,13 +34,6 @@
 #ifndef _IR_PRONTO_HPP
 #define _IR_PRONTO_HPP
 
-// The first number, here 0000, denotes the type of the signal. 0000 denotes a raw IR signal with modulation,
-// The second number, here 006C, denotes a frequency code
-#include <Arduino.h>
-
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT"
-
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -65,8 +58,10 @@ static unsigned int toFrequencyKHz(uint16_t code) {
 
 /*
  * Parse the string given as Pronto Hex, and send it a number of times given as argument.
+ * The first number denotes the type of the signal. 0000 denotes a raw IR signal with modulation,
+ // The second number denotes a frequency code
  */
-void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendPronto(const uint16_t *data, unsigned int length, int_fast8_t aNumberOfRepeats) {
     unsigned int timebase = (microsecondsInSeconds * data[1] + referenceFrequency / 2) / referenceFrequency;
     unsigned int khz;
     switch (data[0]) {
@@ -118,7 +113,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t 
     if (intros >= 2) {
         delay(durations[intros - 1] / MICROS_IN_ONE_MILLI); // equivalent to space(durations[intros - 1]); but allow bigger values for the gap
     }
-    for (unsigned int i = 0; i < aNumberOfRepeats; i++) {
+    for (int i = 0; i < aNumberOfRepeats; i++) {
         sendRaw(durations + intros, repeats - 1, khz);
         if ((i + 1) < aNumberOfRepeats) { // skip last trailing space/gap, see above
             delay(durations[intros + repeats - 1] / MICROS_IN_ONE_MILLI);
@@ -143,7 +138,7 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int length, uint_fast8_t 
  * @param str C type string (null terminated) containing a Pronto Hex representation.
  * @param aNumberOfRepeats Number of times to send the signal.
  */
-void IRsend::sendPronto(const char *str, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendPronto(const char *str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen(str) / (digitsInProntoNumber + 1) + 1;
     uint16_t data[len];
     const char *p = str;
@@ -168,7 +163,7 @@ void IRsend::sendPronto(const char *str, uint_fast8_t aNumberOfRepeats) {
  * @param aNumberOfRepeats Number of times to send the signal.
  */
 //far pointer (? for ATMega2560 etc.)
-void IRsend::sendPronto_PF(uint_farptr_t str, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendPronto_PF(uint_farptr_t str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_PF(str);
     char work[len + 1];
     strncpy_PF(work, str, len);
@@ -176,7 +171,7 @@ void IRsend::sendPronto_PF(uint_farptr_t str, uint_fast8_t aNumberOfRepeats) {
 }
 
 //standard pointer
-void IRsend::sendPronto_P(const char *str, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendPronto_P(const char *str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_P(str);
     char work[len + 1];
     strncpy_P(work, str, len);
@@ -184,7 +179,7 @@ void IRsend::sendPronto_P(const char *str, uint_fast8_t aNumberOfRepeats) {
 }
 #endif
 
-void IRsend::sendPronto(const __FlashStringHelper *str, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendPronto(const __FlashStringHelper *str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_P(reinterpret_cast<const char*>(str));
     char work[len + 1];
     strncpy_P(work, reinterpret_cast<const char*>(str), len);

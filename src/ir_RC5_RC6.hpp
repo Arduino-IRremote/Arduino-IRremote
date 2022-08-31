@@ -30,13 +30,6 @@
 #ifndef _IR_RC5_RC6_HPP
 #define _IR_RC5_RC6_HPP
 
-#include <Arduino.h>
-
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-//#define TRACE // Activate this for more debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
-#include "LongUnion.h"
-
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -75,10 +68,14 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 #define RC5_REPEAT_PERIOD   (128L * RC5_UNIT) // 113792
 #define RC5_REPEAT_SPACE    (RC5_REPEAT_PERIOD - RC5_DURATION) // 100 ms
 
+/************************************
+ * Start of send and decode functions
+ ************************************/
+
 /**
  * @param aCommand If aCommand is >=64 then we switch automatically to RC5X
  */
-void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
+void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
     // Set IR carrier frequency
     enableIROut(RC5_RC6_KHZ);
 
@@ -273,9 +270,9 @@ void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
 
 /**
  * Send RC6 64 bit raw data
- * We do not wait for the minimal trailing space of 2666 us
+ * Can be used to send RC6A with ?31? data bits
  */
-void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
+void IRsend::sendRC6(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
 // Set IR carrier frequency
     enableIROut(RC5_RC6_KHZ);
 
@@ -288,11 +285,11 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
     space(RC6_UNIT);
 
 // Data MSB first
-    uint64_t mask = 1ULL << (nbits - 1);
+    uint64_t mask = 1ULL << (aNumberOfBitsToSend - 1);
     for (uint_fast8_t i = 1; mask; i++, mask >>= 1) {
         // The fourth bit we send is the "double width toggle bit"
         unsigned int t = (i == 4) ? (RC6_UNIT * 2) : (RC6_UNIT);
-        if (data & mask) {
+        if (aRawData & mask) {
             mark(t);
             space(t);
         } else {
@@ -308,7 +305,7 @@ void IRsend::sendRC6(uint64_t data, uint8_t nbits) {
  * We do not wait for the minimal trailing space of 2666 us
  * @param aEnableAutomaticToggle Send toggle bit according to the state of the static sLastSendToggleValue variable.
  */
-void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
+void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
 
     LongUnion tIRRawData;
     tIRRawData.UByte.LowByte = aCommand;
@@ -464,6 +461,10 @@ bool IRrecv::decodeRC6() {
     return true;
 }
 
+/*********************************************************************************
+ * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
+ *********************************************************************************/
+
 /**
  * Old version with 32 bit data
  */
@@ -490,7 +491,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
 }
 
 /*
- * Not longer required, use sendRC5 instead
+ * Not longer required, use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead
  */
 void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
 // Set IR carrier frequency

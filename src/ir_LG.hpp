@@ -1,14 +1,14 @@
 /*
  * ir_LG.hpp
  *
- *  Contains functions for receiving and sending LG IR Protocol in "raw" and standard format with 16 or 8 bit address and 8 bit command
+ *  Contains functions for receiving and sending LG IR Protocol for air conditioner
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2021 Darryl Smith, Armin Joachimsmeyer
+ * Copyright (c) 2017-2022 Darryl Smith, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,11 +32,6 @@
 #ifndef _IR_LG_HPP
 #define _IR_LG_HPP
 
-#include <Arduino.h>
-
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
-
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -54,14 +49,25 @@
 // Bit and repeat timing is like NEC
 // LG2 has different header timing and a shorter bit time
 /*
- * LG remote IR-LED measurements: Type AKB73315611, Ver1.1 from 2011.03.01
+ * LG remote IR-LED measurements: Type AKB 73315611 for air conditioner, Ver1.1 from 2011.03.01
+ * Protocol: LG2
  * Internal crystal: 4 MHz
  * Header:  8.9 ms mark 4.15 ms space
  * Data:    500 / 540 and 500 / 1580;
- * Clock is nor synchronized with gate so you have 19 and sometimes 19 and a spike pulses for mark
+ * Clock is not synchronized with gate so you have 19 and sometimes 19 and a spike pulses for mark
  * Duty:    9 us on 17 us off => around 33 % duty
  * NO REPEAT: If value like temperature has changed during long press, the last value is send at button release.
  * If you do a double press, the next value can be sent after around 118 ms. Tested with the fan button.
+
+ * LG remote IR-LED measurements: Type AKB 75095308 for LG TV
+ * Protocol: NEC!!!
+ * Frequency 37.88 kHz
+ * Header:  9.0 ms mark 4.5 ms space
+ * Data:    560 / 560 and 560 / 1680;
+ * Clock is synchronized with gate, mark always starts with a full period
+ * Duty:    13 us on 13 us off => 50 % duty
+ * Repeat:  110 ms 9.0 ms mark, 2250 us space, 560 stop
+ * LSB first!
  *
  * The codes of the LG air conditioner are documented in https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/ac_LG.cpp
  */
@@ -73,7 +79,7 @@
 #define LG_UNIT                 500 // 19 periods of 38 kHz
 
 #define LG_HEADER_MARK          (18 * LG_UNIT) // 9000
-#define LG_HEADER_SPACE         4200           // 84
+#define LG_HEADER_SPACE         4200           // 4200 | 84
 
 #define LG2_HEADER_MARK         (6 * LG_UNIT)  // 3000
 #define LG2_HEADER_SPACE        (19 * LG_UNIT) // 9500
@@ -88,29 +94,53 @@
 #define LG_REPEAT_PERIOD        110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define LG_REPEAT_SPACE         (LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) // 52 ms
 
-//+=============================================================================
+struct PulsePauseWidthProtocolConstants LGProtocolConstants = { LG, LG_KHZ, LG_HEADER_MARK, LG_HEADER_SPACE, LG_BIT_MARK,
+LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
+        &sendNECSpecialRepeat };
+
+struct PulsePauseWidthProtocolConstants LG2ProtocolConstants = { LG2, LG_KHZ, LG2_HEADER_MARK, LG2_HEADER_SPACE, LG_BIT_MARK,
+LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
+        &sendLG2SpecialRepeat };
+
+/************************************
+ * Start of send and decode functions
+ ************************************/
 /*
- * Send repeat
- * Repeat commands should be sent in a 110 ms raster.
+ * Send special LG repeat
  */
-void IRsend::sendLGRepeat(bool aUseLG2Protocol) {
-    enableIROut(LG_KHZ); // 38 kHz
-    if (aUseLG2Protocol) {
-        mark(LG2_HEADER_MARK);
-    } else {
-        mark(LG_HEADER_MARK);
-    }
-    space(LG_REPEAT_HEADER_SPACE);
-    mark(LG_BIT_MARK);
+void IRsend::sendLGRepeat() {
+    sendNECRepeat(); // we can take the NEC timing here
+//    enableIROut(LG_KHZ);            // 38 kHz
+//    mark(LG_HEADER_MARK);           // + 9000
+//    space(LG_REPEAT_HEADER_SPACE);  // - 2250
+//    mark(LG_BIT_MARK);              // + 500 // NEC has 560, but this should work also!
+//    IrReceiver.restartAfterSend();
+}
+
+/*
+ * Send special LG2 repeat
+ */
+void IRsend::sendLG2Repeat() {
+    enableIROut(LG_KHZ);            // 38 kHz
+    mark(LG2_HEADER_MARK);          // + 3000
+    space(LG_REPEAT_HEADER_SPACE);  // - 2250
+    mark(LG_BIT_MARK);              // + 500
     IrReceiver.restartAfterSend();
 }
 
 /**
- * Repeat commands should be sent in a 110 ms raster.
- * There is NO delay after the last sent repeat!
- * @param aUseLG2Protocol if true use LG2 protocol, which has a different header
+ * Static function for sending special repeat frame.
+ * For use in ProtocolConstants. Saves up to 250 bytes compared to a member function.
  */
-void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialLGRepeat, bool aUseLG2Protocol) {
+void sendLG2SpecialRepeat() {
+    IrSender.enableIROut(LG_KHZ);            // 38 kHz
+    IrSender.mark(LG2_HEADER_MARK);          // + 3000
+    IrSender.space(LG_REPEAT_HEADER_SPACE);  // - 2250
+    IrSender.mark(LG_BIT_MARK);              // + 500
+    IrReceiver.restartAfterSend();
+}
+
+uint32_t IRsend::computeLGRawDataAndChecksum(uint8_t aAddress, uint16_t aCommand) {
     uint32_t tRawData = ((uint32_t) aAddress << (LG_COMMAND_BITS + LG_CHECKSUM_BITS)) | ((uint32_t) aCommand << LG_CHECKSUM_BITS);
     /*
      * My guess of the 4 bit checksum
@@ -122,62 +152,33 @@ void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfR
         tChecksum += tTempForChecksum & 0xF; // add low nibble
         tTempForChecksum >>= 4; // shift by a nibble
     }
-    tRawData |= (tChecksum & 0xF);
-    sendLGRaw(tRawData, aNumberOfRepeats, aSendOnlySpecialLGRepeat, aUseLG2Protocol);
+    return (tRawData | (tChecksum & 0xF));
 }
 
-void IRsend::sendLG2(uint8_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialLGRepeat) {
-    sendLG(aAddress, aCommand, aNumberOfRepeats, aSendOnlySpecialLGRepeat);
-}
-
-/*
- * Here you can put your raw data, even one with "wrong" checksum
+/**
+ * LG uses the NEC repeat.
  */
-void IRsend::sendLGRaw(uint32_t aRawData, uint_fast8_t aNumberOfRepeats, bool aSendOnlySpecialLGRepeat, bool aUseLG2Protocol) {
-    if (aSendOnlySpecialLGRepeat) {
-        sendLGRepeat();
-        return;
-    }
-    // Set IR carrier frequency
-    enableIROut(LG_KHZ);
-
-    // Header
-    if (aUseLG2Protocol) {
-        mark(LG2_HEADER_MARK);
-        space(LG2_HEADER_SPACE);
-    } else {
-        mark(LG_HEADER_MARK);
-        space(LG_HEADER_SPACE);
-    }
-    // MSB first
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, aRawData, LG_BITS, PROTOCOL_IS_MSB_FIRST,
-    SEND_STOP_BIT);
-
-    for (uint_fast8_t i = 0; i < aNumberOfRepeats; ++i) {
-        // send repeat in a 110 ms raster
-        if (i == 0) {
-            delay(LG_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
-        } else {
-            delay((LG_REPEAT_PERIOD - LG_REPEAT_DURATION) / MICROS_IN_ONE_MILLI);
-        }
-        // send repeat
-        sendLGRepeat(aUseLG2Protocol);
-    }
-    IrReceiver.restartAfterSend();
+void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
+    sendPulseDistanceWidth(&LGProtocolConstants, computeLGRawDataAndChecksum(aAddress, aCommand), LG_BITS, aNumberOfRepeats);
 }
 
-//+=============================================================================
-// LGs has a repeat like NEC
-//
-/*
- * First check for right data length
- * Next check start bit
- * Next try the decode
- * Last check stop bit
+/**
+ * LG2 uses a special repeat.
  */
+void IRsend::sendLG2(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
+    sendPulseDistanceWidth(&LG2ProtocolConstants, computeLGRawDataAndChecksum(aAddress, aCommand), LG_BITS, aNumberOfRepeats);
+}
+
 bool IRrecv::decodeLG() {
     decode_type_t tProtocol = LG;
     uint16_t tHeaderSpace = LG_HEADER_SPACE;
+
+    /*
+     * First check for right data length
+     * Next check start bit
+     * Next try the decode
+     * Last check stop bit
+     */
 
 // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawDataPtr->rawlen != ((2 * LG_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
@@ -222,7 +223,7 @@ bool IRrecv::decodeLG() {
         return false;
     }
 
-    if (!decodePulseDistanceData(LG_BITS, 3, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceData(&LGProtocolConstants, LG_BITS)) {
         IR_DEBUG_PRINT(F("LG: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -265,6 +266,23 @@ bool IRrecv::decodeLG() {
     decodedIRData.numberOfBits = LG_BITS;
 
     return true;
+}
+
+/*********************************************************************************
+ * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
+ *********************************************************************************/
+
+/**
+ * Here you can put your raw data, even one with "wrong" checksum
+ * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent
+ */
+void IRsend::sendLGRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
+    if (aNumberOfRepeats < 0) {
+        sendLGRepeat();
+        return;
+    }
+
+    sendPulseDistanceWidth(&LGProtocolConstants, aRawData, LG_BITS, aNumberOfRepeats);
 }
 
 bool IRrecv::decodeLGMSB(decode_results *aResults) {

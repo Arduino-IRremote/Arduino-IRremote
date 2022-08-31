@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2021 Armin Joachimsmeyer
+ * Copyright (c) 2020-2022 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,6 @@
  */
 #ifndef _IR_KASEIKYO_HPP
 #define _IR_KASEIKYO_HPP
-
-#include <Arduino.h>
-
-//#define DEBUG // Activate this for lots of lovely debug output from this decoder.
-#include "IRremoteInt.h" // evaluates the DEBUG for IR_DEBUG_PRINT
-#include "LongUnion.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -86,86 +80,77 @@
 #define KASEIKYO_REPEAT_PERIOD      130000
 #define KASEIKYO_REPEAT_SPACE       (KASEIKYO_REPEAT_PERIOD - KASEIKYO_AVERAGE_DURATION) // 74 ms
 
-// for old decoder
-#define KASEIKYO_DATA_BITS          32
+#define PANASONIC_VENDOR_ID_CODE    0x2002
+#define DENON_VENDOR_ID_CODE        0x3254
+#define MITSUBISHI_VENDOR_ID_CODE   0xCB23
+#define SHARP_VENDOR_ID_CODE        0x5AAA
+#define JVC_VENDOR_ID_CODE          0x0103
 
-//+=============================================================================
-/*
- * Send with LSB first
- * Address is sub-device << 8 + device
+struct PulsePauseWidthProtocolConstants KaseikyoProtocolConstants = { KASEIKYO, KASEIKYO_KHZ, KASEIKYO_HEADER_MARK,
+KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
+SEND_STOP_BIT, (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+
+/************************************
+ * Start of send and decode functions
+ ************************************/
+
+/**
+ * Address can be interpreted as sub-device << 8 + device
  */
-void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats, uint16_t aVendorCode) {
+void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aVendorCode) {
     // Set IR carrier frequency
     enableIROut(KASEIKYO_KHZ); // 37 kHz
 
-    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
-    while (tNumberOfCommands > 0) {
+    // Vendor Parity
+    uint8_t tVendorParity = aVendorCode ^ (aVendorCode >> 8);
+    tVendorParity = (tVendorParity ^ (tVendorParity >> 4)) & 0xF;
 
-        // Header
-        mark(KASEIKYO_HEADER_MARK);
-        space(KASEIKYO_HEADER_SPACE);
+    LongUnion tSendValue;
 
-        // Vendor ID
-        sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aVendorCode,
-        KASEIKYO_VENDOR_ID_BITS, PROTOCOL_IS_LSB_FIRST, SEND_NO_STOP_BIT);
+    // Compute parity
+    tSendValue.UWord.LowWord = aAddress << KASEIKYO_VENDOR_ID_PARITY_BITS;
+    tSendValue.UByte.LowByte |= tVendorParity; // set low nibble to parity
+    tSendValue.UByte.MidHighByte = aCommand;
+    tSendValue.UByte.HighByte = aCommand ^ tSendValue.UByte.LowByte ^ tSendValue.UByte.MidLowByte; // Parity
 
-        // Vendor Parity
-        uint8_t tVendorParity = aVendorCode ^ (aVendorCode >> 8);
-        tVendorParity = (tVendorParity ^ (tVendorParity >> 4)) & 0xF;
-
-        LongUnion tSendValue;
-        tSendValue.UWord.LowWord = aAddress << KASEIKYO_VENDOR_ID_PARITY_BITS;
-        tSendValue.UByte.LowByte |= tVendorParity; // set low nibble to parity
-        tSendValue.UByte.MidHighByte = aCommand;
-        tSendValue.UByte.HighByte = aCommand ^ tSendValue.UByte.LowByte ^ tSendValue.UByte.MidLowByte; // Parity
-
-        // Send address (device and subdevice) + command + parity + Stop bit
-        sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, tSendValue.ULong,
-        KASEIKYO_ADDRESS_BITS + KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
-        PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
-
-        tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            // send repeated command in a fixed raster
-            delay(KASEIKYO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
-        }
-    }
-    IrReceiver.restartAfterSend();
+    uint32_t tRawKaseikyoData[2];
+    tRawKaseikyoData[0] = (uint32_t) tSendValue.UWord.LowWord << 16 | aVendorCode; // LSB of tRawKaseikyoData[0] is sent first
+    tRawKaseikyoData[1] = tSendValue.UWord.HighWord;
+    IrSender.sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawKaseikyoData[0], KASEIKYO_BITS, aNumberOfRepeats);
 }
 
 /**
  * Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE
  */
-void IRsend::sendPanasonic(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendPanasonic(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendKaseikyo(aAddress, aCommand, aNumberOfRepeats, PANASONIC_VENDOR_ID_CODE);
 }
 
 /**
  * Stub using Kaseikyo with DENON_VENDOR_ID_CODE
  */
-void IRsend::sendKaseikyo_Denon(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendKaseikyo_Denon(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendKaseikyo(aAddress, aCommand, aNumberOfRepeats, DENON_VENDOR_ID_CODE);
 }
 
 /**
  * Stub using Kaseikyo with MITSUBISHI_VENDOR_ID_CODE
  */
-void IRsend::sendKaseikyo_Mitsubishi(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendKaseikyo_Mitsubishi(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendKaseikyo(aAddress, aCommand, aNumberOfRepeats, MITSUBISHI_VENDOR_ID_CODE);
 }
 
 /**
  * Stub using Kaseikyo with SHARP_VENDOR_ID_CODE
  */
-void IRsend::sendKaseikyo_Sharp(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendKaseikyo_Sharp(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendKaseikyo(aAddress, aCommand, aNumberOfRepeats, SHARP_VENDOR_ID_CODE);
 }
 
 /**
  * Stub using Kaseikyo with JVC_VENDOR_ID_CODE
  */
-void IRsend::sendKaseikyo_JVC(uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+void IRsend::sendKaseikyo_JVC(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendKaseikyo(aAddress, aCommand, aNumberOfRepeats, JVC_VENDOR_ID_CODE);
 }
 
@@ -184,21 +169,12 @@ bool IRrecv::decodeKaseikyo() {
         return false;
     }
 
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], KASEIKYO_HEADER_MARK)) {
-        IR_DEBUG_PRINT(F("Kaseikyo: "));
-        IR_DEBUG_PRINTLN(F("Header mark length is wrong"));
-        return false;
-    }
-
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[2], KASEIKYO_HEADER_SPACE)) {
-        IR_DEBUG_PRINT(F("Kaseikyo: "));
-        IR_DEBUG_PRINTLN(F("Header space length is wrong"));
+    if (!checkHeader(&KaseikyoProtocolConstants)) {
         return false;
     }
 
     // decode first 16 Vendor ID bits
-    if (!decodePulseDistanceData(KASEIKYO_VENDOR_ID_BITS, 3, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_ZERO_SPACE,
-    PROTOCOL_IS_LSB_FIRST)) {
+    if (!decodePulseDistanceData(&KaseikyoProtocolConstants, KASEIKYO_VENDOR_ID_BITS)) {
         IR_DEBUG_PRINT(F("Kaseikyo: "));
         IR_DEBUG_PRINTLN(F("Vendor ID decode failed"));
         return false;
@@ -224,10 +200,9 @@ bool IRrecv::decodeKaseikyo() {
     tVendorParity = (tVendorParity ^ (tVendorParity >> 4)) & 0xF;
 
     // decode next 32 bits, 8 VendorID parity parity + 12 address (device and subdevice) + 8 command + 8 parity
-    if (!decodePulseDistanceData(
+    if (!decodePulseDistanceData(&KaseikyoProtocolConstants,
     KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
-            3 + (2 * KASEIKYO_VENDOR_ID_BITS), KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
-            KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST)) {
+            3 + (2 * KASEIKYO_VENDOR_ID_BITS))) {
         IR_DEBUG_PRINT(F("Kaseikyo: "));
         IR_DEBUG_PRINTLN(F("VendorID parity, address, command + parity decode failed"));
         return false;
@@ -242,6 +217,8 @@ bool IRrecv::decodeKaseikyo() {
     uint8_t tParity = tValue.UByte.LowByte ^ tValue.UByte.MidLowByte ^ tValue.UByte.MidHighByte;
 
     if (tVendorParity != (tValue.UByte.LowByte & 0xF)) {
+        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
+
         IR_DEBUG_PRINT(F("Kaseikyo: "));
         IR_DEBUG_PRINT(F("4 bit VendorID parity is not correct. expected=0x"));
         IR_DEBUG_PRINT(tVendorParity, HEX);
@@ -249,7 +226,6 @@ bool IRrecv::decodeKaseikyo() {
         IR_DEBUG_PRINT(decodedIRData.decodedRawData, HEX);
         IR_DEBUG_PRINT(F(" VendorID=0x"));
         IR_DEBUG_PRINTLN(tVendorId, HEX);
-        decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
     }
 
     if (tProtocol == KASEIKYO) {
@@ -258,6 +234,8 @@ bool IRrecv::decodeKaseikyo() {
     }
 
     if (tValue.UByte.HighByte != tParity) {
+        decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
+
         IR_DEBUG_PRINT(F("Kaseikyo: "));
         IR_DEBUG_PRINT(F("8 bit Parity is not correct. expected=0x"));
         IR_DEBUG_PRINT(tParity, HEX);
@@ -267,7 +245,6 @@ bool IRrecv::decodeKaseikyo() {
         IR_DEBUG_PRINT(decodedIRData.address, HEX);
         IR_DEBUG_PRINT(F(" command=0x"));
         IR_DEBUG_PRINTLN(decodedIRData.command, HEX);
-        decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
     }
 
     // check for repeat
@@ -282,60 +259,11 @@ bool IRrecv::decodeKaseikyo() {
     return true;
 }
 
-/**
- * Old MSB first decoder
+/*
+ * Removed void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData)
+ * and bool IRrecv::decodePanasonicMSB(decode_results *aResults)
+ * since their implementations were wrong (wrong length), and nobody recognized it
  */
-bool IRrecv::decodePanasonicMSB(decode_results *aResults) {
-    unsigned int offset = 1;
-
-    if (aResults->rawlen < (2 * KASEIKYO_BITS) + 2) {
-        return false;
-    }
-
-    if (!matchMark(aResults->rawbuf[offset], KASEIKYO_HEADER_MARK)) {
-        return false;
-    }
-    offset++;
-    if (!matchMark(aResults->rawbuf[offset], KASEIKYO_HEADER_SPACE)) {
-        return false;
-    }
-    offset++;
-
-    // decode address
-    if (!decodePulseDistanceData(KASEIKYO_ADDRESS_BITS + KASEIKYO_DATA_BITS, offset, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE,
-    KASEIKYO_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-        return false;
-    }
-
-    aResults->bits = KASEIKYO_BITS;
-    aResults->value = decodedIRData.decodedRawData;
-    aResults->address = PANASONIC_VENDOR_ID_CODE;
-    aResults->decode_type = PANASONIC;
-    decodedIRData.protocol = PANASONIC;
-
-    return true;
-}
-
-/**
- * Old version with MSB first data
- */
-void IRsend::sendPanasonic(uint16_t aAddress, uint32_t aData) {
-    // Set IR carrier frequency
-    enableIROut(KASEIKYO_KHZ); // 36.7kHz is the correct frequency
-
-    // Header
-    mark(KASEIKYO_HEADER_MARK);
-    space(KASEIKYO_HEADER_SPACE);
-
-    // Old version with MSB first Data Address
-    sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aAddress,
-    KASEIKYO_ADDRESS_BITS, PROTOCOL_IS_MSB_FIRST, SEND_NO_STOP_BIT);
-
-    // Old version with MSB first Data Data + stop bit
-    sendPulseDistanceWidthData(KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, aData,
-    KASEIKYO_DATA_BITS, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-    IrReceiver.restartAfterSend();
-}
 
 /** @}*/
 #endif // _IR_KASEIKYO_HPP

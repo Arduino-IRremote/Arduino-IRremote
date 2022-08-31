@@ -258,7 +258,7 @@ void Aircondition_LG::sendIRCommand(uint16_t aCommand) {
     Serial.println(aCommand, BIN);
 #endif
 
-    IrSender.sendLG((uint8_t) LG_ADDRESS, aCommand, 0, false, useLG2Protocol);
+    IrSender.sendLG2((uint8_t) LG_ADDRESS, aCommand, 0);
 }
 
 /*
