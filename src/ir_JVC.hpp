@@ -68,9 +68,6 @@
 #define JVC_REPEAT_SPACE      (uint16_t)(45 * JVC_UNIT)  // 23625 - Commands are repeated with a distance of 23 ms for as long as the key on the remote control is held down.
 #define JVC_REPEAT_PERIOD     65000 // assume around 40 ms for a JVC frame
 
-struct PulsePauseWidthProtocolConstants JVCProtocolConstants = { JVC, JVC_KHZ, JVC_HEADER_MARK, JVC_HEADER_SPACE, JVC_BIT_MARK, JVC_ONE_SPACE,
-JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI) };
-
 //+=============================================================================
 // JVC does NOT repeat by sending a separate code (like NEC does).
 // The JVC protocol repeats by skipping the header.
