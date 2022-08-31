@@ -249,13 +249,9 @@ bool IRrecv::decodeDistance() {
      * decide, if we have an pulse width or distance protocol
      */
     if (tSpaceTicksLong > 0) {
-        //        // check if last bit can be decoded as data or not, in this case take it as a stop bit
-        //        if (decodePulseDistanceData(1, decodedIRData.rawDataPtr->rawlen - 3, tMarkTicksShort * MICROS_PER_TICK,
-        //                tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, DISTANCE_DO_MSB_DECODING)) {
-        //            Serial.print(F("tNumberOfBits++ "));
-        //            tNumberOfBits++;
-        //        }
-
+        /*
+         * For PULSE DISTANCE a stop bit is mandatory!
+         */
         decodedIRData.protocol = PULSE_DISTANCE;
 
         /*

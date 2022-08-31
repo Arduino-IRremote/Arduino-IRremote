@@ -116,7 +116,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     if (sRepeats == 0) {
-#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && (defined(RAMSIZE) && RAMSIZE >= 0x4FF) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
         /*
          * Send constant values only once in this demo
          */
@@ -130,6 +130,9 @@ void loop() {
                 "0017 0806"), 0); //stop bit, no repeat possible, because of missing repeat pattern
         delay(DELAY_AFTER_SEND);
 
+        /*
+         * !!! The next data occupies 136 bytes RAM !!!
+         */
         Serial.println(F("Send NEC 16 bit address=0xFB04 and command 0x08 with exact timing (16 bit array format)"));
         Serial.flush();
         const uint16_t irSignal[] = { 9000, 4500/*Start bit*/, 560, 560, 560, 560, 560, 1690, 560,
@@ -259,7 +262,7 @@ void loop() {
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && (defined(RAMSIZE) && RAMSIZE >= 0x4FF) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     /*
      * Next example how to use the IrSender.write function
      */

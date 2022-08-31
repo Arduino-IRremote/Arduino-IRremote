@@ -64,22 +64,21 @@
  */
 #include <Arduino.h>
 
-#if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
+#if !defined(RAW_BUFFER_LENGTH)
+#  if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
 #define RAW_BUFFER_LENGTH  180  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
-#elif RAMEND <= 0x8FF || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
+#  elif RAMEND <= 0x8FF || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
 #define RAW_BUFFER_LENGTH  500  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
-#else
+#  else
 #define RAW_BUFFER_LENGTH  750  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
+#  endif
 #endif
-
-// Change the following two entries if desired
 
 /**
  * Baud rate for the serial/USB connection.
  * (115200 is the default for IrScrutinizer and Lirc.)
  */
 #define BAUDRATE 115200
-
 #define NO_DECODER
 
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.

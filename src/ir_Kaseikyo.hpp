@@ -88,7 +88,7 @@
 
 struct PulsePauseWidthProtocolConstants KaseikyoProtocolConstants = { KASEIKYO, KASEIKYO_KHZ, KASEIKYO_HEADER_MARK,
 KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
-SEND_STOP_BIT, (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+        SEND_STOP_BIT, (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
  * Start of send and decode functions
@@ -99,7 +99,7 @@ SEND_STOP_BIT, (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
  */
 void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aVendorCode) {
     // Set IR carrier frequency
-    enableIROut(KASEIKYO_KHZ); // 37 kHz
+    enableIROut (KASEIKYO_KHZ); // 37 kHz
 
     // Vendor Parity
     uint8_t tVendorParity = aVendorCode ^ (aVendorCode >> 8);
@@ -199,7 +199,9 @@ bool IRrecv::decodeKaseikyo() {
     uint8_t tVendorParity = tVendorId ^ (tVendorId >> 8);
     tVendorParity = (tVendorParity ^ (tVendorParity >> 4)) & 0xF;
 
-    // decode next 32 bits, 8 VendorID parity parity + 12 address (device and subdevice) + 8 command + 8 parity
+    /*
+     * Decode next 32 bits, 8 VendorID parity parity + 12 address (device and subdevice) + 8 command + 8 parity
+     */
     if (!decodePulseDistanceData(&KaseikyoProtocolConstants,
     KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
             3 + (2 * KASEIKYO_VENDOR_ID_BITS))) {
@@ -247,14 +249,11 @@ bool IRrecv::decodeKaseikyo() {
         IR_DEBUG_PRINTLN(decodedIRData.command, HEX);
     }
 
-    // check for repeat
-    if (decodedIRData.rawDataPtr->rawbuf[0] < ((KASEIKYO_REPEAT_SPACE + (KASEIKYO_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
-        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
-    }
-
+    decodedIRData.numberOfBits = KASEIKYO_BITS;
     decodedIRData.protocol = tProtocol;
 
-    decodedIRData.numberOfBits = KASEIKYO_BITS;
+    // check for repeat
+    checkForRepeatSpaceAndSetFlag(KASEIKYO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
 
     return true;
 }

@@ -41,7 +41,7 @@
 
 struct PulsePauseWidthProtocolConstants BoseWaveProtocolConstants = { BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
 BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
-SEND_STOP_BIT, (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+        SEND_STOP_BIT, (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
  * Start of send and decode functions
@@ -93,15 +93,12 @@ bool IRrecv::decodeBoseWave() {
         IR_DEBUG_PRINT(F("Command and inverted command check failed"));
         return false;
     }
+    decodedIRData.command = tCommandNotInverted;
+    decodedIRData.numberOfBits = BOSEWAVE_BITS;
+    decodedIRData.protocol = BOSEWAVE;
 
     // check for repeat
-    if (decodedIRData.rawDataPtr->rawbuf[0] < ((BOSEWAVE_REPEAT_SPACE + (BOSEWAVE_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
-    }
-
-    decodedIRData.command = tCommandNotInverted;
-    decodedIRData.protocol = BOSEWAVE;
-    decodedIRData.numberOfBits = BOSEWAVE_BITS;
+    checkForRepeatSpaceAndSetFlag(BOSEWAVE_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
 
     return true;
 }

@@ -33,13 +33,16 @@
 
 #include <Arduino.h>
 
-#if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
+#if !defined(RAW_BUFFER_LENGTH)
+#  if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
 #define RAW_BUFFER_LENGTH  180  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
-#elif RAMEND <= 0x8FF || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
+#  elif RAMEND <= 0x8FF || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
 #define RAW_BUFFER_LENGTH  600  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
-#else
+#  else
 #define RAW_BUFFER_LENGTH  750  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
+#  endif
 #endif
+
 //#define NO_LED_FEEDBACK_CODE // saves 92 bytes program memory
 #if FLASHEND <= 0x1FFF  // For 8k flash or less, like ATtiny85. Exclude exotic protocols.
 #define EXCLUDE_EXOTIC_PROTOCOLS
@@ -246,8 +249,7 @@ void printIRResultOnLCD() {
          * Show protocol name
          */
         myLCD.setCursor(0, 0);
-        const __FlashStringHelper *tProtocolStringPtr = getProtocolString(IrReceiver.decodedIRData.protocol);
-        myLCD.print(tProtocolStringPtr);
+        myLCD.print(getProtocolString(IrReceiver.decodedIRData.protocol));
 
         /*
          * Show address

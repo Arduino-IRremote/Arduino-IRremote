@@ -28,7 +28,7 @@
  ************************************************************************************
  */
 
- /** \addtogroup Decoder Decoders and encoders for different protocols
+/** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
 
@@ -87,7 +87,7 @@ void IRsend::sendDish(uint16_t aData) {
 struct PulsePauseWidthProtocolConstants WhynterProtocolConstants = { WHYNTER, 38, WHYNTER_HEADER_MARK, WHYNTER_HEADER_SPACE,
 WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, 110, NULL };
 
-void IRsend::sendWhynter(unsigned long aData, uint8_t aNumberOfBitsToSend) {
+void IRsend::sendWhynter(uint32_t aData, uint8_t aNumberOfBitsToSend) {
     sendPulseDistanceWidth(&WhynterProtocolConstants, aData, NEC_BITS, aNumberOfBitsToSend);
 }
 

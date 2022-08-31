@@ -191,8 +191,8 @@ bool IRrecv::decodeLegoPowerFunctions() {
     }
     decodedIRData.address = tToggleEscapeChannel;
     decodedIRData.command = tData | tMode << LEGO_COMMAND_BITS;
-    decodedIRData.protocol = LEGO_PF;
     decodedIRData.numberOfBits = LEGO_BITS;
+    decodedIRData.protocol = LEGO_PF;
 
     return true;
 }

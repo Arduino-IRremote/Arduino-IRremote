@@ -35,6 +35,7 @@
 /**
  * An enum consisting of all supported formats.
  * You do NOT need to remove entries from this list when disabling protocols!
+ * !!!Must be the same order as ProtocolNames in IRReceive.hpp!!!
  */
 typedef enum {
     UNKNOWN = 0,
@@ -42,12 +43,14 @@ typedef enum {
     PULSE_WIDTH,
 #endif
     PULSE_DISTANCE,
+    APPLE,
     DENON,
-    SHARP,
     JVC,
     LG,
     LG2,
     NEC,
+    NEC2, /* NEC with full frame as repeat */
+    ONKYO,
     PANASONIC,
     KASEIKYO,
     KASEIKYO_DENON,
@@ -58,17 +61,43 @@ typedef enum {
     RC6,
     SAMSUNG,
     SAMSUNG_LG,
+    SHARP,
     SONY,
-    NEC2, /* NEC with full frame as repeat */
-    ONKYO,
-    APPLE,
-#if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
+    /* Now the exotic protocols */
     BOSEWAVE,
     LEGO_PF,
     MAGIQUEST,
     WHYNTER,
-#endif
+
 } decode_type_t;
+
+const char string_Unknown[] PROGMEM = "UNKNOWN";
+const char string_PulseWidth[] PROGMEM = "PulseWidth";
+const char string_PulseDistance[] PROGMEM = "PulseDistance";
+const char string_Apple[] PROGMEM = "Apple";
+const char string_Denon[] PROGMEM = "Denon";
+const char string_JVC[] PROGMEM = "JVC";
+const char string_LG[] PROGMEM = "LG";
+const char string_LG2[] PROGMEM = "LG2";
+const char string_NEC[] PROGMEM = "NEC";
+const char string_NEC2[] PROGMEM = "NEC2";
+const char string_Onkyo[] PROGMEM = "Onkyo";
+const char string_Panasonic[] PROGMEM = "Panasonic";
+const char string_Kaseikyo[] PROGMEM = "Kaseikyo";
+const char string_Kaseikyo_Denon[] PROGMEM = "Kaseikyo_Denon";
+const char string_Kaseikyo_Sharp[] PROGMEM = "Kaseikyo_Sharp";
+const char string_Kaseikyo_JVC[] PROGMEM = "Kaseikyo_JVC";
+const char string_Kaseikyo_Mitsubishi[] PROGMEM = "Kaseikyo_Mitsubishi";
+const char string_RC5[] PROGMEM = "RC5";
+const char string_RC6[] PROGMEM = "RC6";
+const char string_Samsung[] PROGMEM = "Samsung";
+const char string_SamsungLG[] PROGMEM = "SamsungLG";
+const char string_Sharp[] PROGMEM = "Sharp";
+const char string_Sony[] PROGMEM = "Sony";
+const char string_BoseWave[] PROGMEM = "BoseWave";
+const char string_Lego[] PROGMEM = "Lego";
+const char string_MagiQuest[] PROGMEM = "MagiQuest";
+const char string_Whynter[] PROGMEM = "Whynter";
 
 struct PulsePauseWidthProtocolConstants {
     decode_type_t ProtocolIndex;
@@ -86,8 +115,6 @@ struct PulsePauseWidthProtocolConstants {
 //    void (IRsend::*SpecialSendRepeatFunction)();
 };
 
-const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
-
 #define PROTOCOL_IS_LSB_FIRST false
 #define PROTOCOL_IS_MSB_FIRST true
 
@@ -103,18 +130,5 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
 #define SAMSUNG_KHZ     38
 #define KASEIKYO_KHZ    37
 #define RC5_RC6_KHZ     36
-
-/*
- * Constants for some protocols
- */
-#define PANASONIC_VENDOR_ID_CODE    0x2002
-#define DENON_VENDOR_ID_CODE        0x3254
-#define MITSUBISHI_VENDOR_ID_CODE   0xCB23
-#define SHARP_VENDOR_ID_CODE        0x5AAA
-#define JVC_VENDOR_ID_CODE          0x0103
-
-#define SIRCS_12_PROTOCOL       12
-#define SIRCS_15_PROTOCOL       15
-#define SIRCS_20_PROTOCOL       20
 
 #endif // _IR_PROTOCOL_H

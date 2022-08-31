@@ -75,7 +75,7 @@ JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BI
  */
 void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
-    enableIROut(JVC_KHZ); // 38 kHz
+    enableIROut (JVC_KHZ); // 38 kHz
 
     if (aNumberOfRepeats < 0) {
         // The JVC protocol repeats by skipping the header.
@@ -221,7 +221,7 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
  */
 void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
     // Set IR carrier frequency
-    enableIROut(JVC_KHZ);
+    enableIROut (JVC_KHZ);
 
     // Only send the Header if this is NOT a repeat command
     if (!repeat) {
@@ -231,7 +231,7 @@ void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
 
     // Old version with MSB first Data
     sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-    SEND_STOP_BIT);
+            SEND_STOP_BIT);
     IrReceiver.restartAfterSend();
 }
 

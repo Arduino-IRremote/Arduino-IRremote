@@ -97,7 +97,7 @@ NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BI
  * Repeat commands should be sent in a 110 ms raster.
  */
 void IRsend::sendNECRepeat() {
-    enableIROut(NEC_KHZ);           // 38 kHz
+    enableIROut (NEC_KHZ);           // 38 kHz
     mark(NEC_HEADER_MARK);          // + 9000
     space(NEC_REPEAT_HEADER_SPACE); // - 2250
     mark(NEC_BIT_MARK);             // + 560
@@ -200,7 +200,6 @@ bool IRrecv::decodeNEC() {
      * First check for right data length
      * Next check start bit
      * Next try the decode
-     * Last check stop bit
      */
     // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawDataPtr->rawlen != ((2 * NEC_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
@@ -242,13 +241,6 @@ bool IRrecv::decodeNEC() {
         return false;
     }
 
-    // Stop bit
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * NEC_BITS)], NEC_BIT_MARK)) {
-        IR_DEBUG_PRINT(F("NEC: "));
-        IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
-        return false;
-    }
-
     // Success
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     LongUnion tValue;
@@ -266,7 +258,7 @@ bool IRrecv::decodeNEC() {
         /*
          * NEC LSB first, so first sent bit is also LSB of decodedIRData.decodedRawData
          */
-        if (tValue.UByte.LowByte == (uint8_t) (~tValue.UByte.MidLowByte)) {
+        if (tValue.UByte.LowByte == (uint8_t)(~tValue.UByte.MidLowByte)) {
             // standard 8 bit address NEC protocol
             decodedIRData.address = tValue.UByte.LowByte; // first 8 bit
         } else {
@@ -274,7 +266,7 @@ bool IRrecv::decodeNEC() {
             decodedIRData.address = tValue.UWord.LowWord; // first 16 bit
         }
         // Check for command if it is 8 bit NEC or 16 bit ONKYO
-        if (tValue.UByte.MidHighByte == (uint8_t) (~tValue.UByte.HighByte)) {
+        if (tValue.UByte.MidHighByte == (uint8_t)(~tValue.UByte.HighByte)) {
             decodedIRData.protocol = NEC;
         } else {
             decodedIRData.protocol = ONKYO;
@@ -366,7 +358,7 @@ bool IRrecv::decodeNECMSB(decode_results *aResults) {
  */
 void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     // Set IR carrier frequency
-    enableIROut(NEC_KHZ);
+    enableIROut (NEC_KHZ);
 
     if (data == 0xFFFFFFFF || repeat) {
         sendNECRepeat();
@@ -379,7 +371,7 @@ void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
 
     // Old version with MSB first Data + stop bit
     sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-    SEND_STOP_BIT);
+            SEND_STOP_BIT);
     IrReceiver.restartAfterSend();
 }
 

@@ -55,12 +55,14 @@
 // etc. see IRremote.hpp
 //
 
-#if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
+#if !defined(RAW_BUFFER_LENGTH)
+#  if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
 #define RAW_BUFFER_LENGTH  120
-#elif RAMEND <= 0xAFF || (defined(RAMSIZE) && RAMSIZE < 0xAFF) // 0xAFF for LEONARDO
-#define RAW_BUFFER_LENGTH  500 // 600 is too much here, because we have additional uint8_t rawCode[RAW_BUFFER_LENGTH];
-#else
+#  elif RAMEND <= 0xAFF || (defined(RAMSIZE) && RAMSIZE < 0xAFF) // 0xAFF for LEONARDO
+#define RAW_BUFFER_LENGTH  400 // 600 is too much here, because we have additional uint8_t rawCode[RAW_BUFFER_LENGTH];
+#  else
 #define RAW_BUFFER_LENGTH  750
+#  endif
 #endif
 
 //#define NO_LED_FEEDBACK_CODE // saves 92 bytes program memory

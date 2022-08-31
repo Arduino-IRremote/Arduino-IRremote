@@ -121,7 +121,7 @@ void IRsend::sendLGRepeat() {
  * Send special LG2 repeat
  */
 void IRsend::sendLG2Repeat() {
-    enableIROut(LG_KHZ);            // 38 kHz
+    enableIROut (LG_KHZ);            // 38 kHz
     mark(LG2_HEADER_MARK);          // + 3000
     space(LG_REPEAT_HEADER_SPACE);  // - 2250
     mark(LG_BIT_MARK);              // + 500
@@ -177,7 +177,6 @@ bool IRrecv::decodeLG() {
      * First check for right data length
      * Next check start bit
      * Next try the decode
-     * Last check stop bit
      */
 
 // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
@@ -226,13 +225,6 @@ bool IRrecv::decodeLG() {
     if (!decodePulseDistanceData(&LGProtocolConstants, LG_BITS)) {
         IR_DEBUG_PRINT(F("LG: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
-        return false;
-    }
-
-// Stop bit
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LG_BITS)], LG_BIT_MARK)) {
-        IR_DEBUG_PRINT(F("LG: "));
-        IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
@@ -324,7 +316,7 @@ bool IRrecv::decodeLGMSB(decode_results *aResults) {
 //+=============================================================================
 void IRsend::sendLG(unsigned long data, int nbits) {
 // Set IR carrier frequency
-    enableIROut(LG_KHZ);
+    enableIROut (LG_KHZ);
 #if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
     Serial.println(
             "The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats).");
@@ -336,7 +328,7 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 
 // Data + stop bit
     sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-    SEND_STOP_BIT);
+            SEND_STOP_BIT);
     IrReceiver.restartAfterSend();
 }
 

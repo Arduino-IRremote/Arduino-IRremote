@@ -114,7 +114,7 @@ void loop() {
 
     Serial.println(F("Send NEC 16 bit address 0x0102, 8 bit data 0x34 with generated timing"));
     Serial.flush();
-    IrSender.sendNEC(0x0102, 0x34, true, 0);
+    IrSender.sendNEC(0x0102, 0x34, 0);
 
     delay(3000);
 }

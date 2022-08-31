@@ -474,7 +474,7 @@ void IRsend::sendPulseDistanceWidth(PulsePauseWidthProtocolConstants *aProtocolC
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
 
-        if (tNumberOfCommands < (aNumberOfRepeats + 1) && aProtocolConstants->SpecialSendRepeatFunction != NULL) {
+        if (tNumberOfCommands < ((uint_fast8_t)aNumberOfRepeats + 1) && aProtocolConstants->SpecialSendRepeatFunction != NULL) {
             // send special repeat
             aProtocolConstants->SpecialSendRepeatFunction();
         } else {
@@ -517,7 +517,7 @@ void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHe
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
 
-        if (tNumberOfCommands < (aNumberOfRepeats + 1) && aSpecialSendRepeatFunction != NULL) {
+        if (tNumberOfCommands < ((uint_fast8_t)aNumberOfRepeats + 1) && aSpecialSendRepeatFunction != NULL) {
             // send special repeat
             aSpecialSendRepeatFunction();
         } else {

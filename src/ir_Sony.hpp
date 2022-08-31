@@ -114,7 +114,7 @@ bool IRrecv::decodeSony() {
     }
 
     if (!decodePulseWidthData((decodedIRData.rawDataPtr->rawlen - 1) / 2, 3, SONY_ONE_MARK, SONY_ZERO_MARK, SONY_SPACE,
-    PROTOCOL_IS_LSB_FIRST)) {
+            PROTOCOL_IS_LSB_FIRST)) {
         IR_DEBUG_PRINT(F("Sony: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -127,12 +127,8 @@ bool IRrecv::decodeSony() {
     decodedIRData.numberOfBits = (decodedIRData.rawDataPtr->rawlen - 1) / 2;
     decodedIRData.protocol = SONY;
 
-    /*
-     *  Check for repeat
-     */
-    if (decodedIRData.rawDataPtr->rawbuf[0] < ((SONY_REPEAT_SPACE_MAX + (SONY_REPEAT_SPACE_MAX / 4)) / MICROS_PER_TICK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
-    }
+    //Check for repeat
+    checkForRepeatSpaceAndSetFlag(SONY_REPEAT_SPACE_MAX / MICROS_IN_ONE_MILLI);
 
     return true;
 }
@@ -207,7 +203,7 @@ bool IRrecv::decodeSonyMSB(decode_results *aResults) {
  */
 void IRsend::sendSony(unsigned long data, int nbits) {
     // Set IR carrier frequency
-    enableIROut(SONY_KHZ);
+    enableIROut (SONY_KHZ);
 
     // Header
     mark(SONY_HEADER_MARK);
@@ -215,7 +211,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 
     // Old version with MSB first Data
     sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-    SEND_NO_STOP_BIT);
+            SEND_NO_STOP_BIT);
     IrReceiver.restartAfterSend();
 }
 

@@ -18,7 +18,7 @@
 
  1. Copy this file to : ir_<YourProtocolName>.hpp
 
- 2. Replace all occurrences of "Shuzu" with the name of your protocol.
+ 2. Replace all occurrences of "SHUZU" with the name of your protocol.
 
  3. Tweak the #defines to suit your protocol.
 
@@ -106,7 +106,7 @@
 #define SHUZU_COMMAND_BITS      8 // Command
 
 #define SHUZU_BITS              (SHUZU_ADDRESS_BITS + SHUZU_COMMAND_BITS) // The number of bits in the protocol
-#define SHUZU_UNIT              560
+#define SHUZU_UNIT              560               // All timings are in microseconds
 
 #define SHUZU_HEADER_MARK       (16 * SHUZU_UNIT) // The length of the Header:Mark
 #define SHUZU_HEADER_SPACE      (8 * SHUZU_UNIT)  // The length of the Header:Space
@@ -117,8 +117,8 @@
 
 #define SHUZU_REPEAT_HEADER_SPACE (4 * SHUZU_UNIT)  // 2250
 
-#define SHUZU_REPEAT_PERIOD     110000
-#define SHUZU_REPEAT_SPACE      45000
+#define SHUZU_REPEAT_PERIOD     110000            // From start to start
+#define SHUZU_REPEAT_SPACE      45000             // SHUZU_REPEAT_PERIOD - default frame duration. Used for repeat detection.
 
 #define SHUZU_OTHER             1234  // Other things you may need to define
 
@@ -139,9 +139,8 @@ void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberO
 bool IRrecv::decodeShuzu() {
     /*
      * First check for right data length
-     * Next check start bit
+     * Next check start bit / header
      * Next try the decode
-     * Last check stop bit
      */
     // Check we have the right amount of data (28). The +4 is for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawDataPtr->rawlen != (2 * SHUZU_BITS) + 4) {
@@ -169,9 +168,7 @@ bool IRrecv::decodeShuzu() {
     decodedIRData.protocol = BOSEWAVE; // we have no SHUZU code
 
     //Check for repeat
-    if (decodedIRData.rawDataPtr->rawbuf[0] < ((SHUZU_REPEAT_SPACE + (SHUZU_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
-    }
+    checkForRepeatSpaceAndSetFlag(SHUZU_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
 
     return true;
 }

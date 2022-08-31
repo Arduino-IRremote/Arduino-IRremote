@@ -226,7 +226,11 @@ public:
      */
     void printIRResultShort(Print *aSerial);
     void printIRSendUsage(Print *aSerial);
+#if defined(__AVR__)
     const __FlashStringHelper* getProtocolString();
+#else
+    const char* getProtocolString();
+#endif
     static void printActiveIRProtocols(Print *aSerial);
 
     void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
@@ -307,7 +311,7 @@ public:
     void initDecodedIRData();
     uint_fast8_t compare(unsigned int oldval, unsigned int newval);
     bool checkHeader(PulsePauseWidthProtocolConstants *aProtocolConstants);
-    bool checkHeader(unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros);
+    void checkForRepeatSpaceAndSetFlag(unsigned int aMediumRepeatSpaceMicros);
 
     IRData decodedIRData;       // New: decoded IR data for the application
 
@@ -347,7 +351,12 @@ int getMarkExcessMicros();
  */
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap);
 void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr);
-const __FlashStringHelper* getProtocolString();
+
+#if defined(__AVR__)
+const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
+#else
+const char* getProtocolString(decode_type_t aProtocol);
+#endif
 void printActiveIRProtocols(Print *aSerial);
 
 /****************************************************

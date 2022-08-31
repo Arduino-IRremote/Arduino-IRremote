@@ -587,14 +587,14 @@ bool IRrecv::decodePulseDistanceData(uint_fast8_t aNumberOfBits, uint_fast8_t aS
  * Static variables for the getBiphaselevel function
  */
 uint_fast8_t sBiphaseDecodeRawbuffOffset; // Index into raw timing array
-unsigned int sCurrentTimingIntervals; // Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
-uint_fast8_t sUsedTimingIntervals;       // Number of already used intervals of sCurrentTimingIntervals.
+unsigned int sBiphaseCurrentTimingIntervals; // 1, 2 or 3. Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
+uint_fast8_t sBiphaseUsedTimingIntervals;       // Number of already used intervals of sCurrentTimingIntervals.
 unsigned int sBiphaseTimeUnit;
 
 void IRrecv::initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, unsigned int aBiphaseTimeUnit) {
     sBiphaseDecodeRawbuffOffset = aRCDecodeRawbuffOffset;
     sBiphaseTimeUnit = aBiphaseTimeUnit;
-    sUsedTimingIntervals = 0;
+    sBiphaseUsedTimingIntervals = 0;
 }
 
 /**
@@ -625,28 +625,28 @@ uint_fast8_t IRrecv::getBiphaselevel() {
     /*
      * Setup data if sUsedTimingIntervals is 0
      */
-    if (sUsedTimingIntervals == 0) {
+    if (sBiphaseUsedTimingIntervals == 0) {
         unsigned int tCurrentTimingWith = decodedIRData.rawDataPtr->rawbuf[sBiphaseDecodeRawbuffOffset];
         unsigned int tMarkExcessCorrection = (tLevelOfCurrentInterval == MARK) ? MARK_EXCESS_MICROS : -MARK_EXCESS_MICROS;
 
         if (matchTicks(tCurrentTimingWith, (sBiphaseTimeUnit) + tMarkExcessCorrection)) {
-            sCurrentTimingIntervals = 1;
+            sBiphaseCurrentTimingIntervals = 1;
         } else if (matchTicks(tCurrentTimingWith, (2 * sBiphaseTimeUnit) + tMarkExcessCorrection)) {
-            sCurrentTimingIntervals = 2;
+            sBiphaseCurrentTimingIntervals = 2;
         } else if (matchTicks(tCurrentTimingWith, (3 * sBiphaseTimeUnit) + tMarkExcessCorrection)) {
-            sCurrentTimingIntervals = 3;
+            sBiphaseCurrentTimingIntervals = 3;
         } else {
             return -1;
         }
     }
 
 // We use another interval from tCurrentTimingIntervals
-    sUsedTimingIntervals++;
+    sBiphaseUsedTimingIntervals++;
 
 // keep track of current timing offset
-    if (sUsedTimingIntervals >= sCurrentTimingIntervals) {
+    if (sBiphaseUsedTimingIntervals >= sBiphaseCurrentTimingIntervals) {
         // we have used all intervals of current timing, switch to next timing value
-        sUsedTimingIntervals = 0;
+        sBiphaseUsedTimingIntervals = 0;
         sBiphaseDecodeRawbuffOffset++;
     }
 
@@ -765,6 +765,13 @@ bool IRrecv::checkHeader(PulsePauseWidthProtocolConstants *aProtocolConstants) {
     return true;
 }
 
+void IRrecv::checkForRepeatSpaceAndSetFlag(unsigned int aMediumRepeatSpaceMillis) {
+    if (decodedIRData.rawDataPtr->rawbuf[0]
+            < ((aMediumRepeatSpaceMillis + (aMediumRepeatSpaceMillis / 4)) * (1000 / MICROS_PER_TICK))) {
+        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
+    }
+}
+
 /**
  * Match function without compensating for marks exceeded or spaces shortened by demodulator hardware
  * Currently not used
@@ -870,7 +877,7 @@ int getMarkExcessMicros() {
  * Check if protocol is not detected and detected space between two transmissions
  * is smaller than known value for protocols (Sony with around 24 ms)
  */
-void CheckForRecordGapsMicros(Print *aSerial, IRData *aIRDataPtr) {
+void checkForRecordGapsMicros(Print *aSerial, IRData *aIRDataPtr) {
     /*
      * Check if protocol is not detected and detected space between two transmissions
      * is smaller than known value for protocols (Sony with around 24 ms)
@@ -1053,7 +1060,7 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap
             aSerial->println();
         }
 
-        CheckForRecordGapsMicros(aSerial, aIRDataPtr);
+        checkForRecordGapsMicros(aSerial, aIRDataPtr);
     }
 }
 
@@ -1388,102 +1395,64 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
     }
 }
 
+/*
+ * !!Must be the same order as in decode_type_t in IRProtocol.h!!!
+ */
+const char * const ProtocolNames[] PROGMEM =
+{
+    string_Unknown,
+#if defined(SUPPORT_PULSE_WIDTH_DECODING) // The only known pulse width protocol is Sony
+    string_PulseWidth,
+#endif
+    string_PulseDistance,
+    string_Apple,
+    string_Denon,
+    string_JVC,
+    string_LG,
+    string_LG2,
+    string_NEC,
+    string_NEC2,
+    string_Onkyo,
+    string_Panasonic,
+    string_Kaseikyo,
+    string_Kaseikyo_Denon,
+    string_Kaseikyo_Sharp,
+    string_Kaseikyo_JVC,
+    string_Kaseikyo_Mitsubishi,
+    string_RC5,
+    string_RC6,
+    string_Samsung,
+    string_SamsungLG,
+    string_Sharp,
+    string_Sony
+#if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
+    , string_BoseWave,
+    string_Lego,
+    string_MagiQuest,
+    string_Whynter
+#endif
+};
+
+#if defined(__AVR__)
 const __FlashStringHelper* IRrecv::getProtocolString() {
 // call no class function with same name
     return ::getProtocolString(decodedIRData.protocol);
 }
 
 const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
-    switch (aProtocol) {
-    default:
-    case UNKNOWN:
-        return (F("UNKNOWN"));
-        break;
-#if defined(SUPPORT_PULSE_WIDTH_DECODING) // The only known pulse width protocol is Sony
-    case PULSE_WIDTH:
-        return (F("PulseWidth"));
-        break;
-#endif
-    case PULSE_DISTANCE:
-        return (F("PulseDistance"));
-        break;
-    case DENON:
-        return (F("Denon"));
-        break;
-    case SHARP:
-        return (F("Sharp"));
-        break;
-    case JVC:
-        return (F("JVC"));
-        break;
-    case LG:
-        return (F("LG"));
-        break;
-    case LG2:
-        return (F("LG2"));
-        break;
-    case NEC:
-        return (F("NEC"));
-        break;
-    case PANASONIC:
-        return (F("Panasonic"));
-        break;
-    case KASEIKYO:
-        return (F("Kaseikyo"));
-        break;
-    case KASEIKYO_DENON:
-        return (F("Kaseikyo_Denon"));
-        break;
-    case KASEIKYO_SHARP:
-        return (F("Kaseikyo_Sharp"));
-        break;
-    case KASEIKYO_JVC:
-        return (F("Kaseikyo_JVC"));
-        break;
-    case KASEIKYO_MITSUBISHI:
-        return (F("Kaseikyo_Mitsubishi"));
-        break;
-    case RC5:
-        return (F("RC5"));
-        break;
-    case RC6:
-        return (F("RC6"));
-        break;
-    case SAMSUNG:
-        return (F("Samsung"));
-        break;
-    case SAMSUNG_LG:
-        return (F("SamsungLG"));
-        break;
-    case SONY:
-        return (F("Sony"));
-        break;
-    case NEC2:
-        return (F("NEC2"));
-        break;
-    case ONKYO:
-        return (F("Onkyo"));
-        break;
-    case APPLE:
-        return (F("Apple"));
-        break;
-
-#if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
-    case BOSEWAVE:
-        return (F("BoseWave"));
-        break;
-    case LEGO_PF:
-        return (F("Lego"));
-        break;
-    case MAGIQUEST:
-        return (F("MagiQuest"));
-        break;
-    case WHYNTER:
-        return (F("Whynter"));
-        break;
-#endif
-    }
+    const char* tProtocolStringPtr = (char*) pgm_read_word(&ProtocolNames[aProtocol]);
+    return((__FlashStringHelper *) (tProtocolStringPtr));
 }
+#else
+const char* IRrecv::getProtocolString() {
+// call no class function with same name
+    return ::getProtocolString(decodedIRData.protocol);
+}
+
+const char* getProtocolString(decode_type_t aProtocol) {
+    return ProtocolNames[aProtocol];
+}
+#endif
 
 /**********************************************************************************************************************
  * Interrupt Service Routine - Called every 50 us

@@ -77,7 +77,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
  */
 void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
     // Set IR carrier frequency
-    enableIROut(RC5_RC6_KHZ);
+    enableIROut (RC5_RC6_KHZ);
 
     uint16_t tIRData = ((aAddress & 0x1F) << RC5_COMMAND_BITS);
 
@@ -191,13 +191,11 @@ bool IRrecv::decodeRC5() {
     if (tValue.UByte.MidLowByte & 0x8) {
         decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK | IRDATA_FLAGS_IS_MSB_FIRST;
     }
+    decodedIRData.protocol = RC5;
 
     // check for repeat
-    if (decodedIRData.rawDataPtr->rawbuf[0] < ((RC5_REPEAT_SPACE + (RC5_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
-        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
-    }
+    checkForRepeatSpaceAndSetFlag(RC5_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
 
-    decodedIRData.protocol = RC5;
     return true;
 }
 
@@ -242,7 +240,7 @@ bool IRrecv::decodeRC5() {
  */
 void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
 // Set IR carrier frequency
-    enableIROut(RC5_RC6_KHZ);
+    enableIROut (RC5_RC6_KHZ);
 
 // Header
     mark(RC6_HEADER_MARK);
@@ -274,7 +272,7 @@ void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
  */
 void IRsend::sendRC6(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
 // Set IR carrier frequency
-    enableIROut(RC5_RC6_KHZ);
+    enableIROut (RC5_RC6_KHZ);
 
 // Header
     mark(RC6_HEADER_MARK);
@@ -325,7 +323,7 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
 
     IR_DEBUG_PRINT(F("RC6: "));
     IR_DEBUG_PRINT(F("sLastSendToggleValue="));
-    IR_DEBUG_PRINT(sLastSendToggleValue);
+    IR_DEBUG_PRINT (sLastSendToggleValue);
     IR_DEBUG_PRINT(F(" RawData="));
     IR_DEBUG_PRINTLN(tIRRawData.ULong, HEX);
 
@@ -470,7 +468,7 @@ bool IRrecv::decodeRC6() {
  */
 void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
     // Set IR carrier frequency
-    enableIROut(RC5_RC6_KHZ);
+    enableIROut (RC5_RC6_KHZ);
 
     // Start
     mark(RC5_UNIT);
@@ -495,7 +493,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
  */
 void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
 // Set IR carrier frequency
-    enableIROut(RC5_RC6_KHZ);
+    enableIROut (RC5_RC6_KHZ);
 
     uint8_t addressBits = 5;
     uint8_t commandBits = 7;
