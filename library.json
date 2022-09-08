@@ -14,7 +14,8 @@
   [
      {
        "name":"Armin Joachimsmeyer",
-       "email":"armin.arduino@gmail.com"
+       "email":"armin.arduino@gmail.com",
+       "maintainer": true
      },
      {
        "name":"Rafi Khan",

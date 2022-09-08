@@ -4,12 +4,14 @@
  * Optimized digital functions for AVR microcontrollers
  * by Watterott electronic (www.watterott.com)
  * based on https://code.google.com/p/digitalwritefast
+ *
+ * License: BSD 3-Clause License (https://opensource.org/licenses/BSD-3-Clause)
  */
 
 #ifndef __digitalWriteFast_h_
 #define __digitalWriteFast_h_ 1
 
-//#define SANGUINO_PINOUT //define for Sanguino pinout
+//#define SANGUINO_PINOUT // define for Sanguino pinout
 
 // general macros/defines
 #if !defined(BIT_READ)
@@ -274,16 +276,30 @@
 # endif
 
 #endif
-//#endif  //#if !defined(digitalPinToPortReg)
+
+
+void NonConstantsUsedForPinModeFast( void )  __attribute__ (( error("Parameter for pinModeFast() function is not constant") ));
+void NonConstantsUsedForDigitalWriteFast( void )  __attribute__ (( error("Parameter for digitalWriteFast() function is not constant") ));
+void NonConstantsUsedForDigitalToggleFast( void )  __attribute__ (( error("Parameter for digitalToggleFast() function is not constant") ));
+int NonConstantsUsedForDigitalReadFast( void )  __attribute__ (( error("Parameter for digitalReadFast() function is not constant") ));
 
 #if !defined(digitalWriteFast)
 #  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
+#    if defined(THROW_ERROR_IF_NOT_FAST)
+#define digitalWriteFast(P, V) \
+if (__builtin_constant_p(P)) { \
+  BIT_WRITE(*__digitalPinToPortReg(P), __digitalPinToBit(P), (V)); \
+} else { \
+    NonConstantsUsedForDigitalWriteFast(); \
+}
+#    else
 #define digitalWriteFast(P, V) \
 if (__builtin_constant_p(P)) { \
   BIT_WRITE(*__digitalPinToPortReg(P), __digitalPinToBit(P), (V)); \
 } else { \
   digitalWrite((P), (V)); \
 }
+#    endif // defined(THROW_ERROR_IF_NOT_FAST)
 #  else
 #define digitalWriteFast digitalWrite
 #  endif
@@ -291,6 +307,19 @@ if (__builtin_constant_p(P)) { \
 
 #if !defined(pinModeFast)
 #  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
+#    if defined(THROW_ERROR_IF_NOT_FAST)
+#define pinModeFast(P, V) \
+if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
+  if (V == INPUT_PULLUP) {\
+    BIT_CLEAR(*__digitalPinToDDRReg(P), __digitalPinToBit(P)); \
+    BIT_SET(*__digitalPinToPortReg(P), __digitalPinToBit(P)); \
+  } else { \
+    BIT_WRITE(*__digitalPinToDDRReg(P), __digitalPinToBit(P), (V)); \
+  } \
+} else { \
+    NonConstantsUsedForPinModeFast(); \
+}
+#    else
 #define pinModeFast(P, V) \
 if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
   if (V == INPUT_PULLUP) {\
@@ -302,6 +331,7 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 } else { \
   pinMode((P), (V)); \
 }
+#    endif // defined(THROW_ERROR_IF_NOT_FAST)
 #  else
 #define pinModeFast pinMode
 #  endif
@@ -309,12 +339,21 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 
 #if !defined(digitalReadFast)
 #  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPINReg)
+#    if defined(THROW_ERROR_IF_NOT_FAST)
+#define digitalReadFast(P) ( (int) __digitalReadFast((P)) )
+// since we have return values, it is easier to implement it by ?:
+#define __digitalReadFast(P ) \
+  (__builtin_constant_p(P) ) ? \
+  (( BIT_READ(*__digitalPinToPINReg(P), __digitalPinToBit(P))) ? HIGH:LOW ) : \
+  NonConstantsUsedForDigitalReadFast()
+#    else
 #define digitalReadFast(P) ( (int) __digitalReadFast((P)) )
 // since we have return values, it is easier to implement it by ?:
 #define __digitalReadFast(P ) \
   (__builtin_constant_p(P) ) ? \
   (( BIT_READ(*__digitalPinToPINReg(P), __digitalPinToBit(P))) ? HIGH:LOW ) : \
   digitalRead((P))
+#    endif // defined(THROW_ERROR_IF_NOT_FAST)
 #  else
 #define digitalReadFast digitalRead
 #  endif
@@ -322,12 +361,21 @@ if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
 
 #if !defined(digitalToggleFast)
 #  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPINReg)
+#    if defined(THROW_ERROR_IF_NOT_FAST)
+#define digitalToggleFast(P) \
+if (__builtin_constant_p(P)) { \
+  BIT_SET(*__digitalPinToPINReg(P), __digitalPinToBit(P)); \
+} else { \
+    NonConstantsUsedForDigitalToggleFast(); \
+}
+#    else
 #define digitalToggleFast(P) \
 if (__builtin_constant_p(P)) { \
   BIT_SET(*__digitalPinToPINReg(P), __digitalPinToBit(P)); \
 } else { \
   digitalWrite(P, ! digitalRead(P)); \
 }
+#    endif // defined(THROW_ERROR_IF_NOT_FAST)
 #  else
 #define digitalToggleFast(P) digitalWrite(P, ! digitalRead(P))
 #  endif
