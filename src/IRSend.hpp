@@ -242,7 +242,8 @@ size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
         sendBoseWave(tCommand, aNumberOfRepeats);
 
     } else if (tProtocol == MAGIQUEST) {
-        sendMagiQuest(tAddress, tCommand);
+        // we have a 32 bit ID/address
+        sendMagiQuest(aIRSendData->decodedRawData, tCommand);
 
     } else if (tProtocol == LEGO_PF) {
         sendLegoPowerFunctions(tAddress, tCommand, tCommand >> 4, tIsRepeat); // send 5 autorepeats

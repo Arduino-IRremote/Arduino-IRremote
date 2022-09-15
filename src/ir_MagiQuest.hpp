@@ -46,6 +46,7 @@
 //==============================================================================
 /*
  * https://github.com/kitlaan/Arduino-IRremote/blob/master/ir_Magiquest.cpp
+ * https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/1027#discussioncomment-3636857
  * https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1015#issuecomment-1222247231
  -3276750
  + 250,- 800 + 250,- 850 + 250,- 850 + 250,- 850
@@ -71,22 +72,24 @@
 union magiquest_t {
     uint64_t llword;
     struct {
-        uint16_t magnitude;
-        uint32_t wand_id;
+        uint8_t checksum;   // Checksum + Sum of 5 bytes before adds up to 0x00
+        uint8_t magnitude;  // Values observed are 102,01,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
+        uint32_t wand_id;   // the lowest bit is the highest bit of magnitude -> wand-id is handled as 32 bit and always even
         uint8_t StartBits;  // first 8 MSB start bits are zero.
         uint8_t HighByte;   // just to pad the struct out to 64 bits so we can union with llword
     } cmd;
 };
 #endif // !defined (DOXYGEN)
 
-#define MAGIQUEST_MAGNITUDE_BITS   16   // magiquest_t.cmd.magnitude
-#define MAGIQUEST_WAND_ID_BITS     32   // magiquest_t.cmd.wand_id
+#define MAGIQUEST_CHECKSUM_BITS     8   // magiquest_t.cmd.checksum
+#define MAGIQUEST_MAGNITUDE_BITS    9   // magiquest_t.cmd.magnitude
+#define MAGIQUEST_WAND_ID_BITS     31   // magiquest_t.cmd.wand_id -> wand-id is handled as 32 bit and always even
 #define MAGIQUEST_START_BITS        8    // magiquest_t.cmd.StartBits
 
 #define MAGIQUEST_PERIOD         1150   // Time for a full MagiQuest "bit" (1100 - 1200 usec)
 
-#define MAGIQUEST_DATA_BITS     (MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS) // 48 Size of the command without the start bits
-#define MAGIQUEST_BITS          (MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) // 56 Size of the command with the start bits
+#define MAGIQUEST_DATA_BITS     (MAGIQUEST_CHECKSUM_BITS + MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS) // 48 Size of the command without the start bits
+#define MAGIQUEST_BITS          (MAGIQUEST_CHECKSUM_BITS + MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) // 56 Size of the command with the start bits
 
 /*
  * 0 = 25% mark & 75% space across 1 period
@@ -106,19 +109,26 @@ union magiquest_t {
 // assume 110 as repeat period
 struct PulsePauseWidthProtocolConstants MagiQuestProtocolConstants = { MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
 MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_NO_STOP_BIT, 110,
-NULL };
+        NULL };
 //+=============================================================================
 //
-void IRsend::sendMagiQuest(uint32_t wand_id, uint16_t magnitude) {
+void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
 
     // Set IR carrier frequency
     enableIROut(38);
 
     // 8 start bits
     sendPulseDistanceWidthData(&MagiQuestProtocolConstants, 0, 8);
+    aMagnitude &= 0x1FF; // we have 9 bit
+    LongUnion tWandId;
+    tWandId.ULong = aWandId;
+    uint8_t tChecksum = (tWandId.Bytes[0] & 0xFE) + tWandId.Bytes[1] + tWandId.Bytes[2] + tWandId.Bytes[3];
+    tChecksum += aMagnitude + (aMagnitude >> 8);
+    tChecksum = ~tChecksum + 1;
     // Data
-    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, wand_id, MAGIQUEST_WAND_ID_BITS);
-    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, magnitude, MAGIQUEST_MAGNITUDE_BITS);
+    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aWandId >> 1, MAGIQUEST_WAND_ID_BITS);
+    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aMagnitude, MAGIQUEST_MAGNITUDE_BITS);
+    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, tChecksum, MAGIQUEST_CHECKSUM_BITS);
     IrReceiver.restartAfterSend();
 }
 
@@ -163,7 +173,7 @@ bool IRrecv::decodeMagiQuest() {
 
         // We have no stop bit, so assume that last space, which is not recorded, is correct, since we can not check it
         if (i == (MAGIQUEST_BITS - 1) || matchMark(tMark + tSpace, MAGIQUEST_PERIOD)) {
-            if (matchMark(tMark, MAGIQUEST_ZERO_MARK)) {
+            if (!matchMark(tMark, MAGIQUEST_ONE_MARK)) {
                 // It's a 0
                 data.llword <<= 1;
 #if defined(LOCAL_DEBUG)
@@ -193,10 +203,29 @@ bool IRrecv::decodeMagiQuest() {
     decodedIRData.protocol = MAGIQUEST;
     decodedIRData.numberOfBits = tIndex / 2;
     decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
-    decodedIRData.decodedRawData = data.cmd.wand_id;    // 32 bit wand_id
-    decodedIRData.address = data.cmd.wand_id;           // lower 16 bit of wand_id
-    decodedIRData.extra = data.cmd.wand_id << 16;       // upper 16 bit of wand_id
-    decodedIRData.command = data.cmd.magnitude; // seems to be always 205 https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1017
+
+    LongUnion tWandId;
+    tWandId.ULong = data.cmd.wand_id;
+    uint8_t tChecksum = tWandId.Bytes[0] + tWandId.Bytes[1] + tWandId.Bytes[2] + tWandId.Bytes[3];
+    tChecksum += data.cmd.magnitude + data.cmd.checksum;
+    if (tChecksum != 0) {
+        decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("Checksum "));
+        Serial.print(tChecksum);
+        Serial.println(F(" is not 0"));
+#endif
+    }
+
+    decodedIRData.command = data.cmd.magnitude;         // Values observed are 102,01,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
+    if (tWandId.UByte.LowByte & 0x01) {
+        // copy lowest id bit to highest magnitude bit
+        decodedIRData.command += 0x100;
+        tWandId.UByte.LowByte &= 0xFE;
+    }
+    decodedIRData.decodedRawData = data.cmd.wand_id;    // 31 bit wand_id + 9.bit of magnitude
+    decodedIRData.address = tWandId.UWord.LowWord;      // lower 16 bit of wand_id
+    decodedIRData.extra = tWandId.UWord.HighWord;       // upper 16 bit of wand_id
 
     return true;
 }

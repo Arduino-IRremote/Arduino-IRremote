@@ -523,7 +523,7 @@ public:
     void sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times = true);
     void sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times = true);
 
-    void sendMagiQuest(uint32_t wand_id, uint16_t magnitude);
+    void sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude);
 
     void sendPronto(const __FlashStringHelper *str, int_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendPronto(const char *prontoHexString, int_fast8_t aNumberOfRepeats = NO_REPEATS);

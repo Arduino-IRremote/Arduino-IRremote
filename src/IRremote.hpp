@@ -106,7 +106,7 @@
 #define DECODE_DENON        // Includes Sharp
 #define DECODE_JVC
 #define DECODE_KASEIKYO
-#define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
+#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
 #define DECODE_LG
 #define DECODE_NEC          // Includes Apple and Onkyo
 #define DECODE_SAMSUNG

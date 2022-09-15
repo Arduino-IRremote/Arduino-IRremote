@@ -56,6 +56,7 @@
 #if FLASHEND >= 0x1FFF      // For 8k flash or more, like ATtiny85
 #define DECODE_DENON        // Includes Sharp
 #define DECODE_KASEIKYO
+#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
 #define DECODE_NEC          // Includes Apple and Onkyo
 #endif
 
@@ -64,7 +65,6 @@
 #define DECODE_RC5
 #define DECODE_RC6
 #define DECODE_SONY
-#define DECODE_PANASONIC    // the same as DECODE_KASEIKYO
 
 #define DECODE_DISTANCE     // universal decoder for pulse distance protocols
 #define DECODE_HASH         // special decoder for all protocols
@@ -288,6 +288,7 @@ void loop() {
         checkReceive(0x0102, 0x34);
         delay(DELAY_AFTER_SEND);
 
+#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
         Serial.flush();
         uint32_t tRawData[] = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
@@ -301,8 +302,8 @@ void loop() {
         Serial.println(F("Send Panasonic 0xB, 0x10 as generic 48 bit PulseDistance"));
         Serial.println(F(" LSB first"));
         Serial.flush();
-        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT,
-                0, NO_REPEATS);
+        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_LSB_FIRST,
+                SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceive(0x0B, 0x10);
         delay(DELAY_AFTER_SEND);
 
@@ -310,17 +311,17 @@ void loop() {
         Serial.println(F(" MSB first"));
         tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;
-        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT,
-                0, NO_REPEATS);
+        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_MSB_FIRST,
+                SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceive(0x0B, 0x10);
         delay(DELAY_AFTER_SEND);
+#endif
 
         Serial.println(F("Send generic 56 bit PulseDistance 0x43D8613C and 0x3BC3BC LSB first"));
         Serial.flush();
-        tRawData[0] = 0x43D8613C;
-        tRawData[1] = 0x3BC3BC;
-        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 56, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT,
-                0, NO_REPEATS);
+        uint32_t tRawData1[] = { 0x43D8613C, 0x3BC3BC }; // LSB of tRawData1[0] is sent first
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData1[0], 56, PROTOCOL_IS_LSB_FIRST,
+                SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceive(0x0, 0x0); // No real check, only printing of received result
         delay(DELAY_AFTER_SEND);
     }
@@ -338,6 +339,8 @@ void loop() {
     checkReceive(sAddress & 0xFF, sCommand);
     delay(DELAY_AFTER_SEND);
 
+
+#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
     Serial.println(F("Send Panasonic"));
     Serial.flush();
     IrSender.sendPanasonic(sAddress & 0xFFF, sCommand, sRepeats);
@@ -355,7 +358,9 @@ void loop() {
     IrSender.sendKaseikyo_Denon(sAddress & 0xFFF, sCommand, sRepeats);
     checkReceive(sAddress & 0xFFF, sCommand);
     delay(DELAY_AFTER_SEND);
+#endif
 
+#if defined(DECODE_DENON)
     Serial.println(F("Send Denon"));
     Serial.flush();
     IrSender.sendDenon(sAddress & 0x1F, sCommand, sRepeats);
@@ -367,6 +372,7 @@ void loop() {
     IrSender.sendSharp(sAddress & 0x1F, sCommand, sRepeats);
     checkReceive(sAddress & 0x1F, sCommand);
     delay(DELAY_AFTER_SEND);
+#endif
 
 #if defined(DECODE_SONY)
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
@@ -441,7 +447,7 @@ void loop() {
 #endif
 
 #if defined(DECODE_LG) || defined(DECODE_MAGIQUEST)
-    IRSendData.command = sCommand << 8 | sCommand;  // LG and MAGIQUEST support 16 bit command
+    IRSendData.command = sCommand << 8 | sCommand;  // LG and MAGIQUEST support more than 8 bit command
 #endif
 
 #if defined(DECODE_LG)
@@ -459,8 +465,8 @@ void loop() {
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
-    IrSender.write(&IRSendData);
-    checkReceive(IRSendData.address, IRSendData.command);
+    IrSender.sendMagiQuest(0xABCD0000 | (uint32_t)sAddress, IRSendData.command);
+    checkReceive(sAddress & 0xFFFE, IRSendData.command & 0x1FF);
     delay(DELAY_AFTER_SEND);
 #endif
 

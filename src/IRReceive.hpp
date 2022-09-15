@@ -1100,21 +1100,29 @@ void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr) {
 #if defined(DECODE_DISTANCE)
         if (aIRDataPtr->protocol != PULSE_DISTANCE) {
 #endif
-        aSerial->print(getProtocolString(aIRDataPtr->protocol));
-        aSerial->print(F("(0x"));
-        /*
-         * New decoders have address and command
-         */
-        aSerial->print(aIRDataPtr->address, HEX);
+            aSerial->print(getProtocolString(aIRDataPtr->protocol));
+            aSerial->print(F("(0x"));
+#if defined(DECODE_MAGIQUEST)
+            if (aIRDataPtr->protocol == MAGIQUEST) {
+                aSerial->print(aIRDataPtr->decodedRawData & 0xFFFFFFFE, HEX);
+            } else {
+                aSerial->print(aIRDataPtr->address, HEX);
+            }
+#else
+            /*
+             * New decoders have address and command
+             */
+            aSerial->print(aIRDataPtr->address, HEX);
+#endif
 
-        aSerial->print(F(", 0x"));
-        aSerial->print(aIRDataPtr->command, HEX);
-        aSerial->print(F(", <numberOfRepeats>"));
-
-        if (aIRDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
             aSerial->print(F(", 0x"));
-            aSerial->print(aIRDataPtr->extra, HEX);
-        }
+            aSerial->print(aIRDataPtr->command, HEX);
+            aSerial->print(F(", <numberOfRepeats>"));
+
+            if (aIRDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
+                aSerial->print(F(", 0x"));
+                aSerial->print(aIRDataPtr->extra, HEX);
+            }
 #if defined(DECODE_DISTANCE)
         } else {
             aSerial->print("PulseDistanceWidthFromArray(38, ");
