@@ -1104,7 +1104,7 @@ void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr) {
             aSerial->print(F("(0x"));
 #if defined(DECODE_MAGIQUEST)
             if (aIRDataPtr->protocol == MAGIQUEST) {
-                aSerial->print(aIRDataPtr->decodedRawData & 0xFFFFFFFE, HEX);
+                aSerial->print(aIRDataPtr->decodedRawData, HEX);
             } else {
                 aSerial->print(aIRDataPtr->address, HEX);
             }

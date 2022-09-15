@@ -461,12 +461,10 @@ void loop() {
 #endif
 
 #if defined(DECODE_MAGIQUEST)
-    IRSendData.protocol = MAGIQUEST;
-    Serial.print(F("Send "));
-    Serial.println(getProtocolString(IRSendData.protocol));
+    Serial.println(F("Send MagiQuest"));
     Serial.flush();
-    IrSender.sendMagiQuest(0xABCD0000 | (uint32_t)sAddress, IRSendData.command);
-    checkReceive(sAddress & 0xFFFE, IRSendData.command & 0x1FF);
+    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t)sAddress, IRSendData.command); // we have 31 bit address
+    checkReceive(sAddress, IRSendData.command & 0x1FF); // we have 9 bit command
     delay(DELAY_AFTER_SEND);
 #endif
 

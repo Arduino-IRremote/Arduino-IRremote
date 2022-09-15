@@ -31,7 +31,7 @@ jobs:
   build:
     name: ${{ matrix.arduino-boards-fqbn }} - test compiling examples
 
-    runs-on: ubuntu-18.04 # I picked Ubuntu to use shell scripts.
+    runs-on: ubuntu-22.04 # I picked Ubuntu to use shell scripts.
 
     strategy:
       matrix:
@@ -146,11 +146,13 @@ jobs:
               All: -DRAW_BUFFER_LENGTH=700
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
+            arduino-platform: arduino:avr,megaTinyCore:megaavr@2.5.11
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
+            arduino-platform: megaTinyCore:megaavr@2.5.11
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100

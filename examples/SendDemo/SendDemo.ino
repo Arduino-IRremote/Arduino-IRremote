@@ -286,11 +286,18 @@ void loop() {
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
 
+    IRSendData.command = sCommand << 8 | sCommand;  // LG and MAGIQUEST support more than 8 bit command
+
     IRSendData.protocol = LG;
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send MagiQuest"));
+    Serial.flush();
+    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t)sAddress, IRSendData.command); // we have 31 bit address
     delay(DELAY_AFTER_SEND);
 
     IRSendData.protocol = BOSEWAVE;

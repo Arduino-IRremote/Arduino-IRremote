@@ -121,12 +121,12 @@ void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
     sendPulseDistanceWidthData(&MagiQuestProtocolConstants, 0, 8);
     aMagnitude &= 0x1FF; // we have 9 bit
     LongUnion tWandId;
-    tWandId.ULong = aWandId;
-    uint8_t tChecksum = (tWandId.Bytes[0] & 0xFE) + tWandId.Bytes[1] + tWandId.Bytes[2] + tWandId.Bytes[3];
+    tWandId.ULong = aWandId << 1;
+    uint8_t tChecksum = (tWandId.Bytes[0]) + tWandId.Bytes[1] + tWandId.Bytes[2] + tWandId.Bytes[3];
     tChecksum += aMagnitude + (aMagnitude >> 8);
     tChecksum = ~tChecksum + 1;
     // Data
-    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aWandId >> 1, MAGIQUEST_WAND_ID_BITS);
+    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aWandId, MAGIQUEST_WAND_ID_BITS);
     sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aMagnitude, MAGIQUEST_MAGNITUDE_BITS);
     sendPulseDistanceWidthData(&MagiQuestProtocolConstants, tChecksum, MAGIQUEST_CHECKSUM_BITS);
     IrReceiver.restartAfterSend();
@@ -221,11 +221,12 @@ bool IRrecv::decodeMagiQuest() {
     if (tWandId.UByte.LowByte & 0x01) {
         // copy lowest id bit to highest magnitude bit
         decodedIRData.command += 0x100;
-        tWandId.UByte.LowByte &= 0xFE;
     }
-    decodedIRData.decodedRawData = data.cmd.wand_id;    // 31 bit wand_id + 9.bit of magnitude
+    tWandId.ULong = tWandId.ULong >> 1;
+
+    decodedIRData.decodedRawData = tWandId.ULong;       // 31 bit wand_id
     decodedIRData.address = tWandId.UWord.LowWord;      // lower 16 bit of wand_id
-    decodedIRData.extra = tWandId.UWord.HighWord;       // upper 16 bit of wand_id
+    decodedIRData.extra = tWandId.UWord.HighWord;       // upper 15 bit of wand_id
 
     return true;
 }
