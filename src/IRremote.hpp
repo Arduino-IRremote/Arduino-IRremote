@@ -65,10 +65,10 @@
 #ifndef _IR_REMOTE_HPP
 #define _IR_REMOTE_HPP
 
-#define VERSION_IRREMOTE "3.9.1"
-#define VERSION_IRREMOTE_MAJOR 3
-#define VERSION_IRREMOTE_MINOR 9
-#define VERSION_IRREMOTE_PATCH 1
+#define VERSION_IRREMOTE "4.0.0"
+#define VERSION_IRREMOTE_MAJOR 4
+#define VERSION_IRREMOTE_MINOR 0
+#define VERSION_IRREMOTE_PATCH 0
 
 /*
  * Macro to convert 3 version parts into an integer

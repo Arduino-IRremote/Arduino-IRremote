@@ -3,10 +3,11 @@ The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
 ## 4.0.0
-- Introduced PulsePauseWidthProtocolConstants.
+- Introduced common structure PulsePauseWidthProtocolConstants.
 - Where possible, converted all send and decode functions to use PulsePauseWidthProtocolConstants.
 - Improved MSB/LSB handling
 - New convenience fuctions bitreverse32Bit() and bitreverseOneByte().
+- Improved Magiquest protocol.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

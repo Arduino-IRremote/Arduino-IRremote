@@ -66,7 +66,7 @@
  + 500,- 650 + 500,- 650 + 500,- 650 + 200,- 900
  + 250,- 850 + 500,- 650 + 300,- 800 + 500
  */
-// MSB first, 8 start bits (zero), 32 wand id bits, 16 magnitude bits and no stop bit
+// MSB first, 8 start bits (zero), 31 wand id bits, 9 magnitude bits 8 checksum bits and no stop bit
 #if !defined (DOXYGEN)
 // MagiQuest packet is both Wand ID and magnitude of swish and flick
 union magiquest_t {
