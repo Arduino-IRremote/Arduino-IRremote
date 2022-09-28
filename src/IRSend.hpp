@@ -399,7 +399,10 @@ void IRsend::sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigne
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
-            delay(aRepeatPeriodMillis - (millis() - tStartOfFrameMillis));
+            unsigned long frameDurationMillis = millis() - tStartOfFrameMillis;
+            if (frameDurationMillis < aRepeatPeriodMillis) {
+                delay(aRepeatPeriodMillis - frameDurationMillis);
+            }
         }
     }
     IrReceiver.restartAfterSend();
@@ -532,7 +535,10 @@ void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHe
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
-            delay(aRepeatPeriodMillis - (millis() - tStartOfFrameMillis));
+            unsigned long frameDurationMillis = millis() - tStartOfFrameMillis;
+            if (frameDurationMillis < aRepeatPeriodMillis) {
+                delay(aRepeatPeriodMillis - frameDurationMillis);
+            }
         }
     }
     IrReceiver.restartAfterSend();
