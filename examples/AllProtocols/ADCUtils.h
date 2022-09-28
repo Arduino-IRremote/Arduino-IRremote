@@ -24,9 +24,8 @@
 #ifndef _ADC_UTILS_H
 #define _ADC_UTILS_H
 
-#if defined(__AVR__) && (!defined(__AVR_ATmega4809__))
+#if defined(__AVR__) && defined(ADCSRA) && defined(ADATE) && (!defined(__AVR_ATmega4809__))
 #include <Arduino.h>
-#if defined(ADATE)
 
 // PRESCALE4 => 13 * 4 = 52 microseconds per ADC conversion at 1 MHz Clock => 19,2 kHz
 #define ADC_PRESCALE2    1 // 26 microseconds per ADC conversion at 1 MHz
@@ -111,6 +110,12 @@
 #error "No temperature channel definitions specified for this AVR CPU"
 #endif
 
+extern float sVCCVoltage;
+extern uint16_t sVCCVoltageMillivolt;
+
+extern long sLastVoltageCheckMillis;
+extern uint8_t sVoltageTooLowCounter;
+
 uint16_t readADCChannel(uint8_t aChannelNumber);
 uint16_t readADCChannelWithReference(uint8_t aChannelNumber, uint8_t aReference);
 uint16_t waitAndReadADCChannelWithReference(uint8_t aChannelNumber, uint8_t aReference);
@@ -127,19 +132,30 @@ uint16_t readUntil4ConsecutiveValuesAreEqual(uint8_t aChannelNumber, uint8_t aDe
 
 uint8_t checkAndWaitForReferenceAndChannelToSwitch(uint8_t aChannelNumber, uint8_t aReference);
 
+/*
+ * readVCC*() functions store the result in sVCCVoltageMillivolt or sVCCVoltage
+ */
 float getVCCVoltageSimple(void);
+void readVCCVoltageSimple(void);
 uint16_t getVCCVoltageMillivoltSimple(void);
-float getTemperatureSimple(void);
+void readVCCVoltageMillivoltSimple(void);
 float getVCCVoltage(void);
+void readVCCVoltage(void);
 uint16_t getVCCVoltageMillivolt(void);
+void readVCCVoltageMillivolt(void);
 uint16_t getVCCVoltageReadingFor1_1VoltReference(void);
 uint16_t printVCCVoltageMillivolt(Print *aSerial);
-void printVCCVoltageMillivolt(Print *aSerial, uint16_t aVCCVoltageMillivolt);
+void readAndPrintVCCVoltageMillivolt(Print *aSerial);
+
 uint16_t getVoltageMillivolt(uint16_t aVCCVoltageMillivolt, uint8_t aADCChannelForVoltageMeasurement);
 uint16_t getVoltageMillivolt(uint8_t aADCChannelForVoltageMeasurement);
 uint16_t getVoltageMillivoltWith_1_1VoltReference(uint8_t aADCChannelForVoltageMeasurement);
+float getTemperatureSimple(void);
 float getTemperature(void);
 
-#endif // defined(ADATE)
-#endif //  defined(__AVR__)
+bool isVCCTooLowMultipleTimes();
+void resetVCCTooLowMultipleTimes();
+bool isVoltageTooLow();
+
+#endif //  defined(__AVR__) ...
 #endif // _ADC_UTILS_H

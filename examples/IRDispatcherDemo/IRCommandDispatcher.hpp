@@ -96,10 +96,14 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
     }
     CD_INFO_PRINTLN();
 
-    if (aAddress == IR_ADDRESS) { // IR_ADDRESS is defined in IRCommandMapping.h
+    if (aAddress == IR_ADDRESS) { // IR_ADDRESS is defined in *IRCommandMapping.h
         IRDispatcher.IRReceivedData.isAvailable = true;
         if(!IRDispatcher.doNotUseDispatcher) {
-            IRDispatcher.checkAndCallCommand(false); // only short commands are executed directly
+            /*
+             * Only short (non blocking) commands are executed directly in ISR context,
+             * others are stored for main loop which calls checkAndRunSuspendedBlockingCommands()
+             */
+            IRDispatcher.checkAndCallCommand(false);
         }
 
     } else {
@@ -109,22 +113,22 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
 }
 
 #elif defined(USE_IRMP_LIBRARY)
-#if !defined(IRMP_USE_COMPLETE_CALLBACK)
+#  if !defined(IRMP_USE_COMPLETE_CALLBACK)
 # error IRMP_USE_COMPLETE_CALLBACK must be activated for IRMP library
-#endif
+#  endif
 
 void IRCommandDispatcher::init() {
     irmp_init();
 }
 
 /*
- * This is the callback function is called if a complete command was received
+ * This is the callback function which is called if a complete command was received
  */
-#if defined(ESP32) || defined(ESP8266)
+#  if defined(ESP32) || defined(ESP8266)
 void IRAM_ATTR handleReceivedIRData()
-#else
+#  else
 void handleReceivedIRData()
-#endif
+#  endif
 {
     IRMP_DATA tTeporaryData;
     irmp_get_data(&tTeporaryData);
@@ -143,9 +147,9 @@ void handleReceivedIRData()
     CD_INFO_PRINTLN();
 
     // To enable delay() for commands
-#if !defined(ARDUINO_ARCH_MBED)
+#  if !defined(ARDUINO_ARCH_MBED)
     interrupts(); // be careful with always executable commands which lasts longer than the IR repeat duration.
-#endif
+#  endif
 
     if (IRDispatcher.IRReceivedData.address == IR_ADDRESS) {
         IRDispatcher.checkAndCallCommand(true);
@@ -154,13 +158,16 @@ void handleReceivedIRData()
         CD_INFO_PRINTLN(IR_ADDRESS, HEX);
     }
 }
-#endif
+#endif // elif defined(USE_IRMP_LIBRARY)
 
 /*
  * The main dispatcher function
  * Sets flags justCalledRegularIRCommand, executingBlockingCommand
+ * @param aCallBlockingCommandImmediately Run blocking command directly, otherwise set request to stop to true
+ *          and store command for main loop to execute by checkAndRunSuspendedBlockingCommands().
+ *          Should be false if called by ISR.
  */
-void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
+void IRCommandDispatcher::checkAndCallCommand(bool aCallBlockingCommandImmediately) {
     if (IRReceivedData.command == COMMAND_EMPTY) {
         return;
     }
@@ -177,7 +184,7 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
             const __FlashStringHelper *tCommandName = reinterpret_cast<const __FlashStringHelper*>(IRMapping[i].CommandString);
 #endif
             /*
-             * Check for repeat and if it is allowed for the current command
+             * Check for repeat and if repeat is allowed for the current command
              */
             if (IRReceivedData.isRepeat && !(IRMapping[i].Flags & IR_COMMAND_FLAG_REPEATABLE)) {
 #if defined(LOCAL_DEBUG)
@@ -201,15 +208,9 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
             }
 
             /*
-             * Handle stop commands
+             * lets start a new turn
              */
-            if (IRMapping[i].Flags & IR_COMMAND_FLAG_IS_STOP_COMMAND) {
-                requestToStopReceived = true;
-                CD_INFO_PRINTLN(F("Stop command received"));
-            } else {
-                // lets start a new turn
-                requestToStopReceived = false;
-            }
+            requestToStopReceived = false;
 
             bool tIsNonBlockingCommand = (IRMapping[i].Flags & IR_COMMAND_FLAG_NON_BLOCKING);
             if (tIsNonBlockingCommand) {
@@ -218,35 +219,13 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
                 CD_INFO_PRINTLN (tCommandName);
                 IRMapping[i].CommandToCall();
             } else {
-                if (!aCallAlsoBlockingCommands) {
+                if (aCallBlockingCommandImmediately && currentBlockingCommandCalled == COMMAND_EMPTY) {
                     /*
-                     * Store for main loop to execute
-                     */
-                    BlockingCommandToRunNext = IRReceivedData.command;
-                    requestToStopReceived = true; // to stop running command
-                    CD_INFO_PRINT(F("Blocking command "));
-                    CD_INFO_PRINT (tCommandName);
-                    CD_INFO_PRINTLN(F(" stored as next command and requested stop"));
-                } else {
-                    if (executingBlockingCommand) {
-                        // Logical error has happened
-                        CD_INFO_PRINTLN(
-                                F("Request to execute blocking command while another command is running. This should not happen!"));
-                        /*
-                         * A blocking command may not be called as long as another blocking command is running.
-                         * Try to stop again
-                         */
-                        BlockingCommandToRunNext = IRReceivedData.command;
-                        requestToStopReceived = true; // to stop running command
-                        return;
-                    }
-
-                    /*
-                     * here we are called from main loop and execute a command
+                     * here we are called from main loop to execute a command
                      */
                     justCalledBlockingCommand = true;
-                    executingBlockingCommand = true; // set lock for recursive calls
-                    currentBlockingCommandCalled = IRReceivedData.command;
+                    currentBlockingCommandCalled = IRReceivedData.command;  // set lock for recursive calls
+                    lastBlockingCommandCalled = IRReceivedData.command;     // set history, can be evaluated by main loop
                     /*
                      * This call is blocking!!!
                      */
@@ -257,30 +236,22 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallAlsoBlockingCommands) {
 #if defined(TRACE)
                     Serial.println(F("End of blocking command"));
 #endif
-                    executingBlockingCommand = false;
-                    currentBlockingCommandCalled = COMMAND_INVALID;
+                    currentBlockingCommandCalled = COMMAND_EMPTY;
+                } else {
+                    /*
+                     * Do not run command directly, but set request to stop to true and store command for main loop to execute
+                     */
+                    BlockingCommandToRunNext = IRReceivedData.command;
+                    requestToStopReceived = true; // to stop running command
+                    CD_INFO_PRINT(F("Requested stop and stored blocking command "));
+                    CD_INFO_PRINT (tCommandName);
+                    CD_INFO_PRINTLN(F(" as next command to run."));
                 }
-
             }
             break; // command found
-        }
+        } // if (IRReceivedData.command == IRMapping[i].IRCode)
     } // for loop
     return;
-}
-
-/*
- * Special delay function for the IRCommandDispatcher. Returns prematurely if requestToStopReceived is set.
- * To be used in blocking functions as delay
- * @return  true - as soon as stop received
- */
-bool IRCommandDispatcher::delayAndCheckForStop(uint16_t aDelayMillis) {
-    uint32_t tStartMillis = millis();
-    do {
-        if (IRDispatcher.requestToStopReceived) {
-            return true;
-        }
-    } while (millis() - tStartMillis < aDelayMillis);
-    return false;
 }
 
 /*
@@ -291,17 +262,44 @@ bool IRCommandDispatcher::checkAndRunSuspendedBlockingCommands() {
     /*
      * Take last rejected command and call associated function
      */
-    if (BlockingCommandToRunNext != COMMAND_INVALID) {
+    if (BlockingCommandToRunNext != COMMAND_EMPTY) {
 
         CD_INFO_PRINT(F("Take stored command = 0x"));
         CD_INFO_PRINTLN(BlockingCommandToRunNext, HEX);
 
         IRReceivedData.command = BlockingCommandToRunNext;
-        BlockingCommandToRunNext = COMMAND_INVALID;
+        BlockingCommandToRunNext = COMMAND_EMPTY;
         IRReceivedData.isRepeat = false;
         checkAndCallCommand(true);
         return true;
     }
+    return false;
+}
+
+#if defined(IR_COMMAND_HAS_MORE_THAN_8_BIT)
+void IRCommandDispatcher::setNextBlockingCommand(uint16_t aBlockingCommandToRunNext)
+#else
+void IRCommandDispatcher::setNextBlockingCommand(uint8_t aBlockingCommandToRunNext)
+#endif
+        {
+    CD_INFO_PRINT(F("Set next command to 0x"));
+    CD_INFO_PRINTLN(aBlockingCommandToRunNext, HEX);
+    BlockingCommandToRunNext = aBlockingCommandToRunNext;
+    requestToStopReceived = true;
+}
+
+/*
+ * Special delay function for the IRCommandDispatcher. Returns prematurely if requestToStopReceived is set.
+ * To be used in blocking functions as delay
+ * @return  true - as soon as stop received
+ */
+bool IRCommandDispatcher::delayAndCheckForStop(uint16_t aDelayMillis) {
+    uint32_t tStartMillis = millis();
+    do {
+        if (requestToStopReceived) {
+            return true;
+        }
+    } while (millis() - tStartMillis < aDelayMillis);
     return false;
 }
 

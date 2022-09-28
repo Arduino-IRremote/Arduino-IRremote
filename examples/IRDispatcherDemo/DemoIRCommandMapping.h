@@ -1,9 +1,9 @@
 /*
- * IRCommandMapping.h
+ * DemoIRCommandMapping.h
  *
  * IR remote button codes, strings, and functions to call
  *
- *  Copyright (C) 2019-2021  Armin Joachimsmeyer
+ *  Copyright (C) 2019-2022  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  */
@@ -169,26 +169,25 @@ static const char unknown[] PROGMEM ="unknown";
 /*
  * Main mapping array of commands to C functions and command strings
  */
-const struct IRToCommandMappingStruct IRMapping[] =
-{
-{ COMMAND_BLINK, IR_COMMAND_FLAG_BLOCKING, &doLedBlink20times, blink20times },
+const struct IRToCommandMappingStruct IRMapping[] = { /**/
+{ COMMAND_BLINK, IR_COMMAND_FLAG_BLOCKING, &doLedBlink20times, blink20times }, /**/
+{ COMMAND_STOP, IR_COMMAND_FLAG_BLOCKING, &doStop, stop },
 
 /*
  * Short commands, which can be executed always
  */
-{ COMMAND_TONE1, IR_COMMAND_FLAG_BLOCKING, &doTone1800, tone1800 },
-{ COMMAND_TONE3, IR_COMMAND_FLAG_BLOCKING, &doPrintMenu, printMenu },
-{ COMMAND_ON, IR_COMMAND_FLAG_NON_BLOCKING, &doLedOn, LEDon },
-{ COMMAND_OFF, IR_COMMAND_FLAG_NON_BLOCKING, &doLedOff, LEDoff },
-{ COMMAND_START, IR_COMMAND_FLAG_NON_BLOCKING, &doLedBlinkStart, blinkStart },
+{ COMMAND_TONE1, IR_COMMAND_FLAG_BLOCKING, &doTone1800, tone1800 }, /**/
+{ COMMAND_TONE3, IR_COMMAND_FLAG_BLOCKING, &doPrintMenu, printMenu }, /**/
+{ COMMAND_ON, IR_COMMAND_FLAG_NON_BLOCKING, &doLedOn, LEDon }, /**/
+{ COMMAND_OFF, IR_COMMAND_FLAG_NON_BLOCKING, &doLedOff, LEDoff }, /**/
+{ COMMAND_START, IR_COMMAND_FLAG_NON_BLOCKING, &doLedBlinkStart, blinkStart }, /**/
 { COMMAND_RESET, IR_COMMAND_FLAG_NON_BLOCKING, &doResetBlinkFrequency, reset },
-{ COMMAND_STOP, IR_COMMAND_FLAG_IS_STOP_COMMAND, &doStop, stop },
 
 /*
  * Repeatable short commands
  */
-{ COMMAND_TONE2, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doTone2200, tone2200 },
-{ COMMAND_INCREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doIncreaseBlinkFrequency, increaseBlink },
+{ COMMAND_TONE2, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doTone2200, tone2200 }, /**/
+{ COMMAND_INCREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doIncreaseBlinkFrequency, increaseBlink }, /**/
 { COMMAND_DECREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doDecreaseBlinkFrequency, decreaseBlink } };
 
 #endif // _IR_COMMAND_MAPPING_H

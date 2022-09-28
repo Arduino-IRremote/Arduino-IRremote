@@ -395,6 +395,7 @@ bool initPCIInterruptForTinyReceiver() {
 
 /**
  * Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.
+ * @return true if interrupt was successfully enabled
  */
 bool enablePCIInterruptForTinyReceiver() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)

@@ -146,7 +146,7 @@ jobs:
               All: -DRAW_BUFFER_LENGTH=700
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-            arduino-platform: arduino:avr,megaTinyCore:megaavr@2.5.11
+            arduino-platform: megaTinyCore:megaavr@2.5.11 # The current 2.6.0 is broken see https://github.com/SpenceKonde/megaTinyCore/issues/805
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100

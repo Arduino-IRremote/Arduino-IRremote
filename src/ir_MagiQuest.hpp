@@ -73,8 +73,8 @@ union magiquest_t {
     uint64_t llword;
     struct {
         uint8_t checksum;   // Checksum + Sum of 5 bytes before adds up to 0x00
-        uint8_t magnitude;  // Values observed are 102,01,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
-        uint32_t wand_id;   // the lowest bit is the highest bit of magnitude -> wand-id is handled as 32 bit and always even
+        uint8_t magnitude;  // Values observed are 0x102,01,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
+        uint32_t wand_id;   // the lowest bit of id is the highest bit of magnitude, i.e. the id is only 31 bit
         uint8_t StartBits;  // first 8 MSB start bits are zero.
         uint8_t HighByte;   // just to pad the struct out to 64 bits so we can union with llword
     } cmd;
@@ -217,6 +217,7 @@ bool IRrecv::decodeMagiQuest() {
 #endif
     }
 
+    // The lower swish values are typically read as 1 or 2, or even 12. Higher value is typically 258.
     decodedIRData.command = data.cmd.magnitude;         // Values observed are 102,01,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
     if (tWandId.UByte.LowByte & 0x01) {
         // copy lowest id bit to highest magnitude bit

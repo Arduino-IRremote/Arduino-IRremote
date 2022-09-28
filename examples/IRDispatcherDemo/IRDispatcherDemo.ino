@@ -123,7 +123,7 @@ void doTone2200();
  */
 #define INFO // to see some informative output
 #include "IRCommandDispatcher.h" // Only for required declarations, the library itself is included below after the definitions of the commands
-#include "IRCommandMapping.h" // must be included before IRCommandDispatcher.hpp to define IR_ADDRESS and IRMapping and string "unknown".
+#include "DemoIRCommandMapping.h" // must be included before IRCommandDispatcher.hpp to define IR_ADDRESS and IRMapping and string "unknown".
 #include "IRCommandDispatcher.hpp"
 
 /*

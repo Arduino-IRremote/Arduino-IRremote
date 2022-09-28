@@ -121,13 +121,20 @@
 #define __digitalPinToBit(P) \
 (((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (((P) >= 16 && (P) <= 23) ? (P) - 24 : (P) - 32))))
 # endif
-#else
+#elif defined(PORTA)
 #define __digitalPinToPortReg(P) \
 (((P) <= 7) ? &PORTB : (((P) >= 8 && (P) <= 15) ? &PORTD : (((P) >= 16 && (P) <= 23) ? &PORTC : &PORTA)))
 #define __digitalPinToDDRReg(P) \
 (((P) <= 7) ? &DDRB : (((P) >= 8 && (P) <= 15) ? &DDRD : (((P) >= 16 && (P) <= 23) ? &DDRC : &DDRA)))
 #define __digitalPinToPINReg(P) \
 (((P) <= 7) ? &PINB : (((P) >= 8 && (P) <= 15) ? &PIND : (((P) >= 16 && (P) <= 23) ? &PINC : &PINA)))
+#else
+#define __digitalPinToPortReg(P) \
+(((P) <= 7) ? &PORTB : (((P) >= 8 && (P) <= 15) ? &PORTD : &PORTC))
+#define __digitalPinToDDRReg(P) \
+(((P) <= 7) ? &DDRB : (((P) >= 8 && (P) <= 15) ? &DDRD : &DDRC))
+#define __digitalPinToPINReg(P) \
+(((P) <= 7) ? &PINB : (((P) >= 8 && (P) <= 15) ? &PIND : &PINC))
 # if defined(SANGUINO_PINOUT)
 #define __digitalPinToBit(P) \
 (((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (7 - ((P) - 24)))))

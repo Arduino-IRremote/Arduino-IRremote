@@ -518,6 +518,9 @@ These next macros for **TinyIRReceiver** must be defined in your program before 
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the feedback LED function. Saves 14 bytes program memory. |
 | `DISABLE_NEC_SPECIAL_REPEAT_SUPPORT` | disabled | Disables the detection of full NEC frame repeats. Saves 40 bytes program memory. |
 
+The next macro for **IRCommandDispatcher** must be defined in your program before the line `#include <IRCommandDispatcher.hpp>` to take effect.
+| `IR_COMMAND_HAS_MORE_THAN_8_BIT` | disabled | Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 4 bytes RAM + 1 byte RAM per mapping entry. |
+
 ### Changing include (*.h) files with Arduino IDE
 First, use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>
 If you have not yet saved the example as your own sketch, then you are instantly in the right library folder.<br/>

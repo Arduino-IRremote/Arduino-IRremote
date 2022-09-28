@@ -399,6 +399,9 @@ void IRsend::sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigne
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
+            /*
+             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
+             */
             auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
             if (aRepeatPeriodMillis >  tFrameDurationMillis) {
                 delay(aRepeatPeriodMillis - tFrameDurationMillis);
@@ -450,6 +453,9 @@ void IRsend::sendPulseDistanceWidthFromArray(PulsePauseWidthProtocolConstants *a
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
+            /*
+             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
+             */
             auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
             if (aProtocolConstants->RepeatPeriodMillis >  tFrameDurationMillis) {
                 delay(aProtocolConstants->RepeatPeriodMillis - tFrameDurationMillis);
@@ -494,6 +500,9 @@ void IRsend::sendPulseDistanceWidth(PulsePauseWidthProtocolConstants *aProtocolC
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
+            /*
+             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
+             */
             auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
             if (aProtocolConstants->RepeatPeriodMillis >  tFrameDurationMillis) {
                 delay(aProtocolConstants->RepeatPeriodMillis - tFrameDurationMillis);
@@ -541,6 +550,9 @@ void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHe
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
+            /*
+             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
+             */
             auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
             if (aRepeatPeriodMillis >  tFrameDurationMillis) {
                 delay(aRepeatPeriodMillis - tFrameDurationMillis);

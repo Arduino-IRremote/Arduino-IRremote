@@ -22,12 +22,16 @@
  *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
  */
 
-
 #ifndef _ADC_UTILS_HPP
 #define _ADC_UTILS_HPP
 
 #include "ADCUtils.h"
-#if defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
+#if defined(__AVR__) && defined(ADCSRA) && defined(ADATE) && (!defined(__AVR_ATmega4809__))
+
+#if !defined(STR_HELPER)
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+#endif
 
 /*
  * By replacing this value with the voltage you measured a the AREF pin after a conversion
@@ -49,6 +53,16 @@ union WordUnionForADCUtils {
     int16_t Word;
     uint8_t *BytePointer;
 };
+
+/*
+ * Persistent storage for VCC value
+ */
+float sVCCVoltage;
+uint16_t sVCCVoltageMillivolt;
+
+// for isVCCTooLowMultipleTimes()
+long sLastVoltageCheckMillis;
+uint8_t sVoltageTooLowCounter = 0;
 
 /*
  * Conversion time is defined as 0.104 milliseconds by ADC_PRESCALE in ADCUtils.h.
@@ -405,11 +419,68 @@ uint16_t printVCCVoltageMillivolt(Print *aSerial) {
     return tVCCVoltageMillivolt;
 }
 
+void readAndPrintVCCVoltageMillivolt(Print *aSerial) {
+    aSerial->print(F("VCC="));
+    sVCCVoltageMillivolt = getVCCVoltageMillivolt();
+    aSerial->print(sVCCVoltageMillivolt);
+    aSerial->println(" mV");
+}
+/*
+ * !!! Function without handling of switched reference and channel.!!!
+ * Use it ONLY if you only call getVCCVoltageSimple() or getVCCVoltageMillivoltSimple() in your program.
+ * !!! Resolution is only 20 millivolt !!!
+ */
+void readVCCVoltageSimple(void) {
+    // use AVCC with (optional) external capacitor at AREF pin as reference
+    float tVCC = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
+    sVCCVoltage = (1023 * 1.1 * 4) / tVCC;
+}
+
+/*
+ * !!! Function without handling of switched reference and channel.!!!
+ * Use it ONLY if you only call getVCCVoltageSimple() or getVCCVoltageMillivoltSimple() in your program.
+ * !!! Resolution is only 20 millivolt !!!
+ */
+void readVCCVoltageMillivoltSimple(void) {
+    // use AVCC with external capacitor at AREF pin as reference
+    uint16_t tVCCVoltageMillivoltRaw = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
+    sVCCVoltageMillivolt = (1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCCVoltageMillivoltRaw;
+}
+
+/*
+ * !!! Resolution is only 20 millivolt !!!
+ */
+void readVCCVoltage(void) {
+    sVCCVoltage = getVCCVoltageMillivolt() / 1000.0;
+}
+
+/*
+ * Read value of 1.1 volt internal channel using VCC (DEFAULT) as reference.
+ * Handles reference and channel switching by introducing the appropriate delays.
+ * !!! Resolution is only 20 millivolt !!!
+ * Sets also the sVCCVoltageMillivolt variable.
+ */
+void readVCCVoltageMillivolt(void) {
+    uint16_t tVCCVoltageMillivoltRaw = waitAndReadADCChannelWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT);
+    /*
+     * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
+     */
+    sVCCVoltageMillivolt = (1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT) / tVCCVoltageMillivoltRaw;
+}
+
+/*
+ * Get voltage at ADC channel aADCChannelForVoltageMeasurement
+ * aVCCVoltageMillivolt is assumed as reference voltage
+ */
 uint16_t getVoltageMillivolt(uint16_t aVCCVoltageMillivolt, uint8_t aADCChannelForVoltageMeasurement) {
     uint16_t tInputVoltageRaw = waitAndReadADCChannelWithReference(aADCChannelForVoltageMeasurement, DEFAULT);
     return (aVCCVoltageMillivolt * (uint32_t) tInputVoltageRaw) / 1023;
 }
 
+/*
+ * Get voltage at ADC channel aADCChannelForVoltageMeasurement
+ * Reference voltage VCC is determined just before
+ */
 uint16_t getVoltageMillivolt(uint8_t aADCChannelForVoltageMeasurement) {
     uint16_t tInputVoltageRaw = waitAndReadADCChannelWithReference(aADCChannelForVoltageMeasurement, DEFAULT);
     return (getVCCVoltageMillivolt() * (uint32_t) tInputVoltageRaw) / 1023;
@@ -419,6 +490,86 @@ uint16_t getVoltageMillivoltWith_1_1VoltReference(uint8_t aADCChannelForVoltageM
     uint16_t tInputVoltageRaw = waitAndReadADCChannelWithReference(aADCChannelForVoltageMeasurement, INTERNAL);
     return (ADC_INTERNAL_REFERENCE_MILLIVOLT * (uint32_t) tInputVoltageRaw) / 1023;
 }
+
+/*
+ * Default values are suitable for Li-ion batteries.
+ * We normally have voltage drop at the connectors, so the battery voltage is assumed slightly higher, than the Arduino VCC.
+ * But keep in mind that the ultrasonic distance module HC-SR04 may not work reliable below 3.7 volt.
+ */
+#if !defined(VCC_STOP_THRESHOLD_MILLIVOLT)
+#define VCC_STOP_THRESHOLD_MILLIVOLT    3400 // Do not stress your battery and we require some power for standby
+#endif
+#if !defined(VCC_EMERGENCY_STOP_MILLIVOLT)
+#define VCC_EMERGENCY_STOP_MILLIVOLT    3000 // Many Li-ions are specified down to 3.0 volt
+#endif
+#if !defined(VCC_CHECK_PERIOD_MILLIS)
+#define VCC_CHECK_PERIOD_MILLIS        10000 // Period of VCC checks
+#endif
+#if !defined(VCC_CHECKS_TOO_LOW_BEFORE_STOP)
+#define VCC_CHECKS_TOO_LOW_BEFORE_STOP     6 // Shutdown after 6 times (60 seconds) VCC below VCC_STOP_THRESHOLD_MILLIVOLT or 1 time below VCC_EMERGENCY_STOP_MILLIVOLT
+#endif
+
+/*
+ * @ return true only once, when VCC_CHECKS_TOO_LOW_BEFORE_STOP (6) times voltage too low -> shutdown
+ */
+bool isVCCTooLowMultipleTimes() {
+    /*
+     * Check VCC every VCC_CHECK_PERIOD_MILLIS (10) seconds
+     */
+
+    if (millis() - sLastVoltageCheckMillis >= VCC_CHECK_PERIOD_MILLIS) {
+        sLastVoltageCheckMillis = millis();
+
+#  if defined(INFO)
+        readAndPrintVCCVoltageMillivolt(&Serial);
+#  else
+        readVCCVoltageMillivolt();
+#  endif
+
+        if (sVoltageTooLowCounter < VCC_CHECKS_TOO_LOW_BEFORE_STOP) {
+            /*
+             * Do not check again if shutdown has happened
+             */
+            if (sVCCVoltageMillivolt > VCC_STOP_THRESHOLD_MILLIVOLT) {
+                sVoltageTooLowCounter = 0; // reset counter
+            } else {
+                /*
+                 * Voltage too low, wait VCC_CHECKS_TOO_LOW_BEFORE_STOP (6) times and then shut down.
+                 */
+                if (sVCCVoltageMillivolt < VCC_EMERGENCY_STOP_MILLIVOLT) {
+                    // emergency shutdown
+                    sVoltageTooLowCounter = VCC_CHECKS_TOO_LOW_BEFORE_STOP;
+#  if defined(INFO)
+                    Serial.println(F("Voltage < " STR(VCC_EMERGENCY_STOP_MILLIVOLT) " mV detected -> emergency shutdown"));
+#  endif
+                } else {
+                    sVoltageTooLowCounter++;
+#  if defined(INFO)
+                    Serial.print(F("Voltage < " STR(VCC_STOP_THRESHOLD_MILLIVOLT) " mV detected: "));
+                    Serial.print(VCC_CHECKS_TOO_LOW_BEFORE_STOP - sVoltageTooLowCounter);
+                    Serial.println(F(" tries left"));
+#  endif
+                }
+                if (sVoltageTooLowCounter == VCC_CHECKS_TOO_LOW_BEFORE_STOP) {
+                    /*
+                     * 6 times voltage too low -> shutdown
+                     */
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+void resetVCCTooLowMultipleTimes(){
+    sVoltageTooLowCounter = 0;
+}
+
+bool isVoltageTooLow(){
+    return (sVoltageTooLowCounter >= VCC_CHECKS_TOO_LOW_BEFORE_STOP);
+}
+
 /*
  * !!! Function without handling of switched reference and channel.!!!
  * Use it ONLY if you only use INTERNAL reference (call getTemperatureSimple()) in your program.
