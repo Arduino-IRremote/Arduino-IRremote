@@ -9,6 +9,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - New convenience fuctions bitreverse32Bit() and bitreverseOneByte().
 - Improved Magiquest protocol.
 - Fix for #1028 - Prevent long delay caused by overflow when frame duration < repeat period - Thanks to Stephen Humphries!
+- Support for ATtiny816 - Thanks to elockman.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

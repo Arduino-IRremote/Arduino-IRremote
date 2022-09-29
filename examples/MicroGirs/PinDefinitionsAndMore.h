@@ -83,6 +83,14 @@
 #undef LED_BUILTIN         // No LED available on the TinyCore 32 board, take the one on the programming board which is connected to the DAC output
 #define LED_BUILTIN      2 // PA6
 
+#  elif defined(__AVR_ATtiny816__) // Tiny Core Micro
+#define IR_RECEIVE_PIN  14 // PA1
+#define IR_SEND_PIN     16 // PA3
+#define TONE_PIN         1 // PA5
+#define APPLICATION_PIN  0 // PA4
+#undef LED_BUILTIN         // No LED available, take the one which is connected to the DAC output
+#define LED_BUILTIN      4 // PB5
+
 #  elif defined(__AVR_ATtiny1604__)
 #define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.
 #define IR_SEND_PIN      3

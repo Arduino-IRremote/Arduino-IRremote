@@ -77,9 +77,12 @@ TinyIRReceiverStruct TinyIRReceiverControl;
  * Set input pin and output pin definitions etc.
  */
 #if !defined(IR_INPUT_PIN)
-#if defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
+#if defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
 #warning "IR_INPUT_PIN is not defined, so it is set to 10"
 #define IR_INPUT_PIN    10
+#elif defined(__AVR_ATtiny816__)
+#warning "IR_INPUT_PIN is not defined, so it is set to 14"
+#define IR_INPUT_PIN    14
 #else
 #warning "IR_INPUT_PIN is not defined, so it is set to 2"
 #define IR_INPUT_PIN    2
@@ -327,7 +330,7 @@ bool initPCIInterruptForTinyReceiver() {
 /**************************************************
  * Pin to interrupt mapping for different platforms
  **************************************************/
-#if defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
+#if defined(__AVR_ATtiny816__) || defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
 #define USE_ATTACH_INTERRUPT_DIRECT
 
 #elif !defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
