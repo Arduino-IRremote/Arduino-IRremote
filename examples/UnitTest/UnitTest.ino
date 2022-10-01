@@ -74,6 +74,11 @@
 #define DECODE_SAMSUNG
 #define DECODE_LG
 
+#  ifdef USE_NO_SEND_PWM    // Bang & Olufsen does not work with a standard IR receiver
+#define BEO_STRICT
+#define RECORD_GAP_MICROS 16000
+#define DECODE_BEO
+#  endif
 #define DECODE_BOSEWAVE
 //#define DECODE_LEGO_PF
 #define DECODE_MAGIQUEST
@@ -465,6 +470,16 @@ void loop() {
     Serial.flush();
     IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t)sAddress, IRSendData.command); // we have 31 bit address
     checkReceive(sAddress, IRSendData.command & 0x1FF); // we have 9 bit command
+    delay(DELAY_AFTER_SEND);
+#endif
+
+#if defined(DECODE_BEO)
+    IRSendData.protocol = BANG_OLUFSEN;
+    Serial.print(F("Send "));
+    Serial.println(getProtocolString(IRSendData.protocol));
+    Serial.flush();
+    IrSender.write(&IRSendData, sRepeats);
+    checkReceive(IRSendData.address & 0x1FF, IRSendData.command & 0xFF);
     delay(DELAY_AFTER_SEND);
 #endif
 

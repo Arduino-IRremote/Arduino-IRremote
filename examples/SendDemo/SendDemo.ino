@@ -300,6 +300,13 @@ void loop() {
     IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t)sAddress, IRSendData.command); // we have 31 bit address
     delay(DELAY_AFTER_SEND);
 
+    IRSendData.protocol = BANG_OLUFSEN;
+    Serial.print(F("Send "));
+    Serial.println(getProtocolString(IRSendData.protocol));
+    Serial.flush();
+    IrSender.write(&IRSendData, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
     IRSendData.protocol = BOSEWAVE;
     Serial.println(F("Send Bosewave with no address and 8 command bits"));
     Serial.flush();

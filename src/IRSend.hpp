@@ -238,6 +238,9 @@ size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
         sendApple(tAddress, tCommand, aNumberOfRepeats);
 
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
+    } else if (tProtocol == BANG_OLUFSEN) {
+        sendBangOlufsen(tAddress, tCommand, 9, false, aNumberOfRepeats);
+
     } else if (tProtocol == BOSEWAVE) {
         sendBoseWave(tCommand, aNumberOfRepeats);
 

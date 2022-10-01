@@ -340,6 +340,13 @@ bool IRrecv::decode() {
      * Start of the exotic protocols
      */
 
+#if defined(DECODE_BEO)
+    IR_TRACE_PRINTLN(F("Attempting Bang & Olufsen decode"));
+    if (decodeBangOlufsen()) {
+        return true;
+    }
+#endif
+
 #if defined(DECODE_WHYNTER)
     IR_TRACE_PRINTLN(F("Attempting Whynter decode"));
     if (decodeWhynter()) {
@@ -934,6 +941,9 @@ void printActiveIRProtocols(Print *aSerial) {
     /*
      * Start of the exotic protocols
      */
+#if defined(DECODE_BEO)
+    aSerial->print(F("Bang & Olufsen, "));
+#endif
 #if defined(DECODE_WHYNTER)
     aSerial->print(F("Whynter, "));
 #endif
@@ -1434,7 +1444,8 @@ const char * const ProtocolNames[] PROGMEM =
     string_Sharp,
     string_Sony
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
-    , string_BoseWave,
+    , string_BangOlufsen,
+    string_BoseWave,
     string_Lego,
     string_MagiQuest,
     string_Whynter
