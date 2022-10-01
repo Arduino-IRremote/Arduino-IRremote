@@ -1,5 +1,5 @@
 /*
- * ir_BEOOlufsen.hpp
+ * ir_BangOlufsen.hpp
  *
  *  Contains functions for receiving and sending Bang & Olufsen IR and Datalink '86 protocols
  *
