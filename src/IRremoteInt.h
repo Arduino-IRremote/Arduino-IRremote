@@ -263,6 +263,7 @@ public:
     /*
      * All standard (decode address + command) protocol decoders
      */
+    bool decodeBangOlufsen();
     bool decodeBoseWave();
     bool decodeDenon();
     bool decodeJVC();
@@ -480,6 +481,8 @@ public:
     /*
      * New send functions
      */
+    void sendBangOlufsen(uint32_t aHeader, uint8_t aData, int8_t aHeaderBits, bool aDatalink, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+    void sendBangOlufsenRaw(uint64_t aRawData, int_fast8_t aBits, bool aDatalink, bool aBackToBack = false);
     void sendBoseWave(uint8_t aCommand, int_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aSendSharp = false);
     void sendDenonRaw(uint16_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS)

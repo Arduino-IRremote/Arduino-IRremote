@@ -49,7 +49,7 @@
  * - SEND_PWM_BY_TIMER                  Disable carrier PWM generation in software and use (restricted) hardware PWM.
  * - USE_NO_SEND_PWM                    Use no carrier PWM, just simulate an **active low** receiver signal. Overrides SEND_PWM_BY_TIMER definition.
  * - USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
- * - EXCLUDE_EXOTIC_PROTOCOLS           If activated, BOSEWAVE, WHYNTER and LEGO_PF are excluded in decode() and in sending with IrSender.write().
+ * - EXCLUDE_EXOTIC_PROTOCOLS           If activated, BANG_OLUFSEN, BOSEWAVE, WHYNTER and LEGO_PF are excluded in decode() and in sending with IrSender.write().
  * - EXCLUDE_UNIVERSAL_PROTOCOLS        If activated, the universal decoder for pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in decode().
  * - DECODE_*                           Selection of individual protocols to be decoded. See below.
  * - MARK_EXCESS_MICROS                 Value is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules.
@@ -81,7 +81,7 @@
 //#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN
 
 /*
- * If activated, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in decoding and in sending with IrSender.write
+ * If activated, BANG_OLUFSEN, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in decoding and in sending with IrSender.write
  */
 //#define EXCLUDE_EXOTIC_PROTOCOLS
 /****************************************************
@@ -98,7 +98,7 @@
 #  if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \
 || defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) \
-|| defined(DECODE_DISTANCE) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
+|| defined(DECODE_DISTANCE) || defined(DECODE_HASH) || defined(DECODE_BEO) || defined(DECODE_BOSEWAVE) \
 || defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_WHYNTER)))
 /*
  * If no protocol is explicitly enabled, we enable all protocols
@@ -115,6 +115,7 @@
 #define DECODE_RC6
 
 #    if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program memory
+#define DECODE_BEO
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF
 #define DECODE_MAGIQUEST // It modifies the RAW_BUFFER_LENGTH from 100 to 112
@@ -308,6 +309,7 @@
 /*
  * Include the sources of all decoders here to enable compilation with macro values set by user program.
  */
+#include "ir_BangOlufsen.hpp"
 #include "ir_BoseWave.hpp"
 #include "ir_Denon.hpp"
 #include "ir_JVC.hpp"

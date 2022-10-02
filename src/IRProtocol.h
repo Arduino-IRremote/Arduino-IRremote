@@ -64,6 +64,7 @@ typedef enum {
     SHARP,
     SONY,
     /* Now the exotic protocols */
+    BANG_OLUFSEN,
     BOSEWAVE,
     LEGO_PF,
     MAGIQUEST,
@@ -94,6 +95,7 @@ const char string_Samsung[] PROGMEM = "Samsung";
 const char string_SamsungLG[] PROGMEM = "SamsungLG";
 const char string_Sharp[] PROGMEM = "Sharp";
 const char string_Sony[] PROGMEM = "Sony";
+const char string_BangOlufsen[] PROGMEM = "Bang&Olufsen";
 const char string_BoseWave[] PROGMEM = "BoseWave";
 const char string_Lego[] PROGMEM = "Lego";
 const char string_MagiQuest[] PROGMEM = "MagiQuest";
@@ -121,6 +123,7 @@ struct PulsePauseWidthProtocolConstants {
 /*
  * Carrier frequencies for various protocols
  */
+#define BEO_KHZ         455
 #define SONY_KHZ        40
 #define BOSEWAVE_KHZ    38
 #define DENON_KHZ       38
