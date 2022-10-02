@@ -115,7 +115,6 @@
 #define DECODE_RC6
 
 #    if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program memory
-#define DECODE_BEO
 #define DECODE_BOSEWAVE
 #define DECODE_LEGO_PF
 #define DECODE_MAGIQUEST // It modifies the RAW_BUFFER_LENGTH from 100 to 112

@@ -74,11 +74,13 @@
 #define DECODE_SAMSUNG
 #define DECODE_LG
 
-#  ifdef USE_NO_SEND_PWM    // Bang & Olufsen does not work with a standard IR receiver
-#define BEO_STRICT
-#define RECORD_GAP_MICROS 16000
 #define DECODE_BEO
-#  endif
+//#define ENABLE_BEO_WITHOUT_FRAME_GAP // For successful unit testing we must see the warning at ir_BangOlufsen.hpp:88:2
+#if defined(DECODE_BEO)
+#define RECORD_GAP_MICROS 16000 // always get the complete frame in the receive buffer
+#define BEO_KHZ         38  //  We send and receive Bang&Olufsen with 38 kHz here.
+#endif
+
 #define DECODE_BOSEWAVE
 //#define DECODE_LEGO_PF
 #define DECODE_MAGIQUEST
@@ -308,7 +310,7 @@ void loop() {
         Serial.println(F(" LSB first"));
         Serial.flush();
         IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_LSB_FIRST,
-                SEND_STOP_BIT, 0, NO_REPEATS);
+        SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceive(0x0B, 0x10);
         delay(DELAY_AFTER_SEND);
 
@@ -317,7 +319,7 @@ void loop() {
         tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;
         IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_MSB_FIRST,
-                SEND_STOP_BIT, 0, NO_REPEATS);
+        SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceive(0x0B, 0x10);
         delay(DELAY_AFTER_SEND);
 #endif
@@ -326,7 +328,7 @@ void loop() {
         Serial.flush();
         uint32_t tRawData1[] = { 0x43D8613C, 0x3BC3BC }; // LSB of tRawData1[0] is sent first
         IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData1[0], 56, PROTOCOL_IS_LSB_FIRST,
-                SEND_STOP_BIT, 0, NO_REPEATS);
+        SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceive(0x0, 0x0); // No real check, only printing of received result
         delay(DELAY_AFTER_SEND);
     }
@@ -343,7 +345,6 @@ void loop() {
     IrSender.sendApple(sAddress & 0xFF, sCommand, sRepeats);
     checkReceive(sAddress & 0xFF, sCommand);
     delay(DELAY_AFTER_SEND);
-
 
 #if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
     Serial.println(F("Send Panasonic"));
@@ -468,18 +469,31 @@ void loop() {
 #if defined(DECODE_MAGIQUEST)
     Serial.println(F("Send MagiQuest"));
     Serial.flush();
-    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t)sAddress, IRSendData.command); // we have 31 bit address
+    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, IRSendData.command); // we have 31 bit address
     checkReceive(sAddress, IRSendData.command & 0x1FF); // we have 9 bit command
     delay(DELAY_AFTER_SEND);
 #endif
 
 #if defined(DECODE_BEO)
-    IRSendData.protocol = BANG_OLUFSEN;
-    Serial.print(F("Send "));
-    Serial.println(getProtocolString(IRSendData.protocol));
+    Serial.println(F("Send Bang&Olufsen"));
     Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
-    checkReceive(IRSendData.address & 0x1FF, IRSendData.command & 0xFF);
+    IrSender.sendBangOlufsen(sAddress & 0x0FF, sCommand, sRepeats);
+#  if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
+    delay((RECORD_GAP_MICROS / 1000) + 1);
+    IrReceiver.printIRResultRawFormatted(&Serial, true);
+    uint8_t tOriginalRawlen = IrReceiver.decodedIRData.rawDataPtr->rawlen;
+    IrReceiver.decodedIRData.rawDataPtr->rawlen = 6;
+    // decode first part of frame
+    IrReceiver.decode();
+    IrReceiver.printIRResultShort(&Serial);
+
+    // Remove trailing 6 entries for next decode
+    IrReceiver.decodedIRData.rawDataPtr->rawlen = tOriginalRawlen - 6;
+    for (uint_fast8_t i = 0; i < IrReceiver.decodedIRData.rawDataPtr->rawlen; ++i) {
+        IrReceiver.decodedIRData.rawDataPtr->rawbuf[i] = IrReceiver.decodedIRData.rawDataPtr->rawbuf[i + 6];
+    }
+#  endif
+    checkReceive(sAddress & 0x0FF, sCommand);
     delay(DELAY_AFTER_SEND);
 #endif
 

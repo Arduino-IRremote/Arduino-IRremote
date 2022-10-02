@@ -456,6 +456,20 @@ rawData[112]:
  + 300,- 850 + 600,- 550 + 600,- 550 + 300
 Sum: 63500
 
+Send Bang&Olufsen
+Protocol=Bang&Olufsen Address=0xF1 Command=0x76 Raw-Data=0xF176 16 bits MSB first
+Send with: IrSender.sendBang&Olufsen(0xF1, 0x76, <numberOfRepeats>);
+rawData[44]: 
+ -1089200
+ + 250,-2850
+ + 250,-2900 + 250,-15200 + 300,-2850 + 250,-9050
+ + 250,-5950 + 250,-5950 + 300,-5900 + 300,-2800
+ + 300,-5900 + 300,-5900 + 300,-9000 + 300,-2800
+ + 300,-9000 + 300,-5900 + 300,-5900 + 250,-2850
+ + 300,-9000 + 300,-5900 + 300,-2800 + 300,-12100
+ + 300
+Sum: 136750
+
 Send Bosewave with no address and 8 command bits
 Protocol=BoseWave Address=0x0 Command=0x76 Raw-Data=0x8976 16 bits LSB first
 Send with: IrSender.sendBoseWave(0x0, 0x76, <numberOfRepeats>);

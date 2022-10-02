@@ -357,6 +357,12 @@ On my Arduino Nanos, I always use a 100 &ohm; series resistor and one IR LED :gr
 For receiving, the **minimal CPU frequency is 4 MHz**, since the 50 µs timer ISR takes around 12 µs on a 16 MHz ATmega.<br/>
 For sending, the **default software generated PWM has problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
 
+## Bang & Olufsen protocol
+The Bang & Olufsen protocol decoder is not enabled by default, i.e if no protocol is enabled explicitely by #define `DECODE_<XYZ>`. It must always be enabled explicitly by `#define DECODE_BEO`.
+This is because it has an **IR transmit frequency of 455 kHz** and therefore requires a different receiver harware (TSOP7000).<br/>
+And because **generating a 455 kHz PWM signal is currently not implemented**, sending only works if `USE_NO_SEND_PWM` is defined!<br/>
+For more info, see [ir_BangOlufsen.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_BangOlufsen.hpp#L42).
+
 # Handling unknown Protocols
 ## Disclaimer
 **This library was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.**

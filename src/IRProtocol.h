@@ -123,7 +123,9 @@ struct PulsePauseWidthProtocolConstants {
 /*
  * Carrier frequencies for various protocols
  */
+#if !defined(BEO_KHZ) // guard used for unit test, which sends and receive Bang&Olufsen with 38 kHz.
 #define BEO_KHZ         455
+#endif
 #define SONY_KHZ        40
 #define BOSEWAVE_KHZ    38
 #define DENON_KHZ       38

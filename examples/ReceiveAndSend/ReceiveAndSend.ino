@@ -46,7 +46,7 @@
 
 /*
  * Specify which protocol(s) should be used for decoding.
- * If no protocol is defined, all protocols are active.
+ * If no protocol is defined, all protocols (except Bang&Olufsen) are active.
  * This must be done before the #include <IRremote.hpp>
  */
 //#define DECODE_LG

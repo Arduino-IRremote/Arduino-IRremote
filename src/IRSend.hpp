@@ -138,6 +138,7 @@ void IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t 
  * Interprets and sends a IRData structure.
  * @param aIRSendData The values of protocol, address, command and repeat flag are taken for sending.
  * @param aNumberOfRepeats Number of repeats to send after the initial data if data is no repeat.
+ * @return 1 if data sent, 0 if no data sent (i.e. for BANG_OLUFSEN)
  */
 size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
 
@@ -146,7 +147,7 @@ size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
     auto tCommand = aIRSendData->command;
     bool tIsRepeat = (aIRSendData->flags & IRDATA_FLAGS_IS_REPEAT);
     if (tIsRepeat) {
-        aNumberOfRepeats = -1;
+        aNumberOfRepeats = -1; // if aNumberOfRepeats < 0 then only a special repeat frame will be sent
     }
 //    switch (tProtocol) { // 26 bytes bigger than if, else if, else
 //    case NEC:
@@ -238,9 +239,6 @@ size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
         sendApple(tAddress, tCommand, aNumberOfRepeats);
 
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
-    } else if (tProtocol == BANG_OLUFSEN) {
-        sendBangOlufsen(tAddress, tCommand, 9, false, aNumberOfRepeats);
-
     } else if (tProtocol == BOSEWAVE) {
         sendBoseWave(tCommand, aNumberOfRepeats);
 
@@ -252,6 +250,8 @@ size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
         sendLegoPowerFunctions(tAddress, tCommand, tCommand >> 4, tIsRepeat); // send 5 autorepeats
 #endif
 
+    } else {
+        return 0; // Not supported by write. E.g for BANG_OLUFSEN
     }
     return 1;
 }
@@ -406,7 +406,7 @@ void IRsend::sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigne
              * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
              */
             auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
-            if (aRepeatPeriodMillis >  tFrameDurationMillis) {
+            if (aRepeatPeriodMillis > tFrameDurationMillis) {
                 delay(aRepeatPeriodMillis - tFrameDurationMillis);
             }
         }
@@ -460,7 +460,7 @@ void IRsend::sendPulseDistanceWidthFromArray(PulsePauseWidthProtocolConstants *a
              * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
              */
             auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
-            if (aProtocolConstants->RepeatPeriodMillis >  tFrameDurationMillis) {
+            if (aProtocolConstants->RepeatPeriodMillis > tFrameDurationMillis) {
                 delay(aProtocolConstants->RepeatPeriodMillis - tFrameDurationMillis);
             }
         }
@@ -490,7 +490,7 @@ void IRsend::sendPulseDistanceWidth(PulsePauseWidthProtocolConstants *aProtocolC
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
 
-        if (tNumberOfCommands < ((uint_fast8_t)aNumberOfRepeats + 1) && aProtocolConstants->SpecialSendRepeatFunction != NULL) {
+        if (tNumberOfCommands < ((uint_fast8_t) aNumberOfRepeats + 1) && aProtocolConstants->SpecialSendRepeatFunction != NULL) {
             // send special repeat
             aProtocolConstants->SpecialSendRepeatFunction();
         } else {
@@ -507,7 +507,7 @@ void IRsend::sendPulseDistanceWidth(PulsePauseWidthProtocolConstants *aProtocolC
              * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
              */
             auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
-            if (aProtocolConstants->RepeatPeriodMillis >  tFrameDurationMillis) {
+            if (aProtocolConstants->RepeatPeriodMillis > tFrameDurationMillis) {
                 delay(aProtocolConstants->RepeatPeriodMillis - tFrameDurationMillis);
             }
         }
@@ -539,7 +539,7 @@ void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHe
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
 
-        if (tNumberOfCommands < ((uint_fast8_t)aNumberOfRepeats + 1) && aSpecialSendRepeatFunction != NULL) {
+        if (tNumberOfCommands < ((uint_fast8_t) aNumberOfRepeats + 1) && aSpecialSendRepeatFunction != NULL) {
             // send special repeat
             aSpecialSendRepeatFunction();
         } else {
@@ -557,7 +557,7 @@ void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHe
              * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
              */
             auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
-            if (aRepeatPeriodMillis >  tFrameDurationMillis) {
+            if (aRepeatPeriodMillis > tFrameDurationMillis) {
                 delay(aRepeatPeriodMillis - tFrameDurationMillis);
             }
         }
@@ -760,6 +760,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
 #  endif
         /*
          * PWM pause timing
+         * Minimal pause duration is 4.3 us if NO_LED_FEEDBACK_CODE is defined
          */
         tNextPeriodEnding += periodTimeMicros;
         do {
@@ -778,6 +779,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
                 }
             }
 #  endif
+            // Just getting variables and check for end condition takes minimal 3.8 us
             if (tDeltaMicros >= aMarkMicros - (112 / CLOCKS_PER_MICRO)) { // To compensate for call duration - 112 is an empirical value
 #else
                 if (tDeltaMicros >= aMarkMicros) {
@@ -789,8 +791,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
 #endif
                 return;
             }
-//            digitalToggleFast(_IR_TIMING_TEST_PIN); // 3.0 us per call @16MHz
-        } while (tMicros < tNextPeriodEnding);  // 3.4 us @16MHz
+        } while (tMicros < tNextPeriodEnding);
     } while (true);
 #  endif
 }
@@ -856,6 +857,7 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
  * Enables IR output. The kHz value controls the modulation frequency in kilohertz.
  * IF PWM should be generated by a timer, it uses the platform specific timerConfigForSend() function,
  * otherwise it computes the delays used by the mark() function.
+ * If IR_SEND_PIN is defined, maximum PWM frequency for an AVR @16 MHz is 170 kHz (180 kHz if NO_LED_FEEDBACK_CODE is defined)
  */
 void IRsend::enableIROut(uint_fast8_t aFrequencyKHz) {
 #if defined(SEND_PWM_BY_TIMER)
