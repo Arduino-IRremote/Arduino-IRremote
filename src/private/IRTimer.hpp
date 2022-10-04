@@ -1119,7 +1119,11 @@ void timerConfigForReceive() {
 
 #define TIMER_RESET_INTR_PENDING
 #define TIMER_ENABLE_RECEIVE_INTR   timerAlarmEnable(s50usTimer)
+#if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2, 0, 2)
 #define TIMER_DISABLE_RECEIVE_INTR  if (s50usTimer != NULL) {timerEnd(s50usTimer); timerDetachInterrupt(s50usTimer);}
+#else
+#define TIMER_DISABLE_RECEIVE_INTR  if (s50usTimer != NULL) {timerAlarmDisable(s50usTimer);}
+#endif
 // Redefinition of ISR macro which creates a plain function now
 #  if defined(ISR)
 #undef ISR
@@ -1129,7 +1133,7 @@ IRAM_ATTR void IRTimerInterruptHandler();
 
 // Variables specific to the ESP32.
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
-hw_timer_t *s50usTimer;
+hw_timer_t *s50usTimer; // set by timerConfigForReceive()
 
 /*
  * Set timer for interrupts every MICROS_PER_TICK (50 us)
