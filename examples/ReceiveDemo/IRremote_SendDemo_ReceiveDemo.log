@@ -1,151 +1,120 @@
-START ../src/ReceiveDemo.cpp from Mar  8 2021
-Using library version 3.1.0
+START ../src/ReceiveDemo.cpp from Oct 17 2022
+Using library version 4.0.0
 Enabling IRin...
-Ready to receive IR signals at pin 2
+Ready to receive IR signals of protocols: NEC/NEC2/Onkyo/Apple, Panasonic/Kaseikyo, Denon/Sharp, Sony, RC5, RC6, LG, JVC, Samsung, Whynter, Lego Power Functions, Bosewave , MagiQuest, Pulse Distance, Hash at pin 2
+Debug button pin is 5
+5000 us is the (minimum) gap, after which the start of a new IR packet is assumed
 20 us are subtracted from all marks and added to all spaces for decoding
+
 Protocol=NEC Address=0x2 Command=0x34 Raw-Data=0xCB34FD02 32 bits LSB first
+Send with: IrSender.sendNEC(0x2, 0x34, <numberOfRepeats>);
 
 Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
+Send with: IrSender.sendNEC(0x102, 0x34, <numberOfRepeats>);
+
+Protocol=NEC Address=0x2 Command=0x34 Raw-Data=0xCB34FD02 32 bits LSB first
+Send with: IrSender.sendNEC(0x2, 0x34, <numberOfRepeats>);
+
+Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
+Send with: IrSender.sendNEC(0x102, 0x34, <numberOfRepeats>);
 
 Protocol=NEC Address=0x80 Command=0x45 Raw-Data=0xBA457F80 32 bits LSB first
+Send with: IrSender.sendNEC(0x80, 0x45, <numberOfRepeats>);
 
-Protocol=NEC Address=0x102 Command=0x34 Parity fail Raw-Data=0xC0340102 32 bits LSB first
+Protocol=NEC Address=0x4 Command=0x8 Raw-Data=0xF708FB04 32 bits LSB first
+Send with: IrSender.sendNEC(0x4, 0x8, <numberOfRepeats>);
+
+Protocol=Onkyo Address=0x102 Command=0x304 Raw-Data=0x3040102 32 bits LSB first
+Send with: IrSender.sendOnkyo(0x102, 0x304, <numberOfRepeats>);
+
+Protocol=Onkyo Address=0x102 Command=0x304 Raw-Data=0x3040102 32 bits LSB first
+Send with: IrSender.sendOnkyo(0x102, 0x304, <numberOfRepeats>);
 
 Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
+Send with: IrSender.sendNEC(0x102, 0x34, <numberOfRepeats>);
 
-Protocol=APPLE Address=0x2 Command=0x34 Raw-Data=0x23487EE 32 bits LSB first
+Protocol=Panasonic Address=0xB Command=0x10 Raw-Data=0xA01000B0 48 bits LSB first
+Send with: IrSender.sendPanasonic(0xB, 0x10, <numberOfRepeats>);
 
-Protocol=PANASONIC Address=0x102 Command=0x34 Raw-Data=0x4341020 48 bits LSB first
+Protocol=Panasonic Address=0xB Command=0x10 Raw-Data=0xA01000B0 48 bits LSB first
+Send with: IrSender.sendPanasonic(0xB, 0x10, <numberOfRepeats>);
 
-Protocol=KASEIKYO Address=0x102 Command=0x34 Extra=0x4711 Raw-Data=0x7341023 48 bits LSB first
+Protocol=Panasonic Address=0xB Command=0x10 Raw-Data=0xA01000B0 48 bits LSB first
+Send with: IrSender.sendPanasonic(0xB, 0x10, <numberOfRepeats>);
 
-Protocol=DENON Address=0x2 Command=0x34 Raw-Data=0x8D0 15 bits MSB first
+Protocol=PulseDistance Raw-Data=0x3BC3BC 56 bits LSB first
+Send with:
+    uint32_t tRawData[]={0x43D8613C, 0x3BC3BC};
+    IrSender.sendPulseDistanceWidthFromArray(38, 8850, 4400, 550, 1700, 550, 600, &tRawData[0], 56, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, <millisofRepeatPeriod>, <numberOfRepeats>);
 
-Protocol=DENON Address=0x2 Command=0x34 Auto-Repeat gap=44550us Raw-Data=0xB2F 15 bits MSB first
+Protocol=Onkyo Address=0x102 Command=0x3434 Raw-Data=0x34340102 32 bits LSB first
+Send with: IrSender.sendOnkyo(0x102, 0x3434, <numberOfRepeats>);
 
-Protocol=SHARP Address=0x2 Command=0x34 Raw-Data=0x8D2 15 bits MSB first
+Protocol=Apple Address=0x2 Command=0x34 Raw-Data=0x23487EE 32 bits LSB first
+Send with: IrSender.sendApple(0x2, 0x34, <numberOfRepeats>);
 
-Protocol=SHARP Address=0x2 Command=0x34 Auto-Repeat gap=44600us Raw-Data=0xB2D 15 bits MSB first
+Protocol=Panasonic Address=0x102 Command=0x34 Raw-Data=0x4341020 48 bits LSB first
+Send with: IrSender.sendPanasonic(0x102, 0x34, <numberOfRepeats>);
 
-Protocol=SONY Address=0x2 Command=0x34 Raw-Data=0x134 12 bits LSB first
+Protocol=Kaseikyo Address=0x102 Command=0x34 Extra=0x4711 Raw-Data=0x7341023 48 bits LSB first
+Send with: IrSender.sendKaseikyo(0x102, 0x34, <numberOfRepeats>, 0x4711);
 
-Protocol=SONY Address=0x2 Command=0x34 Raw-Data=0x134 15 bits LSB first
+Protocol=Kaseikyo_Denon Address=0x102 Command=0x34 Raw-Data=0x4341020 48 bits LSB first
+Send with: IrSender.sendKaseikyo_Denon(0x102, 0x34, <numberOfRepeats>);
 
-Protocol=SONY Address=0x0 Command=0x0 Raw-Data=0x0 0 bits LSB first
+Protocol=Denon Address=0x2 Command=0x34 Raw-Data=0x8D0 15 bits MSB first
+Send with: IrSender.sendDenon(0x2, 0x34, <numberOfRepeats>);
 
-Protocol=SONY Address=0x102 Command=0x34 Raw-Data=0x8134 20 bits LSB first
+Protocol=Denon Address=0x2 Command=0x34 Auto-Repeat gap=44550us Raw-Data=0xB2F 15 bits MSB first
 
-Protocol=RC5 Address=0x2 Command=0x34 Toggle=1 Raw-Data=0x38B4 13 bits MSB first
+Protocol=Sharp Address=0x2 Command=0x34 Raw-Data=0x8D2 15 bits MSB first
+Send with: IrSender.sendSharp(0x2, 0x34, <numberOfRepeats>);
 
-Protocol=RC5 Address=0x2 Command=0x74 Raw-Data=0x20B4 13 bits MSB first
+Protocol=Sharp Address=0x2 Command=0x34 Auto-Repeat gap=44550us Raw-Data=0xB2D 15 bits MSB first
 
-Protocol=RC6 Address=0x2 Command=0x34 Raw-Data=0x234 16 bits MSB first
+Protocol=Sony Address=0x2 Command=0x34 Raw-Data=0x134 12 bits LSB first
+Send with: IrSender.sendSony(0x2, 0x34, <numberOfRepeats>);
 
-Protocol=SAMSUNG Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
+Protocol=Sony Address=0x2 Command=0x34 Raw-Data=0x134 15 bits LSB first
+Send with: IrSender.sendSony(0x2, 0x34, <numberOfRepeats>);
+
+Protocol=Sony Address=0x102 Command=0x34 Raw-Data=0x8134 20 bits LSB first
+Send with: IrSender.sendSony(0x102, 0x34, <numberOfRepeats>);
+
+Protocol=RC5 Address=0x2 Command=0x34 Raw-Data=0x10B4 13 bits MSB first
+Send with: IrSender.sendRC5(0x2, 0x34, <numberOfRepeats>);
+
+Protocol=RC5 Address=0x2 Command=0x74 Toggle=1 Raw-Data=0x8B4 13 bits MSB first
+Send with: IrSender.sendRC5(0x2, 0x74, <numberOfRepeats>);
+
+Protocol=RC6 Address=0x2 Command=0x34 Raw-Data=0x234 20 bits MSB first
+Send with: IrSender.sendRC6(0x2, 0x34, <numberOfRepeats>);
+
+Protocol=Samsung Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
+Send with: IrSender.sendSamsung(0x102, 0x34, <numberOfRepeats>);
 
 Protocol=JVC Address=0x2 Command=0x34 Raw-Data=0x3402 16 bits LSB first
+Send with: IrSender.sendJVC(0x2, 0x34, <numberOfRepeats>);
 
-Protocol=LG Address=0x2 Command=0x34 Raw-Data=0x200347 28 bits MSB first
+Protocol=LG Address=0x2 Command=0x3434 Raw-Data=0x23434E 28 bits MSB first
+Send with: IrSender.sendLG(0x2, 0x3434, <numberOfRepeats>);
 
-Protocol=BOSEWAVE Address=0x0 Command=0x34 Raw-Data=0xCB34 16 bits LSB first
+Protocol=MagiQuest Address=0x102 Command=0x34 Raw-Data=0x6BCD0102 56 bits MSB first
+Send with: IrSender.sendMagiQuest(0x6BCD0102, 0x34, <numberOfRepeats>);
 
-Protocol=LEGO_PF Address=0x3 Command=0x14 Raw-Data=0x2148 16 bits MSB first
+Protocol=Bang&Olufsen Address=0x2 Command=0x34 Raw-Data=0x234 16 bits MSB first
+Send with: IrSender.sendBang&Olufsen(0x2, 0x34, <numberOfRepeats>);
 
-Protocol=LEGO_PF Address=0x3 Command=0x14 Auto-Repeat gap=216800us Raw-Data=0x2148 16 bits MSB first
+Protocol=BoseWave Address=0x0 Command=0x34 Raw-Data=0xCB34 16 bits LSB first
+Send with: IrSender.sendBoseWave(0x0, 0x34, <numberOfRepeats>);
 
-Protocol=LEGO_PF Address=0x2 Command=0x14 Auto-Repeat gap=177200us Raw-Data=0x2148 16 bits MSB first
+Protocol=Lego Address=0x2 Command=0x14 Raw-Data=0x2148 16 bits MSB first
+Send with: IrSender.sendLego(0x2, 0x14, <numberOfRepeats>);
 
-Protocol=LEGO_PF Address=0x2 Command=0x14 Auto-Repeat gap=177200us Raw-Data=0x2148 16 bits MSB first
+Protocol=Lego Address=0x2 Command=0x14 Auto-Repeat gap=179100us Raw-Data=0x2148 16 bits MSB first
 
-Protocol=LEGO_PF Address=0x2 Command=0x14 Auto-Repeat gap=177200us Raw-Data=0x2148 16 bits MSB first
+Protocol=Lego Address=0x2 Command=0x14 Auto-Repeat gap=178050us Raw-Data=0x2148 16 bits MSB first
 
-Overflow detected
+Protocol=Lego Address=0x2 Command=0x14 Auto-Repeat gap=179050us Raw-Data=0x2148 16 bits MSB first
 
-Protocol=NEC Address=0x3 Command=0x45 Raw-Data=0xBA45FC03 32 bits LSB first
-
-Protocol=NEC Address=0x3 Command=0x45 Repeat gap=47550us
-
-Protocol=NEC Address=0x203 Command=0x45 Raw-Data=0xBA450203 32 bits LSB first
-
-Protocol=NEC Address=0x203 Command=0x45 Repeat gap=47550us
-
-Protocol=APPLE Address=0x3 Command=0x45 Raw-Data=0x34587EE 32 bits LSB first
-
-Protocol=APPLE Address=0x3 Command=0x45 Repeat gap=47550us
-
-Protocol=PANASONIC Address=0x203 Command=0x45 Raw-Data=0x55452030 48 bits LSB first
-
-Protocol=PANASONIC Address=0x203 Command=0x45 Repeat gap=73250us Raw-Data=0x55452030 48 bits LSB first
-
-Protocol=KASEIKYO Address=0x203 Command=0x45 Extra=0x4711 Raw-Data=0x56452033 48 bits LSB first
-
-Protocol=KASEIKYO Address=0x203 Command=0x45 Extra=0x4711 Repeat gap=73250us Raw-Data=0x56452033 48 bits LSB first
-
-Protocol=DENON Address=0x3 Command=0x45 Raw-Data=0xD14 15 bits MSB first
-
-Protocol=DENON Address=0x3 Command=0x45 Auto-Repeat gap=44550us Raw-Data=0xEEB 15 bits MSB first
-
-Protocol=DENON Address=0x3 Command=0x45 Repeat gap=44550us Raw-Data=0xD14 15 bits MSB first
-
-Protocol=DENON Address=0x3 Command=0x45 Auto-Repeat gap=44550us Raw-Data=0xEEB 15 bits MSB first
-
-Protocol=SHARP Address=0x3 Command=0x45 Raw-Data=0xD16 15 bits MSB first
-
-Protocol=SHARP Address=0x3 Command=0x45 Auto-Repeat gap=44550us Raw-Data=0xEE9 15 bits MSB first
-
-Protocol=SHARP Address=0x3 Command=0x45 Repeat gap=44550us Raw-Data=0xD16 15 bits MSB first
-
-Protocol=SHARP Address=0x3 Command=0x45 Auto-Repeat gap=44550us Raw-Data=0xEE9 15 bits MSB first
-
-Protocol=SONY Address=0x3 Command=0x45 Raw-Data=0x1C5 12 bits LSB first
-
-Protocol=SONY Address=0x3 Command=0x45 Repeat gap=24350us Raw-Data=0x1C5 12 bits LSB first
-
-Protocol=SONY Address=0x3 Command=0x45 Raw-Data=0x1C5 15 bits LSB first
-
-Protocol=SONY Address=0x3 Command=0x45 Repeat gap=24350us Raw-Data=0x1C5 15 bits LSB first
-
-Protocol=SONY Address=0x203 Command=0x45 Raw-Data=0x101C5 20 bits LSB first
-
-Protocol=SONY Address=0x203 Command=0x45 Repeat gap=24300us Raw-Data=0x101C5 20 bits LSB first
-
-Protocol=RC5 Address=0x3 Command=0x5 Raw-Data=0x30C5 13 bits MSB first
-
-Protocol=RC5 Address=0x3 Command=0x5 Repeat gap=99000us Raw-Data=0x30C5 13 bits MSB first
-
-Protocol=RC5 Address=0x3 Command=0x45 Toggle=1 Raw-Data=0x28C5 13 bits MSB first
-
-Protocol=RC5 Address=0x3 Command=0x45 Toggle=1 Repeat gap=98950us Raw-Data=0x28C5 13 bits MSB first
-
-Protocol=RC6 Address=0x3 Command=0x45 Raw-Data=0x345 16 bits MSB first
-
-Protocol=RC6 Address=0x3 Command=0x45 Repeat gap=106400us Raw-Data=0x345 16 bits MSB first
-
-Protocol=SAMSUNG Address=0x203 Command=0x45 Raw-Data=0xBA450203 32 bits LSB first
-
-Protocol=SAMSUNG Address=0x203 Command=0x45 Repeat gap=54500us
-
-Protocol=JVC Address=0x3 Command=0x45 Raw-Data=0x4503 16 bits LSB first
-
-Protocol=JVC Address=0x3 Command=0x45 Repeat gap=22750us
-
-Protocol=LG Address=0x3 Command=0x45 Raw-Data=0x300459 28 bits MSB first
-
-Protocol=LG Address=0x3 Command=0x45 Repeat gap=51500us
-
-Protocol=BOSEWAVE Address=0x0 Command=0x45 Raw-Data=0xBA45 16 bits LSB first
-
-Protocol=BOSEWAVE Address=0x0 Command=0x45 Repeat gap=51450us Raw-Data=0xBA45 16 bits LSB first
-
-Protocol=LEGO_PF Address=0x3 Command=0x15 Raw-Data=0x3158 16 bits MSB first
-
-Protocol=LEGO_PF Address=0x3 Command=0x15 Auto-Repeat gap=216800us Raw-Data=0x3158 16 bits MSB first
-
-Protocol=LEGO_PF Address=0x3 Command=0x15 Auto-Repeat gap=216800us Raw-Data=0x3158 16 bits MSB first
-
-Protocol=LEGO_PF Address=0x3 Command=0x15 Auto-Repeat gap=216800us Raw-Data=0x3158 16 bits MSB first
-
-Protocol=LEGO_PF Address=0x3 Command=0x15 Auto-Repeat gap=216800us Raw-Data=0x3158 16 bits MSB first
-
-Overflow detected
-
+Protocol=Lego Address=0x2 Command=0x14 Auto-Repeat gap=179050us Raw-Data=0x2148 16 bits MSB first

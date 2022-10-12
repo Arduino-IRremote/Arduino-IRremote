@@ -2,6 +2,8 @@
  * ir_BangOlufsen.hpp
  *
  *  Contains functions for receiving and sending Bang & Olufsen IR and Datalink '86 protocols
+ *  To receive B&O and ENABLE_BEO_WITHOUT_FRAME_GAP is NOT defined, you must set RECORD_GAP_MICROS to
+ *  at least 16000 to accommodate the unusually long 3. start space.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -216,7 +218,7 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
  * @param aUseDatalinkTiming    if false it does the same as sendBangOlufsenRaw()
  */
 void IRsend::sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bool aBackToBack, bool aUseDatalinkTiming) {
-#if defined(USE_NO_SEND_PWM) || BEO_KHZ == 38 // BEO_KHZ == 38 is for unit test which runs the B&O protocol with 38 kHz
+#if defined(USE_NO_SEND_PWM) || BEO_KHZ == 38 // BEO_KHZ == 38 is for unit test which runs the B&O protocol with 38 kHz instead 0f 455 kHz
     uint16_t tSendBEOMarkLength = aUseDatalinkTiming ? BEO_DATALINK_MARK : BEO_IR_MARK;
 
     /*

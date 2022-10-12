@@ -38,7 +38,7 @@
  * with INTERNAL you can calibrate your ADC readout. For my Nanos I measured e.g. 1060 mV and 1093 mV.
  */
 #if !defined(ADC_INTERNAL_REFERENCE_MILLIVOLT)
-#define ADC_INTERNAL_REFERENCE_MILLIVOLT    1100L    // Value measured at the AREF pin. If value > real AREF voltage, measured values are > real values
+#define ADC_INTERNAL_REFERENCE_MILLIVOLT    1100L // Change to value measured at the AREF pin. If value > real AREF voltage, measured values are > real values
 #endif
 
 // Union to speed up the combination of low and high bytes to a word

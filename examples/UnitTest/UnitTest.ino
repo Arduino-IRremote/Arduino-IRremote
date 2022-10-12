@@ -78,7 +78,7 @@
 //#define ENABLE_BEO_WITHOUT_FRAME_GAP // For successful unit testing we must see the warning at ir_BangOlufsen.hpp:88:2
 #if defined(DECODE_BEO)
 #define RECORD_GAP_MICROS 16000 // always get the complete frame in the receive buffer
-#define BEO_KHZ         38  //  We send and receive Bang&Olufsen with 38 kHz here.
+#define BEO_KHZ         38  // We send and receive Bang&Olufsen with 38 kHz here (instead of 455 kHz).
 #endif
 
 #define DECODE_BOSEWAVE

@@ -116,7 +116,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     if (sRepeats == 0) {
-#if FLASHEND >= 0x3FFF && (defined(RAMSIZE) && RAMSIZE >= 0x4FF) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && (RAMEND >= 0x4FF || (defined(RAMSIZE) && RAMSIZE >= 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
         /*
          * Send constant values only once in this demo
          */
@@ -195,6 +195,14 @@ void loop() {
         IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_MSB_FIRST,
         SEND_STOP_BIT, 0, NO_REPEATS);
         delay(DELAY_AFTER_SEND);
+
+        Serial.println(F("Send generic 56 bit PulseDistance 0x43D8613C and 0x3BC3BC LSB first"));
+        Serial.flush();
+        uint32_t tRawData1[] = { 0x43D8613C, 0x3BC3BC }; // LSB of tRawData1[0] is sent first
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData1[0], 56, PROTOCOL_IS_LSB_FIRST,
+        SEND_STOP_BIT, 0, NO_REPEATS);
+        delay(DELAY_AFTER_SEND);
+
     }
 
     Serial.println(F("Send Onkyo (NEC with 16 bit command)"));
@@ -262,7 +270,7 @@ void loop() {
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND >= 0x3FFF && (defined(RAMSIZE) && RAMSIZE >= 0x4FF) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && (RAMEND >= 0x4FF || (defined(RAMSIZE) && RAMSIZE >= 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     /*
      * Next example how to use the IrSender.write function
      */
@@ -300,11 +308,10 @@ void loop() {
     IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t)sAddress, IRSendData.command); // we have 31 bit address
     delay(DELAY_AFTER_SEND);
 
-    IRSendData.protocol = BANG_OLUFSEN;
-    Serial.print(F("Send "));
-    Serial.println(getProtocolString(IRSendData.protocol));
+    // Bang&Olufsen must be sent with 455 kHz
+    Serial.println(F("Send Bang&Olufsen"));
     Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
+    IrSender.sendBangOlufsen(sAddress, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     IRSendData.protocol = BOSEWAVE;

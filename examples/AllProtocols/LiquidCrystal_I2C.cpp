@@ -13,8 +13,9 @@ inline size_t LiquidCrystal_I2C::write(uint8_t value) {
 #if defined(USE_SOFT_I2C_MASTER)
 #define USE_SOFT_I2C_MASTER_H_AS_PLAIN_INCLUDE
 #include "SoftI2CMaster.h"
-#else
-#define printIIC(args)  Wire.write(args)
+#elif defined(USE_SOFT_WIRE)
+#define USE_SOFTWIRE_H_AS_PLAIN_INCLUDE
+#include "SoftWire.h"
 #endif
 
 // When the display powers up, it is configured as follows:
@@ -63,7 +64,7 @@ void LiquidCrystal_I2C::init_priv() {
     begin(_cols, _rows);
 }
 
-void LiquidCrystal_I2C::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
+void LiquidCrystal_I2C::begin(uint8_t cols __attribute__((unused)), uint8_t lines, uint8_t dotsize) {
     if (lines > 1) {
         _displayfunction |= LCD_2LINE;
     }
@@ -261,7 +262,7 @@ void LiquidCrystal_I2C::expanderWrite(uint8_t _data) {
     i2c_write_byte(_Addr << 1, _data | _backlightval);
 #else
     Wire.beginTransmission(_Addr);
-    printIIC((int )(_data) | _backlightval);
+    Wire.write((int )(_data) | _backlightval);
     Wire.endTransmission();
 #endif
 }

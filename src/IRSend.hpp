@@ -138,7 +138,7 @@ void IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t 
  * Interprets and sends a IRData structure.
  * @param aIRSendData The values of protocol, address, command and repeat flag are taken for sending.
  * @param aNumberOfRepeats Number of repeats to send after the initial data if data is no repeat.
- * @return 1 if data sent, 0 if no data sent (i.e. for BANG_OLUFSEN)
+ * @return 1 if data sent, 0 if no data sent (i.e. for BANG_OLUFSEN, which is currently not supported here)
  */
 size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
 

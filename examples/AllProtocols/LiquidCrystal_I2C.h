@@ -4,13 +4,8 @@
 
 #include <inttypes.h>
 #include "Print.h"
-#if !defined(USE_SOFT_I2C_MASTER)
-#  if defined(USE_SOFT_WIRE)
-#define USE_SOFTWIRE_H_AS_PLAIN_INCLUDE
-#include "SoftWire.h"
-#  else
+#if !defined(USE_SOFT_I2C_MASTER) && !defined(USE_SOFT_WIRE)
 #include <Wire.h>
-#  endif
 #endif
 
 // commands

@@ -41,6 +41,10 @@
 //#define DECODE_LG
 //#define DECODE_NEC
 //#define DECODE_DISTANCE
+#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly.
+#if defined(DECODE_BEO)
+#define RECORD_GAP_MICROS 16000 // always get the complete frame in the receive buffer
+#endif
 // etc. see IRremote.hpp
 //
 

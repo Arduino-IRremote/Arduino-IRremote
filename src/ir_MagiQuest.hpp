@@ -4,6 +4,11 @@
  *  Contains functions for receiving and sending MagiQuest Protocol
  *  Based off the Magiquest fork of Arduino-IRremote by mpflaga https://github.com/mpflaga/Arduino-IRremote/
  *
+ *  RESULT:
+ *  The 31 bit wand ID is available in decodedRawData.
+ *  The lower 16 bit of the ID is available in address.
+ *  The magnitude is available in command.
+ *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  ************************************************************************************
@@ -49,21 +54,22 @@
  * https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/1027#discussioncomment-3636857
  * https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1015#issuecomment-1222247231
  -3276750
- + 250,- 800 + 250,- 850 + 250,- 850 + 250,- 850
+ + 250,- 800 + 250,- 850 + 250,- 850 + 250,- 850 // 8 zero start bits
  + 250,- 850 + 300,- 800 + 250,- 850 + 250,- 850
 
- + 300,- 800 + 300,- 800 + 550,- 600 + 550,- 650
- + 250,- 850 + 500,- 650 + 500,- 650 + 250,- 850
- + 250,- 850 + 250,- 850 + 500,- 650 + 300,- 800
+ + 300,- 800 + 300,- 800 + 550,- 600 + 550,- 650 // 0011 31 ID bits
+ + 250,- 850 + 500,- 650 + 500,- 650 + 250,- 850 // 0110
+ + 250,- 850 + 250,- 850 + 500,- 650 + 300,- 800 // 0010
  + 500,- 650 + 300,- 800 + 550,- 650 + 250,- 850
  + 500,- 650 + 250,- 850 + 500,- 650 + 500,- 650
  + 500,- 650 + 300,- 800 + 300,- 800 + 300,- 850
  + 250,- 850 + 250,- 850 + 250,- 850 + 250,- 850
- + 300,- 800 + 250,- 850 + 500,- 650 + 250,- 850
+ + 300,- 800 + 250,- 850 + 500,- 650 + 250,- 850 // 0010 3 LSB ID bits 001 + 1 MSB magnitude bit 1
 
- + 250,- 850 + 250,- 850 + 250,- 850 + 250,- 850
+ + 250,- 850 + 250,- 850 + 250,- 850 + 250,- 850 // 8 bit magnitude
  + 250,- 850 + 250,- 850 + 250,- 850 + 500,- 700
- + 500,- 650 + 500,- 650 + 500,- 650 + 200,- 900
+
+ + 500,- 650 + 500,- 650 + 500,- 650 + 200,- 900 // Checksum (+ sum of the 5 bytes before == 0)
  + 250,- 850 + 500,- 650 + 300,- 800 + 500
  */
 // MSB first, 8 start bits (zero), 31 wand id bits, 9 magnitude bits 8 checksum bits and no stop bit
@@ -76,7 +82,7 @@ union magiquest_t {
         uint8_t magnitude;  // Values observed are 0x102,01,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
         uint32_t wand_id;   // the lowest bit of id is the highest bit of magnitude, i.e. the id is only 31 bit
         uint8_t StartBits;  // first 8 MSB start bits are zero.
-        uint8_t HighByte;   // just to pad the struct out to 64 bits so we can union with llword
+        uint8_t Padding;    // just to pad the struct out to 64 bits so we can union with llword
     } cmd;
 };
 #endif // !defined (DOXYGEN)
@@ -218,7 +224,7 @@ bool IRrecv::decodeMagiQuest() {
     }
 
     // The lower swish values are typically read as 1 or 2, or even 12. Higher value is typically 258.
-    decodedIRData.command = data.cmd.magnitude;         // Values observed are 102,01,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
+    decodedIRData.command = data.cmd.magnitude;         // Values observed are 0x102,01,04,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
     if (tWandId.UByte.LowByte & 0x01) {
         // copy lowest id bit to highest magnitude bit
         decodedIRData.command += 0x100;

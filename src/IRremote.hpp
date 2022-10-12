@@ -98,7 +98,7 @@
 #  if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \
 || defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) \
-|| defined(DECODE_DISTANCE) || defined(DECODE_HASH) || defined(DECODE_BEO) || defined(DECODE_BOSEWAVE) \
+|| defined(DECODE_DISTANCE) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
 || defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_WHYNTER)))
 /*
  * If no protocol is explicitly enabled, we enable all protocols
@@ -127,6 +127,8 @@
 #    endif
 #  endif
 #endif // !defined(NO_DECODER)
+
+//#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly.
 
 #if defined(DECODE_NEC) && !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)
 #warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."

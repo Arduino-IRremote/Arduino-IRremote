@@ -307,11 +307,17 @@ Check out the [MinimalReceiver](https://github.com/Arduino-IRremote/Arduino-IRre
 <br/>
 
 # Sending IR codes
-Please do not use the old send*Raw() functions for sending like e.g. `IrSender.sendNECRaw(0xE61957A8,2)`,
-even if this functions are used in a lot of **(old)** tutorials. They are only kept for backward compatibility and unsupported as well as error prone.<br/>
-**It is recommended** to use the **new structured functions** with address, command and repeat count parameters like e.g. `IrSender.sendNEC(0xA8, 0x19, 2)`.
-Especially if you are able to receive these remote codes and get the address and command values.
+If you have a device at hand which can generate the IR codes you want to work with (aka IR Remote), **it is recommended** to receive the codes with the [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino), which will tell you on the serial output how to send them.
+
+```
+Protocol=LG Address=0x2 Command=0x3434 Raw-Data=0x23434E 28 bits MSB first
+Send with: IrSender.sendLG(0x2, 0x3434, <numberOfRepeats>);
+```
 You will discover that **the address is a constant** and the commands sometimes are sensibly grouped.
+
+The old send*Raw() functions for sending like e.g. `IrSender.sendNECRaw(0xE61957A8,2)` are kept for backward compatibility to **(old)** tutorials and unsupported as well as error prone.<br/>
+The [irdb](https://github.com/probonopd/irdb) database specifies  a device, a subdevice and a function. Most of the times *device* and *subdevice* can be taken as upper and lower byte of the address parameter and *function* is the command parameter for the **new structured functions** with address, command and repeat count parameters like e.g. `IrSender.sendNEC(0xA8, 0x19, 2)`.
+
 
 **All sending functions support the sending of repeats** (if sensible). 
 Repeat frames are sent at a fixed period determined by the protocol. e.g. 110 ms from start to start for NEC.<br/>
@@ -718,6 +724,7 @@ It is dated from **24.06.2022**. If you have complains about the data or request
 - [List of public IR code databases](http://www.harctoolbox.org/IR-resources.html)
 - [LIRC database](http://lirc-remotes.sourceforge.net/remotes-table.html)
 - [IRMP list of IR protocols](https://www.mikrocontroller.net/articles/IRMP_-_english#IR_Protocols)
+- [IRP definition files for IR protocols](https://github.com/probonopd/MakeHex/tree/master/protocols)
 - [IR Remote Control Theory and some protocols (upper right hamburger icon)](https://www.sbprojects.net/knowledge/ir/)
 - [Interpreting Decoded IR Signals (v2.45)](http://www.hifi-remote.com/johnsfine/DecodeIR.html)
 - ["Recording long Infrared Remote control signals with Arduino"](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino)
