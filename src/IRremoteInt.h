@@ -435,14 +435,18 @@ public:
 #if defined(IR_SEND_PIN)
     void begin();
     void begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+    // The next function is a dummy to avoid acceptance of pre 4.0 calls to begin(IR_SEND_PIN, DISABLE_LED_FEEDBACK);
+    void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback)
+#if !defined (DOXYGEN)
+            __attribute__ ((deprecated ("You must use begin(ENABLE_LED_FEEDBACK) or begin(DISABLE_LED_FEEDBACK) since version 4.0.")));
+#endif
 #else
     IRsend(uint_fast8_t aSendPin);
     void begin(uint_fast8_t aSendPin);
     void setSendPin(uint_fast8_t aSendPin); // required if we use IRsend() as constructor
+    // Since 4.0 guarded and without default parameter
+    void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin); // aFeedbackLEDPin can be USE_DEFAULT_FEEDBACK_LED_PIN
 #endif
-
-    // Not guarded for backward compatibility
-    void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
 
     size_t write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
 

@@ -124,7 +124,8 @@ If you use an (old) Arduino core that does not use the `-flto` flag for compile,
 - Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
 - Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK)`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L106)
  or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK)` instead of the `IrReceiver.enableIRIn()` or `irrecv.enableIRIn()` in setup().<br/>
-For sending, call `IrSender.begin(IR_SEND_PIN, ENABLE_LED_FEEDBACK);` or `IrSender.begin(IR_SEND_PIN, DISABLE_LED_FEEDBACK);` in setup().
+For sending, call `IrSender.begin(ENABLE_LED_FEEDBACK);` or `IrSender.begin(DISABLE_LED_FEEDBACK);` in setup().<br/>
+If IR_SEND_PIN is not defined you must use e.g. `IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN);`
 - Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
 - The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value` and `results.decode_type` (and similar) to
  `IrReceiver.decodedIRData.decodedRawData` and `IrReceiver.decodedIRData.protocol`.
@@ -307,7 +308,7 @@ Check out the [MinimalReceiver](https://github.com/Arduino-IRremote/Arduino-IRre
 <br/>
 
 # Sending IR codes
-If you have a device at hand which can generate the IR codes you want to work with (aka IR Remote), **it is recommended** to receive the codes with the [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino), which will tell you on the serial output how to send them.
+If you have a device at hand which can generate the IR codes you want to work with (aka IR remote), **it is recommended** to receive the codes with the [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino), which will tell you on the serial output how to send them.
 
 ```
 Protocol=LG Address=0x2 Command=0x3434 Raw-Data=0x23434E 28 bits MSB first
@@ -315,14 +316,15 @@ Send with: IrSender.sendLG(0x2, 0x3434, <numberOfRepeats>);
 ```
 You will discover that **the address is a constant** and the commands sometimes are sensibly grouped.
 
-The old send*Raw() functions for sending like e.g. `IrSender.sendNECRaw(0xE61957A8,2)` are kept for backward compatibility to **(old)** tutorials and unsupported as well as error prone.<br/>
-The [irdb](https://github.com/probonopd/irdb) database specifies  a device, a subdevice and a function. Most of the times *device* and *subdevice* can be taken as upper and lower byte of the address parameter and *function* is the command parameter for the **new structured functions** with address, command and repeat count parameters like e.g. `IrSender.sendNEC(0xA8, 0x19, 2)`.
+The codes found in the [irdb database](https://github.com/probonopd/irdb/tree/master/codes) specify  a **device**, a **subdevice** and a **function**. Most of the times, *device* and *subdevice* can be taken as upper and lower byte of the **address parameter** and *function* is the **command parameter** for the **new structured functions** with address, command and repeat-count parameters like e.g. `IrSender.sendNEC((device << 8) | subdevice, 0x19, 2)`.<br/>
+An **exact mapping** can be found in the [IRP definition files for IR protocols](https://github.com/probonopd/MakeHex/tree/master/protocols). "D" and "S" denotes device and subdevice and "F" denotes the function.
 
-
-**All sending functions support the sending of repeats** (if sensible). 
+**All sending functions support the sending of repeats** if sensible.
 Repeat frames are sent at a fixed period determined by the protocol. e.g. 110 ms from start to start for NEC.<br/>
-Keep in mind, that **there is no delay after the last sent mark**. 
+Keep in mind, that **there is no delay after the last sent mark**.
 If you handle the sending of repeat frames by your own, you must insert sensible delays before the repeat frames to enable correct decoding.
+
+The old send*Raw() functions for sending like e.g. `IrSender.sendNECRaw(0xE61957A8,2)` are kept for backward compatibility to **(old)** tutorials and unsupported as well as error prone.
 
 ### List of public IR code databases
 http://www.harctoolbox.org/IR-resources.html
@@ -724,6 +726,7 @@ It is dated from **24.06.2022**. If you have complains about the data or request
 - [List of public IR code databases](http://www.harctoolbox.org/IR-resources.html)
 - [LIRC database](http://lirc-remotes.sourceforge.net/remotes-table.html)
 - [IRMP list of IR protocols](https://www.mikrocontroller.net/articles/IRMP_-_english#IR_Protocols)
+- [IRDB database for IR codes](https://github.com/probonopd/irdb/tree/master/codes)
 - [IRP definition files for IR protocols](https://github.com/probonopd/MakeHex/tree/master/protocols)
 - [IR Remote Control Theory and some protocols (upper right hamburger icon)](https://www.sbprojects.net/knowledge/ir/)
 - [Interpreting Decoded IR Signals (v2.45)](http://www.hifi-remote.com/johnsfine/DecodeIR.html)

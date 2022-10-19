@@ -69,8 +69,8 @@ void IRsend::begin(){
 
 /**
  * Only required to set LED feedback
- * @param aEnableLEDFeedback    If true the feedback LED is activated while receiving or sending a PWM signal /a mark
- * @param aFeedbackLEDPin       If 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aEnableLEDFeedback    If true / ENABLE_LED_FEEDBACK, the feedback LED is activated while receiving or sending a PWM signal /a mark
+ * @param aFeedbackLEDPin       If 0 / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) {
 #if !defined(NO_LED_FEEDBACK_CODE)
@@ -107,13 +107,12 @@ void IRsend::begin(uint_fast8_t aSendPin) {
 void IRsend::setSendPin(uint_fast8_t aSendPin) {
     sendPin = aSendPin;
 }
-#endif // defined(IR_SEND_PIN)
 
 /**
  * Initializes the send and feedback pin
  * @param aSendPin The Arduino pin number, where a IR sender diode is connected.
  * @param aEnableLEDFeedback    If true the feedback LED is activated while receiving or sending a PWM signal /a mark
- * @param aFeedbackLEDPin       If 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aFeedbackLEDPin       If 0 / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) {
 #if defined(IR_SEND_PIN)
@@ -133,6 +132,7 @@ void IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t 
     (void) aFeedbackLEDPin;
 #endif
 }
+#endif // defined(IR_SEND_PIN)
 
 /**
  * Interprets and sends a IRData structure.

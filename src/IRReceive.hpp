@@ -103,8 +103,8 @@ void IRrecv::begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8
     (void) aEnableLEDFeedback;
     (void) aFeedbackLEDPin;
 #endif
-    // Set pin mode once
-    pinModeFast(irparams.IRReceivePin, INPUT);
+    // Set pin mode once. pinModeFast makes no difference here :-(
+    pinMode(irparams.IRReceivePin, INPUT);
 
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
     pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
