@@ -39,10 +39,11 @@
  */
 typedef enum {
     UNKNOWN = 0,
-#if defined(SUPPORT_PULSE_WIDTH_DECODING) // The only known pulse width protocol is Sony
+#if defined(SUPPORT_PULSE_WIDTH_DECODING) // The only known pulse width protocol is Sony and this is decoded by the sony decoder
     PULSE_WIDTH,
 #endif
     PULSE_DISTANCE,
+    PULSE_DISTANCE_WIDTH,
     APPLE,
     DENON,
     JVC,
@@ -75,6 +76,7 @@ typedef enum {
 const char string_Unknown[] PROGMEM = "UNKNOWN";
 const char string_PulseWidth[] PROGMEM = "PulseWidth";
 const char string_PulseDistance[] PROGMEM = "PulseDistance";
+const char string_PulseDistanceWidth[] PROGMEM = "PulseDistanceWidth";
 const char string_Apple[] PROGMEM = "Apple";
 const char string_Denon[] PROGMEM = "Denon";
 const char string_JVC[] PROGMEM = "JVC";

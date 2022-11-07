@@ -98,7 +98,7 @@
 #  if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \
 || defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) \
-|| defined(DECODE_DISTANCE) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
+|| defined(DECODE_DISTANCE_WIDTH) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
 || defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_WHYNTER)))
 /*
  * If no protocol is explicitly enabled, we enable all protocols
@@ -122,7 +122,7 @@
 #    endif
 
 #    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
-#define DECODE_DISTANCE     // universal decoder for pulse distance protocols - requires up to 750 bytes additional program memory
+#define DECODE_DISTANCE_WIDTH     // universal decoder for pulse distance width protocols - requires up to 750 bytes additional program memory
 #define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program memory
 #    endif
 #  endif
@@ -324,8 +324,8 @@
 #include "ir_Sony.hpp"
 #include "ir_Others.hpp"
 #include "ir_Pronto.hpp" // pronto is an universal decoder and encoder
-#  if defined(DECODE_DISTANCE)     // universal decoder for pulse distance protocols - requires up to 750 bytes additional program memory
-#include "ir_DistanceProtocol.hpp"
+#  if defined(DECODE_DISTANCE_WIDTH)     // universal decoder for pulse distance width protocols - requires up to 750 bytes additional program memory
+#include <ir_DistanceWidthProtocol.hpp>
 #  endif
 
 #endif // #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)

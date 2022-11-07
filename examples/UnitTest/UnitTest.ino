@@ -66,7 +66,7 @@
 #define DECODE_RC6
 #define DECODE_SONY
 
-#define DECODE_DISTANCE     // universal decoder for pulse distance protocols
+#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 #define DECODE_HASH         // special decoder for all protocols
 #endif
 
@@ -154,6 +154,42 @@ void setup() {
 
 }
 
+void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
+    // wait until signal has received
+    delay((RECORD_GAP_MICROS / 1000) + 1);
+
+    if (IrReceiver.decode()) {
+// Print a short summary of received data
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
+        IrReceiver.printIRResultShort(&Serial);
+        IrReceiver.printIRSendUsage(&Serial);
+#else
+        IrReceiver.printIRResultMinimal(&Serial);
+#endif
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
+        if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
+            // We have an unknown protocol, print more info
+            IrReceiver.printIRResultRawFormatted(&Serial, true);
+        }
+#endif
+        if (IrReceiver.decodedIRData.protocol == PULSE_DISTANCE || IrReceiver.decodedIRData.protocol == PULSE_DISTANCE_WIDTH) {
+            for (uint_fast8_t i = 0; i < aArraySize; ++i) {
+                if (IrReceiver.decodedIRData.decodedRawDataArray[i] != *aRawDataArrayPointer) {
+                    Serial.print(F("ERROR: Received data=0x"));
+                    Serial.print(IrReceiver.decodedIRData.decodedRawDataArray[i], HEX);
+                    Serial.print(F(" != sent data=0x"));
+                    Serial.println(*aRawDataArrayPointer, HEX);
+                }
+                aRawDataArrayPointer++;
+            }
+        }
+        IrReceiver.resume();
+    } else {
+        Serial.println(F("No data received"));
+    }
+    Serial.println();
+}
+
 void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
     // wait until signal has received
     delay((RECORD_GAP_MICROS / 1000) + 1);
@@ -179,28 +215,26 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
                 IrReceiver.printIRResultRawFormatted(&Serial, true);
             }
 #endif
-            if (IrReceiver.decodedIRData.protocol != PULSE_DISTANCE) {
-                if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
-                    Serial.println(F("ERROR: Unknown protocol"));
-                } else {
-                    /*
-                     * Check address
-                     */
-                    if (IrReceiver.decodedIRData.address != aSentAddress) {
-                        Serial.print(F("ERROR: Received address=0x"));
-                        Serial.print(IrReceiver.decodedIRData.address, HEX);
-                        Serial.print(F(" != sent address=0x"));
-                        Serial.println(aSentAddress, HEX);
-                    }
-                    /*
-                     * Check command
-                     */
-                    if (IrReceiver.decodedIRData.command != aSentCommand) {
-                        Serial.print(F("ERROR: Received command=0x"));
-                        Serial.print(IrReceiver.decodedIRData.command, HEX);
-                        Serial.print(F(" != sent command=0x"));
-                        Serial.println(aSentCommand, HEX);
-                    }
+            if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
+                Serial.println(F("ERROR: Unknown protocol"));
+            } else {
+                /*
+                 * Check address
+                 */
+                if (IrReceiver.decodedIRData.address != aSentAddress) {
+                    Serial.print(F("ERROR: Received address=0x"));
+                    Serial.print(IrReceiver.decodedIRData.address, HEX);
+                    Serial.print(F(" != sent address=0x"));
+                    Serial.println(aSentAddress, HEX);
+                }
+                /*
+                 * Check command
+                 */
+                if (IrReceiver.decodedIRData.command != aSentCommand) {
+                    Serial.print(F("ERROR: Received command=0x"));
+                    Serial.print(IrReceiver.decodedIRData.command, HEX);
+                    Serial.print(F(" != sent command=0x"));
+                    Serial.println(aSentCommand, HEX);
                 }
             }
         }
@@ -300,7 +334,7 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 
 #if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
-        Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
+        Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit generic PulseDistance using ProtocolConstants"));
         Serial.flush();
         uint32_t tRawData[] = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
         IrSender.sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawData[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
@@ -328,13 +362,60 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 #endif
 
-        Serial.println(F("Send generic 56 bit PulseDistance 0x43D8613C and 0x3BC3BC LSB first"));
+#if defined(DISTANCE_DO_MSB_DECODING)
+        Serial.println(F("Send generic 52 bit PulseDistance 0x43D8613C and 0x3BC3B MSB first"));
         Serial.flush();
-        uint32_t tRawData1[] = { 0x43D8613C, 0x3BC3BC }; // LSB of tRawData1[0] is sent first
-        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData1[0], 56, PROTOCOL_IS_LSB_FIRST,
+        tRawData[0] = 0x43D8613C;  // MSB of tRawData[0] is sent first
+        tRawData[1] = 0x3BC3B;
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 52, PROTOCOL_IS_MSB_FIRST,
         SEND_STOP_BIT, 0, NO_REPEATS);
-        checkReceive(0x0, 0x0); // No real check, only printing of received result
+        checkReceivedArray(tRawData, 2);
         delay(DELAY_AFTER_SEND);
+
+        Serial.println(F("Send generic 52 bit PulseDistanceWidth 0x43D8613C and 0x3BC3B MSB first"));
+        Serial.flush();
+        // Real PulseDistanceWidth (constant bit length) does not require a stop bit
+        IrSender.sendPulseDistanceWidthFromArray(38, 300, 600, 600, 300, 300, 600, &tRawData[0], 52, PROTOCOL_IS_MSB_FIRST,
+        SEND_NO_STOP_BIT, 0, 0);
+        checkReceivedArray(tRawData, 2);
+        delay(DELAY_AFTER_SEND);
+#else
+        Serial.println(F("Send generic 52 bit PulseDistance 0x43D8613C and 0x3BC3B LSB first"));
+        Serial.flush();
+        tRawData[0] = 0x43D8613C;  // MSB of tRawData[0] is sent first
+        tRawData[1] = 0x3BC3B;
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 52, PROTOCOL_IS_LSB_FIRST,
+        SEND_STOP_BIT, 0, NO_REPEATS);
+        checkReceivedArray(tRawData, 2);
+        delay(DELAY_AFTER_SEND);
+
+        Serial.println(F("Send generic 52 bit PulseDistanceWidth 0x43D8613C and 0x3BC3B LSB first"));
+        Serial.flush();
+        // Real PulseDistanceWidth (constant bit length) does not require a stop bit
+        IrSender.sendPulseDistanceWidthFromArray(38, 300, 600, 600, 300, 300, 600, &tRawData[0], 52, PROTOCOL_IS_LSB_FIRST,
+        SEND_NO_STOP_BIT, 0, 0);
+        checkReceivedArray(tRawData, 2);
+        delay(DELAY_AFTER_SEND);
+#endif
+
+#if defined(DECODE_MAGIQUEST)
+
+        Serial.println(F("Send MagiQuest 0x6BCDFF00, 0x176 as generic 55 bit PulseDistanceWidth MSB first"));
+        Serial.flush();
+        tRawData[0] = 0x01AF37FC; // We have 1 header (start) bit and 7 start bits and 31 address bits for MagiQuest, so 0x6BCDFF00 is shifted six right
+        tRawData[1] = 0x017619; // 19 is the checksum
+        IrSender.sendPulseDistanceWidthFromArray(38, 287, 864, 576, 576, 287, 864, &tRawData[0], 55, PROTOCOL_IS_MSB_FIRST,
+        SEND_NO_STOP_BIT, 0, 0);
+        checkReceive(0xFF00, 0x176);
+        if (IrReceiver.decodedIRData.decodedRawData != 0x6BCDFF00) {
+            Serial.print(F("ERROR: Received address=0x"));
+            Serial.print(IrReceiver.decodedIRData.decodedRawData, HEX);
+            Serial.println(F(" != sent address=0x6BCDFF00"));
+            Serial.println();
+        }
+        delay(DELAY_AFTER_SEND);
+#endif
+
     }
 #endif
 
@@ -387,7 +468,7 @@ void loop() {
 #if defined(DECODE_SONY)
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
     Serial.flush();
-    IrSender.sendSony(sAddress & 0x1F, sCommand & 0x7F, sRepeats);
+    IrSender.sendSony(sAddress & 0x1F, sCommand, sRepeats);
     checkReceive(sAddress & 0x1F, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
 
@@ -399,7 +480,7 @@ void loop() {
 
     Serial.println(F("Send Sony/SIRCS with 7 command and 13 address bits"));
     Serial.flush();
-    IrSender.sendSony(sAddress & 0x1FFF, sCommand & 0x7F, sRepeats, SIRCS_20_PROTOCOL);
+    IrSender.sendSony(sAddress & 0x1FFF, sCommand, sRepeats, SIRCS_20_PROTOCOL);
     checkReceive(sAddress & 0x1FFF, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
 #endif

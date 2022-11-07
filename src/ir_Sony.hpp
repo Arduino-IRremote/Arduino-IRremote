@@ -92,7 +92,7 @@ SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_NO_STOP_BIT,
  * @param numberOfBits should be one of SIRCS_12_PROTOCOL, SIRCS_15_PROTOCOL, SIRCS_20_PROTOCOL. Not checked! 20 -> send 13 address bits
  */
 void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t numberOfBits) {
-    uint32_t tData = (uint32_t) aAddress << 7 | aCommand;
+    uint32_t tData = (uint32_t) aAddress << 7 | (aCommand & 0x7F);
     // send 5, 8, 13 address bits LSB first
     sendPulseDistanceWidth(&SonyProtocolConstants, tData, numberOfBits, aNumberOfRepeats);
 }

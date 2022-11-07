@@ -96,6 +96,14 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - Actively maintained.
 - Allows receiving and sending of **raw timing data**.
 
+## New features with version 4.x
+- New universal **Pulse Distance Width decoder** added, which covers some previous unknown protocols.
+- Printout of code how to send received command by `IrReceiver.printIRSendUsage(&Serial)`.
+- Support for more than 64 bit data for universal decoder and sender.
+
+# Converting your 3.x program to the 4.x version
+- You must replace `#define DECODE_DISTANCE_WIDTH` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).
+
 ## New features with version 3.x
 - **Any pin** can be used for sending / receiving.
 - Feedback LED can be activated for sending / receiving.

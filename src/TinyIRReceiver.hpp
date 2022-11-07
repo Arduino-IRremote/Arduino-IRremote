@@ -310,10 +310,11 @@ bool isTinyReceiverIdle() {
 }
 
 /**
- * Sets IR_INPUT_PIN mode to INPUT_PULLUP, if required, sets feedback LED output mode and call enablePCIInterruptForTinyReceiver()
+ * Sets IR_INPUT_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode.
+ * Then call enablePCIInterruptForTinyReceiver()
  */
 bool initPCIInterruptForTinyReceiver() {
-    pinModeFast(IR_INPUT_PIN, INPUT_PULLUP);
+    pinModeFast(IR_INPUT_PIN, INPUT);
 
 #if !defined(NO_LED_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);

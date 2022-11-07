@@ -73,7 +73,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
  ************************************/
 
 /**
- * @param aCommand If aCommand is >=64 then we switch automatically to RC5X
+ * @param aCommand If aCommand is >=0x40 then we switch automatically to RC5X
  */
 void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
     // Set IR carrier frequency
@@ -82,7 +82,7 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
     uint16_t tIRData = ((aAddress & 0x1F) << RC5_COMMAND_BITS);
 
     if (aCommand < 0x40) {
-        // auto discovery of RC5, set field bit to 1
+        // Auto discovery of RC5X, set field bit to 1
         tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS);
     } else {
         // Mask bit 7 of command and let field bit 0

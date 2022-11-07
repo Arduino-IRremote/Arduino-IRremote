@@ -40,8 +40,10 @@
  */
 //#define DECODE_LG
 //#define DECODE_NEC
-//#define DECODE_DISTANCE
+//#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
+#if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
 #define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly.
+#endif
 #if defined(DECODE_BEO)
 #define RECORD_GAP_MICROS 16000 // always get the complete frame in the receive buffer
 #endif

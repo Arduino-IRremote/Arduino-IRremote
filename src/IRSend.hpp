@@ -32,6 +32,12 @@
 #ifndef _IR_SEND_HPP
 #define _IR_SEND_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /*
  * This improves readability of code by avoiding a lot of #if defined clauses
  */
@@ -368,6 +374,19 @@ void IRsend::sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigne
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     uint_fast8_t tNumberOf32BitChunks = ((aNumberOfBits - 1) / 32) + 1;
 
+#if defined(LOCAL_DEBUG)
+    // fist data
+    Serial.print(F("Data[0]=0x"));
+    Serial.print(aDecodedRawDataArray[0], HEX);
+    if (tNumberOf32BitChunks > 1) {
+        Serial.print(F(" Data[1]=0x"));
+        Serial.print(aDecodedRawDataArray[1], HEX);
+    }
+    Serial.print(F(" #="));
+    Serial.println(aNumberOfBits);
+    Serial.flush();
+#endif
+
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
 
@@ -377,25 +396,24 @@ void IRsend::sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigne
 
         for (uint_fast8_t i = 0; i < tNumberOf32BitChunks; ++i) {
             uint8_t tNumberOfBitsForOneSend;
-            bool tSendStopBit;
             if (aNumberOfBits > 32) {
                 tNumberOfBitsForOneSend = 32;
             } else {
                 tNumberOfBitsForOneSend = aNumberOfBits;
             }
+
+            // Manage stop bit
+            bool tSendStopBit;
             if (i == (tNumberOf32BitChunks - 1)) {
                 // End of data
-                tNumberOfBitsForOneSend = aNumberOfBits;
                 tSendStopBit = aSendStopBit;
             } else {
                 // intermediate data
-                tNumberOfBitsForOneSend = 32;
                 tSendStopBit = false;
             }
 
             sendPulseDistanceWidthData(aOneMarkMicros, aOneSpaceMicros, aZeroMarkMicros, aZeroSpaceMicros, aDecodedRawDataArray[i],
                     tNumberOfBitsForOneSend, aMSBFirst, tSendStopBit);
-
             aNumberOfBits -= 32;
         }
 
@@ -415,7 +433,7 @@ void IRsend::sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigne
 }
 
 /**
- * Sends PulseDistance data from array
+ * Sends PulseDistance data from array using PulsePauseWidthProtocolConstants
  * For LSB First the LSB of array[0] is sent first then all bits until MSB of array[0]. Next is LSB of array[1] and so on.
  * The output always ends with a space
  * Stop bit is always sent
@@ -584,6 +602,13 @@ void IRsend::sendPulseDistanceWidthData(PulsePauseWidthProtocolConstants *aProto
  */
 void IRsend::sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
         unsigned int aZeroSpaceMicros, uint32_t aData, uint_fast8_t aNumberOfBits, bool aMSBFirst, bool aSendStopBit) {
+
+#if defined(LOCAL_DEBUG)
+    // Even printing this short messages (at 115200) disturbs the send timing :-(
+//    Serial.print(aData, HEX);
+//    Serial.print('|');
+//    Serial.println(aNumberOfBits);
+#endif
 
 //    if (aMSBFirst) {  // Send the MSB first.
     // For MSBFirst, send data from MSB to LSB until mask bit is shifted out
@@ -901,4 +926,7 @@ unsigned int IRsend::getPulseCorrectionNanos() {
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_SEND_HPP

@@ -72,7 +72,7 @@
  + 500,- 650 + 500,- 650 + 500,- 650 + 200,- 900 // Checksum (+ sum of the 5 bytes before == 0)
  + 250,- 850 + 500,- 650 + 300,- 800 + 500
  */
-// MSB first, 8 start bits (zero), 31 wand id bits, 9 magnitude bits 8 checksum bits and no stop bit
+// MSB first, 8 start bits (zero), 31 wand id bits, 9 magnitude bits 8 checksum bits and no stop bit => 56 bits
 #if !defined (DOXYGEN)
 // MagiQuest packet is both Wand ID and magnitude of swish and flick
 union magiquest_t {
@@ -118,23 +118,33 @@ MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPA
         NULL };
 //+=============================================================================
 //
+/**
+ * @param aWandId       31 bit ID
+ * @param aMagnitude    9 bit Magnitude
+ */
 void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
 
     // Set IR carrier frequency
     enableIROut(38);
 
-    // 8 start bits
-    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, 0, 8);
     aMagnitude &= 0x1FF; // we have 9 bit
     LongUnion tWandId;
     tWandId.ULong = aWandId << 1;
     uint8_t tChecksum = (tWandId.Bytes[0]) + tWandId.Bytes[1] + tWandId.Bytes[2] + tWandId.Bytes[3];
     tChecksum += aMagnitude + (aMagnitude >> 8);
     tChecksum = ~tChecksum + 1;
-    // Data
-    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aWandId, MAGIQUEST_WAND_ID_BITS);
+
+    // 8 start bits
+    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, 0, 8);
+    // 48 bit data
+    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aWandId, MAGIQUEST_WAND_ID_BITS); // send only 31 bit, do not send MSB here
     sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aMagnitude, MAGIQUEST_MAGNITUDE_BITS);
     sendPulseDistanceWidthData(&MagiQuestProtocolConstants, tChecksum, MAGIQUEST_CHECKSUM_BITS);
+#if defined(LOCAL_DEBUG)
+    // must be after sending, in order not to destroy the send timing
+    Serial.print(F("MagiQuest checksum=0x"));
+    Serial.println(tChecksum, HEX);
+#endif
     IrReceiver.restartAfterSend();
 }
 
@@ -142,17 +152,20 @@ void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
 //
 /*
  * decodes a 56 bit result, which is not really compatible with standard decoder layout
- * magnitude is stored in Command
+ * magnitude is stored in command
+ * 31 bit wand_id is stored in decodedRawData
+ * lower 16 bit of wand_id is stored in address
  */
 bool IRrecv::decodeMagiQuest() {
     magiquest_t data;  // Somewhere to build our code
 
-    unsigned int tMark;
-    unsigned int tSpace;
+    unsigned int tMarkTicks;
+    unsigned int tSpaceTicks;
 
 #if defined(LOCAL_DEBUG)
-    char bitstring[(MAGIQUEST_BITS + 1)];
-    bitstring[MAGIQUEST_BITS] = '\0';
+    char tDebugBitstring[(MAGIQUEST_BITS + 1)];
+    tDebugBitstring[MAGIQUEST_BITS] = '\0';
+    char * tDebugBitstringPtr = tDebugBitstring;
 #endif
 
     // Check we have the right amount of data, magnitude and ID bits and 8 start bits + 0 stop bit
@@ -164,50 +177,49 @@ bool IRrecv::decodeMagiQuest() {
         return false;
     }
 
-    // Decode each bit
+    // Decode the 56 bits in one loop using uint64
     data.llword = 0;
-    uint_fast8_t tIndex = 1;  // Skip the gap between frames
+    unsigned int *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[1];
     for (uint_fast8_t i = 0; i < MAGIQUEST_BITS; i++) {
         // get one mark and space pair
-        tMark = decodedIRData.rawDataPtr->rawbuf[tIndex++];
-        tSpace = decodedIRData.rawDataPtr->rawbuf[tIndex++]; // buffer overflow for last bit, but we do not evaluate this value :-)
+        tMarkTicks = *tRawBufPointer++;;
+        tSpaceTicks = *tRawBufPointer++;; // buffer overflow for last bit, but we do not evaluate this value :-)
 
         IR_TRACE_PRINT(F("MagiQuest: mark="));
-        IR_TRACE_PRINT(tMark * MICROS_PER_TICK);
+        IR_TRACE_PRINT(tMarkTicks * MICROS_PER_TICK);
         IR_TRACE_PRINT(F(" space="));
-        IR_TRACE_PRINTLN(tSpace * MICROS_PER_TICK);
+        IR_TRACE_PRINTLN(tSpaceTicks * MICROS_PER_TICK);
 
         // We have no stop bit, so assume that last space, which is not recorded, is correct, since we can not check it
-        if (i == (MAGIQUEST_BITS - 1) || matchMark(tMark + tSpace, MAGIQUEST_PERIOD)) {
-            if (!matchMark(tMark, MAGIQUEST_ONE_MARK)) {
+        if (i == (MAGIQUEST_BITS - 1) || matchMark(tMarkTicks + tSpaceTicks, MAGIQUEST_PERIOD)) {
+            if (!matchMark(tMarkTicks, MAGIQUEST_ONE_MARK)) {
                 // It's a 0
                 data.llword <<= 1;
 #if defined(LOCAL_DEBUG)
-                bitstring[(tIndex / 2) - 1] = '0';
+                *tDebugBitstringPtr++ = '0';
 #endif
             } else {
                 // It's a 1
                 data.llword = (data.llword << 1) | 1;
 #if defined(LOCAL_DEBUG)
-                bitstring[(tIndex / 2) - 1] = '1';
+                *tDebugBitstringPtr++ = '1';
 #endif
             }
         } else {
 #if defined(LOCAL_DEBUG)
             Serial.print(F("Mark and space does not match the constant MagiQuest period. Index="));
             Serial.println(i);
-//            Serial.println(tIndex - 2);
 #endif
             return false;
         }
     }
 #if defined(LOCAL_DEBUG)
-    Serial.println(bitstring);
+    Serial.println(tDebugBitstring);
 #endif
 
     // Success
     decodedIRData.protocol = MAGIQUEST;
-    decodedIRData.numberOfBits = tIndex / 2;
+    decodedIRData.numberOfBits = MAGIQUEST_BITS;
     decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
 
     LongUnion tWandId;
@@ -217,8 +229,8 @@ bool IRrecv::decodeMagiQuest() {
     if (tChecksum != 0) {
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
 #if defined(LOCAL_DEBUG)
-        Serial.print(F("Checksum "));
-        Serial.print(tChecksum);
+        Serial.print(F("Checksum 0x"));
+        Serial.print(tChecksum, HEX);
         Serial.println(F(" is not 0"));
 #endif
     }

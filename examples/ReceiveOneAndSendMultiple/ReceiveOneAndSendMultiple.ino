@@ -6,6 +6,8 @@
  *  it sends multiple Samsung32 frames with appropriate delays in between.
  *  This serves as a Netflix-key emulation for my old Samsung H5273 TV.
  *
+ *  Tested on a digispark ATTiny85 board using AttinyCore https://github.com/SpenceKonde/ATTinyCore
+ *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  ************************************************************************************
@@ -42,6 +44,51 @@
 // USB- 3.6V Z-Diode              IR Output (4) PB4  3|    |6  PB1 (1) Feedback LED
 //                                              GND  4|    |5  PB0 (0) IR Input
 //                                                    +----+
+
+/* SAUMSUMG REMOTE CODES (Model: BN59-01180A)
+ * Power Button - 0x2
+ * Power Off - 0x98
+ * 1 - 0x4
+ * 2 - 0x5
+ * 3 - 0x6
+ * 4 - 0x8
+ * 5 - 0x9
+ * 6 - 0xa
+ * 7 - 0xc
+ * 8 - 0xd
+ * 9 - 0xe
+ * CH List - 0x6b
+ * Vol + - 0x7
+ * Vol - - 0xb
+ * Mute - 0xf
+ * Source - 0x1
+ * Ch + - 0x12
+ * Ch - - 0x10
+ * Menu - 0x1a
+ * Home - 0x79
+ * MagicInfo Player - 0x30
+ * Tools - 0x4b
+ * Info - 0x1f
+ * Up arrow - 0x60
+ * Left arrow - 0x65
+ * Right arrow - 0x62
+ * Down arrow - 0x61
+ * Return - 0x58
+ * Exit - 0x2d
+ * A - 0x6c
+ * B - 0x14
+ * C - 0x15
+ * D - 0x16
+ * Set - 0xab
+ * Unset - 0xac
+ * Lock - 0x77
+ * Stop (square) - 0x46
+ * Rewind (arrows) - 0x45
+ * Play (triangle) - 0x47
+ * Pause (bars) - 0x4a
+ * Fast Forward (arrows) - 0x48
+ */
+
 #include <Arduino.h>
 
 // select only Samsung protocol for sending and receiving

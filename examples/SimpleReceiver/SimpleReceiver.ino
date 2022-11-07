@@ -51,12 +51,14 @@
 //#define DECODE_MAGIQUEST
 //#define DECODE_WHYNTER
 
-//#define DECODE_DISTANCE     // universal decoder for pulse distance protocols
+//#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 //#define DECODE_HASH         // special decoder for all protocols
 
 //#define DECODE_BEO          // This protocol must always be enabled manually, i.e. it is NOT enabled if no protocol is defined
 
 //#define DEBUG               // Activate this for lots of lovely debug output from the decoders.
+
+//#define RAW_BUFFER_LENGTH  180  // Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
 
 #include <Arduino.h>
 

@@ -51,7 +51,7 @@
  */
 //#define DECODE_LG
 //#define DECODE_NEC
-//#define DECODE_DISTANCE
+//#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 // etc. see IRremote.hpp
 //
 
