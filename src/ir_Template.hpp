@@ -123,7 +123,7 @@
 #define SHUZU_OTHER             1234  // Other things you may need to define
 
 // use BOSEWAVE, we have no SHUZU code
-struct PulsePauseWidthProtocolConstants ShuzuProtocolConstants = { BOSEWAVE, 38, SHUZU_HEADER_MARK, SHUZU_HEADER_SPACE,
+struct PulseDistanceWidthProtocolConstants ShuzuProtocolConstants = { BOSEWAVE, 38, SHUZU_HEADER_MARK, SHUZU_HEADER_SPACE,
 SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (SHUZU_REPEAT_PERIOD
         / MICROS_IN_ONE_MILLI), NULL };
 

@@ -82,7 +82,7 @@
 #define LEGO_MODE_COMBO     1
 #define LEGO_MODE_SINGLE    0x4 // here the 2 LSB have meanings like Output A / Output B
 
-struct PulsePauseWidthProtocolConstants LegoProtocolConstants = { LEGO_PF, 38, LEGO_HEADER_MARK, LEGO_HEADER_SPACE, LEGO_BIT_MARK,
+struct PulseDistanceWidthProtocolConstants LegoProtocolConstants = { LEGO_PF, 38, LEGO_HEADER_MARK, LEGO_HEADER_SPACE, LEGO_BIT_MARK,
 LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (LEGO_AUTO_REPEAT_PERIOD_MIN
         / MICROS_IN_ONE_MILLI), NULL };
 
@@ -139,7 +139,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
         return false;
     }
 
-    if (!decodePulseDistanceData(&LegoProtocolConstants, LEGO_BITS)) {
+    if (!decodePulseDistanceWidthData(&LegoProtocolConstants, LEGO_BITS)) {
         IR_DEBUG_PRINT(F("LEGO: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;

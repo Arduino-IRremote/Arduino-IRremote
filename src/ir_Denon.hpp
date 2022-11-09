@@ -75,7 +75,7 @@
 #define DENON_HEADER_MARK       DENON_UNIT // The length of the Header:Mark
 #define DENON_HEADER_SPACE      (3 * DENON_UNIT) // 780 // The length of the Header:Space
 
-struct PulsePauseWidthProtocolConstants DenonProtocolConstants = { DENON, DENON_KHZ, DENON_HEADER_MARK, DENON_HEADER_SPACE,
+struct PulseDistanceWidthProtocolConstants DenonProtocolConstants = { DENON, DENON_KHZ, DENON_HEADER_MARK, DENON_HEADER_SPACE,
 DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (DENON_REPEAT_PERIOD
         / MICROS_IN_ONE_MILLI), NULL };
 
@@ -136,7 +136,7 @@ bool IRrecv::decodeDenon() {
     }
 
     // Read the bits in
-    if (!decodePulseDistanceData(&DenonProtocolConstants, DENON_BITS, 1)) {
+    if (!decodePulseDistanceWidthData(&DenonProtocolConstants, DENON_BITS, 1)) {
         IR_DEBUG_PRINT(F("Denon: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -245,7 +245,7 @@ bool IRrecv::decodeDenonOld(decode_results *aResults) {
     }
 
     // Read the bits in
-    if (!decodePulseDistanceData(DENON_BITS, 3, DENON_BIT_MARK, DENON_ONE_SPACE, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(DENON_BITS, 3, DENON_BIT_MARK, 0, DENON_ONE_SPACE, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 

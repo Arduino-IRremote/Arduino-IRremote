@@ -279,13 +279,16 @@ bool IRrecv::decodeDistanceWidth() {
     }
 #if defined DECODE_STRICT_CHECKS
         if(tMarkTicksLong > 0 && tSpaceTicksLong > 0) {
-            // We have different mark and space length here, so signal decodePulseWidthData() not to check against constant lenght decodePulseWidthData
+            // We have different mark and space length here, so signal decodePulseDistanceWidthData() not to check against constant lenght decodePulseDistanceWidthData
             tSpaceTicksShort = 0;
         }
 #endif
 
     for (uint_fast8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
         uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;
+        /*
+         * Decode in 32 bit chunks. Only the last chunk can contain less than 32 bits
+         */
         if (tNumberOfBitsForOneDecode > 32) {
             tNumberOfBitsForOneDecode = 32;
         }
@@ -293,28 +296,26 @@ bool IRrecv::decodeDistanceWidth() {
         bool tResult;
         if (tMarkTicksLong > 0) {
             /*
-             * Here short and long mark durations found. Decode in 32 bit chunks.
-             * Only the last chunk can contain less than 32 bits
+             * Here short and long mark durations found.
              */
             decodedIRData.protocol = PULSE_WIDTH;
-            tResult = decodePulseWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksLong * MICROS_PER_TICK,
-                    tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK,
+            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksLong * MICROS_PER_TICK,
+                    tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, 0,
 #if defined(DISTANCE_DO_MSB_DECODING)
-                        true
+                    true
 #else
                     false
 #endif
                     );
         } else {
             /*
-             * Here short and long space durations found. Decode in 32 bit chunks.
-             * Only the last chunk can contain less than 32 bits
+             * Here short and long space durations found.
              */
             decodedIRData.protocol = PULSE_DISTANCE;
-            tResult = decodePulseDistanceData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksShort * MICROS_PER_TICK,
-                    tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK,
+            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksShort * MICROS_PER_TICK,
+                    tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK,
 #if defined(DISTANCE_DO_MSB_DECODING)
-                        true
+                    true
 #else
                     false
 #endif

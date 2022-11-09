@@ -73,7 +73,6 @@
  + 250,- 850 + 500,- 650 + 300,- 800 + 500
  */
 // MSB first, 8 start bits (zero), 31 wand id bits, 9 magnitude bits 8 checksum bits and no stop bit => 56 bits
-
 #define MAGIQUEST_CHECKSUM_BITS     8   // magiquest_t.cmd.checksum
 #define MAGIQUEST_MAGNITUDE_BITS    9   // magiquest_t.cmd.magnitude
 #define MAGIQUEST_WAND_ID_BITS     31   // magiquest_t.cmd.wand_id -> wand-id is handled as 32 bit and always even
@@ -100,7 +99,7 @@
 #define MAGIQUEST_ZERO_SPACE    (3 * MAGIQUEST_UNIT) // 864
 
 // assume 110 as repeat period
-struct PulsePauseWidthProtocolConstants MagiQuestProtocolConstants = { MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
+struct PulseDistanceWidthProtocolConstants MagiQuestProtocolConstants = { MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
 MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_NO_STOP_BIT, 110,
         NULL };
 //+=============================================================================
@@ -157,7 +156,7 @@ bool IRrecv::decodeMagiQuest() {
     /*
      * Check for 8 zero header bits
      */
-    if (!decodePulseWidthData(MAGIQUEST_START_BITS, 1, MAGIQUEST_ONE_MARK, MAGIQUEST_ZERO_MARK, 0, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(&MagiQuestProtocolConstants, MAGIQUEST_START_BITS, 1)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("MagiQuest: "));
         Serial.println(F("Start bit decode failed"));
@@ -175,8 +174,7 @@ bool IRrecv::decodeMagiQuest() {
     /*
      * Decode the 31 bit ID
      */
-    if (!decodePulseWidthData(MAGIQUEST_WAND_ID_BITS, (MAGIQUEST_START_BITS * 2) + 1, MAGIQUEST_ONE_MARK, MAGIQUEST_ZERO_MARK, 0,
-            PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(&MagiQuestProtocolConstants, MAGIQUEST_WAND_ID_BITS, (MAGIQUEST_START_BITS * 2) + 1)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("MagiQuest: "));
         Serial.println(F("ID decode failed"));
@@ -191,9 +189,8 @@ bool IRrecv::decodeMagiQuest() {
     /*
      * Decode the 9 bit Magnitude + 8 bit checksum
      */
-    if (!decodePulseWidthData(MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_CHECKSUM_BITS,
-            ((MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) * 2) + 1, MAGIQUEST_ONE_MARK, MAGIQUEST_ZERO_MARK, 0,
-            PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(&MagiQuestProtocolConstants, MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_CHECKSUM_BITS,
+            ((MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) * 2) + 1)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("MagiQuest: "));
         Serial.println(F("Magnitude + checksum decode failed"));

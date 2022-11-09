@@ -92,7 +92,7 @@
 #define SHARP_VENDOR_ID_CODE        0x5AAA
 #define JVC_VENDOR_ID_CODE          0x0103
 
-struct PulsePauseWidthProtocolConstants KaseikyoProtocolConstants = { KASEIKYO, KASEIKYO_KHZ, KASEIKYO_HEADER_MARK,
+struct PulseDistanceWidthProtocolConstants KaseikyoProtocolConstants = { KASEIKYO, KASEIKYO_KHZ, KASEIKYO_HEADER_MARK,
 KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
         SEND_STOP_BIT, (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
@@ -180,7 +180,7 @@ bool IRrecv::decodeKaseikyo() {
     }
 
     // decode first 16 Vendor ID bits
-    if (!decodePulseDistanceData(&KaseikyoProtocolConstants, KASEIKYO_VENDOR_ID_BITS)) {
+    if (!decodePulseDistanceWidthData(&KaseikyoProtocolConstants, KASEIKYO_VENDOR_ID_BITS)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Kaseikyo: "));
         Serial.println(F("Vendor ID decode failed"));
@@ -210,7 +210,7 @@ bool IRrecv::decodeKaseikyo() {
     /*
      * Decode next 32 bits, 8 VendorID parity parity + 12 address (device and subdevice) + 8 command + 8 parity
      */
-    if (!decodePulseDistanceData(&KaseikyoProtocolConstants,
+    if (!decodePulseDistanceWidthData(&KaseikyoProtocolConstants,
     KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
             3 + (2 * KASEIKYO_VENDOR_ID_BITS))) {
 #if defined(LOCAL_DEBUG)

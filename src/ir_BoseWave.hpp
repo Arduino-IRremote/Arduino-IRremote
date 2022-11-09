@@ -39,7 +39,7 @@
 #define BOSEWAVE_REPEAT_PERIOD 75000
 #define BOSEWAVE_REPEAT_SPACE  50000
 
-struct PulsePauseWidthProtocolConstants BoseWaveProtocolConstants = { BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
+struct PulseDistanceWidthProtocolConstants BoseWaveProtocolConstants = { BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
 BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
         SEND_STOP_BIT, (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
@@ -69,7 +69,7 @@ bool IRrecv::decodeBoseWave() {
         return false;
     }
 
-    if (!decodePulseDistanceData(&BoseWaveProtocolConstants, BOSEWAVE_BITS)) {
+    if (!decodePulseDistanceWidthData(&BoseWaveProtocolConstants, BOSEWAVE_BITS)) {
         IR_DEBUG_PRINT(F("Bose: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;

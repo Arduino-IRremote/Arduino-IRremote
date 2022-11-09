@@ -3,8 +3,8 @@ The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
 ## 4.0.0
-- Introduced common structure PulsePauseWidthProtocolConstants.
-- Where possible, changed all send and decode functions to use PulsePauseWidthProtocolConstants.
+- Introduced common structure PulseDistanceWidthProtocolConstants.
+- Where possible, changed all send and decode functions to use PulseDistanceWidthProtocolConstants.
 - Improved MSB/LSB handling
 - New convenience fuctions bitreverse32Bit() and bitreverseOneByte().
 - Improved Magiquest protocol.
@@ -16,6 +16,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.
 - Fixed bug in sendSony() for command parameter > 0x7F;
 - Disabled strict checks while decoding. They can be enabled by defining DECODE_STRICT_CHECKS.
+- Merged the 2 decode pulse width and distance functions.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

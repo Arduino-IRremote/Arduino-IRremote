@@ -94,11 +94,11 @@
 #define LG_REPEAT_PERIOD        110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define LG_REPEAT_SPACE         (LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) // 52 ms
 
-struct PulsePauseWidthProtocolConstants LGProtocolConstants = { LG, LG_KHZ, LG_HEADER_MARK, LG_HEADER_SPACE, LG_BIT_MARK,
+struct PulseDistanceWidthProtocolConstants LGProtocolConstants = { LG, LG_KHZ, LG_HEADER_MARK, LG_HEADER_SPACE, LG_BIT_MARK,
 LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
         &sendNECSpecialRepeat };
 
-struct PulsePauseWidthProtocolConstants LG2ProtocolConstants = { LG2, LG_KHZ, LG2_HEADER_MARK, LG2_HEADER_SPACE, LG_BIT_MARK,
+struct PulseDistanceWidthProtocolConstants LG2ProtocolConstants = { LG2, LG_KHZ, LG2_HEADER_MARK, LG2_HEADER_SPACE, LG_BIT_MARK,
 LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
         &sendLG2SpecialRepeat };
 
@@ -222,7 +222,7 @@ bool IRrecv::decodeLG() {
         return false;
     }
 
-    if (!decodePulseDistanceData(&LGProtocolConstants, LG_BITS)) {
+    if (!decodePulseDistanceWidthData(&LGProtocolConstants, LG_BITS)) {
         IR_DEBUG_PRINT(F("LG: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -296,7 +296,7 @@ bool IRrecv::decodeLGMSB(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(LG_BITS, offset, LG_BIT_MARK, 0, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 // Stop bit

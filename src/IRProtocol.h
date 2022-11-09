@@ -99,7 +99,7 @@ const char string_Lego[] PROGMEM = "Lego";
 const char string_MagiQuest[] PROGMEM = "MagiQuest";
 const char string_Whynter[] PROGMEM = "Whynter";
 
-struct PulsePauseWidthProtocolConstants {
+struct PulseDistanceWidthProtocolConstants {
     decode_type_t ProtocolIndex;
     uint_fast8_t FrequencyKHz;
     unsigned int HeaderMarkMicros;

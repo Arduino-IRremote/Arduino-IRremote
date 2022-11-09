@@ -81,7 +81,7 @@
 #define SIRCS_15_PROTOCOL       15
 #define SIRCS_20_PROTOCOL       20
 
-struct PulsePauseWidthProtocolConstants SonyProtocolConstants = { SONY, SONY_KHZ, SONY_HEADER_MARK, SONY_SPACE, SONY_ONE_MARK,
+struct PulseDistanceWidthProtocolConstants SonyProtocolConstants = { SONY, SONY_KHZ, SONY_HEADER_MARK, SONY_SPACE, SONY_ONE_MARK,
 SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_NO_STOP_BIT, (SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
@@ -113,8 +113,7 @@ bool IRrecv::decodeSony() {
         return false;
     }
 
-    if (!decodePulseWidthData((decodedIRData.rawDataPtr->rawlen - 1) / 2, 3, SONY_ONE_MARK, SONY_ZERO_MARK, SONY_SPACE,
-            PROTOCOL_IS_LSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(&SonyProtocolConstants, (decodedIRData.rawDataPtr->rawlen - 1) / 2, 3)) {
         IR_DEBUG_PRINT(F("Sony: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;

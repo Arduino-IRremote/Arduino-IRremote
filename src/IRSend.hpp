@@ -433,12 +433,12 @@ void IRsend::sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigne
 }
 
 /**
- * Sends PulseDistance data from array using PulsePauseWidthProtocolConstants
+ * Sends PulseDistance data from array using PulseDistanceWidthProtocolConstants
  * For LSB First the LSB of array[0] is sent first then all bits until MSB of array[0]. Next is LSB of array[1] and so on.
  * The output always ends with a space
  * Stop bit is always sent
  */
-void IRsend::sendPulseDistanceWidthFromArray(PulsePauseWidthProtocolConstants *aProtocolConstants, uint32_t *aDecodedRawDataArray,
+void IRsend::sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t *aDecodedRawDataArray,
         unsigned int aNumberOfBits, int_fast8_t aNumberOfRepeats) {
 
     // Set IR carrier frequency
@@ -489,7 +489,7 @@ void IRsend::sendPulseDistanceWidthFromArray(PulsePauseWidthProtocolConstants *a
  * Sends PulseDistance frames and repeats
  * @param aNumberOfRepeats If < 0 then only a (special) repeat frame will be sent
  */
-void IRsend::sendPulseDistanceWidth(PulsePauseWidthProtocolConstants *aProtocolConstants, uint32_t aData,
+void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t aData,
         uint_fast8_t aNumberOfBits, int_fast8_t aNumberOfRepeats) {
 
     if (aNumberOfRepeats < 0) {
@@ -588,7 +588,7 @@ void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHe
  * The output always ends with a space
  * Each additional call costs 16 bytes program space
  */
-void IRsend::sendPulseDistanceWidthData(PulsePauseWidthProtocolConstants *aProtocolConstants, uint32_t aData,
+void IRsend::sendPulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t aData,
         uint_fast8_t aNumberOfBits) {
 
     sendPulseDistanceWidthData(aProtocolConstants->OneMarkMicros, aProtocolConstants->OneSpaceMicros,

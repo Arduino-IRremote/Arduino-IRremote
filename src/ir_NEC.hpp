@@ -81,11 +81,11 @@
 
 #define APPLE_ADDRESS           0x87EE
 
-struct PulsePauseWidthProtocolConstants NECProtocolConstants = { NEC, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
+struct PulseDistanceWidthProtocolConstants NECProtocolConstants = { NEC, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
 NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
         &sendNECSpecialRepeat };
 
-struct PulsePauseWidthProtocolConstants NEC2ProtocolConstants = { NEC2, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
+struct PulseDistanceWidthProtocolConstants NEC2ProtocolConstants = { NEC2, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
 NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
@@ -235,7 +235,7 @@ bool IRrecv::decodeNEC() {
         return false;
     }
 
-    if (!decodePulseDistanceData(&NECProtocolConstants, NEC_BITS)) {
+    if (!decodePulseDistanceWidthData(&NECProtocolConstants, NEC_BITS)) {
         IR_DEBUG_PRINT(F("NEC: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -324,7 +324,7 @@ bool IRrecv::decodeNECMSB(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceData(NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, NEC_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(NEC_BITS, offset, NEC_BIT_MARK, 0, NEC_ONE_SPACE, NEC_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         IR_DEBUG_PRINT(F("NEC MSB: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;

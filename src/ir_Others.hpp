@@ -58,7 +58,7 @@
 #define DISH_ZERO_SPACE     2800
 #define DISH_REPEAT_SPACE   6200 // really?
 
-struct PulsePauseWidthProtocolConstants DishProtocolConstants = { UNKNOWN, 56, DISH_HEADER_MARK, DISH_HEADER_SPACE,
+struct PulseDistanceWidthProtocolConstants DishProtocolConstants = { UNKNOWN, 56, DISH_HEADER_MARK, DISH_HEADER_SPACE,
 DISH_BIT_MARK, DISH_ONE_SPACE, DISH_BIT_MARK, DISH_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, 40, NULL };
 
 void IRsend::sendDish(uint16_t aData) {
@@ -84,7 +84,7 @@ void IRsend::sendDish(uint16_t aData) {
 #define WHYNTER_ONE_SPACE     2150
 #define WHYNTER_ZERO_SPACE     750
 
-struct PulsePauseWidthProtocolConstants WhynterProtocolConstants = { WHYNTER, 38, WHYNTER_HEADER_MARK, WHYNTER_HEADER_SPACE,
+struct PulseDistanceWidthProtocolConstants WhynterProtocolConstants = { WHYNTER, 38, WHYNTER_HEADER_MARK, WHYNTER_HEADER_SPACE,
 WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, 110, NULL };
 
 void IRsend::sendWhynter(uint32_t aData, uint8_t aNumberOfBitsToSend) {
@@ -99,7 +99,7 @@ bool IRrecv::decodeWhynter() {
     if (!checkHeader(&WhynterProtocolConstants)) {
         return false;
     }
-    if (!decodePulseDistanceData(&WhynterProtocolConstants, WHYNTER_BITS)) {
+    if (!decodePulseDistanceWidthData(&WhynterProtocolConstants, WHYNTER_BITS)) {
         return false;
     }
     // Success

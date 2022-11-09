@@ -68,7 +68,7 @@
 #define SAMSUNG_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define SAMSUNG_REPEAT_SPACE        (SAMSUNG_REPEAT_PERIOD - SAMSUNG_AVERAGE_DURATION)
 
-struct PulsePauseWidthProtocolConstants SamsungProtocolConstants = { SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
+struct PulseDistanceWidthProtocolConstants SamsungProtocolConstants = { SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
 SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
         SEND_STOP_BIT, (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendSamsungLGSpecialRepeat };
 
@@ -163,7 +163,7 @@ bool IRrecv::decodeSamsung() {
     /*
      * Decode first 32 bits
      */
-    if (!decodePulseDistanceData(&SamsungProtocolConstants, SAMSUNG_BITS)) {
+    if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, SAMSUNG_BITS)) {
         IR_DEBUG_PRINT(F("Samsung: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;
@@ -178,7 +178,7 @@ bool IRrecv::decodeSamsung() {
          */
 
         // decode additional 16 bit
-        if (!decodePulseDistanceData(&SamsungProtocolConstants, (SAMSUNG_COMMAND32_BITS - SAMSUNG_COMMAND16_BITS),
+        if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, (SAMSUNG_COMMAND32_BITS - SAMSUNG_COMMAND16_BITS),
                 3 + SAMSUNG_BITS)) {
             IR_DEBUG_PRINT(F("Samsung: "));
             IR_DEBUG_PRINTLN(F("Decode failed"));
@@ -251,7 +251,7 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE,
+    if (!decodePulseDistanceWidthData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, 0, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE,
             PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }

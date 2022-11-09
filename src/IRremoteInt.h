@@ -245,17 +245,11 @@ public:
     /*
      * The main decoding functions used by the individual decoders
      */
-    bool decodePulseDistanceData(PulsePauseWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
+    bool decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
             uint_fast8_t aStartOffset = 3);
 
-    bool decodePulseDistanceData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aBitMarkMicros,
-            unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst);
-
-    bool decodePulseWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aOneMarkMicros,
-            unsigned int aZeroMarkMicros, unsigned int aBitSpaceMicros, bool aMSBfirst);
-
-    bool decodeDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aOneMarkMicros,
-            unsigned int aBitPeriodMicros, bool aMSBfirst);
+    bool decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aOneMarkMicros,
+            unsigned int aZeroMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst);
 
     bool decodeBiPhaseData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint_fast8_t aStartClockCount,
             uint_fast8_t aValueOfSpaceToMarkTransition, unsigned int aBiphaseTimeUnit);
@@ -314,7 +308,7 @@ public:
      */
     void initDecodedIRData();
     uint_fast8_t compare(unsigned int oldval, unsigned int newval);
-    bool checkHeader(PulsePauseWidthProtocolConstants *aProtocolConstants);
+    bool checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants);
     void checkForRepeatSpaceAndSetFlag(unsigned int aMediumRepeatSpaceMicros);
 
     IRData decodedIRData;       // New: decoded IR data for the application
@@ -459,11 +453,11 @@ public:
             unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros,
             unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, uint32_t *aDecodedRawDataArray, unsigned int aNumberOfBits,
             bool aMSBfirst, bool aSendStopBit, unsigned int aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
-    void sendPulseDistanceWidthFromArray(PulsePauseWidthProtocolConstants *aProtocolConstants, uint32_t *aDecodedRawDataArray,
+    void sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t *aDecodedRawDataArray,
             unsigned int aNumberOfBits, int_fast8_t aNumberOfRepeats);
-    void sendPulseDistanceWidth(PulsePauseWidthProtocolConstants *aProtocolConstants, uint32_t aData, uint_fast8_t aNumberOfBits,
+    void sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t aData, uint_fast8_t aNumberOfBits,
             int_fast8_t aNumberOfRepeats);
-    void sendPulseDistanceWidthData(PulsePauseWidthProtocolConstants *aProtocolConstants, uint32_t aData,
+    void sendPulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t aData,
             uint_fast8_t aNumberOfBits);
     void sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros,
             unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros,
