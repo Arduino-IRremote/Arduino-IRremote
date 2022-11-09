@@ -111,23 +111,15 @@ TinyIRReceiverStruct TinyIRReceiverControl;
  * Declaration of the callback function provided by the user application.
  * It is called every time a complete IR command or repeat was received.
  */
-#if defined(ESP32) || defined(ESP8266)
-extern void IRAM_ATTR handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
-#else
 extern void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
-#endif
 
 /**
  * The ISR of TinyIRRreceiver.
  * It handles the NEC protocol decoding and calls the user callback function on complete.
  * 5 us + 3 us for push + pop for a 16MHz ATmega
  */
-#if defined(ESP32) || defined(ESP8266)
-void IRAM_ATTR IRPinChangeInterruptHandler(void)
-#else
-void IRPinChangeInterruptHandler(void)
-#endif
-        {
+
+void IRPinChangeInterruptHandler(void) {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
     digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif

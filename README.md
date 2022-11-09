@@ -100,6 +100,7 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - New universal **Pulse Distance Width decoder** added, which covers some previous unknown protocols.
 - Printout of code how to send received command by `IrReceiver.printIRSendUsage(&Serial)`.
 - Support for more than 64 bit data for universal decoder and sender.
+- Callback after receiving a command - call your own code if a message was received.
 
 # Converting your 3.x program to the 4.x version
 - You must replace `#define DECODE_DISTANCE_WIDTH` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).
@@ -516,7 +517,8 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `RAW_BUFFER_LENGTH` |  100 | Buffer size of raw input buffer. Must be even! 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. |
 | `EXCLUDE_UNIVERSAL_PROTOCOLS` |  disabled | Excludes the universal decoder for pulse distance protocols and decodeHash (special decoder for all protocols) from `decode()`. Saves up to 1000 bytes program memory. |
 | `DECODE_<Protocol name>` |  all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |
-| `DECODE_STRICT_CHECKS` |  disabled | Check for additional characteristics of protocol timing like length of mark for a constant mark protocol, where space length determines the bit value. Requires up to 194 additional bytes of program space. |
+| `DECODE_STRICT_CHECKS` |  disabled | Check for additional characteristics of protocol timing like length of mark for a constant mark protocol, where space length determines the bit value. Requires up to 194 additional bytes of program memory. |
+| `IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK` |  disabled | Saves up to 60 bytes of program memory and 2 bytes RAM. |
 | `MARK_EXCESS_MICROS` |  20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
 | `RECORD_GAP_MICROS` |  5000 | Minimum gap between IR transmissions, to detect the end of a protocol.<br/>Must be greater than any space of a protocol e.g. the NEC header space of 4500 µs.<br/>Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br/>Keep in mind, that this is the delay between the end of the received command and the start of decoding. |
 | `IR_INPUT_IS_ACTIVE_HIGH` |  disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
@@ -718,14 +720,14 @@ It is dated from **24.06.2022**. If you have complains about the data or request
 | Send pins| All | All | All ? | Timer dependent | % | % |
 | Decode method | OnTheFly | OnTheFly | RAM | RAM | OnTheFly | OnTheFly |
 | Encode method | OnTheFly | OnTheFly | OnTheFly | OnTheFly or RAM | % | % |
-| Callback suppport | x | % | % | % | x | % |
+| Callback suppport | x | % | % | x | x | % |
 | Repeat handling | Receive + Send (partially) | % | ? | Receive + Send | Receive | Receive |
 | LED feedback | x | % | x | x | x | % |
 | FLASH usage (simple NEC example with 5 prints) | 1820<br/>(4300 for 15 main / 8000 for all 40 protocols)<br/>(+200 for callback)<br/>(+80 for interrupt at pin 2+3)| 1270<br/>(1400 for pin 2+3) | 4830 | 1770 | **900** | ?1100? |
 | RAM usage | 52<br/>(73 / 100 for 15 (main) / 40 protocols) | 62 | 334 | 227 | **19** | 29 |
 | Supported platforms | **avr, megaavr, attiny, Digispark (Pro), esp8266, ESP32, STM32, SAMD 21, Apollo3<br/>(plus arm and pic for non Arduino IDE)** | avr, esp8266 | avr, SAMD 21, SAMD 51 | avr, attiny, [esp8266](https://github.com/crankyoldgit/IRremoteESP8266), esp32, SAM, SAMD | **All platforms with attach<br/>Interrupt()** | **All platforms with attach<br/>Interrupt()** |
 | Last library update | 6/2022 | 4/2018 | 3/2022 | 6/2022 | 6/2022 | 2/2022 |
-| Remarks | Decodes 40 protocols concurrently.<br/>39 Protocols to send.<br/>Work in progress. | Only one protocol at a time. | Consists of 5 libraries. **Project containing bugs - 45 issues, no reaction for at least one year.** | Decoding and sending are easy to extend.<br/>Supports **Pronto** codes. | Requires no timer. | Requires no timer. |
+| Remarks | Decodes 40 protocols concurrently.<br/>39 Protocols to send.<br/>Work in progress. | Only one protocol at a time. | Consists of 5 libraries. **Project containing bugs - 45 issues, no reaction for at least one year.** | Universal decoder and encoder.<br/>Supports **Pronto** codes and sending of raw timing values. | Requires no timer. | Requires no timer. |
 
 \* The Hash protocol gives you a hash as code, which may be sufficient to distinguish your keys on the remote, but may not work with some protocols like Mitsubishi
 

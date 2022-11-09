@@ -141,6 +141,13 @@ void IRrecv::setReceivePin(uint_fast8_t aReceivePinNumber) {
 }
 
 /**
+ * Sets the function to call if a protocol message has arrived
+ */
+void IRrecv::registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunction)(void)) {
+    irparams.ReceiveCompleteCallbackFunction = aReceiveCompleteCallbackFunction;
+}
+
+/**
  * Configures the timer and the state machine for IR reception.
  */
 void IRrecv::start() {
@@ -597,8 +604,9 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8
 bool IRrecv::decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
         uint_fast8_t aStartOffset) {
 
-    return decodePulseDistanceWidthData(aNumberOfBits, aStartOffset, aProtocolConstants->OneMarkMicros, aProtocolConstants->ZeroMarkMicros,
-            aProtocolConstants->OneSpaceMicros, aProtocolConstants->ZeroSpaceMicros, aProtocolConstants->isMSBFirst);
+    return decodePulseDistanceWidthData(aNumberOfBits, aStartOffset, aProtocolConstants->OneMarkMicros,
+            aProtocolConstants->ZeroMarkMicros, aProtocolConstants->OneSpaceMicros, aProtocolConstants->ZeroSpaceMicros,
+            aProtocolConstants->isMSBFirst);
 }
 
 /*
@@ -1527,15 +1535,20 @@ ISR()
      */
 //    switch (irparams.StateForISR) {
 //......................................................................
-    if (irparams.StateForISR == IR_REC_STATE_IDLE) { // In the middle of a gap or just resumed (and maybe in the middle of a transmission
+    if (irparams.StateForISR == IR_REC_STATE_IDLE) {
+        /*
+         * Here we are just resumed and maybe in the middle of a transmission
+         */
         if (tIRInputLevel == INPUT_MARK) {
             // check if we did not start in the middle of a transmission by checking the minimum length of leading space
             if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
-                // Gap just ended; Record gap duration + start recording transmission
-                // Initialize all state machine variables
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
+                /*
+                 * Gap between two transmissions just ended; Record gap duration + start recording transmission
+                 * Initialize all state machine variables
+                 */
                 irparams.OverflowFlag = false;
                 irparams.rawbuf[0] = irparams.TickCounterForISR;
                 irparams.rawlen = 1;
@@ -1560,6 +1573,14 @@ ISR()
                 // Flag up a read OverflowFlag; Stop the state machine
                 irparams.OverflowFlag = true;
                 irparams.StateForISR = IR_REC_STATE_STOP;
+#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
+                /*
+                 * Call callback if registered (not NULL)
+                 */
+                if (irparams.ReceiveCompleteCallbackFunction != NULL) {
+                    irparams.ReceiveCompleteCallbackFunction();
+                }
+#endif
             } else {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
@@ -1577,6 +1598,14 @@ ISR()
              * Don't reset TickCounterForISR; keep counting width of next leading space
              */
             irparams.StateForISR = IR_REC_STATE_STOP;
+#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
+            /*
+             * Call callback if registered (not NULL)
+             */
+            if (irparams.ReceiveCompleteCallbackFunction != NULL) {
+                irparams.ReceiveCompleteCallbackFunction();
+            }
+#endif
         }
     } else if (irparams.StateForISR == IR_REC_STATE_STOP) {
         /*

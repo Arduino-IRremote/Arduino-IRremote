@@ -87,7 +87,9 @@ struct irparams_struct {
     uint8_t IRReceivePinMask;
 #endif
     uint_fast16_t TickCounterForISR;    ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
-
+#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
+    void (*ReceiveCompleteCallbackFunction)(void); ///< The function to call if a protocol message has arrived, i.e. StateForISR changed to IR_REC_STATE_STOP
+#endif
     bool OverflowFlag;                  ///< Raw buffer OverflowFlag occurred
 #if RAW_BUFFER_LENGTH <= 254            // saves around 75 bytes program memory and speeds up ISR
     uint_fast8_t rawlen;                ///< counter of entries in rawbuf
@@ -148,7 +150,7 @@ struct irparams_struct {
  */
 struct IRData {
     decode_type_t protocol; ///< UNKNOWN, NEC, SONY, RC5, PULSE_DISTANCE, ...
-    uint16_t address;       ///< Decoded address, Distance protocol (tMarkTicksLong (if tMarkTicksLong == 0, then tMarkTicksShort) << 8) | tSpaceTicksLong
+    uint16_t address; ///< Decoded address, Distance protocol (tMarkTicksLong (if tMarkTicksLong == 0, then tMarkTicksShort) << 8) | tSpaceTicksLong
     uint16_t command;       ///< Decoded command, Distance protocol (tMarkTicksShort << 8) | tSpaceTicksShort
     uint16_t extra; ///< Contains upper 16 bit of Magiquest WandID, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks << 8) | HeaderSpaceTicks.
     uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
@@ -187,7 +189,7 @@ public:
     IRrecv(uint_fast8_t aReceivePin);
     IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin);
     void setReceivePin(uint_fast8_t aReceivePinNumber);
-
+    void registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunction)(void));
     /*
      * Stream like API
      */
@@ -482,10 +484,13 @@ public:
     /*
      * New send functions
      */
-    void sendBangOlufsen(uint16_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats = NO_REPEATS, int8_t aNumberOfHeaderBits = 8);
-    void sendBangOlufsenDataLink(uint32_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats = NO_REPEATS, int8_t aNumberOfHeaderBits = 8);
+    void sendBangOlufsen(uint16_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats = NO_REPEATS,
+            int8_t aNumberOfHeaderBits = 8);
+    void sendBangOlufsenDataLink(uint32_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats = NO_REPEATS,
+            int8_t aNumberOfHeaderBits = 8);
     void sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBackToBack = false);
-    void sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bool aBackToBack = false, bool aUseDatalinkTiming = false);
+    void sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bool aBackToBack = false,
+            bool aUseDatalinkTiming = false);
     void sendBoseWave(uint8_t aCommand, int_fast8_t aNumberOfRepeats = NO_REPEATS);
     void sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aSendSharp = false);
     void sendDenonRaw(uint16_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS)

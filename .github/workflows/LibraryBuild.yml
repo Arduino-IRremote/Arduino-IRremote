@@ -195,7 +195,7 @@ jobs:
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             sketches-exclude: MinimalReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=500
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=500 -Wno-error=maybe-uninitialized
               All: -DRAW_BUFFER_LENGTH=300 -Wno-error=maybe-uninitialized # https://github.com/espressif/arduino-esp32/issues/7024
 
           - arduino-boards-fqbn: STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8 # ST version

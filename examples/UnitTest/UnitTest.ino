@@ -103,6 +103,10 @@
 #error Unit test cannot run if SEND_PWM_BY_TIMER is enabled i.e. receive timer us also used by send
 #endif
 
+volatile bool sReceiverDataIsAvailable = false;
+
+void ReceiveCompleteCallbackHandler();
+
 void setup() {
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
 
@@ -115,6 +119,7 @@ void setup() {
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+    IrReceiver.registerReceiveCompleteCallback(ReceiveCompleteCallbackHandler);
 
 #if defined(IR_SEND_PIN)
     IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
@@ -156,7 +161,8 @@ void setup() {
 
 void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
     // wait until signal has received
-    delay((RECORD_GAP_MICROS / 1000) + 1);
+    while(!sReceiverDataIsAvailable){};
+    sReceiverDataIsAvailable = false;
 
     if (IrReceiver.decode()) {
 // Print a short summary of received data
@@ -190,9 +196,18 @@ void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
     Serial.println();
 }
 
+/*
+ * Test callback function
+ * Has the same functionality as available()
+ */
+void ReceiveCompleteCallbackHandler() {
+    sReceiverDataIsAvailable = true;
+}
+
 void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
     // wait until signal has received
-    delay((RECORD_GAP_MICROS / 1000) + 1);
+    while(!sReceiverDataIsAvailable){};
+    sReceiverDataIsAvailable = false;
 
     if (IrReceiver.decode()) {
 // Print a short summary of received data
@@ -606,7 +621,7 @@ void loop() {
     for (unsigned int i = 0; i < 140; ++i) {
         // 400 + 400 should be received as 8/8 and sometimes as 9/7 or 7/9 if compensation by MARK_EXCESS_MICROS is optimal.
         // 210 + 540 = 750 should be received as 5/10 or 4/11 if compensation by MARK_EXCESS_MICROS is optimal.
-        IrSender.mark(210);        // 8 pulses at 38 kHz
+        IrSender.mark(210);         // 8 pulses at 38 kHz
         IrSender.space(540);        // to fill up to 750 us
     }
     checkReceive(sAddress, sCommand);

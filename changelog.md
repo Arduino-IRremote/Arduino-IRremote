@@ -17,6 +17,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Fixed bug in sendSony() for command parameter > 0x7F;
 - Disabled strict checks while decoding. They can be enabled by defining DECODE_STRICT_CHECKS.
 - Merged the 2 decode pulse width and distance functions.
+- Added receiver callback functionality and registerReceiveCompleteCallback() function.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).
