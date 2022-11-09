@@ -13,8 +13,9 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added Bang&Olufsen protocol. #1030.
 - 3. parameter of function "void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)" is not optional anymore
      and this function is now only available if IR_SEND_PIN is not defined. #1033.
-- Added decodeDistanceWidthData() and therfore changed ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp and DECODE_DISTANCE to DECODE_DISTANCE_WIDTH.
+- Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.
 - Fixed bug in sendSony() for command parameter > 0x7F;
+- Disabled strict checks while decoding. They can be enabled by defining DECODE_STRICT_CHECKS.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

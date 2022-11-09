@@ -35,7 +35,7 @@
 #if defined(DEBUG) && !defined(LOCAL_DEBUG)
 #define LOCAL_DEBUG
 #else
-#define LOCAL_DEBUG // This enables debug output only for this file
+//#define LOCAL_DEBUG // This enables debug output only for this file
 #endif
 
 /*

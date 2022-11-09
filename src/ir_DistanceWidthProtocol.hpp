@@ -129,13 +129,13 @@ bool aggregateArrayCounts(uint8_t aArray[], uint8_t aMaxIndex, uint8_t *aShortIn
 }
 
 /*
- * Try to decode a pulse width or pulse distance protocol.
+ * Try to decode a pulse distance or pulse width protocol.
  * 1. Analyze all space and mark length
  * 2. Decide if we have an pulse width or distance protocol
  * 3. Try to decode with the mark and space data found in step 1
  * No data and address decoding, only raw data as result.
  */
-bool IRrecv::decodeDistance() {
+bool IRrecv::decodeDistanceWidth() {
     uint8_t tDurationArray[DURATION_ARRAY_SIZE]; // For up to 49 ticks / 2450 us
 
     /*
@@ -263,98 +263,74 @@ bool IRrecv::decodeDistance() {
     uint8_t tNumberOfAdditionalLong = (tNumberOfBits - 1) / 32;
 
     /*
-     * decide, if we have an pulse width or distance protocol
+     * We can have the following protocol timings
+     * Pulse distance:          Pulses/marks are constant, pause/spaces have different length, like NEC.
+     * Pulse width:             Pulses/marks have different length, pause/spaces are constant, like Sony.
+     * Pulse distance width:    Pulses/marks and pause/spaces have different length, often the bit length is constant, like MagiQuest.
+     * Pulse distance width can be decoded by pulse width decoder, if this decoder does not check the length of pause/spaces.
      */
-    if (tSpaceTicksLong > 0) {
-        /*
-         * Here short and long space duration found. Decode in 32 bit chunks.
-         * Only the last chunk can contain less than 32 bits
-         */
-        for (uint_fast8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
-            uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;
-            if (tNumberOfBitsForOneDecode > 32) {
-                tNumberOfBitsForOneDecode = 32;
-            }
-            bool tResult;
-            if (tMarkTicksLong > 0) {
-                decodedIRData.protocol = PULSE_DISTANCE_WIDTH;
-                /*
-                 * Here we have 2 space and 2 mark durations like MagiQuest
-                 * The longer mark is mostly the mark of the coded 1
-                 */
-                tResult = decodeDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksLong * MICROS_PER_TICK,
-                        (tMarkTicksLong + tSpaceTicksShort) * MICROS_PER_TICK,
+
+    if (tMarkTicksLong == 0 && tSpaceTicksLong == 0) {
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("PULSE_DISTANCE: "));
+        Serial.println(F("Only 1 distinct duration value for each space and mark found"));
+#endif
+        return false;
+    }
+#if defined DECODE_STRICT_CHECKS
+        if(tMarkTicksLong > 0 && tSpaceTicksLong > 0) {
+            // We have different mark and space length here, so signal decodePulseWidthData() not to check against constant lenght decodePulseWidthData
+            tSpaceTicksShort = 0;
+        }
+#endif
+
+    for (uint_fast8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
+        uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;
+        if (tNumberOfBitsForOneDecode > 32) {
+            tNumberOfBitsForOneDecode = 32;
+        }
+
+        bool tResult;
+        if (tMarkTicksLong > 0) {
+            /*
+             * Here short and long mark durations found. Decode in 32 bit chunks.
+             * Only the last chunk can contain less than 32 bits
+             */
+            decodedIRData.protocol = PULSE_WIDTH;
+            tResult = decodePulseWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksLong * MICROS_PER_TICK,
+                    tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK,
 #if defined(DISTANCE_DO_MSB_DECODING)
                         true
 #else
-                        false
+                    false
 #endif
-                        );
-
-            } else {
-                decodedIRData.protocol = PULSE_DISTANCE;
-                tResult = decodePulseDistanceData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksShort * MICROS_PER_TICK,
-                        tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK,
+                    );
+        } else {
+            /*
+             * Here short and long space durations found. Decode in 32 bit chunks.
+             * Only the last chunk can contain less than 32 bits
+             */
+            decodedIRData.protocol = PULSE_DISTANCE;
+            tResult = decodePulseDistanceData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksShort * MICROS_PER_TICK,
+                    tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK,
 #if defined(DISTANCE_DO_MSB_DECODING)
                         true
 #else
-                        false
+                    false
 #endif
-                        );
-            }
-            if (!tResult) {
-#if defined(LOCAL_DEBUG)
-                Serial.print(decodedIRData.protocol);
-                Serial.println(F(": Decode failed"));
-#endif
-                return false;
-            } else {
-                // fill array with decoded data
-                decodedIRData.decodedRawDataArray[i] = decodedIRData.decodedRawData;
-                tStartIndex += 64;
-                tNumberOfBits -= 32;
-            }
+                    );
         }
-
-    } else {
-        if (tMarkTicksLong == 0) {
-#if defined(LOCAL_DEBUG)
-            Serial.print(F("PULSE_DISTANCE: "));
-            Serial.println(F("Only 1 distinct duration value for each space and mark found"));
-#endif
-            return false;
-        }
-
-//#define SUPPORT_PULSE_WIDTH_DECODING
-#if defined(SUPPORT_PULSE_WIDTH_DECODING) // The only known pulse width protocol is Sony
-
-//        // check if last bit can be decoded as data or not, in this case take it as a stop bit
-//        if (decodePulseWidthData(1, decodedIRData.rawDataPtr->rawlen - 3, tMarkTicksLong * MICROS_PER_TICK,
-//                tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, DISTANCE_DO_MSB_DECODING)) {
-//            tNumberOfBits++;
-//        }
-        // decode without leading start bit. Currently only seen for sony protocol
-        for (uint_fast8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
-            uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;
-            if (tNumberOfBitsForOneDecode > 32) {
-                tNumberOfBitsForOneDecode = 32;
-            }
-            if (!decodePulseWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksLong * MICROS_PER_TICK,
-                            tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, DISTANCE_DO_MSB_DECODING)) {
+        if (!tResult) {
 #if defined(LOCAL_DEBUG)
                 Serial.print(F("PULSE_WIDTH: "));
                 Serial.println(F("Decode failed"));
 #endif
-                return false;
-            }
-            tStartIndex += 64;
-            tNumberOfBits -= 32;
+            return false;
         }
-
-        // Store ticks used for decoding in extra
-        decodedIRData.extra = (tMarkTicksShort << 8) | tMarkTicksLong;
-        decodedIRData.protocol = PULSE_WIDTH;
-#endif
+        // fill array with decoded data
+        decodedIRData.decodedRawDataArray[i] = decodedIRData.decodedRawData;
+        tStartIndex += 64;
+        tNumberOfBits -= 32;
     }
 
 #if defined(DISTANCE_DO_MSB_DECODING)

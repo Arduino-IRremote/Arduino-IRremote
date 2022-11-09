@@ -172,7 +172,7 @@ void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
             IrReceiver.printIRResultRawFormatted(&Serial, true);
         }
 #endif
-        if (IrReceiver.decodedIRData.protocol == PULSE_DISTANCE || IrReceiver.decodedIRData.protocol == PULSE_DISTANCE_WIDTH) {
+        if (IrReceiver.decodedIRData.protocol == PULSE_DISTANCE || IrReceiver.decodedIRData.protocol == PULSE_WIDTH) {
             for (uint_fast8_t i = 0; i < aArraySize; ++i) {
                 if (IrReceiver.decodedIRData.decodedRawDataArray[i] != *aRawDataArrayPointer) {
                     Serial.print(F("ERROR: Received data=0x"));

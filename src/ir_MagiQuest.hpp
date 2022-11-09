@@ -73,19 +73,6 @@
  + 250,- 850 + 500,- 650 + 300,- 800 + 500
  */
 // MSB first, 8 start bits (zero), 31 wand id bits, 9 magnitude bits 8 checksum bits and no stop bit => 56 bits
-#if !defined (DOXYGEN)
-// MagiQuest packet is both Wand ID and magnitude of swish and flick
-union magiquest_t {
-    uint64_t llword;
-    struct {
-        uint8_t checksum;   // Checksum + Sum of 5 bytes before adds up to 0x00
-        uint8_t magnitude;  // Values observed are 0x102,01,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
-        uint32_t wand_id;   // the lowest bit of id is the highest bit of magnitude, i.e. the id is only 31 bit
-        uint8_t StartBits;  // first 8 MSB start bits are zero.
-        uint8_t Padding;    // just to pad the struct out to 64 bits so we can union with llword
-    } cmd;
-};
-#endif // !defined (DOXYGEN)
 
 #define MAGIQUEST_CHECKSUM_BITS     8   // magiquest_t.cmd.checksum
 #define MAGIQUEST_MAGNITUDE_BITS    9   // magiquest_t.cmd.magnitude
@@ -157,16 +144,6 @@ void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
  * lower 16 bit of wand_id is stored in address
  */
 bool IRrecv::decodeMagiQuest() {
-    magiquest_t data;  // Somewhere to build our code
-
-    unsigned int tMarkTicks;
-    unsigned int tSpaceTicks;
-
-#if defined(LOCAL_DEBUG)
-    char tDebugBitstring[(MAGIQUEST_BITS + 1)];
-    tDebugBitstring[MAGIQUEST_BITS] = '\0';
-    char * tDebugBitstringPtr = tDebugBitstring;
-#endif
 
     // Check we have the right amount of data, magnitude and ID bits and 8 start bits + 0 stop bit
     if (decodedIRData.rawDataPtr->rawlen != (2 * MAGIQUEST_BITS)) {
@@ -177,55 +154,60 @@ bool IRrecv::decodeMagiQuest() {
         return false;
     }
 
-    // Decode the 56 bits in one loop using uint64
-    data.llword = 0;
-    unsigned int *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[1];
-    for (uint_fast8_t i = 0; i < MAGIQUEST_BITS; i++) {
-        // get one mark and space pair
-        tMarkTicks = *tRawBufPointer++;;
-        tSpaceTicks = *tRawBufPointer++;; // buffer overflow for last bit, but we do not evaluate this value :-)
-
-        IR_TRACE_PRINT(F("MagiQuest: mark="));
-        IR_TRACE_PRINT(tMarkTicks * MICROS_PER_TICK);
-        IR_TRACE_PRINT(F(" space="));
-        IR_TRACE_PRINTLN(tSpaceTicks * MICROS_PER_TICK);
-
-        // We have no stop bit, so assume that last space, which is not recorded, is correct, since we can not check it
-        if (i == (MAGIQUEST_BITS - 1) || matchMark(tMarkTicks + tSpaceTicks, MAGIQUEST_PERIOD)) {
-            if (!matchMark(tMarkTicks, MAGIQUEST_ONE_MARK)) {
-                // It's a 0
-                data.llword <<= 1;
+    /*
+     * Check for 8 zero header bits
+     */
+    if (!decodePulseWidthData(MAGIQUEST_START_BITS, 1, MAGIQUEST_ONE_MARK, MAGIQUEST_ZERO_MARK, 0, PROTOCOL_IS_MSB_FIRST)) {
 #if defined(LOCAL_DEBUG)
-                *tDebugBitstringPtr++ = '0';
+        Serial.print(F("MagiQuest: "));
+        Serial.println(F("Start bit decode failed"));
 #endif
-            } else {
-                // It's a 1
-                data.llword = (data.llword << 1) | 1;
-#if defined(LOCAL_DEBUG)
-                *tDebugBitstringPtr++ = '1';
-#endif
-            }
-        } else {
-#if defined(LOCAL_DEBUG)
-            Serial.print(F("Mark and space does not match the constant MagiQuest period. Index="));
-            Serial.println(i);
-#endif
-            return false;
-        }
+        return false;
     }
+    if (decodedIRData.decodedRawData != 0) {
 #if defined(LOCAL_DEBUG)
-    Serial.println(tDebugBitstring);
+        Serial.print(F("MagiQuest: "));
+        Serial.println(F("Not 8 leading zero start bits received"));
 #endif
+        return false;
+    }
 
-    // Success
-    decodedIRData.protocol = MAGIQUEST;
-    decodedIRData.numberOfBits = MAGIQUEST_BITS;
-    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
+    /*
+     * Decode the 31 bit ID
+     */
+    if (!decodePulseWidthData(MAGIQUEST_WAND_ID_BITS, (MAGIQUEST_START_BITS * 2) + 1, MAGIQUEST_ONE_MARK, MAGIQUEST_ZERO_MARK, 0,
+            PROTOCOL_IS_MSB_FIRST)) {
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("MagiQuest: "));
+        Serial.println(F("ID decode failed"));
+#endif
+        return false;
+    }
+    LongUnion tDecodedRawData;
+    auto tWandId = decodedIRData.decodedRawData; // save tWandId for later use
+    tDecodedRawData.ULong = decodedIRData.decodedRawData << 1; // shift for checksum computation
+    uint8_t tChecksum = tDecodedRawData.Bytes[0] + tDecodedRawData.Bytes[1] + tDecodedRawData.Bytes[2] + tDecodedRawData.Bytes[3];
 
-    LongUnion tWandId;
-    tWandId.ULong = data.cmd.wand_id;
-    uint8_t tChecksum = tWandId.Bytes[0] + tWandId.Bytes[1] + tWandId.Bytes[2] + tWandId.Bytes[3];
-    tChecksum += data.cmd.magnitude + data.cmd.checksum;
+    /*
+     * Decode the 9 bit Magnitude + 8 bit checksum
+     */
+    if (!decodePulseWidthData(MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_CHECKSUM_BITS,
+            ((MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) * 2) + 1, MAGIQUEST_ONE_MARK, MAGIQUEST_ZERO_MARK, 0,
+            PROTOCOL_IS_MSB_FIRST)) {
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("MagiQuest: "));
+        Serial.println(F("Magnitude + checksum decode failed"));
+#endif
+        return false;
+    }
+
+    Serial.print(F("decodedIRData.decodedRawData=0x"));
+    Serial.println(decodedIRData.decodedRawData, HEX);
+    tDecodedRawData.ULong = decodedIRData.decodedRawData;
+    decodedIRData.command = tDecodedRawData.ByteWord.MidWord.UWord; // Values observed are 0x102,01,04,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
+    tChecksum += tDecodedRawData.UByte.MidHighByte /* only one bit */+ tDecodedRawData.UByte.MidLowByte
+            + tDecodedRawData.UByte.LowByte;
+
     if (tChecksum != 0) {
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
 #if defined(LOCAL_DEBUG)
@@ -235,17 +217,14 @@ bool IRrecv::decodeMagiQuest() {
 #endif
     }
 
-    // The lower swish values are typically read as 1 or 2, or even 12. Higher value is typically 258.
-    decodedIRData.command = data.cmd.magnitude;         // Values observed are 0x102,01,04,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
-    if (tWandId.UByte.LowByte & 0x01) {
-        // copy lowest id bit to highest magnitude bit
-        decodedIRData.command += 0x100;
-    }
-    tWandId.ULong = tWandId.ULong >> 1;
+    // Success
+    decodedIRData.decodedRawData = tWandId;     // 31 bit wand_id
+    decodedIRData.address = tWandId;            // lower 16 bit of wand_id
+    decodedIRData.extra = tWandId >> 16;        // upper 15 bit of wand_id
 
-    decodedIRData.decodedRawData = tWandId.ULong;       // 31 bit wand_id
-    decodedIRData.address = tWandId.UWord.LowWord;      // lower 16 bit of wand_id
-    decodedIRData.extra = tWandId.UWord.HighWord;       // upper 15 bit of wand_id
+    decodedIRData.protocol = MAGIQUEST;
+    decodedIRData.numberOfBits = MAGIQUEST_BITS;
+    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
 
     return true;
 }

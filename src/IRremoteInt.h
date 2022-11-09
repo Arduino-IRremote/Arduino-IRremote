@@ -282,7 +282,7 @@ public:
     bool decodeSony();
     bool decodeWhynter();
 
-    bool decodeDistance();
+    bool decodeDistanceWidth();
 
     bool decodeHash();
 
