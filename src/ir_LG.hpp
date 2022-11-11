@@ -32,6 +32,12 @@
 #ifndef _IR_LG_HPP
 #define _IR_LG_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -42,6 +48,19 @@
 //                               L      G   G
 //                               LLLLL   GGG
 //==============================================================================
+/*
+ +8950,-4200
+ + 400,-1600 + 500,-1550 + 550,-1550 + 500,-1550
+ + 550,- 500 + 550,- 500 + 500,- 550 + 550,-1500
+ + 550,- 550 + 500,-1550 + 550,-1500 + 500,-1600
+ + 500,- 550 + 500,-1550 + 500,-1550 + 500,- 550
+ + 550,- 500 + 550,-1550 + 500,-1550 + 500,-1550
+ + 500,- 550 + 500,-1600 + 550,-1500 + 500,- 550
+ + 500,-1600 + 500,- 550 + 450,-1600 + 550,- 500
+ + 500
+Sum: 60300
+*/
+
 // LG originally added by Darryl Smith (based on the JVC protocol)
 // see: https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/LGAirConditionerSendDemo
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#LGAIR
@@ -179,8 +198,10 @@ bool IRrecv::decodeLG() {
 // Check header "mark" this must be done for repeat and data
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG_HEADER_MARK)) {
         if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG2_HEADER_MARK)) {
-            IR_DEBUG_PRINT(F("LG: "));
-            IR_DEBUG_PRINTLN(F("Header mark is wrong"));
+#if defined(LOCAL_DEBUG)
+            Serial.print(F("LG: "));
+            Serial.println(F("Header mark is wrong"));
+#endif
             return false;
         } else {
             tProtocol = LG2;
@@ -198,21 +219,27 @@ bool IRrecv::decodeLG() {
             decodedIRData.protocol = lastDecodedProtocol;
             return true;
         }
-        IR_DEBUG_PRINT(F("LG: "));
-        IR_DEBUG_PRINT(F("Repeat header space is wrong"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("LG: "));
+        Serial.print(F("Repeat header space is wrong"));
+#endif
         return false;
     }
 
 // Check command header space
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], tHeaderSpace)) {
-        IR_DEBUG_PRINT(F("LG: "));
-        IR_DEBUG_PRINTLN(F("Header space length is wrong"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("LG: "));
+        Serial.println(F("Header space length is wrong"));
+#endif
         return false;
     }
 
     if (!decodePulseDistanceWidthData(&LGProtocolConstants, LG_BITS)) {
-        IR_DEBUG_PRINT(F("LG: "));
-        IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("LG: "));
+        Serial.println(F("Decode failed"));
+#endif
         return false;
     }
 
@@ -232,13 +259,15 @@ bool IRrecv::decodeLG() {
     }
 // Checksum check
     if ((tChecksum & 0xF) != (decodedIRData.decodedRawData & 0xF)) {
-        IR_DEBUG_PRINT(F("LG: "));
-        IR_DEBUG_PRINT(F("4 bit checksum is not correct. expected=0x"));
-        IR_DEBUG_PRINT(tChecksum, HEX);
-        IR_DEBUG_PRINT(F(" received=0x"));
-        IR_DEBUG_PRINT((decodedIRData.decodedRawData & 0xF), HEX);
-        IR_DEBUG_PRINT(F(" data=0x"));
-        IR_DEBUG_PRINTLN(decodedIRData.command, HEX);
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("LG: "));
+        Serial.print(F("4 bit checksum is not correct. expected=0x"));
+        Serial.print(tChecksum, HEX);
+        Serial.print(F(" received=0x"));
+        Serial.print((decodedIRData.decodedRawData & 0xF), HEX);
+        Serial.print(F(" data=0x"));
+        Serial.println(decodedIRData.command, HEX);
+#endif
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
     }
 
@@ -284,7 +313,9 @@ bool IRrecv::decodeLGMSB(decode_results *aResults) {
     }
 // Stop bit
     if (!matchMark(aResults->rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
-        IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
+#if defined(LOCAL_DEBUG)
+        Serial.println(F("Stop bit mark length is wrong"));
+#endif
         return false;
     }
 
@@ -301,8 +332,8 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 // Set IR carrier frequency
     enableIROut (LG_KHZ);
 #if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
-    Serial.println(
-            "The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats).");
+    Serial.println(F(
+            "The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats)."));
 #endif
 // Header
     mark(LG_HEADER_MARK);
@@ -316,4 +347,7 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_LG_HPP

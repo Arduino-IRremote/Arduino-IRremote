@@ -32,6 +32,12 @@
 #ifndef _IR_NEC_HPP
 #define _IR_NEC_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -42,6 +48,19 @@
 //                           N  NN  E      C
 //                           N   N  EEEEE   CCCC
 //==============================================================================
+/*
+ +8950,-4450
+ + 600,- 500 + 650,- 500 + 600,-1650 + 600,- 550
+ + 600,- 500 + 600,- 500 + 650,- 500 + 600,- 500
+ + 650,-1650 + 600,-1600 + 650,- 500 + 600,-1650
+ + 600,-1650 + 600,-1650 + 600,-1600 + 650,-1600
+ + 650,- 500 + 600,- 550 + 600,- 500 + 600,-1650
+ + 600,- 550 + 600,- 500 + 600,- 550 + 600,- 500
+ + 600,-1650 + 600,-1650 + 600,-1650 + 600,- 550
+ + 600,-1650 + 600,-1650 + 600,-1650 + 600,-1600
+ + 650
+Sum: 68000
+*/
 // http://www.hifi-remote.com/wiki/index.php/NEC
 // https://www.sbprojects.net/knowledge/ir/nec.php
 // for Apple see https://en.wikipedia.org/wiki/Apple_Remote
@@ -231,14 +250,18 @@ bool IRrecv::decodeNEC() {
 
     // Check command header space
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], NEC_HEADER_SPACE)) {
-        IR_DEBUG_PRINT(F("NEC: "));
-        IR_DEBUG_PRINTLN(F("Header space length is wrong"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("NEC: "));
+        Serial.println(F("Header space length is wrong"));
+#endif
         return false;
     }
 
     if (!decodePulseDistanceWidthData(&NECProtocolConstants, NEC_BITS)) {
-        IR_DEBUG_PRINT(F("NEC: "));
-        IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("NEC: "));
+        Serial.println(F("Decode failed"));
+#endif
         return false;
     }
 
@@ -319,22 +342,28 @@ bool IRrecv::decodeNECMSB(decode_results *aResults) {
 
 // Check header "space"
     if (!matchSpace(aResults->rawbuf[offset], NEC_HEADER_SPACE)) {
-        IR_DEBUG_PRINT(F("NEC MSB: "));
-        IR_DEBUG_PRINTLN(F("Header space length is wrong"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("NEC MSB: "));
+        Serial.println(F("Header space length is wrong"));
+#endif
         return false;
     }
     offset++;
 
     if (!decodePulseDistanceWidthData(NEC_BITS, offset, NEC_BIT_MARK, 0, NEC_ONE_SPACE, NEC_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
-        IR_DEBUG_PRINT(F("NEC MSB: "));
-        IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("NEC MSB: "));
+        Serial.println(F("Decode failed"));
+#endif
         return false;
     }
 
     // Stop bit
     if (!matchMark(aResults->rawbuf[offset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
-        IR_DEBUG_PRINT(F("NEC MSB: "));
-        IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("NEC MSB: "));
+        Serial.println(F("Stop bit mark length is wrong"));
+#endif
         return false;
     }
 
@@ -377,4 +406,7 @@ void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_NEC_HPP

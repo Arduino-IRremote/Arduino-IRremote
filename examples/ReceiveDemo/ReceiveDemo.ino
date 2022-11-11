@@ -42,10 +42,11 @@
 //#define DECODE_NEC
 //#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
-#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly.
+// !!! Enabling B&O disables detection of Sony, because the repeat gap for SONY is smaller than the B&O frame gap :-( !!!
+//#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly. It has an IR transmit frequency of 455 kHz! It prevents decoding of SONY!
 #endif
 #if defined(DECODE_BEO)
-#define RECORD_GAP_MICROS 16000 // always get the complete frame in the receive buffer
+#define RECORD_GAP_MICROS 16000 // always get the complete frame in the receive buffer, but this prevents decoding of SONY!
 #endif
 // etc. see IRremote.hpp
 //
@@ -164,9 +165,11 @@ void loop() {
 
         // tone on esp8266 works once, then it disables the successful IrReceiver.start() / timerConfigForReceive().
 #  if !defined(ESP8266) && !defined(NRF5)
-        if (IrReceiver.decodedIRData.protocol != UNKNOWN && digitalRead(DEBUG_BUTTON_PIN) != LOW) {
+        if ((IrReceiver.decodedIRData.protocol != SONY) && (IrReceiver.decodedIRData.protocol != UNKNOWN)
+                && digitalRead(DEBUG_BUTTON_PIN) != LOW) {
             /*
              * If no debug mode or a valid protocol was received, play tone, wait and restore IR timer.
+             * For SONY the tone prevents the detection of a repeat
              * Otherwise do not play a tone to get exact gap time between transmissions and not running into repeat frames while wait for tone to end.
              * This will give the next CheckForRecordGapsMicros() call a chance to eventually propose a change of the current RECORD_GAP_MICROS value.
              */

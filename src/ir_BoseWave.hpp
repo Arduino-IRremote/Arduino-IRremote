@@ -9,6 +9,12 @@
 #ifndef _IR_BOSEWAVE_HPP
 #define _IR_BOSEWAVE_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -70,15 +76,19 @@ bool IRrecv::decodeBoseWave() {
     }
 
     if (!decodePulseDistanceWidthData(&BoseWaveProtocolConstants, BOSEWAVE_BITS)) {
-        IR_DEBUG_PRINT(F("Bose: "));
-        IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("Bose: "));
+        Serial.println(F("Decode failed"));
+#endif
         return false;
     }
 
     // Stop bit
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {
-        IR_DEBUG_PRINT(F("Bose: "));
-        IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("Bose: "));
+        Serial.println(F("Stop bit mark length is wrong"));
+#endif
         return false;
     }
 
@@ -89,8 +99,10 @@ bool IRrecv::decodeBoseWave() {
     uint8_t tCommandInverted = tDecodedValue >> 8;
     // parity check for command. Use this variant to avoid compiler warning "comparison of promoted ~unsigned with unsigned [-Wsign-compare]"
     if ((tCommandNotInverted ^ tCommandInverted) != 0xFF) {
-        IR_DEBUG_PRINT(F("Bose: "));
-        IR_DEBUG_PRINT(F("Command and inverted command check failed"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("Bose: "));
+        Serial.println(F("Command and inverted command check failed"));
+#endif
         return false;
     }
     decodedIRData.command = tCommandNotInverted;
@@ -104,4 +116,7 @@ bool IRrecv::decodeBoseWave() {
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_BOSEWAVE_HPP

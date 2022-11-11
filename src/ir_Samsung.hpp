@@ -32,6 +32,12 @@
 #ifndef _IR_SAMSUNG_HPP
 #define _IR_SAMSUNG_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -164,8 +170,10 @@ bool IRrecv::decodeSamsung() {
      * Decode first 32 bits
      */
     if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, SAMSUNG_BITS)) {
-        IR_DEBUG_PRINT(F("Samsung: "));
-        IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("Samsung: "));
+        Serial.println(F("Decode failed"));
+#endif
         return false;
     }
     LongUnion tValue;
@@ -180,8 +188,10 @@ bool IRrecv::decodeSamsung() {
         // decode additional 16 bit
         if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, (SAMSUNG_COMMAND32_BITS - SAMSUNG_COMMAND16_BITS),
                 3 + SAMSUNG_BITS)) {
-            IR_DEBUG_PRINT(F("Samsung: "));
-            IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+            Serial.print(F("Samsung: "));
+            Serial.println(F("Decode failed"));
+#endif
             return false;
         }
 
@@ -280,4 +290,7 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_SAMSUNG_HPP

@@ -54,7 +54,7 @@
 //#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 //#define DECODE_HASH         // special decoder for all protocols
 
-//#define DECODE_BEO          // This protocol must always be enabled manually, i.e. it is NOT enabled if no protocol is defined
+//#define DECODE_BEO          // This protocol must always be enabled manually, i.e. it is NOT enabled if no protocol is defined. It prevents decoding of SONY!
 
 //#define DEBUG               // Activate this for lots of lovely debug output from the decoders.
 

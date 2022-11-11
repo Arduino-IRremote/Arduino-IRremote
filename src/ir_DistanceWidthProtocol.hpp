@@ -54,17 +54,17 @@
 #ifndef _IR_DISTANCE_WIDTH_HPP
 #define _IR_DISTANCE_WIDTH_HPP
 
-// accept durations up to 50 * 50 (MICROS_PER_TICK) 2500 microseconds
-#define DURATION_ARRAY_SIZE 50
-
-// Switch the decoding according to your needs
-//#define DISTANCE_DO_MSB_DECODING // If active, it resembles the JVC + Denon, otherwise LSB first as e.g. for NEC and Kaseikyo/Panasonic
-
 #if defined(DEBUG) && !defined(LOCAL_DEBUG)
 #define LOCAL_DEBUG
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file
 #endif
+
+// accept durations up to 50 * 50 (MICROS_PER_TICK) 2500 microseconds
+#define DURATION_ARRAY_SIZE 50
+
+// Switch the decoding according to your needs
+//#define DISTANCE_DO_MSB_DECODING // If active, it resembles the JVC + Denon, otherwise LSB first as e.g. for NEC and Kaseikyo/Panasonic
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -152,19 +152,30 @@ bool IRrecv::decodeDistanceWidth() {
     uint_fast8_t i;
 
     // Reset duration array
-    memset(tDurationArray, 0, sizeof(tDurationArray));
+    memset(tDurationArray, 0, DURATION_ARRAY_SIZE);
 
-    uint8_t tMaxDurationIndex = 0;
+    uint8_t tIndexOfMaxDuration = 0;
     /*
      * Count number of mark durations up to 49 ticks. Skip leading start and trailing stop bit.
      */
     for (i = 3; i < (uint_fast8_t) decodedIRData.rawDataPtr->rawlen - 2; i += 2) {
-        uint8_t tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
-        if (tDurationTicks < sizeof(tDurationArray)) {
+        auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
+        if (tDurationTicks < DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++; // count duration if less than DURATION_ARRAY_SIZE (50)
-            if (tMaxDurationIndex < tDurationTicks) {
-                tMaxDurationIndex = tDurationTicks;
+            if (tIndexOfMaxDuration < tDurationTicks) {
+                tIndexOfMaxDuration = tDurationTicks;
             }
+        } else {
+#if defined(LOCAL_DEBUG)
+            Serial.print(F("PULSE_DISTANCE_WIDTH: "));
+            Serial.print(F("Mark "));
+            Serial.print(tDurationTicks * MICROS_PER_TICK);
+            Serial.print(F(" is longer than "));
+            Serial.print(DURATION_ARRAY_SIZE * MICROS_PER_TICK);
+            Serial.print(F(" us. Index="));
+            Serial.println(i);
+#endif
+            return false;
         }
     }
 
@@ -173,10 +184,10 @@ bool IRrecv::decodeDistanceWidth() {
      */
     uint8_t tMarkTicksShort = 0;
     uint8_t tMarkTicksLong = 0;
-    bool tSuccess = aggregateArrayCounts(tDurationArray, tMaxDurationIndex, &tMarkTicksShort, &tMarkTicksLong);
+    bool tSuccess = aggregateArrayCounts(tDurationArray, tIndexOfMaxDuration, &tMarkTicksShort, &tMarkTicksLong);
 #if defined(LOCAL_DEBUG)
     Serial.println(F("Mark:"));
-    printDurations(tDurationArray, tMaxDurationIndex);
+    printDurations(tDurationArray, tIndexOfMaxDuration);
 #endif
 
     if (!tSuccess) {
@@ -184,22 +195,34 @@ bool IRrecv::decodeDistanceWidth() {
         Serial.print(F("PULSE_DISTANCE_WIDTH: "));
         Serial.println(F("Mark aggregation failed, more than 2 distinct mark duration values found"));
 #endif
+        return false;
     }
 
     // Reset duration array
-    memset(tDurationArray, 0, sizeof(tDurationArray));
+    memset(tDurationArray, 0, DURATION_ARRAY_SIZE);
 
     /*
      * Count number of space durations. Skip leading start and trailing stop bit.
      */
-    tMaxDurationIndex = 0;
+    tIndexOfMaxDuration = 0;
     for (i = 4; i < (uint_fast8_t) decodedIRData.rawDataPtr->rawlen - 2; i += 2) {
-        uint8_t tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
-        if (tDurationTicks < sizeof(tDurationArray)) {
+        auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
+        if (tDurationTicks < DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++;
-            if (tMaxDurationIndex < tDurationTicks) {
-                tMaxDurationIndex = tDurationTicks;
+            if (tIndexOfMaxDuration < tDurationTicks) {
+                tIndexOfMaxDuration = tDurationTicks;
             }
+        } else {
+#if defined(LOCAL_DEBUG)
+            Serial.print(F("PULSE_DISTANCE_WIDTH: "));
+            Serial.print(F("Space "));
+            Serial.print(tDurationTicks * MICROS_PER_TICK);
+            Serial.print(F(" is longer than "));
+            Serial.print(DURATION_ARRAY_SIZE * MICROS_PER_TICK);
+            Serial.print(F(" us. Index="));
+            Serial.println(i);
+#endif
+            return false;
         }
     }
 
@@ -208,10 +231,10 @@ bool IRrecv::decodeDistanceWidth() {
      */
     uint8_t tSpaceTicksShort = 0;
     uint8_t tSpaceTicksLong = 0;
-    tSuccess = aggregateArrayCounts(tDurationArray, tMaxDurationIndex, &tSpaceTicksShort, &tSpaceTicksLong);
+    tSuccess = aggregateArrayCounts(tDurationArray, tIndexOfMaxDuration, &tSpaceTicksShort, &tSpaceTicksLong);
 #if defined(LOCAL_DEBUG)
     Serial.println(F("Space:"));
-    printDurations(tDurationArray, tMaxDurationIndex);
+    printDurations(tDurationArray, tIndexOfMaxDuration);
 #endif
 
     if (!tSuccess) {

@@ -30,6 +30,12 @@
 #ifndef _IR_SONY_HPP
 #define _IR_SONY_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -114,8 +120,10 @@ bool IRrecv::decodeSony() {
     }
 
     if (!decodePulseDistanceWidthData(&SonyProtocolConstants, (decodedIRData.rawDataPtr->rawlen - 1) / 2, 3)) {
-        IR_DEBUG_PRINT(F("Sony: "));
-        IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("Sony: "));
+        Serial.println(F("Decode failed"));
+#endif
         return false;
     }
 
@@ -152,7 +160,9 @@ bool IRrecv::decodeSonyMSB(decode_results *aResults) {
     // Some Sony's deliver repeats fast after first
     // unfortunately can't spot difference from of repeat from two fast clicks
     if (aResults->rawbuf[0] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
-        IR_DEBUG_PRINTLN(F("IR Gap found"));
+#if defined(LOCAL_DEBUG)
+        Serial.println(F("IR Gap found"));
+#endif
         aResults->bits = 0;
         aResults->value = 0xFFFFFFFF;
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
@@ -215,4 +225,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_SONY_HPP

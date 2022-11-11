@@ -233,8 +233,7 @@ jobs:
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300
 
-      # Do not cancel all jobs / architectures if one job fails
-      fail-fast: false
+#      fail-fast: false # false -> do not cancel all jobs / architectures if one job fails
 
     steps:
       - name: Checkout

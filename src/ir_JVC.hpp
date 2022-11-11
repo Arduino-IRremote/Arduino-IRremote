@@ -32,6 +32,12 @@
 #ifndef _IR_JVC_HPP
 #define _IR_JVC_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -42,6 +48,15 @@
 //                             J J     V V   C
 //                              J       V     CCCC
 //==============================================================================
+/*
+ +8400,-4150
+ + 550,-1550 + 550,- 500 + 550,- 500 + 550,- 500
+ + 550,-1500 + 600,-1500 + 600,-1500 + 550,-1550
+ + 550,- 500 + 550,-1550 + 550,-1550 + 550,- 500
+ + 500,-1600 + 550,-1550 + 550,-1500 + 600,- 500
+ + 550
+Sum: 40350
+*/
 // https://www.sbprojects.net/knowledge/ir/jvc.php
 // http://www.hifi-remote.com/johnsfine/DecodeIR.html#JVC
 // IRP: {38k,525}<1,-1|1,-3>(16,-8,(D:8,F:8,1,-45)+)
@@ -103,10 +118,10 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
 
 bool IRrecv::decodeJVC() {
 
-//    uint_fast8_t tRawlen = decodedIRData.rawDataPtr->rawlen; // does not improve code size
+//    uint_fast8_t tRawlen = decodedIRData.rawDataPtr->rawlen; // Using a local variable does not improve code size
 
     // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark. +4 is for first frame, +2 is for repeats
-    if (decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 4) && decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 2)) {
+    if (decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 2) && decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 4)) {
         IR_DEBUG_PRINT(F("JVC: "));
         IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
@@ -137,8 +152,10 @@ bool IRrecv::decodeJVC() {
         }
 
         if (!decodePulseDistanceWidthData(&JVCProtocolConstants, JVC_BITS)) {
-            IR_DEBUG_PRINT(F("JVC: "));
-            IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+            Serial.print(F("JVC: "));
+            Serial.println(F("Decode failed"));
+#endif
             return false;
         }
 
@@ -180,7 +197,6 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
         IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(aResults->rawlen);
         IR_DEBUG_PRINTLN(F(" is too small. >= 36 is required."));
-
         return false;
     }
 
@@ -196,7 +212,9 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
 
     // Stop bit
     if (!matchMark(aResults->rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
-        IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
+#if defined(LOCAL_DEBUG)
+        Serial.println(F("Stop bit mark length is wrong"));
+#endif
         return false;
     }
 
@@ -236,4 +254,7 @@ void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_JVC_HPP

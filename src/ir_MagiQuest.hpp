@@ -53,7 +53,7 @@
  * https://github.com/kitlaan/Arduino-IRremote/blob/master/ir_Magiquest.cpp
  * https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/1027#discussioncomment-3636857
  * https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1015#issuecomment-1222247231
- -3276750
+
  + 250,- 800 + 250,- 850 + 250,- 850 + 250,- 850 // 8 zero start bits
  + 250,- 850 + 300,- 800 + 250,- 850 + 250,- 850
 
@@ -198,8 +198,10 @@ bool IRrecv::decodeMagiQuest() {
         return false;
     }
 
+#if defined(LOCAL_DEBUG)
     Serial.print(F("decodedIRData.decodedRawData=0x"));
     Serial.println(decodedIRData.decodedRawData, HEX);
+#endif
     tDecodedRawData.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tDecodedRawData.ByteWord.MidWord.UWord; // Values observed are 0x102,01,04,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
     tChecksum += tDecodedRawData.UByte.MidHighByte /* only one bit */+ tDecodedRawData.UByte.MidLowByte
