@@ -142,6 +142,12 @@
 #define noTone(a) void()
 #define TONE_PIN                42 // Dummy for examples using it
 
+#elif defined(CONFIG_IDF_TARGET_ESP32C3)
+#define IR_INPUT_PIN             8
+#define IR_SEND_PIN              9
+#define TONE_PIN                10 // ADC2_0
+#define APPLICATION_PIN         11
+
 #elif defined(ESP32)
 #include <Arduino.h>
 

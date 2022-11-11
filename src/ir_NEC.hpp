@@ -76,8 +76,8 @@
 #define NEC_MINIMAL_DURATION    49900 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
 #define NEC_REPEAT_DURATION     (NEC_HEADER_MARK  + NEC_REPEAT_HEADER_SPACE + NEC_BIT_MARK) // 12 ms
 #define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define NEC_REPEAT_SPACE        (NEC_REPEAT_PERIOD - NEC_AVERAGE_DURATION) // 48 ms
-#define NEC_MAXIMUM_REPEAT_SPACE (NEC_REPEAT_PERIOD - NEC_MINIMAL_DURATION + 5) // 65 ms
+#define NEC_REPEAT_DISTANCE         (NEC_REPEAT_PERIOD - NEC_AVERAGE_DURATION) // 48 ms
+#define NEC_MAXIMUM_REPEAT_DISTANCE (NEC_REPEAT_PERIOD - NEC_MINIMAL_DURATION + 5) // 65 ms
 
 #define APPLE_ADDRESS           0x87EE
 
@@ -97,7 +97,7 @@ NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BI
  * Repeat commands should be sent in a 110 ms raster.
  */
 void IRsend::sendNECRepeat() {
-    enableIROut (NEC_KHZ);           // 38 kHz
+    enableIROut(NEC_KHZ);           // 38 kHz
     mark(NEC_HEADER_MARK);          // + 9000
     space(NEC_REPEAT_HEADER_SPACE); // - 2250
     mark(NEC_BIT_MARK);             // + 560
@@ -135,30 +135,30 @@ uint32_t IRsend::computeNECRawDataAndChecksum(uint16_t aAddress, uint16_t aComma
 }
 
 /**
- * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent
+ * @param aNumberOfRepeats  If < 0 then only a special repeat frame without leading and trailing space
+ *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
-
     sendPulseDistanceWidth(&NECProtocolConstants, computeNECRawDataAndChecksum(aAddress, aCommand), NEC_BITS, aNumberOfRepeats);
 }
 
 /*
  * Repeat commands should be sent in a 110 ms raster.
  * There is NO delay after the last sent repeat!
- * @param aSendOnlySpecialNECRepeat if true, send only one repeat frame without leading and trailing space
+ * @param aNumberOfRepeats  If < 0 then only a special repeat frame without leading and trailing space
+ *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendNEC2(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
-
     sendPulseDistanceWidth(&NEC2ProtocolConstants, computeNECRawDataAndChecksum(aAddress, aCommand), NEC_BITS, aNumberOfRepeats);
 }
 
 /*
  * Repeat commands should be sent in a 110 ms raster.
  * There is NO delay after the last sent repeat!
- * @param aSendOnlySpecialNECRepeat if true, send only one repeat frame without leading and trailing space
+ * @param aNumberOfRepeats  If < 0 then only a special repeat frame without leading and trailing space
+ *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
-
     sendPulseDistanceWidth(&NECProtocolConstants, (uint32_t) aCommand << 16 | aAddress, NEC_BITS, aNumberOfRepeats);
 }
 
@@ -168,10 +168,10 @@ void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumber
  * https://en.wikipedia.org/wiki/Apple_Remote
  * https://gist.github.com/darconeous/4437f79a34e3b6441628
  * @param aAddress is the DeviceId*
- * @param aSendOnlySpecialNECRepeat if true, send only one repeat frame without leading and trailing space
+ * @param aNumberOfRepeats  If < 0 then only a special repeat frame without leading and trailing space
+ *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
-
     LongUnion tRawData;
 
     // Address 16 bit LSB first
@@ -186,9 +186,10 @@ void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, int_fast8_t aNumberO
 
 /*
  * Sends NEC1 protocol
+ * @param aNumberOfRepeats  If < 0 then only a special repeat frame without leading and trailing space
+ *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendNECRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
-
     sendPulseDistanceWidth(&NECProtocolConstants, aRawData, NEC_BITS, aNumberOfRepeats);
 }
 
@@ -276,7 +277,7 @@ bool IRrecv::decodeNEC() {
     decodedIRData.numberOfBits = NEC_BITS;
 
     // check for NEC2 repeat, do not check for same content ;-)
-    if (decodedIRData.rawDataPtr->rawbuf[0] < (NEC_MAXIMUM_REPEAT_SPACE / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < (NEC_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK)) {
         decodedIRData.protocol = NEC2;
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }

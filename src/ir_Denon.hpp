@@ -68,8 +68,8 @@
 #define DENON_ONE_SPACE         (7 * DENON_UNIT) // 1820 // The length of a Bit:Space for 1's
 #define DENON_ZERO_SPACE        (3 * DENON_UNIT) // 780 // The length of a Bit:Space for 0's
 
-#define DENON_AUTO_REPEAT_SPACE 45000 // Every frame is auto repeated with a space period of 45 ms and the command and frame inverted.
-#define DENON_REPEAT_PERIOD     110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define DENON_AUTO_REPEAT_DISTANCE  45000 // Every frame is auto repeated with a space period of 45 ms and the command and frame inverted.
+#define DENON_REPEAT_PERIOD        110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 
 // for old decoder
 #define DENON_HEADER_MARK       DENON_UNIT // The length of the Header:Mark
@@ -106,14 +106,14 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOf
         sendPulseDistanceWidthData(&DenonProtocolConstants, tData, DENON_BITS);
 
         // Inverted autorepeat frame
-        delay(DENON_AUTO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
+        delay(DENON_AUTO_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         sendPulseDistanceWidthData(&DenonProtocolConstants, tInvertedData, DENON_BITS);
 
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command with a fixed space gap
-            delay( DENON_AUTO_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
+            delay( DENON_AUTO_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         }
     }
     IrReceiver.restartAfterSend();
@@ -156,7 +156,7 @@ bool IRrecv::decodeDenon() {
     decodedIRData.command &= 0xFF;
 
     // check for autorepeated inverted command
-    if (decodedIRData.rawDataPtr->rawbuf[0] < ((DENON_AUTO_REPEAT_SPACE + (DENON_AUTO_REPEAT_SPACE / 4)) / MICROS_PER_TICK)) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < ((DENON_AUTO_REPEAT_DISTANCE + (DENON_AUTO_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)) {
         repeatCount++;
         if ((decodedIRData.decodedRawData & 0x01) == 0x01) {
             // We are in the auto repeated frame with the inverted command

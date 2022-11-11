@@ -36,8 +36,8 @@
 #define BOSEWAVE_ZERO_SPACE      468    // 468 are 18 clock periods
 #define BOSEWAVE_ONE_SPACE      1468    // 1468(measured), 1456 are 56 clock periods
 
-#define BOSEWAVE_REPEAT_PERIOD 75000
-#define BOSEWAVE_REPEAT_SPACE  50000
+#define BOSEWAVE_REPEAT_PERIOD      75000
+#define BOSEWAVE_REPEAT_DISTANCE    50000
 
 struct PulseDistanceWidthProtocolConstants BoseWaveProtocolConstants = { BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
 BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
@@ -98,7 +98,7 @@ bool IRrecv::decodeBoseWave() {
     decodedIRData.protocol = BOSEWAVE;
 
     // check for repeat
-    checkForRepeatSpaceAndSetFlag(BOSEWAVE_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
+    checkForRepeatSpaceAndSetFlag(BOSEWAVE_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
 
     return true;
 }

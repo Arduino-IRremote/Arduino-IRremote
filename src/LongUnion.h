@@ -1,7 +1,7 @@
 /*
  * LongUnion.h
  *
- *  Copyright (C) 2020  Armin Joachimsmeyer
+ *  Copyright (C) 2020-2022  Armin Joachimsmeyer
  *  Email: armin.joachimsmeyer@gmail.com
  *
  *  This file is part of Arduino-Utils https://github.com/ArminJo/Arduino-Utils.
@@ -40,7 +40,7 @@ union WordUnion {
         int8_t LowByte;
         int8_t HighByte;
     } Byte;
-    uint8_t UBytes[2];
+    uint8_t UBytes[2]; // UBytes[0] is LowByte
     int8_t Bytes[2];
     uint16_t UWord;
     int16_t Word;

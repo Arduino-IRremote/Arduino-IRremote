@@ -103,8 +103,10 @@
 #error Unit test cannot run if SEND_PWM_BY_TIMER is enabled i.e. receive timer us also used by send
 #endif
 
-volatile bool sReceiverDataIsAvailable = false;
-
+/*
+ * For callback
+ */
+volatile bool sDataJustReceived = false;
 void ReceiveCompleteCallbackHandler();
 
 void setup() {
@@ -161,8 +163,8 @@ void setup() {
 
 void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
     // wait until signal has received
-    while(!sReceiverDataIsAvailable){};
-    sReceiverDataIsAvailable = false;
+    while(!sDataJustReceived){};
+    sDataJustReceived = false;
 
     if (IrReceiver.decode()) {
 // Print a short summary of received data
@@ -201,13 +203,13 @@ void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
  * Has the same functionality as available()
  */
 void ReceiveCompleteCallbackHandler() {
-    sReceiverDataIsAvailable = true;
+    sDataJustReceived = true;
 }
 
 void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
     // wait until signal has received
-    while(!sReceiverDataIsAvailable){};
-    sReceiverDataIsAvailable = false;
+    while(!sDataJustReceived){};
+    sDataJustReceived = false;
 
     if (IrReceiver.decode()) {
 // Print a short summary of received data

@@ -18,6 +18,8 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Disabled strict checks while decoding. They can be enabled by defining DECODE_STRICT_CHECKS.
 - Merged the 2 decode pulse width and distance functions.
 - Added receiver callback functionality and registerReceiveCompleteCallback() function.
+- Changed macro names _REPEAT_SPACE to _REPEAT_DISTANCE.
+- Improved TinyReceiver and added FAST protocol for it.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

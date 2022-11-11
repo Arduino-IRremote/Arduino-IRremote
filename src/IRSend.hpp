@@ -487,7 +487,8 @@ void IRsend::sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants
 }
 /**
  * Sends PulseDistance frames and repeats
- * @param aNumberOfRepeats If < 0 then only a (special) repeat frame will be sent
+ * @param aNumberOfRepeats  If < 0 and a aProtocolConstants->SpecialSendRepeatFunction() is specified
+ *                          then it is called without leading and trailing space
  */
 void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t aData,
         uint_fast8_t aNumberOfBits, int_fast8_t aNumberOfRepeats) {

@@ -4,7 +4,7 @@
  *  Small memory footprint and no timer usage!
  *
  *  Receives IR protocol data of NEC protocol using pin change interrupts.
- *  On complete received IR command the function handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition)
+ *  On complete received IR command the function handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, uint8_t aFlags)
  *  is called in Interrupt context but with interrupts being enabled to enable use of delay() etc.
  *  !!!!!!!!!!!!!!!!!!!!!!
  *  Functions called in interrupt context should be running as short as possible,
@@ -51,6 +51,8 @@
 #define IR_INPUT_PIN    21 // INT0
 #elif defined(ESP8266)
 #define IR_INPUT_PIN    14 // D5
+#elif defined(CONFIG_IDF_TARGET_ESP32C3)
+#define IR_INPUT_PIN    8
 #elif defined(ESP32)
 #define IR_INPUT_PIN    15
 #elif defined(ARDUINO_ARCH_MBED) && defined(ARDUINO_ARCH_MBED_NANO)
@@ -68,6 +70,7 @@
 /*
  * Second: include the code and compile it.
  */
+//#define USE_FAST_8_BIT_AND_PARITY_TIMING // Use short protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
 #include "TinyIRReceiver.hpp"
 
 /*
@@ -80,35 +83,42 @@
 
 volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
 
-void setup()
-{
+void setup() {
     Serial.begin(115200);
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/|| defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
     // Just to know which program is running on my Arduino
-#if defined(ESP8266)
+#if defined(ESP8266) || defined(ESP32)
     Serial.println();
 #endif
     Serial.println(F("START " __FILE__ " from " __DATE__));
-    if(!initPCIInterruptForTinyReceiver()){
+    if (!initPCIInterruptForTinyReceiver()) {
         Serial.println(F("No interrupt available for pin " STR(IR_INPUT_PIN))); // optimized out by the compiler, if not required :-)
     }
+#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+    Serial.println(F("Ready to receive Fast IR signals at pin " STR(IR_INPUT_PIN)));
+#else
     Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_INPUT_PIN)));
+#endif
 }
 
-void loop()
-{
-    if (sCallbackData.justWritten)
-    {
+void loop() {
+    if (sCallbackData.justWritten) {
         sCallbackData.justWritten = false;
+#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+        Serial.print(F("Command=0x"));
+#else
         Serial.print(F("Address=0x"));
         Serial.print(sCallbackData.Address, HEX);
         Serial.print(F(" Command=0x"));
+#endif
         Serial.print(sCallbackData.Command, HEX);
-        if (sCallbackData.isRepeat)
-        {
+        if (sCallbackData.Flags == IRDATA_FLAGS_IS_REPEAT) {
             Serial.print(F(" Repeat"));
+        }
+        if (sCallbackData.Flags == IRDATA_FLAGS_PARITY_FAILED) {
+            Serial.print(F(" Parity failed"));
         }
         Serial.println();
     }
@@ -122,31 +132,34 @@ void loop()
  * It runs in an ISR context with interrupts enabled, so functions like delay() etc. are working here
  */
 #if defined(ESP8266) || defined(ESP32)
-void IRAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
-#else
-void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
+IRAM_ATTR
 #endif
-{
 
+#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+void handleReceivedTinyIRData(uint8_t aCommand, uint8_t aFlags)
+#else
+void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags)
+#endif
+        {
 #if defined(ARDUINO_ARCH_MBED) || defined(ESP32)
     // Copy data for main loop, this is the recommended way for handling a callback :-)
+#  if !defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
     sCallbackData.Address = aAddress;
+#  endif
     sCallbackData.Command = aCommand;
-    sCallbackData.isRepeat = isRepeat;
+    sCallbackData.Flags = aFlags;
     sCallbackData.justWritten = true;
 #else
     /*
-     * This is not allowed in ISR context for any kind of RTOS
+     * Printing is not allowed in ISR context for any kind of RTOS
      * For Mbed we get a kernel panic and "Error Message: Semaphore: 0x0, Not allowed in ISR context" for Serial.print()
      * for ESP32 we get a "Guru Meditation Error: Core  1 panic'ed" (we also have an RTOS running!)
      */
     // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
-    Serial.print(F("A=0x"));
-    Serial.print(aAddress, HEX);
-    Serial.print(F(" C=0x"));
-    Serial.print(aCommand, HEX);
-    Serial.print(F(" R="));
-    Serial.print(isRepeat);
-    Serial.println();
+#  if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+    printTinyReceiverResultMinimal(aCommand, aFlags, &Serial);
+#  else
+    printTinyReceiverResultMinimal(aAddress, aCommand, aFlags, &Serial);
+#  endif
 #endif
 }

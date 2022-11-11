@@ -75,7 +75,7 @@
 #define SONY_AVERAGE_DURATION_MIN   21000 // SONY_HEADER_MARK + SONY_SPACE  + 12 * 2,5 * SONY_UNIT  // 2.5 because we assume more zeros than ones
 #define SONY_AVERAGE_DURATION_MAX   33000 // SONY_HEADER_MARK + SONY_SPACE  + 20 * 2,5 * SONY_UNIT  // 2.5 because we assume more zeros than ones
 #define SONY_REPEAT_PERIOD          45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define SONY_REPEAT_SPACE_MAX       (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION_MIN) // 24 ms
+#define SONY_MAXIMUM_REPEAT_DISTANCE    (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION_MIN) // 24 ms
 
 #define SIRCS_12_PROTOCOL       12
 #define SIRCS_15_PROTOCOL       15
@@ -127,7 +127,7 @@ bool IRrecv::decodeSony() {
     decodedIRData.protocol = SONY;
 
     //Check for repeat
-    checkForRepeatSpaceAndSetFlag(SONY_REPEAT_SPACE_MAX / MICROS_IN_ONE_MILLI);
+    checkForRepeatSpaceAndSetFlag(SONY_MAXIMUM_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
 
     return true;
 }

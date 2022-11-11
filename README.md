@@ -541,7 +541,8 @@ These next macros for **TinyIRReceiver** must be defined in your program before 
 | `IR_INPUT_PIN` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the feedback LED function. Saves 14 bytes program memory. |
-| `DISABLE_NEC_SPECIAL_REPEAT_SUPPORT` | disabled | Disables the detection of full NEC frame repeats. Saves 40 bytes program memory. |
+| `DISABLE_PARITY_CHECKS` | disabled | Disables the addres and command parity checks. Saves 48 bytes program memory. |
+| `USE_FAST_8_BIT_AND_PARITY_TIMING` | disabled | Receives a special fast protocol instead of NEC. |
 
 The next macro for **IRCommandDispatcher** must be defined in your program before the line `#include <IRCommandDispatcher.hpp>` to take effect.
 | `IR_COMMAND_HAS_MORE_THAN_8_BIT` | disabled | Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 4 bytes RAM + 1 byte RAM per mapping entry. |

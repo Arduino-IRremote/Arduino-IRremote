@@ -76,22 +76,20 @@ void IRCommandDispatcher::init() {
  * This is the TinyReceiver callback function which is called if a complete command was received
  * It checks for right address and then call the dispatcher
  */
-#if defined(ESP32) || defined(ESP8266)
-void IRAM_ATTR handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
-#  else
-void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat)
-#  endif
-{
+#if defined(ESP8266) || defined(ESP32)
+IRAM_ATTR
+#endif
+void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags) {
     IRDispatcher.IRReceivedData.address = aAddress;
     IRDispatcher.IRReceivedData.command = aCommand;
-    IRDispatcher.IRReceivedData.isRepeat = isRepeat;
+    IRDispatcher.IRReceivedData.isRepeat = aFlags & IRDATA_FLAGS_IS_REPEAT;
     IRDispatcher.IRReceivedData.MillisOfLastCode = millis();
 
     CD_INFO_PRINT(F("A=0x"));
     CD_INFO_PRINT(aAddress, HEX);
     CD_INFO_PRINT(F(" C=0x"));
     CD_INFO_PRINT(aCommand, HEX);
-    if (isRepeat) {
+    if (IRDispatcher.IRReceivedData.isRepeat) {
         CD_INFO_PRINT(F("R"));
     }
     CD_INFO_PRINTLN();
@@ -124,12 +122,10 @@ void IRCommandDispatcher::init() {
 /*
  * This is the callback function which is called if a complete command was received
  */
-#  if defined(ESP32) || defined(ESP8266)
-void IRAM_ATTR handleReceivedIRData()
-#  else
-void handleReceivedIRData()
-#  endif
-{
+#if defined(ESP8266) || defined(ESP32)
+IRAM_ATTR
+#endif
+void handleReceivedIRData() {
     IRMP_DATA tTeporaryData;
     irmp_get_data(&tTeporaryData);
     IRDispatcher.IRReceivedData.address = tTeporaryData.address;

@@ -4,13 +4,14 @@
  *  Receives IR protocol data of NEC protocol using pin change interrupts.
  *  NEC is the protocol of most cheap remote controls for Arduino.
  *
- *  No parity check is done!
- *  On a completely received IR command, the user function handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition)
+ *  Parity check is done for address and data.
+ *  On a completely received IR command, the user function handleReceivedIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags)
  *  is called in interrupt context but with interrupts being enabled to enable use of delay() etc.
  *  !!!!!!!!!!!!!!!!!!!!!!
  *  Functions called in interrupt context should be running as short as possible,
  *  so if you require longer action, save the data (address + command) and handle them in the main loop.
  *  !!!!!!!!!!!!!!!!!!!!!
+ *  aFlags can contain one of IRDATA_FLAGS_EMPTY, IRDATA_FLAGS_IS_REPEAT and IRDATA_FLAGS_PARITY_FAILED bits
  *
  *
  *  Copyright (C) 2021-2022  Armin Joachimsmeyer
@@ -49,8 +50,22 @@
 
 #include <Arduino.h>
 
-// - DISABLE_NEC_SPECIAL_REPEAT_SUPPORT    // Activating this disables detection of full NEC frame repeats. Saves 40 bytes program memory.
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
 
+//#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program space.
+/*
+ * FAST_8_BIT_CS Protocol characteristics:
+ * - Bit timing is like NEC
+ * - The header is shorter, 4000 vs. 14500
+ * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
+ *   leading to a fixed protocol length of (7 + (16 * 2)) * 560 = 39 * 560 = 21840 microseconds or 22 ms.
+ * - Repeats are sent as complete frames but in a 50 ms period.
+ */
+//#define USE_FAST_8_BIT_AND_PARITY_TIMING // Use short protocol
 #include "TinyIRReceiver.h" // If not defined, it defines IR_INPUT_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
 
 #include "digitalWriteFast.h"
@@ -113,12 +128,14 @@ TinyIRReceiverStruct TinyIRReceiverControl;
  */
 extern void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
 
+#if defined(LOCAL_DEBUG)
+uint32_t sMicrosOfGap; // The length of the gap before the start bit
+#endif
 /**
  * The ISR of TinyIRRreceiver.
  * It handles the NEC protocol decoding and calls the user callback function on complete.
  * 5 us + 3 us for push + pop for a 16MHz ATmega
  */
-
 void IRPinChangeInterruptHandler(void) {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
     digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
@@ -136,13 +153,11 @@ void IRPinChangeInterruptHandler(void) {
     /*
      * 1. compute microseconds after last change
      */
+    // Repeats can be sent after a pause, which is longer than 64000 microseconds, so we need a 32 bit value for check of repeats
     uint32_t tCurrentMicros = micros();
-#if defined(DISABLE_NEC_SPECIAL_REPEAT_SUPPORT)
-    uint16_t tMicrosOfMarkOrSpace = tCurrentMicros - TinyIRReceiverControl.LastChangeMicros;
-#else
     uint32_t tMicrosOfMarkOrSpace32 = tCurrentMicros - TinyIRReceiverControl.LastChangeMicros;
     uint16_t tMicrosOfMarkOrSpace = tMicrosOfMarkOrSpace32;
-#endif
+
     TinyIRReceiverControl.LastChangeMicros = tCurrentMicros;
 
     uint8_t tState = TinyIRReceiverControl.IRReceiverState;
@@ -160,39 +175,52 @@ void IRPinChangeInterruptHandler(void) {
         /*
          * We have a mark here
          */
-        if (tMicrosOfMarkOrSpace > 2 * NEC_HEADER_MARK) {
+        if (tMicrosOfMarkOrSpace > 2 * TINY_HEADER_MARK) {
             // timeout -> must reset state machine
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
         }
         if (tState == IR_RECEIVER_STATE_WAITING_FOR_START_MARK) {
             // We are at the beginning of the header mark, check timing at the next transition
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_SPACE;
-            TinyIRReceiverControl.IRRepeatFrameDetected = false; // If we do it here, it saves 4 bytes
-#if !defined(DISABLE_NEC_SPECIAL_REPEAT_SUPPORT)
-            // Check for special repeat, where full frame is sent again after 110 ms
+            TinyIRReceiverControl.Flags = IRDATA_FLAGS_EMPTY; // If we do it here, it saves 4 bytes
+#if defined(LOCAL_TRACE)
+            sMicrosOfGap = tMicrosOfMarkOrSpace32;
+#endif
+#if !defined(ENABLE_NEC_REPEAT_SUPPORT)
+            // Check for repeat, where full frame is sent again after TINY_REPEAT_PERIOD ms
+            // Not required for NEC, where repeats are detected by a special header space duration
             // Must use 32 bit arithmetic here!
-            TinyIRReceiverControl.IRRepeatDistanceDetected = (tMicrosOfMarkOrSpace32 < NEC_MAXIMUM_REPEAT_SPACE);
+            if (tMicrosOfMarkOrSpace32 < TINY_MAXIMUM_REPEAT_DISTANCE) {
+                TinyIRReceiverControl.Flags = IRDATA_FLAGS_IS_REPEAT;
+            }
 #endif
         }
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_FIRST_DATA_MARK) {
-            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(NEC_HEADER_SPACE)
-                    && tMicrosOfMarkOrSpace <= upperValue25Percent(NEC_HEADER_SPACE)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(TINY_HEADER_SPACE)
+                    && tMicrosOfMarkOrSpace <= upperValue25Percent(TINY_HEADER_SPACE)) {
                 /*
                  * We have a valid data header space here -> initialize data
                  */
                 TinyIRReceiverControl.IRRawDataBitCounter = 0;
+#if (TINY_BITS > 16)
                 TinyIRReceiverControl.IRRawData.ULong = 0;
+#else
+                TinyIRReceiverControl.IRRawData.UWord = 0;
+#endif
                 TinyIRReceiverControl.IRRawDataMask = 1;
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
+#if defined(ENABLE_NEC_REPEAT_SUPPORT)
+                // Check for NEC repeat header
             } else if (tMicrosOfMarkOrSpace >= lowerValue25Percent(NEC_REPEAT_HEADER_SPACE)
                     && tMicrosOfMarkOrSpace <= upperValue25Percent(NEC_REPEAT_HEADER_SPACE)
-                    && TinyIRReceiverControl.IRRawDataBitCounter >= NEC_BITS) {
+                    && TinyIRReceiverControl.IRRawDataBitCounter >= TINY_BITS) {
                 /*
                  * We have a repeat header here and no broken receive before -> set repeat flag
                  */
-                TinyIRReceiverControl.IRRepeatFrameDetected = true;
+                TinyIRReceiverControl.Flags = IRDATA_FLAGS_IS_REPEAT;
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
+#endif
             } else {
                 // This parts are optimized by the compiler into jumps to one code :-)
                 // Wrong length -> reset state
@@ -202,13 +230,17 @@ void IRPinChangeInterruptHandler(void) {
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_MARK) {
             // Check data space length
-            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(NEC_ZERO_SPACE)
-                    && tMicrosOfMarkOrSpace <= upperValue50Percent(NEC_ONE_SPACE)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(TINY_ZERO_SPACE)
+                    && tMicrosOfMarkOrSpace <= upperValue50Percent(TINY_ONE_SPACE)) {
                 // We have a valid bit here
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
-                if (tMicrosOfMarkOrSpace >= 2 * NEC_UNIT) {
+                if (tMicrosOfMarkOrSpace >= 2 * TINY_UNIT) {
                     // we received a 1
+#if (TINY_BITS > 16)
                     TinyIRReceiverControl.IRRawData.ULong |= TinyIRReceiverControl.IRRawDataMask;
+#else
+                    TinyIRReceiverControl.IRRawData.UWord |= TinyIRReceiverControl.IRRawDataMask;
+#endif
                 } else {
                     // we received a 0 - empty code for documentation
                 }
@@ -233,8 +265,8 @@ void IRPinChangeInterruptHandler(void) {
             /*
              * Check length of header mark here
              */
-            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(NEC_HEADER_MARK)
-                    && tMicrosOfMarkOrSpace <= upperValue25Percent(NEC_HEADER_MARK)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(TINY_HEADER_MARK)
+                    && tMicrosOfMarkOrSpace <= upperValue25Percent(TINY_HEADER_MARK)) {
                 tState = IR_RECEIVER_STATE_WAITING_FOR_FIRST_DATA_MARK;
             } else {
                 // Wrong length of header mark -> reset state
@@ -244,12 +276,16 @@ void IRPinChangeInterruptHandler(void) {
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE) {
             // Check data mark length
-            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(NEC_BIT_MARK)
-                    && tMicrosOfMarkOrSpace <= upperValue50Percent(NEC_BIT_MARK)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(TINY_BIT_MARK)
+                    && tMicrosOfMarkOrSpace <= upperValue50Percent(TINY_BIT_MARK)) {
                 /*
                  * We have a valid mark here, check for transmission complete, i.e. the mark of the stop bit
                  */
-                if (TinyIRReceiverControl.IRRawDataBitCounter >= NEC_BITS || TinyIRReceiverControl.IRRepeatFrameDetected) {
+                if (TinyIRReceiverControl.IRRawDataBitCounter >= TINY_BITS
+#if defined(ENABLE_NEC_REPEAT_SUPPORT)
+                        || (TinyIRReceiverControl.Flags & IRDATA_FLAGS_IS_REPEAT) // Do not check for full length received, if we have a short repeat frame
+#endif
+                ) {
                     /*
                      * Code complete -> call callback, no parity check!
                      */
@@ -258,24 +294,73 @@ void IRPinChangeInterruptHandler(void) {
 #if !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) // no Serial etc. in callback for ESP -> no interrupt required, WDT is running!
                     interrupts(); // enable interrupts, so delay() etc. works in callback
 #endif
+#if !defined(DISABLE_PARITY_CHECKS) && (TINY_ADDRESS_BITS == 16) && TINY_ADDRESS_HAS_8_BIT_PARITY
                     /*
-                     * Address reduction to 8 bit
+                     * Check address parity
+                     * Address is sent first and contained in the lower word
                      */
-                    if (TinyIRReceiverControl.IRRawData.UByte.LowByte
-                            == (uint8_t) (~TinyIRReceiverControl.IRRawData.UByte.MidLowByte)) {
-                        // standard 8 bit address NEC protocol
-                        TinyIRReceiverControl.IRRawData.UByte.MidLowByte = 0; // Address is the first 8 bit
+                    if (TinyIRReceiverControl.IRRawData.UBytes[0] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[1])) {
+                        TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
                     }
-
+#endif
+#if !defined(DISABLE_PARITY_CHECKS) && (TINY_COMMAND_BITS == 16) && TINY_COMMAND_HAS_8_BIT_PARITY
+                    /*
+                     * Check command parity
+                     */
+#if (TINY_ADDRESS_BITS > 0)
+                    if (TinyIRReceiverControl.IRRawData.UBytes[2] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[3])) {
+                        TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
+#  if defined(LOCAL_DEBUG)
+                        Serial.print(F("Parity check for command failed. Command="));
+                        Serial.print(TinyIRReceiverControl.IRRawData.UBytes[2], HEX);
+                        Serial.print(F(" parity="));
+                        Serial.println(TinyIRReceiverControl.IRRawData.UBytes[3], HEX);
+#  endif
+#else
+                    // No address, so command and parity are in the lowest bytes
+                    if (TinyIRReceiverControl.IRRawData.UBytes[0] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[1])) {
+                        TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
+#  if defined(LOCAL_DEBUG)
+                        Serial.print(F("Parity check for command failed. Command="));
+                        Serial.print(TinyIRReceiverControl.IRRawData.UBytes[0], HEX);
+                        Serial.print(F(" parity="));
+                        Serial.println(TinyIRReceiverControl.IRRawData.UBytes[1], HEX);
+#  endif
+#endif
+                    }
+#endif
                     /*
                      * Call user provided callback here
+                     * We have 6 cases: 0, 8 bit or 16 bit address, each with 8 or 16 bit command
                      */
-                    handleReceivedTinyIRData(TinyIRReceiverControl.IRRawData.UWord.LowWord,
-                            TinyIRReceiverControl.IRRawData.UByte.MidHighByte, (TinyIRReceiverControl.IRRepeatFrameDetected
-#if !defined(DISABLE_NEC_SPECIAL_REPEAT_SUPPORT)
-                                    || TinyIRReceiverControl.IRRepeatDistanceDetected
+                    handleReceivedTinyIRData(
+#if (TINY_ADDRESS_BITS > 0)
+#  if TINY_ADDRESS_HAS_8_BIT_PARITY
+                            // Here we have 8 bit address
+                            TinyIRReceiverControl.IRRawData.UBytes[0],
+#  else
+                            // Here we have 16 bit address
+                            TinyIRReceiverControl.IRRawData.UWord.LowWord,
+#  endif
+#  if TINY_COMMAND_HAS_8_BIT_PARITY
+                            // Here we have 8 bit command
+                            TinyIRReceiverControl.IRRawData.UBytes[3],
+#  else
+                            // Here we have 16 bit command
+                            TinyIRReceiverControl.IRRawData.UWord.HighWord,
+#  endif
+#else
+
+                            // Here we have NO address
+#  if TINY_COMMAND_HAS_8_BIT_PARITY
+                            // Here we have 8 bit command
+                            TinyIRReceiverControl.IRRawData.UBytes[0],
+#  else
+                            // Here we have 16 bit command
+                            TinyIRReceiverControl.IRRawData.UWord,
+#  endif
 #endif
-                            ));
+                            TinyIRReceiverControl.Flags);
 
                 } else {
                     // not finished yet
@@ -312,6 +397,119 @@ bool initPCIInterruptForTinyReceiver() {
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #endif
     return enablePCIInterruptForTinyReceiver();
+}
+
+#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+void printTinyReceiverResultMinimal(uint16_t aCommand, uint8_t aFlags, Print *aSerial)
+#else
+void printTinyReceiverResultMinimal(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags, Print *aSerial)
+#endif
+        {
+// Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
+    // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
+#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+    aSerial->print(F("C=0x"));
+#else
+    aSerial->print(F("A=0x"));
+    aSerial->print(aAddress, HEX);
+    aSerial->print(F(" C=0x"));
+#endif
+    aSerial->print(aCommand, HEX);
+    if (aFlags == IRDATA_FLAGS_IS_REPEAT) {
+        aSerial->print(F(" R"));
+    }
+#if !defined(DISABLE_PARITY_CHECKS)
+    if (aFlags == IRDATA_FLAGS_PARITY_FAILED) {
+        aSerial->print(F(" P"));
+    }
+#endif
+    aSerial->println();
+}
+
+uint8_t sSendPin;
+
+/*
+ * Generate IR signal by bit banging
+ */
+void sendMark(unsigned int aMarkMicros) {
+    unsigned long tStartMicros = micros();
+    unsigned long tNextPeriodEnding = tStartMicros;
+    unsigned long tMicros;
+    do {
+
+        /*
+         * Generate pulse
+         */
+        noInterrupts(); // do not let interrupts extend the short on period
+        digitalWriteFast(sSendPin, HIGH);
+        delayMicroseconds(8); // 8 us for a 30 % duty cycle for 38 kHz
+        digitalWriteFast(sSendPin, LOW);
+        interrupts(); // Enable interrupts - to keep micros correct- for the longer off period 3.4 us until receive ISR is active (for 7 us + pop's)
+
+        /*
+         * PWM pause timing and end check
+         * Minimal pause duration is 4.3 us
+         */
+        tNextPeriodEnding += 26; // for 38 kHz
+        do {
+            tMicros = micros(); // we have only 4 us resolution for AVR @16MHz
+            /*
+             * Exit the forever loop if aMarkMicros has reached
+             */
+            unsigned int tDeltaMicros = tMicros - tStartMicros;
+#if defined(__AVR__)
+            // Just getting variables and check for end condition takes minimal 3.8 us
+            if (tDeltaMicros >= aMarkMicros - (112 / (F_CPU / MICROS_IN_ONE_SECOND))) { // To compensate for call duration - 112 is an empirical value
+#else
+            if (tDeltaMicros >= aMarkMicros) {
+#endif
+                return;
+            }
+        } while (tMicros < tNextPeriodEnding);
+    } while (true);
+}
+
+/*
+ * LSB first, send header, command, inverted command and stop bit
+ */
+void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+    pinModeFast(aSendPin, OUTPUT);
+    sSendPin = aSendPin;
+
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+        unsigned long tStartOfFrameMillis = millis();
+
+        // send header
+        sendMark(FAST_8_BIT_PARITY_HEADER_MARK);
+        delayMicroseconds(FAST_8_BIT_PARITY_HEADER_SPACE);
+        uint16_t tData = aCommand | (((uint8_t) (~aCommand)) << 8); // LSB first
+        // Send data
+        for (uint_fast8_t i = 0; i < 16; ++i) {
+            sendMark(FAST_8_BIT_PARITY_BIT_MARK); // constant mark length
+
+            if (tData & 1) {
+                delayMicroseconds(FAST_8_BIT_PARITY_ONE_SPACE);
+            } else {
+                delayMicroseconds(FAST_8_BIT_PARITY_ZERO_SPACE);
+            }
+            tData >>= 1; // shift command for next bit
+        }
+        // send stop bit
+        sendMark(FAST_8_BIT_PARITY_BIT_MARK);
+
+        tNumberOfCommands--;
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            /*
+             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
+             */
+            auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
+            if (FAST_8_BIT_PARITY_REPEAT_PERIOD / 1000 > tFrameDurationMillis) {
+                delay(FAST_8_BIT_PARITY_REPEAT_PERIOD / 1000 - tFrameDurationMillis);
+            }
+        }
+    }
 }
 
 #if defined (LOCAL_DEBUG_ATTACH_INTERRUPT) && !defined(STR)
@@ -537,5 +735,9 @@ void dummyFunctionToAvoidCompilerErrors()
 #endif
 #if defined(LOCAL_TRACE_STATE_MACHINE)
 #undef LOCAL_TRACE_STATE_MACHINE
+#endif
+
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
 #endif
 #endif // _TINY_IR_RECEIVER_HPP

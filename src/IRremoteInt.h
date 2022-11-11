@@ -499,7 +499,6 @@ public:
 #endif
     void sendJVC(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);
 
-    void sendLGRepeat();
     void sendLG2Repeat();
     uint32_t computeLGRawDataAndChecksum(uint8_t aAddress, uint16_t aCommand);
     void sendLG(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);

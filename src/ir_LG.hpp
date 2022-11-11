@@ -89,10 +89,10 @@
 #define LG_ZERO_SPACE           550
 
 #define LG_REPEAT_HEADER_SPACE  (4 * LG_UNIT)  // 2250
-#define LG_AVERAGE_DURATION     58000 // LG_HEADER_MARK + LG_HEADER_SPACE  + 32 * 2,5 * LG_UNIT) + LG_UNIT // 2.5 because we assume more zeros than ones
-#define LG_REPEAT_DURATION      (LG_HEADER_MARK  + LG_REPEAT_HEADER_SPACE + LG_BIT_MARK)
 #define LG_REPEAT_PERIOD        110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define LG_REPEAT_SPACE         (LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) // 52 ms
+//#define LG_AVERAGE_DURATION     58000 // LG_HEADER_MARK + LG_HEADER_SPACE  + 32 * 2,5 * LG_UNIT) + LG_UNIT // 2.5 because we assume more zeros than ones
+//#define LG_REPEAT_DURATION      (LG_HEADER_MARK  + LG_REPEAT_HEADER_SPACE + LG_BIT_MARK)
+//#define LG_REPEAT_DISTANCE      (LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) // 52 ms
 
 struct PulseDistanceWidthProtocolConstants LGProtocolConstants = { LG, LG_KHZ, LG_HEADER_MARK, LG_HEADER_SPACE, LG_BIT_MARK,
 LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
@@ -106,19 +106,7 @@ LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, 
  * Start of send and decode functions
  ************************************/
 /*
- * Send special LG repeat
- */
-void IRsend::sendLGRepeat() {
-    sendNECRepeat(); // we can take the NEC timing here
-//    enableIROut(LG_KHZ);            // 38 kHz
-//    mark(LG_HEADER_MARK);           // + 9000
-//    space(LG_REPEAT_HEADER_SPACE);  // - 2250
-//    mark(LG_BIT_MARK);              // + 500 // NEC has 560, but this should work also!
-//    IrReceiver.restartAfterSend();
-}
-
-/*
- * Send special LG2 repeat
+ * Send special LG2 repeat not used yet
  */
 void IRsend::sendLG2Repeat() {
     enableIROut (LG_KHZ);            // 38 kHz
@@ -269,11 +257,6 @@ bool IRrecv::decodeLG() {
  * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent
  */
 void IRsend::sendLGRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
-    if (aNumberOfRepeats < 0) {
-        sendLGRepeat();
-        return;
-    }
-
     sendPulseDistanceWidth(&LGProtocolConstants, aRawData, LG_BITS, aNumberOfRepeats);
 }
 

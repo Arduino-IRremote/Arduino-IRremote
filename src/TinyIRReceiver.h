@@ -28,22 +28,18 @@
 
 #include <Arduino.h>
 
-//#define DISABLE_NEC_SPECIAL_REPEAT_SUPPORT    // Activating this disables detection of full NEC frame repeats. Saves 40 bytes program memory.
-
 #include "LongUnion.h"
 
 /** \addtogroup TinyReceiver Minimal receiver for NEC protocol
  * @{
  */
 
-/*
- * This function is called if a complete command was received and must be implemented by the including file (user code)
+/**
+ * Timing for NEC protocol
+ *
+ * see: https://www.sbprojects.net/knowledge/ir/nec.php
+ * LSB first, 1 start bit + 16 bit address + 8 bit data + 8 bit inverted data + 1 stop bit.
  */
-void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat);
-
-// LSB first, 1 start bit + 16 bit address + 8 bit data + 8 bit inverted data + 1 stop bit.
-// see: https://www.sbprojects.net/knowledge/ir/nec.php
-
 #define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
 #define NEC_COMMAND_BITS        16 // Command and inverted command
 
@@ -58,9 +54,112 @@ void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, bool isRepeat
 #define NEC_ZERO_SPACE          NEC_UNIT
 
 #define NEC_REPEAT_HEADER_SPACE (4 * NEC_UNIT)  // 2250
+
 #define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define NEC_MINIMAL_DURATION    49900 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
-#define NEC_MAXIMUM_REPEAT_SPACE (NEC_REPEAT_PERIOD - NEC_MINIMAL_DURATION + 5) // 65 ms
+#define NEC_MINIMAL_DURATION     49900 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
+#define NEC_MAXIMUM_REPEAT_DISTANCE (NEC_REPEAT_PERIOD - NEC_MINIMAL_DURATION + 10000) // 70 ms
+
+/**
+ * FAST_8_BIT_CS Protocol characteristics:
+ * - Bit timing is like NEC
+ * - The header is shorter, 4000 vs. 14500
+ * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
+ *   leading to a fixed protocol length of (7 + (16 * 2) + 1) * 560 = 40 * 560 = 22400 microseconds or 22.5 ms.
+ * - Repeats are sent as complete frames but in a 50 ms period.
+ */
+#define FAST_8_BIT_PARITY_ADDRESS_BITS          0 // No address
+#define FAST_8_BIT_PARITY_COMMAND_BITS         16 // Command and inverted command
+
+#define FAST_8_BIT_PARITY_BITS                 (FAST_8_BIT_PARITY_ADDRESS_BITS + FAST_8_BIT_PARITY_COMMAND_BITS)
+#define FAST_8_BIT_PARITY_UNIT                 560
+
+#define FAST_8_BIT_PARITY_BIT_MARK             FAST_8_BIT_PARITY_UNIT
+#define FAST_8_BIT_PARITY_ONE_SPACE            (3 * FAST_8_BIT_PARITY_UNIT)     // 1690 -> period = 2250
+#define FAST_8_BIT_PARITY_ZERO_SPACE           FAST_8_BIT_PARITY_UNIT           //  560 -> period = 1120
+
+#define FAST_8_BIT_PARITY_HEADER_MARK          (4 * FAST_8_BIT_PARITY_UNIT)     // 2250
+#define FAST_8_BIT_PARITY_HEADER_SPACE         (FAST_8_BIT_PARITY_ONE_SPACE)    // 1690
+
+#define FAST_8_BIT_PARITY_REPEAT_PERIOD        50000 // Commands are repeated every 50 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define FAST_8_BIT_PARITY_REPEAT_DISTANCE      (FAST_8_BIT_PARITY_REPEAT_PERIOD - (40 * FAST_8_BIT_PARITY_UNIT)) // 27.5 ms
+#define FAST_8_BIT_PARITY_MAXIMUM_REPEAT_DISTANCE (FAST_8_BIT_PARITY_REPEAT_DISTANCE + 10000) // 47.5 ms
+
+#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+#define TINY_ADDRESS_BITS          FAST_8_BIT_PARITY_ADDRESS_BITS
+#define TINY_COMMAND_BITS          FAST_8_BIT_PARITY_COMMAND_BITS
+#define TINY_COMMAND_HAS_8_BIT_PARITY  true
+
+#define TINY_BITS                  FAST_8_BIT_PARITY_BITS
+#define TINY_UNIT                  FAST_8_BIT_PARITY_UNIT
+
+#define TINY_HEADER_MARK           FAST_8_BIT_PARITY_HEADER_MARK
+#define TINY_HEADER_SPACE          FAST_8_BIT_PARITY_HEADER_SPACE
+
+#define TINY_BIT_MARK              FAST_8_BIT_PARITY_BIT_MARK
+#define TINY_ONE_SPACE             FAST_8_BIT_PARITY_ONE_SPACE
+#define TINY_ZERO_SPACE            FAST_8_BIT_PARITY_ZERO_SPACE
+
+#define TINY_MAXIMUM_REPEAT_DISTANCE  FAST_8_BIT_PARITY_MAXIMUM_REPEAT_DISTANCE
+
+#else
+#define ENABLE_NEC_REPEAT_SUPPORT    // Activating this, enables detection of special short frame NEC repeats. Requires 40 bytes program memory.
+
+#define TINY_ADDRESS_BITS          NEC_ADDRESS_BITS // the address bits + parity
+#define TINY_COMMAND_BITS          NEC_COMMAND_BITS // the command bits + parity
+#define TINY_ADDRESS_HAS_8_BIT_PARITY  true
+#define TINY_COMMAND_HAS_8_BIT_PARITY  true
+
+#define TINY_BITS                  NEC_BITS
+#define TINY_UNIT                  NEC_UNIT
+
+#define TINY_HEADER_MARK           NEC_HEADER_MARK
+#define TINY_HEADER_SPACE          NEC_HEADER_SPACE
+
+#define TINY_BIT_MARK              NEC_BIT_MARK
+#define TINY_ONE_SPACE             NEC_ONE_SPACE
+#define TINY_ZERO_SPACE            NEC_ZERO_SPACE
+
+#define TINY_MAXIMUM_REPEAT_DISTANCE  NEC_MAXIMUM_REPEAT_DISTANCE
+#endif
+
+/*
+ * This function is called if a complete command was received and must be implemented by the including file (user code)
+ * We have 6 cases: 0, 8 bit or 16 bit address, each with 8 or 16 bit command
+ */
+#if (TINY_ADDRESS_BITS > 0)
+#  if TINY_ADDRESS_HAS_8_BIT_PARITY
+// 8 bit address here
+#    if TINY_COMMAND_HAS_8_BIT_PARITY
+extern void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags);
+#    else
+extern void handleReceivedTinyIRData(uint8_t aAddress, uint16_t aCommand, uint8_t aFlags);
+#    endif
+
+#  else // TINY_ADDRESS_HAS_8_BIT_PARITY
+// 16 bit address here
+#    if TINY_COMMAND_HAS_8_BIT_PARITY
+extern void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, uint8_t aFlags);
+#    else
+extern void handleReceivedTinyIRData(uint16_t aAddress, uint16_t aCommand, uint8_t aFlags);
+#    endif
+#  endif
+
+#else
+// No address here
+#  if TINY_COMMAND_HAS_8_BIT_PARITY
+extern void handleReceivedTinyIRData(uint8_t aCommand, uint8_t aFlags);
+#  else
+extern void handleReceivedTinyIRData(uint16_t aCommand, uint8_t aFlags);
+#  endif
+#endif
+
+#if !defined(MICROS_IN_ONE_SECOND)
+#define MICROS_IN_ONE_SECOND 1000000L
+#endif
+
+#if !defined(MICROS_IN_ONE_MILLI)
+#define MICROS_IN_ONE_MILLI 1000L
+#endif
 
 /*
  * Macros for comparing timing values
@@ -92,29 +191,58 @@ struct TinyIRReceiverStruct {
     /*
      * Data
      */
+#if (TINY_BITS > 16)
     uint32_t IRRawDataMask;         ///< The corresponding bit mask for IRRawDataBitCounter.
     LongUnion IRRawData;            ///< The current raw data. LongUnion helps with decoding of address and command.
-    bool IRRepeatFrameDetected;     ///< A "standard" NEC repeat frame was detected.
-#if !defined(DISABLE_NEC_SPECIAL_REPEAT_SUPPORT)
-    bool IRRepeatDistanceDetected;  ///< A small gap between two frames is detected -> assume a "non standard" repeat.
+#else
+    uint16_t IRRawDataMask;         ///< The corresponding bit mask for IRRawDataBitCounter.
+    WordUnion IRRawData;            ///< The current raw data. WordUnion helps with decoding of command.
 #endif
+    uint8_t Flags;  ///< One of IRDATA_FLAGS_EMPTY, IRDATA_FLAGS_IS_REPEAT, and IRDATA_FLAGS_PARITY_FAILED
 };
+
+/*
+ * Definitions for member TinyIRReceiverCallbackDataStruct.Flags
+ * From IRremoteInt.h
+ */
+#define IRDATA_FLAGS_EMPTY              0x00
+#define IRDATA_FLAGS_IS_REPEAT          0x01
+#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02 // not used here, overwritten with _IRDATA_FLAGS_IS_SHORT_REPEAT
+#define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
 
 /**
  * Can be used by the callback to transfer received data to main loop for further processing.
  * E.g. with volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
  */
 struct TinyIRReceiverCallbackDataStruct {
+#if (TINY_ADDRESS_BITS > 0)
+#  if (TINY_ADDRESS_BITS == 16) && !TINY_ADDRESS_HAS_8_BIT_PARITY
     uint16_t Address;
+#  else
+    uint8_t Address;
+#  endif
+#endif
+
+#  if (TINY_COMMAND_BITS == 16) && !TINY_COMMAND_HAS_8_BIT_PARITY
+    uint16_t Command;
+#else
     uint8_t Command;
-    bool isRepeat;
-    bool justWritten;   ///< Is set true if new data is available. Used by the main loop, to avoid multiple evaluations of the same IR frame.
+#endif
+    uint8_t Flags; // Bit coded flags. Can contain one of the bits: IRDATA_FLAGS_IS_REPEAT and IRDATA_FLAGS_PARITY_FAILED
+    bool justWritten; ///< Is set true if new data is available. Used by the main loop, to avoid multiple evaluations of the same IR frame.
 };
 
 bool initPCIInterruptForTinyReceiver();
 bool enablePCIInterruptForTinyReceiver();
 void disablePCIInterruptForTinyReceiver();
 bool isTinyReceiverIdle();
+#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+void printTinyReceiverResultMinimal(uint16_t aCommand, uint8_t aFlags, Print *aSerial);
+#else
+void printTinyReceiverResultMinimal(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags, Print *aSerial);
+#endif
+
+void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
 
 /** @}*/
 

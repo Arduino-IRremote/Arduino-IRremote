@@ -60,7 +60,7 @@
 #define JVC_ONE_SPACE         (3 * JVC_UNIT)  // 1578 - The length of a Bit:Space for 1's
 #define JVC_ZERO_SPACE        JVC_UNIT        // The length of a Bit:Space for 0's
 
-#define JVC_REPEAT_SPACE      (uint16_t)(45 * JVC_UNIT)  // 23625 - Commands are repeated with a distance of 23 ms for as long as the key on the remote control is held down.
+#define JVC_REPEAT_DISTANCE      (uint16_t)(45 * JVC_UNIT)  // 23625 - Commands are repeated with a distance of 23 ms for as long as the key on the remote control is held down.
 #define JVC_REPEAT_PERIOD     65000 // assume around 40 ms for a JVC frame
 
 struct PulseDistanceWidthProtocolConstants JVCProtocolConstants = { JVC, JVC_KHZ, JVC_HEADER_MARK, JVC_HEADER_SPACE, JVC_BIT_MARK,
@@ -95,7 +95,7 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay(JVC_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
+            delay(JVC_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         }
     }
     IrReceiver.restartAfterSend();
@@ -119,7 +119,7 @@ bool IRrecv::decodeJVC() {
          * Check for repeat
          * Check leading space and first and last mark length
          */
-        if (decodedIRData.rawDataPtr->rawbuf[0] < ((JVC_REPEAT_SPACE + (JVC_REPEAT_SPACE / 4) / MICROS_PER_TICK))
+        if (decodedIRData.rawDataPtr->rawbuf[0] < ((JVC_REPEAT_DISTANCE + (JVC_REPEAT_DISTANCE / 4) / MICROS_PER_TICK))
                 && matchMark(decodedIRData.rawDataPtr->rawbuf[1], JVC_BIT_MARK)
                 && matchMark(decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawDataPtr->rawlen - 1], JVC_BIT_MARK)) {
             /*
