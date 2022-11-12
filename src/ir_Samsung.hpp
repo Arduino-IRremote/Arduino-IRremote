@@ -48,6 +48,25 @@
 //                 S  A   A  M   M      S  U   U  N  NN  G   G
 //             SSSS   A   A  M   M  SSSS    UUU   N   N   GGG
 //==============================================================================
+/*
+ * Address=0xFFF1 Command=0x76 Raw-Data=0x8976FFF1
+ +4500,-4400
+ + 600,-1600 + 650,- 500 + 600,- 500 + 650,- 500
+ + 600,-1650 + 600,-1600 + 650,-1600 + 600,-1650
+ + 600,-1600 + 600,-1650 + 600,-1650 + 600,-1600
+ + 600,-1650 + 600,-1650 + 600,-1600 + 600,-1650
+ + 600,- 500 + 650,-1600 + 600,-1650 + 600,- 500
+ + 650,-1600 + 600,-1650 + 600,-1650 + 600,- 500
+ + 600,-1650 + 600,- 500 + 600,- 550 + 600,-1600
+ + 600,- 550 + 600,- 550 + 550,- 550 + 600,-1650
+ + 550
+ Sum: 68750
+ */
+/*
+ * Samsung repeat frame can be the original frame again or a special repeat frame,
+ * then we call the protocol SamsungLG. They differ only in the handling of repeat,
+ * so we can not decide for the first frame which protocol is used.
+ */
 // see http://www.hifi-remote.com/wiki/index.php?title=DecodeIR#Samsung
 // https://www.mikrocontroller.net/articles/IRMP_-_english#SAMSUNG32
 // LSB first, 1 start bit + 16 bit address + 16,32 bit data + 1 stop bit.
@@ -111,17 +130,6 @@ void sendSamsungLGSpecialRepeat() {
     IrReceiver.restartAfterSend();
 }
 
-void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
-
-    // send 16 bit address and  8 command bits and then 8 inverted command bits LSB first
-    LongUnion tRawData;
-    tRawData.UWord.LowWord = aAddress;
-    tRawData.UByte.MidHighByte = aCommand;
-    tRawData.UByte.HighByte = ~aCommand;
-
-    sendPulseDistanceWidth(&SamsungProtocolConstants, tRawData.ULong, SAMSUNG_BITS, aNumberOfRepeats);
-}
-
 /*
  * Sent e.g. by an LG 6711R1P071A remote
  * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent
@@ -141,6 +149,29 @@ void IRsend::sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNu
     sendPulseDistanceWidth(&SamsungProtocolConstants, tRawData.ULong, SAMSUNG_BITS, aNumberOfRepeats);
 }
 
+void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
+
+    // send 16 bit address and  8 command bits and then 8 inverted command bits LSB first
+    LongUnion tSendValue;
+    tSendValue.UWord.LowWord = aAddress;
+    tSendValue.UByte.MidHighByte = aCommand;
+    tSendValue.UByte.HighByte = ~aCommand;
+
+    uint32_t tRawSamsungData[2];
+    tRawSamsungData[0] = tSendValue.ULong;
+    uint8_t tProtocolLength = SAMSUNG_BITS;
+
+    if (aCommand >= 0x100) {
+        // Here we have Samsung48 -> send the upper byte of command
+        aCommand = aCommand >> 8;
+        tSendValue.UByte.LowByte = aCommand;
+        tSendValue.UByte.MidLowByte = ~aCommand;
+        tRawSamsungData[1] = tSendValue.UWord.LowWord;
+        tProtocolLength = SAMSUNG48_BITS;
+    }
+    IrSender.sendPulseDistanceWidthFromArray(&SamsungProtocolConstants, &tRawSamsungData[0], tProtocolLength, aNumberOfRepeats);
+}
+
 bool IRrecv::decodeSamsung() {
 
     // Check we have enough data (68). The +4 is for initial gap, start bit mark and space + stop bit mark
@@ -149,7 +180,7 @@ bool IRrecv::decodeSamsung() {
         IR_DEBUG_PRINT(F("Samsung: "));
         IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 68 or 100 or 6"));
+        IR_DEBUG_PRINTLN(F(" is not 6 or 68 or 100"));
         return false;
     }
 
@@ -169,7 +200,7 @@ bool IRrecv::decodeSamsung() {
     /*
      * Decode first 32 bits
      */
-    if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, SAMSUNG_BITS)) {
+    if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, SAMSUNG_BITS, 3)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Samsung: "));
         Serial.println(F("Decode failed"));
@@ -183,11 +214,11 @@ bool IRrecv::decodeSamsung() {
     if (decodedIRData.rawDataPtr->rawlen == (2 * SAMSUNG48_BITS) + 4) {
         /*
          * Samsung48
+         * Here https://forum.arduino.cc/t/klimaanlage-per-ir-steuern/1051381/10 is the address also 8 bits and then 8 inverted bits
          */
-
         // decode additional 16 bit
         if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, (SAMSUNG_COMMAND32_BITS - SAMSUNG_COMMAND16_BITS),
-                3 + SAMSUNG_BITS)) {
+                3 + (2 * SAMSUNG_BITS))) {
 #if defined(LOCAL_DEBUG)
             Serial.print(F("Samsung: "));
             Serial.println(F("Decode failed"));
@@ -195,20 +226,22 @@ bool IRrecv::decodeSamsung() {
             return false;
         }
 
-//    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
-        // Put latest (MSB) bits in LowWord, LSB first would have them in HighWord so keep this in mind for decoding below
+        /*
+         * LSB data is already in tValue.UWord.HighWord!
+         * Put latest (MSB) bits in LowWord, LSB first would have them expect in HighWord so keep this in mind for decoding below
+         */
         tValue.UWord.LowWord = decodedIRData.decodedRawData;
 
         /*
          * Check parity
          */
         // receive 2 * (8 bits then 8 inverted bits) LSB first
-        if (tValue.UByte.HighByte != (uint8_t)(~tValue.UByte.MidHighByte)
-                && tValue.UByte.MidLowByte != (uint8_t)(~tValue.UByte.LowByte)) {
+        if (tValue.UByte.MidHighByte != (uint8_t)(~tValue.UByte.HighByte)
+                && tValue.UByte.LowByte != (uint8_t)(~tValue.UByte.MidLowByte)) {
             decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
         }
 
-        decodedIRData.command = tValue.UByte.MidLowByte << 8 | tValue.UByte.HighByte; // low and high word are swapped here, so fetch it this way
+        decodedIRData.command = tValue.UByte.LowByte << 8 | tValue.UByte.MidHighByte; // low and high word are swapped here, so fetch it this way
         decodedIRData.numberOfBits = SAMSUNG48_BITS;
 
     } else {

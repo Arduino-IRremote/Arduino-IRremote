@@ -128,7 +128,7 @@
 #  endif
 #endif // !defined(NO_DECODER)
 
-//#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly.
+//#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly. It prevents decoding of SONY!
 
 #if defined(DECODE_NEC) && !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)
 #warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."

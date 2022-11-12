@@ -163,7 +163,8 @@ void setup() {
 
 void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
     // wait until signal has received
-    while(!sDataJustReceived){};
+    while (!sDataJustReceived) {
+    };
     sDataJustReceived = false;
 
     if (IrReceiver.decode()) {
@@ -208,7 +209,8 @@ void ReceiveCompleteCallbackHandler() {
 
 void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
     // wait until signal has received
-    while(!sDataJustReceived){};
+    while (!sDataJustReceived) {
+    };
     sDataJustReceived = false;
 
     if (IrReceiver.decode()) {
@@ -350,7 +352,7 @@ void loop() {
         checkReceive(0x0102, 0x34);
         delay(DELAY_AFTER_SEND);
 
-#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
+#  if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit generic PulseDistance using ProtocolConstants"));
         Serial.flush();
         uint32_t tRawData[] = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
@@ -377,9 +379,9 @@ void loop() {
         SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceive(0x0B, 0x10);
         delay(DELAY_AFTER_SEND);
-#endif
+#  endif
 
-#if defined(DISTANCE_DO_MSB_DECODING)
+#  if defined(DISTANCE_DO_MSB_DECODING)
         Serial.println(F("Send generic 52 bit PulseDistance 0x43D8613C and 0x3BC3B MSB first"));
         Serial.flush();
         tRawData[0] = 0x43D8613C;  // MSB of tRawData[0] is sent first
@@ -396,7 +398,7 @@ void loop() {
         SEND_NO_STOP_BIT, 0, 0);
         checkReceivedArray(tRawData, 2);
         delay(DELAY_AFTER_SEND);
-#else
+#  else
         Serial.println(F("Send generic 52 bit PulseDistance 0x43D8613C and 0x3BC3B LSB first"));
         Serial.flush();
         tRawData[0] = 0x43D8613C;  // MSB of tRawData[0] is sent first
@@ -413,9 +415,9 @@ void loop() {
         SEND_NO_STOP_BIT, 0, 0);
         checkReceivedArray(tRawData, 2);
         delay(DELAY_AFTER_SEND);
-#endif
+#  endif
 
-#if defined(DECODE_MAGIQUEST)
+#  if defined(DECODE_MAGIQUEST)
 
         Serial.println(F("Send MagiQuest 0x6BCDFF00, 0x176 as generic 55 bit PulseDistanceWidth MSB first"));
         Serial.flush();
@@ -431,15 +433,15 @@ void loop() {
             Serial.println();
         }
         delay(DELAY_AFTER_SEND);
-#endif
+#  endif
 
     }
-#endif
+#endif // if FLASHEND >= 0x3FFF
 
     Serial.println(F("Send Onkyo (NEC with 16 bit command)"));
     Serial.flush();
-    IrSender.sendOnkyo(sAddress, sCommand << 8 | sCommand, sRepeats);
-    checkReceive(sAddress, sCommand << 8 | sCommand);
+    IrSender.sendOnkyo(sAddress, (sCommand + 1) << 8 | sCommand, sRepeats);
+    checkReceive(sAddress, (sCommand + 1) << 8 | sCommand);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Apple"));
@@ -555,7 +557,17 @@ void loop() {
 #endif
 
 #if defined(DECODE_LG) || defined(DECODE_MAGIQUEST)
-    IRSendData.command = sCommand << 8 | sCommand;  // LG and MAGIQUEST support more than 8 bit command
+    IRSendData.command = (sCommand + 1) << 8 | sCommand;  // Samsung48, LG and MAGIQUEST support more than 8 bit command
+#endif
+
+#if defined(DECODE_SAMSUNG)
+    IRSendData.protocol = SAMSUNG;
+    Serial.print(F("Send "));
+    Serial.println(getProtocolString(IRSendData.protocol));
+    Serial.flush();
+    IrSender.write(&IRSendData, sRepeats);
+    checkReceive(IRSendData.address, IRSendData.command);
+    delay(DELAY_AFTER_SEND);
 #endif
 
 #if defined(DECODE_LG)

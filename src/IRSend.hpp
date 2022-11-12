@@ -438,13 +438,26 @@ void IRsend::sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigne
  * The output always ends with a space
  * Stop bit is always sent
  */
-void IRsend::sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t *aDecodedRawDataArray,
-        unsigned int aNumberOfBits, int_fast8_t aNumberOfRepeats) {
+void IRsend::sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants *aProtocolConstants,
+        uint32_t *aDecodedRawDataArray, unsigned int aNumberOfBits, int_fast8_t aNumberOfRepeats) {
 
     // Set IR carrier frequency
     enableIROut(aProtocolConstants->FrequencyKHz);
 
     uint_fast8_t tNumberOf32BitChunks = ((aNumberOfBits - 1) / 32) + 1;
+
+#if defined(LOCAL_DEBUG)
+    // fist data
+    Serial.print(F("Data[0]=0x"));
+    Serial.print(aDecodedRawDataArray[0], HEX);
+    if (tNumberOf32BitChunks > 1) {
+        Serial.print(F(" Data[1]=0x"));
+        Serial.print(aDecodedRawDataArray[1], HEX);
+    }
+    Serial.print(F(" #="));
+    Serial.println(aNumberOfBits);
+    Serial.flush();
+#endif
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -513,7 +526,9 @@ void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtoc
             // send special repeat
             aProtocolConstants->SpecialSendRepeatFunction();
         } else {
-            // Header and regular frame
+            /*
+             * Send Header and regular frame
+             */
             mark(aProtocolConstants->HeaderMarkMicros);
             space(aProtocolConstants->HeaderSpaceMicros);
             sendPulseDistanceWidthData(aProtocolConstants, aData, aNumberOfBits);

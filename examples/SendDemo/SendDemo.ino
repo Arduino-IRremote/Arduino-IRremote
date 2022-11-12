@@ -207,7 +207,7 @@ void loop() {
 
     Serial.println(F("Send Onkyo (NEC with 16 bit command)"));
     Serial.flush();
-    IrSender.sendOnkyo(sAddress, sCommand << 8 | sCommand, sRepeats);
+    IrSender.sendOnkyo(sAddress, (sCommand + 1) << 8 | sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Apple"));
@@ -294,7 +294,14 @@ void loop() {
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
 
-    IRSendData.command = sCommand << 8 | sCommand;  // LG and MAGIQUEST support more than 8 bit command
+    IRSendData.command = (sCommand + 1) << 8 | sCommand;  // Samsung48, LG and MAGIQUEST support more than 8 bit command
+
+    IRSendData.protocol = SAMSUNG;
+    Serial.print(F("Send "));
+    Serial.println(getProtocolString(IRSendData.protocol));
+    Serial.flush();
+    IrSender.write(&IRSendData, sRepeats);
+    delay(DELAY_AFTER_SEND);
 
     IRSendData.protocol = LG;
     Serial.print(F("Send "));
