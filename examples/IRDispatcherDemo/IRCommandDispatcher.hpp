@@ -7,7 +7,7 @@
  * To run this example you need to install the "IRremote" or "IRMP" library.
  * Install it under "Tools -> Manage Libraries..." or "Ctrl+Shift+I"
  *
- * The IR library calls a callback function, which executes a non blocking command directly in ISR context!
+ * The IR library calls a callback function, which executes a non blocking command directly in ISR (Interrupt Service Routine) context!
  * A blocking command is stored and sets a stop flag for an already running blocking function to terminate.
  * The blocking command can in turn be executed by main loop by calling IRDispatcher.checkAndRunSuspendedBlockingCommands().
  *
@@ -98,7 +98,7 @@ void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags
         IRDispatcher.IRReceivedData.isAvailable = true;
         if(!IRDispatcher.doNotUseDispatcher) {
             /*
-             * Only short (non blocking) commands are executed directly in ISR context,
+             * Only short (non blocking) commands are executed directly in ISR (Interrupt Service Routine) context,
              * others are stored for main loop which calls checkAndRunSuspendedBlockingCommands()
              */
             IRDispatcher.checkAndCallCommand(false);

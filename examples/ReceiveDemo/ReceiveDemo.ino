@@ -165,7 +165,8 @@ void loop() {
 
         // tone on esp8266 works once, then it disables the successful IrReceiver.start() / timerConfigForReceive().
 #  if !defined(ESP8266) && !defined(NRF5)
-        if ((IrReceiver.decodedIRData.protocol != SONY) && (IrReceiver.decodedIRData.protocol != UNKNOWN)
+        if ((IrReceiver.decodedIRData.protocol != SONY) && (IrReceiver.decodedIRData.protocol != PULSE_WIDTH)
+                && (IrReceiver.decodedIRData.protocol != PULSE_DISTANCE) && (IrReceiver.decodedIRData.protocol != UNKNOWN)
                 && digitalRead(DEBUG_BUTTON_PIN) != LOW) {
             /*
              * If no debug mode or a valid protocol was received, play tone, wait and restore IR timer.

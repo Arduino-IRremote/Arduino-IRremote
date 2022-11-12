@@ -86,7 +86,7 @@ void setup() {
 }
 /*
  * Callback function
- * This function is called in ISR context (interrupts are blocked here)
+ * This function is called in ISR (Interrupt Service Routine) context (interrupts are blocked here)
  * and therefore must be as short as possible (and better not use printing).
  */
 #if defined(ESP32) || defined(ESP8266)
@@ -95,7 +95,12 @@ IRAM_ATTR
 void ReceiveCompleteCallbackHandler() {
     IrReceiver.decode(); // fill IrReceiver.decodedIRData
 
-    sDataJustReceived = true; // to trigger printing of results in main loop
+    /*
+     * Set flag to trigger printing of results in main loop,
+     * since printing should not be done in a callback function
+     * running in ISR (Interrupt Service Routine) context where interrupts are disabled.
+     */
+    sDataJustReceived = true;
     /*
      * Check the received data and perform actions according to the received command
      * Decoded result is in the IrReceiver.decodedIRData structure.

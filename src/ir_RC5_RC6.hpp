@@ -30,6 +30,12 @@
 #ifndef _IR_RC5_RC6_HPP
 #define _IR_RC5_RC6_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -43,9 +49,26 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 //     R  R   C          5
 //     R   R   CCCC  5555
 //==============================================================================
+/*
+ Protocol=RC5 Address=0x11 Command=0x36 Raw-Data=0x1476 13 bits MSB first
+ + 900,- 900
+ +1800,-1750 +1800,- 850 + 900,- 850 + 900,-1750
+ + 950,- 850 + 900,- 850 +1800,-1750 + 950,- 850
+ +1800
+ Sum: 23100
+
+RC5X with 7.th MSB of command set
+Protocol=RC5 Address=0x11 Command=0x76 Toggle=1 Raw-Data=0xC76 13 bits MSB first
+ +1800,-1750
+ + 850,- 900 +1800,- 850 + 950,- 850 + 900,-1750
+ + 900,- 850 + 950,- 850 +1800,-1750 + 900,- 850
+ +1800
+Sum: 23050
+ */
 //
 // see: https://www.sbprojects.net/knowledge/ir/rc5.php
 // https://en.wikipedia.org/wiki/Manchester_code
+// https://forum.arduino.cc/t/sending-rc-5-extended-code-using-irsender/1045841/10 - Protocol Maranz Extended
 // mark->space => 0
 // space->mark => 1
 // MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit
@@ -167,8 +190,10 @@ bool IRrecv::decodeRC5() {
             // we have a mark to space transition here
             tDecodedRawData = (tDecodedRawData << 1) | 0;
         } else {
-            IR_DEBUG_PRINT(F("RC5: "));
-            IR_DEBUG_PRINTLN(F("no transition found, decode failed"));
+#if defined(LOCAL_DEBUG)
+            Serial.print(F("RC5: "));
+            Serial.println(F("no transition found, decode failed"));
+#endif
             return false;
         }
     }
@@ -205,7 +230,18 @@ bool IRrecv::decodeRC5() {
 // RRRR   C      6666
 // R  R   C      6   6
 // R   R   CCCC   666
+//+=============================================================================
 //
+/*
+Protocol=RC6 Address=0xF1 Command=0x76 Raw-Data=0xF176 20 bits MSB first
+ +2650,- 850
+ + 500,- 850 + 500,- 400 + 450,- 450 + 450,- 850
+ +1400,- 400 + 450,- 450 + 450,- 450 + 450,- 900
+ + 450,- 450 + 450,- 400 + 950,- 850 + 900,- 450
+ + 450,- 450 + 450,- 850 + 950,- 400 + 450,- 900
+ + 450
+Sum: 23150
+ */
 //
 // mark->space => 1
 // space->mark => 0
@@ -321,11 +357,13 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
         }
     }
 
-    IR_DEBUG_PRINT(F("RC6: "));
-    IR_DEBUG_PRINT(F("sLastSendToggleValue="));
-    IR_DEBUG_PRINT (sLastSendToggleValue);
-    IR_DEBUG_PRINT(F(" RawData="));
-    IR_DEBUG_PRINTLN(tIRRawData.ULong, HEX);
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("RC6: "));
+    Serial.print(F("sLastSendToggleValue="));
+    Serial.print (sLastSendToggleValue);
+    Serial.print(F(" RawData="));
+    Serial.println(tIRRawData.ULong, HEX);
+#endif
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -390,8 +428,10 @@ bool IRrecv::decodeRC6() {
         if (tBitIndex == 3) {
             // Toggle bit is double wide; make sure second half is equal first half
             if (tStartLevel != getBiphaselevel()) {
-                IR_DEBUG_PRINT(F("RC6: "));
-                IR_DEBUG_PRINTLN(F("Toggle mark or space length is wrong"));
+#if defined(LOCAL_DEBUG)
+                Serial.print(F("RC6: "));
+                Serial.println(F("Toggle mark or space length is wrong"));
+#endif
                 return false;
             }
         }
@@ -400,8 +440,10 @@ bool IRrecv::decodeRC6() {
         if (tBitIndex == 3) {
             // Toggle bit is double wide; make sure second half matches
             if (tEndLevel != getBiphaselevel()) {
-                IR_DEBUG_PRINT(F("RC6: "));
-                IR_DEBUG_PRINTLN(F("Toggle mark or space length is wrong"));
+#if defined(LOCAL_DEBUG)
+                Serial.print(F("RC6: "));
+                Serial.println(F("Toggle mark or space length is wrong"));
+#endif
                 return false;
             }
         }
@@ -416,8 +458,10 @@ bool IRrecv::decodeRC6() {
             // we have a space to mark transition here
             tDecodedRawData = (tDecodedRawData << 1) | 0;
         } else {
-            IR_DEBUG_PRINT(F("RC6: "));
-            IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+            Serial.print(F("RC6: "));
+            Serial.println(F("Decode failed"));
+#endif
             // we have no transition here or one level is -1 -> error
             return false;            // Error
         }
@@ -556,4 +600,7 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_RC5_RC6_HPP

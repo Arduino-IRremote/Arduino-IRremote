@@ -81,7 +81,7 @@
 #if defined(TRACE)
 #define LOCAL_TRACE_STATE_MACHINE
 #else
-//#define LOCAL_TRACE_STATE_MACHINE  // to see the state of the ISR state machine
+//#define LOCAL_TRACE_STATE_MACHINE  // to see the state of the ISR (Interrupt Service Routine) state machine
 #endif
 
 //#define _IR_MEASURE_TIMING        // Activate this if you want to enable internal hardware timing measurement.
@@ -132,7 +132,7 @@ extern void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRep
 uint32_t sMicrosOfGap; // The length of the gap before the start bit
 #endif
 /**
- * The ISR of TinyIRRreceiver.
+ * The ISR (Interrupt Service Routine) of TinyIRRreceiver.
  * It handles the NEC protocol decoding and calls the user callback function on complete.
  * 5 us + 3 us for push + pop for a 16MHz ATmega
  */

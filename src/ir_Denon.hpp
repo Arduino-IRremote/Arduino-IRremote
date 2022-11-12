@@ -32,6 +32,12 @@
 #ifndef _IR_DENON_HPP
 #define _IR_DENON_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -48,6 +54,14 @@
 //                          S  H   H  A   A  R  R   P
 //                      SSSS   H   H  A   A  R   R  P
 //==============================================================================
+/*
+Protocol=Sharp Address=0x11 Command=0x76 Raw-Data=0x45DA 15 bits MSB first
+ + 300,-1750 + 300,- 750 + 300,- 750 + 300,- 750
+ + 250,-1800 + 300,- 750 + 300,-1750 + 300,-1750
+ + 300,-1800 + 300,- 700 + 350,-1750 + 300,-1750
+ + 300,- 750 + 300,-1800 + 250,- 750 + 350
+Sum: 24150
+ */
 // Denon publish all their IR codes:
 // https://www.mikrocontroller.net/articles/IRMP_-_english#DENON
 // http://assets.denon.com/documentmaster/us/denon%20master%20ir%20hex.xls
@@ -137,15 +151,19 @@ bool IRrecv::decodeDenon() {
 
     // Read the bits in
     if (!decodePulseDistanceWidthData(&DenonProtocolConstants, DENON_BITS, 1)) {
-        IR_DEBUG_PRINT(F("Denon: "));
-        IR_DEBUG_PRINTLN(F("Decode failed"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("Denon: "));
+        Serial.println(F("Decode failed"));
+#endif
         return false;
     }
 
     // Check for stop mark
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
-        IR_DEBUG_PRINT(F("Denon: "));
-        IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("Denon: "));
+        Serial.println(F("Stop bit mark length is wrong"));
+#endif
         return false;
     }
 
@@ -164,11 +182,13 @@ bool IRrecv::decodeDenon() {
             // Check parity of consecutive received commands. There is no parity in one data set.
             if ((uint8_t) lastDecodedCommand != (uint8_t) (~decodedIRData.command)) {
                 decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
-                IR_DEBUG_PRINT(F("Denon: "));
-                IR_DEBUG_PRINT(F("Parity check for repeat failed last command="));
-                IR_DEBUG_PRINT(lastDecodedCommand, HEX);
-                IR_DEBUG_PRINT(F(" current="));
-                IR_DEBUG_PRINTLN(~decodedIRData.command, HEX);
+#if defined(LOCAL_DEBUG)
+                Serial.print(F("Denon: "));
+                Serial.print(F("Parity check for repeat failed last command="));
+                Serial.print(lastDecodedCommand, HEX);
+                Serial.print(F(" current="));
+                Serial.println(~decodedIRData.command, HEX);
+#endif
             }
             // always take non inverted command
             decodedIRData.command = lastDecodedCommand;
@@ -258,4 +278,7 @@ bool IRrecv::decodeDenonOld(decode_results *aResults) {
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_DENON_HPP
