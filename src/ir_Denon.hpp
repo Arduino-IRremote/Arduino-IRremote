@@ -130,7 +130,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOf
             delay( DENON_AUTO_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         }
     }
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -240,7 +240,7 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
     // Data
     sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits,
     PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }

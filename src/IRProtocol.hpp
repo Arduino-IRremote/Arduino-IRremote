@@ -1,0 +1,207 @@
+/*
+ * IRReceive.hpp
+ * This file is exclusively included by IRremote.h to enable easy configuration of library switches
+ *
+ *  Contains all protocol functions used by receiver and sender.
+ *
+ *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
+ *
+ ************************************************************************************
+ * MIT License
+ *
+ * Copyright (c) 2009-2022 Ken Shirriff, Rafi Khan, Armin Joachimsmeyer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
+ */
+#ifndef _IR_PROTOCOL_HPP
+#define _IR_PROTOCOL_HPP
+
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
+/*
+ * Check for additional characteristics of timing like length of mark for a constant mark protocol,
+ * where space length determines the bit value. Requires up to 194 additional bytes of program memory.
+ */
+//#define DECODE_STRICT_CHECKS
+/** \addtogroup Receiving Receiving IR data for multiple protocols
+ * @{
+ */
+
+/*
+ * !!Must be the same order as in decode_type_t in IRProtocol.h!!!
+ */
+const char *const ProtocolNames[]
+PROGMEM = { string_Unknown, string_PulseWidth, string_PulseDistance, string_Apple, string_Denon, string_JVC, string_LG, string_LG2,
+        string_NEC, string_NEC2, string_Onkyo, string_Panasonic, string_Kaseikyo, string_Kaseikyo_Denon, string_Kaseikyo_Sharp,
+        string_Kaseikyo_JVC, string_Kaseikyo_Mitsubishi, string_RC5, string_RC6, string_Samsung, string_SamsungLG, string_Sharp,
+        string_Sony
+#if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
+        , string_BangOlufsen, string_BoseWave, string_Lego, string_MagiQuest, string_Whynter
+#endif
+        };
+
+#if defined(__AVR__)
+const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
+    const char *tProtocolStringPtr = (char*) pgm_read_word(&ProtocolNames[aProtocol]);
+    return ((__FlashStringHelper*) (tProtocolStringPtr));
+}
+#else
+const char* getProtocolString(decode_type_t aProtocol) {
+    return ProtocolNames[aProtocol];
+}
+#endif
+
+/**
+ * Function to print decoded result and flags in one line.
+ * A static function to be able to print data to send or copied received data.
+ * Ends with println().
+ *
+ * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ * @param aIRDataPtr        Pointer to the data to be printed.
+ * @param aPrintRepeatGap   If true also print the gap before repeats.
+ * @param aCheckForRecordGapsMicros   If true, call CheckForRecordGapsMicros() which may do a long printout,
+ *                                    which in turn may block the proper detection of repeats.
+ * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap <
+ *
+ */
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap) {
+    aSerial->print(F("Protocol="));
+    aSerial->print(getProtocolString(aIRDataPtr->protocol));
+    if (aIRDataPtr->protocol == UNKNOWN) {
+#if defined(DECODE_HASH)
+        aSerial->print(F(" Hash=0x"));
+        aSerial->print(aIRDataPtr->decodedRawData, HEX);
+#endif
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
+        aSerial->print(' ');
+        aSerial->print((aIRDataPtr->rawDataPtr->rawlen + 1) / 2, DEC);
+        aSerial->println(F(" bits (incl. gap and start) received"));
+#endif
+    } else {
+#if defined(DECODE_DISTANCE_WIDTH)
+        if (aIRDataPtr->protocol != PULSE_DISTANCE && aIRDataPtr->protocol != PULSE_WIDTH) {
+#endif
+        /*
+         * New decoders have address and command
+         */
+        aSerial->print(F(" Address=0x"));
+        aSerial->print(aIRDataPtr->address, HEX);
+
+        aSerial->print(F(" Command=0x"));
+        aSerial->print(aIRDataPtr->command, HEX);
+
+        if (aIRDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
+            aSerial->print(F(" Extra=0x"));
+            aSerial->print(aIRDataPtr->extra, HEX);
+        }
+
+        if (aIRDataPtr->flags & IRDATA_FLAGS_PARITY_FAILED) {
+            aSerial->print(F(" Parity fail"));
+        }
+
+        if (aIRDataPtr->flags & IRDATA_FLAGS_TOGGLE_BIT) {
+            if (aIRDataPtr->protocol == NEC) {
+                aSerial->print(F(" Special repeat"));
+            } else {
+                aSerial->print(F(" Toggle=1"));
+            }
+        }
+#if defined(DECODE_DISTANCE_WIDTH)
+        }
+#endif
+        if (aIRDataPtr->flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) {
+            aSerial->print(' ');
+            if (aIRDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
+                aSerial->print(F("Auto-"));
+            }
+            aSerial->print(F("Repeat"));
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
+            if (aPrintRepeatGap) {
+                aSerial->print(F(" gap="));
+                aSerial->print((uint32_t) aIRDataPtr->rawDataPtr->rawbuf[0] * MICROS_PER_TICK);
+                aSerial->print(F("us"));
+            }
+#else
+            (void)aPrintRepeatGap;
+#endif
+        }
+
+        /*
+         * Print raw data
+         */
+        if (!(aIRDataPtr->flags & IRDATA_FLAGS_IS_REPEAT) || aIRDataPtr->decodedRawData != 0) {
+            aSerial->print(F(" Raw-Data=0x"));
+            aSerial->print(aIRDataPtr->decodedRawData, HEX);
+
+            /*
+             * Print number of bits processed
+             */
+            aSerial->print(' ');
+            aSerial->print(aIRDataPtr->numberOfBits, DEC);
+            aSerial->print(F(" bits"));
+
+            if (aIRDataPtr->flags & IRDATA_FLAGS_IS_MSB_FIRST) {
+                aSerial->println(F(" MSB first"));
+            } else {
+                aSerial->println(F(" LSB first"));
+            }
+
+        } else {
+            aSerial->println();
+        }
+    }
+}
+
+/**********************************************************************************************************************
+ * Function to bit reverse OLD MSB values of e.g. NEC.
+ **********************************************************************************************************************/
+uint8_t bitreverseOneByte(uint8_t aValue) {
+//    uint8_t tReversedValue;
+//    return __builtin_avr_insert_bits(0x01234567, aValue, tReversedValue);
+// 76543210
+    aValue = (aValue >> 4) | (aValue << 4); // Swap in groups of 4
+// 32107654
+    aValue = ((aValue & 0xcc) >> 2) | ((aValue & 0x33) << 2); // Swap in groups of 2
+// 10325476
+    aValue = ((aValue & 0xaa) >> 1) | ((aValue & 0x55) << 1); // Swap bit pairs
+// 01234567
+    return aValue;
+}
+
+uint32_t bitreverse32Bit(uint32_t aInput) {
+//    __builtin_avr_insert_bits();
+    LongUnion tValue;
+    tValue.UByte.HighByte = bitreverseOneByte(aInput);
+    tValue.UByte.MidHighByte = bitreverseOneByte(aInput >> 8);
+    tValue.UByte.MidLowByte = bitreverseOneByte(aInput >> 16);
+    tValue.UByte.LowByte = bitreverseOneByte(aInput >> 24);
+    return tValue.ULong;
+}
+
+/** @}*/
+
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
+#endif // _IR_PROTOCOL_HPP

@@ -136,7 +136,7 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
             delay(RC5_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         }
     }
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -216,7 +216,7 @@ bool IRrecv::decodeRC5() {
 
     decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
     if (tValue.UByte.MidLowByte & 0x8) {
-        decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK | IRDATA_FLAGS_IS_MSB_FIRST;
+        decodedIRData.flags = IRDATA_FLAGS_TOGGLE_BIT | IRDATA_FLAGS_IS_MSB_FIRST;
     }
     decodedIRData.protocol = RC5;
 
@@ -301,7 +301,7 @@ void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
             mark(t);
         }
     }
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -335,7 +335,7 @@ void IRsend::sendRC6(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
             mark(t);
         }
     }
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -487,13 +487,13 @@ bool IRrecv::decodeRC6() {
         decodedIRData.address = tValue.UByte.MidLowByte;
         // Check for toggle flag
         if ((tValue.UByte.MidHighByte & 1) != 0) {
-            decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK | IRDATA_FLAGS_IS_MSB_FIRST;
+            decodedIRData.flags = IRDATA_FLAGS_TOGGLE_BIT | IRDATA_FLAGS_IS_MSB_FIRST;
         }
     } else {
         // RC6A
         decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
         if ((tValue.UByte.MidLowByte & 0x80) != 0) {
-            decodedIRData.flags = IRDATA_TOGGLE_BIT_MASK | IRDATA_FLAGS_IS_MSB_FIRST;
+            decodedIRData.flags = IRDATA_FLAGS_TOGGLE_BIT | IRDATA_FLAGS_IS_MSB_FIRST;
         }
         tValue.UByte.MidLowByte &= 0x87F; // mask toggle bit
         decodedIRData.command = tValue.UByte.LowByte;
@@ -535,7 +535,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
             space(RC5_UNIT);
         }
     }
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -604,7 +604,7 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
             space(RC5_UNIT);
         }
     }
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }

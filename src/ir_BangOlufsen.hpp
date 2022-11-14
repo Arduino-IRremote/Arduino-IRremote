@@ -204,7 +204,7 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
     space(BEO_PULSE_LENGTH_TRAILING_BIT - BEO_IR_MARK);
     mark(BEO_IR_MARK);
 
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 #else
@@ -266,7 +266,7 @@ void IRsend::sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bo
     space(BEO_PULSE_LENGTH_TRAILING_BIT - tSendBEOMarkLength);
     mark(tSendBEOMarkLength);
 
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 #else

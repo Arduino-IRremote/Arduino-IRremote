@@ -32,7 +32,7 @@
  */
 #include <Arduino.h>
 
-#define DISABLE_RECEIVER_RESTART_AFTER_SENDING // Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not used.
+#define DISABLE_CODE_FOR_RECEIVER // Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not used.
 
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>

@@ -135,7 +135,7 @@ void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
     Serial.print(F("MagiQuest checksum=0x"));
     Serial.println(tChecksum, HEX);
 #endif
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -209,6 +209,7 @@ bool IRrecv::decodeMagiQuest() {
     Serial.println(decodedIRData.decodedRawData, HEX);
 #endif
     tDecodedRawData.ULong = decodedIRData.decodedRawData;
+    // Some compiler throw a wrong "may be used uninitialized " warning for the next line :-(
     decodedIRData.command = tDecodedRawData.ByteWord.MidWord.UWord; // Values observed are 0x102,01,04,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
     tChecksum += tDecodedRawData.UByte.MidHighByte /* only one bit */+ tDecodedRawData.UByte.MidLowByte
             + tDecodedRawData.UByte.LowByte;

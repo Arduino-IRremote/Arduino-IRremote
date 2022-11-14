@@ -37,7 +37,7 @@
  */
 #include <Arduino.h>
 
-#define DISABLE_RECEIVER_RESTART_AFTER_SENDING // Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not used.
+#define DISABLE_CODE_FOR_RECEIVER // Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not used.
 
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition

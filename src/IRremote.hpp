@@ -139,23 +139,6 @@
 /****************************************************
  *                    RECEIVING
  ****************************************************/
-
-/**
- * The length of the buffer where the IR timing data is stored before decoding
- * 100 is sufficient for most standard protocols, but air conditioners often send a longer protocol data stream
- */
-#if !defined(RAW_BUFFER_LENGTH)
-#  if defined(DECODE_MAGIQUEST)
-#define RAW_BUFFER_LENGTH  112  // MagiQuest requires 112 bytes.
-#  else
-#define RAW_BUFFER_LENGTH  100  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
-//#define RAW_BUFFER_LENGTH  750  // 750 (600 if we have only 2k RAM) is the value for air condition remotes.
-#  endif
-#endif
-#if RAW_BUFFER_LENGTH % 2 == 1
-#error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
-#endif
-
 /**
  * MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
  * to compensate for the signal forming of different IR receiver modules
@@ -304,10 +287,11 @@
 /*
  * Include the sources here to enable compilation with macro values set by user program.
  */
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
 #include "IRReceive.hpp"
 #endif
 #include "IRSend.hpp"
+#include "IRProtocol.hpp"
 
 /*
  * Include the sources of all decoders here to enable compilation with macro values set by user program.

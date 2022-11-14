@@ -22,7 +22,8 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Improved TinyIRReceiver and added FAST protocol for it.
 - Removed static function printIRSendUsage(), but kept class function printIRSendUsage().
 - Added TinyIRSender.hpp and MinimalSender example, renamed TinyReceiver.h to TinyIR.h.
-- Added DISABLE_RECEIVER_RESTART_AFTER_SENDING to save program memory and RAM if receiving functionality is not required.
+- Added DISABLE_CODE_FOR_RECEIVER to save program memory and RAM if receiving functionality is not required.
+- Extracted protocol functions used by receive and send to IRProtocol.hpp.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

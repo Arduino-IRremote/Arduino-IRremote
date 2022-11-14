@@ -1011,101 +1011,6 @@ bool IRrecv::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aChec
 }
 
 /**
- * Function to print decoded result and flags in one line.
- * A static function to be able to print data to send or copied received data.
- * Ends with println().
- *
- * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
- * @param aIRDataPtr        Pointer to the data to be printed.
- * @param aPrintRepeatGap   If true also print the gap before repeats.
- * @param aCheckForRecordGapsMicros   If true, call CheckForRecordGapsMicros() which may do a long printout,
- *                                    which in turn may block the proper detection of repeats.
- * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap <
- *
- */
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap) {
-    aSerial->print(F("Protocol="));
-    aSerial->print(getProtocolString(aIRDataPtr->protocol));
-    if (aIRDataPtr->protocol == UNKNOWN) {
-#if defined(DECODE_HASH)
-        aSerial->print(F(" Hash=0x"));
-        aSerial->print(aIRDataPtr->decodedRawData, HEX);
-#endif
-        aSerial->print(' ');
-        aSerial->print((aIRDataPtr->rawDataPtr->rawlen + 1) / 2, DEC);
-        aSerial->println(F(" bits (incl. gap and start) received"));
-    } else {
-#if defined(DECODE_DISTANCE_WIDTH)
-        if (aIRDataPtr->protocol != PULSE_DISTANCE && aIRDataPtr->protocol != PULSE_WIDTH) {
-#endif
-        /*
-         * New decoders have address and command
-         */
-        aSerial->print(F(" Address=0x"));
-        aSerial->print(aIRDataPtr->address, HEX);
-
-        aSerial->print(F(" Command=0x"));
-        aSerial->print(aIRDataPtr->command, HEX);
-
-        if (aIRDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
-            aSerial->print(F(" Extra=0x"));
-            aSerial->print(aIRDataPtr->extra, HEX);
-        }
-
-        if (aIRDataPtr->flags & IRDATA_FLAGS_PARITY_FAILED) {
-            aSerial->print(F(" Parity fail"));
-        }
-
-        if (aIRDataPtr->flags & IRDATA_TOGGLE_BIT_MASK) {
-            if (aIRDataPtr->protocol == NEC) {
-                aSerial->print(F(" Special repeat"));
-            } else {
-                aSerial->print(F(" Toggle=1"));
-            }
-        }
-#if defined(DECODE_DISTANCE_WIDTH)
-        }
-#endif
-        if (aIRDataPtr->flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) {
-            aSerial->print(' ');
-            if (aIRDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
-                aSerial->print(F("Auto-"));
-            }
-            aSerial->print(F("Repeat"));
-            if (aPrintRepeatGap) {
-                aSerial->print(F(" gap="));
-                aSerial->print((uint32_t) aIRDataPtr->rawDataPtr->rawbuf[0] * MICROS_PER_TICK);
-                aSerial->print(F("us"));
-            }
-        }
-
-        /*
-         * Print raw data
-         */
-        if (!(aIRDataPtr->flags & IRDATA_FLAGS_IS_REPEAT) || aIRDataPtr->decodedRawData != 0) {
-            aSerial->print(F(" Raw-Data=0x"));
-            aSerial->print(aIRDataPtr->decodedRawData, HEX);
-
-            /*
-             * Print number of bits processed
-             */
-            aSerial->print(' ');
-            aSerial->print(aIRDataPtr->numberOfBits, DEC);
-            aSerial->print(F(" bits"));
-
-            if (aIRDataPtr->flags & IRDATA_FLAGS_IS_MSB_FIRST) {
-                aSerial->println(F(" MSB first"));
-            } else {
-                aSerial->println(F(" LSB first"));
-            }
-
-        } else {
-            aSerial->println();
-        }
-    }
-}
-
-/**
  * Function to print values and flags of IrReceiver.decodedIRData in one line.
  * Ends with println().
  *
@@ -1454,37 +1359,15 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
     }
 }
 
-/*
- * !!Must be the same order as in decode_type_t in IRProtocol.h!!!
- */
-const char *const ProtocolNames[]
-PROGMEM = { string_Unknown, string_PulseWidth, string_PulseDistance, string_Apple, string_Denon, string_JVC, string_LG, string_LG2,
-        string_NEC, string_NEC2, string_Onkyo, string_Panasonic, string_Kaseikyo, string_Kaseikyo_Denon, string_Kaseikyo_Sharp,
-        string_Kaseikyo_JVC, string_Kaseikyo_Mitsubishi, string_RC5, string_RC6, string_Samsung, string_SamsungLG, string_Sharp,
-        string_Sony
-#if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
-        , string_BangOlufsen, string_BoseWave, string_Lego, string_MagiQuest, string_Whynter
-#endif
-        };
-
 #if defined(__AVR__)
 const __FlashStringHelper* IRrecv::getProtocolString() {
 // call no class function with same name
     return ::getProtocolString(decodedIRData.protocol);
 }
-
-const __FlashStringHelper* getProtocolString(decode_type_t aProtocol) {
-    const char *tProtocolStringPtr = (char*) pgm_read_word(&ProtocolNames[aProtocol]);
-    return ((__FlashStringHelper*) (tProtocolStringPtr));
-}
 #else
 const char* IRrecv::getProtocolString() {
     // call no class function with same name
     return ::getProtocolString(decodedIRData.protocol);
-}
-
-const char* getProtocolString(decode_type_t aProtocol) {
-    return ProtocolNames[aProtocol];
 }
 #endif
 
@@ -1639,31 +1522,7 @@ ISR()
 #endif
 }
 
-/**********************************************************************************************************************
- * Function to bit reverse OLD MSB values of e.g. NEC.
- **********************************************************************************************************************/
-uint8_t bitreverseOneByte(uint8_t aValue) {
-//    uint8_t tReversedValue;
-//    return __builtin_avr_insert_bits(0x01234567, aValue, tReversedValue);
-// 76543210
-    aValue = (aValue >> 4) | (aValue << 4); // Swap in groups of 4
-// 32107654
-    aValue = ((aValue & 0xcc) >> 2) | ((aValue & 0x33) << 2); // Swap in groups of 2
-// 10325476
-    aValue = ((aValue & 0xaa) >> 1) | ((aValue & 0x55) << 1); // Swap bit pairs
-// 01234567
-    return aValue;
-}
 
-uint32_t bitreverse32Bit(uint32_t aInput) {
-//    __builtin_avr_insert_bits();
-    LongUnion tValue;
-    tValue.UByte.HighByte = bitreverseOneByte(aInput);
-    tValue.UByte.MidHighByte = bitreverseOneByte(aInput >> 8);
-    tValue.UByte.MidLowByte = bitreverseOneByte(aInput >> 16);
-    tValue.UByte.LowByte = bitreverseOneByte(aInput >> 24);
-    return tValue.ULong;
-}
 /**********************************************************************************************************************
  * The OLD and DEPRECATED decode function with parameter aResults, kept for backward compatibility to old 2.0 tutorials
  * This function calls the old MSB first decoders and fills only the 3 variables:

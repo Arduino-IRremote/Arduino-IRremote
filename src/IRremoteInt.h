@@ -63,7 +63,21 @@
 #define ENABLE_LED_FEEDBACK             true
 #define USE_DEFAULT_FEEDBACK_LED_PIN    0
 
-#include "IRProtocol.h"
+/**
+ * The length of the buffer where the IR timing data is stored before decoding
+ * 100 is sufficient for most standard protocols, but air conditioners often send a longer protocol data stream
+ */
+#if !defined(RAW_BUFFER_LENGTH)
+#  if defined(DECODE_MAGIQUEST)
+#define RAW_BUFFER_LENGTH  112  // MagiQuest requires 112 bytes.
+#  else
+#define RAW_BUFFER_LENGTH  100  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
+//#define RAW_BUFFER_LENGTH  750  // 750 (600 if we have only 2k RAM) is the value for air condition remotes.
+#  endif
+#endif
+#if RAW_BUFFER_LENGTH % 2 == 1
+#error RAW_BUFFER_LENGTH must be even, since the array consists of space / mark pairs.
+#endif
 
 /****************************************************
  * Declarations for the receiver Interrupt Service Routine
@@ -99,6 +113,8 @@ struct irparams_struct {
     unsigned int rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
 };
 
+#include "IRProtocol.h"
+
 /*
  * Debug directives
  */
@@ -127,40 +143,6 @@ struct irparams_struct {
 /****************************************************
  *                     RECEIVING
  ****************************************************/
-/*
- * Definitions for member IRData.flags
- */
-#define IRDATA_FLAGS_EMPTY              0x00
-#define IRDATA_FLAGS_IS_REPEAT          0x01
-#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
-#define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
-#define IRDATA_FLAGS_TOGGLE_BIT         0x08 ///< is set if RC5 or RC6 toggle bit is set
-#define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< there is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
-#define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is 0 in this case to avoid endless OverflowFlag
-#define IRDATA_FLAGS_IS_LSB_FIRST       0x00
-#define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Just for info. Value is mainly determined by the protocol
-
-// deprecated
-#define IRDATA_TOGGLE_BIT_MASK          0x08 ///< is set if RC5 or RC6 toggle bit is set
-
-#define RAW_DATA_ARRAY_SIZE             ((((RAW_BUFFER_LENGTH - 2) - 1) / 64) + 1) // The -2 is for initial gap + stop bit mark, 64 mark + spaces for 32 bit.
-/**
- * Data structure for the user application, available as decodedIRData.
- * Filled by decoders and read by print functions or user application.
- */
-struct IRData {
-    decode_type_t protocol; ///< UNKNOWN, NEC, SONY, RC5, PULSE_DISTANCE, ...
-    uint16_t address; ///< Decoded address, Distance protocol (tMarkTicksLong (if tMarkTicksLong == 0, then tMarkTicksShort) << 8) | tSpaceTicksLong
-    uint16_t command;       ///< Decoded command, Distance protocol (tMarkTicksShort << 8) | tSpaceTicksShort
-    uint16_t extra; ///< Contains upper 16 bit of Magiquest WandID, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks << 8) | HeaderSpaceTicks.
-    uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
-    uint8_t flags;          ///< See IRDATA_FLAGS_* definitions above
-    uint32_t decodedRawData; ///< Up to 32 bit decoded raw data, to be used for send functions.
-#if defined(DECODE_DISTANCE_WIDTH)
-    uint32_t decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; ///< 32 bit decoded raw data, to be used for send function.
-#endif
-    irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.
-};
 
 /**
  * Results returned from old decoders !!!deprecated!!!
@@ -334,12 +316,6 @@ bool matchMark(unsigned int aMeasuredTicks, unsigned int aMatchValueMicros);
 bool matchSpace(unsigned int aMeasuredTicks, unsigned int aMatchValueMicros);
 
 /*
- * Convenience functions to convert MSB to LSB values
- */
-uint8_t bitreverseOneByte(uint8_t aValue);
-uint32_t bitreverse32Bit(uint32_t aInput);
-
-/*
  * Old function names
  */
 bool MATCH(unsigned int measured, unsigned int desired);
@@ -347,16 +323,7 @@ bool MATCH_MARK(unsigned int measured_ticks, unsigned int desired_us);
 bool MATCH_SPACE(unsigned int measured_ticks, unsigned int desired_us);
 
 int getMarkExcessMicros();
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap); // A static function to be able to print send or copied received data.
 
-/*
- * Next 2 functions are also available as member functions
- */
-#if defined(__AVR__)
-const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
-#else
-const char* getProtocolString(decode_type_t aProtocol);
-#endif
 void printActiveIRProtocols(Print *aSerial);
 
 /****************************************************

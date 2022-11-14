@@ -113,7 +113,7 @@ void IRsend::sendSamsungLGRepeat() {
     mark(SAMSUNG_BIT_MARK);         // + 560
     space(SAMSUNG_ZERO_SPACE);      // - 560
     mark(SAMSUNG_BIT_MARK);         // + 560
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -129,7 +129,7 @@ void sendSamsungLGSpecialRepeat() {
     IrSender.mark(SAMSUNG_BIT_MARK);        // + 560
     IrSender.space(SAMSUNG_ZERO_SPACE);     // - 560
     IrSender.mark(SAMSUNG_BIT_MARK);        // + 560
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -323,7 +323,7 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     // Old version with MSB first Data + stop bit
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits,
             PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }

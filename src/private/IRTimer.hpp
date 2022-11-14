@@ -1190,6 +1190,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #define TIMER_ENABLE_RECEIVE_INTR   NVIC_EnableIRQ(IR_SAMD_TIMER_IRQ)
 #define TIMER_DISABLE_RECEIVE_INTR  NVIC_DisableIRQ(IR_SAMD_TIMER_IRQ) // or TC5->INTENCLR.bit.MC0 = 1; or TC5->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
 // Redefinition of ISR macro which creates a plain function now
+// The ISR is now TC3_Handler() or TC5_Handler() below
 #  if defined(ISR)
 #undef ISR
 #  endif
@@ -1264,10 +1265,10 @@ void timerConfigForReceive() {
 
     // Enable the compare interrupt
     TC->INTENSET.bit.MC0 = 1;
-
 }
 
-#  if defined(__SAMD51__)
+#  if !defined(DISABLE_CODE_FOR_RECEIVER)
+#    if defined(__SAMD51__)
 void TC5_Handler(void) {
     TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
     // Check for right interrupt bit
@@ -1277,7 +1278,7 @@ void TC5_Handler(void) {
         IRTimerInterruptHandler();
     }
 }
-#  else
+#    else
 void TC3_Handler(void) {
     TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
     // Check for right interrupt bit
@@ -1287,7 +1288,8 @@ void TC3_Handler(void) {
         IRTimerInterruptHandler();
     }
 }
-#  endif // defined(__SAMD51__)
+#    endif // defined(__SAMD51__)
+#  endif // !defined(DISABLE_CODE_FOR_RECEIVER)
 
 /***************************************
  * Mbed based boards
@@ -1446,6 +1448,7 @@ void timerConfigForReceive() {
     // timerAttachInterrupt(timer, &IRTimerInterruptHandler, 1);
 }
 
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
 /** TIMTER2 peripheral interrupt handler. This interrupt handler is called whenever there it a TIMER2 interrupt
  * Don't mess with this line. really.
  */
@@ -1459,6 +1462,7 @@ extern "C" {
         }
     }
 }
+#endif
 
 /**********************************************************************************************************************
  * BluePill in 2 flavors see https://samuelpinches.com.au/3d-printer/cutting-through-some-confusion-on-stm32-and-arduino/

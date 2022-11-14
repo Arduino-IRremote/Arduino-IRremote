@@ -121,7 +121,7 @@ void IRsend::sendNECRepeat() {
     mark(NEC_HEADER_MARK);          // + 9000
     space(NEC_REPEAT_HEADER_SPACE); // - 2250
     mark(NEC_BIT_MARK);             // + 560
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -135,7 +135,7 @@ void sendNECSpecialRepeat() {
     IrSender.mark(NEC_HEADER_MARK);          // + 9000
     IrSender.space(NEC_REPEAT_HEADER_SPACE); // - 2250
     IrSender.mark(NEC_BIT_MARK);             // + 560
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
@@ -407,7 +407,7 @@ void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     // Old version with MSB first Data + stop bit
     sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
             SEND_STOP_BIT);
-#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
+#if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
 }
