@@ -33,6 +33,8 @@
 
 #include <Arduino.h>
 
+//#define LOCAL_DEBUG // If defined, print timing for each received data set (the same as if DEBUG_BUTTON_PIN was connected to low)
+
 /*
  * Specify which protocol(s) should be used for decoding.
  * If no protocol is defined, all protocols (except Bang&Olufsen) are active.
@@ -154,20 +156,31 @@ void loop() {
 
         } else {
             // Print a short summary of received data
-            IrReceiver.printIRResultShort(&Serial);
+#if defined(LOCAL_DEBUG)
+            IrReceiver.printIRResultShort(&Serial, true);
+#else
+            IrReceiver.printIRResultShort(&Serial, true, digitalRead(DEBUG_BUTTON_PIN) == LOW);
+#endif
             IrReceiver.printIRSendUsage(&Serial);
-
+#if defined(LOCAL_DEBUG)
             if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
-                // We have an unknown protocol, print more info
-                IrReceiver.printIRResultRawFormatted(&Serial, true);
+#endif
+            // We have an unknown protocol, print more info
+            IrReceiver.printIRResultRawFormatted(&Serial, true);
+#if defined(LOCAL_DEBUG)
             }
+#endif
         }
 
         // tone on esp8266 works once, then it disables the successful IrReceiver.start() / timerConfigForReceive().
 #  if !defined(ESP8266) && !defined(NRF5)
         if ((IrReceiver.decodedIRData.protocol != SONY) && (IrReceiver.decodedIRData.protocol != PULSE_WIDTH)
                 && (IrReceiver.decodedIRData.protocol != PULSE_DISTANCE) && (IrReceiver.decodedIRData.protocol != UNKNOWN)
-                && digitalRead(DEBUG_BUTTON_PIN) != LOW) {
+                && digitalRead(DEBUG_BUTTON_PIN) != LOW
+#if defined(LOCAL_DEBUG)
+                && false // disable 8 ms tone for local debug
+#endif
+        ) {
             /*
              * If no debug mode or a valid protocol was received, play tone, wait and restore IR timer.
              * For SONY the tone prevents the detection of a repeat

@@ -226,7 +226,7 @@ public:
     /*
      * Next 4 functions are also available as non member functions
      */
-    void printIRResultShort(Print *aSerial);
+    bool printIRResultShort(Print *aSerial, bool aPrintRepeatGap = true, bool aCheckForRecordGapsMicros = true);
     void printIRSendUsage(Print *aSerial);
 #if defined(__AVR__)
     const __FlashStringHelper* getProtocolString();
@@ -312,6 +312,7 @@ public:
     uint_fast8_t compare(unsigned int oldval, unsigned int newval);
     bool checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants);
     void checkForRepeatSpaceAndSetFlag(unsigned int aMediumRepeatSpaceMicros);
+    bool checkForRecordGapsMicros(Print *aSerial);
 
     IRData decodedIRData;       // New: decoded IR data for the application
 
@@ -346,12 +347,11 @@ bool MATCH_MARK(unsigned int measured_ticks, unsigned int desired_us);
 bool MATCH_SPACE(unsigned int measured_ticks, unsigned int desired_us);
 
 int getMarkExcessMicros();
-/*
- * Next 4 functions are also available as member functions
- */
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap);
-void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr);
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintGap); // A static function to be able to print send or copied received data.
 
+/*
+ * Next 2 functions are also available as member functions
+ */
 #if defined(__AVR__)
 const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
 #else

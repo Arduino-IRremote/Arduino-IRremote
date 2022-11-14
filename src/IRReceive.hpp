@@ -216,7 +216,7 @@ bool IRrecv::isIdle() {
 }
 
 /**
- * Restart the ISR state machine
+ * Restart the ISR (Interrupt Service Routine) state machine
  * Enable receiving of the next value
  */
 void IRrecv::resume() {
@@ -906,23 +906,27 @@ int getMarkExcessMicros() {
 /*
  * Check if protocol is not detected and detected space between two transmissions
  * is smaller than known value for protocols (Sony with around 24 ms)
+ * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 20ms (RECORD_GAP_MICROS_WARNING_THRESHOLD)
  */
-void checkForRecordGapsMicros(Print *aSerial, IRData *aIRDataPtr) {
+bool IRrecv::checkForRecordGapsMicros(Print *aSerial) {
     /*
      * Check if protocol is not detected and detected space between two transmissions
      * is smaller than known value for protocols (Sony with around 24 ms)
      */
-    if (aIRDataPtr->protocol <= PULSE_DISTANCE
-            && aIRDataPtr->rawDataPtr->rawbuf[0] < (RECORD_GAP_MICROS_WARNING_THRESHOLD / MICROS_PER_TICK)) {
+    if (decodedIRData.protocol <= PULSE_DISTANCE
+            && decodedIRData.rawDataPtr->rawbuf[0] < (RECORD_GAP_MICROS_WARNING_THRESHOLD / MICROS_PER_TICK)) {
         aSerial->println();
         aSerial->print(F("Space of "));
-        aSerial->print(aIRDataPtr->rawDataPtr->rawbuf[0] * MICROS_PER_TICK);
+        aSerial->print(decodedIRData.rawDataPtr->rawbuf[0] * MICROS_PER_TICK);
         aSerial->print(F(" us between two detected transmission is smaller than the minimal gap of "));
         aSerial->print(RECORD_GAP_MICROS_WARNING_THRESHOLD);
-        aSerial->println(F(" us known for a protocol."));
+        aSerial->println(F(" us known for implemented protocols like NEC, Sony, RC% etc.."));
+        aSerial->println(F("But it can be OK for some yet unsupported protocols, and especially for repeats."));
         aSerial->println(F("If you get unexpected results, try to increase the RECORD_GAP_MICROS in IRremote.h."));
         aSerial->println();
+        return true;
     }
+    return false;
 }
 
 /**********************************************************************************************************************
@@ -995,19 +999,29 @@ void printActiveIRProtocols(Print *aSerial) {
  * Ends with println().
  *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 20ms (RECORD_GAP_MICROS_WARNING_THRESHOLD)
  */
-void IRrecv::printIRResultShort(Print *aSerial) {
+bool IRrecv::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
 // call no class function with same name
-    ::printIRResultShort(aSerial, &decodedIRData, true);
+    ::printIRResultShort(aSerial, &decodedIRData, aPrintRepeatGap);
+    if (aCheckForRecordGapsMicros && decodedIRData.protocol != UNKNOWN){
+            return checkForRecordGapsMicros(aSerial);
+    }
+    return false;
 }
 
 /**
- * Internal function to print decoded result and flags in one line.
+ * Function to print decoded result and flags in one line.
+ * A static function to be able to print data to send or copied received data.
  * Ends with println().
  *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  * @param aIRDataPtr        Pointer to the data to be printed.
  * @param aPrintRepeatGap   If true also print the gap before repeats.
+ * @param aCheckForRecordGapsMicros   If true, call CheckForRecordGapsMicros() which may do a long printout,
+ *                                    which in turn may block the proper detection of repeats.
+ * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap <
+ *
  */
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap) {
     aSerial->print(F("Protocol="));
@@ -1088,8 +1102,6 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap
         } else {
             aSerial->println();
         }
-
-        checkForRecordGapsMicros(aSerial, aIRDataPtr);
     }
 }
 
@@ -1100,20 +1112,15 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRSendUsage(Print *aSerial) {
-// call no class function with same name
-    ::printIRSendUsage(aSerial, &decodedIRData);
-}
-
-void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr) {
-    if (aIRDataPtr->protocol != UNKNOWN && (aIRDataPtr->flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) == 0x00) {
+    if (decodedIRData.protocol != UNKNOWN && (decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) == 0x00) {
 #if defined(DECODE_DISTANCE_WIDTH)
         aSerial->print(F("Send with:"));
-        if (aIRDataPtr->protocol == PULSE_DISTANCE || aIRDataPtr->protocol == PULSE_WIDTH) {
+        if (decodedIRData.protocol == PULSE_DISTANCE || decodedIRData.protocol == PULSE_WIDTH) {
             aSerial->println();
             aSerial->print(F("    uint32_t tRawData[]={0x"));
-            uint_fast8_t tNumberOf32BitChunks = ((aIRDataPtr->numberOfBits - 1) / 32) + 1;
+            uint_fast8_t tNumberOf32BitChunks = ((decodedIRData.numberOfBits - 1) / 32) + 1;
             for (uint_fast8_t i = 0; i < tNumberOf32BitChunks; ++i) {
-                aSerial->print(aIRDataPtr->decodedRawDataArray[i], HEX);
+                aSerial->print(decodedIRData.decodedRawDataArray[i], HEX);
                 if (i != tNumberOf32BitChunks - 1) {
                     aSerial->print(F(", 0x"));
                 }
@@ -1127,64 +1134,64 @@ void printIRSendUsage(Print *aSerial, IRData *aIRDataPtr) {
 #endif
 
 #if defined(DECODE_DISTANCE_WIDTH)
-        if (aIRDataPtr->protocol != PULSE_DISTANCE && aIRDataPtr->protocol != PULSE_WIDTH) {
+        if (decodedIRData.protocol != PULSE_DISTANCE && decodedIRData.protocol != PULSE_WIDTH) {
 #endif
-        aSerial->print(getProtocolString(aIRDataPtr->protocol));
+        aSerial->print(getProtocolString());
         aSerial->print(F("(0x"));
 #if defined(DECODE_MAGIQUEST)
-        if (aIRDataPtr->protocol == MAGIQUEST) {
-            aSerial->print(aIRDataPtr->decodedRawData, HEX);
+        if (decodedIRData.protocol == MAGIQUEST) {
+            aSerial->print(decodedIRData.decodedRawData, HEX);
         } else {
-            aSerial->print(aIRDataPtr->address, HEX);
+            aSerial->print(decodedIRData.address, HEX);
         }
 #else
         /*
          * New decoders have address and command
          */
-        aSerial->print(aIRDataPtr->address, HEX);
+        aSerial->print(decodedIRData.address, HEX);
 #endif
 
         aSerial->print(F(", 0x"));
-        aSerial->print(aIRDataPtr->command, HEX);
+        aSerial->print(decodedIRData.command, HEX);
         aSerial->print(F(", <numberOfRepeats>"));
 
-        if (aIRDataPtr->flags & IRDATA_FLAGS_EXTRA_INFO) {
+        if (decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) {
             aSerial->print(F(", 0x"));
-            aSerial->print(aIRDataPtr->extra, HEX);
+            aSerial->print(decodedIRData.extra, HEX);
         }
 #if defined(DECODE_DISTANCE_WIDTH)
         } else {
             aSerial->print("PulseDistanceWidthFromArray(38, ");
-            aSerial->print((aIRDataPtr->extra >> 8) * MICROS_PER_TICK); // aHeaderMarkMicros
+            aSerial->print((decodedIRData.extra >> 8) * MICROS_PER_TICK); // aHeaderMarkMicros
             aSerial->print(F(", "));
-            aSerial->print((aIRDataPtr->extra & 0xFF) * MICROS_PER_TICK);// aHeaderSpaceMicros
+            aSerial->print((decodedIRData.extra & 0xFF) * MICROS_PER_TICK);// aHeaderSpaceMicros
             aSerial->print(F(", "));
 
             // address = tMarkTicksLong (if tMarkTicksLong == 0, then tMarkTicksShort) << 8) | tSpaceTicksLong
             // command = tMarkTicksShort << 8) | tSpaceTicksShort
-            aSerial->print((aIRDataPtr->address >> 8) * MICROS_PER_TICK);// aOneMarkMicros
+            aSerial->print((decodedIRData.address >> 8) * MICROS_PER_TICK);// aOneMarkMicros
             aSerial->print(F(", "));
-            if (aIRDataPtr->protocol == PULSE_DISTANCE) {
-                aSerial->print((aIRDataPtr->address & 0xFF) * MICROS_PER_TICK);// aOneSpaceMicros
+            if (decodedIRData.protocol == PULSE_DISTANCE) {
+                aSerial->print((decodedIRData.address & 0xFF) * MICROS_PER_TICK);// aOneSpaceMicros
             } else {
-                aSerial->print((aIRDataPtr->command & 0xFF) * MICROS_PER_TICK);// aOneSpaceMicros
+                aSerial->print((decodedIRData.command & 0xFF) * MICROS_PER_TICK);// aOneSpaceMicros
             }
             aSerial->print(F(", "));
-            aSerial->print((aIRDataPtr->command >> 8) * MICROS_PER_TICK);// aZeroMarkMicros
+            aSerial->print((decodedIRData.command >> 8) * MICROS_PER_TICK);// aZeroMarkMicros
             aSerial->print(F(", "));
-            if (aIRDataPtr->protocol == PULSE_DISTANCE) {
-                aSerial->print((aIRDataPtr->command & 0xFF) * MICROS_PER_TICK);// aZeroSpaceMicros
+            if (decodedIRData.protocol == PULSE_DISTANCE) {
+                aSerial->print((decodedIRData.command & 0xFF) * MICROS_PER_TICK);// aZeroSpaceMicros
             }else {
-                aSerial->print((aIRDataPtr->address & 0xFF) * MICROS_PER_TICK);// aZeroSpaceMicros
+                aSerial->print((decodedIRData.address & 0xFF) * MICROS_PER_TICK);// aZeroSpaceMicros
             }
             aSerial->print(F(", &tRawData[0], "));
-            aSerial->print(aIRDataPtr->numberOfBits);// aNumberOfBits
-            if (aIRDataPtr->flags & IRDATA_FLAGS_IS_MSB_FIRST) {
+            aSerial->print(decodedIRData.numberOfBits);// aNumberOfBits
+            if (decodedIRData.flags & IRDATA_FLAGS_IS_MSB_FIRST) {
                 aSerial->print(F(", PROTOCOL_IS_MSB_FIRST"));
             } else {
                 aSerial->print(F(", PROTOCOL_IS_LSB_FIRST"));
             }
-            if (aIRDataPtr->protocol == PULSE_DISTANCE) {
+            if (decodedIRData.protocol == PULSE_DISTANCE) {
                 aSerial->print(F(", SEND_STOP_BIT"));
             } else {
                 aSerial->print(F(", SEND_NO_STOP_BIT")); // assume no stop bit like for Magiquest.

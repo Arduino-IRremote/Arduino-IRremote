@@ -20,6 +20,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added receiver callback functionality and registerReceiveCompleteCallback() function.
 - Changed macro names _REPEAT_SPACE to _REPEAT_DISTANCE.
 - Improved TinyReceiver and added FAST protocol for it.
+- Removed static function printIRSendUsage(), but kept class function printIRSendUsage().
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).
