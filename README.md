@@ -438,8 +438,20 @@ In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Ardu
 This examples are a good starting point.
 A simple example can be tested online with [WOKWI](https://wokwi.com/projects/338611596994544210).
 
+#### MinimalReceiver + MinimalSender
+The **MinimalReceiver** example uses the **TinyReceiver** library  which can **only receive NEC and FAST codes, but does not require any timer**.<br/>
+MinimalReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/projects/339264565653013075).
+Click on the receiver while simulation is running to specify individual IR codes.
+
+The **MinimalSender** example uses the **TinySender** library  which can **only send NEC and FAST codes**.<br/>
+Sending NEC protocol codes in standard format with 8 bit address and 8 bit command as in SimpleSender example.
+Saves  780 bytes program memory and 26 bytes RAM compared to SimpleSender, which does the same, but uses the IRRemote library (and is therefore much more flexible).
+
+#### SmallReceiver
+If the protocol is not NEC and **code size** matters, look at this example.<br/>
+
 #### ReceiveDemo
-Receives all protocols and **generates a beep with the Arduino tone() function** on each packet received. By connecting pin 5 to ground, you can see the raw values for each packet. **Example how to use IRremote and tone() together**.
+Receives all protocols and **generates a beep with the Arduino tone() function** on each packet received. By connecting pin 5 to ground, you can see the raw values for each packet. It also seres as an **example how to use IRremote and tone() together**.
 
 #### AllProtocols
 Like ReceiveDemo but with 1604 LCD output and without tone().
@@ -450,23 +462,15 @@ Receives all protocols and dumps the received signal in different flavors. Since
 #### SendDemo
 Sends all available protocols at least once.
 
-#### SendAndReceive + UnitTest
-ReceiveDemo + SendDemo in one program. **Receiving while sending**.
+#### SendAndReceive
+Demonstrates **receiving while sending**.
 
 #### ReceiveAndSend
 Record and **play back last received IR signal** at button press.
 
-### ReceiveOneAndSendMultiple
+#### ReceiveOneAndSendMultiple
 Serves as a IR **remote macro expander**. Receives Samsung32 protocol and on receiving a specified input frame, it sends multiple Samsung32 frames with appropriate delays in between.
 This serves as a **Netflix-key emulation** for my old Samsung H5273 TV.
-
-#### SmallReceiver
-If **code size** matters, look at these example.<br/>
-
-#### MinimalReceiver
-The MinimalReceiver example uses the **TinyReceiver** library  which can **only receive NEC codes, but does not require any timer**.<br/>
-MinimalReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/projects/339264565653013075).
-Click on the receiver while simulation is running to specify individual IR codes.
 
 #### IRDispatcherDemo
 Framework for **calling different functions of your program** for different IR codes.
@@ -491,6 +495,9 @@ Values can be used to determine the stability of the received signal as well as 
 It also computes the `MARK_EXCESS_MICROS` value, which is the extension of the mark (pulse) duration introduced by the IR receiver module.<br/>
 It can be tested online with [WOKWI](https://wokwi.com/arduino/projects/299033930562011656).
 Click on the receiver while simulation is running to specify individual NEC IR codes.
+
+#### UnitTest
+ReceiveDemo + SendDemo in one program. Demonstrates **receiving while sending**.
 
 # WOKWI online examples
 - [Simple receiver](https://wokwi.com/projects/338611596994544210).
@@ -527,6 +534,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `USE_NO_SEND_PWM` |  disabled | Uses no carrier PWM, just simulate an **active low** receiver signal. Overrides `SEND_PWM_BY_TIMER` definition. |
 | `IR_SEND_DUTY_CYCLE_PERCENT` |  30 | Duty cycle of IR send signal. |
 | `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` |  disabled | Uses or simulates open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
+| `DISABLE_RECEIVER_RESTART_AFTER_SENDING` |  disabled | Saves up to 450 bytes program memory and 269 bytes RAM if receiving functionality is not required. |
 | `EXCLUDE_EXOTIC_PROTOCOLS` |  disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER and LEGO_PF from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` |  disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `NO_LED_FEEDBACK_CODE` |  disabled | Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time. |
@@ -717,13 +725,13 @@ It is dated from **24.06.2022**. If you have complains about the data or request
 |---------|------|-----------|--------|----------|----------|----------|
 | Number of protocols | **50** | Nec + Panasonic + Hash \* | 12 + Hash \* | 17 + PulseDistance + Hash \* | NEC | NEC + RC5 + Sony + Samsung |
 | Timing method receive | Timer2 or interrupt for pin 2 or 3 | **Interrupt** | Timer2 or interrupt for pin 2 or 3 | Timer2 | **Interrupt** | **Interrupt** |
-| Timing method send | PWM and timing with Timer2 interrupts | Timer2 interrupts | Timer2 and blocking wait | PWM with Timer2 and/or blocking wait with delay<br/>Microseconds() | % | % |
-| Send pins| All | All | All ? | Timer dependent | % | % |
+| Timing method send | PWM and timing with Timer2 interrupts | Timer2 interrupts | Timer2 and blocking wait | PWM with Timer2 and/or blocking wait with delay<br/>Microseconds() | blocking wait with delay<br/>Microseconds() | % |
+| Send pins| All | All | All ? | Timer dependent | All | % |
 | Decode method | OnTheFly | OnTheFly | RAM | RAM | OnTheFly | OnTheFly |
-| Encode method | OnTheFly | OnTheFly | OnTheFly | OnTheFly or RAM | % | % |
+| Encode method | OnTheFly | OnTheFly | OnTheFly | OnTheFly or RAM | OnTheFly | % |
 | Callback suppport | x | % | % | x | x | % |
-| Repeat handling | Receive + Send (partially) | % | ? | Receive + Send | Receive | Receive |
-| LED feedback | x | % | x | x | x | % |
+| Repeat handling | Receive + Send (partially) | % | ? | Receive + Send | Receive + Send | Receive |
+| LED feedback | x | % | x | x | Receive | % |
 | FLASH usage (simple NEC example with 5 prints) | 1820<br/>(4300 for 15 main / 8000 for all 40 protocols)<br/>(+200 for callback)<br/>(+80 for interrupt at pin 2+3)| 1270<br/>(1400 for pin 2+3) | 4830 | 1770 | **900** | ?1100? |
 | RAM usage | 52<br/>(73 / 100 for 15 (main) / 40 protocols) | 62 | 334 | 227 | **19** | 29 |
 | Supported platforms | **avr, megaavr, attiny, Digispark (Pro), esp8266, ESP32, STM32, SAMD 21, Apollo3<br/>(plus arm and pic for non Arduino IDE)** | avr, esp8266 | avr, SAMD 21, SAMD 51 | avr, attiny, [esp8266](https://github.com/crankyoldgit/IRremoteESP8266), esp32, SAM, SAMD | **All platforms with attach<br/>Interrupt()** | **All platforms with attach<br/>Interrupt()** |

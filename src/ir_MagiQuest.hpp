@@ -58,7 +58,7 @@
  + 250,- 800 + 250,- 850 + 250,- 850 + 250,- 850 // 8 zero start bits
  + 250,- 850 + 300,- 800 + 250,- 850 + 250,- 850
 
-// 31 ID bits
+ // 31 ID bits
  + 550,- 600 + 550,- 550 + 350,- 800 + 600,- 600 // 110 1 6
  + 200,- 950 + 550,- 600 + 550,- 600 + 550,- 600 // 011 1 B - 1(from above)011 => B
  + 550,- 600 + 250,- 900 + 300,- 850 + 550,- 600 // 100 1 C
@@ -135,7 +135,9 @@ void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
     Serial.print(F("MagiQuest checksum=0x"));
     Serial.println(tChecksum, HEX);
 #endif
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 //+=============================================================================

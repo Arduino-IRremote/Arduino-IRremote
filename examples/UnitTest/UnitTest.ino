@@ -64,13 +64,13 @@
 #define DECODE_JVC
 #define DECODE_RC5
 #define DECODE_RC6
-#define DECODE_SONY
 
 #define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 #define DECODE_HASH         // special decoder for all protocols
 #endif
 
 #if FLASHEND >= 0x7FFF      // For 32k flash or more, like ATmega328
+#define DECODE_SONY
 #define DECODE_SAMSUNG
 #define DECODE_LG
 
@@ -123,17 +123,17 @@ void setup() {
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
     IrReceiver.registerReceiveCompleteCallback(ReceiveCompleteCallbackHandler);
 
-#if defined(IR_SEND_PIN)
-    IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
-#else
-    IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
-#endif
-
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
 
-    Serial.println(F("Ready to send IR signals at pin " STR(IR_SEND_PIN)));
+#if defined(IR_SEND_PIN)
+    IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
+    Serial.println(F("Send IR signals at pin " STR(IR_SEND_PIN)));
+#else
+    IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
+    Serial.println(F("Send IR signals at pin 3"));
+#endif
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
 // For esp32 we use PWM generation by ledcWrite() for each pin.

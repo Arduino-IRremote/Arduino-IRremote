@@ -204,7 +204,9 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
     space(BEO_PULSE_LENGTH_TRAILING_BIT - BEO_IR_MARK);
     mark(BEO_IR_MARK);
 
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 #else
     (void) aRawData;
     (void) aBits;
@@ -213,7 +215,7 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
 }
 
 /*
- * Version with 64 bit aRawData, which can send both timings, but costs more program space
+ * Version with 64 bit aRawData, which can send both timings, but costs more program memory
  * @param aBackToBack   If true send data back to back, which cannot be decoded if ENABLE_BEO_WITHOUT_FRAME_GAP is NOT defined
  * @param aUseDatalinkTiming    if false it does the same as sendBangOlufsenRaw()
  */
@@ -264,7 +266,9 @@ void IRsend::sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bo
     space(BEO_PULSE_LENGTH_TRAILING_BIT - tSendBEOMarkLength);
     mark(tSendBEOMarkLength);
 
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 #else
     (void) aRawData;
     (void) aBits;

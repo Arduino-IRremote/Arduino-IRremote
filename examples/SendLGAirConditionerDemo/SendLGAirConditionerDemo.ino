@@ -42,6 +42,8 @@
 //#define USE_LG2_PROTOCOL // Try it if you do not have success with the default LG protocol
 #define NUMBER_OF_COMMANDS_BETWEEN_PRINT_OF_MENU 5
 
+#define DISABLE_RECEIVER_RESTART_AFTER_SENDING // Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not used.
+
 #define INFO // Deactivate this to save program memory and suppress info output from the LG-AC driver.
 //#define DEBUG // Activate this for more output from the LG-AC driver.
 
@@ -74,12 +76,12 @@ delay(4000); // To be able to connect Serial monitor after reset or power up and
      */
 #if defined(IR_SEND_PIN)
     IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
+    Serial.println(F("Ready to send IR signals at pin " STR(IR_SEND_PIN)));
 #else
     IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
+    Serial.println(F("Ready to send IR signals at pin 3"));
 #endif
 
-    Serial.print(F("Ready to send IR signals at pin "));
-    Serial.println(IR_SEND_PIN);
     Serial.println();
     MyLG_Aircondition.setType(LG_IS_WALL_TYPE);
     MyLG_Aircondition.printMenu(&Serial);

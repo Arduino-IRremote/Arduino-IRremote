@@ -136,7 +136,9 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
             delay(RC5_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         }
     }
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
@@ -299,7 +301,9 @@ void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
             mark(t);
         }
     }
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
@@ -331,7 +335,9 @@ void IRsend::sendRC6(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
             mark(t);
         }
     }
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
@@ -529,7 +535,9 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
             space(RC5_UNIT);
         }
     }
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /*
@@ -596,7 +604,9 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
             space(RC5_UNIT);
         }
     }
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /** @}*/

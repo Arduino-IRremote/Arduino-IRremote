@@ -47,7 +47,7 @@
 
 /*
  * Check for additional characteristics of timing like length of mark for a constant mark protocol,
- * where space length determines the bit value. Requires up to 194 additional bytes of program space.
+ * where space length determines the bit value. Requires up to 194 additional bytes of program memory.
  */
 //#define DECODE_STRICT_CHECKS
 /** \addtogroup Receiving Receiving IR data for multiple protocols

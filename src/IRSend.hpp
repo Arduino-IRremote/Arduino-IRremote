@@ -282,7 +282,9 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLe
         }
     }
 
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
@@ -302,7 +304,9 @@ void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBu
         }
     }
     IRLedOff();  // Always end with the LED off
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
@@ -328,7 +332,9 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast16_t a
             mark(duration);
         }
     }
+#  if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#  endif
 #endif
 }
 
@@ -353,7 +359,9 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOf
         }
     }
     IRLedOff();  // Always end with the LED off
+#  if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#  endif
 #endif
 }
 
@@ -429,7 +437,9 @@ void IRsend::sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigne
             }
         }
     }
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
@@ -496,7 +506,9 @@ void IRsend::sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants
             }
         }
     }
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 /**
  * Sends PulseDistance frames and repeats
@@ -546,7 +558,9 @@ void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtoc
             }
         }
     }
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
@@ -596,13 +610,15 @@ void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHe
             }
         }
     }
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
  * Sends PulseDistance data
  * The output always ends with a space
- * Each additional call costs 16 bytes program space
+ * Each additional call costs 16 bytes program memory
  */
 void IRsend::sendPulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t aData,
         uint_fast8_t aNumberOfBits) {

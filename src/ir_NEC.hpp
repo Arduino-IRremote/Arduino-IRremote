@@ -60,8 +60,8 @@
  + 600,-1650 + 600,-1650 + 600,-1650 + 600,- 550
  + 600,-1650 + 600,-1650 + 600,-1650 + 600,-1600
  + 650
-Sum: 68000
-*/
+ Sum: 68000
+ */
 // http://www.hifi-remote.com/wiki/index.php/NEC
 // https://www.sbprojects.net/knowledge/ir/nec.php
 // for Apple see https://en.wikipedia.org/wiki/Apple_Remote
@@ -117,11 +117,13 @@ NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BI
  * Repeat commands should be sent in a 110 ms raster.
  */
 void IRsend::sendNECRepeat() {
-    enableIROut(NEC_KHZ);           // 38 kHz
+    enableIROut (NEC_KHZ);           // 38 kHz
     mark(NEC_HEADER_MARK);          // + 9000
     space(NEC_REPEAT_HEADER_SPACE); // - 2250
     mark(NEC_BIT_MARK);             // + 560
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
@@ -133,7 +135,9 @@ void sendNECSpecialRepeat() {
     IrSender.mark(NEC_HEADER_MARK);          // + 9000
     IrSender.space(NEC_REPEAT_HEADER_SPACE); // - 2250
     IrSender.mark(NEC_BIT_MARK);             // + 560
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 uint32_t IRsend::computeNECRawDataAndChecksum(uint16_t aAddress, uint16_t aCommand) {
@@ -403,7 +407,9 @@ void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     // Old version with MSB first Data + stop bit
     sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
             SEND_STOP_BIT);
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /** @}*/

@@ -221,7 +221,9 @@ void IRsend::sendSony(unsigned long data, int nbits) {
     // Old version with MSB first Data
     sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
             SEND_NO_STOP_BIT);
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /** @}*/

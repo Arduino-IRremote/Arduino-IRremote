@@ -37,6 +37,8 @@
  */
 #include <Arduino.h>
 
+#define DISABLE_RECEIVER_RESTART_AFTER_SENDING // Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not used.
+
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
 //#define NO_LED_FEEDBACK_CODE      // Saves 566 bytes program memory
@@ -57,11 +59,11 @@ void setup() {
 
 #if defined(IR_SEND_PIN)
     IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
+    Serial.println(F("Send IR signals at pin " STR(IR_SEND_PIN)));
 #else
     IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
+    Serial.println(F("Send IR signals at pin 3"));
 #endif
-
-    Serial.println(F("Ready to send IR signals at pin "  STR(IR_SEND_PIN)));
 }
 
 /*

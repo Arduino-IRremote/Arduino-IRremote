@@ -133,7 +133,9 @@ void IRsend::sendLG2Repeat() {
     mark(LG2_HEADER_MARK);          // + 3000
     space(LG_REPEAT_HEADER_SPACE);  // - 2250
     mark(LG_BIT_MARK);              // + 500
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /**
@@ -145,7 +147,9 @@ void sendLG2SpecialRepeat() {
     IrSender.mark(LG2_HEADER_MARK);          // + 3000
     IrSender.space(LG_REPEAT_HEADER_SPACE);  // - 2250
     IrSender.mark(LG_BIT_MARK);              // + 500
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 uint32_t IRsend::computeLGRawDataAndChecksum(uint8_t aAddress, uint16_t aCommand) {
@@ -344,7 +348,9 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 // Data + stop bit
     sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
             SEND_STOP_BIT);
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
     IrReceiver.restartAfterSend();
+#endif
 }
 
 /** @}*/

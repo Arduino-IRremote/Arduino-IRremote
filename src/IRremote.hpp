@@ -304,7 +304,9 @@
 /*
  * Include the sources here to enable compilation with macro values set by user program.
  */
+#if !defined(DISABLE_RECEIVER_RESTART_AFTER_SENDING)
 #include "IRReceive.hpp"
+#endif
 #include "IRSend.hpp"
 
 /*

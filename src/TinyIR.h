@@ -1,5 +1,5 @@
 /*
- *  TinyIRReceiver.h
+ *  TinyIR.h
  *
  *
  *  Copyright (C) 2021-2022  Armin Joachimsmeyer
@@ -23,8 +23,8 @@
  *
  */
 
-#ifndef _TINY_IR_RECEIVER_H
-#define _TINY_IR_RECEIVER_H
+#ifndef _TINY_IR_H
+#define _TINY_IR_H
 
 #include <Arduino.h>
 
@@ -34,6 +34,11 @@
  * @{
  */
 
+#define VERSION_IRTINY "1.0.0"
+#define VERSION_IRTINY_MAJOR 1
+#define VERSION_IRTINY_MINOR 0
+#define VERSION_IRTINY_PATCH 0
+
 /**
  * Timing for NEC protocol
  *
@@ -42,8 +47,8 @@
  */
 #define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
 #define NEC_COMMAND_BITS        16 // Command and inverted command
-
 #define NEC_BITS                (NEC_ADDRESS_BITS + NEC_COMMAND_BITS)
+
 #define NEC_UNIT                560
 
 #define NEC_HEADER_MARK         (16 * NEC_UNIT) // 9000
@@ -61,27 +66,27 @@
 
 /**
  * FAST_8_BIT_CS Protocol characteristics:
- * - Bit timing is like NEC
- * - The header is shorter, 4000 vs. 14500
+ * - Bit timing is like JVC
+ * - The header is shorter, 4000 vs. 12500
  * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *   leading to a fixed protocol length of (7 + (16 * 2) + 1) * 560 = 40 * 560 = 22400 microseconds or 22.5 ms.
+ *     leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
  * - Repeats are sent as complete frames but in a 50 ms period.
  */
 #define FAST_8_BIT_PARITY_ADDRESS_BITS          0 // No address
 #define FAST_8_BIT_PARITY_COMMAND_BITS         16 // Command and inverted command
-
 #define FAST_8_BIT_PARITY_BITS                 (FAST_8_BIT_PARITY_ADDRESS_BITS + FAST_8_BIT_PARITY_COMMAND_BITS)
-#define FAST_8_BIT_PARITY_UNIT                 560
+
+#define FAST_8_BIT_PARITY_UNIT                 526 // 20 periods of 38 kHz (526.315789)
 
 #define FAST_8_BIT_PARITY_BIT_MARK             FAST_8_BIT_PARITY_UNIT
-#define FAST_8_BIT_PARITY_ONE_SPACE            (3 * FAST_8_BIT_PARITY_UNIT)     // 1690 -> period = 2250
-#define FAST_8_BIT_PARITY_ZERO_SPACE           FAST_8_BIT_PARITY_UNIT           //  560 -> period = 1120
+#define FAST_8_BIT_PARITY_ONE_SPACE            (3 * FAST_8_BIT_PARITY_UNIT)     // 1578 -> bit period = 2104
+#define FAST_8_BIT_PARITY_ZERO_SPACE           FAST_8_BIT_PARITY_UNIT           //  526 -> bit period = 1052
 
-#define FAST_8_BIT_PARITY_HEADER_MARK          (4 * FAST_8_BIT_PARITY_UNIT)     // 2250
-#define FAST_8_BIT_PARITY_HEADER_SPACE         (FAST_8_BIT_PARITY_ONE_SPACE)    // 1690
+#define FAST_8_BIT_PARITY_HEADER_MARK          (4 * FAST_8_BIT_PARITY_UNIT)     // 2104
+#define FAST_8_BIT_PARITY_HEADER_SPACE         (FAST_8_BIT_PARITY_ONE_SPACE)    // 1578
 
 #define FAST_8_BIT_PARITY_REPEAT_PERIOD        50000 // Commands are repeated every 50 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define FAST_8_BIT_PARITY_REPEAT_DISTANCE      (FAST_8_BIT_PARITY_REPEAT_PERIOD - (40 * FAST_8_BIT_PARITY_UNIT)) // 27.5 ms
+#define FAST_8_BIT_PARITY_REPEAT_DISTANCE      (FAST_8_BIT_PARITY_REPEAT_PERIOD - (40 * FAST_8_BIT_PARITY_UNIT)) // 29 ms
 #define FAST_8_BIT_PARITY_MAXIMUM_REPEAT_DISTANCE (FAST_8_BIT_PARITY_REPEAT_DISTANCE + 10000) // 47.5 ms
 
 #if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
@@ -99,7 +104,7 @@
 #define TINY_ONE_SPACE             FAST_8_BIT_PARITY_ONE_SPACE
 #define TINY_ZERO_SPACE            FAST_8_BIT_PARITY_ZERO_SPACE
 
-#define TINY_MAXIMUM_REPEAT_DISTANCE  FAST_8_BIT_PARITY_MAXIMUM_REPEAT_DISTANCE
+#define TINY_MAXIMUM_REPEAT_DISTANCE  FAST_8_BIT_PARITY_MAXIMUM_REPEAT_DISTANCE // for repeat detection
 
 #else
 #define ENABLE_NEC_REPEAT_SUPPORT    // Activating this, enables detection of special short frame NEC repeats. Requires 40 bytes program memory.
@@ -243,7 +248,7 @@ void printTinyReceiverResultMinimal(uint8_t aAddress, uint8_t aCommand, uint8_t 
 #endif
 
 void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
-
+void sendNECMinimal(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
 /** @}*/
 
-#endif // _TINY_IR_RECEIVER_H
+#endif // _TINY_IR_H

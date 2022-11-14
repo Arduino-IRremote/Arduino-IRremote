@@ -19,8 +19,10 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Merged the 2 decode pulse width and distance functions.
 - Added receiver callback functionality and registerReceiveCompleteCallback() function.
 - Changed macro names _REPEAT_SPACE to _REPEAT_DISTANCE.
-- Improved TinyReceiver and added FAST protocol for it.
+- Improved TinyIRReceiver and added FAST protocol for it.
 - Removed static function printIRSendUsage(), but kept class function printIRSendUsage().
+- Added TinyIRSender.hpp and MinimalSender example, renamed TinyReceiver.h to TinyIR.h.
+- Added DISABLE_RECEIVER_RESTART_AFTER_SENDING to save program memory and RAM if receiving functionality is not required.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

@@ -163,11 +163,11 @@ void loop() {
 #endif
             IrReceiver.printIRSendUsage(&Serial);
 #if defined(LOCAL_DEBUG)
-            if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
-#endif
-            // We have an unknown protocol, print more info
             IrReceiver.printIRResultRawFormatted(&Serial, true);
-#if defined(LOCAL_DEBUG)
+#else
+            if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
+                // We have an unknown protocol, print more info
+                IrReceiver.printIRResultRawFormatted(&Serial, true);
             }
 #endif
         }

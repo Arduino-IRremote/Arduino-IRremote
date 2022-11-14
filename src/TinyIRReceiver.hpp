@@ -56,7 +56,7 @@
 //#define LOCAL_DEBUG // This enables debug output only for this file
 #endif
 
-//#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program space.
+//#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 /*
  * FAST_8_BIT_CS Protocol characteristics:
  * - Bit timing is like NEC
@@ -66,10 +66,10 @@
  * - Repeats are sent as complete frames but in a 50 ms period.
  */
 //#define USE_FAST_8_BIT_AND_PARITY_TIMING // Use short protocol
-#include "TinyIRReceiver.h" // If not defined, it defines IR_INPUT_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
+#include "TinyIR.h" // If not defined, it defines IR_INPUT_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
 
 #include "digitalWriteFast.h"
-/** \addtogroup TinyReceiver Minimal receiver for NEC protocol
+/** \addtogroup TinyReceiver Minimal receiver for NEC and FAST protocol
  * @{
  */
 
@@ -285,7 +285,7 @@ void IRPinChangeInterruptHandler(void) {
 #if defined(ENABLE_NEC_REPEAT_SUPPORT)
                         || (TinyIRReceiverControl.Flags & IRDATA_FLAGS_IS_REPEAT) // Do not check for full length received, if we have a short repeat frame
 #endif
-                ) {
+                        ) {
                     /*
                      * Code complete -> call callback, no parity check!
                      */
@@ -426,92 +426,6 @@ void printTinyReceiverResultMinimal(uint8_t aAddress, uint8_t aCommand, uint8_t 
     aSerial->println();
 }
 
-uint8_t sSendPin;
-
-/*
- * Generate IR signal by bit banging
- */
-void sendMark(unsigned int aMarkMicros) {
-    unsigned long tStartMicros = micros();
-    unsigned long tNextPeriodEnding = tStartMicros;
-    unsigned long tMicros;
-    do {
-
-        /*
-         * Generate pulse
-         */
-        noInterrupts(); // do not let interrupts extend the short on period
-        digitalWriteFast(sSendPin, HIGH);
-        delayMicroseconds(8); // 8 us for a 30 % duty cycle for 38 kHz
-        digitalWriteFast(sSendPin, LOW);
-        interrupts(); // Enable interrupts - to keep micros correct- for the longer off period 3.4 us until receive ISR is active (for 7 us + pop's)
-
-        /*
-         * PWM pause timing and end check
-         * Minimal pause duration is 4.3 us
-         */
-        tNextPeriodEnding += 26; // for 38 kHz
-        do {
-            tMicros = micros(); // we have only 4 us resolution for AVR @16MHz
-            /*
-             * Exit the forever loop if aMarkMicros has reached
-             */
-            unsigned int tDeltaMicros = tMicros - tStartMicros;
-#if defined(__AVR__)
-            // Just getting variables and check for end condition takes minimal 3.8 us
-            if (tDeltaMicros >= aMarkMicros - (112 / (F_CPU / MICROS_IN_ONE_SECOND))) { // To compensate for call duration - 112 is an empirical value
-#else
-            if (tDeltaMicros >= aMarkMicros) {
-#endif
-                return;
-            }
-        } while (tMicros < tNextPeriodEnding);
-    } while (true);
-}
-
-/*
- * LSB first, send header, command, inverted command and stop bit
- */
-void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
-    pinModeFast(aSendPin, OUTPUT);
-    sSendPin = aSendPin;
-
-    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
-    while (tNumberOfCommands > 0) {
-        unsigned long tStartOfFrameMillis = millis();
-
-        // send header
-        sendMark(FAST_8_BIT_PARITY_HEADER_MARK);
-        delayMicroseconds(FAST_8_BIT_PARITY_HEADER_SPACE);
-        uint16_t tData = aCommand | (((uint8_t) (~aCommand)) << 8); // LSB first
-        // Send data
-        for (uint_fast8_t i = 0; i < 16; ++i) {
-            sendMark(FAST_8_BIT_PARITY_BIT_MARK); // constant mark length
-
-            if (tData & 1) {
-                delayMicroseconds(FAST_8_BIT_PARITY_ONE_SPACE);
-            } else {
-                delayMicroseconds(FAST_8_BIT_PARITY_ZERO_SPACE);
-            }
-            tData >>= 1; // shift command for next bit
-        }
-        // send stop bit
-        sendMark(FAST_8_BIT_PARITY_BIT_MARK);
-
-        tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            /*
-             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
-             */
-            auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
-            if (FAST_8_BIT_PARITY_REPEAT_PERIOD / 1000 > tFrameDurationMillis) {
-                delay(FAST_8_BIT_PARITY_REPEAT_PERIOD / 1000 - tFrameDurationMillis);
-            }
-        }
-    }
-}
-
 #if defined (LOCAL_DEBUG_ATTACH_INTERRUPT) && !defined(STR)
 // Helper macro for getting a macro definition as string
 #define STR_HELPER(x) #x
@@ -603,7 +517,7 @@ bool enablePCIInterruptForTinyReceiver() {
         return false;
     }
 #endif
-    // costs 112 bytes program space + 4 bytes RAM
+    // costs 112 bytes program memory + 4 bytes RAM
     attachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN), IRPinChangeInterruptHandler, CHANGE);
 #  else
     // 2.2 us more than version configured with macros and not compatible
