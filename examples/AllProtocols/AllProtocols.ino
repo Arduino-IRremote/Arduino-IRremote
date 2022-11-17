@@ -60,27 +60,35 @@
 //#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
+//#define DECODE_NEC          // Includes Apple and Onkyo
 
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
-#if defined(APPLICATION_PIN)
-#define DEBUG_BUTTON_PIN    APPLICATION_PIN // if low, print timing for each received data set
-#else
-#define DEBUG_BUTTON_PIN   6
-#endif
-
 /*
  * Activate the type of LCD you use
- * Default is serial LCD with 2 rows of 16 characters (1602).
+ * Default is parallel LCD with 2 rows of 16 characters (1602).
+ * Serial LCD has the disadvantage, that the first repeat is not detected,
+ * because of the long lasting serial communication.
  */
 //#define USE_NO_LCD
-//#define USE_PARALLEL_LCD
-#if defined(USE_PARALLEL_LCD)
-#include "LiquidCrystal.h"
-#elif !defined(USE_NO_LCD)
 #define USE_SERIAL_LCD
+#if defined(USE_SERIAL_LCD)
 #include "LiquidCrystal_I2C.h" // Use an up to date library version, which has the init method
+#elif !defined(USE_NO_LCD)
+#include "LiquidCrystal.h"
+#define USE_PARALLEL_LCD
+#endif
+
+#if defined(USE_PARALLEL_LCD)
+#define DEBUG_BUTTON_PIN   11
+#endif
+#if !defined(DEBUG_BUTTON_PIN)
+#  if defined(APPLICATION_PIN)
+#define DEBUG_BUTTON_PIN    APPLICATION_PIN // if low, print timing for each received data set
+#  else
+#define DEBUG_BUTTON_PIN   6
+#  endif
 #endif
 
 #if defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
@@ -91,21 +99,26 @@
 #  if defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
 // For cyclically display of VCC
 #include "ADCUtils.hpp"
-#define MILLIS_BETWEEN_VOLTAGE_PRINT 5000
+#define MILLIS_BETWEEN_VOLTAGE_PRINT    5000
+#define LCD_VOLTAGE_START_INDEX           11
 uint32_t volatile sMillisOfLastVoltagePrint;
+bool ProtocolStringOverwritesVoltage;
 #  endif
+#define LCD_IR_COMMAND_START_INDEX         9
 
-static uint8_t sLastProtocolIndex;
-#endif
+#endif // defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
 
 #if defined(USE_SERIAL_LCD)
-LiquidCrystal_I2C myLCD(0x27, LCD_COLUMNS, LCD_ROWS);  // set the LCD address to 0x27 for a 20 chars and 2 line display
+LiquidCrystal_I2C myLCD(0x27, LCD_COLUMNS, LCD_ROWS);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 #endif
 #if defined(USE_PARALLEL_LCD)
 LiquidCrystal myLCD(4, 5, 6, 7, 8, 9);
+//LiquidCrystal myLCD(7, 8, 3, 4, 5, 6);
 #endif
 
 void printIRResultOnLCD();
+size_t printHex(uint16_t aHexByteValue);
+void printSpaces(uint_fast8_t aNumberOfSpacesToPrint);
 
 void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
@@ -127,8 +140,13 @@ void setup() {
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
-    printActiveIRProtocols (&Serial);
+    printActiveIRProtocols(&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
+
+#if defined(USE_SERIAL_LCD)
+    Serial.println(
+            F("With serial LCD connection, the first repeat is not detected, because of the long lasting serial communication!"));
+#endif
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     Serial.print(F("Debug button pin is "));
@@ -155,11 +173,11 @@ void setup() {
 #endif
 
 #if defined(USE_LCD)
+    myLCD.setCursor(0, 0);
     myLCD.print(F("IRRemote  v" VERSION_IRREMOTE));
     myLCD.setCursor(0, 1);
     myLCD.print(F(__DATE__));
 #endif
-
 }
 
 void loop() {
@@ -202,18 +220,15 @@ void loop() {
     /*
      * Periodically print VCC
      */
-    if (millis() - sMillisOfLastVoltagePrint > MILLIS_BETWEEN_VOLTAGE_PRINT) {
+    if (!ProtocolStringOverwritesVoltage && millis() - sMillisOfLastVoltagePrint > MILLIS_BETWEEN_VOLTAGE_PRINT) {
         sMillisOfLastVoltagePrint = millis();
         uint16_t tVCC = getVCCVoltageMillivoltSimple();
 
-        myLCD.setCursor(10, 0);
-        myLCD.print(' ');
-        myLCD.print(tVCC / 1000);
-        myLCD.print('.');
-        myLCD.print(((tVCC + 5) / 10) % 100);
+        char tVoltageString[5];
+        dtostrf(tVCC / 1000.0, 4, 2, tVoltageString);
+        myLCD.setCursor(LCD_VOLTAGE_START_INDEX, 0);
+        myLCD.print(tVoltageString);
         myLCD.print('V');
-
-        sLastProtocolIndex = 0; // enable new printing of protocol
     }
 #endif
 
@@ -229,70 +244,66 @@ void loop() {
  */
 void printIRResultOnLCD() {
 #if defined(USE_LCD)
-    static uint16_t sLastProtocolAddress;
-    static uint16_t sLastCommand;
+    static uint16_t sLastProtocolIndex;
+    static uint16_t sLastProtocolAddress = 4711;
+    static uint16_t sLastCommand = 0;
     static uint8_t sLastCommandPrintPosition;
-
-    bool tDisplayWasCleared = false;
 
     /*
      * Print only if protocol or address has changed
      */
-    if (sLastProtocolIndex != IrReceiver.decodedIRData.protocol || sLastProtocolAddress != IrReceiver.decodedIRData.address) {
+    if (sLastProtocolIndex != IrReceiver.decodedIRData.protocol) {
         sLastProtocolIndex = IrReceiver.decodedIRData.protocol;
-        sLastProtocolAddress = IrReceiver.decodedIRData.address;
-
-        myLCD.clear(); // includes a delay of 2 ms
-        tDisplayWasCleared = true;
-
         /*
-         * Show protocol name
+         * Show protocol name and handle overwrite over Voltage
          */
         myLCD.setCursor(0, 0);
-        myLCD.print(getProtocolString(IrReceiver.decodedIRData.protocol));
+        uint_fast8_t tProtocolStringLength = myLCD.print(getProtocolString(IrReceiver.decodedIRData.protocol));
+#  if defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
+        if (tProtocolStringLength > LCD_VOLTAGE_START_INDEX) {
+            // we overwrite the voltage -> clear rest of line and inhibit new printing of voltage
+            ProtocolStringOverwritesVoltage = true;
+            if (tProtocolStringLength < LCD_COLUMNS) {
+                printSpaces(LCD_COLUMNS - tProtocolStringLength);
+            }
+        } else {
+            ProtocolStringOverwritesVoltage = false;
+            printSpaces(LCD_VOLTAGE_START_INDEX - tProtocolStringLength);
+        }
+#  else
+        printSpaces(LCD_COLUMNS - tProtocolStringLength);
+#  endif
+    }
+    if (sLastProtocolAddress == 4711 || sLastProtocolAddress != IrReceiver.decodedIRData.address) {
+        sLastProtocolAddress = IrReceiver.decodedIRData.address;
 
         /*
          * Show address
          */
         myLCD.setCursor(0, 1);
-        myLCD.print(F("A=0x"));
-        myLCD.print(IrReceiver.decodedIRData.address, HEX);
-
-    } else {
-        /*
-         * Show or clear repetition flag
-         */
-        myLCD.setCursor(15, 1);
-        if (IrReceiver.decodedIRData.flags & (IRDATA_FLAGS_IS_REPEAT)) {
-            myLCD.print('R');
-            return; // Since it is a repetition, printed data has not changed
-        } else {
-            myLCD.print(' ');
-        }
+        myLCD.print(F("A="));
+        uint_fast8_t tAddressStringLength = printHex(IrReceiver.decodedIRData.address);
+        printSpaces((LCD_IR_COMMAND_START_INDEX - 2) - tAddressStringLength);
     }
 
     /*
-     * Command prefix
+     * Print command
      */
     uint16_t tCommand = IrReceiver.decodedIRData.command;
 
-    // check if prefix position must change
-    if (tDisplayWasCleared || (sLastCommand > 0x100 && tCommand < 0x100) || (sLastCommand < 0x100 && tCommand > 0x100)) {
+    // Check if prefix position must change
+    if (sLastCommand == 0 || (sLastCommand > 0x100 && tCommand < 0x100) || (sLastCommand < 0x100 && tCommand > 0x100)) {
         sLastCommand = tCommand;
-        /*
-         * Print prefix of command
-         */
-        myLCD.setCursor(9, 1);
-
         /*
          * Print prefix for 8/16 bit commands
          */
         if (tCommand >= 0x100) {
-            myLCD.print(F("0x"));
-            sLastCommandPrintPosition = 11;
+            // save 2 characters here
+            sLastCommandPrintPosition = 9;
         } else {
-            myLCD.print(F("C=0x"));
-            sLastCommandPrintPosition = 13;
+            myLCD.setCursor(LCD_IR_COMMAND_START_INDEX, 1);
+            myLCD.print(F("C="));
+            sLastCommandPrintPosition = 11;
         }
     }
 
@@ -300,12 +311,33 @@ void printIRResultOnLCD() {
      * Command data
      */
     myLCD.setCursor(sLastCommandPrintPosition, 1);
-    if (IrReceiver.decodedIRData.command < 0x10) {
-        // leading 0
-        myLCD.print('0');
+    printHex(tCommand);
+
+    /*
+     * Show or clear repetition flag
+     */
+    if (IrReceiver.decodedIRData.flags & (IRDATA_FLAGS_IS_REPEAT)) {
+        myLCD.print('R');
+        return; // Since it is a repetition, printed data has not changed
+    } else {
+        myLCD.print(' ');
     }
-    myLCD.print(tCommand, HEX);
 
 #endif // defined(USE_LCD)
 }
 
+size_t printHex(uint16_t aHexByteValue) {
+    myLCD.print(F("0x"));
+    size_t tPrintSize = 2;
+    if (aHexByteValue < 0x10 || (aHexByteValue > 0x100 && aHexByteValue < 0x1000)) {
+        myLCD.print('0'); // leading 0
+        tPrintSize++;
+    }
+    return myLCD.print(aHexByteValue, HEX) + tPrintSize;
+}
+
+void printSpaces(uint_fast8_t aNumberOfSpacesToPrint) {
+    for (uint_fast8_t i = 0; i < aNumberOfSpacesToPrint; ++i) {
+        myLCD.print(' ');
+    }
+}

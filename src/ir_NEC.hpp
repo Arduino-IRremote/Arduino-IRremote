@@ -262,6 +262,7 @@ bool IRrecv::decodeNEC() {
         return false;
     }
 
+    // Try to decode as NEC protocol
     if (!decodePulseDistanceWidthData(&NECProtocolConstants, NEC_BITS)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("NEC: "));

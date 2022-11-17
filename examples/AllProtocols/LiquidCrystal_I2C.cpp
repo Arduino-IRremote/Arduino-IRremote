@@ -10,9 +10,14 @@ inline size_t LiquidCrystal_I2C::write(uint8_t value) {
     return 1;
 }
 
+#if !defined(USE_SOFT_I2C_MASTER) && __has_include("SoftI2CMasterConfig.h")
+#define USE_SOFT_I2C_MASTER
+#endif
+
 #if defined(USE_SOFT_I2C_MASTER)
-#define USE_SOFT_I2C_MASTER_H_AS_PLAIN_INCLUDE
-#include "SoftI2CMaster.h"
+//#define USE_SOFT_I2C_MASTER_H_AS_PLAIN_INCLUDE
+#include "SoftI2CMasterConfig.h"    // Include configuration for sources
+#include "SoftI2CMaster.h"          // include sources
 #elif defined(USE_SOFT_WIRE)
 #define USE_SOFTWIRE_H_AS_PLAIN_INCLUDE
 #include "SoftWire.h"

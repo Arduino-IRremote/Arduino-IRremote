@@ -55,19 +55,35 @@
 //                      SSSS   H   H  A   A  R   R  P
 //==============================================================================
 /*
-Protocol=Sharp Address=0x11 Command=0x76 Raw-Data=0x45DA 15 bits MSB first
- + 300,-1750 + 300,- 750 + 300,- 750 + 300,- 750
- + 250,-1800 + 300,- 750 + 300,-1750 + 300,-1750
- + 300,-1800 + 300,- 700 + 350,-1750 + 300,-1750
- + 300,- 750 + 300,-1800 + 250,- 750 + 350
-Sum: 24150
+Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0xED1 15 bits LSB first
+ + 200,-1800 + 300,- 750 + 300,- 800 + 200,- 800
+ + 250,-1800 + 250,- 800 + 250,-1800 + 300,-1750
+ + 300,- 750 + 300,-1800 + 250,-1800 + 250,-1850
+ + 250,- 750 + 300,- 800 + 250,- 800 + 250
+Sum: 23050
+
+Denon/Sharp variant
+Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0x4ED1 15 bits LSB first
+ + 200,-1800 + 300,- 750 + 250,- 800 + 250,- 750
+ + 300,-1800 + 250,- 800 + 250,-1800 + 300,-1750
+ + 300,- 750 + 300,-1800 + 250,-1800 + 250,-1800
+ + 300,- 750 + 300,- 750 + 300,-1800 + 250
+Sum: 23050
  */
-// Denon publish all their IR codes:
-// https://www.mikrocontroller.net/articles/IRMP_-_english#DENON
-// http://assets.denon.com/documentmaster/us/denon%20master%20ir%20hex.xls
-// Having looked at the official Denon Pronto sheet and reverse engineered
-// the timing values from it, it is obvious that Denon have a range of
-// different timings and protocols ...the values here work for my AVR-3801 Amp!
+/*
+ * https://www.mikrocontroller.net/articles/IRMP_-_english#DENON
+ * Denon published all their IR codes:
+ * http://assets.denon.com/documentmaster/us/denon%20master%20ir%20hex.xls
+ * Example:
+ * 0000 006D 0000 0020 000A 001E 000A 0046 000A 001E 000A 001E 000A 001E // 5 address bits
+ *                     000A 001E 000A 001E 000A 0046 000A 0046 000A 0046 000A 001E 000A 0046 000A 0046 // 8 command bits
+ *                     000A 001E 000A 001E 000A 0679 // 2 frame bits 0,0 + stop bit + space for AutoRepeat
+ *                     000A 001E 000A 0046 000A 001E 000A 001E 000A 001E // 5 address bits
+ *                     000A 0046 000A 0046 000A 001E 000A 001E 000A 001E 000A 0046 000A 001E 000A 001E // 8 inverted command bits
+ *                     000A 0046 000A 0046 000A 0679 // 2 frame bits 1,1 + stop bit + space for Repeat
+ * From analyzing the codes for Tuner preset 1 to 8 in tab Main Zone ID#1 it is obvious, that the protocol is LSB first at least for command.
+ * All Denon codes with 32 as 3. value use the Kaseyikyo Denon variant.
+ */
 // MSB first, no start bit, 5 address + 8 command + 2 frame + 1 stop bit - each frame 2 times
 // For autorepeat frame, command and frame bits are inverted
 //
@@ -90,7 +106,7 @@ Sum: 24150
 #define DENON_HEADER_SPACE      (3 * DENON_UNIT) // 780 // The length of the Header:Space
 
 struct PulseDistanceWidthProtocolConstants DenonProtocolConstants = { DENON, DENON_KHZ, DENON_HEADER_MARK, DENON_HEADER_SPACE,
-DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (DENON_REPEAT_PERIOD
+DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (DENON_REPEAT_PERIOD
         / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
@@ -103,15 +119,15 @@ void IRsend::sendSharp(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOf
 
 void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aSendSharp) {
     // Set IR carrier frequency
-    enableIROut(DENON_KHZ); // 38 kHz
+    enableIROut (DENON_KHZ); // 38 kHz
 
-    // Shift command and add frame marker
-    uint16_t tCommand = aCommand << DENON_FRAME_BITS; // the lowest bits are 00 for Denon and 10 for Sharp
+    // Add frame marker for sharp
+    uint16_t tCommand = aCommand;
     if (aSendSharp) {
-        tCommand |= 0x02;
+        tCommand |= 0x0200; // the 2 upper bits are 00 for Denon and 10 for Sharp
     }
-    uint16_t tData = tCommand | ((uint16_t) aAddress << (DENON_COMMAND_BITS + DENON_FRAME_BITS));
-    uint16_t tInvertedData = (tData ^ 0x03FF); // Command and frame (least 10 bits) are inverted
+    uint16_t tData = aAddress | ((uint16_t) tCommand << DENON_ADDRESS_BITS);
+    uint16_t tInvertedData = (tData ^ 0x7FE); // Command and frame (upper 10 bits) are inverted
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -151,7 +167,7 @@ bool IRrecv::decodeDenon() {
         return false;
     }
 
-    // Read the bits in
+    // Try to decode as Denon protocol
     if (!decodePulseDistanceWidthData(&DenonProtocolConstants, DENON_BITS, 1)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Denon: "));
@@ -170,19 +186,24 @@ bool IRrecv::decodeDenon() {
     }
 
     // Success
-    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
-    decodedIRData.command = decodedIRData.decodedRawData >> DENON_FRAME_BITS;
-    decodedIRData.address = decodedIRData.command >> DENON_COMMAND_BITS;
+    decodedIRData.address = decodedIRData.decodedRawData & 0x1F;
+    decodedIRData.command = decodedIRData.decodedRawData >> DENON_ADDRESS_BITS;
+    uint8_t tFrameBits = (decodedIRData.command >> 8) & 0x03;
     decodedIRData.command &= 0xFF;
 
-    // check for autorepeated inverted command
+    // Check for (auto) repeat
     if (decodedIRData.rawDataPtr->rawbuf[0] < ((DENON_AUTO_REPEAT_DISTANCE + (DENON_AUTO_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)) {
         repeatCount++;
-        if ((decodedIRData.decodedRawData & 0x01) == 0x01) {
+
+        if (tFrameBits & 0x01) {
+#if defined(LOCAL_DEBUG)
+                Serial.print(F("Denon: "));
+                Serial.println(F("Autorepeat received="));
+#endif
             // We are in the auto repeated frame with the inverted command
-            decodedIRData.flags = IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
+            decodedIRData.flags = IRDATA_FLAGS_IS_AUTO_REPEAT;
             // Check parity of consecutive received commands. There is no parity in one data set.
-            if ((uint8_t) lastDecodedCommand != (uint8_t) (~decodedIRData.command)) {
+            if ((uint8_t) lastDecodedCommand != (uint8_t)(~decodedIRData.command)) {
                 decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
 #if defined(LOCAL_DEBUG)
                 Serial.print(F("Denon: "));
@@ -198,17 +219,18 @@ bool IRrecv::decodeDenon() {
         if (repeatCount > 1) {
             decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
         }
+        decodedIRData.protocol = DENON; // do not know how to detect sharp here :-(
     } else {
         repeatCount = 0;
+        if (tFrameBits == 1 || tFrameBits == 2) {
+            decodedIRData.protocol = SHARP;
+        } else {
+            decodedIRData.protocol = DENON;
+        }
     }
 
     decodedIRData.numberOfBits = DENON_BITS;
-    uint8_t tFrameBits = decodedIRData.decodedRawData & 0x03;
-    if (tFrameBits == 1 || tFrameBits == 2) {
-        decodedIRData.protocol = SHARP;
-    } else {
-        decodedIRData.protocol = DENON;
-    }
+
     return true;
 }
 
@@ -227,7 +249,7 @@ void IRsend::sendDenonRaw(uint16_t aRawData, int_fast8_t aNumberOfRepeats) {
  */
 void IRsend::sendDenon(unsigned long data, int nbits) {
     // Set IR carrier frequency
-    enableIROut(DENON_KHZ);
+    enableIROut (DENON_KHZ);
 #if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
     Serial.println(
             "The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).");
@@ -239,7 +261,7 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
 
     // Data
     sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits,
-    PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
+            PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
 #if !defined(DISABLE_CODE_FOR_RECEIVER)
     IrReceiver.restartAfterSend();
 #endif
@@ -268,7 +290,7 @@ bool IRrecv::decodeDenonOld(decode_results *aResults) {
         return false;
     }
 
-    // Read the bits in
+    // Try to decode as Denon protocol
     if (!decodePulseDistanceWidthData(DENON_BITS, 3, DENON_BIT_MARK, 0, DENON_ONE_SPACE, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }

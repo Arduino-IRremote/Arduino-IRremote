@@ -24,6 +24,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added TinyIRSender.hpp and MinimalSender example, renamed TinyReceiver.h to TinyIR.h.
 - Added DISABLE_CODE_FOR_RECEIVER to save program memory and RAM if receiving functionality is not required.
 - Extracted protocol functions used by receive and send to IRProtocol.hpp.
+- Analyzed Denon code table and therefore changed Denon from MSB to LSB first.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

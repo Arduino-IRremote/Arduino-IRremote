@@ -298,7 +298,7 @@ public:
 
     IRData decodedIRData;       // New: decoded IR data for the application
 
-    // Last decoded IR data for repeat detection
+    // Last decoded IR data for repeat detection and parity for Denon autorepeat
     decode_type_t lastDecodedProtocol;
     uint32_t lastDecodedAddress;
     uint32_t lastDecodedCommand;

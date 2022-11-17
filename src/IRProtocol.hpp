@@ -121,11 +121,7 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap
         }
 
         if (aIRDataPtr->flags & IRDATA_FLAGS_TOGGLE_BIT) {
-            if (aIRDataPtr->protocol == NEC) {
-                aSerial->print(F(" Special repeat"));
-            } else {
-                aSerial->print(F(" Toggle=1"));
-            }
+            aSerial->print(F(" Toggle=1"));
         }
 #if defined(DECODE_DISTANCE_WIDTH)
         }

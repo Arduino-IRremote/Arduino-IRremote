@@ -337,26 +337,26 @@ rawData[100]:
 Sum: 67700
 
 Send Denon
-Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0x45D8 15 bits MSB first
+Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0xED1 15 bits LSB first
 Send with: IrSender.sendDenon(0x11, 0x76, <numberOfRepeats>);
 rawData[32]: 
- -1064700
- + 300,-1800 + 250,- 800 + 250,- 750 + 350,- 700
- + 300,-1800 + 250,- 800 + 250,-1800 + 300,-1750
- + 350,-1750 + 300,- 750 + 250,-1800 + 300,-1750
+ -1073050
+ + 250,-1800 + 250,- 800 + 250,- 800 + 250,- 800
+ + 250,-1800 + 250,- 850 + 200,-1800 + 300,-1750
+ + 300,- 750 + 300,-1800 + 250,-1800 + 250,-1800
  + 300,- 750 + 300,- 750 + 250,- 800 + 250
-Sum: 23100
+Sum: 23050
 
 Send Denon/Sharp variant
-Protocol=Sharp Address=0x11 Command=0x76 Raw-Data=0x45DA 15 bits MSB first
+Protocol=Sharp Address=0x11 Command=0x76 Raw-Data=0x4ED1 15 bits LSB first
 Send with: IrSender.sendSharp(0x11, 0x76, <numberOfRepeats>);
 rawData[32]: 
- -1025400
- + 300,-1750 + 300,- 750 + 300,- 750 + 300,- 750
- + 250,-1800 + 300,- 750 + 300,-1750 + 300,-1750
- + 300,-1800 + 300,- 700 + 350,-1750 + 300,-1750
- + 300,- 750 + 300,-1800 + 250,- 750 + 350
-Sum: 24150
+ -1018800
+ + 200,-1800 + 300,- 750 + 250,- 800 + 250,- 750
+ + 300,-1800 + 250,- 800 + 250,-1800 + 300,-1750
+ + 300,- 750 + 300,-1800 + 250,-1800 + 250,-1800
+ + 300,- 750 + 300,- 750 + 300,-1800 + 250
+Sum: 24050
 
 Send Sony/SIRCS with 7 command and 5 address bits
 Protocol=Sony Address=0x11 Command=0x76 Raw-Data=0x8F6 12 bits LSB first
