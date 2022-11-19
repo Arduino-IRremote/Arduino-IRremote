@@ -250,7 +250,7 @@ void printIRResultOnLCD() {
     static uint8_t sLastCommandPrintPosition;
 
     /*
-     * Print only if protocol or address has changed
+     * Print only if protocol has changed
      */
     if (sLastProtocolIndex != IrReceiver.decodedIRData.protocol) {
         sLastProtocolIndex = IrReceiver.decodedIRData.protocol;
@@ -274,6 +274,10 @@ void printIRResultOnLCD() {
         printSpaces(LCD_COLUMNS - tProtocolStringLength);
 #  endif
     }
+
+    /*
+     * Print only if address has changed
+     */
     if (sLastProtocolAddress == 4711 || sLastProtocolAddress != IrReceiver.decodedIRData.address) {
         sLastProtocolAddress = IrReceiver.decodedIRData.address;
 
@@ -281,9 +285,20 @@ void printIRResultOnLCD() {
          * Show address
          */
         myLCD.setCursor(0, 1);
-        myLCD.print(F("A="));
-        uint_fast8_t tAddressStringLength = printHex(IrReceiver.decodedIRData.address);
-        printSpaces((LCD_IR_COMMAND_START_INDEX - 2) - tAddressStringLength);
+#  if defined(DECODE_DISTANCE_WIDTH)
+        if (IrReceiver.decodedIRData.protocol == PULSE_DISTANCE || IrReceiver.decodedIRData.protocol == PULSE_WIDTH) {
+            myLCD.print(F("[0]=0x"));
+            uint_fast8_t tAddressStringLength = myLCD.print(IrReceiver.decodedIRData.decodedRawDataArray[0], HEX);
+            printSpaces(LCD_COLUMNS - tAddressStringLength);
+            return; // no command here
+        } else {
+#  endif
+            myLCD.print(F("A="));
+            uint_fast8_t tAddressStringLength = printHex(IrReceiver.decodedIRData.address);
+            printSpaces((LCD_IR_COMMAND_START_INDEX - 2) - tAddressStringLength);
+#  if defined(DECODE_DISTANCE_WIDTH)
+        }
+#  endif
     }
 
     /*
