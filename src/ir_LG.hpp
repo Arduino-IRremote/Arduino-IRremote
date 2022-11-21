@@ -101,8 +101,8 @@ Sum: 62400
 #define LG_HEADER_MARK          (18 * LG_UNIT) // 9000
 #define LG_HEADER_SPACE         4200           // 4200 | 84
 
-#define LG2_HEADER_MARK         (6 * LG_UNIT)  // 3000
-#define LG2_HEADER_SPACE        (19 * LG_UNIT) // 9500
+#define LG2_HEADER_MARK         (19 * LG_UNIT) // 9500
+#define LG2_HEADER_SPACE        (6 * LG_UNIT)  // 3000
 
 #define LG_BIT_MARK             LG_UNIT
 #define LG_ONE_SPACE            1580  // 60 periods of 38 kHz

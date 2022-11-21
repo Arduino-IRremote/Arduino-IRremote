@@ -25,6 +25,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added DISABLE_CODE_FOR_RECEIVER to save program memory and RAM if receiving functionality is not required.
 - Extracted protocol functions used by receive and send to IRProtocol.hpp.
 - Analyzed Denon code table and therefore changed Denon from MSB to LSB first.
+- Corrected bug with swapped LG2 header mark and space.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).
