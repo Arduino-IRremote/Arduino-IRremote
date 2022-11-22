@@ -101,6 +101,7 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - Printout of code how to send received command by `IrReceiver.printIRSendUsage(&Serial)`.
 - Support for more than 64 bit data for universal decoder and sender.
 - Callback after receiving a command - call your own code if a message was received.
+- Cores for 32 bit platforms, which lack the print function for 64 bit integer `size_t println(unsigned long long, int = DEC)` are no longer supported. E.g. seeduino core for SAMD21. Please open an issue for the core to support printing of 64 bit integer or activate the line [#define LAZY_32_BIT_CORE](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L116).
 
 # Converting your 3.x program to the 4.x version
 - You must replace `#define DECODE_DISTANCE_WIDTH` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).
@@ -585,12 +586,14 @@ ATtiny and Digispark boards are only tested with the recommended [ATTinyCore](ht
 - ATtiny3217 (Tiny Core 32 Dev Board)
 - ATtiny84, 85, 167 (Digispark + Digispark Pro)
 - SAMD21 (Zero, MKR*, **but not SAMD51 and not DUE, the latter is SAM architecture**)
+- ESP8266
 - ESP32 (ESP32 C3 since board package 2.0.2 from Espressif)
-- ESP8266 [This fork](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols and a lot of air conditioners](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md)
 - Sparkfun Pro Micro
 - Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
 - BluePill with STM32
 - RP2040 based boards (Raspberry Pi Pico, Nano RP2040 Connect etc.)
+
+For ESP8266/ESP32, [this library](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols and a lot of air conditioners](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md)
 
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.<br/>
 If you can provide **examples of using a periodic timer for interrupts** for the new board, and the board name for selection in the Arduino IDE, then you have way better chances to get your board supported by IRremote.

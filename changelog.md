@@ -15,17 +15,18 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
      and this function is now only available if IR_SEND_PIN is not defined. #1033.
 - Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.
 - Fixed bug in sendSony() for command parameter > 0x7F;
+- Fixed bug with swapped LG2 header mark and space.
 - Disabled strict checks while decoding. They can be enabled by defining DECODE_STRICT_CHECKS.
 - Merged the 2 decode pulse width and distance functions.
 - Added receiver callback functionality and registerReceiveCompleteCallback() function.
 - Changed macro names _REPEAT_SPACE to _REPEAT_DISTANCE.
 - Improved TinyIRReceiver and added FAST protocol for it.
+- Added TinyIRSender.hpp and MinimalSender example, renamed TinyReceiver.h to TinyIR.h and added TinySender.hpp.
 - Removed static function printIRSendUsage(), but kept class function printIRSendUsage().
-- Added TinyIRSender.hpp and MinimalSender example, renamed TinyReceiver.h to TinyIR.h.
 - Added DISABLE_CODE_FOR_RECEIVER to save program memory and RAM if receiving functionality is not required.
 - Extracted protocol functions used by receive and send to IRProtocol.hpp.
 - Analyzed Denon code table and therefore changed Denon from MSB to LSB first.
-- Corrected bug with swapped LG2 header mark and space.
+- Changed type of decodedRawData and decodedRawDataArray which is now 64 bit for 32 bit platforms.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

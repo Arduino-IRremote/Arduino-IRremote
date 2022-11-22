@@ -244,6 +244,8 @@ Protocol=RC6 Address=0xF1 Command=0x76 Raw-Data=0xF176 20 bits MSB first
  + 450
 Sum: 23150
  */
+// Frame RC6:   1 start bit + 1 Bit "1" + 3 mode bits (000) + 1 toggle bit + 8 address + 8 command bits + 2666µs pause
+// Frame RC6A:  1 start bit + 1 Bit "1" + 3 mode bits (110) + 1 toggle bit + "1" + 14 customer bits + 8 system bits + 8 command bits (=31bits) + 2666µs pause
 //
 // mark->space => 1
 // space->mark => 0
@@ -481,7 +483,7 @@ bool IRrecv::decodeRC6() {
     decodedIRData.decodedRawData = tDecodedRawData;
 
     if (tBitIndex < 36) {
-        // RC6
+        // RC6 8 address bits, 8 command bits
         decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
         decodedIRData.command = tValue.UByte.LowByte;
         decodedIRData.address = tValue.UByte.MidLowByte;
@@ -490,7 +492,7 @@ bool IRrecv::decodeRC6() {
             decodedIRData.flags = IRDATA_FLAGS_TOGGLE_BIT | IRDATA_FLAGS_IS_MSB_FIRST;
         }
     } else {
-        // RC6A
+        // RC6A - 32 bits
         decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
         if ((tValue.UByte.MidLowByte & 0x80) != 0) {
             decodedIRData.flags = IRDATA_FLAGS_TOGGLE_BIT | IRDATA_FLAGS_IS_MSB_FIRST;

@@ -32,6 +32,8 @@
 
 #include <Arduino.h>
 
+#include "PinDefinitionsAndMore.h"  // Define macros for input and output pin etc.
+
 #define DISABLE_CODE_FOR_RECEIVER // Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not used.
 
 //#define EXCLUDE_EXOTIC_PROTOCOLS  // Saves around 240 bytes program memory if IrSender.write is used
@@ -40,7 +42,6 @@
 //#define NO_LED_FEEDBACK_CODE      // Saves 566 bytes program memory
 //#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN // Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
 
-#include "PinDefinitionsAndMore.h"  // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #define DELAY_AFTER_SEND 2000
@@ -57,7 +58,11 @@ void setup() {
 
 #if defined(IR_SEND_PIN)
     IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
+#  if defined(IR_SEND_PIN_STRING)
+    Serial.println(F("at pin " IR_SEND_PIN_STRING));
+#  else
     Serial.println(F("Send IR signals at pin " STR(IR_SEND_PIN)));
+#  endif
 #else
     IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
     Serial.println(F("Send IR signals at pin 3"));
@@ -70,7 +75,7 @@ void setup() {
     IrSender.enableIROut(38); // Call it with 38 kHz to initialize the values printed below
     Serial.print(F("Send signal mark duration is "));
     Serial.print(IrSender.periodOnTimeMicros);
-    Serial.print(F(" us, pulse correction is "));
+    Serial.print(F(" us, pulse narrowing correction is "));
     Serial.print(IrSender.getPulseCorrectionNanos());
     Serial.print(F(" ns, total period is "));
     Serial.print(IrSender.periodTimeMicros);
@@ -114,7 +119,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     if (sRepeats == 0) {
-#if FLASHEND >= 0x3FFF && (RAMEND >= 0x4FF || (defined(RAMSIZE) && RAMSIZE >= 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && (RAMEND >= 0x4FF || RAMSIZE >= 0x4FF) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
         /*
          * Send constant values only once in this demo
          */
@@ -171,8 +176,13 @@ void loop() {
 
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
         Serial.flush();
-        uint32_t tRawData[] = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
+#if __INT_WIDTH__ < 32
+        IRRawDataType tRawData[] = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
         IrSender.sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawData[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+#else
+        IrSender.sendPulseDistanceWidth(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+#endif
+
         delay(DELAY_AFTER_SEND);
 
         /*
@@ -181,23 +191,51 @@ void loop() {
         Serial.println(F("Send Panasonic 0xB, 0x10 as generic 48 bit PulseDistance"));
         Serial.println(F(" LSB first"));
         Serial.flush();
+#if __INT_WIDTH__ < 32
         IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_LSB_FIRST,
         SEND_STOP_BIT, 0, NO_REPEATS);
+#else
+        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0xA010B02002, 48, PROTOCOL_IS_LSB_FIRST,
+        SEND_STOP_BIT, 0, NO_REPEATS);
+#endif
         delay(DELAY_AFTER_SEND);
 
         // The same with MSB first. Use bit reversed raw data of LSB first part
         Serial.println(F(" MSB first"));
+#if __INT_WIDTH__ < 32
         tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;
         IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_MSB_FIRST,
         SEND_STOP_BIT, 0, NO_REPEATS);
+#else
+        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0x40040D000805, 48, PROTOCOL_IS_MSB_FIRST,
+        SEND_STOP_BIT, 0, NO_REPEATS);
+#endif
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send generic 56 bit PulseDistance 0x43D8613C and 0x3BC3BC LSB first"));
+        Serial.println(F("Send generic 52 bit PulseDistance 0xDCBA9 87654321 LSB first"));
         Serial.flush();
-        uint32_t tRawData1[] = { 0x43D8613C, 0x3BC3BC }; // LSB of tRawData1[0] is sent first
-        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData1[0], 56, PROTOCOL_IS_LSB_FIRST,
+#if __INT_WIDTH__ < 32
+        tRawData[0] = 0x87654321;  // LSB of tRawData[0] is sent first
+        tRawData[1] = 0xDCBA9;
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 52, PROTOCOL_IS_LSB_FIRST,
         SEND_STOP_BIT, 0, NO_REPEATS);
+#else
+        IrSender.sendPulseDistanceWidth(38, 8900, 4450, 550, 1700, 550, 600, 0xDCBA987654321, 52, PROTOCOL_IS_LSB_FIRST,
+        SEND_STOP_BIT, 0, NO_REPEATS);
+#endif
+        delay(DELAY_AFTER_SEND);
+
+        Serial.println(F("Send generic 52 bit PulseDistanceWidth 0xDCBA9 87654321 LSB first"));
+        Serial.flush();
+        // Real PulseDistanceWidth (constant bit length) does not require a stop bit
+#if __INT_WIDTH__ < 32
+        IrSender.sendPulseDistanceWidthFromArray(38, 300, 600, 600, 300, 300, 600, &tRawData[0], 52, PROTOCOL_IS_LSB_FIRST,
+        SEND_NO_STOP_BIT, 0, 0);
+#else
+        IrSender.sendPulseDistanceWidth(38, 300, 600, 600, 300, 300, 600, 0xDCBA987654321, 52, PROTOCOL_IS_LSB_FIRST,
+        SEND_NO_STOP_BIT, 0, 0);
+#endif
         delay(DELAY_AFTER_SEND);
 
     }
@@ -267,7 +305,7 @@ void loop() {
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND >= 0x3FFF && (RAMEND >= 0x4FF || (defined(RAMSIZE) && RAMSIZE >= 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && (RAMEND >= 0x4FF || RAMSIZE >= 0x4FF) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     /*
      * Next example how to use the IrSender.write function
      */
@@ -309,7 +347,7 @@ void loop() {
 
     Serial.println(F("Send MagiQuest"));
     Serial.flush();
-    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t)sAddress, IRSendData.command); // we have 31 bit address
+    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, IRSendData.command); // we have 31 bit address
     delay(DELAY_AFTER_SEND);
 
     // Bang&Olufsen must be sent with 455 kHz

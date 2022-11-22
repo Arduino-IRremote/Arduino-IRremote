@@ -34,6 +34,22 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: Other_board_NAME_FQBN
+    attributes:
+      label: "In case of other board: The boards name or FQBN (e.g. \"esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80\")"
+      value: ""
+    validations:
+      required: false
+
+  - type: input
+    id: Other_board_URL
+    attributes:
+      label: "In case of other board: The board manager URL used."
+      value: "https://"
+    validations:
+      required: false
+
   - type: dropdown
     id: IDE
     attributes:
@@ -77,7 +93,7 @@ body:
     id: IR_Pin
     attributes:
       label: Pin(s) used for IR-receive, if not default.
-      value: "Arduino pin number: "
+      value: "Arduino pin number: default"
     validations:
       required: false
 

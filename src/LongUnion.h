@@ -21,7 +21,7 @@
  *
  */
 
-#if !defined(_WORD_UNION_H) || !defined(_LONG_UNION_H)
+#if !defined(_WORD_UNION_H) || !defined(_LONG_UNION_H) || !defined(_LONG_LONG_UNION_H)
 
 #include <stdint.h>
 
@@ -67,11 +67,17 @@ union LongUnion {
         int8_t MidHighByte;
         int8_t HighByte;
     } Byte;
+    /* Does not work for STM32
     struct {
         uint8_t LowByte;
-        WordUnion MidWord;
+        uint16_t MidWord;
         uint8_t HighByte;
-    } ByteWord;
+    } UByteWord;
+    */
+    struct {
+        uint16_t LowWord;
+        uint16_t HighWord;
+    } UWord;
     struct {
         int16_t LowWord;
         int16_t HighWord;
@@ -80,10 +86,6 @@ union LongUnion {
         WordUnion LowWord;
         WordUnion HighWord;
     } WordUnion;
-    struct {
-        uint16_t LowWord;
-        uint16_t HighWord;
-    } UWord;
     uint8_t UBytes[4]; // seems to have the same code size as using struct UByte
     int8_t Bytes[4]; // Bytes[0] is LowByte
     uint16_t UWords[2];
@@ -93,4 +95,50 @@ union LongUnion {
 };
 #endif // _LONG_UNION_H
 
-#endif //  !defined(_WORD_UNION_H) || !defined(_LONG_UNION_H)
+#ifndef _LONG_LONG_UNION_H
+#define _LONG_LONG_UNION_H
+/**
+ * Union to specify parts / manifestations of a 64 bit LongLong without casts and shifts.
+ * It also supports the compiler generating small code.
+ */
+union LongLongUnion {
+    struct {
+        uint16_t LowWord;
+        uint16_t MidLowWord;
+        uint16_t MidHighWord;
+        uint16_t HighWord;
+    } UWord;
+    struct {
+        int16_t LowWord;
+        int16_t MidLowWord;
+        int16_t MidHighWord;
+        int16_t HighWord;
+    } Word;
+    struct {
+        WordUnion LowWord;
+        WordUnion MidLowWord;
+        WordUnion MidHighWord;
+        WordUnion HighWord;
+    } WordUnion;
+    struct {
+        uint32_t LowLong;
+        uint32_t HighLong;
+    } ULong;
+    struct {
+        int32_t LowLong;
+        int32_t HighLong;
+    } Long;
+    struct {
+        LongUnion LowLong;
+        LongUnion HighLong;
+    } LongUnion;
+    uint8_t UBytes[8]; // seems to have the same code size as using struct UByte
+    int8_t Bytes[8];
+    uint16_t UWords[4];
+    int16_t Words[4];
+    uint64_t ULongLong;
+    int64_t LongLong;
+};
+#endif // _LONG_LONG_UNION_H
+
+#endif //  !defined(_WORD_UNION_H) || !defined(_LONG_UNION_H) || !defined(_LONG_LONG_UNION_H)

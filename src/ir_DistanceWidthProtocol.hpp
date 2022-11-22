@@ -283,7 +283,11 @@ bool IRrecv::decodeDistanceWidth() {
         tNumberOfBits--; // Correct for stop bit
     }
     decodedIRData.numberOfBits = tNumberOfBits;
-    uint8_t tNumberOfAdditionalLong = (tNumberOfBits - 1) / 32;
+#if __INT_WIDTH__ < 32
+    uint8_t tNumberOfAdditionalArrayValues = (tNumberOfBits - 1) / 32;
+#else
+    uint8_t tNumberOfAdditionalArrayValues = (tNumberOfBits - 1) / 64;
+#endif
 
     /*
      * We can have the following protocol timings
@@ -307,15 +311,20 @@ bool IRrecv::decodeDistanceWidth() {
         }
 #endif
 
-    for (uint_fast8_t i = 0; i <= tNumberOfAdditionalLong; ++i) {
+    for (uint_fast8_t i = 0; i <= tNumberOfAdditionalArrayValues; ++i) {
         uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;
         /*
-         * Decode in 32 bit chunks. Only the last chunk can contain less than 32 bits
+         * Decode in 32/64 bit chunks. Only the last chunk can contain less than 32/64 bits
          */
+#if __INT_WIDTH__ < 32
         if (tNumberOfBitsForOneDecode > 32) {
             tNumberOfBitsForOneDecode = 32;
         }
-
+#else
+        if (tNumberOfBitsForOneDecode > 64) {
+            tNumberOfBitsForOneDecode = 64;
+        }
+#endif
         bool tResult;
         if (tMarkTicksLong > 0) {
             /*
@@ -351,10 +360,20 @@ bool IRrecv::decodeDistanceWidth() {
 #endif
             return false;
         }
+#if defined(LOCAL_DEBUG)
+        Serial.print(F("PULSE_WIDTH: "));
+        Serial.print(F("decodedRawData=0x"));
+        Serial.println(decodedIRData.decodedRawData);
+#endif
         // fill array with decoded data
         decodedIRData.decodedRawDataArray[i] = decodedIRData.decodedRawData;
+#if __INT_WIDTH__ < 32
         tStartIndex += 64;
         tNumberOfBits -= 32;
+#else
+        tStartIndex += 128;
+        tNumberOfBits -= 64;
+#endif
     }
 
 #if defined(DISTANCE_DO_MSB_DECODING)

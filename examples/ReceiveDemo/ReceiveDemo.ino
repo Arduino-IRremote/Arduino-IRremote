@@ -33,6 +33,8 @@
 
 #include <Arduino.h>
 
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+
 //#define LOCAL_DEBUG // If defined, print timing for each received data set (the same as if DEBUG_BUTTON_PIN was connected to low)
 
 /*
@@ -54,11 +56,11 @@
 //
 
 #if !defined(RAW_BUFFER_LENGTH)
-#  if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
+#  if RAMEND <= 0x4FF || RAMSIZE < 0x4FF
 #define RAW_BUFFER_LENGTH  130  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
 #define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
 #define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
-#  elif RAMEND <= 0x8FF || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
+#  elif RAMEND <= 0x8FF || RAMSIZE < 0x8FF
 #define RAW_BUFFER_LENGTH  600  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
 #  else
 #define RAW_BUFFER_LENGTH  750  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
@@ -70,14 +72,13 @@
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
-// to compensate for the signal forming of different IR receiver modules.
-//#define MARK_EXCESS_MICROS    20 // 20 is recommended for the cheap VS1838 modules
+// to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 142.
+#define MARK_EXCESS_MICROS    20    // Adapt it to your IR receiver module. 20 is recommended for the cheap VS1838 modules.
 
 //#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)
@@ -107,11 +108,19 @@ void setup() {
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);
+#if defined(IR_RECEIVE_PIN_STRING)
+    Serial.println(F("at pin " IR_RECEIVE_PIN_STRING));
+#else
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
+#endif
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     Serial.print(F("Debug button pin is "));
+#  if defined(APPLICATION_PIN_STRING)
+    Serial.println(APPLICATION_PIN_STRING);
+#  else
     Serial.println(DEBUG_BUTTON_PIN);
+#  endif
 
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);

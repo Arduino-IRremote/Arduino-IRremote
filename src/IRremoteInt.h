@@ -113,6 +113,12 @@ struct irparams_struct {
     unsigned int rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
 };
 
+//#define LAZY_32_BIT_CORE // Activate it for 32 cores, which are too lazy to specify size_t println(unsigned long long, int = DEC).
+#if (__INT_WIDTH__ < 32) || defined(LAZY_32_BIT_CORE)
+typedef uint32_t IRRawDataType;
+#else
+typedef uint64_t IRRawDataType;
+#endif
 #include "IRProtocol.h"
 
 /*
@@ -420,20 +426,21 @@ public:
 
     void sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros,
             unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros,
-            unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, uint32_t *aDecodedRawDataArray, unsigned int aNumberOfBits,
-            bool aMSBfirst, bool aSendStopBit, unsigned int aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
-    void sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t *aDecodedRawDataArray,
-            unsigned int aNumberOfBits, int_fast8_t aNumberOfRepeats);
-    void sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t aData, uint_fast8_t aNumberOfBits,
+            unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, IRRawDataType *aDecodedRawDataArray,
+            unsigned int aNumberOfBits, bool aMSBfirst, bool aSendStopBit, unsigned int aRepeatPeriodMillis,
             int_fast8_t aNumberOfRepeats);
-    void sendPulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint32_t aData,
+    void sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants *aProtocolConstants,
+            IRRawDataType *aDecodedRawDataArray, unsigned int aNumberOfBits, int_fast8_t aNumberOfRepeats);
+    void sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRRawDataType aData, uint_fast8_t aNumberOfBits,
+            int_fast8_t aNumberOfRepeats);
+    void sendPulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRRawDataType aData,
             uint_fast8_t aNumberOfBits);
     void sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros,
             unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros,
-            uint32_t aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit, unsigned int aRepeatPeriodMillis,
+            IRRawDataType aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit, unsigned int aRepeatPeriodMillis,
             int_fast8_t aNumberOfRepeats, void (*aSpecialSendRepeatFunction)() = NULL);
     void sendPulseDistanceWidthData(unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
-            unsigned int aZeroSpaceMicros, uint32_t aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit);
+            unsigned int aZeroSpaceMicros, IRRawDataType aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit);
     void sendBiphaseData(unsigned int aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits);
 
     void mark(unsigned int aMarkMicros);

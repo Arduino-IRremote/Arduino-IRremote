@@ -1,10 +1,11 @@
 START ../src/UnitTest.cpp from Nov 12 2022
 Using library version 4.0.0
 Ready to receive IR signals of protocols: NEC/NEC2/Onkyo/Apple, Panasonic/Kaseikyo, Denon/Sharp, Sony, RC5, RC6, LG, JVC, Samsung, Bang & Olufsen, Bosewave , MagiQuest, Pulse Distance Width, Hash at pin 2
-Ready to send IR signals at pin 3
-Send signal mark duration for 38kHz  is 8 us, pulse correction is 3000 ns, total period is 26 us
+Send IR signals at pin 3
+Debug button pin is 5
+Send signal mark duration for 38kHz  is 8 us, pulse narrowing correction is 3000 ns, total period is 26 us
 5000 us is the (minimum) gap, after which the start of a new IR packet is assumed
-10 us are subtracted from all marks and added to all spaces for decoding
+50 us are subtracted from all marks and added to all spaces for decoding
 
 address=0xFFF1 command=0x76
 
