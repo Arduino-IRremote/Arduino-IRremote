@@ -447,7 +447,7 @@ bool IRrecv::decode() {
  * Input is     IrReceiver.decodedIRData.rawDataPtr->rawbuf[]
  * Output is    IrReceiver.decodedIRData.decodedRawData
  *
- * Pulse distance if aOneMarkMicros == aZeroMarkMicros
+ * Assume pulse distance if aOneMarkMicros == aZeroMarkMicros
  *
  * @param   aStartOffset        Must point to a mark
  * @param   aOneMarkMicros      Taken as constant BitMarkMicros for pulse distance.
@@ -460,11 +460,12 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8
         unsigned int aZeroMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst) {
 
     unsigned int *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
-    uint32_t tDecodedData = 0;
 
     bool isPulseDistanceProtocol = (aOneMarkMicros == aZeroMarkMicros); // If true, we have a constant mark -> pulse distance protocol
 
-    uint32_t tMask = 1UL;
+    IRRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
+    IRRawDataType tMask = 1UL; // Mask is only used for LSB first
+
     for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
         // get one mark and space pair
         unsigned int tMarkTicks;
@@ -1004,8 +1005,8 @@ void printActiveIRProtocols(Print *aSerial) {
 bool IRrecv::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
 // call no class function with same name
     ::printIRResultShort(aSerial, &decodedIRData, aPrintRepeatGap);
-    if (aCheckForRecordGapsMicros && decodedIRData.protocol != UNKNOWN){
-            return checkForRecordGapsMicros(aSerial);
+    if (aCheckForRecordGapsMicros && decodedIRData.protocol != UNKNOWN) {
+        return checkForRecordGapsMicros(aSerial);
     }
     return false;
 }
@@ -1017,21 +1018,32 @@ bool IRrecv::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aChec
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRSendUsage(Print *aSerial) {
-    if (decodedIRData.protocol != UNKNOWN && (decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) == 0x00) {
+    if (decodedIRData.protocol != UNKNOWN
+            && (decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) == 0x00) {
 #if defined(DECODE_DISTANCE_WIDTH)
         aSerial->print(F("Send with:"));
+        uint_fast8_t tNumberOfArrayData = 0;
         if (decodedIRData.protocol == PULSE_DISTANCE || decodedIRData.protocol == PULSE_WIDTH) {
-            aSerial->println();
-            aSerial->print(F("    uint32_t tRawData[]={0x"));
-            uint_fast8_t tNumberOf32BitChunks = ((decodedIRData.numberOfBits - 1) / 32) + 1;
-            for (uint_fast8_t i = 0; i < tNumberOf32BitChunks; ++i) {
-                aSerial->print(decodedIRData.decodedRawDataArray[i], HEX);
-                if (i != tNumberOf32BitChunks - 1) {
-                    aSerial->print(F(", 0x"));
+#if __INT_WIDTH__ < 32
+            tNumberOfArrayData = ((decodedIRData.numberOfBits - 1) / 32) + 1;
+            if(tNumberOfArrayData > 1) {
+                aSerial->println();
+                aSerial->print(F("    uint32_t tRawData[]={0x"));
+#else
+            tNumberOfArrayData = ((decodedIRData.numberOfBits - 1) / 64) + 1;
+            if(tNumberOfArrayData > 1) {
+                aSerial->println();
+                aSerial->print(F("    uint64_t tRawData[]={0x"));
+#endif
+                for (uint_fast8_t i = 0; i < tNumberOfArrayData; ++i) {
+                    aSerial->print(decodedIRData.decodedRawDataArray[i], HEX);
+                    if (i != tNumberOfArrayData - 1) {
+                        aSerial->print(F(", 0x"));
+                    }
                 }
+                aSerial->println(F("};"));
+                aSerial->print(F("   "));
             }
-            aSerial->println(F("};"));
-            aSerial->print(F("   "));
         }
         aSerial->print(F(" IrSender.send"));
 #else
@@ -1044,11 +1056,11 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
         aSerial->print(getProtocolString());
         aSerial->print(F("(0x"));
 #if defined(DECODE_MAGIQUEST)
-        if (decodedIRData.protocol == MAGIQUEST) {
-            aSerial->print(decodedIRData.decodedRawData, HEX);
-        } else {
-            aSerial->print(decodedIRData.address, HEX);
-        }
+            if (decodedIRData.protocol == MAGIQUEST) {
+                aSerial->print(decodedIRData.decodedRawData, HEX);
+            } else {
+                aSerial->print(decodedIRData.address, HEX);
+            }
 #else
         /*
          * New decoders have address and command
@@ -1066,6 +1078,11 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
         }
 #if defined(DECODE_DISTANCE_WIDTH)
         } else {
+            if(tNumberOfArrayData > 1) {
+                aSerial->print("PulseDistanceWidthFromArray(38, ");
+            } else {
+                aSerial->print("PulseDistanceWidth(38, ");
+            }
             aSerial->print("PulseDistanceWidthFromArray(38, ");
             aSerial->print((decodedIRData.extra >> 8) * MICROS_PER_TICK); // aHeaderMarkMicros
             aSerial->print(F(", "));
@@ -1089,7 +1106,13 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             }else {
                 aSerial->print((decodedIRData.address & 0xFF) * MICROS_PER_TICK);// aZeroSpaceMicros
             }
-            aSerial->print(F(", &tRawData[0], "));
+            if(tNumberOfArrayData > 1) {
+                aSerial->print(F(", &tRawData[0], "));
+            } else {
+                aSerial->print(F(", 0x"));
+                aSerial->print(decodedIRData.decodedRawData, HEX);
+                aSerial->print(F(", "));
+            }
             aSerial->print(decodedIRData.numberOfBits);// aNumberOfBits
             if (decodedIRData.flags & IRDATA_FLAGS_IS_MSB_FIRST) {
                 aSerial->print(F(", PROTOCOL_IS_MSB_FIRST"));
@@ -1351,8 +1374,12 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
         aSerial->print(decodedIRData.command, HEX);
         aSerial->println(';');
 
-        // All protocols have data
-        aSerial->print(F("uint32_t data = 0x"));
+        // All protocols have raw data
+#if __INT_WIDTH__ < 32
+        aSerial->print(F("uint32_t rawData = 0x"));
+#else
+        aSerial->print(F("uint64_t rawData = 0x"));
+#endif
         aSerial->print(decodedIRData.decodedRawData, HEX);
         aSerial->println(';');
         aSerial->println();
@@ -1521,7 +1548,6 @@ ISR()
     digitalWriteFast(_IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
 #endif
 }
-
 
 /**********************************************************************************************************************
  * The OLD and DEPRECATED decode function with parameter aResults, kept for backward compatibility to old 2.0 tutorials

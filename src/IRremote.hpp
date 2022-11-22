@@ -151,7 +151,7 @@
  *
  *  Observed values:
  *  Delta of each signal type is around 50 up to 100 and at low signals up to 200. TSOP is better, especially at low IR signal level.
- *  VS1838      Mark Excess -50 to +50 us
+ *  VS1838      Mark Excess -50 at low intensity to +50 us at high intensity
  *  TSOP31238   Mark Excess 0 to +50
  */
 #if !defined(MARK_EXCESS_MICROS)

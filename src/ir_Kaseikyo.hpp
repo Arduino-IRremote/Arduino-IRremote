@@ -129,18 +129,25 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumb
     uint8_t tVendorParity = aVendorCode ^ (aVendorCode >> 8);
     tVendorParity = (tVendorParity ^ (tVendorParity >> 4)) & 0xF;
 
+#if __INT_WIDTH__ < 32
     LongUnion tSendValue;
-
     // Compute parity
-    tSendValue.UWord.LowWord = aAddress << KASEIKYO_VENDOR_ID_PARITY_BITS;
-    tSendValue.UByte.LowByte |= tVendorParity; // set low nibble to parity
-    tSendValue.UByte.MidHighByte = aCommand;
-    tSendValue.UByte.HighByte = aCommand ^ tSendValue.UByte.LowByte ^ tSendValue.UByte.MidLowByte; // Parity
-
-    uint32_t tRawKaseikyoData[2];
+    tSendValue.UWord.LowWord = (aAddress << KASEIKYO_VENDOR_ID_PARITY_BITS) | tVendorParity; // set low nibble to parity
+    tSendValue.UBytes[2] = aCommand;
+    tSendValue.UBytes[3] = aCommand ^ tSendValue.UBytes[0] ^ tSendValue.UBytes[1]; // Parity
+    IRRawDataType tRawKaseikyoData[2];
     tRawKaseikyoData[0] = (uint32_t) tSendValue.UWord.LowWord << 16 | aVendorCode; // LSB of tRawKaseikyoData[0] is sent first
     tRawKaseikyoData[1] = tSendValue.UWord.HighWord;
     IrSender.sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawKaseikyoData[0], KASEIKYO_BITS, aNumberOfRepeats);
+#else
+    LongLongUnion tSendValue;
+    tSendValue.UWords[0] = aVendorCode;
+    // Compute parity
+    tSendValue.UWords[1] = (aAddress << KASEIKYO_VENDOR_ID_PARITY_BITS) | tVendorParity; // set low nibble to parity
+    tSendValue.UBytes[4] = aCommand;
+    tSendValue.UBytes[5] = aCommand ^ tSendValue.UBytes[2] ^ tSendValue.UBytes[3]; // Parity
+    IrSender.sendPulseDistanceWidth(&KaseikyoProtocolConstants, tSendValue.ULongLong, KASEIKYO_BITS, aNumberOfRepeats);
+#endif
 }
 
 /**
@@ -242,6 +249,10 @@ bool IRrecv::decodeKaseikyo() {
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
     LongUnion tValue;
     tValue.ULong = decodedIRData.decodedRawData;
+#if __INT_WIDTH__ >= 32
+    // workaround until complete refactoring for 64 bit
+    decodedIRData.decodedRawData = (decodedIRData.decodedRawData << 16) | tVendorId;
+#endif
     decodedIRData.address = (tValue.UWord.LowWord >> KASEIKYO_VENDOR_ID_PARITY_BITS); // remove 4 bit vendor parity
     decodedIRData.command = tValue.UByte.MidHighByte;
     uint8_t tParity = tValue.UByte.LowByte ^ tValue.UByte.MidLowByte ^ tValue.UByte.MidHighByte;

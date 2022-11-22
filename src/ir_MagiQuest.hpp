@@ -172,7 +172,8 @@ bool IRrecv::decodeMagiQuest() {
     if (decodedIRData.decodedRawData != 0) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("MagiQuest: "));
-        Serial.println(F("Not 8 leading zero start bits received"));
+        Serial.print(F("Not 8 leading zero start bits received, RawData=0x"));
+        Serial.println(decodedIRData.decodedRawData, HEX);
 #endif
         return false;
     }
@@ -188,10 +189,19 @@ bool IRrecv::decodeMagiQuest() {
         return false;
     }
     LongUnion tDecodedRawData;
-    auto tWandId = decodedIRData.decodedRawData; // save tWandId for later use
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("31 bit WandId=0x"));
+    Serial.println(decodedIRData.decodedRawData, HEX);
+#endif
+    uint32_t tWandId = decodedIRData.decodedRawData; // save tWandId for later use
     tDecodedRawData.ULong = decodedIRData.decodedRawData << 1; // shift for checksum computation
     uint8_t tChecksum = tDecodedRawData.Bytes[0] + tDecodedRawData.Bytes[1] + tDecodedRawData.Bytes[2] + tDecodedRawData.Bytes[3];
-
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("31 bit WandId=0x"));
+    Serial.print(decodedIRData.decodedRawData, HEX);
+    Serial.print(F(" shifted=0x"));
+    Serial.println(tDecodedRawData.ULong, HEX);
+#endif
     /*
      * Decode the 9 bit Magnitude + 8 bit checksum
      */
@@ -205,15 +215,13 @@ bool IRrecv::decodeMagiQuest() {
     }
 
 #if defined(LOCAL_DEBUG)
-    Serial.print(F("decodedIRData.decodedRawData=0x"));
+    Serial.print(F("Magnitude + checksum=0x"));
     Serial.println(decodedIRData.decodedRawData, HEX);
 #endif
     tDecodedRawData.ULong = decodedIRData.decodedRawData;
-    // Some compiler throw a wrong "may be used uninitialized " warning for the next line :-(
-    decodedIRData.command = tDecodedRawData.ByteWord.MidWord.UWord; // Values observed are 0x102,01,04,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
-    tChecksum += tDecodedRawData.UByte.MidHighByte /* only one bit */+ tDecodedRawData.UByte.MidLowByte
-            + tDecodedRawData.UByte.LowByte;
+    decodedIRData.command = tDecodedRawData.UBytes[1] | tDecodedRawData.UBytes[2] << 8; // Values observed are 0x102,01,04,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
 
+    tChecksum += tDecodedRawData.UBytes[2] /* only one bit */+ tDecodedRawData.UBytes[1] + tDecodedRawData.UBytes[0];
     if (tChecksum != 0) {
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
 #if defined(LOCAL_DEBUG)

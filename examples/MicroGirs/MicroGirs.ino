@@ -64,10 +64,12 @@
  */
 #include <Arduino.h>
 
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+
 #if !defined(RAW_BUFFER_LENGTH)
-#  if RAMEND <= 0x4FF || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
+#  if RAMEND <= 0x4FF || RAMSIZE < 0x4FF
 #define RAW_BUFFER_LENGTH  180  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
-#  elif RAMEND <= 0x8FF || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
+#  elif RAMEND <= 0x8FF || RAMSIZE < 0x8FF
 #define RAW_BUFFER_LENGTH  500  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
 #  else
 #define RAW_BUFFER_LENGTH  750  // 750 (600 if we have only 2k RAM) is the value for air condition remotes. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
@@ -81,7 +83,6 @@
 #define BAUDRATE 115200
 #define NO_DECODER
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include "IRremote.hpp"
 #include <limits.h>
 

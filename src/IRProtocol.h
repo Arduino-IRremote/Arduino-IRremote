@@ -123,7 +123,7 @@ struct PulseDistanceWidthProtocolConstants {
 #define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
 #define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
 #define IRDATA_FLAGS_TOGGLE_BIT         0x08 ///< is set if RC5 or RC6 toggle bit is set
-#define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< there is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)
+#define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< there is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray)
 #define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is 0 in this case to avoid endless OverflowFlag
 #define IRDATA_FLAGS_IS_LSB_FIRST       0x00
 #define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Just for info. Value is mainly determined by the protocol
@@ -131,8 +131,11 @@ struct PulseDistanceWidthProtocolConstants {
 // deprecated
 #define IRDATA_TOGGLE_BIT_MASK          0x08 ///< is set if RC5 or RC6 toggle bit is set
 
+#if __INT_WIDTH__ < 32
 #define RAW_DATA_ARRAY_SIZE             ((((RAW_BUFFER_LENGTH - 2) - 1) / 64) + 1) // The -2 is for initial gap + stop bit mark, 64 mark + spaces for 32 bit.
-
+#else
+#define RAW_DATA_ARRAY_SIZE             ((((RAW_BUFFER_LENGTH - 2) - 1) / 128) + 1) // The -2 is for initial gap + stop bit mark, 128 mark + spaces for 64 bit.
+#endif
 /**
  * Data structure for the user application, available as decodedIRData.
  * Filled by decoders and read by print functions or user application.
@@ -144,10 +147,10 @@ struct IRData {
     uint16_t extra; ///< Contains upper 16 bit of Magiquest WandID, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks << 8) | HeaderSpaceTicks.
     uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;          ///< See IRDATA_FLAGS_* definitions above
-    uint32_t decodedRawData; ///< Up to 32 bit decoded raw data, to be used for send functions.
-#  if defined(DECODE_DISTANCE_WIDTH)
-    uint32_t decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; ///< 32 bit decoded raw data, to be used for send function.
-#  endif
+    IRRawDataType decodedRawData; ///< Up to 32/64 bit decoded raw data, to be used for send functions.
+#if defined(DECODE_DISTANCE_WIDTH)
+    IRRawDataType decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; ///< 32/64 bit decoded raw data, to be used for send function.
+#endif
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.
 };
 

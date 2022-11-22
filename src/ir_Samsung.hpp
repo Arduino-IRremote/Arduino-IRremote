@@ -156,10 +156,11 @@ void IRsend::sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNu
 void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
 
     // send 16 bit address and  8 command bits and then 8 inverted command bits LSB first
+#if __INT_WIDTH__ < 32
     LongUnion tSendValue;
-    tSendValue.UWord.LowWord = aAddress;
-    tSendValue.UByte.MidHighByte = aCommand;
-    tSendValue.UByte.HighByte = ~aCommand;
+    tSendValue.UWords[0] = aAddress;
+    tSendValue.UBytes[2] = aCommand;
+    tSendValue.UBytes[3] = ~aCommand;
 
     uint32_t tRawSamsungData[2];
     tRawSamsungData[0] = tSendValue.ULong;
@@ -168,12 +169,31 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumb
     if (aCommand >= 0x100) {
         // Here we have Samsung48 -> send the upper byte of command
         aCommand = aCommand >> 8;
-        tSendValue.UByte.LowByte = aCommand;
-        tSendValue.UByte.MidLowByte = ~aCommand;
+        tSendValue.UBytes[0] = aCommand;
+        tSendValue.UBytes[1] = ~aCommand;
         tRawSamsungData[1] = tSendValue.UWord.LowWord;
         tProtocolLength = SAMSUNG48_BITS;
     }
     IrSender.sendPulseDistanceWidthFromArray(&SamsungProtocolConstants, &tRawSamsungData[0], tProtocolLength, aNumberOfRepeats);
+#else
+    LongLongUnion tSendValue;
+    tSendValue.UWords[0] = aAddress;
+    tSendValue.UBytes[2] = aCommand;
+    tSendValue.UBytes[3] = ~aCommand;
+
+    uint8_t tProtocolLength;
+
+    if (aCommand >= 0x100) {
+        // Here we have Samsung48 -> send the upper byte of command
+        aCommand = aCommand >> 8;
+        tSendValue.UBytes[4] = aCommand;
+        tSendValue.UBytes[5] = ~aCommand;
+        tProtocolLength = SAMSUNG48_BITS;
+    } else {
+        tProtocolLength = SAMSUNG_BITS;
+    }
+    IrSender.sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULongLong, tProtocolLength, aNumberOfRepeats);
+#endif
 }
 
 bool IRrecv::decodeSamsung() {

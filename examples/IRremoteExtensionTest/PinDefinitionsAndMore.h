@@ -180,10 +180,13 @@ void noTone(uint8_t aPinNumber){
 #elif defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_STM32F1) // BluePill
 // Timer 3 blocks PA6, PA7, PB0, PB1 for use by Servo or tone()
 #define IR_RECEIVE_PIN          PA6
+#define IR_RECEIVE_PIN_STRING   "PA6"
 #define IR_SEND_PIN             PA7
+#define IR_SEND_PIN_STRING      "PA7"
 #define TONE_PIN                PA3
 #define _IR_TIMING_TEST_PIN     PA5
 #define APPLICATION_PIN         PA2
+#define APPLICATION_PIN_STRING  "PA2"
 #  if defined(ARDUINO_GENERIC_STM32F103C) || defined(ARDUINO_BLUEPILL_F103C8)
 // BluePill LED is active low
 #define FEEDBACK_LED_IS_ACTIVE_LOW
@@ -295,6 +298,13 @@ void noTone(uint8_t aPinNumber){
 #if !defined (FLASHEND)
 #define FLASHEND 0xFFFF // Dummy value for platforms where FLASHEND is not defined
 #endif
+#if !defined (RAMEND)
+#define RAMEND 0xFFFF // Dummy value for platforms where RAMEND is not defined
+#endif
+#if !defined (RAMSIZE)
+#define RAMSIZE 0xFFFF // Dummy value for platforms where RAMSIZE is not defined
+#endif
+
 /*
  * Helper macro for getting a macro definition as string
  */

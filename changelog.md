@@ -21,11 +21,12 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Changed macro names _REPEAT_SPACE to _REPEAT_DISTANCE.
 - Improved TinyIRReceiver and added FAST protocol for it.
 - Removed static function printIRSendUsage(), but kept class function printIRSendUsage().
-- Added TinyIRSender.hpp and MinimalSender example, renamed TinyReceiver.h to TinyIR.h.
+- Added TinyIRSender.hpp and MinimalSender example, renamed TinyReceiver.h to TinyIR.h and added TinySender.hpp.
 - Added DISABLE_CODE_FOR_RECEIVER to save program memory and RAM if receiving functionality is not required.
 - Extracted protocol functions used by receive and send to IRProtocol.hpp.
 - Analyzed Denon code table and therefore changed Denon from MSB to LSB first.
 - Corrected bug with swapped LG2 header mark and space.
+- Changed type of decodedRawData and decodedRawDataArray which is now 64 bit for 32 bit platforms.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).
