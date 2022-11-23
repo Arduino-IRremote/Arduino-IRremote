@@ -64,6 +64,7 @@
 
 #ifndef _IR_REMOTE_HPP
 #define _IR_REMOTE_HPP
+#include <Arduino.h>
 
 #define VERSION_IRREMOTE "4.0.0"
 #define VERSION_IRREMOTE_MAJOR 4
