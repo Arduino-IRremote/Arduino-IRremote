@@ -57,13 +57,13 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
  +1800
  Sum: 23100
 
-RC5X with 7.th MSB of command set
-Protocol=RC5 Address=0x11 Command=0x76 Toggle=1 Raw-Data=0xC76 13 bits MSB first
+ RC5X with 7.th MSB of command set
+ Protocol=RC5 Address=0x11 Command=0x76 Toggle=1 Raw-Data=0xC76 13 bits MSB first
  +1800,-1750
  + 850,- 900 +1800,- 850 + 950,- 850 + 900,-1750
  + 900,- 850 + 950,- 850 +1800,-1750 + 900,- 850
  +1800
-Sum: 23050
+ Sum: 23050
  */
 //
 // see: https://www.sbprojects.net/knowledge/ir/rc5.php
@@ -235,31 +235,31 @@ bool IRrecv::decodeRC5() {
 //+=============================================================================
 //
 /*
-Protocol=RC6 Address=0xF1 Command=0x76 Raw-Data=0xF176 20 bits MSB first
+ Protocol=RC6 Address=0xF1 Command=0x76 Raw-Data=0xF176 20 bits MSB first
  +2650,- 850
  + 500,- 850 + 500,- 400 + 450,- 450 + 450,- 850
  +1400,- 400 + 450,- 450 + 450,- 450 + 450,- 900
  + 450,- 450 + 450,- 400 + 950,- 850 + 900,- 450
  + 450,- 450 + 450,- 850 + 950,- 400 + 450,- 900
  + 450
-Sum: 23150
+ Sum: 23150
  */
 // Frame RC6:   1 start bit + 1 Bit "1" + 3 mode bits (000) + 1 toggle bit + 8 address + 8 command bits + 2666µs pause
 // Frame RC6A:  1 start bit + 1 Bit "1" + 3 mode bits (110) + 1 toggle bit + "1" + 14 customer bits + 8 system bits + 8 command bits (=31bits) + 2666µs pause
-//
+// !!! toggle bit has another timing :-( !!!
 // mark->space => 1
 // space->mark => 0
 // https://www.sbprojects.net/knowledge/ir/rc6.php
 // https://www.mikrocontroller.net/articles/IRMP_-_english#RC6_.2B_RC6A
 // https://en.wikipedia.org/wiki/Manchester_code
-
 #define MIN_RC6_SAMPLES         1
 
 #define RC6_RPT_LENGTH      46000
 
 #define RC6_LEADING_BIT         1
 #define RC6_MODE_BITS           3 // never seen others than all 0 for Philips TV
-#define RC6_TOGGLE_BIT          1 // toggles at every key press. Can be used to distinguish repeats from 2 key presses.
+#define RC6_TOGGLE_BIT          1 // toggles at every key press. Can be used to distinguish repeats from 2 key presses and has another timing :-(.
+#define RC6_TOGGLE_BIT_INDEX    RC6_MODE_BITS //  fourth position, index = 3
 #define RC6_ADDRESS_BITS        8
 #define RC6_COMMAND_BITS        8
 
@@ -279,6 +279,9 @@ Sum: 23150
  * Main RC6 send function
  */
 void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
+    sendRC6Raw(aRawData, aNumberOfBitsToSend);
+}
+void IRsend::sendRC6Raw(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
 // Set IR carrier frequency
     enableIROut (RC5_RC6_KHZ);
 
@@ -294,7 +297,7 @@ void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
     uint32_t mask = 1UL << (aNumberOfBitsToSend - 1);
     for (uint_fast8_t i = 1; mask; i++, mask >>= 1) {
         // The fourth bit we send is the "double width toggle bit"
-        unsigned int t = (i == 4) ? (RC6_UNIT * 2) : (RC6_UNIT);
+        unsigned int t = (i == (RC6_TOGGLE_BIT_INDEX + 1)) ? (RC6_UNIT * 2) : (RC6_UNIT);
         if (aRawData & mask) {
             mark(t);
             space(t);
@@ -313,6 +316,9 @@ void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
  * Can be used to send RC6A with ?31? data bits
  */
 void IRsend::sendRC6(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
+    sendRC6Raw(aRawData, aNumberOfBitsToSend);
+}
+void IRsend::sendRC6Raw(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
 // Set IR carrier frequency
     enableIROut (RC5_RC6_KHZ);
 
@@ -328,7 +334,7 @@ void IRsend::sendRC6(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
     uint64_t mask = 1ULL << (aNumberOfBitsToSend - 1);
     for (uint_fast8_t i = 1; mask; i++, mask >>= 1) {
         // The fourth bit we send is the "double width toggle bit"
-        unsigned int t = (i == 4) ? (RC6_UNIT * 2) : (RC6_UNIT);
+        unsigned int t = (i == (RC6_TOGGLE_BIT_INDEX + 1)) ? (RC6_UNIT * 2) : (RC6_UNIT);
         if (aRawData & mask) {
             mark(t);
             space(t);
@@ -377,7 +383,7 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
     while (tNumberOfCommands > 0) {
 
         // start and leading bits are sent by sendRC6
-        sendRC6(tIRRawData.ULong, RC6_BITS - 1); // -1 since the leading bit is additionally sent by sendRC6
+        sendRC6Raw(tIRRawData.ULong, RC6_BITS - 1); // -1 since the leading bit is additionally sent by sendRC6
 
         tNumberOfCommands--;
         // skip last delay!
@@ -433,7 +439,7 @@ bool IRrecv::decodeRC6() {
         uint8_t tEndLevel;   // end level of coded bit
 
         tStartLevel = getBiphaselevel();
-        if (tBitIndex == 3) {
+        if (tBitIndex == RC6_TOGGLE_BIT_INDEX) {
             // Toggle bit is double wide; make sure second half is equal first half
             if (tStartLevel != getBiphaselevel()) {
 #if defined(LOCAL_DEBUG)
@@ -445,7 +451,7 @@ bool IRrecv::decodeRC6() {
         }
 
         tEndLevel = getBiphaselevel();
-        if (tBitIndex == 3) {
+        if (tBitIndex == RC6_TOGGLE_BIT_INDEX) {
             // Toggle bit is double wide; make sure second half matches
             if (tEndLevel != getBiphaselevel()) {
 #if defined(LOCAL_DEBUG)
@@ -491,7 +497,7 @@ bool IRrecv::decodeRC6() {
         if ((tValue.UByte.MidHighByte & 1) != 0) {
             decodedIRData.flags = IRDATA_FLAGS_TOGGLE_BIT | IRDATA_FLAGS_IS_MSB_FIRST;
         }
-        if(tBitIndex > 20){
+        if (tBitIndex > 20) {
             decodedIRData.flags |= IRDATA_FLAGS_EXTRA_INFO;
         }
     } else {

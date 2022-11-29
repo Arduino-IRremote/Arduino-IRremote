@@ -543,8 +543,10 @@ public:
     void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat = false);
     void sendRC5(uint32_t data, uint8_t nbits);
     void sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle);
-    void sendRC6(uint32_t data, uint8_t nbits);
-    void sendRC6(uint64_t data, uint8_t nbits);
+    void sendRC6Raw(uint32_t data, uint8_t nbits);
+    void sendRC6(uint32_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC6Raw().")));
+    void sendRC6Raw(uint64_t data, uint8_t nbits);
+    void sendRC6(uint64_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC6Raw().")));;
     void sendSharpRaw(unsigned long data, int nbits);
     void sendSharp(unsigned int address, unsigned int command);
     void sendSAMSUNG(unsigned long data, int nbits);

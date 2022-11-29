@@ -1072,10 +1072,6 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
         aSerial->print(decodedIRData.command, HEX);
         aSerial->print(F(", <numberOfRepeats>"));
 
-        if (decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) {
-            aSerial->print(F(", 0x"));
-            aSerial->print(decodedIRData.extra, HEX);
-        }
 #if defined(DECODE_DISTANCE_WIDTH)
         } else {
             if(tNumberOfArrayData > 1) {
@@ -1127,7 +1123,14 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             aSerial->print(F(", <millisofRepeatPeriod>, <numberOfRepeats>"));
         }
 #endif
-        aSerial->println(F(");"));
+        aSerial->print(F(");"));
+        if (decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) {
+            aSerial->print(
+                    F(
+                            " Because we have non standard extra data, you may have to use the send function, which accepts raw data like sendNECRaw() or sendRC6Raw(). Extra=0x"));
+            aSerial->print(decodedIRData.extra, HEX);
+        }
+        aSerial->println();
     }
 }
 
