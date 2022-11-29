@@ -491,6 +491,9 @@ bool IRrecv::decodeRC6() {
         if ((tValue.UByte.MidHighByte & 1) != 0) {
             decodedIRData.flags = IRDATA_FLAGS_TOGGLE_BIT | IRDATA_FLAGS_IS_MSB_FIRST;
         }
+        if(tBitIndex > 20){
+            decodedIRData.flags |= IRDATA_FLAGS_EXTRA_INFO;
+        }
     } else {
         // RC6A - 32 bits
         decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;

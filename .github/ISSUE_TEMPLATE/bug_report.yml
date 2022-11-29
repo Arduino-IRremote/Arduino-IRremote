@@ -37,7 +37,7 @@ body:
   - type: input
     id: Other_board_NAME_FQBN
     attributes:
-      label: "In case of other board: The boards name or FQBN (e.g. \"esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80\")"
+      label: "In case of other board: The boards name or FQBN (e.g. esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80)"
       value: ""
     validations:
       required: false
