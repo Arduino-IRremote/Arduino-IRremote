@@ -122,7 +122,11 @@ void receive_ir_data() {
         Serial.print(F("Decoded protocol: "));
         Serial.print(getProtocolString(IrReceiver.decodedIRData.protocol));
         Serial.print(F("Decoded raw data: "));
+#if (__INT_WIDTH__ < 32)
         Serial.print(IrReceiver.decodedIRData.decodedRawData, HEX);
+#else
+        PrintULL::print(&Serial, IrReceiver.decodedIRData.decodedRawData, HEX);
+#endif
         Serial.print(F(", decoded address: "));
         Serial.print(IrReceiver.decodedIRData.address, HEX);
         Serial.print(F(", decoded command: "));

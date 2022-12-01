@@ -287,11 +287,11 @@
 /*
  * Include the sources here to enable compilation with macro values set by user program.
  */
+#include "IRProtocol.hpp" // must be first, it includes definition for PrintULL (unsigned long long)
 #if !defined(DISABLE_CODE_FOR_RECEIVER)
 #include "IRReceive.hpp"
 #endif
 #include "IRSend.hpp"
-#include "IRProtocol.hpp"
 
 /*
  * Include the sources of all decoders here to enable compilation with macro values set by user program.

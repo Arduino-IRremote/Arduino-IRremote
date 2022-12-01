@@ -78,7 +78,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 
 ` JVC ` &nbsp; &nbsp; ` LG ` &nbsp; &nbsp; ` RC5 ` &nbsp; &nbsp; ` RC6 ` &nbsp; &nbsp; ` Samsung ` &nbsp; &nbsp; ` Sony `
 
-` Universal Distance ` &nbsp; &nbsp; ` Hash ` &nbsp; &nbsp; ` Pronto `
+` Universal Pulse Distance ` &nbsp; &nbsp; ` Universal Pulse Width ` &nbsp; &nbsp; ` Hash ` &nbsp; &nbsp; ` Pronto `
  
 ` BoseWave ` &nbsp; &nbsp; ` Bang & Olufsen ` &nbsp; &nbsp; ` Lego ` &nbsp; &nbsp; ` Whynter ` &nbsp; &nbsp; ` MagiQuest `
 
@@ -97,11 +97,10 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - Allows receiving and sending of **raw timing data**.
 
 ## New features with version 4.x
-- New universal **Pulse Distance Width decoder** added, which covers some previous unknown protocols.
+- New universal **Pulse Distance / Pulse Width decoder** added, which covers many previous unknown protocols.
 - Printout of code how to send received command by `IrReceiver.printIRSendUsage(&Serial)`.
-- Support for more than 64 bit data for universal decoder and sender.
+- RawData type is now 64 bit for 32 bit platforms and therefore contains complete frame information for more protocols.
 - Callback after receiving a command - call your own code if a message was received.
-- Cores for 32 bit platforms, which lack the print function for 64 bit integer `size_t println(unsigned long long, int = DEC)` are no longer supported. E.g. seeduino core for SAMD21. Please open an issue for the core to support printing of 64 bit integer or activate the line [#define LAZY_32_BIT_CORE](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L116).
 
 # Converting your 3.x program to the 4.x version
 - You must replace `#define DECODE_DISTANCE_WIDTH` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).

@@ -72,6 +72,57 @@ const char* getProtocolString(decode_type_t aProtocol) {
 }
 #endif
 
+#if (__INT_WIDTH__ >= 32)
+#  if __has_include(<type_traits>)
+/*
+ * This code to handle the missing print(unsigned long long...) function of seeduino core was contributed by sklott
+ * https://stackoverflow.com/questions/74622227/avoid-calling-of-function-size-t-printprintunsigned-long-long-n-int-base-if
+ */
+#include <type_traits>
+
+// If you have C++17 you can just use std::void_t, or use this for all versions
+#if __cpp_lib_void_t >= 201411L
+template<typename T>
+using void_t = std::void_t<T>;
+#else
+template<typename ... Ts> struct make_void {
+    typedef void type;
+};
+template<typename ... Ts> using void_t = typename make_void<Ts...>::type;
+#endif
+
+// Detecting if we have print(unsigned long long value, int base) / print(0ull, 0) overload
+template<typename T, typename = void>
+struct has_ull_print: std::false_type {
+};
+template<typename T>
+struct has_ull_print<T, void_t<decltype(std::declval<T>().print(0ull, 0))>> : std::true_type {
+};
+
+// Must be namespace, to avoid public and static declarations for class
+namespace PrintULL {
+template<typename PrintImplType, typename std::enable_if<!has_ull_print<PrintImplType>::value, bool>::type = true>
+size_t print(PrintImplType *p, unsigned long long value, int base) {
+    size_t tLength = p->print(static_cast<uint32_t>(value >> 32), base);
+    tLength += p->print(static_cast<uint32_t>(value), base);
+    return tLength;
+}
+
+template<typename PrintImplType, typename std::enable_if<has_ull_print<PrintImplType>::value, bool>::type = true>
+size_t print(PrintImplType *p, unsigned long long value, int base) {
+    return p->print(value, base);
+}
+}
+;
+#  else
+namespace PrintULL {
+    size_t print(Print *aSerial, unsigned long long n, int base) {
+        return aSerial->print(n, base);
+    }
+};
+#  endif
+#endif
+
 /**
  * Function to print decoded result and flags in one line.
  * A static function to be able to print data to send or copied received data.
@@ -91,7 +142,12 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap
     if (aIRDataPtr->protocol == UNKNOWN) {
 #if defined(DECODE_HASH)
         aSerial->print(F(" Hash=0x"));
+#if (__INT_WIDTH__ < 32)
         aSerial->print(aIRDataPtr->decodedRawData, HEX);
+#else
+        PrintULL::print(aSerial,aIRDataPtr->decodedRawData, HEX);
+#endif
+
 #endif
 #if !defined(DISABLE_CODE_FOR_RECEIVER)
         aSerial->print(' ');
@@ -148,8 +204,11 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap
          */
         if (!(aIRDataPtr->flags & IRDATA_FLAGS_IS_REPEAT) || aIRDataPtr->decodedRawData != 0) {
             aSerial->print(F(" Raw-Data=0x"));
+#if (__INT_WIDTH__ < 32)
             aSerial->print(aIRDataPtr->decodedRawData, HEX);
-
+#else
+            PrintULL::print(aSerial, aIRDataPtr->decodedRawData, HEX);
+#endif
             /*
              * Print number of bits processed
              */

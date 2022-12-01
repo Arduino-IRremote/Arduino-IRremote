@@ -113,8 +113,7 @@ struct irparams_struct {
     unsigned int rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command
 };
 
-//#define LAZY_32_BIT_CORE // Activate it for 32 cores, which are too lazy to specify size_t println(unsigned long long, int = DEC).
-#if (__INT_WIDTH__ < 32) || defined(LAZY_32_BIT_CORE)
+#if (__INT_WIDTH__ < 32)
 typedef uint32_t IRRawDataType;
 #else
 typedef uint64_t IRRawDataType;

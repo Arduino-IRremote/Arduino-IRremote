@@ -28,6 +28,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Analyzed Denon code table and therefore changed Denon from MSB to LSB first.
 - Changed type of decodedRawData and decodedRawDataArray which is now 64 bit for 32 bit platforms.
 - Renamed sendRC6(aRawData...) to sendRC6Raw( aRawData...).
+- Support for seeduino which lacks the print(unsigned long long...) method. Thanks to sklott https://stackoverflow.com/users/11680056/sklott
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

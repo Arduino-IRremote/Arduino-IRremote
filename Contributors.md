@@ -28,5 +28,6 @@ These are the active contributors of this project that you may contact if there 
 - [ElectronicsArchiver}(https://github.com/ElectronicsArchiver) improving documentation
 - [Stephen Humphries](https://github.com/sjahu)Fix for: Prevent long delay caused by overflow when frame duration < repeat period #1028
 - [Daniel Wallner](https://github.com/danielwallner) Bang & Olufsen protocol.
+- [slott](https://stackoverflow.com/users/11680056/sklott) Seeduino print(unsigned long long...) support.
 
 Note: Please let [ArminJo](https://github.com/ArminJo) know if you have been missed.

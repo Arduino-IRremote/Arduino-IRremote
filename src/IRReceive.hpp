@@ -1024,19 +1024,23 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
         aSerial->print(F("Send with:"));
         uint_fast8_t tNumberOfArrayData = 0;
         if (decodedIRData.protocol == PULSE_DISTANCE || decodedIRData.protocol == PULSE_WIDTH) {
-#if __INT_WIDTH__ < 32
+#  if __INT_WIDTH__ < 32
             tNumberOfArrayData = ((decodedIRData.numberOfBits - 1) / 32) + 1;
             if(tNumberOfArrayData > 1) {
                 aSerial->println();
                 aSerial->print(F("    uint32_t tRawData[]={0x"));
-#else
+#  else
             tNumberOfArrayData = ((decodedIRData.numberOfBits - 1) / 64) + 1;
             if(tNumberOfArrayData > 1) {
                 aSerial->println();
                 aSerial->print(F("    uint64_t tRawData[]={0x"));
-#endif
+#  endif
                 for (uint_fast8_t i = 0; i < tNumberOfArrayData; ++i) {
+#  if (__INT_WIDTH__ < 32)
                     aSerial->print(decodedIRData.decodedRawDataArray[i], HEX);
+#  else
+                    PrintULL::print(aSerial, decodedIRData.decodedRawDataArray[i], HEX);
+#  endif
                     if (i != tNumberOfArrayData - 1) {
                         aSerial->print(F(", 0x"));
                     }
@@ -1057,7 +1061,11 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
         aSerial->print(F("(0x"));
 #if defined(DECODE_MAGIQUEST)
             if (decodedIRData.protocol == MAGIQUEST) {
+#  if (__INT_WIDTH__ < 32)
                 aSerial->print(decodedIRData.decodedRawData, HEX);
+#  else
+                PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
+#  endif
             } else {
                 aSerial->print(decodedIRData.address, HEX);
             }
@@ -1106,7 +1114,11 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
                 aSerial->print(F(", &tRawData[0], "));
             } else {
                 aSerial->print(F(", 0x"));
+#  if (__INT_WIDTH__ < 32)
                 aSerial->print(decodedIRData.decodedRawData, HEX);
+#  else
+                PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
+#  endif
                 aSerial->print(F(", "));
             }
             aSerial->print(decodedIRData.numberOfBits);// aNumberOfBits
@@ -1146,7 +1158,11 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
     if (decodedIRData.protocol == UNKNOWN) {
 #if defined(DECODE_HASH)
         aSerial->print(F(" #=0x"));
+#  if (__INT_WIDTH__ < 32)
         aSerial->print(decodedIRData.decodedRawData, HEX);
+#  else
+        PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
+#  endif
 #endif
         aSerial->print(' ');
         aSerial->print((decodedIRData.rawDataPtr->rawlen + 1) / 2, DEC);
@@ -1162,7 +1178,11 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
         aSerial->print(decodedIRData.command, HEX);
 
         aSerial->print(F(" Raw=0x"));
+#if (__INT_WIDTH__ < 32)
         aSerial->print(decodedIRData.decodedRawData, HEX);
+#else
+        PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
+#endif
 
         if (decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) {
             aSerial->print(F(" R"));
@@ -1203,12 +1223,12 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
 // check if we have a protocol with no or 8 start bits
 #if defined(DECODE_DENON) || defined(DECODE_MAGIQUEST)
     if (
-#if defined(DECODE_DENON)
+#  if defined(DECODE_DENON)
             decodedIRData.protocol == DENON || decodedIRData.protocol == SHARP ||
-#endif
-#if defined(DECODE_MAGIQUEST)
+#  endif
+#  if defined(DECODE_MAGIQUEST)
             decodedIRData.protocol == MAGIQUEST ||
-#endif
+#  endif
             false) {
         tCounterForNewline = 0; // no or 8 start bits
     }
@@ -1383,7 +1403,11 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
 #else
         aSerial->print(F("uint64_t rawData = 0x"));
 #endif
+#if (__INT_WIDTH__ < 32)
         aSerial->print(decodedIRData.decodedRawData, HEX);
+#else
+        PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
+#endif
         aSerial->println(';');
         aSerial->println();
     }

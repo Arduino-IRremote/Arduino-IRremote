@@ -73,6 +73,7 @@ jobs:
           - STMicroelectronics:stm32:GenL0:pnum=THUNDERPACK_L072
           - stm32duino:STM32F1:genericSTM32F103C
           - sandeepmistry:nRF5:BBCmicrobit
+          - Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
 
         # Specify parameters for each board.
         # With sketches-exclude you may exclude specific examples for a board. Use a comma separated list.
@@ -229,6 +230,13 @@ jobs:
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
             sketches-exclude: IRDispatcherDemo,MicroGirs,MinimalReceiver
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
+              All: -DRAW_BUFFER_LENGTH=300
+
+          - arduino-boards-fqbn: Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
+            platform-url: https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
+            sketches-exclude: AllProtocols
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300

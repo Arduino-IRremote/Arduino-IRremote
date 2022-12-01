@@ -202,9 +202,18 @@ void checkReceivedRawData(IRRawDataType aRawData) {
         if (IrReceiver.decodedIRData.protocol == PULSE_DISTANCE || IrReceiver.decodedIRData.protocol == PULSE_WIDTH) {
             if (IrReceiver.decodedIRData.decodedRawData != aRawData) {
                 Serial.print(F("ERROR: Received data=0x"));
+#if (__INT_WIDTH__ < 32)
                 Serial.print(IrReceiver.decodedIRData.decodedRawData, HEX);
+#else
+                PrintULL::print(&Serial, IrReceiver.decodedIRData.decodedRawData, HEX);
+#endif
                 Serial.print(F(" != sent data=0x"));
-                Serial.println(aRawData, HEX);
+#if (__INT_WIDTH__ < 32)
+                Serial.print(aRawData, HEX);
+#else
+                PrintULL::print(&Serial, aRawData, HEX);
+#endif
+                Serial.println();
             }
         }
         IrReceiver.resume();
@@ -238,7 +247,11 @@ void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
             for (uint_fast8_t i = 0; i < aArraySize; ++i) {
                 if (IrReceiver.decodedIRData.decodedRawDataArray[i] != *aRawDataArrayPointer) {
                     Serial.print(F("ERROR: Received data=0x"));
+#if (__INT_WIDTH__ < 32)
                     Serial.print(IrReceiver.decodedIRData.decodedRawDataArray[i], HEX);
+#else
+                    PrintULL::print(&Serial, IrReceiver.decodedIRData.decodedRawDataArray[i], HEX);
+#endif
                     Serial.print(F(" != sent data=0x"));
                     Serial.println(*aRawDataArrayPointer, HEX);
                 }
@@ -528,7 +541,11 @@ void loop() {
         checkReceive(0xFF00, 0x176);
         if (IrReceiver.decodedIRData.decodedRawData != 0x6BCDFF00) {
             Serial.print(F("ERROR: Received address=0x"));
+#if (__INT_WIDTH__ < 32)
             Serial.print(IrReceiver.decodedIRData.decodedRawData, HEX);
+#else
+            PrintULL::print(&Serial, IrReceiver.decodedIRData.decodedRawData, HEX);
+#endif
             Serial.println(F(" != sent address=0x6BCDFF00"));
             Serial.println();
         }

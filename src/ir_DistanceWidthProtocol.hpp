@@ -1,7 +1,8 @@
 /*
  * ir_DistanceWidthProtocol.hpp
  *
- * Contains only the decoder functions!
+ * Contains only the decoder functions for universal pulse width or pulse distance protocols!
+ * The send functions are used by almost all protocols and therefore in IRSend.hh.
  *
  * This decoder tries to decode a pulse distance or pulse distance width with constant period (or pulse width - not enabled yet) protocol.
  * 1. Analyze all space and mark length
