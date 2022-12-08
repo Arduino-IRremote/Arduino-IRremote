@@ -615,6 +615,8 @@ The code for the timer and the **timer selection** is located in [private/IRTime
 | [ATtiny88 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **1**             | **PB1 / 8**         | **PB1 / 8 & PB2 / 9** |
 | [ATtiny167 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)           | **1**             | **9**               | **8 - 15**            |
 | [ATtiny1604](https://github.com/SpenceKonde/megaTinyCore)                | **TCB0**          | **PA05**            |
+| [ATtiny816](https://github.com/SpenceKonde/megaTinyCore)                 | **TCA0**          | **PA3**             |
+| [ATtiny1614](https://github.com/SpenceKonde/megaTinyCore)                | **TCA0**          | **PA3**             |
 | [ATtiny3217](https://github.com/SpenceKonde/megaTinyCore)                | **TCA0**, TCD     | %                   |
 | [ATmega8](https://github.com/MCUdude/MiniCore)                           | **1**             | **9**               |
 | ATmega168, **ATmega328**                                                 | 1, **2**          | 9, **3**            | 9 & 10, **3 & 11**    |
