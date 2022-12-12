@@ -35,6 +35,8 @@
  * ATtiny167    9|PA3       8|PA2       5|PA7     Digispark pro
  * ATtiny3217  18|PA1      19|PA2      20|PA3     MegaTinyCore
  * ATtiny1604   2           3|PA5       %
+ * ATtiny816   14|PA1      16|PA3       1|PA5     MegaTinyCore
+ * ATtiny1614   8|PA1      10|PA3       1|PA5     MegaTinyCore
  * SAMD21       3           4           5
  * ESP8266      14|D5       12|D6       %
  * ESP32        15          4           27
@@ -90,6 +92,12 @@
 #define APPLICATION_PIN  0 // PA4
 #undef LED_BUILTIN         // No LED available, take the one which is connected to the DAC output
 #define LED_BUILTIN      4 // PB5
+
+#  elif defined(__AVR_ATtiny1614__)
+#define IR_RECEIVE_PIN   8 // PA1
+#define IR_SEND_PIN     10 // PA3
+#define TONE_PIN         1 // PA5
+#define APPLICATION_PIN  0 // PA4
 
 #  elif defined(__AVR_ATtiny1604__)
 #define IR_RECEIVE_PIN   2 // To be compatible with interrupt example, pin 2 is chosen here.
