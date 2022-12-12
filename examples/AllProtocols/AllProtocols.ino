@@ -256,7 +256,7 @@ void printIRResultOnLCD() {
     if (sLastProtocolIndex != IrReceiver.decodedIRData.protocol) {
         sLastProtocolIndex = IrReceiver.decodedIRData.protocol;
         /*
-         * Show protocol name and handle overwrite over Voltage
+         * Show protocol name and handle overwrite over voltage display
          */
         myLCD.setCursor(0, 0);
         uint_fast8_t tProtocolStringLength = myLCD.print(getProtocolString(IrReceiver.decodedIRData.protocol));

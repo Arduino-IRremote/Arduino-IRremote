@@ -42,6 +42,7 @@
  * If no protocol is defined, all protocols (except Bang&Olufsen) are active.
  * This must be done before the #include <IRremote.hpp>
  */
+// 3 protocol specification examples
 //#define DECODE_LG
 //#define DECODE_NEC
 //#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols

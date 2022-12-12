@@ -290,7 +290,20 @@ void timerConfigForReceive() {
 #define IR_SEND_PIN  8
 
 #    elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#define IR_SEND_PIN  PIN_PB1 // OC1BU / PB1 / Pin8 at ATTinyCore (BU/PB1, BV/PB3, BW/PB5 and BX/PB7 are available) see ENABLE_SEND_PWM_BY_TIMER
+/*
+ * !!! IR_SEND_PIN value must correspond to ENABLE_SEND_PWM_BY_TIMER below !!!
+ */
+#      if defined(USE_TIMER_CHANNEL_B)
+#define IR_SEND_PIN  PIN_PB1 // OC1BU / PB1 / Pin9 at ATTinyCore
+//#define IR_SEND_PIN  PIN_PB3 // OC1BV / PB3 / Pin11 at ATTinyCore
+//#define IR_SEND_PIN  PIN_PB5 // OC1BW / PB5 / Pin13 at ATTinyCore
+//#define IR_SEND_PIN  PIN_PB7 // OC1BX / PB7 / Pin15 at ATTinyCore
+#      else
+#define IR_SEND_PIN  PIN_PB0 // OC1AU / PB1 / Pin8 at ATTinyCore
+//#define IR_SEND_PIN  PIN_PB2 // OC1AV / PB3 / Pin10 at ATTinyCore
+//#define IR_SEND_PIN  PIN_PB4 // OC1AW / PB5 / Pin12 at ATTinyCore
+//#define IR_SEND_PIN  PIN_PB6 // OC1AX / PB6 / Pin14 at ATTinyCore
+#      endif
 
 #    else
 #define IR_SEND_PIN  9              // OC1A Arduino Duemilanove, Diecimila, LilyPad, Sparkfun Pro Micro, Leonardo, MH-ET Tiny88 etc.
@@ -298,11 +311,27 @@ void timerConfigForReceive() {
 
 #    if defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 // Clear OC1A/OC1B on Compare Match when up-counting. Set OC1A/OC1B on Compare Match when downcounting.
-#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  (TCCR1A |= _BV(COM1A1); (TCCR1D |= _BV(OC1BU)) // + enable OC1BU as output
+#      if defined(USE_TIMER_CHANNEL_B)
+#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1B1); (TCCR1D |= _BV(OC1BU)) // + enable OC1BU as output
+//#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1B1); (TCCR1D |= _BV(OC1BV)) // + enable OC1BV as output
+//#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1B1); (TCCR1D |= _BV(OC1BW)) // + enable OC1BW as output
+//#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1B1); (TCCR1D |= _BV(OC1BX)) // + enable OC1BX as output
+#      else
+#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1A1); (TCCR1D |= _BV(OC1AU)) // + enable OC1BU as output
+//#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1A1); (TCCR1D |= _BV(OC1AV)) // + enable OC1BV as output
+//#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1A1); (TCCR1D |= _BV(OC1AW)) // + enable OC1BW as output
+//#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1A1); (TCCR1D |= _BV(OC1AX)) // + enable OC1BX as output
+
+#      endif
 #define DISABLE_SEND_PWM_BY_TIMER  (TCCR1D = 0)
 #    else
+#      if defined(USE_TIMER_CHANNEL_B)
+#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0; (TCCR1A |= _BV(COM1B1))  // Clear OC1A/OC1B on Compare Match when up-counting. Set OC1A/OC1B on Compare Match when downcounting.
+#define DISABLE_SEND_PWM_BY_TIMER  (TCCR1A &= ~(_BV(COM1B1)))
+#      else
 #define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0; (TCCR1A |= _BV(COM1A1))  // Clear OC1A/OC1B on Compare Match when up-counting. Set OC1A/OC1B on Compare Match when downcounting.
 #define DISABLE_SEND_PWM_BY_TIMER  (TCCR1A &= ~(_BV(COM1A1)))
+#      endif
 #    endif
 
 /*
@@ -318,7 +347,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
     TCCR1B = _BV(WGM13) | _BV(CS10);// CS10 -> no prescaling
     ICR1 = tPWMWrapValue - 1;
 #    if defined(USE_TIMER_CHANNEL_B)
-    OCR1A = ((tPWMWrapValue * IR_SEND_DUTY_CYCLE_PERCENT) / 100) - 1;
+    OCR1B = ((tPWMWrapValue * IR_SEND_DUTY_CYCLE_PERCENT) / 100) - 1;
 #    else
     OCR1A = ((tPWMWrapValue * IR_SEND_DUTY_CYCLE_PERCENT) / 100) - 1;
 #    endif
