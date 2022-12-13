@@ -31,6 +31,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Support for seeduino which lacks the print(unsigned long long...) method. Thanks to sklott https://stackoverflow.com/users/11680056/sklott
 - Added support for attiny1614 by Joe Ostrander.
 - Fixed SEND_PWM_BY_TIMER for ATtiny167 thanks to freskpe.
+- Improved SHARP repeat decoding.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

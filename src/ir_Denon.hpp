@@ -55,20 +55,20 @@
 //                      SSSS   H   H  A   A  R   R  P
 //==============================================================================
 /*
-Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0xED1 15 bits LSB first
+ Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0xED1 15 bits LSB first
  + 200,-1800 + 300,- 750 + 300,- 800 + 200,- 800
  + 250,-1800 + 250,- 800 + 250,-1800 + 300,-1750
  + 300,- 750 + 300,-1800 + 250,-1800 + 250,-1850
  + 250,- 750 + 300,- 800 + 250,- 800 + 250
-Sum: 23050
+ Sum: 23050
 
-Denon/Sharp variant
-Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0x4ED1 15 bits LSB first
+ Denon/Sharp variant
+ Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0x4ED1 15 bits LSB first
  + 200,-1800 + 300,- 750 + 250,- 800 + 250,- 750
  + 300,-1800 + 250,- 800 + 250,-1800 + 300,-1750
  + 300,- 750 + 300,-1800 + 250,-1800 + 250,-1800
  + 300,- 750 + 300,- 750 + 300,-1800 + 250
-Sum: 23050
+ Sum: 23050
  */
 /*
  * https://www.mikrocontroller.net/articles/IRMP_-_english#DENON
@@ -84,8 +84,8 @@ Sum: 23050
  * From analyzing the codes for Tuner preset 1 to 8 in tab Main Zone ID#1 it is obvious, that the protocol is LSB first at least for command.
  * All Denon codes with 32 as 3. value use the Kaseyikyo Denon variant.
  */
-// MSB first, no start bit, 5 address + 8 command + 2 frame + 1 stop bit - each frame 2 times
-// For autorepeat frame, command and frame bits are inverted
+// LSB first, no start bit, 5 address + 8 command + 2 frame (0,0) + 1 stop bit - each frame 2 times
+// Every frame is auto repeated with a space period of 45 ms and the command and frame inverted to (1,1) or (0,1) for SHARP.
 //
 #define DENON_ADDRESS_BITS      5
 #define DENON_COMMAND_BITS      8
@@ -127,7 +127,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOf
         tCommand |= 0x0200; // the 2 upper bits are 00 for Denon and 10 for Sharp
     }
     uint16_t tData = aAddress | ((uint16_t) tCommand << DENON_ADDRESS_BITS);
-    uint16_t tInvertedData = (tData ^ 0x7FE); // Command and frame (upper 10 bits) are inverted
+    uint16_t tInvertedData = (tData ^ 0x7FE0); // Command and frame (upper 10 bits) are inverted
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -194,14 +194,19 @@ bool IRrecv::decodeDenon() {
     // Check for (auto) repeat
     if (decodedIRData.rawDataPtr->rawbuf[0] < ((DENON_AUTO_REPEAT_DISTANCE + (DENON_AUTO_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)) {
         repeatCount++;
+        if (repeatCount > 1) { // skip first auto repeat
+            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+        }
 
         if (tFrameBits & 0x01) {
+            /*
+             * Here we are in the auto repeated frame with the inverted command
+             */
 #if defined(LOCAL_DEBUG)
                 Serial.print(F("Denon: "));
                 Serial.println(F("Autorepeat received="));
 #endif
-            // We are in the auto repeated frame with the inverted command
-            decodedIRData.flags = IRDATA_FLAGS_IS_AUTO_REPEAT;
+            decodedIRData.flags |= IRDATA_FLAGS_IS_AUTO_REPEAT;
             // Check parity of consecutive received commands. There is no parity in one data set.
             if ((uint8_t) lastDecodedCommand != (uint8_t)(~decodedIRData.command)) {
                 decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
@@ -216,13 +221,17 @@ bool IRrecv::decodeDenon() {
             // always take non inverted command
             decodedIRData.command = lastDecodedCommand;
         }
-        if (repeatCount > 1) {
-            decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
+
+        // repeated command here
+        if (tFrameBits == 1 || tFrameBits == 2 ) {
+            decodedIRData.protocol = SHARP;
+        } else {
+            decodedIRData.protocol = DENON;
         }
-        decodedIRData.protocol = DENON; // do not know how to detect sharp here :-(
     } else {
         repeatCount = 0;
-        if (tFrameBits == 1 || tFrameBits == 2) {
+        // first command here
+        if (tFrameBits == 2) {
             decodedIRData.protocol = SHARP;
         } else {
             decodedIRData.protocol = DENON;

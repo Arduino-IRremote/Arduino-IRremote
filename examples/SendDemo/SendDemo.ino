@@ -155,7 +155,7 @@ void loop() {
         IrSender.sendNECRaw(0x03040102, sRepeats);
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send NEC with 16 bit address 0x0102 and 16 bit command 0x0304 with sendPulseDistanceWidthData()"));
+        Serial.println(F("Send ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with sendPulseDistanceWidthData()"));
         // Header
         IrSender.mark(9000);
         IrSender.space(4500);

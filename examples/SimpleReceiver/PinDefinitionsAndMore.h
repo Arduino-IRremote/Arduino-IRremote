@@ -61,12 +61,12 @@
 #define IR_RECEIVE_PIN   9 // PA3 - on Digispark board labeled as pin 9
 //#define IR_RECEIVE_PIN  14 // PB6 / INT0 is connected to USB+ on DigisparkPro boards
 #define IR_SEND_PIN      8 // PA2 - on Digispark board labeled as pin 8
-#define TONE_PIN         5 // PA7
+#define TONE_PIN         5 // PA7 - on Digispark board labeled as pin 5
 #define _IR_TIMING_TEST_PIN 10 // PA4
 #  else
-#define IR_RECEIVE_PIN  3
-#define IR_SEND_PIN     2
-#define TONE_PIN        7
+#define IR_RECEIVE_PIN  3 // PA3 - on Digispark board labeled as pin 9
+#define IR_SEND_PIN     2 // PA2 - on Digispark board labeled as pin 8
+#define TONE_PIN        7 // PA7 - on Digispark board labeled as pin 5
 #  endif
 
 #  elif defined(__AVR_ATtiny88__) // MH-ET Tiny88 board

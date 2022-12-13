@@ -120,7 +120,6 @@ LiquidCrystal myLCD(4, 5, 6, 7, 8, 9);
 void printIRResultOnLCD();
 size_t printHex(uint16_t aHexByteValue);
 void printSpaces(uint_fast8_t aNumberOfSpacesToPrint);
-void PrintVCCOnLCD();
 
 void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
@@ -221,23 +220,19 @@ void loop() {
 #if defined(USE_LCD) && defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
     //Periodically print VCC
     if (!ProtocolStringOverwritesVoltage && millis() - sMillisOfLastVoltagePrint > MILLIS_BETWEEN_VOLTAGE_PRINT) {
-        PrintVCCOnLCD();
+        /*
+         * Periodically print VCC
+         */
+        sMillisOfLastVoltagePrint = millis();
+        uint16_t tVCC = getVCCVoltageMillivoltSimple();
+        char tVoltageString[5];
+        dtostrf(tVCC / 1000.0, 4, 2, tVoltageString);
+        myLCD.setCursor(LCD_VOLTAGE_START_INDEX, 0);
+        myLCD.print(tVoltageString);
+        myLCD.print('V');
     }
 #endif
 
-}
-
-void PrintVCCOnLCD() {
-    /*
-     * Periodically print VCC
-     */
-    sMillisOfLastVoltagePrint = millis();
-    uint16_t tVCC = getVCCVoltageMillivoltSimple();
-    char tVoltageString[5];
-    dtostrf(tVCC / 1000.0, 4, 2, tVoltageString);
-    myLCD.setCursor(LCD_VOLTAGE_START_INDEX, 0);
-    myLCD.print(tVoltageString);
-    myLCD.print('V');
 }
 
 /*
