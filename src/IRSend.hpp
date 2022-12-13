@@ -477,7 +477,8 @@ void IRsend::sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
-        unsigned long tStartOfFrameMillis = millis();
+        auto tStartOfFrameMillis = millis();
+        auto tNumberOfBits = aNumberOfBits; // refresh value for repeats
 
         // Header
         mark(aProtocolConstants->HeaderMarkMicros);
@@ -489,7 +490,7 @@ void IRsend::sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants
 
             if (i == (tNumberOf32BitChunks - 1)) {
                 // End of data
-                tNumberOfBitsForOneSend = aNumberOfBits;
+                tNumberOfBitsForOneSend = tNumberOfBits;
                 aProtocolConstants->hasStopBit = tHasStopBit;
             } else {
                 // intermediate data
@@ -497,7 +498,7 @@ void IRsend::sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants
                 aProtocolConstants->hasStopBit = false;
             }
             sendPulseDistanceWidthData(aProtocolConstants, aDecodedRawDataArray[i], tNumberOfBitsForOneSend);
-            aNumberOfBits -= 32;
+            tNumberOfBits -= 32;
         }
 
         tNumberOfCommands--;

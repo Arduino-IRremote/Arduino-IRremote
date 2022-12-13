@@ -310,7 +310,7 @@ void timerConfigForReceive() {
 #    endif // defined(CORE_OC1A_PIN)
 
 #    if defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-// Clear OC1A/OC1B on Compare Match when up-counting. Set OC1A/OC1B on Compare Match when downcounting.
+// Clear OC1A/OC1B on Compare Match when up-counting. Set OC1A/OC1B on Compare Match when down counting.
 #      if defined(USE_TIMER_CHANNEL_B)
 #define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1B1); (TCCR1D |= _BV(OC1BU)) // + enable OC1BU as output
 //#define ENABLE_SEND_PWM_BY_TIMER   TCNT1 = 0;  TCCR1A |= _BV(COM1B1); (TCCR1D |= _BV(OC1BV)) // + enable OC1BV as output

@@ -120,6 +120,7 @@ LiquidCrystal myLCD(4, 5, 6, 7, 8, 9);
 void printIRResultOnLCD();
 size_t printHex(uint16_t aHexByteValue);
 void printSpaces(uint_fast8_t aNumberOfSpacesToPrint);
+void PrintVCCOnLCD();
 
 void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
@@ -218,21 +219,25 @@ void loop() {
     } // if (IrReceiver.decode())
 
 #if defined(USE_LCD) && defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
-    /*
-     * Periodically print VCC
-     */
+    //Periodically print VCC
     if (!ProtocolStringOverwritesVoltage && millis() - sMillisOfLastVoltagePrint > MILLIS_BETWEEN_VOLTAGE_PRINT) {
-        sMillisOfLastVoltagePrint = millis();
-        uint16_t tVCC = getVCCVoltageMillivoltSimple();
-
-        char tVoltageString[5];
-        dtostrf(tVCC / 1000.0, 4, 2, tVoltageString);
-        myLCD.setCursor(LCD_VOLTAGE_START_INDEX, 0);
-        myLCD.print(tVoltageString);
-        myLCD.print('V');
+        PrintVCCOnLCD();
     }
 #endif
 
+}
+
+void PrintVCCOnLCD() {
+    /*
+     * Periodically print VCC
+     */
+    sMillisOfLastVoltagePrint = millis();
+    uint16_t tVCC = getVCCVoltageMillivoltSimple();
+    char tVoltageString[5];
+    dtostrf(tVCC / 1000.0, 4, 2, tVoltageString);
+    myLCD.setCursor(LCD_VOLTAGE_START_INDEX, 0);
+    myLCD.print(tVoltageString);
+    myLCD.print('V');
 }
 
 /*
@@ -268,6 +273,8 @@ void printIRResultOnLCD() {
                 printSpaces(LCD_COLUMNS - tProtocolStringLength);
             }
         } else {
+            // Trigger printing of VCC in main loop
+            sMillisOfLastVoltagePrint = 0;
             ProtocolStringOverwritesVoltage = false;
             printSpaces(LCD_VOLTAGE_START_INDEX - tProtocolStringLength);
         }
@@ -291,6 +298,7 @@ void printIRResultOnLCD() {
             myLCD.print(F("[0]=0x"));
             uint_fast8_t tAddressStringLength = myLCD.print(IrReceiver.decodedIRData.decodedRawDataArray[0], HEX);
             printSpaces(LCD_COLUMNS - tAddressStringLength);
+            sLastCommand = 0; // to trigger restoration of "C=" string
             return; // no command here
         } else {
 #  endif
@@ -307,14 +315,14 @@ void printIRResultOnLCD() {
      */
     uint16_t tCommand = IrReceiver.decodedIRData.command;
 
-    // Check if prefix position must change
-    if (sLastCommand == 0 || (sLastCommand > 0x100 && tCommand < 0x100) || (sLastCommand < 0x100 && tCommand > 0x100)) {
+// Check if prefix position must change
+    if (sLastCommand == 0 || (sLastCommand >= 0x100 && tCommand < 0x100) || (sLastCommand < 0x100 && tCommand >= 0x100)) {
         sLastCommand = tCommand;
         /*
          * Print prefix for 8/16 bit commands
          */
         if (tCommand >= 0x100) {
-            // save 2 characters here
+            // Do not print "C=" here to have 2 additional characters for command
             sLastCommandPrintPosition = 9;
         } else {
             myLCD.setCursor(LCD_IR_COMMAND_START_INDEX, 1);
