@@ -89,7 +89,9 @@ void loop() {
      */
     if (IrReceiver.decode()) {
 
-        // Print a short summary of received data
+        /*
+         * Print a short summary of received data
+         */
         IrReceiver.printIRResultShort(&Serial);
         IrReceiver.printIRSendUsage(&Serial);
         if (IrReceiver.decodedIRData.protocol == UNKNOWN) {

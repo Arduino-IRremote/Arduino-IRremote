@@ -44,7 +44,6 @@ void setup() {
  * and a variable 8 bit command.
  * There are exceptions like Sony and Denon, which have 5 bit address.
  */
-uint8_t sAddress = 0x02;
 uint8_t sCommand = 0x34;
 uint8_t sRepeats = 0;
 
@@ -53,30 +52,21 @@ void loop() {
      * Print current send values
      */
     Serial.println();
-    Serial.print(F("Send now: address=0x"));
-    Serial.print(sAddress, HEX);
-    Serial.print(F(" command=0x"));
+    Serial.print(F("Send now: address=0x00, command=0x"));
     Serial.print(sCommand, HEX);
-    Serial.print(F(" repeats="));
+    Serial.print(F(", repeats="));
     Serial.print(sRepeats);
     Serial.println();
 
-    Serial.println(F("Send NEC with 8 bit address"));
+    Serial.println(F("Send standard NEC with 8 bit address"));
     Serial.flush();
 
     // Receiver output for the first loop must be: Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 (32 bits)
-    IrSender.sendNEC(sAddress, sCommand, sRepeats);
+    IrSender.sendNEC(0x00, sCommand, sRepeats);
 
     /*
-     * If you must send a raw value directly like e.g. 0xCB340102, you have to use sendNECRaw()
-     */
-//    Serial.println(F("Send NECRaw 0xCB340102"));
-//    IrSender.sendNECRaw(0xCB340102, sRepeats);
-    /*
      * Increment send values
-     * Also increment address just for demonstration, which normally makes no sense
      */
-    sAddress += 0x0101;
     sCommand += 0x11;
     sRepeats++;
     // clip repeats at 4

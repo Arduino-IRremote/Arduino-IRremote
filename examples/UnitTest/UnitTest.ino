@@ -412,7 +412,7 @@ void loop() {
          * Example:
          * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
          */
-        Serial.println(F("Send NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first (0x40802CD3)"));
+        Serial.println(F("Send ONKYO with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first (0x40802CD3)"));
         Serial.flush();
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         checkReceive(0x0102, 0x34);

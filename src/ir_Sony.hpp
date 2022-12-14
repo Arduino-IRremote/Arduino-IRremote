@@ -60,7 +60,9 @@
  Sum: 31100
  */
 // see https://www.sbprojects.net/knowledge/ir/sirc.php
-// Here http://picprojects.org.uk/projects/sirc/ it is claimed, that many Sony remotes repeat each frame a minimum of 3 times
+// Frames are repeated every 45ms (measured from start to start) for as long as the key on the remote control is held down.
+// This leads to a 15 ms gap for a Sony20 protocol!
+// Here http://picprojects.org.uk/projects/sirc/ it is claimed, that many Sony remotes send each frame a minimum of 3 times. But 1 repeat (2 sends) has also been seen in real life.
 // LSB first, start bit + 7 command + 5 to 13 address, no stop bit
 // IRP: Sony12 {40k,600}<1,-1|2,-1>(4,-1,F:7,D:5,^45m)+ ==> 40 kHz, Unit is 600, LSB, One mark is 2 units, Start bit is 4 units, 7 bit Function, 5 bit Device, no Stop bit, every 45 milliseconds
 // IRP: Sony15 {40k,600}<1,-1|2,-1>(4,-1,F:7,D:8,^45m)+ ==> 8 bit Device

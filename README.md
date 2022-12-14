@@ -31,9 +31,9 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [Features](https://github.com/Arduino-IRremote/Arduino-IRremote#features)
   * [New features with version 3.x](https://github.com/Arduino-IRremote/Arduino-IRremote#new-features-with-version-3x)
 - [Converting your 2.x program to the 3.x version](https://github.com/Arduino-IRremote/Arduino-IRremote#converting-your-2x-program-to-the-3x-version)
-  * [Staying on 2.x](https://github.com/Arduino-IRremote/Arduino-IRremote#staying-on-2x)
   * [How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes](https://github.com/Arduino-IRremote/Arduino-IRremote#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes)
 -  [Errors with using the 3.x versions for old tutorials](https://github.com/Arduino-IRremote/Arduino-IRremote#errors-with-using-the-3x-versions-for-old-tutorials)
+  * [Staying on 2.x](https://github.com/Arduino-IRremote/Arduino-IRremote#staying-on-2x)
 - [Why *.hpp instead of *.cpp](https://github.com/Arduino-IRremote/Arduino-IRremote#why-hpp-instead-of-cpp)
 - [Using the new *.hpp files](https://github.com/Arduino-IRremote/Arduino-IRremote#using-the-new-hpp-files)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#receiving-ir-codes)
@@ -106,7 +106,7 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - You must replace `#define DECODE_DISTANCE_WIDTH` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).
 
 ## New features with version 3.x
-- **Any pin** can be used for sending / receiving.
+- **Any pin** can be used for sending -if `SEND_PWM_BY_TIMER` is not defined- and receiving.
 - Feedback LED can be activated for sending / receiving.
 - An 8/16 bit ****command** value as well as an 16 bit **address** and a protocol number is provided for decoding (instead of the old 32 bit value).
 - Protocol values comply to **protocol standards**.<br/>
@@ -140,6 +140,9 @@ If IR_SEND_PIN is not defined you must use e.g. `IrSender.begin(3, ENABLE_LED_FE
  `IrReceiver.decodedIRData.decodedRawData` and `IrReceiver.decodedIRData.protocol`.
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L164-L187).
 - Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
+
+- The 5 protocols **NEC, Panasonic, Sony, Samsung and JVC** have been converted to LSB first. Send functions for sending old MSB data for **NEC** and **JVC** were renamed to `sendNECMSB`, and `sendJVCMSB()`. The old  `sendSAMSUNG()` and `sendSony()` MSB functions are still available. The old MSB version of `sendPanasonic()` function was deleted, since it had bugs nobody recognized.<br/>
+For converting MSB codes to LSB see [below](https://github.com/Arduino-IRremote/Arduino-IRremote#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes).
 
 ### Example
 #### 2.x program:
@@ -187,20 +190,6 @@ void loop() {
   ...
 }
 ```
-## Staying on 2.x
-Consider using the [original 2.4 release form 2017](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0)
-or the last backwards compatible [2.8 version](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/2.8.0) for you project.<br/>
-It may be sufficient and deals flawlessly with 32 bit IR codes.<br/>
-If this doesn't fit your case, be assured that 3.x is at least trying to be backwards compatible, so your old examples should still work fine.
-
-### Drawbacks
-- Only the following decoders are available:<br/>
-  ` NEC ` &nbsp; &nbsp; ` Denon ` &nbsp; &nbsp; ` Panasonic ` &nbsp; &nbsp; ` JVC ` &nbsp; &nbsp; ` LG `<br/>
-  ` RC5 ` &nbsp; &nbsp; ` RC6 ` &nbsp; &nbsp; ` Samsung ` &nbsp; &nbsp; ` Sony `
-- The call of `irrecv.decode(&results)` uses the old MSB first decoders like in 2.x and sets the 32 bit codes in `results.value`.
-- The old functions `sendNEC()` and `sendJVC()` are renamed to `sendNECMSB()` and `sendJVCMSB()`.<br/>
-  Use them to send your **old MSB-first 32 bit IR data codes**.
-- No decoding by a (constant) 8/16 bit address and an 8 bit command.
 
 ## How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes
 For the new decoders for **NEC, Panasonic, Sony, Samsung and JVC**, the result `IrReceiver.decodedIRData.decodedRawData` is now **LSB-first**, as the definition of these protocols suggests!<br/>
@@ -226,6 +215,23 @@ If you **read the first binary sequence backwards** (right to left), you get the
 # Errors with using the 3.x versions for old tutorials
 If you suffer from errors with old tutorial code including `IRremote.h` instead of `IRremote.hpp`, just try to rollback to [Version 2.4.0](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0).<br/>
 Most likely your code will run and you will not miss the new features...
+
+<br/>
+
+## Staying on 2.x
+Consider using the [original 2.4 release form 2017](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0)
+or the last backwards compatible [2.8 version](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/2.8.0) for you project.<br/>
+It may be sufficient and deals flawlessly with 32 bit IR codes.<br/>
+If this doesn't fit your case, be assured that 3.x is at least trying to be backwards compatible, so your old examples should still work fine.
+
+### Drawbacks
+- Only the following decoders are available:<br/>
+  ` NEC ` &nbsp; &nbsp; ` Denon ` &nbsp; &nbsp; ` Panasonic ` &nbsp; &nbsp; ` JVC ` &nbsp; &nbsp; ` LG `<br/>
+  ` RC5 ` &nbsp; &nbsp; ` RC6 ` &nbsp; &nbsp; ` Samsung ` &nbsp; &nbsp; ` Sony `
+- The call of `irrecv.decode(&results)` uses the old MSB first decoders like in 2.x and sets the 32 bit codes in `results.value`.
+- The old functions `sendNEC()` and `sendJVC()` are renamed to `sendNECMSB()` and `sendJVCMSB()`.<br/>
+  Use them to send your **old MSB-first 32 bit IR data codes**.
+- No decoding by a (constant) 8/16 bit address and an 8 bit command.
 
 <br/>
 
@@ -530,7 +536,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `RECORD_GAP_MICROS` |  5000 | Minimum gap between IR transmissions, to detect the end of a protocol.<br/>Must be greater than any space of a protocol e.g. the NEC header space of 4500 µs.<br/>Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br/>Keep in mind, that this is the delay between the end of the received command and the start of decoding. |
 | `IR_INPUT_IS_ACTIVE_HIGH` |  disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
 | `IR_SEND_PIN` |  disabled | If specified (as constant), reduces program size and improves send timing for AVR. If you want to use a runtime variable send pin e.g. with `setSendPin(uint8_t aSendPinNumber)` , you must disable this macro. |
-| `SEND_PWM_BY_TIMER` |  disabled | Disables carrier PWM generation in software and use hardware PWM (by timer). Has the advantage of more exact PWM generation, especially the duty cycle (which is not very relevant for real world applications), and the disadvantage of using a hardware timer, which in turn is not available for other libraries. Is enabled for ESP32 and RP2040 in all examples, since they support PWM gereration for each pin without using a shared resource (timer). |
+| `SEND_PWM_BY_TIMER` |  disabled | Disables carrier PWM generation in software and use hardware PWM (by timer). Has the advantage of more exact PWM generation, especially the duty cycle (which is not very relevant for most IR receiver circuits), and the disadvantage of using a hardware timer, which in turn is not available for other libraries and to fix the send pin (but not the receive pin) at the [dedicated timer output pin(s)](https://github.com/Arduino-IRremote/Arduino-IRremote#timer-and-pin-usage). Is enabled for ESP32 and RP2040 in all examples, since they support PWM gereration for each pin without using a shared resource (timer). |
 | `USE_NO_SEND_PWM` |  disabled | Uses no carrier PWM, just simulate an **active low** receiver signal. Overrides `SEND_PWM_BY_TIMER` definition. |
 | `IR_SEND_DUTY_CYCLE_PERCENT` |  30 | Duty cycle of IR send signal. |
 | `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` |  disabled | Uses or simulates open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
@@ -613,7 +619,7 @@ The code for the timer and the **timer selection** is located in [private/IRTime
 | [ATtiny84](https://github.com/SpenceKonde/ATTinyCore)                    | **1**             | **6**               |
 | [ATtiny85 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **0**, 1          | **0**, 4            | **0**, 1 & 4          |
 | [ATtiny88 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)            | **1**             | **PB1 / 8**         | **PB1 / 8 & PB2 / 9** |
-| [ATtiny167 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)           | **1**             | **9**               | **8 - 15**            |
+| [ATtiny167 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore)           | **1**             | **9**, 8 - 15       | **8 - 15**            |
 | [ATtiny1604](https://github.com/SpenceKonde/megaTinyCore)                | **TCB0**          | **PA05**            |
 | [ATtiny1614, ATtiny816](https://github.com/SpenceKonde/megaTinyCore)     | **TCA0**          | **PA3**             |
 | [ATtiny3217](https://github.com/SpenceKonde/megaTinyCore)                | **TCA0**, TCD     | %                   |
@@ -683,8 +689,8 @@ This only works since each call to` tone()` completely initializes the timer 2 u
 
 ## Hardware-PWM signal generation for sending
 If you define `SEND_PWM_BY_TIMER`, the send PWM signal is forced to be generated by a hardware timer on most platforms.<br/>
-The same timer as for the receiver is used.<br/>
-Since each hardware timer has its dedicated output pins, you must change timer to change PWM output.<br/>
+By default, the same timer as for the receiver is used.<br/>
+Since each hardware timer has its dedicated output pin(s), you must change timer or timer sub-specifications to change PWM output pin. See [private/IRTimer.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.hpp)<br/>
 **Exeptions** are currently [ESP32, ARDUINO_ARCH_RP2040, PARTICLE and ARDUINO_ARCH_MBED](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/39bdf8d7bf5b90dc221f8ae9fb3efed9f0a8a1db/examples/SimpleSender/PinDefinitionsAndMore.h#L273), where **PWM generation does not require a timer**.
 
 ## Why do we use 30% duty cycle for sending
