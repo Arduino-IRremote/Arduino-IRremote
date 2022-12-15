@@ -100,7 +100,7 @@ struct irparams_struct {
     volatile uint8_t *IRReceivePinPortInputRegister;
     uint8_t IRReceivePinMask;
 #endif
-    uint_fast16_t TickCounterForISR;    ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
+    volatile uint_fast16_t TickCounterForISR;    ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
 #if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
     void (*ReceiveCompleteCallbackFunction)(void); ///< The function to call if a protocol message has arrived, i.e. StateForISR changed to IR_REC_STATE_STOP
 #endif
@@ -185,6 +185,7 @@ public:
     void start();
     void enableIRIn(); // alias for start
     void start(uint32_t aMicrosecondsToAddToGapCounter);
+    void startWithTicksToAdd(uint16_t aTicksToAddToGapCounter);
     void restartAfterSend();
 
     bool available();
@@ -536,7 +537,7 @@ public:
 
     void sendNEC(uint32_t aRawData,
             uint8_t nbits)
-                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNEC(aAddress, aCommand, aNumberOfRepeats)."))) {
+                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNECMSB() or sendNEC(aAddress, aCommand, aNumberOfRepeats)."))) {
         sendNECMSB(aRawData, nbits);
     }
     void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat = false);

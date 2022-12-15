@@ -162,7 +162,7 @@
 /**
  * Minimum gap between IR transmissions, to detect the end of a protocol.
  * Must be greater than any space of a protocol e.g. the NEC header space of 4500 us.
- * Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.
+ * Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 15 ms for Sony20 protocol.
  * Keep in mind, that this is the delay between the end of the received command and the start of decoding.
  */
 #if !defined(RECORD_GAP_MICROS)
@@ -174,11 +174,11 @@
  */
 #if !defined(RECORD_GAP_MICROS_WARNING_THRESHOLD)
 // To change this value, you simply can add a line #define "RECORD_GAP_MICROS_WARNING_THRESHOLD <My_new_value>" in your ino file before the line "#include <IRremote.hpp>"
-#define RECORD_GAP_MICROS_WARNING_THRESHOLD   20000
+#define RECORD_GAP_MICROS_WARNING_THRESHOLD   15000
 #endif
 
 /** Minimum gap between IR transmissions, in MICROS_PER_TICK */
-#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK) // 221 for 1100
+#define RECORD_GAP_TICKS    (RECORD_GAP_MICROS / MICROS_PER_TICK) // 100
 
 /*
  * Activate this line if your receiver has an external output driver transistor / "inverted" output

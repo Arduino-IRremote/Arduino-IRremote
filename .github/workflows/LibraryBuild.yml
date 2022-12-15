@@ -149,12 +149,14 @@ jobs:
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
             arduino-platform: megaTinyCore:megaavr@2.5.11 # The current 2.6.0 is broken see https://github.com/SpenceKonde/megaTinyCore/issues/805
             platform-url: http://drazzy.com/package_drazzy.com_index.json
+            sketches-exclude: AllProtocolsOnLCD
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
             arduino-platform: megaTinyCore:megaavr@2.5.11
             platform-url: http://drazzy.com/package_drazzy.com_index.json
+            sketches-exclude: AllProtocolsOnLCD
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
@@ -236,7 +238,7 @@ jobs:
 
           - arduino-boards-fqbn: Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
             platform-url: https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
-            sketches-exclude: AllProtocols
+            sketches-exclude: AllProtocolsOnLCD
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300

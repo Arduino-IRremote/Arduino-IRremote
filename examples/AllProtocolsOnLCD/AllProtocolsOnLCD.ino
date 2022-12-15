@@ -1,7 +1,7 @@
 /*
- * AllProtocols.cpp
+ * AllProtocolsOnLCD.cpp
  *
- * Modified ReceiveDemo.cpp with additional LCD output.
+ * Modified ReceiveDemo.cpp with additional 1602 LCD output.
  * If debug button is pressed (pin connected to ground) a long output is generated.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -73,7 +73,7 @@
  * because of the long lasting serial communication.
  */
 //#define USE_NO_LCD
-#define USE_SERIAL_LCD
+//#define USE_SERIAL_LCD
 #if defined(USE_SERIAL_LCD)
 #include "LiquidCrystal_I2C.h" // Use an up to date library version, which has the init method
 #elif !defined(USE_NO_LCD)
@@ -82,14 +82,12 @@
 #endif
 
 #if defined(USE_PARALLEL_LCD)
-#define DEBUG_BUTTON_PIN   11
-#endif
-#if !defined(DEBUG_BUTTON_PIN)
-#  if defined(APPLICATION_PIN)
-#define DEBUG_BUTTON_PIN    APPLICATION_PIN // if low, print timing for each received data set
-#  else
+#define DEBUG_BUTTON_PIN            11 // If low, print timing for each received data set
+#define AUXILIARY_DEBUG_BUTTON_PIN  12 // Is set to low to enable using of a simple connector for enabling debug
+#undef TONE_PIN
+#define TONE_PIN                     9 // Pin 4 is used by LCD
+#else
 #define DEBUG_BUTTON_PIN   6
-#  endif
 #endif
 
 #if defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
@@ -102,8 +100,8 @@
 #include "ADCUtils.hpp"
 #define MILLIS_BETWEEN_VOLTAGE_PRINT    5000
 #define LCD_VOLTAGE_START_INDEX           11
-uint32_t volatile sMillisOfLastVoltagePrint;
-bool ProtocolStringOverwritesVoltage;
+uint32_t volatile sMillisOfLastVoltagePrint = 0;
+bool ProtocolStringOverwritesVoltage = false;
 #  endif
 #define LCD_IR_COMMAND_START_INDEX         9
 
@@ -113,8 +111,8 @@ bool ProtocolStringOverwritesVoltage;
 LiquidCrystal_I2C myLCD(0x27, LCD_COLUMNS, LCD_ROWS);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 #endif
 #if defined(USE_PARALLEL_LCD)
-LiquidCrystal myLCD(4, 5, 6, 7, 8, 9);
-//LiquidCrystal myLCD(7, 8, 3, 4, 5, 6);
+//LiquidCrystal myLCD(4, 5, 6, 7, 8, 9);
+LiquidCrystal myLCD(7, 8, 3, 4, 5, 6);
 #endif
 
 void printIRResultOnLCD();
@@ -124,6 +122,10 @@ void printSpaces(uint_fast8_t aNumberOfSpacesToPrint);
 void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
+#  if defined(AUXILIARY_DEBUG_BUTTON_PIN)
+    pinMode(AUXILIARY_DEBUG_BUTTON_PIN, OUTPUT);
+    digitalWrite(AUXILIARY_DEBUG_BUTTON_PIN, LOW); // To use a simple connector to enable debug
+#  endif
 #endif
 
     Serial.begin(115200);
@@ -150,6 +152,7 @@ void setup() {
 #endif
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+    Serial.println();
     Serial.print(F("Debug button pin is "));
     Serial.println(DEBUG_BUTTON_PIN);
 
@@ -195,16 +198,37 @@ void loop() {
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             Serial.println(F("Overflow detected"));
             Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in " __FILE__));
+#if defined(USE_LCD)
+            myLCD.setCursor(0, 0);
+            myLCD.print(F("Overflow   "));
+#endif
+
             // see also https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library
 
         } else {
+            // play tone
+            auto tStartMillis = millis();
+            IrReceiver.stop();
+            tone(TONE_PIN, 2200);
+
             // Print a short summary of received data
             IrReceiver.printIRResultShort(&Serial);
 
             if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
-                // We have an unknown protocol, print more info
+                // Print more info
+                IrReceiver.printIRSendUsage(&Serial);
                 IrReceiver.printIRResultRawFormatted(&Serial, false);
             }
+
+            // Guarantee at least 5 millis for tone. decode starts 5 millis (RECORD_GAP_MICROS) after end of frame
+            // so here we are 10 millis after end of frame. Sony20 has only a 12 ms repeat gap.
+            while ((millis() - tStartMillis) < 5)
+                ;
+            noTone(TONE_PIN);
+
+            // Restore IR timer. millis() - tStartMillis to compensate for stop of receiver. This enables a correct gap measurement.
+            IrReceiver.startWithTicksToAdd((millis() - tStartMillis) * (MICROS_IN_ONE_MILLI / MICROS_PER_TICK));
+
 #if defined(USE_LCD)
             printIRResultOnLCD();
 #endif
@@ -217,7 +241,7 @@ void loop() {
         IrReceiver.resume();
     } // if (IrReceiver.decode())
 
-#if defined(USE_LCD) && defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
+#if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
     //Periodically print VCC
     if (!ProtocolStringOverwritesVoltage && millis() - sMillisOfLastVoltagePrint > MILLIS_BETWEEN_VOLTAGE_PRINT) {
         /*
@@ -227,7 +251,8 @@ void loop() {
         uint16_t tVCC = getVCCVoltageMillivoltSimple();
         char tVoltageString[5];
         dtostrf(tVCC / 1000.0, 4, 2, tVoltageString);
-        myLCD.setCursor(LCD_VOLTAGE_START_INDEX, 0);
+        myLCD.setCursor(LCD_VOLTAGE_START_INDEX - 1, 0);
+        myLCD.print(' ');
         myLCD.print(tVoltageString);
         myLCD.print('V');
     }
@@ -345,6 +370,7 @@ void printIRResultOnLCD() {
 #endif // defined(USE_LCD)
 }
 
+#if defined(USE_LCD)
 size_t printHex(uint16_t aHexByteValue) {
     myLCD.print(F("0x"));
     size_t tPrintSize = 2;
@@ -360,3 +386,4 @@ void printSpaces(uint_fast8_t aNumberOfSpacesToPrint) {
         myLCD.print(' ');
     }
 }
+#endif

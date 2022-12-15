@@ -99,6 +99,157 @@ IRrecv::IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) {
 }
 
 /**********************************************************************************************************************
+ * Interrupt Service Routine - Called every 50 us
+ *
+ * Duration in ticks of 50 us of alternating SPACE, MARK are recorded in irparams.rawbuf array.
+ * 'rawlen' counts the number of entries recorded so far.
+ * First entry is the SPACE between transmissions.
+ *
+ * As soon as one SPACE entry gets longer than RECORD_GAP_TICKS, state switches to STOP (frame received). Timing of SPACE continues.
+ * A call of resume() switches from STOP to IDLE.
+ * As soon as first MARK arrives in IDLE, gap width is recorded and new logging starts.
+ *
+ * With digitalRead and Feedback LED
+ * 15 pushs, 1 in, 1 eor before start of code = 2 us @16MHz + * 7.2 us computation time (6us idle time) + * pop + reti = 2.25 us @16MHz => 10.3 to 11.5 us @16MHz
+ * With portInputRegister and mask and Feedback LED code commented
+ * 9 pushs, 1 in, 1 eor before start of code = 1.25 us @16MHz + * 2.25 us computation time + * pop + reti = 1.5 us @16MHz => 5 us @16MHz
+ * => Minimal CPU frequency is 4 MHz
+ *
+ **********************************************************************************************************************/
+//#define _IR_MEASURE_TIMING
+//#define _IR_TIMING_TEST_PIN 10 // "pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);" is executed at start()
+#if defined(TIMER_INTR_NAME)
+    ISR (TIMER_INTR_NAME) // for ISR definitions
+#else
+ISR()
+// for functions definitions which are called by separate (board specific) ISR
+#endif
+{
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+    digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
+// 7 - 8.5 us for ISR body (without pushes and pops) for ATmega328 @16MHz
+
+    TIMER_RESET_INTR_PENDING;// reset TickCounterForISR interrupt flag if required (currently only for Teensy and ATmega4809)
+
+// Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
+#if defined(__AVR__)
+    uint8_t tIRInputLevel = *irparams.IRReceivePinPortInputRegister & irparams.IRReceivePinMask;
+#else
+    uint_fast8_t tIRInputLevel = (uint_fast8_t) digitalReadFast(irparams.IRReceivePin);
+#endif
+
+    /*
+     * Increase TickCounter and clip it at maximum 0xFFFF / 3.2 seconds at 50 us ticks
+     */
+    if (irparams.TickCounterForISR < UINT16_MAX) {
+        irparams.TickCounterForISR++;  // One more 50uS tick
+    }
+
+    /*
+     * Due to a ESP32 compiler bug https://github.com/espressif/esp-idf/issues/1552 no switch statements are possible for ESP32
+     * So we change the code to if / else if
+     */
+//    switch (irparams.StateForISR) {
+//......................................................................
+    if (irparams.StateForISR == IR_REC_STATE_IDLE) {
+        /*
+         * Here we are just resumed and maybe in the middle of a transmission
+         */
+        if (tIRInputLevel == INPUT_MARK) {
+            // check if we did not start in the middle of a transmission by checking the minimum length of leading space
+            if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+//                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
+                /*
+                 * Gap between two transmissions just ended; Record gap duration + start recording transmission
+                 * Initialize all state machine variables
+                 */
+                irparams.OverflowFlag = false;
+                irparams.rawbuf[0] = irparams.TickCounterForISR;
+                irparams.rawlen = 1;
+                irparams.StateForISR = IR_REC_STATE_MARK;
+            } // otherwise stay in idle state
+            irparams.TickCounterForISR = 0;// reset counter in both cases
+        }
+
+    } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing mark
+        if (tIRInputLevel != INPUT_MARK) {   // Mark ended; Record time
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+//            digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
+            irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
+            irparams.StateForISR = IR_REC_STATE_SPACE;
+            irparams.TickCounterForISR = 0; // This resets the tick counter also at end of frame :-)
+        }
+
+    } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing space
+        if (tIRInputLevel == INPUT_MARK) {  // Space just ended; Record time
+            if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
+                // Flag up a read OverflowFlag; Stop the state machine
+                irparams.OverflowFlag = true;
+                irparams.StateForISR = IR_REC_STATE_STOP;
+#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
+                /*
+                 * Call callback if registered (not NULL)
+                 */
+                if (irparams.ReceiveCompleteCallbackFunction != NULL) {
+                    irparams.ReceiveCompleteCallbackFunction();
+                }
+#endif
+            } else {
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+//                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
+                irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
+                irparams.StateForISR = IR_REC_STATE_MARK;
+            }
+            irparams.TickCounterForISR = 0;
+
+        } else if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
+            /*
+             * Current code is ready for processing!
+             * We received a long space, which indicates gap between codes.
+             * Switch to IR_REC_STATE_STOP
+             * Don't reset TickCounterForISR; keep counting width of next leading space
+             */
+            irparams.StateForISR = IR_REC_STATE_STOP;
+#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
+            /*
+             * Call callback if registered (not NULL)
+             */
+            if (irparams.ReceiveCompleteCallbackFunction != NULL) {
+                irparams.ReceiveCompleteCallbackFunction();
+            }
+#endif
+        }
+    } else if (irparams.StateForISR == IR_REC_STATE_STOP) {
+        /*
+         * Complete command received
+         * stay here until resume() is called, which switches state to IR_REC_STATE_IDLE
+         */
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+//        digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
+        if (tIRInputLevel == INPUT_MARK) {
+            // Reset gap TickCounterForISR, to prepare for detection if we are in the middle of a transmission after call of resume()
+            irparams.TickCounterForISR = 0;
+        }
+    }
+
+#if !defined(NO_LED_FEEDBACK_CODE)
+    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_RECEIVE) {
+        setFeedbackLED(tIRInputLevel == INPUT_MARK);
+    }
+#endif
+
+#ifdef _IR_MEASURE_TIMING
+    digitalWriteFast(_IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
+#endif
+}
+
+/**********************************************************************************************************************
  * Stream like API
  **********************************************************************************************************************/
 /**
@@ -160,6 +311,9 @@ void IRrecv::start() {
 
     // Timer interrupt is enabled after state machine reset
     TIMER_ENABLE_RECEIVE_INTR;
+#ifdef _IR_MEASURE_TIMING
+    pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
+#endif
 }
 /**
  * Alias for start().
@@ -170,13 +324,16 @@ void IRrecv::enableIRIn() {
 
 /**
  * Configures the timer and the state machine for IR reception.
+ * The tick counter value is already at 100 when decode() gets true, because of the 5000 us minimal gap defined in RECORD_GAP_MICROS.
  * @param aMicrosecondsToAddToGapCounter To compensate for the amount of microseconds the timer was stopped / disabled.
  */
 void IRrecv::start(uint32_t aMicrosecondsToAddToGapCounter) {
-    start();
-    noInterrupts();
     irparams.TickCounterForISR += aMicrosecondsToAddToGapCounter / MICROS_PER_TICK;
-    interrupts();
+    start();
+}
+void IRrecv::startWithTicksToAdd(uint16_t aTicksToAddToGapCounter) {
+    irparams.TickCounterForISR += aTicksToAddToGapCounter;
+    start();
 }
 
 /**
@@ -907,7 +1064,7 @@ int getMarkExcessMicros() {
 /*
  * Check if protocol is not detected and detected space between two transmissions
  * is smaller than known value for protocols (Sony with around 24 ms)
- * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 20ms (RECORD_GAP_MICROS_WARNING_THRESHOLD)
+ * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD)
  */
 bool IRrecv::checkForRecordGapsMicros(Print *aSerial) {
     /*
@@ -1000,7 +1157,7 @@ void printActiveIRProtocols(Print *aSerial) {
  * Ends with println().
  *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
- * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 20ms (RECORD_GAP_MICROS_WARNING_THRESHOLD)
+ * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD)
  */
 bool IRrecv::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
 // call no class function with same name
@@ -1078,7 +1235,12 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
 
         aSerial->print(F(", 0x"));
         aSerial->print(decodedIRData.command, HEX);
-        aSerial->print(F(", <numberOfRepeats>"));
+        if (decodedIRData.protocol == SONY) {
+            aSerial->print(F(", 2, "));
+            aSerial->print(decodedIRData.numberOfBits);
+        } else {
+            aSerial->print(F(", <numberOfRepeats>"));
+        }
 
 #if defined(DECODE_DISTANCE_WIDTH)
         } else {
@@ -1424,157 +1586,6 @@ const char* IRrecv::getProtocolString() {
     return ::getProtocolString(decodedIRData.protocol);
 }
 #endif
-
-/**********************************************************************************************************************
- * Interrupt Service Routine - Called every 50 us
- *
- * Duration in ticks of 50 us of alternating SPACE, MARK are recorded in irparams.rawbuf array.
- * 'rawlen' counts the number of entries recorded so far.
- * First entry is the SPACE between transmissions.
- *
- * As soon as one SPACE entry gets longer than RECORD_GAP_TICKS, state switches to STOP (frame received). Timing of SPACE continues.
- * A call of resume() switches from STOP to IDLE.
- * As soon as first MARK arrives in IDLE, gap width is recorded and new logging starts.
- *
- * With digitalRead and Feedback LED
- * 15 pushs, 1 in, 1 eor before start of code = 2 us @16MHz + * 7.2 us computation time (6us idle time) + * pop + reti = 2.25 us @16MHz => 10.3 to 11.5 us @16MHz
- * With portInputRegister and mask and Feedback LED code commented
- * 9 pushs, 1 in, 1 eor before start of code = 1.25 us @16MHz + * 2.25 us computation time + * pop + reti = 1.5 us @16MHz => 5 us @16MHz
- * => Minimal CPU frequency is 4 MHz
- *
- **********************************************************************************************************************/
-//#define _IR_MEASURE_TIMING
-//#define _IR_TIMING_TEST_PIN 7 // do not forget to execute: "pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);" if activated by line above
-#if defined(TIMER_INTR_NAME)
-    ISR (TIMER_INTR_NAME) // for ISR definitions
-#else
-ISR()
-// for functions definitions which are called by separate (board specific) ISR
-#endif
-{
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-    digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
-#endif
-// 7 - 8.5 us for ISR body (without pushes and pops) for ATmega328 @16MHz
-
-    TIMER_RESET_INTR_PENDING;// reset TickCounterForISR interrupt flag if required (currently only for Teensy and ATmega4809)
-
-// Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
-#if defined(__AVR__)
-    uint8_t tIRInputLevel = *irparams.IRReceivePinPortInputRegister & irparams.IRReceivePinMask;
-#else
-    uint_fast8_t tIRInputLevel = (uint_fast8_t) digitalReadFast(irparams.IRReceivePin);
-#endif
-
-    /*
-     * Increase TickCounter and clip it at maximum 0xFFFF / 3.2 seconds at 50 us ticks
-     */
-    if (irparams.TickCounterForISR < UINT16_MAX) {
-        irparams.TickCounterForISR++;  // One more 50uS tick
-    }
-
-    /*
-     * Due to a ESP32 compiler bug https://github.com/espressif/esp-idf/issues/1552 no switch statements are possible for ESP32
-     * So we change the code to if / else if
-     */
-//    switch (irparams.StateForISR) {
-//......................................................................
-    if (irparams.StateForISR == IR_REC_STATE_IDLE) {
-        /*
-         * Here we are just resumed and maybe in the middle of a transmission
-         */
-        if (tIRInputLevel == INPUT_MARK) {
-            // check if we did not start in the middle of a transmission by checking the minimum length of leading space
-            if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-//                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
-#endif
-                /*
-                 * Gap between two transmissions just ended; Record gap duration + start recording transmission
-                 * Initialize all state machine variables
-                 */
-                irparams.OverflowFlag = false;
-                irparams.rawbuf[0] = irparams.TickCounterForISR;
-                irparams.rawlen = 1;
-                irparams.StateForISR = IR_REC_STATE_MARK;
-            } // otherwise stay in idle state
-            irparams.TickCounterForISR = 0;// reset counter in both cases
-        }
-
-    } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing mark
-        if (tIRInputLevel != INPUT_MARK) {   // Mark ended; Record time
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-//            digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
-#endif
-            irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
-            irparams.StateForISR = IR_REC_STATE_SPACE;
-            irparams.TickCounterForISR = 0;
-        }
-
-    } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing space
-        if (tIRInputLevel == INPUT_MARK) {  // Space just ended; Record time
-            if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
-                // Flag up a read OverflowFlag; Stop the state machine
-                irparams.OverflowFlag = true;
-                irparams.StateForISR = IR_REC_STATE_STOP;
-#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
-                /*
-                 * Call callback if registered (not NULL)
-                 */
-                if (irparams.ReceiveCompleteCallbackFunction != NULL) {
-                    irparams.ReceiveCompleteCallbackFunction();
-                }
-#endif
-            } else {
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-//                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
-#endif
-                irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
-                irparams.StateForISR = IR_REC_STATE_MARK;
-            }
-            irparams.TickCounterForISR = 0;
-
-        } else if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
-            /*
-             * Current code is ready for processing!
-             * We received a long space, which indicates gap between codes.
-             * Switch to IR_REC_STATE_STOP
-             * Don't reset TickCounterForISR; keep counting width of next leading space
-             */
-            irparams.StateForISR = IR_REC_STATE_STOP;
-#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
-            /*
-             * Call callback if registered (not NULL)
-             */
-            if (irparams.ReceiveCompleteCallbackFunction != NULL) {
-                irparams.ReceiveCompleteCallbackFunction();
-            }
-#endif
-        }
-    } else if (irparams.StateForISR == IR_REC_STATE_STOP) {
-        /*
-         * Complete command received
-         * stay here until resume() is called, which switches state to IR_REC_STATE_IDLE
-         */
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-//        digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
-#endif
-        if (tIRInputLevel == INPUT_MARK) {
-            // Reset gap TickCounterForISR, to prepare for detection if we are in the middle of a transmission after call of resume()
-            irparams.TickCounterForISR = 0;
-        }
-    }
-
-#if !defined(NO_LED_FEEDBACK_CODE)
-    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_RECEIVE) {
-        setFeedbackLED(tIRInputLevel == INPUT_MARK);
-    }
-#endif
-
-#ifdef _IR_MEASURE_TIMING
-    digitalWriteFast(_IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
-#endif
-}
 
 /**********************************************************************************************************************
  * The OLD and DEPRECATED decode function with parameter aResults, kept for backward compatibility to old 2.0 tutorials

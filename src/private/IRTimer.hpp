@@ -368,7 +368,7 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #  endif // defined(SEND_PWM_BY_TIMER)
 
 /*
- * AVR Timer2 (8 bits)
+ * AVR Timer2 (8 bits) // Tone timer on UNO
  */
 #elif defined(IR_USE_AVR_TIMER2)
 

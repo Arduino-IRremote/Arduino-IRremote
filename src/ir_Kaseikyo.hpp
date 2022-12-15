@@ -80,7 +80,7 @@ Sum: 64300
 //
 // 2. interpretation: LSB first, start bit + 16 VendorID + 4 VendorID parity + 4 Genre1 + 4 Genre2 + 10 Command + 2 ID + 8 Parity + stop bit
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#KASEIKYO
-//
+// 32 bit raw data LSB is VendorID parity.
 //
 // We reduce it to: IRP: {37k,432}<1,-1|1,-3>(8,-4,V:16,X:4,D:4,S:8,F:8,(X^D^S^F):8,1,-173)+ {X=M:4:0^M:4:4^N:4:0^N:4:4}
 // start bit + 16 VendorID + 4 VendorID parity + 12 Address + 8 Command + 8 Parity of VendorID parity, Address and Command + stop bit

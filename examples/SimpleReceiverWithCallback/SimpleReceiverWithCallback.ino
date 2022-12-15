@@ -68,7 +68,10 @@
 /*
  * For callback
  */
-volatile bool sDataJustReceived = false;
+#define PROCESS_IR_RESULT_IN_MAIN_LOOP
+#if defined(PROCESS_IR_RESULT_IN_MAIN_LOOP) || defined(ARDUINO_ARCH_MBED) || defined(ESP32)
+volatile bool sIRDataJustReceived = false;
+#endif
 void ReceiveCompleteCallbackHandler();
 
 void setup() {
@@ -81,56 +84,15 @@ void setup() {
     IrReceiver.registerReceiveCompleteCallback(ReceiveCompleteCallbackHandler);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
-    printActiveIRProtocols(&Serial);
+    printActiveIRProtocols (&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
-}
-/*
- * Callback function
- * This function is called in ISR (Interrupt Service Routine) context (interrupts are blocked here)
- * and therefore must be as short as possible (and better not use printing).
- */
-#if defined(ESP32) || defined(ESP8266)
-IRAM_ATTR
-# endif
-void ReceiveCompleteCallbackHandler() {
-    IrReceiver.decode(); // fill IrReceiver.decodedIRData
-
-    /*
-     * Set flag to trigger printing of results in main loop,
-     * since printing should not be done in a callback function
-     * running in ISR (Interrupt Service Routine) context where interrupts are disabled.
-     */
-    sDataJustReceived = true;
-    /*
-     * Check the received data and perform actions according to the received command
-     * Decoded result is in the IrReceiver.decodedIRData structure.
-     *
-     * E.g. command is in IrReceiver.decodedIRData.command,
-     * address is in command is in IrReceiver.decodedIRData.address
-     * and up to 32 bit raw data in IrReceiver.decodedIRData.decodedRawData
-     */
-    if (IrReceiver.decodedIRData.command == 0x10) {
-        // do something
-    } else if (IrReceiver.decodedIRData.command == 0x11) {
-        // do something else
-    }
-
-    /*
-     * Enable receiving of the next value.
-     * !!!Attention!!!
-     * After receiving the first mark of the next (repeat) data, 3 variables required for printing are reset/overwritten.
-     * - IrReceiver.irparams.rawlen
-     * - IrReceiver.irparams.rawbuf[0]
-     * - IrReceiver.irparams.OverflowFlag)
-     */
-    IrReceiver.resume();
 }
 
 void loop() {
     /*
      * Print in loop (interrupts are enabled here) if received data is available.
      */
-    if (sDataJustReceived) {
+    if (sIRDataJustReceived) {
         // Print a short summary of received data
         IrReceiver.printIRResultShort(&Serial);
         IrReceiver.printIRSendUsage(&Serial);
@@ -145,4 +107,51 @@ void loop() {
         }
         Serial.println();
     }
+}
+
+/*
+ * Callback function
+ * Here we know, that data is available.
+ * This function is executed in ISR (Interrupt Service Routine) context (interrupts are blocked here).
+ * Make it short and fast and keep in mind, that you can not use delay(), prints longer than print buffer size etc.,
+ * because they require interrupts enabled to return.
+ * In order to enable other interrupts you can call sei() (enable interrupt again) after evaluating/copying data.
+ * Good practice, but somewhat more complex, is to copy relevant data and signal receiving to main loop.
+ */
+#if defined(ESP32) || defined(ESP8266)
+IRAM_ATTR
+# endif
+void ReceiveCompleteCallbackHandler() {
+    IrReceiver.decode(); // fill IrReceiver.decodedIRData
+
+    /*
+     * Check the received data and perform actions according to the received command
+     * Decoded result is in the IrReceiver.decodedIRData structure.
+     *
+     * E.g. command is in IrReceiver.decodedIRData.command,
+     * address is in command is in IrReceiver.decodedIRData.address
+     * and up to 32 bit raw data in IrReceiver.decodedIRData.decodedRawData
+     */
+    if (IrReceiver.decodedIRData.command == 0x10) {
+        // do something SHORT here
+    } else if (IrReceiver.decodedIRData.command == 0x11) {
+        // do something SHORT here too
+    }
+
+    /*
+     * Set flag to trigger printing of results in main loop,
+     * since printing should not be done in a callback function
+     * running in ISR (Interrupt Service Routine) context where interrupts are disabled.
+     */
+    sIRDataJustReceived = true;
+
+    /*
+     * Enable receiving of the next value.
+     * !!!Attention!!!
+     * After receiving the first mark of the next (repeat) data, 3 variables required for printing are reset/overwritten.
+     * - IrReceiver.irparams.rawlen
+     * - IrReceiver.irparams.rawbuf[0]
+     * - IrReceiver.irparams.OverflowFlag)
+     */
+    IrReceiver.resume();
 }
