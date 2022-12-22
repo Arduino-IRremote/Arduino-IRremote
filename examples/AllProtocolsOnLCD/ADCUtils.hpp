@@ -599,10 +599,10 @@ float getTemperature(void) {
 #endif
 }
 
-#elif defined(ARDUINO_ARCH_APOLLO3) // defined(__AVR__) && defined(ADATE)
+#elif defined(ARDUINO_ARCH_APOLLO3) // defined(ADC_UTILS_ARE_AVAILABLE)
     void ADCUtilsDummyToAvoidBFDAssertions(){
         ;
     }
-#endif // defined(__AVR__) && defined(ADATE)
+#endif // defined(ADC_UTILS_ARE_AVAILABLE)
 
 #endif // _ADC_UTILS_HPP

@@ -329,7 +329,8 @@ If you have a device at hand which can generate the IR codes you want to work wi
 Protocol=LG Address=0x2 Command=0x3434 Raw-Data=0x23434E 28 bits MSB first
 Send with: IrSender.sendLG(0x2, 0x3434, <numberOfRepeats>);
 ```
-You will discover that **the address is a constant** and the commands sometimes are sensibly grouped.
+You will discover that **the address is a constant** and the commands sometimes are sensibly grouped.<br/>
+If you are uncertain about the numbers of repeats to use for sending, **3** is a good starting point. If this works, you can check lower values afterwards.
 
 The codes found in the [irdb database](https://github.com/probonopd/irdb/tree/master/codes) specify  a **device**, a **subdevice** and a **function**. Most of the times, *device* and *subdevice* can be taken as upper and lower byte of the **address parameter** and *function* is the **command parameter** for the **new structured functions** with address, command and repeat-count parameters like e.g. `IrSender.sendNEC((device << 8) | subdevice, 0x19, 2)`.<br/>
 An **exact mapping** can be found in the [IRP definition files for IR protocols](https://github.com/probonopd/MakeHex/tree/master/protocols). "D" and "S" denotes device and subdevice and "F" denotes the function.
