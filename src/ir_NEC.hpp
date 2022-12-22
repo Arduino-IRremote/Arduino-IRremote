@@ -105,6 +105,7 @@ struct PulseDistanceWidthProtocolConstants NECProtocolConstants = { NEC, NEC_KHZ
 NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
         &sendNECSpecialRepeat };
 
+// Like NEC but repeat are full frames instead of special NEC repeats
 struct PulseDistanceWidthProtocolConstants NEC2ProtocolConstants = { NEC2, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
 NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
@@ -159,6 +160,8 @@ uint32_t IRsend::computeNECRawDataAndChecksum(uint16_t aAddress, uint16_t aComma
 }
 
 /**
+ * NEC Send frame and special repeats
+ * There is NO delay after the last sent repeat!
  * @param aNumberOfRepeats  If < 0 then only a special repeat frame without leading and trailing space
  *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
@@ -167,10 +170,9 @@ void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfR
 }
 
 /*
- * Repeat commands should be sent in a 110 ms raster.
+ * NEC2 Send frame and repeat the frame for each requested repeat
  * There is NO delay after the last sent repeat!
- * @param aNumberOfRepeats  If < 0 then only a special repeat frame without leading and trailing space
- *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
+ * @param aNumberOfRepeats  If < 0 then nothing is sent.
  */
 void IRsend::sendNEC2(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendPulseDistanceWidth(&NEC2ProtocolConstants, computeNECRawDataAndChecksum(aAddress, aCommand), NEC_BITS, aNumberOfRepeats);

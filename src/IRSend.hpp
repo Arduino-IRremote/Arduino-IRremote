@@ -920,14 +920,23 @@ void IRsend::space(unsigned int aSpaceMicros) {
  * and is (mostly) not extended by the duration of interrupt codes like the millis() interrupt
  */
 void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
-#if defined(__AVR__)
-    unsigned long start = micros() - (64 / clockCyclesPerMicrosecond()); // - (64 / clockCyclesPerMicrosecond()) for reduced resolution and additional overhead
+#if defined(ESP32) || defined(ESP8266)
+    // from https://github.com/crankyoldgit/IRremoteESP8266/blob/00b27cc7ea2e7ac1e48e91740723c805a38728e0/src/IRsend.cpp#L123
+    // Invoke a delay(), where possible, to avoid triggering the WDT.
+    delay(aMicroseconds / 1000UL);  // Delay for as many whole milliseconds as we can.
+    // Delay the remaining sub-millisecond.
+    delayMicroseconds(static_cast<uint16_t>(aMicroseconds % 1000UL));
 #else
+
+#  if defined(__AVR__)
+    unsigned long start = micros() - (64 / clockCyclesPerMicrosecond()); // - (64 / clockCyclesPerMicrosecond()) for reduced resolution and additional overhead
+#  else
     unsigned long start = micros();
-#endif
+#  endif
 // overflow invariant comparison :-)
     while (micros() - start < aMicroseconds) {
     }
+#endif
 }
 
 /**
