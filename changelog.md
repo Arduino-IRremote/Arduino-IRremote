@@ -32,6 +32,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added support for attiny1614 by Joe Ostrander.
 - Fixed SEND_PWM_BY_TIMER for ATtiny167 thanks to freskpe.
 - Improved SHARP repeat decoding.
+- Replaced macros TIMER_EN/DISABLE_RECEIVE_INTR and EN/DISABLE_SEND_PWM_BY_TIMER by functions.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

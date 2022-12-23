@@ -119,7 +119,7 @@ IRrecv::IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) {
 //#define _IR_MEASURE_TIMING
 //#define _IR_TIMING_TEST_PIN 10 // "pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);" is executed at start()
 #if defined(TIMER_INTR_NAME)
-    ISR (TIMER_INTR_NAME) // for ISR definitions
+ISR (TIMER_INTR_NAME) // for ISR definitions
 #else
 ISR()
 // for functions definitions which are called by separate (board specific) ISR
@@ -130,7 +130,9 @@ ISR()
 #endif
 // 7 - 8.5 us for ISR body (without pushes and pops) for ATmega328 @16MHz
 
-    TIMER_RESET_INTR_PENDING;// reset TickCounterForISR interrupt flag if required (currently only for Teensy and ATmega4809)
+#if defined(TIMER_REQUIRES_RESET_INTR_PENDING)
+    timerResetInterruptPending(); // reset TickCounterForISR interrupt flag if required (currently only for Teensy and ATmega4809)
+#endif
 
 // Read if IR Receiver -> SPACE [xmt LED off] or a MARK [xmt LED on]
 #if defined(__AVR__)
@@ -310,7 +312,7 @@ void IRrecv::start() {
     resume();
 
     // Timer interrupt is enabled after state machine reset
-    TIMER_ENABLE_RECEIVE_INTR;
+    timerEnableReceiveInterrupt();
 #ifdef _IR_MEASURE_TIMING
     pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
@@ -349,7 +351,7 @@ void IRrecv::restartAfterSend() {
  * Disables the timer for IR reception.
  */
 void IRrecv::stop() {
-    TIMER_DISABLE_RECEIVE_INTR;
+    timerDisableReceiveInterrupt();
 }
 /**
  * Alias for stop().

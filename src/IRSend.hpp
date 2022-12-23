@@ -755,7 +755,7 @@ void IRsend::mark(unsigned int aMarkMicros) {
     /*
      * Generate hardware PWM signal
      */
-    ENABLE_SEND_PWM_BY_TIMER; // Enable timer or ledcWrite() generated PWM output
+    enableSendPWMByTimer(); // Enable timer or ledcWrite() generated PWM output
     customDelayMicroseconds(aMarkMicros);
     IRLedOff();// disables hardware PWM and manages feedback LED
     return;
@@ -880,20 +880,20 @@ void IRsend::mark(unsigned int aMarkMicros) {
  */
 void IRsend::IRLedOff() {
 #if defined(SEND_PWM_BY_TIMER)
-        DISABLE_SEND_PWM_BY_TIMER; // Disable PWM output
+    disableSendPWMByTimer(); // Disable PWM output
 #elif defined(USE_NO_SEND_PWM)
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
-        digitalWriteFast(sendPin, LOW); // prepare for all next active states.
-        pinModeFast(sendPin, INPUT);// inactive state for open drain
+    digitalWriteFast(sendPin, LOW); // prepare for all next active states.
+    pinModeFast(sendPin, INPUT);// inactive state for open drain
 #  else
-        digitalWriteFast(sendPin, HIGH); // Set output to inactive high.
+    digitalWriteFast(sendPin, HIGH); // Set output to inactive high.
 #  endif
 #else
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
 #    if defined(OUTPUT_OPEN_DRAIN)
-        digitalWriteFast(sendPin, HIGH); // Set output to inactive high.
+    digitalWriteFast(sendPin, HIGH); // Set output to inactive high.
 #    else
-        pinModeFast(sendPin, INPUT); // inactive state to mimic open drain
+    pinModeFast(sendPin, INPUT); // inactive state to mimic open drain
 #    endif
 #  else
     digitalWriteFast(sendPin, LOW);

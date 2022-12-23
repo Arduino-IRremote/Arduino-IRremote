@@ -106,12 +106,14 @@ jobs:
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3 -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
+              SimpleSender: -DSEND_PWM_BY_TIMER
               All: -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
 
           - arduino-boards-fqbn: arduino:avr:mega:cpu=atmega2560
             sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: arduino:avr:leonardo
             build-properties: # the flags were put in compiler.cpp.extra_flags
@@ -122,6 +124,7 @@ jobs:
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: arduino:samd:arduino_zero_native
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
@@ -131,19 +134,24 @@ jobs:
           - arduino-boards-fqbn: adafruit:samd:adafruit_metro_m4:cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off
             platform-url: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
             sketches-exclude: MinimalReceiver,IRDispatcherDemo
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: arduino:mbed:nano33ble
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: arduino:mbed_rp2040:pico
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: rp2040:rp2040:arduino_nano_connect
             platform-url: https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DSEND_PWM_BY_TIMER
+              SimpleSender: -DSEND_PWM_BY_TIMER
               All: -DRAW_BUFFER_LENGTH=700
 
           - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
@@ -164,27 +172,36 @@ jobs:
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
             required-libraries: ATtinySerialOut
             sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             required-libraries: ATtinySerialOut
             sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             required-libraries: ATtinySerialOut
             sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             required-libraries: ATtinySerialOut
             sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal
             platform-url: https://mcudude.github.io/MegaCore/package_MCUdude_MegaCore_index.json
             arduino-platform: arduino:avr,MegaCore:avr # gcc is taken from arduino:avr
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=300
+              SimpleSender: -DSEND_PWM_BY_TIMER
               All: -DRAW_BUFFER_LENGTH=700
 
           - arduino-boards-fqbn: esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80
@@ -197,7 +214,7 @@ jobs:
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             sketches-exclude: MinimalReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
-            build-properties: # the flags were put in compiler.cpp.extra_flags
+            build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=500 -Wno-error=maybe-uninitialized
               All: -DRAW_BUFFER_LENGTH=300 -Wno-error=maybe-uninitialized # https://github.com/espressif/arduino-esp32/issues/7024
 
@@ -225,7 +242,7 @@ jobs:
           - arduino-boards-fqbn: SparkFun:avr:promicro
             arduino-platform: arduino:avr,SparkFun:avr
             platform-url: https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json # Arduino URL is not required here
-            build-properties: # the flags were put in compiler.cpp.extra_flags
+            build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300
 
