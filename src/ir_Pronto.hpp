@@ -34,6 +34,12 @@
 #ifndef _IR_PRONTO_HPP
 #define _IR_PRONTO_HPP
 
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#define LOCAL_DEBUG
+#else
+//#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
@@ -76,10 +82,12 @@ void IRsend::sendPronto(const uint16_t *data, unsigned int length, int_fast8_t a
     }
     unsigned int intros = 2 * data[2];
     unsigned int repeats = 2 * data[3];
-    IR_DEBUG_PRINT(F("sendPronto intros="));
-    IR_DEBUG_PRINT(intros);
-    IR_DEBUG_PRINT(F(" repeats="));
-    IR_DEBUG_PRINTLN(repeats);
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("sendPronto intros="));
+    Serial.print(intros);
+    Serial.print(F(" repeats="));
+    Serial.println(repeats);
+#endif
     if (numbersInPreamble + intros + repeats != length) { // inconsistent sizes
         return;
     }
@@ -327,4 +335,7 @@ size_t IRrecv::compensateAndStorePronto(String *aString, unsigned int frequency)
 }
 
 /** @}*/
+#if defined(LOCAL_DEBUG)
+#undef LOCAL_DEBUG
+#endif
 #endif // _IR_PRONTO_HPP

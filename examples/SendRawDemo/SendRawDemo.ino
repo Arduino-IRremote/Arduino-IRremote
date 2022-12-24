@@ -77,7 +77,10 @@ void setup() {
  * e.g. use 560 (instead of 11 * 50) for NEC or use 432 for Panasonic. But in this cases,
  * you better use the timing generation functions e.g. sendNEC() directly.
  */
-const uint8_t rawDataP[] PROGMEM
+const uint8_t rawDataP[]
+#if defined(__AVR__)
+PROGMEM
+#endif
 = { 180, 90 /*Start bit*/, 11, 11, 11, 11, 11, 34, 11, 34/*0011 0xC of 16 bit address LSB first*/, 11, 11, 11, 11, 11, 11, 11,
         11/*0000*/, 11, 34, 11, 34, 11, 11, 11, 34/*1101 0xB*/, 11, 34, 11, 34, 11, 34, 11, 34/*1111*/, 11, 11, 11, 11, 11, 11, 11,
         34/*0001 0x08 of command LSB first*/, 11, 34, 11, 11, 11, 11, 11, 11/*1000 0x01*/, 11, 34, 11, 34, 11, 34, 11,
