@@ -69,10 +69,12 @@
  */
 // see http://www.hifi-remote.com/wiki/index.php?title=DecodeIR#Samsung
 // https://www.mikrocontroller.net/articles/IRMP_-_english#SAMSUNG32
-// LSB first, 1 start bit + 16 bit address + 16,32 bit data + 1 stop bit.
-// IRP notation: {38k,5553}<1,-1|1,-3>(8,-8,D:8,S:8,F:8,~F:8,1,^110)+  ==> 8 bit data
-// IRP notation: {38k,5553}<1,-1|1,-3>(8,-8,D:8,S:8,F:16,1,^110)+  ==> 16 bit data
-// IRP notation: {38k,5553}<1,-1|1,-3>(8,-8,D:8,S:8,F:32,1,^110)+  ==> 32 bit data
+// https://www.mikrocontroller.net/articles/IRMP_-_english#SAMSUNG48
+// LSB first, 1 start bit + 16 bit address + 16 or 32 bit data + 1 stop bit.
+// Here https://forum.arduino.cc/t/klimaanlage-per-ir-steuern/1051381/10 the address (0xB24D) is also 8 bits and then 8 inverted bits
+// IRP notation: {38k,5553}<1,-1|1,-3>(8,-8,D:8,S:8,F:8,~F:8,1,^110)+  ==> 8 bit + 8 bit inverted data - Samsung32
+// IRP notation: {38k,5553}<1,-1|1,-3>(8,-8,D:8,S:8,F:16,1,^110)+  ==> 16 bit data - still Samsung32
+// IRP notation: {38k,5553}<1,-1|1,-3>(8,-8,D:8,S:8,F:8,~F:8,G:8,~G:8,1,^110)+  ==> 2 x (8 bit + 8 bit inverted data) - Samsung48
 //
 #define SAMSUNG_ADDRESS_BITS        16
 #define SAMSUNG_COMMAND16_BITS      16
@@ -153,46 +155,57 @@ void IRsend::sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNu
     sendPulseDistanceWidth(&SamsungProtocolConstants, tRawData.ULong, SAMSUNG_BITS, aNumberOfRepeats);
 }
 
+/**
+ * Here we send Samsung32
+ * If we get a command < 0x100, we send command and then ~command
+ */
 void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
 
     // send 16 bit address and  8 command bits and then 8 inverted command bits LSB first
+    LongUnion tSendValue;
+    tSendValue.UWords[0] = aAddress;
+    if (aCommand < 0x100) {
+        tSendValue.UBytes[2] = aCommand;
+        tSendValue.UBytes[3] = ~aCommand;
+    } else {
+        tSendValue.UWords[1] = aCommand;
+    }
+
+    IrSender.sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULong, SAMSUNG_BITS, aNumberOfRepeats);
+}
+
+/**
+ * Here we send Samsung48
+ * We send 2 x (8 bit command and then ~command)
+ */
+void IRsend::sendSamsung48(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
+
+    // send 16 bit address and 2 x ( 8 command bits and then 8 inverted command bits) LSB first
 #if __INT_WIDTH__ < 32
+    uint32_t tRawSamsungData[2]; // prepare 2 long for Samsung48
+
     LongUnion tSendValue;
     tSendValue.UWords[0] = aAddress;
     tSendValue.UBytes[2] = aCommand;
     tSendValue.UBytes[3] = ~aCommand;
-
-    uint32_t tRawSamsungData[2];
+    uint8_t tUpper8BitsOfCommand = aCommand >> 8;
+    tRawSamsungData[1] = tUpper8BitsOfCommand | (~tUpper8BitsOfCommand) << 8;
     tRawSamsungData[0] = tSendValue.ULong;
-    uint8_t tProtocolLength = SAMSUNG_BITS;
 
-    if (aCommand >= 0x100) {
-        // Here we have Samsung48 -> send the upper byte of command
-        aCommand = aCommand >> 8;
-        tSendValue.UBytes[0] = aCommand;
-        tSendValue.UBytes[1] = ~aCommand;
-        tRawSamsungData[1] = tSendValue.UWord.LowWord;
-        tProtocolLength = SAMSUNG48_BITS;
-    }
-    IrSender.sendPulseDistanceWidthFromArray(&SamsungProtocolConstants, &tRawSamsungData[0], tProtocolLength, aNumberOfRepeats);
+    IrSender.sendPulseDistanceWidthFromArray(&SamsungProtocolConstants, &tRawSamsungData[0], SAMSUNG48_BITS, aNumberOfRepeats);
 #else
     LongLongUnion tSendValue;
     tSendValue.UWords[0] = aAddress;
-    tSendValue.UBytes[2] = aCommand;
-    tSendValue.UBytes[3] = ~aCommand;
-
-    uint8_t tProtocolLength;
-
-    if (aCommand >= 0x100) {
-        // Here we have Samsung48 -> send the upper byte of command
-        aCommand = aCommand >> 8;
-        tSendValue.UBytes[4] = aCommand;
-        tSendValue.UBytes[5] = ~aCommand;
-        tProtocolLength = SAMSUNG48_BITS;
+    if (aCommand < 0x10000) {
+        tSendValue.UBytes[2] = aCommand;
+        tSendValue.UBytes[3] = ~aCommand;
+        uint8_t tUpper8BitsOfCommand = aCommand >> 8;
+        tSendValue.UBytes[4] = tUpper8BitsOfCommand;
+        tSendValue.UBytes[5] = ~tUpper8BitsOfCommand;
     } else {
-        tProtocolLength = SAMSUNG_BITS;
+        tSendValue.ULongLong = aAddress | aCommand << 16;
     }
-    IrSender.sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULongLong, tProtocolLength, aNumberOfRepeats);
+    IrSender.sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULongLong, SAMSUNG_BITS, aNumberOfRepeats);
 #endif
 }
 
@@ -238,7 +251,6 @@ bool IRrecv::decodeSamsung() {
     if (decodedIRData.rawDataPtr->rawlen == (2 * SAMSUNG48_BITS) + 4) {
         /*
          * Samsung48
-         * Here https://forum.arduino.cc/t/klimaanlage-per-ir-steuern/1051381/10 is the address also 8 bits and then 8 inverted bits
          */
         // decode additional 16 bit
         if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, (SAMSUNG_COMMAND32_BITS - SAMSUNG_COMMAND16_BITS),
@@ -254,10 +266,14 @@ bool IRrecv::decodeSamsung() {
          * LSB data is already in tValue.UWord.HighWord!
          * Put latest (MSB) bits in LowWord, LSB first would have them expect in HighWord so keep this in mind for decoding below
          */
-        tValue.UWord.LowWord = decodedIRData.decodedRawData;
+        tValue.UWord.LowWord = decodedIRData.decodedRawData; // We have only 16 bit in decodedRawData here
+#if __INT_WIDTH__ >= 32
+        // workaround until complete refactoring for 64 bit
+        decodedIRData.decodedRawData = (decodedIRData.decodedRawData << 32)| tValue.UWord.HighWord << 16 | decodedIRData.address; // store all 48 bits in decodedRawData
+#endif
 
         /*
-         * Check parity
+         * Check parity of 32 bit command
          */
         // receive 2 * (8 bits then 8 inverted bits) LSB first
         if (tValue.UByte.MidHighByte != (uint8_t)(~tValue.UByte.HighByte)
@@ -267,6 +283,7 @@ bool IRrecv::decodeSamsung() {
 
         decodedIRData.command = tValue.UByte.LowByte << 8 | tValue.UByte.MidHighByte; // low and high word are swapped here, so fetch it this way
         decodedIRData.numberOfBits = SAMSUNG48_BITS;
+        decodedIRData.protocol = SAMSUNG48;
 
     } else {
         /*
@@ -280,8 +297,8 @@ bool IRrecv::decodeSamsung() {
             decodedIRData.command = tValue.UWord.HighWord; // first 16 bit
         }
         decodedIRData.numberOfBits = SAMSUNG_BITS;
+        decodedIRData.protocol = SAMSUNG;
     }
-    decodedIRData.protocol = SAMSUNG;
 
     // check for repeat
     checkForRepeatSpaceAndSetFlag(SAMSUNG_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);

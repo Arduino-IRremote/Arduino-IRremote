@@ -106,7 +106,8 @@ body:
         - label: ReceiveDemo
         - label: SendRawDemo
         - label: ReceiverTimingAnalysis
-        - label: MinimalReceiver
+        - label: TinyReceiver
+        - label: TinySender
         - label: ReceiveAndSend
         - label: SimpleSender
         - label: SendDemo
@@ -126,7 +127,8 @@ body:
         - label: ReceiveDemo
         - label: SendRawDemo
         - label: ReceiverTimingAnalysis
-        - label: MinimalReceiver
+        - label: TinyReceiver
+        - label: TinySender
         - label: ReceiveAndSend
         - label: SimpleSender
         - label: SendDemo

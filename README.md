@@ -314,11 +314,11 @@ IrReceiver.printIRResultRawFormatted(&Serial, true);`
 
 <br/>
 
-# Minimal NEC receiver
+# Tiny NEC receiver
 For applications only requiring NEC protocol, there is a special receiver included,<br/>
 which has very **small code size of 500 bytes and does NOT require any timer**.
 
-Check out the [MinimalReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote#minimalreceiver) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote#irdispatcherdemo) examples.
+Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote#irdispatcherdemo) examples.
 
 <br/>
 
@@ -445,27 +445,24 @@ In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Ardu
 This examples are a good starting point.
 A simple example can be tested online with [WOKWI](https://wokwi.com/projects/338611596994544210).
 
-#### MinimalReceiver + MinimalSender
+#### TinyReceiver + TinySender
 If **code size** matters, look at these examples.<br/>
-The **MinimalReceiver** example uses the **TinyReceiver** library  which can **only receive NEC and FAST codes, but does not require any timer**.<br/>
-MinimalReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/projects/339264565653013075).
+The **[TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinyReceiver/TinyReceiver.ino)** example uses the **TinyIRReceiver** library  which can **only receive NEC and FAST codes, but does not require any timer**.<br/>
+TinyReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/projects/339264565653013075).
 Click on the receiver while simulation is running to specify individual IR codes.
 
-The **MinimalSender** example uses the **TinySender** library  which can **only send NEC and FAST codes**.<br/>
+The **[TinySender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinySender/TinySender.ino)** example uses the **TinyIRSender** library  which can **only send NEC and FAST codes**.<br/>
 Sending NEC protocol codes in standard format with 8 bit address and 8 bit command as in SimpleSender example.
 Saves  780 bytes program memory and 26 bytes RAM compared to SimpleSender, which does the same, but uses the IRRemote library (and is therefore much more flexible).
 
 #### SmallReceiver
-If the protocol is not NEC and code size matters, look at this example.<br/>
+If the protocol is not NEC and code size matters, look at this [example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SmallReceiver/SmallReceiver.ino).<br/>
 
 #### ReceiveDemo + AllProtocolsOnLCD
-Receives all protocols and **generates a beep with the Arduino tone() function** on each packet received.<br/>
-AllProtocolsOnLCD additionally **displays the short result on a 1602 LCD**. The LCD can be connected parallel or serial (I2C).<br/>
+[ReceiveDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino) receives all protocols and **generates a beep with the Arduino tone() function** on each packet received.<br/>
+[AllProtocolsOnLCD](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/AllProtocolsOnLCD/AllProtocolsOnLCD.ino) additionally **displays the short result on a 1602 LCD**. The LCD can be connected parallel or serial (I2C).<br/>
 By connecting pin debug pin to ground, you can see the raw values for each packet. The pin number of the debug pin is printed during setup, because it depends on board and LCD connection type.<br/>
 This example also serves as an **example how to use IRremote and tone() together**.
-
-#### AllProtocolsOnLCD
-Like ReceiveDemo but with 1604 LCD output and without tone().
 
 #### ReceiveDump
 Receives all protocols and dumps the received signal in different flavors. Since the printing takes so much time, repeat signals may be skipped or interpreted as UNKNOWN.
@@ -490,10 +487,10 @@ Framework for **calling different functions of your program** for different IR c
 **Control a relay** (connected to an output pin) with your remote.
 
 #### IRremoteExtensionTest
-Example for a user defined class, which itself uses the IRrecv class from IRremote.
+[Example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRremoteExtensionTest/IRremoteExtensionTest.ino) for a user defined class, which itself uses the IRrecv class from IRremote.
 
 #### SendLGAirConditionerDemo
-Example for sending LG air conditioner IR codes controlled by Serial input.<br/>
+[Example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendLGAirConditionerDemo/SendLGAirConditionerDemo.ino) for sending LG air conditioner IR codes controlled by Serial input.<br/>
 By just using the function `bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter)` you can control the air conditioner by any other command source.<br/>
 The file *acLG.h* contains the command documentation of the LG air conditioner IR protocol. Based on reverse engineering of the LG AKB73315611 remote.
 ![LG AKB73315611 remote](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/LG_AKB73315611.jpg)<br/>
@@ -501,7 +498,7 @@ IReceiverTimingAnalysis can be tested online with [WOKWI](https://wokwi.com/proj
 Click on the receiver while simulation is running to specify individual IR codes.
 
 #### ReceiverTimingAnalysis
-This example analyzes the signal delivered by your IR receiver module.
+This [example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiverTimingAnalysis/ReceiverTimingAnalysis.ino) analyzes the signal delivered by your IR receiver module.
 Values can be used to determine the stability of the received signal as well as a hint for determining the protocol.<br/>
 It also computes the `MARK_EXCESS_MICROS` value, which is the extension of the mark (pulse) duration introduced by the IR receiver module.<br/>
 It can be tested online with [WOKWI](https://wokwi.com/arduino/projects/299033930562011656).
@@ -512,7 +509,7 @@ ReceiveDemo + SendDemo in one program. Demonstrates **receiving while sending**.
 
 # WOKWI online examples
 - [Simple receiver](https://wokwi.com/projects/338611596994544210).
-- [MinimalReceiver](https://wokwi.com/arduino/projects/339264565653013075)
+- [TinyReceiver](https://wokwi.com/arduino/projects/339264565653013075)
 - [ReceiverTimingAnalysis](https://wokwi.com/projects/299033930562011656)
 - [Receiver with LCD output and switch statement](https://wokwi.com/projects/298934082074575369)
 
@@ -614,7 +611,7 @@ If you can provide **examples of using a periodic timer for interrupts** for the
 The **receiver sample interval of 50 &micro;s is generated by a timer**. On many boards this must be a hardware timer. On some boards where a software timer is available, the software timer is used.<br/>
 Every pin can be used for receiving.
 
-The MinimalReceiver example uses the **TinyReceiver** library,  which can **only receive NEC codes, but does not require any timer**.
+The TinyReceiver example uses the **TinyReceiver** library,  which can **only receive NEC codes, but does not require any timer**.
 
 The code for the timer and the **timer selection** is located in [private/IRTimer.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.hpp). It can be adjusted here.<br/>
 **Be aware that the hardware timer used for receiving should not be used for analogWrite()!**.<br/>
@@ -735,7 +732,7 @@ Created with sigrok PulseView with IR_NEC decoder by DjordjeMandic.<br/>
 I created this comparison matrix for [myself](https://github.com/ArminJo) in order to choose a small IR lib for my project and to have a quick overview, when to choose which library.<br/>
 It is dated from **24.06.2022**. If you have complains about the data or request for extensions, please send a PM or open a discussion.
 
-| Subject | [IRMP](https://github.com/IRMP-org/IRMP) | [IRLremote](https://github.com/NicoHood/IRLremote) | [IRLib2](https://github.com/cyborg5/IRLib2)<br/>**mostly unmaintained** | [IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote) | [Minimal NEC](https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/MinimalReceiver) | [IRsmallDecoder](https://github.com/LuisMiCa/IRsmallDecoder)
+| Subject | [IRMP](https://github.com/IRMP-org/IRMP) | [IRLremote](https://github.com/NicoHood/IRLremote) | [IRLib2](https://github.com/cyborg5/IRLib2)<br/>**mostly unmaintained** | [IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote) | [Minimal NEC](https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/TinyReceiver) | [IRsmallDecoder](https://github.com/LuisMiCa/IRsmallDecoder)
 |---------|------|-----------|--------|----------|----------|----------|
 | Number of protocols | **50** | Nec + Panasonic + Hash \* | 12 + Hash \* | 17 + PulseDistance + Hash \* | NEC | NEC + RC5 + Sony + Samsung |
 | Timing method receive | Timer2 or interrupt for pin 2 or 3 | **Interrupt** | Timer2 or interrupt for pin 2 or 3 | Timer2 | **Interrupt** | **Interrupt** |

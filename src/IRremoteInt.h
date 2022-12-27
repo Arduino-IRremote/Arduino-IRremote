@@ -499,6 +499,7 @@ public:
     void sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
     void sendSamsungLGRepeat();
     void sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
+    void sendSamsung48(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSharp(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats); // redirected to sendDenon
     void sendSony(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t numberOfBits = 12); // SIRCS_12_PROTOCOL

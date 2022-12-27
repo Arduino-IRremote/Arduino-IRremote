@@ -339,6 +339,7 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
  */
 uint16_t sAddress = 0xFFF1;
 uint8_t sCommand = 0x76;
+uint16_t s16BitCommand = 0x9876;
 #define sRepeats  0 // no unit test for repeats
 
 void loop() {
@@ -621,6 +622,26 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 #endif
 
+#if defined(DECODE_SAMSUNG)
+    Serial.println(F("Send Samsung 8 bit command"));
+    Serial.flush();
+    IrSender.sendSamsung(sAddress, sCommand, sRepeats);
+    checkReceive(sAddress, sCommand);
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send Samsung 16 bit command"));
+    Serial.flush();
+    IrSender.sendSamsung(sAddress, s16BitCommand, sRepeats);
+    checkReceive(sAddress, s16BitCommand);
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send Samsung48 16 bit command"));
+    Serial.flush();
+    IrSender.sendSamsung48(sAddress, s16BitCommand, sRepeats);
+    checkReceive(sAddress, s16BitCommand);
+    delay(DELAY_AFTER_SEND);
+#endif
+
 #if defined(DECODE_RC5)
     Serial.println(F("Send RC5"));
     Serial.flush();
@@ -653,16 +674,6 @@ void loop() {
     IRSendData.command = sCommand;
     IRSendData.flags = IRDATA_FLAGS_EMPTY;
 
-#if defined(DECODE_SAMSUNG)
-    IRSendData.protocol = SAMSUNG;
-    Serial.print(F("Send "));
-    Serial.println(getProtocolString(IRSendData.protocol));
-    Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
-    checkReceive(IRSendData.address, IRSendData.command);
-    delay(DELAY_AFTER_SEND);
-#endif
-
 #if defined(DECODE_JVC)
     IRSendData.protocol = JVC;  // switch protocol
     Serial.print(F("Send "));
@@ -674,7 +685,7 @@ void loop() {
 #endif
 
 #if defined(DECODE_LG) || defined(DECODE_MAGIQUEST)
-    IRSendData.command = (sCommand + 1) << 8 | sCommand; // Samsung48, LG and MAGIQUEST support more than 8 bit command
+    IRSendData.command = s16BitCommand; // LG support more than 8 bit command
 #endif
 
 #if defined(DECODE_SAMSUNG)
@@ -700,8 +711,8 @@ void loop() {
 #if defined(DECODE_MAGIQUEST)
     Serial.println(F("Send MagiQuest"));
     Serial.flush();
-    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, IRSendData.command); // we have 31 bit address
-    checkReceive(sAddress, IRSendData.command & 0x1FF); // we have 9 bit command
+    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, s16BitCommand); // we have 31 bit address
+    checkReceive(sAddress, s16BitCommand & 0x1FF); // we have 9 bit command
     delay(DELAY_AFTER_SEND);
 #endif
 
@@ -764,6 +775,7 @@ void loop() {
      */
     sAddress += 0x0101;
     sCommand += 0x11;
+    s16BitCommand += 0x1111;
 
     delay(DELAY_AFTER_LOOP); // additional delay at the end of each loop
 }

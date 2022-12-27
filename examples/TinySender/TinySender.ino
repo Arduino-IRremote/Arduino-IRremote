@@ -1,5 +1,5 @@
 /*
- * MinimalSender.cpp
+ * TinySender.cpp
  *
  *  Sending NEC protocol codes in standard format with 8bit address and 8 bit command as in SimpleSender example.
  *  Saves 780 bytes program memory and 26 bytes RAM compared to SimpleSender, which does the same, but uses the IRRemote library (and is therefore much more flexible).

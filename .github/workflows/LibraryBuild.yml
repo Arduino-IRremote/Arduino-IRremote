@@ -121,19 +121,19 @@ jobs:
 #            sketches-exclude: ReceiveAndSend # Not enough RAM for default RAW_BUFFER_LENGTH
 
           - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
-            sketches-exclude: MinimalReceiver,IRDispatcherDemo
+            sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
               SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: arduino:samd:arduino_zero_native
-            sketches-exclude: MinimalReceiver,IRDispatcherDemo
+            sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: adafruit:samd:adafruit_metro_m4:cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off
             platform-url: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
-            sketches-exclude: MinimalReceiver,IRDispatcherDemo
+            sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
@@ -171,28 +171,28 @@ jobs:
           - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock16
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
             required-libraries: ATtinySerialOut
-            sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
+            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
             build-properties: # the flags were put in compiler.cpp.extra_flags
               SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             required-libraries: ATtinySerialOut
-            sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
+            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
             build-properties: # the flags were put in compiler.cpp.extra_flags
               SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             required-libraries: ATtinySerialOut
-            sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
+            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
             build-properties: # the flags were put in compiler.cpp.extra_flags
               SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
             platform-url: http://drazzy.com/package_drazzy.com_index.json
             required-libraries: ATtinySerialOut
-            sketch-names: MinimalReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
+            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
             build-properties: # the flags were put in compiler.cpp.extra_flags
               SimpleSender: -DSEND_PWM_BY_TIMER
 
@@ -206,35 +206,35 @@ jobs:
 
           - arduino-boards-fqbn: esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80
             platform-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
-            sketches-exclude: MinimalReceiver
+            sketches-exclude: TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=200
               All: -DRAW_BUFFER_LENGTH=300
 
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-            sketches-exclude: MinimalReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
+            sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=500 -Wno-error=maybe-uninitialized
               All: -DRAW_BUFFER_LENGTH=300 -Wno-error=maybe-uninitialized # https://github.com/espressif/arduino-esp32/issues/7024
 
           - arduino-boards-fqbn: STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8 # ST version
             platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
-            sketches-exclude: MinimalReceiver
+            sketches-exclude: TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300
 
           - arduino-boards-fqbn: STMicroelectronics:stm32:GenL0:pnum=THUNDERPACK_L072 # ST version
             platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
-            sketches-exclude: MinimalReceiver,IRDispatcherDemo
+            sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300
 
           - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C # Roger Clark version
             platform-url: http://dan.drown.org/stm32duino/package_STM32duino_index.json
-            sketches-exclude: MinimalReceiver
+            sketches-exclude: TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300
@@ -248,7 +248,7 @@ jobs:
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
-            sketches-exclude: IRDispatcherDemo,MicroGirs,MinimalReceiver
+            sketches-exclude: IRDispatcherDemo,MicroGirs,TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300

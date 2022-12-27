@@ -91,6 +91,7 @@ void setup() {
  */
 uint16_t sAddress = 0x0102;
 uint8_t sCommand = 0x34;
+uint16_t s16BitCommand = 0x5634;
 uint8_t sRepeats = 0;
 
 void loop() {
@@ -242,7 +243,7 @@ void loop() {
 
     Serial.println(F("Send Onkyo (NEC with 16 bit command)"));
     Serial.flush();
-    IrSender.sendOnkyo(sAddress, (sCommand + 1) << 8 | sCommand, sRepeats);
+    IrSender.sendOnkyo(sAddress, s16BitCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Apple"));
@@ -290,6 +291,21 @@ void loop() {
     IrSender.sendSony(sAddress & 0x1FFF, sCommand & 0x7F, sRepeats, SIRCS_20_PROTOCOL);
     delay(DELAY_AFTER_SEND);
 
+    Serial.println(F("Send Samsung 8 bit command"));
+    Serial.flush();
+    IrSender.sendSamsung(sAddress, sCommand, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send Samsung 16 bit command"));
+    Serial.flush();
+    IrSender.sendSamsung(sAddress, s16BitCommand, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send Samsung48 16 bit command"));
+    Serial.flush();
+    IrSender.sendSamsung48(sAddress, s16BitCommand, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
     Serial.println(F("Send RC5"));
     Serial.flush();
     IrSender.sendRC5(sAddress & 0x1F, sCommand & 0x3F, sRepeats, true); // 5 address, 6 command bits
@@ -329,7 +345,7 @@ void loop() {
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
 
-    IRSendData.command = (sCommand + 1) << 8 | sCommand;  // Samsung48, LG and MAGIQUEST support more than 8 bit command
+    IRSendData.command = s16BitCommand;  // LG support more than 8 bit command
 
     IRSendData.protocol = SAMSUNG;
     Serial.print(F("Send "));
@@ -347,7 +363,7 @@ void loop() {
 
     Serial.println(F("Send MagiQuest"));
     Serial.flush();
-    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, IRSendData.command); // we have 31 bit address
+    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, s16BitCommand); // we have 31 bit address
     delay(DELAY_AFTER_SEND);
 
     // Bang&Olufsen must be sent with 455 kHz
@@ -389,6 +405,7 @@ void loop() {
      */
     sAddress += 0x0101;
     sCommand += 0x11;
+    s16BitCommand += 0x1111;
     sRepeats++;
     // clip repeats at 4
     if (sRepeats > 4) {

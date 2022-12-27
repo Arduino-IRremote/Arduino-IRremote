@@ -58,6 +58,7 @@ typedef enum {
     RC5,
     RC6,
     SAMSUNG,
+    SAMSUNG48,
     SAMSUNG_LG,
     SHARP,
     SONY,
@@ -90,6 +91,7 @@ const char string_Kaseikyo_Mitsubishi[] PROGMEM = "Kaseikyo_Mitsubishi";
 const char string_RC5[] PROGMEM = "RC5";
 const char string_RC6[] PROGMEM = "RC6";
 const char string_Samsung[] PROGMEM = "Samsung";
+const char string_Samsung48[] PROGMEM = "Samsung48";
 const char string_SamsungLG[] PROGMEM = "SamsungLG";
 const char string_Sharp[] PROGMEM = "Sharp";
 const char string_Sony[] PROGMEM = "Sony";

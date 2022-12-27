@@ -20,8 +20,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Merged the 2 decode pulse width and distance functions.
 - Added receiver callback functionality and registerReceiveCompleteCallback() function.
 - Changed macro names _REPEAT_SPACE to _REPEAT_DISTANCE.
-- Improved TinyIRReceiver and added FAST protocol for it.
-- Added TinyIRSender.hpp and MinimalSender example, renamed TinyReceiver.h to TinyIR.h and added TinySender.hpp.
+- Improved TinyIRReceiver,added FAST protocol for it and added TinyIRSender.hpp and TinySender example, renamed TinyReceiver.h to TinyIR.h.
 - Removed static function printIRSendUsage(), but kept class function printIRSendUsage().
 - Added DISABLE_CODE_FOR_RECEIVER to save program memory and RAM if receiving functionality is not required.
 - Extracted protocol functions used by receive and send to IRProtocol.hpp.
@@ -33,6 +32,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Fixed SEND_PWM_BY_TIMER for ATtiny167 thanks to freskpe.
 - Improved SHARP repeat decoding.
 - Replaced macros TIMER_EN/DISABLE_RECEIVE_INTR and EN/DISABLE_SEND_PWM_BY_TIMER by functions.
+- Added SAMSUNG48 protocol and sendSamsung48().
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

@@ -251,7 +251,7 @@ bool IRrecv::decodeKaseikyo() {
     tValue.ULong = decodedIRData.decodedRawData;
 #if __INT_WIDTH__ >= 32
     // workaround until complete refactoring for 64 bit
-    decodedIRData.decodedRawData = (decodedIRData.decodedRawData << 16) | tVendorId;
+    decodedIRData.decodedRawData = (decodedIRData.decodedRawData << 16) | tVendorId; // store all 48 bits in decodedRawData
 #endif
     decodedIRData.address = (tValue.UWord.LowWord >> KASEIKYO_VENDOR_ID_PARITY_BITS); // remove 4 bit vendor parity
     decodedIRData.command = tValue.UByte.MidHighByte;
