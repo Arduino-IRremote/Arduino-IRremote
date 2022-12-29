@@ -85,21 +85,21 @@ $(document).ready(function(){initNavTree('structTinyIRReceiverStruct.html',''); 
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structTinyIRReceiverStruct-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">TinyIRReceiverStruct Struct Reference<div class="ingroups"><a class="el" href="group__TinyReceiver.html">Minimal receiver for NEC protocol</a></div></div>  </div>
+<div class="title">TinyIRReceiverStruct Struct Reference<div class="ingroups"><a class="el" href="group__TinyReceiver.html">Minimal receiver for NEC and FAST protocol</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p>Control and data variables of the state machine for TinyReceiver.  
  <a href="structTinyIRReceiverStruct.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for TinyIRReceiverStruct:</div>
 <div class="dyncontent">
 <div class="center"><img src="structTinyIRReceiverStruct__coll__graph.png" border="0" usemap="#TinyIRReceiverStruct_coll__map" alt="Collaboration graph"/></div>
 <map name="TinyIRReceiverStruct_coll__map" id="TinyIRReceiverStruct_coll__map">
-<area shape="rect" title="Control and data variables of the state machine for TinyReceiver." alt="" coords="5,213,148,240"/>
-<area shape="rect" href="unionLongUnion.html" title="Union to specify parts / manifestations of a 32 bit Long without casts and shifts." alt="" coords="35,124,118,151"/>
+<area shape="rect" title="Control and data variables of the state machine for TinyReceiver." alt="" coords="5,199,148,225"/>
+<area shape="rect" href="unionLongUnion.html" title="Union to specify parts / manifestations of a 32 bit Long without casts and shifts." alt="" coords="35,109,118,136"/>
 <area shape="rect" href="unionWordUnion.html" title="Union to specify parts / manifestations of a 16 bit Word without casts and shifts." alt="" coords="33,5,120,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
@@ -107,27 +107,47 @@ Collaboration diagram for TinyIRReceiverStruct:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a978f2ac480cb3ab428ff3016239413f1"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverStruct.html#a978f2ac480cb3ab428ff3016239413f1">LastChangeMicros</a></td></tr>
-<tr class="memdesc:a978f2ac480cb3ab428ff3016239413f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">microseconds of last Pin Change Interrupt.  <a href="structTinyIRReceiverStruct.html#a978f2ac480cb3ab428ff3016239413f1">More...</a><br /></td></tr>
+<tr class="memdesc:a978f2ac480cb3ab428ff3016239413f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Microseconds of last Pin Change Interrupt.  <a href="structTinyIRReceiverStruct.html#a978f2ac480cb3ab428ff3016239413f1">More...</a><br /></td></tr>
 <tr class="separator:a978f2ac480cb3ab428ff3016239413f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca59e5c5331a581e0603a59c552fa8c9"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverStruct.html#aca59e5c5331a581e0603a59c552fa8c9">IRReceiverState</a></td></tr>
-<tr class="memdesc:aca59e5c5331a581e0603a59c552fa8c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">the state of the state machine.  <a href="structTinyIRReceiverStruct.html#aca59e5c5331a581e0603a59c552fa8c9">More...</a><br /></td></tr>
+<tr class="memdesc:aca59e5c5331a581e0603a59c552fa8c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The state of the state machine.  <a href="structTinyIRReceiverStruct.html#aca59e5c5331a581e0603a59c552fa8c9">More...</a><br /></td></tr>
 <tr class="separator:aca59e5c5331a581e0603a59c552fa8c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accdf38f518f17dfaf1a8aa870d77ce91"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverStruct.html#accdf38f518f17dfaf1a8aa870d77ce91">IRRawDataBitCounter</a></td></tr>
+<tr class="memdesc:accdf38f518f17dfaf1a8aa870d77ce91"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many bits are currently contained in raw data.  <a href="structTinyIRReceiverStruct.html#accdf38f518f17dfaf1a8aa870d77ce91">More...</a><br /></td></tr>
 <tr class="separator:accdf38f518f17dfaf1a8aa870d77ce91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6f580c1bf0c11c37edefd255283361a"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverStruct.html#aa6f580c1bf0c11c37edefd255283361a">IRRawDataMask</a></td></tr>
+<tr class="memdesc:aa6f580c1bf0c11c37edefd255283361a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The corresponding bit mask for IRRawDataBitCounter.  <a href="structTinyIRReceiverStruct.html#aa6f580c1bf0c11c37edefd255283361a">More...</a><br /></td></tr>
 <tr class="separator:aa6f580c1bf0c11c37edefd255283361a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6277ed6c719314aef883af018f886056"><td class="memItemLeft" align="right" valign="top"><a class="el" href="unionLongUnion.html">LongUnion</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverStruct.html#a6277ed6c719314aef883af018f886056">IRRawData</a></td></tr>
+<tr class="memdesc:a6277ed6c719314aef883af018f886056"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current raw data. <a class="el" href="unionLongUnion.html" title="Union to specify parts / manifestations of a 32 bit Long without casts and shifts.">LongUnion</a> helps with decoding of address and command.  <a href="structTinyIRReceiverStruct.html#a6277ed6c719314aef883af018f886056">More...</a><br /></td></tr>
 <tr class="separator:a6277ed6c719314aef883af018f886056"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51b38a3f91adfff25ab4222845e00942"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverStruct.html#a51b38a3f91adfff25ab4222845e00942">IRRepeatFrameDetected</a></td></tr>
-<tr class="separator:a51b38a3f91adfff25ab4222845e00942"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a234ba0af8b1e1e21f1a4f0f5f1467956"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverStruct.html#a234ba0af8b1e1e21f1a4f0f5f1467956">IRRepeatDistanceDetected</a></td></tr>
-<tr class="separator:a234ba0af8b1e1e21f1a4f0f5f1467956"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abead77902575acdd1ab470cea07a3611"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverStruct.html#abead77902575acdd1ab470cea07a3611">Flags</a></td></tr>
+<tr class="memdesc:abead77902575acdd1ab470cea07a3611"><td class="mdescLeft">&#160;</td><td class="mdescRight">One of IRDATA_FLAGS_EMPTY, IRDATA_FLAGS_IS_REPEAT, and IRDATA_FLAGS_PARITY_FAILED.  <a href="structTinyIRReceiverStruct.html#abead77902575acdd1ab470cea07a3611">More...</a><br /></td></tr>
+<tr class="separator:abead77902575acdd1ab470cea07a3611"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Control and data variables of the state machine for TinyReceiver. </p>
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00085">85</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00189">189</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="abead77902575acdd1ab470cea07a3611"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abead77902575acdd1ab470cea07a3611">&#9670;&nbsp;</a></span>Flags</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t TinyIRReceiverStruct::Flags</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>One of IRDATA_FLAGS_EMPTY, IRDATA_FLAGS_IS_REPEAT, and IRDATA_FLAGS_PARITY_FAILED. </p>
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00206">206</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
 <a id="a6277ed6c719314aef883af018f886056"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6277ed6c719314aef883af018f886056">&#9670;&nbsp;</a></span>IRRawData</h2>
 
@@ -140,7 +160,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00096">96</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p>The current raw data. <a class="el" href="unionLongUnion.html" title="Union to specify parts / manifestations of a 32 bit Long without casts and shifts.">LongUnion</a> helps with decoding of address and command. </p>
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00201">201</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -156,7 +178,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00091">91</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p>How many bits are currently contained in raw data. </p>
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00195">195</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -172,7 +196,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00095">95</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p>The corresponding bit mask for IRRawDataBitCounter. </p>
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00200">200</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -188,41 +214,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>the state of the state machine. </p>
+<p>The state of the state machine. </p>
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00090">90</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
-
-</div>
-</div>
-<a id="a234ba0af8b1e1e21f1a4f0f5f1467956"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a234ba0af8b1e1e21f1a4f0f5f1467956">&#9670;&nbsp;</a></span>IRRepeatDistanceDetected</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool TinyIRReceiverStruct::IRRepeatDistanceDetected</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00099">99</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
-
-</div>
-</div>
-<a id="a51b38a3f91adfff25ab4222845e00942"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51b38a3f91adfff25ab4222845e00942">&#9670;&nbsp;</a></span>IRRepeatFrameDetected</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool TinyIRReceiverStruct::IRRepeatFrameDetected</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00097">97</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00194">194</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -238,14 +232,14 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>microseconds of last Pin Change Interrupt. </p>
+<p>Microseconds of last Pin Change Interrupt. </p>
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00089">89</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00193">193</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/<a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a></li>
+<li>src/<a class="el" href="TinyIR_8h_source.html">TinyIR.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -253,7 +247,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structTinyIRReceiverStruct.html">TinyIRReceiverStruct</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:22 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:47 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

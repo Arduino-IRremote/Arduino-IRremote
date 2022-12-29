@@ -2,7 +2,7 @@ var IRremote_8hpp =
 [
     [ "DECODE_BOSEWAVE", "IRremote_8hpp.html#a2935e3b14cf449b00b4166f71eecf8af", null ],
     [ "DECODE_DENON", "IRremote_8hpp.html#a589c5f91ad251aff0cbdc179a5faaa60", null ],
-    [ "DECODE_DISTANCE", "IRremote_8hpp.html#ac56dd3a6901bd61a6a122e1f683e5105", null ],
+    [ "DECODE_DISTANCE_WIDTH", "IRremote_8hpp.html#adfd8ff3c8859e3d8f53f39b5837520c5", null ],
     [ "DECODE_HASH", "IRremote_8hpp.html#a4ee00d8b9631462888e74c95712234e1", null ],
     [ "DECODE_JVC", "IRremote_8hpp.html#ac1f2b013768a77943b002953197cb573", null ],
     [ "DECODE_KASEIKYO", "IRremote_8hpp.html#acd46d28198948511f9c8b97328b5fdde", null ],
@@ -25,7 +25,6 @@ var IRremote_8hpp =
     [ "MICROS_PER_TICK", "IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20", null ],
     [ "MILLIS_IN_ONE_SECOND", "IRremote_8hpp.html#a551a361e5f7fbdcf8ec8e9679976b462", null ],
     [ "PULSE_CORRECTION_NANOS", "IRremote_8hpp.html#ac836377a7a04f6f4044daab71d9660f9", null ],
-    [ "RAW_BUFFER_LENGTH", "IRremote_8hpp.html#a589aa40429eeb37b6e83a2c09854a47b", null ],
     [ "RAWBUF", "IRremote_8hpp.html#abb919079668bcc14433d4c857ab8a196", null ],
     [ "RECORD_GAP_MICROS", "IRremote_8hpp.html#a2eb6de0bae8bc6f19f3832c00e91f499", null ],
     [ "RECORD_GAP_MICROS_WARNING_THRESHOLD", "IRremote_8hpp.html#a6afa54ea105253cce361d8c571da5fa9", null ],

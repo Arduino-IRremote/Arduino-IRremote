@@ -85,26 +85,32 @@ $(document).ready(function(){initNavTree('structTinyIRReceiverCallbackDataStruct
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structTinyIRReceiverCallbackDataStruct-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">TinyIRReceiverCallbackDataStruct Struct Reference<div class="ingroups"><a class="el" href="group__TinyReceiver.html">Minimal receiver for NEC protocol</a></div></div>  </div>
+<div class="title">TinyIRReceiverCallbackDataStruct Struct Reference<div class="ingroups"><a class="el" href="group__TinyReceiver.html">Minimal receiver for NEC and FAST protocol</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>&gt;</code></p>
+<p>Can be used by the callback to transfer received data to main loop for further processing.  
+ <a href="structTinyIRReceiverCallbackDataStruct.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a90f587192055c4569e8bf2ea76b83f75"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverCallbackDataStruct.html#a90f587192055c4569e8bf2ea76b83f75">Address</a></td></tr>
 <tr class="separator:a90f587192055c4569e8bf2ea76b83f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5c77524d4f4f01a8fa13100fe0ea0e8"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverCallbackDataStruct.html#ae5c77524d4f4f01a8fa13100fe0ea0e8">Command</a></td></tr>
-<tr class="separator:ae5c77524d4f4f01a8fa13100fe0ea0e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe1d13fe5778021d7c6458a0b9f75cb8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverCallbackDataStruct.html#afe1d13fe5778021d7c6458a0b9f75cb8">isRepeat</a></td></tr>
-<tr class="separator:afe1d13fe5778021d7c6458a0b9f75cb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaee6d40528d1e3310ea66de6d81b01e5"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverCallbackDataStruct.html#aaee6d40528d1e3310ea66de6d81b01e5">Command</a></td></tr>
+<tr class="separator:aaee6d40528d1e3310ea66de6d81b01e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad96a1443f9fe0cc2c079345c9aaa2e0f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverCallbackDataStruct.html#ad96a1443f9fe0cc2c079345c9aaa2e0f">Flags</a></td></tr>
+<tr class="separator:ad96a1443f9fe0cc2c079345c9aaa2e0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98164fef32d1716173ecbb35a2d69111"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverCallbackDataStruct.html#a98164fef32d1716173ecbb35a2d69111">justWritten</a></td></tr>
+<tr class="memdesc:a98164fef32d1716173ecbb35a2d69111"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is set true if new data is available. Used by the main loop, to avoid multiple evaluations of the same IR frame.  <a href="structTinyIRReceiverCallbackDataStruct.html#a98164fef32d1716173ecbb35a2d69111">More...</a><br /></td></tr>
 <tr class="separator:a98164fef32d1716173ecbb35a2d69111"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00107">107</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<div class="textblock"><p>Can be used by the callback to transfer received data to main loop for further processing. </p>
+<p>E.g. with volatile struct <a class="el" href="structTinyIRReceiverCallbackDataStruct.html" title="Can be used by the callback to transfer received data to main loop for further processing.">TinyIRReceiverCallbackDataStruct</a> sCallbackData; </p>
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00222">222</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a90f587192055c4569e8bf2ea76b83f75"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a90f587192055c4569e8bf2ea76b83f75">&#9670;&nbsp;</a></span>Address</h2>
@@ -118,39 +124,39 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00108">108</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00225">225</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
-<a id="ae5c77524d4f4f01a8fa13100fe0ea0e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae5c77524d4f4f01a8fa13100fe0ea0e8">&#9670;&nbsp;</a></span>Command</h2>
+<a id="aaee6d40528d1e3310ea66de6d81b01e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaee6d40528d1e3310ea66de6d81b01e5">&#9670;&nbsp;</a></span>Command</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t TinyIRReceiverCallbackDataStruct::Command</td>
+          <td class="memname">uint16_t TinyIRReceiverCallbackDataStruct::Command</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00109">109</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00232">232</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
-<a id="afe1d13fe5778021d7c6458a0b9f75cb8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe1d13fe5778021d7c6458a0b9f75cb8">&#9670;&nbsp;</a></span>isRepeat</h2>
+<a id="ad96a1443f9fe0cc2c079345c9aaa2e0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad96a1443f9fe0cc2c079345c9aaa2e0f">&#9670;&nbsp;</a></span>Flags</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool TinyIRReceiverCallbackDataStruct::isRepeat</td>
+          <td class="memname">uint8_t TinyIRReceiverCallbackDataStruct::Flags</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00110">110</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00236">236</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -166,12 +172,14 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00111">111</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p>Is set true if new data is available. Used by the main loop, to avoid multiple evaluations of the same IR frame. </p>
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00237">237</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>src/<a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a></li>
+<li>src/<a class="el" href="TinyIR_8h_source.html">TinyIR.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -179,7 +187,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structTinyIRReceiverCallbackDataStruct.html">TinyIRReceiverCallbackDataStruct</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:22 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:47 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

@@ -82,7 +82,8 @@ $(document).ready(function(){initNavTree('digitalWriteFast_8h.html',''); initRes
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">digitalWriteFast.h File Reference</div>  </div>
 </div><!--header-->
@@ -92,9 +93,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="digitalWriteFast_8h__dep__incl.png" border="0" usemap="#src_2digitalWriteFast_8hdep" alt=""/></div>
 <map name="src_2digitalWriteFast_8hdep" id="src_2digitalWriteFast_8hdep">
-<area shape="rect" title=" " alt="" coords="74,5,221,32"/>
+<area shape="rect" title=" " alt="" coords="155,5,302,32"/>
 <area shape="rect" href="IRremote_8hpp.html" title="Public API to the library." alt="" coords="5,80,127,107"/>
 <area shape="rect" href="TinyIRReceiver_8hpp.html" title=" " alt="" coords="151,80,306,107"/>
+<area shape="rect" href="TinyIRSender_8hpp.html" title=" " alt="" coords="330,80,477,107"/>
 <area shape="rect" href="IRremote_8h.html" title="Stub for backward compatibility." alt="" coords="13,155,119,181"/>
 </map>
 </div>
@@ -111,68 +113,6 @@ Macros</h2></td></tr>
 <tr class="separator:a00bda5613fe59582e9cd36d07b8f2851"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c73c74b64f4d1b6538a8de13f95a2e6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a1c73c74b64f4d1b6538a8de13f95a2e6">BIT_WRITE</a>(value,  bit,  bitvalue)&#160;&#160;&#160;(bitvalue ? <a class="el" href="digitalWriteFast_8h.html#ab94522870cd3d40d76ae0a8778166017">BIT_SET</a>(value, bit) : <a class="el" href="digitalWriteFast_8h.html#a00bda5613fe59582e9cd36d07b8f2851">BIT_CLEAR</a>(value, bit))</td></tr>
 <tr class="separator:a1c73c74b64f4d1b6538a8de13f95a2e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d9d454d4b9f2ff8106d5199ac0d0186"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a5d9d454d4b9f2ff8106d5199ac0d0186">SWAP</a>(x,  y)&#160;&#160;&#160;do{ (x)=(x)^(y); (y)=(x)^(y); (x)=(x)^(y); }while(0)</td></tr>
-<tr class="separator:a5d9d454d4b9f2ff8106d5199ac0d0186"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe38ec6126e35e40049e27fdf4586ba5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#afe38ec6126e35e40049e27fdf4586ba5">DEC</a>&#160;&#160;&#160;(10)</td></tr>
-<tr class="separator:afe38ec6126e35e40049e27fdf4586ba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9075d93e0ab26ccd6e059fa06aa4e3de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a9075d93e0ab26ccd6e059fa06aa4e3de">HEX</a>&#160;&#160;&#160;(16)</td></tr>
-<tr class="separator:a9075d93e0ab26ccd6e059fa06aa4e3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a904777e8f3d21de0a6679d2c9f0f1eec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a904777e8f3d21de0a6679d2c9f0f1eec">OCT</a>&#160;&#160;&#160;(8)</td></tr>
-<tr class="separator:a904777e8f3d21de0a6679d2c9f0f1eec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75267cdfa3fa9e52c7c1f1094f9387b7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a75267cdfa3fa9e52c7c1f1094f9387b7">BIN</a>&#160;&#160;&#160;(2)</td></tr>
-<tr class="separator:a75267cdfa3fa9e52c7c1f1094f9387b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75acaba9e781937468d0911423bc0c35"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a75acaba9e781937468d0911423bc0c35">PROGMEM</a></td></tr>
-<tr class="separator:a75acaba9e781937468d0911423bc0c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a963f816fc88a5d8479c285ed4c630229"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a963f816fc88a5d8479c285ed4c630229">PGM_P</a>&#160;&#160;&#160;const char *</td></tr>
-<tr class="separator:a963f816fc88a5d8479c285ed4c630229"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73809107539df84eaf01f6a4dea4fbff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a73809107539df84eaf01f6a4dea4fbff">PSTR</a>(str)&#160;&#160;&#160;(str)</td></tr>
-<tr class="separator:a73809107539df84eaf01f6a4dea4fbff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0444ad0cb3250a5778a573dd10f41be"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#ae0444ad0cb3250a5778a573dd10f41be">memcpy_P</a>(dest,  src,  num)&#160;&#160;&#160;memcpy((dest), (src), (num))</td></tr>
-<tr class="separator:ae0444ad0cb3250a5778a573dd10f41be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab00bda73e5853cc61868501fe37fa9b7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#ab00bda73e5853cc61868501fe37fa9b7">strcpy_P</a>(dst,  src)&#160;&#160;&#160;strcpy((dst), (src))</td></tr>
-<tr class="separator:ab00bda73e5853cc61868501fe37fa9b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37c1666c2ccbf210e3829bbebc2b16e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a37c1666c2ccbf210e3829bbebc2b16e4">strcat_P</a>(dst,  src)&#160;&#160;&#160;strcat((dst), (src))</td></tr>
-<tr class="separator:a37c1666c2ccbf210e3829bbebc2b16e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbb2cd396dde2d1575948bb16ce2853a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#abbb2cd396dde2d1575948bb16ce2853a">strcmp_P</a>(a,  b)&#160;&#160;&#160;strcmp((a), (b))</td></tr>
-<tr class="separator:abbb2cd396dde2d1575948bb16ce2853a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae97e89b6ed4b46ade2eca9cafc6abd8d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#ae97e89b6ed4b46ade2eca9cafc6abd8d">strcasecmp_P</a>(a,  b)&#160;&#160;&#160;strcasecmp((a), (b))</td></tr>
-<tr class="separator:ae97e89b6ed4b46ade2eca9cafc6abd8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83b1e057d9ee4c5160557575be07c41f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a83b1e057d9ee4c5160557575be07c41f">strncmp_P</a>(a,  b,  n)&#160;&#160;&#160;strncmp((a), (b), (n))</td></tr>
-<tr class="separator:a83b1e057d9ee4c5160557575be07c41f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6986d443d13df0a4f28c6d1b52effb7d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a6986d443d13df0a4f28c6d1b52effb7d">strncasecmp_P</a>(a,  b,  n)&#160;&#160;&#160;strncasecmp((a), (b), (n))</td></tr>
-<tr class="separator:a6986d443d13df0a4f28c6d1b52effb7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca1ecbfa8b94eba4b5228f0a6a18a888"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#aca1ecbfa8b94eba4b5228f0a6a18a888">strstr_P</a>(a,  b)&#160;&#160;&#160;strstr((a), (b))</td></tr>
-<tr class="separator:aca1ecbfa8b94eba4b5228f0a6a18a888"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76ea3b30093856a6482a978d9214142d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a76ea3b30093856a6482a978d9214142d">strlen_P</a>(a)&#160;&#160;&#160;strlen((a))</td></tr>
-<tr class="separator:a76ea3b30093856a6482a978d9214142d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45ba8afa17fe1ae5ab9327dbb6ca05b9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a45ba8afa17fe1ae5ab9327dbb6ca05b9">sprintf_P</a>(s,  f, ...)&#160;&#160;&#160;sprintf((s), (f), __VA_ARGS__)</td></tr>
-<tr class="separator:a45ba8afa17fe1ae5ab9327dbb6ca05b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48c60b057902adf805797f183286728d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a48c60b057902adf805797f183286728d">pgm_read_byte</a>(addr)&#160;&#160;&#160;(*(const unsigned char *)(addr))</td></tr>
-<tr class="separator:a48c60b057902adf805797f183286728d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a910fb5f01313d339d3b835d45e1e5ad0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a910fb5f01313d339d3b835d45e1e5ad0">pgm_read_word</a>(addr)&#160;&#160;&#160;(*(const unsigned short *)(addr))</td></tr>
-<tr class="separator:a910fb5f01313d339d3b835d45e1e5ad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73cf3e57e32321cb193b3cc4b041cc6c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a73cf3e57e32321cb193b3cc4b041cc6c">pgm_read_dword</a>(addr)&#160;&#160;&#160;(*(const unsigned long *)(addr))</td></tr>
-<tr class="separator:a73cf3e57e32321cb193b3cc4b041cc6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e4c6098d073922d247087549c084efd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a8e4c6098d073922d247087549c084efd">SPI_SW_SS_PIN</a>&#160;&#160;&#160;(10)</td></tr>
-<tr class="separator:a8e4c6098d073922d247087549c084efd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a590704782aba04d0b90e20dc2e06bfe1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a590704782aba04d0b90e20dc2e06bfe1">SPI_SW_MOSI_PIN</a>&#160;&#160;&#160;(11)</td></tr>
-<tr class="separator:a590704782aba04d0b90e20dc2e06bfe1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad80cac0c04cae5a4106da0daaefe8392"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#ad80cac0c04cae5a4106da0daaefe8392">SPI_SW_MISO_PIN</a>&#160;&#160;&#160;(12)</td></tr>
-<tr class="separator:ad80cac0c04cae5a4106da0daaefe8392"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa5382681cbe8124588319a841015562"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#aaa5382681cbe8124588319a841015562">SPI_SW_SCK_PIN</a>&#160;&#160;&#160;(13)</td></tr>
-<tr class="separator:aaa5382681cbe8124588319a841015562"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cade698267beb86ccaa38c14d35ab0f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a2cade698267beb86ccaa38c14d35ab0f">I2C_SDA_PIN</a>&#160;&#160;&#160;SDA</td></tr>
-<tr class="separator:a2cade698267beb86ccaa38c14d35ab0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e4e08bab2fb484136d18b067bef372c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a0e4e08bab2fb484136d18b067bef372c">I2C_SCL_PIN</a>&#160;&#160;&#160;SCL</td></tr>
-<tr class="separator:a0e4e08bab2fb484136d18b067bef372c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa48cf672323b7a1784a973d1a4fd891e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#aa48cf672323b7a1784a973d1a4fd891e">SPI_HW_SS_PIN</a>&#160;&#160;&#160;SS</td></tr>
-<tr class="separator:aa48cf672323b7a1784a973d1a4fd891e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abde5a3df1fb9cf0e46476ea7ac10b48a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#abde5a3df1fb9cf0e46476ea7ac10b48a">SPI_HW_MOSI_PIN</a>&#160;&#160;&#160;MOSI</td></tr>
-<tr class="separator:abde5a3df1fb9cf0e46476ea7ac10b48a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32f0a77e5800213b4d059bb700302d42"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a32f0a77e5800213b4d059bb700302d42">SPI_HW_MISO_PIN</a>&#160;&#160;&#160;MISO</td></tr>
-<tr class="separator:a32f0a77e5800213b4d059bb700302d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac26ddd8cd6a7cd10b23f08ea6e8f7032"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#ac26ddd8cd6a7cd10b23f08ea6e8f7032">SPI_HW_SCK_PIN</a>&#160;&#160;&#160;SCK</td></tr>
-<tr class="separator:ac26ddd8cd6a7cd10b23f08ea6e8f7032"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bef074dfc5a83ffbb27929185ef9597"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a9bef074dfc5a83ffbb27929185ef9597">digitalWriteFast</a>&#160;&#160;&#160;digitalWrite</td></tr>
 <tr class="separator:a9bef074dfc5a83ffbb27929185ef9597"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99fa3e1d72f2f1a9ffba996b06767a39"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a99fa3e1d72f2f1a9ffba996b06767a39">pinModeFast</a>&#160;&#160;&#160;pinMode</td></tr>
@@ -181,24 +121,19 @@ Macros</h2></td></tr>
 <tr class="separator:a3d35ce09bbea79b9f4e9fb0c291da92c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37533a4829c5931c2ea20fe4282bb910"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a37533a4829c5931c2ea20fe4282bb910">digitalToggleFast</a>(P)&#160;&#160;&#160;digitalWrite(P, ! digitalRead(P))</td></tr>
 <tr class="separator:a37533a4829c5931c2ea20fe4282bb910"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a4e56ea544abf645548406013bf368464"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a4e56ea544abf645548406013bf368464">NonConstantsUsedForPinModeFast</a> (void) __attribute__((error(&quot;Parameter for <a class="el" href="digitalWriteFast_8h.html#a99fa3e1d72f2f1a9ffba996b06767a39">pinModeFast</a>() function is not const ant&quot;)))</td></tr>
+<tr class="separator:a4e56ea544abf645548406013bf368464"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4aaa9a6c4fc18f0cdceced6cd7fb0a4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a4aaa9a6c4fc18f0cdceced6cd7fb0a4b">NonConstantsUsedForDigitalWriteFast</a> (void) __attribute__((error(&quot;Parameter for <a class="el" href="digitalWriteFast_8h.html#a9bef074dfc5a83ffbb27929185ef9597">digitalWriteFast</a>() function is not const ant&quot;)))</td></tr>
+<tr class="separator:a4aaa9a6c4fc18f0cdceced6cd7fb0a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad69bf81d5747855607be227350c249f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#ad69bf81d5747855607be227350c249f6">NonConstantsUsedForDigitalToggleFast</a> (void) __attribute__((error(&quot;Parameter for <a class="el" href="digitalWriteFast_8h.html#a37533a4829c5931c2ea20fe4282bb910">digitalToggleFast</a>() function is not const ant&quot;)))</td></tr>
+<tr class="separator:ad69bf81d5747855607be227350c249f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bf7500fd6d9d2e6aedaa91f4987d772"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="digitalWriteFast_8h.html#a4bf7500fd6d9d2e6aedaa91f4987d772">NonConstantsUsedForDigitalReadFast</a> (void) __attribute__((error(&quot;Parameter for <a class="el" href="digitalWriteFast_8h.html#a3d35ce09bbea79b9f4e9fb0c291da92c">digitalReadFast</a>() function is not const ant&quot;)))</td></tr>
+<tr class="separator:a4bf7500fd6d9d2e6aedaa91f4987d772"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a75267cdfa3fa9e52c7c1f1094f9387b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75267cdfa3fa9e52c7c1f1094f9387b7">&#9670;&nbsp;</a></span>BIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define BIN&#160;&#160;&#160;(2)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00043">43</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
 <a id="a00bda5613fe59582e9cd36d07b8f2851"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a00bda5613fe59582e9cd36d07b8f2851">&#9670;&nbsp;</a></span>BIT_CLEAR</h2>
 
@@ -225,7 +160,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00023">23</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00025">25</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
 
 </div>
 </div>
@@ -255,7 +190,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00017">17</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00019">19</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
 
 </div>
 </div>
@@ -285,7 +220,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00020">20</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00022">22</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
 
 </div>
 </div>
@@ -321,23 +256,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00026">26</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="afe38ec6126e35e40049e27fdf4586ba5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe38ec6126e35e40049e27fdf4586ba5">&#9670;&nbsp;</a></span>DEC</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DEC&#160;&#160;&#160;(10)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00034">34</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00028">28</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
 
 </div>
 </div>
@@ -353,7 +272,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00511">511</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00378">378</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
 
 </div>
 </div>
@@ -373,7 +292,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00524">524</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00400">400</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
 
 </div>
 </div>
@@ -389,183 +308,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00480">480</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a9075d93e0ab26ccd6e059fa06aa4e3de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9075d93e0ab26ccd6e059fa06aa4e3de">&#9670;&nbsp;</a></span>HEX</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define HEX&#160;&#160;&#160;(16)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00037">37</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a0e4e08bab2fb484136d18b067bef372c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e4e08bab2fb484136d18b067bef372c">&#9670;&nbsp;</a></span>I2C_SCL_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define I2C_SCL_PIN&#160;&#160;&#160;SCL</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00460">460</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a2cade698267beb86ccaa38c14d35ab0f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cade698267beb86ccaa38c14d35ab0f">&#9670;&nbsp;</a></span>I2C_SDA_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define I2C_SDA_PIN&#160;&#160;&#160;SDA</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00459">459</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="ae0444ad0cb3250a5778a573dd10f41be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0444ad0cb3250a5778a573dd10f41be">&#9670;&nbsp;</a></span>memcpy_P</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define memcpy_P</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">dest, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">src, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">num&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;memcpy((dest), (src), (num))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00062">62</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a904777e8f3d21de0a6679d2c9f0f1eec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a904777e8f3d21de0a6679d2c9f0f1eec">&#9670;&nbsp;</a></span>OCT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define OCT&#160;&#160;&#160;(8)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00040">40</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a963f816fc88a5d8479c285ed4c630229"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a963f816fc88a5d8479c285ed4c630229">&#9670;&nbsp;</a></span>PGM_P</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define PGM_P&#160;&#160;&#160;const char *</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00055">55</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a48c60b057902adf805797f183286728d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48c60b057902adf805797f183286728d">&#9670;&nbsp;</a></span>pgm_read_byte</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define pgm_read_byte</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">addr</td><td>)</td>
-          <td>&#160;&#160;&#160;(*(const unsigned char *)(addr))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00093">93</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a73cf3e57e32321cb193b3cc4b041cc6c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73cf3e57e32321cb193b3cc4b041cc6c">&#9670;&nbsp;</a></span>pgm_read_dword</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define pgm_read_dword</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">addr</td><td>)</td>
-          <td>&#160;&#160;&#160;(*(const unsigned long *)(addr))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00099">99</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a910fb5f01313d339d3b835d45e1e5ad0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a910fb5f01313d339d3b835d45e1e5ad0">&#9670;&nbsp;</a></span>pgm_read_word</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define pgm_read_word</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">addr</td><td>)</td>
-          <td>&#160;&#160;&#160;(*(const unsigned short *)(addr))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00096">96</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00324">324</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
 
 </div>
 </div>
@@ -581,479 +324,80 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00498">498</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00356">356</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
 
 </div>
 </div>
-<a id="a75acaba9e781937468d0911423bc0c35"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75acaba9e781937468d0911423bc0c35">&#9670;&nbsp;</a></span>PROGMEM</h2>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="a4bf7500fd6d9d2e6aedaa91f4987d772"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bf7500fd6d9d2e6aedaa91f4987d772">&#9670;&nbsp;</a></span>NonConstantsUsedForDigitalReadFast()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define PROGMEM</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00052">52</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a73809107539df84eaf01f6a4dea4fbff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a73809107539df84eaf01f6a4dea4fbff">&#9670;&nbsp;</a></span>PSTR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define PSTR</td>
+          <td class="memname">int NonConstantsUsedForDigitalReadFast </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">str</td><td>)</td>
-          <td>&#160;&#160;&#160;(str)</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00058">58</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
 </div>
 </div>
-<a id="a32f0a77e5800213b4d059bb700302d42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a32f0a77e5800213b4d059bb700302d42">&#9670;&nbsp;</a></span>SPI_HW_MISO_PIN</h2>
+<a id="ad69bf81d5747855607be227350c249f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad69bf81d5747855607be227350c249f6">&#9670;&nbsp;</a></span>NonConstantsUsedForDigitalToggleFast()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define SPI_HW_MISO_PIN&#160;&#160;&#160;MISO</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00464">464</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="abde5a3df1fb9cf0e46476ea7ac10b48a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abde5a3df1fb9cf0e46476ea7ac10b48a">&#9670;&nbsp;</a></span>SPI_HW_MOSI_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_HW_MOSI_PIN&#160;&#160;&#160;MOSI</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00463">463</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="ac26ddd8cd6a7cd10b23f08ea6e8f7032"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac26ddd8cd6a7cd10b23f08ea6e8f7032">&#9670;&nbsp;</a></span>SPI_HW_SCK_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_HW_SCK_PIN&#160;&#160;&#160;SCK</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00465">465</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="aa48cf672323b7a1784a973d1a4fd891e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa48cf672323b7a1784a973d1a4fd891e">&#9670;&nbsp;</a></span>SPI_HW_SS_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_HW_SS_PIN&#160;&#160;&#160;SS</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00462">462</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="ad80cac0c04cae5a4106da0daaefe8392"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad80cac0c04cae5a4106da0daaefe8392">&#9670;&nbsp;</a></span>SPI_SW_MISO_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_SW_MISO_PIN&#160;&#160;&#160;(12)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00108">108</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a590704782aba04d0b90e20dc2e06bfe1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a590704782aba04d0b90e20dc2e06bfe1">&#9670;&nbsp;</a></span>SPI_SW_MOSI_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_SW_MOSI_PIN&#160;&#160;&#160;(11)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00107">107</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="aaa5382681cbe8124588319a841015562"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa5382681cbe8124588319a841015562">&#9670;&nbsp;</a></span>SPI_SW_SCK_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_SW_SCK_PIN&#160;&#160;&#160;(13)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00109">109</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a8e4c6098d073922d247087549c084efd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e4c6098d073922d247087549c084efd">&#9670;&nbsp;</a></span>SPI_SW_SS_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SPI_SW_SS_PIN&#160;&#160;&#160;(10)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00106">106</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a45ba8afa17fe1ae5ab9327dbb6ca05b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45ba8afa17fe1ae5ab9327dbb6ca05b9">&#9670;&nbsp;</a></span>sprintf_P</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define sprintf_P</td>
+          <td class="memname">void NonConstantsUsedForDigitalToggleFast </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">s, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">f, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;sprintf((s), (f), __VA_ARGS__)</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00089">89</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
 </div>
 </div>
-<a id="ae97e89b6ed4b46ade2eca9cafc6abd8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae97e89b6ed4b46ade2eca9cafc6abd8d">&#9670;&nbsp;</a></span>strcasecmp_P</h2>
+<a id="a4aaa9a6c4fc18f0cdceced6cd7fb0a4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4aaa9a6c4fc18f0cdceced6cd7fb0a4b">&#9670;&nbsp;</a></span>NonConstantsUsedForDigitalWriteFast()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define strcasecmp_P</td>
+          <td class="memname">void NonConstantsUsedForDigitalWriteFast </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">b&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;strcasecmp((a), (b))</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00074">74</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
 </div>
 </div>
-<a id="a37c1666c2ccbf210e3829bbebc2b16e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37c1666c2ccbf210e3829bbebc2b16e4">&#9670;&nbsp;</a></span>strcat_P</h2>
+<a id="a4e56ea544abf645548406013bf368464"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e56ea544abf645548406013bf368464">&#9670;&nbsp;</a></span>NonConstantsUsedForPinModeFast()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define strcat_P</td>
+          <td class="memname">void NonConstantsUsedForPinModeFast </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">dst, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">src&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;strcat((dst), (src))</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00068">68</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="abbb2cd396dde2d1575948bb16ce2853a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbb2cd396dde2d1575948bb16ce2853a">&#9670;&nbsp;</a></span>strcmp_P</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define strcmp_P</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">b&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;strcmp((a), (b))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00071">71</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="ab00bda73e5853cc61868501fe37fa9b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab00bda73e5853cc61868501fe37fa9b7">&#9670;&nbsp;</a></span>strcpy_P</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define strcpy_P</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">dst, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">src&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;strcpy((dst), (src))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00065">65</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a76ea3b30093856a6482a978d9214142d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76ea3b30093856a6482a978d9214142d">&#9670;&nbsp;</a></span>strlen_P</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define strlen_P</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a</td><td>)</td>
-          <td>&#160;&#160;&#160;strlen((a))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00086">86</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a6986d443d13df0a4f28c6d1b52effb7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6986d443d13df0a4f28c6d1b52effb7d">&#9670;&nbsp;</a></span>strncasecmp_P</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define strncasecmp_P</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">b, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">n&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;strncasecmp((a), (b), (n))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00080">80</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a83b1e057d9ee4c5160557575be07c41f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83b1e057d9ee4c5160557575be07c41f">&#9670;&nbsp;</a></span>strncmp_P</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define strncmp_P</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">b, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">n&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;strncmp((a), (b), (n))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00077">77</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="aca1ecbfa8b94eba4b5228f0a6a18a888"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca1ecbfa8b94eba4b5228f0a6a18a888">&#9670;&nbsp;</a></span>strstr_P</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define strstr_P</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">b&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;strstr((a), (b))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00083">83</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
-
-</div>
-</div>
-<a id="a5d9d454d4b9f2ff8106d5199ac0d0186"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d9d454d4b9f2ff8106d5199ac0d0186">&#9670;&nbsp;</a></span>SWAP</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SWAP</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">x, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">y&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;do{ (x)=(x)^(y); (y)=(x)^(y); (x)=(x)^(y); }while(0)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="digitalWriteFast_8h_source.html#l00030">30</a> of file <a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>.</p>
 
 </div>
 </div>
@@ -1063,7 +407,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="digitalWriteFast_8h.html">digitalWriteFast.h</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

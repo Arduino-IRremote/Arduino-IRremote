@@ -102,16 +102,19 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a6a7570065b3dac05690883865c757752"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#a6a7570065b3dac05690883865c757752">IRReceivePin</a></td></tr>
 <tr class="memdesc:a6a7570065b3dac05690883865c757752"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pin connected to IR data from detector.  <a href="structirparams__struct.html#a6a7570065b3dac05690883865c757752">More...</a><br /></td></tr>
 <tr class="separator:a6a7570065b3dac05690883865c757752"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d24ca8877a430c9d4af8461cdf92d2d"><td class="memItemLeft" align="right" valign="top">uint_fast16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#a3d24ca8877a430c9d4af8461cdf92d2d">TickCounterForISR</a></td></tr>
-<tr class="memdesc:a3d24ca8877a430c9d4af8461cdf92d2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts 50uS ticks. The value is copied into the rawbuf array on every transition.  <a href="structirparams__struct.html#a3d24ca8877a430c9d4af8461cdf92d2d">More...</a><br /></td></tr>
-<tr class="separator:a3d24ca8877a430c9d4af8461cdf92d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cac39f89a3e3105e68618d61b87eec6"><td class="memItemLeft" align="right" valign="top">volatile uint_fast16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#a6cac39f89a3e3105e68618d61b87eec6">TickCounterForISR</a></td></tr>
+<tr class="memdesc:a6cac39f89a3e3105e68618d61b87eec6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counts 50uS ticks. The value is copied into the rawbuf array on every transition.  <a href="structirparams__struct.html#a6cac39f89a3e3105e68618d61b87eec6">More...</a><br /></td></tr>
+<tr class="separator:a6cac39f89a3e3105e68618d61b87eec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa757c43a8f222a808bb4d7813103f48e"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#aa757c43a8f222a808bb4d7813103f48e">ReceiveCompleteCallbackFunction</a> )(void)</td></tr>
+<tr class="memdesc:aa757c43a8f222a808bb4d7813103f48e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function to call if a protocol message has arrived, i.e. StateForISR changed to IR_REC_STATE_STOP.  <a href="structirparams__struct.html#aa757c43a8f222a808bb4d7813103f48e">More...</a><br /></td></tr>
+<tr class="separator:aa757c43a8f222a808bb4d7813103f48e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add9591d883df748c9ceeb46fa0de1ebc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#add9591d883df748c9ceeb46fa0de1ebc">OverflowFlag</a></td></tr>
 <tr class="memdesc:add9591d883df748c9ceeb46fa0de1ebc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raw buffer OverflowFlag occurred.  <a href="structirparams__struct.html#add9591d883df748c9ceeb46fa0de1ebc">More...</a><br /></td></tr>
 <tr class="separator:add9591d883df748c9ceeb46fa0de1ebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98a83a61e15fc371e5ce7db12dbd0475"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#a98a83a61e15fc371e5ce7db12dbd0475">rawlen</a></td></tr>
 <tr class="memdesc:a98a83a61e15fc371e5ce7db12dbd0475"><td class="mdescLeft">&#160;</td><td class="mdescRight">counter of entries in rawbuf  <a href="structirparams__struct.html#a98a83a61e15fc371e5ce7db12dbd0475">More...</a><br /></td></tr>
 <tr class="separator:a98a83a61e15fc371e5ce7db12dbd0475"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6652c81270d0bbcb0d81e7631770fc02"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#a6652c81270d0bbcb0d81e7631770fc02">rawbuf</a> [<a class="el" href="IRremote_8hpp.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a>]</td></tr>
+<tr class="memitem:a6652c81270d0bbcb0d81e7631770fc02"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html#a6652c81270d0bbcb0d81e7631770fc02">rawbuf</a> [<a class="el" href="IRremoteInt_8h.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a>]</td></tr>
 <tr class="memdesc:a6652c81270d0bbcb0d81e7631770fc02"><td class="mdescLeft">&#160;</td><td class="mdescRight">raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command  <a href="structirparams__struct.html#a6652c81270d0bbcb0d81e7631770fc02">More...</a><br /></td></tr>
 <tr class="separator:a6652c81270d0bbcb0d81e7631770fc02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -119,7 +122,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>This struct contains the data and control used for receiver static functions and the ISR (interrupt service routine) Only StateForISR needs to be volatile. </p>
 <p>All the other fields are not written by ISR after data available and before start/resume. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00081">81</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00095">95</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a6a7570065b3dac05690883865c757752"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6a7570065b3dac05690883865c757752">&#9670;&nbsp;</a></span>IRReceivePin</h2>
@@ -135,7 +138,7 @@ Public Attributes</h2></td></tr>
 
 <p>Pin connected to IR data from detector. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00084">84</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00098">98</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -153,7 +156,7 @@ Public Attributes</h2></td></tr>
 
 <p>Raw buffer OverflowFlag occurred. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00091">91</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00107">107</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -164,14 +167,14 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int irparams_struct::rawbuf[<a class="el" href="IRremote_8hpp.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a>]</td>
+          <td class="memname">unsigned int irparams_struct::rawbuf[<a class="el" href="IRremoteInt_8h.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>raw data / tick counts per mark/space, first entry is the length of the gap between previous and current command </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00097">97</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00113">113</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -189,7 +192,25 @@ Public Attributes</h2></td></tr>
 
 <p>counter of entries in rawbuf </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00093">93</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00109">109</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+
+</div>
+</div>
+<a id="aa757c43a8f222a808bb4d7813103f48e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa757c43a8f222a808bb4d7813103f48e">&#9670;&nbsp;</a></span>ReceiveCompleteCallbackFunction</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void(* irparams_struct::ReceiveCompleteCallbackFunction) (void)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The function to call if a protocol message has arrived, i.e. StateForISR changed to IR_REC_STATE_STOP. </p>
+
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00105">105</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -207,25 +228,25 @@ Public Attributes</h2></td></tr>
 
 <p>State Machine state. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00083">83</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00097">97</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
-<a id="a3d24ca8877a430c9d4af8461cdf92d2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d24ca8877a430c9d4af8461cdf92d2d">&#9670;&nbsp;</a></span>TickCounterForISR</h2>
+<a id="a6cac39f89a3e3105e68618d61b87eec6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cac39f89a3e3105e68618d61b87eec6">&#9670;&nbsp;</a></span>TickCounterForISR</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint_fast16_t irparams_struct::TickCounterForISR</td>
+          <td class="memname">volatile uint_fast16_t irparams_struct::TickCounterForISR</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Counts 50uS ticks. The value is copied into the rawbuf array on every transition. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00089">89</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00103">103</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -238,7 +259,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structirparams__struct.html">irparams_struct</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

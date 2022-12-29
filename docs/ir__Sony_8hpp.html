@@ -82,25 +82,13 @@ $(document).ready(function(){initNavTree('ir__Sony_8hpp.html',''); initResizable
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">ir_Sony.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>&quot;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for ir_Sony.hpp:</div>
-<div class="dyncontent">
-<div class="center"><img src="ir__Sony_8hpp__incl.png" border="0" usemap="#src_2ir__Sony_8hpp" alt=""/></div>
-<map name="src_2ir__Sony_8hpp" id="src_2ir__Sony_8hpp">
-<area shape="rect" title=" " alt="" coords="30,5,143,32"/>
-<area shape="rect" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="81,80,180,107"/>
-<area shape="rect" href="IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="107,155,200,181"/>
-</map>
-</div>
-</div><div class="textblock"><div class="dynheader">
+<div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ir__Sony_8hpp__dep__incl.png" border="0" usemap="#src_2ir__Sony_8hppdep" alt=""/></div>
@@ -137,14 +125,27 @@ Macros</h2></td></tr>
 <tr class="separator:gaacafe83ae7609e591a845d188477b4e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6bed381432686c9434b0debbda4936d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6bed381432686c9434b0debbda4936d0">SONY_SPACE</a>&#160;&#160;&#160;<a class="el" href="group__Decoder.html#ga441cf836ba5e41a476cfaed754619e7d">SONY_UNIT</a></td></tr>
 <tr class="separator:ga6bed381432686c9434b0debbda4936d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa2fa5f3ee92363009f82407872c42549"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaa2fa5f3ee92363009f82407872c42549">SONY_AVERAGE_DURATION</a>&#160;&#160;&#160;21000</td></tr>
-<tr class="separator:gaa2fa5f3ee92363009f82407872c42549"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae0f8f9c332bb24c958a5dcec4260659e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae0f8f9c332bb24c958a5dcec4260659e">SONY_AVERAGE_DURATION_MIN</a>&#160;&#160;&#160;21000</td></tr>
+<tr class="separator:gae0f8f9c332bb24c958a5dcec4260659e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf803b6ab7aa5ca862f25cf41e0336290"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaf803b6ab7aa5ca862f25cf41e0336290">SONY_AVERAGE_DURATION_MAX</a>&#160;&#160;&#160;33000</td></tr>
+<tr class="separator:gaf803b6ab7aa5ca862f25cf41e0336290"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga04bbfe2a8ffe2d8909f20223dc7ae573"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga04bbfe2a8ffe2d8909f20223dc7ae573">SONY_REPEAT_PERIOD</a>&#160;&#160;&#160;45000</td></tr>
 <tr class="separator:ga04bbfe2a8ffe2d8909f20223dc7ae573"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga99ad5f89aa2e68db38c3ee54d925673e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga99ad5f89aa2e68db38c3ee54d925673e">SONY_REPEAT_SPACE</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#ga04bbfe2a8ffe2d8909f20223dc7ae573">SONY_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#gaa2fa5f3ee92363009f82407872c42549">SONY_AVERAGE_DURATION</a>)</td></tr>
-<tr class="separator:ga99ad5f89aa2e68db38c3ee54d925673e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5d0099e94e845b1dfca08317a7c69f31"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5d0099e94e845b1dfca08317a7c69f31">SONY_MAXIMUM_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#ga04bbfe2a8ffe2d8909f20223dc7ae573">SONY_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#gae0f8f9c332bb24c958a5dcec4260659e">SONY_AVERAGE_DURATION_MIN</a>)</td></tr>
+<tr class="separator:ga5d0099e94e845b1dfca08317a7c69f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8a2dbf77031a92783a200b9902c8459b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga8a2dbf77031a92783a200b9902c8459b">SIRCS_12_PROTOCOL</a>&#160;&#160;&#160;12</td></tr>
+<tr class="separator:ga8a2dbf77031a92783a200b9902c8459b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga75fe4989c11b3e3176262acfa9bce2ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga75fe4989c11b3e3176262acfa9bce2ce">SIRCS_15_PROTOCOL</a>&#160;&#160;&#160;15</td></tr>
+<tr class="separator:ga75fe4989c11b3e3176262acfa9bce2ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4014bf0435ac7da04aa0bb1b0949eb8e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4014bf0435ac7da04aa0bb1b0949eb8e">SIRCS_20_PROTOCOL</a>&#160;&#160;&#160;20</td></tr>
+<tr class="separator:ga4014bf0435ac7da04aa0bb1b0949eb8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8967821a9dae0e890bdb9d95a3ee6c0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae8967821a9dae0e890bdb9d95a3ee6c0">SONY_DOUBLE_SPACE_USECS</a>&#160;&#160;&#160;500</td></tr>
 <tr class="separator:gae8967821a9dae0e890bdb9d95a3ee6c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga18d303101fe62d4a4998843253552e80"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga18d303101fe62d4a4998843253552e80">SonyProtocolConstants</a></td></tr>
+<tr class="separator:ga18d303101fe62d4a4998843253552e80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -152,7 +153,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="ir__Sony_8hpp.html">ir_Sony.hpp</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

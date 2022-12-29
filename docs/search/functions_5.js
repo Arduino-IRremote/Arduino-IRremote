@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['effectivefrequency_785',['effectiveFrequency',['../group__Decoder.html#ga1272f3783a3b8d2cf2241f1e76674c8a',1,'ir_Pronto.hpp']]],
-  ['enableirin_786',['enableIRIn',['../group__Receiving.html#ga69d3e9314aea4a37b43b74a0b4f3f976',1,'IRrecv']]],
-  ['enableirout_787',['enableIROut',['../group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15',1,'IRsend']]],
-  ['enableledfeedback_788',['enableLEDFeedback',['../group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54',1,'enableLEDFeedback():&#160;IRFeedbackLED.hpp'],['../group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54',1,'enableLEDFeedback():&#160;IRFeedbackLED.hpp']]],
-  ['enableledfeedbackforsend_789',['enableLEDFeedbackForSend',['../group__FeedbackLEDFunctions.html#ga69bc794d3cfd1600a264a1dbbdd28ef7',1,'enableLEDFeedbackForSend():&#160;IRFeedbackLED.hpp'],['../group__FeedbackLEDFunctions.html#ga69bc794d3cfd1600a264a1dbbdd28ef7',1,'enableLEDFeedbackForSend():&#160;IRFeedbackLED.hpp']]],
-  ['enablepciinterruptfortinyreceiver_790',['enablePCIInterruptForTinyReceiver',['../group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10',1,'TinyIRReceiver.hpp']]],
-  ['end_791',['end',['../group__Receiving.html#ga8ffd22c2d4c6e93918d987a4b7c3ba5b',1,'IRrecv']]]
+  ['effectivefrequency_888',['effectiveFrequency',['../group__Decoder.html#ga1272f3783a3b8d2cf2241f1e76674c8a',1,'ir_Pronto.hpp']]],
+  ['enableirin_889',['enableIRIn',['../group__Receiving.html#ga69d3e9314aea4a37b43b74a0b4f3f976',1,'IRrecv']]],
+  ['enableirout_890',['enableIROut',['../group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15',1,'IRsend']]],
+  ['enableledfeedback_891',['enableLEDFeedback',['../group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54',1,'enableLEDFeedback():&#160;IRFeedbackLED.hpp'],['../group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54',1,'enableLEDFeedback():&#160;IRFeedbackLED.hpp']]],
+  ['enableledfeedbackforsend_892',['enableLEDFeedbackForSend',['../group__FeedbackLEDFunctions.html#ga69bc794d3cfd1600a264a1dbbdd28ef7',1,'enableLEDFeedbackForSend():&#160;IRFeedbackLED.hpp'],['../group__FeedbackLEDFunctions.html#ga69bc794d3cfd1600a264a1dbbdd28ef7',1,'enableLEDFeedbackForSend():&#160;IRFeedbackLED.hpp']]],
+  ['enablepciinterruptfortinyreceiver_893',['enablePCIInterruptForTinyReceiver',['../group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10',1,'TinyIRReceiver.hpp']]],
+  ['enablesendpwmbytimer_894',['enableSendPWMByTimer',['../group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9',1,'IRTimer.hpp']]],
+  ['end_895',['end',['../group__Receiving.html#ga8ffd22c2d4c6e93918d987a4b7c3ba5b',1,'IRrecv']]]
 ];

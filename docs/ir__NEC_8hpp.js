@@ -8,13 +8,16 @@ var ir__NEC_8hpp =
     [ "NEC_COMMAND_BITS", "group__Decoder.html#ga07e295da53565eb7146072bdfeb2ed32", null ],
     [ "NEC_HEADER_MARK", "group__Decoder.html#ga8d393b95d8df4dfa15873aec6a37965e", null ],
     [ "NEC_HEADER_SPACE", "group__Decoder.html#ga5c728ed320ffee624e26767be0a80404", null ],
-    [ "NEC_MAXIMUM_REPEAT_SPACE", "group__Decoder.html#ga41859c8b235dcc7733bc76d751ce2e68", null ],
+    [ "NEC_MAXIMUM_REPEAT_DISTANCE", "group__Decoder.html#ga39b7e9de38af79c826aff1df717aef6d", null ],
     [ "NEC_MINIMAL_DURATION", "group__Decoder.html#ga7445961959fb69fed84c046145402045", null ],
     [ "NEC_ONE_SPACE", "group__Decoder.html#ga5ac04ec8b2185c9fb257d39c472733b1", null ],
+    [ "NEC_REPEAT_DISTANCE", "group__Decoder.html#gad5b529d2582c1dab2e4a91beb5071ae3", null ],
     [ "NEC_REPEAT_DURATION", "group__Decoder.html#ga0e78e019c888522fce3d5a4d4104753d", null ],
     [ "NEC_REPEAT_HEADER_SPACE", "group__Decoder.html#ga91880ffa0b09391f2c827d3a1c565abf", null ],
     [ "NEC_REPEAT_PERIOD", "group__Decoder.html#gac2dab5c4a22f8c4915217d3ee4676f08", null ],
-    [ "NEC_REPEAT_SPACE", "group__Decoder.html#gad075e7ecc3052e071d1c9076137c2b35", null ],
     [ "NEC_UNIT", "group__Decoder.html#gaf3317b0cf5cf7d3063addbaa0a256158", null ],
-    [ "NEC_ZERO_SPACE", "group__Decoder.html#ga5ee46914e98bf7f87f32a7104843b243", null ]
+    [ "NEC_ZERO_SPACE", "group__Decoder.html#ga5ee46914e98bf7f87f32a7104843b243", null ],
+    [ "sendNECSpecialRepeat", "group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2", null ],
+    [ "NEC2ProtocolConstants", "group__Decoder.html#gabc3c8d544eebf60b8a73495496a7c354", null ],
+    [ "NECProtocolConstants", "group__Decoder.html#ga7993c30413e3edec00ff3f46a9357164", null ]
 ];

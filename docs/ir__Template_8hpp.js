@@ -9,7 +9,9 @@ var ir__Template_8hpp =
     [ "SHUZU_ONE_SPACE", "ir__Template_8hpp.html#a8234daa08e0a133eef5a3a4fca4d43b0", null ],
     [ "SHUZU_OTHER", "ir__Template_8hpp.html#aadf4f80ceb0d1ad4407496eec01cd4cc", null ],
     [ "SHUZU_REPEAT_HEADER_SPACE", "ir__Template_8hpp.html#a867779572885cb61bf370ae339fe01d2", null ],
+    [ "SHUZU_REPEAT_PERIOD", "ir__Template_8hpp.html#a9aee5d87d6443758032e0be2f75a648e", null ],
     [ "SHUZU_REPEAT_SPACE", "ir__Template_8hpp.html#a2813fb0cb54aa7fe986f3ceadb73d74c", null ],
     [ "SHUZU_UNIT", "ir__Template_8hpp.html#acf7de30311a6d14db0d1aa23a829f39e", null ],
-    [ "SHUZU_ZERO_SPACE", "ir__Template_8hpp.html#a8290df35f477610944f6e8cc9a53869d", null ]
+    [ "SHUZU_ZERO_SPACE", "ir__Template_8hpp.html#a8290df35f477610944f6e8cc9a53869d", null ],
+    [ "ShuzuProtocolConstants", "ir__Template_8hpp.html#aa7e5a73390be848996e386bf07f621ed", null ]
 ];

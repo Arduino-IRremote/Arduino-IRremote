@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['periodontimemicros_939',['periodOnTimeMicros',['../classIRsend.html#a09e9265c2c7b55632d8c2feae4c08203',1,'IRsend']]],
-  ['periodtimemicros_940',['periodTimeMicros',['../classIRsend.html#a4793a33b9ac0066d198d6938d6dd2256',1,'IRsend']]],
-  ['powerison_941',['PowerIsOn',['../classAircondition__LG.html#a4550e9ef869119bdd82f3bbdbd0a4bf0',1,'Aircondition_LG']]],
-  ['protocol_942',['protocol',['../structIRData.html#a703592faec26bab5cbe465f53ef14245',1,'IRData']]]
+  ['onemarkmicros_1086',['OneMarkMicros',['../structPulseDistanceWidthProtocolConstants.html#ab3fb8c56c943296e15f2412ca65480bd',1,'PulseDistanceWidthProtocolConstants']]],
+  ['onespacemicros_1087',['OneSpaceMicros',['../structPulseDistanceWidthProtocolConstants.html#a0907f019085f52b0c561dc00c3384682',1,'PulseDistanceWidthProtocolConstants']]],
+  ['overflow_1088',['overflow',['../structdecode__results.html#a821bc53c006bab3283c6b8592f0c43d3',1,'decode_results']]],
+  ['overflowflag_1089',['OverflowFlag',['../structirparams__struct.html#add9591d883df748c9ceeb46fa0de1ebc',1,'irparams_struct']]]
 ];

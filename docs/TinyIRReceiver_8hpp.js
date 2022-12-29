@@ -9,5 +9,6 @@ var TinyIRReceiver_8hpp =
     [ "initPCIInterruptForTinyReceiver", "group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2", null ],
     [ "IRPinChangeInterruptHandler", "group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69", null ],
     [ "isTinyReceiverIdle", "group__TinyReceiver.html#gab65e33fe496d3bee4af897e5d8bd9420", null ],
+    [ "printTinyReceiverResultMinimal", "group__TinyReceiver.html#ga48d47d0adf09bebdb3eb3bdc09323f60", null ],
     [ "TinyIRReceiverControl", "group__TinyReceiver.html#ga30567324f26c2fae24bb11592262b6d3", null ]
 ];

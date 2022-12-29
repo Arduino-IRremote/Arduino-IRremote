@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>IRremote: Contribution Guidelines</title>
+<title>IRremote: Contributing</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -82,23 +82,42 @@ $(document).ready(function(){initNavTree('md_Contributing.html',''); initResizab
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Contribution Guidelines </div>  </div>
+<div class="title">Contributing </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This library is the culmination of the expertise of many members of the open source community who have dedicated their time and hard work. The best way to ask for help or propose a new idea is to create a new discussion and / or a new Pull Request with your code changes to allow you to share your own innovations with the rest of the community.</p>
+<div class="textblock"><p>This library is the culmination of the expertise of many members of the open source community who have dedicated their time and hard work.</p>
+<p>If you want to contribute to this project:</p><ul>
+<li>Report bugs and errors</li>
+<li>Ask for enhancements</li>
+<li>Create issues and pull requests</li>
+<li>Tell other people about this library</li>
+<li>Contribute new protocols</li>
+</ul>
+<h1>Guidelines</h1>
 <p>The following are some guidelines to observe when creating discussions / PRs:</p><ul>
 <li>Be friendly; it is important that we can all enjoy a safe space as we are all working on the same project and <b>it is okay for people to have different ideas</b>.</li>
 <li>Use reasonable titles; refrain from using overly long or capitalized titles as they are usually annoying and do little to encourage others to help :smile:.</li>
 <li>Use the style; we use the original <a href="https://en.wikipedia.org/wiki/Indentation_style#K&amp;R_style">C Style by Kerninghan / Ritchie</a> in <a href="https://en.wikipedia.org/wiki/Indentation_style#Variant:_1TBS_(OTBS)">variant: 1TBS (OTBS)</a>. In short: 4 spaces indentation, no tabs, opening braces on the same line, braces are mandatory on all if/while/do, no hard line length limit. To beautify your code, you may use the online formatter <a href="https://www.freecodeformat.com/c-format.php">here</a>.</li>
-<li>Cover <b>all</b> occurences of the problem / addition you address with your PR. Do not forget the documentation like it is done for existing code. Code changes without proper documentation will be rejected! </li>
+<li>Cover <b>all</b> occurences of the problem / addition you address with your PR. Do not forget the documentation like it is done for existing code. Code changes without proper documentation will be rejected!</li>
 </ul>
+<h1>Adding new protocols</h1>
+<p>To add a new protocol is quite straightforward. Best is too look at the existing protocols to find a similar one and modify it.<br  />
+ As a rule of thumb, it is easier to work with a description of the protocol rather than trying to entirely reverse-engineer the protocol. Please include a link to the description in the header, if you found one.<br  />
+ The <b>durations</b> you receive are likely to be longer for marks and shorter for spaces than the protocol suggests, but this depends on the receiver circuit in use. Most protocols use multiples of one time-unit for marks and spaces like e.g. <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_NEC.hpp#L62">NEC</a>. It's easy to be off-by-one with the last bit, since the last space is not recorded by IRremote.</p>
+<p>Try to make use of the template functions <code>decodePulseDistanceData()</code> and <code>sendPulseDistanceData()</code>. If your protocol supports address and code fields, try to reflect this in your api like it is done in <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_NEC.hpp#L96"><code>sendNEC(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aIsRepeat)</code></a> and <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_NEC.hpp#L194"><code>decodeNEC()</code></a>.<br  />
+</p>
+<h2>Integration</h2>
+<p>To integrate your protocol, you need to extend the two functions <code>decode()</code> and <code><a class="el" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7">getProtocolString()</a></code> in <em>IRreceice.hpp</em>, add macros and function declarations for sending and receiving and extend the <code>enum decode_type_t</code> in <em><a class="el" href="IRremote_8h.html" title="Stub for backward compatibility.">IRremote.h</a></em>.<br  />
+ And at least it would be wonderful if you can provide an example how to use the new protocol. A detailed description can be found in the <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_Template.hpp#L11">ir_Template.hpp</a> file.</p>
+<h2>Creating API documentation</h2>
+<p>To generate the API documentation, Doxygen, as well as <a href="http://www.graphviz.org/">Graphviz</a> should be installed. (Note that on Windows, it is useful to specify the installer to add Graphviz to PATH or to do it manually. With Doxygen and Graphviz installed, issue the command <code>doxygen</code> from the command line in the main project directory, which will generate the API documentation in HTML format. The just generated <code>docs/index.html</code> can now be opened in a browser. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

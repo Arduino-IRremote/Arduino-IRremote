@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['lgprotocol_698',['LGProtocol',['../unionLGProtocol.html',1,'']]],
-  ['longunion_699',['LongUnion',['../unionLongUnion.html',1,'']]]
+  ['lgprotocol_790',['LGProtocol',['../unionLGProtocol.html',1,'']]],
+  ['longlongunion_791',['LongLongUnion',['../unionLongLongUnion.html',1,'']]],
+  ['longunion_792',['LongUnion',['../unionLongUnion.html',1,'']]]
 ];

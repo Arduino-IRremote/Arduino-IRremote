@@ -86,10 +86,51 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>The latest version may not be released! See also the commit log at github: <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master">https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master</a></p>
+<h1>4.0.0</h1>
+<ul>
+<li>Introduced common structure <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.</li>
+<li>Where possible, changed all send and decode functions to use <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.</li>
+<li>Improved MSB/LSB handling</li>
+<li>New convenience fuctions <a class="el" href="group__Receiving.html#gad7c345c1b554ca8f3069b5fb767f07d6">bitreverse32Bit()</a> and <a class="el" href="group__Receiving.html#ga95e4a5acb86af8c967f8cae7e75062cb">bitreverseOneByte()</a>.</li>
+<li>Improved Magiquest protocol.</li>
+<li>Fix for #1028 - Prevent long delay caused by overflow when frame duration &lt; repeat period - Thanks to Stephen Humphries!</li>
+<li>Support for ATtiny816 - Thanks to elockman.</li>
+<li>Added Bang&amp;Olufsen protocol. #1030.</li>
+<li>3. parameter of function "void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)" is not optional anymore and this function is now only available if IR_SEND_PIN is not defined. #1033.</li>
+<li>Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to <a class="el" href="ir__DistanceWidthProtocol_8hpp.html">ir_DistanceWidthProtocol.hpp</a>.</li>
+<li>Fixed bug in sendSony() for command parameter &gt; 0x7F;</li>
+<li>Fixed bug with swapped LG2 header mark and space.</li>
+<li>Disabled strict checks while decoding. They can be enabled by defining DECODE_STRICT_CHECKS.</li>
+<li>Merged the 2 decode pulse width and distance functions.</li>
+<li>Added receiver callback functionality and registerReceiveCompleteCallback() function.</li>
+<li>Changed macro names _REPEAT_SPACE to _REPEAT_DISTANCE.</li>
+<li>Improved TinyIRReceiver,added FAST protocol for it and added <a class="el" href="TinyIRSender_8hpp.html">TinyIRSender.hpp</a> and TinySender example, renamed TinyReceiver.h to <a class="el" href="TinyIR_8h.html">TinyIR.h</a>.</li>
+<li>Removed static function printIRSendUsage(), but kept class function printIRSendUsage().</li>
+<li>Added DISABLE_CODE_FOR_RECEIVER to save program memory and RAM if receiving functionality is not required.</li>
+<li>Extracted protocol functions used by receive and send to <a class="el" href="IRProtocol_8hpp.html">IRProtocol.hpp</a>.</li>
+<li>Analyzed Denon code table and therefore changed Denon from MSB to LSB first.</li>
+<li>Changed type of decodedRawData and decodedRawDataArray which is now 64 bit for 32 bit platforms.</li>
+<li>Renamed sendRC6(aRawData...) to sendRC6Raw( aRawData...).</li>
+<li>Support for seeduino which lacks the print(unsigned long long...) method. Thanks to sklott <a href="https://stackoverflow.com/users/11680056/sklott">https://stackoverflow.com/users/11680056/sklott</a></li>
+<li>Added support for attiny1614 by Joe Ostrander.</li>
+<li>Fixed SEND_PWM_BY_TIMER for ATtiny167 thanks to freskpe.</li>
+<li>Improved SHARP repeat decoding.</li>
+<li>Replaced macros TIMER_EN/DISABLE_RECEIVE_INTR and EN/DISABLE_SEND_PWM_BY_TIMER by functions.</li>
+<li>Added SAMSUNG48 protocol and sendSamsung48() function.</li>
+</ul>
+<h1>3.9.0</h1>
+<ul>
+<li>Improved documentation with the help of [ElectronicsArchiver}(<a href="https://github.com/ElectronicsArchiver">https://github.com/ElectronicsArchiver</a>).</li>
+<li>Added NEC2 protocol.</li>
+<li>Improved Magiquest protocol.</li>
+<li>Renamed sendSamsungRepeat() to sendSamsungLGRepeat().</li>
+<li>Added function sendPulseDistanceWidth().</li>
+<li>Improved repeat detection for some protocols.</li>
+</ul>
 <h1>3.8.0</h1>
 <ul>
 <li>Changed Samsung repeat handling. Old handling is available as SamsungLG.</li>
-<li>Added function <a class="el" href="group__Receiving.html#ga744574341a6be1071442b12de79f546f">printIRSendUsage()</a>.</li>
+<li>Added function printIRSendUsage().</li>
 <li>Reduced output size and improved format of printIRResultRawFormatted() to fasten up output (and getting repeats properly decoded).</li>
 <li>Fixed Bug in sendDenonRaw() and improved decodeDenon().</li>
 <li>Fixed potential bug in SendBiphase data for 1 bit.</li>
@@ -224,7 +265,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Fixed resume bug if irparams.rawlen &gt;= RAW_BUFFER_LENGTH. Thanks to Iosif Peterfi</li>
 <li>Added <code>dumpPronto(String *aString, unsigned int frequency)</code> with String object as argument. Thanks to Iosif Peterfi</li>
 <li>Removed Test2 example.</li>
-<li>Fixed swapped cases in <code><a class="el" href="group__Receiving.html#ga77bf675537483ace83da089dea3a50a2">getProtocolString()</a></code>. Thanks to Jim-2249</li>
+<li>Fixed swapped cases in <code><a class="el" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7">getProtocolString()</a></code>. Thanks to Jim-2249</li>
 <li>Added compile option <code>IR_INPUT_IS_ACTIVE_HIGH</code>. Thanks to Jim-2249</li>
 <li>Corrected template. Thanks to Jim-2249</li>
 <li>Introduced standard decode and send functions.</li>
@@ -260,7 +301,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Optimized types in sendRC5ext and sendSharpAlt.</li>
 <li>Added <code>DECODE_NEC_STANDARD</code> and <code>SEND_NEC_STANDARD</code>.</li>
 <li>Renamed all IRrecv* examples to IRreceive*.</li>
-<li>Added functions <code>printIRResultShort(&amp;Serial)</code> and <code><a class="el" href="group__Receiving.html#ga77bf675537483ace83da089dea3a50a2">getProtocolString(decode_type_t aDecodeType)</a></code>.</li>
+<li>Added functions <code>printIRResultShort(&amp;Serial)</code> and <code><a class="el" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7">getProtocolString(decode_type_t aDecodeType)</a></code>.</li>
 <li>Added flag <code>decodedIRData.isRepeat</code>.</li>
 <li>Updated examples.</li>
 </ul>
@@ -401,7 +442,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

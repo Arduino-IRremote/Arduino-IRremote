@@ -88,23 +88,7 @@ $(document).ready(function(){initNavTree('ir__RC5__RC6_8hpp.html',''); initResiz
 <div class="title">ir_RC5_RC6.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>&quot;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for ir_RC5_RC6.hpp:</div>
-<div class="dyncontent">
-<div class="center"><img src="ir__RC5__RC6_8hpp__incl.png" border="0" usemap="#src_2ir__RC5__RC6_8hpp" alt=""/></div>
-<map name="src_2ir__RC5__RC6_8hpp" id="src_2ir__RC5__RC6_8hpp">
-<area shape="rect" title=" " alt="" coords="65,5,205,32"/>
-<area shape="rect" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="85,80,184,107"/>
-<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="209,80,303,107"/>
-<area shape="rect" href="IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="107,155,200,181"/>
-<area shape="rect" title=" " alt="" coords="225,155,290,181"/>
-</map>
-</div>
-</div><div class="textblock"><div class="dynheader">
+<div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ir__RC5__RC6_8hpp__dep__incl.png" border="0" usemap="#src_2ir__RC5__RC6_8hppdep" alt=""/></div>
@@ -137,8 +121,8 @@ Macros</h2></td></tr>
 <tr class="separator:ga72ef3521775a056c2009b22cc9a50a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga985b139053cd231f47e363981e6a32e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga985b139053cd231f47e363981e6a32e4">RC5_REPEAT_PERIOD</a>&#160;&#160;&#160;(128L * <a class="el" href="group__Decoder.html#ga29c2e67aa7b0ee1ed87b0e154eaf6f69">RC5_UNIT</a>)</td></tr>
 <tr class="separator:ga985b139053cd231f47e363981e6a32e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga97029fbe8be39f78c835bf30040a743b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga97029fbe8be39f78c835bf30040a743b">RC5_REPEAT_SPACE</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#ga985b139053cd231f47e363981e6a32e4">RC5_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#ga72ef3521775a056c2009b22cc9a50a28">RC5_DURATION</a>)</td></tr>
-<tr class="separator:ga97029fbe8be39f78c835bf30040a743b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9274e35497925d4e13817a580abb6014"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga9274e35497925d4e13817a580abb6014">RC5_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#ga985b139053cd231f47e363981e6a32e4">RC5_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#ga72ef3521775a056c2009b22cc9a50a28">RC5_DURATION</a>)</td></tr>
+<tr class="separator:ga9274e35497925d4e13817a580abb6014"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga864aa6044417289d715eb819c1be3e10"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga864aa6044417289d715eb819c1be3e10">MIN_RC6_SAMPLES</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:ga864aa6044417289d715eb819c1be3e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab20744e40f55c70de7fd11c163643d03"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab20744e40f55c70de7fd11c163643d03">RC6_RPT_LENGTH</a>&#160;&#160;&#160;46000</td></tr>
@@ -149,6 +133,8 @@ Macros</h2></td></tr>
 <tr class="separator:gace06a80186f826baaec50247cccd9fa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2899c3ab9e20e006a196f1e959e496f7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga2899c3ab9e20e006a196f1e959e496f7">RC6_TOGGLE_BIT</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:ga2899c3ab9e20e006a196f1e959e496f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab3e03a477dc7e59a0eed631cf75e9b61"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab3e03a477dc7e59a0eed631cf75e9b61">RC6_TOGGLE_BIT_INDEX</a>&#160;&#160;&#160;<a class="el" href="group__Decoder.html#gace06a80186f826baaec50247cccd9fa6">RC6_MODE_BITS</a></td></tr>
+<tr class="separator:gab3e03a477dc7e59a0eed631cf75e9b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga998e578fa80abf8e58794f162b4e9c4f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga998e578fa80abf8e58794f162b4e9c4f">RC6_ADDRESS_BITS</a>&#160;&#160;&#160;8</td></tr>
 <tr class="separator:ga998e578fa80abf8e58794f162b4e9c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2693e6912aaa2615f31b2c8298e84e83"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga2693e6912aaa2615f31b2c8298e84e83">RC6_COMMAND_BITS</a>&#160;&#160;&#160;8</td></tr>
@@ -165,8 +151,8 @@ Macros</h2></td></tr>
 <tr class="separator:ga80d136268d4d727245922ae0c85464c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9d1c512ada596652f29f24b17ef7f900"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga9d1c512ada596652f29f24b17ef7f900">MIN_RC6_MARKS</a>&#160;&#160;&#160;4 + ((<a class="el" href="group__Decoder.html#ga998e578fa80abf8e58794f162b4e9c4f">RC6_ADDRESS_BITS</a> + <a class="el" href="group__Decoder.html#ga2693e6912aaa2615f31b2c8298e84e83">RC6_COMMAND_BITS</a>) / 2)</td></tr>
 <tr class="separator:ga9d1c512ada596652f29f24b17ef7f900"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga359feaa5ff007c309d1bce3debe3f579"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga359feaa5ff007c309d1bce3debe3f579">RC6_REPEAT_SPACE</a>&#160;&#160;&#160;107000</td></tr>
-<tr class="separator:ga359feaa5ff007c309d1bce3debe3f579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac2c6129f14778e8648af177c4a832717"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gac2c6129f14778e8648af177c4a832717">RC6_REPEAT_DISTANCE</a>&#160;&#160;&#160;107000</td></tr>
+<tr class="separator:gac2c6129f14778e8648af177c4a832717"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -179,7 +165,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="ir__RC5__RC6_8hpp.html">ir_RC5_RC6.hpp</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

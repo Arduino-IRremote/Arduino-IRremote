@@ -1,14 +1,22 @@
 var searchData=
 [
-  ['panasonic_5fvendor_5fid_5fcode_1097',['PANASONIC_VENDOR_ID_CODE',['../IRProtocol_8h.html#a310adca9c81e03bc122d77251a594440',1,'IRProtocol.h']]],
-  ['pgm_5fp_1098',['PGM_P',['../digitalWriteFast_8h.html#a963f816fc88a5d8479c285ed4c630229',1,'digitalWriteFast.h']]],
-  ['pgm_5fread_5fbyte_1099',['pgm_read_byte',['../digitalWriteFast_8h.html#a48c60b057902adf805797f183286728d',1,'digitalWriteFast.h']]],
-  ['pgm_5fread_5fdword_1100',['pgm_read_dword',['../digitalWriteFast_8h.html#a73cf3e57e32321cb193b3cc4b041cc6c',1,'digitalWriteFast.h']]],
-  ['pgm_5fread_5fword_1101',['pgm_read_word',['../digitalWriteFast_8h.html#a910fb5f01313d339d3b835d45e1e5ad0',1,'digitalWriteFast.h']]],
-  ['pinmodefast_1102',['pinModeFast',['../digitalWriteFast_8h.html#a99fa3e1d72f2f1a9ffba996b06767a39',1,'digitalWriteFast.h']]],
-  ['progmem_1103',['PROGMEM',['../digitalWriteFast_8h.html#a75acaba9e781937468d0911423bc0c35',1,'digitalWriteFast.h']]],
-  ['protocol_5fis_5flsb_5ffirst_1104',['PROTOCOL_IS_LSB_FIRST',['../IRProtocol_8h.html#a8717702b4019c982727719bd40af7630',1,'IRProtocol.h']]],
-  ['protocol_5fis_5fmsb_5ffirst_1105',['PROTOCOL_IS_MSB_FIRST',['../IRProtocol_8h.html#a2db53e8319cd3f5de758337fa08552d0',1,'IRProtocol.h']]],
-  ['pstr_1106',['PSTR',['../digitalWriteFast_8h.html#a73809107539df84eaf01f6a4dea4fbff',1,'digitalWriteFast.h']]],
-  ['pulse_5fcorrection_5fnanos_1107',['PULSE_CORRECTION_NANOS',['../IRremote_8hpp.html#ac836377a7a04f6f4044daab71d9660f9',1,'IRremote.hpp']]]
+  ['samsung_5fkhz_1273',['SAMSUNG_KHZ',['../IRProtocol_8h.html#ac386480bc33f2fa50193da38a023b8ce',1,'IRProtocol.h']]],
+  ['send_5fno_5fstop_5fbit_1274',['SEND_NO_STOP_BIT',['../IRremoteInt_8h.html#a8683da8ac98548ba8f446f3ccfc83c11',1,'IRremoteInt.h']]],
+  ['send_5frepeat_5fcommand_1275',['SEND_REPEAT_COMMAND',['../IRremoteInt_8h.html#a1c39eebb08a1d9a2462580ce00a89acd',1,'IRremoteInt.h']]],
+  ['send_5fstop_5fbit_1276',['SEND_STOP_BIT',['../IRremoteInt_8h.html#a48e176b38988494bc725ac4fa98c534a',1,'IRremoteInt.h']]],
+  ['shuzu_5faddress_5fbits_1277',['SHUZU_ADDRESS_BITS',['../ir__Template_8hpp.html#a1cd4a04cfda39d641d390d62fdb4c333',1,'ir_Template.hpp']]],
+  ['shuzu_5fbit_5fmark_1278',['SHUZU_BIT_MARK',['../ir__Template_8hpp.html#afb0642173138e267a4583c4c0f2bc35f',1,'ir_Template.hpp']]],
+  ['shuzu_5fbits_1279',['SHUZU_BITS',['../ir__Template_8hpp.html#a9f3f74d73db0c979182d61ae7bb0e7d6',1,'ir_Template.hpp']]],
+  ['shuzu_5fcommand_5fbits_1280',['SHUZU_COMMAND_BITS',['../ir__Template_8hpp.html#a9a8c4e633bbd0b23d6147c1764e5d583',1,'ir_Template.hpp']]],
+  ['shuzu_5fheader_5fmark_1281',['SHUZU_HEADER_MARK',['../ir__Template_8hpp.html#a59bf3ec6d3a251bf9e5b6910f4511fca',1,'ir_Template.hpp']]],
+  ['shuzu_5fheader_5fspace_1282',['SHUZU_HEADER_SPACE',['../ir__Template_8hpp.html#ac5f6d4bb7069fe2403be52fec8ec1672',1,'ir_Template.hpp']]],
+  ['shuzu_5fone_5fspace_1283',['SHUZU_ONE_SPACE',['../ir__Template_8hpp.html#a8234daa08e0a133eef5a3a4fca4d43b0',1,'ir_Template.hpp']]],
+  ['shuzu_5fother_1284',['SHUZU_OTHER',['../ir__Template_8hpp.html#aadf4f80ceb0d1ad4407496eec01cd4cc',1,'ir_Template.hpp']]],
+  ['shuzu_5frepeat_5fheader_5fspace_1285',['SHUZU_REPEAT_HEADER_SPACE',['../ir__Template_8hpp.html#a867779572885cb61bf370ae339fe01d2',1,'ir_Template.hpp']]],
+  ['shuzu_5frepeat_5fperiod_1286',['SHUZU_REPEAT_PERIOD',['../ir__Template_8hpp.html#a9aee5d87d6443758032e0be2f75a648e',1,'ir_Template.hpp']]],
+  ['shuzu_5frepeat_5fspace_1287',['SHUZU_REPEAT_SPACE',['../ir__Template_8hpp.html#a2813fb0cb54aa7fe986f3ceadb73d74c',1,'ir_Template.hpp']]],
+  ['shuzu_5funit_1288',['SHUZU_UNIT',['../ir__Template_8hpp.html#acf7de30311a6d14db0d1aa23a829f39e',1,'ir_Template.hpp']]],
+  ['shuzu_5fzero_5fspace_1289',['SHUZU_ZERO_SPACE',['../ir__Template_8hpp.html#a8290df35f477610944f6e8cc9a53869d',1,'ir_Template.hpp']]],
+  ['sony_5fkhz_1290',['SONY_KHZ',['../IRProtocol_8h.html#a5dcaa6ec48a7a0b663e5de0ce853a541',1,'IRProtocol.h']]],
+  ['space_1291',['SPACE',['../IRremoteInt_8h.html#a5ff6e798033f03e74730e99f01936f84',1,'IRremoteInt.h']]]
 ];

@@ -1,0 +1,5 @@
+<map id="LongLongUnion" name="LongLongUnion">
+<area shape="rect" id="node1" title="Union to specify parts / manifestations of a 64 bit LongLong without casts and shifts." alt="" coords="5,245,116,272"/>
+<area shape="rect" id="node2" href="$unionWordUnion.html" title="Union to specify parts / manifestations of a 16 bit Word without casts and shifts." alt="" coords="17,5,104,32"/>
+<area shape="rect" id="node3" href="$unionLongUnion.html" title="Union to specify parts / manifestations of a 32 bit Long without casts and shifts." alt="" coords="142,125,225,152"/>
+</map>

@@ -84,6 +84,7 @@ $(document).ready(function(){initNavTree('IRremoteInt_8h.html',''); initResizabl
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -110,26 +111,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="IRremoteInt_8h__dep__incl.png" border="0" usemap="#src_2IRremoteInt_8hdep" alt=""/></div>
 <map name="src_2IRremoteInt_8hdep" id="src_2IRremoteInt_8hdep">
-<area shape="rect" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="1194,5,1315,32"/>
+<area shape="rect" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="67,5,189,32"/>
 <area shape="rect" href="ac__LG_8hpp.html" title=" " alt="" coords="5,80,112,107"/>
-<area shape="rect" href="ir__BoseWave_8hpp.html" title=" " alt="" coords="137,80,282,107"/>
-<area shape="rect" href="IRremote_8hpp.html" title="Public API to the library." alt="" coords="1194,155,1315,181"/>
-<area shape="rect" href="ir__Denon_8hpp.html" title=" " alt="" coords="357,80,477,107"/>
-<area shape="rect" href="ir__Dish_8hpp.html" title=" " alt="" coords="501,80,611,107"/>
-<area shape="rect" href="ir__DistanceProtocol_8hpp.html" title=" " alt="" coords="635,80,818,107"/>
-<area shape="rect" href="ir__JVC_8hpp.html" title=" " alt="" coords="843,80,949,107"/>
-<area shape="rect" href="ir__Kaseikyo_8hpp.html" title=" " alt="" coords="974,80,1111,107"/>
-<area shape="rect" href="ir__Lego_8hpp.html" title=" " alt="" coords="1135,80,1246,107"/>
-<area shape="rect" href="ir__LG_8hpp.html" title=" " alt="" coords="1270,80,1370,107"/>
-<area shape="rect" href="ir__MagiQuest_8hpp.html" title=" " alt="" coords="1395,80,1541,107"/>
-<area shape="rect" href="ir__NEC_8hpp.html" title=" " alt="" coords="1566,80,1677,107"/>
-<area shape="rect" href="ir__Pronto_8hpp.html" title=" " alt="" coords="1701,80,1822,107"/>
-<area shape="rect" href="ir__RC5__RC6_8hpp.html" title=" " alt="" coords="1846,80,1986,107"/>
-<area shape="rect" href="ir__Samsung_8hpp.html" title=" " alt="" coords="2011,80,2149,107"/>
-<area shape="rect" href="ir__Sony_8hpp.html" title=" " alt="" coords="2174,80,2287,107"/>
-<area shape="rect" href="ir__Template_8hpp.html" title=" " alt="" coords="2312,80,2448,107"/>
-<area shape="rect" href="ir__Whynter_8hpp.html" title=" " alt="" coords="2473,80,2605,107"/>
-<area shape="rect" href="IRremote_8h.html" title="Stub for backward compatibility." alt="" coords="1201,229,1308,256"/>
+<area shape="rect" href="IRremote_8hpp.html" title="Public API to the library." alt="" coords="137,80,258,107"/>
+<area shape="rect" href="IRremote_8h.html" title="Stub for backward compatibility." alt="" coords="144,155,251,181"/>
 </map>
 </div>
 </div>
@@ -139,9 +124,6 @@ This graph shows which files directly or indirectly include this file:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structirparams__struct.html">irparams_struct</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This struct contains the data and control used for receiver static functions and the ISR (interrupt service routine) Only StateForISR needs to be volatile.  <a href="structirparams__struct.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html">IRData</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data structure for the user application, available as decodedIRData.  <a href="structIRData.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdecode__results.html">decode_results</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Results returned from old decoders !!!deprecated!!!  <a href="structdecode__results.html#details">More...</a><br /></td></tr>
@@ -166,6 +148,9 @@ Macros</h2></td></tr>
 <tr class="separator:a2072e6070907411d00d0e5ca5ae1a9b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a575e74508c30d1ccf92f7e142a43dd3d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d">USE_DEFAULT_FEEDBACK_LED_PIN</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a575e74508c30d1ccf92f7e142a43dd3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a589aa40429eeb37b6e83a2c09854a47b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a>&#160;&#160;&#160;100</td></tr>
+<tr class="memdesc:a589aa40429eeb37b6e83a2c09854a47b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The length of the buffer where the IR timing data is stored before decoding 100 is sufficient for most standard protocols, but air conditioners often send a longer protocol data stream.  <a href="IRremoteInt_8h.html#a589aa40429eeb37b6e83a2c09854a47b">More...</a><br /></td></tr>
+<tr class="separator:a589aa40429eeb37b6e83a2c09854a47b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92edad56cde0f027e20711dcf83da843"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a92edad56cde0f027e20711dcf83da843">IR_REC_STATE_IDLE</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:a92edad56cde0f027e20711dcf83da843"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a419691eae4534ee2472565b9aff95a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a1a419691eae4534ee2472565b9aff95a">IR_REC_STATE_MARK</a>&#160;&#160;&#160;1</td></tr>
@@ -184,37 +169,6 @@ Macros</h2></td></tr>
 <tr class="separator:af7b7c32d41d80a578f482d2828b05326"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5eafde7d90e22ca8caed5fa952448228"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a5eafde7d90e22ca8caed5fa952448228">IR_TRACE_PRINTLN</a>(...)&#160;&#160;&#160;void()</td></tr>
 <tr class="separator:a5eafde7d90e22ca8caed5fa952448228"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad670ce496c4a3352cb9929284db11928"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#ad670ce496c4a3352cb9929284db11928">IRDATA_FLAGS_EMPTY</a>&#160;&#160;&#160;0x00</td></tr>
-<tr class="separator:ad670ce496c4a3352cb9929284db11928"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa9952cd64b58083c28873484c494abf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#aaa9952cd64b58083c28873484c494abf">IRDATA_FLAGS_IS_REPEAT</a>&#160;&#160;&#160;0x01</td></tr>
-<tr class="separator:aaa9952cd64b58083c28873484c494abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c5e6ae69aa440bfa132550d120ace08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a5c5e6ae69aa440bfa132550d120ace08">IRDATA_FLAGS_IS_AUTO_REPEAT</a>&#160;&#160;&#160;0x02</td></tr>
-<tr class="separator:a5c5e6ae69aa440bfa132550d120ace08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a60f95f0885b1865dc5514ddd80e093"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a1a60f95f0885b1865dc5514ddd80e093">IRDATA_FLAGS_PARITY_FAILED</a>&#160;&#160;&#160;0x04</td></tr>
-<tr class="memdesc:a1a60f95f0885b1865dc5514ddd80e093"><td class="mdescLeft">&#160;</td><td class="mdescRight">the current (autorepeat) frame violated parity check  <a href="IRremoteInt_8h.html#a1a60f95f0885b1865dc5514ddd80e093">More...</a><br /></td></tr>
-<tr class="separator:a1a60f95f0885b1865dc5514ddd80e093"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a169a0ae23ab363f24027f769881db0b0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a169a0ae23ab363f24027f769881db0b0">IRDATA_FLAGS_TOGGLE_BIT</a>&#160;&#160;&#160;0x08</td></tr>
-<tr class="memdesc:a169a0ae23ab363f24027f769881db0b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">is set if RC5 or RC6 toggle bit is set  <a href="IRremoteInt_8h.html#a169a0ae23ab363f24027f769881db0b0">More...</a><br /></td></tr>
-<tr class="separator:a169a0ae23ab363f24027f769881db0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c32476f27490a9051fc6c3b76be260e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a7c32476f27490a9051fc6c3b76be260e">IRDATA_FLAGS_IS_SPECIAL_REPEAT</a>&#160;&#160;&#160;0x08</td></tr>
-<tr class="memdesc:a7c32476f27490a9051fc6c3b76be260e"><td class="mdescLeft">&#160;</td><td class="mdescRight">is set if we received a NEC special receive (full frame instead of repeat frame)  <a href="IRremoteInt_8h.html#a7c32476f27490a9051fc6c3b76be260e">More...</a><br /></td></tr>
-<tr class="separator:a7c32476f27490a9051fc6c3b76be260e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#abf3b16f9ab35f4e4b95c8c362aca2d71">IRDATA_FLAGS_EXTRA_INFO</a>&#160;&#160;&#160;0x10</td></tr>
-<tr class="memdesc:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="mdescLeft">&#160;</td><td class="mdescRight">there is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID)  <a href="IRremoteInt_8h.html#abf3b16f9ab35f4e4b95c8c362aca2d71">More...</a><br /></td></tr>
-<tr class="separator:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1acaa14d5a437ad317e17489e845f401"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a1acaa14d5a437ad317e17489e845f401">IRDATA_FLAGS_WAS_OVERFLOW</a>&#160;&#160;&#160;0x40</td></tr>
-<tr class="memdesc:a1acaa14d5a437ad317e17489e845f401"><td class="mdescLeft">&#160;</td><td class="mdescRight">irparams.rawlen is 0 in this case to avoid endless OverflowFlag  <a href="IRremoteInt_8h.html#a1acaa14d5a437ad317e17489e845f401">More...</a><br /></td></tr>
-<tr class="separator:a1acaa14d5a437ad317e17489e845f401"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a035e96118f9daf6d8e5152a1ae466538"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a035e96118f9daf6d8e5152a1ae466538">IRDATA_FLAGS_IS_LSB_FIRST</a>&#160;&#160;&#160;0x00</td></tr>
-<tr class="separator:a035e96118f9daf6d8e5152a1ae466538"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f6872e6f83c0571e3150ba86428af4c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a7f6872e6f83c0571e3150ba86428af4c">IRDATA_FLAGS_IS_MSB_FIRST</a>&#160;&#160;&#160;0x80</td></tr>
-<tr class="memdesc:a7f6872e6f83c0571e3150ba86428af4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Just for info. Value is mainly determined by the protocol.  <a href="IRremoteInt_8h.html#a7f6872e6f83c0571e3150ba86428af4c">More...</a><br /></td></tr>
-<tr class="separator:a7f6872e6f83c0571e3150ba86428af4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a8eaa19dc6174814fedc9d5b495560c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a6a8eaa19dc6174814fedc9d5b495560c">IRDATA_TOGGLE_BIT_MASK</a>&#160;&#160;&#160;0x08</td></tr>
-<tr class="memdesc:a6a8eaa19dc6174814fedc9d5b495560c"><td class="mdescLeft">&#160;</td><td class="mdescRight">is set if RC5 or RC6 toggle bit is set  <a href="IRremoteInt_8h.html#a6a8eaa19dc6174814fedc9d5b495560c">More...</a><br /></td></tr>
-<tr class="separator:a6a8eaa19dc6174814fedc9d5b495560c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ad0810b4eae20c260180a1c4d9f359e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a1ad0810b4eae20c260180a1c4d9f359e">RAW_DATA_ARRAY_SIZE</a>&#160;&#160;&#160;((((<a class="el" href="IRremote_8hpp.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a> - 2) - 1) / 64) + 1)</td></tr>
-<tr class="separator:a1ad0810b4eae20c260180a1c4d9f359e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20df6d7738730db43a872d88e744b411"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a20df6d7738730db43a872d88e744b411">DO_NOT_ENABLE_LED_FEEDBACK</a>&#160;&#160;&#160;0x00</td></tr>
 <tr class="separator:a20df6d7738730db43a872d88e744b411"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72176857aa388ce2705ca50d62327809"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a72176857aa388ce2705ca50d62327809">LED_FEEDBACK_DISABLED_COMPLETELY</a>&#160;&#160;&#160;0x00</td></tr>
@@ -240,9 +194,16 @@ Macros</h2></td></tr>
 <tr class="separator:a5d35fb37031b53f0083f8b88ae3cf2c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48e176b38988494bc725ac4fa98c534a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a48e176b38988494bc725ac4fa98c534a">SEND_STOP_BIT</a>&#160;&#160;&#160;true</td></tr>
 <tr class="separator:a48e176b38988494bc725ac4fa98c534a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8683da8ac98548ba8f446f3ccfc83c11"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a8683da8ac98548ba8f446f3ccfc83c11">SEND_NO_STOP_BIT</a>&#160;&#160;&#160;false</td></tr>
+<tr class="separator:a8683da8ac98548ba8f446f3ccfc83c11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c39eebb08a1d9a2462580ce00a89acd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a1c39eebb08a1d9a2462580ce00a89acd">SEND_REPEAT_COMMAND</a>&#160;&#160;&#160;true</td></tr>
 <tr class="memdesc:a1c39eebb08a1d9a2462580ce00a89acd"><td class="mdescLeft">&#160;</td><td class="mdescRight">used for e.g. NEC, where a repeat is different from just repeating the data.  <a href="IRremoteInt_8h.html#a1c39eebb08a1d9a2462580ce00a89acd">More...</a><br /></td></tr>
 <tr class="separator:a1c39eebb08a1d9a2462580ce00a89acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a5f80a14df19acb8907b21cd1ee154d53"><td class="memItemLeft" align="right" valign="top">typedef uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a></td></tr>
+<tr class="separator:a5f80a14df19acb8907b21cd1ee154d53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -264,13 +225,6 @@ Functions</h2></td></tr>
 <tr class="memitem:gab1d28d4dd67d6bf808c0328a92e2d863"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863">getMarkExcessMicros</a> ()</td></tr>
 <tr class="memdesc:gab1d28d4dd67d6bf808c0328a92e2d863"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter function for MARK_EXCESS_MICROS.  <a href="group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863">More...</a><br /></td></tr>
 <tr class="separator:gab1d28d4dd67d6bf808c0328a92e2d863"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac45e8ead5e96868e61c65cd354758d4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gac45e8ead5e96868e61c65cd354758d4d">printIRResultShort</a> (Print *aSerial, <a class="el" href="structIRData.html">IRData</a> *aIRDataPtr, bool aPrintGap)</td></tr>
-<tr class="memdesc:gac45e8ead5e96868e61c65cd354758d4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal function to print decoded result and flags in one line.  <a href="group__Receiving.html#gac45e8ead5e96868e61c65cd354758d4d">More...</a><br /></td></tr>
-<tr class="separator:gac45e8ead5e96868e61c65cd354758d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga744574341a6be1071442b12de79f546f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga744574341a6be1071442b12de79f546f">printIRSendUsage</a> (Print *aSerial, <a class="el" href="structIRData.html">IRData</a> *aIRDataPtr)</td></tr>
-<tr class="separator:ga744574341a6be1071442b12de79f546f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7071c35271d373d1edbffa41cde0121"><td class="memItemLeft" align="right" valign="top">const __FlashStringHelper *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#aa7071c35271d373d1edbffa41cde0121">getProtocolString</a> ()</td></tr>
-<tr class="separator:aa7071c35271d373d1edbffa41cde0121"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gada0f2fe0704a217c16ee497ba7b3630e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gada0f2fe0704a217c16ee497ba7b3630e">printActiveIRProtocols</a> (Print *aSerial)</td></tr>
 <tr class="separator:gada0f2fe0704a217c16ee497ba7b3630e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga072624eeba964d8aa105822da00090ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba">setFeedbackLED</a> (bool aSwitchLedOn)</td></tr>
@@ -292,6 +246,15 @@ Functions</h2></td></tr>
 <tr class="memitem:ga5f1d479f43dcd56febf146e97a3904db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">setBlinkPin</a> (uint8_t aFeedbackLEDPin) __attribute__((deprecated(&quot;Please use <a class="el" href="group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921">setLEDFeedback</a>().&quot;)))</td></tr>
 <tr class="memdesc:ga5f1d479f43dcd56febf146e97a3904db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019" title="Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot ...">setLEDFeedback()</a>  <a href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">More...</a><br /></td></tr>
 <tr class="separator:ga5f1d479f43dcd56febf146e97a3904db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">sendNECSpecialRepeat</a> ()</td></tr>
+<tr class="memdesc:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function for sending special repeat frame.  <a href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">More...</a><br /></td></tr>
+<tr class="separator:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaddace9c2bd03f63855063a3ce5e65acc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaddace9c2bd03f63855063a3ce5e65acc">sendLG2SpecialRepeat</a> ()</td></tr>
+<tr class="memdesc:gaddace9c2bd03f63855063a3ce5e65acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function for sending special repeat frame.  <a href="group__Decoder.html#gaddace9c2bd03f63855063a3ce5e65acc">More...</a><br /></td></tr>
+<tr class="separator:gaddace9c2bd03f63855063a3ce5e65acc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad3b594eed28121c2406e7d80d1636c82"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad3b594eed28121c2406e7d80d1636c82">sendSamsungLGSpecialRepeat</a> ()</td></tr>
+<tr class="memdesc:gad3b594eed28121c2406e7d80d1636c82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function for sending special repeat frame.  <a href="group__Decoder.html#gad3b594eed28121c2406e7d80d1636c82">More...</a><br /></td></tr>
+<tr class="separator:gad3b594eed28121c2406e7d80d1636c82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -348,7 +311,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00347">347</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00339">339</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -386,7 +349,7 @@ Variables</h2></td></tr>
 
 <p>If DEBUG, print the arguments, otherwise do nothing. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00111">111</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00134">134</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -408,7 +371,7 @@ Variables</h2></td></tr>
 
 <p>If DEBUG, print the arguments as a line, otherwise do nothing. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00115">115</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00138">138</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -424,7 +387,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00073">73</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00087">87</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -440,7 +403,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00074">74</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00088">88</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -456,7 +419,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00075">75</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00089">89</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -472,7 +435,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00076">76</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00090">90</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -492,7 +455,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00122">122</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00145">145</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -512,197 +475,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00123">123</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="ad670ce496c4a3352cb9929284db11928"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad670ce496c4a3352cb9929284db11928">&#9670;&nbsp;</a></span>IRDATA_FLAGS_EMPTY</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_EMPTY&#160;&#160;&#160;0x00</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00132">132</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="abf3b16f9ab35f4e4b95c8c362aca2d71"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf3b16f9ab35f4e4b95c8c362aca2d71">&#9670;&nbsp;</a></span>IRDATA_FLAGS_EXTRA_INFO</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_EXTRA_INFO&#160;&#160;&#160;0x10</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>there is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID) </p>
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00138">138</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="a5c5e6ae69aa440bfa132550d120ace08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c5e6ae69aa440bfa132550d120ace08">&#9670;&nbsp;</a></span>IRDATA_FLAGS_IS_AUTO_REPEAT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_IS_AUTO_REPEAT&#160;&#160;&#160;0x02</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00134">134</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="a035e96118f9daf6d8e5152a1ae466538"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a035e96118f9daf6d8e5152a1ae466538">&#9670;&nbsp;</a></span>IRDATA_FLAGS_IS_LSB_FIRST</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_IS_LSB_FIRST&#160;&#160;&#160;0x00</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00140">140</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="a7f6872e6f83c0571e3150ba86428af4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f6872e6f83c0571e3150ba86428af4c">&#9670;&nbsp;</a></span>IRDATA_FLAGS_IS_MSB_FIRST</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_IS_MSB_FIRST&#160;&#160;&#160;0x80</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Just for info. Value is mainly determined by the protocol. </p>
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00141">141</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="aaa9952cd64b58083c28873484c494abf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa9952cd64b58083c28873484c494abf">&#9670;&nbsp;</a></span>IRDATA_FLAGS_IS_REPEAT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_IS_REPEAT&#160;&#160;&#160;0x01</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00133">133</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="a7c32476f27490a9051fc6c3b76be260e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c32476f27490a9051fc6c3b76be260e">&#9670;&nbsp;</a></span>IRDATA_FLAGS_IS_SPECIAL_REPEAT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_IS_SPECIAL_REPEAT&#160;&#160;&#160;0x08</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>is set if we received a NEC special receive (full frame instead of repeat frame) </p>
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00137">137</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="a1a60f95f0885b1865dc5514ddd80e093"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a60f95f0885b1865dc5514ddd80e093">&#9670;&nbsp;</a></span>IRDATA_FLAGS_PARITY_FAILED</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_PARITY_FAILED&#160;&#160;&#160;0x04</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>the current (autorepeat) frame violated parity check </p>
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00135">135</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="a169a0ae23ab363f24027f769881db0b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a169a0ae23ab363f24027f769881db0b0">&#9670;&nbsp;</a></span>IRDATA_FLAGS_TOGGLE_BIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_TOGGLE_BIT&#160;&#160;&#160;0x08</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>is set if RC5 or RC6 toggle bit is set </p>
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00136">136</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="a1acaa14d5a437ad317e17489e845f401"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1acaa14d5a437ad317e17489e845f401">&#9670;&nbsp;</a></span>IRDATA_FLAGS_WAS_OVERFLOW</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_FLAGS_WAS_OVERFLOW&#160;&#160;&#160;0x40</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>irparams.rawlen is 0 in this case to avoid endless OverflowFlag </p>
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00139">139</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="a6a8eaa19dc6174814fedc9d5b495560c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a8eaa19dc6174814fedc9d5b495560c">&#9670;&nbsp;</a></span>IRDATA_TOGGLE_BIT_MASK</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IRDATA_TOGGLE_BIT_MASK&#160;&#160;&#160;0x08</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>is set if RC5 or RC6 toggle bit is set </p>
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00144">144</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00146">146</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -718,7 +491,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00348">348</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00340">340</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -734,7 +507,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00349">349</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00341">341</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -750,7 +523,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00350">350</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00342">342</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -768,7 +541,7 @@ Variables</h2></td></tr>
 
 <p>Lower tolerance for comparison of measured data. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00374">374</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00366">366</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -802,23 +575,42 @@ Variables</h2></td></tr>
 
 <p>Just for better readability of code. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00401">401</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00393">393</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
-<a id="a1ad0810b4eae20c260180a1c4d9f359e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ad0810b4eae20c260180a1c4d9f359e">&#9670;&nbsp;</a></span>RAW_DATA_ARRAY_SIZE</h2>
+<a id="a589aa40429eeb37b6e83a2c09854a47b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a589aa40429eeb37b6e83a2c09854a47b">&#9670;&nbsp;</a></span>RAW_BUFFER_LENGTH</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define RAW_DATA_ARRAY_SIZE&#160;&#160;&#160;((((<a class="el" href="IRremote_8hpp.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a> - 2) - 1) / 64) + 1)</td>
+          <td class="memname">#define RAW_BUFFER_LENGTH&#160;&#160;&#160;100</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00146">146</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p>The length of the buffer where the IR timing data is stored before decoding 100 is sufficient for most standard protocols, but air conditioners often send a longer protocol data stream. </p>
+<p>Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit. </p>
+
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00075">75</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+
+</div>
+</div>
+<a id="a8683da8ac98548ba8f446f3ccfc83c11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8683da8ac98548ba8f446f3ccfc83c11">&#9670;&nbsp;</a></span>SEND_NO_STOP_BIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SEND_NO_STOP_BIT&#160;&#160;&#160;false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00395">395</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -836,7 +628,7 @@ Variables</h2></td></tr>
 
 <p>used for e.g. NEC, where a repeat is different from just repeating the data. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00403">403</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00396">396</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -852,7 +644,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00402">402</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00394">394</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -888,7 +680,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00386">386</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00378">378</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -908,7 +700,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00385">385</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00377">377</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -924,7 +716,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00369">369</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00361">361</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -958,25 +750,24 @@ Variables</h2></td></tr>
 
 <p>Upper tolerance for comparison of measured data. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00377">377</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00369">369</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="aa7071c35271d373d1edbffa41cde0121"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7071c35271d373d1edbffa41cde0121">&#9670;&nbsp;</a></span>getProtocolString()</h2>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="a5f80a14df19acb8907b21cd1ee154d53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f80a14df19acb8907b21cd1ee154d53">&#9670;&nbsp;</a></span>IRRawDataType</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const __FlashStringHelper* getProtocolString </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">typedef uint32_t <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00117">117</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -1001,7 +792,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00356">356</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00348">348</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -1025,7 +816,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00354">354</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00346">346</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -1035,7 +826,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRremoteInt_8h.html">IRremoteInt.h</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

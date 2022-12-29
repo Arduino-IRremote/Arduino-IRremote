@@ -100,12 +100,12 @@ Functions</h2></td></tr>
 <tr class="separator:ga170701fb079d24717aded137dee808e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga218982c1abdb34314e6d8f4b07086db7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga218982c1abdb34314e6d8f4b07086db7">IRsend::setSendPin</a> (uint_fast8_t aSendPin)</td></tr>
 <tr class="separator:ga218982c1abdb34314e6d8f4b07086db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1d7c36404b9a3cdb2b742fb8e9e37681"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga1d7c36404b9a3cdb2b742fb8e9e37681">IRsend::begin</a> (uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin=<a class="el" href="IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d">USE_DEFAULT_FEEDBACK_LED_PIN</a>)</td></tr>
-<tr class="memdesc:ga1d7c36404b9a3cdb2b742fb8e9e37681"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the send and feedback pin.  <a href="group__Sending.html#ga1d7c36404b9a3cdb2b742fb8e9e37681">More...</a><br /></td></tr>
-<tr class="separator:ga1d7c36404b9a3cdb2b742fb8e9e37681"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga567f59869ebc6c7f53d0dc9b360dd4c3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga567f59869ebc6c7f53d0dc9b360dd4c3">IRsend::write</a> (<a class="el" href="structIRData.html">IRData</a> *aIRSendData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
-<tr class="memdesc:ga567f59869ebc6c7f53d0dc9b360dd4c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interprets and sends a <a class="el" href="structIRData.html" title="Data structure for the user application, available as decodedIRData.">IRData</a> structure.  <a href="group__Sending.html#ga567f59869ebc6c7f53d0dc9b360dd4c3">More...</a><br /></td></tr>
-<tr class="separator:ga567f59869ebc6c7f53d0dc9b360dd4c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac7abd96c6c4adb907dcc3adec54ebe77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gac7abd96c6c4adb907dcc3adec54ebe77">IRsend::begin</a> (uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)</td></tr>
+<tr class="memdesc:gac7abd96c6c4adb907dcc3adec54ebe77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the send and feedback pin.  <a href="group__Sending.html#gac7abd96c6c4adb907dcc3adec54ebe77">More...</a><br /></td></tr>
+<tr class="separator:gac7abd96c6c4adb907dcc3adec54ebe77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7954d4b7ff55e43b69fbf6e483f422b2"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga7954d4b7ff55e43b69fbf6e483f422b2">IRsend::write</a> (<a class="el" href="structIRData.html">IRData</a> *aIRSendData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
+<tr class="memdesc:ga7954d4b7ff55e43b69fbf6e483f422b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interprets and sends a <a class="el" href="structIRData.html" title="Data structure for the user application, available as decodedIRData.">IRData</a> structure.  <a href="group__Sending.html#ga7954d4b7ff55e43b69fbf6e483f422b2">More...</a><br /></td></tr>
+<tr class="separator:ga7954d4b7ff55e43b69fbf6e483f422b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga875f514d9cf039cbad7f781595247952"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga875f514d9cf039cbad7f781595247952">IRsend::sendRaw</a> (const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz)</td></tr>
 <tr class="memdesc:ga875f514d9cf039cbad7f781595247952"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function using an 16 byte microsecond timing array for every purpose.  <a href="group__Sending.html#ga875f514d9cf039cbad7f781595247952">More...</a><br /></td></tr>
 <tr class="separator:ga875f514d9cf039cbad7f781595247952"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,9 +118,24 @@ Functions</h2></td></tr>
 <tr class="memitem:ga4fc6a1201b9af5884856fc411d47c087"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga4fc6a1201b9af5884856fc411d47c087">IRsend::sendRaw_P</a> (const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz)</td></tr>
 <tr class="memdesc:ga4fc6a1201b9af5884856fc411d47c087"><td class="mdescLeft">&#160;</td><td class="mdescRight">New function using an 8 byte tick timing array in FLASH to save program memory Raw data starts with a Mark.  <a href="group__Sending.html#ga4fc6a1201b9af5884856fc411d47c087">More...</a><br /></td></tr>
 <tr class="separator:ga4fc6a1201b9af5884856fc411d47c087"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga906dfccd111a70453de88e9379b92def"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga906dfccd111a70453de88e9379b92def">IRsend::sendPulseDistanceWidthData</a> (unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, uint32_t aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit=false)</td></tr>
-<tr class="memdesc:ga906dfccd111a70453de88e9379b92def"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data The output always ends with a space.  <a href="group__Sending.html#ga906dfccd111a70453de88e9379b92def">More...</a><br /></td></tr>
-<tr class="separator:ga906dfccd111a70453de88e9379b92def"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf4cb949fdde9190f214b755db1806203"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gaf4cb949fdde9190f214b755db1806203">IRsend::sendPulseDistanceWidthFromArray</a> (uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> *aDecodedRawDataArray, unsigned int aNumberOfBits, bool aMSBfirst, bool aSendStopBit, unsigned int aRepeatPeriodMillis, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gaf4cb949fdde9190f214b755db1806203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data from array For LSB First the LSB of array[0] is sent first then all bits until MSB of array[0].  <a href="group__Sending.html#gaf4cb949fdde9190f214b755db1806203">More...</a><br /></td></tr>
+<tr class="separator:gaf4cb949fdde9190f214b755db1806203"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab9b089a95b09da77290cc6788a501a2f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gab9b089a95b09da77290cc6788a501a2f">IRsend::sendPulseDistanceWidthFromArray</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> *aDecodedRawDataArray, unsigned int aNumberOfBits, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gab9b089a95b09da77290cc6788a501a2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data from array using <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> For LSB First the LSB of array[0] is sent first then all bits until MSB of array[0].  <a href="group__Sending.html#gab9b089a95b09da77290cc6788a501a2f">More...</a><br /></td></tr>
+<tr class="separator:gab9b089a95b09da77290cc6788a501a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacc820b71185ccb9571fcfaba9af6803f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gacc820b71185ccb9571fcfaba9af6803f">IRsend::sendPulseDistanceWidth</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> aData, uint_fast8_t aNumberOfBits, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gacc820b71185ccb9571fcfaba9af6803f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance frames and repeats.  <a href="group__Sending.html#gacc820b71185ccb9571fcfaba9af6803f">More...</a><br /></td></tr>
+<tr class="separator:gacc820b71185ccb9571fcfaba9af6803f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac1dcc90c0dc717a283c8fdfb9392def8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gac1dcc90c0dc717a283c8fdfb9392def8">IRsend::sendPulseDistanceWidth</a> (uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit, unsigned int aRepeatPeriodMillis, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, void(*aSpecialSendRepeatFunction)()=NULL)</td></tr>
+<tr class="memdesc:gac1dcc90c0dc717a283c8fdfb9392def8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance frames and repeats.  <a href="group__Sending.html#gac1dcc90c0dc717a283c8fdfb9392def8">More...</a><br /></td></tr>
+<tr class="separator:gac1dcc90c0dc717a283c8fdfb9392def8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0e697969acd5ea115afd45d0c08a03db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db">IRsend::sendPulseDistanceWidthData</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> aData, uint_fast8_t aNumberOfBits)</td></tr>
+<tr class="memdesc:ga0e697969acd5ea115afd45d0c08a03db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data The output always ends with a space Each additional call costs 16 bytes program memory.  <a href="group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db">More...</a><br /></td></tr>
+<tr class="separator:ga0e697969acd5ea115afd45d0c08a03db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafdc2ca8ac9ad4b209025b3332be7b440"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gafdc2ca8ac9ad4b209025b3332be7b440">IRsend::sendPulseDistanceWidthData</a> (unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit)</td></tr>
+<tr class="memdesc:gafdc2ca8ac9ad4b209025b3332be7b440"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data The output always ends with a space.  <a href="group__Sending.html#gafdc2ca8ac9ad4b209025b3332be7b440">More...</a><br /></td></tr>
+<tr class="separator:gafdc2ca8ac9ad4b209025b3332be7b440"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga50162b158e0fa94b105d3717318b8b2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga50162b158e0fa94b105d3717318b8b2c">IRsend::sendBiphaseData</a> (unsigned int aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits)</td></tr>
 <tr class="memdesc:ga50162b158e0fa94b105d3717318b8b2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends Biphase data MSB first Always send start bit, do not send the trailing space of the start bit 0 -&gt; mark+space 1 -&gt; space+mark The output always ends with a space can only send 31 bit data, since we put the start bit as 32th bit on front.  <a href="group__Sending.html#ga50162b158e0fa94b105d3717318b8b2c">More...</a><br /></td></tr>
 <tr class="separator:ga50162b158e0fa94b105d3717318b8b2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,10 +145,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ga5242741b8da4fbfaae237eee2b279dd0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0">IRsend::IRLedOff</a> ()</td></tr>
 <tr class="memdesc:ga5242741b8da4fbfaae237eee2b279dd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Just switch the IR sending LED off to send an IR space A space is "no output", so the PWM output is disabled.  <a href="group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0">More...</a><br /></td></tr>
 <tr class="separator:ga5242741b8da4fbfaae237eee2b279dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga6a653dc4b2f718ce16a2ae87abdc2527">IRsend::space</a> (unsigned int aSpaceMicros)</td></tr>
+<tr class="memitem:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga6a653dc4b2f718ce16a2ae87abdc2527">IRsend::space</a> (unsigned int aSpaceMicros)</td></tr>
 <tr class="memdesc:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an IR space for the specified number of microseconds.  <a href="group__Sending.html#ga6a653dc4b2f718ce16a2ae87abdc2527">More...</a><br /></td></tr>
 <tr class="separator:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga78e52089f1ee53b3d080db7d8c25f798"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798">IRsend::customDelayMicroseconds</a> (unsigned long aMicroseconds)</td></tr>
+<tr class="memitem:ga78e52089f1ee53b3d080db7d8c25f798"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798">IRsend::customDelayMicroseconds</a> (unsigned long aMicroseconds)</td></tr>
 <tr class="memdesc:ga78e52089f1ee53b3d080db7d8c25f798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit and is (mostly) not extended by the duration of interrupt codes like the millis() interrupt.  <a href="group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798">More...</a><br /></td></tr>
 <tr class="separator:ga78e52089f1ee53b3d080db7d8c25f798"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga30b1c8f6029a2f72b4dee0eeb2fb7f15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15">IRsend::enableIROut</a> (uint_fast8_t aFrequencyKHz)</td></tr>
@@ -164,7 +179,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00049">49</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00061">61</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -184,7 +199,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00089">89</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00101">101</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -212,12 +227,12 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00100">100</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00112">112</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga1d7c36404b9a3cdb2b742fb8e9e37681"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1d7c36404b9a3cdb2b742fb8e9e37681">&#9670;&nbsp;</a></span>begin() <span class="overload">[2/2]</span></h2>
+<a id="gac7abd96c6c4adb907dcc3adec54ebe77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac7abd96c6c4adb907dcc3adec54ebe77">&#9670;&nbsp;</a></span>begin() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -238,7 +253,7 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint_fast8_t&#160;</td>
-          <td class="paramname"><em>aFeedbackLEDPin</em> = <code><a class="el" href="IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d">USE_DEFAULT_FEEDBACK_LED_PIN</a></code>&#160;</td>
+          <td class="paramname"><em>aFeedbackLEDPin</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -253,12 +268,12 @@ Variables</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">aSendPin</td><td>The Arduino pin number, where a IR sender diode is connected. </td></tr>
     <tr><td class="paramname">aEnableLEDFeedback</td><td>If true the feedback LED is activated while receiving or sending a PWM signal /a mark </td></tr>
-    <tr><td class="paramname">aFeedbackLEDPin</td><td>If 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions </td></tr>
+    <tr><td class="paramname">aFeedbackLEDPin</td><td>If 0 / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00118">118</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00129">129</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -267,6 +282,9 @@ Variables</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void IRsend::customDelayMicroseconds </td>
@@ -276,11 +294,16 @@ Variables</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit and is (mostly) not extended by the duration of interrupt codes like the millis() interrupt. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00601">601</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00935">935</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -301,9 +324,9 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Enables IR output. </p>
-<p>The kHz value controls the modulation frequency in kilohertz. IF PWM should be generated by a timer, it uses the platform specific timerConfigForSend() function, otherwise it computes the delays used by the <a class="el" href="group__Sending.html#ga7328943560a5f60f4e9e13d677716674" title="Sends an IR mark for the specified number of microseconds.">mark()</a> function. </p>
+<p>The kHz value controls the modulation frequency in kilohertz. IF PWM should be generated by a timer, it uses the platform specific <a class="el" href="group__Timer.html#ga45d57d84d5fee327f67afde5f8649e6d" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,...">timerConfigForSend()</a> function, otherwise it computes the delays used by the <a class="el" href="group__Sending.html#ga7328943560a5f60f4e9e13d677716674" title="Sends an IR mark for the specified number of microseconds.">mark()</a> function. If IR_SEND_PIN is defined, maximum PWM frequency for an AVR @16 MHz is 170 kHz (180 kHz if NO_LED_FEEDBACK_CODE is defined) </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00617">617</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00961">961</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -322,7 +345,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00654">654</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00998">998</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -344,7 +367,7 @@ Variables</h2></td></tr>
 <p>Just switch the IR sending LED off to send an IR space A space is "no output", so the PWM output is disabled. </p>
 <p>This function may affect the state of feedback LED. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00560">560</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00894">894</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -367,7 +390,7 @@ Variables</h2></td></tr>
 <p>Sends an IR mark for the specified number of microseconds. </p>
 <p>The mark output is modulated at the PWM frequency if USE_NO_SEND_PWM is not defined. The output is guaranteed to be OFF / inactive after after the call of the function. This function may affect the state of feedback LED. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00433">433</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00757">757</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -405,12 +428,217 @@ Variables</h2></td></tr>
 
 <p>Sends Biphase data MSB first Always send start bit, do not send the trailing space of the start bit 0 -&gt; mark+space 1 -&gt; space+mark The output always ends with a space can only send 31 bit data, since we put the start bit as 32th bit on front. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00388">388</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00706">706</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga906dfccd111a70453de88e9379b92def"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga906dfccd111a70453de88e9379b92def">&#9670;&nbsp;</a></span>sendPulseDistanceWidthData()</h2>
+<a id="gacc820b71185ccb9571fcfaba9af6803f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacc820b71185ccb9571fcfaba9af6803f">&#9670;&nbsp;</a></span>sendPulseDistanceWidth() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IRsend::sendPulseDistanceWidth </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *&#160;</td>
+          <td class="paramname"><em>aProtocolConstants</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a>&#160;</td>
+          <td class="paramname"><em>aData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfBits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends PulseDistance frames and repeats. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aProtocolConstants</td><td>The constants to use for sending this protocol. </td></tr>
+    <tr><td class="paramname">aData</td><td>uint32 or uint64 holding the bits to be sent. </td></tr>
+    <tr><td class="paramname">aNumberOfBits</td><td>Number of bits from aData to be actually sent. </td></tr>
+    <tr><td class="paramname">aNumberOfRepeats</td><td>If &lt; 0 and a aProtocolConstants-&gt;SpecialSendRepeatFunction() is specified then it is called without leading and trailing space. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00532">532</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gac1dcc90c0dc717a283c8fdfb9392def8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac1dcc90c0dc717a283c8fdfb9392def8">&#9670;&nbsp;</a></span>sendPulseDistanceWidth() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IRsend::sendPulseDistanceWidth </td>
+          <td>(</td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aFrequencyKHz</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aHeaderMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aHeaderSpaceMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aOneMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aOneSpaceMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aZeroMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aZeroSpaceMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a>&#160;</td>
+          <td class="paramname"><em>aData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfBits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aMSBFirst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aSendStopBit</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aRepeatPeriodMillis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void(*)()&#160;</td>
+          <td class="paramname"><em>aSpecialSendRepeatFunction</em> = <code>NULL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends PulseDistance frames and repeats. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aFrequencyKHz,aHeaderMarkMicros,aHeaderSpaceMicros,aOneMarkMicros,aOneSpaceMicros,aZeroMarkMicros,aZeroSpaceMicros,aMSBFirst,aSendStopBit,aRepeatPeriodMillis</td><td>Values to use for sending this protocol, also contained in the <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> of this protocol. </td></tr>
+    <tr><td class="paramname">aData</td><td>uint32 or uint64 holding the bits to be sent. </td></tr>
+    <tr><td class="paramname">aNumberOfBits</td><td>Number of bits from aData to be actually sent. </td></tr>
+    <tr><td class="paramname">aNumberOfRepeats</td><td>If &lt; 0 and a aProtocolConstants-&gt;SpecialSendRepeatFunction() is specified then it is called without leading and trailing space. </td></tr>
+    <tr><td class="paramname">aSpecialSendRepeatFunction</td><td>If NULL, the first frame is repeated completely, otherwise this function is used for sending the repeat frame. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00589">589</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga0e697969acd5ea115afd45d0c08a03db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0e697969acd5ea115afd45d0c08a03db">&#9670;&nbsp;</a></span>sendPulseDistanceWidthData() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IRsend::sendPulseDistanceWidthData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *&#160;</td>
+          <td class="paramname"><em>aProtocolConstants</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a>&#160;</td>
+          <td class="paramname"><em>aData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfBits</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends PulseDistance data The output always ends with a space Each additional call costs 16 bytes program memory. </p>
+
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00643">643</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gafdc2ca8ac9ad4b209025b3332be7b440"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafdc2ca8ac9ad4b209025b3332be7b440">&#9670;&nbsp;</a></span>sendPulseDistanceWidthData() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -442,7 +670,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a>&#160;</td>
           <td class="paramname"><em>aData</em>, </td>
         </tr>
         <tr>
@@ -461,7 +689,7 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>aSendStopBit</em> = <code>false</code>&#160;</td>
+          <td class="paramname"><em>aSendStopBit</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -473,7 +701,151 @@ Variables</h2></td></tr>
 
 <p>Sends PulseDistance data The output always ends with a space. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00345">345</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00655">655</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gab9b089a95b09da77290cc6788a501a2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab9b089a95b09da77290cc6788a501a2f">&#9670;&nbsp;</a></span>sendPulseDistanceWidthFromArray() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IRsend::sendPulseDistanceWidthFromArray </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *&#160;</td>
+          <td class="paramname"><em>aProtocolConstants</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> *&#160;</td>
+          <td class="paramname"><em>aDecodedRawDataArray</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aNumberOfBits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends PulseDistance data from array using <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> For LSB First the LSB of array[0] is sent first then all bits until MSB of array[0]. </p>
+<p>Next is LSB of array[1] and so on. The output always ends with a space Stop bit is always sent </p>
+
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00460">460</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gaf4cb949fdde9190f214b755db1806203"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf4cb949fdde9190f214b755db1806203">&#9670;&nbsp;</a></span>sendPulseDistanceWidthFromArray() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IRsend::sendPulseDistanceWidthFromArray </td>
+          <td>(</td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aFrequencyKHz</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aHeaderMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aHeaderSpaceMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aOneMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aOneSpaceMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aZeroMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aZeroSpaceMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> *&#160;</td>
+          <td class="paramname"><em>aDecodedRawDataArray</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aNumberOfBits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aMSBFirst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aSendStopBit</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>aRepeatPeriodMillis</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends PulseDistance data from array For LSB First the LSB of array[0] is sent first then all bits until MSB of array[0]. </p>
+<p>Next is LSB of array[1] and so on. The output always ends with a space Stop bit is always sent </p>
+
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00383">383</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -512,7 +884,7 @@ Variables</h2></td></tr>
 <p>Function using an 16 byte microsecond timing array for every purpose. </p>
 <p>Raw data starts with a Mark. No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00250">250</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00278">278</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -551,7 +923,7 @@ Variables</h2></td></tr>
 <p>Function using an 8 byte tick timing array to save program memory Raw data starts with a Mark. </p>
 <p>No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00273">273</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00303">303</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -590,7 +962,7 @@ Variables</h2></td></tr>
 <p>Function using an 16 byte microsecond timing array in FLASH for every purpose. </p>
 <p>Raw data starts with a Mark. No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00293">293</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00325">325</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -629,7 +1001,7 @@ Variables</h2></td></tr>
 <p>New function using an 8 byte tick timing array in FLASH to save program memory Raw data starts with a Mark. </p>
 <p>No leading space as in received timing data! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00320">320</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00354">354</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -649,7 +1021,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00107">107</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00119">119</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -658,6 +1030,9 @@ Variables</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void IRsend::space </td>
@@ -667,17 +1042,22 @@ Variables</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Sends an IR space for the specified number of microseconds. </p>
 <p>A space is "no output", so just wait. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00593">593</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00927">927</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga567f59869ebc6c7f53d0dc9b360dd4c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga567f59869ebc6c7f53d0dc9b360dd4c3">&#9670;&nbsp;</a></span>write()</h2>
+<a id="ga7954d4b7ff55e43b69fbf6e483f422b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7954d4b7ff55e43b69fbf6e483f422b2">&#9670;&nbsp;</a></span>write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -691,7 +1071,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramtype">int_fast8_t&#160;</td>
           <td class="paramname"><em>aNumberOfRepeats</em> = <code><a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a></code>&#160;</td>
         </tr>
         <tr>
@@ -706,12 +1086,13 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aIRSendData</td><td>The values of protocol, address, command and repeat flag are taken for sending. </td></tr>
-    <tr><td class="paramname">aNumberOfRepeats</td><td>Number of repeats to send after the initial data. </td></tr>
+    <tr><td class="paramname">aNumberOfRepeats</td><td>Number of repeats to send after the initial data if data is no repeat. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>1 if data sent, 0 if no data sent (i.e. for BANG_OLUFSEN, which is currently not supported here) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00142">142</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00155">155</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -728,7 +1109,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00047">47</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRSend_8hpp_source.html#l00059">59</a> of file <a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a>.</p>
 
 </div>
 </div>
@@ -737,7 +1118,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

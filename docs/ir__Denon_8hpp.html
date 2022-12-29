@@ -82,25 +82,13 @@ $(document).ready(function(){initNavTree('ir__Denon_8hpp.html',''); initResizabl
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">ir_Denon.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>&quot;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for ir_Denon.hpp:</div>
-<div class="dyncontent">
-<div class="center"><img src="ir__Denon_8hpp__incl.png" border="0" usemap="#src_2ir__Denon_8hpp" alt=""/></div>
-<map name="src_2ir__Denon_8hpp" id="src_2ir__Denon_8hpp">
-<area shape="rect" title=" " alt="" coords="27,5,147,32"/>
-<area shape="rect" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="81,80,180,107"/>
-<area shape="rect" href="IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="107,155,200,181"/>
-</map>
-</div>
-</div><div class="textblock"><div class="dynheader">
+<div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ir__Denon_8hpp__dep__incl.png" border="0" usemap="#src_2ir__Denon_8hppdep" alt=""/></div>
@@ -131,14 +119,19 @@ Macros</h2></td></tr>
 <tr class="separator:ga8bf7f0f59510bb18534fc8766c9fe01e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga502f8eb1ebb964692c6593a580713064"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga502f8eb1ebb964692c6593a580713064">DENON_ZERO_SPACE</a>&#160;&#160;&#160;(3 * <a class="el" href="group__Decoder.html#gad25dca3fd4ddc00b460b66007be0b2bb">DENON_UNIT</a>)</td></tr>
 <tr class="separator:ga502f8eb1ebb964692c6593a580713064"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2f1a46669381f4761b484d731a83997e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga2f1a46669381f4761b484d731a83997e">DENON_AUTO_REPEAT_SPACE</a>&#160;&#160;&#160;45000</td></tr>
-<tr class="separator:ga2f1a46669381f4761b484d731a83997e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga44433ad61bcd657972a364f4d4963cc7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga44433ad61bcd657972a364f4d4963cc7">DENON_AUTO_REPEAT_DISTANCE</a>&#160;&#160;&#160;45000</td></tr>
+<tr class="separator:ga44433ad61bcd657972a364f4d4963cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadf29400cf8e1622f6bc747dff0944861"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gadf29400cf8e1622f6bc747dff0944861">DENON_REPEAT_PERIOD</a>&#160;&#160;&#160;110000</td></tr>
 <tr class="separator:gadf29400cf8e1622f6bc747dff0944861"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6dc27eb34cfad41af16ceb70357898da"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6dc27eb34cfad41af16ceb70357898da">DENON_HEADER_MARK</a>&#160;&#160;&#160;<a class="el" href="group__Decoder.html#gad25dca3fd4ddc00b460b66007be0b2bb">DENON_UNIT</a></td></tr>
 <tr class="separator:ga6dc27eb34cfad41af16ceb70357898da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaba7b22de3732ce2d613f16730f2477d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaba7b22de3732ce2d613f16730f2477d8">DENON_HEADER_SPACE</a>&#160;&#160;&#160;(3 * <a class="el" href="group__Decoder.html#gad25dca3fd4ddc00b460b66007be0b2bb">DENON_UNIT</a>)</td></tr>
 <tr class="separator:gaba7b22de3732ce2d613f16730f2477d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga2e60a5966e1402b20ddaaca9c1adb815"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga2e60a5966e1402b20ddaaca9c1adb815">DenonProtocolConstants</a></td></tr>
+<tr class="separator:ga2e60a5966e1402b20ddaaca9c1adb815"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -146,7 +139,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="ir__Denon_8hpp.html">ir_Denon.hpp</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

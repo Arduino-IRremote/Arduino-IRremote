@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['raw_943',['raw',['../unionLGProtocol.html#a3255b9b6a3069f7b749b98ed22bf5378',1,'LGProtocol']]],
-  ['rawbuf_944',['rawbuf',['../structirparams__struct.html#a6652c81270d0bbcb0d81e7631770fc02',1,'irparams_struct::rawbuf()'],['../structdecode__results.html#a54d2e781bb257f55dc68b2d97365051d',1,'decode_results::rawbuf()']]],
-  ['rawdataptr_945',['rawDataPtr',['../structIRData.html#a8d7c987d63874731ff2e1120b21a1a08',1,'IRData']]],
-  ['rawlen_946',['rawlen',['../structirparams__struct.html#a98a83a61e15fc371e5ce7db12dbd0475',1,'irparams_struct::rawlen()'],['../structdecode__results.html#a17bf90d204708de6c490dfe3ab887103',1,'decode_results::rawlen()']]],
-  ['repeatcount_947',['repeatCount',['../classIRrecv.html#a75a2cb038de23ec735c044f176c84b3a',1,'IRrecv']]]
+  ['periodontimemicros_1090',['periodOnTimeMicros',['../classIRsend.html#a09e9265c2c7b55632d8c2feae4c08203',1,'IRsend']]],
+  ['periodtimemicros_1091',['periodTimeMicros',['../classIRsend.html#a4793a33b9ac0066d198d6938d6dd2256',1,'IRsend']]],
+  ['powerison_1092',['PowerIsOn',['../classAircondition__LG.html#a4550e9ef869119bdd82f3bbdbd0a4bf0',1,'Aircondition_LG']]],
+  ['progmem_1093',['PROGMEM',['../group__Receiving.html#ga40297ba8cf5a1c89fea2e9844c5e8d9e',1,'IRProtocol.hpp']]],
+  ['protocol_1094',['protocol',['../structIRData.html#a703592faec26bab5cbe465f53ef14245',1,'IRData']]],
+  ['protocolindex_1095',['ProtocolIndex',['../structPulseDistanceWidthProtocolConstants.html#afac964e3780f921bd65787c3d20b55b3',1,'PulseDistanceWidthProtocolConstants']]]
 ];

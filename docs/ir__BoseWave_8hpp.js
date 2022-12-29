@@ -5,6 +5,8 @@ var ir__BoseWave_8hpp =
     [ "BOSEWAVE_HEADER_MARK", "group__Decoder.html#ga01910d7deda73c7866abb73405e982d5", null ],
     [ "BOSEWAVE_HEADER_SPACE", "group__Decoder.html#ga1d790d85945d62aeac5b1324dcbc0654", null ],
     [ "BOSEWAVE_ONE_SPACE", "group__Decoder.html#gac5abcecc1e901cf947864d70ef5fd685", null ],
-    [ "BOSEWAVE_REPEAT_SPACE", "group__Decoder.html#gaaccf319744a0908453bf1e686a1eccf7", null ],
-    [ "BOSEWAVE_ZERO_SPACE", "group__Decoder.html#ga1a90821da64722ab8ddaefe4d084c4b9", null ]
+    [ "BOSEWAVE_REPEAT_DISTANCE", "group__Decoder.html#gabbdf7b50f7e8fa7bc9974a9c38508184", null ],
+    [ "BOSEWAVE_REPEAT_PERIOD", "group__Decoder.html#ga3411e84f67ceffecca90355ae399fcca", null ],
+    [ "BOSEWAVE_ZERO_SPACE", "group__Decoder.html#ga1a90821da64722ab8ddaefe4d084c4b9", null ],
+    [ "BoseWaveProtocolConstants", "group__Decoder.html#ga2b9372d46b99ffdd915e8e70d41b4360", null ]
 ];

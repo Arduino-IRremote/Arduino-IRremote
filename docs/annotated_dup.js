@@ -8,7 +8,9 @@ var annotated_dup =
     [ "IRrecv", "classIRrecv.html", "classIRrecv" ],
     [ "IRsend", "classIRsend.html", "classIRsend" ],
     [ "LGProtocol", "unionLGProtocol.html", "unionLGProtocol" ],
+    [ "LongLongUnion", "unionLongLongUnion.html", "unionLongLongUnion" ],
     [ "LongUnion", "unionLongUnion.html", "unionLongUnion" ],
+    [ "PulseDistanceWidthProtocolConstants", "structPulseDistanceWidthProtocolConstants.html", "structPulseDistanceWidthProtocolConstants" ],
     [ "TinyIRReceiverCallbackDataStruct", "structTinyIRReceiverCallbackDataStruct.html", "structTinyIRReceiverCallbackDataStruct" ],
     [ "TinyIRReceiverStruct", "structTinyIRReceiverStruct.html", "structTinyIRReceiverStruct" ],
     [ "WordUnion", "unionWordUnion.html", "unionWordUnion" ]

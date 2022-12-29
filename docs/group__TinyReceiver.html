@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>IRremote: Minimal receiver for NEC protocol</title>
+<title>IRremote: Minimal receiver for NEC and FAST protocol</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -87,7 +87,7 @@ $(document).ready(function(){initNavTree('group__TinyReceiver.html',''); initRes
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">Minimal receiver for NEC protocol</div>  </div>
+<div class="title">Minimal receiver for NEC and FAST protocol</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
@@ -97,11 +97,21 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Control and data variables of the state machine for TinyReceiver.  <a href="structTinyIRReceiverStruct.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structTinyIRReceiverCallbackDataStruct.html">TinyIRReceiverCallbackDataStruct</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Can be used by the callback to transfer received data to main loop for further processing.  <a href="structTinyIRReceiverCallbackDataStruct.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:gabcc90c7e99a6f9573ca1ebc43a0ab46f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gabcc90c7e99a6f9573ca1ebc43a0ab46f">VERSION_IRTINY</a>&#160;&#160;&#160;&quot;1.0.0&quot;</td></tr>
+<tr class="separator:gabcc90c7e99a6f9573ca1ebc43a0ab46f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga124e97c05ec9fb970a7dd269cbdf06ec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga124e97c05ec9fb970a7dd269cbdf06ec">VERSION_IRTINY_MAJOR</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:ga124e97c05ec9fb970a7dd269cbdf06ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1a8953f1f69cfb2a4c9036bbf9745d4d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga1a8953f1f69cfb2a4c9036bbf9745d4d">VERSION_IRTINY_MINOR</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:ga1a8953f1f69cfb2a4c9036bbf9745d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaacaccf072978edb1a4125358a564b6ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaacaccf072978edb1a4125358a564b6ce">VERSION_IRTINY_PATCH</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:gaacaccf072978edb1a4125358a564b6ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2ab110e480a4b16fe516c2afd16a1ea2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga2ab110e480a4b16fe516c2afd16a1ea2">NEC_ADDRESS_BITS</a>&#160;&#160;&#160;16</td></tr>
+<tr class="memdesc:ga2ab110e480a4b16fe516c2afd16a1ea2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timing for NEC protocol.  <a href="group__TinyReceiver.html#ga2ab110e480a4b16fe516c2afd16a1ea2">More...</a><br /></td></tr>
 <tr class="separator:ga2ab110e480a4b16fe516c2afd16a1ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga07e295da53565eb7146072bdfeb2ed32"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga07e295da53565eb7146072bdfeb2ed32">NEC_COMMAND_BITS</a>&#160;&#160;&#160;16</td></tr>
 <tr class="separator:ga07e295da53565eb7146072bdfeb2ed32"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,8 +135,63 @@ Macros</h2></td></tr>
 <tr class="separator:gac2dab5c4a22f8c4915217d3ee4676f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7445961959fb69fed84c046145402045"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga7445961959fb69fed84c046145402045">NEC_MINIMAL_DURATION</a>&#160;&#160;&#160;49900</td></tr>
 <tr class="separator:ga7445961959fb69fed84c046145402045"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga41859c8b235dcc7733bc76d751ce2e68"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga41859c8b235dcc7733bc76d751ce2e68">NEC_MAXIMUM_REPEAT_SPACE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__TinyReceiver.html#ga7445961959fb69fed84c046145402045">NEC_MINIMAL_DURATION</a> + 5)</td></tr>
-<tr class="separator:ga41859c8b235dcc7733bc76d751ce2e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga39b7e9de38af79c826aff1df717aef6d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga39b7e9de38af79c826aff1df717aef6d">NEC_MAXIMUM_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__TinyReceiver.html#ga7445961959fb69fed84c046145402045">NEC_MINIMAL_DURATION</a> + 10000)</td></tr>
+<tr class="separator:ga39b7e9de38af79c826aff1df717aef6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9178bb46e2cb80262bd72b9fc05a90b5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga9178bb46e2cb80262bd72b9fc05a90b5">FAST_8_BIT_PARITY_ADDRESS_BITS</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:ga9178bb46e2cb80262bd72b9fc05a90b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">FAST_8_BIT_CS Protocol characteristics:  <a href="group__TinyReceiver.html#ga9178bb46e2cb80262bd72b9fc05a90b5">More...</a><br /></td></tr>
+<tr class="separator:ga9178bb46e2cb80262bd72b9fc05a90b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa3969fe3352b3c6dab0883c97ff613ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaa3969fe3352b3c6dab0883c97ff613ac">FAST_8_BIT_PARITY_COMMAND_BITS</a>&#160;&#160;&#160;16</td></tr>
+<tr class="separator:gaa3969fe3352b3c6dab0883c97ff613ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7a5f0d0c964bc36f450a3fcb2d393e34"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga7a5f0d0c964bc36f450a3fcb2d393e34">FAST_8_BIT_PARITY_BITS</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#ga9178bb46e2cb80262bd72b9fc05a90b5">FAST_8_BIT_PARITY_ADDRESS_BITS</a> + <a class="el" href="group__TinyReceiver.html#gaa3969fe3352b3c6dab0883c97ff613ac">FAST_8_BIT_PARITY_COMMAND_BITS</a>)</td></tr>
+<tr class="separator:ga7a5f0d0c964bc36f450a3fcb2d393e34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d5a323a5e0a10d03ad874bf41178f0d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a>&#160;&#160;&#160;526</td></tr>
+<tr class="separator:ga8d5a323a5e0a10d03ad874bf41178f0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1a65650b5016528f061c8843ec5a0959"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga1a65650b5016528f061c8843ec5a0959">FAST_8_BIT_PARITY_BIT_MARK</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a></td></tr>
+<tr class="separator:ga1a65650b5016528f061c8843ec5a0959"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga402c8b004cbf3287a91afc78ff3f390b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga402c8b004cbf3287a91afc78ff3f390b">FAST_8_BIT_PARITY_ONE_SPACE</a>&#160;&#160;&#160;(3 * <a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a>)</td></tr>
+<tr class="separator:ga402c8b004cbf3287a91afc78ff3f390b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa0236d2a3d99ae7e823bc780a9d24c28"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaa0236d2a3d99ae7e823bc780a9d24c28">FAST_8_BIT_PARITY_ZERO_SPACE</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a></td></tr>
+<tr class="separator:gaa0236d2a3d99ae7e823bc780a9d24c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafe64eceac3987b42d969f6f937b3cbd9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gafe64eceac3987b42d969f6f937b3cbd9">FAST_8_BIT_PARITY_HEADER_MARK</a>&#160;&#160;&#160;(4 * <a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a>)</td></tr>
+<tr class="separator:gafe64eceac3987b42d969f6f937b3cbd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gada465eaa1f5b6dfea83672727b81ee09"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gada465eaa1f5b6dfea83672727b81ee09">FAST_8_BIT_PARITY_HEADER_SPACE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#ga402c8b004cbf3287a91afc78ff3f390b">FAST_8_BIT_PARITY_ONE_SPACE</a>)</td></tr>
+<tr class="separator:gada465eaa1f5b6dfea83672727b81ee09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4399998ec8b27a37be88700da3931d75"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga4399998ec8b27a37be88700da3931d75">FAST_8_BIT_PARITY_REPEAT_PERIOD</a>&#160;&#160;&#160;50000</td></tr>
+<tr class="separator:ga4399998ec8b27a37be88700da3931d75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga23dfc40e835cd75495422ec0cba3eac6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga23dfc40e835cd75495422ec0cba3eac6">FAST_8_BIT_PARITY_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#ga4399998ec8b27a37be88700da3931d75">FAST_8_BIT_PARITY_REPEAT_PERIOD</a> - (40 * <a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a>))</td></tr>
+<tr class="separator:ga23dfc40e835cd75495422ec0cba3eac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacd037d8ebe1a7f896f95cd7aadc14b75"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gacd037d8ebe1a7f896f95cd7aadc14b75">FAST_8_BIT_PARITY_MAXIMUM_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#ga23dfc40e835cd75495422ec0cba3eac6">FAST_8_BIT_PARITY_REPEAT_DISTANCE</a> + 10000)</td></tr>
+<tr class="separator:gacd037d8ebe1a7f896f95cd7aadc14b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga58d0588621424637511e450c133a4efc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga58d0588621424637511e450c133a4efc">ENABLE_NEC_REPEAT_SUPPORT</a></td></tr>
+<tr class="separator:ga58d0588621424637511e450c133a4efc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad0d88e06a82a2333f651ea8a93b1db0f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gad0d88e06a82a2333f651ea8a93b1db0f">TINY_ADDRESS_BITS</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga2ab110e480a4b16fe516c2afd16a1ea2">NEC_ADDRESS_BITS</a></td></tr>
+<tr class="separator:gad0d88e06a82a2333f651ea8a93b1db0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafe4526f8ff3a53017976c689f4942cb2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gafe4526f8ff3a53017976c689f4942cb2">TINY_COMMAND_BITS</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga07e295da53565eb7146072bdfeb2ed32">NEC_COMMAND_BITS</a></td></tr>
+<tr class="separator:gafe4526f8ff3a53017976c689f4942cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0e70fd1c6780350c8f0d4f0a0d5be4d9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga0e70fd1c6780350c8f0d4f0a0d5be4d9">TINY_ADDRESS_HAS_8_BIT_PARITY</a>&#160;&#160;&#160;true</td></tr>
+<tr class="separator:ga0e70fd1c6780350c8f0d4f0a0d5be4d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac96d50b6c4f57ab671103928fb45fef6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gac96d50b6c4f57ab671103928fb45fef6">TINY_COMMAND_HAS_8_BIT_PARITY</a>&#160;&#160;&#160;true</td></tr>
+<tr class="separator:gac96d50b6c4f57ab671103928fb45fef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafa556d07d24bb7068dabaf19a093ab68"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gafa556d07d24bb7068dabaf19a093ab68">TINY_BITS</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#gaa82c77bc0131ac28bc3534b8cf3422bc">NEC_BITS</a></td></tr>
+<tr class="separator:gafa556d07d24bb7068dabaf19a093ab68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac66ec1a29ccf4edc14973c0a1963b4b3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gac66ec1a29ccf4edc14973c0a1963b4b3">TINY_UNIT</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#gaf3317b0cf5cf7d3063addbaa0a256158">NEC_UNIT</a></td></tr>
+<tr class="separator:gac66ec1a29ccf4edc14973c0a1963b4b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga307689e686314d0616c84b82039bbab2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga307689e686314d0616c84b82039bbab2">TINY_HEADER_MARK</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga8d393b95d8df4dfa15873aec6a37965e">NEC_HEADER_MARK</a></td></tr>
+<tr class="separator:ga307689e686314d0616c84b82039bbab2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga47842438e3a81bfd747e804db4324196"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga47842438e3a81bfd747e804db4324196">TINY_HEADER_SPACE</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga5c728ed320ffee624e26767be0a80404">NEC_HEADER_SPACE</a></td></tr>
+<tr class="separator:ga47842438e3a81bfd747e804db4324196"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1c6d9873e4805b48a9d1bf4932c69363"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga1c6d9873e4805b48a9d1bf4932c69363">TINY_BIT_MARK</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga3abbe30ef3781c1cf2490003e1c1443a">NEC_BIT_MARK</a></td></tr>
+<tr class="separator:ga1c6d9873e4805b48a9d1bf4932c69363"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa2585601666708d6e0d77be40b3605f7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaa2585601666708d6e0d77be40b3605f7">TINY_ONE_SPACE</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga5ac04ec8b2185c9fb257d39c472733b1">NEC_ONE_SPACE</a></td></tr>
+<tr class="separator:gaa2585601666708d6e0d77be40b3605f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae74455b6e4810002bebfaee2e7947537"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gae74455b6e4810002bebfaee2e7947537">TINY_ZERO_SPACE</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga5ee46914e98bf7f87f32a7104843b243">NEC_ZERO_SPACE</a></td></tr>
+<tr class="separator:gae74455b6e4810002bebfaee2e7947537"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga270a367f9d92b6b01116a96b3b59f771"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga270a367f9d92b6b01116a96b3b59f771">TINY_MAXIMUM_REPEAT_DISTANCE</a>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga39b7e9de38af79c826aff1df717aef6d">NEC_MAXIMUM_REPEAT_DISTANCE</a></td></tr>
+<tr class="separator:ga270a367f9d92b6b01116a96b3b59f771"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf33c8a218dd35ede965cf20a68a0068d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaf33c8a218dd35ede965cf20a68a0068d">MICROS_IN_ONE_SECOND</a>&#160;&#160;&#160;1000000L</td></tr>
+<tr class="separator:gaf33c8a218dd35ede965cf20a68a0068d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae9ba0b7dd556e22688f7da01019bba68"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gae9ba0b7dd556e22688f7da01019bba68">MICROS_IN_ONE_MILLI</a>&#160;&#160;&#160;1000L</td></tr>
+<tr class="separator:gae9ba0b7dd556e22688f7da01019bba68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga02b97ed6af9381a224ea3be0cab054a0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga02b97ed6af9381a224ea3be0cab054a0">lowerValue25Percent</a>(aDuration)&#160;&#160;&#160;(aDuration - (aDuration / 4))</td></tr>
 <tr class="separator:ga02b97ed6af9381a224ea3be0cab054a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga22a6cd77d395a6c06686eafdf9aa2b52"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga22a6cd77d395a6c06686eafdf9aa2b52">upperValue25Percent</a>(aDuration)&#160;&#160;&#160;(aDuration + (aDuration / 4))</td></tr>
@@ -147,6 +212,15 @@ Macros</h2></td></tr>
 <tr class="separator:gae237abb240b59b9c8dd7d853fc3c76b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2f6f17e18c7b5f1ef4b9cfc907d086e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga2f6f17e18c7b5f1ef4b9cfc907d086e4">IR_RECEIVER_STATE_WAITING_FOR_STOP_MARK</a>&#160;&#160;&#160;5</td></tr>
 <tr class="separator:ga2f6f17e18c7b5f1ef4b9cfc907d086e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad670ce496c4a3352cb9929284db11928"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gad670ce496c4a3352cb9929284db11928">IRDATA_FLAGS_EMPTY</a>&#160;&#160;&#160;0x00</td></tr>
+<tr class="separator:gad670ce496c4a3352cb9929284db11928"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaa9952cd64b58083c28873484c494abf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaaa9952cd64b58083c28873484c494abf">IRDATA_FLAGS_IS_REPEAT</a>&#160;&#160;&#160;0x01</td></tr>
+<tr class="separator:gaaa9952cd64b58083c28873484c494abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5c5e6ae69aa440bfa132550d120ace08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga5c5e6ae69aa440bfa132550d120ace08">IRDATA_FLAGS_IS_AUTO_REPEAT</a>&#160;&#160;&#160;0x02</td></tr>
+<tr class="separator:ga5c5e6ae69aa440bfa132550d120ace08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1a60f95f0885b1865dc5514ddd80e093"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga1a60f95f0885b1865dc5514ddd80e093">IRDATA_FLAGS_PARITY_FAILED</a>&#160;&#160;&#160;0x04</td></tr>
+<tr class="memdesc:ga1a60f95f0885b1865dc5514ddd80e093"><td class="mdescLeft">&#160;</td><td class="mdescRight">the current (autorepeat) frame violated parity check  <a href="group__TinyReceiver.html#ga1a60f95f0885b1865dc5514ddd80e093">More...</a><br /></td></tr>
+<tr class="separator:ga1a60f95f0885b1865dc5514ddd80e093"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga57d0c5b7d83f10557910205596d66dfb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga57d0c5b7d83f10557910205596d66dfb">IR_INPUT_PIN</a>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:ga57d0c5b7d83f10557910205596d66dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae7054616db7e69e979dfcd5ad38fb968"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gae7054616db7e69e979dfcd5ad38fb968">TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT</a></td></tr>
@@ -156,10 +230,10 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga5c751ad19033cb8c209d7253dccf34e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga5c751ad19033cb8c209d7253dccf34e7">handleReceivedTinyIRData</a> (uint16_t aAddress, uint8_t aCommand, bool isRepeat)</td></tr>
-<tr class="separator:ga5c751ad19033cb8c209d7253dccf34e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafedcee9f0c2db6983860b5f91e1ebea2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gafedcee9f0c2db6983860b5f91e1ebea2">handleReceivedTinyIRData</a> (uint16_t aAddress, uint16_t aCommand, uint8_t aFlags)</td></tr>
+<tr class="separator:gafedcee9f0c2db6983860b5f91e1ebea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaafb51bc656ba199129d261afa3f950c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">initPCIInterruptForTinyReceiver</a> ()</td></tr>
-<tr class="memdesc:gaafb51bc656ba199129d261afa3f950c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets IR_INPUT_PIN mode to INPUT_PULLUP, if required, sets feedback LED output mode and call <a class="el" href="group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10" title="Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function...">enablePCIInterruptForTinyReceiver()</a>  <a href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">More...</a><br /></td></tr>
+<tr class="memdesc:gaafb51bc656ba199129d261afa3f950c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets IR_INPUT_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode.  <a href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">More...</a><br /></td></tr>
 <tr class="separator:gaafb51bc656ba199129d261afa3f950c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacc1eec5de7563e88aa73d16aa9e60a10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10">enablePCIInterruptForTinyReceiver</a> ()</td></tr>
 <tr class="memdesc:gacc1eec5de7563e88aa73d16aa9e60a10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.  <a href="group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10">More...</a><br /></td></tr>
@@ -168,11 +242,17 @@ Functions</h2></td></tr>
 <tr class="separator:ga4217cae1ded4a9b2ed54bc3a1e8cd86e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab65e33fe496d3bee4af897e5d8bd9420"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gab65e33fe496d3bee4af897e5d8bd9420">isTinyReceiverIdle</a> ()</td></tr>
 <tr class="separator:gab65e33fe496d3bee4af897e5d8bd9420"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48d47d0adf09bebdb3eb3bdc09323f60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga48d47d0adf09bebdb3eb3bdc09323f60">printTinyReceiverResultMinimal</a> (uint8_t aAddress, uint8_t aCommand, uint8_t aFlags, Print *aSerial)</td></tr>
+<tr class="separator:ga48d47d0adf09bebdb3eb3bdc09323f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga21e45ae5abbd50dcf77693c87c01cc71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga21e45ae5abbd50dcf77693c87c01cc71">sendFast8BitAndParity</a> (uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats=0)</td></tr>
+<tr class="separator:ga21e45ae5abbd50dcf77693c87c01cc71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf94078156f2df01c4883c7633e9a707b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaf94078156f2df01c4883c7633e9a707b">sendNECMinimal</a> (uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats=0)</td></tr>
+<tr class="separator:gaf94078156f2df01c4883c7633e9a707b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf44d26445244a24863cda1636eb8bf97"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaf44d26445244a24863cda1636eb8bf97">handleReceivedIRData</a> (uint16_t aAddress, uint8_t aCommand, bool isRepetition)</td></tr>
 <tr class="memdesc:gaf44d26445244a24863cda1636eb8bf97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the callback function provided by the user application.  <a href="group__TinyReceiver.html#gaf44d26445244a24863cda1636eb8bf97">More...</a><br /></td></tr>
 <tr class="separator:gaf44d26445244a24863cda1636eb8bf97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3c3d6703d25dbcc0555823e23eec0e69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69">IRPinChangeInterruptHandler</a> (void)</td></tr>
-<tr class="memdesc:ga3c3d6703d25dbcc0555823e23eec0e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ISR of TinyIRRreceiver.  <a href="group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69">More...</a><br /></td></tr>
+<tr class="memdesc:ga3c3d6703d25dbcc0555823e23eec0e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ISR (Interrupt Service Routine) of TinyIRRreceiver.  <a href="group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69">More...</a><br /></td></tr>
 <tr class="separator:ga3c3d6703d25dbcc0555823e23eec0e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -182,6 +262,222 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ga58d0588621424637511e450c133a4efc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga58d0588621424637511e450c133a4efc">&#9670;&nbsp;</a></span>ENABLE_NEC_REPEAT_SUPPORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ENABLE_NEC_REPEAT_SUPPORT</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00111">111</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga9178bb46e2cb80262bd72b9fc05a90b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9178bb46e2cb80262bd72b9fc05a90b5">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_ADDRESS_BITS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_ADDRESS_BITS&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>FAST_8_BIT_CS Protocol characteristics: </p>
+<ul>
+<li>Bit timing is like JVC</li>
+<li>The header is shorter, 4000 vs. 12500</li>
+<li>No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command, leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.</li>
+<li>Repeats are sent as complete frames but in a 50 ms period. </li>
+</ul>
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00076">76</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga1a65650b5016528f061c8843ec5a0959"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1a65650b5016528f061c8843ec5a0959">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_BIT_MARK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_BIT_MARK&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00082">82</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga7a5f0d0c964bc36f450a3fcb2d393e34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7a5f0d0c964bc36f450a3fcb2d393e34">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_BITS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_BITS&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#ga9178bb46e2cb80262bd72b9fc05a90b5">FAST_8_BIT_PARITY_ADDRESS_BITS</a> + <a class="el" href="group__TinyReceiver.html#gaa3969fe3352b3c6dab0883c97ff613ac">FAST_8_BIT_PARITY_COMMAND_BITS</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00078">78</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gaa3969fe3352b3c6dab0883c97ff613ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa3969fe3352b3c6dab0883c97ff613ac">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_COMMAND_BITS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_COMMAND_BITS&#160;&#160;&#160;16</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00077">77</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gafe64eceac3987b42d969f6f937b3cbd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafe64eceac3987b42d969f6f937b3cbd9">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_HEADER_MARK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_HEADER_MARK&#160;&#160;&#160;(4 * <a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00086">86</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gada465eaa1f5b6dfea83672727b81ee09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gada465eaa1f5b6dfea83672727b81ee09">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_HEADER_SPACE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_HEADER_SPACE&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#ga402c8b004cbf3287a91afc78ff3f390b">FAST_8_BIT_PARITY_ONE_SPACE</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00087">87</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gacd037d8ebe1a7f896f95cd7aadc14b75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacd037d8ebe1a7f896f95cd7aadc14b75">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_MAXIMUM_REPEAT_DISTANCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_MAXIMUM_REPEAT_DISTANCE&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#ga23dfc40e835cd75495422ec0cba3eac6">FAST_8_BIT_PARITY_REPEAT_DISTANCE</a> + 10000)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00091">91</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga402c8b004cbf3287a91afc78ff3f390b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga402c8b004cbf3287a91afc78ff3f390b">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_ONE_SPACE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_ONE_SPACE&#160;&#160;&#160;(3 * <a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00083">83</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga23dfc40e835cd75495422ec0cba3eac6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga23dfc40e835cd75495422ec0cba3eac6">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_REPEAT_DISTANCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_REPEAT_DISTANCE&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#ga4399998ec8b27a37be88700da3931d75">FAST_8_BIT_PARITY_REPEAT_PERIOD</a> - (40 * <a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a>))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00090">90</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga4399998ec8b27a37be88700da3931d75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4399998ec8b27a37be88700da3931d75">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_REPEAT_PERIOD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_REPEAT_PERIOD&#160;&#160;&#160;50000</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00089">89</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga8d5a323a5e0a10d03ad874bf41178f0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8d5a323a5e0a10d03ad874bf41178f0d">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_UNIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_UNIT&#160;&#160;&#160;526</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00080">80</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gaa0236d2a3d99ae7e823bc780a9d24c28"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa0236d2a3d99ae7e823bc780a9d24c28">&#9670;&nbsp;</a></span>FAST_8_BIT_PARITY_ZERO_SPACE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FAST_8_BIT_PARITY_ZERO_SPACE&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga8d5a323a5e0a10d03ad874bf41178f0d">FAST_8_BIT_PARITY_UNIT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00084">84</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
 <a id="ga57d0c5b7d83f10557910205596d66dfb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga57d0c5b7d83f10557910205596d66dfb">&#9670;&nbsp;</a></span>IR_INPUT_PIN</h2>
 
@@ -194,7 +490,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00086">86</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00104">104</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -210,7 +506,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00081">81</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00185">185</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -226,7 +522,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00080">80</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00184">184</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -242,7 +538,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00079">79</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00183">183</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -258,7 +554,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00077">77</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00181">181</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -274,7 +570,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00078">78</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00182">182</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -290,7 +586,73 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00082">82</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00186">186</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gad670ce496c4a3352cb9929284db11928"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad670ce496c4a3352cb9929284db11928">&#9670;&nbsp;</a></span>IRDATA_FLAGS_EMPTY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IRDATA_FLAGS_EMPTY&#160;&#160;&#160;0x00</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00214">214</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga5c5e6ae69aa440bfa132550d120ace08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5c5e6ae69aa440bfa132550d120ace08">&#9670;&nbsp;</a></span>IRDATA_FLAGS_IS_AUTO_REPEAT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IRDATA_FLAGS_IS_AUTO_REPEAT&#160;&#160;&#160;0x02</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00216">216</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gaaa9952cd64b58083c28873484c494abf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaa9952cd64b58083c28873484c494abf">&#9670;&nbsp;</a></span>IRDATA_FLAGS_IS_REPEAT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IRDATA_FLAGS_IS_REPEAT&#160;&#160;&#160;0x01</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00215">215</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga1a60f95f0885b1865dc5514ddd80e093"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1a60f95f0885b1865dc5514ddd80e093">&#9670;&nbsp;</a></span>IRDATA_FLAGS_PARITY_FAILED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IRDATA_FLAGS_PARITY_FAILED&#160;&#160;&#160;0x04</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>the current (autorepeat) frame violated parity check </p>
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00217">217</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -310,7 +672,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00069">69</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00173">173</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -330,7 +692,39 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00071">71</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00175">175</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gae9ba0b7dd556e22688f7da01019bba68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae9ba0b7dd556e22688f7da01019bba68">&#9670;&nbsp;</a></span>MICROS_IN_ONE_MILLI</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MICROS_IN_ONE_MILLI&#160;&#160;&#160;1000L</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00167">167</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gaf33c8a218dd35ede965cf20a68a0068d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf33c8a218dd35ede965cf20a68a0068d">&#9670;&nbsp;</a></span>MICROS_IN_ONE_SECOND</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MICROS_IN_ONE_SECOND&#160;&#160;&#160;1000000L</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00163">163</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -346,7 +740,10 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00048">48</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p>Timing for NEC protocol. </p>
+<p>see: <a href="https://www.sbprojects.net/knowledge/ir/nec.php">https://www.sbprojects.net/knowledge/ir/nec.php</a> LSB first, 1 start bit + 16 bit address + 8 bit data + 8 bit inverted data + 1 stop bit. </p>
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00049">49</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -362,7 +759,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00057">57</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00058">58</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -378,7 +775,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00051">51</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00051">51</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -394,7 +791,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00049">49</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00050">50</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -410,7 +807,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00054">54</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00055">55</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -426,23 +823,23 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00055">55</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00056">56</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
-<a id="ga41859c8b235dcc7733bc76d751ce2e68"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga41859c8b235dcc7733bc76d751ce2e68">&#9670;&nbsp;</a></span>NEC_MAXIMUM_REPEAT_SPACE</h2>
+<a id="ga39b7e9de38af79c826aff1df717aef6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga39b7e9de38af79c826aff1df717aef6d">&#9670;&nbsp;</a></span>NEC_MAXIMUM_REPEAT_DISTANCE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define NEC_MAXIMUM_REPEAT_SPACE&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__TinyReceiver.html#ga7445961959fb69fed84c046145402045">NEC_MINIMAL_DURATION</a> + 5)</td>
+          <td class="memname">#define NEC_MAXIMUM_REPEAT_DISTANCE&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__TinyReceiver.html#ga7445961959fb69fed84c046145402045">NEC_MINIMAL_DURATION</a> + 10000)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00064">64</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00066">66</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -458,7 +855,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00063">63</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00065">65</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -474,7 +871,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00058">58</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00059">59</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -490,7 +887,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00061">61</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00062">62</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -506,7 +903,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00062">62</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00064">64</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -522,7 +919,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00052">52</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00053">53</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -538,7 +935,167 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00059">59</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00060">60</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gad0d88e06a82a2333f651ea8a93b1db0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad0d88e06a82a2333f651ea8a93b1db0f">&#9670;&nbsp;</a></span>TINY_ADDRESS_BITS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_ADDRESS_BITS&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga2ab110e480a4b16fe516c2afd16a1ea2">NEC_ADDRESS_BITS</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00113">113</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga0e70fd1c6780350c8f0d4f0a0d5be4d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0e70fd1c6780350c8f0d4f0a0d5be4d9">&#9670;&nbsp;</a></span>TINY_ADDRESS_HAS_8_BIT_PARITY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_ADDRESS_HAS_8_BIT_PARITY&#160;&#160;&#160;true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00115">115</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga1c6d9873e4805b48a9d1bf4932c69363"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1c6d9873e4805b48a9d1bf4932c69363">&#9670;&nbsp;</a></span>TINY_BIT_MARK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_BIT_MARK&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga3abbe30ef3781c1cf2490003e1c1443a">NEC_BIT_MARK</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00124">124</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gafa556d07d24bb7068dabaf19a093ab68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafa556d07d24bb7068dabaf19a093ab68">&#9670;&nbsp;</a></span>TINY_BITS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_BITS&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#gaa82c77bc0131ac28bc3534b8cf3422bc">NEC_BITS</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00118">118</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gafe4526f8ff3a53017976c689f4942cb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafe4526f8ff3a53017976c689f4942cb2">&#9670;&nbsp;</a></span>TINY_COMMAND_BITS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_COMMAND_BITS&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga07e295da53565eb7146072bdfeb2ed32">NEC_COMMAND_BITS</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00114">114</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gac96d50b6c4f57ab671103928fb45fef6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac96d50b6c4f57ab671103928fb45fef6">&#9670;&nbsp;</a></span>TINY_COMMAND_HAS_8_BIT_PARITY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_COMMAND_HAS_8_BIT_PARITY&#160;&#160;&#160;true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00116">116</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga307689e686314d0616c84b82039bbab2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga307689e686314d0616c84b82039bbab2">&#9670;&nbsp;</a></span>TINY_HEADER_MARK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_HEADER_MARK&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga8d393b95d8df4dfa15873aec6a37965e">NEC_HEADER_MARK</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00121">121</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga47842438e3a81bfd747e804db4324196"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga47842438e3a81bfd747e804db4324196">&#9670;&nbsp;</a></span>TINY_HEADER_SPACE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_HEADER_SPACE&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga5c728ed320ffee624e26767be0a80404">NEC_HEADER_SPACE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00122">122</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga270a367f9d92b6b01116a96b3b59f771"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga270a367f9d92b6b01116a96b3b59f771">&#9670;&nbsp;</a></span>TINY_MAXIMUM_REPEAT_DISTANCE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_MAXIMUM_REPEAT_DISTANCE&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga39b7e9de38af79c826aff1df717aef6d">NEC_MAXIMUM_REPEAT_DISTANCE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00128">128</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gaa2585601666708d6e0d77be40b3605f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa2585601666708d6e0d77be40b3605f7">&#9670;&nbsp;</a></span>TINY_ONE_SPACE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_ONE_SPACE&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga5ac04ec8b2185c9fb257d39c472733b1">NEC_ONE_SPACE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00125">125</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -554,7 +1111,39 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00105">105</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00123">123</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gac66ec1a29ccf4edc14973c0a1963b4b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac66ec1a29ccf4edc14973c0a1963b4b3">&#9670;&nbsp;</a></span>TINY_UNIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_UNIT&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#gaf3317b0cf5cf7d3063addbaa0a256158">NEC_UNIT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00119">119</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gae74455b6e4810002bebfaee2e7947537"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae74455b6e4810002bebfaee2e7947537">&#9670;&nbsp;</a></span>TINY_ZERO_SPACE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TINY_ZERO_SPACE&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga5ee46914e98bf7f87f32a7104843b243">NEC_ZERO_SPACE</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00126">126</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -574,7 +1163,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00070">70</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00174">174</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -594,7 +1183,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8h_source.html#l00072">72</a> of file <a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00176">176</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -610,7 +1199,71 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00336">336</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00444">444</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gabcc90c7e99a6f9573ca1ebc43a0ab46f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabcc90c7e99a6f9573ca1ebc43a0ab46f">&#9670;&nbsp;</a></span>VERSION_IRTINY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VERSION_IRTINY&#160;&#160;&#160;&quot;1.0.0&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00038">38</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga124e97c05ec9fb970a7dd269cbdf06ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga124e97c05ec9fb970a7dd269cbdf06ec">&#9670;&nbsp;</a></span>VERSION_IRTINY_MAJOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VERSION_IRTINY_MAJOR&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00039">39</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="ga1a8953f1f69cfb2a4c9036bbf9745d4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1a8953f1f69cfb2a4c9036bbf9745d4d">&#9670;&nbsp;</a></span>VERSION_IRTINY_MINOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VERSION_IRTINY_MINOR&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00040">40</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+
+</div>
+</div>
+<a id="gaacaccf072978edb1a4125358a564b6ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaacaccf072978edb1a4125358a564b6ce">&#9670;&nbsp;</a></span>VERSION_IRTINY_PATCH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VERSION_IRTINY_PATCH&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00041">41</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -630,7 +1283,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00465">465</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00574">574</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -650,8 +1303,9 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if interrupt was successfully enabled </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00399">399</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00508">508</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -692,8 +1346,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="ga5c751ad19033cb8c209d7253dccf34e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5c751ad19033cb8c209d7253dccf34e7">&#9670;&nbsp;</a></span>handleReceivedTinyIRData()</h2>
+<a id="gafedcee9f0c2db6983860b5f91e1ebea2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafedcee9f0c2db6983860b5f91e1ebea2">&#9670;&nbsp;</a></span>handleReceivedTinyIRData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -707,14 +1361,14 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>aCommand</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>isRepeat</em>&#160;</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aFlags</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -741,9 +1395,10 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets IR_INPUT_PIN mode to INPUT_PULLUP, if required, sets feedback LED output mode and call <a class="el" href="group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10" title="Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function...">enablePCIInterruptForTinyReceiver()</a> </p>
+<p>Sets IR_INPUT_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode. </p>
+<p>Then call <a class="el" href="group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10" title="Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function...">enablePCIInterruptForTinyReceiver()</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00312">312</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00393">393</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -763,10 +1418,10 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The ISR of TinyIRRreceiver. </p>
+<p>The ISR (Interrupt Service Routine) of TinyIRRreceiver. </p>
 <p>It handles the NEC protocol decoding and calls the user callback function on complete. 5 us + 3 us for push + pop for a 16MHz ATmega </p>
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00125">125</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00139">139</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -785,7 +1440,119 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00305">305</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00385">385</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga48d47d0adf09bebdb3eb3bdc09323f60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga48d47d0adf09bebdb3eb3bdc09323f60">&#9670;&nbsp;</a></span>printTinyReceiverResultMinimal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void printTinyReceiverResultMinimal </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aAddress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aCommand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Print *&#160;</td>
+          <td class="paramname"><em>aSerial</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00405">405</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga21e45ae5abbd50dcf77693c87c01cc71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga21e45ae5abbd50dcf77693c87c01cc71">&#9670;&nbsp;</a></span>sendFast8BitAndParity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sendFast8BitAndParity </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aSendPin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aCommand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00147">147</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gaf94078156f2df01c4883c7633e9a707b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf94078156f2df01c4883c7633e9a707b">&#9670;&nbsp;</a></span>sendNECMinimal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sendNECMinimal </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aSendPin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aCommand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -802,7 +1569,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00074">74</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00089">89</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -811,7 +1578,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

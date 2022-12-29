@@ -83,6 +83,7 @@ $(document).ready(function(){initNavTree('classIRsend.html',''); initResizable()
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classIRsend-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -106,27 +107,39 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ga170701fb079d24717aded137dee808e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga218982c1abdb34314e6d8f4b07086db7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga218982c1abdb34314e6d8f4b07086db7">setSendPin</a> (uint_fast8_t aSendPin)</td></tr>
 <tr class="separator:ga218982c1abdb34314e6d8f4b07086db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1d7c36404b9a3cdb2b742fb8e9e37681"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga1d7c36404b9a3cdb2b742fb8e9e37681">begin</a> (uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin=<a class="el" href="IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d">USE_DEFAULT_FEEDBACK_LED_PIN</a>)</td></tr>
-<tr class="memdesc:ga1d7c36404b9a3cdb2b742fb8e9e37681"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the send and feedback pin.  <a href="group__Sending.html#ga1d7c36404b9a3cdb2b742fb8e9e37681">More...</a><br /></td></tr>
-<tr class="separator:ga1d7c36404b9a3cdb2b742fb8e9e37681"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga567f59869ebc6c7f53d0dc9b360dd4c3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga567f59869ebc6c7f53d0dc9b360dd4c3">write</a> (<a class="el" href="structIRData.html">IRData</a> *aIRSendData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
-<tr class="memdesc:ga567f59869ebc6c7f53d0dc9b360dd4c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interprets and sends a <a class="el" href="structIRData.html" title="Data structure for the user application, available as decodedIRData.">IRData</a> structure.  <a href="group__Sending.html#ga567f59869ebc6c7f53d0dc9b360dd4c3">More...</a><br /></td></tr>
-<tr class="separator:ga567f59869ebc6c7f53d0dc9b360dd4c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac7abd96c6c4adb907dcc3adec54ebe77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gac7abd96c6c4adb907dcc3adec54ebe77">begin</a> (uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)</td></tr>
+<tr class="memdesc:gac7abd96c6c4adb907dcc3adec54ebe77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the send and feedback pin.  <a href="group__Sending.html#gac7abd96c6c4adb907dcc3adec54ebe77">More...</a><br /></td></tr>
+<tr class="separator:gac7abd96c6c4adb907dcc3adec54ebe77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7954d4b7ff55e43b69fbf6e483f422b2"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga7954d4b7ff55e43b69fbf6e483f422b2">write</a> (<a class="el" href="structIRData.html">IRData</a> *aIRSendData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
+<tr class="memdesc:ga7954d4b7ff55e43b69fbf6e483f422b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interprets and sends a <a class="el" href="structIRData.html" title="Data structure for the user application, available as decodedIRData.">IRData</a> structure.  <a href="group__Sending.html#ga7954d4b7ff55e43b69fbf6e483f422b2">More...</a><br /></td></tr>
+<tr class="separator:ga7954d4b7ff55e43b69fbf6e483f422b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga30b1c8f6029a2f72b4dee0eeb2fb7f15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15">enableIROut</a> (uint_fast8_t aFrequencyKHz)</td></tr>
 <tr class="memdesc:ga30b1c8f6029a2f72b4dee0eeb2fb7f15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables IR output.  <a href="group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15">More...</a><br /></td></tr>
 <tr class="separator:ga30b1c8f6029a2f72b4dee0eeb2fb7f15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga906dfccd111a70453de88e9379b92def"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga906dfccd111a70453de88e9379b92def">sendPulseDistanceWidthData</a> (unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, uint32_t aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit=false)</td></tr>
-<tr class="memdesc:ga906dfccd111a70453de88e9379b92def"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data The output always ends with a space.  <a href="group__Sending.html#ga906dfccd111a70453de88e9379b92def">More...</a><br /></td></tr>
-<tr class="separator:ga906dfccd111a70453de88e9379b92def"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf4cb949fdde9190f214b755db1806203"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gaf4cb949fdde9190f214b755db1806203">sendPulseDistanceWidthFromArray</a> (uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> *aDecodedRawDataArray, unsigned int aNumberOfBits, bool aMSBfirst, bool aSendStopBit, unsigned int aRepeatPeriodMillis, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gaf4cb949fdde9190f214b755db1806203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data from array For LSB First the LSB of array[0] is sent first then all bits until MSB of array[0].  <a href="group__Sending.html#gaf4cb949fdde9190f214b755db1806203">More...</a><br /></td></tr>
+<tr class="separator:gaf4cb949fdde9190f214b755db1806203"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab9b089a95b09da77290cc6788a501a2f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gab9b089a95b09da77290cc6788a501a2f">sendPulseDistanceWidthFromArray</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> *aDecodedRawDataArray, unsigned int aNumberOfBits, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gab9b089a95b09da77290cc6788a501a2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data from array using <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> For LSB First the LSB of array[0] is sent first then all bits until MSB of array[0].  <a href="group__Sending.html#gab9b089a95b09da77290cc6788a501a2f">More...</a><br /></td></tr>
+<tr class="separator:gab9b089a95b09da77290cc6788a501a2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacc820b71185ccb9571fcfaba9af6803f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gacc820b71185ccb9571fcfaba9af6803f">sendPulseDistanceWidth</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> aData, uint_fast8_t aNumberOfBits, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gacc820b71185ccb9571fcfaba9af6803f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance frames and repeats.  <a href="group__Sending.html#gacc820b71185ccb9571fcfaba9af6803f">More...</a><br /></td></tr>
+<tr class="separator:gacc820b71185ccb9571fcfaba9af6803f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0e697969acd5ea115afd45d0c08a03db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db">sendPulseDistanceWidthData</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> aData, uint_fast8_t aNumberOfBits)</td></tr>
+<tr class="memdesc:ga0e697969acd5ea115afd45d0c08a03db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data The output always ends with a space Each additional call costs 16 bytes program memory.  <a href="group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db">More...</a><br /></td></tr>
+<tr class="separator:ga0e697969acd5ea115afd45d0c08a03db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac1dcc90c0dc717a283c8fdfb9392def8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gac1dcc90c0dc717a283c8fdfb9392def8">sendPulseDistanceWidth</a> (uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit, unsigned int aRepeatPeriodMillis, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, void(*aSpecialSendRepeatFunction)()=NULL)</td></tr>
+<tr class="memdesc:gac1dcc90c0dc717a283c8fdfb9392def8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance frames and repeats.  <a href="group__Sending.html#gac1dcc90c0dc717a283c8fdfb9392def8">More...</a><br /></td></tr>
+<tr class="separator:gac1dcc90c0dc717a283c8fdfb9392def8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafdc2ca8ac9ad4b209025b3332be7b440"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gafdc2ca8ac9ad4b209025b3332be7b440">sendPulseDistanceWidthData</a> (unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a> aData, uint_fast8_t aNumberOfBits, bool aMSBfirst, bool aSendStopBit)</td></tr>
+<tr class="memdesc:gafdc2ca8ac9ad4b209025b3332be7b440"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends PulseDistance data The output always ends with a space.  <a href="group__Sending.html#gafdc2ca8ac9ad4b209025b3332be7b440">More...</a><br /></td></tr>
+<tr class="separator:gafdc2ca8ac9ad4b209025b3332be7b440"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga50162b158e0fa94b105d3717318b8b2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga50162b158e0fa94b105d3717318b8b2c">sendBiphaseData</a> (unsigned int aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits)</td></tr>
 <tr class="memdesc:ga50162b158e0fa94b105d3717318b8b2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends Biphase data MSB first Always send start bit, do not send the trailing space of the start bit 0 -&gt; mark+space 1 -&gt; space+mark The output always ends with a space can only send 31 bit data, since we put the start bit as 32th bit on front.  <a href="group__Sending.html#ga50162b158e0fa94b105d3717318b8b2c">More...</a><br /></td></tr>
 <tr class="separator:ga50162b158e0fa94b105d3717318b8b2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7328943560a5f60f4e9e13d677716674"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga7328943560a5f60f4e9e13d677716674">mark</a> (unsigned int aMarkMicros)</td></tr>
 <tr class="memdesc:ga7328943560a5f60f4e9e13d677716674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an IR mark for the specified number of microseconds.  <a href="group__Sending.html#ga7328943560a5f60f4e9e13d677716674">More...</a><br /></td></tr>
 <tr class="separator:ga7328943560a5f60f4e9e13d677716674"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga6a653dc4b2f718ce16a2ae87abdc2527">space</a> (unsigned int aSpaceMicros)</td></tr>
-<tr class="memdesc:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an IR space for the specified number of microseconds.  <a href="group__Sending.html#ga6a653dc4b2f718ce16a2ae87abdc2527">More...</a><br /></td></tr>
-<tr class="separator:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5242741b8da4fbfaae237eee2b279dd0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0">IRLedOff</a> ()</td></tr>
 <tr class="memdesc:ga5242741b8da4fbfaae237eee2b279dd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Just switch the IR sending LED off to send an IR space A space is "no output", so the PWM output is disabled.  <a href="group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0">More...</a><br /></td></tr>
 <tr class="separator:ga5242741b8da4fbfaae237eee2b279dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,129 +155,158 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga9fb09e73b62fcca2229b982877922b1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga9fb09e73b62fcca2229b982877922b1f">sendRaw_P</a> (const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz)</td></tr>
 <tr class="memdesc:ga9fb09e73b62fcca2229b982877922b1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function using an 16 byte microsecond timing array in FLASH for every purpose.  <a href="group__Sending.html#ga9fb09e73b62fcca2229b982877922b1f">More...</a><br /></td></tr>
 <tr class="separator:ga9fb09e73b62fcca2229b982877922b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga56bfe794dedefda7cc2487301fe1f1f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga56bfe794dedefda7cc2487301fe1f1f3">sendBoseWave</a> (uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
-<tr class="separator:ga56bfe794dedefda7cc2487301fe1f1f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga342baabd2418ed33d6d847ea5f53f165"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga342baabd2418ed33d6d847ea5f53f165">sendDenon</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aSendSharp=false)</td></tr>
-<tr class="separator:ga342baabd2418ed33d6d847ea5f53f165"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0ff70bbcf54540194c71b8f311c28d9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga0ff70bbcf54540194c71b8f311c28d9f">sendDenonRaw</a> (uint16_t aRawData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0) void <a class="el" href="group__Decoder.html#ga623ebe3659a8600fd09ccd4391a632af">sendJVC</a>(uint8_t aAddress</td></tr>
-<tr class="separator:ga0ff70bbcf54540194c71b8f311c28d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga59c09c7300fa34bc136b7be9bdebe2b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga59c09c7300fa34bc136b7be9bdebe2b5">sendLGRepeat</a> (bool aUseLG2Protocol=false)</td></tr>
-<tr class="separator:ga59c09c7300fa34bc136b7be9bdebe2b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf5095df5a6598fe2651510e4a8d5e018"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaf5095df5a6598fe2651510e4a8d5e018">sendLG</a> (uint8_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false, bool aUseLG2Protocol=false)</td></tr>
-<tr class="memdesc:gaf5095df5a6598fe2651510e4a8d5e018"><td class="mdescLeft">&#160;</td><td class="mdescRight">Repeat commands should be sent in a 110 ms raster.  <a href="group__Decoder.html#gaf5095df5a6598fe2651510e4a8d5e018">More...</a><br /></td></tr>
-<tr class="separator:gaf5095df5a6598fe2651510e4a8d5e018"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8f4da0dd53ac52d459234d34a0a52040"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga8f4da0dd53ac52d459234d34a0a52040">sendLG2</a> (uint8_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false)</td></tr>
-<tr class="separator:ga8f4da0dd53ac52d459234d34a0a52040"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9f8683daf286269b2aafab5e86a8bfc1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga9f8683daf286269b2aafab5e86a8bfc1">sendLGRaw</a> (uint32_t aRawData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0, bool aIsRepeat=false, bool aUseLG2Protocol=false)</td></tr>
-<tr class="separator:ga9f8683daf286269b2aafab5e86a8bfc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc39200973383b94811ac59f29c56efb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#afc39200973383b94811ac59f29c56efb">sendBangOlufsen</a> (uint16_t aHeader, uint8_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>, int8_t aNumberOfHeaderBits=8)</td></tr>
+<tr class="separator:afc39200973383b94811ac59f29c56efb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97581e3c4d1df5e63d221df687655aaf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a97581e3c4d1df5e63d221df687655aaf">sendBangOlufsenDataLink</a> (uint32_t aHeader, uint8_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>, int8_t aNumberOfHeaderBits=8)</td></tr>
+<tr class="separator:a97581e3c4d1df5e63d221df687655aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f0668c744fa5f27401d1089a1b42c8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a9f0668c744fa5f27401d1089a1b42c8c">sendBangOlufsenRaw</a> (uint32_t aRawData, int_fast8_t aBits, bool aBackToBack=false)</td></tr>
+<tr class="separator:a9f0668c744fa5f27401d1089a1b42c8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01622320e53e93b0695b2cece65a724f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a01622320e53e93b0695b2cece65a724f">sendBangOlufsenRawDataLink</a> (uint64_t aRawData, int_fast8_t aBits, bool aBackToBack=false, bool aUseDatalinkTiming=false)</td></tr>
+<tr class="separator:a01622320e53e93b0695b2cece65a724f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1288521054e8b5afb8aece28355829ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga1288521054e8b5afb8aece28355829ff">sendBoseWave</a> (uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
+<tr class="separator:ga1288521054e8b5afb8aece28355829ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafac34cda1599b5bd6ba5a8e8451cf6fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gafac34cda1599b5bd6ba5a8e8451cf6fa">sendDenon</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aSendSharp=false)</td></tr>
+<tr class="separator:gafac34cda1599b5bd6ba5a8e8451cf6fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf8f236e1be69ac658424e0d0c0d21b4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaf8f236e1be69ac658424e0d0c0d21b4b">sendDenonRaw</a> (uint16_t aRawData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>) void <a class="el" href="group__Decoder.html#ga623ebe3659a8600fd09ccd4391a632af">sendJVC</a>(uint8_t aAddress</td></tr>
+<tr class="separator:gaf8f236e1be69ac658424e0d0c0d21b4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaea3e264abb5eb70d01e792817af23e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaaea3e264abb5eb70d01e792817af23e6">sendLG2Repeat</a> ()</td></tr>
+<tr class="separator:gaaea3e264abb5eb70d01e792817af23e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6ada889ebd0aeb60e7284c2060f61871"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6ada889ebd0aeb60e7284c2060f61871">computeLGRawDataAndChecksum</a> (uint8_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>)</td></tr>
+<tr class="separator:ga6ada889ebd0aeb60e7284c2060f61871"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab0200ca785ce3be24c4ad2efc95f37f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab0200ca785ce3be24c4ad2efc95f37f7">sendLG</a> (uint8_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gab0200ca785ce3be24c4ad2efc95f37f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">LG uses the NEC repeat.  <a href="group__Decoder.html#gab0200ca785ce3be24c4ad2efc95f37f7">More...</a><br /></td></tr>
+<tr class="separator:gab0200ca785ce3be24c4ad2efc95f37f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad8b3a7ce5ae5adb098ca0dc004b7b71b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad8b3a7ce5ae5adb098ca0dc004b7b71b">sendLG2</a> (uint8_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gad8b3a7ce5ae5adb098ca0dc004b7b71b"><td class="mdescLeft">&#160;</td><td class="mdescRight">LG2 uses a special repeat.  <a href="group__Decoder.html#gad8b3a7ce5ae5adb098ca0dc004b7b71b">More...</a><br /></td></tr>
+<tr class="separator:gad8b3a7ce5ae5adb098ca0dc004b7b71b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4a616180179201f4f863ee709d844dd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4a616180179201f4f863ee709d844dd7">sendLGRaw</a> (uint32_t aRawData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
+<tr class="memdesc:ga4a616180179201f4f863ee709d844dd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Here you can put your raw data, even one with "wrong" checksum.  <a href="group__Decoder.html#ga4a616180179201f4f863ee709d844dd7">More...</a><br /></td></tr>
+<tr class="separator:ga4a616180179201f4f863ee709d844dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8fff4f1d8703ca18ea85a15289dc44c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae8fff4f1d8703ca18ea85a15289dc44c">sendNECRepeat</a> ()</td></tr>
+<tr class="memdesc:gae8fff4f1d8703ca18ea85a15289dc44c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send special NEC repeat frame Repeat commands should be sent in a 110 ms raster.  <a href="group__Decoder.html#gae8fff4f1d8703ca18ea85a15289dc44c">More...</a><br /></td></tr>
 <tr class="separator:gae8fff4f1d8703ca18ea85a15289dc44c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacc081690ddf61dec5d3f1c55000da7f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gacc081690ddf61dec5d3f1c55000da7f5">sendNEC</a> (uint16_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false)</td></tr>
-<tr class="separator:gacc081690ddf61dec5d3f1c55000da7f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaaeec0a3f8d592deee8746a5b06bc3454"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaaeec0a3f8d592deee8746a5b06bc3454">sendNECRaw</a> (uint32_t aRawData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0, bool aIsRepeat=false)</td></tr>
-<tr class="separator:gaaeec0a3f8d592deee8746a5b06bc3454"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga857b05f2b99e8b705cb6d00470c4e78b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga857b05f2b99e8b705cb6d00470c4e78b">sendOnkyo</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false)</td></tr>
-<tr class="separator:ga857b05f2b99e8b705cb6d00470c4e78b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga15fbc8a08b929395d6be6549cb296db5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga15fbc8a08b929395d6be6549cb296db5">sendApple</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false)</td></tr>
-<tr class="separator:ga15fbc8a08b929395d6be6549cb296db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4b61477c5bd7a32ec7d005d7bb88c610"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4b61477c5bd7a32ec7d005d7bb88c610">sendKaseikyo</a> (uint16_t aAddress, uint8_t aData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, uint16_t aVendorCode)</td></tr>
-<tr class="separator:ga4b61477c5bd7a32ec7d005d7bb88c610"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad3a14e1a94a402a4cbe0eeeded312173"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad3a14e1a94a402a4cbe0eeeded312173">sendPanasonic</a> (uint16_t aAddress, uint8_t aData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
-<tr class="memdesc:gad3a14e1a94a402a4cbe0eeeded312173"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE.  <a href="group__Decoder.html#gad3a14e1a94a402a4cbe0eeeded312173">More...</a><br /></td></tr>
-<tr class="separator:gad3a14e1a94a402a4cbe0eeeded312173"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9c3687ea0ab26ce088bd2a8a0aa1f1c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga9c3687ea0ab26ce088bd2a8a0aa1f1c8">sendKaseikyo_Denon</a> (uint16_t aAddress, uint8_t aData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
-<tr class="memdesc:ga9c3687ea0ab26ce088bd2a8a0aa1f1c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with DENON_VENDOR_ID_CODE.  <a href="group__Decoder.html#ga9c3687ea0ab26ce088bd2a8a0aa1f1c8">More...</a><br /></td></tr>
-<tr class="separator:ga9c3687ea0ab26ce088bd2a8a0aa1f1c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf42f22f1d83211811b4ec765d4dc0a7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaf42f22f1d83211811b4ec765d4dc0a7f">sendKaseikyo_Mitsubishi</a> (uint16_t aAddress, uint8_t aData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
-<tr class="memdesc:gaf42f22f1d83211811b4ec765d4dc0a7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with MITSUBISHI_VENDOR_ID_CODE.  <a href="group__Decoder.html#gaf42f22f1d83211811b4ec765d4dc0a7f">More...</a><br /></td></tr>
-<tr class="separator:gaf42f22f1d83211811b4ec765d4dc0a7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6fee66f189ae46afac1ebe876ffbbf58"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6fee66f189ae46afac1ebe876ffbbf58">sendKaseikyo_Sharp</a> (uint16_t aAddress, uint8_t aData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
-<tr class="memdesc:ga6fee66f189ae46afac1ebe876ffbbf58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with SHARP_VENDOR_ID_CODE.  <a href="group__Decoder.html#ga6fee66f189ae46afac1ebe876ffbbf58">More...</a><br /></td></tr>
-<tr class="separator:ga6fee66f189ae46afac1ebe876ffbbf58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga43bf86aaaa216292f8eb7d0941731241"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga43bf86aaaa216292f8eb7d0941731241">sendKaseikyo_JVC</a> (uint16_t aAddress, uint8_t aData, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
-<tr class="memdesc:ga43bf86aaaa216292f8eb7d0941731241"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with JVC_VENDOR_ID_CODE.  <a href="group__Decoder.html#ga43bf86aaaa216292f8eb7d0941731241">More...</a><br /></td></tr>
-<tr class="separator:ga43bf86aaaa216292f8eb7d0941731241"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga55808fcce8aaf429ebbb1d34cb7f5ee5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga55808fcce8aaf429ebbb1d34cb7f5ee5">sendRC5</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aEnableAutomaticToggle=true)</td></tr>
-<tr class="separator:ga55808fcce8aaf429ebbb1d34cb7f5ee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad26a55d87f9f8cc64a77b4571ae79e5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad26a55d87f9f8cc64a77b4571ae79e5f">sendRC6</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aEnableAutomaticToggle=true)</td></tr>
-<tr class="memdesc:gad26a55d87f9f8cc64a77b4571ae79e5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble raw data for RC6 from parameters and toggle state and send We do not wait for the minimal trailing space of 2666 us.  <a href="group__Decoder.html#gad26a55d87f9f8cc64a77b4571ae79e5f">More...</a><br /></td></tr>
-<tr class="separator:gad26a55d87f9f8cc64a77b4571ae79e5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4daa3f9a1c496072f2e17cdcf93f3906"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4daa3f9a1c496072f2e17cdcf93f3906">sendSamsungRepeat</a> ()</td></tr>
-<tr class="memdesc:ga4daa3f9a1c496072f2e17cdcf93f3906"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send repeat Repeat commands should be sent in a 110 ms raster.  <a href="group__Decoder.html#ga4daa3f9a1c496072f2e17cdcf93f3906">More...</a><br /></td></tr>
-<tr class="separator:ga4daa3f9a1c496072f2e17cdcf93f3906"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafc436966467ba6c103dd332e46682d7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gafc436966467ba6c103dd332e46682d7b">sendSamsung</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
-<tr class="separator:gafc436966467ba6c103dd332e46682d7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5aa32233e5a8d65d3bec6ee7d8265669"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5aa32233e5a8d65d3bec6ee7d8265669">sendSamsungLG</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aIsRepeat=false)</td></tr>
-<tr class="separator:ga5aa32233e5a8d65d3bec6ee7d8265669"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga81b608682a7f7f89e0b1fd00756bb714"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga81b608682a7f7f89e0b1fd00756bb714">sendSharp</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
-<tr class="separator:ga81b608682a7f7f89e0b1fd00756bb714"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga64cfeb90c005e597c62586ea19b93b12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga64cfeb90c005e597c62586ea19b93b12">sendSony</a> (uint16_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, uint8_t numberOfBits=<a class="el" href="IRProtocol_8h.html#a8a2dbf77031a92783a200b9902c8459b">SIRCS_12_PROTOCOL</a>)</td></tr>
-<tr class="separator:ga64cfeb90c005e597c62586ea19b93b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4cec214f3ebfd28867697ebaac4de74b"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4cec214f3ebfd28867697ebaac4de74b">computeNECRawDataAndChecksum</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>)</td></tr>
+<tr class="separator:ga4cec214f3ebfd28867697ebaac4de74b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab783b0ecbe1d09db5d8a426c1a96797c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab783b0ecbe1d09db5d8a426c1a96797c">sendNEC</a> (uint16_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gab783b0ecbe1d09db5d8a426c1a96797c"><td class="mdescLeft">&#160;</td><td class="mdescRight">NEC Send frame and special repeats There is NO delay after the last sent repeat!  <a href="group__Decoder.html#gab783b0ecbe1d09db5d8a426c1a96797c">More...</a><br /></td></tr>
+<tr class="separator:gab783b0ecbe1d09db5d8a426c1a96797c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafe27f4ded08b23be8c28377f2181d71c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gafe27f4ded08b23be8c28377f2181d71c">sendNEC2</a> (uint16_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="separator:gafe27f4ded08b23be8c28377f2181d71c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0cd187952518c5df1a4596aeec33cc9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga0cd187952518c5df1a4596aeec33cc9f">sendNECRaw</a> (uint32_t aRawData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
+<tr class="separator:ga0cd187952518c5df1a4596aeec33cc9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5a1e296f0350dc379cb925d13ca59d87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5a1e296f0350dc379cb925d13ca59d87">sendOnkyo</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="separator:ga5a1e296f0350dc379cb925d13ca59d87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga101c9bd6ac69748f27ec4abe65b04803"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga101c9bd6ac69748f27ec4abe65b04803">sendApple</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="separator:ga101c9bd6ac69748f27ec4abe65b04803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gada6382d5c398922c22ace404179a5744"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gada6382d5c398922c22ace404179a5744">sendKaseikyo</a> (uint16_t aAddress, uint8_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, uint16_t aVendorCode)</td></tr>
+<tr class="memdesc:gada6382d5c398922c22ace404179a5744"><td class="mdescLeft">&#160;</td><td class="mdescRight">Address can be interpreted as sub-device &lt;&lt; 8 + device.  <a href="group__Decoder.html#gada6382d5c398922c22ace404179a5744">More...</a><br /></td></tr>
+<tr class="separator:gada6382d5c398922c22ace404179a5744"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf720308fa32a1f182ff17772c32c3cea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaf720308fa32a1f182ff17772c32c3cea">sendPanasonic</a> (uint16_t aAddress, uint8_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gaf720308fa32a1f182ff17772c32c3cea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE.  <a href="group__Decoder.html#gaf720308fa32a1f182ff17772c32c3cea">More...</a><br /></td></tr>
+<tr class="separator:gaf720308fa32a1f182ff17772c32c3cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga266389f19755fdef8f6dc0155191bf3b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga266389f19755fdef8f6dc0155191bf3b">sendKaseikyo_Denon</a> (uint16_t aAddress, uint8_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:ga266389f19755fdef8f6dc0155191bf3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with DENON_VENDOR_ID_CODE.  <a href="group__Decoder.html#ga266389f19755fdef8f6dc0155191bf3b">More...</a><br /></td></tr>
+<tr class="separator:ga266389f19755fdef8f6dc0155191bf3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8853de09de0669d147a40e8344ee2dc4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga8853de09de0669d147a40e8344ee2dc4">sendKaseikyo_Mitsubishi</a> (uint16_t aAddress, uint8_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:ga8853de09de0669d147a40e8344ee2dc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with MITSUBISHI_VENDOR_ID_CODE.  <a href="group__Decoder.html#ga8853de09de0669d147a40e8344ee2dc4">More...</a><br /></td></tr>
+<tr class="separator:ga8853de09de0669d147a40e8344ee2dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf60a31544006d2e18eb25b3b0205a261"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaf60a31544006d2e18eb25b3b0205a261">sendKaseikyo_Sharp</a> (uint16_t aAddress, uint8_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gaf60a31544006d2e18eb25b3b0205a261"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with SHARP_VENDOR_ID_CODE.  <a href="group__Decoder.html#gaf60a31544006d2e18eb25b3b0205a261">More...</a><br /></td></tr>
+<tr class="separator:gaf60a31544006d2e18eb25b3b0205a261"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga87a6a2163f2608a0c90014586bb04cfa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga87a6a2163f2608a0c90014586bb04cfa">sendKaseikyo_JVC</a> (uint16_t aAddress, uint8_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:ga87a6a2163f2608a0c90014586bb04cfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stub using Kaseikyo with JVC_VENDOR_ID_CODE.  <a href="group__Decoder.html#ga87a6a2163f2608a0c90014586bb04cfa">More...</a><br /></td></tr>
+<tr class="separator:ga87a6a2163f2608a0c90014586bb04cfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacce74f70ce85c35d92bb3f1af08e6ff4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gacce74f70ce85c35d92bb3f1af08e6ff4">sendRC5</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aEnableAutomaticToggle=true)</td></tr>
+<tr class="separator:gacce74f70ce85c35d92bb3f1af08e6ff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaff709569cc91804f55dd6c50a9df6c6b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaff709569cc91804f55dd6c50a9df6c6b">sendRC6</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, bool aEnableAutomaticToggle=true)</td></tr>
+<tr class="memdesc:gaff709569cc91804f55dd6c50a9df6c6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble raw data for RC6 from parameters and toggle state and send We do not wait for the minimal trailing space of 2666 us.  <a href="group__Decoder.html#gaff709569cc91804f55dd6c50a9df6c6b">More...</a><br /></td></tr>
+<tr class="separator:gaff709569cc91804f55dd6c50a9df6c6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga395b9e2ded40a5ad085fa11938422b21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga395b9e2ded40a5ad085fa11938422b21">sendSamsungLGRepeat</a> ()</td></tr>
+<tr class="memdesc:ga395b9e2ded40a5ad085fa11938422b21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send repeat Repeat commands should be sent in a 110 ms raster.  <a href="group__Decoder.html#ga395b9e2ded40a5ad085fa11938422b21">More...</a><br /></td></tr>
+<tr class="separator:ga395b9e2ded40a5ad085fa11938422b21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6e694626edcde10e0d5a4e6a2bc6b915"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915">sendSamsung</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:ga6e694626edcde10e0d5a4e6a2bc6b915"><td class="mdescLeft">&#160;</td><td class="mdescRight">Here we send Samsung32 If we get a command &lt; 0x100, we send command and then ~command.  <a href="group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915">More...</a><br /></td></tr>
+<tr class="separator:ga6e694626edcde10e0d5a4e6a2bc6b915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafdef385afb9257aea153b375bf363220"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gafdef385afb9257aea153b375bf363220">sendSamsung48</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:gafdef385afb9257aea153b375bf363220"><td class="mdescLeft">&#160;</td><td class="mdescRight">Here we send Samsung48 We send 2 x (8 bit command and then ~command)  <a href="group__Decoder.html#gafdef385afb9257aea153b375bf363220">More...</a><br /></td></tr>
+<tr class="separator:gafdef385afb9257aea153b375bf363220"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga09ed812db755a2db480d8e9233036629"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga09ed812db755a2db480d8e9233036629">sendSamsungLG</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="separator:ga09ed812db755a2db480d8e9233036629"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9b819c19d95d4d880e9d6ecb056c0e0a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga9b819c19d95d4d880e9d6ecb056c0e0a">sendSharp</a> (uint8_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="separator:ga9b819c19d95d4d880e9d6ecb056c0e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafef2381435874c06374a40c6f06aa92b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gafef2381435874c06374a40c6f06aa92b">sendSony</a> (uint16_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>, uint8_t numberOfBits=12)</td></tr>
+<tr class="separator:gafef2381435874c06374a40c6f06aa92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa62e64650aaae09b6f001a53a31f00b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaa62e64650aaae09b6f001a53a31f00b8">sendLegoPowerFunctions</a> (uint8_t aChannel, uint8_t tCommand, uint8_t aMode, bool aDoSend5Times=true)</td></tr>
 <tr class="separator:gaa62e64650aaae09b6f001a53a31f00b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga315bc3587e7c4aa15629155b66e52728"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga315bc3587e7c4aa15629155b66e52728">sendLegoPowerFunctions</a> (uint16_t aRawData, bool aDoSend5Times=true)</td></tr>
 <tr class="separator:ga315bc3587e7c4aa15629155b66e52728"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaea94765ecf1af29cf323354be4d74538"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaea94765ecf1af29cf323354be4d74538">sendLegoPowerFunctions</a> (uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times=true)</td></tr>
 <tr class="separator:gaea94765ecf1af29cf323354be4d74538"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7baa10d355a9a694a7e3cce942ff9f59"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a7baa10d355a9a694a7e3cce942ff9f59">sendMagiQuest</a> (uint32_t wand_id, uint16_t magnitude)</td></tr>
-<tr class="separator:a7baa10d355a9a694a7e3cce942ff9f59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga26830e1c38ef9caa1caedeb9e7dabb7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga26830e1c38ef9caa1caedeb9e7dabb7a">sendPronto</a> (const __FlashStringHelper *str, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
-<tr class="separator:ga26830e1c38ef9caa1caedeb9e7dabb7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5174f63b73d3ba9fe997bdb98a4af0c5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5174f63b73d3ba9fe997bdb98a4af0c5">sendPronto</a> (const char *prontoHexString, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
-<tr class="memdesc:ga5174f63b73d3ba9fe997bdb98a4af0c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the string given as Pronto Hex, and send it a number of times given as the second argument.  <a href="group__Decoder.html#ga5174f63b73d3ba9fe997bdb98a4af0c5">More...</a><br /></td></tr>
-<tr class="separator:ga5174f63b73d3ba9fe997bdb98a4af0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4f221f872371078dd6d4f3ffa87b7b10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4f221f872371078dd6d4f3ffa87b7b10">sendPronto</a> (const uint16_t *data, unsigned int length, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
-<tr class="separator:ga4f221f872371078dd6d4f3ffa87b7b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5d65c8bf1632440a30562d0513fd8d7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5d65c8bf1632440a30562d0513fd8d7f">sendPulseDistance</a> (unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros, unsigned int aZeroSpaceMicros, uint32_t *aDecodedRawDataArray, unsigned int aNumberOfBits, bool aMSBfirst, unsigned int aRepeatSpaceMillis=110, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=0)</td></tr>
-<tr class="separator:ga5d65c8bf1632440a30562d0513fd8d7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d8036a6e498c052b291a2871a3b1b94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a1d8036a6e498c052b291a2871a3b1b94">sendShuzu</a> (uint16_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
-<tr class="separator:a1d8036a6e498c052b291a2871a3b1b94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71e0a4a000f5dcb541ca889be34442ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a71e0a4a000f5dcb541ca889be34442ce">sendMagiQuest</a> (uint32_t aWandId, uint16_t aMagnitude)</td></tr>
+<tr class="separator:a71e0a4a000f5dcb541ca889be34442ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga39b5c1f2d7378a717505862ef2c2b7ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga39b5c1f2d7378a717505862ef2c2b7ff">sendPronto</a> (const __FlashStringHelper *str, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
+<tr class="separator:ga39b5c1f2d7378a717505862ef2c2b7ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae58b0eca1937aca61ee9c609f0396827"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae58b0eca1937aca61ee9c609f0396827">sendPronto</a> (const char *prontoHexString, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
+<tr class="memdesc:gae58b0eca1937aca61ee9c609f0396827"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the string given as Pronto Hex, and send it a number of times given as the second argument.  <a href="group__Decoder.html#gae58b0eca1937aca61ee9c609f0396827">More...</a><br /></td></tr>
+<tr class="separator:gae58b0eca1937aca61ee9c609f0396827"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaff7bb49132f8b3205111956d6256bb3a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaff7bb49132f8b3205111956d6256bb3a">sendPronto</a> (const uint16_t *data, unsigned int length, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
+<tr class="separator:gaff7bb49132f8b3205111956d6256bb3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc8631cb8ce32816e6cc504a1a01744f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#abc8631cb8ce32816e6cc504a1a01744f">sendShuzu</a> (uint16_t aAddress, uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="separator:abc8631cb8ce32816e6cc504a1a01744f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab5a2c0a20071c7b37f0d1cd99680d513"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab5a2c0a20071c7b37f0d1cd99680d513">sendDenon</a> (unsigned long data, int nbits)</td></tr>
 <tr class="separator:gab5a2c0a20071c7b37f0d1cd99680d513"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8b3fe0ba492391c8f142281165accec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#ac8b3fe0ba492391c8f142281165accec">sendDISH</a> (unsigned long data, int nbits)</td></tr>
-<tr class="separator:ac8b3fe0ba492391c8f142281165accec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad15692d418b4e8df6c8b9907acfa348f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad15692d418b4e8df6c8b9907acfa348f">sendDish</a> (uint16_t aData)</td></tr>
+<tr class="separator:gad15692d418b4e8df6c8b9907acfa348f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga623ebe3659a8600fd09ccd4391a632af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga623ebe3659a8600fd09ccd4391a632af">sendJVC</a> (unsigned long data, int nbits, bool repeat) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use sendJVC(aAddress</td></tr>
+<tr class="memdesc:ga623ebe3659a8600fd09ccd4391a632af"><td class="mdescLeft">&#160;</td><td class="mdescRight">The JVC protocol repeats by skipping the header mark and space -&gt; this leads to a poor repeat detection for JVC protocol.  <a href="group__Decoder.html#ga623ebe3659a8600fd09ccd4391a632af">More...</a><br /></td></tr>
 <tr class="separator:ga623ebe3659a8600fd09ccd4391a632af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae3ffaf23301bec85ca0c2c7499f484a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">sendJVCMSB</a> (unsigned long data, int nbits, bool repeat=false)</td></tr>
 <tr class="memdesc:gae3ffaf23301bec85ca0c2c7499f484a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">With Send <a class="el" href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3" title="With Send sendJVCMSB() you can send your old 32 bit codes.">sendJVCMSB()</a> you can send your old 32 bit codes.  <a href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">More...</a><br /></td></tr>
 <tr class="separator:gae3ffaf23301bec85ca0c2c7499f484a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga88ecc2eb801abf6aa1428cc0669abe94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga88ecc2eb801abf6aa1428cc0669abe94">sendLG</a> (unsigned long data, int nbits)</td></tr>
 <tr class="separator:ga88ecc2eb801abf6aa1428cc0669abe94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a6f485602665ff9556e2c1e4d456669"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a2a6f485602665ff9556e2c1e4d456669">sendNEC</a> (uint32_t aRawData, uint8_t nbits) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use sendNEC(aAddress</td></tr>
-<tr class="separator:a2a6f485602665ff9556e2c1e4d456669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a540e86b4ba238175930b1d4fd8845c15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a540e86b4ba238175930b1d4fd8845c15">sendNEC</a> (uint32_t aRawData, uint8_t nbits) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use <a class="el" href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">sendNECMSB</a>() or sendNEC(aAddress</td></tr>
+<tr class="separator:a540e86b4ba238175930b1d4fd8845c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0184d3edbfe2659b12fc157c3be0cd63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">sendNECMSB</a> (uint32_t data, uint8_t nbits, bool repeat=false)</td></tr>
 <tr class="memdesc:ga0184d3edbfe2659b12fc157c3be0cd63"><td class="mdescLeft">&#160;</td><td class="mdescRight">With Send <a class="el" href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63" title="With Send sendNECMSB() you can send your old 32 bit codes.">sendNECMSB()</a> you can send your old 32 bit codes.  <a href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">More...</a><br /></td></tr>
 <tr class="separator:ga0184d3edbfe2659b12fc157c3be0cd63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga205cb2e4005389ce19e769b25002b2a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga205cb2e4005389ce19e769b25002b2a2">sendPanasonic</a> (uint16_t aAddress, uint32_t aData) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use sendPanasonic(aAddress</td></tr>
-<tr class="memdesc:ga205cb2e4005389ce19e769b25002b2a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old version with MSB first data.  <a href="group__Decoder.html#ga205cb2e4005389ce19e769b25002b2a2">More...</a><br /></td></tr>
-<tr class="separator:ga205cb2e4005389ce19e769b25002b2a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6168e3ad4e47c657c9f3de0e5d7590b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6168e3ad4e47c657c9f3de0e5d7590b3">sendRC5</a> (uint32_t data, uint8_t nbits)</td></tr>
 <tr class="memdesc:ga6168e3ad4e47c657c9f3de0e5d7590b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old version with 32 bit data.  <a href="group__Decoder.html#ga6168e3ad4e47c657c9f3de0e5d7590b3">More...</a><br /></td></tr>
 <tr class="separator:ga6168e3ad4e47c657c9f3de0e5d7590b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaee1c9e1d8ab6dcf642d6707b4528385b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaee1c9e1d8ab6dcf642d6707b4528385b">sendRC5ext</a> (uint8_t addr, uint8_t cmd, bool toggle)</td></tr>
 <tr class="separator:gaee1c9e1d8ab6dcf642d6707b4528385b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab2553414d8480f449762eb00a3ff7d6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab2553414d8480f449762eb00a3ff7d6d">sendRC6</a> (uint32_t data, uint8_t nbits)</td></tr>
-<tr class="memdesc:gab2553414d8480f449762eb00a3ff7d6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main RC6 send function.  <a href="group__Decoder.html#gab2553414d8480f449762eb00a3ff7d6d">More...</a><br /></td></tr>
-<tr class="separator:gab2553414d8480f449762eb00a3ff7d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae6bfe6af18c1bb7f34fda4338882b435"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gae6bfe6af18c1bb7f34fda4338882b435">sendRC6</a> (uint64_t data, uint8_t nbits)</td></tr>
-<tr class="memdesc:gae6bfe6af18c1bb7f34fda4338882b435"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send RC6 64 bit raw data We do not wait for the minimal trailing space of 2666 us.  <a href="group__Decoder.html#gae6bfe6af18c1bb7f34fda4338882b435">More...</a><br /></td></tr>
-<tr class="separator:gae6bfe6af18c1bb7f34fda4338882b435"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9a81f073c38fddb261bb6a7697af049c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga9a81f073c38fddb261bb6a7697af049c">sendRC6Raw</a> (uint32_t data, uint8_t nbits)</td></tr>
+<tr class="separator:ga9a81f073c38fddb261bb6a7697af049c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafbba909b7fa7ef0f4770dc124e2c4804"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gafbba909b7fa7ef0f4770dc124e2c4804">sendRC6</a> (uint32_t data, uint8_t nbits) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;Please use <a class="el" href="group__Decoder.html#ga9a81f073c38fddb261bb6a7697af049c">sendRC6Raw</a>().&quot;)))</td></tr>
+<tr class="memdesc:gafbba909b7fa7ef0f4770dc124e2c4804"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main RC6 send function.  <a href="group__Decoder.html#gafbba909b7fa7ef0f4770dc124e2c4804">More...</a><br /></td></tr>
+<tr class="separator:gafbba909b7fa7ef0f4770dc124e2c4804"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2676750b05dd52cd05b698176a971cb3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga2676750b05dd52cd05b698176a971cb3">sendRC6Raw</a> (uint64_t data, uint8_t nbits)</td></tr>
+<tr class="separator:ga2676750b05dd52cd05b698176a971cb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad4338783d4c245c2756db5b00845fed7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad4338783d4c245c2756db5b00845fed7">sendRC6</a> (uint64_t data, uint8_t nbits) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;Please use <a class="el" href="group__Decoder.html#ga9a81f073c38fddb261bb6a7697af049c">sendRC6Raw</a>().&quot;)))</td></tr>
+<tr class="memdesc:gad4338783d4c245c2756db5b00845fed7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send RC6 64 bit raw data Can be used to send RC6A with ?31? data bits.  <a href="group__Decoder.html#gad4338783d4c245c2756db5b00845fed7">More...</a><br /></td></tr>
+<tr class="separator:gad4338783d4c245c2756db5b00845fed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50067887a95c401e98362e0c6f721f71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a50067887a95c401e98362e0c6f721f71">sendSharpRaw</a> (unsigned long data, int nbits)</td></tr>
 <tr class="separator:a50067887a95c401e98362e0c6f721f71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0b0933040532b8c1cbc7cbf17ab7edb5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga0b0933040532b8c1cbc7cbf17ab7edb5">sendSharp</a> (unsigned int address, unsigned int command)</td></tr>
 <tr class="separator:ga0b0933040532b8c1cbc7cbf17ab7edb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7b4ca49d8fceaf6ccfa26df2d1b553d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7b4ca49d8fceaf6ccfa26df2d1b553d5">sendSAMSUNG</a> (unsigned long data, int nbits)</td></tr>
 <tr class="separator:ga7b4ca49d8fceaf6ccfa26df2d1b553d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47ef75994f6381a6bfe8a715a6b8cdd5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a> ((deprecated(&quot;This old function sends MSB first! Please use <a class="el" href="group__Decoder.html#gafc436966467ba6c103dd332e46682d7b">sendSamsung</a>().&quot;)))</td></tr>
+<tr class="memitem:a47ef75994f6381a6bfe8a715a6b8cdd5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a> ((deprecated(&quot;This old function sends MSB first! Please use <a class="el" href="group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915">sendSamsung</a>().&quot;)))</td></tr>
 <tr class="separator:a47ef75994f6381a6bfe8a715a6b8cdd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8d1abfc5910cf3f0964498e8bf22bd4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga8d1abfc5910cf3f0964498e8bf22bd4e">sendSony</a> (unsigned long data, int nbits) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use sendSony(aAddress</td></tr>
 <tr class="memdesc:ga8d1abfc5910cf3f0964498e8bf22bd4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old version with MSB first data.  <a href="group__Decoder.html#ga8d1abfc5910cf3f0964498e8bf22bd4e">More...</a><br /></td></tr>
 <tr class="separator:ga8d1abfc5910cf3f0964498e8bf22bd4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8acfdbfc54f8b76d49acb799f5b40805"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga8acfdbfc54f8b76d49acb799f5b40805">sendWhynter</a> (unsigned long data, int nbits)</td></tr>
-<tr class="separator:ga8acfdbfc54f8b76d49acb799f5b40805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga305c54c3b558c7fc13b05b792858cb8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga305c54c3b558c7fc13b05b792858cb8d">sendWhynter</a> (uint32_t aData, uint8_t aNumberOfBitsToSend)</td></tr>
+<tr class="separator:ga305c54c3b558c7fc13b05b792858cb8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga39034e110ba58c6a5effb7711801d74a"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga39034e110ba58c6a5effb7711801d74a">getPulseCorrectionNanos</a> ()</td></tr>
 <tr class="separator:ga39034e110ba58c6a5effb7711801d74a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga78e52089f1ee53b3d080db7d8c25f798"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798">customDelayMicroseconds</a> (unsigned long aMicroseconds)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga6a653dc4b2f718ce16a2ae87abdc2527">space</a> (unsigned int aSpaceMicros)</td></tr>
+<tr class="memdesc:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an IR space for the specified number of microseconds.  <a href="group__Sending.html#ga6a653dc4b2f718ce16a2ae87abdc2527">More...</a><br /></td></tr>
+<tr class="separator:ga6a653dc4b2f718ce16a2ae87abdc2527"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga78e52089f1ee53b3d080db7d8c25f798"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798">customDelayMicroseconds</a> (unsigned long aMicroseconds)</td></tr>
 <tr class="memdesc:ga78e52089f1ee53b3d080db7d8c25f798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit and is (mostly) not extended by the duration of interrupt codes like the millis() interrupt.  <a href="group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798">More...</a><br /></td></tr>
 <tr class="separator:ga78e52089f1ee53b3d080db7d8c25f798"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -272,7 +314,7 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a5f5d819c72ce2f74395d14166e77c7cc"><td class="memItemLeft" align="right" valign="top">void uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a></td></tr>
 <tr class="separator:a5f5d819c72ce2f74395d14166e77c7cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff233b57d2382a713926797ce5da0fd3"><td class="memItemLeft" align="right" valign="top">void uint8_t uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a></td></tr>
+<tr class="memitem:aff233b57d2382a713926797ce5da0fd3"><td class="memItemLeft" align="right" valign="top">void uint8_t int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a></td></tr>
 <tr class="separator:aff233b57d2382a713926797ce5da0fd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f5d819c72ce2f74395d14166e77c7cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a></td></tr>
 <tr class="separator:a5f5d819c72ce2f74395d14166e77c7cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -288,7 +330,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main class for sending IR signals. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00407">407</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00400">400</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a47ef75994f6381a6bfe8a715a6b8cdd5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a47ef75994f6381a6bfe8a715a6b8cdd5">&#9670;&nbsp;</a></span>__attribute__()</h2>
@@ -299,7 +341,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">IRsend::__attribute__ </td>
           <td>(</td>
-          <td class="paramtype">(deprecated(&quot;This old function sends MSB first! Please use <a class="el" href="group__Decoder.html#gafc436966467ba6c103dd332e46682d7b">sendSamsung</a>().&quot;))&#160;</td>
+          <td class="paramtype">(deprecated(&quot;This old function sends MSB first! Please use <a class="el" href="group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915">sendSamsung</a>().&quot;))&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -308,23 +350,35 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac8b3fe0ba492391c8f142281165accec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8b3fe0ba492391c8f142281165accec">&#9670;&nbsp;</a></span>sendDISH()</h2>
+<a id="afc39200973383b94811ac59f29c56efb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc39200973383b94811ac59f29c56efb">&#9670;&nbsp;</a></span>sendBangOlufsen()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void IRsend::sendDISH </td>
+          <td class="memname">void IRsend::sendBangOlufsen </td>
           <td>(</td>
-          <td class="paramtype">unsigned long&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aHeader</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>nbits</em>&#160;</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em> = <code><a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfHeaderBits</em> = <code>8</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -334,12 +388,132 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Dish_8hpp_source.html#l00034">34</a> of file <a class="el" href="ir__Dish_8hpp_source.html">ir_Dish.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00147">147</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a7baa10d355a9a694a7e3cce942ff9f59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7baa10d355a9a694a7e3cce942ff9f59">&#9670;&nbsp;</a></span>sendMagiQuest()</h2>
+<a id="a97581e3c4d1df5e63d221df687655aaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97581e3c4d1df5e63d221df687655aaf">&#9670;&nbsp;</a></span>sendBangOlufsenDataLink()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IRsend::sendBangOlufsenDataLink </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>aHeader</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em> = <code><a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfHeaderBits</em> = <code>8</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00153">153</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a9f0668c744fa5f27401d1089a1b42c8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f0668c744fa5f27401d1089a1b42c8c">&#9670;&nbsp;</a></span>sendBangOlufsenRaw()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IRsend::sendBangOlufsenRaw </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>aRawData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int_fast8_t&#160;</td>
+          <td class="paramname"><em>aBits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aBackToBack</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00162">162</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a01622320e53e93b0695b2cece65a724f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01622320e53e93b0695b2cece65a724f">&#9670;&nbsp;</a></span>sendBangOlufsenRawDataLink()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IRsend::sendBangOlufsenRawDataLink </td>
+          <td>(</td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>aRawData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int_fast8_t&#160;</td>
+          <td class="paramname"><em>aBits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aBackToBack</em> = <code>false</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aUseDatalinkTiming</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00222">222</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a71e0a4a000f5dcb541ca889be34442ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71e0a4a000f5dcb541ca889be34442ce">&#9670;&nbsp;</a></span>sendMagiQuest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -348,13 +522,13 @@ Public Attributes</h2></td></tr>
           <td class="memname">void IRsend::sendMagiQuest </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>wand_id</em>, </td>
+          <td class="paramname"><em>aWandId</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>magnitude</em>&#160;</td>
+          <td class="paramname"><em>aMagnitude</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -363,13 +537,20 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aWandId</td><td>31 bit ID </td></tr>
+    <tr><td class="paramname">aMagnitude</td><td>9 bit Magnitude </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="ir__MagiQuest_8hpp_source.html#l00089">89</a> of file <a class="el" href="ir__MagiQuest_8hpp_source.html">ir_MagiQuest.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__MagiQuest_8hpp_source.html#l00115">115</a> of file <a class="el" href="ir__MagiQuest_8hpp_source.html">ir_MagiQuest.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a2a6f485602665ff9556e2c1e4d456669"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a6f485602665ff9556e2c1e4d456669">&#9670;&nbsp;</a></span>sendNEC()</h2>
+<a id="a540e86b4ba238175930b1d4fd8845c15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a540e86b4ba238175930b1d4fd8845c15">&#9670;&nbsp;</a></span>sendNEC()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -424,8 +605,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1d8036a6e498c052b291a2871a3b1b94"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d8036a6e498c052b291a2871a3b1b94">&#9670;&nbsp;</a></span>sendShuzu()</h2>
+<a id="abc8631cb8ce32816e6cc504a1a01744f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc8631cb8ce32816e6cc504a1a01744f">&#9670;&nbsp;</a></span>sendShuzu()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -445,7 +626,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramtype">int_fast8_t&#160;</td>
           <td class="paramname"><em>aNumberOfRepeats</em>&#160;</td>
         </tr>
         <tr>
@@ -456,7 +637,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__Template_8hpp_source.html#l00133">133</a> of file <a class="el" href="ir__Template_8hpp_source.html">ir_Template.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__Template_8hpp_source.html#l00134">134</a> of file <a class="el" href="ir__Template_8hpp_source.html">ir_Template.hpp</a>.</p>
 
 </div>
 </div>
@@ -473,7 +654,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00455">455</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00474">474</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -489,7 +670,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00514">514</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00532">532</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -507,7 +688,7 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">        <a class="code" href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">sendNECMSB</a>(aRawData, nbits)</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00455">455</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00474">474</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -525,7 +706,7 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">        <a class="code" href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">sendJVCMSB</a>(data, nbits, repeat)</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00514">514</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00532">532</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -541,7 +722,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00548">548</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00565">565</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -557,7 +738,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00547">547</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00564">564</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -573,39 +754,38 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00545">545</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00562">562</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a></li>
+<li>src/<a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a></li>
 <li>src/<a class="el" href="ir__BoseWave_8hpp_source.html">ir_BoseWave.hpp</a></li>
 <li>src/<a class="el" href="ir__Denon_8hpp_source.html">ir_Denon.hpp</a></li>
-<li>src/<a class="el" href="ir__Dish_8hpp_source.html">ir_Dish.hpp</a></li>
-<li>src/<a class="el" href="ir__DistanceProtocol_8hpp_source.html">ir_DistanceProtocol.hpp</a></li>
 <li>src/<a class="el" href="ir__JVC_8hpp_source.html">ir_JVC.hpp</a></li>
 <li>src/<a class="el" href="ir__Kaseikyo_8hpp_source.html">ir_Kaseikyo.hpp</a></li>
 <li>src/<a class="el" href="ir__Lego_8hpp_source.html">ir_Lego.hpp</a></li>
 <li>src/<a class="el" href="ir__LG_8hpp_source.html">ir_LG.hpp</a></li>
 <li>src/<a class="el" href="ir__MagiQuest_8hpp_source.html">ir_MagiQuest.hpp</a></li>
 <li>src/<a class="el" href="ir__NEC_8hpp_source.html">ir_NEC.hpp</a></li>
+<li>src/<a class="el" href="ir__Others_8hpp_source.html">ir_Others.hpp</a></li>
 <li>src/<a class="el" href="ir__Pronto_8hpp_source.html">ir_Pronto.hpp</a></li>
 <li>src/<a class="el" href="ir__RC5__RC6_8hpp_source.html">ir_RC5_RC6.hpp</a></li>
 <li>src/<a class="el" href="ir__Samsung_8hpp_source.html">ir_Samsung.hpp</a></li>
 <li>src/<a class="el" href="ir__Sony_8hpp_source.html">ir_Sony.hpp</a></li>
 <li>src/<a class="el" href="ir__Template_8hpp_source.html">ir_Template.hpp</a></li>
-<li>src/<a class="el" href="ir__Whynter_8hpp_source.html">ir_Whynter.hpp</a></li>
 <li>src/<a class="el" href="IRSend_8hpp_source.html">IRSend.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="agroup__Decoder_html_ga0184d3edbfe2659b12fc157c3be0cd63"><div class="ttname"><a href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">IRsend::sendNECMSB</a></div><div class="ttdeci">void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat=false)</div><div class="ttdoc">With Send sendNECMSB() you can send your old 32 bit codes.</div><div class="ttdef"><b>Definition:</b> <a href="ir__NEC_8hpp_source.html#l00368">ir_NEC.hpp:368</a></div></div>
-<div class="ttc" id="agroup__Decoder_html_gae3ffaf23301bec85ca0c2c7499f484a3"><div class="ttname"><a href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">IRsend::sendJVCMSB</a></div><div class="ttdeci">void sendJVCMSB(unsigned long data, int nbits, bool repeat=false)</div><div class="ttdoc">With Send sendJVCMSB() you can send your old 32 bit codes.</div><div class="ttdef"><b>Definition:</b> <a href="ir__JVC_8hpp_source.html#l00225">ir_JVC.hpp:225</a></div></div>
+<div class="ttc" id="agroup__Decoder_html_ga0184d3edbfe2659b12fc157c3be0cd63"><div class="ttname"><a href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">IRsend::sendNECMSB</a></div><div class="ttdeci">void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat=false)</div><div class="ttdoc">With Send sendNECMSB() you can send your old 32 bit codes.</div><div class="ttdef"><b>Definition:</b> <a href="ir__NEC_8hpp_source.html#l00397">ir_NEC.hpp:397</a></div></div>
+<div class="ttc" id="agroup__Decoder_html_gae3ffaf23301bec85ca0c2c7499f484a3"><div class="ttname"><a href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">IRsend::sendJVCMSB</a></div><div class="ttdeci">void sendJVCMSB(unsigned long data, int nbits, bool repeat=false)</div><div class="ttdoc">With Send sendJVCMSB() you can send your old 32 bit codes.</div><div class="ttdef"><b>Definition:</b> <a href="ir__JVC_8hpp_source.html#l00242">ir_JVC.hpp:242</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classIRsend.html">IRsend</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:22 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:47 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

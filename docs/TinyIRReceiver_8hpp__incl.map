@@ -1,8 +1,8 @@
 <map id="src/TinyIRReceiver.hpp" name="src/TinyIRReceiver.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="64,5,219,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="39,5,193,32"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" id="node3" href="$TinyIRReceiver_8h.html" title=" " alt="" coords="82,80,201,107"/>
-<area shape="rect" id="node6" href="$digitalWriteFast_8h.html" title=" " alt="" coords="225,80,349,107"/>
+<area shape="rect" id="node3" href="$TinyIR_8h.html" title=" " alt="" coords="81,80,151,107"/>
+<area shape="rect" id="node6" href="$digitalWriteFast_8h.html" title=" " alt="" coords="175,80,299,107"/>
 <area shape="rect" id="node4" href="$LongUnion_8h.html" title=" " alt="" coords="107,155,202,181"/>
 <area shape="rect" id="node5" title=" " alt="" coords="122,229,187,256"/>
 </map>

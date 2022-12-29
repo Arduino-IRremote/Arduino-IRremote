@@ -25,9 +25,8 @@
 var NAVTREE =
 [
   [ "IRremote", "index.html", [
-    [ "IRremote Arduino Library", "index.html", null ],
     [ "Changelog", "md_changelog.html", null ],
-    [ "Contribution Guidelines", "md_Contributing.html", null ],
+    [ "Contributing", "md_Contributing.html", null ],
     [ "Contributors", "md_Contributors.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Classes", "annotated.html", [
@@ -44,6 +43,7 @@ var NAVTREE =
         [ "All", "globals.html", "globals_dup" ],
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
+        [ "Typedefs", "globals_type.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
         [ "Enumerator", "globals_eval.html", null ],
         [ "Macros", "globals_defs.html", "globals_defs" ]
@@ -55,11 +55,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "IRFeedbackLED_8hpp.html",
-"functions_p.html",
-"group__Decoder.html#ga2e824e5b2ac1c06adafdbb203091ad2a",
-"group__Decoder.html#gaaa7d595e4d4b3857f3165bbc7682ae36",
-"group__Receiving.html#gab42e5cf55dacb8b5849563ef0c5d9138",
-"structirparams__struct.html#a6652c81270d0bbcb0d81e7631770fc02"
+"globals_defs_j.html",
+"group__Decoder.html#ga3511024575bd92aae238c9db73b9d1e1",
+"group__Decoder.html#gaa701711c860c8ff58d332c4567e7ff89",
+"group__Receiving.html#ga5e9aceb0b9c38a1125ad080ba4e4198f",
+"group__TinyReceiver.html#ga9178bb46e2cb80262bd72b9fc05a90b5",
+"unionLongLongUnion.html#ad131e93d0be6fc5d02cef733c0cfe39a"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -10,8 +10,11 @@ var ir__Samsung_8hpp =
     [ "SAMSUNG_HEADER_MARK", "group__Decoder.html#gaba5b0346e4a7aca7a202768a6abf7cae", null ],
     [ "SAMSUNG_HEADER_SPACE", "group__Decoder.html#ga22d50c9e05c2de32c73cda0a9b05a8c4", null ],
     [ "SAMSUNG_ONE_SPACE", "group__Decoder.html#ga139bb990e482496d098c49c6409047bf", null ],
+    [ "SAMSUNG_REPEAT_DISTANCE", "group__Decoder.html#ga1f3ce0d0a0b6db72f5b228816c466837", null ],
     [ "SAMSUNG_REPEAT_DURATION", "group__Decoder.html#ga2d02df520e7d312e045090f6f1e62897", null ],
     [ "SAMSUNG_REPEAT_PERIOD", "group__Decoder.html#ga7611f37500fda881b03220c8a7fd9d74", null ],
     [ "SAMSUNG_UNIT", "group__Decoder.html#ga651bd895c4ad553171399aebcc7297ea", null ],
-    [ "SAMSUNG_ZERO_SPACE", "group__Decoder.html#ga47aa3d1eeb1f86ee48a8c9a9e2c1e4d2", null ]
+    [ "SAMSUNG_ZERO_SPACE", "group__Decoder.html#ga47aa3d1eeb1f86ee48a8c9a9e2c1e4d2", null ],
+    [ "sendSamsungLGSpecialRepeat", "group__Decoder.html#gad3b594eed28121c2406e7d80d1636c82", null ],
+    [ "SamsungProtocolConstants", "group__Decoder.html#gab9dd24f874feb021b119287864648c5f", null ]
 ];

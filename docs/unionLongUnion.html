@@ -98,7 +98,7 @@ Collaboration diagram for LongUnion:</div>
 <div class="dyncontent">
 <div class="center"><img src="unionLongUnion__coll__graph.png" border="0" usemap="#LongUnion_coll__map" alt="Collaboration graph"/></div>
 <map name="LongUnion_coll__map" id="LongUnion_coll__map">
-<area shape="rect" title="Union to specify parts / manifestations of a 32 bit Long without casts and shifts." alt="" coords="7,124,90,151"/>
+<area shape="rect" title="Union to specify parts / manifestations of a 32 bit Long without casts and shifts." alt="" coords="7,109,90,136"/>
 <area shape="rect" href="unionWordUnion.html" title="Union to specify parts / manifestations of a 16 bit Word without casts and shifts." alt="" coords="5,5,92,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
@@ -127,15 +127,13 @@ Public Attributes</h2></td></tr>
 <tr class="separator:ab61e0a1371b4982eeec1633746ec8a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a718f6c5df5ea017a086a02470aefb718"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionLongUnion.html#a718f6c5df5ea017a086a02470aefb718">Byte</a></td></tr>
 <tr class="separator:a718f6c5df5ea017a086a02470aefb718"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f2fbf95bb1fbe8417cb60a670084751"><td class="memItemLeft" >struct {</td></tr>
-<tr class="memitem:a242807acf26340bc5c8b67395fc8dfd9"><td class="memItemLeft" >&#160;&#160;&#160;uint8_t&#160;&#160;&#160;<a class="el" href="unionLongUnion.html#aa41368107679917a1c39f30999f4e9d9">LowByte</a></td></tr>
-<tr class="separator:a242807acf26340bc5c8b67395fc8dfd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e0035800b8ac4d55734dbbadd91eaa4"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="unionWordUnion.html">WordUnion</a>&#160;&#160;&#160;<a class="el" href="unionLongUnion.html#aa4ca6414a8a8f155b113c02995fa2887">MidWord</a></td></tr>
-<tr class="separator:a3e0035800b8ac4d55734dbbadd91eaa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7824762cc7b4bbc97bddab2a01a2cfd0"><td class="memItemLeft" >&#160;&#160;&#160;uint8_t&#160;&#160;&#160;<a class="el" href="unionLongUnion.html#a67e1514b7a6ccc4d017eb6928c327e5c">HighByte</a></td></tr>
-<tr class="separator:a7824762cc7b4bbc97bddab2a01a2cfd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f2fbf95bb1fbe8417cb60a670084751"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionLongUnion.html#a8f2fbf95bb1fbe8417cb60a670084751">ByteWord</a></td></tr>
-<tr class="separator:a8f2fbf95bb1fbe8417cb60a670084751"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5c029c115e4e0d03294e27cbef24972"><td class="memItemLeft" >struct {</td></tr>
+<tr class="memitem:a634f19b66cf0c8cbc571dea5fe360f00"><td class="memItemLeft" >&#160;&#160;&#160;uint16_t&#160;&#160;&#160;<a class="el" href="unionLongUnion.html#a05f946f8845eb4dda0407470d34854e2">LowWord</a></td></tr>
+<tr class="separator:a634f19b66cf0c8cbc571dea5fe360f00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8fa9d0050160cbaf051da5644f92083"><td class="memItemLeft" >&#160;&#160;&#160;uint16_t&#160;&#160;&#160;<a class="el" href="unionLongUnion.html#afd26d7d3a11130649129850162a7eb39">HighWord</a></td></tr>
+<tr class="separator:aa8fa9d0050160cbaf051da5644f92083"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5c029c115e4e0d03294e27cbef24972"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionLongUnion.html#ab5c029c115e4e0d03294e27cbef24972">UWord</a></td></tr>
+<tr class="separator:ab5c029c115e4e0d03294e27cbef24972"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44ff9a4d34c7293871f5a399a36987b4"><td class="memItemLeft" >struct {</td></tr>
 <tr class="memitem:ab6fa905af48d8b046f1cafd825342bd1"><td class="memItemLeft" >&#160;&#160;&#160;int16_t&#160;&#160;&#160;<a class="el" href="unionLongUnion.html#a9c0af1e73f44cf26341485cdac332bd2">LowWord</a></td></tr>
 <tr class="separator:ab6fa905af48d8b046f1cafd825342bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,13 +148,6 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a7ffe8d51ca98e51ca02fe36d386177c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f4652f7d96f5fd19eb780109df1e38a"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionLongUnion.html#a2f4652f7d96f5fd19eb780109df1e38a">WordUnion</a></td></tr>
 <tr class="separator:a2f4652f7d96f5fd19eb780109df1e38a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9092b3fa79b92fe5829014ffe7a4ec5"><td class="memItemLeft" >struct {</td></tr>
-<tr class="memitem:ab323e6c7a0b51cba9516deed965769be"><td class="memItemLeft" >&#160;&#160;&#160;uint16_t&#160;&#160;&#160;<a class="el" href="unionLongUnion.html#a05f946f8845eb4dda0407470d34854e2">LowWord</a></td></tr>
-<tr class="separator:ab323e6c7a0b51cba9516deed965769be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11d5580a7d9300be1b247c36b71d064b"><td class="memItemLeft" >&#160;&#160;&#160;uint16_t&#160;&#160;&#160;<a class="el" href="unionLongUnion.html#afd26d7d3a11130649129850162a7eb39">HighWord</a></td></tr>
-<tr class="separator:a11d5580a7d9300be1b247c36b71d064b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9092b3fa79b92fe5829014ffe7a4ec5"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionLongUnion.html#ae9092b3fa79b92fe5829014ffe7a4ec5">UWord</a></td></tr>
-<tr class="separator:ae9092b3fa79b92fe5829014ffe7a4ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a683822101c9e06c7cec0dde475d23ad3"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionLongUnion.html#a683822101c9e06c7cec0dde475d23ad3">UBytes</a> [4]</td></tr>
 <tr class="separator:a683822101c9e06c7cec0dde475d23ad3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c5178886b7c046da66506d996ee6587"><td class="memItemLeft" align="right" valign="top">int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionLongUnion.html#a8c5178886b7c046da66506d996ee6587">Bytes</a> [4]</td></tr>
@@ -202,21 +193,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00088">88</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
-
-</div>
-</div>
-<a id="a8f2fbf95bb1fbe8417cb60a670084751"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f2fbf95bb1fbe8417cb60a670084751">&#9670;&nbsp;</a></span>ByteWord</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct { ... }  LongUnion::ByteWord</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00090">90</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
 
 </div>
 </div>
@@ -252,40 +229,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a2b12288fe56e397d39ba9085fca70616"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b12288fe56e397d39ba9085fca70616">&#9670;&nbsp;</a></span>HighWord <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int16_t LongUnion::HighWord</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00077">77</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
-
-</div>
-</div>
-<a id="a5595650293a30be4a2aa52013b953d88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5595650293a30be4a2aa52013b953d88">&#9670;&nbsp;</a></span>HighWord <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="unionWordUnion.html">WordUnion</a> LongUnion::HighWord</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00081">81</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
-
-</div>
-</div>
 <a id="afd26d7d3a11130649129850162a7eb39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd26d7d3a11130649129850162a7eb39">&#9670;&nbsp;</a></span>HighWord <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afd26d7d3a11130649129850162a7eb39">&#9670;&nbsp;</a></span>HighWord <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -296,7 +241,39 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00085">85</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00079">79</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+
+</div>
+</div>
+<a id="a2b12288fe56e397d39ba9085fca70616"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b12288fe56e397d39ba9085fca70616">&#9670;&nbsp;</a></span>HighWord <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t LongUnion::HighWord</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00083">83</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+
+</div>
+</div>
+<a id="a5595650293a30be4a2aa52013b953d88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5595650293a30be4a2aa52013b953d88">&#9670;&nbsp;</a></span>HighWord <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="unionWordUnion.html">WordUnion</a> LongUnion::HighWord</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00087">87</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
 
 </div>
 </div>
@@ -312,7 +289,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00092">92</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00094">94</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
 
 </div>
 </div>
@@ -348,40 +325,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9c0af1e73f44cf26341485cdac332bd2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c0af1e73f44cf26341485cdac332bd2">&#9670;&nbsp;</a></span>LowWord <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int16_t LongUnion::LowWord</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00076">76</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
-
-</div>
-</div>
-<a id="a45adb668aa3c266c1caa869b64f5110f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45adb668aa3c266c1caa869b64f5110f">&#9670;&nbsp;</a></span>LowWord <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="unionWordUnion.html">WordUnion</a> LongUnion::LowWord</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00080">80</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
-
-</div>
-</div>
 <a id="a05f946f8845eb4dda0407470d34854e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05f946f8845eb4dda0407470d34854e2">&#9670;&nbsp;</a></span>LowWord <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a05f946f8845eb4dda0407470d34854e2">&#9670;&nbsp;</a></span>LowWord <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -392,7 +337,39 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00084">84</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00078">78</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+
+</div>
+</div>
+<a id="a9c0af1e73f44cf26341485cdac332bd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c0af1e73f44cf26341485cdac332bd2">&#9670;&nbsp;</a></span>LowWord <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int16_t LongUnion::LowWord</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00082">82</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+
+</div>
+</div>
+<a id="a45adb668aa3c266c1caa869b64f5110f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45adb668aa3c266c1caa869b64f5110f">&#9670;&nbsp;</a></span>LowWord <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="unionWordUnion.html">WordUnion</a> LongUnion::LowWord</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00086">86</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
 
 </div>
 </div>
@@ -460,22 +437,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa4ca6414a8a8f155b113c02995fa2887"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4ca6414a8a8f155b113c02995fa2887">&#9670;&nbsp;</a></span>MidWord</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="unionWordUnion.html">WordUnion</a> LongUnion::MidWord</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00072">72</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
-
-</div>
-</div>
 <a id="a2a351107fefa4b5173dbc8198607515e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2a351107fefa4b5173dbc8198607515e">&#9670;&nbsp;</a></span>UByte</h2>
 
@@ -502,7 +463,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00087">87</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00089">89</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
 
 </div>
 </div>
@@ -518,12 +479,12 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00091">91</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00093">93</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
 
 </div>
 </div>
-<a id="ae9092b3fa79b92fe5829014ffe7a4ec5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae9092b3fa79b92fe5829014ffe7a4ec5">&#9670;&nbsp;</a></span>UWord</h2>
+<a id="ab5c029c115e4e0d03294e27cbef24972"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5c029c115e4e0d03294e27cbef24972">&#9670;&nbsp;</a></span>UWord</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -548,7 +509,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00089">89</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00091">91</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
 
 </div>
 </div>
@@ -578,7 +539,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00090">90</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LongUnion_8h_source.html#l00092">92</a> of file <a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>.</p>
 
 </div>
 </div>
@@ -605,7 +566,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="unionLongUnion.html">LongUnion</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:22 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:47 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

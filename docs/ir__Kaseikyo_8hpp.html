@@ -82,28 +82,13 @@ $(document).ready(function(){initNavTree('ir__Kaseikyo_8hpp.html',''); initResiz
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">ir_Kaseikyo.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>&quot;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for ir_Kaseikyo.hpp:</div>
-<div class="dyncontent">
-<div class="center"><img src="ir__Kaseikyo_8hpp__incl.png" border="0" usemap="#src_2ir__Kaseikyo_8hpp" alt=""/></div>
-<map name="src_2ir__Kaseikyo_8hpp" id="src_2ir__Kaseikyo_8hpp">
-<area shape="rect" title=" " alt="" coords="66,5,203,32"/>
-<area shape="rect" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="85,80,184,107"/>
-<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="209,80,303,107"/>
-<area shape="rect" href="IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="107,155,200,181"/>
-<area shape="rect" title=" " alt="" coords="225,155,290,181"/>
-</map>
-</div>
-</div><div class="textblock"><div class="dynheader">
+<div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ir__Kaseikyo_8hpp__dep__incl.png" border="0" usemap="#src_2ir__Kaseikyo_8hppdep" alt=""/></div>
@@ -146,10 +131,23 @@ Macros</h2></td></tr>
 <tr class="separator:ga96b2393ae13bd45c6b13074a27e800eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab8c7f8e151b67c06523fce7193dd5cdd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab8c7f8e151b67c06523fce7193dd5cdd">KASEIKYO_REPEAT_PERIOD</a>&#160;&#160;&#160;130000</td></tr>
 <tr class="separator:gab8c7f8e151b67c06523fce7193dd5cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga33bd304970bafe120a91b03a08718ff9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga33bd304970bafe120a91b03a08718ff9">KASEIKYO_REPEAT_SPACE</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#gab8c7f8e151b67c06523fce7193dd5cdd">KASEIKYO_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#ga96b2393ae13bd45c6b13074a27e800eb">KASEIKYO_AVERAGE_DURATION</a>)</td></tr>
-<tr class="separator:ga33bd304970bafe120a91b03a08718ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab8e6b6ef29172f2a9f2e3690fcdac4f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab8e6b6ef29172f2a9f2e3690fcdac4f3">KASEIKYO_DATA_BITS</a>&#160;&#160;&#160;32</td></tr>
-<tr class="separator:gab8e6b6ef29172f2a9f2e3690fcdac4f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7f2291b1aefd16dce8a384f26662fed8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7f2291b1aefd16dce8a384f26662fed8">KASEIKYO_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#gab8c7f8e151b67c06523fce7193dd5cdd">KASEIKYO_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#ga96b2393ae13bd45c6b13074a27e800eb">KASEIKYO_AVERAGE_DURATION</a>)</td></tr>
+<tr class="separator:ga7f2291b1aefd16dce8a384f26662fed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga310adca9c81e03bc122d77251a594440"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga310adca9c81e03bc122d77251a594440">PANASONIC_VENDOR_ID_CODE</a>&#160;&#160;&#160;0x2002</td></tr>
+<tr class="separator:ga310adca9c81e03bc122d77251a594440"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeb3d85736eb3f3e60af419edd191e14d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaeb3d85736eb3f3e60af419edd191e14d">DENON_VENDOR_ID_CODE</a>&#160;&#160;&#160;0x3254</td></tr>
+<tr class="separator:gaeb3d85736eb3f3e60af419edd191e14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaca397cf0ba4543c581f0f5bfaf50ef25"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaca397cf0ba4543c581f0f5bfaf50ef25">MITSUBISHI_VENDOR_ID_CODE</a>&#160;&#160;&#160;0xCB23</td></tr>
+<tr class="separator:gaca397cf0ba4543c581f0f5bfaf50ef25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2ee9972dc5425130b659242589ceb098"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga2ee9972dc5425130b659242589ceb098">SHARP_VENDOR_ID_CODE</a>&#160;&#160;&#160;0x5AAA</td></tr>
+<tr class="separator:ga2ee9972dc5425130b659242589ceb098"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3e456885d3a0286f50fb024b0b3f90a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga3e456885d3a0286f50fb024b0b3f90a2">JVC_VENDOR_ID_CODE</a>&#160;&#160;&#160;0x0103</td></tr>
+<tr class="separator:ga3e456885d3a0286f50fb024b0b3f90a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga5f5da8d9b1b980c8fef61096ffb8b216"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5f5da8d9b1b980c8fef61096ffb8b216">KaseikyoProtocolConstants</a></td></tr>
+<tr class="separator:ga5f5da8d9b1b980c8fef61096ffb8b216"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -157,7 +155,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="ir__Kaseikyo_8hpp.html">ir_Kaseikyo.hpp</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

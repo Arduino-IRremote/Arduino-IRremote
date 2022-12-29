@@ -82,28 +82,14 @@ $(document).ready(function(){initNavTree('ir__NEC_8hpp.html',''); initResizable(
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">ir_NEC.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="LongUnion_8h_source.html">LongUnion.h</a>&quot;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for ir_NEC.hpp:</div>
-<div class="dyncontent">
-<div class="center"><img src="ir__NEC_8hpp__incl.png" border="0" usemap="#src_2ir__NEC_8hpp" alt=""/></div>
-<map name="src_2ir__NEC_8hpp" id="src_2ir__NEC_8hpp">
-<area shape="rect" title=" " alt="" coords="79,5,190,32"/>
-<area shape="rect" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="85,80,184,107"/>
-<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="209,80,303,107"/>
-<area shape="rect" href="IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="107,155,200,181"/>
-<area shape="rect" title=" " alt="" coords="225,155,290,181"/>
-</map>
-</div>
-</div><div class="textblock"><div class="dynheader">
+<div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ir__NEC_8hpp__dep__incl.png" border="0" usemap="#src_2ir__NEC_8hppdep" alt=""/></div>
@@ -146,12 +132,25 @@ Macros</h2></td></tr>
 <tr class="separator:ga0e78e019c888522fce3d5a4d4104753d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac2dab5c4a22f8c4915217d3ee4676f08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a>&#160;&#160;&#160;110000</td></tr>
 <tr class="separator:gac2dab5c4a22f8c4915217d3ee4676f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad075e7ecc3052e071d1c9076137c2b35"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad075e7ecc3052e071d1c9076137c2b35">NEC_REPEAT_SPACE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#gad086d93e5fb59de2890e12653a9c2f4f">NEC_AVERAGE_DURATION</a>)</td></tr>
-<tr class="separator:gad075e7ecc3052e071d1c9076137c2b35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga41859c8b235dcc7733bc76d751ce2e68"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga41859c8b235dcc7733bc76d751ce2e68">NEC_MAXIMUM_REPEAT_SPACE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__TinyReceiver.html#ga7445961959fb69fed84c046145402045">NEC_MINIMAL_DURATION</a> + 5)</td></tr>
-<tr class="separator:ga41859c8b235dcc7733bc76d751ce2e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad5b529d2582c1dab2e4a91beb5071ae3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad5b529d2582c1dab2e4a91beb5071ae3">NEC_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#gad086d93e5fb59de2890e12653a9c2f4f">NEC_AVERAGE_DURATION</a>)</td></tr>
+<tr class="separator:gad5b529d2582c1dab2e4a91beb5071ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga39b7e9de38af79c826aff1df717aef6d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga39b7e9de38af79c826aff1df717aef6d">NEC_MAXIMUM_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__TinyReceiver.html#ga7445961959fb69fed84c046145402045">NEC_MINIMAL_DURATION</a> + 5)</td></tr>
+<tr class="separator:ga39b7e9de38af79c826aff1df717aef6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4d268b1bd7431cab88c570c446d4810b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4d268b1bd7431cab88c570c446d4810b">APPLE_ADDRESS</a>&#160;&#160;&#160;0x87EE</td></tr>
 <tr class="separator:ga4d268b1bd7431cab88c570c446d4810b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">sendNECSpecialRepeat</a> ()</td></tr>
+<tr class="memdesc:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function for sending special repeat frame.  <a href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">More...</a><br /></td></tr>
+<tr class="separator:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga7993c30413e3edec00ff3f46a9357164"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7993c30413e3edec00ff3f46a9357164">NECProtocolConstants</a></td></tr>
+<tr class="separator:ga7993c30413e3edec00ff3f46a9357164"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabc3c8d544eebf60b8a73495496a7c354"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gabc3c8d544eebf60b8a73495496a7c354">NEC2ProtocolConstants</a></td></tr>
+<tr class="separator:gabc3c8d544eebf60b8a73495496a7c354"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -159,7 +158,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="ir__NEC_8hpp.html">ir_NEC.hpp</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

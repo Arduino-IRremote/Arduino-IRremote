@@ -1,7 +1,7 @@
 var structTinyIRReceiverCallbackDataStruct =
 [
     [ "Address", "structTinyIRReceiverCallbackDataStruct.html#a90f587192055c4569e8bf2ea76b83f75", null ],
-    [ "Command", "structTinyIRReceiverCallbackDataStruct.html#ae5c77524d4f4f01a8fa13100fe0ea0e8", null ],
-    [ "isRepeat", "structTinyIRReceiverCallbackDataStruct.html#afe1d13fe5778021d7c6458a0b9f75cb8", null ],
+    [ "Command", "structTinyIRReceiverCallbackDataStruct.html#aaee6d40528d1e3310ea66de6d81b01e5", null ],
+    [ "Flags", "structTinyIRReceiverCallbackDataStruct.html#ad96a1443f9fe0cc2c079345c9aaa2e0f", null ],
     [ "justWritten", "structTinyIRReceiverCallbackDataStruct.html#a98164fef32d1716173ecbb35a2d69111", null ]
 ];

@@ -90,17 +90,17 @@ $(document).ready(function(){initNavTree('TinyIRReceiver_8hpp.html',''); initRes
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="TinyIRReceiver_8h_source.html">TinyIRReceiver.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for TinyIRReceiver.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="TinyIRReceiver_8hpp__incl.png" border="0" usemap="#src_2TinyIRReceiver_8hpp" alt=""/></div>
 <map name="src_2TinyIRReceiver_8hpp" id="src_2TinyIRReceiver_8hpp">
-<area shape="rect" title=" " alt="" coords="64,5,219,32"/>
+<area shape="rect" title=" " alt="" coords="39,5,193,32"/>
 <area shape="rect" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" href="TinyIRReceiver_8h.html" title=" " alt="" coords="82,80,201,107"/>
-<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="225,80,349,107"/>
+<area shape="rect" href="TinyIR_8h.html" title=" " alt="" coords="81,80,151,107"/>
+<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="175,80,299,107"/>
 <area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="107,155,202,181"/>
 <area shape="rect" title=" " alt="" coords="122,229,187,256"/>
 </map>
@@ -123,13 +123,15 @@ Functions</h2></td></tr>
 <tr class="memdesc:gaf44d26445244a24863cda1636eb8bf97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the callback function provided by the user application.  <a href="group__TinyReceiver.html#gaf44d26445244a24863cda1636eb8bf97">More...</a><br /></td></tr>
 <tr class="separator:gaf44d26445244a24863cda1636eb8bf97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3c3d6703d25dbcc0555823e23eec0e69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69">IRPinChangeInterruptHandler</a> (void)</td></tr>
-<tr class="memdesc:ga3c3d6703d25dbcc0555823e23eec0e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ISR of TinyIRRreceiver.  <a href="group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69">More...</a><br /></td></tr>
+<tr class="memdesc:ga3c3d6703d25dbcc0555823e23eec0e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ISR (Interrupt Service Routine) of TinyIRRreceiver.  <a href="group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69">More...</a><br /></td></tr>
 <tr class="separator:ga3c3d6703d25dbcc0555823e23eec0e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab65e33fe496d3bee4af897e5d8bd9420"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gab65e33fe496d3bee4af897e5d8bd9420">isTinyReceiverIdle</a> ()</td></tr>
 <tr class="separator:gab65e33fe496d3bee4af897e5d8bd9420"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaafb51bc656ba199129d261afa3f950c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">initPCIInterruptForTinyReceiver</a> ()</td></tr>
-<tr class="memdesc:gaafb51bc656ba199129d261afa3f950c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets IR_INPUT_PIN mode to INPUT_PULLUP, if required, sets feedback LED output mode and call <a class="el" href="group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10" title="Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function...">enablePCIInterruptForTinyReceiver()</a>  <a href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">More...</a><br /></td></tr>
+<tr class="memdesc:gaafb51bc656ba199129d261afa3f950c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets IR_INPUT_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode.  <a href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">More...</a><br /></td></tr>
 <tr class="separator:gaafb51bc656ba199129d261afa3f950c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga48d47d0adf09bebdb3eb3bdc09323f60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga48d47d0adf09bebdb3eb3bdc09323f60">printTinyReceiverResultMinimal</a> (uint8_t aAddress, uint8_t aCommand, uint8_t aFlags, Print *aSerial)</td></tr>
+<tr class="separator:ga48d47d0adf09bebdb3eb3bdc09323f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacc1eec5de7563e88aa73d16aa9e60a10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10">enablePCIInterruptForTinyReceiver</a> ()</td></tr>
 <tr class="memdesc:gacc1eec5de7563e88aa73d16aa9e60a10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.  <a href="group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10">More...</a><br /></td></tr>
 <tr class="separator:gacc1eec5de7563e88aa73d16aa9e60a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,7 +149,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="TinyIRReceiver_8hpp.html">TinyIRReceiver.hpp</a></li>
-    <li class="footer">Generated on Sat Aug 6 2022 14:36:21 for IRremote by
+    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>
