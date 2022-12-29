@@ -85,7 +85,7 @@ void setup() {
     Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println();
-    Serial.println(F("Because of the verbose output, repeats are likely not dumped correctly!"));
+    Serial.println(F("Because of the verbose output, repeats are probably not dumped correctly!"));
     Serial.println();
 }
 

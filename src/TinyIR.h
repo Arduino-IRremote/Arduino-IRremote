@@ -30,7 +30,7 @@
 
 #include "LongUnion.h"
 
-/** \addtogroup TinyReceiver Minimal receiver for NEC protocol
+/** \addtogroup TinyReceiver Minimal receiver for NEC and FAST protocol
  * @{
  */
 

@@ -96,7 +96,8 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
  ************************************/
 
 /**
- * @param aCommand If aCommand is >=0x40 then we switch automatically to RC5X
+ * @param aCommand If aCommand is >=0x40 then we switch automatically to RC5X.
+ * @param aEnableAutomaticToggle Send toggle bit according to the state of the static sLastSendToggleValue variable.
  */
 void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
     // Set IR carrier frequency
@@ -244,8 +245,8 @@ bool IRrecv::decodeRC5() {
  + 450
  Sum: 23150
  */
-// Frame RC6:   1 start bit + 1 Bit "1" + 3 mode bits (000) + 1 toggle bit + 8 address + 8 command bits + 2666µs pause
-// Frame RC6A:  1 start bit + 1 Bit "1" + 3 mode bits (110) + 1 toggle bit + "1" + 14 customer bits + 8 system bits + 8 command bits (=31bits) + 2666µs pause
+// Frame RC6:   1 start bit + 1 Bit "1" + 3 mode bits (000) + 1 toggle bit + 8 address + 8 command bits + 2666us pause
+// Frame RC6A:  1 start bit + 1 Bit "1" + 3 mode bits (110) + 1 toggle bit + "1" + 14 customer bits + 8 system bits + 8 command bits (=31bits) + 2666us pause
 // !!! toggle bit has another timing :-( !!!
 // mark->space => 1
 // space->mark => 0

@@ -301,7 +301,9 @@ void IRrecv::registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunc
 }
 
 /**
- * Configures the timer and the state machine for IR reception.
+ * Start the receiving process.
+ * This configures the timer and the state machine for IR reception
+ * and enables the receive sample timer interrupt which consumes a small amount of CPU every 50 us.
  */
 void IRrecv::start() {
 
@@ -312,7 +314,7 @@ void IRrecv::start() {
     resume();
 
     // Timer interrupt is enabled after state machine reset
-    timerEnableReceiveInterrupt();
+    timerEnableReceiveInterrupt(); // Enables the receive sample timer interrupt which consumes a small amount of CPU every 50 us.
 #ifdef _IR_MEASURE_TIMING
     pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
@@ -375,8 +377,7 @@ bool IRrecv::isIdle() {
 }
 
 /**
- * Restart the ISR (Interrupt Service Routine) state machine
- * Enable receiving of the next value
+ * Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame
  */
 void IRrecv::resume() {
     // check allows to call resume at arbitrary places or more than once
@@ -444,7 +445,8 @@ IRData* IRrecv::read() {
 /**
  * The main decode function, attempts to decode the recently receive IR signal.
  * The set of decoders used is determined by active definitions of the DECODE_<PROTOCOL> macros.
- * @return false if no IR receiver data available, true if data available. Results of decoding are stored in IrReceiver.decodedIRData.
+ * Results of decoding are stored in IrReceiver.decodedIRData.* like e.g. IrReceiver.decodedIRData.command.
+ * @return false if no IR receiver data available, true if data available.
  */
 bool IRrecv::decode() {
     if (irparams.StateForISR != IR_REC_STATE_STOP) {
@@ -608,11 +610,13 @@ bool IRrecv::decode() {
  *
  * Assume pulse distance if aOneMarkMicros == aZeroMarkMicros
  *
- * @param   aStartOffset        Must point to a mark
+ * @param   aNumberOfBits       Number of bits to decode from decodedIRData.rawDataPtr->rawbuf[] array.
+ * @param   aStartOffset        Offset in decodedIRData.rawDataPtr->rawbuf[] to start decoding. Must point to a mark.
  * @param   aOneMarkMicros      Taken as constant BitMarkMicros for pulse distance.
  * @param   aZeroMarkMicros     Not required if DECODE_STRICT_CHECKS is not defined.
  * @param   aOneSpaceMicros     Taken as (constant) BitSpaceMicros for pulse width.
  * @param   aZeroSpaceMicros    Not required if DECODE_STRICT_CHECKS is not defined.
+ * @param   aMSBfirst           If true send Most Significant Bit first, else send Least Significant Bit (lowest bit) first.
  * @return  true                If decoding was successful
  */
 bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aOneMarkMicros,
@@ -1158,8 +1162,11 @@ void printActiveIRProtocols(Print *aSerial) {
  * Function to print values and flags of IrReceiver.decodedIRData in one line.
  * Ends with println().
  *
- * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
- * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD)
+ * @param aSerial   The Print object on which to write, for Arduino you can use &Serial.
+ * @param aPrintRepeatGap     If true also print the gap before repeats.
+ * @param aCheckForRecordGapsMicros   If true, call CheckForRecordGapsMicros() which may do a long printout,
+ *                                    which in turn may block the proper detection of repeats.*
+ * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD).
  */
 bool IRrecv::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
 // call no class function with same name

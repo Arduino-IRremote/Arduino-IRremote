@@ -92,6 +92,50 @@ void timerConfigForSend(uint8_t aFrequencyKHz);
  */
 #define IR_SEND_PIN
 
+/**
+ * Configures the timer to be able to generate the receive sample interrupt,
+ * which consumes a small amount of CPU every 50 (MICROS_PER_TICK) us.
+ * The actual interrupt generation is controlled by timerEnableReceiveInterrupt() and timerDisableReceiveInterrupt().
+ * timerConfigForReceive() is used exclusively by IRrecv::start()
+ */
+void timerConfigForReceive() {
+}
+/**
+ *  Enables the receive sample timer interrupt, which consumes a small amount of CPU every 50 us.
+ */
+void timerEnableReceiveInterrupt() {
+}
+
+/**
+ *  Disables the receive sample timer interrupt. This must be done before using the timer for e.g. tone().
+ *  Is a synonym for calling end() or stop().
+ */
+void timerDisableReceiveInterrupt() {
+}
+
+/**
+ * IF PWM should be generated not by software, but by a timer, this function sets output pin mode,
+ * configures the timer for generating a PWM with duty cycle of IR_SEND_DUTY_CYCLE_PERCENT
+ * and disables the receive interrupt if it uses the same resource.
+ * For most architectures, the pin number(s) which can be used for output is determined by the timer used!
+ * The output of the PWM signal is controlled by enableSendPWMByTimer() and disableSendPWMByTimer().
+ * timerConfigForSend() is used exclusively by IRsend::enableIROut().
+ * @param aFrequencyKHz     Frequency of the sent PWM signal in kHz. There is no practical reason to have a sub kHz resolution for sending frequency :-).
+ */
+void timerConfigForSend(uint8_t aFrequencyKHz) {
+}
+
+/**
+ * Enables output of the PWM signal of the timer at the timer pin.
+ */
+void enableSendPWMByTimer() {
+}
+/**
+ * Disables output of the PWM signal of the timer at the timer pin and set it to inactive.
+ */
+void disableSendPWMByTimer() {
+}
+
 #elif defined(__AVR__)
 /**********************************************************************************************************************
  * Mapping of AVR boards to AVR timers
@@ -431,10 +475,7 @@ void timerDisableReceiveInterrupt() {
 #define TIMER_INTR_NAME             TIMER2_COMPB_vect                   // We use TIMER2_COMPB_vect to be compatible with tone() library
 
 #define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND)
-/*
- * timerConfigForReceive() is used exclusively by IRrecv::start()
- * It generates an interrupt each 50 (MICROS_PER_TICK) us.
- */
+
 void timerConfigForReceive() {
 #  if (TIMER_COUNT_TOP < 256)
     TCCR2A = _BV(WGM21);
@@ -760,6 +801,7 @@ void timerDisableReceiveInterrupt() {
 #define TIMER_INTR_NAME                 TIMER0_COMPA_vect
 
 #define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND)
+
 void timerConfigForReceive() {
 #  if (TIMER_COUNT_TOP < 256)
     TCCR0A = _BV(WGM01); // CTC, Top is OCR0A
@@ -818,6 +860,7 @@ void timerDisableReceiveInterrupt() {
 #define TIMER_INTR_NAME             TIMER1_COMPB_vect
 
 #define TIMER_COUNT_TOP  (F_CPU * MICROS_PER_TICK / MICROS_IN_ONE_SECOND)
+
 void timerConfigForReceive() {
 #  if (TIMER_COUNT_TOP < 256)
     TCCR1 = _BV(CTC1) | _BV(CS10); // Clear Timer/Counter on Compare Match, Top is OCR1C, No prescaling
@@ -1041,12 +1084,12 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
  * End of AVR timers
  **********************************************************************************************************************/
 
-/***************************************
- * Teensy 3.0 / Teensy 3.1 boards
- ***************************************/
+/**********************************************
+ * Teensy 3.0 / Teensy 3.1 / Teensy 3.2 boards
+ **********************************************/
 #elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined(__MK66FX1M0__)
 
-// Special carrier modulator timer for Teensy 3.0 / Teensy 3.1
+// Special carrier modulator timer for Teensy 3.0 / Teensy 3.1 / Teensy 3.2
 #define TIMER_REQUIRES_RESET_INTR_PENDING
 void timerResetInterruptPending() {
     uint8_t tmp __attribute__((unused)) = CMT_MSC;
@@ -1303,9 +1346,6 @@ void timerDisableReceiveInterrupt() {
     timer1_detachInterrupt(); // disables interrupt too }
 }
 
-/*
- * Set timer for interrupts every MICROS_PER_TICK (50 us)
- */
 void timerConfigForReceive() {
     timer1_isr_init();
     /*
@@ -1356,10 +1396,6 @@ void timerDisableReceiveInterrupt() {
 #define ISR() IRAM_ATTR void IRTimerInterruptHandler()
 IRAM_ATTR void IRTimerInterruptHandler();
 
-
-/*
- * Set timer for interrupts every MICROS_PER_TICK (50 us)
- */
 void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
@@ -1435,9 +1471,6 @@ void IRTimerInterruptHandler();
  * GCLK1 = 48 MHz // This Clock is present in SAMD21 and SAMD51
  * GCLK4 = 12 MHz
  * GCLK3 = XOSC32K
- */
-/*
- * Set timer for interrupts every MICROS_PER_TICK (50 us)
  */
 void timerConfigForReceive() {
     TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
@@ -1545,9 +1578,6 @@ void timerDisableReceiveInterrupt() {
     s50usTimer.detach();
 }
 
-/*
- * Set timer for interrupts every MICROS_PER_TICK (50 us)
- */
 void timerConfigForReceive() {
     s50usTimer.attach(IRTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
 }
@@ -1681,9 +1711,6 @@ void timerDisableReceiveInterrupt() {
 #define ISR(f) void IRTimerInterruptHandler(void)
 void IRTimerInterruptHandler();
 
-/*
- * Set timer for interrupts every MICROS_PER_TICK (50 us)
- */
 void timerConfigForReceive() {
     NRF_TIMER2->MODE = TIMER_MODE_MODE_Timer;              // Set the timer in Timer Mode
     NRF_TIMER2->TASKS_CLEAR = 1;              // clear the task first to be usable for later
@@ -1748,9 +1775,6 @@ void timerDisableReceiveInterrupt() {
 #define ISR() void IRTimerInterruptHandler(void)
 void IRTimerInterruptHandler();
 
-/*
- * Set timer for interrupts every MICROS_PER_TICK (50 us)
- */
 void timerConfigForReceive() {
     s50usTimer.setMode(TIMER_CH1, TIMER_OUTPUT_COMPARE);
     s50usTimer.setPrescaleFactor(1);
@@ -1795,9 +1819,6 @@ void timerDisableReceiveInterrupt() {
 #define ISR() void IRTimerInterruptHandler(void)
 void IRTimerInterruptHandler();
 
-/*
- * Set timer for interrupts every MICROS_PER_TICK (50 us)
- */
 void timerConfigForReceive() {
     s50usTimer.setOverflow(MICROS_PER_TICK, MICROSEC_FORMAT); // 50 uS
     s50usTimer.attachInterrupt(IRTimerInterruptHandler);
@@ -1881,8 +1902,6 @@ void timerDisableReceiveInterrupt() {};
 #undef ISR
 #  endif
 #define ISR() void notImplemented(void)
-
-
 
 void timerConfigForReceive() {
 }

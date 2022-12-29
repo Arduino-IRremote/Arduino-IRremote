@@ -287,8 +287,9 @@ bool IRrecv::decodeLG() {
  *********************************************************************************/
 
 /**
- * Here you can put your raw data, even one with "wrong" checksum
- * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent
+ * Here you can put your raw data, even one with "wrong" checksum.
+ * @param aRawData  The lowest 28 (LG_BITS) bit of this value are sent MSB first.
+ * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent.
  */
 void IRsend::sendLGRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
     sendPulseDistanceWidth(&LGProtocolConstants, aRawData, LG_BITS, aNumberOfRepeats);

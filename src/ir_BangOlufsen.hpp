@@ -49,7 +49,7 @@
 // 1. The carrier frequency is 455 kHz
 
 // You can build your own receiver as Bang & Olufsen did (check old schematics) or use a TSOP7000
-// Vishay stopped producing TSOP7000 since 2009 so you will likely only find counterfeits:
+// Vishay stopped producing TSOP7000 since 2009 so you will probably only find counterfeits:
 // https://www.vishay.com/files/whatsnew/doc/ff_FastFacts_CounterfeitTSOP7000_Dec72018.pdf
 // It is also likely that you will need an oscilloscope to debug a counterfeit TSOP7000
 // The specimen used to test this code was very noisy and had a very low output current

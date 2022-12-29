@@ -48,6 +48,36 @@
  * @{
  */
 
+const char string_Unknown[] PROGMEM = "UNKNOWN";
+const char string_PulseWidth[] PROGMEM = "PulseWidth";
+const char string_PulseDistance[] PROGMEM = "PulseDistance";
+const char string_Apple[] PROGMEM = "Apple";
+const char string_Denon[] PROGMEM = "Denon";
+const char string_JVC[] PROGMEM = "JVC";
+const char string_LG[] PROGMEM = "LG";
+const char string_LG2[] PROGMEM = "LG2";
+const char string_NEC[] PROGMEM = "NEC";
+const char string_NEC2[] PROGMEM = "NEC2";
+const char string_Onkyo[] PROGMEM = "Onkyo";
+const char string_Panasonic[] PROGMEM = "Panasonic";
+const char string_Kaseikyo[] PROGMEM = "Kaseikyo";
+const char string_Kaseikyo_Denon[] PROGMEM = "Kaseikyo_Denon";
+const char string_Kaseikyo_Sharp[] PROGMEM = "Kaseikyo_Sharp";
+const char string_Kaseikyo_JVC[] PROGMEM = "Kaseikyo_JVC";
+const char string_Kaseikyo_Mitsubishi[] PROGMEM = "Kaseikyo_Mitsubishi";
+const char string_RC5[] PROGMEM = "RC5";
+const char string_RC6[] PROGMEM = "RC6";
+const char string_Samsung[] PROGMEM = "Samsung";
+const char string_Samsung48[] PROGMEM = "Samsung48";
+const char string_SamsungLG[] PROGMEM = "SamsungLG";
+const char string_Sharp[] PROGMEM = "Sharp";
+const char string_Sony[] PROGMEM = "Sony";
+const char string_BangOlufsen[] PROGMEM = "Bang&Olufsen";
+const char string_BoseWave[] PROGMEM = "BoseWave";
+const char string_Lego[] PROGMEM = "Lego";
+const char string_MagiQuest[] PROGMEM = "MagiQuest";
+const char string_Whynter[] PROGMEM = "Whynter";
+
 /*
  * !!Must be the same order as in decode_type_t in IRProtocol.h!!!
  */
@@ -131,9 +161,6 @@ namespace PrintULL {
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  * @param aIRDataPtr        Pointer to the data to be printed.
  * @param aPrintRepeatGap   If true also print the gap before repeats.
- * @param aCheckForRecordGapsMicros   If true, call CheckForRecordGapsMicros() which may do a long printout,
- *                                    which in turn may block the proper detection of repeats.
- * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap <
  *
  */
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap) {
