@@ -299,7 +299,7 @@ public:
     void initDecodedIRData();
     uint_fast8_t compare(unsigned int oldval, unsigned int newval);
     bool checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants);
-    void checkForRepeatSpaceAndSetFlag(unsigned int aMediumRepeatSpaceMicros);
+    void checkForRepeatSpaceTicksAndSetFlag(unsigned int aMaximumRepeatSpaceTicks);
     bool checkForRecordGapsMicros(Print *aSerial);
 
     IRData decodedIRData;       // New: decoded IR data for the application

@@ -91,10 +91,10 @@ struct PulseDistanceWidthProtocolConstants {
  * Definitions for member IRData.flags
  */
 #define IRDATA_FLAGS_EMPTY              0x00
-#define IRDATA_FLAGS_IS_REPEAT          0x01
-#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02
-#define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
-#define IRDATA_FLAGS_TOGGLE_BIT         0x08 ///< is set if RC5 or RC6 toggle bit is set
+#define IRDATA_FLAGS_IS_REPEAT          0x01 ///< The gap between the preceding frame is as smaller than the maximum gap expected for a repeat. !!!We do not check for changed command or address!!!
+#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02 ///< The current repeat frame is a repeat, that is always sent after a regular frame and cannot be avoided. Only specified for protocols DENON, and LEGO.
+#define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< The current (autorepeat) frame violated parity check.
+#define IRDATA_FLAGS_TOGGLE_BIT         0x08 ///< Is set if RC5 or RC6 toggle bit is set
 #define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray)
 #define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag
 #define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Value is mainly determined by the (known) protocol

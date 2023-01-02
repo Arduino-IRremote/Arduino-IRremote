@@ -408,7 +408,7 @@ void IRrecv::initDecodedIRData() {
 
     } else {
         decodedIRData.flags = IRDATA_FLAGS_EMPTY;
-        // save last protocol, command and address for repeat handling (where the are copied back :-))
+        // save last protocol, command and address for repeat handling (where they are compared or copied back :-))
         lastDecodedProtocol = decodedIRData.protocol; // repeat patterns can be equal between protocols (e.g. NEC and LG), so we must keep the original one
         lastDecodedCommand = decodedIRData.command;
         lastDecodedAddress = decodedIRData.address;
@@ -959,9 +959,17 @@ bool IRrecv::checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants
     return true;
 }
 
-void IRrecv::checkForRepeatSpaceAndSetFlag(unsigned int aMediumRepeatSpaceMillis) {
-    if (decodedIRData.rawDataPtr->rawbuf[0]
-            < ((aMediumRepeatSpaceMillis + (aMediumRepeatSpaceMillis / 4)) * (1000 / MICROS_PER_TICK))) {
+/*
+ * Do not check for same address and command, because it is almost not possible to press 2 different buttons on the remote within around 100 ms.
+ * And if really required, it can be enabled here, or done manually in user program.
+ * And we have still no RC6 toggle bit check for detecting a second press on the same button.
+ */
+void IRrecv::checkForRepeatSpaceTicksAndSetFlag(unsigned int aMaximumRepeatSpaceTicks) {
+    if (decodedIRData.rawDataPtr->rawbuf[0] < aMaximumRepeatSpaceTicks
+#if defined(ENABLE_FULL_REPEAT_CHECK)
+            && decodedIRData.address == lastDecodedAddress && decodedIRData.command == lastDecodedCommand /* requires around 85 bytes program space */
+#endif
+            ) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
 }

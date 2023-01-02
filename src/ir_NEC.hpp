@@ -308,11 +308,10 @@ bool IRrecv::decodeNEC() {
     decodedIRData.numberOfBits = NEC_BITS;
 
     // check for NEC2 repeat, do not check for same content ;-)
-    if (decodedIRData.rawDataPtr->rawbuf[0] < (NEC_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK)) {
+    checkForRepeatSpaceTicksAndSetFlag(NEC_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
+    if (decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
         decodedIRData.protocol = NEC2;
-        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
     }
-
     return true;
 }
 

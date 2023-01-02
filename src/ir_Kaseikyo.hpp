@@ -103,6 +103,7 @@ Sum: 64300
 #define KASEIKYO_AVERAGE_DURATION   56000
 #define KASEIKYO_REPEAT_PERIOD      130000
 #define KASEIKYO_REPEAT_DISTANCE    (KASEIKYO_REPEAT_PERIOD - KASEIKYO_AVERAGE_DURATION) // 74 ms
+#define KASEIKYO_MAXIMUM_REPEAT_DISTANCE    (KASEIKYO_REPEAT_DISTANCE + (KASEIKYO_REPEAT_DISTANCE / 4)) // Just a guess
 
 #define PANASONIC_VENDOR_ID_CODE    0x2002
 #define DENON_VENDOR_ID_CODE        0x3254
@@ -296,7 +297,7 @@ bool IRrecv::decodeKaseikyo() {
     decodedIRData.protocol = tProtocol;
 
     // check for repeat
-    checkForRepeatSpaceAndSetFlag(KASEIKYO_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
+    checkForRepeatSpaceTicksAndSetFlag(KASEIKYO_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
 
     return true;
 }

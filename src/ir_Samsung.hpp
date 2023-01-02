@@ -94,6 +94,7 @@
 #define SAMSUNG_REPEAT_DURATION     (SAMSUNG_HEADER_MARK  + SAMSUNG_HEADER_SPACE + SAMSUNG_BIT_MARK + SAMSUNG_ZERO_SPACE + SAMSUNG_BIT_MARK)
 #define SAMSUNG_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define SAMSUNG_REPEAT_DISTANCE     (SAMSUNG_REPEAT_PERIOD - SAMSUNG_AVERAGE_DURATION)
+#define SAMSUNG_MAXIMUM_REPEAT_DISTANCE     (SAMSUNG_REPEAT_DISTANCE + (SAMSUNG_REPEAT_DISTANCE / 4)) // Just a guess
 
 struct PulseDistanceWidthProtocolConstants SamsungProtocolConstants = { SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
 SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
@@ -301,7 +302,7 @@ bool IRrecv::decodeSamsung() {
     }
 
     // check for repeat
-    checkForRepeatSpaceAndSetFlag(SAMSUNG_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
+    checkForRepeatSpaceTicksAndSetFlag(SAMSUNG_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
 
     return true;
 }

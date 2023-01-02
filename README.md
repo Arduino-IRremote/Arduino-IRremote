@@ -138,7 +138,7 @@ If IR_SEND_PIN is not defined you must use e.g. `IrSender.begin(3, ENABLE_LED_FE
 - Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
 - The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value` and `results.decode_type` (and similar) to
  `IrReceiver.decodedIRData.decodedRawData` and `IrReceiver.decodedIRData.protocol`.
-- Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L164-L187).
+- Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRProtocol.h#L90-L101).
 - Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
 
 - The 5 protocols **NEC, Panasonic, Sony, Samsung and JVC** have been converted to LSB first. Send functions for sending old MSB data for **NEC** and **JVC** were renamed to `sendNECMSB`, and `sendJVCMSB()`. The old  `sendSAMSUNG()` and `sendSony()` MSB functions are still available. The old MSB version of `sendPanasonic()` function was deleted, since it had bugs nobody recognized.<br/>

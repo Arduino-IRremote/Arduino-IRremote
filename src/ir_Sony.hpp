@@ -138,7 +138,7 @@ bool IRrecv::decodeSony() {
     decodedIRData.protocol = SONY;
 
     //Check for repeat
-    checkForRepeatSpaceAndSetFlag(SONY_MAXIMUM_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
+    checkForRepeatSpaceTicksAndSetFlag(SONY_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
 
     return true;
 }

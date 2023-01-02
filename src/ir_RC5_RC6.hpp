@@ -90,6 +90,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 #define RC5_DURATION        (15L * RC5_UNIT) // 13335
 #define RC5_REPEAT_PERIOD   (128L * RC5_UNIT) // 113792
 #define RC5_REPEAT_DISTANCE (RC5_REPEAT_PERIOD - RC5_DURATION) // 100 ms
+#define RC5_MAXIMUM_REPEAT_DISTANCE     (RC5_REPEAT_DISTANCE + (RC5_REPEAT_DISTANCE / 4)) // Just a guess
 
 /************************************
  * Start of send and decode functions
@@ -222,7 +223,7 @@ bool IRrecv::decodeRC5() {
     decodedIRData.protocol = RC5;
 
     // check for repeat
-    checkForRepeatSpaceAndSetFlag(RC5_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
+    checkForRepeatSpaceTicksAndSetFlag(RC5_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
 
     return true;
 }
@@ -275,6 +276,7 @@ bool IRrecv::decodeRC5() {
 #define MIN_RC6_MARKS       4 + ((RC6_ADDRESS_BITS + RC6_COMMAND_BITS) / 2) // 12, 4 are for preamble
 
 #define RC6_REPEAT_DISTANCE 107000 // just a guess but > 2.666ms
+#define RC6_MAXIMUM_REPEAT_DISTANCE     (RC6_REPEAT_DISTANCE + (RC6_REPEAT_DISTANCE / 4)) // Just a guess
 
 /**
  * Main RC6 send function
@@ -513,9 +515,7 @@ bool IRrecv::decodeRC6() {
     }
 
     // check for repeat, do not check toggle bit yet
-    if (decodedIRData.rawDataPtr->rawbuf[0] < ((RC6_REPEAT_DISTANCE + (RC6_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)) {
-        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
-    }
+    checkForRepeatSpaceTicksAndSetFlag(RC6_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
 
     decodedIRData.protocol = RC6;
     return true;
