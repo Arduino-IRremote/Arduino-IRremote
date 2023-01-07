@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2022 Darryl Smith, Armin Joachimsmeyer
+ * Copyright (c) 2017-2023 Darryl Smith, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -179,7 +179,7 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumb
  * Here we send Samsung48
  * We send 2 x (8 bit command and then ~command)
  */
-void IRsend::sendSamsung48(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
+void IRsend::sendSamsung48(uint16_t aAddress, uint32_t aCommand, int_fast8_t aNumberOfRepeats) {
 
     // send 16 bit address and 2 x ( 8 command bits and then 8 inverted command bits) LSB first
 #if __INT_WIDTH__ < 32
