@@ -146,7 +146,7 @@ void disableSendPWMByTimer() {
  ***************************************/
 // Arduino Duemilanove, Diecimila, LilyPad, Mini, Fio, Nano, etc
 #if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega168__) \
-    || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega88PB__) || defined(__AVR_ATmega8__)
+    || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega88PB__)
 #  if !defined(IR_USE_AVR_TIMER1) && !defined(IR_USE_AVR_TIMER2)
 //#define IR_USE_AVR_TIMER1   // send pin = pin 9
 #define IR_USE_AVR_TIMER2     // send pin = pin 3
@@ -184,7 +184,7 @@ void disableSendPWMByTimer() {
 #  endif
 
 // ATmega8u2, ATmega16U2, ATmega32U2
-#elif defined(__AVR_ATmega8U2__) || defined(__AVR_ATmega16U2__)  || defined(__AVR_ATmega32U2__)
+#elif defined(__AVR_ATmega8U2__) || defined(__AVR_ATmega16U2__)  || defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega8__)
 #  if !defined(IR_USE_AVR_TIMER1)
 #define IR_USE_AVR_TIMER1     // send pin = pin C6
 #  endif
@@ -303,20 +303,15 @@ void disableSendPWMByTimer() {
 #if defined(IR_USE_AVR_TIMER1)
 
 #  if defined(TIMSK1)
-void timerEnableReceiveInterrupt() {
-    TIMSK1 = _BV(OCIE1A);          // Timer/Counter1, Output Compare A Match Interrupt Enable
-}
-void timerDisableReceiveInterrupt() {
-    TIMSK1 &= ~_BV(OCIE1A);
-}
-#  else
+#define TIMSK   TIMSK1 // use the value of TIMSK1 for the statements below
+#  endif
+
 void timerEnableReceiveInterrupt() {
     TIMSK |= _BV(OCIE1A);
 }
 void timerDisableReceiveInterrupt() {
     TIMSK &= ~_BV(OCIE1A);
 }
-#  endif
 
 #  if defined(USE_TIMER_CHANNEL_B)
 #    if defined(TIMER1_COMPB_vect)
