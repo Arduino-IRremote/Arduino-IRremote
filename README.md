@@ -145,7 +145,7 @@ If IR_SEND_PIN is not defined you must use e.g. `IrSender.begin(3, ENABLE_LED_FE
 For converting MSB codes to LSB see [below](https://github.com/Arduino-IRremote/Arduino-IRremote#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes).
 
 ### Example
-#### 2.x program:
+#### Old 2.x program:
 
 ```c++
 #include <IRremote.h>
@@ -169,7 +169,7 @@ void loop() {
 }
 ```
 
-#### 3.x program:
+#### New 3.x or 4.x program:
 
 ```c++
 #include <IRremote.hpp>
@@ -182,8 +182,10 @@ void setup()
 
 void loop() {
   if (IrReceiver.decode()) {
-      Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
-      IrReceiver.printIRResultShort(&Serial); // optional use new print version
+      Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX); // Print "old" raw data
+      /* USE NEW 3.x FUNCTIONS */
+      IrReceiver.printIRResultShort(&Serial); // Print complete received data in one line
+      IrReceiver.printIRSendUsage(&Serial);   // Print the statement required to send this data
       ...
       IrReceiver.resume(); // Enable receiving of the next value
   }

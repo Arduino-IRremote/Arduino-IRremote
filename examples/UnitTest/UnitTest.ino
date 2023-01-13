@@ -223,6 +223,7 @@ void checkReceivedRawData(IRRawDataType aRawData) {
     Serial.println();
 }
 
+#if defined(DECODE_DISTANCE_WIDTH)
 void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
     // wait until signal has received
     while (!sDataJustReceived) {
@@ -243,15 +244,16 @@ void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
             IrReceiver.printIRResultRawFormatted(&Serial, true);
         }
 #endif
+
         if (IrReceiver.decodedIRData.protocol == PULSE_DISTANCE || IrReceiver.decodedIRData.protocol == PULSE_WIDTH) {
             for (uint_fast8_t i = 0; i < aArraySize; ++i) {
                 if (IrReceiver.decodedIRData.decodedRawDataArray[i] != *aRawDataArrayPointer) {
                     Serial.print(F("ERROR: Received data=0x"));
-#if (__INT_WIDTH__ < 32)
+#  if (__INT_WIDTH__ < 32)
                     Serial.print(IrReceiver.decodedIRData.decodedRawDataArray[i], HEX);
-#else
+#  else
                     PrintULL::print(&Serial, IrReceiver.decodedIRData.decodedRawDataArray[i], HEX);
-#endif
+#  endif
                     Serial.print(F(" != sent data=0x"));
                     Serial.println(*aRawDataArrayPointer, HEX);
                 }
@@ -264,6 +266,7 @@ void checkReceivedArray(uint32_t *aRawDataArrayPointer, uint8_t aArraySize) {
     }
     Serial.println();
 }
+#endif
 
 /*
  * Test callback function
@@ -466,65 +469,67 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 #  endif
 
-#  if defined(DISTANCE_DO_MSB_DECODING)
+#  if defined(DECODE_DISTANCE_WIDTH)
+#    if defined(DISTANCE_DO_MSB_DECODING)
         Serial.println(F("Send generic 52 bit PulseDistance 0x43D8613C and 0x3BC3B MSB first"));
         Serial.flush();
-#    if __INT_WIDTH__ < 32
+#      if __INT_WIDTH__ < 32
         tRawData[0] = 0x43D8613C;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x3BC3B;
         IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 52, PROTOCOL_IS_MSB_FIRST,
                 SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceivedArray(tRawData, 2);
-#    else
+#      else
         IrSender.sendPulseDistanceWidth(38, 8900, 4450, 550, 1700, 550, 600, 0x43D8613CBC3B, 52, PROTOCOL_IS_MSB_FIRST,
                 SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceivedRawData(0x43D8613CBC3B);
-#    endif
+#      endif
         delay(DELAY_AFTER_SEND);
 
         Serial.println(F("Send generic 52 bit PulseDistanceWidth 0x43D8613C and 0x3BC3B MSB first"));
         Serial.flush();
         // Real PulseDistanceWidth (constant bit length) does not require a stop bit
-#    if __INT_WIDTH__ < 32
+#      if __INT_WIDTH__ < 32
         IrSender.sendPulseDistanceWidthFromArray(38, 300, 600, 600, 300, 300, 600, &tRawData[0], 52, PROTOCOL_IS_MSB_FIRST,
                 SEND_NO_STOP_BIT, 0, 0);
         checkReceivedArray(tRawData, 2);
-#    else
+#      else
         IrSender.sendPulseDistanceWidth(38, 300, 600, 600, 300, 300, 600, 0x123456789ABC, 52, PROTOCOL_IS_MSB_FIRST,
                 SEND_NO_STOP_BIT, 0, 0);
         checkReceivedRawData(0x123456789ABC);
-#    endif
+#      endif
         delay(DELAY_AFTER_SEND);
-#  else
+#    else // defined(DISTANCE_DO_MSB_DECODING)
         Serial.println(F("Send generic 52 bit PulseDistance 0xDCBA9 87654321 LSB first"));
         Serial.flush();
-#    if __INT_WIDTH__ < 32
+#      if __INT_WIDTH__ < 32
         tRawData[0] = 0x87654321;  // LSB of tRawData[0] is sent first
         tRawData[1] = 0xDCBA9;
         IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 52, PROTOCOL_IS_LSB_FIRST,
         SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceivedArray(tRawData, 2);
-#    else
+#      else
         IrSender.sendPulseDistanceWidth(38, 8900, 4450, 550, 1700, 550, 600, 0xDCBA987654321, 52, PROTOCOL_IS_LSB_FIRST,
         SEND_STOP_BIT, 0, NO_REPEATS);
         checkReceivedRawData(0xDCBA987654321);
-#    endif
+#      endif
         delay(DELAY_AFTER_SEND);
 
         Serial.println(F("Send generic 52 bit PulseDistanceWidth 0xDCBA9 87654321 LSB first"));
         Serial.flush();
         // Real PulseDistanceWidth (constant bit length) does not require a stop bit
-#    if __INT_WIDTH__ < 32
+#      if __INT_WIDTH__ < 32
         IrSender.sendPulseDistanceWidthFromArray(38, 300, 600, 600, 300, 300, 600, &tRawData[0], 52, PROTOCOL_IS_LSB_FIRST,
         SEND_NO_STOP_BIT, 0, 0);
         checkReceivedArray(tRawData, 2);
-#    else
+#      else
         IrSender.sendPulseDistanceWidth(38, 300, 600, 600, 300, 300, 600, 0xDCBA987654321, 52, PROTOCOL_IS_LSB_FIRST,
         SEND_NO_STOP_BIT, 0, 0);
         checkReceivedRawData(0xDCBA987654321);
-#    endif
+#      endif
         delay(DELAY_AFTER_SEND);
-#  endif
+#    endif // defined(DISTANCE_DO_MSB_DECODING)
+#  endif // defined(DECODE_DISTANCE_WIDTH)
 
 #  if defined(DECODE_MAGIQUEST)
         Serial.println(F("Send MagiQuest 0x6BCDFF00, 0x176 as generic 55 bit PulseDistanceWidth MSB first"));
