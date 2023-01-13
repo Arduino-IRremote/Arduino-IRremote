@@ -285,7 +285,7 @@
 #define __digitalPinToDDRReg(P)  (((P) <= 4) ? &DDRB : &DDRA)
 #define __digitalPinToPINReg(P)  (((P) <= 4) ? &PINB : &PINA)
 #define __digitalPinToBit(P)     (((P) <= 2) ? (P) : (((P) == 3) ? 6 : (((P) == 4) ? 3 : (((P) == 5) ? 7 : (P) - 6 ))))
-#else
+# else
 // ATtinyX4: PORTA for 0 to 7, PORTB for 8 to 11
 // ATtinyX7: PORTA for 0 to 7, PORTB for 8 to 15
 #define __digitalPinToPortReg(P) (((P) <= 7) ? &PORTA : &PORTB)
