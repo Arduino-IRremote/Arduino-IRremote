@@ -285,13 +285,18 @@
 #define __digitalPinToDDRReg(P)  (((P) <= 4) ? &DDRB : &DDRA)
 #define __digitalPinToPINReg(P)  (((P) <= 4) ? &PINB : &PINA)
 #define __digitalPinToBit(P)     (((P) <= 2) ? (P) : (((P) == 3) ? 6 : (((P) == 4) ? 3 : (((P) == 5) ? 7 : (P) - 6 ))))
-# else
+#else
 // ATtinyX4: PORTA for 0 to 7, PORTB for 8 to 11
 // ATtinyX7: PORTA for 0 to 7, PORTB for 8 to 15
 #define __digitalPinToPortReg(P) (((P) <= 7) ? &PORTA : &PORTB)
 #define __digitalPinToDDRReg(P)  (((P) <= 7) ? &DDRA : &DDRB)
 #define __digitalPinToPINReg(P)  (((P) <= 7) ? &PINA : &PINB)
+#  if PIN_PB2 == 8
+// ATtinyX4: PORTA for 0 to 7, PORTB for 11 downwards to 8, i.e. ATTinyCore
+#define __digitalPinToBit(P)     (((P) <= 7) ? (P) : 10 -(P) )
+#  else
 #define __digitalPinToBit(P)     (((P) <= 7) ? (P) : (P) - 8 )
+#  endif
 # endif
 
 #endif
