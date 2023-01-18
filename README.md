@@ -103,7 +103,7 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - Callback after receiving a command - call your own code if a message was received.
 
 # Converting your 3.x program to the 4.x version
-- You must replace `#define DECODE_DISTANCE_WIDTH` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).
+- You must replace `#define DECODE_DISTANCE` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).
 
 ## New features with version 3.x
 - **Any pin** can be used for sending -if `SEND_PWM_BY_TIMER` is not defined- and receiving.
