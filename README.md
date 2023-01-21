@@ -521,7 +521,8 @@ Click on the receiver while simulation is running to specify individual NEC IR c
 ReceiveDemo + SendDemo in one program. Demonstrates **receiving while sending**.
 
 # WOKWI online examples
-- [Simple receiver](https://wokwi.com/projects/338611596994544210).
+- [Simple receiver](https://wokwi.com/projects/338611596994544210)
+- [Simple toggle by IR key 5](https://wokwi.com/projects/338611596994544210)
 - [TinyReceiver](https://wokwi.com/arduino/projects/339264565653013075)
 - [ReceiverTimingAnalysis](https://wokwi.com/projects/299033930562011656)
 - [Receiver with LCD output and switch statement](https://wokwi.com/projects/298934082074575369)

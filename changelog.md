@@ -3,6 +3,10 @@ The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
 ## 4.0.0
+- Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.
+- Removed static function printIRSendUsage(), but kept class function printIRSendUsage().
+- Changed type of decodedRawData and decodedRawDataArray which is now 64 bit for 32 bit platforms.
+- Added receiver callback functionality and registerReceiveCompleteCallback() function.
 - Introduced common structure PulseDistanceWidthProtocolConstants.
 - Where possible, changed all send and decode functions to use PulseDistanceWidthProtocolConstants.
 - Improved MSB/LSB handling
@@ -13,19 +17,15 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added Bang&Olufsen protocol. #1030.
 - 3. parameter of function "void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)" is not optional anymore
      and this function is now only available if IR_SEND_PIN is not defined. #1033.
-- Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.
 - Fixed bug in sendSony() for command parameter > 0x7F;
 - Fixed bug with swapped LG2 header mark and space.
 - Disabled strict checks while decoding. They can be enabled by defining DECODE_STRICT_CHECKS.
 - Merged the 2 decode pulse width and distance functions.
-- Added receiver callback functionality and registerReceiveCompleteCallback() function.
 - Changed macro names _REPEAT_SPACE to _REPEAT_DISTANCE.
 - Improved TinyIRReceiver,added FAST protocol for it and added TinyIRSender.hpp and TinySender example, renamed TinyReceiver.h to TinyIR.h.
-- Removed static function printIRSendUsage(), but kept class function printIRSendUsage().
 - Added DISABLE_CODE_FOR_RECEIVER to save program memory and RAM if receiving functionality is not required.
 - Extracted protocol functions used by receive and send to IRProtocol.hpp.
 - Analyzed Denon code table and therefore changed Denon from MSB to LSB first.
-- Changed type of decodedRawData and decodedRawDataArray which is now 64 bit for 32 bit platforms.
 - Renamed sendRC6(aRawData...) to sendRC6Raw( aRawData...).
 - Support for seeduino which lacks the print(unsigned long long...) method. Thanks to sklott https://stackoverflow.com/users/11680056/sklott
 - Added support for attiny1614 by Joe Ostrander.
