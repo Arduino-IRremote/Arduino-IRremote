@@ -177,17 +177,23 @@ ISR()
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing mark
-        if (tIRInputLevel != INPUT_MARK) {   // Mark ended; Record time
+        if (tIRInputLevel != INPUT_MARK) {
+            /*
+             * Mark ended here. Record mark time in rawbuf array
+             */
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //            digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-            irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
+            irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR; // record mark
             irparams.StateForISR = IR_REC_STATE_SPACE;
             irparams.TickCounterForISR = 0; // This resets the tick counter also at end of frame :-)
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing space
-        if (tIRInputLevel == INPUT_MARK) {  // Space just ended; Record time
+        if (tIRInputLevel == INPUT_MARK) {
+            /*
+             * Space ended here. Check for overflow and record space time in rawbuf array
+             */
             if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
                 // Flag up a read OverflowFlag; Stop the state machine
                 irparams.OverflowFlag = true;
@@ -204,13 +210,14 @@ ISR()
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-                irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR;
+                irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR; // record space
                 irparams.StateForISR = IR_REC_STATE_MARK;
             }
             irparams.TickCounterForISR = 0;
 
         } else if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
             /*
+             * Maximum space duration reached here.
              * Current code is ready for processing!
              * We received a long space, which indicates gap between codes.
              * Switch to IR_REC_STATE_STOP
@@ -1503,7 +1510,10 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
             aSerial->print(tDuration);
         } else {
             unsigned int tTicks = (tDuration + (MICROS_PER_TICK / 2)) / MICROS_PER_TICK;
-            tTicks = (tTicks > UINT8_MAX) ? UINT8_MAX : tTicks; // uint8_t rawTicks above are 8 bit
+            /*
+             * Clip to 8 bit value
+             */
+            tTicks = (tTicks > UINT8_MAX) ? UINT8_MAX : tTicks;
             aSerial->print(tTicks);
         }
         if (i + 1 < decodedIRData.rawDataPtr->rawlen)
