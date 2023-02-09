@@ -61,6 +61,13 @@
  + 600,-1650 + 600,-1650 + 600,-1650 + 600,-1600
  + 650
  Sum: 68000
+
+Protocol=NEC Address=0x8 Command=0x7 Repeat gap=40900us
+rawData[4]:
+ -40900
+ +10450,-2250
+ + 700
+Sum: 13400
  */
 // http://www.hifi-remote.com/wiki/index.php/NEC
 // https://www.sbprojects.net/knowledge/ir/nec.php

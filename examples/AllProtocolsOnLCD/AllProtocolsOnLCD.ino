@@ -59,7 +59,7 @@
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 142.
 #define MARK_EXCESS_MICROS    20    // Adapt it to your IR receiver module. 20 is recommended for the cheap VS1838 modules.
 
-//#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
+//#define RECORD_GAP_MICROS 12000 // Default is 5000. Activate it for some LG air conditioner protocols.
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 //#define DECODE_NEC          // Includes Apple and Onkyo
@@ -135,6 +135,10 @@ void setup() {
 // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
+    tone(TONE_PIN, 2200);
+    delay(200);
+    noTone(TONE_PIN);
+
 // In case the interrupt driver crashes on setup, give a clue
 // to the user what's going on.
     Serial.println(F("Enabling IRin..."));
@@ -143,7 +147,7 @@ void setup() {
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
-    printActiveIRProtocols(&Serial);
+    printActiveIRProtocols (&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
 
 #if defined(USE_SERIAL_LCD)
@@ -153,8 +157,13 @@ void setup() {
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     Serial.println();
-    Serial.print(F("Debug button pin is "));
-    Serial.println(DEBUG_BUTTON_PIN);
+    Serial.print(F("If you connect debug pin "));
+#  if defined(APPLICATION_PIN_STRING)
+    Serial.print(APPLICATION_PIN_STRING);
+#  else
+    Serial.print(DEBUG_BUTTON_PIN);
+#  endif
+    Serial.println(F(" to ground, raw data is always printed"));
 
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);

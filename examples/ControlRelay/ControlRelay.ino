@@ -91,6 +91,7 @@ void loop() {
             Serial.println();
             if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                 // We have an unknown protocol, print more info
+                Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
                 IrReceiver.printIRResultRawFormatted(&Serial, true);
             }
 #else

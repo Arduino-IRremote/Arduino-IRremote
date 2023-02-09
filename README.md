@@ -478,7 +478,7 @@ By connecting pin debug pin to ground, you can see the raw values for each packe
 This example also serves as an **example how to use IRremote and tone() together**.
 
 #### ReceiveDump
-Receives all protocols and dumps the received signal in different flavors. Since the printing takes so much time, repeat signals may be skipped or interpreted as UNKNOWN.
+Receives all protocols and dumps the received signal in different flavors including Pronto format. Since the printing takes so much time, repeat signals may be skipped or interpreted as UNKNOWN.
 
 #### SendDemo
 Sends all available protocols at least once.

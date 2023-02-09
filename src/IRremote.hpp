@@ -255,7 +255,7 @@
  * microseconds per clock interrupt tick
  */
 #if ! defined(MICROS_PER_TICK)
-#define MICROS_PER_TICK    50
+#define MICROS_PER_TICK    50L // must be with L to get 32 bit results if multiplied with rawbuf[] content.
 #endif
 
 #define MILLIS_IN_ONE_SECOND 1000L

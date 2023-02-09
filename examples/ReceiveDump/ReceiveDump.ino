@@ -2,7 +2,8 @@
  * ReceiveDump.cpp
  *
  * Dumps the received signal in different flavors.
- * Since the printing takes so much time, repeat signals may be skipped or interpreted as UNKNOWN.
+ * Since the printing takes so much time (200 ms @115200 for NEC protocol, 70ms for NEC repeat),
+ * repeat signals may be skipped or interpreted as UNKNOWN.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -55,7 +56,7 @@
  */
 #define MARK_EXCESS_MICROS    20    // Adapt it to your IR receiver module. 20 is recommended for the cheap VS1838 modules.
 
-//#define RECORD_GAP_MICROS 12000 // Activate it for some LG air conditioner protocols
+#define RECORD_GAP_MICROS 120000 // Default is 5000. Activate it for some LG air conditioner protocols
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
 #include <IRremote.hpp>
@@ -85,7 +86,7 @@ void setup() {
     Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println();
-    Serial.println(F("Because of the verbose output, repeats are probably not dumped correctly!"));
+    Serial.println(F("Because of the verbose output (>200 ms at 115200), repeats are probably not dumped correctly!"));
     Serial.println();
 }
 
@@ -94,15 +95,19 @@ void setup() {
 //
 void loop() {
     if (IrReceiver.decode()) {  // Grab an IR code
+        // At 115200 baud, printing takes 200 ms for NEC protocol and 70 ms for NEC repeat
+        Serial.println(); // blank line between entries
         // Check if the buffer overflowed
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
             Serial.println(F("Overflow detected"));
             Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in " __FILE__));
             // see also https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library
         } else {
-            Serial.println();                               // 2 blank lines between entries
-            Serial.println();
+            Serial.println(); // 2 blank lines between entries
             IrReceiver.printIRResultShort(&Serial);
+            if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
+                Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
+            }
             Serial.println();
             IrReceiver.printIRSendUsage(&Serial);
             Serial.println();
@@ -111,7 +116,7 @@ void loop() {
             Serial.println(F("Raw result in microseconds - with leading gap"));
             IrReceiver.printIRResultRawFormatted(&Serial, true);  // Output the results in RAW format
             Serial.println();                               // blank line between entries
-            Serial.print(F("Result as internal ticks (50 us) array - compensated with MARK_EXCESS_MICROS="));
+            Serial.print(F("Result as internal 8bit ticks (50 us) array - compensated with MARK_EXCESS_MICROS="));
             Serial.println(MARK_EXCESS_MICROS);
             IrReceiver.compensateAndPrintIRResultAsCArray(&Serial, false); // Output the results as uint8_t source code array of ticks
             Serial.print(F("Result as microseconds array - compensated with MARK_EXCESS_MICROS="));

@@ -15,8 +15,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Fix for #1028 - Prevent long delay caused by overflow when frame duration < repeat period - Thanks to Stephen Humphries!
 - Support for ATtiny816 - Thanks to elockman.
 - Added Bang&Olufsen protocol. #1030.
-- 3. parameter of function "void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)" is not optional anymore
-     and this function is now only available if IR_SEND_PIN is not defined. #1033.
+- Third parameter of function "void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)" is not optional anymore and this function is now only available if IR_SEND_PIN is not defined. #1033.
 - Fixed bug in sendSony() for command parameter > 0x7F;
 - Fixed bug with swapped LG2 header mark and space.
 - Disabled strict checks while decoding. They can be enabled by defining DECODE_STRICT_CHECKS.
@@ -33,6 +32,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Improved SHARP repeat decoding.
 - Replaced macros TIMER_EN/DISABLE_RECEIVE_INTR and EN/DISABLE_SEND_PWM_BY_TIMER by functions.
 - Added SAMSUNG48 protocol and sendSamsung48() function.
+- Fixed bug in printing durations > 64535 in printIRResultRawFormatted().
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

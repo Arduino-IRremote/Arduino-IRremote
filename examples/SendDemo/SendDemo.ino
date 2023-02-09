@@ -70,9 +70,9 @@ void setup() {
 
 #if !defined(SEND_PWM_BY_TIMER)
     /*
-     * Print internal signal generation info
+     * Print internal software PWM signal generation info
      */
-    IrSender.enableIROut(38); // Call it with 38 kHz to initialize the values printed below
+    IrSender.enableIROut(38); // Call it with 38 kHz just to initialize the values printed below
     Serial.print(F("Send signal mark duration is "));
     Serial.print(IrSender.periodOnTimeMicros);
     Serial.print(F(" us, pulse narrowing correction is "));

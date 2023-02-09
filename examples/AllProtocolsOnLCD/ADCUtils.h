@@ -13,8 +13,8 @@
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
@@ -24,9 +24,10 @@
 #ifndef _ADC_UTILS_H
 #define _ADC_UTILS_H
 
+#include <Arduino.h>
+
 #if defined(__AVR__) && defined(ADCSRA) && defined(ADATE) && (!defined(__AVR_ATmega4809__))
 #define ADC_UTILS_ARE_AVAILABLE
-#include <Arduino.h>
 
 // PRESCALE4 => 13 * 4 = 52 microseconds per ADC conversion at 1 MHz Clock => 19,2 kHz
 #define ADC_PRESCALE2    1 // 26 microseconds per ADC conversion at 1 MHz
@@ -136,23 +137,23 @@ uint8_t checkAndWaitForReferenceAndChannelToSwitch(uint8_t aChannelNumber, uint8
 /*
  * readVCC*() functions store the result in sVCCVoltageMillivolt or sVCCVoltage
  */
-float getVCCVoltageSimple(void);
-void readVCCVoltageSimple(void);
-uint16_t getVCCVoltageMillivoltSimple(void);
-void readVCCVoltageMillivoltSimple(void);
-float getVCCVoltage(void);
-void readVCCVoltage(void);
-uint16_t getVCCVoltageMillivolt(void);
-void readVCCVoltageMillivolt(void);
-uint16_t getVCCVoltageReadingFor1_1VoltReference(void);
+float getVCCVoltageSimple();
+void readVCCVoltageSimple();
+uint16_t getVCCVoltageMillivoltSimple();
+void readVCCVoltageMillivoltSimple();
+float getVCCVoltage();
+void readVCCVoltage();
+uint16_t getVCCVoltageMillivolt();
+void readVCCVoltageMillivolt();
+uint16_t getVCCVoltageReadingFor1_1VoltReference();
 uint16_t printVCCVoltageMillivolt(Print *aSerial);
 void readAndPrintVCCVoltageMillivolt(Print *aSerial);
 
 uint16_t getVoltageMillivolt(uint16_t aVCCVoltageMillivolt, uint8_t aADCChannelForVoltageMeasurement);
 uint16_t getVoltageMillivolt(uint8_t aADCChannelForVoltageMeasurement);
 uint16_t getVoltageMillivoltWith_1_1VoltReference(uint8_t aADCChannelForVoltageMeasurement);
-float getTemperatureSimple(void);
-float getTemperature(void);
+float getTemperatureSimple();
+float getTemperature();
 
 bool isVCCTooLowMultipleTimes();
 void resetVCCTooLowMultipleTimes();

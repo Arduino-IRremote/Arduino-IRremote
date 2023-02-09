@@ -147,12 +147,13 @@ void setup() {
 #endif
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
-    Serial.print(F("Debug button pin is "));
-#if defined(APPLICATION_PIN_STRING)
-    Serial.println(APPLICATION_PIN_STRING);
-#else
-    Serial.println(DEBUG_BUTTON_PIN);
-#endif
+    Serial.print(F("If you connect debug pin "));
+#  if defined(APPLICATION_PIN_STRING)
+    Serial.print(APPLICATION_PIN_STRING);
+#  else
+    Serial.print(DEBUG_BUTTON_PIN);
+#  endif
+    Serial.println(F(" to ground, raw data is always printed"));
 
     // For esp32 we use PWM generation by ledcWrite() for each pin.
 #  if !defined(SEND_PWM_BY_TIMER)

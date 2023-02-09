@@ -15,8 +15,8 @@
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
@@ -362,7 +362,7 @@ uint16_t readUntil4ConsecutiveValuesAreEqual(uint8_t aChannelNumber, uint8_t aDe
  * Use it ONLY if you only call getVCCVoltageSimple() or getVCCVoltageMillivoltSimple() in your program.
  * !!! Resolution is only 20 millivolt !!!
  */
-float getVCCVoltageSimple(void) {
+float getVCCVoltageSimple() {
     // use AVCC with (optional) external capacitor at AREF pin as reference
     float tVCC = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
     return ((1023 * 1.1 * 4) / tVCC);
@@ -373,7 +373,7 @@ float getVCCVoltageSimple(void) {
  * Use it ONLY if you only call getVCCVoltageSimple() or getVCCVoltageMillivoltSimple() in your program.
  * !!! Resolution is only 20 millivolt !!!
  */
-uint16_t getVCCVoltageMillivoltSimple(void) {
+uint16_t getVCCVoltageMillivoltSimple() {
     // use AVCC with external capacitor at AREF pin as reference
     uint16_t tVCC = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
     return ((1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCC);
@@ -383,7 +383,7 @@ uint16_t getVCCVoltageMillivoltSimple(void) {
  * Gets the hypothetical 14 bit reading of VCC using 1.1 volt reference
  * Similar to getVCCVoltageMillivolt() * 1023 / 1100
  */
-uint16_t getVCCVoltageReadingFor1_1VoltReference(void) {
+uint16_t getVCCVoltageReadingFor1_1VoltReference() {
     uint16_t tVCC = waitAndReadADCChannelWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT); // 225 for 1.1 V at 5 V VCC
     /*
      * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
@@ -394,7 +394,7 @@ uint16_t getVCCVoltageReadingFor1_1VoltReference(void) {
 /*
  * !!! Resolution is only 20 millivolt !!!
  */
-float getVCCVoltage(void) {
+float getVCCVoltage() {
     return (getVCCVoltageMillivolt() / 1000.0);
 }
 
@@ -403,7 +403,7 @@ float getVCCVoltage(void) {
  * Handles reference and channel switching by introducing the appropriate delays.
  * !!! Resolution is only 20 millivolt !!!
  */
-uint16_t getVCCVoltageMillivolt(void) {
+uint16_t getVCCVoltageMillivolt() {
     uint16_t tVCC = waitAndReadADCChannelWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT);
     /*
      * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
@@ -430,7 +430,7 @@ void readAndPrintVCCVoltageMillivolt(Print *aSerial) {
  * Use it ONLY if you only call getVCCVoltageSimple() or getVCCVoltageMillivoltSimple() in your program.
  * !!! Resolution is only 20 millivolt !!!
  */
-void readVCCVoltageSimple(void) {
+void readVCCVoltageSimple() {
     // use AVCC with (optional) external capacitor at AREF pin as reference
     float tVCC = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
     sVCCVoltage = (1023 * 1.1 * 4) / tVCC;
@@ -441,7 +441,7 @@ void readVCCVoltageSimple(void) {
  * Use it ONLY if you only call getVCCVoltageSimple() or getVCCVoltageMillivoltSimple() in your program.
  * !!! Resolution is only 20 millivolt !!!
  */
-void readVCCVoltageMillivoltSimple(void) {
+void readVCCVoltageMillivoltSimple() {
     // use AVCC with external capacitor at AREF pin as reference
     uint16_t tVCCVoltageMillivoltRaw = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
     sVCCVoltageMillivolt = (1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCCVoltageMillivoltRaw;
@@ -450,7 +450,7 @@ void readVCCVoltageMillivoltSimple(void) {
 /*
  * !!! Resolution is only 20 millivolt !!!
  */
-void readVCCVoltage(void) {
+void readVCCVoltage() {
     sVCCVoltage = getVCCVoltageMillivolt() / 1000.0;
 }
 
@@ -460,7 +460,7 @@ void readVCCVoltage(void) {
  * !!! Resolution is only 20 millivolt !!!
  * Sets also the sVCCVoltageMillivolt variable.
  */
-void readVCCVoltageMillivolt(void) {
+void readVCCVoltageMillivolt() {
     uint16_t tVCCVoltageMillivoltRaw = waitAndReadADCChannelWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT);
     /*
      * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
@@ -574,7 +574,7 @@ bool isVoltageTooLow(){
  * !!! Function without handling of switched reference and channel.!!!
  * Use it ONLY if you only use INTERNAL reference (call getTemperatureSimple()) in your program.
  */
-float getTemperatureSimple(void) {
+float getTemperatureSimple() {
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
     return 0.0;
 #else
@@ -587,7 +587,7 @@ float getTemperatureSimple(void) {
 /*
  * Handles reference and channel switching by introducing the appropriate delays.
  */
-float getTemperature(void) {
+float getTemperature() {
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
     return 0.0;
 #else
