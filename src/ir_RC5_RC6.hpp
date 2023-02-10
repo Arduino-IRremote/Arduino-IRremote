@@ -1,7 +1,7 @@
 /*
  * ir_RC5_RC6.hpp
  *
- *  Contains functions for receiving and sending RC5, RC5X Protocols
+ *  Contains functions for receiving and sending RC5, RC5X, RC6 protocols
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -74,7 +74,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 // MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit
 // Field bit is 1 for RC5 and inverted 7. command bit for RC5X. That way the first 64 commands of RC5X remain compatible with the original RC5.
 // SF TAAA  AACC CCCC
-// duty factor is 25%,
+// IR duty factor is 25%,
 //
 #define RC5_ADDRESS_BITS        5
 #define RC5_COMMAND_BITS        6
@@ -85,7 +85,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 
 #define RC5_UNIT            889 // 32 periods of 36 kHz (888.8888)
 
-#define MIN_RC5_MARKS       ((RC5_BITS + 1) / 2) // 7
+#define MIN_RC5_MARKS       ((RC5_BITS + 1) / 2) // 7. Divided by 2 to handle the bit sequence of 01010101 which gives one mark and space for each 2 bits
 
 #define RC5_DURATION        (15L * RC5_UNIT) // 13335
 #define RC5_REPEAT_PERIOD   (128L * RC5_UNIT) // 113792
@@ -163,12 +163,12 @@ bool IRrecv::decodeRC5() {
     initBiphaselevel(1, RC5_UNIT); // Skip gap space
 
     // Check we have the right amount of data (11 to 26). The +2 is for initial gap and start bit mark.
-    if (decodedIRData.rawDataPtr->rawlen < MIN_RC5_MARKS + 2 && decodedIRData.rawDataPtr->rawlen > ((2 * RC5_BITS) + 2)) {
+    if (decodedIRData.rawDataPtr->rawlen < ((RC5_BITS + 1) / 2) + 2 && (RC5_BITS + 2) < decodedIRData.rawDataPtr->rawlen) {
         // no debug output, since this check is mainly to determine the received protocol
         IR_DEBUG_PRINT(F("RC5: "));
         IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(F(" is not between 11 and 26"));
+        IR_DEBUG_PRINTLN(F(" is not between 9 and 15"));
         return false;
     }
 
@@ -265,7 +265,7 @@ bool IRrecv::decodeRC5() {
 #define RC6_ADDRESS_BITS        8
 #define RC6_COMMAND_BITS        8
 
-#define RC6_BITS            (RC6_LEADING_BIT + RC6_MODE_BITS + RC6_TOGGLE_BIT + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // 13
+#define RC6_BITS            (RC6_LEADING_BIT + RC6_MODE_BITS + RC6_TOGGLE_BIT + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // 21
 
 #define RC6_UNIT            444 // 16 periods of 36 kHz (444.4444)
 
@@ -405,11 +405,11 @@ bool IRrecv::decodeRC6() {
     uint32_t tDecodedRawData = 0;
 
     // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space
-    if (decodedIRData.rawDataPtr->rawlen < MIN_RC6_MARKS + 3 && decodedIRData.rawDataPtr->rawlen > ((2 * RC6_BITS) + 3)) {
+    if (decodedIRData.rawDataPtr->rawlen < MIN_RC6_MARKS + 3 && (RC6_BITS + 3) < decodedIRData.rawDataPtr->rawlen) {
         IR_DEBUG_PRINT(F("RC6: "));
         IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
-        IR_DEBUG_PRINTLN(F(" is not between 15 and 45"));
+        IR_DEBUG_PRINTLN(F(" is not between 15 and 25"));
         return false;
     }
 
