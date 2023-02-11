@@ -11,8 +11,17 @@
  *  so if you require longer action, save the data (address + command) and handle it in the main loop.
  *  !!!!!!!!!!!!!!!!!!!!!
  *
+ *  FAST protocol is proprietary and a JVC protocol without address and with a shorter header.
+ *  FAST takes 21 ms for sending and can be sent at a 50 ms period. It still supports parity.
+ *  FAST Protocol characteristics:
+ *  - Bit timing is like JVC
+ *  - The header is shorter, 4000 vs. 12500
+ *  - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
+ *      leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
+ *  - Repeats are sent as complete frames but in a 50 ms period.
  *
- *  Copyright (C) 2020-2022  Armin Joachimsmeyer
+ *
+ *  Copyright (C) 2020-2023  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
@@ -44,26 +53,26 @@
  */
 #include "ATtinySerialOut.hpp" // TX is at pin 2 - Available as Arduino library "ATtinySerialOut" - Saves up to 700 bytes program memory and 70 bytes RAM for ATtinyCore
 #  if defined(ARDUINO_AVR_DIGISPARKPRO)
-#define IR_INPUT_PIN    9 // PA3 - on Digispark board labeled as pin 9
+#define IR_RECEIVE_PIN    9 // PA3 - on Digispark board labeled as pin 9
 #  else
-#define IR_INPUT_PIN    0 // PCINT0
+#define IR_RECEIVE_PIN    0 // PCINT0
 #  endif
 #elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
-#define IR_INPUT_PIN    10
+#define IR_RECEIVE_PIN    10
 #elif (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__))
-#define IR_INPUT_PIN    21 // INT0
+#define IR_RECEIVE_PIN    21 // INT0
 #elif defined(ESP8266)
-#define IR_INPUT_PIN    14 // D5
+#define IR_RECEIVE_PIN    14 // D5
 #elif defined(CONFIG_IDF_TARGET_ESP32C3)
-#define IR_INPUT_PIN    8
+#define IR_RECEIVE_PIN    8
 #elif defined(ESP32)
-#define IR_INPUT_PIN    15
+#define IR_RECEIVE_PIN    15
 #elif defined(ARDUINO_ARCH_MBED) && defined(ARDUINO_ARCH_MBED_NANO)
-#define IR_INPUT_PIN    3   // GPIO15 Use pin 3 since pin 2|GPIO25 is connected to LED on Pi pico
+#define IR_RECEIVE_PIN    3   // GPIO15 Use pin 3 since pin 2|GPIO25 is connected to LED on Pi pico
 #elif defined(ARDUINO_ARCH_RP2040) // Pi Pico with arduino-pico core https://github.com/earlephilhower/arduino-pico
-#define IR_INPUT_PIN    15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
+#define IR_RECEIVE_PIN    15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
 #else
-#define IR_INPUT_PIN    2   // INT0
+#define IR_RECEIVE_PIN    2   // INT0
 //#define NO_LED_FEEDBACK_CODE   // Activate this if you want to suppress LED feedback or if you do not have a LED. This saves 14 bytes code and 2 clock cycles per interrupt.
 #endif
 
@@ -73,7 +82,7 @@
 /*
  * Second: include the code and compile it.
  */
-//#define USE_FAST_8_BIT_AND_PARITY_TIMING // Use short protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
+//#define USE_FAST_PROTOCOL // Use short protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
 #include "TinyIRReceiver.hpp"
 
 /*
@@ -96,20 +105,21 @@ void setup() {
     Serial.println();
 #endif
     Serial.println(F("START " __FILE__ " from " __DATE__));
+    // Enables the interrupt generation on change of IR input signal
     if (!initPCIInterruptForTinyReceiver()) {
-        Serial.println(F("No interrupt available for pin " STR(IR_INPUT_PIN))); // optimized out by the compiler, if not required :-)
+        Serial.println(F("No interrupt available for pin " STR(IR_RECEIVE_PIN))); // optimized out by the compiler, if not required :-)
     }
-#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
-    Serial.println(F("Ready to receive Fast IR signals at pin " STR(IR_INPUT_PIN)));
+#if defined(USE_FAST_PROTOCOL)
+    Serial.println(F("Ready to receive Fast IR signals at pin " STR(IR_RECEIVE_PIN)));
 #else
-    Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_INPUT_PIN)));
+    Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_RECEIVE_PIN)));
 #endif
 }
 
 void loop() {
     if (sCallbackData.justWritten) {
         sCallbackData.justWritten = false;
-#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+#if defined(USE_FAST_PROTOCOL)
         Serial.print(F("Command=0x"));
 #else
         Serial.print(F("Address=0x"));
@@ -132,13 +142,13 @@ void loop() {
 
 /*
  * This is the function is called if a complete command was received
- * It runs in an ISR context with interrupts enabled, so functions like delay() etc. are working here
+ * It runs in an ISR context with interrupts enabled, so functions like delay() etc. should work here
  */
 #if defined(ESP8266) || defined(ESP32)
 IRAM_ATTR
 #endif
 
-#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+#if defined(USE_FAST_PROTOCOL)
 void handleReceivedTinyIRData(uint8_t aCommand, uint8_t aFlags)
 #else
 void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags)
@@ -146,7 +156,7 @@ void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags
         {
 #if defined(ARDUINO_ARCH_MBED) || defined(ESP32)
     // Copy data for main loop, this is the recommended way for handling a callback :-)
-#  if !defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+#  if !defined(USE_FAST_PROTOCOL)
     sCallbackData.Address = aAddress;
 #  endif
     sCallbackData.Command = aCommand;
@@ -159,10 +169,10 @@ void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags
      * for ESP32 we get a "Guru Meditation Error: Core  1 panic'ed" (we also have an RTOS running!)
      */
     // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
-#  if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
-    printTinyReceiverResultMinimal(aCommand, aFlags, &Serial);
+#  if defined(USE_FAST_PROTOCOL)
+    printTinyReceiverResultMinimal(&Serial, aCommand, aFlags);
 #  else
-    printTinyReceiverResultMinimal(aAddress, aCommand, aFlags, &Serial);
+    printTinyReceiverResultMinimal(&Serial, aAddress, aCommand, aFlags);
 #  endif
 #endif
 }

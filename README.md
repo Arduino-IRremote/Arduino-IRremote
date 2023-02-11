@@ -38,9 +38,11 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [Using the new *.hpp files](https://github.com/Arduino-IRremote/Arduino-IRremote#using-the-new-hpp-files)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#receiving-ir-codes)
   * [Data format](https://github.com/Arduino-IRremote/Arduino-IRremote#data-format)
-- [Minimal NEC receiver](https://github.com/Arduino-IRremote/Arduino-IRremote#minimal-nec-receiver)
 - [Sending IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#sending-ir-codes)
+  * [Send pin](https://github.com/Arduino-IRremote/Arduino-IRremote#send-pin)
     + [List of public IR code databases](https://github.com/Arduino-IRremote/Arduino-IRremote#list-of-public-ir-code-databases)
+- [Tiny NEC receiver and sender](https://github.com/Arduino-IRremote/Arduino-IRremote#tiny-nec-receiver-and-sender)
+  * [Tiny FAST receiver and sender](https://github.com/Arduino-IRremote/Arduino-IRremote#tiny-fast-receiver-and-sender)
 - [FAQ and hints](https://github.com/Arduino-IRremote/Arduino-IRremote#faq-and-hints)
   * [Problems with Neopixels, FastLed etc.](https://github.com/Arduino-IRremote/Arduino-IRremote#problems-with-neopixels-fastled-etc)
   * [Does not work/compile with another library](https://github.com/Arduino-IRremote/Arduino-IRremote#does-not-workcompile-with-another-library)
@@ -356,8 +358,59 @@ http://www.harctoolbox.org/IR-resources.html
 For applications only requiring NEC protocol, there is a special receiver / sender included,<br/>
 which has very **small code size of 500 bytes and does NOT require any timer**.
 
-Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote#irdispatcherdemo) examples.
+Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote#irdispatcherdemo) examples.<br/>
+Take care to include `TinyIRReceiver.hpp` or `TinyIRSender.hpp` instead of `IRremote.hpp`.
 
+### TinyIRReceiver usage
+```c++
+#include "TinyIRReceiver.hpp"
+
+void setup() {
+  initPCIInterruptForTinyReceiver(); // Enables the interrupt generation on change of IR input signal
+}
+
+void loop() {}
+
+/*
+ * This is the function is called if a complete command was received
+ * It runs in an ISR context with interrupts enabled, so functions like delay() etc. should work here
+ */
+void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags) {
+  printTinyReceiverResultMinimal(&Serial, aAddress, aCommand, aFlags);
+}
+```
+
+### TinyIRSender usage
+```c++
+#include "TinyIRSender.hpp"
+
+void setup() {
+  sendNECMinimal(3, 0, 11, 2); // Send address 0 and command 11 on pin 3 with 2 repeats.
+}
+
+void loop() {}
+```
+
+## Tiny FAST receiver and sender
+The FAST protocol is proprietary and a JVC protocol **without address and with a shorter header**. It is meant to have a quick response to the event which sent the frame on another board. FAST takes **21 ms for sending** and is sent at a **50 ms period**. It still supports full 8 bit parity for error detection!
+
+### FAST protocol characteristics:
+- Bit timing is like JVC
+- The header is shorter, 4000 &micro;s vs. 12500 &micro;s
+- No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command, leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
+- Repeats are sent as complete frames but in a 50 ms period / with a 29 ms distance.
+
+### TinyIRSender with FAST protocol
+```c++
+#define USE_FAST_PROTOCOL // Use short protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
+#include "TinyIRSender.hpp"
+
+void setup() {
+  sendFast8BitAndParity(3, 11, 2); // Send command 11 on pin 3 with 2 repeats.
+}
+
+void loop() {}
+```
 <br/>
 
 # FAQ and hints
@@ -569,11 +622,11 @@ Modify them by enabling / disabling them, or change the values if applicable.
 These next macros for **TinyIRReceiver** must be defined in your program before the line `#include <TinyIRReceiver.hpp>` to take effect.
 | Name | Default value | Description |
 |:---|---:|----|
-| `IR_INPUT_PIN` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
+| `IR_RECEIVE_PIN` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
 | `IR_FEEDBACK_LED_PIN` | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the feedback LED function. Saves 14 bytes program memory. |
 | `DISABLE_PARITY_CHECKS` | disabled | Disables the addres and command parity checks. Saves 48 bytes program memory. |
-| `USE_FAST_8_BIT_AND_PARITY_TIMING` | disabled | Receives a special fast protocol instead of NEC. |
+| `USE_FAST_PROTOCOL` | disabled | Receives a special fast protocol instead of NEC. |
 
 The next macro for **IRCommandDispatcher** must be defined in your program before the line `#include <IRCommandDispatcher.hpp>` to take effect.
 | `IR_COMMAND_HAS_MORE_THAN_8_BIT` | disabled | Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 4 bytes RAM + 1 byte RAM per mapping entry. |

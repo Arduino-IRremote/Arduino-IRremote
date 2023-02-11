@@ -14,7 +14,8 @@
  */
 #include <Arduino.h>
 
-#include <TinyIRSender.hpp>
+//#define USE_FAST_PROTOCOL // Use short protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
+#include "TinyIRSender.hpp"
 
 #define IR_SEND_PIN         3
 
@@ -49,19 +50,26 @@ void loop() {
      * Print current send values
      */
     Serial.println();
-    Serial.print(F("Send now: address=0x"));
+    Serial.print(F("Send now:"));
+#if defined(USE_FAST_PROTOCOL)
+    Serial.print(F(" address=0x"));
     Serial.print(sAddress, HEX);
+#endif
     Serial.print(F(" command=0x"));
     Serial.print(sCommand, HEX);
     Serial.print(F(" repeats="));
     Serial.print(sRepeats);
     Serial.println();
 
+#if defined(USE_FAST_PROTOCOL)
+    Serial.println(F("Send FAST with 8 bit address"));
+    Serial.flush();
+    sendFast8BitAndParity(IR_SEND_PIN, sCommand, sRepeats);
+#else
     Serial.println(F("Send NEC with 8 bit address"));
     Serial.flush();
-
-    // Receiver output for the first loop must be: Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 (32 bits)
     sendNECMinimal(IR_SEND_PIN, sAddress, sCommand, sRepeats);
+#endif
     /*
      * Increment send values
      * Also increment address just for demonstration, which normally makes no sense

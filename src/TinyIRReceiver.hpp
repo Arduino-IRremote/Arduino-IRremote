@@ -13,8 +13,17 @@
  *  !!!!!!!!!!!!!!!!!!!!!
  *  aFlags can contain one of IRDATA_FLAGS_EMPTY, IRDATA_FLAGS_IS_REPEAT and IRDATA_FLAGS_PARITY_FAILED bits
  *
+ *  FAST protocol is proprietary and a JVC protocol without address and with a shorter header.
+ *  FAST takes 21 ms for sending and can be sent at a 50 ms period. It still supports parity.
+ *  FAST Protocol characteristics:
+ *  - Bit timing is like JVC
+ *  - The header is shorter, 4000 vs. 12500
+ *  - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
+ *      leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
+ *  - Repeats are sent as complete frames but in a 50 ms period / with a 29 ms distance.
  *
- *  Copyright (C) 2021-2022  Armin Joachimsmeyer
+ *
+ *  Copyright (C) 2021-2023  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
@@ -39,7 +48,7 @@
  * This library can be configured at compile time by the following options / macros:
  * For more details see: https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library (scroll down)
  *
- * - IR_INPUT_PIN           The pin number for TinyIRReceiver IR input.
+ * - IR_RECEIVE_PIN           The pin number for TinyIRReceiver IR input.
  * - IR_FEEDBACK_LED_PIN    The pin number for TinyIRReceiver feedback LED.
  * - NO_LED_FEEDBACK_CODE   Disables the feedback LED function. Saves 14 bytes program memory.
  *
@@ -57,16 +66,8 @@
 #endif
 
 //#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
-/*
- * FAST_8_BIT_CS Protocol characteristics:
- * - Bit timing is like NEC
- * - The header is shorter, 4000 vs. 14500
- * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *   leading to a fixed protocol length of (7 + (16 * 2)) * 560 = 39 * 560 = 21840 microseconds or 22 ms.
- * - Repeats are sent as complete frames but in a 50 ms period.
- */
-//#define USE_FAST_8_BIT_AND_PARITY_TIMING // Use short protocol
-#include "TinyIR.h" // If not defined, it defines IR_INPUT_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
+//#define USE_FAST_PROTOCOL // Use short protocol
+#include "TinyIR.h" // If not defined, it defines IR_RECEIVE_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
 
 #include "digitalWriteFast.h"
 /** \addtogroup TinyReceiver Minimal receiver for NEC and FAST protocol
@@ -91,16 +92,20 @@ TinyIRReceiverStruct TinyIRReceiverControl;
 /*
  * Set input pin and output pin definitions etc.
  */
-#if !defined(IR_INPUT_PIN)
+#if defined(IR_INPUT_PIN)
+#warning "IR_INPUT_PIN is deprecated, use IR_RECEIVE_PIN"
+#define IR_RECEIVE_PIN  IR_INPUT_PIN
+#endif
+#if !defined(IR_RECEIVE_PIN)
 #if defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
-#warning "IR_INPUT_PIN is not defined, so it is set to 10"
-#define IR_INPUT_PIN    10
+#warning "IR_RECEIVE_PIN is not defined, so it is set to 10"
+#define IR_RECEIVE_PIN    10
 #elif defined(__AVR_ATtiny816__)
-#warning "IR_INPUT_PIN is not defined, so it is set to 14"
-#define IR_INPUT_PIN    14
+#warning "IR_RECEIVE_PIN is not defined, so it is set to 14"
+#define IR_RECEIVE_PIN    14
 #else
-#warning "IR_INPUT_PIN is not defined, so it is set to 2"
-#define IR_INPUT_PIN    2
+#warning "IR_RECEIVE_PIN is not defined, so it is set to 2"
+#define IR_RECEIVE_PIN    2
 #endif
 #endif
 
@@ -116,8 +121,8 @@ TinyIRReceiverStruct TinyIRReceiverControl;
 || defined(__AVR_ATmega8__) || defined(__AVR_ATmega48__) || defined(__AVR_ATmega48P__) || defined(__AVR_ATmega48PB__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega88PB__) \
 || defined(__AVR_ATmega168__) || defined(__AVR_ATmega168PA__) || defined(__AVR_ATmega168PB__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) \
   /* ATmegas with ports 0,1,2 above and ATtiny167 only 2 pins below */ \
-|| ( (defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)) && ( (defined(ARDUINO_AVR_DIGISPARKPRO) && ((IR_INPUT_PIN == 3) || (IR_INPUT_PIN == 9))) /*ATtinyX7(digisparkpro) and pin 3 or 9 */\
-        || (! defined(ARDUINO_AVR_DIGISPARKPRO) && ((IR_INPUT_PIN == 3) || (IR_INPUT_PIN == 14)))) ) /*ATtinyX7(ATTinyCore) and pin 3 or 14 */ \
+|| ( (defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)) && ( (defined(ARDUINO_AVR_DIGISPARKPRO) && ((IR_RECEIVE_PIN == 3) || (IR_RECEIVE_PIN == 9))) /*ATtinyX7(digisparkpro) and pin 3 or 9 */\
+        || (! defined(ARDUINO_AVR_DIGISPARKPRO) && ((IR_RECEIVE_PIN == 3) || (IR_RECEIVE_PIN == 14)))) ) /*ATtinyX7(ATTinyCore) and pin 3 or 14 */ \
 )
 #define TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT // Cannot use any static ISR vector here. In other cases we have code provided for generating interrupt on pin change.
 #endif
@@ -144,7 +149,7 @@ void IRPinChangeInterruptHandler(void) {
      * Save IR input level
      * Negative logic, true / HIGH means inactive / IR space, LOW / false means IR mark.
      */
-    uint_fast8_t tIRLevel = digitalReadFast(IR_INPUT_PIN);
+    uint_fast8_t tIRLevel = digitalReadFast(IR_RECEIVE_PIN);
 
 #if !defined(NO_LED_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, !tIRLevel);
@@ -291,9 +296,7 @@ void IRPinChangeInterruptHandler(void) {
                      */
                     // Reset state for new start
                     tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
-#if !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) // no Serial etc. in callback for ESP -> no interrupt required, WDT is running!
-                    interrupts(); // enable interrupts, so delay() etc. works in callback
-#endif
+
 #if !defined(DISABLE_PARITY_CHECKS) && (TINY_ADDRESS_BITS == 16) && TINY_ADDRESS_HAS_8_BIT_PARITY
                     /*
                      * Check address parity
@@ -331,8 +334,12 @@ void IRPinChangeInterruptHandler(void) {
 #endif
                     /*
                      * Call user provided callback here
+                     * The parameter size is dependent of the code variant used in order to save program memory.
                      * We have 6 cases: 0, 8 bit or 16 bit address, each with 8 or 16 bit command
                      */
+#if !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) // no Serial etc. in callback for ESP -> no interrupt required, WDT is running!
+                    interrupts(); // enable interrupts, so delay() etc. works in callback
+#endif
                     handleReceivedTinyIRData(
 #if (TINY_ADDRESS_BITS > 0)
 #  if TINY_ADDRESS_HAS_8_BIT_PARITY
@@ -387,11 +394,11 @@ bool isTinyReceiverIdle() {
 }
 
 /**
- * Sets IR_INPUT_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode.
+ * Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode.
  * Then call enablePCIInterruptForTinyReceiver()
  */
 bool initPCIInterruptForTinyReceiver() {
-    pinModeFast(IR_INPUT_PIN, INPUT);
+    pinModeFast(IR_RECEIVE_PIN, INPUT);
 
 #if !defined(NO_LED_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
@@ -399,15 +406,15 @@ bool initPCIInterruptForTinyReceiver() {
     return enablePCIInterruptForTinyReceiver();
 }
 
-#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
-void printTinyReceiverResultMinimal(uint16_t aCommand, uint8_t aFlags, Print *aSerial)
+#if defined(USE_FAST_PROTOCOL)
+void printTinyReceiverResultMinimal(Print *aSerial, uint16_t aCommand, uint8_t aFlags)
 #else
-void printTinyReceiverResultMinimal(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags, Print *aSerial)
+void printTinyReceiverResultMinimal(Print *aSerial, uint8_t aAddress, uint8_t aCommand, uint8_t aFlags)
 #endif
         {
 // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
     // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
-#if defined(USE_FAST_8_BIT_AND_PARITY_TIMING)
+#if defined(USE_FAST_PROTOCOL)
     aSerial->print(F("C=0x"));
 #else
     aSerial->print(F("A=0x"));
@@ -448,30 +455,30 @@ void printTinyReceiverResultMinimal(uint8_t aAddress, uint8_t aCommand, uint8_t 
 
 #  elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #    if defined(ARDUINO_AVR_DIGISPARKPRO)
-#      if (IR_INPUT_PIN == 3)
+#      if (IR_RECEIVE_PIN == 3)
 #define USE_INT0
-#      elif (IR_INPUT_PIN == 9)
+#      elif (IR_RECEIVE_PIN == 9)
 #define USE_INT1
 #      else
-#        error "IR_INPUT_PIN must be 9 or 3."
-#      endif // if (IR_INPUT_PIN == 9)
+#        error "IR_RECEIVE_PIN must be 9 or 3."
+#      endif // if (IR_RECEIVE_PIN == 9)
 #    else // defined(ARDUINO_AVR_DIGISPARKPRO)
-#      if (IR_INPUT_PIN == 14)
+#      if (IR_RECEIVE_PIN == 14)
 #define USE_INT0
-#      elif (IR_INPUT_PIN == 3)
+#      elif (IR_RECEIVE_PIN == 3)
 #define USE_INT1
 #      else
-#        error "IR_INPUT_PIN must be 14 or 3."
-#      endif // if (IR_INPUT_PIN == 14)
+#        error "IR_RECEIVE_PIN must be 14 or 3."
+#      endif // if (IR_RECEIVE_PIN == 14)
 #    endif
 
 #  elif (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__))
-#    if (IR_INPUT_PIN == 21)
+#    if (IR_RECEIVE_PIN == 21)
 #define USE_INT0
-#    elif (IR_INPUT_PIN == 20)
+#    elif (IR_RECEIVE_PIN == 20)
 #define USE_INT1
 #    else
-#warning "No pin mapping for IR_INPUT_PIN to interrupt found -> attachInterrupt() is used now."
+#warning "No pin mapping for IR_RECEIVE_PIN to interrupt found -> attachInterrupt() is used now."
 #define USE_ATTACH_INTERRUPT
 #    endif
 
@@ -479,30 +486,30 @@ void printTinyReceiverResultMinimal(uint8_t aAddress, uint8_t aCommand, uint8_t 
 /*
  * ATmegas + ATtiny88 here
  */
-#    if (IR_INPUT_PIN == 2)
+#    if (IR_RECEIVE_PIN == 2)
 #define USE_INT0
-#    elif (IR_INPUT_PIN == 3)
+#    elif (IR_RECEIVE_PIN == 3)
 #define USE_INT1
 
-#    elif IR_INPUT_PIN == 4 || IR_INPUT_PIN == 5 || IR_INPUT_PIN == 6 || IR_INPUT_PIN == 7
+#    elif IR_RECEIVE_PIN == 4 || IR_RECEIVE_PIN == 5 || IR_RECEIVE_PIN == 6 || IR_RECEIVE_PIN == 7
     //ATmega328 (Uno, Nano ) etc. Enable pin change interrupt 20 to 23 for port PD4 to PD7 (Arduino pin 4 to 7)
 #define USE_PCINT2
-#    elif IR_INPUT_PIN == 8 || IR_INPUT_PIN == 9 || IR_INPUT_PIN == 10 || IR_INPUT_PIN == 11 || IR_INPUT_PIN == 12 || IR_INPUT_PIN == 13
+#    elif IR_RECEIVE_PIN == 8 || IR_RECEIVE_PIN == 9 || IR_RECEIVE_PIN == 10 || IR_RECEIVE_PIN == 11 || IR_RECEIVE_PIN == 12 || IR_RECEIVE_PIN == 13
     //ATmega328 (Uno, Nano ) etc. Enable pin change interrupt 0 to 5 for port PB0 to PB5 (Arduino pin 8 to 13)
 #define USE_PCINT0
-#    elif IR_INPUT_PIN == A0 || IR_INPUT_PIN == A1 || IR_INPUT_PIN == A2 || IR_INPUT_PIN == A3 || IR_INPUT_PIN == A4 || IR_INPUT_PIN == A5
+#    elif IR_RECEIVE_PIN == A0 || IR_RECEIVE_PIN == A1 || IR_RECEIVE_PIN == A2 || IR_RECEIVE_PIN == A3 || IR_RECEIVE_PIN == A4 || IR_RECEIVE_PIN == A5
     //ATmega328 (Uno, Nano ) etc. Enable pin change interrupt 8 to 13 for port PC0 to PC5 (Arduino pin A0 to A5)
 #define USE_PCINT1
 
 #    else
-#warning "No pin mapping for IR_INPUT_PIN to interrupt found -> attachInterrupt() is used now."
+#warning "No pin mapping for IR_RECEIVE_PIN to interrupt found -> attachInterrupt() is used now."
 #define USE_ATTACH_INTERRUPT
-#    endif // if (IR_INPUT_PIN == 2)
+#    endif // if (IR_RECEIVE_PIN == 2)
 #  endif // defined(__AVR_ATtiny25__)
 #endif // ! defined(__AVR__) || defined(TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT)
 
 /**
- * Initializes hardware interrupt generation according to IR_INPUT_PIN or use attachInterrupt() function.
+ * Initializes hardware interrupt generation according to IR_RECEIVE_PIN or use attachInterrupt() function.
  * @return true if interrupt was successfully enabled
  */
 bool enablePCIInterruptForTinyReceiver() {
@@ -513,24 +520,24 @@ bool enablePCIInterruptForTinyReceiver() {
 #if defined(USE_ATTACH_INTERRUPT) || defined(USE_ATTACH_INTERRUPT_DIRECT)
 #  if defined(USE_ATTACH_INTERRUPT)
 #if defined(NOT_AN_INTERRUPT)
-    if(digitalPinToInterrupt(IR_INPUT_PIN) == NOT_AN_INTERRUPT){
+    if(digitalPinToInterrupt(IR_RECEIVE_PIN) == NOT_AN_INTERRUPT){
         return false;
     }
 #endif
     // costs 112 bytes program memory + 4 bytes RAM
-    attachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN), IRPinChangeInterruptHandler, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(IR_RECEIVE_PIN), IRPinChangeInterruptHandler, CHANGE);
 #  else
     // 2.2 us more than version configured with macros and not compatible
-    attachInterrupt(IR_INPUT_PIN, IRPinChangeInterruptHandler, CHANGE); // no extra pin mapping here
+    attachInterrupt(IR_RECEIVE_PIN, IRPinChangeInterruptHandler, CHANGE); // no extra pin mapping here
 #  endif
 
 #  if defined(LOCAL_DEBUG_ATTACH_INTERRUPT)
-    Serial.println(F("Use attachInterrupt for pin=" STR(IR_INPUT_PIN)));
+    Serial.println(F("Use attachInterrupt for pin=" STR(IR_RECEIVE_PIN)));
 #  endif
 
 #else
 #  if defined(LOCAL_DEBUG_ATTACH_INTERRUPT)
-    Serial.println(F("Use static interrupt for pin=" STR(IR_INPUT_PIN)));
+    Serial.println(F("Use static interrupt for pin=" STR(IR_RECEIVE_PIN)));
 #  endif
 #  if defined(USE_INT0)
     // interrupt on any logical change
@@ -549,7 +556,7 @@ bool enablePCIInterruptForTinyReceiver() {
 
 #  elif defined(USE_PCIE) // For ATtiny85 etc.
     // use PinChangeInterrupt no INT0 for pin PB2
-    PCMSK = _BV(IR_INPUT_PIN);
+    PCMSK = _BV(IR_RECEIVE_PIN);
     // clear interrupt bit
     GIFR |= 1 << PCIF;
     // enable interrupt on next change
@@ -557,13 +564,13 @@ bool enablePCIInterruptForTinyReceiver() {
 
 #  elif defined(USE_PCINT0)
     PCICR |= _BV(PCIE0);
-    PCMSK0 = digitalPinToBitMask(IR_INPUT_PIN);
+    PCMSK0 = digitalPinToBitMask(IR_RECEIVE_PIN);
 #  elif defined(USE_PCINT1)
     PCICR |= _BV(PCIE1);
-    PCMSK1 = digitalPinToBitMask(IR_INPUT_PIN);
+    PCMSK1 = digitalPinToBitMask(IR_RECEIVE_PIN);
 #  elif defined(USE_PCINT2)
     PCICR |= _BV(PCIE2);
-    PCMSK2 = digitalPinToBitMask(IR_INPUT_PIN);
+    PCMSK2 = digitalPinToBitMask(IR_RECEIVE_PIN);
 #  else
     return false;
 #  endif
@@ -578,9 +585,9 @@ void disablePCIInterruptForTinyReceiver() {
 
 #if defined(USE_ATTACH_INTERRUPT) || defined(USE_ATTACH_INTERRUPT_DIRECT)
 #  if defined(USE_ATTACH_INTERRUPT)
-    detachInterrupt(digitalPinToInterrupt(IR_INPUT_PIN));
+    detachInterrupt(digitalPinToInterrupt(IR_RECEIVE_PIN));
 #  else
-    detachInterrupt(IR_INPUT_PIN);
+    detachInterrupt(IR_RECEIVE_PIN);
 #  endif
 
 #else

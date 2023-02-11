@@ -34,6 +34,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added SAMSUNG48 protocol and sendSamsung48() function.
 - Fixed bug in printing durations > 64535 in printIRResultRawFormatted().
 - Narrowed constraints for RC5 RC6 number of bits.
+- Changed the first parameter of printTinyReceiverResultMinimal() to &Serial.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

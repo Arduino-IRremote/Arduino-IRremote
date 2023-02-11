@@ -71,7 +71,7 @@ Sum: 13400
  */
 // http://www.hifi-remote.com/wiki/index.php/NEC
 // https://www.sbprojects.net/knowledge/ir/nec.php
-// for Apple see https://en.wikipedia.org/wiki/Apple_Remote
+// for Apple see https://en.wikipedia.org/wiki/Apple_Remote - Fixed address 0x87EE, 8 bit device ID, 7 bit command, 1 bit parity - untested!
 // ONKYO like NEC but 16 independent command bits
 // PIONEER (not implemented) is NEC2 with 40 kHz
 // LSB first, 1 start bit + 16 bit address (or 8 bit address and 8 bit inverted address) + 8 bit command + 8 bit inverted command + 1 stop bit.
@@ -104,7 +104,7 @@ Sum: 13400
 #define NEC_REPEAT_DURATION     (NEC_HEADER_MARK  + NEC_REPEAT_HEADER_SPACE + NEC_BIT_MARK) // 12 ms
 #define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define NEC_REPEAT_DISTANCE         (NEC_REPEAT_PERIOD - NEC_AVERAGE_DURATION) // 48 ms
-#define NEC_MAXIMUM_REPEAT_DISTANCE (NEC_REPEAT_PERIOD - NEC_MINIMAL_DURATION + 5) // 65 ms
+#define NEC_MAXIMUM_REPEAT_DISTANCE (NEC_REPEAT_PERIOD - NEC_MINIMAL_DURATION + 10000) // 70 ms
 
 #define APPLE_ADDRESS           0x87EE
 

@@ -3,11 +3,18 @@
  *
  *  Sends IR protocol data of NEC and FAST protocol using bit banging.
  *  NEC is the protocol of most cheap remote controls for Arduino.
+ *
  *  FAST protocol is proprietary and a JVC protocol without address and with a shorter header.
  *  FAST takes 21 ms for sending and can be sent at a 50 ms period. It still supports parity.
+ *  FAST Protocol characteristics:
+ *  - Bit timing is like JVC
+ *  - The header is shorter, 4000 vs. 12500
+ *  - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
+ *      leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
+ *  - Repeats are sent as complete frames but in a 50 ms period / with a 29 ms distance.
  *
  *
- *  Copyright (C) 2022  Armin Joachimsmeyer
+ *  Copyright (C) 2022-2023  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
@@ -38,15 +45,6 @@
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file
 #endif
-
-/*
- * FAST_8_BIT_CS Protocol characteristics:
- * - Bit timing is like JVC
- * - The header is shorter, 4000 vs. 12500
- * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *     leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
- * - Repeats are sent as complete frames but in a 50 ms period.
- */
 #include "TinyIR.h" // Defines protocol timings
 
 #include "digitalWriteFast.h"
@@ -152,22 +150,22 @@ void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNum
         unsigned long tStartOfFrameMillis = millis();
 
         // send header
-        sendMark(aSendPin, FAST_8_BIT_PARITY_HEADER_MARK);
-        delayMicroseconds(FAST_8_BIT_PARITY_HEADER_SPACE);
+        sendMark(aSendPin, FAST_PARITY_HEADER_MARK);
+        delayMicroseconds(FAST_PARITY_HEADER_SPACE);
         uint16_t tData = aCommand | (((uint8_t) (~aCommand)) << 8); // LSB first
         // Send data
-        for (uint_fast8_t i = 0; i < FAST_8_BIT_PARITY_BITS; ++i) {
-            sendMark(aSendPin, FAST_8_BIT_PARITY_BIT_MARK); // constant mark length
+        for (uint_fast8_t i = 0; i < FAST_PARITY_BITS; ++i) {
+            sendMark(aSendPin, FAST_PARITY_BIT_MARK); // constant mark length
 
             if (tData & 1) {
-                delayMicroseconds(FAST_8_BIT_PARITY_ONE_SPACE);
+                delayMicroseconds(FAST_PARITY_ONE_SPACE);
             } else {
-                delayMicroseconds(FAST_8_BIT_PARITY_ZERO_SPACE);
+                delayMicroseconds(FAST_PARITY_ZERO_SPACE);
             }
             tData >>= 1; // shift command for next bit
         }
         // send stop bit
-        sendMark(aSendPin, FAST_8_BIT_PARITY_BIT_MARK);
+        sendMark(aSendPin, FAST_PARITY_BIT_MARK);
 
         tNumberOfCommands--;
         // skip last delay!
@@ -176,8 +174,8 @@ void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNum
              * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
              */
             auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
-            if (FAST_8_BIT_PARITY_REPEAT_PERIOD / 1000 > tFrameDurationMillis) {
-                delay(FAST_8_BIT_PARITY_REPEAT_PERIOD / 1000 - tFrameDurationMillis);
+            if (FAST_PARITY_REPEAT_PERIOD / 1000 > tFrameDurationMillis) {
+                delay(FAST_PARITY_REPEAT_PERIOD / 1000 - tFrameDurationMillis);
             }
         }
     }
