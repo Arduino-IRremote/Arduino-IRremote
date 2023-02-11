@@ -33,6 +33,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Replaced macros TIMER_EN/DISABLE_RECEIVE_INTR and EN/DISABLE_SEND_PWM_BY_TIMER by functions.
 - Added SAMSUNG48 protocol and sendSamsung48() function.
 - Fixed bug in printing durations > 64535 in printIRResultRawFormatted().
+- Narrowed constraints for RC5 RC6 number of bits.
 
 ## 3.9.0
 - Improved documentation with the help of [ElectronicsArchiver}(https://github.com/ElectronicsArchiver).

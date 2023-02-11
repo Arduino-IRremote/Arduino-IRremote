@@ -39,7 +39,10 @@
  * Set sensible receive pin for different CPU's
  */
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-#include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
+/*
+ * This program runs on 1 MHz CPU clock :-) and is requires only 1550 bytes program memory using ATTiny core
+ */
+#include "ATtinySerialOut.hpp" // TX is at pin 2 - Available as Arduino library "ATtinySerialOut" - Saves up to 700 bytes program memory and 70 bytes RAM for ATtinyCore
 #  if defined(ARDUINO_AVR_DIGISPARKPRO)
 #define IR_INPUT_PIN    9 // PA3 - on Digispark board labeled as pin 9
 #  else

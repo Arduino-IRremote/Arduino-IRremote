@@ -163,7 +163,9 @@ void setup() {
 #  else
     Serial.print(DEBUG_BUTTON_PIN);
 #  endif
-    Serial.println(F(" to ground, raw data is always printed"));
+    Serial.print(F(" to ground or to pin "));
+    Serial.print(AUXILIARY_DEBUG_BUTTON_PIN);
+    Serial.println(F(", raw data is always printed"));
 
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);

@@ -137,23 +137,23 @@ uint8_t checkAndWaitForReferenceAndChannelToSwitch(uint8_t aChannelNumber, uint8
 /*
  * readVCC*() functions store the result in sVCCVoltageMillivolt or sVCCVoltage
  */
-float getVCCVoltageSimple();
-void readVCCVoltageSimple();
-uint16_t getVCCVoltageMillivoltSimple();
-void readVCCVoltageMillivoltSimple();
-float getVCCVoltage();
-void readVCCVoltage();
-uint16_t getVCCVoltageMillivolt();
-void readVCCVoltageMillivolt();
-uint16_t getVCCVoltageReadingFor1_1VoltReference();
+float getVCCVoltageSimple(void);
+void readVCCVoltageSimple(void);
+uint16_t getVCCVoltageMillivoltSimple(void);
+void readVCCVoltageMillivoltSimple(void);
+float getVCCVoltage(void);
+void readVCCVoltage(void);
+uint16_t getVCCVoltageMillivolt(void);
+void readVCCVoltageMillivolt(void);
+uint16_t getVCCVoltageReadingFor1_1VoltReference(void);
 uint16_t printVCCVoltageMillivolt(Print *aSerial);
 void readAndPrintVCCVoltageMillivolt(Print *aSerial);
 
 uint16_t getVoltageMillivolt(uint16_t aVCCVoltageMillivolt, uint8_t aADCChannelForVoltageMeasurement);
 uint16_t getVoltageMillivolt(uint8_t aADCChannelForVoltageMeasurement);
 uint16_t getVoltageMillivoltWith_1_1VoltReference(uint8_t aADCChannelForVoltageMeasurement);
-float getTemperatureSimple();
-float getTemperature();
+float getTemperatureSimple(void);
+float getTemperature(void);
 
 bool isVCCTooLowMultipleTimes();
 void resetVCCTooLowMultipleTimes();
