@@ -100,7 +100,7 @@ struct irparams_struct {
     volatile uint8_t *IRReceivePinPortInputRegister;
     uint8_t IRReceivePinMask;
 #endif
-    volatile uint_fast16_t TickCounterForISR;    ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
+    volatile uint_fast16_t TickCounterForISR; ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition.
 #if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
     void (*ReceiveCompleteCallbackFunction)(void); ///< The function to call if a protocol message has arrived, i.e. StateForISR changed to IR_REC_STATE_STOP
 #endif
@@ -431,8 +431,8 @@ public:
             int_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants *aProtocolConstants,
             IRRawDataType *aDecodedRawDataArray, unsigned int aNumberOfBits, int_fast8_t aNumberOfRepeats);
-    void sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRRawDataType aData, uint_fast8_t aNumberOfBits,
-            int_fast8_t aNumberOfRepeats);
+    void sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRRawDataType aData,
+            uint_fast8_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRRawDataType aData,
             uint_fast8_t aNumberOfBits);
     void sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros, unsigned int aHeaderSpaceMicros,
@@ -525,7 +525,9 @@ public:
     /*
      * OLD send functions
      */
-    void sendDenon(unsigned long data, int nbits);
+    void sendDenon(unsigned long data,
+            int nbits)
+                    __attribute__ ((deprecated ("The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).")));
     void sendDish(uint16_t aData);
     void sendJVC(unsigned long data, int nbits,
             bool repeat)
@@ -534,7 +536,7 @@ public:
     }
     void sendJVCMSB(unsigned long data, int nbits, bool repeat = false);
 
-    void sendLG(unsigned long data, int nbits);
+    void sendLG(unsigned long data, int nbits) __attribute__ ((deprecated ("The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats).")));
 
     void sendNEC(uint32_t aRawData,
             uint8_t nbits)
@@ -547,7 +549,8 @@ public:
     void sendRC6Raw(uint32_t data, uint8_t nbits);
     void sendRC6(uint32_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC6Raw().")));
     void sendRC6Raw(uint64_t data, uint8_t nbits);
-    void sendRC6(uint64_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC6Raw().")));;
+    void sendRC6(uint64_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC6Raw().")));
+    ;
     void sendSharpRaw(unsigned long data, int nbits);
     void sendSharp(unsigned int address, unsigned int command);
     void sendSAMSUNG(unsigned long data, int nbits);

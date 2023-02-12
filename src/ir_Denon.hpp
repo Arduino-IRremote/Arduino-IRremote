@@ -260,8 +260,8 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut (DENON_KHZ);
 #if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
-    Serial.println(
-            "The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).");
+//    Serial.println(
+//            "The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).");
 #endif
 
     // Header

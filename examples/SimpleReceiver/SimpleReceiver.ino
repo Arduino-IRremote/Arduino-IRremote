@@ -1,7 +1,7 @@
 /*
  * SimpleReceiver.cpp
  *
- * Demonstrates receiving NEC IR codes with IRrecv
+ * Demonstrates receiving NEC IR codes with IRremote
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
