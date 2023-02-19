@@ -92,7 +92,7 @@ void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
     } while (true);
 }
 
-void sendNECMinimal(uint8_t aSendPin, uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
     pinModeFast(aSendPin, OUTPUT);
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
@@ -107,8 +107,11 @@ void sendNECMinimal(uint8_t aSendPin, uint8_t aAddress, uint8_t aCommand, uint_f
             // send header
             delayMicroseconds(NEC_HEADER_SPACE);
             LongUnion tData;
-            tData.UByte.LowByte = aAddress; // LSB first
-            tData.UByte.MidLowByte = ~aAddress;
+            if (aAddress > 0xFF) {
+                tData.UWord.LowWord = aAddress;
+            } else {
+                tData.UWord.LowWord = ~aAddress << 8 | aAddress; // LSB first                
+            }
             tData.UByte.MidHighByte = aCommand;
             tData.UByte.HighByte = ~aCommand; // LSB first
             // Send data
