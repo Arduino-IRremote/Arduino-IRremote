@@ -23,35 +23,45 @@
  *  - Repeats are sent as complete frames but in a 50 ms period / with a 29 ms distance.
  *
  *
- *  Copyright (C) 2021-2023  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
- *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
- *  TinyIRReceiver is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ ************************************************************************************
+ * MIT License
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * Copyright (c) 2022-20232 Armin Joachimsmeyer
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
  *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
 
 /*
  * This library can be configured at compile time by the following options / macros:
  * For more details see: https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library (scroll down)
  *
- * - IR_RECEIVE_PIN           The pin number for TinyIRReceiver IR input.
+ * - IR_RECEIVE_PIN         The pin number for TinyIRReceiver IR input.
  * - IR_FEEDBACK_LED_PIN    The pin number for TinyIRReceiver feedback LED.
  * - NO_LED_FEEDBACK_CODE   Disables the feedback LED function. Saves 14 bytes program memory.
- *
+ * - DISABLE_PARITY_CHECKS  Disable parity checks. Saves 48 bytes of program memory.
+ * - USE_ONKYO_PROTOCOL     Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
+ * - USE_FAST_PROTOCOL      Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC.
+ * - ENABLE_NEC2_REPEATS    Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
  */
 
 #ifndef _TINY_IR_RECEIVER_HPP
@@ -66,7 +76,10 @@
 #endif
 
 //#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
-//#define USE_FAST_PROTOCOL // Use short protocol
+//#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
+//#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC.
+//#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
+
 #include "TinyIR.h" // If not defined, it defines IR_RECEIVE_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
 
 #include "digitalWriteFast.h"
@@ -180,7 +193,7 @@ void IRPinChangeInterruptHandler(void) {
         /*
          * We have a mark here
          */
-        if (tMicrosOfMarkOrSpace > 2 * TINY_HEADER_MARK) {
+        if (tMicrosOfMarkOrSpace > 2 * TINY_RECEIVER_HEADER_MARK) {
             // timeout -> must reset state machine
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
         }
@@ -191,35 +204,35 @@ void IRPinChangeInterruptHandler(void) {
 #if defined(LOCAL_TRACE)
             sMicrosOfGap = tMicrosOfMarkOrSpace32;
 #endif
-#if !defined(ENABLE_NEC_REPEAT_SUPPORT)
-            // Check for repeat, where full frame is sent again after TINY_REPEAT_PERIOD ms
+#if defined(ENABLE_NEC2_REPEATS)
+            // Check for repeat, where full frame is sent again after TINY_RECEIVER_REPEAT_PERIOD ms
             // Not required for NEC, where repeats are detected by a special header space duration
             // Must use 32 bit arithmetic here!
-            if (tMicrosOfMarkOrSpace32 < TINY_MAXIMUM_REPEAT_DISTANCE) {
+            if (tMicrosOfMarkOrSpace32 < TINY_RECEIVER_MAXIMUM_REPEAT_DISTANCE) {
                 TinyIRReceiverControl.Flags = IRDATA_FLAGS_IS_REPEAT;
             }
 #endif
         }
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_FIRST_DATA_MARK) {
-            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(TINY_HEADER_SPACE)
-                    && tMicrosOfMarkOrSpace <= upperValue25Percent(TINY_HEADER_SPACE)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(TINY_RECEIVER_HEADER_SPACE)
+                    && tMicrosOfMarkOrSpace <= upperValue25Percent(TINY_RECEIVER_HEADER_SPACE)) {
                 /*
                  * We have a valid data header space here -> initialize data
                  */
                 TinyIRReceiverControl.IRRawDataBitCounter = 0;
-#if (TINY_BITS > 16)
+#if (TINY_RECEIVER_BITS > 16)
                 TinyIRReceiverControl.IRRawData.ULong = 0;
 #else
                 TinyIRReceiverControl.IRRawData.UWord = 0;
 #endif
                 TinyIRReceiverControl.IRRawDataMask = 1;
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
-#if defined(ENABLE_NEC_REPEAT_SUPPORT)
+#if !defined(ENABLE_NEC2_REPEATS)
                 // Check for NEC repeat header
             } else if (tMicrosOfMarkOrSpace >= lowerValue25Percent(NEC_REPEAT_HEADER_SPACE)
                     && tMicrosOfMarkOrSpace <= upperValue25Percent(NEC_REPEAT_HEADER_SPACE)
-                    && TinyIRReceiverControl.IRRawDataBitCounter >= TINY_BITS) {
+                    && TinyIRReceiverControl.IRRawDataBitCounter >= TINY_RECEIVER_BITS) {
                 /*
                  * We have a repeat header here and no broken receive before -> set repeat flag
                  */
@@ -235,13 +248,13 @@ void IRPinChangeInterruptHandler(void) {
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_MARK) {
             // Check data space length
-            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(TINY_ZERO_SPACE)
-                    && tMicrosOfMarkOrSpace <= upperValue50Percent(TINY_ONE_SPACE)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(TINY_RECEIVER_ZERO_SPACE)
+                    && tMicrosOfMarkOrSpace <= upperValue50Percent(TINY_RECEIVER_ONE_SPACE)) {
                 // We have a valid bit here
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
-                if (tMicrosOfMarkOrSpace >= 2 * TINY_UNIT) {
+                if (tMicrosOfMarkOrSpace >= 2 * TINY_RECEIVER_UNIT) {
                     // we received a 1
-#if (TINY_BITS > 16)
+#if (TINY_RECEIVER_BITS > 16)
                     TinyIRReceiverControl.IRRawData.ULong |= TinyIRReceiverControl.IRRawDataMask;
 #else
                     TinyIRReceiverControl.IRRawData.UWord |= TinyIRReceiverControl.IRRawDataMask;
@@ -270,8 +283,8 @@ void IRPinChangeInterruptHandler(void) {
             /*
              * Check length of header mark here
              */
-            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(TINY_HEADER_MARK)
-                    && tMicrosOfMarkOrSpace <= upperValue25Percent(TINY_HEADER_MARK)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue25Percent(TINY_RECEIVER_HEADER_MARK)
+                    && tMicrosOfMarkOrSpace <= upperValue25Percent(TINY_RECEIVER_HEADER_MARK)) {
                 tState = IR_RECEIVER_STATE_WAITING_FOR_FIRST_DATA_MARK;
             } else {
                 // Wrong length of header mark -> reset state
@@ -281,23 +294,23 @@ void IRPinChangeInterruptHandler(void) {
 
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE) {
             // Check data mark length
-            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(TINY_BIT_MARK)
-                    && tMicrosOfMarkOrSpace <= upperValue50Percent(TINY_BIT_MARK)) {
+            if (tMicrosOfMarkOrSpace >= lowerValue50Percent(TINY_RECEIVER_BIT_MARK)
+                    && tMicrosOfMarkOrSpace <= upperValue50Percent(TINY_RECEIVER_BIT_MARK)) {
                 /*
                  * We have a valid mark here, check for transmission complete, i.e. the mark of the stop bit
                  */
-                if (TinyIRReceiverControl.IRRawDataBitCounter >= TINY_BITS
-#if defined(ENABLE_NEC_REPEAT_SUPPORT)
+                if (TinyIRReceiverControl.IRRawDataBitCounter >= TINY_RECEIVER_BITS
+#if !defined(ENABLE_NEC2_REPEATS)
                         || (TinyIRReceiverControl.Flags & IRDATA_FLAGS_IS_REPEAT) // Do not check for full length received, if we have a short repeat frame
 #endif
                         ) {
                     /*
-                     * Code complete -> call callback, no parity check!
+                     * Code complete -> optionally check parity
                      */
                     // Reset state for new start
                     tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
 
-#if !defined(DISABLE_PARITY_CHECKS) && (TINY_ADDRESS_BITS == 16) && TINY_ADDRESS_HAS_8_BIT_PARITY
+#if !defined(DISABLE_PARITY_CHECKS) && (TINY_RECEIVER_ADDRESS_BITS == 16) && TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY
                     /*
                      * Check address parity
                      * Address is sent first and contained in the lower word
@@ -306,11 +319,11 @@ void IRPinChangeInterruptHandler(void) {
                         TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
                     }
 #endif
-#if !defined(DISABLE_PARITY_CHECKS) && (TINY_COMMAND_BITS == 16) && TINY_COMMAND_HAS_8_BIT_PARITY
+#if !defined(DISABLE_PARITY_CHECKS) && (TINY_RECEIVER_COMMAND_BITS == 16) && TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
                     /*
                      * Check command parity
                      */
-#if (TINY_ADDRESS_BITS > 0)
+#if (TINY_RECEIVER_ADDRESS_BITS > 0)
                     if (TinyIRReceiverControl.IRRawData.UBytes[2] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[3])) {
                         TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
 #  if defined(LOCAL_DEBUG)
@@ -341,15 +354,15 @@ void IRPinChangeInterruptHandler(void) {
                     interrupts(); // enable interrupts, so delay() etc. works in callback
 #endif
                     handleReceivedTinyIRData(
-#if (TINY_ADDRESS_BITS > 0)
-#  if TINY_ADDRESS_HAS_8_BIT_PARITY
+#if (TINY_RECEIVER_ADDRESS_BITS > 0)
+#  if TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY
                             // Here we have 8 bit address
                             TinyIRReceiverControl.IRRawData.UBytes[0],
 #  else
                             // Here we have 16 bit address
                             TinyIRReceiverControl.IRRawData.UWord.LowWord,
 #  endif
-#  if TINY_COMMAND_HAS_8_BIT_PARITY
+#  if TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
                             // Here we have 8 bit command
                             TinyIRReceiverControl.IRRawData.UBytes[3],
 #  else
@@ -359,7 +372,7 @@ void IRPinChangeInterruptHandler(void) {
 #else
 
                             // Here we have NO address
-#  if TINY_COMMAND_HAS_8_BIT_PARITY
+#  if TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
                             // Here we have 8 bit command
                             TinyIRReceiverControl.IRRawData.UBytes[0],
 #  else

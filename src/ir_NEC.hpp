@@ -75,7 +75,10 @@ Sum: 13400
 // ONKYO like NEC but 16 independent command bits
 // PIONEER (not implemented) is NEC2 with 40 kHz
 // LSB first, 1 start bit + 16 bit address (or 8 bit address and 8 bit inverted address) + 8 bit command + 8 bit inverted command + 1 stop bit.
-// Standard NEC (or NEC1) sends a special fixed repeat frame, but I have a DVD remote with NEC2, which send the same full frame after the 110 ms.
+// Standard NEC sends a special fixed repeat frame.
+// NEC2 sends the same full frame after the 110 ms. I have a DVD remote with NEC2.
+// NEC and NEC 2 only differ in the repeat frames, so the protocol can only be detected correctly after the first repeat.
+//
 // IRP: NEC  {38.0k,564}<1,-1|1,-3>(16,-8,D:8,S:8,F:8,~F:8,1,^108m,(16,-4,1,^108m)*)  ==> "*" means send special repeat frames o ore more times
 // IRP: NEC2 {38.0k,564}<1,-1|1,-3>(16,-8,D:8,S:8,F:8,~F:8,1,^108m)+   ==> "+" means send frame 1 or more times (special repeat is missing here!)
 // {38.0k,564} ==> 38.0k -> Frequency , 564 -> unit in microseconds (we use 560), no "msb", so "lsb" is assumed

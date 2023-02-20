@@ -1,7 +1,7 @@
 # PlatformIoPublish.yml
 # Github workflow script to publish a release to PlatformIo.
 #
-# Copyright (C) 2021-2022  Armin Joachimsmeyer
+# Copyright (C) 2021-2023  Armin Joachimsmeyer
 # https://github.com/ArminJo/Github-Actions
 #
 
@@ -18,15 +18,20 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+
+    - name: Checkout
+      uses: actions/checkout@master
+
     - name: Set up Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@master
       with:
         python-version: '3.x'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install platformio
+
     - name: Build and publish
       env:
         PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_TOKEN }}

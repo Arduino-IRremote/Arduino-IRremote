@@ -80,44 +80,49 @@ jobs:
         #############################################################################################################
         include:
           - arduino-boards-fqbn: arduino:avr:uno
-            sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
 
           - arduino-boards-fqbn: arduino:avr:uno|DEBUG
-            sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
               All: -DEBUG
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_NO_SEND_PWM
-            sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
+              TinyReceiver: -DUSE_FAST_PROTOCOL
+              TinySender: -DUSE_FAST_PROTOCOL
               All: -DUSE_NO_SEND_PWM
 
           - arduino-boards-fqbn: arduino:avr:uno|SEND_PWM_BY_TIMER
-            sketches-exclude: IR2Keyboard,UnitTest
+            sketches-exclude: UnitTest
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3 -DSEND_PWM_BY_TIMER
+              TinyReceiver: -DUSE_ONKYO_PROTOCOL
+              TinySender: -DUSE_ONKYO_PROTOCOL
               All: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
-            sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3 -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
               SimpleSender: -DSEND_PWM_BY_TIMER
+              TinyReceiver: -DENABLE_NEC2_REPEATS
+              TinySender: -DENABLE_NEC2_REPEATS
               All: -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
 
           - arduino-boards-fqbn: arduino:avr:mega:cpu=atmega2560
-            sketches-exclude: IR2Keyboard
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               SimpleSender: -DSEND_PWM_BY_TIMER
+              TinyReceiver: -DDISABLE_PARITY_CHECKS
+              TinySender: -DDISABLE_PARITY_CHECKS
 
           - arduino-boards-fqbn: arduino:avr:leonardo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              TinyReceiver: -DNO_LED_FEEDBACK_CODE
+              TinySender: -DNO_LED_FEEDBACK_CODE
 #            sketches-exclude: ReceiveAndSend # Not enough RAM for default RAW_BUFFER_LENGTH
 
           - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
@@ -125,6 +130,8 @@ jobs:
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
               SimpleSender: -DSEND_PWM_BY_TIMER
+              TinyReceiver: -DUSE_ONKYO_PROTOCOL -DENABLE_NEC2_REPEATS -DNO_LED_FEEDBACK_CODE
+              TinySender: -DUSE_ONKYO_PROTOCOL -DENABLE_NEC2_REPEATS -DNO_LED_FEEDBACK_CODE
 
           - arduino-boards-fqbn: arduino:samd:arduino_zero_native
             sketches-exclude: TinyReceiver,IRDispatcherDemo

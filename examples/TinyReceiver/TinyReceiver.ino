@@ -12,34 +12,41 @@
  *  !!!!!!!!!!!!!!!!!!!!!
  *
  *  FAST protocol is proprietary and a JVC protocol without address and with a shorter header.
- *  FAST takes 21 ms for sending and can be sent at a 50 ms period. It still supports parity.
+ *  FAST takes 21 ms for sending and can be sent at a 40 ms period. It still supports parity.
  *  FAST Protocol characteristics:
  *  - Bit timing is like JVC
- *  - The header is shorter, 4000 vs. 12500
+ *  - The header is shorter, 3156 vs. 12500
  *  - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *      leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
- *  - Repeats are sent as complete frames but in a 50 ms period.
+ *      leading to a fixed protocol length of (6 + (16 * 2) + 1) * 526 = 39 * 560 = 20514 microseconds or 20.5 ms.
+ *  - Repeats are sent as complete frames but in a 40 ms period / with a 19.5 ms distance.
  *
- *
- *  Copyright (C) 2020-2023  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
- *  TinyIRReceiver is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ ************************************************************************************
+ * MIT License
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
+ * Copyright (c) 2022-2023 Armin Joachimsmeyer
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
  *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ ************************************************************************************
  */
 
 #include <Arduino.h>
@@ -82,7 +89,10 @@
 /*
  * Second: include the code and compile it.
  */
-//#define USE_FAST_PROTOCOL // Use short protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
+//#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
+//#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
+//#define USE_FAST_PROTOCOL     // Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC.
+//#define ENABLE_NEC2_REPEATS   // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 #include "TinyIRReceiver.hpp"
 
 /*
@@ -150,6 +160,8 @@ IRAM_ATTR
 
 #if defined(USE_FAST_PROTOCOL)
 void handleReceivedTinyIRData(uint8_t aCommand, uint8_t aFlags)
+#elif defined(USE_ONKYO_PROTOCOL)
+void handleReceivedTinyIRData(uint16_t aAddress, uint16_t aCommand, uint8_t aFlags)
 #else
 void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags)
 #endif

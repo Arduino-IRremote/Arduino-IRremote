@@ -153,7 +153,7 @@ ISR()
      * So we change the code to if / else if
      */
 //    switch (irparams.StateForISR) {
-//......................................................................
+//
     if (irparams.StateForISR == IR_REC_STATE_IDLE) {
         /*
          * Here we are just resumed and maybe in the middle of a transmission
@@ -186,7 +186,7 @@ ISR()
 #endif
             irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR; // record mark
             irparams.StateForISR = IR_REC_STATE_SPACE;
-            irparams.TickCounterForISR = 0; // This resets the tick counter also at end of frame :-)
+            irparams.TickCounterForISR = 0;// This resets the tick counter also at end of frame :-)
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing space
@@ -1268,6 +1268,9 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
 
 #if defined(DECODE_DISTANCE_WIDTH)
         } else {
+            /*
+             * Pulse distance or pulse width here
+             */
             if(tNumberOfArrayData > 1) {
                 aSerial->print("PulseDistanceWidthFromArray(38, ");
             } else {
@@ -1316,7 +1319,7 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             if (decodedIRData.protocol == PULSE_DISTANCE) {
                 aSerial->print(F(", SEND_STOP_BIT"));
             } else {
-                aSerial->print(F(", SEND_NO_STOP_BIT")); // assume no stop bit like for Magiquest.
+                aSerial->print(F(", SEND_NO_STOP_BIT")); // assume no stop bit for pulse width like for Magiquest.
             }
             aSerial->print(F(", <millisofRepeatPeriod>, <numberOfRepeats>"));
         }

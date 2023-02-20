@@ -34,13 +34,11 @@
  * @{
  */
 
-#define VERSION_IRTINY "1.1.0"
+#define VERSION_IRTINY "1.2.0"
 #define VERSION_IRTINY_MAJOR 1
-#define VERSION_IRTINY_MINOR 1
+#define VERSION_IRTINY_MINOR 2
 #define VERSION_IRTINY_PATCH 0
-
-
-//#define SUPPORT_ONKYO_16_BIT_COMMAND // If activated take the 16 bit (NEC) command as one 16 bit value and not as 8 bit data and 8 bit inverted data
+// The change log is at the bottom of the file
 
 /**
  * Timing for NEC protocol
@@ -70,79 +68,80 @@
 /**
  * FAST protocol characteristics:
  * - Bit timing is like JVC
- * - The header is shorter, 4000 vs. 12500
+ * - The header is shorter, 3156 vs. 12500
  * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *     leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
- * - Repeats are sent as complete frames but in a 50 ms period / with a 29 ms distance.
+ *     leading to a fixed protocol length of (6 + (16 * 2) + 1) * 526 = 39 * 560 = 20514 microseconds or 20.5 ms.
+ * - Repeats are sent as complete frames but in a 40 ms period / with a 19.5 ms distance.
  */
-#define FAST_PARITY_ADDRESS_BITS          0 // No address
-#define FAST_PARITY_COMMAND_BITS         16 // Command and inverted command (parity)
-#define FAST_PARITY_BITS                 (FAST_PARITY_ADDRESS_BITS + FAST_PARITY_COMMAND_BITS)
+#define FAST_ADDRESS_BITS          0 // No address
+#define FAST_COMMAND_BITS         16 // Command and inverted command (parity)
+#define FAST_BITS                 (FAST_ADDRESS_BITS + FAST_COMMAND_BITS)
 
-#define FAST_PARITY_UNIT                 526 // 20 periods of 38 kHz (526.315789)
+#define FAST_UNIT                 526 // 20 periods of 38 kHz (526.315789)
 
-#define FAST_PARITY_BIT_MARK             FAST_PARITY_UNIT
-#define FAST_PARITY_ONE_SPACE            (3 * FAST_PARITY_UNIT)     // 1578 -> bit period = 2104
-#define FAST_PARITY_ZERO_SPACE           FAST_PARITY_UNIT           //  526 -> bit period = 1052
+#define FAST_BIT_MARK             FAST_UNIT
+#define FAST_ONE_SPACE            (3 * FAST_UNIT)     // 1578 -> bit period = 2104
+#define FAST_ZERO_SPACE           FAST_UNIT           //  526 -> bit period = 1052
 
-#define FAST_PARITY_HEADER_MARK          (4 * FAST_PARITY_UNIT)     // 2104
-#define FAST_PARITY_HEADER_SPACE         (FAST_PARITY_ONE_SPACE)    // 1578
+#define FAST_HEADER_MARK          (4 * FAST_UNIT)     // 2104
+#define FAST_HEADER_SPACE         (2 * FAST_UNIT)     // 1052
 
-#define FAST_PARITY_REPEAT_PERIOD        50000 // Commands are repeated every 50 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define FAST_PARITY_REPEAT_DISTANCE      (FAST_PARITY_REPEAT_PERIOD - (40 * FAST_PARITY_UNIT)) // 29 ms
-#define FAST_PARITY_MAXIMUM_REPEAT_DISTANCE (FAST_PARITY_REPEAT_DISTANCE + 10000) // 47.5 ms
+#define FAST_REPEAT_PERIOD        40000 // Commands are repeated every 40 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define FAST_REPEAT_DISTANCE      (FAST_REPEAT_PERIOD - (39 * FAST_UNIT)) // 19.5 ms
+#define FAST_MAXIMUM_REPEAT_DISTANCE (FAST_REPEAT_DISTANCE + 5000) // 24.5 ms
 
 /*
  * Definitions to switch between FAST and NEC/ONKYO timing with the same code.
  */
 #if defined(USE_FAST_PROTOCOL)
-#define TINY_ADDRESS_BITS          FAST_PARITY_ADDRESS_BITS
-#define TINY_COMMAND_BITS          FAST_PARITY_COMMAND_BITS
-#if !defined(TINY_COMMAND_HAS_8_BIT_PARITY)
-#define TINY_COMMAND_HAS_8_BIT_PARITY  true     // 8 bit and 8 bit parity
-//#define TINY_COMMAND_HAS_8_BIT_PARITY  false    //  16 bit command without parity - not tested
+#define ENABLE_NEC2_REPEATS    // Disables detection of special short frame NEC repeats. Saves 40 bytes program memory.
+
+#define TINY_RECEIVER_ADDRESS_BITS          FAST_ADDRESS_BITS
+#define TINY_RECEIVER_COMMAND_BITS          FAST_COMMAND_BITS
+#if !defined(TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY)
+#define TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY  true     // 8 bit and 8 bit parity
+//#define TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY  false    //  16 bit command without parity - not tested
 #endif
 
-#define TINY_BITS                  FAST_PARITY_BITS
-#define TINY_UNIT                  FAST_PARITY_UNIT
+#define TINY_RECEIVER_BITS                  FAST_BITS
+#define TINY_RECEIVER_UNIT                  FAST_UNIT
 
-#define TINY_HEADER_MARK           FAST_PARITY_HEADER_MARK
-#define TINY_HEADER_SPACE          FAST_PARITY_HEADER_SPACE
+#define TINY_RECEIVER_HEADER_MARK           FAST_HEADER_MARK
+#define TINY_RECEIVER_HEADER_SPACE          FAST_HEADER_SPACE
 
-#define TINY_BIT_MARK              FAST_PARITY_BIT_MARK
-#define TINY_ONE_SPACE             FAST_PARITY_ONE_SPACE
-#define TINY_ZERO_SPACE            FAST_PARITY_ZERO_SPACE
+#define TINY_RECEIVER_BIT_MARK              FAST_BIT_MARK
+#define TINY_RECEIVER_ONE_SPACE             FAST_ONE_SPACE
+#define TINY_RECEIVER_ZERO_SPACE            FAST_ZERO_SPACE
 
-#define TINY_MAXIMUM_REPEAT_DISTANCE  FAST_PARITY_MAXIMUM_REPEAT_DISTANCE // for repeat detection
+#define TINY_RECEIVER_MAXIMUM_REPEAT_DISTANCE  FAST_MAXIMUM_REPEAT_DISTANCE // for repeat detection
 
 #else
-#define ENABLE_NEC_REPEAT_SUPPORT    // Activating this, enables detection of special short frame NEC repeats. Requires 40 bytes program memory.
 
-#define TINY_ADDRESS_BITS          NEC_ADDRESS_BITS // the address bits + parity
-#  if !defined(TINY_ADDRESS_HAS_8_BIT_PARITY)
-#define TINY_ADDRESS_HAS_8_BIT_PARITY  true     // 8 bit and 8 bit parity
+#define TINY_RECEIVER_ADDRESS_BITS          NEC_ADDRESS_BITS // the address bits + parity
+#  if defined(USE_ONKYO_PROTOCOL)
+#define TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY  false     // 16 bit address without parity
+#  else
+#define TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY  true     // 8 bit and 8 bit parity
 #  endif
 
-#define TINY_COMMAND_BITS          NEC_COMMAND_BITS // the command bits + parity
-#  if !defined(TINY_COMMAND_HAS_8_BIT_PARITY)
-#    if defined(SUPPORT_ONKYO_16_BIT_COMMAND)
-#define TINY_COMMAND_HAS_8_BIT_PARITY  false    // 16 bit command without parity
-#    else
-#define TINY_COMMAND_HAS_8_BIT_PARITY  true     // 8 bit and 8 bit parity
-#    endif
+#define TINY_RECEIVER_COMMAND_BITS          NEC_COMMAND_BITS // the command bits + parity
+#  if defined(USE_ONKYO_PROTOCOL)
+#define TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY  false    // 16 bit command without parity
+#  else
+#define TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY  true     // 8 bit and 8 bit parity
 #  endif
 
-#define TINY_BITS                  NEC_BITS
-#define TINY_UNIT                  NEC_UNIT
+#define TINY_RECEIVER_BITS                  NEC_BITS
+#define TINY_RECEIVER_UNIT                  NEC_UNIT
 
-#define TINY_HEADER_MARK           NEC_HEADER_MARK
-#define TINY_HEADER_SPACE          NEC_HEADER_SPACE
+#define TINY_RECEIVER_HEADER_MARK           NEC_HEADER_MARK
+#define TINY_RECEIVER_HEADER_SPACE          NEC_HEADER_SPACE
 
-#define TINY_BIT_MARK              NEC_BIT_MARK
-#define TINY_ONE_SPACE             NEC_ONE_SPACE
-#define TINY_ZERO_SPACE            NEC_ZERO_SPACE
+#define TINY_RECEIVER_BIT_MARK              NEC_BIT_MARK
+#define TINY_RECEIVER_ONE_SPACE             NEC_ONE_SPACE
+#define TINY_RECEIVER_ZERO_SPACE            NEC_ZERO_SPACE
 
-#define TINY_MAXIMUM_REPEAT_DISTANCE  NEC_MAXIMUM_REPEAT_DISTANCE
+#define TINY_RECEIVER_MAXIMUM_REPEAT_DISTANCE  NEC_MAXIMUM_REPEAT_DISTANCE
 #endif
 
 /*
@@ -150,18 +149,18 @@
  * The parameter size is dependent of the code variant used in order to save program memory.
  * We have 6 cases: 0, 8 bit or 16 bit address, each with 8 or 16 bit command
  */
-#if (TINY_ADDRESS_BITS > 0)
-#  if TINY_ADDRESS_HAS_8_BIT_PARITY
+#if (TINY_RECEIVER_ADDRESS_BITS > 0)
+#  if TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY
 // 8 bit address here
-#    if TINY_COMMAND_HAS_8_BIT_PARITY
+#    if TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
 extern void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags);   // Standard NEC callback
 #    else
 extern void handleReceivedTinyIRData(uint8_t aAddress, uint16_t aCommand, uint8_t aFlags); // If SUPPORT_ONKYO_16_BIT_COMMAND is defined
 #    endif
 
-#  else // TINY_ADDRESS_HAS_8_BIT_PARITY
+#  else // TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY
 // 16 bit address here
-#    if TINY_COMMAND_HAS_8_BIT_PARITY
+#    if TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
 extern void handleReceivedTinyIRData(uint16_t aAddress, uint8_t aCommand, uint8_t aFlags);
 #    else
 extern void handleReceivedTinyIRData(uint16_t aAddress, uint16_t aCommand, uint8_t aFlags);
@@ -170,10 +169,10 @@ extern void handleReceivedTinyIRData(uint16_t aAddress, uint16_t aCommand, uint8
 
 #else
 // FAST protocol - No address here
-#  if TINY_COMMAND_HAS_8_BIT_PARITY
+#  if TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
 extern void handleReceivedTinyIRData(uint8_t aCommand, uint8_t aFlags); // Standard FAST callback
 #  else
-extern void handleReceivedTinyIRData(uint16_t aCommand, uint8_t aFlags); // If "TINY_COMMAND_HAS_8_BIT_PARITY  false" is defined. 16 bit without parity.
+extern void handleReceivedTinyIRData(uint16_t aCommand, uint8_t aFlags); // If "TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY  false" is defined. 16 bit without parity.
 #  endif
 #endif
 
@@ -215,7 +214,7 @@ struct TinyIRReceiverStruct {
     /*
      * Data
      */
-#if (TINY_BITS > 16)
+#if (TINY_RECEIVER_BITS > 16)
     uint32_t IRRawDataMask;         ///< The corresponding bit mask for IRRawDataBitCounter.
     LongUnion IRRawData;            ///< The current raw data. LongUnion helps with decoding of address and command.
 #else
@@ -239,15 +238,15 @@ struct TinyIRReceiverStruct {
  * E.g. with volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
  */
 struct TinyIRReceiverCallbackDataStruct {
-#if (TINY_ADDRESS_BITS > 0)
-#  if (TINY_ADDRESS_BITS == 16) && !TINY_ADDRESS_HAS_8_BIT_PARITY
+#if (TINY_RECEIVER_ADDRESS_BITS > 0)
+#  if (TINY_RECEIVER_ADDRESS_BITS == 16) && !TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY
     uint16_t Address;
 #  else
     uint8_t Address;
 #  endif
 #endif
 
-#  if (TINY_COMMAND_BITS == 16) && !TINY_COMMAND_HAS_8_BIT_PARITY
+#  if (TINY_RECEIVER_COMMAND_BITS == 16) && !TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
     uint16_t Command;
 #else
     uint8_t Command;
@@ -266,8 +265,21 @@ void printTinyReceiverResultMinimal(Print *aSerial, uint16_t aCommand, uint8_t a
 void printTinyReceiverResultMinimal(Print *aSerial, uint8_t aAddress, uint8_t aCommand, uint8_t aFlags);
 #endif
 
+void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
 void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
-void sendNECMinimal(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
+void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0); // Send NEC with 16 bit command, even if aCommand < 0x100
+void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0)
+        __attribute__ ((deprecated ("Renamed to sendNEC().")));
+void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
+
+/*
+ *  Version 1.2.0 - 01/2023
+ * - Added ONKYO protocol, NEC with 16 bit address and command, instead of 8 bit + 8 bit parity address and command.
+ * - Renamed functions and macros.
+ *
+ * Version 1.1.0 - 01/2023
+ * - FAST protocol added.
+ */
 /** @}*/
 
 #endif // _TINY_IR_H
