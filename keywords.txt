@@ -66,7 +66,7 @@ sendLegoPowerFunctions	KEYWORD2
 sendMagiQuest	KEYWORD2
 sendPronto	KEYWORD2
 sendMagiQuest	KEYWORD2
-
+sendFAST	KEYWORD2
 #######################################
 # Constants (LITERAL1)
 #######################################
@@ -97,6 +97,7 @@ BOSEWAVE	LITERAL1
 LEGO_PF	LITERAL1
 MAGIQUEST	LITERAL1
 WHYNTER	LITERAL1
+FAST	LITERAL1
 UNKNOWN	LITERAL1
 IR_RECEIVE_PIN	LITERAL1
 IR_SEND_PIN	LITERAL1

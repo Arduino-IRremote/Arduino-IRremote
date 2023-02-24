@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@
 
 #include "PinDefinitionsAndMore.h"  // Define macros for input and output pin etc.
 
-#define DISABLE_CODE_FOR_RECEIVER // Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not used.
+#define DISABLE_CODE_FOR_RECEIVER // Disables restarting receiver after each send. Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not used.
 
 //#define EXCLUDE_EXOTIC_PROTOCOLS  // Saves around 240 bytes program memory if IrSender.write is used
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
@@ -119,6 +119,11 @@ void loop() {
     IrSender.sendNEC(sAddress, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
+    Serial.println(F("Send NEC2 with 16 bit address"));
+    Serial.flush();
+    IrSender.sendNEC2(sAddress, sCommand, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
     if (sRepeats == 0) {
 #if FLASHEND >= 0x3FFF && (RAMEND >= 0x4FF || RAMSIZE >= 0x4FF) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
         /*
@@ -137,7 +142,8 @@ void loop() {
         /*
          * !!! The next data occupies 136 bytes RAM !!!
          */
-        Serial.println(F("Send NEC 16 bit address=0xFB04 and command 0x08 with exact timing (16 bit array format)"));
+        Serial.println(
+                F("Send NEC sendRaw data with 8 bit address=0xFB04 and command 0x08 and exact timing (16 bit array format)"));
         Serial.flush();
         const uint16_t irSignal[] = { 9000, 4500/*Start bit*/, 560, 560, 560, 560, 560, 1690, 560,
                 560/*0010 0x4 of 16 bit address LSB first*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000*/, 560, 1690, 560, 1690,
@@ -147,7 +153,7 @@ void loop() {
                 1690/*1111 inverted 0 of command*/, 560 /*stop bit*/}; // Using exact NEC timing
         IrSender.sendRaw(irSignal, sizeof(irSignal) / sizeof(irSignal[0]), NEC_KHZ); // Note the approach used to automatically calculate the size of the array.
         delay(DELAY_AFTER_SEND);
-#endif
+
         /*
          * With sendNECRaw() you can send 32 bit combined codes
          */
@@ -156,24 +162,17 @@ void loop() {
         IrSender.sendNECRaw(0x03040102, sRepeats);
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with sendPulseDistanceWidthData()"));
-        // Header
-        IrSender.mark(9000);
-        IrSender.space(4500);
-        // LSB first + stop bit
-        IrSender.sendPulseDistanceWidthData(560, 1680, 560, 560, 0x03040102, 32, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT);
-        delay(DELAY_AFTER_SEND);
-
         /*
          * With Send sendNECMSB() you can send your old 32 bit codes.
          * To convert one into the other, you must reverse the byte positions and then reverse all positions of each byte.
          * Example:
          * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
          */
+        Serial.println(F("Send ONKYO with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first (0x40802CD3)"));
         Serial.flush();
-        Serial.println(F("Send NEC with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first"));
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         delay(DELAY_AFTER_SEND);
+#endif
 
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
         Serial.flush();
@@ -193,11 +192,11 @@ void loop() {
         Serial.println(F(" LSB first"));
         Serial.flush();
 #if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_LSB_FIRST,
-        SEND_STOP_BIT, 0, NO_REPEATS);
+        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48,
+        PROTOCOL_IS_LSB_FIRST, 0, NO_REPEATS);
 #else
         IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0xA010B02002, 48, PROTOCOL_IS_LSB_FIRST,
-        SEND_STOP_BIT, 0, NO_REPEATS);
+         0, NO_REPEATS);
 #endif
         delay(DELAY_AFTER_SEND);
 
@@ -206,39 +205,45 @@ void loop() {
 #if __INT_WIDTH__ < 32
         tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;
-        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_MSB_FIRST,
-        SEND_STOP_BIT, 0, NO_REPEATS);
+        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48,
+        PROTOCOL_IS_MSB_FIRST, 0, NO_REPEATS);
 #else
         IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0x40040D000805, 48, PROTOCOL_IS_MSB_FIRST,
-        SEND_STOP_BIT, 0, NO_REPEATS);
+         0, NO_REPEATS);
 #endif
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send generic 52 bit PulseDistance 0xDCBA9 87654321 LSB first"));
+        Serial.println(F("Send generic 72 bit PulseDistance 0x5A AFEDCBA9 87654321 LSB first"));
         Serial.flush();
-#if __INT_WIDTH__ < 32
+#      if __INT_WIDTH__ < 32
         tRawData[0] = 0x87654321;  // LSB of tRawData[0] is sent first
-        tRawData[1] = 0xDCBA9;
-        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 52, PROTOCOL_IS_LSB_FIRST,
-        SEND_STOP_BIT, 0, NO_REPEATS);
-#else
-        IrSender.sendPulseDistanceWidth(38, 8900, 4450, 550, 1700, 550, 600, 0xDCBA987654321, 52, PROTOCOL_IS_LSB_FIRST,
-        SEND_STOP_BIT, 0, NO_REPEATS);
-#endif
+        tRawData[1] = 0xAFEDCBA9;
+        tRawData[2] = 0x5A;
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, 0,
+        NO_REPEATS);
+#      else
+        IRRawDataType tRawData[] = { 0xAFEDCBA987654321, 0x5A }; // LSB of tRawData[0] is sent first
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, 0, NO_REPEATS);
+#      endif
         delay(DELAY_AFTER_SEND);
 
         Serial.println(F("Send generic 52 bit PulseDistanceWidth 0xDCBA9 87654321 LSB first"));
         Serial.flush();
         // Real PulseDistanceWidth (constant bit length) does not require a stop bit
 #if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromArray(38, 300, 600, 600, 300, 300, 600, &tRawData[0], 52, PROTOCOL_IS_LSB_FIRST,
-        SEND_NO_STOP_BIT, 0, 0);
+        IrSender.sendPulseDistanceWidthFromArray(38, 300, 600, 600, 300, 300, 600, &tRawData[0], 52,
+        PROTOCOL_IS_LSB_FIRST, 0, 0);
 #else
         IrSender.sendPulseDistanceWidth(38, 300, 600, 600, 300, 300, 600, 0xDCBA987654321, 52, PROTOCOL_IS_LSB_FIRST,
-        SEND_NO_STOP_BIT, 0, 0);
+        0, 0);
 #endif
         delay(DELAY_AFTER_SEND);
 
+        Serial.println(F("Send generic 32 bit PulseWidth 0x87654321 LSB first"));
+        Serial.flush();
+        // Real PulseDistanceWidth (constant bit length) does not require a stop bit
+        IrSender.sendPulseDistanceWidth(38, 1000, 500, 600, 300, 300, 300, 0x87654321, 32, PROTOCOL_IS_LSB_FIRST, 0, 0);
+        delay(DELAY_AFTER_SEND);
     }
 
     Serial.println(F("Send Onkyo (NEC with 16 bit command)"));
@@ -367,13 +372,20 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     // Bang&Olufsen must be sent with 455 kHz
-    Serial.println(F("Send Bang&Olufsen"));
-    Serial.flush();
-    IrSender.sendBangOlufsen(sAddress, sCommand, sRepeats);
-    delay(DELAY_AFTER_SEND);
+//    Serial.println(F("Send Bang&Olufsen"));
+//    Serial.flush();
+//    IrSender.sendBangOlufsen(sAddress, sCommand, sRepeats);
+//    delay(DELAY_AFTER_SEND);
 
     IRSendData.protocol = BOSEWAVE;
     Serial.println(F("Send Bosewave with no address and 8 command bits"));
+    Serial.flush();
+    IrSender.write(&IRSendData, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
+    IRSendData.protocol = FAST;
+    Serial.print(F("Send "));
+    Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
@@ -390,8 +402,8 @@ void loop() {
     /*
      * Force buffer overflow
      */
-    Serial.println(F("Force buffer overflow by sending 280 marks and spaces"));
-    for (unsigned int i = 0; i < 140; ++i) {
+    Serial.println(F("Force buffer overflow by sending 700 marks and spaces"));
+    for (unsigned int i = 0; i < 350; ++i) {
         // 400 + 400 should be received as 8/8 and sometimes as 9/7 or 7/9 if compensation by MARK_EXCESS_MICROS is optimal.
         // 210 + 540 = 750 should be received as 5/10 or 4/11 if compensation by MARK_EXCESS_MICROS is optimal.
         IrSender.mark(210); // 8 pulses at 38 kHz

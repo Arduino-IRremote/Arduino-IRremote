@@ -161,10 +161,13 @@ void IRsend::sendBangOlufsenDataLink(uint32_t aHeader, uint8_t aData, int_fast8_
  */
 void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBackToBack) {
 #if defined(USE_NO_SEND_PWM) || BEO_KHZ == 38 // BEO_KHZ == 38 is for unit test which runs the B&O protocol with 38 kHz
+
     /*
      * 455 kHz PWM is currently not supported, maximum is 180 kHz
      */
+#if !defined(USE_NO_SEND_PWM)
     enableIROut (BEO_KHZ);
+#endif
 
 // AGC / Start - 3 bits + first constant 0 header bit described in the official documentation
     if (!aBackToBack) {
@@ -204,9 +207,6 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
     space(BEO_PULSE_LENGTH_TRAILING_BIT - BEO_IR_MARK);
     mark(BEO_IR_MARK);
 
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 #else
     (void) aRawData;
     (void) aBits;
@@ -226,7 +226,9 @@ void IRsend::sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bo
     /*
      * 455 kHz PWM is currently not supported, maximum is 180 kHz
      */
+#if !defined(USE_NO_SEND_PWM)
     enableIROut (BEO_KHZ);
+#endif
 
 // AGC / Start - 3 bits + first constant 0 header bit described in the official documentation
     if (!aBackToBack) {
@@ -266,9 +268,6 @@ void IRsend::sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bo
     space(BEO_PULSE_LENGTH_TRAILING_BIT - tSendBEOMarkLength);
     mark(tSendBEOMarkLength);
 
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 #else
     (void) aRawData;
     (void) aBits;

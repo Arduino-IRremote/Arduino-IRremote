@@ -59,7 +59,7 @@
 #define DISH_REPEAT_SPACE   6200 // really?
 
 struct PulseDistanceWidthProtocolConstants DishProtocolConstants = { UNKNOWN, 56, DISH_HEADER_MARK, DISH_HEADER_SPACE,
-DISH_BIT_MARK, DISH_ONE_SPACE, DISH_BIT_MARK, DISH_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, 40, NULL };
+DISH_BIT_MARK, DISH_ONE_SPACE, DISH_BIT_MARK, DISH_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, 40, NULL };
 
 void IRsend::sendDish(uint16_t aData) {
     sendPulseDistanceWidth(&DishProtocolConstants, aData, DISH_BITS, 4);
@@ -85,7 +85,7 @@ void IRsend::sendDish(uint16_t aData) {
 #define WHYNTER_ZERO_SPACE     750
 
 struct PulseDistanceWidthProtocolConstants WhynterProtocolConstants = { WHYNTER, 38, WHYNTER_HEADER_MARK, WHYNTER_HEADER_SPACE,
-WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, 110, NULL };
+WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, 110, NULL };
 
 void IRsend::sendWhynter(uint32_t aData, uint8_t aNumberOfBitsToSend) {
     sendPulseDistanceWidth(&WhynterProtocolConstants, aData, NEC_BITS, aNumberOfBitsToSend);

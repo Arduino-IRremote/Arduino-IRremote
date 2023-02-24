@@ -68,23 +68,21 @@ typedef enum {
     LEGO_PF,
     MAGIQUEST,
     WHYNTER,
-
+    FAST
 } decode_type_t;
 
-struct PulseDistanceWidthProtocolConstants {
-    decode_type_t ProtocolIndex;
-    uint_fast8_t FrequencyKHz;
-    unsigned int HeaderMarkMicros;
-    unsigned int HeaderSpaceMicros;
-    unsigned int OneMarkMicros;
-    unsigned int OneSpaceMicros;
-    unsigned int ZeroMarkMicros;
-    unsigned int ZeroSpaceMicros;
-    bool isMSBFirst;
-    bool hasStopBit;
-    unsigned int RepeatPeriodMillis;
-    void (*SpecialSendRepeatFunction)(); // using non member functions here saves up to 250 bytes for send demo
-//    void (IRsend::*SpecialSendRepeatFunction)();
+
+#define SIRCS_12_PROTOCOL       12
+#define SIRCS_15_PROTOCOL       15
+#define SIRCS_20_PROTOCOL       20
+
+struct DistanceWidthTimingInfoStruct {
+    uint16_t HeaderMarkMicros;
+    uint16_t HeaderSpaceMicros;
+    uint16_t OneMarkMicros;
+    uint16_t OneSpaceMicros;
+    uint16_t ZeroMarkMicros;
+    uint16_t ZeroSpaceMicros;
 };
 
 /*
@@ -95,19 +93,13 @@ struct PulseDistanceWidthProtocolConstants {
 #define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02 ///< The current repeat frame is a repeat, that is always sent after a regular frame and cannot be avoided. Only specified for protocols DENON, and LEGO.
 #define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< The current (autorepeat) frame violated parity check.
 #define IRDATA_FLAGS_TOGGLE_BIT         0x08 ///< Is set if RC5 or RC6 toggle bit is set
+#define IRDATA_TOGGLE_BIT_MASK          0x08 ///< deprecated -is set if RC5 or RC6 toggle bit is set
 #define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray)
 #define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag
 #define IRDATA_FLAGS_IS_MSB_FIRST       0x80 ///< Value is mainly determined by the (known) protocol
 #define IRDATA_FLAGS_IS_LSB_FIRST       0x00
 
-// deprecated
-#define IRDATA_TOGGLE_BIT_MASK          0x08 ///< is set if RC5 or RC6 toggle bit is set
-
-#if __INT_WIDTH__ < 32
-#define RAW_DATA_ARRAY_SIZE             ((((RAW_BUFFER_LENGTH - 2) - 1) / 64) + 1) // The -2 is for initial gap + stop bit mark, 64 mark + spaces for 32 bit.
-#else
-#define RAW_DATA_ARRAY_SIZE             ((((RAW_BUFFER_LENGTH - 2) - 1) / 128) + 1) // The -2 is for initial gap + stop bit mark, 128 mark + spaces for 64 bit.
-#endif
+#define RAW_DATA_ARRAY_SIZE             ((((RAW_BUFFER_LENGTH - 2) - 1) / (2 * BITS_IN_RAW_DATA_TYPE)) + 1) // The -2 is for initial gap + stop bit mark, 128 mark + spaces for 64 bit.
 /**
  * Data structure for the user application, available as decodedIRData.
  * Filled by decoders and read by print functions or user application.
@@ -117,17 +109,35 @@ struct IRData {
     uint16_t address; ///< Decoded address, Distance protocol (tMarkTicksLong (if tMarkTicksLong == 0, then tMarkTicksShort) << 8) | tSpaceTicksLong
     uint16_t command;       ///< Decoded command, Distance protocol (tMarkTicksShort << 8) | tSpaceTicksShort
     uint16_t extra; ///< Contains upper 16 bit of Magiquest WandID, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks << 8) | HeaderSpaceTicks.
-    uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
-    uint8_t flags;          ///< See IRDATA_FLAGS_* definitions above
     IRRawDataType decodedRawData; ///< Up to 32/64 bit decoded raw data, to be used for send functions.
 #if defined(DECODE_DISTANCE_WIDTH)
+    // This replaces the address, command, extra and decodedRawData in case of protocol == PULSE_DISTANCE or -rather seldom- protocol == PULSE_WIDTH.
+    DistanceWidthTimingInfoStruct DistanceWidthTimingInfo; // 12 bytes
     IRRawDataType decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; ///< 32/64 bit decoded raw data, to be used for send function.
 #endif
+    uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
+    uint8_t flags;          ///< See IRDATA_FLAGS_* definitions above
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.
 };
 
-#define PROTOCOL_IS_LSB_FIRST false
-#define PROTOCOL_IS_MSB_FIRST true
+struct PulseDistanceWidthProtocolConstants {
+    decode_type_t ProtocolIndex;
+    uint_fast8_t FrequencyKHz;
+    DistanceWidthTimingInfoStruct DistanceWidthTimingInfo;
+    uint8_t Flags;
+    unsigned int RepeatPeriodMillis;
+    void (*SpecialSendRepeatFunction)(); // using non member functions here saves up to 250 bytes for send demo
+//    void (IRsend::*SpecialSendRepeatFunction)();
+};
+/*
+ * Definitions for member PulseDistanceWidthProtocolConstants.Flags
+ */
+#define SUPPRESS_STOP_BIT_FOR_THIS_DATA 0x20
+#define PROTOCOL_IS_MSB_FIRST           IRDATA_FLAGS_IS_MSB_FIRST
+#define PROTOCOL_IS_LSB_FIRST           IRDATA_FLAGS_IS_LSB_FIRST
+// 2 definitions for deprecated parameter bool aSendStopBit
+#define SEND_STOP_BIT true
+#define SEND_NO_STOP_BIT false
 
 /*
  * Carrier frequencies for various protocols

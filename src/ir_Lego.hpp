@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -83,7 +83,7 @@
 #define LEGO_MODE_SINGLE    0x4 // here the 2 LSB have meanings like Output A / Output B
 
 struct PulseDistanceWidthProtocolConstants LegoProtocolConstants = { LEGO_PF, 38, LEGO_HEADER_MARK, LEGO_HEADER_SPACE, LEGO_BIT_MARK,
-LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (LEGO_AUTO_REPEAT_PERIOD_MIN
+LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (LEGO_AUTO_REPEAT_PERIOD_MIN
         / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************

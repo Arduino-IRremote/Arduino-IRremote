@@ -34,10 +34,10 @@
  * @{
  */
 
-#define VERSION_IRTINY "1.2.0"
-#define VERSION_IRTINY_MAJOR 1
-#define VERSION_IRTINY_MINOR 2
-#define VERSION_IRTINY_PATCH 0
+#define VERSION_TINYIR "1.2.0"
+#define VERSION_TINYIR_MAJOR 1
+#define VERSION_TINYIR_MINOR 2
+#define VERSION_TINYIR_PATCH 0
 // The change log is at the bottom of the file
 
 /**
@@ -46,6 +46,7 @@
  * see: https://www.sbprojects.net/knowledge/ir/nec.php
  * LSB first, 1 start bit + 16 bit address + 8 bit data + 8 bit inverted data + 1 stop bit.
  */
+#if !defined(NEC_ADDRESS_BITS)
 #define NEC_ADDRESS_BITS        16 // 16 bit address or 8 bit address and 8 bit inverted address
 #define NEC_COMMAND_BITS        16 // Command and inverted command
 #define NEC_BITS                (NEC_ADDRESS_BITS + NEC_COMMAND_BITS)
@@ -64,15 +65,28 @@
 #define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define NEC_MINIMAL_DURATION     49900 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
 #define NEC_MAXIMUM_REPEAT_DISTANCE (NEC_REPEAT_PERIOD - NEC_MINIMAL_DURATION + 10000) // 70 ms
+#endif
 
 /**
+ * The FAST protocol is a proprietary modified JVC protocol without address, with parity and with a shorter header.
  * FAST protocol characteristics:
- * - Bit timing is like JVC
+ * - Bit timing is like NEC or JVC
  * - The header is shorter, 3156 vs. 12500
  * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *     leading to a fixed protocol length of (6 + (16 * 2) + 1) * 526 = 39 * 560 = 20514 microseconds or 20.5 ms.
- * - Repeats are sent as complete frames but in a 40 ms period / with a 19.5 ms distance.
+ *     leading to a fixed protocol length of (6 + (16 * 3) + 1) * 526 = 55 * 526 = 28930 microseconds or 29 ms.
+ * - Repeats are sent as complete frames but in a 50 ms period / with a 21 ms distance.
  */
+/*
+Protocol=FAST Address=0x0 Command=0x76 Raw-Data=0x8976 16 bits LSB first
+ +2100,-1050
+ + 550,- 500 + 550,-1550 + 550,-1550 + 550,- 500
+ + 550,-1550 + 550,-1550 + 550,-1550 + 550,- 500
+ + 550,-1550 + 550,- 500 + 550,- 500 + 550,-1550
+ + 550,- 500 + 550,- 500 + 550,- 500 + 550,-1550
+ + 550
+Sum: 28900
+*/
+#define FAST_KHZ                  38
 #define FAST_ADDRESS_BITS          0 // No address
 #define FAST_COMMAND_BITS         16 // Command and inverted command (parity)
 #define FAST_BITS                 (FAST_ADDRESS_BITS + FAST_COMMAND_BITS)
@@ -86,9 +100,9 @@
 #define FAST_HEADER_MARK          (4 * FAST_UNIT)     // 2104
 #define FAST_HEADER_SPACE         (2 * FAST_UNIT)     // 1052
 
-#define FAST_REPEAT_PERIOD        40000 // Commands are repeated every 40 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define FAST_REPEAT_DISTANCE      (FAST_REPEAT_PERIOD - (39 * FAST_UNIT)) // 19.5 ms
-#define FAST_MAXIMUM_REPEAT_DISTANCE (FAST_REPEAT_DISTANCE + 5000) // 24.5 ms
+#define FAST_REPEAT_PERIOD        50000 // Commands are repeated every 50 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define FAST_REPEAT_DISTANCE      (FAST_REPEAT_PERIOD - (55 * FAST_UNIT)) // 19 ms
+#define FAST_MAXIMUM_REPEAT_DISTANCE (FAST_REPEAT_DISTANCE + 10000) // 29 ms
 
 /*
  * Definitions to switch between FAST and NEC/ONKYO timing with the same code.

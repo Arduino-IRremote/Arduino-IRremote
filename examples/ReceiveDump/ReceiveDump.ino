@@ -97,14 +97,13 @@ void loop() {
     if (IrReceiver.decode()) {  // Grab an IR code
         // At 115200 baud, printing takes 200 ms for NEC protocol and 70 ms for NEC repeat
         Serial.println(); // blank line between entries
+        Serial.println(); // 2 blank lines between entries
+        IrReceiver.printIRResultShort(&Serial);
         // Check if the buffer overflowed
         if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_WAS_OVERFLOW) {
-            Serial.println(F("Overflow detected"));
             Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in " __FILE__));
             // see also https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library
         } else {
-            Serial.println(); // 2 blank lines between entries
-            IrReceiver.printIRResultShort(&Serial);
             if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                 Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
             }

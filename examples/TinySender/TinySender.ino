@@ -6,6 +6,14 @@
  *  NEC protocol codes are sent in standard format with 8bit address and 8 bit command as in SimpleSender example.
  *  Saves 780 bytes program memory and 26 bytes RAM compared to SimpleSender, which does the same, but uses the IRRemote library (and is therefore much more flexible).
  *
+ * The FAST protocol is a proprietary modified JVC protocol without address, with parity and with a shorter header.
+ *  FAST Protocol characteristics:
+ * - Bit timing is like NEC or JVC
+ * - The header is shorter, 3156 vs. 12500
+ * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
+ *     leading to a fixed protocol length of (6 + (16 * 3) + 1) * 526 = 55 * 526 = 28930 microseconds or 29 ms.
+ * - Repeats are sent as complete frames but in a 50 ms period / with a 21 ms distance.
+ *
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -13,7 +21,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-20232 Armin Joachimsmeyer
+ * Copyright (c) 2022-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,12 +60,7 @@ void setup() {
     Serial.begin(115200);
 
     // Just to know which program is running on my Arduino
-    Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRTINY));
-
-    /*
-     * The IR library setup. That's all!
-     */
-
+    Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_TINYIR));
     Serial.print(F("Send IR signals at pin "));
     Serial.println(IR_SEND_PIN);
 }

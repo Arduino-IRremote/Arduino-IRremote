@@ -14,7 +14,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2022 E. Stuart Hicks <ehicks@binarymagi.com>, Armin Joachimsmeyer
+ * Copyright (c) 2017-2023 E. Stuart Hicks <ehicks@binarymagi.com>, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,8 +46,12 @@
 //
 //==============================================================================
 //
-//                            M A G I Q U E S T
-//
+//       M   M   AA    GGG   III   QQQ    U   U  EEEE   SSS  TTTTTT
+//       MM MM  A  A  G       I   Q   Q   U   U  E     S       TT
+//       M M M  AAAA  G  GG   I   Q   Q   U   U  EEE    SSS    TT
+//       M   M  A  A  G   G   I   Q  QQ   U   U  E         S   TT
+//       M   M  A  A   GGG   III   QQQQ    UUU   EEEE  SSSS    TT
+//                                     Q
 //==============================================================================
 /*
  * https://github.com/kitlaan/Arduino-IRremote/blob/master/ir_Magiquest.cpp
@@ -104,8 +108,7 @@
 
 // assume 110 as repeat period
 struct PulseDistanceWidthProtocolConstants MagiQuestProtocolConstants = { MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
-MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_NO_STOP_BIT, 110,
-        NULL };
+MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, 110, NULL };
 //+=============================================================================
 //
 /**
@@ -134,9 +137,6 @@ void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
     // must be after sending, in order not to destroy the send timing
     Serial.print(F("MagiQuest checksum=0x"));
     Serial.println(tChecksum, HEX);
-#endif
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
 #endif
 }
 

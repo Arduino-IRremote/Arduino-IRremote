@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,12 +62,12 @@
  + 650
  Sum: 68000
 
-Protocol=NEC Address=0x8 Command=0x7 Repeat gap=40900us
-rawData[4]:
+ Protocol=NEC Address=0x8 Command=0x7 Repeat gap=40900us
+ rawData[4]:
  -40900
  +10450,-2250
  + 700
-Sum: 13400
+ Sum: 13400
  */
 // http://www.hifi-remote.com/wiki/index.php/NEC
 // https://www.sbprojects.net/knowledge/ir/nec.php
@@ -111,13 +111,14 @@ Sum: 13400
 
 #define APPLE_ADDRESS           0x87EE
 
-struct PulseDistanceWidthProtocolConstants NECProtocolConstants = { NEC, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
-NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
-        &sendNECSpecialRepeat };
+struct PulseDistanceWidthProtocolConstants NECProtocolConstants =
+        { NEC, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
+        NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
+                &sendNECSpecialRepeat };
 
 // Like NEC but repeats are full frames instead of special NEC repeats
 struct PulseDistanceWidthProtocolConstants NEC2ProtocolConstants = { NEC2, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
-NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
  * Start of send and decode functions
@@ -132,9 +133,6 @@ void IRsend::sendNECRepeat() {
     mark(NEC_HEADER_MARK);          // + 9000
     space(NEC_REPEAT_HEADER_SPACE); // - 2250
     mark(NEC_BIT_MARK);             // + 560
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 }
 
 /**
@@ -146,9 +144,6 @@ void sendNECSpecialRepeat() {
     IrSender.mark(NEC_HEADER_MARK);          // + 9000
     IrSender.space(NEC_REPEAT_HEADER_SPACE); // - 2250
     IrSender.mark(NEC_BIT_MARK);             // + 560
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 }
 
 uint32_t IRsend::computeNECRawDataAndChecksum(uint16_t aAddress, uint16_t aCommand) {
@@ -417,11 +412,7 @@ void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
     space(NEC_HEADER_SPACE);
 
     // Old version with MSB first Data + stop bit
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-            SEND_STOP_BIT);
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
+    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
 }
 
 /** @}*/

@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2009-2022 Ken Shirriff, Rafi Khan, Armin Joachimsmeyer
+ * Copyright (c) 2009-2023 Ken Shirriff, Rafi Khan, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -77,6 +77,7 @@ const char string_BoseWave[] PROGMEM = "BoseWave";
 const char string_Lego[] PROGMEM = "Lego";
 const char string_MagiQuest[] PROGMEM = "MagiQuest";
 const char string_Whynter[] PROGMEM = "Whynter";
+const char string_FAST[] PROGMEM = "FAST";
 
 /*
  * !!Must be the same order as in decode_type_t in IRProtocol.h!!!
@@ -84,10 +85,10 @@ const char string_Whynter[] PROGMEM = "Whynter";
 const char *const ProtocolNames[]
 PROGMEM = { string_Unknown, string_PulseWidth, string_PulseDistance, string_Apple, string_Denon, string_JVC, string_LG, string_LG2,
         string_NEC, string_NEC2, string_Onkyo, string_Panasonic, string_Kaseikyo, string_Kaseikyo_Denon, string_Kaseikyo_Sharp,
-        string_Kaseikyo_JVC, string_Kaseikyo_Mitsubishi, string_RC5, string_RC6, string_Samsung,  string_Samsung48, string_SamsungLG, string_Sharp,
-        string_Sony
+        string_Kaseikyo_JVC, string_Kaseikyo_Mitsubishi, string_RC5, string_RC6, string_Samsung, string_Samsung48, string_SamsungLG,
+        string_Sharp, string_Sony
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
-        , string_BangOlufsen, string_BoseWave, string_Lego, string_MagiQuest, string_Whynter
+        , string_BangOlufsen, string_BoseWave, string_Lego, string_MagiQuest, string_Whynter, string_FAST
 #endif
         };
 
@@ -164,6 +165,10 @@ namespace PrintULL {
  *
  */
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap) {
+    if (aIRDataPtr->flags & IRDATA_FLAGS_WAS_OVERFLOW) {
+        aSerial->println(F("Overflow"));
+        return;
+    }
     aSerial->print(F("Protocol="));
     aSerial->print(getProtocolString(aIRDataPtr->protocol));
     if (aIRDataPtr->protocol == UNKNOWN) {

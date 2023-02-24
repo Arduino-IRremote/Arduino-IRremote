@@ -11,14 +11,13 @@
  *  so if you require longer action, save the data (address + command) and handle it in the main loop.
  *  !!!!!!!!!!!!!!!!!!!!!
  *
- *  FAST protocol is proprietary and a JVC protocol without address and with a shorter header.
- *  FAST takes 21 ms for sending and can be sent at a 40 ms period. It still supports parity.
+ * The FAST protocol is a proprietary modified JVC protocol without address, with parity and with a shorter header.
  *  FAST Protocol characteristics:
- *  - Bit timing is like JVC
- *  - The header is shorter, 3156 vs. 12500
- *  - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *      leading to a fixed protocol length of (6 + (16 * 2) + 1) * 526 = 39 * 560 = 20514 microseconds or 20.5 ms.
- *  - Repeats are sent as complete frames but in a 40 ms period / with a 19.5 ms distance.
+ * - Bit timing is like NEC or JVC
+ * - The header is shorter, 3156 vs. 12500
+ * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
+ *     leading to a fixed protocol length of (6 + (16 * 3) + 1) * 526 = 55 * 526 = 28930 microseconds or 29 ms.
+ * - Repeats are sent as complete frames but in a 50 ms period / with a 21 ms distance.
  *
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
@@ -114,7 +113,8 @@ void setup() {
 #if defined(ESP8266) || defined(ESP32)
     Serial.println();
 #endif
-    Serial.println(F("START " __FILE__ " from " __DATE__));
+    Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_TINYIR));
+
     // Enables the interrupt generation on change of IR input signal
     if (!initPCIInterruptForTinyReceiver()) {
         Serial.println(F("No interrupt available for pin " STR(IR_RECEIVE_PIN))); // optimized out by the compiler, if not required :-)

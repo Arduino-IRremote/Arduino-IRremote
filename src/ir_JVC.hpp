@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2022 Kristian Lauszus, Armin Joachimsmeyer
+ * Copyright (c) 2017-2023 Kristian Lauszus, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,8 +55,8 @@
  + 550,- 500 + 550,-1550 + 550,-1550 + 550,- 500
  + 500,-1600 + 550,-1550 + 550,-1500 + 600,- 500
  + 550
-Sum: 40350
-*/
+ Sum: 40350
+ */
 // https://www.sbprojects.net/knowledge/ir/jvc.php
 // http://www.hifi-remote.com/johnsfine/DecodeIR.html#JVC
 // IRP: {38k,525}<1,-1|1,-3>(16,-8,(D:8,F:8,1,-45)+)
@@ -80,7 +80,8 @@ Sum: 40350
 #define JVC_REPEAT_PERIOD     65000 // assume around 40 ms for a JVC frame
 
 struct PulseDistanceWidthProtocolConstants JVCProtocolConstants = { JVC, JVC_KHZ, JVC_HEADER_MARK, JVC_HEADER_SPACE, JVC_BIT_MARK,
-JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (JVC_REPEAT_PERIOD
+        / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
  * Start of send and decode functions
@@ -114,16 +115,14 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
             delay(JVC_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         }
     }
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 }
 
 bool IRrecv::decodeJVC() {
 
 //    uint_fast8_t tRawlen = decodedIRData.rawDataPtr->rawlen; // Using a local variable does not improve code size
 
-    // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark. +4 is for first frame, +2 is for repeats
+    // Check we have the right amount of data (36 or 34). The +4 is for initial gap, start bit mark and space + stop bit mark.
+    // +4 is for first frame, +2 is for repeats
     if (decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 2) && decodedIRData.rawDataPtr->rawlen != ((2 * JVC_BITS) + 4)) {
         IR_DEBUG_PRINT(F("JVC: "));
         IR_DEBUG_PRINT(F("Data length="));
@@ -251,11 +250,8 @@ void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
     }
 
     // Old version with MSB first Data
-    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-            SEND_STOP_BIT);
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
+    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits,
+            PROTOCOL_IS_MSB_FIRST);
 }
 
 /** @}*/

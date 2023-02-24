@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,13 @@
  * @{
  */
 //==============================================================================
+//       K  K   AA    SSS   EEEE  III  K  K  Y   Y   OOO
+//       K K   A  A  S      E      I   K K    Y Y   O   O
+//       KK    AAAA   SSS   EEE    I   KK      Y    O   O
+//       K K   A  A      S  E      I   K K     Y    O   O
+//       K  K  A  A  SSSS   EEEE  III  K  K    Y     OOO
+//==============================================================================
+//==============================================================================
 //       PPPP    AAA   N   N   AAA    SSSS   OOO   N   N  IIIII   CCCC
 //       P   P  A   A  NN  N  A   A  S      O   O  NN  N    I    C
 //       PPPP   AAAAA  N N N  AAAAA   SSS   O   O  N N N    I    C
@@ -49,7 +56,7 @@
 //       P      A   A  N   N  A   A  SSSS    OOO   N   N  IIIII   CCCC
 //==============================================================================
 /*
-Protocol=Panasonic Address=0xFF1 Command=0x76 Raw-Data=0x9976FF10 48 bits LSB first
+ Protocol=Panasonic Address=0xFF1 Command=0x76 Raw-Data=0x9976FF10 48 bits LSB first
  +3450,-1700
  + 450,- 400 + 500,-1250 + 450,- 400 + 500,- 400
  + 450,- 400 + 400,- 450 + 500,- 350 + 450,- 450
@@ -64,7 +71,7 @@ Protocol=Panasonic Address=0xFF1 Command=0x76 Raw-Data=0x9976FF10 48 bits LSB fi
  + 450,-1250 + 450,- 400 + 450,- 400 + 500,-1250
  + 450,-1250 + 450,- 400 + 500,- 400 + 450,-1250
  + 450
-Sum: 64300
+ Sum: 64300
  */
 // http://www.hifi-remote.com/johnsfine/DecodeIR.html#Panasonic
 // http://www.hifi-remote.com/johnsfine/DecodeIR.html#Kaseikyo
@@ -112,8 +119,8 @@ Sum: 64300
 #define JVC_VENDOR_ID_CODE          0x0103
 
 struct PulseDistanceWidthProtocolConstants KaseikyoProtocolConstants = { KASEIKYO, KASEIKYO_KHZ, KASEIKYO_HEADER_MARK,
-KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
-        SEND_STOP_BIT, (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST
+       , (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
  * Start of send and decode functions
@@ -263,7 +270,7 @@ bool IRrecv::decodeKaseikyo() {
 
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Kaseikyo: "));
-        Serial.print(F("4 bit VendorID parity is not correct. expected=0x"));
+        Serial.print(F("4 bit VendorID parity is not correct. Expected=0x"));
         Serial.print(tVendorParity, HEX);
         Serial.print(F(" received=0x"));
         Serial.print(decodedIRData.decodedRawData, HEX);
@@ -282,7 +289,7 @@ bool IRrecv::decodeKaseikyo() {
 
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Kaseikyo: "));
-        Serial.print(F("8 bit Parity is not correct. expected=0x"));
+        Serial.print(F("8 bit parity is not correct. Expected=0x"));
         Serial.print(tParity, HEX);
         Serial.print(F(" received=0x"));
         Serial.print(decodedIRData.decodedRawData >> KASEIKYO_COMMAND_BITS, HEX);

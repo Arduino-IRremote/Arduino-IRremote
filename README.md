@@ -42,7 +42,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Send pin](https://github.com/Arduino-IRremote/Arduino-IRremote#send-pin)
     + [List of public IR code databases](https://github.com/Arduino-IRremote/Arduino-IRremote#list-of-public-ir-code-databases)
 - [Tiny NEC receiver and sender](https://github.com/Arduino-IRremote/Arduino-IRremote#tiny-nec-receiver-and-sender)
-  * [Tiny FAST receiver and sender](https://github.com/Arduino-IRremote/Arduino-IRremote#tiny-fast-receiver-and-sender)
+- [The FAST protocol](https://github.com/Arduino-IRremote/Arduino-IRremote#the-fast-protocol)
 - [FAQ and hints](https://github.com/Arduino-IRremote/Arduino-IRremote#faq-and-hints)
   * [Problems with Neopixels, FastLed etc.](https://github.com/Arduino-IRremote/Arduino-IRremote#problems-with-neopixels-fastled-etc)
   * [Does not work/compile with another library](https://github.com/Arduino-IRremote/Arduino-IRremote#does-not-workcompile-with-another-library)
@@ -82,7 +82,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 
 ` Universal Pulse Distance ` &nbsp; &nbsp; ` Universal Pulse Width ` &nbsp; &nbsp; ` Hash ` &nbsp; &nbsp; ` Pronto `
 
-` BoseWave ` &nbsp; &nbsp; ` Bang & Olufsen ` &nbsp; &nbsp; ` Lego ` &nbsp; &nbsp; ` Whynter ` &nbsp; &nbsp; ` MagiQuest `
+` BoseWave ` &nbsp; &nbsp; ` Bang & Olufsen ` &nbsp; &nbsp; ` Lego ` &nbsp; &nbsp; ` FAST ` &nbsp; &nbsp; ` Whynter ` &nbsp; &nbsp; ` MagiQuest `
 
 Protocols can be switched off and on by defining macros before the line `#include <IRremote.hpp>` like [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L33):
 
@@ -102,10 +102,13 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - New universal **Pulse Distance / Pulse Width decoder** added, which covers many previous unknown protocols.
 - Printout of code how to send received command by `IrReceiver.printIRSendUsage(&Serial)`.
 - RawData type is now 64 bit for 32 bit platforms and therefore `decodedIRData.decodedRawData` can contain complete frame information for more protocols than with 32 bit as before.
-- Callback after receiving a command - call your own code if a message was received.
+- Callback after receiving a command - It calls your code as soon as a message was received.
+- Improved handling of `PULSE_DISTANCE` + `PULSE_WIDTH` protocols.
+- New FAST protocol.
 
 # Converting your 3.x program to the 4.x version
 - You must replace `#define DECODE_DISTANCE` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).
+- The parameter `bool hasStopBit` is not longer required and removed e.g. for function `sendPulseDistanceWidth()`.
 
 ## New features with version 3.x
 - **Any pin** can be used for sending -if `SEND_PWM_BY_TIMER` is not defined- and receiving.
@@ -391,22 +394,37 @@ void setup() {
 void loop() {}
 ```
 
-## Tiny FAST receiver and sender
-The FAST protocol is proprietary and a JVC protocol **without address and with a shorter header**. It is meant to have a quick response to the event which sent the frame on another board. FAST takes **21 ms for sending** and is sent at a **40 ms period**. It still supports full 8 bit parity for error detection!
+# The FAST protocol
+The FAST protocol is a proprietary modified JVC protocol **without address, with parity and with a shorter header**.
+It is meant to have a quick response to the event which sent the protocol frame on another board.
+FAST takes **21 ms for sending** and is sent at a **50 ms period**.
+It has full 8 bit parity for error detection.
 
 ### FAST protocol characteristics:
 - Bit timing is like JVC
 - The header is shorter, 3156 &micro;s vs. 12500 &micro;s
-- No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command, leading to a fixed protocol length of (6 + (16 * 2) + 1) * 526 = 39 * 560 = 20514 microseconds or 20.5 ms.
-- Repeats are sent as complete frames but in a 40 ms period / with a 19.5 ms distance.
+- No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command, leading to a fixed protocol length of (6 + (16 * 3) + 1) * 526 = 55 * 526 = 28930 microseconds or 29 ms.
+- Repeats are sent as complete frames but in a 50 ms period / with a 21 ms distance.
 
-### TinyIRSender with FAST protocol
+### Sending FAST protocol with IRremote
 ```c++
-#define USE_FAST_PROTOCOL // Use short protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
+#define IR_SEND_PIN 3
+#include <IRremote.hpp>
+
+void setup() {
+  sendFAST(11, 2); // Send command 11 on pin 3 with 2 repeats.
+}
+
+void loop() {}
+```
+
+### Sending FAST protocol with TinyIRSender
+```c++
+#define USE_FAST_PROTOCOL // Use FAST protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
 #include "TinyIRSender.hpp"
 
 void setup() {
-  sendFast8BitAndParity(3, 11, 2); // Send command 11 on pin 3 with 2 repeats.
+  sendFAST(3, 11, 2); // Send command 11 on pin 3 with 2 repeats.
 }
 
 void loop() {}
@@ -513,13 +531,12 @@ This examples are a good starting point.
 A simple example can be tested online with [WOKWI](https://wokwi.com/projects/338611596994544210).
 
 #### TinyReceiver + TinySender
-If **code size** matters, look at these examples.<br/>
-The **[TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinyReceiver/TinyReceiver.ino)** example uses the **TinyIRReceiver** library  which can **only receive NEC and FAST codes, but does not require any timer**.<br/>
+If **code size** or **timer usage** matters, look at these examples.<br/>
+The **[TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinyReceiver/TinyReceiver.ino)** example uses the **TinyIRReceiver** library  which can **only receive NEC, ONKYO and FAST protocols, but does not require any timer**. They use pin change interrupt for on the fly decoding, which is the reason for the restricted protocol choice.<br/>
 TinyReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/projects/339264565653013075).
-Click on the receiver while simulation is running to specify individual IR codes.
 
-The **[TinySender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinySender/TinySender.ino)** example uses the **TinyIRSender** library  which can **only send NEC and FAST codes**.<br/>
-Sending NEC protocol codes in standard format with 8 bit address and 8 bit command as in SimpleSender example.
+The **[TinySender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinySender/TinySender.ino)** example uses the **TinyIRSender** library  which can **only send NEC, ONKYO and FAST protocols**.<br/>
+It sends NEC protocol codes in standard format with 8 bit address and 8 bit command as in SimpleSender example.
 Saves  780 bytes program memory and 26 bytes RAM compared to SimpleSender, which does the same, but uses the IRRemote library (and is therefore much more flexible).
 
 #### SmallReceiver
@@ -528,11 +545,11 @@ If the protocol is not NEC and code size matters, look at this [example](https:/
 #### ReceiveDemo + AllProtocolsOnLCD
 [ReceiveDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino) receives all protocols and **generates a beep with the Arduino tone() function** on each packet received.<br/>
 [AllProtocolsOnLCD](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/AllProtocolsOnLCD/AllProtocolsOnLCD.ino) additionally **displays the short result on a 1602 LCD**. The LCD can be connected parallel or serial (I2C).<br/>
-By connecting pin debug pin to ground, you can see the raw values for each packet. The pin number of the debug pin is printed during setup, because it depends on board and LCD connection type.<br/>
+By connecting debug pin to ground, you can force printing of the raw values for each frame. The pin number of the debug pin is printed during setup, because it depends on board and LCD connection type.<br/>
 This example also serves as an **example how to use IRremote and tone() together**.
 
 #### ReceiveDump
-Receives all protocols and dumps the received signal in different flavors including Pronto format. Since the printing takes so much time, repeat signals may be skipped or interpreted as UNKNOWN.
+Receives all protocols and dumps the received signal in different flavors including Pronto format. Since the printing takes much time, repeat signals may be skipped or interpreted as UNKNOWN.
 
 #### SendDemo
 Sends all available protocols at least once.
@@ -541,7 +558,12 @@ Sends all available protocols at least once.
 Demonstrates **receiving while sending**.
 
 #### ReceiveAndSend
-Record and **play back last received IR signal** at button press.
+Record and **play back last received IR signal** at button press. IR frames of known protocols are sent by the approriate protocol encoder. `UNKNOWN` protocol frames are stored as raw data and sent with `sendRaw()`.
+
+#### ReceiveAndSendDistanceWidth
+Try to decode each IR frame with the *universal* **DistanceWidth decoder**, store the data and send it on button press with `sendPulseDistanceWidthFromArray()`.<br/>
+Storing data for distance width protocol requires 17 bytes.
+The ReceiveAndSend example requires 16 bytes for known protocol data and 37 bytes for raw data of e.g.NEC protocol.
 
 #### ReceiveOneAndSendMultiple
 Serves as a IR **remote macro expander**. Receives Samsung32 protocol and on receiving a specified input frame, it sends multiple Samsung32 frames with appropriate delays in between.
@@ -611,7 +633,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `IR_SEND_DUTY_CYCLE_PERCENT` |  30 | Duty cycle of IR send signal. |
 | `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` |  disabled | Uses or simulates open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
 | `DISABLE_CODE_FOR_RECEIVER` |  disabled | Saves up to 450 bytes program memory and 269 bytes RAM if receiving functionality is not required. |
-| `EXCLUDE_EXOTIC_PROTOCOLS` |  disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER and LEGO_PF from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
+| `EXCLUDE_EXOTIC_PROTOCOLS` |  disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` |  disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `NO_LED_FEEDBACK_CODE` |  disabled | Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time. |
 | `MICROS_PER_TICK` |  50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 &micro;s at 38 kHz. |
@@ -842,4 +864,4 @@ From the version 2.8.0, the license is the MIT license.
 # Copyright
 Initially coded 2009 Ken Shirriff http://www.righto.com<br/>
 Copyright (c) 2016-2017 Rafi Khan<br/>
-Copyright (c) 2020-2022 [Armin Joachimsmeyer](https://github.com/ArminJo)
+Copyright (c) 2020-2023 [Armin Joachimsmeyer](https://github.com/ArminJo)

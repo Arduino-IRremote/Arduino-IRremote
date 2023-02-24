@@ -98,7 +98,7 @@
 
 struct PulseDistanceWidthProtocolConstants SamsungProtocolConstants = { SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
 SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
-        SEND_STOP_BIT, (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendSamsungLGSpecialRepeat };
+        (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendSamsungLGSpecialRepeat };
 
 /************************************
  * Start of send and decode functions
@@ -116,9 +116,6 @@ void IRsend::sendSamsungLGRepeat() {
     mark(SAMSUNG_BIT_MARK);         // + 560
     space(SAMSUNG_ZERO_SPACE);      // - 560
     mark(SAMSUNG_BIT_MARK);         // + 560
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 }
 
 /**
@@ -132,9 +129,6 @@ void sendSamsungLGSpecialRepeat() {
     IrSender.mark(SAMSUNG_BIT_MARK);        // + 560
     IrSender.space(SAMSUNG_ZERO_SPACE);     // - 560
     IrSender.mark(SAMSUNG_BIT_MARK);        // + 560
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 }
 
 /*
@@ -206,7 +200,7 @@ void IRsend::sendSamsung48(uint16_t aAddress, uint32_t aCommand, int_fast8_t aNu
     } else {
         tSendValue.ULongLong = aAddress | aCommand << 16;
     }
-    IrSender.sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULongLong, SAMSUNG_BITS, aNumberOfRepeats);
+    IrSender.sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULongLong, SAMSUNG48_BITS, aNumberOfRepeats);
 #endif
 }
 
@@ -360,10 +354,7 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 
     // Old version with MSB first Data + stop bit
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits,
-            PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
+            PROTOCOL_IS_MSB_FIRST);
 }
 
 /** @}*/

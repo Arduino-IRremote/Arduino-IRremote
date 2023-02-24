@@ -123,14 +123,8 @@ void setup() {
     printActiveIRProtocols(&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
 
-#if defined(IR_SEND_PIN)
     IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
     Serial.println(F("Ready to send IR signals at pin " STR(IR_SEND_PIN)));
-#else
-    IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
-    Serial.println(F("Ready to send IR signals at pin 3"));
-#endif
-
 }
 
 void loop() {
@@ -165,6 +159,7 @@ void loop() {
          * !!!Important!!! Enable receiving of the next value,
          * since receiving has stopped after the end of the current received data packet.
          */
+        IrReceiver.restartAfterSend(); // Is a NOP if sending does not require a timer.
         IrReceiver.resume(); // Enable receiving of the next value
     }
 }

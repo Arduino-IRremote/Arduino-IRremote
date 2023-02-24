@@ -317,6 +317,12 @@ void dumpProtocols() {
     Serial.println(F("Disabled"));
 #endif
 
+    Serial.print(F("FAST:         "));
+#if defined(DECODE_FAST)
+    Serial.println(F("Enabled"));
+#else
+    Serial.println(F("Disabled"));
+#endif
 #endif
 }
 

@@ -50,6 +50,7 @@
 //#define DECODE_LEGO_PF
 //#define DECODE_MAGIQUEST
 //#define DECODE_WHYNTER
+//#define DECODE_FAST
 
 //#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 //#define DECODE_HASH         // special decoder for all protocols

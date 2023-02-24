@@ -52,14 +52,18 @@
  // 7 command bits
  +1300,- 450 +1350,- 450 +1300,- 450 + 700,- 450
  + 700,- 450 + 750,- 450 + 700,- 400
-// (5,8,) 13 address bits
+ // (5,8,) 13 address bits
  +1300,- 500
  + 700,- 450 + 700,- 450 +1300,- 500 +1300,- 450
  +1300,- 450 + 700,- 450 +1350,- 400 + 750,- 450
  + 700,- 450 +1300,- 450 + 700,- 450 + 700
  Sum: 31100
  */
+/*
+ * Sony is the only protocol using the pulse width encoding, which requires no stop bit
+ */
 // see https://www.sbprojects.net/knowledge/ir/sirc.php
+// https://www.mikrocontroller.net/articles/IRMP_-_english#SIRCS
 // Frames are repeated every 45ms (measured from start to start) for as long as the key on the remote control is held down.
 // This leads to a 15 ms gap for a Sony20 protocol!
 // Here http://picprojects.org.uk/projects/sirc/ it is claimed, that many Sony remotes send each frame a minimum of 3 times. But 1 repeat (2 sends) has also been seen in real life.
@@ -86,12 +90,8 @@
 #define SONY_REPEAT_PERIOD          45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define SONY_MAXIMUM_REPEAT_DISTANCE    (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION_MIN) // 24 ms
 
-#define SIRCS_12_PROTOCOL       12
-#define SIRCS_15_PROTOCOL       15
-#define SIRCS_20_PROTOCOL       20
-
 struct PulseDistanceWidthProtocolConstants SonyProtocolConstants = { SONY, SONY_KHZ, SONY_HEADER_MARK, SONY_SPACE, SONY_ONE_MARK,
-SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_NO_STOP_BIT, (SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST, (SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
  * Start of send and decode functions
@@ -222,11 +222,7 @@ void IRsend::sendSony(unsigned long data, int nbits) {
     space(SONY_SPACE);
 
     // Old version with MSB first Data
-    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-            SEND_NO_STOP_BIT);
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
+    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
 }
 
 /** @}*/

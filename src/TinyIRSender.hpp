@@ -4,14 +4,13 @@
  *  Sends IR protocol data of NEC and FAST protocol using bit banging.
  *  NEC is the protocol of most cheap remote controls for Arduino.
  *
- *  FAST protocol is proprietary and a JVC protocol without address and with a shorter header.
- *  FAST takes 21 ms for sending and can be sent at a 50 ms period. It still supports parity.
+ * The FAST protocol is a proprietary modified JVC protocol without address, with parity and with a shorter header.
  *  FAST Protocol characteristics:
- *  - Bit timing is like JVC
- *  - The header is shorter, 4000 vs. 12500
- *  - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *      leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
- *  - Repeats are sent as complete frames but in a 50 ms period / with a 29 ms distance.
+ * - Bit timing is like NEC or JVC
+ * - The header is shorter, 3156 vs. 12500
+ * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
+ *     leading to a fixed protocol length of (6 + (16 * 3) + 1) * 526 = 55 * 526 = 28930 microseconds or 29 ms.
+ * - Repeats are sent as complete frames but in a 50 ms period / with a 21 ms distance.
  *
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
@@ -20,7 +19,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-20232 Armin Joachimsmeyer
+ * Copyright (c) 2022-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +61,7 @@
  */
 
 /*
- * Generate IR signal by bit banging
+ * Generate 38 kHz IR signal by bit banging
  */
 void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
     unsigned long tStartMicros = micros();
@@ -248,7 +247,7 @@ void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats
         uint16_t tData;
         /*
          * The compiler is intelligent and removes the code for "(aCommand > 0xFF)" if we are called with an uint8_t command :-).
-         * Using an uint16_t address requires additional 56 bytes program memory.
+         * Using an uint16_t command requires additional 56 bytes program memory.
          */
         if (aCommand > 0xFF) {
             tData = aCommand;

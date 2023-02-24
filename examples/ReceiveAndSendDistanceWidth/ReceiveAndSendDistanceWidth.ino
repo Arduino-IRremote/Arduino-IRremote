@@ -1,11 +1,13 @@
 /*
- * ReceiveAndSend.cpp
+ * ReceiveAndSendDistanceWidth.cpp
  *
- * Record and play back last received IR signal at button press.
+ * Record and play back last received distance width IR signal at button press.
+ * Using DistanceWidthProtocol covers a lot of known and unknown IR protocols,
+ * and requires less memory than raw protocol.
+ *
  * The logic is:
  * If the button is pressed, send the IR code.
  * If an IR code is received, record it.
- * If the protocol is unknown or not enabled, store it as raw data for later sending.
  *
  * An example for simultaneous receiving and sending is in the UnitTest example.
  *
@@ -15,14 +17,12 @@
  * A visible LED can be connected to STATUS_PIN to provide status.
  *
  *
- * Initially coded 2009 Ken Shirriff http://www.righto.com
- *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2009-2023 Ken Shirriff, Armin Joachimsmeyer
+ * Copyright (c) 2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,28 +46,14 @@
 #include <Arduino.h>
 
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+#if !defined(IR_SEND_PIN)
+#define IR_SEND_PIN         3
+#endif
 
 /*
- * Specify which protocol(s) should be used for decoding.
- * If no protocol is defined, all protocols (except Bang&Olufsen) are active.
- * This must be done before the #include <IRremote.hpp>
+ * Specify DistanceWidthProtocol for decoding. This must be done before the #include <IRremote.hpp>
  */
-//#define DECODE_DENON        // Includes Sharp
-//#define DECODE_JVC
-//#define DECODE_KASEIKYO
-//#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
-//#define DECODE_LG
-#define DECODE_NEC          // Includes Apple and Onkyo
-//#define DECODE_SAMSUNG
-//#define DECODE_SONY
-//#define DECODE_RC5
-//#define DECODE_RC6
-
-//#define DECODE_BOSEWAVE
-//#define DECODE_LEGO_PF
-//#define DECODE_MAGIQUEST
-//#define DECODE_WHYNTER
-//#define DECODE_FAST
+#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 //
 #if !defined(RAW_BUFFER_LENGTH)
 #  if RAMEND <= 0x4FF || RAMSIZE < 0x4FF
@@ -79,37 +65,25 @@
 #  endif
 #endif
 
-//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
-//#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
 //#define NO_LED_FEEDBACK_CODE      // saves 92 bytes program memory
 //#define RECORD_GAP_MICROS 12000   // Default is 5000. Activate it for some LG air conditioner protocols
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
 
-// MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
-// to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 142.
-#define MARK_EXCESS_MICROS    20    // Adapt it to your IR receiver module. 20 is recommended for the cheap VS1838 modules.
-
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
 #include <IRremote.hpp>
 
-int SEND_BUTTON_PIN = APPLICATION_PIN;
+#define SEND_BUTTON_PIN                     APPLICATION_PIN
 
-int DELAY_BETWEEN_REPEAT = 50;
+#define DELAY_BETWEEN_REPEATS_MILLIS        70
 
-// Storage for the recorded code
-struct storedIRDataStruct {
-    IRData receivedIRData;
-    // extensions for sendRaw
-    uint8_t rawCode[RAW_BUFFER_LENGTH]; // The durations if raw
-    uint8_t rawCodeLength; // The length of the code
-} sStoredIRData;
+// Storage for the recorded code, pre-filled with NEC data
+IRRawDataType sDecodedRawDataArray[RAW_DATA_ARRAY_SIZE] = { 0x7B34ED12 }; // address 0x12 command 0x34
+DistanceWidthTimingInfoStruct sDistanceWidthTimingInfo = { 9000, 4500, 560, 1690, 560, 560 }; // NEC timing
+uint8_t sNumberOfBits = 32;
 
 bool sSendButtonWasActive;
-
-void storeCode();
-void sendCode(storedIRDataStruct *aIRDataToSend);
 
 void setup() {
     pinMode(SEND_BUTTON_PIN, INPUT_PULLUP);
@@ -123,9 +97,7 @@ void setup() {
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
-    Serial.print(F("Ready to receive IR signals of protocols: "));
-    printActiveIRProtocols(&Serial);
-    Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
+    Serial.println(F("Ready to receive pulse distance/width coded IR signals at pin " STR(IR_RECEIVE_PIN)));
 
     IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
     Serial.print(F("Ready to send IR signals at pin " STR(IR_SEND_PIN) " on press of button at pin "));
@@ -149,15 +121,23 @@ void loop() {
          * Button pressed -> send stored data
          */
         Serial.print(F("Button pressed, now sending "));
-        if (sSendButtonWasActive == tSendButtonIsActive) {
-            Serial.print(F("repeat "));
-            sStoredIRData.receivedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
-        } else {
-            sStoredIRData.receivedIRData.flags = IRDATA_FLAGS_EMPTY;
-        }
+        Serial.print(sNumberOfBits);
+        Serial.print(F(" bits 0x"));
+        Serial.print(sDecodedRawDataArray[0], HEX);
+        Serial.print(F(" with sendPulseDistanceWidthFromArray timing="));
+        IrReceiver.printDistanceWidthTimingInfo(&Serial, &sDistanceWidthTimingInfo);
+        Serial.println();
         Serial.flush(); // To avoid disturbing the software PWM generation by serial output interrupts
-        sendCode(&sStoredIRData);
-        delay(DELAY_BETWEEN_REPEAT); // Wait a bit between retransmissions
+
+        IrSender.sendPulseDistanceWidthFromArray(38, &sDistanceWidthTimingInfo, &sDecodedRawDataArray[0], sNumberOfBits,
+#if defined(USE_MSB_DECODING_FOR_DISTANCE_DECODER)
+                PROTOCOL_IS_MSB_FIRST
+#else
+                PROTOCOL_IS_LSB_FIRST
+#endif
+                , 100, 0);
+
+        delay(DELAY_BETWEEN_REPEATS_MILLIS); // Wait a bit between retransmissions
 
     } else if (sSendButtonWasActive) {
         /*
@@ -170,73 +150,35 @@ void loop() {
     } else if (IrReceiver.decode()) {
         /*
          * Button is not pressed and data available -> store received data and resume
+         * DistanceWidthTimingInfo and sNumberOfBits should be constant for all keys of the same IR remote / protocol
          */
-        storeCode();
+        IrReceiver.printIRResultShort(&Serial);
+        if (IrReceiver.decodedIRData.protocol != UNKNOWN) {
+            IrReceiver.printIRSendUsage(&Serial);
+
+            if (memcmp(&sDistanceWidthTimingInfo, &IrReceiver.decodedIRData.DistanceWidthTimingInfo,
+                    sizeof(sDistanceWidthTimingInfo)) != 0) {
+                Serial.print(F("Store new timing info data="));
+                IrReceiver.printDistanceWidthTimingInfo(&Serial, &IrReceiver.decodedIRData.DistanceWidthTimingInfo);
+                Serial.println();
+                sDistanceWidthTimingInfo = IrReceiver.decodedIRData.DistanceWidthTimingInfo; // copy content here
+            } else {
+                Serial.print(F("Timing did not change, so we can reuse already stored timing info."));
+            }
+            if (sNumberOfBits != IrReceiver.decodedIRData.numberOfBits) {
+                Serial.print(F("Store new numberOfBits="));
+                sNumberOfBits = IrReceiver.decodedIRData.numberOfBits;
+                Serial.println(IrReceiver.decodedIRData.numberOfBits);
+            }
+            if (sDecodedRawDataArray[0] != IrReceiver.decodedIRData.decodedRawDataArray[0]) {
+                *sDecodedRawDataArray = *IrReceiver.decodedIRData.decodedRawDataArray; // copy content here
+                Serial.print(F("Store new sDecodedRawDataArray[0]=0x"));
+                Serial.println(IrReceiver.decodedIRData.decodedRawDataArray[0], HEX);
+            }
+        }
         IrReceiver.resume(); // resume receiver
     }
 
     sSendButtonWasActive = tSendButtonIsActive;
     delay(100);
 }
-
-// Stores the code for later playback in sStoredIRData
-// Most of this code is just logging
-void storeCode() {
-    if (IrReceiver.decodedIRData.rawDataPtr->rawlen < 4) {
-        Serial.print(F("Ignore data with rawlen="));
-        Serial.println(IrReceiver.decodedIRData.rawDataPtr->rawlen);
-        return;
-    }
-    if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
-        Serial.println(F("Ignore repeat"));
-        return;
-    }
-    if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
-        Serial.println(F("Ignore autorepeat"));
-        return;
-    }
-    if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_PARITY_FAILED) {
-        Serial.println(F("Ignore parity error"));
-        return;
-    }
-    /*
-     * Copy decoded data
-     */
-    sStoredIRData.receivedIRData = IrReceiver.decodedIRData;
-
-    if (sStoredIRData.receivedIRData.protocol == UNKNOWN) {
-        Serial.print(F("Received unknown code and store "));
-        Serial.print(IrReceiver.decodedIRData.rawDataPtr->rawlen - 1);
-        Serial.println(F(" timing entries as raw "));
-        IrReceiver.printIRResultRawFormatted(&Serial, true); // Output the results in RAW format
-        sStoredIRData.rawCodeLength = IrReceiver.decodedIRData.rawDataPtr->rawlen - 1;
-        /*
-         * Store the current raw data in a dedicated array for later usage
-         */
-        IrReceiver.compensateAndStoreIRResultInArray(sStoredIRData.rawCode);
-    } else {
-        IrReceiver.printIRResultShort(&Serial);
-        IrReceiver.printIRSendUsage(&Serial);
-        sStoredIRData.receivedIRData.flags = 0; // clear flags -esp. repeat- for later sending
-        Serial.println();
-    }
-}
-
-void sendCode(storedIRDataStruct *aIRDataToSend) {
-    if (aIRDataToSend->receivedIRData.protocol == UNKNOWN /* i.e. raw */) {
-        // Assume 38 KHz
-        IrSender.sendRaw(aIRDataToSend->rawCode, aIRDataToSend->rawCodeLength, 38);
-
-        Serial.print(F("raw "));
-        Serial.print(aIRDataToSend->rawCodeLength);
-        Serial.println(F(" marks or spaces"));
-    } else {
-
-        /*
-         * Use the write function, which does the switch for different protocols
-         */
-        IrSender.write(&aIRDataToSend->receivedIRData);
-        printIRResultShort(&Serial, &aIRDataToSend->receivedIRData, false);
-    }
-}
-

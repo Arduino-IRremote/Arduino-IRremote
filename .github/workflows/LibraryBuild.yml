@@ -262,7 +262,7 @@ jobs:
 
           - arduino-boards-fqbn: Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
             platform-url: https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
-            sketches-exclude: AllProtocolsOnLCD
+            sketches-exclude: AllProtocolsOnLCD,UnitTest,ReceiveAndSendDistanceWidth  # No print(uint64_t,.) available
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300

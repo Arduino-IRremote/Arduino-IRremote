@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -106,8 +106,8 @@
 #define DENON_HEADER_SPACE      (3 * DENON_UNIT) // 780 // The length of the Header:Space
 
 struct PulseDistanceWidthProtocolConstants DenonProtocolConstants = { DENON, DENON_KHZ, DENON_HEADER_MARK, DENON_HEADER_SPACE,
-DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, SEND_STOP_BIT, (DENON_REPEAT_PERIOD
-        / MICROS_IN_ONE_MILLI), NULL };
+DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
+        (DENON_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
 
 /************************************
  * Start of send and decode functions
@@ -146,9 +146,6 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOf
             delay( DENON_AUTO_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         }
     }
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 }
 
 bool IRrecv::decodeSharp() {
@@ -212,7 +209,7 @@ bool IRrecv::decodeDenon() {
                 decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
 #if defined(LOCAL_DEBUG)
                 Serial.print(F("Denon: "));
-                Serial.print(F("Parity check for repeat failed last command="));
+                Serial.print(F("Parity check for repeat failed. Last command="));
                 Serial.print(lastDecodedCommand, HEX);
                 Serial.print(F(" current="));
                 Serial.println(~decodedIRData.command, HEX);
@@ -223,7 +220,7 @@ bool IRrecv::decodeDenon() {
         }
 
         // repeated command here
-        if (tFrameBits == 1 || tFrameBits == 2 ) {
+        if (tFrameBits == 1 || tFrameBits == 2) {
             decodedIRData.protocol = SHARP;
         } else {
             decodedIRData.protocol = DENON;
@@ -270,16 +267,13 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
 
     // Data
     sendPulseDistanceWidthData(DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, data, nbits,
-            PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT);
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
+            PROTOCOL_IS_MSB_FIRST);
 }
 
 /*
  * Old function without parameter aNumberOfRepeats
  */
-void IRsend::sendSharp(unsigned int aAddress, unsigned int aCommand) {
+void IRsend::sendSharp(uint16_t aAddress, uint16_t aCommand) {
     sendDenon(aAddress, aCommand, true, 0);
 }
 

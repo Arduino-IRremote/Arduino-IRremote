@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2022 Darryl Smith, Armin Joachimsmeyer
+ * Copyright (c) 2017-2023 Darryl Smith, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,8 +59,8 @@
  + 500,- 550 + 500,-1550 + 500,-1600 + 500,- 550
  + 500,-1550 + 500,- 600 + 450,-1600 + 500,-1550
  + 500
-Sum: 62400
-*/
+ Sum: 62400
+ */
 
 // LG originally added by Darryl Smith (based on the JVC protocol)
 // see: https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/LGAirConditionerSendDemo
@@ -115,12 +115,10 @@ Sum: 62400
 //#define LG_REPEAT_DISTANCE      (LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) // 52 ms
 
 struct PulseDistanceWidthProtocolConstants LGProtocolConstants = { LG, LG_KHZ, LG_HEADER_MARK, LG_HEADER_SPACE, LG_BIT_MARK,
-LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
-        &sendNECSpecialRepeat };
+LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendNECSpecialRepeat };
 
 struct PulseDistanceWidthProtocolConstants LG2ProtocolConstants = { LG2, LG_KHZ, LG2_HEADER_MARK, LG2_HEADER_SPACE, LG_BIT_MARK,
-LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, SEND_STOP_BIT, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
-        &sendLG2SpecialRepeat };
+LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendLG2SpecialRepeat };
 
 /************************************
  * Start of send and decode functions
@@ -133,9 +131,6 @@ void IRsend::sendLG2Repeat() {
     mark(LG2_HEADER_MARK);          // + 3000
     space(LG_REPEAT_HEADER_SPACE);  // - 2250
     mark(LG_BIT_MARK);              // + 500
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 }
 
 /**
@@ -147,9 +142,6 @@ void sendLG2SpecialRepeat() {
     IrSender.mark(LG2_HEADER_MARK);          // + 3000
     IrSender.space(LG_REPEAT_HEADER_SPACE);  // - 2250
     IrSender.mark(LG_BIT_MARK);              // + 500
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
 }
 
 uint32_t IRsend::computeLGRawDataAndChecksum(uint8_t aAddress, uint16_t aCommand) {
@@ -347,11 +339,7 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 //    mark(LG_BIT_MARK);
 
 // Data + stop bit
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST,
-            SEND_STOP_BIT);
-#if !defined(DISABLE_CODE_FOR_RECEIVER)
-    IrReceiver.restartAfterSend();
-#endif
+    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
 }
 
 /** @}*/

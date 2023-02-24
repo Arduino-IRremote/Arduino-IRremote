@@ -13,7 +13,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2015-2022 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
+ * Copyright (c) 2015-2023 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,7 @@
  * - SEND_PWM_BY_TIMER                  Disable carrier PWM generation in software and use (restricted) hardware PWM.
  * - USE_NO_SEND_PWM                    Use no carrier PWM, just simulate an **active low** receiver signal. Overrides SEND_PWM_BY_TIMER definition.
  * - USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
- * - EXCLUDE_EXOTIC_PROTOCOLS           If activated, BANG_OLUFSEN, BOSEWAVE, WHYNTER and LEGO_PF are excluded in decode() and in sending with IrSender.write().
+ * - EXCLUDE_EXOTIC_PROTOCOLS           If activated, BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF are excluded in decode() and in sending with IrSender.write().
  * - EXCLUDE_UNIVERSAL_PROTOCOLS        If activated, the universal decoder for pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in decode().
  * - DECODE_*                           Selection of individual protocols to be decoded. See below.
  * - MARK_EXCESS_MICROS                 Value is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules.
@@ -65,9 +65,9 @@
 #ifndef _IR_REMOTE_HPP
 #define _IR_REMOTE_HPP
 
-#define VERSION_IRREMOTE "4.0.0"
+#define VERSION_IRREMOTE "4.1.0"
 #define VERSION_IRREMOTE_MAJOR 4
-#define VERSION_IRREMOTE_MINOR 0
+#define VERSION_IRREMOTE_MINOR 1
 #define VERSION_IRREMOTE_PATCH 0
 
 /*
@@ -81,7 +81,7 @@
 //#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN
 
 /*
- * If activated, BANG_OLUFSEN, BOSEWAVE, MAGIQUEST,WHYNTER and LEGO_PF are excluded in decoding and in sending with IrSender.write
+ * If activated, BANG_OLUFSEN, BOSEWAVE, MAGIQUEST, WHYNTER, FAST and LEGO_PF are excluded in decoding and in sending with IrSender.write
  */
 //#define EXCLUDE_EXOTIC_PROTOCOLS
 /****************************************************
@@ -99,7 +99,7 @@
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_SAMSUNG) \
 || defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) \
 || defined(DECODE_DISTANCE_WIDTH) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
-|| defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_WHYNTER)))
+|| defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_FAST) || defined(DECODE_WHYNTER)))
 /*
  * If no protocol is explicitly enabled, we enable all protocols
  */
@@ -119,6 +119,7 @@
 #define DECODE_LEGO_PF
 #define DECODE_MAGIQUEST // It modifies the RAW_BUFFER_LENGTH from 100 to 112
 #define DECODE_WHYNTER
+#define DECODE_FAST
 #    endif
 
 #    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
@@ -308,6 +309,7 @@
 #include "ir_RC5_RC6.hpp"
 #include "ir_Samsung.hpp"
 #include "ir_Sony.hpp"
+#include "ir_FAST.hpp"
 #include "ir_Others.hpp"
 #include "ir_Pronto.hpp" // pronto is an universal decoder and encoder
 #  if defined(DECODE_DISTANCE_WIDTH)     // universal decoder for pulse distance width protocols - requires up to 750 bytes additional program memory

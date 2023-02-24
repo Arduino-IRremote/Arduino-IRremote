@@ -2,12 +2,19 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
-## 4.0.1
+## 4.1.0
 - Fixed bug in printing durations > 64535 in printIRResultRawFormatted().
 - Narrowed constraints for RC5 RC6 number of bits.
 - Changed the first parameter of printTinyReceiverResultMinimal() to &Serial.
 - Removed 3 Serial prints for deprecation warnings to fix #1094.
-- Version 1.2.0 of TinyIR.
+- Version 1.2.0 of TinyIR. Now FAST protocol with 40 ms period and shorter header space.
+- Removed field "bool hasStopBit" and parameter "bool aSendStopBit" from PulseDistanceWidthProtocolConstants structure and related functions.
+- Changed a lot of "unsigned int" types to "uint16_t" types.
+- Improved overflow handling.
+- Added FAST protocol.
+- Improved handling of PULSE_DISTANCE + PULSE_WIDTH protocols.
+- New example ReceiveAndSendDistanceWidth.
+- Removed the automatic restarting of the receiver timer after sending with SEND_PWM_BY_TIMER enabled.
 
 ## 4.0.0
 - Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.

@@ -31,7 +31,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022 Armin Joachimsmeyer
+ * Copyright (c) 2022-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,6 +55,10 @@
 #ifndef _IR_DISTANCE_WIDTH_HPP
 #define _IR_DISTANCE_WIDTH_HPP
 
+#if !defined(DISTANCE_WIDTH_MAXIMUM_REPEAT_DISTANCE_MICROS)
+#define DISTANCE_WIDTH_MAXIMUM_REPEAT_DISTANCE_MICROS       100000 // 100 ms, bit it is just a guess
+#endif
+
 #if defined(DEBUG) && !defined(LOCAL_DEBUG)
 #define LOCAL_DEBUG
 #else
@@ -65,28 +69,37 @@
 #define DURATION_ARRAY_SIZE 50
 
 // Switch the decoding according to your needs
-//#define DISTANCE_DO_MSB_DECODING // If active, it resembles the JVC + Denon, otherwise LSB first as e.g. for NEC and Kaseikyo/Panasonic
+//#define USE_MSB_DECODING_FOR_DISTANCE_DECODER // If active, it resembles LG, otherwise LSB first as most other protocols e.g. NEC and Kaseikyo/Panasonic
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
  */
+//=====================================================================================
+// DDD   III   SSS  TTTTTT   AA   N   N   CCC  EEEE     W     W  III  DDD  TTTTTT  H  H
+// D  D   I   S       TT    A  A  NN  N  C     E        W     W   I   D  D   TT    H  H
+// D  D   I    SSS    TT    AAAA  N N N  C     EEE      W  W  W   I   D  D   TT    HHHH
+// D  D   I       S   TT    A  A  N  NN  C     E         W W W    I   D  D   TT    H  H
+// DDD   III  SSSS    TT    A  A  N   N   CCC  EEEE       W W    III  DDD    TT    H  H
+//=====================================================================================
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#Codings
 #if defined(LOCAL_DEBUG)
 void printDurations(uint8_t aArray[], uint8_t aMaxIndex) {
     for (uint_fast8_t i = 0; i <= aMaxIndex; i++) {
+        //Print index at the beginning of a new line
         if (i % 10 == 0) {
             if (i == 0) {
-                Serial.print(' '); // indentation for the 0
+                Serial.print(' '); // indentation for the first index 0
             } else {
-                Serial.println();
+                Serial.println(); // new line for next indexes 10, 20 etc.
             }
             Serial.print(i);
             Serial.print(F(": "));
         }
+        // Print number of values in array and duration if != 0
         Serial.print(aArray[i]);
         if (aArray[i] != 0) {
-            Serial.print(' ');
-            Serial.print(i * (uint16_t)MICROS_PER_TICK);
+            Serial.print('x');
+            Serial.print(i * (uint16_t) MICROS_PER_TICK);
         }
         Serial.print(F(" | "));
     }
@@ -171,7 +184,7 @@ bool IRrecv::decodeDistanceWidth() {
             Serial.print(F("PULSE_DISTANCE_WIDTH: "));
             Serial.print(F("Mark "));
             Serial.print(tDurationTicks * MICROS_PER_TICK);
-            Serial.print(F(" is longer than "));
+            Serial.print(F(" is longer than maximum "));
             Serial.print(DURATION_ARRAY_SIZE * MICROS_PER_TICK);
             Serial.print(F(" us. Index="));
             Serial.println(i);
@@ -248,47 +261,38 @@ bool IRrecv::decodeDistanceWidth() {
 
     /*
      * Print characteristics of this protocol. Durations are in ticks.
-     * Number of bits, start bit, start pause, short mark, long mark, short space, long space
+     * Number of bits, start bit, start pause, long mark, long space, short mark, short space
      *
-     * NEC:         32, 180, 90, 11,  0, 11, 34
-     * Samsung32:   32,  90, 90, 11,  0, 11, 34
-     * LG:          28, 180, 84, 10,  0, 11, 32
-     * JVC:         16, 168, 84, 10,  0, 10, 32
-     * Kaseikyo:    48.  69, 35,  9,  0,  9, 26
-     * Sony:  12|15|20,  48, 12, 12, 24, 12,  0 // the only known pulse width protocol
+     * NEC:         32, 180, 90,  0, 34, 11, 11
+     * Samsung32:   32,  90, 90,  0, 34, 11, 11
+     * LG:          28, 180, 84,  0, 32, 10, 11
+     * JVC:         16, 168, 84,  0, 32, 10, 10
+     * Kaseikyo:    48.  69, 35,  0, 26,  9,  9
+     * Sony:  12|15|20,  48, 12, 24,  0, 12, 12 // the only known pulse width protocol
      */
 #if defined(LOCAL_DEBUG)
-    Serial.print(F("ProtocolConstants: "));
+    Serial.print(F("DistanceWidthTimingInfoStruct: "));
     Serial.print(decodedIRData.rawDataPtr->rawbuf[1] * MICROS_PER_TICK);
     Serial.print(F(", "));
     Serial.print(decodedIRData.rawDataPtr->rawbuf[2] * MICROS_PER_TICK);
     Serial.print(F(", "));
-    Serial.print(tMarkTicksShort * MICROS_PER_TICK);
+    Serial.print(tMarkTicksLong * MICROS_PER_TICK);
     Serial.print(F(", "));
     Serial.print(tSpaceTicksLong * MICROS_PER_TICK);
     Serial.print(F(", "));
-    if (tMarkTicksLong == 0) {
-        Serial.print(tMarkTicksShort * MICROS_PER_TICK);
-    } else {
-        Serial.print(tMarkTicksLong * MICROS_PER_TICK);
-    }
+    Serial.print(tMarkTicksShort * MICROS_PER_TICK);
     Serial.print(F(", "));
-    Serial.print(tSpaceTicksShort * MICROS_PER_TICK);
-    Serial.println();
+    Serial.println(tSpaceTicksShort * MICROS_PER_TICK);
 #endif
     uint8_t tStartIndex = 3;
     // skip leading start bit for decoding.
     uint16_t tNumberOfBits = (decodedIRData.rawDataPtr->rawlen / 2) - 1;
     if (tSpaceTicksLong > 0 && tMarkTicksLong == 0) {
-        // For PULSE DISTANCE a stop bit is mandatory, for PULSE_DISTANCE_WIDTH it is not required!
+        // For PULSE_DISTANCE a stop bit is mandatory, for PULSE_WIDTH it is not required!
         tNumberOfBits--; // Correct for stop bit
     }
     decodedIRData.numberOfBits = tNumberOfBits;
-#if __INT_WIDTH__ < 32
-    uint8_t tNumberOfAdditionalArrayValues = (tNumberOfBits - 1) / 32;
-#else
-    uint8_t tNumberOfAdditionalArrayValues = (tNumberOfBits - 1) / 64;
-#endif
+    uint8_t tNumberOfAdditionalArrayValues = (tNumberOfBits - 1) / BITS_IN_RAW_DATA_TYPE;
 
     /*
      * We can have the following protocol timings
@@ -305,36 +309,35 @@ bool IRrecv::decodeDistanceWidth() {
 #endif
         return false;
     }
+    unsigned int tSpaceMicrosShort;
 #if defined DECODE_STRICT_CHECKS
         if(tMarkTicksLong > 0 && tSpaceTicksLong > 0) {
-            // We have different mark and space length here, so signal decodePulseDistanceWidthData() not to check against constant lenght decodePulseDistanceWidthData
-            tSpaceTicksShort = 0;
+            // We have different mark and space length here, so signal decodePulseDistanceWidthData() not to check against constant length decodePulseDistanceWidthData
+            tSpaceMicrosShort = 0;
         }
 #endif
+    tSpaceMicrosShort = tSpaceTicksShort * MICROS_PER_TICK;
+    unsigned int tMarkMicrosShort = tMarkTicksShort * MICROS_PER_TICK;
+    unsigned int tMarkMicrosLong = tMarkTicksLong * MICROS_PER_TICK;
+    unsigned int tSpaceMicrosLong = tSpaceTicksLong * MICROS_PER_TICK;
 
     for (uint_fast8_t i = 0; i <= tNumberOfAdditionalArrayValues; ++i) {
         uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;
         /*
          * Decode in 32/64 bit chunks. Only the last chunk can contain less than 32/64 bits
          */
-#if __INT_WIDTH__ < 32
-        if (tNumberOfBitsForOneDecode > 32) {
-            tNumberOfBitsForOneDecode = 32;
+        if (tNumberOfBitsForOneDecode > BITS_IN_RAW_DATA_TYPE) {
+            tNumberOfBitsForOneDecode = BITS_IN_RAW_DATA_TYPE;
         }
-#else
-        if (tNumberOfBitsForOneDecode > 64) {
-            tNumberOfBitsForOneDecode = 64;
-        }
-#endif
         bool tResult;
         if (tMarkTicksLong > 0) {
             /*
              * Here short and long mark durations found.
              */
             decodedIRData.protocol = PULSE_WIDTH;
-            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksLong * MICROS_PER_TICK,
-                    tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK, 0,
-#if defined(DISTANCE_DO_MSB_DECODING)
+            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkMicrosLong, tMarkMicrosShort,
+                    tSpaceMicrosShort, 0,
+#if defined(USE_MSB_DECODING_FOR_DISTANCE_DECODER)
                     true
 #else
                     false
@@ -345,9 +348,9 @@ bool IRrecv::decodeDistanceWidth() {
              * Here short and long space durations found.
              */
             decodedIRData.protocol = PULSE_DISTANCE;
-            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkTicksShort * MICROS_PER_TICK,
-                    tMarkTicksShort * MICROS_PER_TICK, tSpaceTicksLong * MICROS_PER_TICK, tSpaceTicksShort * MICROS_PER_TICK,
-#if defined(DISTANCE_DO_MSB_DECODING)
+            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkMicrosShort, tMarkMicrosShort,
+                    tSpaceMicrosLong, tSpaceMicrosShort,
+#if defined(USE_MSB_DECODING_FOR_DISTANCE_DECODER)
                     true
 #else
                     false
@@ -356,41 +359,56 @@ bool IRrecv::decodeDistanceWidth() {
         }
         if (!tResult) {
 #if defined(LOCAL_DEBUG)
-                Serial.print(F("PULSE_WIDTH: "));
-                Serial.println(F("Decode failed"));
+            Serial.print(F("PULSE_WIDTH: "));
+            Serial.println(F("Decode failed"));
 #endif
             return false;
         }
 #if defined(LOCAL_DEBUG)
         Serial.print(F("PULSE_WIDTH: "));
         Serial.print(F("decodedRawData=0x"));
-        Serial.println(decodedIRData.decodedRawData);
+        Serial.println(decodedIRData.decodedRawData, HEX);
 #endif
         // fill array with decoded data
         decodedIRData.decodedRawDataArray[i] = decodedIRData.decodedRawData;
-#if __INT_WIDTH__ < 32
-        tStartIndex += 64;
-        tNumberOfBits -= 32;
-#else
-        tStartIndex += 128;
-        tNumberOfBits -= 64;
-#endif
+        tStartIndex += (2 * BITS_IN_RAW_DATA_TYPE);
+        tNumberOfBits -= BITS_IN_RAW_DATA_TYPE;
     }
 
-#if defined(DISTANCE_DO_MSB_DECODING)
-    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST | IRDATA_FLAGS_EXTRA_INFO;
-#else
-    decodedIRData.flags = IRDATA_FLAGS_EXTRA_INFO;
+#if defined(USE_MSB_DECODING_FOR_DISTANCE_DECODER)
+    decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
 #endif
-// Store data to reproduce frame for sending
-    decodedIRData.extra = (decodedIRData.rawDataPtr->rawbuf[1] << 8) | decodedIRData.rawDataPtr->rawbuf[2];
-    if (tMarkTicksLong == 0) {
-        decodedIRData.address = (tMarkTicksShort << 8) | tSpaceTicksLong;
+
+    // Check for repeat
+    checkForRepeatSpaceTicksAndSetFlag(DISTANCE_WIDTH_MAXIMUM_REPEAT_DISTANCE_MICROS / MICROS_PER_TICK);
+
+    /*
+     * Store timing data to reproduce frame for sending
+     */
+    decodedIRData.DistanceWidthTimingInfo.HeaderMarkMicros = (decodedIRData.rawDataPtr->rawbuf[1] * MICROS_PER_TICK);
+    decodedIRData.DistanceWidthTimingInfo.HeaderSpaceMicros = (decodedIRData.rawDataPtr->rawbuf[2] * MICROS_PER_TICK);
+    decodedIRData.DistanceWidthTimingInfo.ZeroMarkMicros = tMarkMicrosShort;
+    decodedIRData.DistanceWidthTimingInfo.ZeroSpaceMicros = tSpaceMicrosShort;
+    if (tMarkMicrosLong != 0) {
+        decodedIRData.DistanceWidthTimingInfo.OneMarkMicros = tMarkMicrosLong;
+
+        decodedIRData.DistanceWidthTimingInfo.OneSpaceMicros = tSpaceMicrosShort;
+        if (tSpaceMicrosLong != 0) {
+            // Assume long space for zero when we have PulseDistanceWidth -> enables constant bit length
+            decodedIRData.DistanceWidthTimingInfo.ZeroSpaceMicros = tSpaceMicrosLong;
+        }
     } else {
-        decodedIRData.address = (tMarkTicksLong << 8) | tSpaceTicksLong;
-    }
-    decodedIRData.command = (tMarkTicksShort << 8) | tSpaceTicksShort;
+        decodedIRData.DistanceWidthTimingInfo.OneMarkMicros = tMarkMicrosShort;
 
+        // Here tMarkMicrosLong is 0 => tSpaceMicrosLong != 0
+        decodedIRData.DistanceWidthTimingInfo.OneSpaceMicros = tSpaceMicrosLong;
+    }
+
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("DistanceWidthTimingInfo="));
+    IrReceiver.printDistanceWidthTimingInfo(&Serial, &decodedIRData.DistanceWidthTimingInfo);
+    Serial.println();
+#endif
     return true;
 }
 

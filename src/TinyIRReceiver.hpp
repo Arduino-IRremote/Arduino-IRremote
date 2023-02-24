@@ -13,14 +13,13 @@
  *  !!!!!!!!!!!!!!!!!!!!!
  *  aFlags can contain one of IRDATA_FLAGS_EMPTY, IRDATA_FLAGS_IS_REPEAT and IRDATA_FLAGS_PARITY_FAILED bits
  *
- *  FAST protocol is proprietary and a JVC protocol without address and with a shorter header.
- *  FAST takes 21 ms for sending and can be sent at a 50 ms period. It still supports parity.
+ * The FAST protocol is a proprietary modified JVC protocol without address, with parity and with a shorter header.
  *  FAST Protocol characteristics:
- *  - Bit timing is like JVC
- *  - The header is shorter, 4000 vs. 12500
- *  - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *      leading to a fixed protocol length of (7 + (16 * 2) + 1) * 526 = 40 * 560 = 21040 microseconds or 21 ms.
- *  - Repeats are sent as complete frames but in a 50 ms period / with a 29 ms distance.
+ * - Bit timing is like NEC or JVC
+ * - The header is shorter, 3156 vs. 12500
+ * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
+ *     leading to a fixed protocol length of (6 + (16 * 3) + 1) * 526 = 55 * 526 = 28930 microseconds or 29 ms.
+ * - Repeats are sent as complete frames but in a 50 ms period / with a 21 ms distance.
  *
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
@@ -29,7 +28,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-20232 Armin Joachimsmeyer
+ * Copyright (c) 2022-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -316,7 +315,11 @@ void IRPinChangeInterruptHandler(void) {
                      * Address is sent first and contained in the lower word
                      */
                     if (TinyIRReceiverControl.IRRawData.UBytes[0] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[1])) {
-                        TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
+#if defined(ENABLE_NEC2_REPEATS)
+                        TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED; // here we can have the repeat flag already set
+#else
+                        TinyIRReceiverControl.Flags = IRDATA_FLAGS_PARITY_FAILED; // here we do not check anything, if we have a repeat
+#endif
                     }
 #endif
 #if !defined(DISABLE_PARITY_CHECKS) && (TINY_RECEIVER_COMMAND_BITS == 16) && TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
@@ -325,7 +328,11 @@ void IRPinChangeInterruptHandler(void) {
                      */
 #if (TINY_RECEIVER_ADDRESS_BITS > 0)
                     if (TinyIRReceiverControl.IRRawData.UBytes[2] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[3])) {
+#if defined(ENABLE_NEC2_REPEATS)
                         TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
+#else
+                        TinyIRReceiverControl.Flags = IRDATA_FLAGS_PARITY_FAILED;
+#endif
 #  if defined(LOCAL_DEBUG)
                         Serial.print(F("Parity check for command failed. Command="));
                         Serial.print(TinyIRReceiverControl.IRRawData.UBytes[2], HEX);
@@ -364,7 +371,7 @@ void IRPinChangeInterruptHandler(void) {
 #  endif
 #  if TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
                             // Here we have 8 bit command
-                            TinyIRReceiverControl.IRRawData.UBytes[3],
+                            TinyIRReceiverControl.IRRawData.UBytes[2],
 #  else
                             // Here we have 16 bit command
                             TinyIRReceiverControl.IRRawData.UWord.HighWord,
