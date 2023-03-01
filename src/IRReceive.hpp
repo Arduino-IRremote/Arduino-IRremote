@@ -363,6 +363,13 @@ void IRrecv::startWithTicksToAdd(uint16_t aTicksToAddToGapCounter) {
     start();
 }
 
+void IRrecv::addTicksToInternalTickCounter(uint16_t aTicksToAddToInternalTickCounter) {
+    irparams.TickCounterForISR += aTicksToAddToInternalTickCounter;
+}
+
+void IRrecv::addMicrosToInternalTickCounter(uint16_t aMicrosecondsToAddToInternalTickCounter) {
+    irparams.TickCounterForISR += aMicrosecondsToAddToInternalTickCounter / MICROS_PER_TICK;
+}
 /**
  * Restarts receiver after send. Is a NOP if sending does not require a timer.
  */

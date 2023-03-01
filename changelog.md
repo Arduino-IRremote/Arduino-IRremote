@@ -11,11 +11,13 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Removed field "bool hasStopBit" and parameter "bool aSendStopBit" from PulseDistanceWidthProtocolConstants structure and related functions.
 - Changed a lot of "unsigned int" types to "uint16_t" types.
 - Improved overflow handling.
+- Improved software PWM generation.
 - Added FAST protocol.
 - Improved handling of PULSE_DISTANCE + PULSE_WIDTH protocols.
 - New example ReceiveAndSendDistanceWidth.
 - Removed the automatic restarting of the receiver timer after sending with SEND_PWM_BY_TIMER enabled.
 - Split ISR into ISR and function IRPinChangeInterruptHandler().
+- Added functions addTicksToInternalTickCounter() and addMicrosToInternalTickCounter().
 
 ## 4.0.0
 - Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.

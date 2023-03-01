@@ -83,10 +83,10 @@
  * Declarations for the receiver Interrupt Service Routine
  ****************************************************/
 // ISR State-Machine : Receiver States
-#define IR_REC_STATE_IDLE      0
-#define IR_REC_STATE_MARK      1
-#define IR_REC_STATE_SPACE     2
-#define IR_REC_STATE_STOP      3 // set to IR_REC_STATE_IDLE only by resume()
+#define IR_REC_STATE_IDLE      0 // Counting the gap time and waiting for the start bit to arrive
+#define IR_REC_STATE_MARK      1 // A mark was received and we are counting the duration of it.
+#define IR_REC_STATE_SPACE     2 // A space was received and we are counting the duration of it. If space is too long, we assume end of frame.
+#define IR_REC_STATE_STOP      3 // Stopped until set to IR_REC_STATE_IDLE which can only be done by resume()
 
 /**
  * This struct contains the data and control used for receiver static functions and the ISR (interrupt service routine)
@@ -189,6 +189,9 @@ public:
     void start(uint32_t aMicrosecondsToAddToGapCounter);
     void startWithTicksToAdd(uint16_t aTicksToAddToGapCounter);
     void restartAfterSend();
+
+    void addTicksToInternalTickCounter(uint16_t aTicksToAddToInternalTickCounter);
+    void addMicrosToInternalTickCounter(uint16_t aMicrosecondsToAddToInternalTickCounter);
 
     bool available();
     IRData* read(); // returns decoded data
