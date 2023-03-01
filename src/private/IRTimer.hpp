@@ -1097,8 +1097,8 @@ void timerEnableReceiveInterrupt() {
 void timerDisableReceiveInterrupt() {
     NVIC_DISABLE_IRQ(IRQ_CMT);
 }
-#define TIMER_INTR_NAME     cmt_isr
 
+#define TIMER_INTR_NAME     cmt_isr
 #  if defined(ISR)
 #undef ISR
 #  endif
@@ -1327,15 +1327,13 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 #error "No support for hardware PWM generation for ESP8266"
 #  endif // defined(SEND_PWM_BY_TIMER)
 
-// Redefinition of ISR macro which creates a plain function now
+// Undefine ISR, because we register/call the plain function IRReceiveTimerInterruptHandler()
 #  if defined(ISR)
 #undef ISR
 #  endif
-#define ISR() IRAM_ATTR void IRTimerInterruptHandler()
-IRAM_ATTR void IRTimerInterruptHandler();
 
 void timerEnableReceiveInterrupt() {
-    timer1_attachInterrupt(&IRTimerInterruptHandler); // enables interrupt too
+    timer1_attachInterrupt(&IRReceiveTimerInterruptHandler); // enables interrupt too
 }
 void timerDisableReceiveInterrupt() {
     timer1_detachInterrupt(); // disables interrupt too }
@@ -1384,19 +1382,17 @@ void timerDisableReceiveInterrupt() {
     }
 }
 #endif
-// Redefinition of ISR macro which creates a plain function now
+// Undefine ISR, because we register/call the plain function IRReceiveTimerInterruptHandler()
 #  if defined(ISR)
 #undef ISR
 #  endif
-#define ISR() IRAM_ATTR void IRTimerInterruptHandler()
-IRAM_ATTR void IRTimerInterruptHandler();
 
 void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
     s50usTimer = timerBegin(1, 80, true);
-    timerAttachInterrupt(s50usTimer, &IRTimerInterruptHandler, false); // false -> level interrupt, true -> edge interrupt, but this is not supported :-(
+    timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler, false); // false -> level interrupt, true -> edge interrupt, but this is not supported :-(
     // every 50 us, autoreload = true
     timerAlarmWrite(s50usTimer, MICROS_PER_TICK, true);
 }
@@ -1450,14 +1446,11 @@ void timerDisableReceiveInterrupt() {
     NVIC_DisableIRQ (IR_SAMD_TIMER_IRQ); // or TC5->INTENCLR.bit.MC0 = 1; or TC5->COUNT16.CTRLA.reg &= ~TC_CTRLA_ENABLE;
 
 }
-// Redefinition of ISR macro which creates a plain function now
+// Undefine ISR, because we call the plain function IRReceiveTimerInterruptHandler()
 // The ISR is now TC3_Handler() or TC5_Handler() below
 #  if defined(ISR)
 #undef ISR
 #  endif
-#define ISR(f) void IRTimerInterruptHandler(void)
-// ATSAMD Timer IRQ functions
-void IRTimerInterruptHandler();
 
 /**
  * Adafruit M4 code (cores/arduino/startup.c) configures these clock generators:
@@ -1536,7 +1529,7 @@ void TC5_Handler(void) {
     if (TC->INTFLAG.bit.MC0 == 1) {
         // reset bit for next turn
         TC->INTFLAG.bit.MC0 = 1;
-        IRTimerInterruptHandler();
+        IRReceiveTimerInterruptHandler();
     }
 }
 #    else
@@ -1546,7 +1539,7 @@ void TC3_Handler(void) {
     if (TC->INTFLAG.bit.MC0 == 1) {
         // reset bit for next turn
         TC->INTFLAG.bit.MC0 = 1;
-        IRTimerInterruptHandler();
+        IRReceiveTimerInterruptHandler();
     }
 }
 #    endif // defined(__SAMD51__)
@@ -1559,22 +1552,20 @@ void TC3_Handler(void) {
 #include "mbed.h"
 mbed::Ticker s50usTimer;
 
-// Redefinition of ISR macro which creates a plain function now
+// Undefine ISR, because we register/call the plain function IRReceiveTimerInterruptHandler()
 #  if defined(ISR)
 #undef ISR
 #  endif
-#define ISR() void IRTimerInterruptHandler(void)
-void IRTimerInterruptHandler();
 
 void timerEnableReceiveInterrupt() {
-    s50usTimer.attach(IRTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
+    s50usTimer.attach(IRReceiveTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
 }
 void timerDisableReceiveInterrupt() {
     s50usTimer.detach();
 }
 
 void timerConfigForReceive() {
-    s50usTimer.attach(IRTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
+    s50usTimer.attach(IRReceiveTimerInterruptHandler, std::chrono::microseconds(MICROS_PER_TICK));
 }
 
 #  if defined(SEND_PWM_BY_TIMER)
@@ -1618,15 +1609,14 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 
 repeating_timer_t s50usTimer;
 
-// Redefinition of ISR macro which creates a plain function now
+// Undefine ISR, because we register/call the plain function IRReceiveTimerInterruptHandler()
 #  if defined(ISR)
 #undef ISR
 #  endif
-#define ISR() void IRTimerInterruptHandler(void)
-void IRTimerInterruptHandler();
+
 // The timer callback has a parameter and a return value
 bool IRTimerInterruptHandlerHelper(repeating_timer_t*) {
-    IRTimerInterruptHandler();
+    IRReceiveTimerInterruptHandler();
     return true;
 }
 
@@ -1700,11 +1690,11 @@ void timerEnableReceiveInterrupt() {
 void timerDisableReceiveInterrupt() {
     NVIC_DisableIRQ (TIMER2_IRQn);
 }
+
+// Undefine ISR, because we call the plain function IRReceiveTimerInterruptHandler()
 #  if defined(ISR)
 #undef ISR
 #  endif
-#define ISR(f) void IRTimerInterruptHandler(void)
-void IRTimerInterruptHandler();
 
 void timerConfigForReceive() {
     NRF_TIMER2->MODE = TIMER_MODE_MODE_Timer;              // Set the timer in Timer Mode
@@ -1730,7 +1720,7 @@ void TIMER2_IRQHandler(void) {
     // Interrupt Service Routine - Fires every 50uS
     if ((NRF_TIMER2->EVENTS_COMPARE[0] != 0) && ((NRF_TIMER2->INTENSET & TIMER_INTENSET_COMPARE0_Msk) != 0)) {
         NRF_TIMER2->EVENTS_COMPARE[0] = 0;          //Clear compare register 0 event
-        IRTimerInterruptHandler();          // call the IR-receive function
+        IRReceiveTimerInterruptHandler();          // call the IR-receive function
         NRF_TIMER2->CC[0] += 50;
     }
 }
@@ -1763,18 +1753,16 @@ void timerDisableReceiveInterrupt() {
     s50usTimer.pause();
 }
 
-// Redefinition of ISR macro which creates a plain function now
+// Undefine ISR, because we register/call the plain function IRReceiveTimerInterruptHandler()
 #  if defined(ISR)
 #undef ISR
 #  endif
-#define ISR() void IRTimerInterruptHandler(void)
-void IRTimerInterruptHandler();
 
 void timerConfigForReceive() {
     s50usTimer.setMode(TIMER_CH1, TIMER_OUTPUT_COMPARE);
     s50usTimer.setPrescaleFactor(1);
     s50usTimer.setOverflow((F_CPU / MICROS_IN_ONE_SECOND) * MICROS_PER_TICK);
-    s50usTimer.attachInterrupt(TIMER_CH1, IRTimerInterruptHandler);
+    s50usTimer.attachInterrupt(TIMER_CH1, IRReceiveTimerInterruptHandler);
     s50usTimer.refresh();
 }
 
@@ -1807,16 +1795,14 @@ void timerDisableReceiveInterrupt() {
     s50usTimer.pause();
 }
 
-// Redefinition of ISR macro which creates a plain function now
+// Undefine ISR, because we register/call the plain function IRReceiveTimerInterruptHandler()
 #  if defined(ISR)
 #undef ISR
 #  endif
-#define ISR() void IRTimerInterruptHandler(void)
-void IRTimerInterruptHandler();
 
 void timerConfigForReceive() {
     s50usTimer.setOverflow(MICROS_PER_TICK, MICROSEC_FORMAT); // 50 uS
-    s50usTimer.attachInterrupt(IRTimerInterruptHandler);
+    s50usTimer.attachInterrupt(IRReceiveTimerInterruptHandler);
     s50usTimer.resume();
 }
 
@@ -1833,17 +1819,16 @@ extern IntervalTimer timer;
 extern int ir_out_kHz;
 
 void timerEnableReceiveInterrupt() {
-    timer.begin(IRTimerInterruptHandler, MICROS_PER_TICK, uSec);
+    timer.begin(IRReceiveTimerInterruptHandler, MICROS_PER_TICK, uSec);
 }
 void timerDisableReceiveInterrupt() {
     timer.end();
 }
 
-// Redefinition of ISR macro which creates a plain function now
+// Undefine ISR, because we register/call the plain function IRReceiveTimerInterruptHandler()
 #  if defined(ISR)
 #undef ISR
 #  endif
-#define ISR() void IRTimerInterruptHandler(void)
 
 void timerConfigForReceive() {
 }

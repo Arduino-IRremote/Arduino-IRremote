@@ -15,6 +15,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Improved handling of PULSE_DISTANCE + PULSE_WIDTH protocols.
 - New example ReceiveAndSendDistanceWidth.
 - Removed the automatic restarting of the receiver timer after sending with SEND_PWM_BY_TIMER enabled.
+- Split ISR into ISR and function IRPinChangeInterruptHandler().
 
 ## 4.0.0
 - Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.

@@ -387,6 +387,11 @@ void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please us
  */
 extern IRrecv IrReceiver;
 
+/*
+ * The receiver interrupt handler for timer interrupt
+ */
+void IRReceiveTimerInterruptHandler();
+
 /****************************************************
  *                     SENDING
  ****************************************************/

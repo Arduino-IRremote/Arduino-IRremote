@@ -121,13 +121,10 @@ IRrecv::IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) {
  * => Minimal CPU frequency is 4 MHz
  *
  **********************************************************************************************************************/
-#if defined(TIMER_INTR_NAME)
-ISR (TIMER_INTR_NAME) // for ISR definitions
-#else
-ISR()
-// for functions definitions which are called by separate (board specific) ISR
+#if defined(ESP8266) || defined(ESP32)
+IRAM_ATTR
 #endif
-{
+void IRReceiveTimerInterruptHandler(){
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
     digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
@@ -259,7 +256,23 @@ ISR()
 #ifdef _IR_MEASURE_TIMING
     digitalWriteFast(_IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
 #endif
+
 }
+
+/*
+ * The ISR, which calls the interrupt handler
+ */
+#if defined(TIMER_INTR_NAME) || defined(ISR)
+#  if defined(TIMER_INTR_NAME)
+ISR (TIMER_INTR_NAME) // for ISR definitions
+#  elif defined(ISR)
+ISR()
+// for functions definitions which are called by separate (board specific) ISR
+#  endif
+{
+    IRReceiveTimerInterruptHandler();
+}
+#endif
 
 /**********************************************************************************************************************
  * Stream like API
