@@ -311,10 +311,9 @@ Check it with e.g. `if(IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT)`
 | IRDATA_FLAGS_IS_AUTO_REPEAT | The current repeat frame is a repeat, that is always sent after a regular frame and cannot be avoided. Only specified for protocols DENON, and LEGO. |
 | IRDATA_FLAGS_PARITY_FAILED | The current (autorepeat) frame violated parity check. |
 | IRDATA_FLAGS_TOGGLE_BIT | Is set if RC5 or RC6 toggle bit is set. |
-| IRDATA_TOGGLE_BIT_MASK | deprecated -is set if RC5 or RC6 toggle bit is set. |
 | IRDATA_FLAGS_EXTRA_INFO | There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray). |
 | IRDATA_FLAGS_WAS_OVERFLOW | irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag. |
-| IRDATA_FLAGS_IS_MSB_FIRST | Value is mainly determined by the (known) protocol. |
+| IRDATA_FLAGS_IS_MSB_FIRST | This value is mainly determined by the (known) protocol. |
 
 #### To access the **RAW data**, use:
 ```c++

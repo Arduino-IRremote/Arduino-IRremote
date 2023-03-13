@@ -2,6 +2,9 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+## 4.1.1
+- SAMD51 use timer3 if timer5 not available.
+
 ## 4.1.0
 - Fixed bug in printing durations > 64535 in printIRResultRawFormatted().
 - Narrowed constraints for RC5 RC6 number of bits.

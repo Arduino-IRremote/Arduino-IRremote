@@ -10,7 +10,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,10 +43,28 @@
  * If no protocol is defined, all protocols (except Bang&Olufsen) are active.
  * This must be done before the #include <IRremote.hpp>
  */
-// 3 protocol specification examples
+//#define DECODE_DENON        // Includes Sharp
+//#define DECODE_JVC
+//#define DECODE_KASEIKYO
+//#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
 //#define DECODE_LG
-//#define DECODE_NEC
+//#define DECODE_NEC          // Includes Apple and Onkyo
+//#define DECODE_SAMSUNG
+//#define DECODE_SONY
+//#define DECODE_RC5
+//#define DECODE_RC6
+
+//#define DECODE_BOSEWAVE
+//#define DECODE_LEGO_PF
+//#define DECODE_MAGIQUEST
+//#define DECODE_WHYNTER
+//#define DECODE_FAST
+
 //#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
+//#define DECODE_HASH         // special decoder for all protocols
+
+//#define DECODE_BEO          // This protocol must always be enabled manually, i.e. it is NOT enabled if no protocol is defined. It prevents decoding of SONY!
+
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
 // !!! Enabling B&O disables detection of Sony, because the repeat gap for SONY is smaller than the B&O frame gap :-( !!!
 //#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly. It has an IR transmit frequency of 455 kHz! It prevents decoding of SONY!
