@@ -153,20 +153,24 @@ void IRsend::sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNu
 /**
  * Here we send Samsung32
  * If we get a command < 0x100, we send command and then ~command
+ * !!! Be aware, that this is flexible, but makes it impossible to send e.g. 0x0042 as 16 bit value!!!
+ * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent
  */
 void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
 
-    // send 16 bit address and  8 command bits and then 8 inverted command bits LSB first
+    // send 16 bit address
     LongUnion tSendValue;
     tSendValue.UWords[0] = aAddress;
     if (aCommand < 0x100) {
+        // Send 8 command bits and then 8 inverted command bits LSB first
         tSendValue.UBytes[2] = aCommand;
         tSendValue.UBytes[3] = ~aCommand;
     } else {
+        // Send 16 command bits
         tSendValue.UWords[1] = aCommand;
     }
 
-    IrSender.sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULong, SAMSUNG_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULong, SAMSUNG_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -187,7 +191,7 @@ void IRsend::sendSamsung48(uint16_t aAddress, uint32_t aCommand, int_fast8_t aNu
     tRawSamsungData[1] = tUpper8BitsOfCommand | (~tUpper8BitsOfCommand) << 8;
     tRawSamsungData[0] = tSendValue.ULong;
 
-    IrSender.sendPulseDistanceWidthFromArray(&SamsungProtocolConstants, &tRawSamsungData[0], SAMSUNG48_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidthFromArray(&SamsungProtocolConstants, &tRawSamsungData[0], SAMSUNG48_BITS, aNumberOfRepeats);
 #else
     LongLongUnion tSendValue;
     tSendValue.UWords[0] = aAddress;
@@ -200,7 +204,7 @@ void IRsend::sendSamsung48(uint16_t aAddress, uint32_t aCommand, int_fast8_t aNu
     } else {
         tSendValue.ULongLong = aAddress | aCommand << 16;
     }
-    IrSender.sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULongLong, SAMSUNG48_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULongLong, SAMSUNG48_BITS, aNumberOfRepeats);
 #endif
 }
 

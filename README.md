@@ -272,7 +272,7 @@ In **all other files** you must use the following, to **prevent `multiple defini
 #include <IRremote.hpp>
 ```
 
-**Ensure that all macros in your main program are defined before any** `#include <IRremote.hpp>`. <br/>
+**Ensure that all macros in your main program are defined before any** `#include <IRremote.hpp>`.<br/>
 The following macros will definitely be overridden with default values otherwise:
 - `RAW_BUFFER_LENGTH`
 - `IR_SEND_PIN`
@@ -295,12 +295,26 @@ struct IRData {
     uint16_t command;           // Decoded command
     uint16_t extra;             // Used for Kaseikyo unknown vendor ID. Ticks used for decoding Distance protocol.
     uint16_t numberOfBits;      // Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
-    uint8_t flags;              // See IRDATA_FLAGS_* definitions
+    uint8_t flags;              // IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions
     IRRawDataType decodedRawData;    // Up to 32 (64 bit for 32 bit CPU architectures) bit decoded raw data, used for sendRaw functions.
     uint32_t decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; // 32 bit decoded raw data, to be used for send function.
     irparams_struct *rawDataPtr; // Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
 };
 ```
+#### Flags
+This is the [list of flags](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRProtocol.h#L88) contained in the flags field.<br/>
+Check it with e.g. `if(IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT)`.
+
+| Flag name | Description |
+|:---|----|
+| IRDATA_FLAGS_IS_REPEAT | The gap between the preceding frame is as smaller than the maximum gap expected for a repeat. !!!We do not check for changed command or address, because it is almost not possible to press 2 different buttons on the remote within around 100 ms!!!
+| IRDATA_FLAGS_IS_AUTO_REPEAT | The current repeat frame is a repeat, that is always sent after a regular frame and cannot be avoided. Only specified for protocols DENON, and LEGO. |
+| IRDATA_FLAGS_PARITY_FAILED | The current (autorepeat) frame violated parity check. |
+| IRDATA_FLAGS_TOGGLE_BIT | Is set if RC5 or RC6 toggle bit is set. |
+| IRDATA_TOGGLE_BIT_MASK | deprecated -is set if RC5 or RC6 toggle bit is set. |
+| IRDATA_FLAGS_EXTRA_INFO | There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray). |
+| IRDATA_FLAGS_WAS_OVERFLOW | irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag. |
+| IRDATA_FLAGS_IS_MSB_FIRST | Value is mainly determined by the (known) protocol. |
 
 #### To access the **RAW data**, use:
 ```c++
@@ -544,6 +558,7 @@ If the protocol is not NEC and code size matters, look at this [example](https:/
 
 #### ReceiveDemo + AllProtocolsOnLCD
 [ReceiveDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino) receives all protocols and **generates a beep with the Arduino tone() function** on each packet received.<br/>
+Long press of one IR button (receiving of multiple repeats for one command) is detected.<br/>
 [AllProtocolsOnLCD](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/AllProtocolsOnLCD/AllProtocolsOnLCD.ino) additionally **displays the short result on a 1602 LCD**. The LCD can be connected parallel or serial (I2C).<br/>
 By connecting debug pin to ground, you can force printing of the raw values for each frame. The pin number of the debug pin is printed during setup, because it depends on board and LCD connection type.<br/>
 This example also serves as an **example how to use IRremote and tone() together**.

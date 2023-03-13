@@ -2,6 +2,7 @@
  * ReceiveDemo.cpp
  *
  * Demonstrates receiving IR codes with the IRremote library and the use of the Arduino tone() function with this library.
+ * Long press of one IR button (receiving of multiple repeats for one command) is detected.
  * If debug button is pressed (pin connected to ground) a long output is generated.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -76,7 +77,6 @@
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 142.
 //#define MARK_EXCESS_MICROS    20    // Adapt it to your IR receiver module. 40 is taken for the cheap VS1838 module her, since we have high intensity.
 
-
 //#define RECORD_GAP_MICROS 12000 // Default is 5000. Activate it for some LG air conditioner protocols
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
@@ -88,6 +88,8 @@
 #else
 #define DEBUG_BUTTON_PIN   6
 #endif
+
+bool detectLongPress(uint16_t aLongPressDurationMillis);
 
 void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
@@ -249,6 +251,13 @@ void loop() {
                 // do something else
             }
         }
+
+        // Check if the command was repeated for more than 2000 ms
+        if (detectLongPress(2000)) {
+            Serial.print(F("Command 0x"));
+            Serial.print(IrReceiver.decodedIRData.command, HEX);
+            Serial.println(F(" was repeated for more than 2 seconds"));
+        }
     } // if (IrReceiver.decode())
 
     /*
@@ -260,3 +269,25 @@ void loop() {
      */
 
 }
+
+unsigned long sMillisOfFirstReceive;
+bool sLongPressJustDetected;
+/**
+ * @return true once after the repeated command was received for longer than aLongPressDurationMillis milliseconds, false otherwise.
+ */
+bool detectLongPress(uint16_t aLongPressDurationMillis) {
+    if (!sLongPressJustDetected && (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT)) {
+        /*
+         * Here the repeat flag is set (which implies, that command is the same as the previous one)
+         */
+        if (millis() - aLongPressDurationMillis > sMillisOfFirstReceive) {
+            sLongPressJustDetected = true; // Long press here
+        }
+    } else {
+        // No repeat here
+        sMillisOfFirstReceive = millis();
+        sLongPressJustDetected = false;
+    }
+    return sLongPressJustDetected; // No long press here
+}
+

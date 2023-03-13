@@ -146,7 +146,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumb
     IRRawDataType tRawKaseikyoData[2];
     tRawKaseikyoData[0] = (uint32_t) tSendValue.UWord.LowWord << 16 | aVendorCode; // LSB of tRawKaseikyoData[0] is sent first
     tRawKaseikyoData[1] = tSendValue.UWord.HighWord;
-    IrSender.sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawKaseikyoData[0], KASEIKYO_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawKaseikyoData[0], KASEIKYO_BITS, aNumberOfRepeats);
 #else
     LongLongUnion tSendValue;
     tSendValue.UWords[0] = aVendorCode;
@@ -154,7 +154,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumb
     tSendValue.UWords[1] = (aAddress << KASEIKYO_VENDOR_ID_PARITY_BITS) | tVendorParity; // set low nibble to parity
     tSendValue.UBytes[4] = aCommand;
     tSendValue.UBytes[5] = aCommand ^ tSendValue.UBytes[2] ^ tSendValue.UBytes[3]; // Parity
-    IrSender.sendPulseDistanceWidth(&KaseikyoProtocolConstants, tSendValue.ULongLong, KASEIKYO_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth(&KaseikyoProtocolConstants, tSendValue.ULongLong, KASEIKYO_BITS, aNumberOfRepeats);
 #endif
 }
 
