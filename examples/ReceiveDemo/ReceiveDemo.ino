@@ -270,8 +270,8 @@ void loop() {
             }
         }
 
-        // Check if the command was repeated for more than 2000 ms
-        if (detectLongPress(2000)) {
+        // Check if the command was repeated for more than 1000 ms
+        if (detectLongPress(1000)) {
             Serial.print(F("Command 0x"));
             Serial.print(IrReceiver.decodedIRData.command, HEX);
             Serial.println(F(" was repeated for more than 2 seconds"));

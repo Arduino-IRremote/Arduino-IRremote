@@ -128,6 +128,13 @@
 (((P) <= 7) ? &DDRB : (((P) >= 8 && (P) <= 15) ? &DDRD : (((P) >= 16 && (P) <= 23) ? &DDRC : &DDRA)))
 #define __digitalPinToPINReg(P) \
 (((P) <= 7) ? &PINB : (((P) >= 8 && (P) <= 15) ? &PIND : (((P) >= 16 && (P) <= 23) ? &PINC : &PINA)))
+# if defined(SANGUINO_PINOUT)
+#define __digitalPinToBit(P) \
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (7 - ((P) - 24)))))
+# else //MightyCore Pinout
+#define __digitalPinToBit(P) \
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (P) - 24)))
+# endif
 #else
 #define __digitalPinToPortReg(P) \
 (((P) <= 7) ? &PORTB : (((P) >= 8 && (P) <= 15) ? &PORTD : &PORTC))
