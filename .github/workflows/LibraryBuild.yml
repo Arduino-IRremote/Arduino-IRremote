@@ -74,7 +74,7 @@ jobs:
       - name: Install PlatformIO libraries
         run: pio pkg install -g -l "arminjo/ATtinySerialOut@^2.1.1"
       - name: Build ${{ matrix.example }}
-        run: pio ci --lib="." --board=uno --board=featheresp32 --board=nodemcuv2 --board=bluepill_f103c8 --board=pico
+        run: pio ci --lib="." --board=uno --board=featheresp32 --board=nodemcuv2 --board=bluepill_f103c8 --board=pico --board=teensy41
         env:
           PLATFORMIO_CI_SRC: ${{ matrix.example }}
   arduino-cli-build:
@@ -123,7 +123,9 @@ jobs:
           - stm32duino:STM32F1:genericSTM32F103C
           - sandeepmistry:nRF5:BBCmicrobit
           - Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
-          - teensy:avr:teensy41
+          # not yet capable, always prefers older IRemote library in core/libraries, not "our" one.
+          # see https://github.com/arduino/arduino-cli/issues/2106
+          #- teensy:avr:teensy41
 
         # Specify parameters for each board.
         # With sketches-exclude you may exclude specific examples for a board. Use a comma separated list.
@@ -317,9 +319,10 @@ jobs:
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300
 
-          - arduino-boards-fqbn: teensy:avr:teensy41
-            platform-url: https://www.pjrc.com/teensy/package_teensy_index.json
-            sketches-exclude: TinyReceiver,IRDispatcherDemo
+          # See reason for Teensy above
+          #- arduino-boards-fqbn: teensy:avr:teensy41
+          #  platform-url: https://www.pjrc.com/teensy/package_teensy_index.json
+          #  sketches-exclude: TinyReceiver,IRDispatcherDemo
 
 
 #      fail-fast: false # false -> do not cancel all jobs / architectures if one job fails
