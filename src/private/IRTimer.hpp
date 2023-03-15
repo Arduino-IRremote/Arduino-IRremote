@@ -1368,7 +1368,7 @@ hw_timer_t *s50usTimer; // set by timerConfigForReceive()
 void timerEnableReceiveInterrupt() {
     timerAlarmEnable (s50usTimer);
 }
-#if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2, 0, 2)
+#if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL<<(2, 0, 2)>>
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != NULL) {
         timerEnd(s50usTimer);
@@ -1498,7 +1498,7 @@ void timerConfigForReceive() {
         ; // wait for sync to ensure that we can write again to COUNT16.CTRLA.reg
     // Reset TCx
     TC->CTRLA.reg = TC_CTRLA_SWRST;
-    // When writing a ‘1’ to the CTRLA.SWRST bit it will immediately read as ‘1’.
+    // When writing a Â‘1Â’ to the CTRLA.SWRST bit it will immediately read as Â‘1Â’.
     while (TC->CTRLA.bit.SWRST)
         ; // CTRL.SWRST will be cleared by hardware when the peripheral has been reset.
 
