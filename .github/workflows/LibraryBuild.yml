@@ -28,7 +28,53 @@ on:
     - '**LibraryBuild.yml'
 
 jobs:
-  build:
+  platformio-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        example:
+          - "examples/AllProtocolsOnLCD"
+          - "examples/ControlRelay"
+          - "examples/IRDispatcherDemo"
+          - "examples/IRremoteExtensionTest"
+          - "examples/IRremoteInfo"
+          - "examples/MicroGirs"
+          - "examples/ReceiveAndSend"
+          - "examples/ReceiveAndSendDistanceWidth"
+          - "examples/ReceiveDemo"
+          - "examples/ReceiveDump"
+          - "examples/ReceiveOneAndSendMultiple"
+          - "examples/ReceiverTimingAnalysis"
+          - "examples/SendAndReceive"
+          - "examples/SendBoseWaveDemo"
+          - "examples/SendDemo"
+          - "examples/SendLGAirConditionerDemo"
+          - "examples/SendProntoDemo"
+          - "examples/SendRawDemo"
+          - "examples/SimpleReceiver"
+          - "examples/SimpleReceiverWithCallback"
+          - "examples/SimpleSender"
+          - "examples/TinyReceiver"
+          - "examples/TinySender"
+          - "examples/UnitTest"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ubuntu-pio
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+      - name: Build ${{ matrix.example }}
+        run: pio ci --lib="." --board=uno --board=attiny167 --board=esp32dev --board=nodemcuv2 --board=bluepill_f103c8 --board=pico
+        env:
+          PLATFORMIO_CI_SRC: ${{ matrix.example }}
+  arduino-cli-build:
     name: ${{ matrix.arduino-boards-fqbn }} - test compiling examples
 
     runs-on: ubuntu-22.04 # I picked Ubuntu to use shell scripts.
