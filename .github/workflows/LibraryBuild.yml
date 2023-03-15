@@ -70,6 +70,8 @@ jobs:
           python-version: '3.9'
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
+      - name: Install PlatformIO libraries
+        run: pio pkg install -g -l "arminjo/ATtinySerialOut@^2.1.1"
       - name: Build ${{ matrix.example }}
         run: pio ci --lib="." --board=uno --board=attiny167 --board=esp32dev --board=nodemcuv2 --board=bluepill_f103c8 --board=pico
         env:
