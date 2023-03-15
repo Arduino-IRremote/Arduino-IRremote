@@ -1230,6 +1230,8 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
  * Teensy 4.0, 4.1, MicroMod boards
  ***************************************/
 #elif defined(__IMXRT1062__)
+// forward declare ISR function (will be implemented by IRReceive.hpp)
+void pwm1_3_isr();
 
 // defines for FlexPWM1 timer on Teensy 4
 #define TIMER_REQUIRES_RESET_INTR_PENDING
@@ -1250,7 +1252,6 @@ void timerDisableReceiveInterrupt() {
 #undef ISR
 #  endif
 #define ISR(f) void (f)(void)
-void pwm1_3_isr();
 
 void timerConfigForReceive() {
     uint32_t period = (float) F_BUS_ACTUAL * (float) (MICROS_PER_TICK) * 0.0000005f;
@@ -1498,7 +1499,7 @@ void timerConfigForReceive() {
         ; // wait for sync to ensure that we can write again to COUNT16.CTRLA.reg
     // Reset TCx
     TC->CTRLA.reg = TC_CTRLA_SWRST;
-    // When writing a ‘1’ to the CTRLA.SWRST bit it will immediately read as ‘1’.
+    // When writing a 1 to the CTRLA.SWRST bit it will immediately read as 1.
     while (TC->CTRLA.bit.SWRST)
         ; // CTRL.SWRST will be cleared by hardware when the peripheral has been reset.
 
