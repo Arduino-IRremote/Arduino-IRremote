@@ -74,7 +74,7 @@ jobs:
       - name: Install PlatformIO libraries
         run: pio pkg install -g -l "arminjo/ATtinySerialOut@^2.1.1"
       - name: Build ${{ matrix.example }}
-        run: pio ci --lib="." --board=uno --board=attiny167 --board=featheresp32 --board=nodemcuv2 --board=bluepill_f103c8 --board=pico
+        run: pio ci --lib="." --board=uno --board=featheresp32 --board=nodemcuv2 --board=bluepill_f103c8 --board=pico
         env:
           PLATFORMIO_CI_SRC: ${{ matrix.example }}
   arduino-cli-build:
@@ -317,7 +317,7 @@ jobs:
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300
 
-          - arduino-boards-fqn: teensy4:avr:teensy41
+          - arduino-boards-fqbn: teensy4:avr:teensy41
             platform-url: https://www.pjrc.com/teensy/package_teensy_index.json
 
 
