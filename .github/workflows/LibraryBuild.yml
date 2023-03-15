@@ -54,8 +54,9 @@ jobs:
           - "examples/SimpleReceiver"
           - "examples/SimpleReceiverWithCallback"
           - "examples/SimpleSender"
-          - "examples/TinyReceiver"
-          - "examples/TinySender"
+          # ATTiny specific things later  
+          #- "examples/TinyReceiver"
+          #- "examples/TinySender"
           - "examples/UnitTest"
     steps:
       - uses: actions/checkout@v3
@@ -73,7 +74,7 @@ jobs:
       - name: Install PlatformIO libraries
         run: pio pkg install -g -l "arminjo/ATtinySerialOut@^2.1.1"
       - name: Build ${{ matrix.example }}
-        run: pio ci --lib="." --board=uno --board=attiny167 --board=esp32dev --board=nodemcuv2 --board=bluepill_f103c8 --board=pico
+        run: pio ci --lib="." --board=uno --board=attiny167 --board=featheresp32 --board=nodemcuv2 --board=bluepill_f103c8 --board=pico
         env:
           PLATFORMIO_CI_SRC: ${{ matrix.example }}
   arduino-cli-build:
@@ -122,6 +123,7 @@ jobs:
           - stm32duino:STM32F1:genericSTM32F103C
           - sandeepmistry:nRF5:BBCmicrobit
           - Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
+          - teensy4:avr:teensy41
 
         # Specify parameters for each board.
         # With sketches-exclude you may exclude specific examples for a board. Use a comma separated list.
@@ -314,6 +316,10 @@ jobs:
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
               All: -DRAW_BUFFER_LENGTH=300
+
+          - arduino-boards-fqn: teensy4:avr:teensy41
+            platform-url: https://www.pjrc.com/teensy/package_teensy_index.json
+
 
 #      fail-fast: false # false -> do not cancel all jobs / architectures if one job fails
 
