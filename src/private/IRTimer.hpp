@@ -1230,6 +1230,8 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
  * Teensy 4.0, 4.1, MicroMod boards
  ***************************************/
 #elif defined(__IMXRT1062__)
+// forward declare ISR function (will be implemented by IRReceive.hpp)
+void pwm1_3_isr();
 
 /* forward declare ISR function (will be implemented by IRReceive.hpp) */
 void pwm1_3_isr();
