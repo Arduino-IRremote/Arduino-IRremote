@@ -1233,9 +1233,6 @@ void timerConfigForSend(uint8_t aFrequencyKHz) {
 // forward declare ISR function (will be implemented by IRReceive.hpp)
 void pwm1_3_isr();
 
-/* forward declare ISR function (will be implemented by IRReceive.hpp) */
-void pwm1_3_isr();
-
 // defines for FlexPWM1 timer on Teensy 4
 #define TIMER_REQUIRES_RESET_INTR_PENDING
 void timerResetInterruptPending() {
