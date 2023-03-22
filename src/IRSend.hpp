@@ -1137,16 +1137,14 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
 #if defined(ESP32) || defined(ESP8266)
     // from https://github.com/crankyoldgit/IRremoteESP8266/blob/00b27cc7ea2e7ac1e48e91740723c805a38728e0/src/IRsend.cpp#L123
     // Invoke a delay(), where possible, to avoid triggering the WDT.
-    // see https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1114 for the reason of checking for > 20000 ( 20000 is just a best guess :-))
-    if (aMicroseconds > 20000) {
+    // see https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1114 for the reason of checking for > 16383)
+    // delayMicroseconds() is only accurate to 16383 us. Ref: https://www.arduino.cc/en/Reference/delayMicroseconds
+    if (aMicroseconds > 16383) {
         delay(aMicroseconds / 1000UL);  // Delay for as many whole milliseconds as we can.
         // Delay the remaining sub-millisecond.
         delayMicroseconds(static_cast<uint16_t>(aMicroseconds % 1000UL));
     } else {
-        unsigned long start = micros();
-        // overflow invariant comparison :-)
-        while (micros() - start < aMicroseconds) {
-        }
+        delayMicroseconds(aMicroseconds);
     }
 #else
 
