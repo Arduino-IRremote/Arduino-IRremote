@@ -74,27 +74,34 @@
  */
 //#define USE_NO_LCD
 //#define USE_SERIAL_LCD
+// Definitions for the 1602 LCD
+#define LCD_COLUMNS 16
+#define LCD_ROWS 2
+
 #if defined(USE_SERIAL_LCD)
 #include "LiquidCrystal_I2C.h" // Use an up to date library version, which has the init method
+LiquidCrystal_I2C myLCD(0x27, LCD_COLUMNS, LCD_ROWS);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 #elif !defined(USE_NO_LCD)
-#include "LiquidCrystal.h"
 #define USE_PARALLEL_LCD
+#include "LiquidCrystal.h"
+//LiquidCrystal myLCD(4, 5, 6, 7, 8, 9);
+LiquidCrystal myLCD(7, 8, 3, 4, 5, 6);
 #endif
 
 #if defined(USE_PARALLEL_LCD)
 #define DEBUG_BUTTON_PIN            11 // If low, print timing for each received data set
-#define AUXILIARY_DEBUG_BUTTON_PIN  12 // Is set to low to enable using of a simple connector for enabling debug
 #undef TONE_PIN
 #define TONE_PIN                     9 // Pin 4 is used by LCD
 #else
-#define DEBUG_BUTTON_PIN   6
+#define DEBUG_BUTTON_PIN             6
 #endif
+#define AUXILIARY_DEBUG_BUTTON_PIN  12 // Is set to low to enable using of a simple connector for enabling debug
+
+#define MILLIS_BETWEEN_ATTENTION_BEEP   60000 // 60 sec
+uint32_t sMillisOfLastReceivedIRFrame = 0;
 
 #if defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
 #define USE_LCD
-// definitions for a 1602 LCD
-#define LCD_COLUMNS 16
-#define LCD_ROWS 2
 #  if defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
 // For cyclically display of VCC
 #include "ADCUtils.hpp"
@@ -106,14 +113,6 @@ bool ProtocolStringOverwritesVoltage = false;
 #define LCD_IR_COMMAND_START_INDEX         9
 
 #endif // defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
-
-#if defined(USE_SERIAL_LCD)
-LiquidCrystal_I2C myLCD(0x27, LCD_COLUMNS, LCD_ROWS);  // set the LCD address to 0x27 for a 16 chars and 2 line display
-#endif
-#if defined(USE_PARALLEL_LCD)
-//LiquidCrystal myLCD(4, 5, 6, 7, 8, 9);
-LiquidCrystal myLCD(7, 8, 3, 4, 5, 6);
-#endif
 
 void printIRResultOnLCD();
 size_t printByteHexOnLCD(uint16_t aHexByteValue);
@@ -186,7 +185,7 @@ void setup() {
     myLCD.backlight();
 #endif
 #if defined(USE_PARALLEL_LCD)
-    myLCD.begin(LCD_COLUMNS, LCD_ROWS);
+    myLCD.begin(LCD_COLUMNS, LCD_ROWS); // This also clears display
 #endif
 
 #if defined(USE_LCD)
@@ -261,6 +260,18 @@ void loop() {
         IrReceiver.resume();
     } // if (IrReceiver.decode())
 
+    /*
+     * Check for attention every 10 minute, after the current measurement was finished
+     */
+    if (millis() - sMillisOfLastReceivedIRFrame >= MILLIS_BETWEEN_ATTENTION_BEEP) {
+        sMillisOfLastReceivedIRFrame = millis();
+        IrReceiver.stop();
+        tone(TONE_PIN, 2200);
+        delay(50);
+        noTone(TONE_PIN);
+        IrReceiver.startWithTicksToAdd(50 * (MICROS_IN_ONE_MILLI / MICROS_PER_TICK));
+    }
+
 #if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
     //Periodically print VCC
     if (!ProtocolStringOverwritesVoltage && millis() - sMillisOfLastVoltagePrint > MILLIS_BETWEEN_VOLTAGE_PRINT) {
@@ -268,7 +279,7 @@ void loop() {
          * Periodically print VCC
          */
         sMillisOfLastVoltagePrint = millis();
-         sVCCMillivolt = getVCCVoltageMillivoltSimple();
+        sVCCMillivolt = getVCCVoltageMillivoltSimple();
         char tVoltageString[5];
         dtostrf(sVCCMillivolt / 1000.0, 4, 2, tVoltageString);
         myLCD.setCursor(LCD_VOLTAGE_START_INDEX - 1, 0);

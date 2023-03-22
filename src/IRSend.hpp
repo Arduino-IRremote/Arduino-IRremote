@@ -683,6 +683,14 @@ void IRsend::sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants
 void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRRawDataType aData,
         uint_fast8_t aNumberOfBits, int_fast8_t aNumberOfRepeats) {
 
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("Data=0x"));
+    Serial.print(aData, HEX);
+    Serial.print(F(" #="));
+    Serial.println(aNumberOfBits);
+    Serial.flush();
+#endif
+
     if (aNumberOfRepeats < 0) {
         if (aProtocolConstants->SpecialSendRepeatFunction != NULL) {
             aProtocolConstants->SpecialSendRepeatFunction();
@@ -823,10 +831,10 @@ void IRsend::sendPulseDistanceWidthData(uint16_t aOneMarkMicros, uint16_t aOneSp
         uint16_t aZeroSpaceMicros, IRRawDataType aData, uint_fast8_t aNumberOfBits, uint8_t aFlags) {
 
 #if defined(LOCAL_DEBUG)
-    // Even printing this short messages (at 115200) disturbs the send timing :-(
-//    Serial.print(aData, HEX);
-//    Serial.print('|');
-//    Serial.println(aNumberOfBits);
+    Serial.print(aData, HEX);
+    Serial.print('|');
+    Serial.println(aNumberOfBits);
+    Serial.flush();
 #endif
 
     // For MSBFirst, send data from MSB to LSB until mask bit is shifted out
@@ -1129,9 +1137,17 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
 #if defined(ESP32) || defined(ESP8266)
     // from https://github.com/crankyoldgit/IRremoteESP8266/blob/00b27cc7ea2e7ac1e48e91740723c805a38728e0/src/IRsend.cpp#L123
     // Invoke a delay(), where possible, to avoid triggering the WDT.
-    delay(aMicroseconds / 1000UL);  // Delay for as many whole milliseconds as we can.
-    // Delay the remaining sub-millisecond.
-    delayMicroseconds(static_cast<uint16_t>(aMicroseconds % 1000UL));
+    // see https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1114 for the reason of checking for > 20000 ( 20000 is just a best guess :-))
+    if (aMicroseconds > 20000) {
+        delay(aMicroseconds / 1000UL);  // Delay for as many whole milliseconds as we can.
+        // Delay the remaining sub-millisecond.
+        delayMicroseconds(static_cast<uint16_t>(aMicroseconds % 1000UL));
+    } else {
+        unsigned long start = micros();
+        // overflow invariant comparison :-)
+        while (micros() - start < aMicroseconds) {
+        }
+    }
 #else
 
 #  if defined(__AVR__)

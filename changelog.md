@@ -2,6 +2,9 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+## 4.1.2
+- Workaround for ESP32 RTOS delay() timing bug influencing the mark() function.
+
 ## 4.1.1
 - SAMD51 use timer3 if timer5 not available.
 - Disabled #define LOCAL_DEBUG in IRReceive.hpp, which was accidently enabled at 4.1.0.
