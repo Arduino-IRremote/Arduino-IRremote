@@ -17,8 +17,11 @@
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
-#include <IRremote.hpp>
+/*
+ * This include defines the actual pin number for pins like IR_RECEIVE_PIN, IR_SEND_PIN for many different boards and architectures
+ */
+#include "PinDefinitionsAndMore.h"
+#include <IRremote.hpp> // include the library
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);

@@ -29,8 +29,9 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 # Overview
 - [Supported IR Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote#supported-ir-protocols)
 - [Features](https://github.com/Arduino-IRremote/Arduino-IRremote#features)
+  * [New features with version 4.x](https://github.com/Arduino-IRremote/Arduino-IRremote#new-features-with-version-4x)
   * [New features with version 3.x](https://github.com/Arduino-IRremote/Arduino-IRremote#new-features-with-version-3x)
-- [Converting your 2.x program to the 3.x version](https://github.com/Arduino-IRremote/Arduino-IRremote#converting-your-2x-program-to-the-3x-version)
+- [Converting your 2.x program to the 4.x version](https://github.com/Arduino-IRremote/Arduino-IRremote#converting-your-2x-program-to-the-4x-version)
   * [How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes](https://github.com/Arduino-IRremote/Arduino-IRremote#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes)
 -  [Errors with using the 3.x versions for old tutorials](https://github.com/Arduino-IRremote/Arduino-IRremote#errors-with-using-the-3x-versions-for-old-tutorials)
   * [Staying on 2.x](https://github.com/Arduino-IRremote/Arduino-IRremote#staying-on-2x)
@@ -106,7 +107,7 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - Improved handling of `PULSE_DISTANCE` + `PULSE_WIDTH` protocols.
 - New FAST protocol.
 
-# Converting your 3.x program to the 4.x version
+#### Converting your 3.x program to the 4.x version
 - You must replace `#define DECODE_DISTANCE` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).
 - The parameter `bool hasStopBit` is not longer required and removed e.g. for function `sendPulseDistanceWidth()`.
 
@@ -129,7 +130,7 @@ Protocols can be switched off and on by defining macros before the line `#includ
 
 <br/>
 
-# Converting your 2.x program to the 3.x version
+# Converting your 2.x program to the 4.x version
 Starting with the 3.1 version, **the generation of PWM for sending is done by software**, thus saving the hardware timer and **enabling arbitrary output pins for sending**.<br/>
 If you use an (old) Arduino core that does not use the `-flto` flag for compile, you can activate the line `#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN` in IRRemote.h, if you get false error messages regarding begin() during compilation.
 
@@ -174,7 +175,7 @@ void loop() {
 }
 ```
 
-#### New 3.x or 4.x program:
+#### New 4.x program:
 
 ```c++
 #include <IRremote.hpp>
@@ -219,7 +220,7 @@ If you **read the first binary sequence backwards** (right to left), you get the
 
 <br/>
 
-# Errors with using the 3.x versions for old tutorials
+# Errors with using the 4.x versions for old tutorials
 If you suffer from errors with old tutorial code including `IRremote.h` instead of `IRremote.hpp`, just try to rollback to [Version 2.4.0](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0).<br/>
 Most likely your code will run and you will not miss the new features...
 
@@ -537,10 +538,11 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 <br/>
 
 # Examples for this library
-In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.
+The examples are available at File > Examples > Examples from Custom Libraries / IRremote.<br/>
+ In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.
 
 #### SimpleReceiver + SimpleSender
-This examples are a good starting point.
+The **[SimpleReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino)**  and **[SimpleSender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleSender/SimpleSender.ino)** examples are a good starting point.
 A simple example can be tested online with [WOKWI](https://wokwi.com/projects/338611596994544210).
 
 #### TinyReceiver + TinySender

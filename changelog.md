@@ -2,6 +2,9 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+# 4.2.0
+- The old decode function is renamed to decode_old(decode_results *aResults). decode (decode_results *aResults) is only available in IRremote.h and prints a message.
+
 ## 4.1.2
 - Workaround for ESP32 RTOS delay() timing bug influencing the mark() function.
 

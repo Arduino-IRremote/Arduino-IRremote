@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2023 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -63,8 +63,11 @@
 
 #include <Arduino.h>
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
-#include <IRremote.hpp>
+/*
+ * This include defines the actual pin number for pins like IR_RECEIVE_PIN, IR_SEND_PIN for many different boards and architectures
+ */
+#include "PinDefinitionsAndMore.h"
+#include <IRremote.hpp> // include the library
 
 void setup() {
     Serial.begin(115200);

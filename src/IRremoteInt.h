@@ -293,6 +293,8 @@ public:
     bool decodeSAMSUNG(decode_results *aResults);
     bool decodeHashOld(decode_results *aResults);
 
+    bool decode_old(decode_results *aResults);
+
     bool decode(
             decode_results *aResults)
                     __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> ."))); // deprecated

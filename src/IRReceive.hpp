@@ -1654,7 +1654,7 @@ const char* IRrecv::getProtocolString() {
  * aResults->bits
  * aResults->decode_type
  **********************************************************************************************************************/
-bool IRrecv::decode(decode_results *aResults) {
+bool IRrecv::decode_old(decode_results *aResults) {
     static bool sDeprecationMessageSent = false;
 
     if (irparams.StateForISR != IR_REC_STATE_STOP) {
