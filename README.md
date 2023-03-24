@@ -50,6 +50,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Multiple IR receiver](https://github.com/Arduino-IRremote/Arduino-IRremote#multiple-ir-receiver)
   * [Increase strength of sent output signal](https://github.com/Arduino-IRremote/Arduino-IRremote#increase-strength-of-sent-output-signal)
   * [Minimal CPU clock frequency](https://github.com/Arduino-IRremote/Arduino-IRremote#minimal-cpu-clock-frequency)
+  * [Bang & Olufsen protocol](https://github.com/Arduino-IRremote/Arduino-IRremote#bang--olufsen-protocol)
 - [Handling unknown Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote#handling-unknown-protocols)
   * [Disclaimer](https://github.com/Arduino-IRremote/Arduino-IRremote#disclaimer)
   * [Protocol=PULSE_DISTANCE](https://github.com/Arduino-IRremote/Arduino-IRremote#protocolpulse_distance)
@@ -483,7 +484,7 @@ For sending, the **default software generated PWM has problems on AVR running wi
 ## Bang & Olufsen protocol
 The Bang & Olufsen protocol decoder is not enabled by default, i.e if no protocol is enabled explicitly by #define `DECODE_<XYZ>`. It must always be enabled explicitly by `#define DECODE_BEO`.
 This is because it has an **IR transmit frequency of 455 kHz** and therefore requires a different receiver hardware (TSOP7000).<br/>
-And because **generating a 455 kHz PWM signal is currently not implemented**, sending only works if `USE_NO_SEND_PWM` is defined!<br/>
+And because **generating a 455 kHz PWM signal is currently not implemented**, sending only works if `USE_NO_SEND_PWM` is defined, i.e. data is transferred by cable and not by IR!<br/>
 For more info, see [ir_BangOlufsen.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_BangOlufsen.hpp#L42).
 
 # Handling unknown Protocols
@@ -645,7 +646,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `IR_INPUT_IS_ACTIVE_HIGH` |  disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
 | `IR_SEND_PIN` |  disabled | If specified (as constant), it reduces program size and improves send timing for AVR. If you want to use a variable to specify send pin e.g. with `setSendPin(uint8_t aSendPinNumber)`, you must not use / disable this macro in your source. |
 | `SEND_PWM_BY_TIMER` |  disabled | Disables carrier PWM generation in software and use hardware PWM (by timer). Has the advantage of more exact PWM generation, especially the duty cycle (which is not very relevant for most IR receiver circuits), and the disadvantage of using a hardware timer, which in turn is not available for other libraries and to fix the send pin (but not the receive pin) at the [dedicated timer output pin(s)](https://github.com/Arduino-IRremote/Arduino-IRremote#timer-and-pin-usage). Is enabled for ESP32 and RP2040 in all examples, since they support PWM gereration for each pin without using a shared resource (timer). |
-| `USE_NO_SEND_PWM` |  disabled | Uses no carrier PWM, just simulate an **active low** receiver signal. Overrides `SEND_PWM_BY_TIMER` definition. |
+| `USE_NO_SEND_PWM` |  disabled | Uses no carrier PWM, just simulate an **active low** receiver signal. Used for transferring signal by cable instead of IR. Overrides `SEND_PWM_BY_TIMER` definition. |
 | `IR_SEND_DUTY_CYCLE_PERCENT` |  30 | Duty cycle of IR send signal. |
 | `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` |  disabled | Uses or simulates open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
 | `DISABLE_CODE_FOR_RECEIVER` |  disabled | Saves up to 450 bytes program memory and 269 bytes RAM if receiving functionality is not required. |

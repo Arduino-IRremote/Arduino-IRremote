@@ -165,9 +165,9 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
     /*
      * 455 kHz PWM is currently not supported, maximum is 180 kHz
      */
-#if !defined(USE_NO_SEND_PWM)
-    enableIROut (BEO_KHZ);
-#endif
+#  if !defined(USE_NO_SEND_PWM)
+    enableIROut (BEO_KHZ); // currently only for unit test
+#  endif
 
 // AGC / Start - 3 bits + first constant 0 header bit described in the official documentation
     if (!aBackToBack) {
