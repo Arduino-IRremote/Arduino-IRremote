@@ -1369,20 +1369,28 @@ hw_timer_t *s50usTimer; // set by timerConfigForReceive()
 void timerEnableReceiveInterrupt() {
     timerAlarmEnable (s50usTimer);
 }
-#if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2, 0, 2)
+
+#if !defined(ESP_ARDUINO_VERSION)
+#define ESP_ARDUINO_VERSION 0
+#endif
+#if !defined(ESP_ARDUINO_VERSION_VAL)
+#define ESP_ARDUINO_VERSION_VAL(major, minor, patch) 202
+#endif
+# if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2, 0, 2)
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != NULL) {
         timerEnd(s50usTimer);
         timerDetachInterrupt(s50usTimer);
     }
 }
-#else
+# else
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != NULL) {
         timerAlarmDisable (s50usTimer);
     }
 }
-#endif
+# endif
+
 // Undefine ISR, because we register/call the plain function IRReceiveTimerInterruptHandler()
 #  if defined(ISR)
 #undef ISR
