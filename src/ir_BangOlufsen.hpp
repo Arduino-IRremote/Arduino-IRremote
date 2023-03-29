@@ -160,13 +160,17 @@ void IRsend::sendBangOlufsenDataLink(uint32_t aHeader, uint8_t aData, int_fast8_
  * @param aBackToBack   If true send data back to back, which cannot be decoded if ENABLE_BEO_WITHOUT_FRAME_GAP is NOT defined
  */
 void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBackToBack) {
-#if defined(USE_NO_SEND_PWM) || BEO_KHZ == 38 // BEO_KHZ == 38 is for unit test which runs the B&O protocol with 38 kHz
+#if defined(USE_NO_SEND_PWM) || defined(SEND_PWM_BY_TIMER) || BEO_KHZ == 38 // BEO_KHZ == 38 is for unit test which runs the B&O protocol with 38 kHz
 
     /*
-     * 455 kHz PWM is currently not supported, maximum is 180 kHz
+     * 455 kHz PWM is currently only supported with SEND_PWM_BY_TIMER defined, otherwise maximum is 180 kHz
      */
 #  if !defined(USE_NO_SEND_PWM)
+#    if defined(SEND_PWM_BY_TIMER)
+    enableHighFrequencyIROut (BEO_KHZ);
+#    elif (BEO_KHZ == 38)
     enableIROut (BEO_KHZ); // currently only for unit test
+#    endif
 #  endif
 
 // AGC / Start - 3 bits + first constant 0 header bit described in the official documentation

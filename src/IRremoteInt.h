@@ -437,6 +437,9 @@ public:
     size_t write(decode_type_t aProtocol, uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats = NO_REPEATS);
 
     void enableIROut(uint_fast8_t aFrequencyKHz);
+#if defined(SEND_PWM_BY_TIMER)
+    void enableHighFrequencyIROut(uint_fast16_t aFrequencyKHz); // Used for Bang&Olufsen
+#endif
 
     void sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
             uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,

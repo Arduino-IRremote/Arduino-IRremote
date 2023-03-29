@@ -484,8 +484,8 @@ For sending, the **default software generated PWM has problems on AVR running wi
 ## Bang & Olufsen protocol
 The Bang & Olufsen protocol decoder is not enabled by default, i.e if no protocol is enabled explicitly by #define `DECODE_<XYZ>`. It must always be enabled explicitly by `#define DECODE_BEO`.
 This is because it has an **IR transmit frequency of 455 kHz** and therefore requires a different receiver hardware (TSOP7000).<br/>
-And because **generating a 455 kHz PWM signal is currently not implemented**, sending only works if `USE_NO_SEND_PWM` is defined, i.e. data is transferred by cable and not by IR!<br/>
-For more info, see [ir_BangOlufsen.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_BangOlufsen.hpp#L42).
+And because **generating a 455 kHz PWM signal is currently only implemented for `SEND_PWM_BY_TIMER`**, sending only works if `SEND_PWM_BY_TIMER` or `USE_NO_SEND_PWM` is defined.<br/>
+For more info, see [ir_BangOlufsen.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_BangOlufsen.hpp#L44).
 
 # Handling unknown Protocols
 ## Disclaimer

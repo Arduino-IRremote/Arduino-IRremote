@@ -50,7 +50,7 @@ void timerDisableReceiveInterrupt();
 void timerConfigForReceive();
 void enableSendPWMByTimer();
 void disableSendPWMByTimer();
-void timerConfigForSend(uint8_t aFrequencyKHz);
+void timerConfigForSend(uint16_t aFrequencyKHz);
 
 #if defined(SEND_PWM_BY_TIMER) && ( (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED) )
 #define SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER // Receive timer and send generation are independent, so it is recommended to always define SEND_PWM_BY_TIMER
@@ -122,7 +122,7 @@ void timerDisableReceiveInterrupt() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut().
  * @param aFrequencyKHz     Frequency of the sent PWM signal in kHz. There is no practical reason to have a sub kHz resolution for sending frequency :-).
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
 }
 
 /**
@@ -427,7 +427,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     timerDisableReceiveInterrupt();
 
 #  if (((F_CPU / 2000) / 38) < 256)
@@ -517,14 +517,19 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     timerDisableReceiveInterrupt();
 
 #  if (((F_CPU / 2000) / 38) < 256)
-    const uint16_t tPWMWrapValue = (F_CPU / 2000) / (aFrequencyKHz); // 210,52 for 38 kHz @16 MHz clock, 2000 instead of 1000 because of Phase Correct PWM
+    /*
+     * tPWMWrapValue is 210.52 for 38 kHz, 17.58 for 455 kHz @16 MHz clock.
+     * 210 -> 38.095 kHz, 17 -> 470.588 kHz @16 MHz clock.
+     * We use 2000 instead of 1000 in the formula, because of Phase Correct PWM.
+     */
+    const uint16_t tPWMWrapValue = (F_CPU / 2000) / (aFrequencyKHz);
     TCCR2A = _BV(WGM20); // PWM, Phase Correct, Top is OCR2A
     TCCR2B = _BV(WGM22) | _BV(CS20); // CS20 -> no prescaling
-    OCR2A = tPWMWrapValue - 1; // The top value for the timer.  The modulation frequency will be F_CPU / 2 / OCR2A.
+    OCR2A = tPWMWrapValue - 1; // The top value for the timer.  The modulation frequency will be F_CPU / 2 / (OCR2A + 1).
     OCR2B = ((tPWMWrapValue * IR_SEND_DUTY_CYCLE_PERCENT) / 100) - 1;
     TCNT2 = 0; // not really required, since we have an 8 bit counter, but makes the signal more reproducible
 #  else
@@ -586,7 +591,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
 #if F_CPU > 16000000
 #error "Creating timer PWM with timer 3 is not supported for F_CPU > 16 MHz"
 #endif
@@ -637,7 +642,7 @@ void disableSendPWMByTimer() {
     TCCR4A &= ~(_BV(COM4A1));
 }
 
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
 #if F_CPU > 16000000
 #error "Creating timer PWM with timer 4 is not supported for F_CPU > 16 MHz"
 #endif
@@ -706,7 +711,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
 #if F_CPU > 16000000
 #error "Creating timer PWM with timer 4 HS is not supported for F_CPU > 16 MHz"
 #endif
@@ -767,7 +772,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
 #if F_CPU > 16000000
 #error "Creating timer PWM with timer 5 is not supported for F_CPU > 16 MHz"
 #endif
@@ -826,7 +831,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
 #if F_CPU > 16000000
 #error "Creating timer PWM with timer TINY0 is not supported for F_CPU > 16 MHz"
 #endif
@@ -885,7 +890,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     timerDisableReceiveInterrupt();
 
 #  if (((F_CPU / 1000) / 38) < 256)
@@ -981,7 +986,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
 #if F_CPU > 16000000
         // we have only prescaler 2 or must take clock of timer A (which is non deterministic)
 #error "Creating timer PWM with timer TCB0 is not possible for F_CPU > 16 MHz"
@@ -1050,7 +1055,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     timerDisableReceiveInterrupt();
 
     const uint16_t tPWMWrapValue = (F_CPU / 1000) / (aFrequencyKHz);    // 526,31 for 38 kHz @20 MHz clock
@@ -1140,7 +1145,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     timerDisableReceiveInterrupt(); // TODO really required here? Do we have a common resource for Teensy3.0, 3.1
 #    if defined(IR_SEND_PIN)
     pinMode(IR_SEND_PIN, OUTPUT);
@@ -1209,7 +1214,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     timerDisableReceiveInterrupt();
 #    if defined(IR_SEND_PIN)
     pinMode(IR_SEND_PIN, OUTPUT);
@@ -1292,7 +1297,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     timerDisableReceiveInterrupt();
 #    if defined(IR_SEND_PIN)
     pinMode(IR_SEND_PIN, OUTPUT);
@@ -1418,7 +1423,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * ledcWrite since ESP 2.0.2 does not work if pin mode is set. Disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     ledcSetup(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
 #    if defined(IR_SEND_PIN)
     ledcAttachPin(IR_SEND_PIN, SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL);  // bind pin to channel
@@ -1601,7 +1606,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     sPwmOutForSendPWM.period_us(1000 / aFrequencyKHz);  // 26.315 for 38 kHz
     sIROutPuseWidth = (1000 * IR_SEND_DUTY_CYCLE_PERCENT) / (aFrequencyKHz * 100);
 }
@@ -1662,7 +1667,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
 #    if defined(IR_SEND_PIN)
     gpio_set_function(IR_SEND_PIN, GPIO_FUNC_PWM);
     // Find out which PWM slice is connected to IR_SEND_PIN
@@ -1864,7 +1869,7 @@ void disableSendPWMByTimer() {
  * timerConfigForSend() is used exclusively by IRsend::enableIROut()
  * Set output pin mode and disable receive interrupt if it uses the same resource
  */
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     timerDisableReceiveInterrupt();
 #    if defined(IR_SEND_PIN)
     pinMode(IR_SEND_PIN, OUTPUT);
@@ -1901,7 +1906,7 @@ void enableSendPWMByTimer() {
 void disableSendPWMByTimer() {
 }
 
-void timerConfigForSend(uint8_t aFrequencyKHz) {
+void timerConfigForSend(uint16_t aFrequencyKHz) {
     timerDisableReceiveInterrupt();
 #    if defined(IR_SEND_PIN)
     pinMode(IR_SEND_PIN, OUTPUT);

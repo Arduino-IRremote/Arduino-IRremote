@@ -950,7 +950,7 @@ void IRsend::mark(uint16_t aMarkMicros) {
      */
     enableSendPWMByTimer(); // Enable timer or ledcWrite() generated PWM output
     customDelayMicroseconds(aMarkMicros);
-    IRLedOff();// disables hardware PWM and manages feedback LED
+    IRLedOff(); // disables hardware PWM and manages feedback LED
     return;
 
 #elif defined(USE_NO_SEND_PWM)
@@ -1167,15 +1167,15 @@ void IRsend::customDelayMicroseconds(unsigned long aMicroseconds) {
  */
 void IRsend::enableIROut(uint_fast8_t aFrequencyKHz) {
 #if defined(SEND_PWM_BY_TIMER)
-        timerConfigForSend(aFrequencyKHz); // must set output pin mode and disable receive interrupt if required, e.g. uses the same resource
+    timerConfigForSend(aFrequencyKHz); // must set output pin mode and disable receive interrupt if required, e.g. uses the same resource
 
 #elif defined(USE_NO_SEND_PWM)
-        (void) aFrequencyKHz;
+    (void) aFrequencyKHz;
 
 #else
     periodTimeMicros = (1000U + (aFrequencyKHz / 2)) / aFrequencyKHz; // rounded value -> 26 for 38.46 kHz, 27 for 37.04 kHz, 25 for 40 kHz.
 #  if defined(IR_SEND_PIN)
-        periodOnTimeMicros = (((periodTimeMicros * IR_SEND_DUTY_CYCLE_PERCENT) + 50) / 100U); // +50 for rounding -> 830/100 for 30% and 16 MHz
+    periodOnTimeMicros = (((periodTimeMicros * IR_SEND_DUTY_CYCLE_PERCENT) + 50) / 100U); // +50 for rounding -> 830/100 for 30% and 16 MHz
 #  else
 // Heuristics! We require a nanosecond correction for "slow" digitalWrite() functions
     periodOnTimeMicros = (((periodTimeMicros * IR_SEND_DUTY_CYCLE_PERCENT) + 50 - (PULSE_CORRECTION_NANOS / 10)) / 100U); // +50 for rounding -> 530/100 for 30% and 16 MHz
@@ -1184,9 +1184,9 @@ void IRsend::enableIROut(uint_fast8_t aFrequencyKHz) {
 
 #if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && defined(OUTPUT_OPEN_DRAIN) // the mode INPUT for mimicking open drain is set at IRLedOff()
 #  if defined(IR_SEND_PIN)
-        pinModeFast(IR_SEND_PIN, OUTPUT_OPEN_DRAIN);
+    pinModeFast(IR_SEND_PIN, OUTPUT_OPEN_DRAIN);
 #  else
-        pinModeFast(sendPin, OUTPUT_OPEN_DRAIN);
+    pinModeFast(sendPin, OUTPUT_OPEN_DRAIN);
 #  endif
 #else
 
@@ -1194,13 +1194,29 @@ void IRsend::enableIROut(uint_fast8_t aFrequencyKHz) {
 // because ESP 2.0.2 ledcWrite does not work if pin mode is set, and RP2040 requires gpio_set_function(IR_SEND_PIN, GPIO_FUNC_PWM);
 #  if defined(__AVR__) || !defined(SEND_PWM_BY_TIMER)
 #    if defined(IR_SEND_PIN)
-        pinModeFast(IR_SEND_PIN, OUTPUT);
+    pinModeFast(IR_SEND_PIN, OUTPUT);
 #    else
     pinModeFast(sendPin, OUTPUT);
 #    endif
 #  endif
 #endif // defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
 }
+
+#if defined(SEND_PWM_BY_TIMER)
+// Used for Bang&Olufsen
+void IRsend::enableHighFrequencyIROut(uint_fast16_t aFrequencyKHz) {
+    timerConfigForSend(aFrequencyKHz); // must set output pin mode and disable receive interrupt if required, e.g. uses the same resource
+    // For Non AVR platforms pin mode for SEND_PWM_BY_TIMER must be handled by the timerConfigForSend() function
+    // because ESP 2.0.2 ledcWrite does not work if pin mode is set, and RP2040 requires gpio_set_function(IR_SEND_PIN, GPIO_FUNC_PWM);
+#  if defined(__AVR__)
+#    if defined(IR_SEND_PIN)
+    pinModeFast(IR_SEND_PIN, OUTPUT);
+#    else
+    pinModeFast(sendPin, OUTPUT);
+#    endif
+#  endif
+}
+#endif
 
 uint16_t IRsend::getPulseCorrectionNanos() {
     return PULSE_CORRECTION_NANOS;
