@@ -487,8 +487,8 @@ bool IRrecv::decode() {
         return true;
     }
 
-#if defined(DECODE_NEC)
-    IR_TRACE_PRINTLN(F("Attempting NEC decode"));
+#if defined(DECODE_NEC) || defined(DECODE_ONKYO)
+    IR_TRACE_PRINTLN(F("Attempting NEC/Onkyo decode"));
     if (decodeNEC()) {
         return true;
     }
@@ -1143,7 +1143,9 @@ void IRrecv::printActiveIRProtocols(Print *aSerial) {
     ::printActiveIRProtocols(aSerial);
 }
 void printActiveIRProtocols(Print *aSerial) {
-#if defined(DECODE_NEC)
+#if defined(DECODE_ONKYO)
+    aSerial->print(F("Onkyo, "));
+#elif defined(DECODE_NEC)
     aSerial->print(F("NEC/NEC2/Onkyo/Apple, "));
 #endif
 #if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)

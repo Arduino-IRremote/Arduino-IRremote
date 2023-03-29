@@ -48,6 +48,7 @@
 //#define DECODE_KASEIKYO
 //#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
 //#define DECODE_LG
+//#define DECODE_ONKYO        // Decodes only Onkyo and not NEC or Apple
 //#define DECODE_NEC          // Includes Apple and Onkyo
 //#define DECODE_SAMSUNG
 //#define DECODE_SONY
