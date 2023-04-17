@@ -73,6 +73,7 @@
 // https://www.sbprojects.net/knowledge/ir/nec.php
 // for Apple see https://en.wikipedia.org/wiki/Apple_Remote - Fixed address 0x87EE, 8 bit device ID, 7 bit command, 1 bit parity - untested!
 // ONKYO like NEC but 16 independent address and command bits
+// APPLE like ONKYO with special NEC repeat but with constant address of 0x87EE and and 16 bit command interpreted as MSB = 8 bit device ID, LSB = 8 bit command
 // PIONEER (not implemented) is NEC2 with 40 kHz
 // LSB first, 1 start bit + 16 bit address (or 8 bit address and 8 bit inverted address) + 8 bit command + 8 bit inverted command + 1 stop bit.
 // Standard NEC sends a special fixed repeat frame.
@@ -285,7 +286,7 @@ bool IRrecv::decodeNEC() {
     decodedIRData.command = tValue.UByte.MidHighByte; // 8 bit
 
 #if defined(DECODE_ONKYO)
-    // Here only Onkyo protocol -> force 16 bit address and command decoding
+    // Here only Onkyo protocol is supported -> force 16 bit address and command decoding
     decodedIRData.address = tValue.UWord.LowWord; // first 16 bit
     decodedIRData.protocol = ONKYO;
     decodedIRData.command = tValue.UWord.HighWord; // 16 bit command

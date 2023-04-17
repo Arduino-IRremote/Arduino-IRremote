@@ -90,7 +90,7 @@
  */
 //#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
-//#define USE_FAST_PROTOCOL     // Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC.
+//#define USE_FAST_PROTOCOL     // Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC / ONKYO.
 //#define ENABLE_NEC2_REPEATS   // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 #include "TinyIRReceiver.hpp"
 
@@ -151,7 +151,7 @@ void loop() {
 }
 
 /*
- * This is the function is called if a complete command was received
+ * This is the function, which is called if a complete command was received
  * It runs in an ISR context with interrupts enabled, so functions like delay() etc. should work here
  */
 #if defined(ESP8266) || defined(ESP32)

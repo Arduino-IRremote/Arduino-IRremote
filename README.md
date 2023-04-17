@@ -39,6 +39,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [Using the new *.hpp files](https://github.com/Arduino-IRremote/Arduino-IRremote#using-the-new-hpp-files)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#receiving-ir-codes)
   * [Data format](https://github.com/Arduino-IRremote/Arduino-IRremote#data-format)
+  * [Ambiguous protocols](https://github.com/Arduino-IRremote/Arduino-IRremote#ambiguous-protocols)
 - [Sending IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#sending-ir-codes)
   * [Send pin](https://github.com/Arduino-IRremote/Arduino-IRremote#send-pin)
     + [List of public IR code databases](https://github.com/Arduino-IRremote/Arduino-IRremote#list-of-public-ir-code-databases)
@@ -190,7 +191,7 @@ void setup()
 void loop() {
   if (IrReceiver.decode()) {
       Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX); // Print "old" raw data
-      /* USE NEW 3.x FUNCTIONS */
+      // USE NEW 3.x FUNCTIONS
       IrReceiver.printIRResultShort(&Serial); // Print complete received data in one line
       IrReceiver.printIRSendUsage(&Serial);   // Print the statement required to send this data
       ...
@@ -340,6 +341,30 @@ The raw data depends on the internal state of the Arduino timer in relation to t
 IrReceiver.printIRSendUsage(&Serial);
 ```
 
+## Ambiguous protocols
+### NEC, Extended NEC, ONKYO
+The **NEC protocol** is defined as 8 bit address and 8 bit command. But the physical address and data fields are each 16 bit wide.
+The additional 8 bits are used to send the inverted address or command for parity checking.<br/>
+The **extended NEC protocol** uses the additional 8 parity bit of address for a 16 bit address, thus disabling the parity check for address.<br/>
+The **ONKYO protocol** in turn uses the additional 8 parity bit of address and command for a 16 bit address and command.
+
+The decoder reduces the 16 bit values to 8 bit ones if the parity is correct.
+If the parity is not correct, it assumes no parity error, but takes the values as 16 bit values without parity assuming extended NEC or extended NEC protocol protocol.
+
+But now we have a problem when we want to receive e.g. the **16 bit** address 0x00FF or 0x32CD!
+The decoder interprets this as a NEC 8 bit address 0x00 / 0x32 with correct parity of 0xFF / 0xCD and reduces it to 0x00 / 0x32.
+
+One way to handle this, is to force the library to **always** use the ONKYO protocol interpretation by using `#define DECODE_ONKYO`.
+Another way is to check if `IrReceiver.decodedIRData.protocol` is NEC and not ONKYO and to revert the parity reducing manually.
+
+### NEC, NEC2
+On a long press, the **NEC protocol** does not repeat its frame, it sends a special short repeat frame.
+This enables an easy distinction between long presses and repeated presses and saves a bit of battery energy.
+This behavior is quite unique for NEC and its derived protocols like LG.
+
+So there are of course also remote control systems, which uses the NEC protocol but on a long press just repeat the first frame instead of sending the special short repeat frame. We named this the  **NEC2** protocol and it is sent with `sendNEC2()`.<br/>
+But be careful, the NEC2 protocol can only be detected by the NEC library decoder **after** the first frame and if you do a long press!
+
 <br/>
 
 # Sending IR codes
@@ -373,7 +398,7 @@ http://www.harctoolbox.org/IR-resources.html
 
 
 # Tiny NEC receiver and sender
-For applications only requiring NEC protocol, there is a special receiver / sender included,<br/>
+For applications only requiring NEC or FAST -see below- protocol, there is a special receiver / sender included,<br/>
 which has very **small code size of 500 bytes and does NOT require any timer**.
 
 Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote#irdispatcherdemo) examples.<br/>
@@ -381,6 +406,8 @@ Take care to include `TinyIRReceiver.hpp` or `TinyIRSender.hpp` instead of `IRre
 
 ### TinyIRReceiver usage
 ```c++
+//#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
+//#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC / ONKYO
 #include "TinyIRReceiver.hpp"
 
 void setup() {
@@ -389,10 +416,8 @@ void setup() {
 
 void loop() {}
 
-/*
- * This is the function is called if a complete command was received
- * It runs in an ISR context with interrupts enabled, so functions like delay() etc. should work here
- */
+// This is the function, which is called if a complete command was received
+// It runs in an ISR context with interrupts enabled, so functions like delay() etc. should work here
 void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags) {
   printTinyReceiverResultMinimal(&Serial, aAddress, aCommand, aFlags);
 }
@@ -408,6 +433,8 @@ void setup() {
 
 void loop() {}
 ```
+
+Another tiny receiver and sender **supporting more protocols** can be found [here](https://github.com/LuisMiCa/IRsmallDecoder).
 
 # The FAST protocol
 The FAST protocol is a proprietary modified JVC protocol **without address, with parity and with a shorter header**.
@@ -446,6 +473,8 @@ void loop() {}
 ```
 <br/>
 
+The FAST protocol can be received by IRremote and TinyIRReceiver.
+
 # FAQ and hints
 
 ## Problems with Neopixels, FastLed etc.
@@ -463,9 +492,11 @@ There are some other solutions to this on more powerful processors,
 This is often due to **timer resource conflicts** with the other library. Please see [below](https://github.com/Arduino-IRremote/Arduino-IRremote#timer-and-pin-usage).
 
 ## Multiple IR receivers
-You can use **multiple IR receiver** by just connecting the output pins of several IR receivers together.
+IRreceiver consists of one timer triggered function reading the digital IR signal value from one pin every 50 &micro;s.<br/>
+So **multiple IR receivers** can only be used by connecting the output pins of several IR receivers together.
 The IR receivers use an NPN transistor as output device with just a 30k resistor to VCC.
-This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.
+This is almost "open collector" and allows connecting of several output pins to one Arduino input pin.<br/>
+But keep in mind, that any weak / disturbed signal from one of the receivers will in turn also disturb a good signal from another one.
 
 ## Increase strength of sent output signal
 **The best way to increase the IR power for free** is to use 2 or 3 IR diodes in series. One diode requires 1.2 volt at 20 mA or 1.5 volt at 100 mA so you can supply up to 3 diodes with a 5 volt output.<br/>

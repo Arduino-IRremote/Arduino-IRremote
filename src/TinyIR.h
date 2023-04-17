@@ -159,7 +159,7 @@ Sum: 28900
 #endif
 
 /*
- * This function is called if a complete command was received and must be implemented in the file (user code) which includes this library.
+ * This function is called, if a complete command was received and must be implemented in the file (user code) which includes this library.
  * The parameter size is dependent of the code variant used in order to save program memory.
  * We have 6 cases: 0, 8 bit or 16 bit address, each with 8 or 16 bit command
  */

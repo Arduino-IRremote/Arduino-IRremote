@@ -76,7 +76,7 @@
 
 //#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
-//#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC.
+//#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC / ONKYO.
 //#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 
 #include "TinyIR.h" // If not defined, it defines IR_RECEIVE_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT

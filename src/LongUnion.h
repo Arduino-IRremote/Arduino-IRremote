@@ -30,6 +30,8 @@
 /**
  * Union to specify parts / manifestations of a 16 bit Word without casts and shifts.
  * It also supports the compiler generating small code.
+ * Usage: WordUnion tWord;
+ *        tWord.UByte.HighByte = 0x12;
  */
 union WordUnion {
     struct {

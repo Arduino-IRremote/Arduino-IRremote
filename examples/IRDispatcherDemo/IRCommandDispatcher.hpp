@@ -73,7 +73,7 @@ void IRCommandDispatcher::init() {
 }
 
 /*
- * This is the TinyReceiver callback function which is called if a complete command was received
+ * This is the TinyReceiver callback function, which is called if a complete command was received
  * It checks for right address and then call the dispatcher
  */
 #if defined(ESP8266) || defined(ESP32)
@@ -120,7 +120,7 @@ void IRCommandDispatcher::init() {
 }
 
 /*
- * This is the callback function which is called if a complete command was received
+ * This is the callback function, which is called if a complete command was received
  */
 #if defined(ESP8266) || defined(ESP32)
 IRAM_ATTR

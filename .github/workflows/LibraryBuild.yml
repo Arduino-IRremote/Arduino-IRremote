@@ -65,8 +65,8 @@ jobs:
           - ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal # ATmega128
           - SparkFun:avr:promicro
-          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-          - megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
+#          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
+#          - megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
           - esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80
           - esp32:esp32:featheresp32:FlashFreq=80
           - STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8
@@ -162,19 +162,21 @@ jobs:
               SimpleSender: -DSEND_PWM_BY_TIMER
               All: -DRAW_BUFFER_LENGTH=700
 
-          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-            arduino-platform: megaTinyCore:megaavr@2.5.11 # The current 2.6.0 is broken see https://github.com/SpenceKonde/megaTinyCore/issues/805
-            platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: AllProtocolsOnLCD
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+#          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
+#            arduino-platform: megaTinyCore:megaavr@2.5.11 # The current 2.6.0 is broken see https://github.com/SpenceKonde/megaTinyCore/issues/805
+#            arduino-platform: megaTinyCore:megaavr
+#            platform-url: http://drazzy.com/package_drazzy.com_index.json
+#            sketches-exclude: AllProtocolsOnLCD
+#            build-properties: # the flags were put in compiler.cpp.extra_flags
+#              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
-          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
-            arduino-platform: megaTinyCore:megaavr@2.5.11
-            platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: AllProtocolsOnLCD
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+#          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
+#            arduino-platform: megaTinyCore:megaavr@2.5.11
+#            arduino-platform: megaTinyCore:megaavr
+#            platform-url: http://drazzy.com/package_drazzy.com_index.json
+#            sketches-exclude: AllProtocolsOnLCD
+#            build-properties: # the flags were put in compiler.cpp.extra_flags
+#              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
           - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock16
             platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
