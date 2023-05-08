@@ -153,6 +153,9 @@ uint32_t sMicrosOfGap; // The length of the gap before the start bit
  * It handles the NEC protocol decoding and calls the user callback function on complete.
  * 5 us + 3 us for push + pop for a 16MHz ATmega
  */
+#if defined(ESP8266) || defined(ESP32)
+IRAM_ATTR
+#endif
 void IRPinChangeInterruptHandler(void) {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
     digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
