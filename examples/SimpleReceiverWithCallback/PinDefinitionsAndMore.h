@@ -259,7 +259,7 @@ void noTone(uint8_t aPinNumber){
 #define ALTERNATIVE_IR_FEEDBACK_LED_PIN 6 // E.g. used for examples which use LED_BUILDIN for example output.
 #define _IR_TIMING_TEST_PIN 7
 
-#if !defined(ARDUINO_SAMD_ADAFRUIT)
+#if !defined(ARDUINO_SAMD_ADAFRUIT) && !defined(ARDUINO_SEEED_XIAO_M0)
 // On the Zero and others we switch explicitly to SerialUSB
 #define Serial SerialUSB
 #endif
