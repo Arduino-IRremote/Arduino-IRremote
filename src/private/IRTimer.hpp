@@ -1364,7 +1364,7 @@ void timerConfigForReceive() {
 #elif defined(ESP32)
 // Variables specific to the ESP32.
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
-hw_timer_t *s50usTimer; // set by timerConfigForReceive()
+hw_timer_t *s50usTimer = NULL; // set by timerConfigForReceive()
 
 
 #  if !defined(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL)
@@ -1372,7 +1372,7 @@ hw_timer_t *s50usTimer; // set by timerConfigForReceive()
 #  endif
 
 void timerEnableReceiveInterrupt() {
-    timerAlarmEnable (s50usTimer);
+    timerAlarmEnable(s50usTimer);
 }
 
 #if !defined(ESP_ARDUINO_VERSION)
@@ -1384,14 +1384,14 @@ void timerEnableReceiveInterrupt() {
 #if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2, 0, 2)
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != NULL) {
-        timerEnd(s50usTimer);
         timerDetachInterrupt(s50usTimer);
+        timerEnd(s50usTimer);
     }
 }
 #else
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != NULL) {
-        timerAlarmDisable (s50usTimer);
+        timerAlarmDisable(s50usTimer);
     }
 }
 #endif
@@ -1405,10 +1405,12 @@ void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
-    s50usTimer = timerBegin(1, 80, true);
-    timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler, false); // false -> level interrupt, true -> edge interrupt, but this is not supported :-(
+    if(s50usTimer == NULL) {
+        s50usTimer = timerBegin(1, 80, true);
+        timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler, false); // false -> level interrupt, true -> edge interrupt, but this is not supported :-(
+        timerAlarmWrite(s50usTimer, MICROS_PER_TICK, true);
+    }
     // every 50 us, autoreload = true
-    timerAlarmWrite(s50usTimer, MICROS_PER_TICK, true);
 }
 
 #  if defined(SEND_PWM_BY_TIMER)
