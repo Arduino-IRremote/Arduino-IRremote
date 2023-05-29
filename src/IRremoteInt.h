@@ -297,11 +297,11 @@ public:
 
     bool decode(
             decode_results *aResults)
-                    __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> ."))); // deprecated
+                    __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> .")));
 
     // for backward compatibility. Now in IRFeedbackLED.hpp
     void blink13(uint8_t aEnableLEDFeedback)
-            __attribute__ ((deprecated ("Please use setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback()."))); // deprecated
+            __attribute__ ((deprecated ("Please use setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback().")));
 
     /*
      * Internal functions
