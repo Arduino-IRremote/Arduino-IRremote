@@ -299,11 +299,12 @@
 #define __digitalPinToPortReg(P) (((P) <= 7) ? &PORTA : &PORTB)
 #define __digitalPinToDDRReg(P)  (((P) <= 7) ? &DDRA : &DDRB)
 #define __digitalPinToPINReg(P)  (((P) <= 7) ? &PINA : &PINB)
-#  if  defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny441__) || defined(__AVR_ATtiny841__)
+# endif
+# if  defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny441__) || defined(__AVR_ATtiny841__)
 // https://github.com/SpenceKonde/ATTinyCore/blob/v2.0.0-devThis-is-the-head-submit-PRs-against-this/avr/variants/tinyx41_cw/pins_arduino.h#L334
 // Clockwise layout
 #define __digitalPinToBit(P)     (((P) <= 7) ? (P) : ((P) == 11 ? (3) : 10 - (P)))
-#  endif
+# else
 #define __digitalPinToBit(P)     (((P) <= 7) ? (P) : (P) - 8 )
 # endif
 

@@ -1,18 +1,18 @@
 // Based on the work by DFRobot
 
+#include "Arduino.h"
+
+#if defined(__AVR__) && !defined(USE_SOFT_I2C_MASTER) && __has_include("SoftI2CMasterConfig.h")
+#define USE_SOFT_I2C_MASTER // must be before #include "LiquidCrystal_I2C.h"
+#endif
+
 #include "LiquidCrystal_I2C.h"
 #include <inttypes.h>
-
-#include "Arduino.h"
 
 inline size_t LiquidCrystal_I2C::write(uint8_t value) {
     send(value, Rs);
     return 1;
 }
-
-#if !defined(USE_SOFT_I2C_MASTER) && __has_include("SoftI2CMasterConfig.h")
-#define USE_SOFT_I2C_MASTER
-#endif
 
 #if defined(USE_SOFT_I2C_MASTER)
 //#define USE_SOFT_I2C_MASTER_H_AS_PLAIN_INCLUDE

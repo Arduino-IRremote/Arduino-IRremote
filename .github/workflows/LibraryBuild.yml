@@ -40,7 +40,7 @@ jobs:
         #
         # Examples: arduino:avr:uno, arduino:avr:leonardo, arduino:avr:nano, arduino:avr:mega
         # arduino:sam:arduino_due_x, arduino:samd:arduino_zero_native"
-        # ATTinyCore:avr:attinyx5:chip=85,clock=1internal, digistump:avr:digispark-tiny, digistump:avr:digispark-pro
+        # ATTinyCore:avr:attinyx5:chip=85,clock=1internal
         # STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8
         # esp8266:esp8266:huzzah:eesz=4M3M,xtal=80, esp32:esp32:featheresp32:FlashFreq=80
         # You may add a suffix behind the fqbn with "|" to specify one board for e.g. different compile options like arduino:avr:uno|trace
@@ -59,14 +59,13 @@ jobs:
           - arduino:mbed:nano33ble
           - arduino:mbed_rp2040:pico
           - rp2040:rp2040:arduino_nano_connect
-          - digistump:avr:digispark-tiny:clock=clock16
           - ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
           - ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
           - ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal # ATmega128
           - SparkFun:avr:promicro
-#          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-#          - megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
+#          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal # https://github.com/SpenceKonde/megaTinyCore/issues/935
+#          - megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal # https://github.com/SpenceKonde/megaTinyCore/issues/935
           - esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80
           - esp32:esp32:featheresp32:FlashFreq=80
           - STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8
@@ -162,28 +161,21 @@ jobs:
               SimpleSender: -DSEND_PWM_BY_TIMER
               All: -DRAW_BUFFER_LENGTH=700
 
+#         https://github.com/SpenceKonde/megaTinyCore/issues/935
 #          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-#            arduino-platform: megaTinyCore:megaavr@2.5.11 # The current 2.6.0 is broken see https://github.com/SpenceKonde/megaTinyCore/issues/805
 #            arduino-platform: megaTinyCore:megaavr
 #            platform-url: http://drazzy.com/package_drazzy.com_index.json
 #            sketches-exclude: AllProtocolsOnLCD
 #            build-properties: # the flags were put in compiler.cpp.extra_flags
 #              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
 
+#         https://github.com/SpenceKonde/megaTinyCore/issues/935
 #          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
-#            arduino-platform: megaTinyCore:megaavr@2.5.11
 #            arduino-platform: megaTinyCore:megaavr
 #            platform-url: http://drazzy.com/package_drazzy.com_index.json
 #            sketches-exclude: AllProtocolsOnLCD
 #            build-properties: # the flags were put in compiler.cpp.extra_flags
 #              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
-
-          - arduino-boards-fqbn: digistump:avr:digispark-tiny:clock=clock16
-            platform-url: https://raw.githubusercontent.com/ArminJo/DigistumpArduino/master/package_digistump_index.json
-            required-libraries: ATtinySerialOut
-            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
             platform-url: http://drazzy.com/package_drazzy.com_index.json

@@ -6,7 +6,8 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - The old decode function is renamed to decode_old(decode_results *aResults). decode (decode_results *aResults) is only available in IRremote.h and prints a message.
 - Added DECODE_ONKYO, to force 16 bit command and data decoding.
 - Enable Bang&Olufsen 455 kHz if SEND_PWM_BY_TIMER is defined.
-- Fixed bug: TinyReceiver throwing ISR not in IRAM on ESP8266
+- Fixed bug: TinyReceiver throwing ISR not in IRAM on ESP8266.
+- Usage of ATTinyCore pin numbering scheme e.g. PIN_PB2.
 
 ## 4.1.2
 - Workaround for ESP32 RTOS delay() timing bug influencing the mark() function.
@@ -33,7 +34,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added functions addTicksToInternalTickCounter() and addMicrosToInternalTickCounter().
 
 ## 4.0.0
-- Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.
+- Added decoding of PulseDistanceWidth protocols and therefore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to ir_DistanceWidthProtocol.hpp.
 - Removed static function printIRSendUsage(), but kept class function printIRSendUsage().
 - Changed type of decodedRawData and decodedRawDataArray which is now 64 bit for 32 bit platforms.
 - Added receiver callback functionality and registerReceiveCompleteCallback() function.
