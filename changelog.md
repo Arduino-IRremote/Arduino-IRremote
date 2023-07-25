@@ -8,6 +8,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Enable Bang&Olufsen 455 kHz if SEND_PWM_BY_TIMER is defined.
 - Fixed bug: TinyReceiver throwing ISR not in IRAM on ESP8266.
 - Usage of ATTinyCore pin numbering scheme e.g. PIN_PB2.
+- Added ARDUINO_ARCH_NRF52 to support Seeed XIAO nRF52840 Sense.
 
 ## 4.1.2
 - Workaround for ESP32 RTOS delay() timing bug influencing the mark() function.

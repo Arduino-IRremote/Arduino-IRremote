@@ -1695,7 +1695,7 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
 /***************************************
  * NRF5 boards like the BBC:Micro
  ***************************************/
-#elif defined(NRF5) || defined(ARDUINO_ARCH_NRF52840)
+#elif defined(NRF5) || defined(ARDUINO_ARCH_NRF52840) || defined(ARDUINO_ARCH_NRF52)
 #  if defined(SEND_PWM_BY_TIMER)
 #error PWM generation by hardware not implemented for NRF5
 #  endif
