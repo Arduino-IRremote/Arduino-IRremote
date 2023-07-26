@@ -55,6 +55,7 @@ jobs:
           - arduino:avr:leonardo
           - arduino:megaavr:nona4809:mode=off
           - arduino:samd:arduino_zero_native
+          - arduino:renesas_uno:unor4wifi
           - adafruit:samd:adafruit_metro_m4:cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off
           - arduino:mbed:nano33ble
           - arduino:mbed_rp2040:pico
@@ -137,6 +138,11 @@ jobs:
             sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+
+          - arduino-boards-fqbn: arduino:renesas_uno:unor4wifi
+            sketches-exclude: TinyReceiver,IRDispatcherDemo
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
 
           - arduino-boards-fqbn: adafruit:samd:adafruit_metro_m4:cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off
             platform-url: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json

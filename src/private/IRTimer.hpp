@@ -85,6 +85,7 @@ void timerConfigForSend(uint16_t aFrequencyKHz);
 //#define __STM32F1__
 //#define STM32F1xx
 //#define PARTICLE
+//#define ARDUINO_ARCH_RENESAS
 
 #if defined (DOXYGEN)
 /**
@@ -1083,6 +1084,68 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
 /**********************************************************************************************************************
  * End of AVR timers
  **********************************************************************************************************************/
+
+/**********************************************
+ * UNO R4 boards
+ * The FspTimer uses undocumented
+ **********************************************/
+#elif defined(ARDUINO_ARCH_RENESAS)
+#include "FspTimer.h"
+FspTimer s50usTimer;
+
+// Undefine ISR, because we register/call the plain function IRReceiveTimerInterruptHandler()
+#  if defined(ISR)
+#undef ISR
+#  endif
+
+// callback method used by timer
+void IRTimerInterruptHandlerHelper(timer_callback_args_t __attribute((unused)) *p_args) {
+    IRReceiveTimerInterruptHandler();
+}
+void timerEnableReceiveInterrupt() {
+//    s50usTimer.enable_overflow_irq();
+    s50usTimer.start();
+}
+void timerDisableReceiveInterrupt() {
+//    s50usTimer.disable_overflow_irq();
+    s50usTimer.stop(); // May save power
+}
+
+void timerConfigForReceive() {
+    uint8_t tTimerType = GPT_TIMER;
+    int8_t tIndex = FspTimer::get_available_timer(tTimerType); // Get first unused channel. Here we need the address of tTimerType
+    if (tIndex < 0 || tTimerType != GPT_TIMER) {
+        // here we found no unused GPT channel
+        tIndex = FspTimer::get_available_timer(tTimerType, true); // true to force use of already used PWM channel. Sets "force_pwm_reserved" if timer found
+        if (tIndex < 0) {
+            // If we already get an tIndex < 0 we have an error, but do not know how to handle :-(
+            return;
+        }
+    }
+    s50usTimer.begin(TIMER_MODE_PERIODIC, tTimerType, tIndex, MICROS_IN_ONE_SECOND / MICROS_PER_TICK, 0.0,
+            IRTimerInterruptHandlerHelper);
+    s50usTimer.setup_overflow_irq();
+    s50usTimer.open(); // In turn calls R_GPT_Enable()
+    s50usTimer.stop(); // May save power
+}
+
+#  if defined(SEND_PWM_BY_TIMER)
+#error PWM generation by hardware not yet implemented for Arduino Uno R4
+// Not yet implemented
+void enableSendPWMByTimer() {
+}
+void disableSendPWMByTimer() {
+}
+
+/*
+ * timerConfigForSend() is used exclusively by IRsend::enableIROut()
+ */
+void timerConfigForSend(uint16_t aFrequencyKHz) {
+#    if defined(IR_SEND_PIN)
+#    else
+#    endif
+}
+#  endif
 
 /**********************************************
  * Teensy 3.0 / Teensy 3.1 / Teensy 3.2 boards
