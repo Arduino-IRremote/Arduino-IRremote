@@ -933,6 +933,8 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
  * The mark output is modulated at the PWM frequency if USE_NO_SEND_PWM is not defined.
  * The output is guaranteed to be OFF / inactive after after the call of the function.
  * This function may affect the state of feedback LED.
+ * Period time is 26 us for 38.46 kHz, 27 us for 37.04 kHz, 25 us for 40 kHz.
+ * On time is 8 us for 30% duty cycle
  */
 void IRsend::mark(uint16_t aMarkMicros) {
 
@@ -1000,7 +1002,7 @@ void IRsend::mark(uint16_t aMarkMicros) {
         // 4.3 us from do{ to pin setting if sendPin is no constant
         digitalWriteFast(sendPin, HIGH);
 #  endif
-        delayMicroseconds (periodOnTimeMicros); // this is normally implemented by a blocking wait
+        delayMicroseconds(periodOnTimeMicros); // On time is 8 us for 30% duty cycle. This is normally implemented by a blocking wait.
 
         /*
          * Output the PWM pause
@@ -1034,12 +1036,15 @@ void IRsend::mark(uint16_t aMarkMicros) {
 #  endif
         /*
          * PWM pause timing
-         * Measured delta between pause duration values are 13 us for a 16 MHz UNO (from 13 to 26)
+         * Measured delta between pause duration values are 13 us for a 16 MHz Uno (from 13 to 26), if interrupts are disabled below
+         * Measured delta between pause duration values are 20 us for a 16 MHz Uno (from 7.8 to 28), if interrupts are not disabled below
          * Minimal pause duration is 5.2 us with NO_LED_FEEDBACK_CODE enabled
          * and 8.1 us with NO_LED_FEEDBACK_CODE disabled.
          */
         tNextPeriodEnding += periodTimeMicros;
-        noInterrupts();
+#if defined(__AVR__) // micros() for STM sometimes give decreasing values if interrupts are disabled. See https://github.com/stm32duino/Arduino_Core_STM32/issues/1680
+        noInterrupts(); // disable interrupts (especially the 20 us receive interrupts) only at start of the PWM pause. Otherwise it may extend the pause too much.
+#endif
         do {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
             digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
@@ -1051,19 +1056,19 @@ void IRsend::mark(uint16_t aMarkMicros) {
              * The rest of the loop takes 1.2 us with NO_LED_FEEDBACK_CODE enabled
              * and 3 us with NO_LED_FEEDBACK_CODE disabled.
              */
-            tMicros = micros(); //
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
             digitalWriteFast(_IR_TIMING_TEST_PIN, LOW); // 2 clock cycles
 #endif
             /*
              * Exit the forever loop if aMarkMicros has reached
              */
-            unsigned int tDeltaMicros = tMicros - tStartMicros;
+            tMicros = micros();
+            uint16_t tDeltaMicros = tMicros - tStartMicros;
 #if defined(__AVR__)
-//            tDeltaMicros += (160 / CLOCKS_PER_MICRO); // adding this once increases program size !
+            // reset feedback led in the last pause before end
+//            tDeltaMicros += (160 / CLOCKS_PER_MICRO); // adding this once increases program size, so do it below !
 #  if !defined(NO_LED_FEEDBACK_CODE)
             if (tDeltaMicros >= aMarkMicros - (30 + (112 / CLOCKS_PER_MICRO))) { // 30 to be constant. Using periodTimeMicros increases program size too much.
-            // reset feedback led in the last pause before end
                 if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
                     setFeedbackLED(false);
                 }
@@ -1079,7 +1084,9 @@ void IRsend::mark(uint16_t aMarkMicros) {
                 }
 #  endif
 #endif
+#if defined(__AVR__)
                 interrupts();
+#endif
                 return;
             }
         } while (tMicros < tNextPeriodEnding);
