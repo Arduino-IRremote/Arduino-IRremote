@@ -458,7 +458,7 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
 #  endif // defined(SEND_PWM_BY_TIMER)
 
 /*
- * AVR Timer2 (8 bits) // Tone timer on UNO
+ * AVR Timer2 (8 bits) // Tone timer on Uno
  */
 #elif defined(IR_USE_AVR_TIMER2)
 
@@ -1086,7 +1086,7 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
  **********************************************************************************************************************/
 
 /**********************************************
- * UNO R4 boards
+ * Uno R4 boards
  * The FspTimer uses undocumented
  **********************************************/
 #elif defined(ARDUINO_ARCH_RENESAS)
