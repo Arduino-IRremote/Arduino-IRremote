@@ -124,7 +124,7 @@ IRrecv::IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) {
 #if defined(ESP8266) || defined(ESP32)
 IRAM_ATTR
 #endif
-void IRReceiveTimerInterruptHandler(){
+void IRReceiveTimerInterruptHandler() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
     digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
@@ -173,7 +173,7 @@ void IRReceiveTimerInterruptHandler(){
                 irparams.rawlen = 1;
                 irparams.StateForISR = IR_REC_STATE_MARK;
             } // otherwise stay in idle state
-            irparams.TickCounterForISR = 0;// reset counter in both cases
+            irparams.TickCounterForISR = 0; // reset counter in both cases
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing mark
@@ -186,7 +186,7 @@ void IRReceiveTimerInterruptHandler(){
 #endif
             irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR; // record mark
             irparams.StateForISR = IR_REC_STATE_SPACE;
-            irparams.TickCounterForISR = 0;// This resets the tick counter also at end of frame :-)
+            irparams.TickCounterForISR = 0; // This resets the tick counter also at end of frame :-)
         }
 
     } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing space
@@ -664,6 +664,7 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8
         // get one mark and space pair
         unsigned int tMarkTicks;
         unsigned int tSpaceTicks;
+        bool tBitValue;
 
         if (isPulseDistanceProtocol) {
             /*
@@ -676,6 +677,7 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8
             tRawBufPointer++;
 #endif
             tSpaceTicks = *tRawBufPointer++; // maybe buffer overflow for last bit, but we do not evaluate this value :-)
+            tBitValue = matchSpace(tSpaceTicks, aOneSpaceMicros); // Check for variable length space indicating a 1 or 0
 
 #if defined DECODE_STRICT_CHECKS
             // Check for constant length mark
@@ -698,6 +700,8 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8
              * Pulse width here, it is not required to check (constant) space duration and zero mark duration.
              */
             tMarkTicks = *tRawBufPointer++;
+            tBitValue = matchMark(tMarkTicks, aOneMarkMicros); // Check for variable length mark indicating a 1 or 0
+
 #if defined DECODE_STRICT_CHECKS
             tSpaceTicks = *tRawBufPointer++; // maybe buffer overflow for last bit, but we do not evaluate this value :-)
 #else
@@ -710,17 +714,7 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8
         if (aMSBfirst) {
             tDecodedData <<= 1;
         }
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-        bool tBitValue;
-        if (isPulseDistanceProtocol) {
-            // Check for variable length space indicating a 1 or 0
-            tBitValue = matchSpace(tSpaceTicks, aOneSpaceMicros); // tSpaceTicks is initialized here, even if some compiler are complaining!
-        } else {
-            // Check for variable length mark indicating a 1 or 0
-            tBitValue = matchMark(tMarkTicks, aOneMarkMicros); // tMarkTicks is initialized here, even if some compiler are complaining!
-        }
-#pragma GCC diagnostic pop
+
         if (tBitValue) {
             // It's a 1 -> set the bit
             if (aMSBfirst) {

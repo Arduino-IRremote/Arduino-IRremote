@@ -27,6 +27,8 @@
 # define BIT_WRITE(value, bit, bitvalue) (bitvalue ? BIT_SET(value, bit) : BIT_CLEAR(value, bit))
 #endif
 
+#include <Arduino.h> // declarations for the fallback to digitalWrite(), digitalRead() etc.
+
 // --- Arduino Mega and ATmega128x/256x based boards ---
 #if (defined(ARDUINO_AVR_MEGA) || \
        defined(ARDUINO_AVR_MEGA1280) || \

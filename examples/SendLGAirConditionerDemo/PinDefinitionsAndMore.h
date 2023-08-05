@@ -153,8 +153,8 @@
 #    endif
 #  endif // defined(__AVR_ATtiny25__)...
 
-#elif defined(ARDUINO_ARCH_RENESAS_UNO) // UNO R4
-// To be compatible with UNO R3.
+#elif defined(ARDUINO_ARCH_RENESAS_UNO) // Uno R4
+// To be compatible with Uno R3.
 #define IR_RECEIVE_PIN      2
 #define IR_SEND_PIN         3
 #define TONE_PIN            4
