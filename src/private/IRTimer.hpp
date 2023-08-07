@@ -408,7 +408,8 @@ void disableSendPWMByTimer() {
 #    else
 #      if defined(USE_TIMER_CHANNEL_B)
 void enableSendPWMByTimer() {
-    TCNT1 = 0; (TCCR1A |= _BV(COM1B1))  // Clear OC1A/OC1B on Compare Match when up-counting. Set OC1A/OC1B on Compare Match when downcounting.
+    TCNT1 = 0;
+    TCCR1A |= _BV(COM1B1);  // Clear OC1A/OC1B on Compare Match when up-counting. Set OC1A/OC1B on Compare Match when counting down.
 }
 void disableSendPWMByTimer() {
     TCCR1A &= ~(_BV(COM1B1));
@@ -694,8 +695,13 @@ void timerConfigForReceive() {
 #    endif
 
 #    if defined(ARDUINO_AVR_PROMICRO) // Sparkfun Pro Micro
-void enableSendPWMByTimer() {    TCNT4 = 0; (TCCR4A |= _BV(COM4A0))     // Use complementary OC4A output on pin 5
-void disableSendPWMByTimer() {   (TCCR4A &= ~(_BV(COM4A0)))  // (Pro Micro does not map PC7 (32/ICP3/CLK0/OC4A)
+void enableSendPWMByTimer() {
+    TCNT4 = 0;
+    TCCR4A |= _BV(COM4A0);     // Use complementary OC4A output on pin 5
+}
+void disableSendPWMByTimer() {
+    TCCR4A &= ~(_BV(COM4A0));  // (Pro Micro does not map PC7 (32/ICP3/CLK0/OC4A)
+}
 // of ATmega32U4 )
 #    else
 void enableSendPWMByTimer() {
