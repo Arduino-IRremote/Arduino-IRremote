@@ -182,7 +182,7 @@ void setup() {
 #if defined(USE_SERIAL_LCD)
     myLCD.init();
     myLCD.clear();
-    myLCD.backlight();
+    myLCD.backlight(); // Switch backlight LED on
 #endif
 #if defined(USE_PARALLEL_LCD)
     myLCD.begin(LCD_COLUMNS, LCD_ROWS); // This also clears display

@@ -379,7 +379,7 @@ void loop() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
 
     if (sAddress == 0xFFF1) {
-#  if FLASHEND >= 0x7FFF  // For 32k flash or more, like UNO. Code does not fit in program memory of ATtiny1604 etc.
+#  if FLASHEND >= 0x7FFF  // For 32k flash or more, like Uno. Code does not fit in program memory of ATtiny1604 etc.
         /*
          * Send constant values only once in this demo
          */

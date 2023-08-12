@@ -1651,18 +1651,9 @@ const char* IRrecv::getProtocolString() {
  * aResults->decode_type
  **********************************************************************************************************************/
 bool IRrecv::decode_old(decode_results *aResults) {
-    static bool sDeprecationMessageSent = false;
 
     if (irparams.StateForISR != IR_REC_STATE_STOP) {
         return false;
-    }
-
-    if (!sDeprecationMessageSent) {
-#if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
-//        Serial.println(
-//                "The function decode(&results)) is deprecated and may not work as expected! Just use decode() without a parameter and IrReceiver.decodedIRData.<fieldname> .");
-#endif
-        sDeprecationMessageSent = true;
     }
 
 // copy for usage by legacy programs

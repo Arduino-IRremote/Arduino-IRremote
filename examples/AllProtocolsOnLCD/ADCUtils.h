@@ -115,8 +115,8 @@
 extern float sVCCVoltage;
 extern uint16_t sVCCVoltageMillivolt;
 
-extern long sLastVoltageCheckMillis;
-extern uint8_t sVoltageTooLowCounter;
+extern long sLastVCCCheckMillis;
+extern uint8_t sVCCTooLowCounter;
 
 uint16_t readADCChannel(uint8_t aChannelNumber);
 uint16_t readADCChannelWithReference(uint8_t aChannelNumber, uint8_t aReference);
@@ -157,7 +157,9 @@ float getTemperature(void);
 
 bool isVCCTooLowMultipleTimes();
 void resetVCCTooLowMultipleTimes();
-bool isVoltageTooLow();
+bool isVCCTooLow();
+bool isVCCTooHigh();
+bool isVCCTooHighSimple();
 
 #endif //  defined(__AVR__) ...
 #endif // _ADC_UTILS_H

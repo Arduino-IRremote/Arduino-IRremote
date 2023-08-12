@@ -33,6 +33,8 @@ bool IRrecv::decode(decode_results *aResults) {
         Serial.println(F(" https://github.com/Arduino-IRremote/Arduino-IRremote#examples-for-this-library"));
         Serial.println(F("A guide how to convert your 2.0 program is here:"));
         Serial.println(F(" https://github.com/Arduino-IRremote/Arduino-IRremote#converting-your-2x-program-to-the-4x-version"));
+        Serial.println();
+        Serial.println(F("Thanks"));
         Serial.println(F("**************************************************************************************************"));
         Serial.println();
         Serial.println();
