@@ -220,6 +220,26 @@ Example:
 `0x40802CD3` is binary `0100 0000 1000 0000 0010 1100 1101 0011`.<br/>
 If you **read the first binary sequence backwards** (right to left), you get the second sequence.
 
+### Code to reverse a number
+
+Best is to update your defined IR codes, but if you want to convert IR codes during runtime the code below might be helpfull.
+```
+uint32_t reverseNumber(uint32_t input) {
+    uint32_t newNumber = 0;
+    
+    // Iterate through each bit position
+    for (int i = 0; i < 32; i++) {
+        // Check if the i-th bit is set in the input
+        if (input & (1 << i)) {
+            // Set the corresponding bit in the newNumber in reversed position
+            newNumber |= 1 << (31 - i);
+        }
+    }
+    return newNumber;
+}```
+
+This can be used to compare the old 32bit MSB to the LSB version `if (reverseNumber(value) == IrCode)`.
+
 <br/>
 
 # Errors with using the 4.x versions for old tutorials
