@@ -219,6 +219,7 @@ Example:
 `0xCB340102` is binary `1100 1011 0011 0100 0000 0001 0000 0010`.<br/>
 `0x40802CD3` is binary `0100 0000 1000 0000 0010 1100 1101 0011`.<br/>
 If you **read the first binary sequence backwards** (right to left), you get the second sequence.
+You may use `bitreverseOneByte()` or `bitreverse32Bit()` for this.
 
 <br/>
 

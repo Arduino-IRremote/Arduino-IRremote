@@ -165,6 +165,7 @@ void loop() {
         /*
          * With Send sendNECMSB() you can send your old 32 bit codes.
          * To convert one into the other, you must reverse the byte positions and then reverse all positions of each byte.
+         * Use bitreverse32Bit().
          * Example:
          * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
          */
