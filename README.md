@@ -725,6 +725,7 @@ If you are using [Sloeber](https://eclipse.baeyens.it) as your IDE, you can easi
 <br/>
 ATtiny and Digispark boards are only tested with the recommended [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) using `New Style` pin mapping for the pro board.
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
+- Arduino Uno R4, but not yet tested, because of lack of a R4 board.
 - Teensy 1.0 / 1.0++ / 2.0 / 2++ / 3.0 / 3.1 / 3.2 / Teensy-LC - but [limited support](https://forum.pjrc.com/threads/65912-Enable-Continuous-Integration-with-arduino-cli-for-3-party-libraries); Credits: PaulStoffregen (Teensy Team)
 - Sanguino
 - ATmega8, 48, 88, 168, 328

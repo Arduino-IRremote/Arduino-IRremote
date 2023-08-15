@@ -39,6 +39,7 @@ class IRExtensionClass
 public:
     IRrecv * MyIrReceiver;
     IRExtensionClass(IRrecv * aIrReceiver);
+    void decode();
     void resume();
 };
 

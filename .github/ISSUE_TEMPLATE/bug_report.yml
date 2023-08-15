@@ -18,7 +18,7 @@ body:
     attributes:
       label: The type of board you are using.
       options:
-        - Arduino ATmega328* board (UNO, Nano, etc.)
+        - Arduino ATmega328* board (Uno, Nano, etc.)
         - Arduino ATmega2560 board (Mega)
         - Arduino ATmega32U4 board (Leonardo, etc.)
         - Arduino ATmega4809 megaAVR board (NanoEvery)

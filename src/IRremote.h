@@ -26,6 +26,7 @@ bool IRrecv::decode(decode_results *aResults) {
         Serial.println(F("This version is no longer supported!"));
         Serial.println(F("Please use one of the new code examples from the library,"));
         Serial.println(F(" available at \"File > Examples > Examples from Custom Libraries / IRremote\"."));
+        Serial.println(F("Or downgrade your library to version 2.6.0."));
         Serial.println();
         Serial.println(F("Start with the SimpleReceiver or SimpleSender example."));
         Serial.println();

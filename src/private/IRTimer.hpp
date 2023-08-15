@@ -1093,7 +1093,6 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
 
 /**********************************************
  * Uno R4 boards
- * The FspTimer uses undocumented
  **********************************************/
 #elif defined(ARDUINO_ARCH_RENESAS)
 #include "FspTimer.h"

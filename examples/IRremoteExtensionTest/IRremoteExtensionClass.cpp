@@ -36,6 +36,11 @@
 IRExtensionClass::IRExtensionClass(IRrecv *aIrReceiver) {
     MyIrReceiver = aIrReceiver;
 }
+void IRExtensionClass::decode() {
+    Serial.println(F("Call decode()"));
+    MyIrReceiver->decode();
+}
+
 void IRExtensionClass::resume() {
     Serial.println(F("Call resume()"));
     MyIrReceiver->resume();
