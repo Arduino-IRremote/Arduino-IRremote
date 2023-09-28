@@ -55,31 +55,31 @@
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
 #    if defined(ARDUINO_AVR_DIGISPARKPRO)
-#define IR_INPUT_PIN    9 // PA3 - on Digispark board labeled as pin 9
+#define IR_RECEIVE_PIN    9 // PA3 - on Digispark board labeled as pin 9
 #    else
-#define IR_INPUT_PIN    0 // PCINT0
+#define IR_RECEIVE_PIN    0 // PCINT0
 #    endif
 #  elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
-#define IR_INPUT_PIN    10
+#define IR_RECEIVE_PIN    10
 #  elif (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__))
-#define IR_INPUT_PIN    21 // INT0
+#define IR_RECEIVE_PIN    21 // INT0
 #  elif defined(ESP8266)
-#define IR_INPUT_PIN    14 // D5
+#define IR_RECEIVE_PIN    14 // D5
 #  elif defined(ESP32)
-#define IR_INPUT_PIN    15
+#define IR_RECEIVE_PIN    15
 #  elif defined(ARDUINO_ARCH_MBED) && defined(ARDUINO_ARCH_MBED_NANO)
-#define IR_INPUT_PIN    3   // GPIO15 Use pin 3 since pin 2|GPIO25 is connected to LED on Pi pico
+#define IR_RECEIVE_PIN    3   // GPIO15 Use pin 3 since pin 2|GPIO25 is connected to LED on Pi pico
 #  elif defined(ARDUINO_ARCH_RP2040) // Pi Pico with arduino-pico core https://github.com/earlephilhower/arduino-pico
-#define IR_INPUT_PIN    15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
+#define IR_RECEIVE_PIN    15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
 #  else
-#define IR_INPUT_PIN    2   // INT0
+#define IR_RECEIVE_PIN    2   // INT0
 #  endif
 
 #elif defined(USE_IRMP_LIBRARY)
 /*
  * IRMP version
  */
-#define IR_INPUT_PIN    2
+#define IR_RECEIVE_PIN    2
 #define IRMP_USE_COMPLETE_CALLBACK       1 // Enable callback functionality. It is required if IRMP library is used.
 #if defined(ALTERNATIVE_IR_FEEDBACK_LED_PIN)
 #define FEEDBACK_LED_PIN    ALTERNATIVE_IR_FEEDBACK_LED_PIN
@@ -159,7 +159,7 @@ void setup() {
 
     IRDispatcher.init(); // This just calls irmp_init()
 #if defined(USE_TINY_IR_RECEIVER)
-    Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_INPUT_PIN)));
+    Serial.println(F("Ready to receive NEC IR signals at pin " STR(IR_RECEIVE_PIN)));
 #else
     irmp_register_complete_callback_function(&handleReceivedIRData); // fixed function in IRCommandDispatcher.hpp
 

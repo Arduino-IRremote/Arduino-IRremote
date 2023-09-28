@@ -688,10 +688,28 @@ float getCPUTemperature(void) {
 #endif
 }
 
-#elif defined(ARDUINO_ARCH_APOLLO3) // defined(ADC_UTILS_ARE_AVAILABLE)
-    void ADCUtilsDummyToAvoidBFDAssertions(){
-        ;
-    }
+#else // defined(ADC_UTILS_ARE_AVAILABLE)
+// Dummy definition of functions defined in ADCUtils to compile examples without errors
+/*
+ * Persistent storage for VCC value
+ */
+float sVCCVoltage;
+uint16_t sVCCVoltageMillivolt;
+
+uint16_t getVCCVoltageMillivoltSimple(void){
+    return 3300;
+}
+
+uint16_t readADCChannelWithReferenceOversample(uint8_t aChannelNumber __attribute__((unused)),
+        uint8_t aReference __attribute__((unused)), uint8_t aOversampleExponent __attribute__((unused))) {
+    return 0;
+}
+float getCPUTemperature() {
+    return 20.0;
+}
+float getVCCVoltage() {
+    return 3.3;
+}
 #endif // defined(ADC_UTILS_ARE_AVAILABLE)
 
 #if defined(LOCAL_DEBUG)
