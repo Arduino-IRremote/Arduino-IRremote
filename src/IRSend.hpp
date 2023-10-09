@@ -935,6 +935,13 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
  * This function may affect the state of feedback LED.
  * Period time is 26 us for 38.46 kHz, 27 us for 37.04 kHz, 25 us for 40 kHz.
  * On time is 8 us for 30% duty cycle
+ *
+ * The mark() function relies on the correct implementation of:
+ * delayMicroseconds() for pulse time, and micros() for pause time.
+ * The delayMicroseconds() of pulse time is guarded on AVR CPU's with noInterrupts() / interrupts().
+ * At the start of pause time, interrupts are enabled once, the rest of the pause is also guarded on AVR CPU's with noInterrupts() / interrupts().
+ * The maximum length of an interrupt during sending should not exceed 26 us - 8 us = 18 us, otherwise timing is disturbed.
+ * This disturbance is no problem, if the exceedance is small and does not happen too often.
  */
 void IRsend::mark(uint16_t aMarkMicros) {
 
@@ -1002,7 +1009,7 @@ void IRsend::mark(uint16_t aMarkMicros) {
         // 4.3 us from do{ to pin setting if sendPin is no constant
         digitalWriteFast(sendPin, HIGH);
 #  endif
-        delayMicroseconds(periodOnTimeMicros); // On time is 8 us for 30% duty cycle. This is normally implemented by a blocking wait.
+        delayMicroseconds (periodOnTimeMicros); // On time is 8 us for 30% duty cycle. This is normally implemented by a blocking wait.
 
         /*
          * Output the PWM pause

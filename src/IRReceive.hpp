@@ -51,7 +51,7 @@
 //#define _IR_TIMING_TEST_PIN 7 // "pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);" is executed at start()
 //
 /*
- * Check for additional characteristics of timing like length of mark for a constant mark protocol,
+ * Check for additional required characteristics of timing like length of mark for a constant mark protocol,
  * where space length determines the bit value. Requires up to 194 additional bytes of program memory.
  */
 //#define DECODE_STRICT_CHECKS

@@ -124,6 +124,8 @@ typedef uint64_t IRRawDataType;
 
 /*
  * Debug directives
+ * Outputs with IR_DEBUG_PRINT can only be activated by defining DEBUG!
+ * If LOCAL_DEBUG is defined in one file, all outputs with IR_DEBUG_PRINT are still suppressed.
  */
 #if defined(DEBUG) || defined(TRACE)
 #  define IR_DEBUG_PRINT(...)    Serial.print(__VA_ARGS__)
@@ -162,7 +164,7 @@ struct decode_results {
     uint16_t magnitude;         // deprecated, moved to decodedIRData.extra ///< Used by MagiQuest [16-bits]
     bool isRepeat;              // deprecated, moved to decodedIRData.flags ///< True if repeat of value is detected
 
-// next 3 values are copies of irparams values - see IRremoteint.h
+// next 3 values are copies of irparams_struct values - see above
     uint16_t *rawbuf;       // deprecated, moved to decodedIRData.rawDataPtr->rawbuf ///< Raw intervals in 50uS ticks
     uint_fast8_t rawlen;        // deprecated, moved to decodedIRData.rawDataPtr->rawlen ///< Number of records in rawbuf
     bool overflow;              // deprecated, moved to decodedIRData.flags ///< true if IR raw code too long
