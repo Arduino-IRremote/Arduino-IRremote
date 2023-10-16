@@ -287,7 +287,7 @@ void IRrecv::begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8
 
     setReceivePin(aReceivePin);
 #if !defined(NO_LED_FEEDBACK_CODE)
-    bool tEnableLEDFeedback = DO_NOT_ENABLE_LED_FEEDBACK;
+    uint_fast8_t tEnableLEDFeedback = DO_NOT_ENABLE_LED_FEEDBACK;
     if (aEnableLEDFeedback) {
         tEnableLEDFeedback = LED_FEEDBACK_ENABLED_FOR_RECEIVE;
     }
