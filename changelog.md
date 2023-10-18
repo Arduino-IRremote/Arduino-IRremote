@@ -2,6 +2,9 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+# 4.2.1
+- Fix wrong type of tEnableLEDFeedback in IRSend.hpp and IRReceive.hpp.
+
 # 4.2.0
 - The old decode function is renamed to decode_old(decode_results *aResults). decode (decode_results *aResults) is only available in IRremote.h and prints a message.
 - Added DECODE_ONKYO, to force 16 bit command and data decoding.

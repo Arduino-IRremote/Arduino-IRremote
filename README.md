@@ -740,7 +740,7 @@ ATtiny boards are only tested with [ATTinyCore](https://github.com/SpenceKonde/A
 - ATtiny84, 85, 167 (Digispark + Digispark Pro)
 - SAMD21 (Zero, MKR*, **but not SAMD51 and not DUE, the latter is SAM architecture**)
 - ESP8266
-- ESP32 (ESP32-C3 since board package 2.0.2 from Espressif)
+- ESP32 (ESP32-C3 since board package 2.0.2 from Espressif) **not for ESP32 core version > 3.0.0**
 - Sparkfun Pro Micro
 - Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
 - BluePill with STM32

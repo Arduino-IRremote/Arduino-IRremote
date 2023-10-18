@@ -95,7 +95,9 @@ LiquidCrystal myLCD(7, 8, 3, 4, 5, 6);
 #else
 #define DEBUG_BUTTON_PIN             6
 #endif
-#define AUXILIARY_DEBUG_BUTTON_PIN  12 // Is set to low to enable using of a simple connector for enabling debug
+#if defined(__AVR_ATmega328P__)
+#define AUXILIARY_DEBUG_BUTTON_PIN  12 // Is set to low to enable using of a simple connector for enabling debug with pin 11
+#endif
 
 #define MILLIS_BETWEEN_ATTENTION_BEEP   60000 // 60 sec
 uint32_t sMillisOfLastReceivedIRFrame = 0;
@@ -164,8 +166,11 @@ void setup() {
 #  else
     Serial.print(DEBUG_BUTTON_PIN);
 #  endif
-    Serial.print(F(" to ground or to pin "));
+    Serial.print(F(" to ground"));
+#  if defined(AUXILIARY_DEBUG_BUTTON_PIN)
+    Serial.print(F(" or to pin "));
     Serial.print(AUXILIARY_DEBUG_BUTTON_PIN);
+#endif
     Serial.println(F(", raw data is always printed"));
 
     // infos for receive
