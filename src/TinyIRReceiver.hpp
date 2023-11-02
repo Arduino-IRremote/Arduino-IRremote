@@ -61,6 +61,7 @@
  * - USE_ONKYO_PROTOCOL     Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
  * - USE_FAST_PROTOCOL      Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC.
  * - ENABLE_NEC2_REPEATS    Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
+ * - USE_CALLBACK_FOR_TINY_RECEIVER   Call the fixed function "void handleReceivedTinyIRData()" each time a frame or repeat is received.
  */
 
 #ifndef _TINY_IR_RECEIVER_HPP
@@ -100,6 +101,7 @@
 //#define _IR_MEASURE_TIMING        // Activate this if you want to enable internal hardware timing measurement.
 //#define _IR_TIMING_TEST_PIN 7
 TinyIRReceiverStruct TinyIRReceiverControl;
+volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
 
 /*
  * Set input pin and output pin definitions etc.
@@ -143,7 +145,7 @@ TinyIRReceiverStruct TinyIRReceiverControl;
  * Declaration of the callback function provided by the user application.
  * It is called every time a complete IR command or repeat was received.
  */
-extern void handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, bool isRepetition);
+extern void handleTinyReceivedIRData();
 
 #if defined(LOCAL_DEBUG)
 uint32_t sMicrosOfGap; // The length of the gap before the start bit
@@ -319,7 +321,7 @@ void IRPinChangeInterruptHandler(void) {
                      */
                     if (TinyIRReceiverControl.IRRawData.UBytes[0] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[1])) {
 #if defined(ENABLE_NEC2_REPEATS)
-                        TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED; // here we can have the repeat flag already set
+                    TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED; // here we can have the repeat flag already set
 #else
                         TinyIRReceiverControl.Flags = IRDATA_FLAGS_PARITY_FAILED; // here we do not check anything, if we have a repeat
 #endif
@@ -332,15 +334,15 @@ void IRPinChangeInterruptHandler(void) {
 #if (TINY_RECEIVER_ADDRESS_BITS > 0)
                     if (TinyIRReceiverControl.IRRawData.UBytes[2] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[3])) {
 #if defined(ENABLE_NEC2_REPEATS)
-                        TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
+                    TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
 #else
                         TinyIRReceiverControl.Flags = IRDATA_FLAGS_PARITY_FAILED;
 #endif
 #  if defined(LOCAL_DEBUG)
-                        Serial.print(F("Parity check for command failed. Command="));
-                        Serial.print(TinyIRReceiverControl.IRRawData.UBytes[2], HEX);
-                        Serial.print(F(" parity="));
-                        Serial.println(TinyIRReceiverControl.IRRawData.UBytes[3], HEX);
+                    Serial.print(F("Parity check for command failed. Command="));
+                    Serial.print(TinyIRReceiverControl.IRRawData.UBytes[2], HEX);
+                    Serial.print(F(" parity="));
+                    Serial.println(TinyIRReceiverControl.IRRawData.UBytes[3], HEX);
 #  endif
 #else
                     // No address, so command and parity are in the lowest bytes
@@ -363,34 +365,37 @@ void IRPinChangeInterruptHandler(void) {
 #if !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) // no Serial etc. in callback for ESP -> no interrupt required, WDT is running!
                     interrupts(); // enable interrupts, so delay() etc. works in callback
 #endif
-                    handleReceivedTinyIRData(
+                    TinyIRReceiverData.justWritten = true;
+                    TinyIRReceiverData.Flags = TinyIRReceiverControl.Flags;
 #if (TINY_RECEIVER_ADDRESS_BITS > 0)
 #  if TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY
-                            // Here we have 8 bit address
-                            TinyIRReceiverControl.IRRawData.UBytes[0],
+                    // Here we have 8 bit address
+                    TinyIRReceiverData.Address = TinyIRReceiverControl.IRRawData.UBytes[0];
 #  else
-                            // Here we have 16 bit address
-                            TinyIRReceiverControl.IRRawData.UWord.LowWord,
+                    // Here we have 16 bit address
+                    TinyIRReceiverData.Address = TinyIRReceiverControl.IRRawData.UWord.LowWord;
 #  endif
 #  if TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
-                            // Here we have 8 bit command
-                            TinyIRReceiverControl.IRRawData.UBytes[2],
+                    // Here we have 8 bit command
+                    TinyIRReceiverData.Command = TinyIRReceiverControl.IRRawData.UBytes[2];
 #  else
                             // Here we have 16 bit command
-                            TinyIRReceiverControl.IRRawData.UWord.HighWord,
+                    TinyIRReceiverData.Command = TinyIRReceiverControl.IRRawData.UWord.HighWord;
 #  endif
-#else
 
-                            // Here we have NO address
+#else
+                    // Here we have NO address
 #  if TINY_RECEIVER_COMMAND_HAS_8_BIT_PARITY
-                            // Here we have 8 bit command
-                            TinyIRReceiverControl.IRRawData.UBytes[0],
+                    // Here we have 8 bit command
+                    TinyIRReceiverData.Command = TinyIRReceiverControl.IRRawData.UBytes[0];
 #  else
-                            // Here we have 16 bit command
-                            TinyIRReceiverControl.IRRawData.UWord,
+                    // Here we have 16 bit command
+                    TinyIRReceiverData.Command = TinyIRReceiverControl.IRRawData.UWord;
 #  endif
 #endif
-                            TinyIRReceiverControl.Flags);
+#if defined(USE_CALLBACK_FOR_TINY_RECEIVER)
+                    handleReceivedTinyIRData();
+#endif
 
                 } else {
                     // not finished yet
@@ -429,27 +434,22 @@ bool initPCIInterruptForTinyReceiver() {
     return enablePCIInterruptForTinyReceiver();
 }
 
-#if defined(USE_FAST_PROTOCOL)
-void printTinyReceiverResultMinimal(Print *aSerial, uint16_t aCommand, uint8_t aFlags)
-#else
-void printTinyReceiverResultMinimal(Print *aSerial, uint8_t aAddress, uint8_t aCommand, uint8_t aFlags)
-#endif
-        {
+void printTinyReceiverResultMinimal(Print *aSerial) {
 // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
     // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
 #if defined(USE_FAST_PROTOCOL)
     aSerial->print(F("C=0x"));
 #else
     aSerial->print(F("A=0x"));
-    aSerial->print(aAddress, HEX);
+    aSerial->print(TinyIRReceiverData.Address, HEX);
     aSerial->print(F(" C=0x"));
 #endif
-    aSerial->print(aCommand, HEX);
-    if (aFlags == IRDATA_FLAGS_IS_REPEAT) {
+    aSerial->print(TinyIRReceiverData.Command, HEX);
+    if (TinyIRReceiverData.Flags == IRDATA_FLAGS_IS_REPEAT) {
         aSerial->print(F(" R"));
     }
 #if !defined(DISABLE_PARITY_CHECKS)
-    if (aFlags == IRDATA_FLAGS_PARITY_FAILED) {
+    if (TinyIRReceiverData.Flags == IRDATA_FLAGS_PARITY_FAILED) {
         aSerial->print(F(" P"));
     }
 #endif

@@ -77,7 +77,7 @@
 // !!! We assume that the real implementations never set the official first header bit to anything other than 0 !!!
 // !!! We therefore use 4 start bits instead of the specified 3 and in turn ignore the first header bit of the specification !!!
 
-// IR messages are 16 bits long and datalink messages have different lengths
+// IR messages are 16 bits long. Datalink messages have different lengths.
 // This implementation supports up to 40 bits total length split into 8 bit data/command and a header/address of variable length
 // Header data with more than 16 bits is stored in decodedIRData.extra
 
@@ -87,8 +87,9 @@
 
 /*
  * Options for this decoder
+ *
  */
-//#define ENABLE_BEO_WITHOUT_FRAME_GAP // Requires additional 30 bytes program memory.
+#define ENABLE_BEO_WITHOUT_FRAME_GAP // Requires additional 30 bytes program memory. Enabled by default, see https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/1181
 //#define SUPPORT_BEO_DATALINK_TIMING_FOR_DECODE // This also supports headers up to 32 bit. Requires additional 150 bytes program memory.
 #if defined(DECODE_BEO)
 #  if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)

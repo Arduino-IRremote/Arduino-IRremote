@@ -50,49 +50,21 @@
 
 #include <Arduino.h>
 
-/*
- * Set sensible receive pin for different CPU's
- */
-#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
-/*
- * This program runs on 1 MHz CPU clock :-) and is requires only 1550 bytes program memory using ATTiny core
- */
-#include "ATtinySerialOut.hpp" // TX is at pin 2 - Available as Arduino library "ATtinySerialOut" - Saves up to 700 bytes program memory and 70 bytes RAM for ATtinyCore
-#  if defined(ARDUINO_AVR_DIGISPARKPRO)
-#define IR_RECEIVE_PIN    9 // PA3 - on Digispark board labeled as pin 9
-#  else
-#define IR_RECEIVE_PIN    0 // PCINT0
-#  endif
-#elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
-#define IR_RECEIVE_PIN    10
-#elif (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__))
-#define IR_RECEIVE_PIN    21 // INT0
-#elif defined(ESP8266)
-#define IR_RECEIVE_PIN    14 // D5
-#elif defined(CONFIG_IDF_TARGET_ESP32C3)
-#define IR_RECEIVE_PIN    8
-#elif defined(ESP32)
-#define IR_RECEIVE_PIN    15
-#elif defined(ARDUINO_ARCH_MBED) && defined(ARDUINO_ARCH_MBED_NANO)
-#define IR_RECEIVE_PIN    3   // GPIO15 Use pin 3 since pin 2|GPIO25 is connected to LED on Pi pico
-#elif defined(ARDUINO_ARCH_RP2040) // Pi Pico with arduino-pico core https://github.com/earlephilhower/arduino-pico
-#define IR_RECEIVE_PIN    15  // to be compatible with the Arduino Nano RP2040 Connect (pin3)
-#else
-#define IR_RECEIVE_PIN    2   // INT0
-//#define NO_LED_FEEDBACK_CODE   // Activate this if you want to suppress LED feedback or if you do not have a LED. This saves 14 bytes code and 2 clock cycles per interrupt.
-#endif
+#include "PinDefinitionsAndMore.h" // Set IR_RECEIVE_PIN for different CPU's
 
 //#define DEBUG // to see if attachInterrupt is used
 //#define TRACE // to see the state of the ISR state machine
 
 /*
- * Second: include the code and compile it.
+ * Set compile options to modify the generated code.
  */
 //#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_FAST_PROTOCOL     // Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC / ONKYO.
 //#define ENABLE_NEC2_REPEATS   // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
-#include "TinyIRReceiver.hpp"
+//#define USE_CALLBACK_FOR_TINY_RECEIVER  // Call the fixed function "void handleReceivedTinyIRData()" each time a frame or repeat is received.
+
+#include "TinyIRReceiver.hpp" // include the code
 
 /*
  * Helper macro for getting a macro definition as string
@@ -101,8 +73,6 @@
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 #endif
-
-volatile struct TinyIRReceiverCallbackDataStruct sCallbackData;
 
 void setup() {
     Serial.begin(115200);
@@ -127,20 +97,20 @@ void setup() {
 }
 
 void loop() {
-    if (sCallbackData.justWritten) {
-        sCallbackData.justWritten = false;
-#if defined(USE_FAST_PROTOCOL)
-        Serial.print(F("Command=0x"));
-#else
+    if (TinyIRReceiverData.justWritten) {
+        TinyIRReceiverData.justWritten = false;
+#if !defined(USE_FAST_PROTOCOL)
+        // We have no address at FAST protocol
         Serial.print(F("Address=0x"));
-        Serial.print(sCallbackData.Address, HEX);
-        Serial.print(F(" Command=0x"));
+        Serial.print(TinyIRReceiverData.Address, HEX);
+        Serial.print(' ');
 #endif
-        Serial.print(sCallbackData.Command, HEX);
-        if (sCallbackData.Flags == IRDATA_FLAGS_IS_REPEAT) {
+        Serial.print(F("Command=0x"));
+        Serial.print(TinyIRReceiverData.Command, HEX);
+        if (TinyIRReceiverData.Flags == IRDATA_FLAGS_IS_REPEAT) {
             Serial.print(F(" Repeat"));
         }
-        if (sCallbackData.Flags == IRDATA_FLAGS_PARITY_FAILED) {
+        if (TinyIRReceiverData.Flags == IRDATA_FLAGS_PARITY_FAILED) {
             Serial.print(F(" Parity failed"));
         }
         Serial.println();
@@ -151,40 +121,30 @@ void loop() {
 }
 
 /*
- * This is the function, which is called if a complete command was received
+ * Optional code, if you require a callback
+ */
+#if defined(USE_CALLBACK_FOR_TINY_RECEIVER)
+/*
+ * This is the function, which is called if a complete frame was received
  * It runs in an ISR context with interrupts enabled, so functions like delay() etc. should work here
  */
-#if defined(ESP8266) || defined(ESP32)
+#  if defined(ESP8266) || defined(ESP32)
 IRAM_ATTR
-#endif
-
-#if defined(USE_FAST_PROTOCOL)
-void handleReceivedTinyIRData(uint8_t aCommand, uint8_t aFlags)
-#elif defined(USE_ONKYO_PROTOCOL)
-void handleReceivedTinyIRData(uint16_t aAddress, uint16_t aCommand, uint8_t aFlags)
-#else
-void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags)
-#endif
-        {
-#if defined(ARDUINO_ARCH_MBED) || defined(ESP32)
-    // Copy data for main loop, this is the recommended way for handling a callback :-)
-#  if !defined(USE_FAST_PROTOCOL)
-    sCallbackData.Address = aAddress;
 #  endif
-    sCallbackData.Command = aCommand;
-    sCallbackData.Flags = aFlags;
-    sCallbackData.justWritten = true;
-#else
+
+void handleReceivedTinyIRData() {
+#  if defined(ARDUINO_ARCH_MBED) || defined(ESP32)
     /*
-     * Printing is not allowed in ISR context for any kind of RTOS
+     * Printing is not allowed in ISR context for any kind of RTOS, so we use the slihjtly more complex,
+     * but recommended way for handling a callback :-). Copy data for main loop.
      * For Mbed we get a kernel panic and "Error Message: Semaphore: 0x0, Not allowed in ISR context" for Serial.print()
      * for ESP32 we get a "Guru Meditation Error: Core  1 panic'ed" (we also have an RTOS running!)
      */
-    // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
-#  if defined(USE_FAST_PROTOCOL)
-    printTinyReceiverResultMinimal(&Serial, aCommand, aFlags);
+    // Do something useful here...
 #  else
-    printTinyReceiverResultMinimal(&Serial, aAddress, aCommand, aFlags);
+    // As an example, print very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
+    printTinyReceiverResultMinimal(&Serial);
 #  endif
-#endif
 }
+#endif
+

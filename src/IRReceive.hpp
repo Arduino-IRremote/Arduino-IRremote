@@ -407,10 +407,11 @@ bool IRrecv::isIdle() {
 }
 
 /**
- * Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame
+ * Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame.
+ * Counting of gap timing is independent of StateForISR and therefore independent of call time of resume().
  */
 void IRrecv::resume() {
-    // check allows to call resume at arbitrary places or more than once
+    // This check allows to call resume at arbitrary places or more than once
     if (irparams.StateForISR == IR_REC_STATE_STOP) {
         irparams.StateForISR = IR_REC_STATE_IDLE;
     }

@@ -38,8 +38,9 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [Why *.hpp instead of *.cpp](https://github.com/Arduino-IRremote/Arduino-IRremote#why-hpp-instead-of-cpp)
 - [Using the new *.hpp files](https://github.com/Arduino-IRremote/Arduino-IRremote#using-the-new-hpp-files)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#receiving-ir-codes)
-  * [Data format](https://github.com/Arduino-IRremote/Arduino-IRremote#data-format)
+  * [decodedIRData structure](https://github.com/Arduino-IRremote/Arduino-IRremote#decodedirdata-structure)
   * [Ambiguous protocols](https://github.com/Arduino-IRremote/Arduino-IRremote#ambiguous-protocols)
+  * [Unknown protocol](https://github.com/Arduino-IRremote/Arduino-IRremote#unknown-protocol)
 - [Sending IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote#sending-ir-codes)
   * [Send pin](https://github.com/Arduino-IRremote/Arduino-IRremote#send-pin)
     + [List of public IR code databases](https://github.com/Arduino-IRremote/Arduino-IRremote#list-of-public-ir-code-databases)
@@ -141,8 +142,8 @@ If you use an (old) Arduino core that does not use the `-flto` flag for compile,
 - Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
 - Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK)`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L106)
  or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK)` instead of the `IrReceiver.enableIRIn()` or `irrecv.enableIRIn()` in setup().<br/>
-For sending, call `IrSender.begin(ENABLE_LED_FEEDBACK);` or `IrSender.begin(DISABLE_LED_FEEDBACK);` in setup().<br/>
-If IR_SEND_PIN is not defined you must use e.g. `IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN);`
+For sending, call `IrSender.begin();` or `IrSender.begin(DISABLE_LED_FEEDBACK);` in setup().<br/>
+If IR_SEND_PIN is not defined (before the line `#include <IRremote.hpp>`) you must use e.g. `IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN);`
 - Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
 - The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value` and `results.decode_type` (and similar) to
  `IrReceiver.decodedIRData.decodedRawData` and `IrReceiver.decodedIRData.protocol`.
@@ -287,13 +288,12 @@ The following macros will definitely be overridden with default values otherwise
 <br/>
 
 # Receiving IR codes
-Check for **received data** with:<br/>
+Check for a **completly received IR frame** with:<br/>
 `if (IrReceiver.decode()) {}`<br/>
-This also decodes the received data.
-
-## Data format
+This also decodes the received data.<br/>
 After successful decoding, the IR data is contained in the IRData structure, available as `IrReceiver.decodedIRData`.
 
+## decodedIRData structure
 ```c++
 struct IRData {
     decode_type_t protocol;     // UNKNOWN, NEC, SONY, RC5, PULSE_DISTANCE, ...
@@ -368,6 +368,9 @@ This behavior is quite unique for NEC and its derived protocols like LG.
 So there are of course also remote control systems, which uses the NEC protocol but on a long press just repeat the first frame instead of sending the special short repeat frame. We named this the  **NEC2** protocol and it is sent with `sendNEC2()`.<br/>
 But be careful, the NEC2 protocol can only be detected by the NEC library decoder **after** the first frame and if you do a long press!
 
+## Unknown protocol
+If your protocol seems not to be supported by this library, you may try the [IRMP library](https://github.com/IRMP-org/IRMP).
+
 <br/>
 
 # Sending IR codes
@@ -417,12 +420,11 @@ void setup() {
   initPCIInterruptForTinyReceiver(); // Enables the interrupt generation on change of IR input signal
 }
 
-void loop() {}
-
-// This is the function, which is called if a complete command was received
-// It runs in an ISR context with interrupts enabled, so functions like delay() etc. should work here
-void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags) {
-  printTinyReceiverResultMinimal(&Serial, aAddress, aCommand, aFlags);
+void loop() {
+    if (TinyIRReceiverData.justWritten) {
+        TinyIRReceiverData.justWritten = false;
+        printTinyReceiverResultMinimal(&Serial);
+    }
 }
 ```
 
@@ -702,6 +704,7 @@ These next macros for **TinyIRReceiver** must be defined in your program before 
 | `USE_ONKYO_PROTOCOL` | disabled | Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
 | `USE_FAST_PROTOCOL` | disabled | Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC. |
 | `ENABLE_NEC2_REPEATS` | disabled | Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat. |
+| `USE_CALLBACK_FOR_TINY_RECEIVER` | disabled | Call the fixed function `void handleReceivedTinyIRData()` each time a frame or repeat is received. |
 
 The next macro for **IRCommandDispatcher** must be defined in your program before the line `#include <IRCommandDispatcher.hpp>` to take effect.
 | `IR_COMMAND_HAS_MORE_THAN_8_BIT` | disabled | Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 4 bytes RAM + 1 byte RAM per mapping entry. |

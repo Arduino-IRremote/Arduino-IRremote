@@ -4,6 +4,10 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 
 # 4.2.1
 - Fix wrong type of tEnableLEDFeedback in IRSend.hpp and IRReceive.hpp.
+- TinyReceiver 2.0
+  - New TinyIRReceiverData which is filled with address, command and flags.
+  - Removed parameters address, command and flags from callback handleReceivedTinyIRData() and printTinyReceiverResultMinimal().
+  - Callback function now only enabled if USE_CALLBACK_FOR_TINY_RECEIVER is activated.
 
 # 4.2.0
 - The old decode function is renamed to decode_old(decode_results *aResults). decode (decode_results *aResults) is only available in IRremote.h and prints a message.

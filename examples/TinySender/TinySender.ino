@@ -52,7 +52,7 @@
 
 #include "TinyIRSender.hpp"
 
-#define IR_SEND_PIN         3
+#include "PinDefinitionsAndMore.h" // Set IR_SEND_PIN for different CPU's
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
