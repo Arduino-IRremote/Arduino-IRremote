@@ -648,6 +648,8 @@ Click on the receiver while simulation is running to specify individual NEC IR c
 
 #### UnitTest
 ReceiveDemo + SendDemo in one program. Demonstrates **receiving while sending**.
+Here you see the delay of the receiver output (blue) from the IR diode input (yellow).
+![Delay](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IR_UnitTest_delay.bmp)
 
 # WOKWI online examples
 - [Simple receiver](https://wokwi.com/projects/338611596994544210)
@@ -846,7 +848,7 @@ Since each hardware timer has its dedicated output pin(s), you must change timer
 **Exeptions** are currently [ESP32, ARDUINO_ARCH_RP2040, PARTICLE and ARDUINO_ARCH_MBED](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/39bdf8d7bf5b90dc221f8ae9fb3efed9f0a8a1db/examples/SimpleSender/PinDefinitionsAndMore.h#L273), where **PWM generation does not require a timer**.
 
 ## Why do we use 30% duty cycle for sending
-We do it according to the statement in the [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf):
+We [do it](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRSend.hpp#L1192) according to the statement in the [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf):
 - Carrier duty cycle 50 %, peak current of emitter IF = 200 mA, the resulting transmission distance is 25 m.
 - Carrier duty cycle 10 %, peak current of emitter IF = 800 mA, the resulting transmission distance is 29 m. - Factor 1.16
 The reason is, that it is not the pure energy of the fundamental which is responsible for the receiver to detect a signal.
@@ -859,7 +861,7 @@ The IR signal is sampled at a **50 &micro;s interval**. For a constant 525 &micr
 And believe me, if you send a 525 &micro;s signal, your receiver will output something between around 400 and 700 &micro;s!<br/>
 Therefore **we decode by default with a +/- 25% margin** using the formulas [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L376-L399).<br/>
 E.g. for the NEC protocol with its 560 &micro;s unit length, we have TICKS_LOW = 8.358 and TICKS_HIGH = 15.0. This means, we accept any value between 8 ticks / 400 &micro;s and 15 ticks / 750 &micro;s (inclusive) as a mark or as a zero space. For a one space we have TICKS_LOW = 25.07 and TICKS_HIGH = 45.0.<br/>
-And since the receivers generated marks are longer or shorter than the spaces, we have introduced the [`MARK_EXCESS_MICROS` value]/https://github.com/Arduino-IRremote/Arduino-IRremote#protocolunknown)
+And since the receivers generated marks are longer or shorter than the spaces, we have introduced the [`MARK_EXCESS_MICROS` value](https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library)
 to compensate for this receiver (and signal strength as well as ambient light dependent :disappointed: ) specific deviation.<br/>
 Welcome to the world of **real world signal processing**.
 

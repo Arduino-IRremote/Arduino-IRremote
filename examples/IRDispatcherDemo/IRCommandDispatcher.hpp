@@ -57,9 +57,6 @@
 
 IRCommandDispatcher IRDispatcher;
 
-#if defined(USE_TINY_IR_RECEIVER)
-#include "TinyIRReceiver.hpp" // included in "IRremote" library
-
 #if defined(LOCAL_INFO)
 #define CD_INFO_PRINT(...)      Serial.print(__VA_ARGS__);
 #define CD_INFO_PRINTLN(...)    Serial.println(__VA_ARGS__);
@@ -67,6 +64,10 @@ IRCommandDispatcher IRDispatcher;
 #define CD_INFO_PRINT(...)      void();
 #define CD_INFO_PRINTLN(...)    void();
 #endif
+
+#if defined(USE_TINY_IR_RECEIVER)
+#define USE_CALLBACK_FOR_TINY_RECEIVER  // Call the fixed function "void handleReceivedTinyIRData()" each time a frame or repeat is received.
+#include "TinyIRReceiver.hpp" // included in "IRremote" library
 
 void IRCommandDispatcher::init() {
     initPCIInterruptForTinyReceiver();
@@ -76,25 +77,20 @@ void IRCommandDispatcher::init() {
  * This is the TinyReceiver callback function, which is called if a complete command was received
  * It checks for right address and then call the dispatcher
  */
-#if defined(ESP8266) || defined(ESP32)
+#  if defined(ESP8266) || defined(ESP32)
 IRAM_ATTR
-#endif
-void handleReceivedTinyIRData(uint8_t aAddress, uint8_t aCommand, uint8_t aFlags) {
-    IRDispatcher.IRReceivedData.address = aAddress;
-    IRDispatcher.IRReceivedData.command = aCommand;
-    IRDispatcher.IRReceivedData.isRepeat = aFlags & IRDATA_FLAGS_IS_REPEAT;
+#  endif
+void handleReceivedTinyIRData() {
+    IRDispatcher.IRReceivedData.address = TinyIRReceiverData.Address;
+    IRDispatcher.IRReceivedData.command = TinyIRReceiverData.Command;
+    IRDispatcher.IRReceivedData.isRepeat = TinyIRReceiverData.Flags & IRDATA_FLAGS_IS_REPEAT;
     IRDispatcher.IRReceivedData.MillisOfLastCode = millis();
 
-    CD_INFO_PRINT(F("A=0x"));
-    CD_INFO_PRINT(aAddress, HEX);
-    CD_INFO_PRINT(F(" C=0x"));
-    CD_INFO_PRINT(aCommand, HEX);
-    if (IRDispatcher.IRReceivedData.isRepeat) {
-        CD_INFO_PRINT(F("R"));
-    }
-    CD_INFO_PRINTLN();
+#  if defined(LOCAL_INFO)
+    printTinyReceiverResultMinimal(&Serial);
+#  endif
 
-    if (aAddress == IR_ADDRESS) { // IR_ADDRESS is defined in *IRCommandMapping.h
+    if (TinyIRReceiverData.Address == IR_ADDRESS) { // IR_ADDRESS is defined in *IRCommandMapping.h
         IRDispatcher.IRReceivedData.isAvailable = true;
         if(!IRDispatcher.doNotUseDispatcher) {
             /*
@@ -212,7 +208,7 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallBlockingCommandImmediate
             if (tIsNonBlockingCommand) {
                 // short command here, just call
                 CD_INFO_PRINT(F("Run non blocking command: "));
-                CD_INFO_PRINTLN (tCommandName);
+                CD_INFO_PRINTLN(tCommandName);
                 IRMapping[i].CommandToCall();
             } else {
                 if (aCallBlockingCommandImmediately && currentBlockingCommandCalled == COMMAND_EMPTY) {
@@ -226,7 +222,7 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallBlockingCommandImmediate
                      * This call is blocking!!!
                      */
                     CD_INFO_PRINT(F("Run blocking command: "));
-                    CD_INFO_PRINTLN (tCommandName);
+                    CD_INFO_PRINTLN(tCommandName);
 
                     IRMapping[i].CommandToCall();
 #if defined(TRACE)
@@ -240,7 +236,7 @@ void IRCommandDispatcher::checkAndCallCommand(bool aCallBlockingCommandImmediate
                     BlockingCommandToRunNext = IRReceivedData.command;
                     requestToStopReceived = true; // to stop running command
                     CD_INFO_PRINT(F("Requested stop and stored blocking command "));
-                    CD_INFO_PRINT (tCommandName);
+                    CD_INFO_PRINT(tCommandName);
                     CD_INFO_PRINTLN(F(" as next command to run."));
                 }
             }
