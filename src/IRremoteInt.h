@@ -417,7 +417,7 @@ public:
     IRsend();
 
     /*
-     * IR_SEND_PIN is defined
+     * IR_SEND_PIN is defined or fixed by timer, value of IR_SEND_PIN is then "DeterminedByTimer"
      */
 #if defined(IR_SEND_PIN)
     void begin();

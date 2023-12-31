@@ -52,12 +52,13 @@ void enableSendPWMByTimer();
 void disableSendPWMByTimer();
 void timerConfigForSend(uint16_t aFrequencyKHz);
 
-#if defined(SEND_PWM_BY_TIMER) && ( (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED) )
-#define SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER // Receive timer and send generation are independent, so it is recommended to always define SEND_PWM_BY_TIMER
+// SEND_PWM_BY_TIMER is defined in IRremote.hpp line 195.
+#if  defined(SEND_PWM_BY_TIMER) && ( (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED) )
+#define SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER // Receive timer and send generation timer are independent here.
 #endif
 
-#if defined(IR_SEND_PIN) && defined(SEND_PWM_BY_TIMER) && !defined(SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER) // For e.g ESP32 IR_SEND_PIN definition is useful
-#undef IR_SEND_PIN // avoid warning below, user warning is done at IRremote.hpp
+#if defined(IR_SEND_PIN) && defined(SEND_PWM_BY_TIMER) && !defined(SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER) // For ESP32 etc. IR_SEND_PIN definition is useful
+#undef IR_SEND_PIN // To avoid "warning: "IR_SEND_PIN" redefined". The user warning is done at IRremote.hpp line 202.
 #endif
 
 // Macros for enabling timers for development
@@ -1434,8 +1435,7 @@ void timerConfigForReceive() {
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
 hw_timer_t *s50usTimer = NULL; // set by timerConfigForReceive()
 
-
-#  if !defined(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL)
+#  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0) &&  !defined(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL)
 #define SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
 #  endif
 
@@ -1481,24 +1481,52 @@ void timerConfigForReceive() {
     // every 50 us, autoreload = true
 }
 
+#  if !defined(IR_SEND_PIN)
+uint8_t sLastSendPin = 0; // To detach before attach, if already attached
+#  endif
+
 #  if defined(SEND_PWM_BY_TIMER)
 void enableSendPWMByTimer() {
+#    if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)
     ledcWrite(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); //  * 256 since we have 8 bit resolution
+#    else
+    ledcWrite(IrSender.sendPin, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // New API
+#    endif
 }
 void disableSendPWMByTimer() {
+#    if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)
     ledcWrite(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL, 0);
+#    else
+    ledcWrite(IrSender.sendPin, 0); // New API
+#    endif
 }
 
 /*
- * timerConfigForSend() is used exclusively by IRsend::enableIROut()
- * ledcWrite since ESP 2.0.2 does not work if pin mode is set. Disable receive interrupt if it uses the same resource
+ * timerConfigForSend() is used exclusively by IRsend::enableIROut() (or enableHighFrequencyIROut())
+ * ledcWrite since ESP 2.0.2 does not work if pin mode is set.
  */
 void timerConfigForSend(uint16_t aFrequencyKHz) {
+#    if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)
     ledcSetup(SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
-#    if defined(IR_SEND_PIN)
-    ledcAttachPin(IR_SEND_PIN, SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL);  // bind pin to channel
-#    else
-    ledcAttachPin(IrSender.sendPin, SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL);  // bind pin to channel
+#      if defined(IR_SEND_PIN)
+    ledcAttachPin(IR_SEND_PIN, SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL);  // attach pin to channel
+#      else
+    if(sLastSendPin != 0 && sLastSendPin != IrSender.sendPin){
+        ledcDetachPin(IrSender.sendPin);  // detach pin before new attaching see #1194
+    }
+    ledcAttachPin(IrSender.sendPin, SEND_AND_RECEIVE_TIMER_LEDC_CHANNEL);  // attach pin to channel
+    sLastSendPin = IrSender.sendPin;
+#      endif
+#    else  // New API here
+#      if defined(IR_SEND_PIN)
+    ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, 8); // New API
+#      else
+    if(sLastSendPin != 0 && sLastSendPin != IrSender.sendPin){
+        ledcDetach(IrSender.sendPin); // detach pin before new attaching see #1194
+    }
+    ledcAttach(IrSender.sendPin, aFrequencyKHz * 1000, 8); // New API
+    sLastSendPin = IrSender.sendPin;
+#      endif
 #    endif
 }
 #  endif // defined(SEND_PWM_BY_TIMER)

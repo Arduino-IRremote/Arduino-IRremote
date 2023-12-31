@@ -112,6 +112,43 @@
 #error "No temperature channel definitions specified for this AVR CPU"
 #endif
 
+/*
+ * Thresholds for OVER and UNDER voltage and detection of kind of power supply (USB or Li-ion)
+ *
+ * Default values are suitable for Li-ion batteries.
+ * We normally have voltage drop at the connectors, so the battery voltage is assumed slightly higher, than the Arduino VCC.
+ * But keep in mind that the ultrasonic distance module HC-SR04 may not work reliable below 3.7 volt.
+ */
+#if !defined(LI_ION_VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT)
+#define LI_ION_VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT             3400 // Do not stress your battery and we require some power for standby
+#endif
+#if !defined(LI_ION_VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT)
+#define LI_ION_VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT   3000 // Many Li-ions are specified down to 3.0 volt
+#endif
+
+#if !defined(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT)
+#define VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT            LI_ION_VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT
+#endif
+#if !defined(VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT)
+#define VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT  LI_ION_VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT
+#endif
+#if !defined(VCC_OVERVOLTAGE_THRESHOLD_MILLIVOLT)
+#define VCC_OVERVOLTAGE_THRESHOLD_MILLIVOLT             5250 // + 5 % operation voltage
+#endif
+#if !defined(VCC_EMERGENCY_OVERVOLTAGE_THRESHOLD_MILLIVOLT)
+#define VCC_EMERGENCY_OVERVOLTAGE_THRESHOLD_MILLIVOLT   5500 // +10 %. Max recommended operation voltage
+#endif
+#if !defined(VCC_CHECK_PERIOD_MILLIS)
+#define VCC_CHECK_PERIOD_MILLIS                         10000L // 10 seconds period of VCC checks
+#endif
+#if !defined(VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP)
+#define VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP     6 // Shutdown after 6 times (60 seconds) VCC below VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT or 1 time below VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT
+#endif
+
+#if !defined(VOLTAGE_USB_LOWER_THRESHOLD_MILLIVOLT)
+#define VOLTAGE_USB_LOWER_THRESHOLD_MILLIVOLT   4300
+#endif
+
 extern long sLastVCCCheckMillis;
 extern uint8_t sVCCTooLowCounter;
 
@@ -150,11 +187,13 @@ float getCPUTemperatureSimple(void);
 float getCPUTemperature(void);
 float getTemperature(void) __attribute__ ((deprecated ("Renamed to getCPUTemperature()"))); // deprecated
 
-bool isVCCTooLowMultipleTimes();
-void resetVCCTooLowMultipleTimes();
-bool isVCCTooLow();
-bool isVCCTooHigh();
-bool isVCCTooHighSimple();
+bool isVCCUSBPowered() ;
+bool isVCCUndervoltageMultipleTimes();
+void resetCounterForVCCUndervoltageMultipleTimes();
+bool isVCCUndervoltage();
+bool isVCCEmergencyUndervoltage();
+bool isVCCOvervoltage();
+bool isVCCOvervoltageSimple();
 
 #endif //  defined(__AVR__) ...
 

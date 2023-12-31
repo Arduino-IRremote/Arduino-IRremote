@@ -481,7 +481,7 @@ void readAndPrintVCCVoltageMillivolt(Print *aSerial) {
 void readVCCVoltageSimple(void) {
     // use AVCC with (optional) external capacitor at AREF pin as reference
     float tVCC = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
-    sVCCVoltage = (1023 * 1.1 * 4) / tVCC;
+    sVCCVoltage = (1023 * (((float) ADC_INTERNAL_REFERENCE_MILLIVOLT) / 1000) * 4) / tVCC;
 }
 
 /*
@@ -540,33 +540,17 @@ uint16_t getVoltageMillivoltWith_1_1VoltReference(uint8_t aADCChannelForVoltageM
 }
 
 /*
- * Default values are suitable for Li-ion batteries.
- * We normally have voltage drop at the connectors, so the battery voltage is assumed slightly higher, than the Arduino VCC.
- * But keep in mind that the ultrasonic distance module HC-SR04 may not work reliable below 3.7 volt.
+ * Return true if sVCCVoltageMillivolt is > 4.3 V
  */
-#if !defined(VCC_STOP_THRESHOLD_MILLIVOLT)
-#define VCC_STOP_THRESHOLD_MILLIVOLT    3400 // Do not stress your battery and we require some power for standby
-#endif
-#if !defined(VCC_EMERGENCY_STOP_MILLIVOLT)
-#define VCC_EMERGENCY_STOP_MILLIVOLT    3000 // Many Li-ions are specified down to 3.0 volt
-#endif
-#if !defined(VCC_TOO_HIGH_STOP_MILLIVOLT)
-#define VCC_TOO_HIGH_STOP_MILLIVOLT    5250 // + 5 % operation voltage
-#endif
-#if !defined(VCC_TOO_HIGH_EMERGENCY_STOP_MILLIVOLT)
-#define VCC_TOO_HIGH_EMERGENCY_STOP_MILLIVOLT    5500 // +10 %. Max recommended operation voltage
-#endif
-#if !defined(VCC_CHECK_PERIOD_MILLIS)
-#define VCC_CHECK_PERIOD_MILLIS        10000 // Period of VCC checks
-#endif
-#if !defined(VCC_CHECKS_TOO_LOW_BEFORE_STOP)
-#define VCC_CHECKS_TOO_LOW_BEFORE_STOP     6 // Shutdown after 6 times (60 seconds) VCC below VCC_STOP_THRESHOLD_MILLIVOLT or 1 time below VCC_EMERGENCY_STOP_MILLIVOLT
-#endif
+bool isVCCUSBPowered() {
+    readVCCVoltageMillivolt();
+    return (sVCCVoltageMillivolt > VOLTAGE_USB_LOWER_THRESHOLD_MILLIVOLT);
+}
 
 /*
- * @ return true only once, when VCC_CHECKS_TOO_LOW_BEFORE_STOP (6) times voltage too low -> shutdown
+ * @ return true only once, when VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP (6) times voltage too low -> shutdown
  */
-bool isVCCTooLowMultipleTimes() {
+bool isVCCUndervoltageMultipleTimes() {
     /*
      * Check VCC every VCC_CHECK_PERIOD_MILLIS (10) seconds
      */
@@ -580,33 +564,35 @@ bool isVCCTooLowMultipleTimes() {
         readVCCVoltageMillivolt();
 #  endif
 
-        if (sVCCTooLowCounter < VCC_CHECKS_TOO_LOW_BEFORE_STOP) {
+        if (sVCCTooLowCounter < VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP) {
             /*
              * Do not check again if shutdown has happened
              */
-            if (sVCCVoltageMillivolt > VCC_STOP_THRESHOLD_MILLIVOLT) {
+            if (sVCCVoltageMillivolt > VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) {
                 sVCCTooLowCounter = 0; // reset counter
             } else {
                 /*
-                 * Voltage too low, wait VCC_CHECKS_TOO_LOW_BEFORE_STOP (6) times and then shut down.
+                 * Voltage too low, wait VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP (6) times and then shut down.
                  */
-                if (sVCCVoltageMillivolt < VCC_EMERGENCY_STOP_MILLIVOLT) {
+                if (sVCCVoltageMillivolt < VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) {
                     // emergency shutdown
-                    sVCCTooLowCounter = VCC_CHECKS_TOO_LOW_BEFORE_STOP;
+                    sVCCTooLowCounter = VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP;
 #  if defined(INFO)
-                    Serial.println(F("Voltage < " STR(VCC_EMERGENCY_STOP_MILLIVOLT) " mV detected -> emergency shutdown"));
+                    Serial.println(
+                            F(
+                                    "Voltage < " STR(VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV detected -> emergency shutdown"));
 #  endif
                 } else {
                     sVCCTooLowCounter++;
 #  if defined(INFO)
-                    Serial.print(F("Voltage < " STR(VCC_STOP_THRESHOLD_MILLIVOLT) " mV detected: "));
-                    Serial.print(VCC_CHECKS_TOO_LOW_BEFORE_STOP - sVCCTooLowCounter);
+                    Serial.print(F("Voltage < " STR(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV detected: "));
+                    Serial.print(VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP - sVCCTooLowCounter);
                     Serial.println(F(" tries left"));
 #  endif
                 }
-                if (sVCCTooLowCounter == VCC_CHECKS_TOO_LOW_BEFORE_STOP) {
+                if (sVCCTooLowCounter == VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP) {
                     /*
-                     * 6 times voltage too low -> shutdown
+                     * 6 times voltage too low -> return signal for shutdown etc.
                      */
                     return true;
                 }
@@ -616,14 +602,24 @@ bool isVCCTooLowMultipleTimes() {
     return false;
 }
 
+
 /*
- * Return true if VCC_EMERGENCY_STOP_MILLIVOLT (3 V) reached
+ * Return true if VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT (3 V) reached
  */
-bool isVCCTooLow() {
-    return (sVCCVoltageMillivolt < VCC_EMERGENCY_STOP_MILLIVOLT);
+bool isVCCUndervoltage() {
+    readVCCVoltageMillivolt();
+    return (sVCCVoltageMillivolt < VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT);
 }
 
-void resetVCCTooLowMultipleTimes() {
+/*
+ * Return true if VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT (3 V) reached
+ */
+bool isVCCEmergencyUndervoltage() {
+    readVCCVoltageMillivolt();
+    return (sVCCVoltageMillivolt < VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT);
+}
+
+void resetCounterForVCCUndervoltageMultipleTimes() {
     sVCCTooLowCounter = 0;
 }
 
@@ -636,13 +632,13 @@ void resetVCCTooLowMultipleTimes() {
  * Raw reading of 1.1 V is 204 at 5.5 V (+10 %).
  * @return true if 5 % overvoltage reached
  */
-bool isVCCTooHigh() {
+bool isVCCOvervoltage() {
     readVCCVoltageMillivolt();
-    return (sVCCVoltageMillivolt > VCC_TOO_HIGH_STOP_MILLIVOLT);
+    return (sVCCVoltageMillivolt > VCC_OVERVOLTAGE_THRESHOLD_MILLIVOLT);
 }
-bool isVCCTooHighSimple() {
+bool isVCCOvervoltageSimple() {
     readVCCVoltageMillivoltSimple();
-    return (sVCCVoltageMillivolt > VCC_TOO_HIGH_STOP_MILLIVOLT);
+    return (sVCCVoltageMillivolt > VCC_OVERVOLTAGE_THRESHOLD_MILLIVOLT);
 }
 
 /*
