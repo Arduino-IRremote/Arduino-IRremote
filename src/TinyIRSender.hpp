@@ -60,6 +60,10 @@
  * @{
  */
 
+#if !defined(IR_SEND_PIN)
+#warning "IR_SEND_PIN is not defined, so it is set to 3"
+#define IR_SEND_PIN    3
+#endif
 /*
  * Generate 38 kHz IR signal by bit banging
  */

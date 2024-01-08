@@ -90,14 +90,14 @@
 
 #  elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // For use with megaTinyCore
 // Tiny Core Dev board
-// https://www.tindie.com/products/xkimi/tiny-core-16-dev-board-attiny1616/
-// https://www.tindie.com/products/xkimi/tiny-core-32-dev-board-attiny3217/
-#define IR_RECEIVE_PIN   PIN_PA1 // use 18 for TinyCore32
+// https://www.tindie.com/products/xkimi/tiny-core-16-dev-board-attiny1616/ - Out of Stock
+// https://www.tindie.com/products/xkimi/tiny-core-32-dev-board-attiny3217/ - Out of Stock
+#define IR_RECEIVE_PIN   PIN_PA1 // use 18 instead of PIN_PA1 for TinyCore32
 #define IR_SEND_PIN      PIN_PA2 // 19
 #define TONE_PIN         PIN_PA3 // 20
 #define APPLICATION_PIN  PIN_PA0 // 0
 #undef LED_BUILTIN               // No LED available on the TinyCore 32 board, take the one on the programming board which is connected to the DAC output
-#define LED_BUILTIN      PIN_PA6 // use 2 for TinyCore32
+#define LED_BUILTIN      PIN_PA6 // use 2 instead of PIN_PA6 for TinyCore32
 
 #  elif defined(__AVR_ATtiny816__) // For use with megaTinyCore
 #define IR_RECEIVE_PIN  PIN_PA1 // 14

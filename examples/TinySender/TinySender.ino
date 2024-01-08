@@ -44,6 +44,8 @@
  */
 #include <Arduino.h>
 
+#include "PinDefinitionsAndMore.h" // Set IR_SEND_PIN for different CPU's
+
 //#define USE_FAST_PROTOCOL     // Use FAST protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
 //#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
@@ -51,8 +53,6 @@
 //#define ENABLE_NEC2_REPEATS   // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 
 #include "TinyIRSender.hpp"
-
-#include "PinDefinitionsAndMore.h" // Set IR_SEND_PIN for different CPU's
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
