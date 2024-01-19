@@ -105,7 +105,8 @@ uint32_t sMillisOfLastReceivedIRFrame = 0;
 #if defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
 #define USE_LCD
 #  if defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
-// For cyclically display of VCC
+// For cyclically display of VCC and isVCCUSBPowered()
+#define VOLTAGE_USB_POWERED_LOWER_THRESHOLD_MILLIVOLT 4250
 #include "ADCUtils.hpp"
 #define MILLIS_BETWEEN_VOLTAGE_PRINT    5000
 #define LCD_VOLTAGE_START_INDEX           11
@@ -114,13 +115,12 @@ bool ProtocolStringOverwritesVoltage = false;
 #  endif
 #define LCD_IR_COMMAND_START_INDEX         9
 
-#endif // defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
-
+void printsVCCVoltageMillivoltOnLCD();
 void printIRResultOnLCD();
 size_t printByteHexOnLCD(uint16_t aHexByteValue);
 void printSpacesOnLCD(uint_fast8_t aNumberOfSpacesToPrint);
 
-uint16_t sVCCMillivolt;
+#endif // defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
 
 void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
@@ -180,8 +180,8 @@ void setup() {
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
 #endif
 
-#if defined(USE_LCD) && defined(__AVR__) && defined(ADCSRA) && defined(ADATE)
-    getVCCVoltageMillivoltSimple(); // to initialize ADC mux and reference
+#if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
+    readVCCVoltageMillivolt();
 #endif
 
 #if defined(USE_SERIAL_LCD)
@@ -201,7 +201,7 @@ void setup() {
 #endif
 
 #if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
-    sVCCMillivolt = getVCCVoltageMillivoltSimple();
+    readVCCVoltageMillivolt();
 #endif
 }
 
@@ -236,10 +236,10 @@ void loop() {
 
             if ((IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW)
 #if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
-                    && sVCCMillivolt > 4222
+                    || isVCCUSBPowered()
 #endif
-            ) {
-                // Print more info, but only if we are connected to USB, i.e. VCC is > 4222 mV, because this may take to long to detect some fast repeats
+                    ) {
+                // Print more info, but only if we are connected to USB, i.e. VCC is > 4300 mV, because this may take to long to detect some fast repeats
                 IrReceiver.printIRSendUsage(&Serial);
                 IrReceiver.printIRResultRawFormatted(&Serial, false); // print ticks, this is faster :-)
             }
@@ -266,10 +266,17 @@ void loop() {
     } // if (IrReceiver.decode())
 
     /*
-     * Check for attention every 10 minute, after the current measurement was finished
+     * Check if generating attention beep every minute, after the current measurement was finished
      */
-    if (millis() - sMillisOfLastReceivedIRFrame >= MILLIS_BETWEEN_ATTENTION_BEEP) {
+    if ((millis() - sMillisOfLastReceivedIRFrame) >= MILLIS_BETWEEN_ATTENTION_BEEP
+#if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
+            && !isVCCUSBPowered()
+#endif
+            ) {
         sMillisOfLastReceivedIRFrame = millis();
+#if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
+        printsVCCVoltageMillivoltOnLCD();
+#endif
         IrReceiver.stop();
         tone(TONE_PIN, 2200);
         delay(50);
@@ -284,16 +291,23 @@ void loop() {
          * Periodically print VCC
          */
         sMillisOfLastVoltagePrint = millis();
-        sVCCMillivolt = getVCCVoltageMillivoltSimple();
-        char tVoltageString[5];
-        dtostrf(sVCCMillivolt / 1000.0, 4, 2, tVoltageString);
-        myLCD.setCursor(LCD_VOLTAGE_START_INDEX - 1, 0);
-        myLCD.print(' ');
-        myLCD.print(tVoltageString);
-        myLCD.print('V');
+        readVCCVoltageMillivolt();
+        printsVCCVoltageMillivoltOnLCD();
     }
 #endif
 
+}
+
+#if defined(USE_LCD)
+void printsVCCVoltageMillivoltOnLCD() {
+#  if defined(ADC_UTILS_ARE_AVAILABLE)
+    char tVoltageString[5];
+    dtostrf(sVCCVoltageMillivolt / 1000.0, 4, 2, tVoltageString);
+    myLCD.setCursor(LCD_VOLTAGE_START_INDEX - 1, 0);
+    myLCD.print(' ');
+    myLCD.print(tVoltageString);
+    myLCD.print('V');
+#  endif
 }
 
 /*
@@ -305,7 +319,6 @@ void loop() {
  *
  */
 void printIRResultOnLCD() {
-#if defined(USE_LCD)
     static uint16_t sLastProtocolIndex = 4711;
     static uint16_t sLastProtocolAddress = 4711;
     static uint16_t sLastCommand = 0;
@@ -421,10 +434,8 @@ void printIRResultOnLCD() {
             myLCD.print(' ');
         }
     } // IrReceiver.decodedIRData.protocol == UNKNOWN
-#endif // defined(USE_LCD)
 }
 
-#if defined(USE_LCD)
 size_t printByteHexOnLCD(uint16_t aHexByteValue) {
     myLCD.print(F("0x"));
     size_t tPrintSize = 2;
@@ -440,4 +451,4 @@ void printSpacesOnLCD(uint_fast8_t aNumberOfSpacesToPrint) {
         myLCD.print(' ');
     }
 }
-#endif
+#endif // defined(USE_LCD)

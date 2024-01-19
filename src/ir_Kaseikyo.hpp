@@ -87,9 +87,10 @@
 //    01000000 00100100  0110Dev_ Sub_Dev_ Fun____  XOR( B2, B3, B4) - Byte 0,1 and vendor parity showing Panasonic vendor code 0x2002.
 // 1. interpretation: <start bit><VendorID:16><VendorID parity:4><Device:4><Subdevice:8><Function:8><Parity:8><stop bit>
 // see: http://www.remotecentral.com/cgi-bin/mboard/rc-pronto/thread.cgi?26152
-// 2. interpretation: <start bit><VendorID:16><VendorID parity:4><Genre1:4><Genre2:4><Command:10><ID:2><Parity:8><stop bit>
+// 2. interpretation (Flipper Zero style): <start bit><VendorID:16><VendorID parity:4><Genre1:4><Genre2:4><Command:10><ID:2><Parity:8><stop bit>
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#KASEIKYO
-// Implemented is:    <start bit><VendorID:16><VendorID parity:4><Address:12><Command:8><Parity of VendorID parity, Address and Command:8><stop bit>
+// Implemented is Samsung style:  <start bit><VendorID:16><VendorID parity:4><Address:12><Command:8><Parity of VendorID parity, Address and Command:8><stop bit>
+//                  which is derived from Samsung remotes and may not be optimal for Denon kind of Kaseikyo protokol usage.
 //
 #define KASEIKYO_VENDOR_ID_BITS     16
 #define KASEIKYO_VENDOR_ID_PARITY_BITS   4
@@ -126,7 +127,7 @@ KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK,
  ************************************/
 
 /**
- * Address can be interpreted as sub-device << 8 + device
+ * Address can be interpreted as sub-device << 4 + 4 bit device
  */
 void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aVendorCode) {
     // Set IR carrier frequency

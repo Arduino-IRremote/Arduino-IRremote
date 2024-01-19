@@ -145,8 +145,13 @@
 #define VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP     6 // Shutdown after 6 times (60 seconds) VCC below VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT or 1 time below VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT
 #endif
 
-#if !defined(VOLTAGE_USB_LOWER_THRESHOLD_MILLIVOLT)
-#define VOLTAGE_USB_LOWER_THRESHOLD_MILLIVOLT   4300
+#if !defined(VOLTAGE_USB_POWERED_LOWER_THRESHOLD_MILLIVOLT)
+#define VOLTAGE_USB_POWERED_LOWER_THRESHOLD_MILLIVOLT   4300 // Assume USB powered above this voltage
+#endif
+
+#if !defined(VOLTAGE_USB_POWERED_UPPER_THRESHOLD_MILLIVOLT)
+#define VOLTAGE_USB_POWERED_UPPER_THRESHOLD_MILLIVOLT   4950 // Assume USB powered below this voltage, because of the loss in USB cable. If we have > 4950, we assume to be powered by VIN.
+// In contrast to e.g. powered by VIN, which results in almost perfect 5 volt supply
 #endif
 
 extern long sLastVCCCheckMillis;

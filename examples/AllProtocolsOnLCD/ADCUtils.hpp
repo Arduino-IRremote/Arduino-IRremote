@@ -540,11 +540,12 @@ uint16_t getVoltageMillivoltWith_1_1VoltReference(uint8_t aADCChannelForVoltageM
 }
 
 /*
- * Return true if sVCCVoltageMillivolt is > 4.3 V
+ * Return true if sVCCVoltageMillivolt is > 4.3 V and < 4.95 V
  */
 bool isVCCUSBPowered() {
     readVCCVoltageMillivolt();
-    return (sVCCVoltageMillivolt > VOLTAGE_USB_LOWER_THRESHOLD_MILLIVOLT);
+    return (VOLTAGE_USB_POWERED_LOWER_THRESHOLD_MILLIVOLT < sVCCVoltageMillivolt
+            && sVCCVoltageMillivolt < VOLTAGE_USB_POWERED_UPPER_THRESHOLD_MILLIVOLT);
 }
 
 /*
@@ -601,7 +602,6 @@ bool isVCCUndervoltageMultipleTimes() {
     }
     return false;
 }
-
 
 /*
  * Return true if VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT (3 V) reached

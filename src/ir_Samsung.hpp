@@ -72,6 +72,10 @@
 // https://www.mikrocontroller.net/articles/IRMP_-_english#SAMSUNG48
 // LSB first, 1 start bit + 16 bit address + 16 or 32 bit data + 1 stop bit.
 // Here https://forum.arduino.cc/t/klimaanlage-per-ir-steuern/1051381/10 the address (0xB24D) is also 8 bits and then 8 inverted bits
+//
+// Here https://github.com/flipperdevices/flipperzero-firmware/blob/master/lib/infrared/encoder_decoder/samsung/infrared_decoder_samsung.c#L18
+// Address is 8 bit + same 8 bit if data is 8 bit and ~8 bit.
+//
 // IRP notation: {38k,5553}<1,-1|1,-3>(8,-8,D:8,S:8,F:8,~F:8,1,^110)+  ==> 8 bit + 8 bit inverted data - Samsung32
 // IRP notation: {38k,5553}<1,-1|1,-3>(8,-8,D:8,S:8,F:16,1,^110)+  ==> 16 bit data - still Samsung32
 // IRP notation: {38k,5553}<1,-1|1,-3>(8,-8,D:8,S:8,F:8,~F:8,G:8,~G:8,1,^110)+  ==> 2 x (8 bit + 8 bit inverted data) - Samsung48
@@ -84,7 +88,7 @@
 
 // except SAMSUNG_HEADER_MARK, values are like NEC
 #define SAMSUNG_UNIT                560             // 21.28 periods of 38 kHz, 11.2 ticks TICKS_LOW = 8.358 TICKS_HIGH = 15.0
-#define SAMSUNG_HEADER_MARK         (8 * SAMSUNG_UNIT) // 4500 | 180
+#define SAMSUNG_HEADER_MARK         (8 * SAMSUNG_UNIT) // 4500 | 180 periods
 #define SAMSUNG_HEADER_SPACE        (8 * SAMSUNG_UNIT) // 4500
 #define SAMSUNG_BIT_MARK            SAMSUNG_UNIT
 #define SAMSUNG_ONE_SPACE           (3 * SAMSUNG_UNIT) // 1690 | 33.8  TICKS_LOW = 25.07 TICKS_HIGH = 45.0
@@ -93,8 +97,7 @@
 #define SAMSUNG_AVERAGE_DURATION    55000 // SAMSUNG_HEADER_MARK + SAMSUNG_HEADER_SPACE  + 32 * 2,5 * SAMSUNG_UNIT + SAMSUNG_UNIT // 2.5 because we assume more zeros than ones
 #define SAMSUNG_REPEAT_DURATION     (SAMSUNG_HEADER_MARK  + SAMSUNG_HEADER_SPACE + SAMSUNG_BIT_MARK + SAMSUNG_ZERO_SPACE + SAMSUNG_BIT_MARK)
 #define SAMSUNG_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define SAMSUNG_REPEAT_DISTANCE     (SAMSUNG_REPEAT_PERIOD - SAMSUNG_AVERAGE_DURATION)
-#define SAMSUNG_MAXIMUM_REPEAT_DISTANCE     (SAMSUNG_REPEAT_DISTANCE + (SAMSUNG_REPEAT_DISTANCE / 4)) // Just a guess
+#define SAMSUNG_MAXIMUM_REPEAT_DISTANCE     (SAMSUNG_REPEAT_PERIOD + (SAMSUNG_REPEAT_PERIOD / 4)) // 137000 - Just a guess
 
 struct PulseDistanceWidthProtocolConstants SamsungProtocolConstants = { SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
 SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
@@ -165,6 +168,12 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumb
         // Send 8 command bits and then 8 inverted command bits LSB first
         tSendValue.UBytes[2] = aCommand;
         tSendValue.UBytes[3] = ~aCommand;
+        if (aAddress < 0x100) {
+            // This makes it flipper IRDB compatible
+            // https://github.com/flipperdevices/flipperzero-firmware/blob/master/lib/infrared/encoder_decoder/samsung/infrared_decoder_samsung.c#L18
+            // Duplicate address byte, if data is 8 bit and 8 bit inverted and address is 8bit
+            tSendValue.UBytes[1] = aAddress;
+        }
     } else {
         // Send 16 command bits
         tSendValue.UWords[1] = aCommand;
