@@ -8,6 +8,9 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
   - New TinyIRReceiverData which is filled with address, command and flags.
   - Removed parameters address, command and flags from callback handleReceivedTinyIRData() and printTinyReceiverResultMinimal().
   - Callback function now only enabled if USE_CALLBACK_FOR_TINY_RECEIVER is activated.
+- Fix changing IR_SEND_PIN dynamically for ESP32.
+- Fix wrong type of tEnableLEDFeedback.
+- Support for ESP32-C3.
 
 # 4.2.0
 - The old decode function is renamed to decode_old(decode_results *aResults). decode (decode_results *aResults) is only available in IRremote.h and prints a message.
