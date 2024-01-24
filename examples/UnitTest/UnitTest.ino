@@ -93,6 +93,7 @@
 #define DECODE_FAST
 #endif
 
+//#undef IR_SEND_PIN // enable this, if you need to set send pin programmatically using uint8_t tSendPin below
 #include <IRremote.hpp>
 
 #if defined(APPLICATION_PIN)
@@ -144,8 +145,13 @@ void setup() {
     Serial.println(F("Send IR signals at pin " STR(IR_SEND_PIN)));
 #  endif
 #else
-    IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
-    Serial.println(F("Send IR signals at pin 3"));
+    // Here the macro IR_SEND_PIN is not defined or undefined above with #undef IR_SEND_PIN
+    uint8_t tSendPin = 3;
+    IrSender.begin(tSendPin, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
+    // You can change send pin later with IrSender.setSendPin();
+
+    Serial.print(F("Send IR signals at pin "));
+    Serial.println(tSendPin);
 #endif
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604

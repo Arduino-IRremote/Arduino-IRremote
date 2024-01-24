@@ -42,6 +42,7 @@
 //#define NO_LED_FEEDBACK_CODE      // Saves 566 bytes program memory
 //#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN // Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
 
+//#undef IR_SEND_PIN // enable this, if you need to set send pin programmatically using uint8_t tSendPin below
 #include <IRremote.hpp>
 
 #define DELAY_AFTER_SEND 2000
@@ -64,8 +65,13 @@ void setup() {
     Serial.println(F("Send IR signals at pin " STR(IR_SEND_PIN)));
 #  endif
 #else
-    IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
-    Serial.println(F("Send IR signals at pin 3"));
+    // Here the macro IR_SEND_PIN is not defined or undefined above with #undef IR_SEND_PIN
+    uint8_t tSendPin = 3;
+    IrSender.begin(tSendPin, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
+    // You can change send pin later with IrSender.setSendPin();
+
+    Serial.print(F("Send IR signals at pin "));
+    Serial.println(tSendPin);
 #endif
 
 #if !defined(SEND_PWM_BY_TIMER)

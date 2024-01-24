@@ -114,8 +114,12 @@ void setup() {
     IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
     Serial.println(F("Send IR signals at pin " STR(IR_SEND_PIN)));
 #else
-    IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
-    Serial.println(F("Send IR signals at pin 3"));
+    uint8_t tSendPin = 3;
+    IrSender.begin(tSendPin, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
+    // You can change send pin later with IrSender.setSendPin();
+
+    Serial.print(F("Send IR signals at pin "));
+    Serial.println(tSendPin);
 #endif
 
     sPrintMenu = true;
