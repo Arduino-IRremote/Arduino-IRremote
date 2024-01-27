@@ -6,7 +6,7 @@ var structdecode__results =
     [ "isRepeat", "structdecode__results.html#a90be852473f99ee751a1db7f4041c15e", null ],
     [ "magnitude", "structdecode__results.html#a98c64af766518ef20d7b62419bc0780b", null ],
     [ "overflow", "structdecode__results.html#a821bc53c006bab3283c6b8592f0c43d3", null ],
-    [ "rawbuf", "structdecode__results.html#a54d2e781bb257f55dc68b2d97365051d", null ],
+    [ "rawbuf", "structdecode__results.html#a88b2a9fa8a5e843247c6dcdfe372ddf5", null ],
     [ "rawlen", "structdecode__results.html#a17bf90d204708de6c490dfe3ab887103", null ],
     [ "value", "structdecode__results.html#a7c9654e6312819d5f7880fa4838340fe", null ]
 ];

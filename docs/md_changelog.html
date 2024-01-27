@@ -86,8 +86,63 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>The latest version may not be released! See also the commit log at github: <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master">https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master</a></p>
-<h1>4.0.0</h1>
+<h1>4.2.1</h1>
 <ul>
+<li>Fix wrong type of tEnableLEDFeedback in <a class="el" href="IRSend_8hpp.html">IRSend.hpp</a> and <a class="el" href="IRReceive_8hpp.html">IRReceive.hpp</a>.</li>
+<li>TinyReceiver 2.0<ul>
+<li>New TinyIRReceiverData which is filled with address, command and flags.</li>
+<li>Removed parameters address, command and flags from callback handleReceivedTinyIRData() and <a class="el" href="group__TinyReceiver.html#ga27649645d9280dfaee8095ce2dcf8f07">printTinyReceiverResultMinimal()</a>.</li>
+<li>Callback function now only enabled if USE_CALLBACK_FOR_TINY_RECEIVER is activated.</li>
+</ul>
+</li>
+<li>Fix changing IR_SEND_PIN dynamically for ESP32.</li>
+<li>Fix wrong type of tEnableLEDFeedback.</li>
+<li>Support for ESP32-C3.</li>
+</ul>
+<h1>4.2.0</h1>
+<ul>
+<li>The old decode function is renamed to decode_old(decode_results *aResults). decode (<a class="el" href="structdecode__results.html" title="Results returned from old decoders !!!deprecated!!!">decode_results</a> *aResults) is only available in <a class="el" href="IRremote_8h.html" title="Stub for backward compatibility.">IRremote.h</a> and prints a message.</li>
+<li>Added DECODE_ONKYO, to force 16 bit command and data decoding.</li>
+<li>Enable Bang&amp;Olufsen 455 kHz if SEND_PWM_BY_TIMER is defined.</li>
+<li>Fixed bug: TinyReceiver throwing ISR not in IRAM on ESP8266.</li>
+<li>Usage of ATTinyCore pin numbering scheme e.g. PIN_PB2.</li>
+<li>Added ARDUINO_ARCH_NRF52 to support Seeed XIAO nRF52840 Sense.</li>
+<li>First untested support of Uno R4.</li>
+<li>Extraced version macros to <a class="el" href="IRVersion_8h.html">IRVersion.h</a>.</li>
+</ul>
+<h2>4.1.2</h2>
+<ul>
+<li>Workaround for ESP32 RTOS delay() timing bug influencing the mark() function.</li>
+</ul>
+<h2>4.1.1</h2>
+<ul>
+<li>SAMD51 use timer3 if timer5 not available.</li>
+<li>Disabled #define LOCAL_DEBUG in <a class="el" href="IRReceive_8hpp.html">IRReceive.hpp</a>, which was accidently enabled at 4.1.0.</li>
+</ul>
+<h2>4.1.0</h2>
+<ul>
+<li>Fixed bug in printing durations &gt; 64535 in printIRResultRawFormatted().</li>
+<li>Narrowed constraints for RC5 RC6 number of bits.</li>
+<li>Changed the first parameter of <a class="el" href="group__TinyReceiver.html#ga27649645d9280dfaee8095ce2dcf8f07">printTinyReceiverResultMinimal()</a> to &amp;Serial.</li>
+<li>Removed 3 Serial prints for deprecation warnings to fix #1094.</li>
+<li>Version 1.2.0 of TinyIR. Now FAST protocol with 40 ms period and shorter header space.</li>
+<li>Removed field "bool hasStopBit" and parameter "bool aSendStopBit" from <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> structure and related functions.</li>
+<li>Changed a lot of "unsigned int" types to "uint16_t" types.</li>
+<li>Improved overflow handling.</li>
+<li>Improved software PWM generation.</li>
+<li>Added FAST protocol.</li>
+<li>Improved handling of PULSE_DISTANCE + PULSE_WIDTH protocols.</li>
+<li>New example ReceiveAndSendDistanceWidth.</li>
+<li>Removed the automatic restarting of the receiver timer after sending with SEND_PWM_BY_TIMER enabled.</li>
+<li>Split ISR into ISR and function <a class="el" href="group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69" title="The ISR (Interrupt Service Routine) of TinyIRRreceiver.">IRPinChangeInterruptHandler()</a>.</li>
+<li>Added functions addTicksToInternalTickCounter() and addMicrosToInternalTickCounter().</li>
+</ul>
+<h2>4.0.0</h2>
+<ul>
+<li>Added decoding of PulseDistanceWidth protocols and therefore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to <a class="el" href="ir__DistanceWidthProtocol_8hpp.html">ir_DistanceWidthProtocol.hpp</a>.</li>
+<li>Removed static function printIRSendUsage(), but kept class function printIRSendUsage().</li>
+<li>Changed type of decodedRawData and decodedRawDataArray which is now 64 bit for 32 bit platforms.</li>
+<li>Added receiver callback functionality and registerReceiveCompleteCallback() function.</li>
 <li>Introduced common structure <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.</li>
 <li>Where possible, changed all send and decode functions to use <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.</li>
 <li>Improved MSB/LSB handling</li>
@@ -96,20 +151,16 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Fix for #1028 - Prevent long delay caused by overflow when frame duration &lt; repeat period - Thanks to Stephen Humphries!</li>
 <li>Support for ATtiny816 - Thanks to elockman.</li>
 <li>Added Bang&amp;Olufsen protocol. #1030.</li>
-<li>3. parameter of function "void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)" is not optional anymore and this function is now only available if IR_SEND_PIN is not defined. #1033.</li>
-<li>Added decoding of PulseDistanceWidth protocols and therfore changed function decodeDistance() to decodeDistanceWidth() and filename ir_DistanceProtocol.hpp to <a class="el" href="ir__DistanceWidthProtocol_8hpp.html">ir_DistanceWidthProtocol.hpp</a>.</li>
+<li>Third parameter of function "void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)" is not optional anymore and this function is now only available if IR_SEND_PIN is not defined. #1033.</li>
 <li>Fixed bug in sendSony() for command parameter &gt; 0x7F;</li>
 <li>Fixed bug with swapped LG2 header mark and space.</li>
 <li>Disabled strict checks while decoding. They can be enabled by defining DECODE_STRICT_CHECKS.</li>
 <li>Merged the 2 decode pulse width and distance functions.</li>
-<li>Added receiver callback functionality and registerReceiveCompleteCallback() function.</li>
 <li>Changed macro names _REPEAT_SPACE to _REPEAT_DISTANCE.</li>
 <li>Improved TinyIRReceiver,added FAST protocol for it and added <a class="el" href="TinyIRSender_8hpp.html">TinyIRSender.hpp</a> and TinySender example, renamed TinyReceiver.h to <a class="el" href="TinyIR_8h.html">TinyIR.h</a>.</li>
-<li>Removed static function printIRSendUsage(), but kept class function printIRSendUsage().</li>
 <li>Added DISABLE_CODE_FOR_RECEIVER to save program memory and RAM if receiving functionality is not required.</li>
 <li>Extracted protocol functions used by receive and send to <a class="el" href="IRProtocol_8hpp.html">IRProtocol.hpp</a>.</li>
 <li>Analyzed Denon code table and therefore changed Denon from MSB to LSB first.</li>
-<li>Changed type of decodedRawData and decodedRawDataArray which is now 64 bit for 32 bit platforms.</li>
 <li>Renamed sendRC6(aRawData...) to sendRC6Raw( aRawData...).</li>
 <li>Support for seeduino which lacks the print(unsigned long long...) method. Thanks to sklott <a href="https://stackoverflow.com/users/11680056/sklott">https://stackoverflow.com/users/11680056/sklott</a></li>
 <li>Added support for attiny1614 by Joe Ostrander.</li>
@@ -118,7 +169,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Replaced macros TIMER_EN/DISABLE_RECEIVE_INTR and EN/DISABLE_SEND_PWM_BY_TIMER by functions.</li>
 <li>Added SAMSUNG48 protocol and sendSamsung48() function.</li>
 </ul>
-<h1>3.9.0</h1>
+<h2>3.9.0</h2>
 <ul>
 <li>Improved documentation with the help of [ElectronicsArchiver}(<a href="https://github.com/ElectronicsArchiver">https://github.com/ElectronicsArchiver</a>).</li>
 <li>Added NEC2 protocol.</li>
@@ -127,7 +178,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Added function sendPulseDistanceWidth().</li>
 <li>Improved repeat detection for some protocols.</li>
 </ul>
-<h1>3.8.0</h1>
+<h2>3.8.0</h2>
 <ul>
 <li>Changed Samsung repeat handling. Old handling is available as SamsungLG.</li>
 <li>Added function printIRSendUsage().</li>
@@ -140,13 +191,13 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Added SAMD51 support.</li>
 <li>Improved pin mapping for TinyReceiver.</li>
 </ul>
-<h1>3.7.1</h1>
+<h2>3.7.1</h2>
 <ul>
 <li>SendRaw now supports bufferlenght &gt; 255.</li>
 <li>Improved DistanceProtocol decoder output.</li>
 <li>Fixed ESP32 send bug for 2.x ESP32 cores.</li>
 </ul>
-<h1>3.7.0</h1>
+<h2>3.7.0</h2>
 <ul>
 <li>Changed TOLERANCE to TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING and documented it.</li>
 <li>Changed last uint8_t to uint_fast8_t and uint16_t to unsigned integer.</li>
@@ -156,11 +207,11 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Use IRAM_ATTR instead of deprecated ICACHE_RAM_ATTR for ESP8266.</li>
 <li>Removed pulse width decoding from ir_DistanceProtocol.</li>
 </ul>
-<h1>3.6.1</h1>
+<h2>3.6.1</h2>
 <ul>
 <li>Switched Bose internal protocol timing for 0 and 1 -&gt; old 1 timing is now 0 and vice versa.</li>
 </ul>
-<h1>3.6.0</h1>
+<h2>3.6.0</h2>
 <ul>
 <li>Separated enable flag of send and receive feedback LED. Inspired by PR#970 from luvaihassanali.</li>
 <li>RP2040 support added.</li>
@@ -169,11 +220,11 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Renamed IR_SEND_DUTY_CYCLE to IR_SEND_DUTY_CYCLE_PERCENT.</li>
 <li>Fixed bugs for SEND_PWM_BY_TIMER active.</li>
 </ul>
-<h1>3.5.2</h1>
+<h2>3.5.2</h2>
 <ul>
 <li>Improved support for Teensy boards by Paul Stoffregen.</li>
 </ul>
-<h1>3.5.1</h1>
+<h2>3.5.1</h2>
 <ul>
 <li>Renamed INFO_PRINT to IR_INFO_PRINT as well as for DEBUG and TRACE.</li>
 <li>Fixed error with DEBUG in <a class="el" href="TinyIRReceiver_8hpp.html">TinyIRReceiver.hpp</a>.</li>
@@ -182,7 +233,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Removed NO_LEGACY_COMPATIBILITY macro, it was useless now.</li>
 <li>Fix ESP32 send bug see issue #927.</li>
 </ul>
-<h1>3.5.0</h1>
+<h2>3.5.0</h2>
 <ul>
 <li>Improved ir_DistanceProtocol.</li>
 <li>Tone for ESP32.</li>
@@ -194,7 +245,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Added <a class="el" href="group__Receiving.html#gada0f2fe0704a217c16ee497ba7b3630e">printActiveIRProtocols()</a> function.</li>
 <li>Used IR_SEND_PIN to reduce code size and improved send timing for AVR.</li>
 </ul>
-<h1>3.4.0</h1>
+<h2>3.4.0</h2>
 <ul>
 <li>Added LG2 protocol.</li>
 <li>Added ATtiny167 (Digispark Pro) support.</li>
@@ -207,7 +258,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Improved universal decoder for pulse distance protocols to support more than 32 bits.</li>
 <li>Added mbed support.</li>
 </ul>
-<h1>3.3.0</h1>
+<h2>3.3.0</h2>
 <ul>
 <li>Fix errors if LED_BUILTIN is not defined.</li>
 <li>Fixed error for AVR timer1. Thanks to alexbarcelo.</li>
@@ -215,7 +266,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Enabled megaAVR 0-series devices.</li>
 <li>Added universal decoder for pulse distance protocols.</li>
 </ul>
-<h1>3.2.0</h1>
+<h2>3.2.0</h2>
 <ul>
 <li>Fix for ESP32 send Error, removed <code>USE_SOFT_SEND_PWM</code> macro.</li>
 <li>Added Onkyo protocol.</li>
@@ -226,7 +277,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Added ESP8266 support.</li>
 <li>Extended DEBUG output.</li>
 </ul>
-<h1>3.1.0</h1>
+<h2>3.1.0</h2>
 <ul>
 <li>Generation of PWM by software is active by default.</li>
 <li>Removed <a class="el" href="structdecode__results.html" title="Results returned from old decoders !!!deprecated!!!">decode_results</a> results.</li>
@@ -238,12 +289,12 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Removed SENDPIN_ON and SENDPIN_OFF macros.</li>
 <li>Refactored board specific code for timer and feedback LED.</li>
 <li>Extracted common LED feedback functions and implemented feedback for send.</li>
-<li><a class="el" href="group__Receiving.html#ga7aa109ed6e93766bb746a50fd7e54526">MATCH_MARK()</a> etc. now available as <a class="el" href="group__Receiving.html#ga5e9aceb0b9c38a1125ad080ba4e4198f" title="Compensate for marks exceeded by demodulator hardware.">matchMark()</a>.</li>
+<li><a class="el" href="group__Receiving.html#gadab293a71386f20571db6d779d1d84b7">MATCH_MARK()</a> etc. now available as <a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware.">matchMark()</a>.</li>
 <li>Added STM32F1 by (by Roger Clark) support.</li>
 <li>Added stm32 (by ST) support. Thanks to Paolo Malaspina.</li>
 <li>Added ATtiny88 support.</li>
 </ul>
-<h1>3.0.2</h1>
+<h2>3.0.2</h2>
 <ul>
 <li>Bug fix for USE_OLD_DECODE.</li>
 <li>Increase RECORD_GAP_MICROS to 11000.</li>
@@ -258,7 +309,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Fixed LG checksum error.</li>
 <li>Fixed JVC repeat error.</li>
 </ul>
-<h1>3.0.0 + 3.0.1 2021/02</h1>
+<h2>3.0.0 + 3.0.1 2021/02</h2>
 <ul>
 <li>New LSB first decoders are default.</li>
 <li>Added SendRaw with byte data.</li>
@@ -275,11 +326,11 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Added TinyCore 32 / ATtiny3217 support.</li>
 <li>Added Apple protocol.</li>
 </ul>
-<h1>2.8.1 2020/10</h1>
+<h2>2.8.1 2020/10</h2>
 <ul>
 <li>Fixed bug in Sony decode introduced in 2.8.0.</li>
 </ul>
-<h1>2.8.0 2020/10</h1>
+<h2>2.8.0 2020/10</h2>
 <ul>
 <li>Changed License to MIT see <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/issues/397">https://github.com/Arduino-IRremote/Arduino-IRremote/issues/397</a>.</li>
 <li>Added ATtiny timer 1 support.</li>
@@ -291,7 +342,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Moved dump/print functions from example to irReceiver.</li>
 <li>irPronto.cpp: Using Print instead of Stream saves 1020 bytes program memory. Changed from &amp; to * parameter type to be more transparent and consistent with other code of IRremote.</li>
 </ul>
-<h1>2.7.0 2020/09</h1>
+<h2>2.7.0 2020/09</h2>
 <ul>
 <li>Added ATmega328PB support.</li>
 <li>Renamed hardware specific macro and function names.</li>
@@ -305,12 +356,12 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Added flag <code>decodedIRData.isRepeat</code>.</li>
 <li>Updated examples.</li>
 </ul>
-<h1>2.6.1 2020/08</h1>
+<h2>2.6.1 2020/08</h2>
 <ul>
 <li>Adjusted JVC and LG timing.</li>
 <li>Fixed 4809 bug.</li>
 </ul>
-<h1>2.6.0 2020/08</h1>
+<h2>2.6.0 2020/08</h2>
 <ul>
 <li>Added support for MagiQuest IR wands.</li>
 <li>Corrected Samsung timing.</li>
@@ -322,7 +373,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Changed switch to if / else if in IRRemote.cpp because of ESP32 compiler bug.</li>
 <li>Changed <code>DEBUG</code> handling since compiler warns about empty "IF" or "ELSE" statements in IRRemote.cpp.</li>
 </ul>
-<h1>2.5.0 2020/06</h1>
+<h2>2.5.0 2020/06</h2>
 <ul>
 <li>Corrected keywords.txt.</li>
 <li>BoseWave protocol added PR #690.</li>
@@ -340,27 +391,27 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Made decodeHash as a settable protocol defined by <code>DECODE_HASH</code>.</li>
 <li>Added Philips Extended RC-5 protocol support <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/522">PR #522</a></li>
 </ul>
-<h1>2.4.0 - 2017/08/10</h1>
+<h2>2.4.0 - 2017/08/10</h2>
 <ul>
 <li>Cleanup of hardware dependencies. Merge in SAM support <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/437">PR #437</a></li>
 </ul>
-<h1>2.3.3 - 2017/03/31</h1>
+<h2>2.3.3 - 2017/03/31</h2>
 <ul>
 <li>Added ESP32 IR receive support <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/425">PR #427</a></li>
 </ul>
-<h1>2.2.3 - 2017/03/27</h1>
+<h2>2.2.3 - 2017/03/27</h2>
 <ul>
 <li>Fix calculation of pause length in LEGO PF protocol <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/427">PR #427</a></li>
 </ul>
-<h1>2.2.2 - 2017/01/20</h1>
+<h2>2.2.2 - 2017/01/20</h2>
 <ul>
 <li>Fixed naming bug <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/398">PR #398</a></li>
 </ul>
-<h1>2.2.1 - 2016/07/27</h1>
+<h2>2.2.1 - 2016/07/27</h2>
 <ul>
 <li>Added tests for Lego Power Functions Protocol <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/336">PR #336</a></li>
 </ul>
-<h1>2.2.0 - 2016/06/28</h1>
+<h2>2.2.0 - 2016/06/28</h2>
 <ul>
 <li>Added support for ATmega8535</li>
 <li>Added support for ATmega16</li>
@@ -373,30 +424,30 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Added support for ATmega128</li>
 </ul>
 <p><a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/324">PR</a></p>
-<h1>2.1.1 - 2016/05/04</h1>
+<h2>2.1.1 - 2016/05/04</h2>
 <ul>
 <li>Added Lego Power Functions Protocol <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/309">PR #309</a></li>
 </ul>
-<h1>2.1.0 - 2016/02/20</h1>
+<h2>2.1.0 - 2016/02/20</h2>
 <ul>
 <li>Improved Debugging <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/258">PR #258</a></li>
 <li>Display TIME instead of TICKS <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/258">PR #258</a></li>
 </ul>
-<h1>2.0.4 - 2016/02/20</h1>
+<h2>2.0.4 - 2016/02/20</h2>
 <ul>
 <li>Add Panasonic and JVC to IRrecord example <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/54">PR</a></li>
 </ul>
-<h1>2.0.3 - 2016/02/20</h1>
+<h2>2.0.3 - 2016/02/20</h2>
 <ul>
 <li>Change IRSend Raw parameter to const <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/227">PR</a></li>
 </ul>
-<h1>2.0.2 - 2015/12/02</h1>
+<h2>2.0.2 - 2015/12/02</h2>
 <ul>
 <li>Added IRremoteInfo Sketch - <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/pull/241">PR</a></li>
 <li>Enforcing <a class="el" href="changelog_8md.html">changelog.md</a></li>
 </ul>
-<h1>2.0.1 - 2015/07/26 - <a href="https://github.com/shirriff/Arduino-IRremote/releases/tag/BETA">Release</a></h1>
-<h2>Changes</h2>
+<h2>2.0.1 - 2015/07/26 - <a href="https://github.com/shirriff/Arduino-IRremote/releases/tag/BETA">Release</a></h2>
+<h3>Changes</h3>
 <ul>
 <li>Updated README</li>
 <li>Updated Contributors</li>
@@ -414,7 +465,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Fixed Interrupt on ATmega8</li>
 <li>Switched to Stable Release of PlatformIO</li>
 </ul>
-<h2>Additions</h2>
+<h3>Additions</h3>
 <ul>
 <li>Added Aiwa RC-T501 Protocol</li>
 <li>Added Denon Protocol</li>
@@ -427,12 +478,12 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Added ATtiny85 Support</li>
 <li>Added isIdle method</li>
 </ul>
-<h2>Deletions</h2>
+<h3>Deletions</h3>
 <ul>
 <li>Removed (Fixed) #110</li>
 <li>Broke Teensy 3 / 3.1 Support</li>
 </ul>
-<h2>Not Working</h2>
+<h3>Not Working</h3>
 <ul>
 <li>Teensy 3 / 3.1 Support is in Development </li>
 </ul>
@@ -442,7 +493,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

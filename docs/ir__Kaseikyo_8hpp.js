@@ -9,6 +9,7 @@ var ir__Kaseikyo_8hpp =
     [ "KASEIKYO_COMMAND_BITS", "group__Decoder.html#ga46f7e707bf79a6b1657bd29bfaaa7522", null ],
     [ "KASEIKYO_HEADER_MARK", "group__Decoder.html#gaced5ece1bb2d810f20f6a02142181699", null ],
     [ "KASEIKYO_HEADER_SPACE", "group__Decoder.html#ga5bad2bab824504b4289cf034c8070b60", null ],
+    [ "KASEIKYO_MAXIMUM_REPEAT_DISTANCE", "group__Decoder.html#ga6c1738e5a8ec0026b10285b47a5d3ca8", null ],
     [ "KASEIKYO_ONE_SPACE", "group__Decoder.html#ga70e2a773b7615e33846a98556ef5e43f", null ],
     [ "KASEIKYO_PARITY_BITS", "group__Decoder.html#ga4d69f0966b844257d734539d4547ea80", null ],
     [ "KASEIKYO_REPEAT_DISTANCE", "group__Decoder.html#ga7f2291b1aefd16dce8a384f26662fed8", null ],

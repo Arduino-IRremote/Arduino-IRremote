@@ -90,7 +90,8 @@ $(document).ready(function(){initNavTree('IRremote_8hpp.html',''); initResizable
 
 <p>Public API to the library.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="IRVersion_8h_source.html">IRVersion.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="IRTimer_8hpp_source.html">private/IRTimer.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>&quot;</code><br />
@@ -110,6 +111,7 @@ $(document).ready(function(){initNavTree('IRremote_8hpp.html',''); initResizable
 <code>#include &quot;<a class="el" href="ir__RC5__RC6_8hpp_source.html">ir_RC5_RC6.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ir__Samsung_8hpp_source.html">ir_Samsung.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ir__Sony_8hpp_source.html">ir_Sony.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ir__FAST_8hpp_source.html">ir_FAST.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ir__Others_8hpp_source.html">ir_Others.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ir__Pronto_8hpp_source.html">ir_Pronto.hpp</a>&quot;</code><br />
 <code>#include &lt;<a class="el" href="ir__DistanceWidthProtocol_8hpp_source.html">ir_DistanceWidthProtocol.hpp</a>&gt;</code><br />
@@ -118,33 +120,36 @@ Include dependency graph for IRremote.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="IRremote_8hpp__incl.png" border="0" usemap="#src_2IRremote_8hpp" alt=""/></div>
 <map name="src_2IRremote_8hpp" id="src_2IRremote_8hpp">
-<area shape="rect" title="Public API to the library." alt="" coords="1546,5,1667,32"/>
-<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="49,80,148,107"/>
-<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="173,80,297,107"/>
-<area shape="rect" href="IRTimer_8hpp.html" title="All timer specific definitions are contained in this file. Sets IR_SEND_PIN if required,..." alt="" coords="321,80,453,107"/>
-<area shape="rect" href="IRFeedbackLED_8hpp.html" title="All Feedback LED specific functions are contained in this file." alt="" coords="477,80,619,107"/>
-<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="643,80,738,107"/>
-<area shape="rect" href="IRProtocol_8hpp.html" title=" " alt="" coords="763,80,869,107"/>
-<area shape="rect" href="IRReceive_8hpp.html" title=" " alt="" coords="893,80,997,107"/>
-<area shape="rect" href="IRSend_8hpp.html" title=" " alt="" coords="1022,80,1111,107"/>
-<area shape="rect" href="ir__BangOlufsen_8hpp.html" title=" " alt="" coords="1135,80,1270,107"/>
-<area shape="rect" href="ir__BoseWave_8hpp.html" title=" " alt="" coords="1295,80,1417,107"/>
-<area shape="rect" href="ir__Denon_8hpp.html" title=" " alt="" coords="1441,80,1540,107"/>
-<area shape="rect" href="ir__JVC_8hpp.html" title=" " alt="" coords="1564,80,1649,107"/>
-<area shape="rect" href="ir__Kaseikyo_8hpp.html" title=" " alt="" coords="1673,80,1788,107"/>
-<area shape="rect" href="ir__Lego_8hpp.html" title=" " alt="" coords="1813,80,1902,107"/>
-<area shape="rect" href="ir__LG_8hpp.html" title=" " alt="" coords="1926,80,2005,107"/>
-<area shape="rect" href="ir__MagiQuest_8hpp.html" title=" " alt="" coords="2029,80,2153,107"/>
-<area shape="rect" href="ir__NEC_8hpp.html" title=" " alt="" coords="2177,80,2265,107"/>
-<area shape="rect" href="ir__RC5__RC6_8hpp.html" title=" " alt="" coords="2290,80,2409,107"/>
-<area shape="rect" href="ir__Samsung_8hpp.html" title=" " alt="" coords="2433,80,2549,107"/>
-<area shape="rect" href="ir__Sony_8hpp.html" title=" " alt="" coords="2573,80,2664,107"/>
-<area shape="rect" href="ir__Others_8hpp.html" title=" " alt="" coords="2689,80,2789,107"/>
-<area shape="rect" href="ir__Pronto_8hpp.html" title=" " alt="" coords="2813,80,2912,107"/>
-<area shape="rect" href="ir__DistanceWidthProtocol_8hpp.html" title=" " alt="" coords="2936,80,3131,107"/>
-<area shape="rect" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" href="IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="107,155,200,181"/>
-<area shape="rect" title=" " alt="" coords="658,155,723,181"/>
+<area shape="rect" title="Public API to the library." alt="" coords="1519,5,1640,32"/>
+<area shape="rect" href="IRVersion_8h.html" title=" " alt="" coords="5,80,95,107"/>
+<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="170,80,269,107"/>
+<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="48,155,172,181"/>
+<area shape="rect" href="IRTimer_8hpp.html" title="All timer specific definitions are contained in this file. Sets IR_SEND_PIN if required,..." alt="" coords="293,80,425,107"/>
+<area shape="rect" href="IRFeedbackLED_8hpp.html" title="All Feedback LED specific functions are contained in this file." alt="" coords="450,80,591,107"/>
+<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="1621,229,1716,256"/>
+<area shape="rect" href="IRProtocol_8hpp.html" title=" " alt="" coords="735,80,842,107"/>
+<area shape="rect" href="IRReceive_8hpp.html" title=" " alt="" coords="866,80,970,107"/>
+<area shape="rect" href="IRSend_8hpp.html" title=" " alt="" coords="995,80,1084,107"/>
+<area shape="rect" href="ir__BangOlufsen_8hpp.html" title=" " alt="" coords="1108,80,1243,107"/>
+<area shape="rect" href="ir__BoseWave_8hpp.html" title=" " alt="" coords="1267,80,1390,107"/>
+<area shape="rect" href="ir__Denon_8hpp.html" title=" " alt="" coords="1414,80,1513,107"/>
+<area shape="rect" href="ir__JVC_8hpp.html" title=" " alt="" coords="1537,80,1622,107"/>
+<area shape="rect" href="ir__Kaseikyo_8hpp.html" title=" " alt="" coords="1646,80,1761,107"/>
+<area shape="rect" href="ir__Lego_8hpp.html" title=" " alt="" coords="1785,80,1875,107"/>
+<area shape="rect" href="ir__LG_8hpp.html" title=" " alt="" coords="1899,80,1977,107"/>
+<area shape="rect" href="ir__MagiQuest_8hpp.html" title=" " alt="" coords="2001,80,2125,107"/>
+<area shape="rect" href="ir__NEC_8hpp.html" title=" " alt="" coords="2150,80,2238,107"/>
+<area shape="rect" href="ir__RC5__RC6_8hpp.html" title=" " alt="" coords="2263,80,2381,107"/>
+<area shape="rect" href="ir__Samsung_8hpp.html" title=" " alt="" coords="2405,80,2521,107"/>
+<area shape="rect" href="ir__Sony_8hpp.html" title=" " alt="" coords="2546,80,2637,107"/>
+<area shape="rect" href="ir__FAST_8hpp.html" title=" " alt="" coords="616,80,711,107"/>
+<area shape="rect" href="ir__Others_8hpp.html" title=" " alt="" coords="2712,80,2812,107"/>
+<area shape="rect" href="ir__Pronto_8hpp.html" title=" " alt="" coords="2837,80,2935,107"/>
+<area shape="rect" href="ir__DistanceWidthProtocol_8hpp.html" title=" " alt="" coords="2959,80,3154,107"/>
+<area shape="rect" title=" " alt="" coords="289,229,366,256"/>
+<area shape="rect" href="IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="197,155,290,181"/>
+<area shape="rect" title=" " alt="" coords="1636,304,1701,331"/>
+<area shape="rect" href="TinyIR_8h.html" title=" " alt="" coords="629,155,698,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -161,18 +166,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ad9f03906065f749788cc9e3f68fb6253"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#ad9f03906065f749788cc9e3f68fb6253">VERSION_IRREMOTE</a>&#160;&#160;&#160;&quot;4.0.0&quot;</td></tr>
-<tr class="separator:ad9f03906065f749788cc9e3f68fb6253"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fccc9834ba25cd17b7ca45e14aa7751"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a5fccc9834ba25cd17b7ca45e14aa7751">VERSION_IRREMOTE_MAJOR</a>&#160;&#160;&#160;4</td></tr>
-<tr class="separator:a5fccc9834ba25cd17b7ca45e14aa7751"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a824e2f61336bde09dd9b835e8606683f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a824e2f61336bde09dd9b835e8606683f">VERSION_IRREMOTE_MINOR</a>&#160;&#160;&#160;0</td></tr>
-<tr class="separator:a824e2f61336bde09dd9b835e8606683f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a190ee428ccd5ea2362e913f114718779"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a190ee428ccd5ea2362e913f114718779">VERSION_IRREMOTE_PATCH</a>&#160;&#160;&#160;0</td></tr>
-<tr class="separator:a190ee428ccd5ea2362e913f114718779"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8fe70c54038764ee815bb4940c58ad3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a8fe70c54038764ee815bb4940c58ad3c">VERSION_HEX_VALUE</a>(major,  minor,  patch)&#160;&#160;&#160;((major &lt;&lt; 16) | (minor &lt;&lt; 8) | (patch))</td></tr>
-<tr class="separator:a8fe70c54038764ee815bb4940c58ad3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2a16f9b7dd2cf6fc0ca9c5f78e7824c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#ac2a16f9b7dd2cf6fc0ca9c5f78e7824c">VERSION_IRREMOTE_HEX</a>&#160;&#160;&#160;<a class="el" href="IRremote_8hpp.html#a8fe70c54038764ee815bb4940c58ad3c">VERSION_HEX_VALUE</a>(<a class="el" href="IRremote_8hpp.html#a5fccc9834ba25cd17b7ca45e14aa7751">VERSION_IRREMOTE_MAJOR</a>, <a class="el" href="IRremote_8hpp.html#a824e2f61336bde09dd9b835e8606683f">VERSION_IRREMOTE_MINOR</a>, <a class="el" href="IRremote_8hpp.html#a190ee428ccd5ea2362e913f114718779">VERSION_IRREMOTE_PATCH</a>)</td></tr>
-<tr class="separator:ac2a16f9b7dd2cf6fc0ca9c5f78e7824c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a589c5f91ad251aff0cbdc179a5faaa60"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a589c5f91ad251aff0cbdc179a5faaa60">DECODE_DENON</a></td></tr>
 <tr class="separator:a589c5f91ad251aff0cbdc179a5faaa60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1f2b013768a77943b002953197cb573"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#ac1f2b013768a77943b002953197cb573">DECODE_JVC</a></td></tr>
@@ -201,6 +194,8 @@ Macros</h2></td></tr>
 <tr class="separator:a4f3f73855171522cc6a9fa5ba5f51896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad1f31ad2d36110ba06286b7fb1d1ddcf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#ad1f31ad2d36110ba06286b7fb1d1ddcf">DECODE_WHYNTER</a></td></tr>
 <tr class="separator:ad1f31ad2d36110ba06286b7fb1d1ddcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9694ea0f1078f534605b0b7227d6198"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#ab9694ea0f1078f534605b0b7227d6198">DECODE_FAST</a></td></tr>
+<tr class="separator:ab9694ea0f1078f534605b0b7227d6198"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adfd8ff3c8859e3d8f53f39b5837520c5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#adfd8ff3c8859e3d8f53f39b5837520c5">DECODE_DISTANCE_WIDTH</a></td></tr>
 <tr class="separator:adfd8ff3c8859e3d8f53f39b5837520c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ee00d8b9631462888e74c95712234e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a4ee00d8b9631462888e74c95712234e1">DECODE_HASH</a></td></tr>
@@ -226,7 +221,7 @@ Macros</h2></td></tr>
 <tr class="memitem:a6be706039d9083db8cb072478e0a09f8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a6be706039d9083db8cb072478e0a09f8">IR_SEND_DUTY_CYCLE_PERCENT</a>&#160;&#160;&#160;30</td></tr>
 <tr class="memdesc:a6be706039d9083db8cb072478e0a09f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duty cycle in percent for sent signals.  <a href="IRremote_8hpp.html#a6be706039d9083db8cb072478e0a09f8">More...</a><br /></td></tr>
 <tr class="separator:a6be706039d9083db8cb072478e0a09f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c7eebb527483c272812530caa313d20"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a>&#160;&#160;&#160;50</td></tr>
+<tr class="memitem:a1c7eebb527483c272812530caa313d20"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a>&#160;&#160;&#160;50L</td></tr>
 <tr class="memdesc:a1c7eebb527483c272812530caa313d20"><td class="mdescLeft">&#160;</td><td class="mdescRight">microseconds per clock interrupt tick  <a href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">More...</a><br /></td></tr>
 <tr class="separator:a1c7eebb527483c272812530caa313d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a551a361e5f7fbdcf8ec8e9679976b462"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a551a361e5f7fbdcf8ec8e9679976b462">MILLIS_IN_ONE_SECOND</a>&#160;&#160;&#160;1000L</td></tr>
@@ -251,7 +246,7 @@ Macros</h2></td></tr>
 <div class="line">!!! the user defines in its source code BEFORE the #include &lt;IRremote.hpp&gt; !!!</div>
 </div><!-- fragment --><p>This file is part of Arduino-IRremote <a href="https://github.com/Arduino-IRremote/Arduino-IRremote">https://github.com/Arduino-IRremote/Arduino-IRremote</a>.</p>
 <p>MIT License</p>
-<p>Copyright (c) 2015-2022 Ken Shirriff <a href="http://www.righto.com">http://www.righto.com</a>, Rafi Khan, Armin Joachimsmeyer</p>
+<p>Copyright (c) 2015-2023 Ken Shirriff <a href="http://www.righto.com">http://www.righto.com</a>, Rafi Khan, Armin Joachimsmeyer</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
@@ -271,7 +266,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00119">119</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00109">109</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -287,7 +282,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00107">107</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00097">97</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -303,7 +298,23 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00126">126</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00117">117</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ab9694ea0f1078f534605b0b7227d6198"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9694ea0f1078f534605b0b7227d6198">&#9670;&nbsp;</a></span>DECODE_FAST</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DECODE_FAST</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00113">113</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -319,7 +330,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00127">127</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00118">118</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -335,7 +346,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00108">108</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00098">98</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -351,7 +362,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00109">109</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00099">99</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -367,7 +378,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00120">120</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00110">110</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -383,7 +394,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00111">111</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00101">101</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -399,7 +410,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00121">121</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00111">111</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -415,7 +426,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00112">112</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00102">102</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -431,7 +442,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00110">110</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00100">100</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -447,7 +458,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00115">115</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00105">105</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -463,7 +474,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00116">116</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00106">106</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -479,7 +490,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00113">113</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00103">103</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -495,7 +506,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00114">114</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00104">104</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -511,7 +522,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00122">122</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00112">112</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -529,7 +540,7 @@ Macros</h2></td></tr>
 
 <p>Sensor output for a mark ("flash") </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00193">193</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00184">184</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -547,7 +558,7 @@ Macros</h2></td></tr>
 
 <p>Duty cycle in percent for sent signals. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00252">252</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00243">243</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -563,7 +574,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00326">326</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00317">317</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -584,7 +595,7 @@ Macros</h2></td></tr>
 <p>The right value is critical for IR codes using short pulses like Denon / Sharp / Lego</p>
 <p>Observed values: Delta of each signal type is around 50 up to 100 and at low signals up to 200. TSOP is better, especially at low IR signal level. VS1838 Mark Excess -50 at low intensity to +50 us at high intensity TSOP31238 Mark Excess 0 to +50 </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00160">160</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00151">151</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -600,7 +611,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00264">264</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00255">255</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -616,7 +627,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00263">263</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00254">254</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -627,14 +638,14 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MICROS_PER_TICK&#160;&#160;&#160;50</td>
+          <td class="memname">#define MICROS_PER_TICK&#160;&#160;&#160;50L</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>microseconds per clock interrupt tick </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00259">259</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00250">250</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -650,7 +661,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00262">262</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00253">253</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -669,7 +680,7 @@ Macros</h2></td></tr>
 <p>Define to disable carrier PWM generation in software and use (restricted) hardware PWM. </p>
 <p>Define to use no carrier PWM, just simulate an active low receiver signal. Define to use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin! This amount is subtracted from the on-time of the pulses generated for software PWM generation. It should be the time used for digitalWrite(sendPin, LOW) and the call to delayMicros() Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600 </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00244">244</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00235">235</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -687,7 +698,7 @@ Macros</h2></td></tr>
 
 <p>Macros for legacy compatibility. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00323">323</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00314">314</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -706,7 +717,7 @@ Macros</h2></td></tr>
 <p>Minimum gap between IR transmissions, to detect the end of a protocol. </p>
 <p>Must be greater than any space of a protocol e.g. the NEC header space of 4500 us. Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 15 ms for Sony20 protocol. Keep in mind, that this is the delay between the end of the received command and the start of decoding. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00171">171</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00162">162</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -724,7 +735,7 @@ Macros</h2></td></tr>
 
 <p>Threshold for warnings at printIRResult*() to report about changing the RECORD_GAP_MICROS value to a higher value. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00178">178</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00169">169</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -742,7 +753,7 @@ Macros</h2></td></tr>
 
 <p>Minimum gap between IR transmissions, in MICROS_PER_TICK. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00182">182</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00173">173</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -758,7 +769,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00324">324</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00315">315</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -774,123 +785,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00325">325</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a8fe70c54038764ee815bb4940c58ad3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8fe70c54038764ee815bb4940c58ad3c">&#9670;&nbsp;</a></span>VERSION_HEX_VALUE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define VERSION_HEX_VALUE</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">major, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">minor, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">patch&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;((major &lt;&lt; 16) | (minor &lt;&lt; 8) | (patch))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00078">78</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ad9f03906065f749788cc9e3f68fb6253"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9f03906065f749788cc9e3f68fb6253">&#9670;&nbsp;</a></span>VERSION_IRREMOTE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define VERSION_IRREMOTE&#160;&#160;&#160;&quot;4.0.0&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00069">69</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ac2a16f9b7dd2cf6fc0ca9c5f78e7824c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac2a16f9b7dd2cf6fc0ca9c5f78e7824c">&#9670;&nbsp;</a></span>VERSION_IRREMOTE_HEX</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define VERSION_IRREMOTE_HEX&#160;&#160;&#160;<a class="el" href="IRremote_8hpp.html#a8fe70c54038764ee815bb4940c58ad3c">VERSION_HEX_VALUE</a>(<a class="el" href="IRremote_8hpp.html#a5fccc9834ba25cd17b7ca45e14aa7751">VERSION_IRREMOTE_MAJOR</a>, <a class="el" href="IRremote_8hpp.html#a824e2f61336bde09dd9b835e8606683f">VERSION_IRREMOTE_MINOR</a>, <a class="el" href="IRremote_8hpp.html#a190ee428ccd5ea2362e913f114718779">VERSION_IRREMOTE_PATCH</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00079">79</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a5fccc9834ba25cd17b7ca45e14aa7751"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fccc9834ba25cd17b7ca45e14aa7751">&#9670;&nbsp;</a></span>VERSION_IRREMOTE_MAJOR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define VERSION_IRREMOTE_MAJOR&#160;&#160;&#160;4</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00070">70</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a824e2f61336bde09dd9b835e8606683f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a824e2f61336bde09dd9b835e8606683f">&#9670;&nbsp;</a></span>VERSION_IRREMOTE_MINOR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define VERSION_IRREMOTE_MINOR&#160;&#160;&#160;0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00071">71</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a190ee428ccd5ea2362e913f114718779"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a190ee428ccd5ea2362e913f114718779">&#9670;&nbsp;</a></span>VERSION_IRREMOTE_PATCH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define VERSION_IRREMOTE_PATCH&#160;&#160;&#160;0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00072">72</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00316">316</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -900,7 +795,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRremote_8hpp.html">IRremote.hpp</a></li>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:39 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

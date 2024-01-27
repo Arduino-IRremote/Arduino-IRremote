@@ -82,23 +82,88 @@ $(document).ready(function(){initNavTree('group__TinySender.html',''); initResiz
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Minimal sender for NEC and FAST protocol</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga4cb394b3b749f9302940902fb05bd920"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga4cb394b3b749f9302940902fb05bd920">IR_SEND_PIN</a>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:ga4cb394b3b749f9302940902fb05bd920"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga1cc15240b7357116480a33cbc5ff4a06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga1cc15240b7357116480a33cbc5ff4a06">sendMark</a> (uint8_t aSendPin, unsigned int aMarkMicros)</td></tr>
 <tr class="separator:ga1cc15240b7357116480a33cbc5ff4a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga753f166597d49ac9aad7b90b1a8c3244"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga753f166597d49ac9aad7b90b1a8c3244">sendNECMinimal</a> (uint8_t aSendPin, uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
-<tr class="separator:ga753f166597d49ac9aad7b90b1a8c3244"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga42814c2141edfc8ca7e223cefc0d2e1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga42814c2141edfc8ca7e223cefc0d2e1a">sendONKYO</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
+<tr class="separator:ga42814c2141edfc8ca7e223cefc0d2e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga693e3c08170e163489b7c73c595c060e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga693e3c08170e163489b7c73c595c060e">sendNECMinimal</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
+<tr class="separator:ga693e3c08170e163489b7c73c595c060e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1213d923a9b96e6e8b29a2413d81d95f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga1213d923a9b96e6e8b29a2413d81d95f">sendNEC</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
+<tr class="separator:ga1213d923a9b96e6e8b29a2413d81d95f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac2a48685f769fa815bb473f6c97c9677"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#gac2a48685f769fa815bb473f6c97c9677">sendFast8BitAndParity</a> (uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
 <tr class="separator:gac2a48685f769fa815bb473f6c97c9677"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga03e7b24211df9d9b321032bf11449df8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga03e7b24211df9d9b321032bf11449df8">sendFAST</a> (uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
+<tr class="separator:ga03e7b24211df9d9b321032bf11449df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ga4cb394b3b749f9302940902fb05bd920"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4cb394b3b749f9302940902fb05bd920">&#9670;&nbsp;</a></span>IR_SEND_PIN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IR_SEND_PIN&#160;&#160;&#160;3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00066">66</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga03e7b24211df9d9b321032bf11449df8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga03e7b24211df9d9b321032bf11449df8">&#9670;&nbsp;</a></span>sendFAST()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sendFAST </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aSendPin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aCommand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00241">241</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+
+</div>
+</div>
 <a id="gac2a48685f769fa815bb473f6c97c9677"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gac2a48685f769fa815bb473f6c97c9677">&#9670;&nbsp;</a></span>sendFast8BitAndParity()</h2>
 
@@ -131,7 +196,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00147">147</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00234">234</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
 
 </div>
 </div>
@@ -161,18 +226,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00060">60</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00070">70</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga753f166597d49ac9aad7b90b1a8c3244"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga753f166597d49ac9aad7b90b1a8c3244">&#9670;&nbsp;</a></span>sendNECMinimal()</h2>
+<a id="ga1213d923a9b96e6e8b29a2413d81d95f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1213d923a9b96e6e8b29a2413d81d95f">&#9670;&nbsp;</a></span>sendNEC()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void sendNECMinimal </td>
+          <td class="memname">void sendNEC </td>
           <td>(</td>
           <td class="paramtype">uint8_t&#160;</td>
           <td class="paramname"><em>aSendPin</em>, </td>
@@ -180,13 +245,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>aAddress</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>aCommand</em>, </td>
         </tr>
         <tr>
@@ -203,7 +268,91 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00097">97</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00169">169</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga693e3c08170e163489b7c73c595c060e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga693e3c08170e163489b7c73c595c060e">&#9670;&nbsp;</a></span>sendNECMinimal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sendNECMinimal </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aSendPin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aAddress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aCommand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00166">166</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga42814c2141edfc8ca7e223cefc0d2e1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga42814c2141edfc8ca7e223cefc0d2e1a">&#9670;&nbsp;</a></span>sendONKYO()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sendONKYO </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aSendPin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aAddress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aCommand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00113">113</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
 
 </div>
 </div>
@@ -212,7 +361,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

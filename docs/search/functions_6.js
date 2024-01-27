@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['getbiphaselevel_896',['getBiphaselevel',['../group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9',1,'IRrecv']]],
-  ['getmarkexcessmicros_897',['getMarkExcessMicros',['../group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863',1,'getMarkExcessMicros():&#160;IRReceive.hpp'],['../group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863',1,'getMarkExcessMicros():&#160;IRReceive.hpp']]],
-  ['getprotocolstring_898',['getProtocolString',['../group__Receiving.html#gad59a9b756d71f983bf9f0a28d25f238f',1,'IRrecv::getProtocolString()'],['../group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7',1,'getProtocolString(decode_type_t aProtocol):&#160;IRProtocol.hpp'],['../group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7',1,'getProtocolString(decode_type_t aProtocol):&#160;IRProtocol.hpp']]],
-  ['getpulsecorrectionnanos_899',['getPulseCorrectionNanos',['../group__Sending.html#ga39034e110ba58c6a5effb7711801d74a',1,'IRsend']]]
+  ['getbiphaselevel_926',['getBiphaselevel',['../group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9',1,'IRrecv']]],
+  ['getmarkexcessmicros_927',['getMarkExcessMicros',['../group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863',1,'getMarkExcessMicros():&#160;IRReceive.hpp'],['../group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863',1,'getMarkExcessMicros():&#160;IRReceive.hpp']]],
+  ['getprotocolstring_928',['getProtocolString',['../group__Receiving.html#gad59a9b756d71f983bf9f0a28d25f238f',1,'IRrecv::getProtocolString()'],['../group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7',1,'getProtocolString(decode_type_t aProtocol):&#160;IRProtocol.hpp'],['../group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7',1,'getProtocolString(decode_type_t aProtocol):&#160;IRProtocol.hpp']]],
+  ['getpulsecorrectionnanos_929',['getPulseCorrectionNanos',['../group__Sending.html#ga2197b815b50508e7901209bff307fdc1',1,'IRsend']]],
+  ['gettotaldurationofrawdata_930',['getTotalDurationOfRawData',['../group__Receiving.html#gae63243378b0c763d659a870b6e4f04eb',1,'IRrecv']]]
 ];

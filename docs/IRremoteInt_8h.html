@@ -159,6 +159,8 @@ Macros</h2></td></tr>
 <tr class="separator:acabdaf864f20981cb6d749b043490c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b1bdb2048293ad4cd31ff2705dec64c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a1b1bdb2048293ad4cd31ff2705dec64c">IR_REC_STATE_STOP</a>&#160;&#160;&#160;3</td></tr>
 <tr class="separator:a1b1bdb2048293ad4cd31ff2705dec64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7687558679e30d4e0b460e58198da55e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a7687558679e30d4e0b460e58198da55e">BITS_IN_RAW_DATA_TYPE</a>&#160;&#160;&#160;32</td></tr>
+<tr class="separator:a7687558679e30d4e0b460e58198da55e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a093a1c04e9dd4d6845a48163554143a0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a093a1c04e9dd4d6845a48163554143a0">IR_DEBUG_PRINT</a>(...)&#160;&#160;&#160;void()</td></tr>
 <tr class="memdesc:a093a1c04e9dd4d6845a48163554143a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">If DEBUG, print the arguments, otherwise do nothing.  <a href="IRremoteInt_8h.html#a093a1c04e9dd4d6845a48163554143a0">More...</a><br /></td></tr>
 <tr class="separator:a093a1c04e9dd4d6845a48163554143a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -185,17 +187,13 @@ Macros</h2></td></tr>
 <tr class="memitem:ad3a18e82bb4b51badb0727fce56a7557"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#ad3a18e82bb4b51badb0727fce56a7557">UTOL</a>&#160;&#160;&#160;(100 + <a class="el" href="IRremoteInt_8h.html#a21dc688dd1fa862b635bf0bffdf2dee0">TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING</a>)</td></tr>
 <tr class="memdesc:ad3a18e82bb4b51badb0727fce56a7557"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upper tolerance for comparison of measured data.  <a href="IRremoteInt_8h.html#ad3a18e82bb4b51badb0727fce56a7557">More...</a><br /></td></tr>
 <tr class="separator:ad3a18e82bb4b51badb0727fce56a7557"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92632ec97aa1c7a60a990811744a6902"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a92632ec97aa1c7a60a990811744a6902">TICKS_LOW</a>(us)&#160;&#160;&#160;((unsigned int ) ((long) (us) * <a class="el" href="IRremoteInt_8h.html#abd2c46e5e893c0f5fd23fe9fed2ae49a">LTOL</a> / (<a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a> * 100) ))</td></tr>
+<tr class="memitem:a92632ec97aa1c7a60a990811744a6902"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a92632ec97aa1c7a60a990811744a6902">TICKS_LOW</a>(us)&#160;&#160;&#160;((uint16_t ) ((long) (us) * <a class="el" href="IRremoteInt_8h.html#abd2c46e5e893c0f5fd23fe9fed2ae49a">LTOL</a> / (<a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a> * 100) ))</td></tr>
 <tr class="separator:a92632ec97aa1c7a60a990811744a6902"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0d006cd9c029a2e6c4bd513ee5e7951"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#ac0d006cd9c029a2e6c4bd513ee5e7951">TICKS_HIGH</a>(us)&#160;&#160;&#160;((unsigned int ) ((long) (us) * <a class="el" href="IRremoteInt_8h.html#ad3a18e82bb4b51badb0727fce56a7557">UTOL</a> / (<a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a> * 100) + 1))</td></tr>
+<tr class="memitem:ac0d006cd9c029a2e6c4bd513ee5e7951"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#ac0d006cd9c029a2e6c4bd513ee5e7951">TICKS_HIGH</a>(us)&#160;&#160;&#160;((uint16_t ) ((long) (us) * <a class="el" href="IRremoteInt_8h.html#ad3a18e82bb4b51badb0727fce56a7557">UTOL</a> / (<a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a> * 100) + 1))</td></tr>
 <tr class="separator:ac0d006cd9c029a2e6c4bd513ee5e7951"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d35fb37031b53f0083f8b88ae3cf2c2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>&#160;&#160;&#160;0</td></tr>
 <tr class="memdesc:a5d35fb37031b53f0083f8b88ae3cf2c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Just for better readability of code.  <a href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">More...</a><br /></td></tr>
 <tr class="separator:a5d35fb37031b53f0083f8b88ae3cf2c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48e176b38988494bc725ac4fa98c534a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a48e176b38988494bc725ac4fa98c534a">SEND_STOP_BIT</a>&#160;&#160;&#160;true</td></tr>
-<tr class="separator:a48e176b38988494bc725ac4fa98c534a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8683da8ac98548ba8f446f3ccfc83c11"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a8683da8ac98548ba8f446f3ccfc83c11">SEND_NO_STOP_BIT</a>&#160;&#160;&#160;false</td></tr>
-<tr class="separator:a8683da8ac98548ba8f446f3ccfc83c11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c39eebb08a1d9a2462580ce00a89acd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a1c39eebb08a1d9a2462580ce00a89acd">SEND_REPEAT_COMMAND</a>&#160;&#160;&#160;true</td></tr>
 <tr class="memdesc:a1c39eebb08a1d9a2462580ce00a89acd"><td class="mdescLeft">&#160;</td><td class="mdescRight">used for e.g. NEC, where a repeat is different from just repeating the data.  <a href="IRremoteInt_8h.html#a1c39eebb08a1d9a2462580ce00a89acd">More...</a><br /></td></tr>
 <tr class="separator:a1c39eebb08a1d9a2462580ce00a89acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -207,21 +205,21 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga7e916f5e40dbb6db37fff67191857ff9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga7e916f5e40dbb6db37fff67191857ff9">matchTicks</a> (unsigned int aMeasuredTicks, unsigned int aMatchValueMicros)</td></tr>
-<tr class="memdesc:ga7e916f5e40dbb6db37fff67191857ff9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function without compensating for marks exceeded or spaces shortened by demodulator hardware Currently not used.  <a href="group__Receiving.html#ga7e916f5e40dbb6db37fff67191857ff9">More...</a><br /></td></tr>
-<tr class="separator:ga7e916f5e40dbb6db37fff67191857ff9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5e9aceb0b9c38a1125ad080ba4e4198f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga5e9aceb0b9c38a1125ad080ba4e4198f">matchMark</a> (unsigned int aMeasuredTicks, unsigned int aMatchValueMicros)</td></tr>
-<tr class="memdesc:ga5e9aceb0b9c38a1125ad080ba4e4198f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compensate for marks exceeded by demodulator hardware.  <a href="group__Receiving.html#ga5e9aceb0b9c38a1125ad080ba4e4198f">More...</a><br /></td></tr>
-<tr class="separator:ga5e9aceb0b9c38a1125ad080ba4e4198f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga791733ef19a2995f0b952b3aba0eaf1f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga791733ef19a2995f0b952b3aba0eaf1f">matchSpace</a> (unsigned int aMeasuredTicks, unsigned int aMatchValueMicros)</td></tr>
-<tr class="memdesc:ga791733ef19a2995f0b952b3aba0eaf1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compensate for spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga791733ef19a2995f0b952b3aba0eaf1f">More...</a><br /></td></tr>
-<tr class="separator:ga791733ef19a2995f0b952b3aba0eaf1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab42e5cf55dacb8b5849563ef0c5d9138"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gab42e5cf55dacb8b5849563ef0c5d9138">MATCH</a> (unsigned int measured, unsigned int desired)</td></tr>
-<tr class="separator:gab42e5cf55dacb8b5849563ef0c5d9138"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7aa109ed6e93766bb746a50fd7e54526"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga7aa109ed6e93766bb746a50fd7e54526">MATCH_MARK</a> (unsigned int measured_ticks, unsigned int desired_us)</td></tr>
-<tr class="separator:ga7aa109ed6e93766bb746a50fd7e54526"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga93abce496bc1c03f2e689b5c7fbaab41"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga93abce496bc1c03f2e689b5c7fbaab41">MATCH_SPACE</a> (unsigned int measured_ticks, unsigned int desired_us)</td></tr>
-<tr class="separator:ga93abce496bc1c03f2e689b5c7fbaab41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga495b7f49ff71cde1289b118fac0f0674"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">matchTicks</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros)</td></tr>
+<tr class="memdesc:ga495b7f49ff71cde1289b118fac0f0674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function without compensating for marks exceeded or spaces shortened by demodulator hardware Currently not used.  <a href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">More...</a><br /></td></tr>
+<tr class="separator:ga495b7f49ff71cde1289b118fac0f0674"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4472564ea96b1ee10b51f594f60d7aeb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb">matchMark</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros)</td></tr>
+<tr class="memdesc:ga4472564ea96b1ee10b51f594f60d7aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compensate for marks exceeded by demodulator hardware.  <a href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb">More...</a><br /></td></tr>
+<tr class="separator:ga4472564ea96b1ee10b51f594f60d7aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7902b620f6c01463b5b6e50ef604ac8b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b">matchSpace</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros)</td></tr>
+<tr class="memdesc:ga7902b620f6c01463b5b6e50ef604ac8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compensate for spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b">More...</a><br /></td></tr>
+<tr class="separator:ga7902b620f6c01463b5b6e50ef604ac8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0f9263ab71af2d2895add92f72a05ee9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga0f9263ab71af2d2895add92f72a05ee9">MATCH</a> (uint16_t measured, uint16_t desired)</td></tr>
+<tr class="separator:ga0f9263ab71af2d2895add92f72a05ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadab293a71386f20571db6d779d1d84b7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gadab293a71386f20571db6d779d1d84b7">MATCH_MARK</a> (uint16_t measured_ticks, uint16_t desired_us)</td></tr>
+<tr class="separator:gadab293a71386f20571db6d779d1d84b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab91e763e3ae44501f7c4f7b7ff8aca0f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gab91e763e3ae44501f7c4f7b7ff8aca0f">MATCH_SPACE</a> (uint16_t measured_ticks, uint16_t desired_us)</td></tr>
+<tr class="separator:gab91e763e3ae44501f7c4f7b7ff8aca0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab1d28d4dd67d6bf808c0328a92e2d863"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863">getMarkExcessMicros</a> ()</td></tr>
 <tr class="memdesc:gab1d28d4dd67d6bf808c0328a92e2d863"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter function for MARK_EXCESS_MICROS.  <a href="group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863">More...</a><br /></td></tr>
 <tr class="separator:gab1d28d4dd67d6bf808c0328a92e2d863"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -246,8 +244,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ga5f1d479f43dcd56febf146e97a3904db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">setBlinkPin</a> (uint8_t aFeedbackLEDPin) __attribute__((deprecated(&quot;Please use <a class="el" href="group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921">setLEDFeedback</a>().&quot;)))</td></tr>
 <tr class="memdesc:ga5f1d479f43dcd56febf146e97a3904db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019" title="Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot ...">setLEDFeedback()</a>  <a href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">More...</a><br /></td></tr>
 <tr class="separator:ga5f1d479f43dcd56febf146e97a3904db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga770e03720a79491d7ddf347ad4b9e484"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga770e03720a79491d7ddf347ad4b9e484">IRReceiveTimerInterruptHandler</a> ()</td></tr>
+<tr class="separator:ga770e03720a79491d7ddf347ad4b9e484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">sendNECSpecialRepeat</a> ()</td></tr>
-<tr class="memdesc:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function for sending special repeat frame.  <a href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">More...</a><br /></td></tr>
+<tr class="memdesc:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function variant of <a class="el" href="group__Decoder.html#gae8fff4f1d8703ca18ea85a15289dc44c" title="Send special NEC repeat frame Repeat commands should be sent in a 110 ms raster.">IRsend::sendNECRepeat</a> For use in ProtocolConstants.  <a href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">More...</a><br /></td></tr>
 <tr class="separator:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaddace9c2bd03f63855063a3ce5e65acc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaddace9c2bd03f63855063a3ce5e65acc">sendLG2SpecialRepeat</a> ()</td></tr>
 <tr class="memdesc:gaddace9c2bd03f63855063a3ce5e65acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function for sending special repeat frame.  <a href="group__Decoder.html#gaddace9c2bd03f63855063a3ce5e65acc">More...</a><br /></td></tr>
@@ -274,13 +274,29 @@ Variables</h2></td></tr>
 <div class="textblock"><p>Contains all declarations required for the interface to IRremote. Could not be named <a class="el" href="IRremote_8h.html" title="Stub for backward compatibility.">IRremote.h</a>, since this has another semantic (it must include all *.hpp files) for old example code found in the wild. </p>
 <p>This file is part of Arduino-IRremote <a href="https://github.com/Arduino-IRremote/Arduino-IRremote">https://github.com/Arduino-IRremote/Arduino-IRremote</a>.</p>
 <p>MIT License</p>
-<p>Copyright (c) 2015-2022 Ken Shirriff <a href="http://www.righto.com">http://www.righto.com</a>, Rafi Khan, Armin Joachimsmeyer</p>
+<p>Copyright (c) 2015-2023 Ken Shirriff <a href="http://www.righto.com">http://www.righto.com</a>, Rafi Khan, Armin Joachimsmeyer</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
 
 <p class="definition">Definition in file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a7687558679e30d4e0b460e58198da55e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7687558679e30d4e0b460e58198da55e">&#9670;&nbsp;</a></span>BITS_IN_RAW_DATA_TYPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BITS_IN_RAW_DATA_TYPE&#160;&#160;&#160;32</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00119">119</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+
+</div>
+</div>
 <a id="a3033a7d78620f2d895d7268ceb685129"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3033a7d78620f2d895d7268ceb685129">&#9670;&nbsp;</a></span>DISABLE_LED_FEEDBACK</h2>
 
@@ -311,7 +327,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00339">339</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00351">351</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -349,7 +365,7 @@ Variables</h2></td></tr>
 
 <p>If DEBUG, print the arguments, otherwise do nothing. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00134">134</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00138">138</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -371,7 +387,7 @@ Variables</h2></td></tr>
 
 <p>If DEBUG, print the arguments as a line, otherwise do nothing. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00138">138</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00142">142</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -455,7 +471,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00145">145</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00149">149</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -475,7 +491,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00146">146</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00150">150</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -491,7 +507,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00340">340</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00352">352</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -507,7 +523,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00341">341</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00353">353</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -523,7 +539,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00342">342</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00354">354</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -541,7 +557,7 @@ Variables</h2></td></tr>
 
 <p>Lower tolerance for comparison of measured data. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00366">366</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00378">378</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -575,7 +591,7 @@ Variables</h2></td></tr>
 
 <p>Just for better readability of code. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00393">393</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00410">410</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -598,22 +614,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a8683da8ac98548ba8f446f3ccfc83c11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8683da8ac98548ba8f446f3ccfc83c11">&#9670;&nbsp;</a></span>SEND_NO_STOP_BIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SEND_NO_STOP_BIT&#160;&#160;&#160;false</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00395">395</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
 <a id="a1c39eebb08a1d9a2462580ce00a89acd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1c39eebb08a1d9a2462580ce00a89acd">&#9670;&nbsp;</a></span>SEND_REPEAT_COMMAND</h2>
 
@@ -628,23 +628,7 @@ Variables</h2></td></tr>
 
 <p>used for e.g. NEC, where a repeat is different from just repeating the data. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00396">396</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
-
-</div>
-</div>
-<a id="a48e176b38988494bc725ac4fa98c534a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a48e176b38988494bc725ac4fa98c534a">&#9670;&nbsp;</a></span>SEND_STOP_BIT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define SEND_STOP_BIT&#160;&#160;&#160;true</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00394">394</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00411">411</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -675,12 +659,12 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">us</td><td>)</td>
-          <td>&#160;&#160;&#160;((unsigned int ) ((long) (us) * <a class="el" href="IRremoteInt_8h.html#ad3a18e82bb4b51badb0727fce56a7557">UTOL</a> / (<a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a> * 100) + 1))</td>
+          <td>&#160;&#160;&#160;((uint16_t ) ((long) (us) * <a class="el" href="IRremoteInt_8h.html#ad3a18e82bb4b51badb0727fce56a7557">UTOL</a> / (<a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a> * 100) + 1))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00378">378</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00390">390</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -695,12 +679,12 @@ Variables</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">us</td><td>)</td>
-          <td>&#160;&#160;&#160;((unsigned int ) ((long) (us) * <a class="el" href="IRremoteInt_8h.html#abd2c46e5e893c0f5fd23fe9fed2ae49a">LTOL</a> / (<a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a> * 100) ))</td>
+          <td>&#160;&#160;&#160;((uint16_t ) ((long) (us) * <a class="el" href="IRremoteInt_8h.html#abd2c46e5e893c0f5fd23fe9fed2ae49a">LTOL</a> / (<a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a> * 100) ))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00377">377</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00389">389</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -716,7 +700,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00361">361</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00373">373</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -750,7 +734,7 @@ Variables</h2></td></tr>
 
 <p>Upper tolerance for comparison of measured data. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00369">369</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00381">381</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -792,7 +776,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00348">348</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00360">360</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -816,7 +800,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00346">346</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00358">358</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -826,7 +810,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRremoteInt_8h.html">IRremoteInt.h</a></li>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

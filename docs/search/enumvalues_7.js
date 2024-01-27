@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['nec_1150',['NEC',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada0811f93a25b0873e21979d569eeac05e',1,'IRProtocol.h']]],
-  ['nec2_1151',['NEC2',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada0d099dee601264bd3c752705c1dab624',1,'IRProtocol.h']]]
+  ['magiquest_1186',['MAGIQUEST',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada3be750ce1687bc1a92fee05b0c511100',1,'IRProtocol.h']]]
 ];

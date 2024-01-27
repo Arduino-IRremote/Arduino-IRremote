@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['zeromarkmicros_1132',['ZeroMarkMicros',['../structPulseDistanceWidthProtocolConstants.html#adc423327bee17abf4d3f4df0bae2eee0',1,'PulseDistanceWidthProtocolConstants']]],
-  ['zerospacemicros_1133',['ZeroSpaceMicros',['../structPulseDistanceWidthProtocolConstants.html#a3889c8a7565d5c5bcd56a9cddacfb468',1,'PulseDistanceWidthProtocolConstants']]]
+  ['zeromarkmicros_1168',['ZeroMarkMicros',['../structDistanceWidthTimingInfoStruct.html#a49e0680a4f7253ba1622b710b6f67a70',1,'DistanceWidthTimingInfoStruct']]],
+  ['zerospacemicros_1169',['ZeroSpaceMicros',['../structDistanceWidthTimingInfoStruct.html#a5ecc71cd75d7275f6d905bc0d5dd1215',1,'DistanceWidthTimingInfoStruct']]]
 ];

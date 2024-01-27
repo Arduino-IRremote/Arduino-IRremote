@@ -2,6 +2,7 @@ var annotated_dup =
 [
     [ "Aircondition_LG", "classAircondition__LG.html", "classAircondition__LG" ],
     [ "decode_results", "structdecode__results.html", "structdecode__results" ],
+    [ "DistanceWidthTimingInfoStruct", "structDistanceWidthTimingInfoStruct.html", "structDistanceWidthTimingInfoStruct" ],
     [ "FeedbackLEDControlStruct", "structFeedbackLEDControlStruct.html", "structFeedbackLEDControlStruct" ],
     [ "IRData", "structIRData.html", "structIRData" ],
     [ "irparams_struct", "structirparams__struct.html", "structirparams__struct" ],

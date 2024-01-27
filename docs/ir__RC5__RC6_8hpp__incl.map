@@ -1,8 +1,0 @@
-<map id="src/ir_RC5_RC6.hpp" name="src/ir_RC5_RC6.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="65,5,205,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" id="node3" href="$IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="85,80,184,107"/>
-<area shape="rect" id="node5" href="$LongUnion_8h.html" title=" " alt="" coords="209,80,303,107"/>
-<area shape="rect" id="node4" href="$IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="107,155,200,181"/>
-<area shape="rect" id="node6" title=" " alt="" coords="225,155,290,181"/>
-</map>

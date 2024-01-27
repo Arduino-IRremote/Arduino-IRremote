@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['lego_5fpf_1146',['LEGO_PF',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf47be4dad020b9c36aa255c582e25510',1,'IRProtocol.h']]],
-  ['lg_1147',['LG',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadadf6c249ac7d923229f9e623eff9a61f4',1,'IRProtocol.h']]],
-  ['lg2_1148',['LG2',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada8402547ec0b99b9b0efe97dec65badf9',1,'IRProtocol.h']]]
+  ['kaseikyo_1178',['KASEIKYO',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf2d8443e083aa95f191f26d438c6b953',1,'IRProtocol.h']]],
+  ['kaseikyo_5fdenon_1179',['KASEIKYO_DENON',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada4cb93fe0fe3dbe0681b8764a9294733b',1,'IRProtocol.h']]],
+  ['kaseikyo_5fjvc_1180',['KASEIKYO_JVC',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6b221b79427a02288ea41683a7d04841',1,'IRProtocol.h']]],
+  ['kaseikyo_5fmitsubishi_1181',['KASEIKYO_MITSUBISHI',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2516be3bdfd7614bb64961800fa49e43',1,'IRProtocol.h']]],
+  ['kaseikyo_5fsharp_1182',['KASEIKYO_SHARP',['../IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada181746513f88dba0d824c5dfeeec68b6',1,'IRProtocol.h']]]
 ];

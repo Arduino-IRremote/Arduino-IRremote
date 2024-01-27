@@ -117,15 +117,15 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a0b71fa1a17e3ab0ae9bc9462b795213f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a0b71fa1a17e3ab0ae9bc9462b795213f">extra</a></td></tr>
 <tr class="memdesc:a0b71fa1a17e3ab0ae9bc9462b795213f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains upper 16 bit of Magiquest WandID, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks &lt;&lt; 8) | HeaderSpaceTicks.  <a href="structIRData.html#a0b71fa1a17e3ab0ae9bc9462b795213f">More...</a><br /></td></tr>
 <tr class="separator:a0b71fa1a17e3ab0ae9bc9462b795213f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1aca80950279db7f8631f96268f012d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a1aca80950279db7f8631f96268f012d9">decodedRawData</a></td></tr>
+<tr class="memdesc:a1aca80950279db7f8631f96268f012d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Up to 32/64 bit decoded raw data, to be used for send functions.  <a href="structIRData.html#a1aca80950279db7f8631f96268f012d9">More...</a><br /></td></tr>
+<tr class="separator:a1aca80950279db7f8631f96268f012d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a945c41b8463a36cf00b0f38b0aa73200"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a945c41b8463a36cf00b0f38b0aa73200">numberOfBits</a></td></tr>
 <tr class="memdesc:a945c41b8463a36cf00b0f38b0aa73200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.  <a href="structIRData.html#a945c41b8463a36cf00b0f38b0aa73200">More...</a><br /></td></tr>
 <tr class="separator:a945c41b8463a36cf00b0f38b0aa73200"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaad48fc0d90e5c6daec601987848a51"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#aaaad48fc0d90e5c6daec601987848a51">flags</a></td></tr>
-<tr class="memdesc:aaaad48fc0d90e5c6daec601987848a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">See IRDATA_FLAGS_* definitions above.  <a href="structIRData.html#aaaad48fc0d90e5c6daec601987848a51">More...</a><br /></td></tr>
+<tr class="memdesc:aaaad48fc0d90e5c6daec601987848a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above.  <a href="structIRData.html#aaaad48fc0d90e5c6daec601987848a51">More...</a><br /></td></tr>
 <tr class="separator:aaaad48fc0d90e5c6daec601987848a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1aca80950279db7f8631f96268f012d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRRawDataType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a1aca80950279db7f8631f96268f012d9">decodedRawData</a></td></tr>
-<tr class="memdesc:a1aca80950279db7f8631f96268f012d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Up to 32/64 bit decoded raw data, to be used for send functions.  <a href="structIRData.html#a1aca80950279db7f8631f96268f012d9">More...</a><br /></td></tr>
-<tr class="separator:a1aca80950279db7f8631f96268f012d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d7c987d63874731ff2e1120b21a1a08"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structirparams__struct.html">irparams_struct</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a8d7c987d63874731ff2e1120b21a1a08">rawDataPtr</a></td></tr>
 <tr class="memdesc:a8d7c987d63874731ff2e1120b21a1a08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.  <a href="structIRData.html#a8d7c987d63874731ff2e1120b21a1a08">More...</a><br /></td></tr>
 <tr class="separator:a8d7c987d63874731ff2e1120b21a1a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,7 +134,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Data structure for the user application, available as decodedIRData. </p>
 <p>Filled by decoders and read by print functions or user application. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00115">115</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00107">107</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a1255a5b7d704d34fda83dcabcb903d4c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1255a5b7d704d34fda83dcabcb903d4c">&#9670;&nbsp;</a></span>address</h2>
@@ -150,7 +150,7 @@ Public Attributes</h2></td></tr>
 
 <p>Decoded address, Distance protocol (tMarkTicksLong (if tMarkTicksLong == 0, then tMarkTicksShort) &lt;&lt; 8) | tSpaceTicksLong. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00117">117</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00109">109</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -168,7 +168,7 @@ Public Attributes</h2></td></tr>
 
 <p>Decoded command, Distance protocol (tMarkTicksShort &lt;&lt; 8) | tSpaceTicksShort. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00118">118</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00110">110</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -186,7 +186,7 @@ Public Attributes</h2></td></tr>
 
 <p>Up to 32/64 bit decoded raw data, to be used for send functions. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00122">122</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00112">112</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -204,7 +204,7 @@ Public Attributes</h2></td></tr>
 
 <p>Contains upper 16 bit of Magiquest WandID, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks &lt;&lt; 8) | HeaderSpaceTicks. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00119">119</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00111">111</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -220,9 +220,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>See IRDATA_FLAGS_* definitions above. </p>
+<p>IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00121">121</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00119">119</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -240,7 +240,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00120">120</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00118">118</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -258,7 +258,7 @@ Public Attributes</h2></td></tr>
 
 <p>UNKNOWN, NEC, SONY, RC5, PULSE_DISTANCE, ... </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00116">116</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00108">108</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -276,7 +276,7 @@ Public Attributes</h2></td></tr>
 
 <p>Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00126">126</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00120">120</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -289,7 +289,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structIRData.html">IRData</a></li>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

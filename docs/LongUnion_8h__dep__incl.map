@@ -1,9 +1,10 @@
 <map id="src/LongUnion.h" name="src/LongUnion.h">
-<area shape="rect" id="node1" title=" " alt="" coords="139,5,255,32"/>
-<area shape="rect" id="node2" href="$ac__LG_8hpp.html" title=" " alt="" coords="5,80,112,107"/>
-<area shape="rect" id="node3" href="$IRremote_8hpp.html" title="Public API to the library." alt="" coords="137,80,258,107"/>
-<area shape="rect" id="node5" href="$TinyIR_8h.html" title=" " alt="" coords="295,80,385,107"/>
-<area shape="rect" id="node4" href="$IRremote_8h.html" title="Stub for backward compatibility." alt="" coords="132,155,239,181"/>
-<area shape="rect" id="node6" href="$TinyIRReceiver_8hpp.html" title=" " alt="" coords="263,155,417,181"/>
-<area shape="rect" id="node7" href="$TinyIRSender_8hpp.html" title=" " alt="" coords="441,155,588,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="252,5,368,32"/>
+<area shape="rect" id="node2" href="$ac__LG_8hpp.html" title=" " alt="" coords="134,80,241,107"/>
+<area shape="rect" id="node3" href="$TinyIR_8h.html" title=" " alt="" coords="265,80,355,107"/>
+<area shape="rect" id="node5" href="$IRremote_8hpp.html" title="Public API to the library." alt="" coords="225,229,347,256"/>
+<area shape="rect" id="node4" href="$ir__FAST_8hpp.html" title=" " alt="" coords="5,155,121,181"/>
+<area shape="rect" id="node7" href="$TinyIRReceiver_8hpp.html" title=" " alt="" coords="146,155,301,181"/>
+<area shape="rect" id="node8" href="$TinyIRSender_8hpp.html" title=" " alt="" coords="325,155,471,181"/>
+<area shape="rect" id="node6" href="$IRremote_8h.html" title="Stub for backward compatibility." alt="" coords="233,304,339,331"/>
 </map>

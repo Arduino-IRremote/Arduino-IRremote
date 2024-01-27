@@ -134,7 +134,7 @@ Macros</h2></td></tr>
 <tr class="separator:gac2dab5c4a22f8c4915217d3ee4676f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad5b529d2582c1dab2e4a91beb5071ae3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad5b529d2582c1dab2e4a91beb5071ae3">NEC_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#gad086d93e5fb59de2890e12653a9c2f4f">NEC_AVERAGE_DURATION</a>)</td></tr>
 <tr class="separator:gad5b529d2582c1dab2e4a91beb5071ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga39b7e9de38af79c826aff1df717aef6d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga39b7e9de38af79c826aff1df717aef6d">NEC_MAXIMUM_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__TinyReceiver.html#ga7445961959fb69fed84c046145402045">NEC_MINIMAL_DURATION</a> + 5)</td></tr>
+<tr class="memitem:ga39b7e9de38af79c826aff1df717aef6d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga39b7e9de38af79c826aff1df717aef6d">NEC_MAXIMUM_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08">NEC_REPEAT_PERIOD</a> - <a class="el" href="group__TinyReceiver.html#ga7445961959fb69fed84c046145402045">NEC_MINIMAL_DURATION</a> + 10000)</td></tr>
 <tr class="separator:ga39b7e9de38af79c826aff1df717aef6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4d268b1bd7431cab88c570c446d4810b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga4d268b1bd7431cab88c570c446d4810b">APPLE_ADDRESS</a>&#160;&#160;&#160;0x87EE</td></tr>
 <tr class="separator:ga4d268b1bd7431cab88c570c446d4810b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,7 +142,7 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">sendNECSpecialRepeat</a> ()</td></tr>
-<tr class="memdesc:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function for sending special repeat frame.  <a href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">More...</a><br /></td></tr>
+<tr class="memdesc:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function variant of <a class="el" href="group__Decoder.html#gae8fff4f1d8703ca18ea85a15289dc44c" title="Send special NEC repeat frame Repeat commands should be sent in a 110 ms raster.">IRsend::sendNECRepeat</a> For use in ProtocolConstants.  <a href="group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2">More...</a><br /></td></tr>
 <tr class="separator:ga7c4ddfbbbe38d11709d079dee617f2b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -158,7 +158,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="ir__NEC_8hpp.html">ir_NEC.hpp</a></li>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:39 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

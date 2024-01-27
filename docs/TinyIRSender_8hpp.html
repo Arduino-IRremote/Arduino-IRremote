@@ -82,6 +82,7 @@ $(document).ready(function(){initNavTree('TinyIRSender_8hpp.html',''); initResiz
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">TinyIRSender.hpp File Reference</div>  </div>
@@ -95,25 +96,36 @@ Include dependency graph for TinyIRSender.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="TinyIRSender_8hpp__incl.png" border="0" usemap="#src_2TinyIRSender_8hpp" alt=""/></div>
 <map name="src_2TinyIRSender_8hpp" id="src_2TinyIRSender_8hpp">
-<area shape="rect" title=" " alt="" coords="43,5,189,32"/>
-<area shape="rect" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" href="TinyIR_8h.html" title=" " alt="" coords="81,80,151,107"/>
-<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="175,80,299,107"/>
-<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="107,155,202,181"/>
-<area shape="rect" title=" " alt="" coords="122,229,187,256"/>
+<area shape="rect" title=" " alt="" coords="11,5,157,32"/>
+<area shape="rect" title=" " alt="" coords="45,155,123,181"/>
+<area shape="rect" href="TinyIR_8h.html" title=" " alt="" coords="171,80,240,107"/>
+<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="22,80,146,107"/>
+<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="158,155,253,181"/>
+<area shape="rect" title=" " alt="" coords="173,229,238,256"/>
 </map>
 </div>
 </div>
 <p><a href="TinyIRSender_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga4cb394b3b749f9302940902fb05bd920"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga4cb394b3b749f9302940902fb05bd920">IR_SEND_PIN</a>&#160;&#160;&#160;3</td></tr>
+<tr class="separator:ga4cb394b3b749f9302940902fb05bd920"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga1cc15240b7357116480a33cbc5ff4a06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga1cc15240b7357116480a33cbc5ff4a06">sendMark</a> (uint8_t aSendPin, unsigned int aMarkMicros)</td></tr>
 <tr class="separator:ga1cc15240b7357116480a33cbc5ff4a06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga753f166597d49ac9aad7b90b1a8c3244"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga753f166597d49ac9aad7b90b1a8c3244">sendNECMinimal</a> (uint8_t aSendPin, uint8_t aAddress, uint8_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
-<tr class="separator:ga753f166597d49ac9aad7b90b1a8c3244"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga42814c2141edfc8ca7e223cefc0d2e1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga42814c2141edfc8ca7e223cefc0d2e1a">sendONKYO</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
+<tr class="separator:ga42814c2141edfc8ca7e223cefc0d2e1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga693e3c08170e163489b7c73c595c060e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga693e3c08170e163489b7c73c595c060e">sendNECMinimal</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
+<tr class="separator:ga693e3c08170e163489b7c73c595c060e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1213d923a9b96e6e8b29a2413d81d95f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga1213d923a9b96e6e8b29a2413d81d95f">sendNEC</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
+<tr class="separator:ga1213d923a9b96e6e8b29a2413d81d95f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac2a48685f769fa815bb473f6c97c9677"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#gac2a48685f769fa815bb473f6c97c9677">sendFast8BitAndParity</a> (uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
 <tr class="separator:gac2a48685f769fa815bb473f6c97c9677"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga03e7b24211df9d9b321032bf11449df8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinySender.html#ga03e7b24211df9d9b321032bf11449df8">sendFAST</a> (uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats)</td></tr>
+<tr class="separator:ga03e7b24211df9d9b321032bf11449df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -121,7 +133,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="TinyIRSender_8hpp.html">TinyIRSender.hpp</a></li>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

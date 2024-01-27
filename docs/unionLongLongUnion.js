@@ -1,6 +1,7 @@
 var unionLongLongUnion =
 [
     [ "Bytes", "unionLongLongUnion.html#ac730aa4aea6374b426aa741b2135adee", null ],
+    [ "Double", "unionLongLongUnion.html#ad639ee45132e99aee9b824cc85045c00", null ],
     [ "HighLong", "unionLongLongUnion.html#a1868073f657ae9df0b3aaceb3fa131f2", null ],
     [ "HighLong", "unionLongLongUnion.html#a34cc7306550b99e4821a7cf6aee59a05", null ],
     [ "HighLong", "unionLongLongUnion.html#a50f0984be8b74a82c9c3e6e02ccc911e", null ],

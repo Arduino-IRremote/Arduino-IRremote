@@ -14,5 +14,6 @@ var ir__BangOlufsen_8hpp =
     [ "BEO_TRACE_PRINT", "ir__BangOlufsen_8hpp.html#a0aeace4bbeb9d4b02804c39178086e32", null ],
     [ "BEO_TRACE_PRINTLN", "ir__BangOlufsen_8hpp.html#a9411cb1c5671300507c09558f2d8234f", null ],
     [ "BEO_UNIT", "ir__BangOlufsen_8hpp.html#a4adfc98780d87248b0159417e4a8feff", null ],
+    [ "ENABLE_BEO_WITHOUT_FRAME_GAP", "ir__BangOlufsen_8hpp.html#a14baffaacb883f714f29fac6543ed614", null ],
     [ "matchBeoLength", "ir__BangOlufsen_8hpp.html#ac5080b165c41b5f1d1245017b9fbc3f8", null ]
 ];

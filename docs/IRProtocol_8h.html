@@ -110,46 +110,62 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDistanceWidthTimingInfoStruct.html">DistanceWidthTimingInfoStruct</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html">IRData</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data structure for the user application, available as decodedIRData.  <a href="structIRData.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a8a2dbf77031a92783a200b9902c8459b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a8a2dbf77031a92783a200b9902c8459b">SIRCS_12_PROTOCOL</a>&#160;&#160;&#160;12</td></tr>
+<tr class="separator:a8a2dbf77031a92783a200b9902c8459b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75fe4989c11b3e3176262acfa9bce2ce"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a75fe4989c11b3e3176262acfa9bce2ce">SIRCS_15_PROTOCOL</a>&#160;&#160;&#160;15</td></tr>
+<tr class="separator:a75fe4989c11b3e3176262acfa9bce2ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4014bf0435ac7da04aa0bb1b0949eb8e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a4014bf0435ac7da04aa0bb1b0949eb8e">SIRCS_20_PROTOCOL</a>&#160;&#160;&#160;20</td></tr>
+<tr class="separator:a4014bf0435ac7da04aa0bb1b0949eb8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad670ce496c4a3352cb9929284db11928"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#ad670ce496c4a3352cb9929284db11928">IRDATA_FLAGS_EMPTY</a>&#160;&#160;&#160;0x00</td></tr>
 <tr class="separator:ad670ce496c4a3352cb9929284db11928"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa9952cd64b58083c28873484c494abf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#aaa9952cd64b58083c28873484c494abf">IRDATA_FLAGS_IS_REPEAT</a>&#160;&#160;&#160;0x01</td></tr>
+<tr class="memdesc:aaa9952cd64b58083c28873484c494abf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The gap between the preceding frame is as smaller than the maximum gap expected for a repeat. !!!We do not check for changed command or address, because it is almost not possible to press 2 different buttons on the remote within around 100 ms!!!  <a href="IRProtocol_8h.html#aaa9952cd64b58083c28873484c494abf">More...</a><br /></td></tr>
 <tr class="separator:aaa9952cd64b58083c28873484c494abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c5e6ae69aa440bfa132550d120ace08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a5c5e6ae69aa440bfa132550d120ace08">IRDATA_FLAGS_IS_AUTO_REPEAT</a>&#160;&#160;&#160;0x02</td></tr>
+<tr class="memdesc:a5c5e6ae69aa440bfa132550d120ace08"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current repeat frame is a repeat, that is always sent after a regular frame and cannot be avoided. Only specified for protocols DENON, and LEGO.  <a href="IRProtocol_8h.html#a5c5e6ae69aa440bfa132550d120ace08">More...</a><br /></td></tr>
 <tr class="separator:a5c5e6ae69aa440bfa132550d120ace08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a60f95f0885b1865dc5514ddd80e093"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a1a60f95f0885b1865dc5514ddd80e093">IRDATA_FLAGS_PARITY_FAILED</a>&#160;&#160;&#160;0x04</td></tr>
-<tr class="memdesc:a1a60f95f0885b1865dc5514ddd80e093"><td class="mdescLeft">&#160;</td><td class="mdescRight">the current (autorepeat) frame violated parity check  <a href="IRProtocol_8h.html#a1a60f95f0885b1865dc5514ddd80e093">More...</a><br /></td></tr>
+<tr class="memdesc:a1a60f95f0885b1865dc5514ddd80e093"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current (autorepeat) frame violated parity check.  <a href="IRProtocol_8h.html#a1a60f95f0885b1865dc5514ddd80e093">More...</a><br /></td></tr>
 <tr class="separator:a1a60f95f0885b1865dc5514ddd80e093"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a169a0ae23ab363f24027f769881db0b0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a169a0ae23ab363f24027f769881db0b0">IRDATA_FLAGS_TOGGLE_BIT</a>&#160;&#160;&#160;0x08</td></tr>
-<tr class="memdesc:a169a0ae23ab363f24027f769881db0b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">is set if RC5 or RC6 toggle bit is set  <a href="IRProtocol_8h.html#a169a0ae23ab363f24027f769881db0b0">More...</a><br /></td></tr>
+<tr class="memdesc:a169a0ae23ab363f24027f769881db0b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is set if RC5 or RC6 toggle bit is set.  <a href="IRProtocol_8h.html#a169a0ae23ab363f24027f769881db0b0">More...</a><br /></td></tr>
 <tr class="separator:a169a0ae23ab363f24027f769881db0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a8eaa19dc6174814fedc9d5b495560c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a6a8eaa19dc6174814fedc9d5b495560c">IRDATA_TOGGLE_BIT_MASK</a>&#160;&#160;&#160;0x08</td></tr>
+<tr class="memdesc:a6a8eaa19dc6174814fedc9d5b495560c"><td class="mdescLeft">&#160;</td><td class="mdescRight">deprecated -is set if RC5 or RC6 toggle bit is set.  <a href="IRProtocol_8h.html#a6a8eaa19dc6174814fedc9d5b495560c">More...</a><br /></td></tr>
+<tr class="separator:a6a8eaa19dc6174814fedc9d5b495560c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#abf3b16f9ab35f4e4b95c8c362aca2d71">IRDATA_FLAGS_EXTRA_INFO</a>&#160;&#160;&#160;0x10</td></tr>
-<tr class="memdesc:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="mdescLeft">&#160;</td><td class="mdescRight">There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray)  <a href="IRProtocol_8h.html#abf3b16f9ab35f4e4b95c8c362aca2d71">More...</a><br /></td></tr>
+<tr class="memdesc:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="mdescLeft">&#160;</td><td class="mdescRight">There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray).  <a href="IRProtocol_8h.html#abf3b16f9ab35f4e4b95c8c362aca2d71">More...</a><br /></td></tr>
 <tr class="separator:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1acaa14d5a437ad317e17489e845f401"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a1acaa14d5a437ad317e17489e845f401">IRDATA_FLAGS_WAS_OVERFLOW</a>&#160;&#160;&#160;0x40</td></tr>
-<tr class="memdesc:a1acaa14d5a437ad317e17489e845f401"><td class="mdescLeft">&#160;</td><td class="mdescRight">irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag  <a href="IRProtocol_8h.html#a1acaa14d5a437ad317e17489e845f401">More...</a><br /></td></tr>
+<tr class="memdesc:a1acaa14d5a437ad317e17489e845f401"><td class="mdescLeft">&#160;</td><td class="mdescRight">irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag.  <a href="IRProtocol_8h.html#a1acaa14d5a437ad317e17489e845f401">More...</a><br /></td></tr>
 <tr class="separator:a1acaa14d5a437ad317e17489e845f401"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f6872e6f83c0571e3150ba86428af4c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a7f6872e6f83c0571e3150ba86428af4c">IRDATA_FLAGS_IS_MSB_FIRST</a>&#160;&#160;&#160;0x80</td></tr>
 <tr class="memdesc:a7f6872e6f83c0571e3150ba86428af4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value is mainly determined by the (known) protocol.  <a href="IRProtocol_8h.html#a7f6872e6f83c0571e3150ba86428af4c">More...</a><br /></td></tr>
 <tr class="separator:a7f6872e6f83c0571e3150ba86428af4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a035e96118f9daf6d8e5152a1ae466538"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a035e96118f9daf6d8e5152a1ae466538">IRDATA_FLAGS_IS_LSB_FIRST</a>&#160;&#160;&#160;0x00</td></tr>
 <tr class="separator:a035e96118f9daf6d8e5152a1ae466538"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a8eaa19dc6174814fedc9d5b495560c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a6a8eaa19dc6174814fedc9d5b495560c">IRDATA_TOGGLE_BIT_MASK</a>&#160;&#160;&#160;0x08</td></tr>
-<tr class="memdesc:a6a8eaa19dc6174814fedc9d5b495560c"><td class="mdescLeft">&#160;</td><td class="mdescRight">is set if RC5 or RC6 toggle bit is set  <a href="IRProtocol_8h.html#a6a8eaa19dc6174814fedc9d5b495560c">More...</a><br /></td></tr>
-<tr class="separator:a6a8eaa19dc6174814fedc9d5b495560c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ad0810b4eae20c260180a1c4d9f359e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a1ad0810b4eae20c260180a1c4d9f359e">RAW_DATA_ARRAY_SIZE</a>&#160;&#160;&#160;((((<a class="el" href="IRremoteInt_8h.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a> - 2) - 1) / 64) + 1)</td></tr>
+<tr class="memitem:a1ad0810b4eae20c260180a1c4d9f359e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a1ad0810b4eae20c260180a1c4d9f359e">RAW_DATA_ARRAY_SIZE</a>&#160;&#160;&#160;((((<a class="el" href="IRremoteInt_8h.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a> - 2) - 1) / (2 * <a class="el" href="IRremoteInt_8h.html#a7687558679e30d4e0b460e58198da55e">BITS_IN_RAW_DATA_TYPE</a>)) + 1)</td></tr>
 <tr class="separator:a1ad0810b4eae20c260180a1c4d9f359e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8717702b4019c982727719bd40af7630"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a8717702b4019c982727719bd40af7630">PROTOCOL_IS_LSB_FIRST</a>&#160;&#160;&#160;false</td></tr>
-<tr class="separator:a8717702b4019c982727719bd40af7630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2db53e8319cd3f5de758337fa08552d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a2db53e8319cd3f5de758337fa08552d0">PROTOCOL_IS_MSB_FIRST</a>&#160;&#160;&#160;true</td></tr>
+<tr class="memitem:adbc2fb58befbed8b45912fa31eb2dbcf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#adbc2fb58befbed8b45912fa31eb2dbcf">SUPPRESS_STOP_BIT_FOR_THIS_DATA</a>&#160;&#160;&#160;0x20</td></tr>
+<tr class="separator:adbc2fb58befbed8b45912fa31eb2dbcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2db53e8319cd3f5de758337fa08552d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a2db53e8319cd3f5de758337fa08552d0">PROTOCOL_IS_MSB_FIRST</a>&#160;&#160;&#160;<a class="el" href="IRProtocol_8h.html#a7f6872e6f83c0571e3150ba86428af4c">IRDATA_FLAGS_IS_MSB_FIRST</a></td></tr>
 <tr class="separator:a2db53e8319cd3f5de758337fa08552d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8717702b4019c982727719bd40af7630"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a8717702b4019c982727719bd40af7630">PROTOCOL_IS_LSB_FIRST</a>&#160;&#160;&#160;<a class="el" href="IRProtocol_8h.html#a035e96118f9daf6d8e5152a1ae466538">IRDATA_FLAGS_IS_LSB_FIRST</a></td></tr>
+<tr class="separator:a8717702b4019c982727719bd40af7630"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48e176b38988494bc725ac4fa98c534a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a48e176b38988494bc725ac4fa98c534a">SEND_STOP_BIT</a>&#160;&#160;&#160;true</td></tr>
+<tr class="separator:a48e176b38988494bc725ac4fa98c534a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8683da8ac98548ba8f446f3ccfc83c11"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a8683da8ac98548ba8f446f3ccfc83c11">SEND_NO_STOP_BIT</a>&#160;&#160;&#160;false</td></tr>
+<tr class="separator:a8683da8ac98548ba8f446f3ccfc83c11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28c405223cc0e826050ab76e204238ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a28c405223cc0e826050ab76e204238ac">BEO_KHZ</a>&#160;&#160;&#160;455</td></tr>
 <tr class="separator:a28c405223cc0e826050ab76e204238ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5dcaa6ec48a7a0b663e5de0ce853a541"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a5dcaa6ec48a7a0b663e5de0ce853a541">SONY_KHZ</a>&#160;&#160;&#160;40</td></tr>
@@ -209,7 +225,8 @@ Enumerations</h2></td></tr>
 <a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf47be4dad020b9c36aa255c582e25510">LEGO_PF</a>, 
 <a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada3be750ce1687bc1a92fee05b0c511100">MAGIQUEST</a>, 
 <br />
-&#160;&#160;<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada458cdd7fa2b29dc8617c694696580c0c">WHYNTER</a>
+&#160;&#160;<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada458cdd7fa2b29dc8617c694696580c0c">WHYNTER</a>, 
+<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaf84c11ba888e499a8a282a3e6f5de7de">FAST</a>
 <br />
  }</td></tr>
 <tr class="memdesc:ad5b287a488a8c1b7b8661f029ab56fad"><td class="mdescLeft">&#160;</td><td class="mdescRight">An enum consisting of all supported formats.  <a href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fad">More...</a><br /></td></tr>
@@ -231,7 +248,7 @@ Functions</h2></td></tr>
 <div class="textblock"><p>Common declarations for receiving and sending. </p>
 <p>This file is part of Arduino-IRremote <a href="https://github.com/Arduino-IRremote/Arduino-IRremote">https://github.com/Arduino-IRremote/Arduino-IRremote</a>.</p>
 <p>MIT License</p>
-<p>Copyright (c) 2020-2022 Armin Joachimsmeyer</p>
+<p>Copyright (c) 2020-2023 Armin Joachimsmeyer</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
@@ -250,7 +267,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00137">137</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00147">147</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -266,7 +283,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00140">140</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00150">150</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -282,7 +299,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00141">141</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00151">151</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -298,7 +315,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00094">94</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00092">92</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -314,9 +331,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray) </p>
+<p>There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray). </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00099">99</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00098">98</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -332,7 +349,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00096">96</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p>The current repeat frame is a repeat, that is always sent after a regular frame and cannot be avoided. Only specified for protocols DENON, and LEGO. </p>
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00094">94</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -348,7 +367,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00102">102</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00101">101</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -366,7 +385,7 @@ Functions</h2></td></tr>
 
 <p>Value is mainly determined by the (known) protocol. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00101">101</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00100">100</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -382,7 +401,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00095">95</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p>The gap between the preceding frame is as smaller than the maximum gap expected for a repeat. !!!We do not check for changed command or address, because it is almost not possible to press 2 different buttons on the remote within around 100 ms!!! </p>
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00093">93</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -398,9 +419,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>the current (autorepeat) frame violated parity check </p>
+<p>The current (autorepeat) frame violated parity check. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00097">97</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00095">95</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -416,9 +437,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>is set if RC5 or RC6 toggle bit is set </p>
+<p>Is set if RC5 or RC6 toggle bit is set. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00098">98</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00096">96</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -434,9 +455,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag </p>
+<p>irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00100">100</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00099">99</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -452,9 +473,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>is set if RC5 or RC6 toggle bit is set </p>
+<p>deprecated -is set if RC5 or RC6 toggle bit is set. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00105">105</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00097">97</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -470,7 +491,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00142">142</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00152">152</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -486,7 +507,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00146">146</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00156">156</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -502,7 +523,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00143">143</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00153">153</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -518,7 +539,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00144">144</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00154">154</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -529,12 +550,12 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define PROTOCOL_IS_LSB_FIRST&#160;&#160;&#160;false</td>
+          <td class="memname">#define PROTOCOL_IS_LSB_FIRST&#160;&#160;&#160;<a class="el" href="IRProtocol_8h.html#a035e96118f9daf6d8e5152a1ae466538">IRDATA_FLAGS_IS_LSB_FIRST</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00130">130</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00138">138</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -545,12 +566,12 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define PROTOCOL_IS_MSB_FIRST&#160;&#160;&#160;true</td>
+          <td class="memname">#define PROTOCOL_IS_MSB_FIRST&#160;&#160;&#160;<a class="el" href="IRProtocol_8h.html#a7f6872e6f83c0571e3150ba86428af4c">IRDATA_FLAGS_IS_MSB_FIRST</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00131">131</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00137">137</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -561,12 +582,12 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define RAW_DATA_ARRAY_SIZE&#160;&#160;&#160;((((<a class="el" href="IRremoteInt_8h.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a> - 2) - 1) / 64) + 1)</td>
+          <td class="memname">#define RAW_DATA_ARRAY_SIZE&#160;&#160;&#160;((((<a class="el" href="IRremoteInt_8h.html#a589aa40429eeb37b6e83a2c09854a47b">RAW_BUFFER_LENGTH</a> - 2) - 1) / (2 * <a class="el" href="IRremoteInt_8h.html#a7687558679e30d4e0b460e58198da55e">BITS_IN_RAW_DATA_TYPE</a>)) + 1)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00108">108</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00103">103</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -582,7 +603,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00147">147</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00157">157</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -598,7 +619,87 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00145">145</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00155">155</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="a8683da8ac98548ba8f446f3ccfc83c11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8683da8ac98548ba8f446f3ccfc83c11">&#9670;&nbsp;</a></span>SEND_NO_STOP_BIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SEND_NO_STOP_BIT&#160;&#160;&#160;false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00141">141</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="a48e176b38988494bc725ac4fa98c534a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48e176b38988494bc725ac4fa98c534a">&#9670;&nbsp;</a></span>SEND_STOP_BIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SEND_STOP_BIT&#160;&#160;&#160;true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00140">140</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="a8a2dbf77031a92783a200b9902c8459b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a2dbf77031a92783a200b9902c8459b">&#9670;&nbsp;</a></span>SIRCS_12_PROTOCOL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SIRCS_12_PROTOCOL&#160;&#160;&#160;12</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00076">76</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="a75fe4989c11b3e3176262acfa9bce2ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75fe4989c11b3e3176262acfa9bce2ce">&#9670;&nbsp;</a></span>SIRCS_15_PROTOCOL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SIRCS_15_PROTOCOL&#160;&#160;&#160;15</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00077">77</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="a4014bf0435ac7da04aa0bb1b0949eb8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4014bf0435ac7da04aa0bb1b0949eb8e">&#9670;&nbsp;</a></span>SIRCS_20_PROTOCOL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SIRCS_20_PROTOCOL&#160;&#160;&#160;20</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00078">78</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -614,7 +715,23 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00139">139</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00149">149</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="adbc2fb58befbed8b45912fa31eb2dbcf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbc2fb58befbed8b45912fa31eb2dbcf">&#9670;&nbsp;</a></span>SUPPRESS_STOP_BIT_FOR_THIS_DATA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SUPPRESS_STOP_BIT_FOR_THIS_DATA&#160;&#160;&#160;0x20</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00136">136</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -663,6 +780,7 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fadaf47be4dad020b9c36aa255c582e25510"></a>LEGO_PF&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fada3be750ce1687bc1a92fee05b0c511100"></a>MAGIQUEST&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fada458cdd7fa2b29dc8617c694696580c0c"></a>WHYNTER&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fadaf84c11ba888e499a8a282a3e6f5de7de"></a>FAST&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 <p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00040">40</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
@@ -675,7 +793,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRProtocol_8h.html">IRProtocol.h</a></li>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:39 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

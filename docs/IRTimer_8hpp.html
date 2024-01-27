@@ -129,16 +129,16 @@ Functions</h2></td></tr>
 <tr class="memitem:ga352399811c67be16548d81a18e3cd337"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga352399811c67be16548d81a18e3cd337">disableSendPWMByTimer</a> ()</td></tr>
 <tr class="memdesc:ga352399811c67be16548d81a18e3cd337"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables output of the PWM signal of the timer at the timer pin and set it to inactive.  <a href="group__Timer.html#ga352399811c67be16548d81a18e3cd337">More...</a><br /></td></tr>
 <tr class="separator:ga352399811c67be16548d81a18e3cd337"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga45d57d84d5fee327f67afde5f8649e6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga45d57d84d5fee327f67afde5f8649e6d">timerConfigForSend</a> (uint8_t aFrequencyKHz)</td></tr>
-<tr class="memdesc:ga45d57d84d5fee327f67afde5f8649e6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with duty cycle of IR_SEND_DUTY_CYCLE_PERCENT and disables the receive interrupt if it uses the same resource.  <a href="group__Timer.html#ga45d57d84d5fee327f67afde5f8649e6d">More...</a><br /></td></tr>
-<tr class="separator:ga45d57d84d5fee327f67afde5f8649e6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">timerConfigForSend</a> (uint16_t aFrequencyKHz)</td></tr>
+<tr class="memdesc:gab4f8dc26e10c0481e8859252afa4d42b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with duty cycle of IR_SEND_DUTY_CYCLE_PERCENT and disables the receive interrupt if it uses the same resource.  <a href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">More...</a><br /></td></tr>
+<tr class="separator:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>All timer specific definitions are contained in this file. Sets IR_SEND_PIN if required, e.g. if SEND_PWM_BY_TIMER for AVR is defined, which restricts the output to a dedicated pin number. </p>
 <p>timerConfigForSend(aFrequencyKHz) must set output pin mode and disable receive interrupt if it uses the same resource</p>
 <p>This file is part of Arduino-IRremote <a href="https://github.com/Arduino-IRremote/Arduino-IRremote">https://github.com/Arduino-IRremote/Arduino-IRremote</a>.</p>
 <p>MIT License</p>
-<p>Copyright (c) 2021-2022 Armin Joachimsmeyer</p>
+<p>Copyright (c) 2021-2023 Armin Joachimsmeyer</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
@@ -150,7 +150,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d49b597d86ed44de6eb8a459f0ed40df.html">private</a></li><li class="navelem"><a class="el" href="IRTimer_8hpp.html">IRTimer.hpp</a></li>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:46 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

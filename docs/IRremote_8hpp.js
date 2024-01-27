@@ -3,6 +3,7 @@ var IRremote_8hpp =
     [ "DECODE_BOSEWAVE", "IRremote_8hpp.html#a2935e3b14cf449b00b4166f71eecf8af", null ],
     [ "DECODE_DENON", "IRremote_8hpp.html#a589c5f91ad251aff0cbdc179a5faaa60", null ],
     [ "DECODE_DISTANCE_WIDTH", "IRremote_8hpp.html#adfd8ff3c8859e3d8f53f39b5837520c5", null ],
+    [ "DECODE_FAST", "IRremote_8hpp.html#ab9694ea0f1078f534605b0b7227d6198", null ],
     [ "DECODE_HASH", "IRremote_8hpp.html#a4ee00d8b9631462888e74c95712234e1", null ],
     [ "DECODE_JVC", "IRremote_8hpp.html#ac1f2b013768a77943b002953197cb573", null ],
     [ "DECODE_KASEIKYO", "IRremote_8hpp.html#acd46d28198948511f9c8b97328b5fdde", null ],
@@ -30,11 +31,5 @@ var IRremote_8hpp =
     [ "RECORD_GAP_MICROS_WARNING_THRESHOLD", "IRremote_8hpp.html#a6afa54ea105253cce361d8c571da5fa9", null ],
     [ "RECORD_GAP_TICKS", "IRremote_8hpp.html#a1ba5a08e87f922d04e6acb5c07867386", null ],
     [ "REPEAT", "IRremote_8hpp.html#a2c9384c67919c632913b8db2088f8341", null ],
-    [ "USECPERTICK", "IRremote_8hpp.html#aad2fcaac88c28bf54ecbd42146a56e3f", null ],
-    [ "VERSION_HEX_VALUE", "IRremote_8hpp.html#a8fe70c54038764ee815bb4940c58ad3c", null ],
-    [ "VERSION_IRREMOTE", "IRremote_8hpp.html#ad9f03906065f749788cc9e3f68fb6253", null ],
-    [ "VERSION_IRREMOTE_HEX", "IRremote_8hpp.html#ac2a16f9b7dd2cf6fc0ca9c5f78e7824c", null ],
-    [ "VERSION_IRREMOTE_MAJOR", "IRremote_8hpp.html#a5fccc9834ba25cd17b7ca45e14aa7751", null ],
-    [ "VERSION_IRREMOTE_MINOR", "IRremote_8hpp.html#a824e2f61336bde09dd9b835e8606683f", null ],
-    [ "VERSION_IRREMOTE_PATCH", "IRremote_8hpp.html#a190ee428ccd5ea2362e913f114718779", null ]
+    [ "USECPERTICK", "IRremote_8hpp.html#aad2fcaac88c28bf54ecbd42146a56e3f", null ]
 ];

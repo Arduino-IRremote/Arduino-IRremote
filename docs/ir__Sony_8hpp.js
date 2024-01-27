@@ -1,8 +1,5 @@
 var ir__Sony_8hpp =
 [
-    [ "SIRCS_12_PROTOCOL", "group__Decoder.html#ga8a2dbf77031a92783a200b9902c8459b", null ],
-    [ "SIRCS_15_PROTOCOL", "group__Decoder.html#ga75fe4989c11b3e3176262acfa9bce2ce", null ],
-    [ "SIRCS_20_PROTOCOL", "group__Decoder.html#ga4014bf0435ac7da04aa0bb1b0949eb8e", null ],
     [ "SONY_ADDRESS_BITS", "group__Decoder.html#ga8bf3de6a0e95b5fcdee222bb59170be3", null ],
     [ "SONY_AVERAGE_DURATION_MAX", "group__Decoder.html#gaf803b6ab7aa5ca862f25cf41e0336290", null ],
     [ "SONY_AVERAGE_DURATION_MIN", "group__Decoder.html#gae0f8f9c332bb24c958a5dcec4260659e", null ],

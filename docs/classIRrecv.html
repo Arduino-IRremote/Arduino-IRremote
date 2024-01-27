@@ -139,6 +139,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:gacf2ba4aadc8118c4d1012302f985f62a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gacf2ba4aadc8118c4d1012302f985f62a">restartAfterSend</a> ()</td></tr>
 <tr class="memdesc:gacf2ba4aadc8118c4d1012302f985f62a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restarts receiver after send.  <a href="group__Receiving.html#gacf2ba4aadc8118c4d1012302f985f62a">More...</a><br /></td></tr>
 <tr class="separator:gacf2ba4aadc8118c4d1012302f985f62a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4dbef49ebdb3e7d921436fec54850546"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga4dbef49ebdb3e7d921436fec54850546">addTicksToInternalTickCounter</a> (uint16_t aTicksToAddToInternalTickCounter)</td></tr>
+<tr class="separator:ga4dbef49ebdb3e7d921436fec54850546"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga27f6a183e5beccc5817f606dfbd14699"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga27f6a183e5beccc5817f606dfbd14699">addMicrosToInternalTickCounter</a> (uint16_t aMicrosecondsToAddToInternalTickCounter)</td></tr>
+<tr class="separator:ga27f6a183e5beccc5817f606dfbd14699"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa4f466138c416bf4e1548f5399be0298"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gaa4f466138c416bf4e1548f5399be0298">available</a> ()</td></tr>
 <tr class="memdesc:gaa4f466138c416bf4e1548f5399be0298"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if IR receiver data is available.  <a href="group__Receiving.html#gaa4f466138c416bf4e1548f5399be0298">More...</a><br /></td></tr>
 <tr class="separator:gaa4f466138c416bf4e1548f5399be0298"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,9 +176,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:gae24919a83cfbea5b2c53a851e1d3fed0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gae24919a83cfbea5b2c53a851e1d3fed0">printIRResultAsCVariables</a> (Print *aSerial)</td></tr>
 <tr class="memdesc:gae24919a83cfbea5b2c53a851e1d3fed0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print results as C variables to be used for sendXXX()  <a href="group__Receiving.html#gae24919a83cfbea5b2c53a851e1d3fed0">More...</a><br /></td></tr>
 <tr class="separator:gae24919a83cfbea5b2c53a851e1d3fed0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae63243378b0c763d659a870b6e4f04eb"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gae63243378b0c763d659a870b6e4f04eb">getTotalDurationOfRawData</a> ()</td></tr>
+<tr class="separator:gae63243378b0c763d659a870b6e4f04eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga58403efdf845d0eca9e647f12b6ff061"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga58403efdf845d0eca9e647f12b6ff061">printIRResultShort</a> (Print *aSerial, bool aPrintRepeatGap=true, bool aCheckForRecordGapsMicros=true)</td></tr>
 <tr class="memdesc:ga58403efdf845d0eca9e647f12b6ff061"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to print values and flags of IrReceiver.decodedIRData in one line.  <a href="group__Receiving.html#ga58403efdf845d0eca9e647f12b6ff061">More...</a><br /></td></tr>
 <tr class="separator:ga58403efdf845d0eca9e647f12b6ff061"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3c4ee9436861333c2737f9272a4fadc7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga3c4ee9436861333c2737f9272a4fadc7">printDistanceWidthTimingInfo</a> (Print *aSerial, <a class="el" href="structDistanceWidthTimingInfoStruct.html">DistanceWidthTimingInfoStruct</a> *aDistanceWidthTimingInfo)</td></tr>
+<tr class="separator:ga3c4ee9436861333c2737f9272a4fadc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabe924ffc10b8814a5f3303b3df907dd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gabe924ffc10b8814a5f3303b3df907dd7">printIRSendUsage</a> (Print *aSerial)</td></tr>
 <tr class="memdesc:gabe924ffc10b8814a5f3303b3df907dd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to print values and flags of IrReceiver.decodedIRData in one line.  <a href="group__Receiving.html#gabe924ffc10b8814a5f3303b3df907dd7">More...</a><br /></td></tr>
 <tr class="separator:gabe924ffc10b8814a5f3303b3df907dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,24 +191,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ga21364e5f35756fe0f72581c00b1b33b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga21364e5f35756fe0f72581c00b1b33b1">compensateAndPrintIRResultAsCArray</a> (Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks=true)</td></tr>
 <tr class="memdesc:ga21364e5f35756fe0f72581c00b1b33b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dump out the IrReceiver.decodedIRData.rawDataPtr-&gt;rawbuf[] to be used as C definition for sendRaw().  <a href="group__Receiving.html#ga21364e5f35756fe0f72581c00b1b33b1">More...</a><br /></td></tr>
 <tr class="separator:ga21364e5f35756fe0f72581c00b1b33b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa701711c860c8ff58d332c4567e7ff89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaa701711c860c8ff58d332c4567e7ff89">compensateAndPrintIRResultAsPronto</a> (Print *aSerial, unsigned int frequency=38000U)</td></tr>
-<tr class="memdesc:gaa701711c860c8ff58d332c4567e7ff89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print the result (second argument) as Pronto Hex on the Print supplied as argument.  <a href="group__Decoder.html#gaa701711c860c8ff58d332c4567e7ff89">More...</a><br /></td></tr>
-<tr class="separator:gaa701711c860c8ff58d332c4567e7ff89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga68f4ba6d484fcdf02bcbf80c5f62a8f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga68f4ba6d484fcdf02bcbf80c5f62a8f2">compensateAndPrintIRResultAsPronto</a> (Print *aSerial, uint16_t frequency=38000U)</td></tr>
+<tr class="memdesc:ga68f4ba6d484fcdf02bcbf80c5f62a8f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print the result (second argument) as Pronto Hex on the Print supplied as argument.  <a href="group__Decoder.html#ga68f4ba6d484fcdf02bcbf80c5f62a8f2">More...</a><br /></td></tr>
+<tr class="separator:ga68f4ba6d484fcdf02bcbf80c5f62a8f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5a515633f91a505e621cba3bab5e53d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga5a515633f91a505e621cba3bab5e53d0">compensateAndStoreIRResultInArray</a> (uint8_t *aArrayPtr)</td></tr>
 <tr class="memdesc:ga5a515633f91a505e621cba3bab5e53d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Store the decodedIRData to be used for sendRaw().  <a href="group__Receiving.html#ga5a515633f91a505e621cba3bab5e53d0">More...</a><br /></td></tr>
 <tr class="separator:ga5a515633f91a505e621cba3bab5e53d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga48195517ee0e2cd73788c7956e413014"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga48195517ee0e2cd73788c7956e413014">compensateAndStorePronto</a> (String *aString, unsigned int frequency=38000U)</td></tr>
-<tr class="separator:ga48195517ee0e2cd73788c7956e413014"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac6e3066f2e8be8e4f18342a624bc60a2"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gac6e3066f2e8be8e4f18342a624bc60a2">compensateAndStorePronto</a> (String *aString, uint16_t frequency=38000U)</td></tr>
+<tr class="separator:gac6e3066f2e8be8e4f18342a624bc60a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga85f5b5f6113b8a62bcb2b4378170f63c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga85f5b5f6113b8a62bcb2b4378170f63c">decodePulseDistanceWidthData</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants, uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset=3)</td></tr>
 <tr class="memdesc:ga85f5b5f6113b8a62bcb2b4378170f63c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode pulse distance protocols for <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.  <a href="group__Receiving.html#ga85f5b5f6113b8a62bcb2b4378170f63c">More...</a><br /></td></tr>
 <tr class="separator:ga85f5b5f6113b8a62bcb2b4378170f63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae968d8b6d897ac952215fae1f1be45b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gae968d8b6d897ac952215fae1f1be45b6">decodePulseDistanceWidthData</a> (uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, unsigned int aOneMarkMicros, unsigned int aZeroMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroSpaceMicros, bool aMSBfirst)</td></tr>
-<tr class="memdesc:gae968d8b6d897ac952215fae1f1be45b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode pulse distance width protocols.  <a href="group__Receiving.html#gae968d8b6d897ac952215fae1f1be45b6">More...</a><br /></td></tr>
-<tr class="separator:gae968d8b6d897ac952215fae1f1be45b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6322a15d6864654775796f4d090cdc9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRrecv.html#ac6322a15d6864654775796f4d090cdc9">decodeBiPhaseData</a> (uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint_fast8_t aStartClockCount, uint_fast8_t aValueOfSpaceToMarkTransition, unsigned int aBiphaseTimeUnit)</td></tr>
-<tr class="separator:ac6322a15d6864654775796f4d090cdc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3817aa7d3ac2ac825f348807eccae5db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga3817aa7d3ac2ac825f348807eccae5db">initBiphaselevel</a> (uint_fast8_t aRCDecodeRawbuffOffset, unsigned int aBiphaseTimeUnit)</td></tr>
-<tr class="separator:ga3817aa7d3ac2ac825f348807eccae5db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6cd51a8b666c1647a995b5c738f9402c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga6cd51a8b666c1647a995b5c738f9402c">decodePulseDistanceWidthData</a> (uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint16_t aOneMarkMicros, uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst)</td></tr>
+<tr class="memdesc:ga6cd51a8b666c1647a995b5c738f9402c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode pulse distance width protocols.  <a href="group__Receiving.html#ga6cd51a8b666c1647a995b5c738f9402c">More...</a><br /></td></tr>
+<tr class="separator:ga6cd51a8b666c1647a995b5c738f9402c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f72960e141618a12b57de0e4c0cae4f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRrecv.html#a9f72960e141618a12b57de0e4c0cae4f">decodeBiPhaseData</a> (uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint_fast8_t aStartClockCount, uint_fast8_t aValueOfSpaceToMarkTransition, uint16_t aBiphaseTimeUnit)</td></tr>
+<tr class="separator:a9f72960e141618a12b57de0e4c0cae4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacd517e921cf41136c8744799797c75e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gacd517e921cf41136c8744799797c75e2">initBiphaselevel</a> (uint_fast8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit)</td></tr>
+<tr class="separator:gacd517e921cf41136c8744799797c75e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac44c88dd418acc5d8068dbacda37e8e9"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9">getBiphaselevel</a> ()</td></tr>
 <tr class="memdesc:gac44c88dd418acc5d8068dbacda37e8e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer.  <a href="group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9">More...</a><br /></td></tr>
 <tr class="separator:gac44c88dd418acc5d8068dbacda37e8e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -210,6 +218,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:gaf9a5bf8248971aca9d4f5b68f3e9f858"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga680c0090daf6945a85fd2658af84dfac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac">decodeDenon</a> ()</td></tr>
 <tr class="separator:ga680c0090daf6945a85fd2658af84dfac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga26e0c4b0bd3cc4f5e007cd63904a7253"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253">decodeFAST</a> ()</td></tr>
+<tr class="separator:ga26e0c4b0bd3cc4f5e007cd63904a7253"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad6ecf38f85cefea8f71090fce4dbbbed"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed">decodeJVC</a> ()</td></tr>
 <tr class="separator:gad6ecf38f85cefea8f71090fce4dbbbed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga099d67ab5fef881af8838d6cb11d0b14"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14">decodeKaseikyo</a> ()</td></tr>
@@ -259,20 +269,22 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ga6bdd668914f10932bc87bc57c4059ccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc379370caac8ca6ab6f1fd1a4cc4359"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRrecv.html#acc379370caac8ca6ab6f1fd1a4cc4359">decodeHashOld</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
 <tr class="separator:acc379370caac8ca6ab6f1fd1a4cc4359"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9705c2ae98b44014e6e8bf55191b2eba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga9705c2ae98b44014e6e8bf55191b2eba">decode</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults) __attribute__((deprecated(&quot;Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.&lt;fieldname&gt; .&quot;)))</td></tr>
-<tr class="separator:ga9705c2ae98b44014e6e8bf55191b2eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga00d69eee1eaf3d055334399b567e6f79"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga00d69eee1eaf3d055334399b567e6f79">decode_old</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults)</td></tr>
+<tr class="separator:ga00d69eee1eaf3d055334399b567e6f79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9705c2ae98b44014e6e8bf55191b2eba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba">decode</a> (<a class="el" href="structdecode__results.html">decode_results</a> *aResults) __attribute__((deprecated(&quot;Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.&lt;fieldname&gt; .&quot;)))</td></tr>
+<tr class="separator:a9705c2ae98b44014e6e8bf55191b2eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac7fc50c7e08b8c339b2c1c912a0c6e89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#gac7fc50c7e08b8c339b2c1c912a0c6e89">blink13</a> (uint8_t aEnableLEDFeedback) __attribute__((deprecated(&quot;Please use <a class="el" href="group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921">setLEDFeedback</a>() or <a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback</a>() / <a class="el" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback</a>().&quot;)))</td></tr>
 <tr class="memdesc:gac7fc50c7e08b8c339b2c1c912a0c6e89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019" title="Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot ...">setLEDFeedback()</a> or <a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback()</a> / <a class="el" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback()</a>  <a href="group__FeedbackLEDFunctions.html#gac7fc50c7e08b8c339b2c1c912a0c6e89">More...</a><br /></td></tr>
 <tr class="separator:gac7fc50c7e08b8c339b2c1c912a0c6e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga26e37f666387134ed18393fd930f68db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga26e37f666387134ed18393fd930f68db">initDecodedIRData</a> ()</td></tr>
 <tr class="memdesc:ga26e37f666387134ed18393fd930f68db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is internally called by decode before calling decoders.  <a href="group__Receiving.html#ga26e37f666387134ed18393fd930f68db">More...</a><br /></td></tr>
 <tr class="separator:ga26e37f666387134ed18393fd930f68db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fad2dc90590178013096996edf248ed"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRrecv.html#a0fad2dc90590178013096996edf248ed">compare</a> (unsigned int oldval, unsigned int newval)</td></tr>
-<tr class="separator:a0fad2dc90590178013096996edf248ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d6653a616af4dd5cde8f4abf2b1c157"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRrecv.html#a9d6653a616af4dd5cde8f4abf2b1c157">compare</a> (uint16_t oldval, uint16_t newval)</td></tr>
+<tr class="separator:a9d6653a616af4dd5cde8f4abf2b1c157"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga69b3bcea4b42c620264d9212e409238e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga69b3bcea4b42c620264d9212e409238e">checkHeader</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants)</td></tr>
 <tr class="separator:ga69b3bcea4b42c620264d9212e409238e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad8ea6e853ca2864a3f8a2ca04174116c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gad8ea6e853ca2864a3f8a2ca04174116c">checkForRepeatSpaceAndSetFlag</a> (unsigned int aMediumRepeatSpaceMicros)</td></tr>
-<tr class="separator:gad8ea6e853ca2864a3f8a2ca04174116c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad00cc7b682411c68ccd2056b1d45fa84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gad00cc7b682411c68ccd2056b1d45fa84">checkForRepeatSpaceTicksAndSetFlag</a> (uint16_t aMaximumRepeatSpaceTicks)</td></tr>
+<tr class="separator:gad00cc7b682411c68ccd2056b1d45fa84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8f6a77e0e70e85964847b9c052f137f7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga8f6a77e0e70e85964847b9c052f137f7">checkForRecordGapsMicros</a> (Print *aSerial)</td></tr>
 <tr class="separator:ga8f6a77e0e70e85964847b9c052f137f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -297,10 +309,10 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main class for receiving IR signals. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00172">172</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00176">176</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0fad2dc90590178013096996edf248ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0fad2dc90590178013096996edf248ed">&#9670;&nbsp;</a></span>compare()</h2>
+<a id="a9d6653a616af4dd5cde8f4abf2b1c157"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d6653a616af4dd5cde8f4abf2b1c157">&#9670;&nbsp;</a></span>compare()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -308,13 +320,13 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">uint_fast8_t IRrecv::compare </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>oldval</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>newval</em>&#160;</td>
         </tr>
         <tr>
@@ -324,6 +336,26 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9705c2ae98b44014e6e8bf55191b2eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9705c2ae98b44014e6e8bf55191b2eba">&#9670;&nbsp;</a></span>decode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structdecode__results.html">decode_results</a> *&#160;</td>
+          <td class="paramname"><em>aResults</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRremote_8h_source.html#l00029">29</a> of file <a class="el" href="IRremote_8h_source.html">IRremote.h</a>.</p>
 
 </div>
 </div>
@@ -342,12 +374,12 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00286">286</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00290">290</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ac6322a15d6864654775796f4d090cdc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6322a15d6864654775796f4d090cdc9">&#9670;&nbsp;</a></span>decodeBiPhaseData()</h2>
+<a id="a9f72960e141618a12b57de0e4c0cae4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f72960e141618a12b57de0e4c0cae4f">&#9670;&nbsp;</a></span>decodeBiPhaseData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -379,7 +411,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>aBiphaseTimeUnit</em>&#160;</td>
         </tr>
         <tr>
@@ -496,7 +528,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00305">305</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00317">317</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -512,7 +544,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00309">309</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00321">321</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -528,7 +560,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00310">310</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00322">322</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -544,7 +576,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00308">308</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00320">320</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -560,7 +592,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00312">312</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00324">324</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -570,6 +602,7 @@ Public Attributes</h2></td></tr>
 <li>src/<a class="el" href="ir__BoseWave_8hpp_source.html">ir_BoseWave.hpp</a></li>
 <li>src/<a class="el" href="ir__Denon_8hpp_source.html">ir_Denon.hpp</a></li>
 <li>src/<a class="el" href="ir__DistanceWidthProtocol_8hpp_source.html">ir_DistanceWidthProtocol.hpp</a></li>
+<li>src/<a class="el" href="ir__FAST_8hpp_source.html">ir_FAST.hpp</a></li>
 <li>src/<a class="el" href="ir__JVC_8hpp_source.html">ir_JVC.hpp</a></li>
 <li>src/<a class="el" href="ir__Kaseikyo_8hpp_source.html">ir_Kaseikyo.hpp</a></li>
 <li>src/<a class="el" href="ir__Lego_8hpp_source.html">ir_Lego.hpp</a></li>
@@ -584,6 +617,7 @@ Public Attributes</h2></td></tr>
 <li>src/<a class="el" href="ir__Template_8hpp_source.html">ir_Template.hpp</a></li>
 <li>src/<a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a></li>
 <li>src/<a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a></li>
+<li>src/<a class="el" href="IRremote_8h_source.html">IRremote.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -591,7 +625,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classIRrecv.html">IRrecv</a></li>
-    <li class="footer">Generated on Thu Dec 29 2022 19:37:47 for IRremote by
+    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

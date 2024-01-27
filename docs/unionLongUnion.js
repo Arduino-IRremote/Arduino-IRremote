@@ -2,6 +2,7 @@ var unionLongUnion =
 [
     [ "Byte", "unionLongUnion.html#a718f6c5df5ea017a086a02470aefb718", null ],
     [ "Bytes", "unionLongUnion.html#a8c5178886b7c046da66506d996ee6587", null ],
+    [ "Float", "unionLongUnion.html#a827328f51189919e4de584da161e3279", null ],
     [ "HighByte", "unionLongUnion.html#a67e1514b7a6ccc4d017eb6928c327e5c", null ],
     [ "HighByte", "unionLongUnion.html#a9c076778ee637e06ea2ccec3ee6703ec", null ],
     [ "HighWord", "unionLongUnion.html#afd26d7d3a11130649129850162a7eb39", null ],

@@ -1,8 +1,8 @@
 <map id="src/TinyIRSender.hpp" name="src/TinyIRSender.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="43,5,189,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,155,83,181"/>
-<area shape="rect" id="node3" href="$TinyIR_8h.html" title=" " alt="" coords="81,80,151,107"/>
-<area shape="rect" id="node6" href="$digitalWriteFast_8h.html" title=" " alt="" coords="175,80,299,107"/>
-<area shape="rect" id="node4" href="$LongUnion_8h.html" title=" " alt="" coords="107,155,202,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="122,229,187,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="11,5,157,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="45,155,123,181"/>
+<area shape="rect" id="node3" href="$TinyIR_8h.html" title=" " alt="" coords="171,80,240,107"/>
+<area shape="rect" id="node6" href="$digitalWriteFast_8h.html" title=" " alt="" coords="22,80,146,107"/>
+<area shape="rect" id="node4" href="$LongUnion_8h.html" title=" " alt="" coords="158,155,253,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="173,229,238,256"/>
 </map>
