@@ -174,7 +174,7 @@ void IRsend::sendPronto(const char *str, int_fast8_t aNumberOfRepeats) {
 void IRsend::sendPronto_PF(uint_farptr_t str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_PF(str);
     char work[len + 1];
-    strncpy_PF(work, str, len);
+    strncpy_PF(work, str, sizeof(work));
     sendPronto(work, aNumberOfRepeats);
 }
 
@@ -182,7 +182,7 @@ void IRsend::sendPronto_PF(uint_farptr_t str, int_fast8_t aNumberOfRepeats) {
 void IRsend::sendPronto_P(const char *str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_P(str);
     char work[len + 1];
-    strncpy_P(work, str, len);
+    strncpy_P(work, str, sizeof(work));
     sendPronto(work, aNumberOfRepeats);
 }
 #endif
@@ -190,7 +190,7 @@ void IRsend::sendPronto_P(const char *str, int_fast8_t aNumberOfRepeats) {
 void IRsend::sendPronto(const __FlashStringHelper *str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_P(reinterpret_cast<const char*>(str));
     char work[len + 1];
-    strncpy_P(work, reinterpret_cast<const char*>(str), len);
+    strncpy_P(work, reinterpret_cast<const char*>(str), sizeof(work));
     return sendPronto(work, aNumberOfRepeats);
 }
 
