@@ -134,6 +134,8 @@
 #define TINY_RECEIVER_ADDRESS_BITS          NEC_ADDRESS_BITS // the address bits + parity
 #  if defined(USE_ONKYO_PROTOCOL)
 #define TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY  false     // 16 bit address without parity
+#  elif defined(USE_EXTENDED_NEC_PROTOCOL)
+#define TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY  false     // 16 bit address without parity
 #  else
 #define TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY  true     // 8 bit and 8 bit parity
 #  endif
