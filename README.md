@@ -418,7 +418,7 @@ http://www.harctoolbox.org/IR-resources.html
 
 
 # Tiny NEC receiver and sender
-For applications only requiring NEC or FAST -see below- protocol, there is a special receiver / sender included,<br/>
+For applications only requiring NEC, NEC variants or FAST -see below- protocol, there is a special receiver / sender included,<br/>
 which has very **small code size of 500 bytes and does NOT require any timer**.
 
 Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote#irdispatcherdemo) examples.<br/>
@@ -598,7 +598,7 @@ A simple example can be tested online with [WOKWI](https://wokwi.com/projects/33
 
 #### TinyReceiver + TinySender
 If **code size** or **timer usage** matters, look at these examples.<br/>
-The **[TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinyReceiver/TinyReceiver.ino)** example uses the **TinyIRReceiver** library  which can **only receive NEC, ONKYO and FAST protocols, but does not require any timer**. They use pin change interrupt for on the fly decoding, which is the reason for the restricted protocol choice.<br/>
+The **[TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinyReceiver/TinyReceiver.ino)** example uses the **TinyIRReceiver** library  which can **only receive NEC, Extended NEC, ONKYO and FAST protocols, but does not require any timer**. They use pin change interrupt for on the fly decoding, which is the reason for the restricted protocol choice.<br/>
 TinyReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/projects/339264565653013075).
 
 The **[TinySender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinySender/TinySender.ino)** example uses the **TinyIRSender** library  which can **only send NEC, ONKYO and FAST protocols**.<br/>
@@ -717,7 +717,8 @@ These next macros for **TinyIRReceiver** must be defined in your program before 
 | `IR_FEEDBACK_LED_PIN` | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the feedback LED function. Saves 14 bytes program memory. |
 | `DISABLE_PARITY_CHECKS` | disabled | Disables the addres and command parity checks. Saves 48 bytes program memory. |
-| `USE_ONKYO_PROTOCOL` | disabled | Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
+| `USE_EXTENDED_NEC_PROTOCOL` | disabled | Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
+| `USE_ONKYO_PROTOCOL` | disabled | Like NEC, but take both the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
 | `USE_FAST_PROTOCOL` | disabled | Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC. |
 | `ENABLE_NEC2_REPEATS` | disabled | Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat. |
 | `USE_CALLBACK_FOR_TINY_RECEIVER` | disabled | Call the fixed function `void handleReceivedTinyIRData()` each time a frame or repeat is received. |
