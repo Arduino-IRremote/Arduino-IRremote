@@ -85,6 +85,7 @@
 #define ADC_TEMPERATURE_CHANNEL_MUX 15
 #define ADC_1_1_VOLT_CHANNEL_MUX    12
 #define ADC_GND_CHANNEL_MUX         13
+#define ADC_CHANNEL_MUX_MASK        0x0F
 
 #elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)
 #define ADC_ISCR_CHANNEL_MUX         3
@@ -92,20 +93,25 @@
 #define ADC_1_1_VOLT_CHANNEL_MUX    12
 #define ADC_GND_CHANNEL_MUX         14
 #define ADC_VCC_4TH_CHANNEL_MUX     13
+#define ADC_CHANNEL_MUX_MASK        0x1F
 
 #elif defined(__AVR_ATmega328P__)
 #define ADC_TEMPERATURE_CHANNEL_MUX  8
 #define ADC_1_1_VOLT_CHANNEL_MUX    14
 #define ADC_GND_CHANNEL_MUX         15
+#define ADC_CHANNEL_MUX_MASK        0x0F
 
 #elif defined(__AVR_ATmega32U4__)
 #define ADC_TEMPERATURE_CHANNEL_MUX 0x27
 #define ADC_1_1_VOLT_CHANNEL_MUX    0x1E
 #define ADC_GND_CHANNEL_MUX         0x1F
+#define ADC_CHANNEL_MUX_MASK        0x3F
 
 #elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644A__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644PA__)
 #define ADC_1_1_VOLT_CHANNEL_MUX    0x1E
 #define ADC_GND_CHANNEL_MUX         0x1F
+#define ADC_CHANNEL_MUX_MASK        0x1F
+
 #define INTERNAL INTERNAL1V1
 
 #else
@@ -164,7 +170,10 @@ uint16_t waitAndReadADCChannelWithReferenceAndRestoreADMUXAndReference(uint8_t a
 uint16_t readADCChannelWithOversample(uint8_t aADCChannelNumber, uint8_t aOversampleExponent);
 void setADCChannelAndReferenceForNextConversion(uint8_t aADCChannelNumber, uint8_t aReference);
 uint16_t readADCChannelWithReferenceOversampleFast(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aOversampleExponent);
-uint16_t readADCChannelWithReferenceMultiSamples(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aNumberOfSamples);
+uint32_t readADCChannelMultiSamples(uint8_t aPrescale, uint16_t aNumberOfSamples);
+uint16_t readADCChannelMultiSamplesWithReference(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aNumberOfSamples);
+uint32_t readADCChannelMultiSamplesWithReferenceAndPrescaler(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aPrescale,
+        uint16_t aNumberOfSamples);
 uint16_t readADCChannelWithReferenceMax(uint8_t aADCChannelNumber, uint8_t aReference, uint16_t aNumberOfSamples);
 uint16_t readADCChannelWithReferenceMaxMicros(uint8_t aADCChannelNumber, uint8_t aReference, uint16_t aMicrosecondsToAquire);
 uint16_t readUntil4ConsecutiveValuesAreEqual(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aDelay,
@@ -192,7 +201,8 @@ float getCPUTemperatureSimple(void);
 float getCPUTemperature(void);
 float getTemperature(void) __attribute__ ((deprecated ("Renamed to getCPUTemperature()"))); // deprecated
 
-bool isVCCUSBPowered() ;
+bool isVCCUSBPowered();
+bool isVCCUSBPowered(Print *aSerial);
 bool isVCCUndervoltageMultipleTimes();
 void resetCounterForVCCUndervoltageMultipleTimes();
 bool isVCCUndervoltage();

@@ -247,6 +247,7 @@ struct TinyIRReceiverCallbackDataStruct {
 };
 extern volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
 
+bool isIRReceiverAttachedForTinyReceiver();
 bool initPCIInterruptForTinyReceiver();
 bool enablePCIInterruptForTinyReceiver();
 void disablePCIInterruptForTinyReceiver();

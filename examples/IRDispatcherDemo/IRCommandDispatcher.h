@@ -5,14 +5,14 @@
  *
  * To run this example you need to install the "IRremote" or "IRMP" library under "Tools -> Manage Libraries..." or "Ctrl+Shift+I"
  *
- *  Copyright (C) 2019-2021  Armin Joachimsmeyer
+ *  Copyright (C) 2019-2024  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of ServoEasing https://github.com/ArminJo/ServoEasing.
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
- *  ServoEasing is free software: you can redistribute it and/or modify
+ *  IRCommandDispatcher is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
@@ -38,6 +38,22 @@
 #define IR_COMMAND_FLAG_REPEATABLE      0x01 // repeat accepted
 #define IR_COMMAND_FLAG_NON_BLOCKING    0x02 // Non blocking (short) command that can be processed any time and may interrupt other IR commands - used for stop, set direction etc.
 #define IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING (IR_COMMAND_FLAG_REPEATABLE | IR_COMMAND_FLAG_NON_BLOCKING)
+#define IR_COMMAND_FLAG_BEEP            0x04 // Do a single short beep before executing command. May not be useful for short or repeating commands.
+#define IR_COMMAND_FLAG_BLOCKING_BEEP   (IR_COMMAND_FLAG_BLOCKING | IR_COMMAND_FLAG_BEEP)
+
+
+#if !defined(IS_STOP_REQUESTED)
+#define IS_STOP_REQUESTED               IRDispatcher.requestToStopReceived
+#endif
+#if !defined(RETURN_IF_STOP)
+#define RETURN_IF_STOP                  if (IRDispatcher.requestToStopReceived) return
+#endif
+#if !defined(BREAK_IF_STOP)
+#define BREAK_IF_STOP                   if (IRDispatcher.requestToStopReceived) break
+#endif
+#if !defined(DELAY_AND_RETURN_IF_STOP)
+#define DELAY_AND_RETURN_IF_STOP(aDurationMillis)   if (IRDispatcher.delayAndCheckForStop(aDurationMillis)) return
+#endif
 
 // Basic mapping structure
 struct IRToCommandMappingStruct {
@@ -72,13 +88,10 @@ struct IRDataForCommandDispatcherStruct {
 #define COMMAND_EMPTY       0xFF // code no command
 #endif
 
-#define RETURN_IF_STOP  if (IRDispatcher.requestToStopReceived) return
-#define BREAK_IF_STOP   if (IRDispatcher.requestToStopReceived) break
-#define DELAY_AND_RETURN_IF_STOP(aDurationMillis)   if (IRDispatcher.delayAndCheckForStop(aDurationMillis)) return
-
 class IRCommandDispatcher {
 public:
     void init();
+    void printIRInfo(Print *aSerial);
 
     bool checkAndRunNonBlockingCommands();
     bool checkAndRunSuspendedBlockingCommands();
@@ -107,7 +120,8 @@ public:
     bool justCalledBlockingCommand = false;             // Flag that a blocking command was received and called - is set before call of command
     /*
      * Flag for running blocking commands to terminate. To check, you can use "if (IRDispatcher.requestToStopReceived) return;" (available as macro RETURN_IF_STOP).
-     * Is reset by next IR command received. Can be reset by main loop, if command has stopped.
+     * It is set if a blocking IR command received, which cannot be executed directly. Can be reset by main loop, if command has stopped.
+     * It is reset before executing a blocking command.
      */
     volatile bool requestToStopReceived;
     /*

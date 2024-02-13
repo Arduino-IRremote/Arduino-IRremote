@@ -58,7 +58,7 @@
  * - IR_FEEDBACK_LED_PIN    The pin number for TinyIRReceiver feedback LED.
  * - NO_LED_FEEDBACK_CODE   Disables the feedback LED function. Saves 14 bytes program memory.
  * - DISABLE_PARITY_CHECKS  Disable parity checks. Saves 48 bytes of program memory.
- * - USE_EXTENDED_NEC_PROTOCOL     Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
+ * - USE_EXTENDED_NEC_PROTOCOL Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
  * - USE_ONKYO_PROTOCOL     Like NEC, but take both the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
  * - USE_FAST_PROTOCOL      Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC.
  * - ENABLE_NEC2_REPEATS    Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
@@ -78,7 +78,7 @@
 
 //#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 //#define USE_EXTENDED_NEC_PROTOCOL // Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
-//#define USE_ONKYO_PROTOCOL    // Like NEC, but take both the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
+//#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC / ONKYO.
 //#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 
@@ -421,6 +421,17 @@ void IRPinChangeInterruptHandler(void) {
 
 bool isTinyReceiverIdle() {
     return (TinyIRReceiverControl.IRReceiverState == IR_RECEIVER_STATE_WAITING_FOR_START_MARK);
+}
+
+/*
+ * Checks if IR_RECEIVE_PIN is connected and high
+ * @return true, if IR Receiver is attached
+ */
+bool isIRReceiverAttachedForTinyReceiver() {
+    pinModeFast(IR_RECEIVE_PIN, OUTPUT);
+    digitalWriteFast(IR_RECEIVE_PIN, LOW); // discharge pin capacity
+    pinModeFast(IR_RECEIVE_PIN, INPUT);
+    return digitalRead(IR_RECEIVE_PIN); // use slow digitalRead here, since the pin capacity is not fully charged again if we use digitalReadFast.
 }
 
 /**

@@ -58,7 +58,7 @@ union WordUnionForADCUtils {
  * Enable this to see information on each call.
  * Since there should be no library which uses Serial, it should only be enabled for development purposes.
  */
-#if defined(DEBUG)
+#if defined(DEBUG) && !defined(LOCAL_DEBUG)
 #define LOCAL_DEBUG
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file
@@ -162,11 +162,14 @@ uint8_t checkAndWaitForReferenceAndChannelToSwitch(uint8_t aADCChannelNumber, ui
 #else
     if ((tOldADMUX & MASK_FOR_ADC_REFERENCE) != tNewReference && aReference == INTERNAL) {
 #endif
+#if defined(LOCAL_DEBUG)
+        Serial.println(F("Switch from DEFAULT to INTERNAL"));
+#endif
         /*
          * Switch reference from DEFAULT to INTERNAL
          */
         delayMicroseconds(8000); // experimental value is >= 7600 us for Nano board and 6200 for Uno board
-    } else if ((tOldADMUX & 0x0F) != aADCChannelNumber) {
+    } else if ((tOldADMUX & ADC_CHANNEL_MUX_MASK) != aADCChannelNumber) {
         if (aADCChannelNumber == ADC_1_1_VOLT_CHANNEL_MUX) {
             /*
              * Internal 1.1 Volt channel requires  <= 200 us for Nano board
@@ -249,9 +252,10 @@ uint16_t readADCChannelWithReferenceOversampleFast(uint8_t aADCChannelNumber, ui
 
 /*
  * Returns sum of all sample values
- * Conversion time is defined as 0.104 milliseconds for 16 MHz Arduino by ADC_PRESCALE in ADCUtils.h.
+ * Conversion time is defined as 0.104 milliseconds for 16 MHz Arduino by ADC_PRESCALE (=ADC_PRESCALE128) in ADCUtils.h.
+ * @ param aNumberOfSamples If > 64 an overflow may occur.
  */
-uint16_t readADCChannelWithReferenceMultiSamples(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aNumberOfSamples) {
+uint16_t readADCChannelMultiSamplesWithReference(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aNumberOfSamples) {
     uint16_t tSumValue = 0;
     ADMUX = aADCChannelNumber | (aReference << SHIFT_VALUE_FOR_REFERENCE);
 
@@ -275,6 +279,65 @@ uint16_t readADCChannelWithReferenceMultiSamples(uint8_t aADCChannelNumber, uint
     return tSumValue;
 }
 
+/*
+ * Returns sum of all sample values
+ * Conversion time is defined as 0.104 milliseconds for 16 MHz Arduino for ADC_PRESCALE128 in ADCUtils.h.
+ * @ param aPrescale can be one of ADC_PRESCALE2, ADC_PRESCALE4, 8, 16, 32, 64, 128.
+ *                   ADC_PRESCALE32 is recommended for excellent linearity and fast readout of 26 microseconds
+ * @ param aNumberOfSamples If > 16k an overflow may occur.
+ */
+uint32_t readADCChannelMultiSamplesWithReferenceAndPrescaler(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aPrescale,
+        uint16_t aNumberOfSamples) {
+    uint32_t tSumValue = 0;
+    ADMUX = aADCChannelNumber | (aReference << SHIFT_VALUE_FOR_REFERENCE);
+
+    ADCSRB = 0; // Free running mode. Only active if ADATE is set to 1.
+    // ADSC-StartConversion ADATE-AutoTriggerEnable ADIF-Reset Interrupt Flag
+    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIF) | aPrescale);
+
+    for (uint16_t i = 0; i < aNumberOfSamples; i++) {
+        /*
+         * wait for free running conversion to finish.
+         * Do not wait for ADSC here, since ADSC is only low for 1 ADC Clock cycle on free running conversion.
+         */
+        loop_until_bit_is_set(ADCSRA, ADIF);
+
+        ADCSRA |= _BV(ADIF); // clear bit to enable recognizing next conversion has finished
+        // Add value
+        tSumValue += ADCL | (ADCH << 8); // using WordUnionForADCUtils does not save space here
+        // tSumValue += (ADCH << 8) | ADCL; // this does NOT work!
+    }
+    ADCSRA &= ~_BV(ADATE); // Disable auto-triggering (free running mode)
+    return tSumValue;
+}
+
+/*
+ * Returns sum of all sample values
+ * Assumes, that channel and reference are still set to the right values
+ * @ param aNumberOfSamples If > 16k an overflow may occur.
+ */
+uint32_t readADCChannelMultiSamples(uint8_t aPrescale, uint16_t aNumberOfSamples) {
+    uint32_t tSumValue = 0;
+
+    ADCSRB = 0; // Free running mode. Only active if ADATE is set to 1.
+    // ADSC-StartConversion ADATE-AutoTriggerEnable ADIF-Reset Interrupt Flag
+    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIF) | aPrescale);
+
+    for (uint16_t i = 0; i < aNumberOfSamples; i++) {
+        /*
+         * wait for free running conversion to finish.
+         * Do not wait for ADSC here, since ADSC is only low for 1 ADC Clock cycle on free running conversion.
+         */
+        loop_until_bit_is_set(ADCSRA, ADIF);
+
+        ADCSRA |= _BV(ADIF); // clear bit to enable recognizing next conversion has finished
+        // Add value
+        tSumValue += ADCL | (ADCH << 8); // using WordUnionForADCUtils does not save space here
+        // tSumValue += (ADCH << 8) | ADCL; // this does NOT work!
+    }
+    ADCSRA &= ~_BV(ADATE); // Disable auto-triggering (free running mode)
+    return tSumValue;
+}
 /*
  * use ADC_PRESCALE32 which gives 26 us conversion time and good linearity
  * @return the maximum value of aNumberOfSamples samples.
@@ -408,7 +471,7 @@ uint16_t readUntil4ConsecutiveValuesAreEqual(uint8_t aADCChannelNumber, uint8_t 
  */
 float getVCCVoltageSimple(void) {
     // use AVCC with (optional) external capacitor at AREF pin as reference
-    float tVCC = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
+    float tVCC = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
     return ((1023 * 1.1 * 4) / tVCC);
 }
 
@@ -419,7 +482,7 @@ float getVCCVoltageSimple(void) {
  */
 uint16_t getVCCVoltageMillivoltSimple(void) {
     // use AVCC with external capacitor at AREF pin as reference
-    uint16_t tVCC = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
+    uint16_t tVCC = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
     return ((1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCC);
 }
 
@@ -459,6 +522,9 @@ uint16_t getVCCVoltageMillivolt(void) {
     return ((1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT) / tVCC);
 }
 
+/*
+ * Does not set sVCCVoltageMillivolt
+ */
 uint16_t printVCCVoltageMillivolt(Print *aSerial) {
     aSerial->print(F("VCC="));
     uint16_t tVCCVoltageMillivolt = getVCCVoltageMillivolt();
@@ -480,7 +546,7 @@ void readAndPrintVCCVoltageMillivolt(Print *aSerial) {
  */
 void readVCCVoltageSimple(void) {
     // use AVCC with (optional) external capacitor at AREF pin as reference
-    float tVCC = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
+    float tVCC = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
     sVCCVoltage = (1023 * (((float) ADC_INTERNAL_REFERENCE_MILLIVOLT) / 1000) * 4) / tVCC;
 }
 
@@ -491,7 +557,7 @@ void readVCCVoltageSimple(void) {
  */
 void readVCCVoltageMillivoltSimple(void) {
     // use AVCC with external capacitor at AREF pin as reference
-    uint16_t tVCCVoltageMillivoltRaw = readADCChannelWithReferenceMultiSamples(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
+    uint16_t tVCCVoltageMillivoltRaw = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
     sVCCVoltageMillivolt = (1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCCVoltageMillivoltRaw;
 }
 
@@ -546,6 +612,25 @@ bool isVCCUSBPowered() {
     readVCCVoltageMillivolt();
     return (VOLTAGE_USB_POWERED_LOWER_THRESHOLD_MILLIVOLT < sVCCVoltageMillivolt
             && sVCCVoltageMillivolt < VOLTAGE_USB_POWERED_UPPER_THRESHOLD_MILLIVOLT);
+}
+
+/*
+ * Return true if sVCCVoltageMillivolt is > 4.3 V and < 4.95 V
+ */
+bool isVCCUSBPowered(Print *aSerial) {
+    readVCCVoltageMillivolt();
+    aSerial->print(F("USB powered is "));
+    bool tReturnValue;
+    if (VOLTAGE_USB_POWERED_LOWER_THRESHOLD_MILLIVOLT
+            < sVCCVoltageMillivolt&& sVCCVoltageMillivolt < VOLTAGE_USB_POWERED_UPPER_THRESHOLD_MILLIVOLT) {
+        tReturnValue = true;
+        aSerial->print(F("true "));
+    } else {
+        tReturnValue = false;
+        aSerial->print(F("false "));
+    }
+    printVCCVoltageMillivolt(aSerial);
+    return tReturnValue;
 }
 
 /*
@@ -685,7 +770,7 @@ float getCPUTemperature(void) {
 }
 
 #else // defined(ADC_UTILS_ARE_AVAILABLE)
-// Dummy definition of functions defined in ADCUtils to compile examples without errors
+// Dummy definition of functions defined in ADCUtils to compile examples for non AVR platforms without errors
 /*
  * Persistent storage for VCC value
  */

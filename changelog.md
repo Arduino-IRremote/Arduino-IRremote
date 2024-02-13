@@ -2,6 +2,10 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+# 4.2.2
+- Added convenience function isIRReceiverAttachedForTinyReceiver().
+- Added Extended NEC Protocol to TinyIR by Butzerb
+
 # 4.2.1
 - Fix wrong type of tEnableLEDFeedback in IRSend.hpp and IRReceive.hpp.
 - TinyReceiver 2.0
