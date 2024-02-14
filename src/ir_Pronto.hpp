@@ -174,7 +174,7 @@ void IRsend::sendPronto(const char *str, int_fast8_t aNumberOfRepeats) {
 void IRsend::sendPronto_PF(uint_farptr_t str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_PF(str);
     char work[len + 1];
-    strncpy_PF(work, str, len);
+    strcpy_PF(work, str); // We know that string including terminating character fits in work
     sendPronto(work, aNumberOfRepeats);
 }
 
@@ -182,7 +182,7 @@ void IRsend::sendPronto_PF(uint_farptr_t str, int_fast8_t aNumberOfRepeats) {
 void IRsend::sendPronto_P(const char *str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_P(str);
     char work[len + 1];
-    strncpy_P(work, str, len);
+    strcpy_P(work, str);
     sendPronto(work, aNumberOfRepeats);
 }
 #endif
@@ -190,7 +190,7 @@ void IRsend::sendPronto_P(const char *str, int_fast8_t aNumberOfRepeats) {
 void IRsend::sendPronto(const __FlashStringHelper *str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_P(reinterpret_cast<const char*>(str));
     char work[len + 1];
-    strncpy_P(work, reinterpret_cast<const char*>(str), len);
+    strcpy_P(work, reinterpret_cast<const char*>(str));
     return sendPronto(work, aNumberOfRepeats);
 }
 
