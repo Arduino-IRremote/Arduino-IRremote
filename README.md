@@ -447,7 +447,7 @@ void loop() {
 #include "TinyIRSender.hpp"
 
 void setup() {
-  sendNECMinimal(3, 0, 11, 2); // Send address 0 and command 11 on pin 3 with 2 repeats.
+  sendNEC(3, 0, 11, 2); // Send address 0 and command 11 on pin 3 with 2 repeats.
 }
 
 void loop() {}
@@ -604,7 +604,7 @@ They use pin change interrupt for on the fly decoding, which is the reason for t
 TinyReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/projects/339264565653013075).
 
 The **[TinySender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinySender/TinySender.ino)** example uses the **TinyIRSender** library  which can **only send NEC, ONKYO and FAST protocols**.<br/>
-It sends NEC protocol codes in standard format with 8 bit address and 8 bit command as in SimpleSender example.
+It sends NEC protocol codes in standard format with 8 bit address and 8 bit command as in SimpleSender example. It has options to send using Extended NEC, ONKYO and FAST protocols.
 Saves  780 bytes program memory and 26 bytes RAM compared to SimpleSender, which does the same, but uses the IRRemote library (and is therefore much more flexible).
 
 #### SmallReceiver

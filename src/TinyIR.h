@@ -256,10 +256,11 @@ void printTinyReceiverResultMinimal(Print *aSerial);
 
 void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
 void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
-void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0); // Send NEC with 16 bit command, even if aCommand < 0x100
+void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool NEC2Repeats = false); // Send NEC with 16 bit command, even if aCommand < 0x100
 void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0)
         __attribute__ ((deprecated ("Renamed to sendNEC().")));
-void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
+void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool NEC2Repeats = false);
+void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool NEC2Repeats = false);
 
 /*
  *  Version 2.0.0 - 10/2023
