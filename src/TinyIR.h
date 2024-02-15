@@ -34,9 +34,9 @@
  * @{
  */
 
-#define VERSION_TINYIR "2.0.0"
+#define VERSION_TINYIR "2.1.0"
 #define VERSION_TINYIR_MAJOR 2
-#define VERSION_TINYIR_MINOR 0
+#define VERSION_TINYIR_MINOR 1
 #define VERSION_TINYIR_PATCH 0
 // The change log is at the bottom of the file
 
@@ -256,13 +256,16 @@ void printTinyReceiverResultMinimal(Print *aSerial);
 
 void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
 void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats = 0);
-void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool NEC2Repeats = false); // Send NEC with 16 bit command, even if aCommand < 0x100
+void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool aSendNEC2Repeats = false); // Send NEC with 16 bit command, even if aCommand < 0x100
 void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0)
         __attribute__ ((deprecated ("Renamed to sendNEC().")));
-void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool NEC2Repeats = false);
-void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool NEC2Repeats = false);
+void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool aSendNEC2Repeats = false);
+void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool aSendNEC2Repeats = false);
 
 /*
+ *  Version 2.1.0 - 2/2024
+ *  - New sendExtendedNEC() function and new parameter aSendNEC2Repeats.
+ *
  *  Version 2.0.0 - 10/2023
  *  - New TinyIRReceiverData which is filled with address, command and flags.
  *  - Removed parameters address, command and flags from callback handleReceivedTinyIRData() and printTinyReceiverResultMinimal().

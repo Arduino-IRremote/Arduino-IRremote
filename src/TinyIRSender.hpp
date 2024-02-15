@@ -19,7 +19,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-2023 Armin Joachimsmeyer
+ * Copyright (c) 2022-2024 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -109,8 +109,9 @@ void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
  * @param aAddress  - The 16 bit address to send.
  * @param aCommand  - The 16 bit command to send.
  * @param aNumberOfRepeats  - Number of repeats send at a period of 110 ms.
+ * @param aSendNEC2Repeats - Instead of sending the NEC special repeat code, send the original frame for repeat.
  */
-void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool NEC2Repeats) {
+void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
@@ -118,7 +119,7 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
         unsigned long tStartOfFrameMillis = millis();
 
         sendMark(aSendPin, NEC_HEADER_MARK);
-        if ((!NEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
+        if ((!aSendNEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
             // send the NEC special repeat
             delayMicroseconds(NEC_REPEAT_HEADER_SPACE); // - 2250
         } else {
@@ -159,11 +160,12 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
  * @param aAddress  - If aAddress < 0x100 send 8 bit address and 8 bit inverted address, else send 16 bit address.
  * @param aCommand  - If aCommand < 0x100 send 8 bit command and 8 bit inverted command, else send 16 bit command.
  * @param aNumberOfRepeats  - Number of repeats send at a period of 110 ms.
+ * @param aSendNEC2Repeats - Instead of sending the NEC special repeat code, send the original frame for repeat.
  */
 void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats) {
     sendNEC(aSendPin, aAddress, aCommand, aNumberOfRepeats); // sendNECMinimal() is deprecated
 }
-void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool NEC2Repeats) {
+void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
@@ -171,7 +173,7 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
         unsigned long tStartOfFrameMillis = millis();
 
         sendMark(aSendPin, NEC_HEADER_MARK);
-        if ((!NEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
+        if ((!aSendNEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
             // send the NEC special repeat
             delayMicroseconds(NEC_REPEAT_HEADER_SPACE); // - 2250
         } else {
@@ -227,8 +229,9 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
  * @param aAddress  - Send 16 bit address.
  * @param aCommand  - If aCommand < 0x100 send 8 bit command and 8 bit inverted command, else send 16 bit command.
  * @param aNumberOfRepeats  - Number of repeats send at a period of 110 ms.
+ * @param aSendNEC2Repeats - Instead of sending the NEC special repeat code, send the original frame for repeat.
  */
-void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool NEC2Repeats) {
+void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
@@ -236,7 +239,7 @@ void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uin
         unsigned long tStartOfFrameMillis = millis();
 
         sendMark(aSendPin, NEC_HEADER_MARK);
-        if ((!NEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
+        if ((!aSendNEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
             // send the NEC special repeat
             delayMicroseconds(NEC_REPEAT_HEADER_SPACE); // - 2250
         } else {
