@@ -110,7 +110,7 @@ void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
  * @param aCommand  - The 16 bit command to send.
  * @param aNumberOfRepeats  - Number of repeats send at a period of 110 ms.
  */
-void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool NEC2Repeats = false) {
+void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool NEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
@@ -163,7 +163,7 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
 void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats) {
     sendNEC(aSendPin, aAddress, aCommand, aNumberOfRepeats); // sendNECMinimal() is deprecated
 }
-void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool NEC2Repeats = false) {
+void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool NEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
@@ -228,7 +228,7 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
  * @param aCommand  - If aCommand < 0x100 send 8 bit command and 8 bit inverted command, else send 16 bit command.
  * @param aNumberOfRepeats  - Number of repeats send at a period of 110 ms.
  */
-void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool NEC2Repeats = false) {
+void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool NEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;

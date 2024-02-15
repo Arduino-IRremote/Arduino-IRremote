@@ -1,10 +1,11 @@
 /*
  * TinySender.ino
  *
- *  Example for sending FAST or NEC/NEC variant protocols using TinyIR.
- *
- *  By default, NEC protocol codes are sent in standard format with 8 bit address and 8 bit command as in SimpleSender example.
- *  Saves 780 bytes program memory and 26 bytes RAM compared to SimpleSender, which does the same, but uses the IRRemote library (and is therefore much more flexible).
+ *  Example for sending using TinyIR. By default sends simultaneously using all supported protocols
+ *  To use a single protocol, simply delete or comment out all unneeded protocols in the main loop
+ *  Program size is significantly reduced when using a single protocol
+ *  For example, sending only 8 bit address and command NEC codes saves 780 bytes program memory and 26 bytes RAM compared to SimpleSender, 
+ *  which does the same, but uses the IRRemote library (and is therefore much more flexible).
  *
  *
  * The FAST protocol is a proprietary modified JVC protocol without address, with parity and with a shorter header.
@@ -47,17 +48,6 @@
 
 #include "PinDefinitionsAndMore.h" // Set IR_SEND_PIN for different CPU's
 
-/*
- * Note:
- * Although the below compile flags affect the behaviour of this sketch, and TinyIRReceiver.hpp, they do not directly affect the behaviour of TinyIRSender.hpp
- * To send using different protocols, use the different functions included in TinyIRSender.hpp. This allows use of multiple functions at once.
- * See this script for examples.
-*/
-//#define USE_EXTENDED_NEC_PROTOCOL // Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
-//#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
-//#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
-//#define ENABLE_NEC2_REPEATS   // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
-
 #include "TinyIRSender.hpp"
 
 void setup() {
@@ -88,46 +78,47 @@ void loop() {
      */
     Serial.println();
     Serial.print(F("Send now:"));
-#if !defined(USE_FAST_PROTOCOL)
-    //FAST has no address
     Serial.print(F(" address=0x"));
     Serial.print(sAddress, HEX);
-#endif
     Serial.print(F(" command=0x"));
     Serial.print(sCommand, HEX);
     Serial.print(F(" repeats="));
     Serial.print(sRepeats);
     Serial.println();
-
-#if defined(USE_FAST_PROTOCOL)
+    
+    // Send with FAST 
+    // No address and only 16 bits of data, interpreted as 8 bit command and 8 bit inverted command for parity checking
     Serial.println(F("Send FAST with 8 bit command"));
     Serial.flush();
     sendFAST(IR_SEND_PIN, sCommand, sRepeats);
-#elif defined(USE_ONKYO_PROTOCOL)
-    Serial.println(F("Send ONKYO with 16 bit address and command"));
-    Serial.flush();
-#if defined(ENABLE_NEC2_REPEATS) //For NEC2 repeats, set the optional NEC2Repeats parameter true (defaults to false)
-    sendONKYO(IR_SEND_PIN, sAddress, sCommand, sRepeats, true);
-#else //Otherwise, for normal NEC repeats
-    sendONKYO(IR_SEND_PIN, sAddress, sCommand, sRepeats);
-#endif
-#elif defined(USE_EXTENDED_NEC_PROTOCOL)
-    Serial.println(F("Send ExtendedNEC with 16 bit address and  8 bit command"));
-    Serial.flush();
-#if defined(ENABLE_NEC2_REPEATS) //For NEC2 repeats, set the optional NEC2Repeats parameter true (defaults to false)
-    sendExtendedNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats, true);
-#else //Otherwise, for normal NEC repeats
-    sendExtendedNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats);
-#endif
-#else
+    
+    // Send with NEC 
+    // NEC uses 8 bit address and 8 bit command each with 8 bit inverted parity checks
+    // However, sendNEC will accept 16 bit address and commands too (but remove the parity checks)
     Serial.println(F("Send NEC with 8 bit address and command"));
     Serial.flush();
-#if defined(ENABLE_NEC2_REPEATS) //For NEC2 repeats, set the optional NEC2Repeats parameter true (defaults to false)
-    sendNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats, true);
-#else //Otherwise, for normal NEC repeats
     sendNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats);
-#endif
-#endif
+    
+    // Send with Extended NEC
+    // Like NEC, but the address is forced 16 bits with no parity check 
+    Serial.println(F("Send ExtendedNEC with 16 bit address and  8 bit command"));
+    Serial.flush();
+    sendExtendedNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats);
+    
+    // Send with ONKYO
+    // Like NEC, but both the address and command are forced 16 bits with no parity check
+    Serial.println(F("Send ONKYO with 16 bit address and command"));
+    Serial.flush();
+    sendONKYO(IR_SEND_PIN, sAddress, sCommand, sRepeats);
+    
+    // Send with NEC2
+    // Instead of sending the NEC special repeat code, sends the full original frame for repeats
+    // Sending NEC2 is done by setting the optional bool NEC2Repeats argument to true (defaults to false)
+    // sendExtendedNEC and sendONKYO also support the NEC2Repeats argument for full frame repeats (not demonstrated here)
+    Serial.println(F("Send NEC2 with 8 bit address and command and original frame repeats"));
+    Serial.flush();
+    sendNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats, true);
+    
     /*
      * Increment send values
      * Also increment address just for demonstration, which normally makes no sense
