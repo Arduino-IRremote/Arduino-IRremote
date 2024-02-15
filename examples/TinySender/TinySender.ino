@@ -1,10 +1,11 @@
 /*
- * TinySender.cpp
+ * TinySender.ino
  *
- *  Example for sending FAST or NEC protocol using TinyIR.
+ *  Example for sending FAST or NEC/NEC variant protocols using TinyIR.
  *
- *  NEC protocol codes are sent in standard format with 8bit address and 8 bit command as in SimpleSender example.
+ *  By default, NEC protocol codes are sent in standard format with 8 bit address and 8 bit command as in SimpleSender example.
  *  Saves 780 bytes program memory and 26 bytes RAM compared to SimpleSender, which does the same, but uses the IRRemote library (and is therefore much more flexible).
+ *
  *
  * The FAST protocol is a proprietary modified JVC protocol without address, with parity and with a shorter header.
  *  FAST Protocol characteristics:
@@ -46,10 +47,15 @@
 
 #include "PinDefinitionsAndMore.h" // Set IR_SEND_PIN for different CPU's
 
-//#define USE_FAST_PROTOCOL     // Use FAST protocol. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
-//#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
+/*
+ * Note:
+ * Although the below compile flags affect the behaviour of this sketch, and TinyIRReceiver.hpp, they do not directly affect the behaviour of TinyIRSender.hpp
+ * To send using different protocols, use the different functions included in TinyIRSender.hpp. This allows use of multiple functions at once.
+ * See this script for examples.
+*/
+//#define USE_EXTENDED_NEC_PROTOCOL // Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
-//#define USE_FAST_PROTOCOL     // Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC.
+//#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC. No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
 //#define ENABLE_NEC2_REPEATS   // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 
 #include "TinyIRSender.hpp"
@@ -82,7 +88,8 @@ void loop() {
      */
     Serial.println();
     Serial.print(F("Send now:"));
-#if defined(USE_FAST_PROTOCOL)
+#if !defined(USE_FAST_PROTOCOL)
+    //FAST has no address
     Serial.print(F(" address=0x"));
     Serial.print(sAddress, HEX);
 #endif
@@ -93,17 +100,33 @@ void loop() {
     Serial.println();
 
 #if defined(USE_FAST_PROTOCOL)
-    Serial.println(F("Send FAST with 8 bit address"));
+    Serial.println(F("Send FAST with 8 bit command"));
     Serial.flush();
     sendFAST(IR_SEND_PIN, sCommand, sRepeats);
 #elif defined(USE_ONKYO_PROTOCOL)
     Serial.println(F("Send ONKYO with 16 bit address and command"));
     Serial.flush();
+#if defined(ENABLE_NEC2_REPEATS) //For NEC2 repeats, set the optional NEC2Repeats parameter true (defaults to false)
+    sendONKYO(IR_SEND_PIN, sAddress, sCommand, sRepeats, true);
+#else //Otherwise, for normal NEC repeats
     sendONKYO(IR_SEND_PIN, sAddress, sCommand, sRepeats);
-#else
-    Serial.println(F("Send NEC with 8 bit address"));
+#endif
+#elif defined(USE_EXTENDED_NEC_PROTOCOL)
+    Serial.println(F("Send ExtendedNEC with 16 bit address and  8 bit command"));
     Serial.flush();
+#if defined(ENABLE_NEC2_REPEATS) //For NEC2 repeats, set the optional NEC2Repeats parameter true (defaults to false)
+    sendExtendedNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats, true);
+#else //Otherwise, for normal NEC repeats
+    sendExtendedNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats);
+#endif
+#else
+    Serial.println(F("Send NEC with 8 bit address and command"));
+    Serial.flush();
+#if defined(ENABLE_NEC2_REPEATS) //For NEC2 repeats, set the optional NEC2Repeats parameter true (defaults to false)
+    sendNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats, true);
+#else //Otherwise, for normal NEC repeats
     sendNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats);
+#endif
 #endif
     /*
      * Increment send values
