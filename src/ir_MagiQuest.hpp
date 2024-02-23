@@ -151,10 +151,10 @@ void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
 bool IRrecv::decodeMagiQuest() {
 
     // Check we have the right amount of data, magnitude and ID bits and 8 start bits + 0 stop bit
-    if (decodedIRData.rawDataPtr->rawlen != (2 * MAGIQUEST_BITS)) {
+    if (decodedIRData.rawlen != (2 * MAGIQUEST_BITS)) {
         IR_DEBUG_PRINT(F("MagiQuest: "));
         IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(decodedIRData.rawlen);
         IR_DEBUG_PRINTLN(F(" is not 112"));
         return false;
     }

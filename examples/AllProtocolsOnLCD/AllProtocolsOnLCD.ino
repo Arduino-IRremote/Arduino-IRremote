@@ -231,7 +231,7 @@ void loop() {
         } else {
             // play tone
             auto tStartMillis = millis();
-            IrReceiver.stop();
+            IrReceiver.stopTimer();
             tone(TONE_PIN, 2200);
 
             if ((IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW)
@@ -251,7 +251,7 @@ void loop() {
             noTone(TONE_PIN);
 
             // Restore IR timer. millis() - tStartMillis to compensate for stop of receiver. This enables a correct gap measurement.
-            IrReceiver.startWithTicksToAdd((millis() - tStartMillis) * (MICROS_IN_ONE_MILLI / MICROS_PER_TICK));
+            IrReceiver.restartTimerWithTicksToAdd((millis() - tStartMillis) * (MICROS_IN_ONE_MILLI / MICROS_PER_TICK));
 
 #if defined(USE_LCD)
             printIRResultOnLCD();
@@ -277,11 +277,11 @@ void loop() {
 #if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
         printsVCCVoltageMillivoltOnLCD();
 #endif
-        IrReceiver.stop();
+        IrReceiver.stopTimer();
         tone(TONE_PIN, 2200);
         delay(50);
         noTone(TONE_PIN);
-        IrReceiver.startWithTicksToAdd(50 * (MICROS_IN_ONE_MILLI / MICROS_PER_TICK));
+        IrReceiver.restartTimerWithTicksToAdd(50 * (MICROS_IN_ONE_MILLI / MICROS_PER_TICK));
     }
 
 #if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)

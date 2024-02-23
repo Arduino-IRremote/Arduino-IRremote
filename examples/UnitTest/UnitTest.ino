@@ -288,7 +288,7 @@ void ReceiveCompleteCallbackHandler() {
 void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
     // wait until signal has received
     while (!sDataJustReceived) {
-    };
+    }
     sDataJustReceived = false;
 
     if (IrReceiver.decode()) {
@@ -311,6 +311,8 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
             IrReceiver.printIRResultRawFormatted(&Serial, true);
         }
 #endif
+        IrReceiver.resume(); // Early resume
+
         if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
             Serial.println(F("ERROR: Unknown protocol"));
         } else {
@@ -334,9 +336,9 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
             }
         }
 
-        IrReceiver.resume();
     } else {
         Serial.println(F("No data received"));
+        IrReceiver.resume();
     }
     Serial.println();
 }
@@ -350,7 +352,7 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
 uint16_t sAddress = 0xFFF1;
 uint8_t sCommand = 0x76;
 uint16_t s16BitCommand = 0x9876;
-#define sRepeats  0 // no unit test for repeats
+uint8_t sRepeats = 0;
 
 void loop() {
     /*
@@ -366,19 +368,29 @@ void loop() {
 
     Serial.println(F("Send NEC with 8 bit address"));
     Serial.flush();
-    IrSender.sendNEC(sAddress & 0xFF, sCommand, sRepeats);
+    IrSender.sendNEC(sAddress & 0xFF, sCommand, 0);
     checkReceive(sAddress & 0xFF, sCommand);
+    //
+    for (int8_t i = 0; i < sRepeats; i++) {
+        Serial.println(F("Repeat NEC frame for NEC2"));
+        Serial.flush();
+        // if debug is enabled, printing time (50 ms) is too high anyway
+        delayMicroseconds(NEC_REPEAT_DISTANCE - 200); // 200 is just a guess
+        IrSender.sendNEC(sAddress & 0xFF, sCommand, 0);
+        checkReceive(sAddress & 0xFF, sCommand);
+    }
+
     delay(DELAY_AFTER_SEND); // delay must be greater than 5 ms (RECORD_GAP_MICROS), otherwise the receiver sees it as one long signal
 
     Serial.println(F("Send NEC with 16 bit address"));
     Serial.flush();
-    IrSender.sendNEC(sAddress, sCommand, sRepeats);
+    IrSender.sendNEC(sAddress, sCommand, 0);
     checkReceive(sAddress, sCommand);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send NEC2 with 16 bit address"));
     Serial.flush();
-    IrSender.sendNEC2(sAddress, sCommand, sRepeats);
+    IrSender.sendNEC2(sAddress, sCommand, 0);
     checkReceive(sAddress, sCommand);
     delay(DELAY_AFTER_SEND);
 
@@ -418,7 +430,7 @@ void loop() {
          */
         Serial.println(F("Send ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)"));
         Serial.flush();
-        IrSender.sendNECRaw(0x03040102, sRepeats);
+        IrSender.sendNECRaw(0x03040102, 0);
         checkReceive(0x0102, 0x304);
         delay(DELAY_AFTER_SEND);
 
@@ -453,7 +465,7 @@ void loop() {
          * Send 2 Panasonic 48 bit codes as generic Pulse Distance data, once with LSB and once with MSB first
          */
         Serial.println(F("Send Panasonic 0xB, 0x10 as generic 48 bit PulseDistance"));
-        Serial.println(F(" LSB first"));
+        Serial.println(F("-LSB first"));
         Serial.flush();
 #    if __INT_WIDTH__ < 32
         IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_LSB_FIRST, 0,
@@ -467,7 +479,7 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 
         // The same with MSB first. Use bit reversed raw data of LSB first part
-        Serial.println(F(" MSB first"));
+        Serial.println(F("-MSB first"));
 #    if __INT_WIDTH__ < 32
         tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;
@@ -585,32 +597,32 @@ void loop() {
 
     Serial.println(F("Send Onkyo (NEC with 16 bit command)"));
     Serial.flush();
-    IrSender.sendOnkyo(sAddress, (sCommand + 1) << 8 | sCommand, sRepeats);
+    IrSender.sendOnkyo(sAddress, (sCommand + 1) << 8 | sCommand, 0);
     checkReceive(sAddress, (sCommand + 1) << 8 | sCommand);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Apple"));
     Serial.flush();
-    IrSender.sendApple(sAddress & 0xFF, sCommand, sRepeats);
+    IrSender.sendApple(sAddress & 0xFF, sCommand, 0);
     checkReceive(sAddress & 0xFF, sCommand);
     delay(DELAY_AFTER_SEND);
 
 #if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
     Serial.println(F("Send Panasonic"));
     Serial.flush();
-    IrSender.sendPanasonic(sAddress & 0xFFF, sCommand, sRepeats);
+    IrSender.sendPanasonic(sAddress & 0xFFF, sCommand, 0);
     checkReceive(sAddress & 0xFFF, sCommand);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Kaseikyo with 0x4711 as Vendor ID"));
     Serial.flush();
-    IrSender.sendKaseikyo(sAddress & 0xFFF, sCommand, sRepeats, 0x4711);
+    IrSender.sendKaseikyo(sAddress & 0xFFF, sCommand, 0, 0x4711);
     checkReceive(sAddress & 0xFFF, sCommand);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Kaseikyo_Denon variant"));
     Serial.flush();
-    IrSender.sendKaseikyo_Denon(sAddress & 0xFFF, sCommand, sRepeats);
+    IrSender.sendKaseikyo_Denon(sAddress & 0xFFF, sCommand, 0);
     checkReceive(sAddress & 0xFFF, sCommand);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -618,13 +630,13 @@ void loop() {
 #if defined(DECODE_DENON)
     Serial.println(F("Send Denon"));
     Serial.flush();
-    IrSender.sendDenon(sAddress & 0x1F, sCommand, sRepeats);
+    IrSender.sendDenon(sAddress & 0x1F, sCommand, 0);
     checkReceive(sAddress & 0x1F, sCommand);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Denon/Sharp variant"));
     Serial.flush();
-    IrSender.sendSharp(sAddress & 0x1F, sCommand, sRepeats);
+    IrSender.sendSharp(sAddress & 0x1F, sCommand, 0);
     checkReceive(sAddress & 0x1F, sCommand);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -632,19 +644,19 @@ void loop() {
 #if defined(DECODE_SONY)
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
     Serial.flush();
-    IrSender.sendSony(sAddress & 0x1F, sCommand, sRepeats);
+    IrSender.sendSony(sAddress & 0x1F, sCommand, 0);
     checkReceive(sAddress & 0x1F, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Sony/SIRCS with 7 command and 8 address bits"));
     Serial.flush();
-    IrSender.sendSony(sAddress & 0xFF, sCommand, sRepeats, SIRCS_15_PROTOCOL);
+    IrSender.sendSony(sAddress & 0xFF, sCommand, 0, SIRCS_15_PROTOCOL);
     checkReceive(sAddress & 0xFF, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Sony/SIRCS with 7 command and 13 address bits"));
     Serial.flush();
-    IrSender.sendSony(sAddress & 0x1FFF, sCommand, sRepeats, SIRCS_20_PROTOCOL);
+    IrSender.sendSony(sAddress & 0x1FFF, sCommand, 0, SIRCS_20_PROTOCOL);
     checkReceive(sAddress & 0x1FFF, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -652,19 +664,19 @@ void loop() {
 #if defined(DECODE_SAMSUNG)
     Serial.println(F("Send Samsung 8 bit command"));
     Serial.flush();
-    IrSender.sendSamsung(sAddress, sCommand, sRepeats);
+    IrSender.sendSamsung(sAddress, sCommand, 0);
     checkReceive(sAddress, sCommand);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Samsung 16 bit command"));
     Serial.flush();
-    IrSender.sendSamsung(sAddress, s16BitCommand, sRepeats);
+    IrSender.sendSamsung(sAddress, s16BitCommand, 0);
     checkReceive(sAddress, s16BitCommand);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Samsung48 16 bit command"));
     Serial.flush();
-    IrSender.sendSamsung48(sAddress, s16BitCommand, sRepeats);
+    IrSender.sendSamsung48(sAddress, s16BitCommand, 0);
     checkReceive(sAddress, s16BitCommand);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -672,13 +684,13 @@ void loop() {
 #if defined(DECODE_RC5)
     Serial.println(F("Send RC5"));
     Serial.flush();
-    IrSender.sendRC5(sAddress & 0x1F, sCommand & 0x3F, sRepeats, true);  // 5 address, 6 command bits
+    IrSender.sendRC5(sAddress & 0x1F, sCommand & 0x3F, 0, true);  // 5 address, 6 command bits
     checkReceive(sAddress & 0x1F, sCommand & 0x3F);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send RC5X with 7.th MSB of command set"));
     Serial.flush();
-    IrSender.sendRC5(sAddress & 0x1F, (sCommand & 0x3F) + 0x40, sRepeats, true);  // 5 address, 7 command bits
+    IrSender.sendRC5(sAddress & 0x1F, (sCommand & 0x3F) + 0x40, 0, true);  // 5 address, 7 command bits
     checkReceive(sAddress & 0x1F, (sCommand & 0x3F) + 0x40);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -687,7 +699,7 @@ void loop() {
     Serial.println(F("Send RC6"));
     // RC6 check does not work stable without the flush
     Serial.flush();
-    IrSender.sendRC6(sAddress & 0xFF, sCommand, sRepeats, true);
+    IrSender.sendRC6(sAddress & 0xFF, sCommand, 0, true);
     checkReceive(sAddress & 0xFF, sCommand);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -706,7 +718,7 @@ void loop() {
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
+    IrSender.write(&IRSendData, 0);
     checkReceive(IRSendData.address & 0xFF, IRSendData.command);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -720,7 +732,7 @@ void loop() {
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
+    IrSender.write(&IRSendData, 0);
     checkReceive(IRSendData.address, IRSendData.command);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -730,7 +742,7 @@ void loop() {
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
+    IrSender.write(&IRSendData, 0);
     checkReceive(IRSendData.address & 0xFF, IRSendData.command);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -746,19 +758,21 @@ void loop() {
 #if defined(DECODE_BEO)
     Serial.println(F("Send Bang&Olufsen"));
     Serial.flush();
-    IrSender.sendBangOlufsen(sAddress & 0x0FF, sCommand, sRepeats);
+    IrSender.sendBangOlufsen(sAddress & 0x0FF, sCommand, 0);
 #  if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
     delay((RECORD_GAP_MICROS / 1000) + 1);
+    Serial.println(F("- ENABLE_BEO_WITHOUT_FRAME_GAP is enabled. PrintRaw and try to decode"));
     IrReceiver.printIRResultRawFormatted(&Serial, true);
-    uint8_t tOriginalRawlen = IrReceiver.decodedIRData.rawDataPtr->rawlen;
-    IrReceiver.decodedIRData.rawDataPtr->rawlen = 6;
+    uint8_t tOriginalRawlen = IrReceiver.decodedIRData.rawlen;
+    IrReceiver.decodedIRData.rawlen = 6;
     // decode first part of frame
     IrReceiver.decode();
     IrReceiver.printIRResultShort(&Serial);
 
-    // Remove trailing 6 entries for next decode
-    IrReceiver.decodedIRData.rawDataPtr->rawlen = tOriginalRawlen - 6;
-    for (uint_fast8_t i = 0; i < IrReceiver.decodedIRData.rawDataPtr->rawlen; ++i) {
+    // Remove trailing 6 entries for next decode try
+    Serial.println(F("- Remove trailing 6 entries for next decode try"));
+    IrReceiver.decodedIRData.rawlen = tOriginalRawlen - 6;
+    for (uint_fast8_t i = 0; i < IrReceiver.decodedIRData.rawlen; ++i) {
         IrReceiver.decodedIRData.rawDataPtr->rawbuf[i] = IrReceiver.decodedIRData.rawDataPtr->rawbuf[i + 6];
     }
 #  endif
@@ -770,7 +784,7 @@ void loop() {
     IRSendData.protocol = BOSEWAVE;
     Serial.println(F("Send Bosewave with no address and 8 command bits"));
     Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
+    IrSender.write(&IRSendData, 0);
     checkReceive(0, IRSendData.command & 0xFF);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -780,7 +794,7 @@ void loop() {
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
+    IrSender.write(&IRSendData, 0);
     checkReceive(0, IRSendData.command & 0xFF);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -813,7 +827,11 @@ void loop() {
     sAddress += 0x0101;
     sCommand += 0x11;
     s16BitCommand += 0x1111;
-
+    sRepeats++;
+    // clip repeats at 4
+    if (sRepeats > 4) {
+        sRepeats = 4;
+    }
     delay(DELAY_AFTER_LOOP); // additional delay at the end of each loop
 }
 

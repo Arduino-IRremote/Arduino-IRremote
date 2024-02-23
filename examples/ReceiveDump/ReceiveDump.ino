@@ -10,7 +10,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2024 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,6 +88,9 @@ void setup() {
     Serial.println();
     Serial.println(F("Because of the verbose output (>200 ms at 115200 baud), repeats are not dumped correctly!"));
     Serial.println();
+    Serial.println(F("If you receive protocol NEC, Samsung or LG, run also ReceiveDemo to check if your actual protocol is eventually NEC2, SamsungLG or LG2, which is determined by the repeats"));
+    Serial.println();
+
 }
 
 //+=============================================================================
@@ -147,6 +150,6 @@ void loop() {
 //            Serial.println();                                 // blank line between entries
 //        }
         }
-        IrReceiver.resume();                            // Prepare for the next value
+        IrReceiver.resume();                            // Prepare for the next IR frame
     }
 }

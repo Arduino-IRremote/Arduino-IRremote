@@ -94,22 +94,19 @@ void loop() {
     if (IrReceiver.decode()) {
 
         /*
-         * Print a short summary of received data
+         * Print a summary of received data
          */
-        IrReceiver.printIRResultShort(&Serial);
-        IrReceiver.printIRSendUsage(&Serial);
         if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
             Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
-            // We have an unknown protocol here, print more info
+            // We have an unknown protocol here, print extended info
             IrReceiver.printIRResultRawFormatted(&Serial, true);
+            IrReceiver.resume(); // Do it here, to preserve raw data for printing with printIRResultRawFormatted()
+        } else {
+            IrReceiver.resume(); // Early enable receiving of the next IR frame
+            IrReceiver.printIRResultShort(&Serial);
+            IrReceiver.printIRSendUsage(&Serial);
         }
         Serial.println();
-
-        /*
-         * !!!Important!!! Enable receiving of the next value,
-         * since receiving has stopped after the end of the current received data packet.
-         */
-        IrReceiver.resume(); // Enable receiving of the next value
 
         /*
          * Finally, check the received data and perform actions according to the received command

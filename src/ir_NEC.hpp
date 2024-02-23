@@ -171,8 +171,7 @@ uint32_t IRsend::computeNECRawDataAndChecksum(uint16_t aAddress, uint16_t aComma
 /**
  * NEC Send frame and special repeats
  * There is NO delay after the last sent repeat!
- * @param aNumberOfRepeats  If < 0 then only a special repeat frame without leading and trailing space
- *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
+ * @param aNumberOfRepeats  If < 0 then only a special NEC repeat frame will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendNEC(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendPulseDistanceWidth(&NECProtocolConstants, computeNECRawDataAndChecksum(aAddress, aCommand), NEC_BITS, aNumberOfRepeats);
@@ -237,10 +236,10 @@ bool IRrecv::decodeNEC() {
      * Next try the decode
      */
     // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
-    if (decodedIRData.rawDataPtr->rawlen != ((2 * NEC_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
+    if (decodedIRData.rawlen != ((2 * NEC_BITS) + 4) && (decodedIRData.rawlen != 4)) {
         IR_DEBUG_PRINT(F("NEC: "));
         IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(decodedIRData.rawlen);
         IR_DEBUG_PRINTLN(F(" is not 68 or 4"));
         return false;
     }
@@ -251,7 +250,7 @@ bool IRrecv::decodeNEC() {
     }
 
     // Check for repeat - here we have another header space length
-    if (decodedIRData.rawDataPtr->rawlen == 4) {
+    if (decodedIRData.rawlen == 4) {
         if (matchSpace(decodedIRData.rawDataPtr->rawbuf[2], NEC_REPEAT_HEADER_SPACE)
                 && matchMark(decodedIRData.rawDataPtr->rawbuf[3], NEC_BIT_MARK)) {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
@@ -328,6 +327,7 @@ bool IRrecv::decodeNEC() {
     checkForRepeatSpaceTicksAndSetFlag(NEC_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
     if (decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
         decodedIRData.protocol = NEC2;
+        decodedIRData.flags |= IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT;
     }
     return true;
 }

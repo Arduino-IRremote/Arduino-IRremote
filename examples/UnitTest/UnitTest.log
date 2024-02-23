@@ -12,7 +12,7 @@ address=0xFFF1 command=0x76
 Send NEC with 8 bit address
 Protocol=NEC Address=0xF1 Command=0x76 Raw-Data=0x89760EF1 32 bits LSB first
 Send with: IrSender.sendNEC(0xF1, 0x76, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1044300
  +8950,-4400
  + 600,-1650 + 600,- 500 + 600,- 550 + 600,- 500
@@ -29,7 +29,7 @@ Sum: 67650
 Send NEC with 16 bit address
 Protocol=NEC Address=0xFFF1 Command=0x76 Raw-Data=0x8976FFF1 32 bits LSB first
 Send with: IrSender.sendNEC(0xFFF1, 0x76, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1055100
  +8850,-4450
  + 600,-1650 + 600,- 500 + 600,- 550 + 600,- 500
@@ -46,7 +46,7 @@ Sum: 73150
 Send NEC2 with 16 bit address
 Protocol=NEC Address=0xFFF1 Command=0x76 Raw-Data=0x8976FFF1 32 bits LSB first
 Send with: IrSender.sendNEC(0xFFF1, 0x76, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1055500
  +8950,-4400
  + 650,-1600 + 600,- 500 + 650,- 500 + 600,- 500
@@ -63,7 +63,7 @@ Sum: 73400
 Send NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats
 Protocol=NEC Address=0x80 Command=0x45 Raw-Data=0xBA457F80 32 bits LSB first
 Send with: IrSender.sendNEC(0x80, 0x45, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1064450
  +9050,-4450
  + 550,- 550 + 600,- 550 + 600,- 600 + 550,- 600
@@ -80,7 +80,7 @@ Sum: 67800
 Send NEC sendRaw data with 8 bit address=0xFB04 and command 0x08 and exact timing (16 bit array format)
 Protocol=NEC Address=0x4 Command=0x8 Raw-Data=0xF708FB04 32 bits LSB first
 Send with: IrSender.sendNEC(0x4, 0x8, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1061400
  +9000,-4400
  + 600,- 500 + 650,- 500 + 600,-1650 + 600,- 500
@@ -97,7 +97,7 @@ Sum: 67900
 Send ONKYO with 16 bit address 0x0102 and 16 bit command 0x0304 with NECRaw(0x03040102)
 Protocol=Onkyo Address=0x102 Command=0x304 Raw-Data=0x3040102 32 bits LSB first
 Send with: IrSender.sendOnkyo(0x102, 0x304, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1059700
  +8900,-4400
  + 600,- 550 + 600,-1600 + 600,- 550 + 600,- 500
@@ -114,7 +114,7 @@ Sum: 55450
 Send ONKYO with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first (0x40802CD3)
 Protocol=NEC Address=0x102 Command=0x34 Raw-Data=0xCB340102 32 bits LSB first
 Send with: IrSender.sendNEC(0x102, 0x34, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1061500
  +8950,-4400
  + 600,- 500 + 550,-1700 + 600,- 500 + 650,- 500
@@ -131,7 +131,7 @@ Sum: 61000
 Send Panasonic 0xB, 0x10 as 48 bit generic PulseDistance using ProtocolConstants
 Protocol=Panasonic Address=0xB Command=0x10 Raw-Data=0xA01000B0 48 bits LSB first
 Send with: IrSender.sendPanasonic(0xB, 0x10, <numberOfRepeats>);
-rawData[100]: 
+rawData[100]:
  -1059500
  +3450,-1700
  + 450,- 450 + 450,-1250 + 450,- 400 + 450,- 450
@@ -150,10 +150,10 @@ rawData[100]:
 Sum: 54100
 
 Send Panasonic 0xB, 0x10 as generic 48 bit PulseDistance
- LSB first
+- LSB first
 Protocol=Panasonic Address=0xB Command=0x10 Raw-Data=0xA01000B0 48 bits LSB first
 Send with: IrSender.sendPanasonic(0xB, 0x10, <numberOfRepeats>);
-rawData[100]: 
+rawData[100]:
  -1076450
  +3450,-1700
  + 450,- 400 + 450,-1250 + 450,- 400 + 450,- 400
@@ -171,10 +171,10 @@ rawData[100]:
  + 400
 Sum: 53200
 
- MSB first
+- MSB first
 Protocol=Panasonic Address=0xB Command=0x10 Raw-Data=0xA01000B0 48 bits LSB first
 Send with: IrSender.sendPanasonic(0xB, 0x10, <numberOfRepeats>);
-rawData[100]: 
+rawData[100]:
  -1070700
  +3400,-1700
  + 450,- 400 + 450,-1250 + 450,- 400 + 450,- 400
@@ -194,10 +194,10 @@ Sum: 53150
 
 Send generic 72 bit PulseDistance 0x5A AFEDCBA9 87654321 LSB first
 Protocol=PulseDistance Raw-Data=0x5A 72 bits LSB first
-Send with:
+Send on a 8 bit platform with:
     uint32_t tRawData[]={0x87654321, 0xAFEDCBA9, 0x5A};
     IrSender.sendPulseDistanceWidthFromArray(38, 8850, 4400, 550, 1650, 550, 600, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
-rawData[148]: 
+rawData[148]:
  -1076300
  +8850,-4400
  + 600,-1650 + 550,- 600 + 550,- 600 + 550,- 600
@@ -223,10 +223,10 @@ Sum: 138200
 
 Send generic 52 bit PulseDistanceWidth 0xDCBA9 87654321 LSB first
 Protocol=PulseWidth Raw-Data=0xDCBA9 52 bits LSB first
-Send with:
+Send on a 8 bit platform with:
     uint32_t tRawData[]={0x87654321, 0xDCBA9};
     IrSender.sendPulseDistanceWidthFromArray(38, 350, 600, 600, 300, 300, 600, &tRawData[0], 52, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
-rawData[106]: 
+rawData[106]:
  -1115100
  + 350,- 600
  + 650,- 250 + 350,- 550 + 350,- 550 + 300,- 600
@@ -246,8 +246,8 @@ Sum: 47550
 
 Send generic 32 bit PulseWidth 0x87654321 LSB first
 Protocol=PulseWidth Raw-Data=0x87654321 32 bits LSB first
-Send with: IrSender.sendPulseDistanceWidth(38, 950, 550, 600, 300, 300, 300, 0x87654321, 32, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
-rawData[66]: 
+Send on a 8 bit platform with: IrSender.sendPulseDistanceWidth(38, 950, 550, 600, 300, 300, 300, 0x87654321, 32, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
+rawData[66]:
  -1088600
  + 950,- 550
  + 600,- 300 + 300,- 300 + 350,- 250 + 350,- 250
@@ -263,7 +263,7 @@ Sum: 24500
 Send MagiQuest 0x6BCDFF00, 0x176 as generic 55 bit PulseDistanceWidth MSB first
 Protocol=MagiQuest Address=0xFF00 Command=0x176 Raw-Data=0x6BCDFF00 56 bits MSB first
 Send with: IrSender.sendMagiQuest(0x6BCDFF00, 0x176, <numberOfRepeats>);
-rawData[112]: 
+rawData[112]:
  -1089000
  + 350,- 800 + 350,- 800 + 350,- 800 + 300,- 850
  + 300,- 850 + 300,- 850 + 300,- 850 + 350,- 800
@@ -284,7 +284,7 @@ Sum: 63850
 Send Onkyo (NEC with 16 bit command)
 Protocol=Onkyo Address=0xFFF1 Command=0x7776 Raw-Data=0x7776FFF1 32 bits LSB first
 Send with: IrSender.sendOnkyo(0xFFF1, 0x7776, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1070700
  +8900,-4550
  + 500,-1600 + 650,- 500 + 600,- 500 + 600,- 550
@@ -301,7 +301,7 @@ Sum: 76500
 Send Apple
 Protocol=Apple Address=0xF1 Command=0x76 Raw-Data=0xF17687EE 32 bits LSB first
 Send with: IrSender.sendApple(0xF1, 0x76, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1054650
  +8950,-4400
  + 600,- 550 + 550,-1650 + 650,-1600 + 600,-1600
@@ -318,7 +318,7 @@ Sum: 72100
 Send Panasonic
 Protocol=Panasonic Address=0xFF1 Command=0x76 Raw-Data=0x9976FF10 48 bits LSB first
 Send with: IrSender.sendPanasonic(0xFF1, 0x76, <numberOfRepeats>);
-rawData[100]: 
+rawData[100]:
  -1054300
  +3450,-1700
  + 450,- 450 + 400,-1300 + 450,- 400 + 450,- 450
@@ -339,7 +339,7 @@ Sum: 64400
 Send Kaseikyo with 0x4711 as Vendor ID
 Protocol=Kaseikyo Address=0xFF1 Command=0x76 Extra=0x4711 Raw-Data=0x9A76FF13 48 bits LSB first
 Send with: IrSender.sendKaseikyo(0xFF1, 0x76, <numberOfRepeats>, 0x4711);
-rawData[100]: 
+rawData[100]:
  -1074550
  +3400,-1750
  + 450,-1250 + 450,- 450 + 450,- 400 + 450,- 450
@@ -360,7 +360,7 @@ Sum: 69500
 Send Kaseikyo_Denon variant
 Protocol=Kaseikyo_Denon Address=0xFF1 Command=0x76 Raw-Data=0x9976FF10 48 bits LSB first
 Send with: IrSender.sendKaseikyo_Denon(0xFF1, 0x76, <numberOfRepeats>);
-rawData[100]: 
+rawData[100]:
  -1067700
  +3400,-1750
  + 450,- 400 + 450,- 450 + 450,-1250 + 450,- 400
@@ -381,7 +381,7 @@ Sum: 67700
 Send Denon
 Protocol=Denon Address=0x11 Command=0x76 Raw-Data=0xED1 15 bits LSB first
 Send with: IrSender.sendDenon(0x11, 0x76, <numberOfRepeats>);
-rawData[32]: 
+rawData[32]:
  -1073050
  + 250,-1850 + 250,- 750 + 250,- 800 + 250,- 800
  + 250,-1800 + 250,- 800 + 250,-1800 + 250,-1850
@@ -392,7 +392,7 @@ Sum: 23050
 Send Denon/Sharp variant
 Protocol=Sharp Address=0x11 Command=0x76 Raw-Data=0x4ED1 15 bits LSB first
 Send with: IrSender.sendSharp(0x11, 0x76, <numberOfRepeats>);
-rawData[32]: 
+rawData[32]:
  -1018750
  + 300,-1750 + 300,- 750 + 250,- 800 + 250,- 800
  + 250,-1800 + 250,- 800 + 250,-1800 + 300,-1800
@@ -403,7 +403,7 @@ Sum: 24100
 Send Sony/SIRCS with 7 command and 5 address bits
 Protocol=Sony Address=0x11 Command=0x76 Raw-Data=0x8F6 12 bits LSB first
 Send with: IrSender.sendSony(0x11, 0x76, 2, 12);
-rawData[26]: 
+rawData[26]:
  -1020950
  +2400,- 650
  + 550,- 600 +1200,- 550 +1250,- 550 + 650,- 550
@@ -414,7 +414,7 @@ Sum: 20950
 Send Sony/SIRCS with 7 command and 8 address bits
 Protocol=Sony Address=0xF1 Command=0x76 Raw-Data=0x78F6 15 bits LSB first
 Send with: IrSender.sendSony(0xF1, 0x76, 2, 15);
-rawData[32]: 
+rawData[32]:
  -1032550
  +2400,- 600
  + 600,- 600 +1200,- 600 +1200,- 550 + 650,- 550
@@ -426,7 +426,7 @@ Sum: 26400
 Send Sony/SIRCS with 7 command and 13 address bits
 Protocol=Sony Address=0x1FF1 Command=0x76 Raw-Data=0xFF8F6 20 bits LSB first
 Send with: IrSender.sendSony(0x1FF1, 0x76, 2, 20);
-rawData[42]: 
+rawData[42]:
  -1036350
  +2300,- 650
  + 600,- 600 +1200,- 550 +1250,- 550 + 650,- 600
@@ -439,7 +439,7 @@ Sum: 35350
 Send Samsung 8 bit command
 Protocol=Samsung Address=0xFFF1 Command=0x76 Raw-Data=0x8976FFF1 32 bits LSB first
 Send with: IrSender.sendSamsung(0xFFF1, 0x76, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1039650
  +4400,-4450
  + 550,-1700 + 550,- 550 + 600,- 550 + 550,- 550
@@ -456,7 +456,7 @@ Sum: 68750
 Send Samsung 16 bit command
 Protocol=Samsung Address=0xFFF1 Command=0x9876 Raw-Data=0x9876FFF1 32 bits LSB first
 Send with: IrSender.sendSamsung(0xFFF1, 0x9876, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1056350
  +4400,-4400
  + 600,-1650 + 550,- 550 + 600,- 550 + 550,- 550
@@ -473,7 +473,7 @@ Sum: 68650
 Send Samsung48 16 bit command
 Protocol=Samsung48 Address=0xFFF1 Command=0x9876 Raw-Data=0x6798 48 bits LSB first
 Send with: IrSender.sendSamsung48(0xFFF1, 0x9876, <numberOfRepeats>);
-rawData[100]: 
+rawData[100]:
  -1056750
  +4450,-4450
  + 600,-1650 + 600,- 500 + 600,- 550 + 550,- 550
@@ -494,7 +494,7 @@ Sum: 95650
 Send RC5
 Protocol=RC5 Address=0x11 Command=0x36 Raw-Data=0x1476 13 bits MSB first
 Send with: IrSender.sendRC5(0x11, 0x36, <numberOfRepeats>);
-rawData[20]: 
+rawData[20]:
  -1073300
  + 900,- 900
  +1750,-1800 +1750,- 900 + 900,- 850 + 900,-1750
@@ -505,7 +505,7 @@ Sum: 23100
 Send RC5X with 7.th MSB of command set
 Protocol=RC5 Address=0x11 Command=0x76 Toggle=1 Raw-Data=0xC76 13 bits MSB first
 Send with: IrSender.sendRC5(0x11, 0x76, <numberOfRepeats>);
-rawData[20]: 
+rawData[20]:
  -1031250
  +1800,-1750
  + 850,- 900 +1800,- 850 + 900,- 900 + 900,-1750
@@ -516,7 +516,7 @@ Sum: 23050
 Send RC6
 Protocol=RC6 Address=0xF1 Command=0x76 Raw-Data=0xF176 20 bits MSB first
 Send with: IrSender.sendRC6(0xF1, 0x76, <numberOfRepeats>);
-rawData[36]: 
+rawData[36]:
  -1028550
  +2650,- 900
  + 450,- 900 + 450,- 450 + 450,- 450 + 450,- 850
@@ -529,7 +529,7 @@ Sum: 23250
 Send JVC
 Protocol=JVC Address=0xF1 Command=0x76 Raw-Data=0x76F1 16 bits LSB first
 Send with: IrSender.sendJVC(0xF1, 0x76, <numberOfRepeats>);
-rawData[36]: 
+rawData[36]:
  -1037050
  +8400,-4150
  + 500,-1600 + 550,- 500 + 500,- 550 + 550,- 500
@@ -542,7 +542,7 @@ Sum: 40400
 Send Samsung
 Protocol=Samsung Address=0xFFF1 Command=0x9876 Raw-Data=0x9876FFF1 32 bits LSB first
 Send with: IrSender.sendSamsung(0xFFF1, 0x9876, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1036350
  +4450,-4400
  + 550,-1700 + 600,- 550 + 550,- 550 + 600,- 550
@@ -559,7 +559,7 @@ Sum: 68750
 Send LG
 Protocol=LG Address=0xF1 Command=0x9876 Raw-Data=0xF19876E 28 bits MSB first
 Send with: IrSender.sendLG(0xF1, 0x9876, <numberOfRepeats>);
-rawData[60]: 
+rawData[60]:
  -1054900
  +9000,-4150
  + 450,-1600 + 500,-1550 + 500,-1550 + 500,-1600
@@ -575,7 +575,7 @@ Sum: 59350
 Send MagiQuest
 Protocol=MagiQuest Address=0xFFF1 Command=0x76 Raw-Data=0x6BCDFFF1 56 bits MSB first
 Send with: IrSender.sendMagiQuest(0x6BCDFFF1, 0x76, <numberOfRepeats>);
-rawData[112]: 
+rawData[112]:
  -1049950
  + 250,- 850 + 250,- 900 + 250,- 900 + 250,- 900
  + 250,- 900 + 300,- 850 + 250,- 900 + 250,- 900
@@ -594,9 +594,29 @@ rawData[112]:
 Sum: 63750
 
 Send Bang&Olufsen
+- ENABLE_BEO_WITHOUT_FRAME_GAP is enabled. PrintRaw and try to decode
+rawData[112]:
+ -1049800
+ + 300,-2900 + 200,-2850 + 250,-15200 + 300,-2850
+ + 250,-9000 + 300,-5900 + 300,-5950 + 250,-5950
+ + 250,-2850 + 250,-5950 + 250,-5950 + 250,-9000
+ + 300,-2850 + 250,-9050 + 250,-5900 + 300,-5950
+ + 250,-2850 + 250,-9000 + 300,-5950 + 250,-2850
+ + 250,-12100 + 300,- 800 + 650,- 500 + 650,- 500
+ + 650,- 500 + 650,- 500 + 650,- 500 + 650,- 500
+ + 650,- 500 + 650,- 500 + 650,- 500 + 650,- 500
+ + 650,- 500 + 650,- 500 + 650,- 500 + 350,- 800
+ + 350,- 800 + 350,- 800 + 650,- 500 + 350,- 800
+ + 350,- 800 + 650,- 500 + 650,- 500 + 650,- 500
+ + 350,- 800 + 650,- 500 + 650,- 500 + 350,- 850
+ + 350,- 800 + 350,- 750 + 650,- 500 + 650,- 500
+ + 300,- 850 + 650,- 500 + 650,- 500 + 650
+Sum: 176100
+Protocol=UNKNOWN Hash=0x643E0496 22 bits (incl. gap and start) received
+- Remove trailing 6 entries for next decode try
 Protocol=Bang&Olufsen Address=0xF1 Command=0x76 Raw-Data=0xF176 16 bits MSB first
 Send with: IrSender.sendBang&Olufsen(0xF1, 0x76, <numberOfRepeats>);
-rawData[44]: 
+rawData[44]:
  -1078450
  + 150,-2850
  + 200,-2900 + 200,-15300 + 200,-2900 + 200,-9100
@@ -610,7 +630,7 @@ Sum: 136500
 Send Bosewave with no address and 8 command bits
 Protocol=BoseWave Address=0x0 Command=0x76 Raw-Data=0x8976 16 bits LSB first
 Send with: IrSender.sendBoseWave(0x0, 0x76, <numberOfRepeats>);
-rawData[36]: 
+rawData[36]:
  -1044750
  +1050,-1450
  + 550,- 450 + 550,-1400 + 550,-1450 + 550,- 450
@@ -623,7 +643,7 @@ Sum: 26750
 Send FAST
 Protocol=FAST Address=0x0 Command=0x76 Raw-Data=0x8976 16 bits LSB first
 Send with: IrSender.sendFAST(0x0, 0x76, <numberOfRepeats>);
-rawData[36]: 
+rawData[36]:
  -1036750
  +2100,-1050
  + 550,- 500 + 550,-1550 + 550,-1550 + 550,- 500
@@ -636,7 +656,7 @@ Sum: 28900
 Force buffer overflow by sending 280 marks and spaces
 Overflow
 Try to increase the "RAW_BUFFER_LENGTH" value of 150 in ../src/UnitTest.cpp
-rawData[150]: 
+rawData[150]:
  -1040000
  + 250,- 500
  + 200,- 600 + 200,- 550 + 200,- 500 + 200,- 550
@@ -667,7 +687,7 @@ address=0xF2 command=0x87
 Send NEC with 8 bit address
 Protocol=NEC Address=0xF2 Command=0x87 Raw-Data=0x78870DF2 32 bits LSB first
 Send with: IrSender.sendNEC(0xF2, 0x87, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -3276750
  +8850,-4500
  + 550,- 500 + 600,-1650 + 600,- 500 + 600,- 550
@@ -681,10 +701,27 @@ rawData[68]:
  + 600
 Sum: 67600
 
+Repeat NEC frame for NEC2
+Protocol=NEC2 Address=0xF8 Command=0xED Repeat gap=48600us Raw-Data=0x12ED07F8 32 bits LSB first
+!Use the NEC2 protocol for sending!
+rawData[68]:
+ -87300
+ +8950,-4400
+ + 650,- 500 + 600,-1600 + 650,- 500 + 650,- 500
+ + 600,-1600 + 650,-1600 + 650,-1600 + 650,-1600
+ + 600,-1600 + 650,- 500 + 650,-1600 + 600,-1650
+ + 600,- 500 + 650,- 500 + 600,- 500 + 650,- 500
+ + 600,-1600 + 650,-1600 + 650,-1600 + 650,- 500
+ + 600,- 500 + 650,- 500 + 600,- 500 + 650,-1600
+ + 650,- 500 + 600,- 500 + 650,- 500 + 650,-1600
+ + 600,-1650 + 600,-1600 + 650,-1600 + 650,- 500
+ + 600
+Sum: 67850
+
 Send NEC with 16 bit address
 Protocol=NEC Address=0xF2 Command=0x87 Raw-Data=0x78870DF2 32 bits LSB first
 Send with: IrSender.sendNEC(0xF2, 0x87, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -998700
  +8900,-4400
  + 600,- 500 + 600,-1650 + 600,- 550 + 600,- 500
@@ -701,7 +738,7 @@ Sum: 67650
 Send NEC2 with 16 bit address
 Protocol=NEC Address=0xF2 Command=0x87 Raw-Data=0x78870DF2 32 bits LSB first
 Send with: IrSender.sendNEC(0xF2, 0x87, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1055100
  +8950,-4400
  + 600,- 500 + 650,-1600 + 650,- 500 + 600,- 500
@@ -718,7 +755,7 @@ Sum: 67800
 Send Onkyo (NEC with 16 bit command)
 Protocol=Onkyo Address=0xF2 Command=0x8887 Raw-Data=0x888700F2 32 bits LSB first
 Send with: IrSender.sendOnkyo(0xF2, 0x8887, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1053400
  +8850,-4400
  + 600,- 550 + 600,-1650 + 600,- 500 + 600,- 550
@@ -735,7 +772,7 @@ Sum: 62050
 Send Apple
 Protocol=Apple Address=0xF2 Command=0x87 Raw-Data=0xF28787EE 32 bits LSB first
 Send with: IrSender.sendApple(0xF2, 0x87, <numberOfRepeats>);
-rawData[68]: 
+rawData[68]:
  -1054100
  +8900,-4450
  + 550,- 550 + 600,-1650 + 600,-1650 + 600,-1650

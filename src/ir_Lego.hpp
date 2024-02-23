@@ -47,13 +47,13 @@
 // https://oberguru.net/elektronik/ir/codes/lego_power_functions_train.lircd.conf
 //
 // To ensure correct detection of IR messages six 38 kHz cycles are transmitted as mark.
-// Low bit consists of 6 cycles of IR and 10 “cycles” of pause,
-// high bit of 6 cycles IR and 21 “cycles” of pause and start bit of 6 cycles IR and 39 “cycles” of pause.
+// Low bit consists of 6 cycles of IR and 10 ï¿½cyclesï¿½ of pause,
+// high bit of 6 cycles IR and 21 ï¿½cyclesï¿½ of pause and start bit of 6 cycles IR and 39 ï¿½cyclesï¿½ of pause.
 // Low bit range 316 - 526 us
-// High bit range 526 – 947 us
-// Start/stop bit range 947 – 1579 us
+// High bit range 526 ï¿½ 947 us
+// Start/stop bit range 947 ï¿½ 1579 us
 // If tm is the maximum message length (16ms) and Ch is the channel number, then
-// The delay before transmitting the first message is: (4 – Ch)*tm
+// The delay before transmitting the first message is: (4 ï¿½ Ch)*tm
 // The time from start to start for the next 2 messages is: 5*tm
 // The time from start to start for the following messages is: (6 + 2*Ch)*tm
 // Supported Devices
@@ -186,7 +186,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
     /*
      * Check for autorepeat (should happen 4 times for one press)
      */
-    if (decodedIRData.rawDataPtr->rawbuf[0] < (LEGO_AUTO_REPEAT_PERIOD_MAX / MICROS_PER_TICK)) {
+    if (decodedIRData.initialGap < (LEGO_AUTO_REPEAT_PERIOD_MAX / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_AUTO_REPEAT;
     }
     decodedIRData.address = tToggleEscapeChannel;

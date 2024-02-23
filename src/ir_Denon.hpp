@@ -156,10 +156,10 @@ bool IRrecv::decodeDenon() {
 
     // we have no start bit, so check for the exact amount of data bits
     // Check we have the right amount of data (32). The + 2 is for initial gap + stop bit mark
-    if (decodedIRData.rawDataPtr->rawlen != (2 * DENON_BITS) + 2) {
+    if (decodedIRData.rawlen != (2 * DENON_BITS) + 2) {
         IR_DEBUG_PRINT(F("Denon: "));
         IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(decodedIRData.rawlen);
         IR_DEBUG_PRINTLN(F(" is not 32"));
         return false;
     }
@@ -189,7 +189,7 @@ bool IRrecv::decodeDenon() {
     decodedIRData.command &= 0xFF;
 
     // Check for (auto) repeat
-    if (decodedIRData.rawDataPtr->rawbuf[0] < ((DENON_AUTO_REPEAT_DISTANCE + (DENON_AUTO_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)) {
+    if (decodedIRData.initialGap < ((DENON_AUTO_REPEAT_DISTANCE + (DENON_AUTO_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)) {
         repeatCount++;
         if (repeatCount > 1) { // skip first auto repeat
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
@@ -280,7 +280,7 @@ void IRsend::sendSharp(uint16_t aAddress, uint16_t aCommand) {
 bool IRrecv::decodeDenonOld(decode_results *aResults) {
 
     // Check we have the right amount of data
-    if (decodedIRData.rawDataPtr->rawlen != 1 + 2 + (2 * DENON_BITS) + 1) {
+    if (decodedIRData.rawlen != 1 + 2 + (2 * DENON_BITS) + 1) {
         return false;
     }
 

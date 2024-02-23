@@ -93,7 +93,7 @@ void IRsend::sendWhynter(uint32_t aData, uint8_t aNumberOfBitsToSend) {
 
 bool IRrecv::decodeWhynter() {
     // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
-    if (decodedIRData.rawDataPtr->rawlen != (2 * WHYNTER_BITS) + 4) {
+    if (decodedIRData.rawlen != (2 * WHYNTER_BITS) + 4) {
         return false;
     }
     if (!checkHeader(&WhynterProtocolConstants)) {

@@ -155,10 +155,10 @@ bool IRrecv::decodeDistanceWidth() {
     /*
      * Accept only protocols with at least 8 bits
      */
-    if (decodedIRData.rawDataPtr->rawlen < (2 * 8) + 4) {
+    if (decodedIRData.rawlen < (2 * 8) + 4) {
         IR_DEBUG_PRINT(F("PULSE_DISTANCE_WIDTH: "));
         IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(decodedIRData.rawlen);
         IR_DEBUG_PRINTLN(F(" is less than 20"));
         return false;
     }
@@ -172,7 +172,7 @@ bool IRrecv::decodeDistanceWidth() {
     /*
      * Count number of mark durations up to 49 ticks. Skip leading start and trailing stop bit.
      */
-    for (i = 3; i < (uint_fast8_t) decodedIRData.rawDataPtr->rawlen - 2; i += 2) {
+    for (i = 3; i < (uint_fast8_t) decodedIRData.rawlen - 2; i += 2) {
         auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
         if (tDurationTicks < DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++; // count duration if less than DURATION_ARRAY_SIZE (50)
@@ -219,7 +219,7 @@ bool IRrecv::decodeDistanceWidth() {
      * Count number of space durations. Skip leading start and trailing stop bit.
      */
     tIndexOfMaxDuration = 0;
-    for (i = 4; i < (uint_fast8_t) decodedIRData.rawDataPtr->rawlen - 2; i += 2) {
+    for (i = 4; i < (uint_fast8_t) decodedIRData.rawlen - 2; i += 2) {
         auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
         if (tDurationTicks < DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++;
@@ -286,7 +286,7 @@ bool IRrecv::decodeDistanceWidth() {
 #endif
     uint8_t tStartIndex = 3;
     // skip leading start bit for decoding.
-    uint16_t tNumberOfBits = (decodedIRData.rawDataPtr->rawlen / 2) - 1;
+    uint16_t tNumberOfBits = (decodedIRData.rawlen / 2) - 1;
     if (tSpaceTicksLong > 0 && tMarkTicksLong == 0) {
         // For PULSE_DISTANCE a stop bit is mandatory, for PULSE_WIDTH it is not required!
         tNumberOfBits--; // Correct for stop bit

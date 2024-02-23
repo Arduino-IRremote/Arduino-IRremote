@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2023 Darryl Smith, Armin Joachimsmeyer
+ * Copyright (c) 2017-2024 Darryl Smith, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -124,7 +124,7 @@ LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, (LG_REPEAT_PERI
  * Start of send and decode functions
  ************************************/
 /*
- * Send special LG2 repeat not used yet
+ * Send special LG2 repeat - not used internally
  */
 void IRsend::sendLG2Repeat() {
     enableIROut (LG_KHZ);            // 38 kHz
@@ -184,30 +184,30 @@ bool IRrecv::decodeLG() {
      */
 
 // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
-    if (decodedIRData.rawDataPtr->rawlen != ((2 * LG_BITS) + 4) && (decodedIRData.rawDataPtr->rawlen != 4)) {
+    if (decodedIRData.rawlen != ((2 * LG_BITS) + 4) && (decodedIRData.rawlen != 4)) {
         IR_DEBUG_PRINT(F("LG: "));
         IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(decodedIRData.rawlen);
         IR_DEBUG_PRINTLN(F(" is not 60 or 4"));
         return false;
     }
 
 // Check header "mark" this must be done for repeat and data
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG_HEADER_MARK)) {
-        if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG2_HEADER_MARK)) {
+        if (matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG2_HEADER_MARK)) {
+            tProtocol = LG2;
+            tHeaderSpace = LG2_HEADER_SPACE;
+        } else {
 #if defined(LOCAL_DEBUG)
             Serial.print(F("LG: "));
             Serial.println(F("Header mark is wrong"));
 #endif
-            return false;
-        } else {
-            tProtocol = LG2;
-            tHeaderSpace = LG2_HEADER_SPACE;
+            return false; // neither LG nor LG2 header
         }
     }
 
 // Check for repeat - here we have another header space length
-    if (decodedIRData.rawDataPtr->rawlen == 4) {
+    if (decodedIRData.rawlen == 4) {
         if (matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LG_REPEAT_HEADER_SPACE)
                 && matchMark(decodedIRData.rawDataPtr->rawbuf[3], LG_BIT_MARK)) {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;

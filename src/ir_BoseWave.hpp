@@ -68,10 +68,10 @@ bool IRrecv::decodeBoseWave() {
     }
 
     // Check we have enough data +4 for initial gap, start bit mark and space + stop bit mark
-    if (decodedIRData.rawDataPtr->rawlen != (2 * BOSEWAVE_BITS) + 4) {
+    if (decodedIRData.rawlen != (2 * BOSEWAVE_BITS) + 4) {
         IR_DEBUG_PRINT(F("Bose: "));
         IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(decodedIRData.rawlen);
         IR_DEBUG_PRINTLN(F(" is not 36"));
         return false;
     }

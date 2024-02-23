@@ -2,9 +2,12 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
-# 4.2.2
+# 4.3.0
 - Added convenience function isIRReceiverAttachedForTinyReceiver().
 - Added Extended NEC Protocol macro to TinyIR by Buzzerb.
+- Fixed sendSamsung() / sendSamsungLG() bug.
+- Added functions stopTimer(), restartTimer() and restartTimerWithTicksToAdd().
+- Added rawlen and initialGap to IRData.
 
 # 4.2.1
 - Fix wrong type of tEnableLEDFeedback in IRSend.hpp and IRReceive.hpp.

@@ -160,11 +160,11 @@ bool IRrecv::decodeRC5() {
     initBiphaselevel(1, RC5_UNIT); // Skip gap space
 
     // Check we have the right amount of data (11 to 26). The +2 is for initial gap and start bit mark.
-    if (decodedIRData.rawDataPtr->rawlen < ((RC5_BITS + 1) / 2) + 2 && (RC5_BITS + 2) < decodedIRData.rawDataPtr->rawlen) {
+    if (decodedIRData.rawlen < ((RC5_BITS + 1) / 2) + 2 && (RC5_BITS + 2) < decodedIRData.rawlen) {
         // no debug output, since this check is mainly to determine the received protocol
         IR_DEBUG_PRINT(F("RC5: "));
         IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(decodedIRData.rawlen);
         IR_DEBUG_PRINTLN(F(" is not between 9 and 15"));
         return false;
     }
@@ -179,7 +179,7 @@ bool IRrecv::decodeRC5() {
     /*
      * Get data bits - MSB first
      */
-    for (tBitIndex = 0; sBiphaseDecodeRawbuffOffset < decodedIRData.rawDataPtr->rawlen; tBitIndex++) {
+    for (tBitIndex = 0; sBiphaseDecodeRawbuffOffset < decodedIRData.rawlen; tBitIndex++) {
         // get next 2 levels and check for transition
         uint8_t tStartLevel = getBiphaselevel();
         uint8_t tEndLevel = getBiphaselevel();
@@ -396,10 +396,10 @@ bool IRrecv::decodeRC6() {
     uint32_t tDecodedRawData = 0;
 
     // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space
-    if (decodedIRData.rawDataPtr->rawlen < MIN_RC6_MARKS + 3 && (RC6_BITS + 3) < decodedIRData.rawDataPtr->rawlen) {
+    if (decodedIRData.rawlen < MIN_RC6_MARKS + 3 && (RC6_BITS + 3) < decodedIRData.rawlen) {
         IR_DEBUG_PRINT(F("RC6: "));
         IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(decodedIRData.rawlen);
         IR_DEBUG_PRINTLN(F(" is not between 15 and 25"));
         return false;
     }
@@ -428,7 +428,7 @@ bool IRrecv::decodeRC6() {
         return false;
     }
 
-    for (tBitIndex = 0; sBiphaseDecodeRawbuffOffset < decodedIRData.rawDataPtr->rawlen; tBitIndex++) {
+    for (tBitIndex = 0; sBiphaseDecodeRawbuffOffset < decodedIRData.rawlen; tBitIndex++) {
         uint8_t tStartLevel; // start level of coded bit
         uint8_t tEndLevel;   // end level of coded bit
 

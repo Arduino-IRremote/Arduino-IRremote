@@ -220,7 +220,7 @@ size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
     } else if (tProtocol == SAMSUNG48) {
         sendSamsung48(tAddress, tCommand, aNumberOfRepeats);
 
-    } else if (tProtocol == SAMSUNG_LG) {
+    } else if (tProtocol == SAMSUNGLG) {
         sendSamsungLG(tAddress, tCommand, aNumberOfRepeats);
 
     } else if (tProtocol == SONY) {
@@ -341,7 +341,7 @@ size_t IRsend::write(decode_type_t aProtocol, uint16_t aAddress, uint16_t aComma
     } else if (aProtocol == SAMSUNG48) {
         sendSamsung48(aAddress, aCommand, aNumberOfRepeats);
 
-    } else if (aProtocol == SAMSUNG_LG) {
+    } else if (aProtocol == SAMSUNGLG) {
         sendSamsungLG(aAddress, aCommand, aNumberOfRepeats);
 
     } else if (aProtocol == SONY) {
@@ -693,10 +693,14 @@ void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtoc
 
     if (aNumberOfRepeats < 0) {
         if (aProtocolConstants->SpecialSendRepeatFunction != NULL) {
+            /*
+             * Send only a special repeat and return
+             */
             aProtocolConstants->SpecialSendRepeatFunction();
             return;
         } else {
-            aNumberOfRepeats = 0; // send a plain frame as repeat
+            // Send only one plain frame (as repeat)
+            aNumberOfRepeats = 0;
         }
     }
 
@@ -708,7 +712,7 @@ void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtoc
         unsigned long tStartOfFrameMillis = millis();
 
         if (tNumberOfCommands < ((uint_fast8_t) aNumberOfRepeats + 1) && aProtocolConstants->SpecialSendRepeatFunction != NULL) {
-            // send special repeat
+            // send special repeat, if specified and we are not in the first loop
             aProtocolConstants->SpecialSendRepeatFunction();
         } else {
             /*
@@ -722,12 +726,12 @@ void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtoc
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
+            auto tCurrentFrameDurationMillis = millis() - tStartOfFrameMillis;
             /*
              * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
              */
-            auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
-            if (aProtocolConstants->RepeatPeriodMillis > tFrameDurationMillis) {
-                delay(aProtocolConstants->RepeatPeriodMillis - tFrameDurationMillis);
+            if (aProtocolConstants->RepeatPeriodMillis > tCurrentFrameDurationMillis) {
+                delay(aProtocolConstants->RepeatPeriodMillis - tCurrentFrameDurationMillis);
             }
         }
     }

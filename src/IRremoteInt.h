@@ -186,10 +186,13 @@ public:
      */
     void begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback = false, uint_fast8_t aFeedbackLEDPin =
     USE_DEFAULT_FEEDBACK_LED_PIN);
+    void restartTimer();
     void start();
     void enableIRIn(); // alias for start
     void start(uint32_t aMicrosecondsToAddToGapCounter);
+    void restartTimer(uint32_t aMicrosecondsToAddToGapCounter);
     void startWithTicksToAdd(uint16_t aTicksToAddToGapCounter);
+    void restartTimerWithTicksToAdd(uint16_t aTicksToAddToGapCounter);
     void restartAfterSend();
 
     void addTicksToInternalTickCounter(uint16_t aTicksToAddToInternalTickCounter);
@@ -199,6 +202,7 @@ public:
     IRData* read(); // returns decoded data
     // write is a method of class IRsend below
     // size_t write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+    void stopTimer();
     void stop();
     void disableIRIn(); // alias for stop
     void end(); // alias for stop
@@ -314,7 +318,7 @@ public:
     void checkForRepeatSpaceTicksAndSetFlag(uint16_t aMaximumRepeatSpaceTicks);
     bool checkForRecordGapsMicros(Print *aSerial);
 
-    IRData decodedIRData;       // New: decoded IR data for the application
+    IRData decodedIRData;       // Decoded IR data for the application
 
     // Last decoded IR data for repeat detection and parity for Denon autorepeat
     decode_type_t lastDecodedProtocol;
@@ -535,6 +539,7 @@ public:
     void sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
     void sendSamsungLGRepeat();
     void sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
+    void sendSamsung16BitAddressAndCommand(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSamsung48(uint16_t aAddress, uint32_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSharp(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats); // redirected to sendDenon
