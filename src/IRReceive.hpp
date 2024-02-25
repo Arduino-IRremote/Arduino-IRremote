@@ -930,11 +930,10 @@ uint_fast8_t IRrecv::compare(uint16_t oldval, uint16_t newval) {
  * Instead of decoding using a standard encoding scheme
  * (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
  *
- * The algorithm: look at the sequence of MARK signals, and see if each one
- * is shorter (0), the same length (1), or longer (2) than the previous.
- * Do the same with the SPACE signals.  Hash the resulting sequence of 0's,
- * 1's, and 2's to a 32-bit value.  This will give a unique value for each
- * different code (probably), for most code systems.
+ * The algorithm: look at the sequence of MARK and SPACE signals, and see if each one
+ * is shorter (0), the same length (1), or longer (2) than the previous MARK or SPACE.
+ * Hash the resulting sequence of 0's, 1's, and 2's to a 32-bit value.
+ * This will give a unique value for each different code (probably), for most code systems.
  *
  * Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
  * Converts the raw code values into a 32-bit hash code.
@@ -956,6 +955,7 @@ bool IRrecv::decodeHash() {
     unsigned int i;
 #endif
     for (i = 1; (i + 2) < decodedIRData.rawlen; i++) {
+        // Compare mark with mark and space with space
         uint_fast8_t value = compare(decodedIRData.rawDataPtr->rawbuf[i], decodedIRData.rawDataPtr->rawbuf[i + 2]);
         // Add value into the hash
         hash = (hash * FNV_PRIME_32) ^ value;

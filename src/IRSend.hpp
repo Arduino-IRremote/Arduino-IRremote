@@ -466,15 +466,24 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast16_t a
         if (i & 1) {
             // Odd
             space(duration);
+#  if defined(LOCAL_DEBUG)
+            Serial.print(F("S="));
+#  endif
         } else {
             mark(duration);
+#  if defined(LOCAL_DEBUG)
+            Serial.print(F("M="));
+#  endif
         }
+#  if defined(LOCAL_DEBUG)
+        Serial.println(duration);
+#  endif
     }
 #endif
 }
 
 /**
- * New function using an 8 byte tick timing array in FLASH to save program memory
+ * New function using an 8 byte tick (50 us) timing array in FLASH to save program memory
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
@@ -484,16 +493,26 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOf
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
+    uint_fast16_t duration;
     for (uint_fast16_t i = 0; i < aLengthOfBuffer; i++) {
-        uint_fast16_t duration = pgm_read_byte(&aBufferWithTicks[i]) * (uint_fast16_t) MICROS_PER_TICK;
+        duration = pgm_read_byte(&aBufferWithTicks[i]) * (uint_fast16_t) MICROS_PER_TICK;
         if (i & 1) {
             // Odd
             space(duration);
+#  if defined(LOCAL_DEBUG)
+            Serial.print(F("S="));
+#  endif
         } else {
             mark(duration);
+#  if defined(LOCAL_DEBUG)
+            Serial.print(F("M="));
+#  endif
         }
     }
     IRLedOff();  // Always end with the LED off
+#  if defined(LOCAL_DEBUG)
+    Serial.println(duration);
+#  endif
 #endif
 }
 

@@ -8,6 +8,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Fixed sendSamsung() / sendSamsungLG() bug.
 - Added functions stopTimer(), restartTimer() and restartTimerWithTicksToAdd().
 - Added rawlen and initialGap to IRData.
+- Added ReceiveAndSendHobToHood example.
 
 # 4.2.1
 - Fix wrong type of tEnableLEDFeedback in IRSend.hpp and IRReceive.hpp.

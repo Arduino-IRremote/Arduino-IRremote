@@ -660,6 +660,9 @@ The file *acLG.h* contains the command documentation of the LG air conditioner I
 IReceiverTimingAnalysis can be tested online with [WOKWI](https://wokwi.com/projects/299033930562011656)
 Click on the receiver while simulation is running to specify individual IR codes.
 
+#### ReceiveAndSendHob2Hood
+[Example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendLGAirConditionerDemo/ReceiveAndSendHobToHood.ino) for receiving and sending AEG / Elektrolux Hob2Hood protocol.<br/>
+
 #### ReceiverTimingAnalysis
 This [example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiverTimingAnalysis/ReceiverTimingAnalysis.ino) analyzes the signal delivered by your IR receiver module.
 Values can be used to determine the stability of the received signal as well as a hint for determining the protocol.<br/>
