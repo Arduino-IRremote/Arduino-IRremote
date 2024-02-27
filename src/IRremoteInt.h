@@ -425,11 +425,18 @@ public:
      */
 #if defined(IR_SEND_PIN)
     void begin();
-    void begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN);
+    // The default parameter allowed to specify IrSender.begin(7); without errors, if IR_SEND_PIN was defined. But the semantics is not the one the user expect.
+    void begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin); // 4.3.1 Removed default value USE_DEFAULT_FEEDBACK_LED_PIN for last parameter
+    // The next function is a dummy to avoid acceptance of pre 4.3 calls to begin(DISABLE_LED_FEEDBACK);
+    void begin(uint8_t aSendPin)
+#  if !defined (DOXYGEN)
+            __attribute__ ((deprecated ("Error: IR_SEND_PIN is still defined, therefore the function begin(aSendPin) is NOT available. You must disable '#define IR_SEND_PIN' to enable this function.")));
+#  endif
+
     // The next function is a dummy to avoid acceptance of pre 4.0 calls to begin(IR_SEND_PIN, DISABLE_LED_FEEDBACK);
     void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback)
 #  if !defined (DOXYGEN)
-            __attribute__ ((deprecated ("You must use begin(ENABLE_LED_FEEDBACK) or begin(DISABLE_LED_FEEDBACK) since version 4.0.")));
+            __attribute__ ((deprecated ("You must use begin() and enableLEDFeedback() or disableLEDFeedback() since version 4.3.")));
 #  endif
 #else
     IRsend(uint_fast8_t aSendPin);

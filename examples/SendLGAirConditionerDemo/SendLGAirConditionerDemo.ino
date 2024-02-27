@@ -75,7 +75,7 @@ delay(4000); // To be able to connect Serial monitor after reset or power up and
     /*
      * The IR library setup. That's all!
      */
-    IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
 
 
     Serial.println();

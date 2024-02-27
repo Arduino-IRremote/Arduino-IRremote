@@ -354,18 +354,25 @@ void printIRResultOnLCD() {
 
     if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
         /*
-         * Print number of bits received and microseconds of signal
+         * Print number of bits received and hash code or microseconds of signal
          */
         myLCD.setCursor(0, 1);
         uint8_t tNumberOfBits = (IrReceiver.decodedIRData.rawDataPtr->rawlen + 1) / 2;
-        if (tNumberOfBits < 10) {
-            myLCD.print(' '); // padding space
-        }
-        myLCD.print(tNumberOfBits);
+        uint_fast8_t tPrintedStringLength = myLCD.print(tNumberOfBits);
         myLCD.print(F(" bit "));
-        uint_fast8_t tDurationStringLength = myLCD.print(IrReceiver.getTotalDurationOfRawData());
-        myLCD.print(F(" \xE4s")); // \xE4 is micro symbol
-        printSpacesOnLCD(7 - tDurationStringLength);
+
+        if (IrReceiver.decodedIRData.decodedRawData != 0) {
+            if (tNumberOfBits < 10) {
+                myLCD.print('0');
+                tPrintedStringLength++;
+            }
+            myLCD.print('x');
+            tPrintedStringLength += myLCD.print(IrReceiver.decodedIRData.decodedRawData, HEX) + 1;
+        } else {
+            tPrintedStringLength += myLCD.print(IrReceiver.getTotalDurationOfRawData());
+            myLCD.print(F(" \xE4s")); // \xE4 is micro symbol
+        }
+        printSpacesOnLCD(11 - tPrintedStringLength);
         sLastProtocolAddress = 4711;
         sLastCommand = 44711;
 

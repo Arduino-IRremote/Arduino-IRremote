@@ -84,7 +84,7 @@ void setup() {
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive Hob2Hood IR signals at pin " STR(IR_RECEIVE_PIN)));
-    IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
     Serial.println(F("Send Hob2Hood IR signals at pin " STR(IR_SEND_PIN)));
 }
 

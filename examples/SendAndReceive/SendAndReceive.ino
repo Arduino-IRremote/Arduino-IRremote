@@ -65,7 +65,7 @@ void setup() {
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
-    IrSender.begin(); // Start with IR_SEND_PIN as send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
     Serial.println(F("Send IR signals at pin " STR(IR_SEND_PIN)));
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604
