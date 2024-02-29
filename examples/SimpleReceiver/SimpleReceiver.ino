@@ -1,7 +1,8 @@
 /*
  * SimpleReceiver.cpp
  *
- * Demonstrates receiving NEC IR codes with IRremote
+ * Demonstrates receiving ONLY NEC protocol IR codes with IRremote
+ * If no protocol is defined, all protocols (except Bang&Olufsen) are active.
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -40,7 +41,7 @@
 //#define DECODE_KASEIKYO
 //#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
 //#define DECODE_LG
-#define DECODE_NEC          // Includes Apple and Onkyo
+#define DECODE_NEC          // Includes Apple and Onkyo. To enable all protocols , just comment/disable this line.
 //#define DECODE_SAMSUNG
 //#define DECODE_SONY
 //#define DECODE_RC5

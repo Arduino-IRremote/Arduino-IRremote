@@ -107,6 +107,7 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - Allows receiving and sending of **raw timing data**.
 
 ## New features with version 4.x
+- **Since 4.3 `IrSender.begin(DISABLE_LED_FEEDBACK)` will no longer work**, use `IrSender.begin(DISABLE_LED_FEEDBACK, 0)` instead.
 - New universal **Pulse Distance / Pulse Width decoder** added, which covers many previous unknown protocols.
 - Printout of code how to send received command by `IrReceiver.printIRSendUsage(&Serial)`.
 - RawData type is now 64 bit for 32 bit platforms and therefore `decodedIRData.decodedRawData` can contain complete frame information for more protocols than with 32 bit as before.
@@ -120,7 +121,7 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - The parameter `bool hasStopBit` is not longer required and removed e.g. for function `sendPulseDistanceWidth()`.
 
 ## New features with version 3.x
-- **Any pin** can be used for sending -if `SEND_PWM_BY_TIMER` is not defined- and receiving.
+- **Any pin** can be used for receiving and if `SEND_PWM_BY_TIMER` is not defined also for sending.
 - Feedback LED can be activated for sending / receiving.
 - An 8/16 bit ****command** value as well as an 16 bit **address** and a protocol number is provided for decoding (instead of the old 32 bit value).
 - Protocol values comply to **protocol standards**.<br/>
@@ -147,7 +148,7 @@ If you use an (old) Arduino core that does not use the `-flto` flag for compile,
 - Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
 - Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK)`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L106)
  or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK)` instead of the `IrReceiver.enableIRIn()` or `irrecv.enableIRIn()` in setup().<br/>
-For sending, call `IrSender.begin();` or `IrSender.begin(DISABLE_LED_FEEDBACK);` in setup().<br/>
+For sending, call `IrSender.begin();` in setup().<br/>
 If IR_SEND_PIN is not defined (before the line `#include <IRremote.hpp>`) you must use e.g. `IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN);`
 - Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
 - The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value` and `results.decode_type` (and similar) to
@@ -292,6 +293,8 @@ The following macros will definitely be overridden with default values otherwise
 <br/>
 
 # Receiving IR codes
+![IRReceiver Pinout](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IRReceiverPinout.jpg)
+
 Check for a **completly received IR frame** with:<br/>
 `if (IrReceiver.decode()) {}`<br/>
 This also decodes the received data.<br/>
@@ -711,7 +714,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `USE_NO_SEND_PWM` |  disabled | Uses no carrier PWM, just simulate an **active low** receiver signal. Used for transferring signal by cable instead of IR. Overrides `SEND_PWM_BY_TIMER` definition. |
 | `IR_SEND_DUTY_CYCLE_PERCENT` |  30 | Duty cycle of IR send signal. |
 | `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` |  disabled | Uses or simulates open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
-| `DISABLE_CODE_FOR_RECEIVER` |  disabled | Saves up to 450 bytes program memory and 269 bytes RAM if receiving functionality is not required. |
+| `DISABLE_CODE_FOR_RECEIVER` |  disabled |  Disables static receiver code like receive timer ISR handler and static IRReceiver and irparams data. Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not required. |
 | `EXCLUDE_EXOTIC_PROTOCOLS` |  disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` |  disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `NO_LED_FEEDBACK_CODE` |  disabled | Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time. |

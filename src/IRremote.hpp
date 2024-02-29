@@ -271,6 +271,8 @@
 #warning INFO: No definition for LED_BUILTIN found -> default LED feedback is disabled.
 #    endif
 #include "IRFeedbackLED.hpp"
+#  else
+void disableLEDFeedback() {}; // dummy function for examples
 #  endif
 
 #include "LongUnion.h" // used in most decoders

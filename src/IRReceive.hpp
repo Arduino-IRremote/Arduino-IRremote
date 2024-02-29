@@ -309,11 +309,30 @@ void IRrecv::begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8
 void IRrecv::setReceivePin(uint_fast8_t aReceivePinNumber) {
     irparams.IRReceivePin = aReceivePinNumber;
 #if defined(__AVR__)
-    irparams.IRReceivePinMask = digitalPinToBitMask(aReceivePinNumber);
-    irparams.IRReceivePinPortInputRegister = portInputRegister(digitalPinToPort(aReceivePinNumber));
+#  if defined(__digitalPinToBit)
+    if (__builtin_constant_p(aReceivePinNumber)) {
+        irparams.IRReceivePinMask = 1UL << (__digitalPinToBit(aReceivePinNumber));
+    } else {
+        irparams.IRReceivePinMask = digitalPinToBitMask(aReceivePinNumber); // requires 10 bytes PGM, even if not referenced (?because it is assembler code?)
+    }
+#  else
+    irparams.IRReceivePinMask = digitalPinToBitMask(aReceivePinNumber); // requires 10 bytes PGM, even if not referenced (?because it is assembler code?)
+#  endif
+#  if defined(__digitalPinToPINReg)
+    /*
+     * This code is 54 bytes smaller, if aReceivePinNumber is a constant :-), but 38 byte longer if it is not constant (,which is not likely).
+     */
+    if (__builtin_constant_p(aReceivePinNumber)) {
+        irparams.IRReceivePinPortInputRegister = __digitalPinToPINReg(aReceivePinNumber);
+    } else {
+        irparams.IRReceivePinPortInputRegister = portInputRegister(digitalPinToPort(aReceivePinNumber)); // requires 44 bytes PGM, even if not referenced
+    }
+#  else
+    irparams.IRReceivePinPortInputRegister = portInputRegister(digitalPinToPort(aReceivePinNumber)); // requires 44 bytes PGM, even if not referenced
+#  endif
 #endif
-    // Set pin mode once. pinModeFast makes no difference here :-(
-    pinMode(aReceivePinNumber, INPUT); // Seems to be at least required by ESP32
+    // Set pin mode once. pinModeFast makes no difference if used, but saves 224 if not referenced :-(
+    pinModeFast(aReceivePinNumber, INPUT); // Seems to be at least required by ESP32
 }
 
 /**
@@ -903,10 +922,12 @@ uint_fast8_t IRrecv::getBiphaselevel() {
     return tLevelOfCurrentInterval;
 }
 
-#if defined(DECODE_HASH)
 /**********************************************************************************************************************
  * Internal Hash decode function
  **********************************************************************************************************************/
+#define FNV_PRIME_32 16777619   ///< used for decodeHash()
+#define FNV_BASIS_32 2166136261 ///< used for decodeHash()
+
 /**
  * Compare two (tick) values for Hash decoder
  * Use a tolerance of 20% to enable e.g. 500 and 600 (NEC timing) to be equal
@@ -921,9 +942,6 @@ uint_fast8_t IRrecv::compare(uint16_t oldval, uint16_t newval) {
     }
     return 1;
 }
-
-#define FNV_PRIME_32 16777619   ///< used for decodeHash()
-#define FNV_BASIS_32 2166136261 ///< used for decodeHash()
 
 /**
  * decodeHash - decode an arbitrary IR code.
@@ -989,7 +1007,6 @@ bool IRrecv::decodeHashOld(decode_results *aResults) {
 
     return true;
 }
-#endif // DECODE_HASH
 
 /**********************************************************************************************************************
  * Match functions

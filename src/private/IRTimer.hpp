@@ -1469,6 +1469,7 @@ void timerDisableReceiveInterrupt() {
 #undef ISR
 #  endif
 
+#  if !defined(DISABLE_CODE_FOR_RECEIVER) // &IRReceiveTimerInterruptHandler is referenced, but not available
 void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
@@ -1480,6 +1481,7 @@ void timerConfigForReceive() {
     }
     // every 50 us, autoreload = true
 }
+#  endif
 
 #  if !defined(IR_SEND_PIN)
 uint8_t sLastSendPin = 0; // To detach before attach, if already attached
