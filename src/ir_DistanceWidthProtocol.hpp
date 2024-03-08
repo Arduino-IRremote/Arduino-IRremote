@@ -231,7 +231,7 @@ bool IRrecv::decodeDistanceWidth() {
             Serial.print(F("PULSE_DISTANCE_WIDTH: "));
             Serial.print(F("Space "));
             Serial.print(tDurationTicks * MICROS_PER_TICK);
-            Serial.print(F(" is longer than "));
+            Serial.print(F(" is longer than maximum "));
             Serial.print(DURATION_ARRAY_SIZE * MICROS_PER_TICK);
             Serial.print(F(" us. Index="));
             Serial.println(i);

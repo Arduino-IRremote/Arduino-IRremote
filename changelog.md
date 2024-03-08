@@ -11,6 +11,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added functions stopTimer(), restartTimer() and restartTimerWithTicksToAdd().
 - Added rawlen and initialGap to IRData.
 - Added ReceiveAndSendHobToHood example.
+- Changed RECORD_GAP_MICROS default value from 5000 to 8000.
 
 # 4.2.1
 - Fix wrong type of tEnableLEDFeedback in IRSend.hpp and IRReceive.hpp.
