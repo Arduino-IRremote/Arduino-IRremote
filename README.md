@@ -297,7 +297,7 @@ The following macros will definitely be overridden with default values otherwise
 ![IRReceiver Pinout](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IRReceiverPinout.jpg)
 
 # Receiving IR codes
-Check for a **completly received IR frame** with:<br/>
+In your program you check for a **completly received IR frame** with:<br/>
 `if (IrReceiver.decode()) {}`<br/>
 This also decodes the received data.<br/>
 After successful decoding, the IR data is contained in the IRData structure, available as `IrReceiver.decodedIRData`.
@@ -381,6 +381,9 @@ But be careful, the NEC2 protocol can only be detected by the NEC library decode
 On a long press, the **SamsungLG protocol** does not repeat its frame, it sends a special short repeat frame.
 
 ## Unknown protocol
+Use the **ReceiveDemo example** to print out all informations about your IR protocol.<br/>
+The **ReceiveDump example** gives you more information but has bad repeat detection.
+
 If your protocol seems not to be supported by this library, you may try the [IRMP library](https://github.com/IRMP-org/IRMP).
 
 <br/>

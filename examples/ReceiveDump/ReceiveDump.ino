@@ -126,8 +126,6 @@ void loop() {
             IrReceiver.compensateAndPrintIRResultAsCArray(&Serial, true); // Output the results as uint16_t source code array of micros
             IrReceiver.printIRResultAsCVariables(&Serial);  // Output address and data as source code variables
             Serial.println();                               // blank line between entries
-            IrReceiver.printIRSendUsage(&Serial);
-            Serial.println();                               // blank line between entries
 
             IrReceiver.compensateAndPrintIRResultAsPronto(&Serial);
 
