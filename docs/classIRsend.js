@@ -77,6 +77,7 @@ var classIRsend =
     [ "sendRC6Raw", "group__Decoder.html#ga2676750b05dd52cd05b698176a971cb3", null ],
     [ "sendSamsung", "group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915", null ],
     [ "sendSAMSUNG", "group__Decoder.html#ga7b4ca49d8fceaf6ccfa26df2d1b553d5", null ],
+    [ "sendSamsung16BitAddressAndCommand", "group__Decoder.html#ga78ab8efbaf556541c6c6be6c89281309", null ],
     [ "sendSamsung48", "group__Decoder.html#gaa72ec4013c647400e0dc43a4ede328e4", null ],
     [ "sendSamsungLG", "group__Decoder.html#ga09ed812db755a2db480d8e9233036629", null ],
     [ "sendSamsungLGRepeat", "group__Decoder.html#ga395b9e2ded40a5ad085fa11938422b21", null ],

@@ -16,5 +16,6 @@ var ir__Samsung_8hpp =
     [ "SAMSUNG_UNIT", "group__Decoder.html#ga651bd895c4ad553171399aebcc7297ea", null ],
     [ "SAMSUNG_ZERO_SPACE", "group__Decoder.html#ga47aa3d1eeb1f86ee48a8c9a9e2c1e4d2", null ],
     [ "sendSamsungLGSpecialRepeat", "group__Decoder.html#gad3b594eed28121c2406e7d80d1636c82", null ],
+    [ "SamsungLGProtocolConstants", "group__Decoder.html#ga2176ced4df44ecd3eaaad6f392744e34", null ],
     [ "SamsungProtocolConstants", "group__Decoder.html#gab9dd24f874feb021b119287864648c5f", null ]
 ];

@@ -61,12 +61,14 @@ var TinyIR_8h =
     [ "disablePCIInterruptForTinyReceiver", "group__TinyReceiver.html#ga4217cae1ded4a9b2ed54bc3a1e8cd86e", null ],
     [ "enablePCIInterruptForTinyReceiver", "group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10", null ],
     [ "initPCIInterruptForTinyReceiver", "group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2", null ],
+    [ "isIRReceiverAttachedForTinyReceiver", "group__TinyReceiver.html#ga2553571086097dd6e7ba319a6da2c743", null ],
     [ "isTinyReceiverIdle", "group__TinyReceiver.html#gab65e33fe496d3bee4af897e5d8bd9420", null ],
     [ "printTinyReceiverResultMinimal", "group__TinyReceiver.html#ga27649645d9280dfaee8095ce2dcf8f07", null ],
+    [ "sendExtendedNEC", "group__TinyReceiver.html#ga2f9e7eb2572eabb1fb55a5e112a7afdb", null ],
     [ "sendFAST", "group__TinyReceiver.html#ga5d40a2ebca50382f9ddc8210cd82ebcd", null ],
     [ "sendFast8BitAndParity", "group__TinyReceiver.html#ga21e45ae5abbd50dcf77693c87c01cc71", null ],
-    [ "sendNEC", "group__TinyReceiver.html#ga2348c9b6b66de96fb608e020d582b0db", null ],
+    [ "sendNEC", "group__TinyReceiver.html#gad56f6ae51db2f76f6b48bd6eb621b55d", null ],
     [ "sendNECMinimal", "group__TinyReceiver.html#gad46384dcfa939b9ed9538b6c907acb1f", null ],
-    [ "sendONKYO", "group__TinyReceiver.html#gabf047474adaaa15df0c3c99382a29b8e", null ],
+    [ "sendONKYO", "group__TinyReceiver.html#ga42ba5dff1100c121334ae46c000631e2", null ],
     [ "TinyIRReceiverData", "group__TinyReceiver.html#gab367546db9f1c8a232471ca8b6e27053", null ]
 ];

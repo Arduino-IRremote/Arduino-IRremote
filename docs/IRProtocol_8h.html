@@ -146,6 +146,9 @@ Macros</h2></td></tr>
 <tr class="memitem:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#abf3b16f9ab35f4e4b95c8c362aca2d71">IRDATA_FLAGS_EXTRA_INFO</a>&#160;&#160;&#160;0x10</td></tr>
 <tr class="memdesc:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="mdescLeft">&#160;</td><td class="mdescRight">There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray).  <a href="IRProtocol_8h.html#abf3b16f9ab35f4e4b95c8c362aca2d71">More...</a><br /></td></tr>
 <tr class="separator:abf3b16f9ab35f4e4b95c8c362aca2d71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0aefeb2bf89e81593b0ae4af274e81a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#ab0aefeb2bf89e81593b0ae4af274e81a">IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT</a>&#160;&#160;&#160;0x20</td></tr>
+<tr class="memdesc:ab0aefeb2bf89e81593b0ae4af274e81a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Here we have a repeat of type NEC2 or SamsungLG.  <a href="IRProtocol_8h.html#ab0aefeb2bf89e81593b0ae4af274e81a">More...</a><br /></td></tr>
+<tr class="separator:ab0aefeb2bf89e81593b0ae4af274e81a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1acaa14d5a437ad317e17489e845f401"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRProtocol_8h.html#a1acaa14d5a437ad317e17489e845f401">IRDATA_FLAGS_WAS_OVERFLOW</a>&#160;&#160;&#160;0x40</td></tr>
 <tr class="memdesc:a1acaa14d5a437ad317e17489e845f401"><td class="mdescLeft">&#160;</td><td class="mdescRight">irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag.  <a href="IRProtocol_8h.html#a1acaa14d5a437ad317e17489e845f401">More...</a><br /></td></tr>
 <tr class="separator:a1acaa14d5a437ad317e17489e845f401"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,8 +218,8 @@ Enumerations</h2></td></tr>
 <a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada7f7247f15587eb3812846f424b941abe">RC6</a>, 
 <a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2b451b6e7bebbf070d0913ec77d5d438">SAMSUNG</a>, 
 <br />
-&#160;&#160;<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada230f52f19cb835b5299ad0369a46a9e7">SAMSUNG48</a>, 
-<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada1b8f950b7f75e9b76ad4a5092575b4f4">SAMSUNG_LG</a>, 
+&#160;&#160;<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaefefa15a30b9bb48bc7fb0ae5660ca22">SAMSUNGLG</a>, 
+<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada230f52f19cb835b5299ad0369a46a9e7">SAMSUNG48</a>, 
 <a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaad63db67a2284cd7e3ffe382b6d6ea82">SHARP</a>, 
 <a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada72d58193d4d25517202d22b7e57a65c3">SONY</a>, 
 <br />
@@ -267,7 +270,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00147">147</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00156">156</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -283,7 +286,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00150">150</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00159">159</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -299,7 +302,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00151">151</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00160">160</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -315,7 +318,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00092">92</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00091">91</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -333,7 +336,7 @@ Functions</h2></td></tr>
 
 <p>There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray). </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00098">98</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00097">97</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -351,7 +354,7 @@ Functions</h2></td></tr>
 
 <p>The current repeat frame is a repeat, that is always sent after a regular frame and cannot be avoided. Only specified for protocols DENON, and LEGO. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00094">94</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00093">93</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -389,6 +392,24 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ab0aefeb2bf89e81593b0ae4af274e81a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0aefeb2bf89e81593b0ae4af274e81a">&#9670;&nbsp;</a></span>IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT&#160;&#160;&#160;0x20</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Here we have a repeat of type NEC2 or SamsungLG. </p>
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00098">98</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
 <a id="aaa9952cd64b58083c28873484c494abf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaa9952cd64b58083c28873484c494abf">&#9670;&nbsp;</a></span>IRDATA_FLAGS_IS_REPEAT</h2>
 
@@ -403,7 +424,7 @@ Functions</h2></td></tr>
 
 <p>The gap between the preceding frame is as smaller than the maximum gap expected for a repeat. !!!We do not check for changed command or address, because it is almost not possible to press 2 different buttons on the remote within around 100 ms!!! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00093">93</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00092">92</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -421,7 +442,7 @@ Functions</h2></td></tr>
 
 <p>The current (autorepeat) frame violated parity check. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00095">95</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00094">94</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -439,7 +460,7 @@ Functions</h2></td></tr>
 
 <p>Is set if RC5 or RC6 toggle bit is set. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00096">96</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00095">95</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -475,7 +496,7 @@ Functions</h2></td></tr>
 
 <p>deprecated -is set if RC5 or RC6 toggle bit is set. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00097">97</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00096">96</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -491,7 +512,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00152">152</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00161">161</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -507,7 +528,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00156">156</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00165">165</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -523,7 +544,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00153">153</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00162">162</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -539,7 +560,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00154">154</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00163">163</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -555,7 +576,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00138">138</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00147">147</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -571,7 +592,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00137">137</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00146">146</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -603,7 +624,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00157">157</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00166">166</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -619,7 +640,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00155">155</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00164">164</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -635,7 +656,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00141">141</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00150">150</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -651,7 +672,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00140">140</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00149">149</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -667,7 +688,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00076">76</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00075">75</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -683,7 +704,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00077">77</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00076">76</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -699,7 +720,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00078">78</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00077">77</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -715,7 +736,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00149">149</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00158">158</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -731,7 +752,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00136">136</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00145">145</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -771,8 +792,8 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fadac3c0a3883a1488209bcd91730ece33b2"></a>RC5&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fada7f7247f15587eb3812846f424b941abe"></a>RC6&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fada2b451b6e7bebbf070d0913ec77d5d438"></a>SAMSUNG&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fadaefefa15a30b9bb48bc7fb0ae5660ca22"></a>SAMSUNGLG&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fada230f52f19cb835b5299ad0369a46a9e7"></a>SAMSUNG48&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fada1b8f950b7f75e9b76ad4a5092575b4f4"></a>SAMSUNG_LG&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fadaad63db67a2284cd7e3ffe382b6d6ea82"></a>SHARP&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fada72d58193d4d25517202d22b7e57a65c3"></a>SONY&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ad5b287a488a8c1b7b8661f029ab56fadacfe86b309838e200c12f1078c0d81799"></a>BANG_OLUFSEN&#160;</td><td class="fielddoc"></td></tr>
@@ -793,7 +814,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRProtocol_8h.html">IRProtocol.h</a></li>
-    <li class="footer">Generated on Sat Jan 27 2024 22:47:39 for IRremote by
+    <li class="footer">Generated on Mon Mar 11 2024 10:50:17 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

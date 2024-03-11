@@ -183,7 +183,7 @@ $(document).ready(function(){initNavTree('IRremote_8hpp_source.html',''); initRe
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="preprocessor">#if !defined(RECORD_GAP_MICROS)</span></div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="comment">// To change this value, you simply can add a line #define &quot;RECORD_GAP_MICROS &lt;My_new_value&gt;&quot; in your ino file before the line &quot;#include &lt;IRremote.hpp&gt;&quot;</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="preprocessor">#define RECORD_GAP_MICROS   5000 // FREDRICH28AC / LG2 header space is 9700, NEC header space is 4500</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="preprocessor">#define RECORD_GAP_MICROS   8000 // RECS80 (https://www.mikrocontroller.net/articles/IRMP#RECS80) 1 bit space is 7500µs , NEC header space is 4500</span></div>
 <div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="IRremote_8hpp.html#a2eb6de0bae8bc6f19f3832c00e91f499">  162</a></span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">#if !defined(RECORD_GAP_MICROS_WARNING_THRESHOLD)</span></div>
@@ -273,48 +273,50 @@ $(document).ready(function(){initNavTree('IRremote_8hpp_source.html',''); initRe
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;<span class="preprocessor">#warning INFO: No definition for LED_BUILTIN found -&gt; default LED feedback is disabled.</span></div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;<span class="preprocessor">#    endif</span></div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRFeedbackLED_8hpp.html">IRFeedbackLED.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="preprocessor">#  endif</span></div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="LongUnion_8h.html">LongUnion.h</a>&quot;</span> <span class="comment">// used in most decoders</span></div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;<span class="preprocessor">#  else</span></div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback</a>() {}; <span class="comment">// dummy function for examples</span></div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="preprocessor">#  endif</span></div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160; </div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;<span class="comment"> * Include the sources here to enable compilation with macro values set by user program.</span></div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRProtocol_8hpp.html">IRProtocol.hpp</a>&quot;</span> <span class="comment">// must be first, it includes definition for PrintULL (unsigned long long)</span></div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="preprocessor">#if !defined(DISABLE_CODE_FOR_RECEIVER)</span></div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRReceive_8hpp.html">IRReceive.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRSend_8hpp.html">IRSend.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160; </div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="comment">/*</span></div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="comment"> * Include the sources of all decoders here to enable compilation with macro values set by user program.</span></div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="comment"> */</span></div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__BangOlufsen_8hpp.html">ir_BangOlufsen.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__BoseWave_8hpp.html">ir_BoseWave.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Denon_8hpp.html">ir_Denon.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__JVC_8hpp.html">ir_JVC.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Kaseikyo_8hpp.html">ir_Kaseikyo.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Lego_8hpp.html">ir_Lego.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__LG_8hpp.html">ir_LG.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__MagiQuest_8hpp.html">ir_MagiQuest.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__NEC_8hpp.html">ir_NEC.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__RC5__RC6_8hpp.html">ir_RC5_RC6.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Samsung_8hpp.html">ir_Samsung.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Sony_8hpp.html">ir_Sony.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__FAST_8hpp.html">ir_FAST.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Others_8hpp.html">ir_Others.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Pronto_8hpp.html">ir_Pronto.hpp</a>&quot;</span> <span class="comment">// pronto is an universal decoder and encoder</span></div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="preprocessor">#  if defined(DECODE_DISTANCE_WIDTH)     // universal decoder for pulse distance width protocols - requires up to 750 bytes additional program memory</span></div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="ir__DistanceWidthProtocol_8hpp.html">ir_DistanceWidthProtocol.hpp</a>&gt;</span></div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;<span class="preprocessor">#  endif</span></div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="preprocessor">#endif // #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)</span></div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="preprocessor">#define RAWBUF  101  // Maximum length of raw duration buffer</span></div>
-<div class="line"><a name="l00314"></a><span class="lineno"><a class="line" href="IRremote_8hpp.html#abb919079668bcc14433d4c857ab8a196">  314</a></span>&#160;<span class="preprocessor">#define REPEAT 0xFFFFFFFF</span></div>
-<div class="line"><a name="l00315"></a><span class="lineno"><a class="line" href="IRremote_8hpp.html#a2c9384c67919c632913b8db2088f8341">  315</a></span>&#160;<span class="preprocessor">#define USECPERTICK MICROS_PER_TICK</span></div>
-<div class="line"><a name="l00316"></a><span class="lineno"><a class="line" href="IRremote_8hpp.html#aad2fcaac88c28bf54ecbd42146a56e3f">  316</a></span>&#160;<span class="preprocessor">#define MARK_EXCESS MARK_EXCESS_MICROS</span></div>
-<div class="line"><a name="l00317"></a><span class="lineno"><a class="line" href="IRremote_8hpp.html#ac21b48ddc487212fbce7d6474423e080">  317</a></span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;<span class="preprocessor">#endif // _IR_REMOTE_HPP</span></div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="LongUnion_8h.html">LongUnion.h</a>&quot;</span> <span class="comment">// used in most decoders</span></div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160; </div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="comment"> * Include the sources here to enable compilation with macro values set by user program.</span></div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRProtocol_8hpp.html">IRProtocol.hpp</a>&quot;</span> <span class="comment">// must be first, it includes definition for PrintULL (unsigned long long)</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="preprocessor">#if !defined(DISABLE_CODE_FOR_RECEIVER)</span></div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRReceive_8hpp.html">IRReceive.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="IRSend_8hpp.html">IRSend.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160; </div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="comment"> * Include the sources of all decoders here to enable compilation with macro values set by user program.</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__BangOlufsen_8hpp.html">ir_BangOlufsen.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__BoseWave_8hpp.html">ir_BoseWave.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Denon_8hpp.html">ir_Denon.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__JVC_8hpp.html">ir_JVC.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Kaseikyo_8hpp.html">ir_Kaseikyo.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Lego_8hpp.html">ir_Lego.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__LG_8hpp.html">ir_LG.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__MagiQuest_8hpp.html">ir_MagiQuest.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__NEC_8hpp.html">ir_NEC.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__RC5__RC6_8hpp.html">ir_RC5_RC6.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Samsung_8hpp.html">ir_Samsung.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Sony_8hpp.html">ir_Sony.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__FAST_8hpp.html">ir_FAST.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Others_8hpp.html">ir_Others.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ir__Pronto_8hpp.html">ir_Pronto.hpp</a>&quot;</span> <span class="comment">// pronto is an universal decoder and encoder</span></div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;<span class="preprocessor">#  if defined(DECODE_DISTANCE_WIDTH)     // universal decoder for pulse distance width protocols - requires up to 750 bytes additional program memory</span></div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="ir__DistanceWidthProtocol_8hpp.html">ir_DistanceWidthProtocol.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;<span class="preprocessor">#  endif</span></div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;<span class="preprocessor">#endif // #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)</span></div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;<span class="preprocessor">#define RAWBUF  101  // Maximum length of raw duration buffer</span></div>
+<div class="line"><a name="l00316"></a><span class="lineno"><a class="line" href="IRremote_8hpp.html#abb919079668bcc14433d4c857ab8a196">  316</a></span>&#160;<span class="preprocessor">#define REPEAT 0xFFFFFFFF</span></div>
+<div class="line"><a name="l00317"></a><span class="lineno"><a class="line" href="IRremote_8hpp.html#a2c9384c67919c632913b8db2088f8341">  317</a></span>&#160;<span class="preprocessor">#define USECPERTICK MICROS_PER_TICK</span></div>
+<div class="line"><a name="l00318"></a><span class="lineno"><a class="line" href="IRremote_8hpp.html#aad2fcaac88c28bf54ecbd42146a56e3f">  318</a></span>&#160;<span class="preprocessor">#define MARK_EXCESS MARK_EXCESS_MICROS</span></div>
+<div class="line"><a name="l00319"></a><span class="lineno"><a class="line" href="IRremote_8hpp.html#ac21b48ddc487212fbce7d6474423e080">  319</a></span>&#160; </div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="preprocessor">#endif // _IR_REMOTE_HPP</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aIRSend_8hpp_html"><div class="ttname"><a href="IRSend_8hpp.html">IRSend.hpp</a></div></div>
@@ -331,6 +333,7 @@ $(document).ready(function(){initNavTree('IRremote_8hpp_source.html',''); initRe
 <div class="ttc" id="air__DistanceWidthProtocol_8hpp_html"><div class="ttname"><a href="ir__DistanceWidthProtocol_8hpp.html">ir_DistanceWidthProtocol.hpp</a></div></div>
 <div class="ttc" id="air__Others_8hpp_html"><div class="ttname"><a href="ir__Others_8hpp.html">ir_Others.hpp</a></div></div>
 <div class="ttc" id="air__LG_8hpp_html"><div class="ttname"><a href="ir__LG_8hpp.html">ir_LG.hpp</a></div></div>
+<div class="ttc" id="agroup__FeedbackLEDFunctions_html_gab72e6123a449de7feaaa1c3dcb9f8630"><div class="ttname"><a href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback</a></div><div class="ttdeci">void disableLEDFeedback()</div><div class="ttdef"><b>Definition:</b> <a href="IRFeedbackLED_8hpp_source.html#l00089">IRFeedbackLED.hpp:89</a></div></div>
 <div class="ttc" id="aIRProtocol_8hpp_html"><div class="ttname"><a href="IRProtocol_8hpp.html">IRProtocol.hpp</a></div></div>
 <div class="ttc" id="aLongUnion_8h_html"><div class="ttname"><a href="LongUnion_8h.html">LongUnion.h</a></div></div>
 <div class="ttc" id="aIRFeedbackLED_8hpp_html"><div class="ttname"><a href="IRFeedbackLED_8hpp.html">IRFeedbackLED.hpp</a></div><div class="ttdoc">All Feedback LED specific functions are contained in this file.</div></div>
@@ -346,7 +349,7 @@ $(document).ready(function(){initNavTree('IRremote_8hpp_source.html',''); initRe
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRremote_8hpp.html">IRremote.hpp</a></li>
-    <li class="footer">Generated on Sat Jan 27 2024 22:47:39 for IRremote by
+    <li class="footer">Generated on Mon Mar 11 2024 10:50:17 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

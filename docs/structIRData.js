@@ -5,7 +5,9 @@ var structIRData =
     [ "decodedRawData", "structIRData.html#a1aca80950279db7f8631f96268f012d9", null ],
     [ "extra", "structIRData.html#a0b71fa1a17e3ab0ae9bc9462b795213f", null ],
     [ "flags", "structIRData.html#aaaad48fc0d90e5c6daec601987848a51", null ],
+    [ "initialGap", "structIRData.html#a1f13b970b6e25d00e2fb8d77adc9a1ac", null ],
     [ "numberOfBits", "structIRData.html#a945c41b8463a36cf00b0f38b0aa73200", null ],
     [ "protocol", "structIRData.html#a703592faec26bab5cbe465f53ef14245", null ],
-    [ "rawDataPtr", "structIRData.html#a8d7c987d63874731ff2e1120b21a1a08", null ]
+    [ "rawDataPtr", "structIRData.html#a8d7c987d63874731ff2e1120b21a1a08", null ],
+    [ "rawlen", "structIRData.html#a41e4346a5dd857a4fc6fea68e0552951", null ]
 ];

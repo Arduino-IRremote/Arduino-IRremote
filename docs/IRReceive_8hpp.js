@@ -1,5 +1,7 @@
 var IRReceive_8hpp =
 [
+    [ "FNV_BASIS_32", "group__Receiving.html#ga346d5186e56ca2ce520d59681479c808", null ],
+    [ "FNV_PRIME_32", "group__Receiving.html#ga6a18c840bbf00da32a4e35a85342095a", null ],
     [ "getMarkExcessMicros", "group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863", null ],
     [ "IRReceiveTimerInterruptHandler", "group__Receiving.html#ga770e03720a79491d7ddf347ad4b9e484", null ],
     [ "MATCH", "group__Receiving.html#ga0f9263ab71af2d2895add92f72a05ee9", null ],

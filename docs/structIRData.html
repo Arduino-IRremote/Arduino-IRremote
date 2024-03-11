@@ -126,6 +126,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aaaad48fc0d90e5c6daec601987848a51"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#aaaad48fc0d90e5c6daec601987848a51">flags</a></td></tr>
 <tr class="memdesc:aaaad48fc0d90e5c6daec601987848a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above.  <a href="structIRData.html#aaaad48fc0d90e5c6daec601987848a51">More...</a><br /></td></tr>
 <tr class="separator:aaaad48fc0d90e5c6daec601987848a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41e4346a5dd857a4fc6fea68e0552951"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a41e4346a5dd857a4fc6fea68e0552951">rawlen</a></td></tr>
+<tr class="memdesc:a41e4346a5dd857a4fc6fea68e0552951"><td class="mdescLeft">&#160;</td><td class="mdescRight">counter of entries in rawbuf  <a href="structIRData.html#a41e4346a5dd857a4fc6fea68e0552951">More...</a><br /></td></tr>
+<tr class="separator:a41e4346a5dd857a4fc6fea68e0552951"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f13b970b6e25d00e2fb8d77adc9a1ac"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a1f13b970b6e25d00e2fb8d77adc9a1ac">initialGap</a></td></tr>
+<tr class="memdesc:a1f13b970b6e25d00e2fb8d77adc9a1ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">rawbuf[0] contains the initial gap of the last frame.  <a href="structIRData.html#a1f13b970b6e25d00e2fb8d77adc9a1ac">More...</a><br /></td></tr>
+<tr class="separator:a1f13b970b6e25d00e2fb8d77adc9a1ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d7c987d63874731ff2e1120b21a1a08"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structirparams__struct.html">irparams_struct</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a8d7c987d63874731ff2e1120b21a1a08">rawDataPtr</a></td></tr>
 <tr class="memdesc:a8d7c987d63874731ff2e1120b21a1a08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.  <a href="structIRData.html#a8d7c987d63874731ff2e1120b21a1a08">More...</a><br /></td></tr>
 <tr class="separator:a8d7c987d63874731ff2e1120b21a1a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,6 +232,24 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a1f13b970b6e25d00e2fb8d77adc9a1ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f13b970b6e25d00e2fb8d77adc9a1ac">&#9670;&nbsp;</a></span>initialGap</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t IRData::initialGap</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>rawbuf[0] contains the initial gap of the last frame. </p>
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00127">127</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
 <a id="a945c41b8463a36cf00b0f38b0aa73200"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a945c41b8463a36cf00b0f38b0aa73200">&#9670;&nbsp;</a></span>numberOfBits</h2>
 
@@ -276,7 +300,25 @@ Public Attributes</h2></td></tr>
 
 <p>Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00120">120</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00129">129</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+
+</div>
+</div>
+<a id="a41e4346a5dd857a4fc6fea68e0552951"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41e4346a5dd857a4fc6fea68e0552951">&#9670;&nbsp;</a></span>rawlen</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint_fast8_t IRData::rawlen</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>counter of entries in rawbuf </p>
+
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00123">123</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -289,7 +331,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structIRData.html">IRData</a></li>
-    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
+    <li class="footer">Generated on Mon Mar 11 2024 10:50:18 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

@@ -12,7 +12,7 @@ var searchData=
   ['aciswalltype_12',['ACIsWallType',['../classAircondition__LG.html#aa4afac70cfc80f7915b26bbd1c269bc9',1,'Aircondition_LG']]],
   ['acommand_13',['aCommand',['../classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc',1,'IRsend']]],
   ['addmicrostointernaltickcounter_14',['addMicrosToInternalTickCounter',['../group__Receiving.html#ga27f6a183e5beccc5817f606dfbd14699',1,'IRrecv']]],
-  ['address_15',['address',['../structIRData.html#a1255a5b7d704d34fda83dcabcb903d4c',1,'IRData::address()'],['../structdecode__results.html#a63091d6d39138248dd2c3bc35ca8ab46',1,'decode_results::address()'],['../structTinyIRReceiverCallbackDataStruct.html#a90f587192055c4569e8bf2ea76b83f75',1,'TinyIRReceiverCallbackDataStruct::Address()']]],
+  ['address_15',['Address',['../structTinyIRReceiverCallbackDataStruct.html#a90f587192055c4569e8bf2ea76b83f75',1,'TinyIRReceiverCallbackDataStruct::Address()'],['../structIRData.html#a1255a5b7d704d34fda83dcabcb903d4c',1,'IRData::address()'],['../structdecode__results.html#a63091d6d39138248dd2c3bc35ca8ab46',1,'decode_results::address()']]],
   ['addtickstointernaltickcounter_16',['addTicksToInternalTickCounter',['../group__Receiving.html#ga4dbef49ebdb3e7d921436fec54850546',1,'IRrecv']]],
   ['aggregatearraycounts_17',['aggregateArrayCounts',['../group__Decoder.html#ga90217576bd30a0755127207435731549',1,'ir_DistanceWidthProtocol.hpp']]],
   ['aircondition_5flg_18',['Aircondition_LG',['../classAircondition__LG.html',1,'']]],

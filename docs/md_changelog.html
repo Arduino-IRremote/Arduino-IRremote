@@ -86,6 +86,17 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>The latest version may not be released! See also the commit log at github: <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master">https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master</a></p>
+<h1>4.3.0</h1>
+<ul>
+<li>Removed default value USE_DEFAULT_FEEDBACK_LED_PIN for last parameter of IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin). Therefore IrSender.begin(DISABLE_LED_FEEDBACK) will not longer work!</li>
+<li>Added convenience function <a class="el" href="group__TinyReceiver.html#ga2553571086097dd6e7ba319a6da2c743">isIRReceiverAttachedForTinyReceiver()</a>.</li>
+<li>Added Extended NEC Protocol macro to TinyIR by Buzzerb.</li>
+<li>Fixed sendSamsung() / sendSamsungLG() bug.</li>
+<li>Added functions stopTimer(), restartTimer() and restartTimerWithTicksToAdd().</li>
+<li>Added rawlen and initialGap to <a class="el" href="structIRData.html" title="Data structure for the user application, available as decodedIRData.">IRData</a>.</li>
+<li>Added ReceiveAndSendHobToHood example.</li>
+<li>Changed RECORD_GAP_MICROS default value from 5000 to 8000.</li>
+</ul>
 <h1>4.2.1</h1>
 <ul>
 <li>Fix wrong type of tEnableLEDFeedback in <a class="el" href="IRSend_8hpp.html">IRSend.hpp</a> and <a class="el" href="IRReceive_8hpp.html">IRReceive.hpp</a>.</li>
@@ -493,7 +504,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
+    <li class="footer">Generated on Mon Mar 11 2024 10:50:18 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

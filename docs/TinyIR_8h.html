@@ -130,11 +130,11 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:gab740dd587f2603ebf1183bd8043e5153"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gab740dd587f2603ebf1183bd8043e5153">VERSION_TINYIR</a>&#160;&#160;&#160;&quot;2.0.0&quot;</td></tr>
+<tr class="memitem:gab740dd587f2603ebf1183bd8043e5153"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gab740dd587f2603ebf1183bd8043e5153">VERSION_TINYIR</a>&#160;&#160;&#160;&quot;2.1.0&quot;</td></tr>
 <tr class="separator:gab740dd587f2603ebf1183bd8043e5153"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga05c4dfc623d9ab9c3f6c7da81d361a0b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga05c4dfc623d9ab9c3f6c7da81d361a0b">VERSION_TINYIR_MAJOR</a>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:ga05c4dfc623d9ab9c3f6c7da81d361a0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabbfb8e770c41cbdcf0afd3ef243e0d3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gabbfb8e770c41cbdcf0afd3ef243e0d3c">VERSION_TINYIR_MINOR</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memitem:gabbfb8e770c41cbdcf0afd3ef243e0d3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gabbfb8e770c41cbdcf0afd3ef243e0d3c">VERSION_TINYIR_MINOR</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:gabbfb8e770c41cbdcf0afd3ef243e0d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8223f29625c671b7a921a502f8cca06d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga8223f29625c671b7a921a502f8cca06d">VERSION_TINYIR_PATCH</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:ga8223f29625c671b7a921a502f8cca06d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -252,6 +252,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga2553571086097dd6e7ba319a6da2c743"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga2553571086097dd6e7ba319a6da2c743">isIRReceiverAttachedForTinyReceiver</a> ()</td></tr>
+<tr class="separator:ga2553571086097dd6e7ba319a6da2c743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaafb51bc656ba199129d261afa3f950c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">initPCIInterruptForTinyReceiver</a> ()</td></tr>
 <tr class="memdesc:gaafb51bc656ba199129d261afa3f950c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode.  <a href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">More...</a><br /></td></tr>
 <tr class="separator:gaafb51bc656ba199129d261afa3f950c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -268,12 +270,14 @@ Functions</h2></td></tr>
 <tr class="separator:ga5d40a2ebca50382f9ddc8210cd82ebcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga21e45ae5abbd50dcf77693c87c01cc71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga21e45ae5abbd50dcf77693c87c01cc71">sendFast8BitAndParity</a> (uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats=0)</td></tr>
 <tr class="separator:ga21e45ae5abbd50dcf77693c87c01cc71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabf047474adaaa15df0c3c99382a29b8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gabf047474adaaa15df0c3c99382a29b8e">sendONKYO</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0)</td></tr>
-<tr class="separator:gabf047474adaaa15df0c3c99382a29b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad46384dcfa939b9ed9538b6c907acb1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gad46384dcfa939b9ed9538b6c907acb1f">sendNECMinimal</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0) __attribute__((deprecated(&quot;Renamed to <a class="el" href="group__TinySender.html#ga1213d923a9b96e6e8b29a2413d81d95f">sendNEC</a>().&quot;)))</td></tr>
+<tr class="memitem:ga42ba5dff1100c121334ae46c000631e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga42ba5dff1100c121334ae46c000631e2">sendONKYO</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0, bool aSendNEC2Repeats=false)</td></tr>
+<tr class="separator:ga42ba5dff1100c121334ae46c000631e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad46384dcfa939b9ed9538b6c907acb1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gad46384dcfa939b9ed9538b6c907acb1f">sendNECMinimal</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0) __attribute__((deprecated(&quot;Renamed to <a class="el" href="group__TinySender.html#ga0a4a942fdd78fd7e5f6a54b0c7251ff7">sendNEC</a>().&quot;)))</td></tr>
 <tr class="separator:gad46384dcfa939b9ed9538b6c907acb1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2348c9b6b66de96fb608e020d582b0db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga2348c9b6b66de96fb608e020d582b0db">sendNEC</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0)</td></tr>
-<tr class="separator:ga2348c9b6b66de96fb608e020d582b0db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad56f6ae51db2f76f6b48bd6eb621b55d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gad56f6ae51db2f76f6b48bd6eb621b55d">sendNEC</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0, bool aSendNEC2Repeats=false)</td></tr>
+<tr class="separator:gad56f6ae51db2f76f6b48bd6eb621b55d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f9e7eb2572eabb1fb55a5e112a7afdb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga2f9e7eb2572eabb1fb55a5e112a7afdb">sendExtendedNEC</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0, bool aSendNEC2Repeats=false)</td></tr>
+<tr class="separator:ga2f9e7eb2572eabb1fb55a5e112a7afdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -286,7 +290,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="TinyIR_8h.html">TinyIR.h</a></li>
-    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
+    <li class="footer">Generated on Mon Mar 11 2024 10:50:18 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

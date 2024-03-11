@@ -102,11 +102,11 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:gab740dd587f2603ebf1183bd8043e5153"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gab740dd587f2603ebf1183bd8043e5153">VERSION_TINYIR</a>&#160;&#160;&#160;&quot;2.0.0&quot;</td></tr>
+<tr class="memitem:gab740dd587f2603ebf1183bd8043e5153"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gab740dd587f2603ebf1183bd8043e5153">VERSION_TINYIR</a>&#160;&#160;&#160;&quot;2.1.0&quot;</td></tr>
 <tr class="separator:gab740dd587f2603ebf1183bd8043e5153"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga05c4dfc623d9ab9c3f6c7da81d361a0b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga05c4dfc623d9ab9c3f6c7da81d361a0b">VERSION_TINYIR_MAJOR</a>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:ga05c4dfc623d9ab9c3f6c7da81d361a0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabbfb8e770c41cbdcf0afd3ef243e0d3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gabbfb8e770c41cbdcf0afd3ef243e0d3c">VERSION_TINYIR_MINOR</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memitem:gabbfb8e770c41cbdcf0afd3ef243e0d3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gabbfb8e770c41cbdcf0afd3ef243e0d3c">VERSION_TINYIR_MINOR</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:gabbfb8e770c41cbdcf0afd3ef243e0d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8223f29625c671b7a921a502f8cca06d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga8223f29625c671b7a921a502f8cca06d">VERSION_TINYIR_PATCH</a>&#160;&#160;&#160;0</td></tr>
 <tr class="separator:ga8223f29625c671b7a921a502f8cca06d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -230,6 +230,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga2553571086097dd6e7ba319a6da2c743"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga2553571086097dd6e7ba319a6da2c743">isIRReceiverAttachedForTinyReceiver</a> ()</td></tr>
+<tr class="separator:ga2553571086097dd6e7ba319a6da2c743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaafb51bc656ba199129d261afa3f950c2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">initPCIInterruptForTinyReceiver</a> ()</td></tr>
 <tr class="memdesc:gaafb51bc656ba199129d261afa3f950c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode.  <a href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">More...</a><br /></td></tr>
 <tr class="separator:gaafb51bc656ba199129d261afa3f950c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -246,12 +248,14 @@ Functions</h2></td></tr>
 <tr class="separator:ga5d40a2ebca50382f9ddc8210cd82ebcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga21e45ae5abbd50dcf77693c87c01cc71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga21e45ae5abbd50dcf77693c87c01cc71">sendFast8BitAndParity</a> (uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats=0)</td></tr>
 <tr class="separator:ga21e45ae5abbd50dcf77693c87c01cc71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabf047474adaaa15df0c3c99382a29b8e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gabf047474adaaa15df0c3c99382a29b8e">sendONKYO</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0)</td></tr>
-<tr class="separator:gabf047474adaaa15df0c3c99382a29b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad46384dcfa939b9ed9538b6c907acb1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gad46384dcfa939b9ed9538b6c907acb1f">sendNECMinimal</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0) __attribute__((deprecated(&quot;Renamed to <a class="el" href="group__TinySender.html#ga1213d923a9b96e6e8b29a2413d81d95f">sendNEC</a>().&quot;)))</td></tr>
+<tr class="memitem:ga42ba5dff1100c121334ae46c000631e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga42ba5dff1100c121334ae46c000631e2">sendONKYO</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0, bool aSendNEC2Repeats=false)</td></tr>
+<tr class="separator:ga42ba5dff1100c121334ae46c000631e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad46384dcfa939b9ed9538b6c907acb1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gad46384dcfa939b9ed9538b6c907acb1f">sendNECMinimal</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0) __attribute__((deprecated(&quot;Renamed to <a class="el" href="group__TinySender.html#ga0a4a942fdd78fd7e5f6a54b0c7251ff7">sendNEC</a>().&quot;)))</td></tr>
 <tr class="separator:gad46384dcfa939b9ed9538b6c907acb1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2348c9b6b66de96fb608e020d582b0db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga2348c9b6b66de96fb608e020d582b0db">sendNEC</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0)</td></tr>
-<tr class="separator:ga2348c9b6b66de96fb608e020d582b0db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad56f6ae51db2f76f6b48bd6eb621b55d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gad56f6ae51db2f76f6b48bd6eb621b55d">sendNEC</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0, bool aSendNEC2Repeats=false)</td></tr>
+<tr class="separator:gad56f6ae51db2f76f6b48bd6eb621b55d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f9e7eb2572eabb1fb55a5e112a7afdb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga2f9e7eb2572eabb1fb55a5e112a7afdb">sendExtendedNEC</a> (uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats=0, bool aSendNEC2Repeats=false)</td></tr>
+<tr class="separator:ga2f9e7eb2572eabb1fb55a5e112a7afdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa968353e3a3d31ca950fe4dd5be38b71"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gaa968353e3a3d31ca950fe4dd5be38b71">handleTinyReceivedIRData</a> ()</td></tr>
 <tr class="memdesc:gaa968353e3a3d31ca950fe4dd5be38b71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declaration of the callback function provided by the user application.  <a href="group__TinyReceiver.html#gaa968353e3a3d31ca950fe4dd5be38b71">More...</a><br /></td></tr>
 <tr class="separator:gaa968353e3a3d31ca950fe4dd5be38b71"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -498,7 +502,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00123">123</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00125">125</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -514,7 +518,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00193">193</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00195">195</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -530,7 +534,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00192">192</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00194">194</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -546,7 +550,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00191">191</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00193">193</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -562,7 +566,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00189">189</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00191">191</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -578,7 +582,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00190">190</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00192">192</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -594,7 +598,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00194">194</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00196">196</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -610,7 +614,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00222">222</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00224">224</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -626,7 +630,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00224">224</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00226">226</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -642,7 +646,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00223">223</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00225">225</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -660,7 +664,7 @@ Variables</h2></td></tr>
 
 <p>the current (autorepeat) frame violated parity check </p>
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00225">225</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00227">227</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -680,7 +684,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00181">181</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00183">183</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -700,7 +704,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00183">183</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00185">185</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -716,7 +720,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00175">175</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00177">177</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -732,7 +736,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00171">171</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00173">173</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -975,7 +979,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00139">139</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00141">141</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -991,7 +995,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00155">155</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00157">157</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1007,7 +1011,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00149">149</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00151">151</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1023,7 +1027,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00142">142</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00144">144</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1039,7 +1043,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00146">146</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00148">148</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1055,7 +1059,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00152">152</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00154">154</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1071,7 +1075,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00153">153</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00155">155</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1087,7 +1091,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00159">159</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00161">161</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1103,7 +1107,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00156">156</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00158">158</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1119,7 +1123,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00150">150</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00152">152</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1135,7 +1139,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00142">142</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00144">144</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1151,7 +1155,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00157">157</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00159">159</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1171,7 +1175,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00182">182</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00184">184</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1191,7 +1195,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00184">184</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIR_8h_source.html#l00186">186</a> of file <a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>.</p>
 
 </div>
 </div>
@@ -1207,7 +1211,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00474">474</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00487">487</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1218,7 +1222,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define VERSION_TINYIR&#160;&#160;&#160;&quot;2.0.0&quot;</td>
+          <td class="memname">#define VERSION_TINYIR&#160;&#160;&#160;&quot;2.1.0&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1250,7 +1254,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define VERSION_TINYIR_MINOR&#160;&#160;&#160;0</td>
+          <td class="memname">#define VERSION_TINYIR_MINOR&#160;&#160;&#160;1</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1291,7 +1295,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00604">604</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00617">617</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1313,7 +1317,7 @@ Variables</h2></td></tr>
 <p>Initializes hardware interrupt generation according to IR_RECEIVE_PIN or use attachInterrupt() function. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if interrupt was successfully enabled </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00538">538</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00551">551</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1355,7 +1359,7 @@ Variables</h2></td></tr>
 <p>Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode. </p>
 <p>Then call <a class="el" href="group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10" title="Initializes hardware interrupt generation according to IR_RECEIVE_PIN or use attachInterrupt() functi...">enablePCIInterruptForTinyReceiver()</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00428">428</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00441">441</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1378,7 +1382,26 @@ Variables</h2></td></tr>
 <p>The ISR (Interrupt Service Routine) of TinyIRRreceiver. </p>
 <p>It handles the NEC protocol decoding and calls the user callback function on complete. 5 us + 3 us for push + pop for a 16MHz ATmega </p>
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00161">161</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00163">163</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga2553571086097dd6e7ba319a6da2c743"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2553571086097dd6e7ba319a6da2c743">&#9670;&nbsp;</a></span>isIRReceiverAttachedForTinyReceiver()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isIRReceiverAttachedForTinyReceiver </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00430">430</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1397,7 +1420,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00420">420</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00422">422</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1417,7 +1440,55 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00437">437</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00450">450</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga2f9e7eb2572eabb1fb55a5e112a7afdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2f9e7eb2572eabb1fb55a5e112a7afdb">&#9670;&nbsp;</a></span>sendExtendedNEC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void sendExtendedNEC </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>aSendPin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aAddress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aCommand</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aSendNEC2Repeats</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00234">234</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
 
 </div>
 </div>
@@ -1453,7 +1524,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00241">241</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00294">294</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
 
 </div>
 </div>
@@ -1489,12 +1560,12 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00234">234</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00287">287</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga2348c9b6b66de96fb608e020d582b0db"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2348c9b6b66de96fb608e020d582b0db">&#9670;&nbsp;</a></span>sendNEC()</h2>
+<a id="gad56f6ae51db2f76f6b48bd6eb621b55d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad56f6ae51db2f76f6b48bd6eb621b55d">&#9670;&nbsp;</a></span>sendNEC()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1521,7 +1592,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint_fast8_t&#160;</td>
-          <td class="paramname"><em>aNumberOfRepeats</em> = <code>0</code>&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aSendNEC2Repeats</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1531,7 +1608,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00169">169</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00168">168</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
 
 </div>
 </div>
@@ -1573,12 +1650,12 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00166">166</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00165">165</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
 
 </div>
 </div>
-<a id="gabf047474adaaa15df0c3c99382a29b8e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabf047474adaaa15df0c3c99382a29b8e">&#9670;&nbsp;</a></span>sendONKYO()</h2>
+<a id="ga42ba5dff1100c121334ae46c000631e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga42ba5dff1100c121334ae46c000631e2">&#9670;&nbsp;</a></span>sendONKYO()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1605,7 +1682,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint_fast8_t&#160;</td>
-          <td class="paramname"><em>aNumberOfRepeats</em> = <code>0</code>&#160;</td>
+          <td class="paramname"><em>aNumberOfRepeats</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aSendNEC2Repeats</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1615,7 +1698,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00113">113</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRSender_8hpp_source.html#l00114">114</a> of file <a class="el" href="TinyIRSender_8hpp_source.html">TinyIRSender.hpp</a>.</p>
 
 </div>
 </div>
@@ -1632,7 +1715,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00103">103</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00105">105</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1648,7 +1731,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00104">104</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00106">106</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1664,7 +1747,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00104">104</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TinyIRReceiver_8hpp_source.html#l00106">106</a> of file <a class="el" href="TinyIRReceiver_8hpp_source.html">TinyIRReceiver.hpp</a>.</p>
 
 </div>
 </div>
@@ -1673,7 +1756,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
+    <li class="footer">Generated on Mon Mar 11 2024 10:50:18 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

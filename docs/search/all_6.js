@@ -22,8 +22,10 @@ var searchData=
   ['feedbackledcontrolstruct_214',['FeedbackLEDControlStruct',['../structFeedbackLEDControlStruct.html',1,'']]],
   ['feedback_20led_20functions_215',['Feedback LED functions',['../group__FeedbackLEDFunctions.html',1,'']]],
   ['feedbackledpin_216',['FeedbackLEDPin',['../structFeedbackLEDControlStruct.html#a759f018b8bdb93695bd4ebb0d61a3c4c',1,'FeedbackLEDControlStruct']]],
-  ['flags_217',['Flags',['../structPulseDistanceWidthProtocolConstants.html#a254c0862391ddcacd26a17351481d27b',1,'PulseDistanceWidthProtocolConstants::Flags()'],['../structTinyIRReceiverStruct.html#abead77902575acdd1ab470cea07a3611',1,'TinyIRReceiverStruct::Flags()'],['../structTinyIRReceiverCallbackDataStruct.html#ad96a1443f9fe0cc2c079345c9aaa2e0f',1,'TinyIRReceiverCallbackDataStruct::Flags()'],['../structIRData.html#aaaad48fc0d90e5c6daec601987848a51',1,'IRData::flags()']]],
+  ['flags_217',['flags',['../structIRData.html#aaaad48fc0d90e5c6daec601987848a51',1,'IRData::flags()'],['../structPulseDistanceWidthProtocolConstants.html#a254c0862391ddcacd26a17351481d27b',1,'PulseDistanceWidthProtocolConstants::Flags()'],['../structTinyIRReceiverStruct.html#abead77902575acdd1ab470cea07a3611',1,'TinyIRReceiverStruct::Flags()'],['../structTinyIRReceiverCallbackDataStruct.html#ad96a1443f9fe0cc2c079345c9aaa2e0f',1,'TinyIRReceiverCallbackDataStruct::Flags()']]],
   ['float_218',['Float',['../unionLongUnion.html#a827328f51189919e4de584da161e3279',1,'LongUnion']]],
-  ['frequencykhz_219',['FrequencyKHz',['../structPulseDistanceWidthProtocolConstants.html#a6171ae6af196b51aa32ad8f8cb9939e1',1,'PulseDistanceWidthProtocolConstants']]],
-  ['function_220',['Function',['../unionLGProtocol.html#ab0676c3c820e2fa00d117af76a6a4127',1,'LGProtocol']]]
+  ['fnv_5fbasis_5f32_219',['FNV_BASIS_32',['../group__Receiving.html#ga346d5186e56ca2ce520d59681479c808',1,'IRReceive.hpp']]],
+  ['fnv_5fprime_5f32_220',['FNV_PRIME_32',['../group__Receiving.html#ga6a18c840bbf00da32a4e35a85342095a',1,'IRReceive.hpp']]],
+  ['frequencykhz_221',['FrequencyKHz',['../structPulseDistanceWidthProtocolConstants.html#a6171ae6af196b51aa32ad8f8cb9939e1',1,'PulseDistanceWidthProtocolConstants']]],
+  ['function_222',['Function',['../unionLGProtocol.html#ab0676c3c820e2fa00d117af76a6a4127',1,'LGProtocol']]]
 ];

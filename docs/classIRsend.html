@@ -158,7 +158,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:gae1aebf8a1c14c25bd21da343411bd441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function using an 8 byte tick timing array to save program memory Raw data starts with a Mark.  <a href="group__Sending.html#gae1aebf8a1c14c25bd21da343411bd441">More...</a><br /></td></tr>
 <tr class="separator:gae1aebf8a1c14c25bd21da343411bd441"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4fc6a1201b9af5884856fc411d47c087"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga4fc6a1201b9af5884856fc411d47c087">sendRaw_P</a> (const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz)</td></tr>
-<tr class="memdesc:ga4fc6a1201b9af5884856fc411d47c087"><td class="mdescLeft">&#160;</td><td class="mdescRight">New function using an 8 byte tick timing array in FLASH to save program memory Raw data starts with a Mark.  <a href="group__Sending.html#ga4fc6a1201b9af5884856fc411d47c087">More...</a><br /></td></tr>
+<tr class="memdesc:ga4fc6a1201b9af5884856fc411d47c087"><td class="mdescLeft">&#160;</td><td class="mdescRight">New function using an 8 byte tick (50 us) timing array in FLASH to save program memory Raw data starts with a Mark.  <a href="group__Sending.html#ga4fc6a1201b9af5884856fc411d47c087">More...</a><br /></td></tr>
 <tr class="separator:ga4fc6a1201b9af5884856fc411d47c087"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga875f514d9cf039cbad7f781595247952"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga875f514d9cf039cbad7f781595247952">sendRaw</a> (const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz)</td></tr>
 <tr class="memdesc:ga875f514d9cf039cbad7f781595247952"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function using an 16 byte microsecond timing array for every purpose.  <a href="group__Sending.html#ga875f514d9cf039cbad7f781595247952">More...</a><br /></td></tr>
@@ -239,8 +239,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ga395b9e2ded40a5ad085fa11938422b21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send repeat Repeat commands should be sent in a 110 ms raster.  <a href="group__Decoder.html#ga395b9e2ded40a5ad085fa11938422b21">More...</a><br /></td></tr>
 <tr class="separator:ga395b9e2ded40a5ad085fa11938422b21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6e694626edcde10e0d5a4e6a2bc6b915"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915">sendSamsung</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
-<tr class="memdesc:ga6e694626edcde10e0d5a4e6a2bc6b915"><td class="mdescLeft">&#160;</td><td class="mdescRight">Here we send Samsung32 If we get a command &lt; 0x100, we send command and then ~command !!! Be aware, that this is flexible, but makes it impossible to send e.g.  <a href="group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915">More...</a><br /></td></tr>
+<tr class="memdesc:ga6e694626edcde10e0d5a4e6a2bc6b915"><td class="mdescLeft">&#160;</td><td class="mdescRight">Here we send Samsung32 If we get a command &lt; 0x100, we send command and then ~command If we get an address &lt; 0x100, we send address and then address again, this makes it flipper IRDB compatible !!! Be aware, that this is flexible, but makes it impossible to send e.g.  <a href="group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915">More...</a><br /></td></tr>
 <tr class="separator:ga6e694626edcde10e0d5a4e6a2bc6b915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga78ab8efbaf556541c6c6be6c89281309"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga78ab8efbaf556541c6c6be6c89281309">sendSamsung16BitAddressAndCommand</a> (uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="memdesc:ga78ab8efbaf556541c6c6be6c89281309"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maybe no one needs it in the wild...  <a href="group__Decoder.html#ga78ab8efbaf556541c6c6be6c89281309">More...</a><br /></td></tr>
+<tr class="separator:ga78ab8efbaf556541c6c6be6c89281309"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa72ec4013c647400e0dc43a4ede328e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaa72ec4013c647400e0dc43a4ede328e4">sendSamsung48</a> (uint16_t aAddress, uint32_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
 <tr class="memdesc:gaa72ec4013c647400e0dc43a4ede328e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Here we send Samsung48 We send 2 x (8 bit command and then ~command)  <a href="group__Decoder.html#gaa72ec4013c647400e0dc43a4ede328e4">More...</a><br /></td></tr>
 <tr class="separator:gaa72ec4013c647400e0dc43a4ede328e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -349,7 +352,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main class for sending IR signals. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00415">415</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00419">419</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a47ef75994f6381a6bfe8a715a6b8cdd5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a47ef75994f6381a6bfe8a715a6b8cdd5">&#9670;&nbsp;</a></span>__attribute__()</h2>
@@ -763,7 +766,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00570">570</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00582">582</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -781,7 +784,7 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">        <a class="code" href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">sendNECMSB</a>(aRawData, nbits)</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00509">509</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00520">520</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -799,7 +802,7 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">        <a class="code" href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">sendJVCMSB</a>(data, nbits, repeat)</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00570">570</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00582">582</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -815,7 +818,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00566">566</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00578">578</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -831,7 +834,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00566">566</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00578">578</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -847,7 +850,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00606">606</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00618">618</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -863,7 +866,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00605">605</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00617">617</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -879,7 +882,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00603">603</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00615">615</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -910,7 +913,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classIRsend.html">IRsend</a></li>
-    <li class="footer">Generated on Sat Jan 27 2024 22:47:40 for IRremote by
+    <li class="footer">Generated on Mon Mar 11 2024 10:50:18 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>
