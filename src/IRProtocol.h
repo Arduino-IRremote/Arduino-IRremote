@@ -118,7 +118,7 @@ struct IRData {
     uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;          ///< IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above
 
-    //These 2 variables allow to call resume() directly after decode, if no dump is required. Since 4.3.0.
+    // These 2 variables allow to call resume() directly after decode, if no dump is required. Since 4.3.0.
 #if RAW_BUFFER_LENGTH <= 254    // saves around 75 bytes program memory and speeds up ISR
     uint_fast8_t rawlen;        ///< counter of entries in rawbuf
 #else

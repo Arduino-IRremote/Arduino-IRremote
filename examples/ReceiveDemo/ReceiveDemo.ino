@@ -137,13 +137,16 @@ void setup() {
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     Serial.println();
-    Serial.print(F("If you connect debug pin "));
+    if (digitalRead(DEBUG_BUTTON_PIN) != LOW) {
+        Serial.print(F("If you connect debug pin "));
 #  if defined(APPLICATION_PIN_STRING)
-    Serial.print(APPLICATION_PIN_STRING);
+        Serial.print(APPLICATION_PIN_STRING);
 #  else
-    Serial.print(DEBUG_BUTTON_PIN);
+        Serial.print(DEBUG_BUTTON_PIN);
 #  endif
-    Serial.println(F(" to ground, raw data is always printed"));
+        Serial.print(F(" to ground, "));
+    }
+    Serial.println(F("raw data is always printed"));
 
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);
@@ -201,9 +204,10 @@ void loop() {
                     Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
                 }
                 IrReceiver.printIRResultRawFormatted(&Serial, true);
-            } else {
+            }
+            if (IrReceiver.decodedIRData.protocol != UNKNOWN) {
                 /*
-                 * This is the info output for a successful receive in normal mode
+                 * The info output for a successful receive
                  */
                 IrReceiver.printIRResultShort(&Serial);
                 IrReceiver.printIRSendUsage(&Serial);

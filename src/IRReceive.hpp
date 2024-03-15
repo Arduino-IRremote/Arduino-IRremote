@@ -1473,7 +1473,7 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
  */
 void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
 
-    uint8_t tRawlen = decodedIRData.rawlen; // Get it once here in order to print quite consistent data, even if ISR is running
+    uint8_t tRawlen = decodedIRData.rawlen;
 // Print Raw data
     aSerial->print(F("rawData["));
     aSerial->print(tRawlen, DEC);
