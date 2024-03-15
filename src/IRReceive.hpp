@@ -853,9 +853,9 @@ bool IRrecv::decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *a
 /*
  * Static variables for the getBiphaselevel function
  */
-uint_fast8_t sBiphaseDecodeRawbuffOffset; // Index into raw timing array
-uint16_t sBiphaseCurrentTimingIntervals; // 1, 2 or 3. Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
-uint_fast8_t sBiphaseUsedTimingIntervals;       // Number of already used intervals of sCurrentTimingIntervals.
+uint_fast8_t sBiphaseDecodeRawbuffOffset;   // Index into raw timing array
+uint16_t sBiphaseCurrentTimingIntervals;    // 1, 2 or 3. Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
+uint_fast8_t sBiphaseUsedTimingIntervals;   // Number of already used intervals of sCurrentTimingIntervals.
 uint16_t sBiphaseTimeUnit;
 
 void IRrecv::initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit) {
@@ -1281,7 +1281,12 @@ void IRrecv::printDistanceWidthTimingInfo(Print *aSerial, DistanceWidthTimingInf
 
 uint32_t IRrecv::getTotalDurationOfRawData() {
     uint16_t tSumOfDurationTicks = 0;
-    for (uint_fast8_t i = 1; i < decodedIRData.rawlen; i++) {
+#if RAW_BUFFER_LENGTH <= 254    // saves around 75 bytes program memory and speeds up ISR
+    uint_fast8_t i;
+#else
+    unsigned int i;
+#endif
+    for (i = 1; i < decodedIRData.rawlen; i++) {
         tSumOfDurationTicks += decodedIRData.rawDataPtr->rawbuf[i];
     }
     return tSumOfDurationTicks * (uint32_t) MICROS_PER_TICK;
@@ -1473,10 +1478,9 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
  */
 void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
 
-    uint8_t tRawlen = decodedIRData.rawlen;
 // Print Raw data
     aSerial->print(F("rawData["));
-    aSerial->print(tRawlen, DEC);
+    aSerial->print(decodedIRData.rawlen, DEC);
     aSerial->println(F("]: "));
 
     /*
@@ -1513,7 +1517,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
 
     uint32_t tDuration;
     uint16_t tSumOfDurationTicks = 0;
-    for (i = 1; i < tRawlen; i++) {
+    for (i = 1; i < decodedIRData.rawlen; i++) {
         auto tCurrentTicks = decodedIRData.rawDataPtr->rawbuf[i];
         if (aOutputMicrosecondsInsteadOfTicks) {
             tDuration = tCurrentTicks * MICROS_PER_TICK;
@@ -1540,7 +1544,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
         }
         aSerial->print(tDuration, DEC);
 
-        if ((i & 1) && (i + 1) < tRawlen) {
+        if ((i & 1) && (i + 1) < decodedIRData.rawlen) {
             aSerial->print(','); //',' not required for last one
         }
 
