@@ -2,6 +2,10 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+# 4.3.1
+ - Fixed overflow bug for rawlen > 254.
+ - Removed deprecated sendPulseDistance... functions with parameter aSendStopBit.
+
 # 4.3.0
 - Removed default value USE_DEFAULT_FEEDBACK_LED_PIN for last parameter of IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin).
     Therefore IrSender.begin(DISABLE_LED_FEEDBACK) will not longer work!

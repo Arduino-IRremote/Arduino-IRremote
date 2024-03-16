@@ -119,11 +119,7 @@ struct IRData {
     uint8_t flags;          ///< IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above
 
     // These 2 variables allow to call resume() directly after decode, if no dump is required. Since 4.3.0.
-#if RAW_BUFFER_LENGTH <= 254    // saves around 75 bytes program memory and speeds up ISR
-    uint_fast8_t rawlen;        ///< counter of entries in rawbuf
-#else
-    uint_fast16_t rawlen;       ///< counter of entries in rawbuf
-#endif
+    IRRawlenType rawlen;        ///< counter of entries in rawbuf
     uint16_t initialGap;        ///< rawbuf[0] contains the initial gap of the last frame.
 
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.
@@ -141,12 +137,9 @@ struct PulseDistanceWidthProtocolConstants {
 /*
  * Definitions for member PulseDistanceWidthProtocolConstants.Flags
  */
-#define SUPPRESS_STOP_BIT_FOR_THIS_DATA 0x20
+#define SUPPRESS_STOP_BIT_FOR_THIS_DATA 0x20 // Stop bit is otherwise sent for all pulse distance protocols.
 #define PROTOCOL_IS_MSB_FIRST           IRDATA_FLAGS_IS_MSB_FIRST
 #define PROTOCOL_IS_LSB_FIRST           IRDATA_FLAGS_IS_LSB_FIRST
-// 2 definitions for deprecated parameter bool aSendStopBit
-#define SEND_STOP_BIT true
-#define SEND_NO_STOP_BIT false
 
 /*
  * Carrier frequencies for various protocols

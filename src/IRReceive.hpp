@@ -700,7 +700,7 @@ bool IRrecv::decode() {
  * @param   aMSBfirst           If true send Most Significant Bit first, else send Least Significant Bit (lowest bit) first.
  * @return  true                If decoding was successful
  */
-bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint16_t aOneMarkMicros,
+bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
         uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst) {
 
     auto *tRawBufPointer = &decodedIRData.rawDataPtr->rawbuf[aStartOffset];
@@ -843,7 +843,7 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, uint_fast8
  * @return  true if decoding was successful
  */
 bool IRrecv::decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
-        uint_fast8_t aStartOffset) {
+        IRRawlenType aStartOffset) {
 
     return decodePulseDistanceWidthData(aNumberOfBits, aStartOffset, aProtocolConstants->DistanceWidthTimingInfo.OneMarkMicros,
             aProtocolConstants->DistanceWidthTimingInfo.ZeroMarkMicros, aProtocolConstants->DistanceWidthTimingInfo.OneSpaceMicros,
@@ -967,12 +967,7 @@ bool IRrecv::decodeHash() {
     if (decodedIRData.rawlen < 6) {
         return false;
     }
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
-    uint_fast8_t i;
-#else
-    unsigned int i;
-#endif
-    for (i = 1; (i + 2) < decodedIRData.rawlen; i++) {
+    for (IRRawlenType i = 1; (i + 2) < decodedIRData.rawlen; i++) {
         // Compare mark with mark and space with space
         uint_fast8_t value = compare(decodedIRData.rawDataPtr->rawbuf[i], decodedIRData.rawDataPtr->rawbuf[i + 2]);
         // Add value into the hash
@@ -1281,12 +1276,8 @@ void IRrecv::printDistanceWidthTimingInfo(Print *aSerial, DistanceWidthTimingInf
 
 uint32_t IRrecv::getTotalDurationOfRawData() {
     uint16_t tSumOfDurationTicks = 0;
-#if RAW_BUFFER_LENGTH <= 254    // saves around 75 bytes program memory and speeds up ISR
-    uint_fast8_t i;
-#else
-    unsigned int i;
-#endif
-    for (i = 1; i < decodedIRData.rawlen; i++) {
+
+    for (IRRawlenType i = 1; i < decodedIRData.rawlen; i++) {
         tSumOfDurationTicks += decodedIRData.rawDataPtr->rawbuf[i];
     }
     return tSumOfDurationTicks * (uint32_t) MICROS_PER_TICK;
@@ -1492,11 +1483,6 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
     } else {
         aSerial->println(decodedIRData.initialGap, DEC);
     }
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
-    uint_fast8_t i;
-#else
-    unsigned int i;
-#endif
 
 // Newline is printed every 8. value, if tCounterForNewline % 8 == 0
     uint_fast8_t tCounterForNewline = 6; // first newline is after the 2 values of the start bit
@@ -1517,7 +1503,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
 
     uint32_t tDuration;
     uint16_t tSumOfDurationTicks = 0;
-    for (i = 1; i < decodedIRData.rawlen; i++) {
+    for (IRRawlenType i = 1; i < decodedIRData.rawlen; i++) {
         auto tCurrentTicks = decodedIRData.rawDataPtr->rawbuf[i];
         if (aOutputMicrosecondsInsteadOfTicks) {
             tDuration = tCurrentTicks * MICROS_PER_TICK;
@@ -1586,12 +1572,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
     aSerial->print(F("] = {"));    // Start declaration
 
 // Dump data
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
-    uint_fast8_t i;
-#else
-    unsigned int i;
-#endif
-    for (i = 1; i < decodedIRData.rawlen; i++) {
+    for (IRRawlenType i = 1; i < decodedIRData.rawlen; i++) {
         uint32_t tDuration = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
 
         if (i & 1) {
@@ -1638,11 +1619,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
 void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
 
 // Store data, skip leading space#
-#if RAW_BUFFER_LENGTH <= 254        // saves around 75 bytes program memory and speeds up ISR
-    uint_fast8_t i;
-#else
-    unsigned int i;
-#endif
+    IRRawlenType i;
     for (i = 1; i < decodedIRData.rawlen; i++) {
         uint32_t tDuration = decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK;
         if (i & 1) {

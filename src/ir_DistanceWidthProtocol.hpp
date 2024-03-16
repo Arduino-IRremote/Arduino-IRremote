@@ -23,8 +23,8 @@
  * https://github.com/Arduino-IRremote/Arduino-IRremote/blob/d51b540cb2ddf1424888d2d9e6b62fe1ef46859d/examples/SendDemo/SendDemo.ino#L175
  * sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros,
  *         unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
- *         unsigned int aZeroSpaceMicros, uint32_t *aDecodedRawDataArray, unsigned int aNumberOfBits, bool aMSBFirst,
- *         bool aSendStopBit, unsigned int aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats)
+ *         unsigned int aZeroSpaceMicros, uint32_t *aDecodedRawDataArray, unsigned int aNumberOfBits, uint8_t aFlags,
+ *         unsigned int aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats)
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -163,8 +163,6 @@ bool IRrecv::decodeDistanceWidth() {
         return false;
     }
 
-    uint_fast8_t i;
-
     // Reset duration array
     memset(tDurationArray, 0, DURATION_ARRAY_SIZE);
 
@@ -172,7 +170,7 @@ bool IRrecv::decodeDistanceWidth() {
     /*
      * Count number of mark durations up to 49 ticks. Skip leading start and trailing stop bit.
      */
-    for (i = 3; i < (uint_fast8_t) decodedIRData.rawlen - 2; i += 2) {
+    for (IRRawlenType i = 3; i < decodedIRData.rawlen - 2; i += 2) {
         auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
         if (tDurationTicks < DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++; // count duration if less than DURATION_ARRAY_SIZE (50)
@@ -219,7 +217,7 @@ bool IRrecv::decodeDistanceWidth() {
      * Count number of space durations. Skip leading start and trailing stop bit.
      */
     tIndexOfMaxDuration = 0;
-    for (i = 4; i < (uint_fast8_t) decodedIRData.rawlen - 2; i += 2) {
+    for (IRRawlenType i = 4; i < decodedIRData.rawlen - 2; i += 2) {
         auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
         if (tDurationTicks < DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++;
@@ -284,9 +282,12 @@ bool IRrecv::decodeDistanceWidth() {
     Serial.print(F(", "));
     Serial.println(tSpaceTicksShort * MICROS_PER_TICK);
 #endif
-    uint8_t tStartIndex = 3;
-    // skip leading start bit for decoding.
-    uint16_t tNumberOfBits = (decodedIRData.rawlen / 2) - 1;
+#if RAW_BUFFER_LENGTH <= 508
+    uint_fast8_t tNumberOfBits;
+#else
+    uint16_t tNumberOfBits;
+#endif
+    tNumberOfBits = (decodedIRData.rawlen / 2) - 1;
     if (tSpaceTicksLong > 0 && tMarkTicksLong == 0) {
         // For PULSE_DISTANCE a stop bit is mandatory, for PULSE_WIDTH it is not required!
         tNumberOfBits--; // Correct for stop bit
@@ -320,6 +321,7 @@ bool IRrecv::decodeDistanceWidth() {
     unsigned int tMarkMicrosShort = tMarkTicksShort * MICROS_PER_TICK;
     unsigned int tMarkMicrosLong = tMarkTicksLong * MICROS_PER_TICK;
     unsigned int tSpaceMicrosLong = tSpaceTicksLong * MICROS_PER_TICK;
+    IRRawlenType tStartIndex = 3;  // skip leading start bit for decoding.
 
     for (uint_fast8_t i = 0; i <= tNumberOfAdditionalArrayValues; ++i) {
         uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;

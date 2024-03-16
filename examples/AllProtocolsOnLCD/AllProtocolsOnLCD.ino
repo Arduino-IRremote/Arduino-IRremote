@@ -241,7 +241,8 @@ void loop() {
                     ) {
                 // Print more info, but only if we are connected to USB, i.e. VCC is > 4300 mV, because this may take to long to detect some fast repeats
                 IrReceiver.printIRSendUsage(&Serial);
-                IrReceiver.printIRResultRawFormatted(&Serial, false); // print ticks, this is faster :-)
+//                IrReceiver.printIRResultRawFormatted(&Serial, false); // print ticks, this is faster :-)
+                IrReceiver.printIRResultRawFormatted(&Serial); // print us, this is better to compare :-)
             }
 
             // Guarantee at least 5 millis for tone. decode starts 5 millis (RECORD_GAP_MICROS) after end of frame
