@@ -30,10 +30,10 @@
 //
 // Support for Bose Wave Radio CD initially provided by https://github.com/uvotguy.
 //
-// As seen on my trusty oscilloscope, there is no repeat code.  Instead, when I
+// As seen on my oscilloscope, there is no repeat code. Instead, when I
 // press and hold a button on my remote, it sends a command, makes a 51.2ms space,
-// and resends the command, etc, etc.
-// LSB first, 1 start bit + 8 bit data + 8 bit inverted data + 1 stop bit.
+// and resends the command again, and so on.
+// 38 kHz, LSB first, 1 start bit + 8 bit data + 8 bit inverted data + 1 stop bit.
 #define BOSEWAVE_BITS             16 // Command and inverted command
 
 #define BOSEWAVE_HEADER_MARK    1014    // 1014 are 39 clock periods (I counted 3 times!)

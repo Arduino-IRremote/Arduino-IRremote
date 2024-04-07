@@ -45,6 +45,7 @@
 // from LEGO Power Functions RC Manual 26.02.2010 Version 1.20
 // https://github.com/jurriaan/Arduino-PowerFunctions/raw/master/LEGO_Power_Functions_RC_v120.pdf
 // https://oberguru.net/elektronik/ir/codes/lego_power_functions_train.lircd.conf
+// For original LEGO receiver see: https://www.philohome.com/pfrec/pfrec.htm and https://www.youtube.com/watch?v=KCM4Ug1bPrM
 //
 // To ensure correct detection of IR messages six 38 kHz cycles are transmitted as mark.
 // Low bit consists of 6 cycles of IR and 10 �cycles� of pause,

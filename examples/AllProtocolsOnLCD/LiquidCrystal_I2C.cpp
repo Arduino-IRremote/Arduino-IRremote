@@ -1,4 +1,12 @@
 // Based on the work by DFRobot
+/*
+ * Extensions made by AJ 2023
+ * Removed Arduino 0.x support
+ * Added SoftI2CMaste support, which drastically reduces program size.
+ * Added OLED stuff
+ * Added createChar() with PROGMEM input
+ * Added fast timing
+ */
 
 #include "Arduino.h"
 
@@ -21,6 +29,18 @@ inline size_t LiquidCrystal_I2C::write(uint8_t value) {
 #elif defined(USE_SOFT_WIRE)
 #define USE_SOFTWIRE_H_AS_PLAIN_INCLUDE
 #include "SoftWire.h"
+#endif
+
+#if defined(__AVR__)
+/*
+ * The datasheet says: a command need > 37us to settle. Enable pulse must be > 450ns.
+ * Use no delay for enable pulse after each command,
+ * because the overhead of this library seems to be using the 37 us and 450 ns.
+ * At least it works perfectly for all my LCD's connected to Uno, Nano etc.
+ * and it saves a lot of time in realtime applications using LCD as display,
+ * like https://github.com/ArminJo/Arduino-DTSU666H_PowerMeter
+ */
+#define USE_FAST_TIMING
 #endif
 
 // When the display powers up, it is configured as follows:
@@ -131,7 +151,11 @@ void LiquidCrystal_I2C::begin(uint8_t cols __attribute__((unused)), uint8_t line
 /********** high level commands, for the user! */
 void LiquidCrystal_I2C::clear() {
     command(LCD_CLEARDISPLAY); // clear display, set cursor position to zero
+#if defined(USE_FAST_TIMING)
     delayMicroseconds(1500);  // this command takes a long time! // AJ 20.9.23 1200 is too short for my 2004 LCD's, 1400 is OK
+#else
+    delayMicroseconds(2000);  // this command takes a long time!
+#endif
     if (_oled)
         setCursor(0, 0);
 }
@@ -274,10 +298,13 @@ void LiquidCrystal_I2C::expanderWrite(uint8_t _data) {
 
 void LiquidCrystal_I2C::pulseEnable(uint8_t _data) {
     expanderWrite(_data | En);	// En high
-//    delayMicroseconds(1);		// enable pulse must be >450ns // AJ 20.9.23 not required for my LCD's
-
+#if !defined(USE_FAST_TIMING)
+    delayMicroseconds(1);		// enable pulse must be > 450ns // AJ 20.9.23 not required for my LCD's
+#endif
     expanderWrite(_data & ~En);	// En low
-//    delayMicroseconds(50);      // commands need > 37us to settle // AJ 20.9.23 not required for my LCD's
+#if !defined(USE_FAST_TIMING)
+    delayMicroseconds(50);      // commands need > 37us to settle // AJ 20.9.23 not required for my LCD's
+#endif
 }
 
 // Alias functions

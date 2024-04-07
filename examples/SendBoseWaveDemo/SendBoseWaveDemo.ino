@@ -98,6 +98,10 @@
 //#define BOSE_CMD_ALARM_ON_OFF   0x22
 //#define BOSE_CMD_ALARM_WAKE_TO  0x70
 //#define BOSE_CMD_ALARM_TIME     0x23
+// Different last 3 codes for Wave Sound Touch IV
+//#define BOSE_CMD_ALARM_1        0x22
+//#define BOSE_CMD_ALARM_2        0x62
+//#define BOSE_CMD_ALARM_SETUP    0xA2
 
 bool sPrintMenu;
 void printMenu();
