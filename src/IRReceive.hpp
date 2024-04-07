@@ -772,7 +772,7 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenTy
             } else {
                 tDecodedData |= tMask;
             }
-            IR_TRACE_PRINTLN('1');
+            IR_TRACE_PRINTLN(F("=> 1"));
         } else {
 #if defined DECODE_STRICT_CHECKS
             /*
@@ -811,7 +811,7 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenTy
             }
 #endif
             // do not set the bit
-            IR_TRACE_PRINTLN('0');
+            IR_TRACE_PRINTLN(F("=> 0"));
         }
 #if defined DECODE_STRICT_CHECKS
         // If we have no stop bit, assume that last space, which is not recorded, is correct, since we can not check it
