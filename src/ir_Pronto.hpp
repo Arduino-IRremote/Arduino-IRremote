@@ -187,6 +187,9 @@ void IRsend::sendPronto_P(const char *str, int_fast8_t aNumberOfRepeats) {
 }
 #endif
 
+/*
+ * Copy flash data to ram buffer in stack
+ */
 void IRsend::sendPronto(const __FlashStringHelper *str, int_fast8_t aNumberOfRepeats) {
     size_t len = strlen_P(reinterpret_cast<const char*>(str));
     char work[len + 1];

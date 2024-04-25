@@ -60,6 +60,7 @@ void setup() {
 
 #if defined(IR_SEND_PIN)
     IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
+//    disableLEDFeedback(); // Disable feedback LED at default feedback LED pin
 #  if defined(IR_SEND_PIN_STRING)
     Serial.println(F("Send IR signals at pin " IR_SEND_PIN_STRING));
 #  else
@@ -132,7 +133,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     if (sRepeats == 0) {
-#if FLASHEND >= 0x3FFF && (RAMEND >= 0x4FF || RAMSIZE >= 0x4FF) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && ((defined(RAMEND) && RAMEND > 0x6FF) || (defined(RAMSIZE) && RAMSIZE > 0x6FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
         /*
          * Send constant values only once in this demo
          */
@@ -334,7 +335,7 @@ void loop() {
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND >= 0x3FFF && (RAMEND >= 0x4FF || RAMSIZE >= 0x4FF) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && ((defined(RAMEND) && RAMEND > 0x4FF) || (defined(RAMSIZE) && RAMSIZE > 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     /*
      * Next example how to use the IrSender.write function
      */

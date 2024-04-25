@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2021 Armin Joachimsmeyer
+ * Copyright (c) 2021-2024 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,14 +31,32 @@
  */
 #include <Arduino.h>
 
+/*
+ * !!! The value of RAW_BUFFER_LENGTH (and some other macros) must be the same in all compile units !!!
+ * Otherwise you may get warnings like "type 'struct IRData' itself violates the C++ One Definition Rule"
+ */
+#if !defined(RAW_BUFFER_LENGTH)
+// For air condition remotes it requires 600 (maximum for 2k RAM) to 750. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
+#  if (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
+#define RAW_BUFFER_LENGTH  180
+#  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
+#define RAW_BUFFER_LENGTH  600
+#  else
+#define RAW_BUFFER_LENGTH  750
+#  endif
+#endif
+
 #include "IRremoteExtensionClass.h"
 
 IRExtensionClass::IRExtensionClass(IRrecv *aIrReceiver) {
     MyIrReceiver = aIrReceiver;
 }
-void IRExtensionClass::decode() {
-    Serial.println(F("Call decode()"));
-    MyIrReceiver->decode();
+bool IRExtensionClass::decode() {
+    return MyIrReceiver->decode();
+}
+
+bool IRExtensionClass::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
+    return MyIrReceiver->printIRResultShort(aSerial,aPrintRepeatGap,aCheckForRecordGapsMicros);
 }
 
 void IRExtensionClass::resume() {

@@ -331,12 +331,6 @@ void noTone(uint8_t aPinNumber){
 #if !defined (FLASHEND)
 #define FLASHEND 0xFFFF // Dummy value for platforms where FLASHEND is not defined
 #endif
-#if !defined (RAMEND)
-#define RAMEND 0xFFFF // Dummy value for platforms where RAMEND is not defined
-#endif
-#if !defined (RAMSIZE)
-#define RAMSIZE 0xFFFF // Dummy value for platforms where RAMSIZE is not defined
-#endif
 
 /*
  * Helper macro for getting a macro definition as string
