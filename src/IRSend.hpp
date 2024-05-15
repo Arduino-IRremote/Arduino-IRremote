@@ -968,7 +968,10 @@ void IRsend::mark(uint16_t aMarkMicros) {
      * Here we generate no carrier PWM, just simulate an active low receiver signal.
      */
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
+    // Here we have no hardware supported Open Drain outputs, so we must mimicking it
     pinModeFast(sendPin, OUTPUT); // active state for mimicking open drain
+#  elif defined(USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN)
+    digitalWriteFast(sendPin, HIGH); // Set output to active high.
 #  else
     digitalWriteFast(sendPin, LOW); // Set output to active low.
 #  endif
@@ -1114,6 +1117,8 @@ void IRsend::IRLedOff() {
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
     digitalWriteFast(sendPin, LOW); // prepare for all next active states.
     pinModeFast(sendPin, INPUT);// inactive state for open drain
+#  elif defined(USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN)
+    digitalWriteFast(sendPin, LOW); // Set output to inactive low.
 #  else
     digitalWriteFast(sendPin, HIGH); // Set output to inactive high.
 #  endif
