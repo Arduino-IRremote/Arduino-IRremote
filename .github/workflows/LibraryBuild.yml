@@ -82,6 +82,7 @@ jobs:
         include:
           - arduino-boards-fqbn: arduino:avr:uno
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              ReceiveDemo: -DIR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
 
           - arduino-boards-fqbn: arduino:avr:uno|DEBUG
