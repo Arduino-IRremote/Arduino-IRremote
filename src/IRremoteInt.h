@@ -599,6 +599,8 @@ public:
     void sendSharp(uint16_t address, uint16_t command);
     void sendSAMSUNG(unsigned long data, int nbits);
     __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSamsung().")));
+    void sendSamsungMSB(unsigned long data, int nbits);
+    void sendSonyMSB(unsigned long data, int nbits);
     void sendSony(unsigned long data,
             int nbits)
                     __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSony(aAddress, aCommand, aNumberOfRepeats).")));

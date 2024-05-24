@@ -407,7 +407,7 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
 }
 
 // Old version with MSB first
-void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
+void IRsend::sendSamsungMSB(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut (SAMSUNG_KHZ);
 
@@ -418,6 +418,9 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
     // Old version with MSB first Data + stop bit
     sendPulseDistanceWidthData(SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, data, nbits,
             PROTOCOL_IS_MSB_FIRST);
+}
+void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
+    sendSamsungMSB(data, nbits);
 }
 
 /** @}*/
