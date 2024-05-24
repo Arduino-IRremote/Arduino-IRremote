@@ -611,7 +611,8 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 
 # Examples for this library
 The examples are available at File > Examples > Examples from Custom Libraries / IRremote.<br/>
- In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.
+ In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.<br/>
+See also [DroneBot Workshop SimpleReceiver](https://dronebotworkshop.com/ir-remotes/#SimpleReceiver_Example_Code) and [SimpleSender](https://dronebotworkshop.com/ir-remotes/#SimpleSender_Example_Code).
 
 #### SimpleReceiver + SimpleSender
 The **[SimpleReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino)**  and **[SimpleSender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleSender/SimpleSender.ino)** examples are a good starting point.
@@ -964,6 +965,7 @@ It is dated from **24.06.2022** and updated 10/2023. If you have complains about
 - [IRMP list of IR protocols](https://www.mikrocontroller.net/articles/IRMP_-_english#IR_Protocols)
 - [IRDB database for IR codes](https://github.com/probonopd/irdb/tree/master/codes)
 - [IRP definition files for IR protocols](https://github.com/probonopd/MakeHex/tree/master/protocols)
+- [Good introduction to IR remotes by DroneBot Workshop](https://dronebotworkshop.com/ir-remotes/)
 - [IR Remote Control Theory and some protocols (upper right hamburger icon)](https://www.sbprojects.net/knowledge/ir/)
 - [Interpreting Decoded IR Signals (v2.45)](http://www.hifi-remote.com/johnsfine/DecodeIR.html)
 - ["Recording long Infrared Remote control signals with Arduino"](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino)

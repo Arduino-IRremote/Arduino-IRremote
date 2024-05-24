@@ -14,6 +14,7 @@
  * A button must be connected between the input SEND_BUTTON_PIN and ground.
  * A visible LED can be connected to STATUS_PIN to provide status.
  *
+ * See also https://dronebotworkshop.com/ir-remotes/#ReceiveAndSend_Code
  *
  * Initially coded 2009 Ken Shirriff http://www.righto.com
  *
