@@ -198,7 +198,7 @@ void IRReceiveTimerInterruptHandler() {
                 // Flag up a read OverflowFlag; Stop the state machine
                 irparams.OverflowFlag = true;
                 irparams.StateForISR = IR_REC_STATE_STOP;
-#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
+#if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
                 /*
                  * Call callback if registered (not NULL)
                  */
@@ -224,7 +224,7 @@ void IRReceiveTimerInterruptHandler() {
              * Don't reset TickCounterForISR; keep counting width of next leading space
              */
             irparams.StateForISR = IR_REC_STATE_STOP;
-#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
+#if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
             /*
              * Call callback if registered (not NULL)
              */
@@ -335,12 +335,14 @@ void IRrecv::setReceivePin(uint_fast8_t aReceivePinNumber) {
     pinModeFast(aReceivePinNumber, INPUT); // Seems to be at least required by ESP32
 }
 
+#if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
 /**
  * Sets the function to call if a protocol message has arrived
  */
 void IRrecv::registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunction)(void)) {
     irparams.ReceiveCompleteCallbackFunction = aReceiveCompleteCallbackFunction;
 }
+#endif
 
 /**
  * Start the receiving process.
