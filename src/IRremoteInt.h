@@ -106,7 +106,7 @@ struct irparams_struct {
     uint8_t IRReceivePinMask;
 #endif
     volatile uint_fast16_t TickCounterForISR; ///< Counts 50uS ticks. The value is copied into the rawbuf array on every transition. Counting is independent of state or resume().
-#if !IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
+#if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
     void (*ReceiveCompleteCallbackFunction)(void); ///< The function to call if a protocol message has arrived, i.e. StateForISR changed to IR_REC_STATE_STOP
 #endif
     bool OverflowFlag;                  ///< Raw buffer OverflowFlag occurred
@@ -181,7 +181,10 @@ public:
     IRrecv(uint_fast8_t aReceivePin);
     IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin);
     void setReceivePin(uint_fast8_t aReceivePinNumber);
+#if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
     void registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunction)(void));
+#endif
+
     /*
      * Stream like API
      */
