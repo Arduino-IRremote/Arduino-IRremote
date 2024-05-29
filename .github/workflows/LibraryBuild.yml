@@ -239,6 +239,7 @@ jobs:
 
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+            arduino-platform: esp32:esp32@2.0.17 # latest 2.x version of 5/2024
             sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=500 -Wno-error=maybe-uninitialized
@@ -246,6 +247,7 @@ jobs:
 
           - arduino-boards-fqbn: esp32:esp32:esp32c3
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+            arduino-platform: esp32:esp32@2.0.17 # latest 2.x version of 5/2024
             sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=500 -Wno-error=maybe-uninitialized

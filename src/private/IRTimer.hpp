@@ -1414,7 +1414,7 @@ void timerEnableReceiveInterrupt() {
     timer1_attachInterrupt(&IRReceiveTimerInterruptHandler); // enables interrupt too
 }
 void timerDisableReceiveInterrupt() {
-    timer1_detachInterrupt(); // disables interrupt too }
+    timer1_detachInterrupt(); // disables interrupt too
 }
 
 void timerConfigForReceive() {
