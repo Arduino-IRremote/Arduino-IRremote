@@ -101,6 +101,12 @@
 #define ADC_GND_CHANNEL_MUX         15
 #define ADC_CHANNEL_MUX_MASK        0x0F
 
+#elif defined(__AVR_ATmega644P__)
+#define ADC_TEMPERATURE_CHANNEL_MUX  // not existent
+#define ADC_1_1_VOLT_CHANNEL_MUX    0x1E
+#define ADC_GND_CHANNEL_MUX         0x1F
+#define ADC_CHANNEL_MUX_MASK        0x0F
+
 #elif defined(__AVR_ATmega32U4__)
 #define ADC_TEMPERATURE_CHANNEL_MUX 0x27
 #define ADC_1_1_VOLT_CHANNEL_MUX    0x1E
@@ -208,7 +214,8 @@ void resetCounterForVCCUndervoltageMultipleTimes();
 bool isVCCUndervoltage();
 bool isVCCEmergencyUndervoltage();
 bool isVCCOvervoltage();
-bool isVCCOvervoltageSimple();
+bool isVCCOvervoltageSimple();  // Version using readVCCVoltageMillivoltSimple()
+bool isVCCTooHighSimple();      // Version not using readVCCVoltageMillivoltSimple()
 
 #endif //  defined(__AVR__) ...
 

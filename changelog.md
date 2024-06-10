@@ -5,6 +5,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 # 4.3.2
 - Added sendSonyMSB(unsigned long data, int nbits) as a clone of sendSony(unsigned long data, int nbits) to be more consistent.
 - Added sendSamsungMSB(unsigned long data, int nbits) as a clone of sendSAMSUNG(unsigned long data, int nbits) to be more consistent.
+- Added ESP32 core 3.x error message.
 
 # 4.3.1
  - Fixed overflow bug for rawlen > 254.

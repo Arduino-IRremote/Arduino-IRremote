@@ -42,7 +42,9 @@
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 
+#if !(defined(EICRA) && defined(EIFR) && defined(EIMSK))
 void measureTimingISR(void);
+#endif
 
 void setup()
 {

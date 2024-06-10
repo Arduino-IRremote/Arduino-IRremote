@@ -1434,6 +1434,10 @@ void timerConfigForReceive() {
  * so it is recommended to always define SEND_PWM_BY_TIMER
  **********************************************************/
 #elif defined(ESP32)
+#  if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+#error This library does not work with ESP32 core 3.x. You are kindly invited to port and document the code to 3.x, to fix this problem!
+#  endif
+
 // Variables specific to the ESP32.
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
 hw_timer_t *s50usTimer = NULL; // set by timerConfigForReceive()

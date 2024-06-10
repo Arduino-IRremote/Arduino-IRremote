@@ -715,6 +715,7 @@ void resetCounterForVCCUndervoltageMultipleTimes() {
  * Raw reading of 1.1 V is 221 at 5.1 V.
  * Raw reading of 1.1 V is 214 at 5.25 V (+5 %).
  * Raw reading of 1.1 V is 204 at 5.5 V (+10 %).
+ * Raw reading of 1.1 V is 1126000 / VCC_MILLIVOLT
  * @return true if 5 % overvoltage reached
  */
 bool isVCCOvervoltage() {
@@ -724,6 +725,21 @@ bool isVCCOvervoltage() {
 bool isVCCOvervoltageSimple() {
     readVCCVoltageMillivoltSimple();
     return (sVCCVoltageMillivolt > VCC_OVERVOLTAGE_THRESHOLD_MILLIVOLT);
+}
+
+// Version not using readVCCVoltageMillivoltSimple()
+bool isVCCTooHighSimple() {
+    ADMUX = ADC_1_1_VOLT_CHANNEL_MUX | (DEFAULT << SHIFT_VALUE_FOR_REFERENCE);
+// ADCSRB = 0; // Only active if ADATE is set to 1.
+// ADSC-StartConversion ADIF-Reset Interrupt Flag - NOT free running mode
+    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADIF) | ADC_PRESCALE128); //  128 -> 104 microseconds per ADC conversion at 16 MHz --- Arduino default
+// wait for single conversion to finish
+    loop_until_bit_is_clear(ADCSRA, ADSC);
+
+// Get value
+    uint16_t tRawValue = ADCL | (ADCH << 8);
+
+    return tRawValue < 1126000 / VCC_OVERVOLTAGE_THRESHOLD_MILLIVOLT;
 }
 
 /*
@@ -737,18 +753,18 @@ float getCPUTemperatureSimple(void) {
     return 0.0;
 #else
     // use internal 1.1 volt as reference. 4 times oversample. Assume the signal has noise, but never verified :-(
-    uint16_t tTempRaw = readADCChannelWithReferenceOversample(ADC_TEMPERATURE_CHANNEL_MUX, INTERNAL, 2);
+    uint16_t tTemperatureRaw = readADCChannelWithReferenceOversample(ADC_TEMPERATURE_CHANNEL_MUX, INTERNAL, 2);
 #if defined(LOCAL_DEBUG)
     Serial.print(F("TempRaw="));
-    Serial.println(tTempRaw);
+    Serial.println(tTemperatureRaw);
 #endif
 
 #if defined(__AVR_ATmega328PB__)
-    tTempRaw -= 245;
-    return (float)tTempRaw;
+    tTemperatureRaw -= 245;
+    return (float)tTemperatureRaw;
 #else
-    tTempRaw -= 317;
-    return (float) tTempRaw / 1.22;
+    tTemperatureRaw -= 317;
+    return (float) tTemperatureRaw / 1.22;
 #endif
 #endif
 }
