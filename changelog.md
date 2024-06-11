@@ -3,8 +3,9 @@ The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
 # 4.3.3
-- sendNEC() and sendNEC2() now accepts 16 bit command to better map to NEXext protocol found in IRDB databases.
+- sendNEC() and sendNEC2() now accepts 16 bit command to better map to NECext protocol found in IRDB databases.
 - ir_DistanceWidthProtocol() now decodes up to 10 ms mark or spaces if RAM is bigger than 2 k.
+- Improved examples AllProtocolsOnLCD, UnitTest and SimpleReceiver.
 
 # 4.3.2
 - Added sendSonyMSB(unsigned long data, int nbits) as a clone of sendSony(unsigned long data, int nbits) to be more consistent.

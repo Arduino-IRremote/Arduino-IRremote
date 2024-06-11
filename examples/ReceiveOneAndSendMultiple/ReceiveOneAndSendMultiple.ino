@@ -13,7 +13,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2024 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@
 // USB- 3.6V Z-Diode              IR Output (4) PB4  3|    |6  PB1 (1) Feedback LED
 //                                              GND  4|    |5  PB0 (0) IR Input
 //                                                    +----+
-/* SAUMSUMG REMOTE CODES (Model: BN59-01180A)
+/* SAUMSUMG REMOTE CODES (Model: BN59-01180A) - Address is 0x07
  * Power Button - 0x2
  * Power Off - 0x98
  * 1 - 0x4
@@ -92,7 +92,7 @@
 
 // select only Samsung protocol for sending and receiving
 #define DECODE_SAMSUNG
-#define ADDRESS_OF_SAMSUNG_REMOTE   0x0707 // The value you see as address in printIRResultShort()
+#define ADDRESS_OF_SAMSUNG_REMOTE   0x07 // The value you see as address in printIRResultShort()
 
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
@@ -104,7 +104,11 @@ void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/|| defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
+    while (!Serial)
+        ; // Wait for Serial to become available. Is optimized away for some cores.
+
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
+    || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
     // Just to know which program is running on my Arduino
@@ -189,9 +193,9 @@ void sendSamsungSmartHubMacro(bool aDoSelect) {
         tWaitTimeAfterBoot = INITIAL_WAIT_TIME_SMARTHUB_READY_MILLIS;
     }
 
-#    if !defined(ESP32)
-    IrReceiver.stopTimer(); // ESP32 uses another timer for tone()
-#    endif
+#if !defined(ESP32)  // ESP32 uses another timer for tone(), so the receiver must not be stopped and restarted for it
+    IrReceiver.stopTimer();
+#endif
     if (millis() < tWaitTimeAfterBoot) {
         // division by 1000 and printing requires much (8%) program memory
         Serial.print(F("It is "));
@@ -217,9 +221,9 @@ void sendSamsungSmartHubMacro(bool aDoSelect) {
     tone(TONE_PIN, 2200, 200);
     delay(200);
 
-#    if !defined(ESP32)
+#if !defined(ESP32)
     IrReceiver.restartTimer(200000); // to compensate for 200 ms stop of receiver. This enables a correct gap measurement.
-#    endif
+#endif
 
     Serial.println(F("Wait for \"not supported\" to disappear"));
     delay(2000);

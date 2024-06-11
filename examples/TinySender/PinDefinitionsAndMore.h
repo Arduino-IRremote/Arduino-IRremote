@@ -230,7 +230,8 @@ void noTone(uint8_t aPinNumber){
 #define IR_SEND_PIN     12
 #define TONE_PIN         5
 
-#elif defined(ARDUINO_ARCH_MBED) && defined(ARDUINO_ARCH_MBED_NANO) // Arduino Nano 33 BLE
+#elif defined(ARDUINO_ARCH_MBED) && defined(ARDUINO_ARCH_MBED_NANO) // Arduino Nano 33 BLE and Arduino Nano Connect layout for MBED
+// Must be before ARDUINO_ARCH_RP2040, since it is the layout for the MBED core of Arduino Nano Connect
 #define IR_RECEIVE_PIN      3   // GPIO15 Start with pin 3 since pin 2|GPIO25 is connected to LED on Pi pico
 #define IR_SEND_PIN         4   // GPIO16
 #define TONE_PIN            5

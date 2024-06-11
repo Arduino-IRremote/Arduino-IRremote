@@ -68,11 +68,16 @@
  * 100 is sufficient for most standard protocols, but air conditioners often send a longer protocol data stream
  */
 #if !defined(RAW_BUFFER_LENGTH)
-#  if defined(DECODE_MAGIQUEST)
+#  if (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
+// for RAMsize <= 2k
+#    if defined(DECODE_MAGIQUEST)
 #define RAW_BUFFER_LENGTH  112  // MagiQuest requires 112 bytes.
-#  else
+#    else
 #define RAW_BUFFER_LENGTH  100  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
-//#define RAW_BUFFER_LENGTH  750  // 750 (600 if we have only 2k RAM) is the value for air condition remotes.
+#    endif
+#  else
+// For undefined or bigger RAMsize
+#define RAW_BUFFER_LENGTH  750 // 750 (600 if we have only 2k RAM) is the value for air condition remotes.
 #  endif
 #endif
 #if RAW_BUFFER_LENGTH % 2 == 1
@@ -383,19 +388,18 @@ void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please us
 #define TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING    25 // Relative tolerance (in percent) for matchTicks(), matchMark() and matchSpace() functions used for protocol decoding.
 #endif
 
-/** Lower tolerance for comparison of measured data */
-//#define LTOL            (1.0 - (TOLERANCE/100.))
-#define LTOL            (100 - TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING)
-/** Upper tolerance for comparison of measured data */
-//#define UTOL            (1.0 + (TOLERANCE/100.))
-#define UTOL            (100 + TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING)
-
 //#define TICKS_LOW(us)   ((int)(((us)*LTOL/MICROS_PER_TICK)))
 //#define TICKS_HIGH(us)  ((int)(((us)*UTOL/MICROS_PER_TICK + 1)))
 #if MICROS_PER_TICK == 50 && TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING == 25           // Defaults
 #define TICKS_LOW(us)   ((us)/67 )     // (us) / ((MICROS_PER_TICK:50 / LTOL:75 ) * 100)
 #define TICKS_HIGH(us)  (((us)/40) + 1)  // (us) / ((MICROS_PER_TICK:50 / UTOL:125) * 100) + 1
 #else
+/** Lower tolerance for comparison of measured data */
+//#define LTOL            (1.0 - (TOLERANCE/100.))
+#define LTOL            (100 - TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING)
+/** Upper tolerance for comparison of measured data */
+//#define UTOL            (1.0 + (TOLERANCE/100.))
+#define UTOL            (100 + TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING)
 #define TICKS_LOW(us)   ((uint16_t ) ((long) (us) * LTOL / (MICROS_PER_TICK * 100) ))
 #define TICKS_HIGH(us)  ((uint16_t ) ((long) (us) * UTOL / (MICROS_PER_TICK * 100) + 1))
 #endif

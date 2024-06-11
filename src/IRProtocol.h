@@ -118,9 +118,14 @@ struct IRData {
     uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;          ///< IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above
 
-    // These 2 variables allow to call resume() directly after decode, if no dump is required. Since 4.3.0.
-    IRRawlenType rawlen;        ///< counter of entries in rawbuf
-    uint16_t initialGap;        ///< rawbuf[0] contains the initial gap of the last frame.
+    /*
+     * These 2 variables allow to call resume() directly after decode.
+     * After resume(), decodedIRData.rawDataPtr->rawbuf[0] and decodedIRData.rawDataPtr->rawlen are
+     * the first variables, which are overwritten by the next received frame.
+     * since 4.3.0.
+     */
+    IRRawlenType rawlen;        ///< counter of entries in rawbuf of last received frame.
+    uint16_t initialGap;        ///< contains the initial gap (rawbuf[0]) of the last received frame.
 
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.
 };

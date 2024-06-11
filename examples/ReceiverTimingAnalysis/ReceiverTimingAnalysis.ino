@@ -46,11 +46,14 @@
 void measureTimingISR(void);
 #endif
 
-void setup()
-{
+void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/|| defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
+    while (!Serial)
+        ; // Wait for Serial to become available. Is optimized away for some cores.
+
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
+    || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
     // Just to know which program is running on my Arduino
@@ -75,8 +78,7 @@ void setup()
 
 uint8_t ISREdgeCounter = 0;
 volatile uint32_t LastMicros;
-struct timingStruct
-{
+struct timingStruct {
     uint16_t minimum;
     uint8_t indexOfMinimum;
     uint16_t maximum;
@@ -95,23 +97,19 @@ struct timingStruct LongSpace;
 /*
  * Compute minimum, maximum and average
  */
-void processTmingValue(struct timingStruct *aTimingStruct, uint16_t aValue)
-{
-    if (aTimingStruct->SampleCount == 0)
-    {
+void processTmingValue(struct timingStruct *aTimingStruct, uint16_t aValue) {
+    if (aTimingStruct->SampleCount == 0) {
         // initialize values
         aTimingStruct->minimum = UINT16_MAX;
         aTimingStruct->maximum = 0;
         aTimingStruct->SumForAverage = 0;
     }
 
-    if (aTimingStruct->minimum > aValue)
-    {
+    if (aTimingStruct->minimum > aValue) {
         aTimingStruct->minimum = aValue;
         aTimingStruct->indexOfMinimum = aTimingStruct->SampleCount;
     }
-    if (aTimingStruct->maximum < aValue)
-    {
+    if (aTimingStruct->maximum < aValue) {
         aTimingStruct->maximum = aValue;
         aTimingStruct->indexOfMaximum = aTimingStruct->SampleCount;
     }
@@ -122,8 +120,7 @@ void processTmingValue(struct timingStruct *aTimingStruct, uint16_t aValue)
 
 }
 
-void printTimingValues(struct timingStruct *aTimingStruct, const char *aCaption)
-{
+void printTimingValues(struct timingStruct *aTimingStruct, const char *aCaption) {
 //    if (aTimingStruct->LastPrintedCount != aTimingStruct->SampleCount)
 //    {
 //        aTimingStruct->LastPrintedCount = aTimingStruct->SampleCount;
@@ -147,10 +144,8 @@ void printTimingValues(struct timingStruct *aTimingStruct, const char *aCaption)
 //    }
 }
 
-void loop()
-{
-    if (Mark.SampleCount >= 32)
-    {
+void loop() {
+    if (Mark.SampleCount >= 32) {
         /*
          * This check enables statistics for longer protocols like Kaseikyo/Panasonics
          */
@@ -163,8 +158,7 @@ void loop()
 #endif
         uint32_t tMicrosDelta = micros() - tLastMicros;
 
-        if (tMicrosDelta > 10000)
-        {
+        if (tMicrosDelta > 10000) {
             // NEC signal ended just now
             Serial.println();
             printTimingValues(&Mark, "Mark      ");
@@ -218,41 +212,31 @@ void measureTimingISR()
     uint8_t tInputLevel = digitalRead(IR_RECEIVE_PIN);
     digitalWrite(LED_BUILTIN, !tInputLevel);
 
-    if (tMicrosDelta > 10000)
-    {
+    if (tMicrosDelta > 10000) {
         // gap > 10 ms detected, reset counter to first detected edge and initialize timing structures
         ISREdgeCounter = 1;
         LongSpace.SampleCount = 0;
         ShortSpace.SampleCount = 0;
         Mark.SampleCount = 0;
-    }
-    else
-    {
+    } else {
         ISREdgeCounter++;
     }
 
     /*
      * Skip header mark and space and first bit mark and space
      */
-    if (ISREdgeCounter > 4)
-    {
-        if (tInputLevel != LOW)
-        {
+    if (ISREdgeCounter > 4) {
+        if (tInputLevel != LOW) {
             // Mark ended
             processTmingValue(&Mark, tMicrosDelta);
 //            Serial.print('M');
-        }
-        else
-        {
+        } else {
             // Space ended
-            if (tMicrosDelta > 1000)
-            {
+            if (tMicrosDelta > 1000) {
                 // long space - logical 1
                 processTmingValue(&LongSpace, tMicrosDelta);
                 Serial.print('1');
-            }
-            else
-            {
+            } else {
                 // short space - logical 0
                 processTmingValue(&ShortSpace, tMicrosDelta);
                 Serial.print('0');

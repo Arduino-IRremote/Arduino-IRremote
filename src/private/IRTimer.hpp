@@ -1435,7 +1435,7 @@ void timerConfigForReceive() {
  **********************************************************/
 #elif defined(ESP32)
 #  if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-#error This library does not work with ESP32 core 3.x. You are kindly invited to port and document the code to 3.x, to fix this problem!
+#error This library does not work with ESP32 core 3.x. Please use ESP 2.0.17 core. You are kindly invited to port and document the code to 3.x, to fix this problem!
 #  endif
 
 // Variables specific to the ESP32.

@@ -52,8 +52,11 @@
 
 void setup() {
     Serial.begin(115200);
+    while (!Serial)
+        ; // Wait for Serial to become available. Is optimized away for some cores.
 
-#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/|| defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
+    || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
     // Just to know which program is running on my Arduino
@@ -337,6 +340,18 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
 #if FLASHEND >= 0x3FFF && ((defined(RAMEND) && RAMEND > 0x4FF) || (defined(RAMSIZE) && RAMSIZE > 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+
+    Serial.println(F("Send MagiQuest"));
+    Serial.flush();
+    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, s16BitCommand); // we have 31 bit address
+    delay(DELAY_AFTER_SEND);
+
+    // Bang&Olufsen must be sent with 455 kHz
+//    Serial.println(F("Send Bang&Olufsen"));
+//    Serial.flush();
+//    IrSender.sendBangOlufsen(sAddress, sCommand, sRepeats);
+//    delay(DELAY_AFTER_SEND);
+
     /*
      * Next example how to use the IrSender.write function
      */
@@ -348,13 +363,6 @@ void loop() {
 
     Serial.println(F("Send next protocols with IrSender.write"));
     Serial.flush();
-
-    IRSendData.protocol = SAMSUNG;
-    Serial.print(F("Send "));
-    Serial.println(getProtocolString(IRSendData.protocol));
-    Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
-    delay(DELAY_AFTER_SEND);
 
     IRSendData.protocol = JVC; // switch protocol
     Serial.print(F("Send "));
@@ -378,17 +386,6 @@ void loop() {
     Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
-
-    Serial.println(F("Send MagiQuest"));
-    Serial.flush();
-    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, s16BitCommand); // we have 31 bit address
-    delay(DELAY_AFTER_SEND);
-
-    // Bang&Olufsen must be sent with 455 kHz
-//    Serial.println(F("Send Bang&Olufsen"));
-//    Serial.flush();
-//    IrSender.sendBangOlufsen(sAddress, sCommand, sRepeats);
-//    delay(DELAY_AFTER_SEND);
 
     IRSendData.protocol = BOSEWAVE;
     Serial.println(F("Send Bosewave with no address and 8 command bits"));

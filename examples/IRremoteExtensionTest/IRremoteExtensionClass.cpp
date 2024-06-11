@@ -41,8 +41,6 @@
 #define RAW_BUFFER_LENGTH  180
 #  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
 #define RAW_BUFFER_LENGTH  600
-#  else
-#define RAW_BUFFER_LENGTH  750
 #  endif
 #endif
 
@@ -56,7 +54,7 @@ bool IRExtensionClass::decode() {
 }
 
 bool IRExtensionClass::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
-    return MyIrReceiver->printIRResultShort(aSerial,aPrintRepeatGap,aCheckForRecordGapsMicros);
+    return MyIrReceiver->printIRResultShort(aSerial, aPrintRepeatGap, aCheckForRecordGapsMicros);
 }
 
 void IRExtensionClass::resume() {

@@ -77,6 +77,9 @@ void ReceiveCompleteCallbackHandler();
 
 void setup() {
     Serial.begin(115200);
+    while (!Serial)
+        ; // Wait for Serial to become available. Is optimized away for some cores.
+
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 

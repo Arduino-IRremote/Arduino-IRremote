@@ -191,8 +191,7 @@ String Tokenizer::getRest() {
 }
 
 String Tokenizer::getLine() {
-    if (index == invalidIndex)
-        return String("");
+    if (index == invalidIndex) return String("");
 
     int i = payload.indexOf('\n', index);
     String s = (i > 0) ? payload.substring(index, i) : payload.substring(index);
@@ -201,16 +200,13 @@ String Tokenizer::getLine() {
 }
 
 String Tokenizer::getToken() {
-    if (index < 0)
-        return String("");
+    if (index < 0) return String("");
 
     int i = payload.indexOf(' ', index);
     String s = (i > 0) ? payload.substring(index, i) : payload.substring(index);
     index = (i > 0) ? i : invalidIndex;
-    if (index != invalidIndex)
-        if (index != invalidIndex)
-            while (payload.charAt(index) == ' ')
-                index++;
+    if (index != invalidIndex) if (index != invalidIndex) while (payload.charAt(index) == ' ')
+        index++;
     return s;
 }
 
@@ -254,13 +250,10 @@ static inline unsigned hz2khz(frequency_t hz) {
  */
 static void sendRaw(const microseconds_t intro[], unsigned lengthIntro, const microseconds_t repeat[], unsigned lengthRepeat,
         const microseconds_t ending[], unsigned lengthEnding, frequency_t frequency, unsigned times) {
-    if (lengthIntro > 0U)
-        IrSender.sendRaw(intro, lengthIntro, hz2khz(frequency));
-    if (lengthRepeat > 0U)
-        for (unsigned i = 0U; i < times - (lengthIntro > 0U); i++)
-            IrSender.sendRaw(repeat, lengthRepeat, hz2khz(frequency));
-    if (lengthEnding > 0U)
-        IrSender.sendRaw(ending, lengthEnding, hz2khz(frequency));
+    if (lengthIntro > 0U) IrSender.sendRaw(intro, lengthIntro, hz2khz(frequency));
+    if (lengthRepeat > 0U) for (unsigned i = 0U; i < times - (lengthIntro > 0U); i++)
+        IrSender.sendRaw(repeat, lengthRepeat, hz2khz(frequency));
+    if (lengthEnding > 0U) IrSender.sendRaw(ending, lengthEnding, hz2khz(frequency));
 }
 #endif // TRANSMIT
 
@@ -302,7 +295,7 @@ static void receive(Stream &stream) {
 void setup() {
     Serial.begin(BAUDRATE);
     while (!Serial)
-        ; // wait for serial port to connect.
+        ; // Wait for Serial to become available. Is optimized away for some cores.
 
     Serial.println(F(PROGNAME " " VERSION));
     // Just to know which program is running on my Arduino

@@ -486,7 +486,12 @@ void IRrecv::initDecodedIRData() {
 
     }
 
-    //These 2 variables allow to call resume() directly after decode, if no dump is required. since 4.3.0.
+    /*
+     * These 2 variables allow to call resume() directly after decode.
+     * After resume(), decodedIRData.rawDataPtr->rawbuf[0] and decodedIRData.rawDataPtr->rawlen are
+     * the first variables, which are overwritten by the next received frame.
+     * since 4.3.0.
+     */
     decodedIRData.initialGap = decodedIRData.rawDataPtr->rawbuf[0];
     decodedIRData.rawlen = decodedIRData.rawDataPtr->rawlen;
 
@@ -1332,22 +1337,16 @@ uint32_t IRrecv::getTotalDurationOfRawData() {
 
 /**
  * Function to print values and flags of IrReceiver.decodedIRData in one line.
+ * do not print for repeats except IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT.
  * Ends with println().
  * !!!Attention: The result differs on a 8 bit or 32 bit platform!!!
  *
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRSendUsage(Print *aSerial) {
-    if (decodedIRData.flags & IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT) {
-        /*
-         * Here we have a repeat of type NEC2 or SamsungLG. -> Inform the user to use this and not the initial protocol for sending.
-         */
-        Serial.print(F("!Use the "));
-        Serial.print(getProtocolString());
-        Serial.println(F(" protocol for sending!"));
-    } else {
-        if (decodedIRData.protocol != UNKNOWN
-                && (decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) == 0x00) {
+    if (decodedIRData.protocol != UNKNOWN
+            && ((decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) == 0x00
+                    || (decodedIRData.flags & IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT))) {
 #if defined(DECODE_DISTANCE_WIDTH)
         uint_fast8_t tNumberOfArrayData = 0;
         if (decodedIRData.protocol == PULSE_DISTANCE || decodedIRData.protocol == PULSE_WIDTH) {
@@ -1383,7 +1382,7 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
         aSerial->print(F("IrSender.send"));
 
 #else
-            aSerial->print(F("Send with: IrSender.send"));
+        aSerial->print(F("Send with: IrSender.send"));
 #endif
 
 #if defined(DECODE_DISTANCE_WIDTH)
@@ -1458,9 +1457,8 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             aSerial->print(decodedIRData.extra, HEX);
         }
 #endif
-            aSerial->print(F(");"));
-            aSerial->println();
-        }
+        aSerial->print(F(");"));
+        aSerial->println();
     }
 }
 

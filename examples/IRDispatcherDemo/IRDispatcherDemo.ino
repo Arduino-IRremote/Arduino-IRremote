@@ -109,7 +109,11 @@ void doTone2200();
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/|| defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
+    while (!Serial)
+        ; // Wait for Serial to become available. Is optimized away for some cores.
+
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
+    || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
 #if defined(ESP8266)
@@ -163,8 +167,7 @@ void loop() {
         DELAY_AND_RETURN_IF_STOP(sBlinkDelay);
     }
 
-    if (millis() - IRDispatcher.IRReceivedData.MillisOfLastCode > 120000)
-    {
+    if (millis() - IRDispatcher.IRReceivedData.MillisOfLastCode > 120000) {
         //Short beep as remainder, if we did not receive any command in the last 2 minutes
         IRDispatcher.IRReceivedData.MillisOfLastCode += 120000;
         doTone1800();
@@ -173,7 +176,7 @@ void loop() {
 //    delay(10);
 }
 
-void doPrintMenu(){
+void doPrintMenu() {
     Serial.println();
     Serial.println(F("Press 1 for tone 1800 Hz"));
     Serial.println(F("Press 2 for tone 2200 Hz"));
@@ -230,7 +233,6 @@ void doLedBlink20times() {
         DELAY_AND_RETURN_IF_STOP(200);
     }
 }
-
 
 void doTone1800() {
 #if defined(USE_IRMP_LIBRARY) && !defined(IRMP_ENABLE_PIN_CHANGE_INTERRUPT)

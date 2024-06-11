@@ -77,9 +77,8 @@
 #  if (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
 #define RAW_BUFFER_LENGTH  180
 #  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
-#define RAW_BUFFER_LENGTH  600
-#  else
-#define RAW_BUFFER_LENGTH  750
+#define RAW_BUFFER_LENGTH  520
+#define DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE 200 // The decoder accepts mark or space durations up to 200 * 50 (MICROS_PER_TICK) = 10 milliseconds
 #  endif
 #endif
 
@@ -114,7 +113,11 @@ void setup() {
 #endif
 
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/|| defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
+    while (!Serial)
+        ; // Wait for Serial to become available. Is optimized away for some cores.
+
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
+    || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
 // Just to know which program is running on my Arduino
@@ -257,7 +260,7 @@ void loop() {
 void generateTone() {
 #if !defined(ESP8266) && !defined(NRF5) // tone on esp8266 works only once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
 #  if defined(ESP32) // ESP32 uses another timer for tone()
-            tone(TONE_PIN, 2200, 5);
+    tone(TONE_PIN, 2200, 8);
 #  else
     IrReceiver.stopTimer(); // ESP32 uses another timer for tone(), maybe other platforms (not tested yet) too.
     tone(TONE_PIN, 2200, 8);

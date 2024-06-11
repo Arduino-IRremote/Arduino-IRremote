@@ -41,8 +41,6 @@
 #define RAW_BUFFER_LENGTH  180
 #  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
 #define RAW_BUFFER_LENGTH  200 // 600 is too much here, because then variables are overwritten. 500 is OK without Pronto and 200 is OK with Pronto
-#  else
-#define RAW_BUFFER_LENGTH  750
 #  endif
 #endif
 
@@ -122,7 +120,11 @@ void setup() {
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
 
     Serial.begin(115200);
-#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/|| defined(SERIALUSB_PID) || defined(ARDUINO_attiny3217)
+    while (!Serial)
+        ; // Wait for Serial to become available. Is optimized away for some cores.
+
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
+    || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217)
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
     // Just to know which program is running on my Arduino
@@ -379,16 +381,20 @@ void loop() {
     Serial.println();
     Serial.println();
 
-    Serial.println(F("Send NEC with 8 bit address"));
+    Serial.print(F("Send NEC with 8 bit address"));
+    if (sRepeats > 0) {
+        Serial.print(F(" and complete NEC frames as repeats to force decoding as NEC2"));
+    }
+    Serial.println();
     Serial.flush();
     IrSender.sendNEC(sAddress & 0xFF, sCommand, 0);
     checkReceive(sAddress & 0xFF, sCommand);
-    //
+
     for (int8_t i = 0; i < sRepeats; i++) {
-        Serial.println(F("Repeat NEC frame for NEC2"));
-        Serial.flush();
-        // if debug is enabled, printing time (50 ms) is too high anyway
-        delayMicroseconds(NEC_REPEAT_DISTANCE - 200); // 200 is just a guess
+        if (digitalRead(DEBUG_BUTTON_PIN) != LOW) {
+            // if debug is enabled, printing time (50 ms) is too high anyway
+            delayMicroseconds(NEC_REPEAT_DISTANCE - 200); // 200 is just a guess
+        }
         IrSender.sendNEC(sAddress & 0xFF, sCommand, 0);
         checkReceive(sAddress & 0xFF, sCommand);
     }
@@ -718,6 +724,46 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 #endif
 
+#if defined(DECODE_BEO)
+    Serial.println(F("Send Bang&Olufsen"));
+    Serial.flush();
+    IrSender.sendBangOlufsen(sAddress & 0x0FF, sCommand, 0);
+#  if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
+    delay((RECORD_GAP_MICROS / 1000) + 1);
+    Serial.println(F("- ENABLE_BEO_WITHOUT_FRAME_GAP is enabled"));
+    Serial.println(F("- Now print raw data and try to decode the first 6 entries, which results in rawData 0x0"));
+    IrReceiver.printIRResultRawFormatted(&Serial, true);
+    uint8_t tOriginalRawlen = IrReceiver.decodedIRData.rawDataPtr->rawlen;
+    IrReceiver.decodedIRData.rawDataPtr->rawlen = 6;
+    /*
+     * decode first part / AGC part of frame
+     */
+    IrReceiver.decode(); // sets IrReceiver.decodedIRData.rawlen to 6
+    IrReceiver.printIRResultShort(&Serial); // -> Protocol=Bang&Olufsen Address=0x0 Command=0x0 Raw-Data=0x0 0 bits MSB first
+
+    // Remove trailing 6 entries for second decode try
+    Serial.println();
+    Serial.println(
+            F(
+                    "- Remove trailing 6 entries, which is equivalent to define RECORD_GAP_MICROS < 15000, to enable successful B&O decode"));
+    IrReceiver.decodedIRData.rawlen = tOriginalRawlen - 6;
+    IrReceiver.decodedIRData.rawDataPtr->rawlen = tOriginalRawlen - 6;
+    for (uint_fast8_t i = 0; i < IrReceiver.decodedIRData.rawlen; ++i) {
+        IrReceiver.decodedIRData.rawDataPtr->rawbuf[i] = IrReceiver.decodedIRData.rawDataPtr->rawbuf[i + 6];
+    }
+#  endif
+    checkReceive(sAddress & 0x0FF, sCommand);
+    delay(DELAY_AFTER_SEND);
+#endif
+
+#if defined(DECODE_MAGIQUEST)
+    Serial.println(F("Send MagiQuest"));
+    Serial.flush();
+    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, s16BitCommand); // we have 31 bit address
+    checkReceive(sAddress, s16BitCommand & 0x1FF); // we have 9 bit command
+    delay(DELAY_AFTER_SEND);
+#endif
+
     /*
      * Next example how to use the IrSender.write function
      */
@@ -726,6 +772,10 @@ void loop() {
     IRSendData.address = sAddress;
     IRSendData.command = sCommand;
     IRSendData.flags = IRDATA_FLAGS_EMPTY;
+
+    Serial.println(F("Send next protocols with IrSender.write"));
+    Serial.println();
+    Serial.flush();
 
 #if defined(DECODE_JVC)
     IRSendData.protocol = JVC;  // switch protocol
@@ -741,16 +791,6 @@ void loop() {
     IRSendData.command = s16BitCommand; // LG support more than 8 bit command
 #endif
 
-#if defined(DECODE_SAMSUNG)
-    IRSendData.protocol = SAMSUNG;
-    Serial.print(F("Send "));
-    Serial.println(getProtocolString(IRSendData.protocol));
-    Serial.flush();
-    IrSender.write(&IRSendData, 0);
-    checkReceive(IRSendData.address & 0xFF, IRSendData.command);
-    delay(DELAY_AFTER_SEND);
-#endif
-
 #if defined(DECODE_LG)
     IRSendData.protocol = LG;
     Serial.print(F("Send "));
@@ -758,43 +798,6 @@ void loop() {
     Serial.flush();
     IrSender.write(&IRSendData, 0);
     checkReceive(IRSendData.address & 0xFF, IRSendData.command);
-    delay(DELAY_AFTER_SEND);
-#endif
-
-#if defined(DECODE_MAGIQUEST)
-    Serial.println(F("Send MagiQuest"));
-    Serial.flush();
-    IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, s16BitCommand); // we have 31 bit address
-    checkReceive(sAddress, s16BitCommand & 0x1FF); // we have 9 bit command
-    delay(DELAY_AFTER_SEND);
-#endif
-
-#if defined(DECODE_BEO)
-    Serial.println(F("Send Bang&Olufsen"));
-    Serial.flush();
-    IrSender.sendBangOlufsen(sAddress & 0x0FF, sCommand, 0);
-#  if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
-    delay((RECORD_GAP_MICROS / 1000) + 1);
-    Serial.println(F("- ENABLE_BEO_WITHOUT_FRAME_GAP is enabled"));
-    Serial.println(F("- Now print raw data and try to decode it, which must fail!"));
-    IrReceiver.printIRResultRawFormatted(&Serial, true);
-    uint8_t tOriginalRawlen = IrReceiver.decodedIRData.rawlen;
-    IrReceiver.decodedIRData.rawlen = 6;
-    // decode first part of frame
-    IrReceiver.decode();
-    IrReceiver.printIRResultShort(&Serial);
-
-    // Remove trailing 6 entries for second decode try
-    Serial.println();
-    Serial.println(
-            F(
-                    "- Remove trailing 6 entries, which is equivalent to define RECORD_GAP_MICROS < 15000, to enable successful B&O decode"));
-    IrReceiver.decodedIRData.rawlen = tOriginalRawlen - 6;
-    for (uint_fast8_t i = 0; i < IrReceiver.decodedIRData.rawlen; ++i) {
-        IrReceiver.decodedIRData.rawDataPtr->rawbuf[i] = IrReceiver.decodedIRData.rawDataPtr->rawbuf[i + 6];
-    }
-#  endif
-    checkReceive(sAddress & 0x0FF, sCommand);
     delay(DELAY_AFTER_SEND);
 #endif
 
