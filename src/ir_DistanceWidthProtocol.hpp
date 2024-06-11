@@ -2,7 +2,10 @@
  * ir_DistanceWidthProtocol.hpp
  *
  * Contains only the decoder functions for universal pulse width or pulse distance protocols!
- * The send functions are used by almost all protocols and therefore in IRSend.hh.
+ * The send functions are used by almost all protocols and are therefore located in IRSend.hpp.
+ *
+ * If RAM is not more than 2k, the decoder only accepts mark or space durations up to 50 * 50 (MICROS_PER_TICK) = 2500 microseconds
+ * to save RAM space, otherwise it accepts durations up to 10 ms.
  *
  * This decoder tries to decode a pulse distance or pulse distance width with constant period (or pulse width - not enabled yet) protocol.
  * 1. Analyze all space and mark length
@@ -31,7 +34,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-2023 Armin Joachimsmeyer
+ * Copyright (c) 2022-2024 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,8 +68,13 @@
 //#define LOCAL_DEBUG // This enables debug output only for this file
 #endif
 
-// accept durations up to 50 * 50 (MICROS_PER_TICK) 2500 microseconds
-#define DURATION_ARRAY_SIZE 50
+#if !defined(DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE)
+#  if (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
+#define DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE 50 // To save program space, the decoder only accepts mark or space durations up to 50 * 50 (MICROS_PER_TICK) = 2500 microseconds
+#  else
+#define DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE 200 // The decoder accepts mark or space durations up to 200 * 50 (MICROS_PER_TICK) = 10 milliseconds
+#  endif
+#endif
 
 // Switch the decoding according to your needs
 //#define USE_MSB_DECODING_FOR_DISTANCE_DECODER // If active, it resembles LG, otherwise LSB first as most other protocols e.g. NEC and Kaseikyo/Panasonic
@@ -148,9 +156,15 @@ bool aggregateArrayCounts(uint8_t aArray[], uint8_t aMaxIndex, uint8_t *aShortIn
  * 2. Decide if we have an pulse width or distance protocol
  * 3. Try to decode with the mark and space data found in step 1
  * No data and address decoding, only raw data as result.
+ *
+ * calloc() version is 700 bytes larger :-(
  */
 bool IRrecv::decodeDistanceWidth() {
-    uint8_t tDurationArray[DURATION_ARRAY_SIZE]; // For up to 49 ticks / 2450 us
+    /*
+     * Array for up to 49 ticks / 2500 us (or 199  ticks / 10 ms us if RAM > 2k)
+     * 0 tick covers mark or space durations from 0 to 49 us, and 49 ticks from 2450 to 2499 us
+     */
+    uint8_t tDurationArray[DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE];
 
     /*
      * Accept only protocols with at least 8 bits
@@ -164,16 +178,16 @@ bool IRrecv::decodeDistanceWidth() {
     }
 
     // Reset duration array
-    memset(tDurationArray, 0, DURATION_ARRAY_SIZE);
+    memset(tDurationArray, 0, DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE);
 
     uint8_t tIndexOfMaxDuration = 0;
     /*
-     * Count number of mark durations up to 49 ticks. Skip leading start and trailing stop bit.
+     * Count number of mark durations. Skip leading start and trailing stop bit.
      */
     for (IRRawlenType i = 3; i < decodedIRData.rawlen - 2; i += 2) {
         auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
-        if (tDurationTicks < DURATION_ARRAY_SIZE) {
-            tDurationArray[tDurationTicks]++; // count duration if less than DURATION_ARRAY_SIZE (50)
+        if (tDurationTicks < DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE) {
+            tDurationArray[tDurationTicks]++; // count duration if less than DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE
             if (tIndexOfMaxDuration < tDurationTicks) {
                 tIndexOfMaxDuration = tDurationTicks;
             }
@@ -183,7 +197,7 @@ bool IRrecv::decodeDistanceWidth() {
             Serial.print(F("Mark "));
             Serial.print(tDurationTicks * MICROS_PER_TICK);
             Serial.print(F(" is longer than maximum "));
-            Serial.print(DURATION_ARRAY_SIZE * MICROS_PER_TICK);
+            Serial.print(DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE * MICROS_PER_TICK);
             Serial.print(F(" us. Index="));
             Serial.println(i);
 #endif
@@ -211,7 +225,7 @@ bool IRrecv::decodeDistanceWidth() {
     }
 
     // Reset duration array
-    memset(tDurationArray, 0, DURATION_ARRAY_SIZE);
+    memset(tDurationArray, 0, DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE);
 
     /*
      * Count number of space durations. Skip leading start and trailing stop bit.
@@ -219,7 +233,7 @@ bool IRrecv::decodeDistanceWidth() {
     tIndexOfMaxDuration = 0;
     for (IRRawlenType i = 4; i < decodedIRData.rawlen - 2; i += 2) {
         auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
-        if (tDurationTicks < DURATION_ARRAY_SIZE) {
+        if (tDurationTicks < DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++;
             if (tIndexOfMaxDuration < tDurationTicks) {
                 tIndexOfMaxDuration = tDurationTicks;
@@ -230,7 +244,7 @@ bool IRrecv::decodeDistanceWidth() {
             Serial.print(F("Space "));
             Serial.print(tDurationTicks * MICROS_PER_TICK);
             Serial.print(F(" is longer than maximum "));
-            Serial.print(DURATION_ARRAY_SIZE * MICROS_PER_TICK);
+            Serial.print(DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE * MICROS_PER_TICK);
             Serial.print(F(" us. Index="));
             Serial.println(i);
 #endif

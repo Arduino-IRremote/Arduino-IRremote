@@ -856,7 +856,7 @@ bool IRrecv::decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *a
  * Static variables for the getBiphaselevel function
  */
 uint_fast8_t sBiphaseDecodeRawbuffOffset;   // Index into raw timing array
-uint16_t sBiphaseCurrentTimingIntervals;    // 1, 2 or 3. Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
+uint16_t sBiphaseCurrentTimingIntervals; // 1, 2 or 3. Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
 uint_fast8_t sBiphaseUsedTimingIntervals;   // Number of already used intervals of sCurrentTimingIntervals.
 uint16_t sBiphaseTimeUnit;
 
@@ -1274,6 +1274,51 @@ void IRrecv::printDistanceWidthTimingInfo(Print *aSerial, DistanceWidthTimingInf
     aSerial->print(aDistanceWidthTimingInfo->ZeroMarkMicros);
     aSerial->print(F(", "));
     aSerial->print(aDistanceWidthTimingInfo->ZeroSpaceMicros);
+}
+
+/*
+ * Get maximum of mark ticks in rawDataPtr.
+ * Skip leading start and trailing stop bit.
+ */
+uint8_t IRrecv::getMaximumMarkTicksFromRawData() {
+    uint8_t tMaximumTick = 0;
+    for (IRRawlenType i = 3; i < decodedIRData.rawlen - 2; i += 2) { // Skip leading start and trailing stop bit.
+        auto tTick = decodedIRData.rawDataPtr->rawbuf[i];
+        if (tMaximumTick < tTick) {
+            tMaximumTick = tTick;
+        }
+    }
+    return tMaximumTick;
+}
+uint8_t IRrecv::getMaximumSpaceTicksFromRawData() {
+    uint8_t tMaximumTick = 0;
+    for (IRRawlenType i = 4; i < decodedIRData.rawlen - 2; i += 2) { // Skip leading start and trailing stop bit.
+        auto tTick = decodedIRData.rawDataPtr->rawbuf[i];
+        if (tMaximumTick < tTick) {
+            tMaximumTick = tTick;
+        }
+    }
+    return tMaximumTick;
+}
+
+/*
+ * The optimizing compiler internally generates this function, if getMaximumMarkTicksFromRawData() and getMaximumSpaceTicksFromRawData() is used.
+ */
+uint8_t IRrecv::getMaximumTicksFromRawData(bool aSearchSpaceInsteadOfMark) {
+    uint8_t tMaximumTick = 0;
+    IRRawlenType i;
+    if (aSearchSpaceInsteadOfMark) {
+        i = 4;
+    } else {
+        i = 3;
+    }
+    for (; i < decodedIRData.rawlen - 2; i += 2) { // Skip leading start and trailing stop bit.
+        auto tTick = decodedIRData.rawDataPtr->rawbuf[i];
+        if (tMaximumTick < tTick) {
+            tMaximumTick = tTick;
+        }
+    }
+    return tMaximumTick;
 }
 
 uint32_t IRrecv::getTotalDurationOfRawData() {

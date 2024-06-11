@@ -225,6 +225,9 @@ public:
     void printIRResultMinimal(Print *aSerial);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
+    uint8_t getMaximumMarkTicksFromRawData();
+    uint8_t getMaximumSpaceTicksFromRawData();
+    uint8_t getMaximumTicksFromRawData(bool aSearchSpaceInsteadOfMark);
     uint32_t getTotalDurationOfRawData();
 
     /*
@@ -524,8 +527,8 @@ public:
 
     void sendNECRepeat();
     uint32_t computeNECRawDataAndChecksum(uint16_t aAddress, uint16_t aCommand);
-    void sendNEC(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);
-    void sendNEC2(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);
+    void sendNEC(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
+    void sendNEC2(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendNECRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
     // NEC variants
     void sendOnkyo(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
