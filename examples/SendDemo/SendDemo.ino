@@ -199,9 +199,9 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 
         /*
-         * Send 2 Panasonic 48 bit codes as generic Pulse Distance data, once with LSB and once with MSB first
+         * Send 2 Panasonic 48 bit codes as Pulse Distance data, once with LSB and once with MSB first
          */
-        Serial.println(F("Send Panasonic 0xB, 0x10 as generic 48 bit PulseDistance"));
+        Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance"));
         Serial.println(F(" LSB first"));
         Serial.flush();
 #if __INT_WIDTH__ < 32
@@ -226,7 +226,7 @@ void loop() {
 #endif
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send generic 72 bit PulseDistance 0x5A AFEDCBA9 87654321 LSB first"));
+        Serial.println(F("Send 72 bit PulseDistance 0x5A AFEDCBA9 87654321 LSB first"));
         Serial.flush();
 #      if __INT_WIDTH__ < 32
         tRawData[0] = 0x87654321;  // LSB of tRawData[0] is sent first
@@ -240,7 +240,7 @@ void loop() {
 #      endif
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send generic 52 bit PulseDistanceWidth 0xDCBA9 87654321 LSB first"));
+        Serial.println(F("Send 52 bit PulseDistanceWidth 0xDCBA9 87654321 LSB first"));
         Serial.flush();
         // Real PulseDistanceWidth (constant bit length) does not require a stop bit
 #if __INT_WIDTH__ < 32
@@ -252,7 +252,19 @@ void loop() {
 #endif
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send generic 32 bit PulseWidth 0x87654321 LSB first"));
+        Serial.println(F("Send ASCII 7 bit PulseDistanceWidth LSB first"));
+        Serial.flush();
+        // Real PulseDistanceWidth (constant bit length) does theoretically not require a stop bit, but we know the stop bit from serial transmission
+        IrSender.sendPulseDistanceWidth(38, 6000, 500, 500, 1500, 1500, 500, sCommand, 7, PROTOCOL_IS_LSB_FIRST, 0, 0);
+        delay(DELAY_AFTER_SEND);
+
+        Serial.println(F("Send Sony12 as PulseWidth LSB first"));
+        Serial.flush();
+        uint32_t tData = (uint32_t) sAddress << 7 | (sCommand & 0x7F);
+        IrSender.sendPulseDistanceWidth(38, 2400, 600, 1200, 600, 600, 600, tData, SIRCS_12_PROTOCOL, PROTOCOL_IS_LSB_FIRST, 0, 0);
+        delay(DELAY_AFTER_SEND);
+
+        Serial.println(F("Send 32 bit PulseWidth 0x87654321 LSB first"));
         Serial.flush();
         // Real PulseDistanceWidth (constant bit length) does not require a stop bit
         IrSender.sendPulseDistanceWidth(38, 1000, 500, 600, 300, 300, 300, 0x87654321, 32, PROTOCOL_IS_LSB_FIRST, 0, 0);

@@ -93,7 +93,7 @@ void setup() {
 }
 
 /*
- * Send Hob2Hood protocol
+ * Receive and send Hob2Hood protocol
  */
 void loop() {
     static long sLastMillisOfSend = 0;

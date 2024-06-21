@@ -207,7 +207,7 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceWidthData(JVC_BITS, offset, JVC_BIT_MARK, 0, JVC_ONE_SPACE, JVC_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 

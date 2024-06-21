@@ -41,6 +41,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Staying on 2.x](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#staying-on-2x)
 - [Why *.hpp instead of *.cpp](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#why-hpp-instead-of-cpp)
 - [Using the new *.hpp files](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#using-the-new-hpp-files)
+- [3 ways to specify an IR code](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#3-ways-to-specify-an-ir-code)
 - [IRReceiver pinouts](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irreceiver-pinouts)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-ir-codes)
   * [decodedIRData structure](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#decodedirdata-structure)
@@ -93,7 +94,9 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 
 ` JVC ` &nbsp; &nbsp; ` LG ` &nbsp; &nbsp; ` RC5 ` &nbsp; &nbsp; ` RC6 ` &nbsp; &nbsp; ` Samsung ` &nbsp; &nbsp; ` Sony `
 
-` Universal Pulse Distance ` &nbsp; &nbsp; ` Universal Pulse Width ` &nbsp; &nbsp; ` Hash ` &nbsp; &nbsp; ` Pronto `
+` Universal Pulse Distance ` &nbsp; &nbsp; ` Universal Pulse Width ` &nbsp; &nbsp; ` Universal Pulse Distance Width`
+
+` Hash ` &nbsp; &nbsp; ` Pronto `
 
 ` BoseWave ` &nbsp; &nbsp; ` Bang & Olufsen ` &nbsp; &nbsp; ` Lego ` &nbsp; &nbsp; ` FAST ` &nbsp; &nbsp; ` Whynter ` &nbsp; &nbsp; ` MagiQuest `
 
@@ -113,13 +116,13 @@ Protocols can be switched off and on by defining macros before the line `#includ
 
 ## New features with version 4.x
 - **Since 4.3 `IrSender.begin(DISABLE_LED_FEEDBACK)` will no longer work**, use `IrSender.begin(DISABLE_LED_FEEDBACK, 0)` instead.
-- New universal **Pulse Distance / Pulse Width decoder** added, which covers many previous unknown protocols.
+- New universal **Pulse Distance / Pulse Width / Pulse Distance Width decoder** added, which covers many previous unknown protocols.
 - Printout of code how to send received command by `IrReceiver.printIRSendUsage(&Serial)`.
 - RawData type is now 64 bit for 32 bit platforms and therefore `decodedIRData.decodedRawData` can contain complete frame information for more protocols than with 32 bit as before.
 - **Callback** after receiving a command - It calls your code as soon as a message was received.
 - Improved handling of `PULSE_DISTANCE` + `PULSE_WIDTH` protocols.
 - New FAST protocol.
-- Automatic printout of the **corresponding send function** with printIRSendUsage().
+- Automatic printout of the **corresponding send function** with `printIRSendUsage()`.
 
 #### Converting your 3.x program to the 4.x version
 - You must replace `#define DECODE_DISTANCE` by `#define DECODE_DISTANCE_WIDTH` (only if you explicitly enabled this decoder).
@@ -255,7 +258,7 @@ If this doesn't fit your case, be assured that 4.x is at least trying to be back
   ` NEC ` &nbsp; &nbsp; ` Denon ` &nbsp; &nbsp; ` Panasonic ` &nbsp; &nbsp; ` JVC ` &nbsp; &nbsp; ` LG `<br/>
   ` RC5 ` &nbsp; &nbsp; ` RC6 ` &nbsp; &nbsp; ` Samsung ` &nbsp; &nbsp; ` Sony `
 - The call of `irrecv.decode(&results)` uses the old MSB first decoders like in 2.x and sets the 32 bit codes in `results.value`.
-- No decoding to a more meaningfull (constant) 8/16 bit address and 8 bit command.
+- No decoding to a more meaningful (constant) 8/16 bit address and 8 bit command.
 
 <br/>
 
@@ -297,11 +300,55 @@ The following macros will definitely be overridden with default values otherwise
 
 <br/>
 
+# 3 ways to specify an IR code
+There are 3 different ways of specifying a particular IR code.
+
+## 1. Timing
+The timing of each mark/pulse and space/distance_between_pulses is specified in a list or array.
+This enables specifying **all IR codes**, but requires a lot of memory and is **not readable at all**.
+One formal definition of such a timing array, including **specification of frequency and repeats** is the [**Pronto** format](http://www.harctoolbox.org/Glossary.html#ProntoSemantics).<br/>
+Memory can be saved by using a lower time resolution.
+For IRremote you can use a 50 &micro;s resolution which halves the memory requirement by using byte values instead of int16 values.
+For receiving purposes you can use the **hash of the timing** provided by the `decodeHash()` decoder.
+
+## 2. Encoding schemes
+There are 3 main encoding schemes which encodes a binary bitstream / hex value:
+1. `PULSE_DISTANCE`. The distance between pulses determines the bit value. This requires always a stop bit!
+Examples are NEC and KASEIKYO protocols. The pulse width is constant for most protocols.
+2. `PULSE_WIDTH`. The width of a pulse determines the bit value, pulse distance is constant. This requires no stop bit!
+The only known example is the SONY protocol.
+3. [Phase / Manchester encoding](https://en.wikipedia.org/wiki/Manchester_code).
+The time of the pulse/pause transition (phase) relative to the clock determines the bit value. Examples are RC5 and RC6 protocols.
+
+Phase encoding has a **constant bit length**, `PULSE_DISTANCE` with constant pulse width and `PULSE_WIDTH` have **no constant bit length**!
+
+A well known example for `PULSE_DISTANCE` with non constant pulse width encoding is the **RS232 serial encoding**.
+Here the non constant pulse width is used to enable a **constant bit length**.
+
+Most IR signals have a **special header** to help in setting the automatic gain of the receiver circuit.
+This header is not part of the encoding, but is often significant for a special protocol and therefore must be reproducible.
+
+Be aware that there are codes using a `PULSE_DISTANCE` encoding where more than a binary 0/1 is put into a pulse/pause combination.
+This requires more than 2 different pulse or pause length combinations.
+The [HobToHood protocol](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveAndSendHob2Hood/ReceiveAndSendHob2Hood.ino) uses such an encoding.
+
+Using encoding schemes reduces the specification of an IR code to a bitstream / hex value, which is LSB by default and pulse / pause timings of header, 0, and 1.
+The hex value is **quite readable**.
+These schemes can not put any semantics like address, command or checksum on this bitstream.
+
+## 3. Protocols
+There are a few common protocols that are implemented directly in IRremote.
+They specify the frequency, the timings of header, 0, and 1 as well as other values like checksum, repeat distance, repeat coding, bit toggling etc.
+The semantics of the hex value is also specified, allowing the usage of only 2 parameters **address** and **command** to specify an IR code.
+This saves memory and is **highly readable**.
+Often the address is also constant, which further reduces memory requirements.
+
+
 # IRReceiver pinouts
 ![IRReceiver Pinout](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IRReceiverPinout.jpg)
 
 # Receiving IR codes
-In your program you check for a **completly received IR frame** with:<br/>
+In your program you check for a **completely received IR frame** with:<br/>
 `if (IrReceiver.decode()) {}`<br/>
 This also decodes the received data.<br/>
 After successful decoding, the IR data is contained in the IRData structure, available as `IrReceiver.decodedIRData`.
@@ -415,13 +462,15 @@ Sending old MSB codes without conversion can be done by using `sendNECMSB()`, `s
 The codes found in the [Flipper-IRDB database](https://github.com/Lucaslhm/Flipper-IRDB) are quite straightforward to convert, because the also use the address / command scheme.<br/>
 Protocol matching is NECext -> NECext (or Onkyo), Samsung32 -> Samsung, SIRC20 -> Sony with 20 bits etc.
 
-The codes found in the [irdb database](https://github.com/probonopd/irdb/tree/master/codes) specify  a **device**, a **subdevice** and a **function**. Most of the times, *device* and *subdevice* can be taken as upper and lower byte of the **address parameter** and *function* is the **command parameter** for the **new structured functions** with address, command and repeat-count parameters like e.g. `IrSender.sendNEC((device << 8) | subdevice, 0x19, 2)`.<br/>
+The codes found in the [irdb database](https://github.com/probonopd/irdb/tree/master/codes) specify  a **device**, a **subdevice** and a **function**.
+Most of the times, *device* and *subdevice* can be taken as upper and lower byte of the **address parameter** and *function* is the **command parameter** for the **new structured functions** with address, command and repeat-count parameters like e.g. `IrSender.sendNEC((device << 8) | subdevice, 0x19, 2)`.<br/>
 An **exact mapping** can be found in the [IRP definition files for IR protocols](https://github.com/probonopd/MakeHex/tree/master/protocols). "D" and "S" denotes device and subdevice and "F" denotes the function.
 
 ## Send pin
-Any pin can be choosen as send pin, because the PWM signal is generated by default with software bit banging, since `SEND_PWM_BY_TIMER` is not active.<br/>
-On **ESP32** ledc channel 0 is used for gereating the IR PWM.<br/>
-If `IR_SEND_PIN` is specified (as c macro), it reduces program size and improves send timing for AVR. If you want to use a variable to specify send pin e.g. with `setSendPin(uint8_t aSendPinNumber)`, you must disable this `IR_SEND_PIN` macro. Then you can change send pin at any time before sending an IR frame. See also [Compile options / macros for this library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#compile-options--macros-for-this-library).
+Any pin can be chosen as send pin, because the PWM signal is generated by default with software bit banging, since `SEND_PWM_BY_TIMER` is not active.<br/>
+On **ESP32** ledc channel 0 is used for generating the IR PWM.<br/>
+If `IR_SEND_PIN` is specified (as c macro), it reduces program size and improves send timing for AVR. If you want to use a variable to specify send pin e.g. with `setSendPin(uint8_t aSendPinNumber)`, you must disable this `IR_SEND_PIN` macro.
+Then you can change send pin at any time before sending an IR frame. See also [Compile options / macros for this library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#compile-options--macros-for-this-library).
 
 ### List of public IR code databases
 http://www.harctoolbox.org/IR-resources.html
@@ -518,15 +567,17 @@ The FAST protocol can be received by IRremote and TinyIRReceiver.
 
 # FAQ and hints
 ## Receiving stops after analogWrite() or tone() or after running a motor.
-The receiver sample interval of 50 µs is generated by a timer. On many boards this must be a [hardware timer](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage). On some boards where a software timer is available, the software timer is used.<br/>
+The receiver sample interval of 50 µs is generated by a timer. On many boards this must be a [hardware timer](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage).
+On some boards where a software timer is available, the software timer is used.<br/>
 Be aware that the hardware timer used for receiving should not be used for `analogWrite()`.<br/>
 Especially **motor** control often uses the `analogWrite()` function and will therefore stop the receiving if used on the pins indicated [here](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage).<br/>
-On the Uno and other AVR boards the receiver timer ist the same as the tone timer. Thus receiving will stop after a `tone()` command. See [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/b962db8f4e47408df01474a57f313f5a6bbe39a1/examples/ReceiveDemo/ReceiveDemo.ino#L257) how to deal with it, i.e. how to use `IrReceiver.restartTimer()`.
+On the Uno and other AVR boards the receiver timer ist the same as the tone timer. Thus receiving will stop after a `tone()` command.
+See [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/b962db8f4e47408df01474a57f313f5a6bbe39a1/examples/ReceiveDemo/ReceiveDemo.ino#L257) how to deal with it, i.e. how to use `IrReceiver.restartTimer()`.
 
 ## Receiving sets overflow flag.
-The flag `IRDATA_FLAGS_WAS_OVERFLOW` is set, if `RAW_BUFFER_LENGTH` is too small for all the marks and spaces of the protocol. 
-This can happen on long protocol frames like the ones from air conditioner. 
-It also can happen, if `RECORD_GAP_MICROS` is smaller than the real gap between a frame and thr repetition frame, thus interpreting both as one consecutive frame. 
+The flag `IRDATA_FLAGS_WAS_OVERFLOW` is set, if `RAW_BUFFER_LENGTH` is too small for all the marks and spaces of the protocol.
+This can happen on long protocol frames like the ones from air conditioner.
+It also can happen, if `RECORD_GAP_MICROS` is smaller than the real gap between a frame and thr repetition frame, thus interpreting both as one consecutive frame.
 Best is to dump the timing then, to see which reason holds.
 
 ## Problems with Neopixels, FastLed etc.
@@ -587,16 +638,16 @@ If you get something like this:
 PULSE_DISTANCE: HeaderMarkMicros=8900 HeaderSpaceMicros=4450 MarkMicros=550 OneSpaceMicros=1700 ZeroSpaceMicros=600  NumberOfBits=56 0x43D8613C 0x3BC3BC
 ```
 then you have a code consisting of **56 bits**, which is probably from an air conditioner remote.<br/>
-You can send it with sendPulseDistance().
+You can send it with `sendPulseDistanceWidth()`.
 ```c++
 uint32_t tRawData[] = { 0xB02002, 0xA010 };
 IrSender.sendPulseDistance(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, false, 0, 0);
 ```
-You can send it with calling sendPulseDistanceWidthData() twice, once for the first 32 bit and next for the remaining 24 bits.<br/>
-**The PulseDistance or PulseWidth decoders just decode a timing stream to a bit stream**.
-They can not put any semantics like address, command or checksum on this bitstream, since it is no known protocol.
+You can send it with calling `sendPulseDistanceWidthData()` twice, once for the first 32 bit and next for the remaining 24 bits.<br/>
+The `PULSE_DISTANCE` / `PULSE_WIDTH` decoder just decodes a timing stream to a bitstream stored as hex values.
+These decoders can not put any semantics like address, command or checksum on this bitstream.
 But the bitstream is way more readable, than a timing stream. This bitstream is read **LSB first by default**.
-If this does not suit you for further research, you can change it [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_DistanceProtocol.hpp#L78).
+If LSB does not suit for further research, you can change it [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_DistanceProtocol.hpp#L78).
 
 **If RAM is not more than 2k, the decoder only accepts mark or space durations up to 2500 microseconds to save RAM space, otherwise it accepts durations up to 10 ms.**
 
@@ -733,7 +784,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | Name | Default value | Description |
 |-|-:|-|
 | `RAW_BUFFER_LENGTH` | 100 | Buffer size of raw input buffer. Must be even! If it is too small, overflow flag will be set. 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. |
-| `EXCLUDE_UNIVERSAL_PROTOCOLS` | disabled | Excludes the universal decoder for pulse distance protocols and decodeHash (special decoder for all protocols) from `decode()`. Saves up to 1000 bytes program memory. |
+| `EXCLUDE_UNIVERSAL_PROTOCOLS` | disabled | Excludes the universal decoder for pulse distance width protocols and decodeHash (special decoder for all protocols) from `decode()`. Saves up to 1000 bytes program memory. |
 | `DECODE_<Protocol name>` | all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |
 | `DECODE_STRICT_CHECKS` |  disabled | Check for additional required characteristics of protocol timing like length of mark for a constant mark protocol, where space length determines the bit value. Requires up to 194 additional bytes of program memory. |
 | `IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK` |  disabled | Saves up to 60 bytes of program memory and 2 bytes RAM. |
@@ -752,7 +803,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time. |
 | `MICROS_PER_TICK` | 50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 &micro;s at 38 kHz. |
-| `TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING` | 25 | Relative tolerance (in percent) for matchTicks(), matchMark() and matchSpace() functions used for protocol decoding. |
+| `TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT` | 25 | Relative tolerance for matchTicks(), matchMark() and matchSpace() functions used for protocol decoding. |
 | `DEBUG` | disabled | Enables lots of lovely debug output. |
 | `IR_USE_AVR_TIMER*` |  | Selection of timer to be used for generating IR receiving sample interval. |
 
@@ -931,7 +982,7 @@ The IR signal is sampled at a **50 &micro;s interval**. For a constant 525 &micr
 And believe me, if you send a 525 &micro;s signal, your receiver will output something between around 400 and 700 &micro;s!<br/>
 Therefore **we decode by default with a +/- 25% margin** using the formulas [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L376-L399).<br/>
 E.g. for the NEC protocol with its 560 &micro;s unit length, we have TICKS_LOW = 8.358 and TICKS_HIGH = 15.0. This means, we accept any value between 8 ticks / 400 &micro;s and 15 ticks / 750 &micro;s (inclusive) as a mark or as a zero space. For a one space we have TICKS_LOW = 25.07 and TICKS_HIGH = 45.0.<br/>
-And since the receivers generated marks are longer or shorter than the spaces, 
+And since the receivers generated marks are longer or shorter than the spaces,
 we have introduced the [`MARK_EXCESS_MICROS`](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#compile-options--macros-for-this-library) macro
 to compensate for this receiver (and signal strength as well as ambient light dependent :disappointed: ) specific deviation.<br/>
 Welcome to the world of **real world signal processing**.

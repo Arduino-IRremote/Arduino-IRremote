@@ -2,10 +2,13 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
-# 4.3.3
+# 4.4.0
 - sendNEC() and sendNEC2() now accepts 16 bit command to better map to NECext protocol found in IRDB databases.
 - ir_DistanceWidthProtocol() now decodes up to 10 ms mark or spaces if RAM is bigger than 2 k.
+- Improved sensitivity and decoding of PULSE_DISTANCE + PULSE_WIDTH protocols.
+- Changed TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING to TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT.
 - Improved examples AllProtocolsOnLCD, UnitTest and SimpleReceiver.
+- New functions decodePulseDistanceWidthData() with 6 parameters and decodePulseDistanceWidthDataStrict() with 7 parameters.
 
 # 4.3.2
 - Added sendSonyMSB(unsigned long data, int nbits) as a clone of sendSony(unsigned long data, int nbits) to be more consistent.

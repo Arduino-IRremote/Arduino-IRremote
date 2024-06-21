@@ -306,7 +306,7 @@ bool IRrecv::decodeLGMSB(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceWidthData(LG_BITS, offset, LG_BIT_MARK, 0, LG_ONE_SPACE, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 // Stop bit

@@ -47,7 +47,7 @@ typedef enum {
     LG,
     LG2,
     NEC,
-    NEC2, /* NEC with full frame as repeat */
+    NEC2, /* 10 NEC with full frame as repeat */
     ONKYO,
     PANASONIC,
     KASEIKYO,
@@ -57,7 +57,7 @@ typedef enum {
     KASEIKYO_MITSUBISHI,
     RC5,
     RC6,
-    SAMSUNG,
+    SAMSUNG, /* 20*/
     SAMSUNGLG,
     SAMSUNG48,
     SHARP,
@@ -67,9 +67,10 @@ typedef enum {
     BOSEWAVE,
     LEGO_PF,
     MAGIQUEST,
-    WHYNTER,
+    WHYNTER, /* 30 */
     FAST
 } decode_type_t;
+extern const char *const ProtocolNames[]; // The array of name strings for the decode_type_t enum
 
 #define SIRCS_12_PROTOCOL       12
 #define SIRCS_15_PROTOCOL       15
@@ -142,9 +143,9 @@ struct PulseDistanceWidthProtocolConstants {
 /*
  * Definitions for member PulseDistanceWidthProtocolConstants.Flags
  */
-#define SUPPRESS_STOP_BIT_FOR_THIS_DATA 0x20 // Stop bit is otherwise sent for all pulse distance protocols.
-#define PROTOCOL_IS_MSB_FIRST           IRDATA_FLAGS_IS_MSB_FIRST
-#define PROTOCOL_IS_LSB_FIRST           IRDATA_FLAGS_IS_LSB_FIRST
+#define SUPPRESS_STOP_BIT       0x20 // Stop bit is otherwise sent for all pulse distance protocols, i.e. aOneSpaceMicros != aZeroSpaceMicros.
+#define PROTOCOL_IS_MSB_FIRST   IRDATA_FLAGS_IS_MSB_FIRST
+#define PROTOCOL_IS_LSB_FIRST   IRDATA_FLAGS_IS_LSB_FIRST
 
 /*
  * Carrier frequencies for various protocols

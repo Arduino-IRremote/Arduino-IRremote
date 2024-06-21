@@ -380,7 +380,7 @@ bool IRrecv::decodeNECMSB(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceWidthData(NEC_BITS, offset, NEC_BIT_MARK, 0, NEC_ONE_SPACE, NEC_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("NEC MSB: "));
         Serial.println(F("Decode failed"));

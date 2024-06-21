@@ -762,6 +762,9 @@ float getCPUTemperatureSimple(void) {
 #if defined(__AVR_ATmega328PB__)
     tTemperatureRaw -= 245;
     return (float)tTemperatureRaw;
+#elif defined(__AVR_ATtiny85__)
+    tTemperatureRaw -= 273; // 273 and 1.1666 are values from the datasheet
+    return (float)tTemperatureRaw / 1.1666;
 #else
     tTemperatureRaw -= 317;
     return (float) tTemperatureRaw / 1.22;

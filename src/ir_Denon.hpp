@@ -293,8 +293,8 @@ bool IRrecv::decodeDenonOld(decode_results *aResults) {
         return false;
     }
 
-    // Try to decode as Denon protocol
-    if (!decodePulseDistanceWidthData(DENON_BITS, 3, DENON_BIT_MARK, 0, DENON_ONE_SPACE, DENON_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST)) {
+    // Try to decode as Denon protocol.
+    if (!decodePulseDistanceWidthData(DENON_BITS, 3, DENON_BIT_MARK, DENON_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 

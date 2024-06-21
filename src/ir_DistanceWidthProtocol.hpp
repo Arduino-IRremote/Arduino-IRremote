@@ -90,6 +90,34 @@
 // DDD   III  SSSS    TT    A  A  N   N   CCC  EEEE       W W    III  DDD    TT    H  H
 //=====================================================================================
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#Codings
+/*
+ Example output of UnitTest.ino for PulseWidth protocol:
+ Protocol=PulseWidth Raw-Data=0x87654321 32 bits LSB first
+ Send on a 8 bit platform with: IrSender.sendPulseDistanceWidth(38, 950, 550, 600, 300, 300, 300, 0x87654321, 32, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
+ rawData[66]:
+ -1088600
+ + 950,- 550
+ + 600,- 300 + 300,- 300 + 350,- 250 + 350,- 250
+ + 350,- 300 + 600,- 300 + 300,- 300 + 300,- 300
+ + 650,- 250 + 650,- 250 + 300,- 300 + 350,- 250
+ + 350,- 300 + 300,- 300 + 600,- 300 + 300,- 300
+ + 600,- 300 + 350,- 250 + 600,- 300 + 350,- 250
+ + 350,- 300 + 600,- 300 + 600,- 300 + 300,- 300
+ + 600,- 300 + 600,- 300 + 600,- 300 + 300,- 300
+ + 300,- 300 + 300,- 300 + 350,- 250 + 650
+ Sum: 24500
+
+ Example output of UnitTest.ino for PulseDistanceWidth protocol:
+ Protocol=PulseDistance Raw-Data=0x76 7 bits LSB first
+ Send on a 8 bit platform with: IrSender.sendPulseDistanceWidth(38, 5950, 500, 550, 1450, 1550, 500, 0x76, 7, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
+ rawData[18]:
+ -1092450
+ +5950,- 500
+ +1500,- 500 + 500,-1450 + 550,-1450 +1550,- 450
+ + 550,-1450 + 550,-1450 + 550,-1450 + 550
+ Sum: 20950
+ */
+
 #if defined(LOCAL_DEBUG)
 void printDurations(uint8_t aArray[], uint8_t aMaxIndex) {
     for (uint_fast8_t i = 0; i <= aMaxIndex; i++) {
@@ -116,11 +144,13 @@ void printDurations(uint8_t aArray[], uint8_t aMaxIndex) {
 #endif
 
 /*
+ * We count all consecutive (allow only one gap between) durations and compute the average.
  * @return false if more than 2 distinct duration values found
  */
 bool aggregateArrayCounts(uint8_t aArray[], uint8_t aMaxIndex, uint8_t *aShortIndex, uint8_t *aLongIndex) {
     uint8_t tSum = 0;
     uint16_t tWeightedSum = 0;
+    uint8_t tGapCount = 0;
     for (uint_fast8_t i = 0; i <= aMaxIndex; i++) {
         uint8_t tCurrentDurations = aArray[i];
         if (tCurrentDurations != 0) {
@@ -128,9 +158,14 @@ bool aggregateArrayCounts(uint8_t aArray[], uint8_t aMaxIndex, uint8_t *aShortIn
             tSum += tCurrentDurations;
             tWeightedSum += (tCurrentDurations * i);
             aArray[i] = 0;
+            tGapCount = 0;
+        } else {
+            tGapCount++;
         }
-        if ((tCurrentDurations == 0 || i == aMaxIndex) && tSum != 0) {
-            // here we have a sum and a gap after the values
+        if (tSum != 0 && (i == aMaxIndex || tGapCount > 1)) {
+            /*
+             * Here we have a sum AND last element OR more than 1 consecutive gap
+             */
             uint8_t tAggregateIndex = (tWeightedSum + (tSum / 2)) / tSum; // with rounding
             aArray[tAggregateIndex] = tSum; // disabling this line increases code size by 2 - unbelievable!
             // store aggregate for later decoding
@@ -167,13 +202,13 @@ bool IRrecv::decodeDistanceWidth() {
     uint8_t tDurationArray[DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE];
 
     /*
-     * Accept only protocols with at least 8 bits
+     * Accept only protocols with at least 7 bits
      */
-    if (decodedIRData.rawlen < (2 * 8) + 4) {
+    if (decodedIRData.rawlen < (2 * 7) + 4) {
         IR_DEBUG_PRINT(F("PULSE_DISTANCE_WIDTH: "));
         IR_DEBUG_PRINT(F("Data length="));
         IR_DEBUG_PRINT(decodedIRData.rawlen);
-        IR_DEBUG_PRINTLN(F(" is less than 20"));
+        IR_DEBUG_PRINTLN(F(" is less than 18"));
         return false;
     }
 
@@ -272,7 +307,7 @@ bool IRrecv::decodeDistanceWidth() {
     }
 
     /*
-     * Print characteristics of this protocol. Durations are in ticks.
+     * Print characteristics of this protocol. Durations are in (50 us) ticks.
      * Number of bits, start bit, start pause, long mark, long space, short mark, short space
      *
      * NEC:         32, 180, 90,  0, 34, 11, 11
@@ -281,6 +316,8 @@ bool IRrecv::decodeDistanceWidth() {
      * JVC:         16, 168, 84,  0, 32, 10, 10
      * Kaseikyo:    48.  69, 35,  0, 26,  9,  9
      * Sony:  12|15|20,  48, 12, 24,  0, 12, 12 // the only known pulse width protocol
+     * Disney monorail
+     *   model:      7, 120, 10, 30, 30, 10, 10 // PulseDistanceWidth. Can be seen as direct conversion of a 7 bit serial timing at 250 baud with a 6 ms start bit.
      */
 #if defined(LOCAL_DEBUG)
     Serial.print(F("DistanceWidthTimingInfoStruct: "));
@@ -302,8 +339,8 @@ bool IRrecv::decodeDistanceWidth() {
     uint16_t tNumberOfBits;
 #endif
     tNumberOfBits = (decodedIRData.rawlen / 2) - 1;
-    if (tSpaceTicksLong > 0 && tMarkTicksLong == 0) {
-        // For PULSE_DISTANCE a stop bit is mandatory, for PULSE_WIDTH it is not required!
+    if (tSpaceTicksLong > 0) {
+        // For PULSE_DISTANCE -including PULSE_DISTANCE_WIDTH- a stop bit is mandatory, for PULSE_WIDTH it is not required!
         tNumberOfBits--; // Correct for stop bit
     }
     decodedIRData.numberOfBits = tNumberOfBits;
@@ -311,10 +348,9 @@ bool IRrecv::decodeDistanceWidth() {
 
     /*
      * We can have the following protocol timings
-     * Pulse distance:          Pulses/marks are constant, pause/spaces have different length, like NEC.
-     * Pulse width:             Pulses/marks have different length, pause/spaces are constant, like Sony.
-     * Pulse distance width:    Pulses/marks and pause/spaces have different length, often the bit length is constant, like MagiQuest.
-     * Pulse distance width can be decoded by pulse width decoder, if this decoder does not check the length of pause/spaces.
+     * PULSE_DISTANCE:       Pause/spaces have different length and determine the bit value, longer space is 1. Pulses/marks can be constant, like NEC.
+     * PULSE_WIDTH:          Pulses/marks have different length and determine the bit value, longer mark is 1. Pause/spaces can be constant, like Sony.
+     * PULSE_DISTANCE_WIDTH: Pulses/marks and pause/spaces have different length, often the bit length is constant, like MagiQuest. Can be decoded by PULSE_DISTANCE decoder.
      */
 
     if (tMarkTicksLong == 0 && tSpaceTicksLong == 0) {
@@ -346,13 +382,14 @@ bool IRrecv::decodeDistanceWidth() {
             tNumberOfBitsForOneDecode = BITS_IN_RAW_DATA_TYPE;
         }
         bool tResult;
-        if (tMarkTicksLong > 0) {
+        if (tSpaceTicksLong > 0) {
             /*
-             * Here short and long mark durations found.
+             * Here short and long space durations found.
+             * Since parameters aOneMarkMicros and aOneSpaceMicros are equal, we only check tSpaceMicrosLong here.
              */
-            decodedIRData.protocol = PULSE_WIDTH;
-            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkMicrosLong, tMarkMicrosShort,
-                    tSpaceMicrosShort, 0,
+            decodedIRData.protocol = PULSE_DISTANCE; // Sony + PULSE_DISTANCE_WIDTH
+            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkMicrosShort, tSpaceMicrosLong,
+                    tMarkMicrosShort,
 #if defined(USE_MSB_DECODING_FOR_DISTANCE_DECODER)
                     true
 #else
@@ -361,17 +398,19 @@ bool IRrecv::decodeDistanceWidth() {
                     );
         } else {
             /*
-             * Here short and long space durations found.
+             * Here no long space duration found. => short and long mark durations found, check tMarkMicrosLong here
+             * This else case will most likely never be used, but it only requires 12 bytes additional programming space :-)
              */
-            decodedIRData.protocol = PULSE_DISTANCE;
-            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkMicrosShort, tMarkMicrosShort,
-                    tSpaceMicrosLong, tSpaceMicrosShort,
+            decodedIRData.protocol = PULSE_WIDTH; // NEC etc.
+            tResult = decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkMicrosLong, tSpaceMicrosShort,
+                    tMarkMicrosShort,
 #if defined(USE_MSB_DECODING_FOR_DISTANCE_DECODER)
                     true
 #else
                     false
 #endif
                     );
+
         }
         if (!tResult) {
 #if defined(LOCAL_DEBUG)
@@ -406,17 +445,25 @@ bool IRrecv::decodeDistanceWidth() {
     decodedIRData.DistanceWidthTimingInfo.ZeroMarkMicros = tMarkMicrosShort;
     decodedIRData.DistanceWidthTimingInfo.ZeroSpaceMicros = tSpaceMicrosShort;
     if (tMarkMicrosLong != 0) {
-        decodedIRData.DistanceWidthTimingInfo.OneMarkMicros = tMarkMicrosLong;
-
-        decodedIRData.DistanceWidthTimingInfo.OneSpaceMicros = tSpaceMicrosShort;
-        if (tSpaceMicrosLong != 0) {
-            // Assume long space for zero when we have PulseDistanceWidth -> enables constant bit length
-            decodedIRData.DistanceWidthTimingInfo.ZeroSpaceMicros = tSpaceMicrosLong;
+        if (tSpaceMicrosLong == 0) {
+            // PULSE_DISTANCE, Sony
+            decodedIRData.DistanceWidthTimingInfo.OneMarkMicros = tMarkMicrosLong;
+            decodedIRData.DistanceWidthTimingInfo.OneSpaceMicros = tSpaceMicrosShort;
+        } else {
+            // PULSE_DISTANCE_WIDTH, we have 4 distinct values here
+            // Assume long space for a one when we have PulseDistanceWidth like for RS232, where a long inactive period (high) is a 1
+            decodedIRData.DistanceWidthTimingInfo.OneSpaceMicros = tSpaceMicrosLong;
+            decodedIRData.DistanceWidthTimingInfo.OneMarkMicros = tMarkMicrosShort;
+            decodedIRData.DistanceWidthTimingInfo.ZeroMarkMicros = tMarkMicrosLong;
+//            // Assume long mark for a one when we have PulseDistanceWidth
+//            decodedIRData.DistanceWidthTimingInfo.OneSpaceMicros = tSpaceMicrosShort;
+//            decodedIRData.DistanceWidthTimingInfo.ZeroSpaceMicros = tSpaceMicrosLong;
+//            decodedIRData.DistanceWidthTimingInfo.OneMarkMicros = tMarkMicrosLong;
         }
     } else {
-        decodedIRData.DistanceWidthTimingInfo.OneMarkMicros = tMarkMicrosShort;
-
+        // PULSE_WIDTH, NEC etc.
         // Here tMarkMicrosLong is 0 => tSpaceMicrosLong != 0
+        decodedIRData.DistanceWidthTimingInfo.OneMarkMicros = tMarkMicrosShort;
         decodedIRData.DistanceWidthTimingInfo.OneSpaceMicros = tSpaceMicrosLong;
     }
 

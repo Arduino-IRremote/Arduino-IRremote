@@ -393,8 +393,7 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceWidthData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, 0, SAMSUNG_ONE_SPACE, SAMSUNG_ZERO_SPACE,
-            PROTOCOL_IS_MSB_FIRST)) {
+    if (!decodePulseDistanceWidthData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST)) {
         return false;
     }
 
