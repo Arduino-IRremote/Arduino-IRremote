@@ -75,9 +75,9 @@
 #if !defined(RAW_BUFFER_LENGTH)
 // For air condition remotes it requires 600 (maximum for 2k RAM) to 750. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
 #  if (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
-#define RAW_BUFFER_LENGTH  180
+#define RAW_BUFFER_LENGTH  180 // Requires 360 bytes RAM
 #  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
-#define RAW_BUFFER_LENGTH  520
+#define RAW_BUFFER_LENGTH  520 // Requires 1040 bytes RAM
 #define DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE 200 // The decoder accepts mark or space durations up to 200 * 50 (MICROS_PER_TICK) = 10 milliseconds
 #  endif
 #endif

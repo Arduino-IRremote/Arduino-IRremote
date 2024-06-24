@@ -71,13 +71,13 @@
 #  if (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
 // for RAMsize <= 2k
 #    if defined(DECODE_MAGIQUEST)
-#define RAW_BUFFER_LENGTH  112  // MagiQuest requires 112 bytes.
+#define RAW_BUFFER_LENGTH  112  // MagiQuest requires 224 bytes.
 #    else
-#define RAW_BUFFER_LENGTH  100  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
+#define RAW_BUFFER_LENGTH  100  ///< Length of raw duration buffer. 100 -> 200 bytes. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
 #    endif
 #  else
 // For undefined or bigger RAMsize
-#define RAW_BUFFER_LENGTH  750 // 750 (600 if we have only 2k RAM) is the value for air condition remotes.
+#define RAW_BUFFER_LENGTH  750 // Requires 1500 bytes RAM. The value for air condition remotes.
 #  endif
 #endif
 #if RAW_BUFFER_LENGTH % 2 == 1
