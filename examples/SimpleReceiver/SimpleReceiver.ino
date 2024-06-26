@@ -62,7 +62,7 @@
 
 //#define DEBUG               // Activate this for lots of lovely debug output from the decoders.
 
-//#define RAW_BUFFER_LENGTH  180 // Requires 360 bytes RAM. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
+//#define RAW_BUFFER_LENGTH  750 // For air condition remotes it requires 750. Default is 200.
 
 /*
  * This include defines the actual pin number for pins like IR_RECEIVE_PIN, IR_SEND_PIN for many different boards and architectures

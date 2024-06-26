@@ -85,7 +85,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 
 #define RC5_UNIT            889 // 32 periods of 36 kHz (888.8888)
 
-#define MIN_RC5_MARKS       ((RC5_BITS + 1) / 2) // 7. Divided by 2 to handle the bit sequence of 01010101 which gives one mark and space for each 2 bits
+#define MIN_RC5_MARKS       ((RC5_BITS + 1) / 2) // 7 - Divided by 2 to handle the bit sequence of 01010101 which gives one mark and space for each 2 bits
 
 #define RC5_DURATION        (15L * RC5_UNIT) // 13335
 #define RC5_REPEAT_PERIOD   (128L * RC5_UNIT) // 113792

@@ -47,6 +47,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [decodedIRData structure](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#decodedirdata-structure)
   * [Ambiguous protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ambiguous-protocols)
   * [Unknown protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#unknown-protocol)
+  * [RAM usage of different protocolsl](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ram-usage-of-different-protocols)
 - [Sending IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-ir-codes)
   * [Sending IRDB IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-irdb-ir-codes)
   * [Send pin](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#send-pin)
@@ -437,6 +438,17 @@ The **ReceiveDump example** gives you more information but has bad repeat detect
 
 If your protocol seems not to be supported by this library, you may try the [IRMP library](https://github.com/IRMP-org/IRMP), which especially supports manchester protocols much better.
 
+## RAM usage of different protocols
+The `RAW_BUFFER_LENGTH` determines the length of the **byte buffer** where the received IR timing data is stored before decoding.<br/>
+**100** is sufficient for standard protocols **up to 48 bits**, with 1 bit consisting of one mark and space.
+We always require additional 4 btes, 1 byte for initial gap, 2 bytes for header and 1 byte for stop bit.
+- **48** bit protocols are PANASONIC, KASEIKYO, SAMSUNG48, RC6.
+- **32** bit protocols like NEC, SAMSUNG, WHYNTER, SONY(20), LG(28) require a **buffer length of 68**.
+- **16** bit protocols like BOSEWAVE, DENON, FAST, JVC, LEGO_PF, RC5, SONY(12 or 15) require a **buffer length of 36**.
+- MAGIQUEST requires a buffer length of **112**.
+- Air conditioners often send a longer protocol data stream **up to 750 bits**.
+
+If the record gap determined by `RECORD_GAP_MICROS` is changed from the default 8 ms to more than 20 ms, the buffer is no longer a byte but a uint16_t buffer, requiring twice as much RAM.
 <br/>
 
 # Sending IR codes
@@ -656,13 +668,14 @@ If you see something like `Protocol=UNKNOWN Hash=0x13BD886C 35 bits received` as
 
 - If you have an **odd number of bits** received, your receiver circuit probably has problems. Maybe because the IR signal is too weak.
 - If you see timings like `+ 600,- 600     + 550,- 150     + 200,- 100     + 750,- 550` then one 450 &micro;s space was split into two 150 and 100 &micro;s spaces with a spike / error signal of 200 &micro;s between. Maybe because of a defective receiver or a weak signal in conjunction with another light emitting source nearby.
-- If you see timings like `+ 500,- 550     + 450,- 550     + 500,- 500     + 500,-1550`, then marks are generally shorter than spaces and therefore `MARK_EXCESS_MICROS` (specified in your ino file) should be **negative** to compensate for this at decoding.
+- If you see timings like `+ 500,- 550     + 450,- 550     + 450,- 500     + 500,-1550`, then marks are generally shorter than spaces and therefore `MARK_EXCESS_MICROS` (specified in your ino file) should be **negative** to compensate for this at decoding.
 - If you see `Protocol=UNKNOWN Hash=0x0 1 bits received` it may be that the space after the initial mark is longer than [`RECORD_GAP_MICROS`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L124).
   This was observed for some LG air conditioner protocols. Try again with a line e.g. `#define RECORD_GAP_MICROS 12000` before the line `#include <IRremote.hpp>` in your .ino file.
 - To see more info supporting you to find the reason for your UNKNOWN protocol, you must enable the line `//#define DEBUG` in IRremoteInt.h.
 
 ## How to deal with protocols not supported by IRremote
 If you do not know which protocol your IR transmitter uses, you have several choices.
+- Just use the hash value to decide which command was received. See the [SimpleReceiverForHashCodes example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiverForHashCodes/SimpleReceiverForHashCodes.ino).
 - Use the [IRreceiveDump example](examples/ReceiveDump) to dump out the IR timing.
  You can then reproduce/send this timing with the [SendRawDemo example](examples/SendRawDemo).
  For **long codes** with more than 48 bits like from air conditioners, you can **change the length of the input buffer** in [IRremote.h](src/IRremoteInt.h#L36).
@@ -684,6 +697,11 @@ See also [DroneBot Workshop SimpleReceiver](https://dronebotworkshop.com/ir-remo
 #### SimpleReceiver + SimpleSender
 The **[SimpleReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino)**  and **[SimpleSender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleSender/SimpleSender.ino)** examples are a good starting point.
 A simple example can be tested online with [WOKWI](https://wokwi.com/projects/338611596994544210).
+
+#### SimpleReceiverForHashCodes
+The **[SimpleReceiverForHashCodes](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino)** uses only the hash decoder. 
+It converts all IR frames longer than 6 to a 32 bit hash code, thus enabling receiving of unknown protocols.<br/>
+See: http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html
 
 #### TinyReceiver + TinySender
 If **code size** or **timer usage** matters, look at these examples.<br/>
@@ -783,7 +801,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 
 | Name | Default value | Description |
 |-|-:|-|
-| `RAW_BUFFER_LENGTH` | 100 | Buffer size of raw input uint16_t buffer. Must be even! If it is too small, overflow flag will be set. 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. A value of 100 requires 200 bytes, a value of 750 requires 1.5k bytes RAM. |
+| `RAW_BUFFER_LENGTH` | 200 | Buffer size of raw input uint16_t buffer. Must be even! If it is too small, overflow flag will be set. 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. A value of 200 requires 200 bytes RAM. |
 | `EXCLUDE_UNIVERSAL_PROTOCOLS` | disabled | Excludes the universal decoder for pulse distance width protocols and decodeHash (special decoder for all protocols) from `decode()`. Saves up to 1000 bytes program memory. |
 | `DECODE_<Protocol name>` | all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |
 | `DECODE_STRICT_CHECKS` |  disabled | Check for additional required characteristics of protocol timing like length of mark for a constant mark protocol, where space length determines the bit value. Requires up to 194 additional bytes of program memory. |

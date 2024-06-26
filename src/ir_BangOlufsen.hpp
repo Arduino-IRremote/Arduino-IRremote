@@ -97,7 +97,7 @@
 #if defined(DECODE_BEO)
 #  if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
 #    if RECORD_GAP_MICROS > 15000
-#warning If defined ENABLE_BEO_WITHOUT_FRAME_GAP, RECORD_GAP_MICROS must be set to <= 15000 by "#define RECORD_GAP_MICROS 13000"
+#warning If defined ENABLE_BEO_WITHOUT_FRAME_GAP, RECORD_GAP_MICROS must be set to <= 15000 by "#define RECORD_GAP_MICROS 12750"
 #    endif
 #  else
 #    if RECORD_GAP_MICROS < 16000
@@ -310,7 +310,7 @@ bool IRrecv::decodeBangOlufsen() {
     uint8_t tBitNumber = 0;
 
     BEO_TRACE_PRINT(F("Pre gap: "));
-    BEO_TRACE_PRINT(decodedIRData.initialGap * 50);
+    BEO_TRACE_PRINT(decodedIRData.initialGapTicks * 50);
     BEO_TRACE_PRINT(F(" raw len: "));
     BEO_TRACE_PRINTLN(decodedIRData.rawlen);
 
@@ -332,7 +332,7 @@ bool IRrecv::decodeBangOlufsen() {
         /*
          * Check if leading gap is trailing bit of first frame
          */
-        if (!matchSpace(decodedIRData.initialGap, BEO_PULSE_LENGTH_START_BIT)) {
+        if (!matchSpace(decodedIRData.initialGapTicks, BEO_PULSE_LENGTH_START_BIT)) {
             BEO_TRACE_PRINT(::getProtocolString(BANG_OLUFSEN));
             BEO_TRACE_PRINTLN(F(": Leading gap is wrong")); // Leading gap is trailing bit of first frame
             return false; // no B&O protocol

@@ -232,7 +232,7 @@ static void dumpDuration(Print *aSerial, uint32_t duration, uint16_t timebase) {
 /*
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding!
  */
-static void compensateAndDumpSequence(Print *aSerial, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+static void compensateAndDumpSequence(Print *aSerial, const volatile IRRawbufType *data, size_t length, uint16_t timebase) {
     for (size_t i = 0; i < length; i++) {
         uint32_t tDuration = data[i] * MICROS_PER_TICK;
         if (i & 1) {
@@ -297,7 +297,7 @@ static size_t dumpDuration(String *aString, uint32_t duration, uint16_t timebase
     return dumpNumber(aString, (duration + timebase / 2) / timebase);
 }
 
-static size_t compensateAndDumpSequence(String *aString, const volatile uint16_t *data, size_t length, uint16_t timebase) {
+static size_t compensateAndDumpSequence(String *aString, const volatile IRRawbufType *data, size_t length, uint16_t timebase) {
 
     size_t size = 0;
 

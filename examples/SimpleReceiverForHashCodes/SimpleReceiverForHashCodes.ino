@@ -37,7 +37,7 @@
  * This must be done before the #include <IRremote.hpp>
  */
 #define DECODE_HASH             // special decoder for all protocols
-#define RAW_BUFFER_LENGTH  600  // Requires 1200 bytes RAM. Especially useful for unknown and probably long protocols
+#define RAW_BUFFER_LENGTH  1000 // Especially useful for unknown and probably long protocols
 //#define DEBUG                 // Activate this for lots of lovely debug output from the decoders.
 
 /*

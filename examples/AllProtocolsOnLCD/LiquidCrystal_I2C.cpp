@@ -1,3 +1,4 @@
+// LiquidCrystal_I2C.hpp
 // Based on the work by DFRobot
 /*
  * Extensions made by AJ 2023
@@ -7,6 +8,8 @@
  * Added createChar() with PROGMEM input
  * Added fast timing
  */
+#ifndef _LIQUID_CRYSTAL_I2C_HPP
+#define _LIQUID_CRYSTAL_I2C_HPP
 
 #include "Arduino.h"
 
@@ -369,3 +372,4 @@ void LiquidCrystal_I2C::setContrast(uint8_t new_val) {
 }
 #pragma GCC diagnostic pop
 
+#endif // _LIQUID_CRYSTAL_I2C_HPP

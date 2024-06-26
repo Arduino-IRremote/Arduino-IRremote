@@ -218,7 +218,7 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap
 #if !defined(DISABLE_CODE_FOR_RECEIVER)
             if (aPrintRepeatGap) {
                 aSerial->print(F(" gap="));
-                aSerial->print((uint32_t) aIRDataPtr->initialGap * MICROS_PER_TICK);
+                aSerial->print((uint32_t) aIRDataPtr->initialGapTicks * MICROS_PER_TICK);
                 aSerial->print(F("us"));
             }
 #else

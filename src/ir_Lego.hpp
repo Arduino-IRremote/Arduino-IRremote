@@ -187,7 +187,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
     /*
      * Check for autorepeat (should happen 4 times for one press)
      */
-    if (decodedIRData.initialGap < (LEGO_AUTO_REPEAT_PERIOD_MAX / MICROS_PER_TICK)) {
+    if (decodedIRData.initialGapTicks < (LEGO_AUTO_REPEAT_PERIOD_MAX / MICROS_PER_TICK)) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_AUTO_REPEAT;
     }
     decodedIRData.address = tToggleEscapeChannel;

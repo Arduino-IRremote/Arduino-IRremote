@@ -1,7 +1,8 @@
 /*
  * ir_FAST.hpp
  *
- *  Contains functions for receiving and sending FAST IR protocol with 8 bit command
+ *  Contains functions for receiving and sending FAST IR protocol
+ *  with no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *

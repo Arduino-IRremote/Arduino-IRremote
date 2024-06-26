@@ -83,17 +83,17 @@ jobs:
           - arduino-boards-fqbn: arduino:avr:uno
             build-properties: # the flags were put in compiler.cpp.extra_flags
               ReceiveDemo: -DIR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=1200 -DIR_SEND_PIN=3
 
           - arduino-boards-fqbn: arduino:avr:uno|DEBUG
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750 -DIR_SEND_PIN=3
               TinyReceiver: -DUSE_CALLBACK_FOR_TINY_RECEIVER
               All: -DEBUG
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_NO_SEND_PWM
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750 -DIR_SEND_PIN=3
               TinyReceiver: -DUSE_FAST_PROTOCOL
               TinySender: -DUSE_FAST_PROTOCOL
               All: -DUSE_NO_SEND_PWM
@@ -101,7 +101,7 @@ jobs:
           - arduino-boards-fqbn: arduino:avr:uno|SEND_PWM_BY_TIMER
             sketches-exclude: UnitTest
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3 -DSEND_PWM_BY_TIMER
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750 -DIR_SEND_PIN=3 -DSEND_PWM_BY_TIMER
               ReceiveDemo: -DDECODE_ONKYO
               TinyReceiver: -DUSE_ONKYO_PROTOCOL
               TinySender: -DUSE_ONKYO_PROTOCOL
@@ -109,7 +109,7 @@ jobs:
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DIR_SEND_PIN=3 -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750 -DIR_SEND_PIN=3 -DUSE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
               SimpleSender: -DSEND_PWM_BY_TIMER
               TinyReceiver: -DENABLE_NEC2_REPEATS
               TinySender: -DENABLE_NEC2_REPEATS
@@ -117,14 +117,14 @@ jobs:
 
           - arduino-boards-fqbn: arduino:avr:mega:cpu=atmega2560
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
               SimpleSender: -DSEND_PWM_BY_TIMER
               TinyReceiver: -DDISABLE_PARITY_CHECKS
               TinySender: -DDISABLE_PARITY_CHECKS
 
           - arduino-boards-fqbn: arduino:avr:leonardo
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
               TinyReceiver: -DNO_LED_FEEDBACK_CODE
               TinySender: -DNO_LED_FEEDBACK_CODE
 #            sketches-exclude: ReceiveAndSend # Not enough RAM for default RAW_BUFFER_LENGTH
@@ -132,7 +132,7 @@ jobs:
           - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
             sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
               SimpleSender: -DSEND_PWM_BY_TIMER
               TinyReceiver: -DUSE_ONKYO_PROTOCOL -DENABLE_NEC2_REPEATS -DNO_LED_FEEDBACK_CODE -DUSE_CALLBACK_FOR_TINY_RECEIVER
               TinySender: -DUSE_ONKYO_PROTOCOL -DENABLE_NEC2_REPEATS -DNO_LED_FEEDBACK_CODE
@@ -140,22 +140,22 @@ jobs:
           - arduino-boards-fqbn: arduino:samd:arduino_zero_native
             sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: arduino:renesas_uno:unor4wifi
             sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: adafruit:samd:adafruit_metro_m4:cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off
             platform-url: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
             sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: arduino:mbed:nano33ble
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
               SimpleSender: -DSEND_PWM_BY_TIMER
 
 #
@@ -163,15 +163,15 @@ jobs:
 #
           - arduino-boards-fqbn: arduino:mbed_rp2040:pico
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
               SimpleSender: -DSEND_PWM_BY_TIMER
 
           - arduino-boards-fqbn: rp2040:rp2040:arduino_nano_connect
             platform-url: https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100 -DSEND_PWM_BY_TIMER
+              IRremoteExtensionTest: -DSEND_PWM_BY_TIMER
               SimpleSender: -DSEND_PWM_BY_TIMER
-              All: -DRAW_BUFFER_LENGTH=700
+              All: -DRAW_BUFFER_LENGTH=750
 
 #
 # megaTinyCore
@@ -182,7 +182,7 @@ jobs:
 #            platform-url: http://drazzy.com/package_drazzy.com_index.json
 #            sketches-exclude: AllProtocolsOnLCD
 #            build-properties: # the flags were put in compiler.cpp.extra_flags
-#              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+#              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=360
 
 #         https://github.com/SpenceKonde/megaTinyCore/issues/935
 #          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
@@ -190,7 +190,7 @@ jobs:
 #            platform-url: http://drazzy.com/package_drazzy.com_index.json
 #            sketches-exclude: AllProtocolsOnLCD
 #            build-properties: # the flags were put in compiler.cpp.extra_flags
-#              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=100
+#              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=360
 
 #
 # ATTinyCore
@@ -223,9 +223,8 @@ jobs:
             platform-url: https://mcudude.github.io/MegaCore/package_MCUdude_MegaCore_index.json
             arduino-platform: arduino:avr,MegaCore:avr # gcc is taken from arduino:avr
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=300
               SimpleSender: -DSEND_PWM_BY_TIMER
-              All: -DRAW_BUFFER_LENGTH=700
+              All: -DRAW_BUFFER_LENGTH=750
 
 #
 # ESP
@@ -234,24 +233,23 @@ jobs:
             platform-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
             sketches-exclude: TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=200
-              All: -DRAW_BUFFER_LENGTH=300
+              All: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: esp32:esp32:featheresp32:FlashFreq=80
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             arduino-platform: esp32:esp32@2.0.17 # latest 2.x version as of 5/2024
             sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=500 -Wno-error=maybe-uninitialized
-              All: -DRAW_BUFFER_LENGTH=300 -Wno-error=maybe-uninitialized # https://github.com/espressif/arduino-esp32/issues/7024
+              IRremoteExtensionTest: -Wno-error=maybe-uninitialized
+              All: -DRAW_BUFFER_LENGTH=750 -Wno-error=maybe-uninitialized # https://github.com/espressif/arduino-esp32/issues/7024
 
           - arduino-boards-fqbn: esp32:esp32:esp32c3
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             arduino-platform: esp32:esp32@2.0.17 # latest 2.x version as of 5/2024
             sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=500 -Wno-error=maybe-uninitialized
-              All: -DRAW_BUFFER_LENGTH=300 -Wno-error=maybe-uninitialized # https://github.com/espressif/arduino-esp32/issues/7024
+              IRremoteExtensionTest: -Wno-error=maybe-uninitialized
+              All: -DRAW_BUFFER_LENGTH=750 -Wno-error=maybe-uninitialized # https://github.com/espressif/arduino-esp32/issues/7024
 
 #
 # STM
@@ -260,22 +258,19 @@ jobs:
             platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
             sketches-exclude: TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
-              All: -DRAW_BUFFER_LENGTH=300
+              All: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: STMicroelectronics:stm32:GenL0:pnum=THUNDERPACK_L072 # ST version
             platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
             sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
-              All: -DRAW_BUFFER_LENGTH=300
+              All: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C # Roger Clark version
             platform-url: http://dan.drown.org/stm32duino/package_STM32duino_index.json
             sketches-exclude: TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
-              All: -DRAW_BUFFER_LENGTH=300
+              All: -DRAW_BUFFER_LENGTH=750
 
 #
 # Others
@@ -284,22 +279,19 @@ jobs:
             arduino-platform: arduino:avr,SparkFun:avr
             platform-url: https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json # Arduino URL is not required here
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
-              All: -DRAW_BUFFER_LENGTH=300
+              All: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
             sketches-exclude: IRDispatcherDemo,MicroGirs,TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
-              All: -DRAW_BUFFER_LENGTH=300
+              All: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
             platform-url: https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
             sketches-exclude: AllProtocolsOnLCD,UnitTest,ReceiveAndSendDistanceWidth  # No print(uint64_t,.) available
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=700
-              All: -DRAW_BUFFER_LENGTH=300
+              All: -DRAW_BUFFER_LENGTH=750
 
 #      fail-fast: false # false -> do not cancel all jobs / architectures if one job fails
 

@@ -164,7 +164,8 @@ void IRReceiveTimerInterruptHandler() {
                  * Initialize all state machine variables
                  */
                 irparams.OverflowFlag = false;
-                irparams.rawbuf[0] = irparams.TickCounterForISR;
+//                irparams.rawbuf[0] = irparams.TickCounterForISR;
+                irparams.initialGapTicks = irparams.TickCounterForISR; // Enabling 8 bit buffer since 4.4
                 irparams.rawlen = 1;
                 irparams.StateForISR = IR_REC_STATE_MARK;
             } // otherwise stay in idle state
@@ -218,6 +219,14 @@ void IRReceiveTimerInterruptHandler() {
              * Switch to IR_REC_STATE_STOP
              * Don't reset TickCounterForISR; keep counting width of next leading space
              */
+            /*
+             * These 2 variables allow to call resume() directly after decode.
+             * After resume(), decodedIRData.rawDataPtr->initialGapTicks and decodedIRData.rawDataPtr->rawlen are
+             * the first variables, which are overwritten by the next received frame.
+             * since 4.3.0.
+             */
+            IrReceiver.decodedIRData.initialGapTicks = irparams.initialGapTicks;
+            IrReceiver.decodedIRData.rawlen = irparams.rawlen;
             irparams.StateForISR = IR_REC_STATE_STOP;
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
             /*
@@ -480,16 +489,6 @@ void IRrecv::initDecodedIRData() {
         lastDecodedAddress = decodedIRData.address;
 
     }
-
-    /*
-     * These 2 variables allow to call resume() directly after decode.
-     * After resume(), decodedIRData.rawDataPtr->rawbuf[0] and decodedIRData.rawDataPtr->rawlen are
-     * the first variables, which are overwritten by the next received frame.
-     * since 4.3.0.
-     */
-    decodedIRData.initialGap = decodedIRData.rawDataPtr->rawbuf[0];
-    decodedIRData.rawlen = decodedIRData.rawDataPtr->rawlen;
-
     decodedIRData.protocol = UNKNOWN;
     decodedIRData.command = 0;
     decodedIRData.address = 0;
@@ -1075,6 +1074,10 @@ bool IRrecv::decodeHash() {
 
 // Require at least 6 samples to prevent triggering on noise
     if (decodedIRData.rawlen < 6) {
+        IR_DEBUG_PRINT(F("HASH: "));
+        IR_DEBUG_PRINT(F("Data length="));
+        IR_DEBUG_PRINT(decodedIRData.rawlen);
+        IR_DEBUG_PRINTLN(F(" is less than 6"));
         return false;
     }
     for (IRRawlenType i = 1; (i + 2) < decodedIRData.rawlen; i++) {
@@ -1145,7 +1148,7 @@ bool IRrecv::checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants
  * And we have still no RC6 toggle bit check for detecting a second press on the same button.
  */
 void IRrecv::checkForRepeatSpaceTicksAndSetFlag(uint16_t aMaximumRepeatSpaceTicks) {
-    if (decodedIRData.rawDataPtr->rawbuf[0] < aMaximumRepeatSpaceTicks
+    if (decodedIRData.initialGapTicks < aMaximumRepeatSpaceTicks
 #if defined(ENABLE_FULL_REPEAT_CHECK)
             && decodedIRData.address == lastDecodedAddress && decodedIRData.command == lastDecodedCommand /* requires around 85 bytes program space */
 #endif
@@ -1269,10 +1272,10 @@ bool IRrecv::checkForRecordGapsMicros(Print *aSerial) {
      * is smaller than known value for protocols (Sony with around 24 ms)
      */
     if (decodedIRData.protocol <= PULSE_DISTANCE
-            && decodedIRData.initialGap < (RECORD_GAP_MICROS_WARNING_THRESHOLD / MICROS_PER_TICK)) {
+            && decodedIRData.initialGapTicks < (RECORD_GAP_MICROS_WARNING_THRESHOLD / MICROS_PER_TICK)) {
         aSerial->println();
         aSerial->print(F("Space of "));
-        aSerial->print(decodedIRData.initialGap * MICROS_PER_TICK);
+        aSerial->print(decodedIRData.initialGapTicks * MICROS_PER_TICK);
         aSerial->print(F(" us between two detected transmission is smaller than the minimal gap of "));
         aSerial->print(RECORD_GAP_MICROS_WARNING_THRESHOLD);
         aSerial->println(F(" us known for implemented protocols like NEC, Sony, RC% etc.."));
@@ -1630,9 +1633,9 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
      */
     aSerial->print(F(" -"));
     if (aOutputMicrosecondsInsteadOfTicks) {
-        aSerial->println((uint32_t) decodedIRData.initialGap * MICROS_PER_TICK, DEC);
+        aSerial->println((uint32_t) decodedIRData.initialGapTicks * MICROS_PER_TICK, DEC);
     } else {
-        aSerial->println(decodedIRData.initialGap, DEC);
+        aSerial->println(decodedIRData.initialGapTicks, DEC);
     }
 
 // Newline is printed every 8. value, if tCounterForNewline % 8 == 0
@@ -1849,7 +1852,10 @@ bool IRrecv::decode_old(decode_results *aResults) {
     }
 
 // copy for usage by legacy programs
-    aResults->rawbuf = irparams.rawbuf;
+    aResults->rawbuf[0] = irparams.initialGapTicks;
+    for (int i = 1; i < RAW_BUFFER_LENGTH; ++i) {
+        aResults->rawbuf[i] = irparams.rawbuf[i]; // copy 8 bit array into a 16 bit array
+    }
     aResults->rawlen = irparams.rawlen;
     if (irparams.OverflowFlag) {
         // Copy overflow flag to decodedIRData.flags

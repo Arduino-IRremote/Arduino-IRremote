@@ -189,7 +189,7 @@ bool IRrecv::decodeDenon() {
     decodedIRData.command &= 0xFF;
 
     // Check for (auto) repeat
-    if (decodedIRData.initialGap < ((DENON_AUTO_REPEAT_DISTANCE + (DENON_AUTO_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)) {
+    if (decodedIRData.initialGapTicks < ((DENON_AUTO_REPEAT_DISTANCE + (DENON_AUTO_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)) {
         repeatCount++;
         if (repeatCount > 1) { // skip first auto repeat
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;

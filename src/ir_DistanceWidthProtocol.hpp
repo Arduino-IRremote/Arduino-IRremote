@@ -333,7 +333,7 @@ bool IRrecv::decodeDistanceWidth() {
     Serial.print(F(", "));
     Serial.println(tSpaceTicksShort * MICROS_PER_TICK);
 #endif
-#if RAW_BUFFER_LENGTH <= 508
+#if RAW_BUFFER_LENGTH <= (512 -4)
     uint_fast8_t tNumberOfBits;
 #else
     uint16_t tNumberOfBits;

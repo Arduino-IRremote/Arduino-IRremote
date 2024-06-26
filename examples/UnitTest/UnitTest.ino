@@ -38,9 +38,9 @@
 #if !defined(RAW_BUFFER_LENGTH)
 // For air condition remotes it requires 600 (maximum for 2k RAM) to 750. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
 #  if (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
-#define RAW_BUFFER_LENGTH  180 // Requires 360 bytes RAM
+#define RAW_BUFFER_LENGTH  360
 #  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
-#define RAW_BUFFER_LENGTH  200 // 600 is too much here, because then variables are overwritten. 500 is OK without Pronto and 200 is OK with Pronto
+#define RAW_BUFFER_LENGTH  400 // 400 is OK with Pronto and 1000 is OK without Pronto. 1200 is too much here, because then variables are overwritten.
 #  endif
 #endif
 
@@ -859,8 +859,8 @@ void loop() {
     /*
      * Force buffer overflow
      */
-    Serial.println(F("Force buffer overflow by sending 280 marks and spaces"));
-    for (unsigned int i = 0; i < 140; ++i) {
+    Serial.println(F("Force buffer overflow by sending 450 marks and spaces"));
+    for (unsigned int i = 0; i < 225; ++i) {
         // 400 + 400 should be received as 8/8 and sometimes as 9/7 or 7/9 if compensation by MARK_EXCESS_MICROS is optimal.
         // 210 + 540 = 750 should be received as 5/10 or 4/11 if compensation by MARK_EXCESS_MICROS is optimal.
         IrSender.mark(210);         // 8 pulses at 38 kHz

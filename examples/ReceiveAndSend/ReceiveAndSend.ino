@@ -72,13 +72,9 @@
 //
 
 #if !defined(RAW_BUFFER_LENGTH)
-// For air condition remotes it requires 600 (maximum for 2k RAM) to 750. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
-#  if (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
-#define RAW_BUFFER_LENGTH  120 // 180 is too much here, because we have additional uint8_t rawCode[RAW_BUFFER_LENGTH];
-#  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
-#define RAW_BUFFER_LENGTH  400 // 600 is too much here, because we have additional uint8_t rawCode[RAW_BUFFER_LENGTH];
-#  elif (defined(RAMEND) && RAMEND <= 0xAFF) || (defined(RAMSIZE) && RAMSIZE < 0xAFF)
-#define RAW_BUFFER_LENGTH  500 // 750 is too much here, because we have additional uint8_t rawCode[RAW_BUFFER_LENGTH];
+// For air condition remotes it requires 750. Default is 200.
+#  if !((defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF))
+#define RAW_BUFFER_LENGTH  750
 #  endif
 #endif
 
