@@ -1507,15 +1507,23 @@ uint8_t sLastSendPin = 0; // To detach before attach, if already attached
 void enableSendPWMByTimer() {
 #    if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)
     ledcWrite(SEND_LEDC_CHANNEL, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); //  * 256 since we have 8 bit resolution
-//#    else
-//    ledcWrite(IrSender.sendPin, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // New API
+#    else
+#      if defined(IR_SEND_PIN)
+    ledcWrite(IR_SEND_PIN, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // New API
+#      else
+    ledcWrite(IrSender.sendPin, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // New API
+#      endif
 #    endif
 }
 void disableSendPWMByTimer() {
 #    if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)
     ledcWrite(SEND_LEDC_CHANNEL, 0);
-//#    else
-//    ledcWrite(IrSender.sendPin, 0); // New API
+#    else
+#      if defined(IR_SEND_PIN)
+    ledcWrite(IR_SEND_PIN, 0); // New API
+#      else
+    ledcWrite(IrSender.sendPin, 0); // New API
+#      endif
 #    endif
 }
 
