@@ -26,13 +26,11 @@ var IRProtocol_8h =
     [ "RAW_DATA_ARRAY_SIZE", "IRProtocol_8h.html#a1ad0810b4eae20c260180a1c4d9f359e", null ],
     [ "RC5_RC6_KHZ", "IRProtocol_8h.html#a1e8fcd1e00b7fa15e99fae5ea30f35ae", null ],
     [ "SAMSUNG_KHZ", "IRProtocol_8h.html#ac386480bc33f2fa50193da38a023b8ce", null ],
-    [ "SEND_NO_STOP_BIT", "IRProtocol_8h.html#a8683da8ac98548ba8f446f3ccfc83c11", null ],
-    [ "SEND_STOP_BIT", "IRProtocol_8h.html#a48e176b38988494bc725ac4fa98c534a", null ],
     [ "SIRCS_12_PROTOCOL", "IRProtocol_8h.html#a8a2dbf77031a92783a200b9902c8459b", null ],
     [ "SIRCS_15_PROTOCOL", "IRProtocol_8h.html#a75fe4989c11b3e3176262acfa9bce2ce", null ],
     [ "SIRCS_20_PROTOCOL", "IRProtocol_8h.html#a4014bf0435ac7da04aa0bb1b0949eb8e", null ],
     [ "SONY_KHZ", "IRProtocol_8h.html#a5dcaa6ec48a7a0b663e5de0ce853a541", null ],
-    [ "SUPPRESS_STOP_BIT_FOR_THIS_DATA", "IRProtocol_8h.html#adbc2fb58befbed8b45912fa31eb2dbcf", null ],
+    [ "SUPPRESS_STOP_BIT", "IRProtocol_8h.html#acb7cd491522896832a94dad6b13cc03e", null ],
     [ "decode_type_t", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fad", [
       [ "UNKNOWN", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada6ce26a62afab55d7606ad4e92428b30c", null ],
       [ "PULSE_WIDTH", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada783253fd89cb09e1dbdb2bcdbc0400e3", null ],
@@ -68,5 +66,6 @@ var IRProtocol_8h =
     [ "bitreverse32Bit", "group__Receiving.html#gad7c345c1b554ca8f3069b5fb767f07d6", null ],
     [ "bitreverseOneByte", "group__Receiving.html#ga95e4a5acb86af8c967f8cae7e75062cb", null ],
     [ "getProtocolString", "group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7", null ],
-    [ "printIRResultShort", "group__Receiving.html#gac45e8ead5e96868e61c65cd354758d4d", null ]
+    [ "printIRResultShort", "group__Receiving.html#gac45e8ead5e96868e61c65cd354758d4d", null ],
+    [ "ProtocolNames", "group__Receiving.html#ga3bdd668aa583bfcd42fc7ecffbe55653", null ]
 ];

@@ -113,7 +113,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga770e03720a79491d7ddf347ad4b9e484"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga770e03720a79491d7ddf347ad4b9e484">IRReceiveTimerInterruptHandler</a> ()</td></tr>
 <tr class="separator:ga770e03720a79491d7ddf347ad4b9e484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga495b7f49ff71cde1289b118fac0f0674"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">matchTicks</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros)</td></tr>
-<tr class="memdesc:ga495b7f49ff71cde1289b118fac0f0674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function without compensating for marks exceeded or spaces shortened by demodulator hardware Currently not used.  <a href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">More...</a><br /></td></tr>
+<tr class="memdesc:ga495b7f49ff71cde1289b118fac0f0674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function without compensating for marks exceeded or spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">More...</a><br /></td></tr>
 <tr class="separator:ga495b7f49ff71cde1289b118fac0f0674"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0f9263ab71af2d2895add92f72a05ee9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga0f9263ab71af2d2895add92f72a05ee9">MATCH</a> (uint16_t measured_ticks, uint16_t desired_us)</td></tr>
 <tr class="separator:ga0f9263ab71af2d2895add92f72a05ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,12 +202,16 @@ Functions</h2></td></tr>
 <tr class="memitem:ga913af602be49b9182fb0b22e9e351b36"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36">IRrecv::decode</a> ()</td></tr>
 <tr class="memdesc:ga913af602be49b9182fb0b22e9e351b36"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main decode function, attempts to decode the recently receive IR signal.  <a href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36">More...</a><br /></td></tr>
 <tr class="separator:ga913af602be49b9182fb0b22e9e351b36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6cd51a8b666c1647a995b5c738f9402c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga6cd51a8b666c1647a995b5c738f9402c">IRrecv::decodePulseDistanceWidthData</a> (uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset, uint16_t aOneMarkMicros, uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst)</td></tr>
-<tr class="memdesc:ga6cd51a8b666c1647a995b5c738f9402c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode pulse distance width protocols.  <a href="group__Receiving.html#ga6cd51a8b666c1647a995b5c738f9402c">More...</a><br /></td></tr>
-<tr class="separator:ga6cd51a8b666c1647a995b5c738f9402c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga85f5b5f6113b8a62bcb2b4378170f63c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga85f5b5f6113b8a62bcb2b4378170f63c">IRrecv::decodePulseDistanceWidthData</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants, uint_fast8_t aNumberOfBits, uint_fast8_t aStartOffset=3)</td></tr>
-<tr class="memdesc:ga85f5b5f6113b8a62bcb2b4378170f63c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode pulse distance protocols for <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.  <a href="group__Receiving.html#ga85f5b5f6113b8a62bcb2b4378170f63c">More...</a><br /></td></tr>
-<tr class="separator:ga85f5b5f6113b8a62bcb2b4378170f63c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga87abd13c6eb9f2e2c705bbe1deddecb4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga87abd13c6eb9f2e2c705bbe1deddecb4">IRrecv::decodePulseDistanceWidthData</a> (uint_fast8_t aNumberOfBits, <a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a> aStartOffset, uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, bool aMSBfirst)</td></tr>
+<tr class="memdesc:ga87abd13c6eb9f2e2c705bbe1deddecb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode pulse distance width protocols.  <a href="group__Receiving.html#ga87abd13c6eb9f2e2c705bbe1deddecb4">More...</a><br /></td></tr>
+<tr class="separator:ga87abd13c6eb9f2e2c705bbe1deddecb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf0031bc0a8ed1127d3c1ee1adf314082"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gaf0031bc0a8ed1127d3c1ee1adf314082">IRrecv::decodePulseDistanceWidthData</a> (uint_fast8_t aNumberOfBits, <a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a> aStartOffset, uint16_t aOneMarkMicros, uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst) __attribute__((deprecated(&quot;Please use decodePulseDistanceWidthData() with 6 parameters.&quot;)))</td></tr>
+<tr class="separator:gaf0031bc0a8ed1127d3c1ee1adf314082"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9ef9c4faf1f28323095b3b90f18e1f74"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga9ef9c4faf1f28323095b3b90f18e1f74">IRrecv::decodePulseDistanceWidthDataStrict</a> (uint_fast8_t aNumberOfBits, <a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a> aStartOffset, uint16_t aOneMarkMicros, uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst)</td></tr>
+<tr class="separator:ga9ef9c4faf1f28323095b3b90f18e1f74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga97d300dc2b49cdc7aa1e0570bf888e7c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga97d300dc2b49cdc7aa1e0570bf888e7c">IRrecv::decodePulseDistanceWidthData</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> *aProtocolConstants, uint_fast8_t aNumberOfBits, <a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a> aStartOffset=3)</td></tr>
+<tr class="memdesc:ga97d300dc2b49cdc7aa1e0570bf888e7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decode pulse distance protocols for <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.  <a href="group__Receiving.html#ga97d300dc2b49cdc7aa1e0570bf888e7c">More...</a><br /></td></tr>
+<tr class="separator:ga97d300dc2b49cdc7aa1e0570bf888e7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacd517e921cf41136c8744799797c75e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gacd517e921cf41136c8744799797c75e2">IRrecv::initBiphaselevel</a> (uint_fast8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit)</td></tr>
 <tr class="separator:gacd517e921cf41136c8744799797c75e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac44c88dd418acc5d8068dbacda37e8e9"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9">IRrecv::getBiphaselevel</a> ()</td></tr>
@@ -234,6 +238,12 @@ Functions</h2></td></tr>
 <tr class="separator:ga58403efdf845d0eca9e647f12b6ff061"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3c4ee9436861333c2737f9272a4fadc7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga3c4ee9436861333c2737f9272a4fadc7">IRrecv::printDistanceWidthTimingInfo</a> (Print *aSerial, <a class="el" href="structDistanceWidthTimingInfoStruct.html">DistanceWidthTimingInfoStruct</a> *aDistanceWidthTimingInfo)</td></tr>
 <tr class="separator:ga3c4ee9436861333c2737f9272a4fadc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaad82404b499add472db4619a3b945b4d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gaad82404b499add472db4619a3b945b4d">IRrecv::getMaximumMarkTicksFromRawData</a> ()</td></tr>
+<tr class="separator:gaad82404b499add472db4619a3b945b4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga85e92727dd8e239bf8281b9f76fc5eca"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga85e92727dd8e239bf8281b9f76fc5eca">IRrecv::getMaximumSpaceTicksFromRawData</a> ()</td></tr>
+<tr class="separator:ga85e92727dd8e239bf8281b9f76fc5eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1a68dde740e70e436bf139798d168dc6"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga1a68dde740e70e436bf139798d168dc6">IRrecv::getMaximumTicksFromRawData</a> (bool aSearchSpaceInsteadOfMark)</td></tr>
+<tr class="separator:ga1a68dde740e70e436bf139798d168dc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae63243378b0c763d659a870b6e4f04eb"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gae63243378b0c763d659a870b6e4f04eb">IRrecv::getTotalDurationOfRawData</a> ()</td></tr>
 <tr class="separator:gae63243378b0c763d659a870b6e4f04eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabe924ffc10b8814a5f3303b3df907dd7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gabe924ffc10b8814a5f3303b3df907dd7">IRrecv::printIRSendUsage</a> (Print *aSerial)</td></tr>
@@ -276,6 +286,8 @@ Variables</h2></td></tr>
 <tr class="separator:gafa340a1dbbee30ea603df9f63bb55027"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae25d907bed7a0f0298f9cf105d89f86f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gae25d907bed7a0f0298f9cf105d89f86f">sBiphaseTimeUnit</a></td></tr>
 <tr class="separator:gae25d907bed7a0f0298f9cf105d89f86f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3bdd668aa583bfcd42fc7ecffbe55653"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga3bdd668aa583bfcd42fc7ecffbe55653">ProtocolNames</a> []</td></tr>
+<tr class="separator:ga3bdd668aa583bfcd42fc7ecffbe55653"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -293,7 +305,7 @@ Variables</h2></td></tr>
 
 <p>used for decodeHash() </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00930">930</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01039">1039</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -311,7 +323,7 @@ Variables</h2></td></tr>
 
 <p>used for decodeHash() </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00929">929</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01038">1038</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -339,7 +351,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00075">75</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00070">70</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -359,7 +371,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00083">83</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00078">78</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -398,7 +410,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00096">96</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00091">91</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -418,7 +430,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00410">410</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00416">416</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -438,7 +450,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00406">406</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00412">412</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -459,7 +471,7 @@ Variables</h2></td></tr>
 
 <p>Returns true if IR receiver data is available. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00501">501</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00502">502</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -505,7 +517,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00286">286</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00290">290</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -565,7 +577,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01158">1158</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01269">1269</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -585,7 +597,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01042">1042</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01150">1150</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -605,7 +617,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01018">1018</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01126">1126</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -638,7 +650,7 @@ Variables</h2></td></tr>
 <p>Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g. </p>
 <p>500 and 600 (NEC timing) to be equal </p><dl class="section return"><dt>Returns</dt><dd>0 if newval is shorter, 1 if newval is equal, and 2 if newval is longer </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00936">936</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01045">1045</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -678,7 +690,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01573">1573</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01717">1717</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -707,7 +719,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01634">1634</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01773">1773</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -729,7 +741,7 @@ Variables</h2></td></tr>
 <p>The main decode function, attempts to decode the recently receive IR signal. </p>
 <p>The set of decoders used is determined by active definitions of the DECODE_&lt;PROTOCOL&gt; macros. Results of decoding are stored in IrReceiver.decodedIRData.* like e.g. IrReceiver.decodedIRData.command. </p><dl class="section return"><dt>Returns</dt><dd>false if no IR receiver data available, true if data available. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00525">525</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00526">526</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -749,7 +761,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01713">1713</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01848">1848</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -774,7 +786,7 @@ Variables</h2></td></tr>
 <p>Use FNV hash algorithm: <a href="http://isthe.com/chongo/tech/comp/fnv/#FNV-param">http://isthe.com/chongo/tech/comp/fnv/#FNV-param</a> Converts the raw code values into a 32-bit hash code. Hopefully this code is unique for each button. This isn't a "real" decoding, just an arbitrary value.</p>
 <p>see: <a href="http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html">http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00963">963</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01072">1072</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -794,12 +806,12 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00989">989</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01097">1097</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga85f5b5f6113b8a62bcb2b4378170f63c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga85f5b5f6113b8a62bcb2b4378170f63c">&#9670;&nbsp;</a></span>decodePulseDistanceWidthData() <span class="overload">[1/2]</span></h2>
+<a id="ga97d300dc2b49cdc7aa1e0570bf888e7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga97d300dc2b49cdc7aa1e0570bf888e7c">&#9670;&nbsp;</a></span>decodePulseDistanceWidthData() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -819,7 +831,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a>&#160;</td>
           <td class="paramname"><em>aStartOffset</em> = <code>3</code>&#160;</td>
         </tr>
         <tr>
@@ -833,12 +845,12 @@ Variables</h2></td></tr>
 <p>Decode pulse distance protocols for <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if decoding was successful </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00845">845</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00954">954</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
-<a id="ga6cd51a8b666c1647a995b5c738f9402c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6cd51a8b666c1647a995b5c738f9402c">&#9670;&nbsp;</a></span>decodePulseDistanceWidthData() <span class="overload">[2/2]</span></h2>
+<a id="ga87abd13c6eb9f2e2c705bbe1deddecb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga87abd13c6eb9f2e2c705bbe1deddecb4">&#9670;&nbsp;</a></span>decodePulseDistanceWidthData() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -852,7 +864,79 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a>&#160;</td>
+          <td class="paramname"><em>aStartOffset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aOneMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aOneSpaceMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aZeroMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aMSBfirst</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Decode pulse distance width protocols. </p>
+<p>We only check the mark or space length of a 1, otherwise we always assume a 0!</p>
+<p>We can have the following protocol timings PULSE_DISTANCE: Pause/spaces have different length and determine the bit value, longer space is 1. Pulses/marks can be constant, like NEC. PULSE_WIDTH: Pulses/marks have different length and determine the bit value, longer mark is 1. Pause/spaces can be constant, like Sony. PULSE_DISTANCE_WIDTH: Pulses/marks and pause/spaces have different length, often the bit length is constant, like MagiQuest. Can be decoded by PULSE_DISTANCE decoder.</p>
+<p>Input is IrReceiver.decodedIRData.rawDataPtr-&gt;rawbuf[] Output is IrReceiver.decodedIRData.decodedRawData</p>
+<p>Assume PULSE_DISTANCE if aOneMarkMicros == aZeroMarkMicros</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">aNumberOfBits</td><td>Number of bits to decode from decodedIRData.rawDataPtr-&gt;rawbuf[] array. </td></tr>
+    <tr><td class="paramname">aStartOffset</td><td>Offset in decodedIRData.rawDataPtr-&gt;rawbuf[] to start decoding. Must point to a mark. </td></tr>
+    <tr><td class="paramname">aOneMarkMicros</td><td>Checked if PULSE_WIDTH </td></tr>
+    <tr><td class="paramname">aZeroMarkMicros</td><td>Required for deciding if we have PULSE_DISTANCE. </td></tr>
+    <tr><td class="paramname">aOneSpaceMicros</td><td>Checked if PULSE_DISTANCE. </td></tr>
+    <tr><td class="paramname">aMSBfirst</td><td>If true send Most Significant Bit first, else send Least Significant Bit (lowest bit) first. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true If decoding was successful </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00702">702</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gaf0031bc0a8ed1127d3c1ee1adf314082"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf0031bc0a8ed1127d3c1ee1adf314082">&#9670;&nbsp;</a></span>decodePulseDistanceWidthData() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodePulseDistanceWidthData </td>
+          <td>(</td>
           <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfBits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a>&#160;</td>
           <td class="paramname"><em>aStartOffset</em>, </td>
         </tr>
         <tr>
@@ -893,25 +977,67 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Decode pulse distance width protocols. </p>
-<p>We can have the following protocol timings Pulse distance: Pulses/marks are constant, pause/spaces have different length, like NEC. Pulse width: Pulses/marks have different length, pause/spaces are constant, like Sony. Pulse distance width: Pulses/marks and pause/spaces have different length, often the bit length is constant, like MagiQuest. Pulse distance width can be decoded like pulse width decoder, if this decoder does not check the length of pause/spaces.</p>
-<p>Input is IrReceiver.decodedIRData.rawDataPtr-&gt;rawbuf[] Output is IrReceiver.decodedIRData.decodedRawData</p>
-<p>Assume pulse distance if aOneMarkMicros == aZeroMarkMicros</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">aNumberOfBits</td><td>Number of bits to decode from decodedIRData.rawDataPtr-&gt;rawbuf[] array. </td></tr>
-    <tr><td class="paramname">aStartOffset</td><td>Offset in decodedIRData.rawDataPtr-&gt;rawbuf[] to start decoding. Must point to a mark. </td></tr>
-    <tr><td class="paramname">aOneMarkMicros</td><td>Taken as constant BitMarkMicros for pulse distance. </td></tr>
-    <tr><td class="paramname">aZeroMarkMicros</td><td>Not required if DECODE_STRICT_CHECKS is not defined. </td></tr>
-    <tr><td class="paramname">aOneSpaceMicros</td><td>Taken as (constant) BitSpaceMicros for pulse width. </td></tr>
-    <tr><td class="paramname">aZeroSpaceMicros</td><td>Not required if DECODE_STRICT_CHECKS is not defined. </td></tr>
-    <tr><td class="paramname">aMSBfirst</td><td>If true send Most Significant Bit first, else send Least Significant Bit (lowest bit) first. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>true If decoding was successful </dd></dl>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00762">762</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00703">703</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+</div>
+</div>
+<a id="ga9ef9c4faf1f28323095b3b90f18e1f74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9ef9c4faf1f28323095b3b90f18e1f74">&#9670;&nbsp;</a></span>decodePulseDistanceWidthDataStrict()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool IRrecv::decodePulseDistanceWidthDataStrict </td>
+          <td>(</td>
+          <td class="paramtype">uint_fast8_t&#160;</td>
+          <td class="paramname"><em>aNumberOfBits</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a>&#160;</td>
+          <td class="paramname"><em>aStartOffset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aOneMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aZeroMarkMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aOneSpaceMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>aZeroSpaceMicros</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aMSBfirst</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00827">827</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -932,7 +1058,7 @@ Variables</h2></td></tr>
 
 <p>Alias for <a class="el" href="group__Receiving.html#gaadb62786cd826cd539683c03734e46fe" title="Disables the timer for IR reception.">stop()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00435">435</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00441">441</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -953,7 +1079,7 @@ Variables</h2></td></tr>
 
 <p>Alias for <a class="el" href="group__Receiving.html#ga2c06971f0e4e0c4131930c8903eb21dc" title="Start the receiving process.">start()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00380">380</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00386">386</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -974,7 +1100,7 @@ Variables</h2></td></tr>
 
 <p>Alias for <a class="el" href="group__Receiving.html#gaadb62786cd826cd539683c03734e46fe" title="Disables the timer for IR reception.">stop()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00441">441</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00447">447</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1000,7 +1126,7 @@ Variables</h2></td></tr>
           _     _   _   ___   _     ___     ___   _   - Mark
 </pre><p> Data _____| |___| |_| |_| |_| |___| |___| |_| | - Data starts with a mark-&gt;space bit 1 0 0 0 1 1 0 1 0 1 1 - Space A mark to space at a significant clock edge results in a 1 A space to mark at a significant clock edge results in a 0 (for RC6) Returns current level [MARK or SPACE] or -1 for error (measured time interval is not a multiple of sBiphaseTimeUnit). </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00883">883</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00992">992</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1021,7 +1147,65 @@ Variables</h2></td></tr>
 
 <p>Getter function for MARK_EXCESS_MICROS. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01149">1149</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01260">1260</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+
+</div>
+</div>
+<a id="gaad82404b499add472db4619a3b945b4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaad82404b499add472db4619a3b945b4d">&#9670;&nbsp;</a></span>getMaximumMarkTicksFromRawData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t IRrecv::getMaximumMarkTicksFromRawData </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01397">1397</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga85e92727dd8e239bf8281b9f76fc5eca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga85e92727dd8e239bf8281b9f76fc5eca">&#9670;&nbsp;</a></span>getMaximumSpaceTicksFromRawData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t IRrecv::getMaximumSpaceTicksFromRawData </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01407">1407</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga1a68dde740e70e436bf139798d168dc6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1a68dde740e70e436bf139798d168dc6">&#9670;&nbsp;</a></span>getMaximumTicksFromRawData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t IRrecv::getMaximumTicksFromRawData </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>aSearchSpaceInsteadOfMark</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01421">1421</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1040,7 +1224,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01700">1700</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01835">1835</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1079,7 +1263,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01282">1282</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01438">1438</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1109,7 +1293,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00861">861</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00970">970</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1131,7 +1315,7 @@ Variables</h2></td></tr>
 <p>Is internally called by decode before calling decoders. </p>
 <p>Must be used to setup data, if you call decoders manually. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00468">468</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00474">474</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1150,7 +1334,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00127">127</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00122">122</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1172,7 +1356,7 @@ Variables</h2></td></tr>
 <p>Returns status of reception. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if no reception is on-going. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00449">449</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00455">455</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1202,7 +1386,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01076">1076</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01185">1185</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1232,7 +1416,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01109">1109</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01219">1219</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1262,7 +1446,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01142">1142</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01253">1253</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1293,8 +1477,9 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Compensate for marks exceeded by demodulator hardware. </p>
+<dl class="section return"><dt>Returns</dt><dd>true, if values match </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01083">1083</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01193">1193</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1325,8 +1510,9 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Compensate for spaces shortened by demodulator hardware. </p>
+<dl class="section return"><dt>Returns</dt><dd>true, if values match </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01116">1116</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01227">1227</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1356,9 +1542,10 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Match function without compensating for marks exceeded or spaces shortened by demodulator hardware Currently not used. </p>
+<p>Match function without compensating for marks exceeded or spaces shortened by demodulator hardware. </p>
+<dl class="section return"><dt>Returns</dt><dd>true, if values match Currently not used </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01056">1056</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01165">1165</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1386,7 +1573,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01183">1183</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01294">1294</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1406,7 +1593,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01187">1187</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01298">1298</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1436,7 +1623,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01268">1268</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01379">1379</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1464,7 +1651,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01661">1661</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01796">1796</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1493,7 +1680,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01430">1430</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01580">1580</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1532,7 +1719,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01474">1474</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01624">1624</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1580,7 +1767,7 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true, if CheckForRecordGapsMicros() has printed a message, i.e. gap &lt; 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01259">1259</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01370">1370</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1648,7 +1835,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Function to print values and flags of IrReceiver.decodedIRData in one line. </p>
-<p>Ends with println(). !!!Attention: The result differs on a 8 bit or 32 bit platform!!!</p>
+<p>do not print for repeats except IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT. Ends with println(). !!!Attention: The result differs on a 8 bit or 32 bit platform!!!</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aSerial</td><td>The Print object on which to write, for Arduino you can use &amp;Serial. </td></tr>
@@ -1656,7 +1843,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01297">1297</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01455">1455</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1677,7 +1864,7 @@ Variables</h2></td></tr>
 
 <p>If IR receiver data is available, returns pointer to IrReceiver.decodedIRData, else NULL. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00508">508</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00509">509</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1699,7 +1886,7 @@ Variables</h2></td></tr>
 
 <p>Sets the function to call if a protocol message has arrived. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00341">341</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00346">346</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1721,7 +1908,7 @@ Variables</h2></td></tr>
 <p>Restarts receiver after send. </p>
 <p>Is a NOP if sending does not require a timer. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00416">416</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00422">422</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1740,7 +1927,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00368">368</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00374">374</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1760,7 +1947,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00393">393</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00399">399</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1780,7 +1967,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00401">401</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00407">407</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1802,7 +1989,7 @@ Variables</h2></td></tr>
 <p>Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame. </p>
 <p>Internal counting of gap timing is independent of StateForISR and therefore independent of call time of <a class="el" href="group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5" title="Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame.">resume()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00457">457</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00463">463</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1824,7 +2011,7 @@ Variables</h2></td></tr>
 
 <p>Sets / changes the receiver pin number. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00309">309</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00313">313</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1846,7 +2033,7 @@ Variables</h2></td></tr>
 <p>Start the receiving process. </p>
 <p>This configures the timer and the state machine for IR reception and enables the receive sample timer interrupt which consumes a small amount of CPU every 50 us. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00350">350</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00356">356</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1874,7 +2061,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00389">389</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00395">395</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1894,7 +2081,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00397">397</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00403">403</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1915,7 +2102,7 @@ Variables</h2></td></tr>
 
 <p>Disables the timer for IR reception. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00425">425</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00431">431</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1934,7 +2121,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00429">429</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00435">435</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1951,7 +2138,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00064">64</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00059">59</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1969,7 +2156,7 @@ Variables</h2></td></tr>
 
 <p>The receiver instance. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00064">64</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00059">59</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -1980,12 +2167,36 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const char* const ProtocolNames [] PROGMEM = &quot;UNKNOWN&quot;</td>
+          <td class="memname">const char* const <a class="el" href="group__Receiving.html#ga3bdd668aa583bfcd42fc7ecffbe55653">ProtocolNames</a> [] PROGMEM = &quot;UNKNOWN&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="IRProtocol_8hpp_source.html#l00046">46</a> of file <a class="el" href="IRProtocol_8hpp_source.html">IRProtocol.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga3bdd668aa583bfcd42fc7ecffbe55653"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3bdd668aa583bfcd42fc7ecffbe55653">&#9670;&nbsp;</a></span>ProtocolNames</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char *const ProtocolNames</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= { string_Unknown, string_PulseWidth, string_PulseDistance, string_Apple, string_Denon, string_JVC, string_LG, string_LG2,</div>
+<div class="line">        string_NEC, string_NEC2, string_Onkyo, string_Panasonic, string_Kaseikyo, string_Kaseikyo_Denon, string_Kaseikyo_Sharp,</div>
+<div class="line">        string_Kaseikyo_JVC, string_Kaseikyo_Mitsubishi, string_RC5, string_RC6, string_Samsung, string_SamsungLG, string_Samsung48,</div>
+<div class="line">        string_Sharp, string_Sony</div>
+<div class="line"> </div>
+<div class="line">        , string_BangOlufsen, string_BoseWave, string_Lego, string_MagiQuest, string_Whynter, string_FAST</div>
+<div class="line"> </div>
+<div class="line">        }</div>
+</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8hpp_source.html#l00081">81</a> of file <a class="el" href="IRProtocol_8hpp_source.html">IRProtocol.hpp</a>.</p>
 
 </div>
 </div>
@@ -2001,7 +2212,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00857">857</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00966">966</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -2017,7 +2228,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00856">856</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00965">965</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -2033,7 +2244,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00859">859</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00968">968</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -2049,7 +2260,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00858">858</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00967">967</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -2058,7 +2269,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Mar 11 2024 10:50:18 for IRremote by
+    <li class="footer">Generated on Thu Jul 11 2024 21:32:03 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

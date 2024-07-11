@@ -18,12 +18,12 @@ var unionLongUnion =
     [ "MidHighByte", "unionLongUnion.html#a5404235118006061ae33de167803c70a", null ],
     [ "MidLowByte", "unionLongUnion.html#aeed69e051ef3c5c3d03e0efa260226b1", null ],
     [ "MidLowByte", "unionLongUnion.html#abbb97b234b56a9fc85e675baef650eb2", null ],
+    [ "TwoWordUnions", "unionLongUnion.html#a94fdc59337221b6d4906dc1aa8016018", null ],
     [ "UByte", "unionLongUnion.html#a2a351107fefa4b5173dbc8198607515e", null ],
     [ "UBytes", "unionLongUnion.html#a683822101c9e06c7cec0dde475d23ad3", null ],
     [ "ULong", "unionLongUnion.html#aaf8815ca810b2d8386b5912f127586a7", null ],
     [ "UWord", "unionLongUnion.html#ab5c029c115e4e0d03294e27cbef24972", null ],
     [ "UWords", "unionLongUnion.html#a96deff8963ef4155f33a26390f8f0a4b", null ],
     [ "Word", "unionLongUnion.html#a44ff9a4d34c7293871f5a399a36987b4", null ],
-    [ "Words", "unionLongUnion.html#a67e933c7563c43956226e5db844984d5", null ],
-    [ "WordUnion", "unionLongUnion.html#a2f4652f7d96f5fd19eb780109df1e38a", null ]
+    [ "Words", "unionLongUnion.html#a67e933c7563c43956226e5db844984d5", null ]
 ];

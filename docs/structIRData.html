@@ -126,12 +126,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:aaaad48fc0d90e5c6daec601987848a51"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#aaaad48fc0d90e5c6daec601987848a51">flags</a></td></tr>
 <tr class="memdesc:aaaad48fc0d90e5c6daec601987848a51"><td class="mdescLeft">&#160;</td><td class="mdescRight">IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above.  <a href="structIRData.html#aaaad48fc0d90e5c6daec601987848a51">More...</a><br /></td></tr>
 <tr class="separator:aaaad48fc0d90e5c6daec601987848a51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41e4346a5dd857a4fc6fea68e0552951"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a41e4346a5dd857a4fc6fea68e0552951">rawlen</a></td></tr>
-<tr class="memdesc:a41e4346a5dd857a4fc6fea68e0552951"><td class="mdescLeft">&#160;</td><td class="mdescRight">counter of entries in rawbuf  <a href="structIRData.html#a41e4346a5dd857a4fc6fea68e0552951">More...</a><br /></td></tr>
-<tr class="separator:a41e4346a5dd857a4fc6fea68e0552951"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f13b970b6e25d00e2fb8d77adc9a1ac"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a1f13b970b6e25d00e2fb8d77adc9a1ac">initialGap</a></td></tr>
-<tr class="memdesc:a1f13b970b6e25d00e2fb8d77adc9a1ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">rawbuf[0] contains the initial gap of the last frame.  <a href="structIRData.html#a1f13b970b6e25d00e2fb8d77adc9a1ac">More...</a><br /></td></tr>
-<tr class="separator:a1f13b970b6e25d00e2fb8d77adc9a1ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a17562431120ffc7f8964e56e5db27e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a8a17562431120ffc7f8964e56e5db27e">rawlen</a></td></tr>
+<tr class="memdesc:a8a17562431120ffc7f8964e56e5db27e"><td class="mdescLeft">&#160;</td><td class="mdescRight">counter of entries in rawbuf of last received frame.  <a href="structIRData.html#a8a17562431120ffc7f8964e56e5db27e">More...</a><br /></td></tr>
+<tr class="separator:a8a17562431120ffc7f8964e56e5db27e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39cdcb814880cd9af21f79b53669e824"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a39cdcb814880cd9af21f79b53669e824">initialGapTicks</a></td></tr>
+<tr class="memdesc:a39cdcb814880cd9af21f79b53669e824"><td class="mdescLeft">&#160;</td><td class="mdescRight">contains the initial gap (pre 4.4: the value in rawbuf[0]) of the last received frame.  <a href="structIRData.html#a39cdcb814880cd9af21f79b53669e824">More...</a><br /></td></tr>
+<tr class="separator:a39cdcb814880cd9af21f79b53669e824"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d7c987d63874731ff2e1120b21a1a08"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structirparams__struct.html">irparams_struct</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structIRData.html#a8d7c987d63874731ff2e1120b21a1a08">rawDataPtr</a></td></tr>
 <tr class="memdesc:a8d7c987d63874731ff2e1120b21a1a08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.  <a href="structIRData.html#a8d7c987d63874731ff2e1120b21a1a08">More...</a><br /></td></tr>
 <tr class="separator:a8d7c987d63874731ff2e1120b21a1a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,7 +140,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Data structure for the user application, available as decodedIRData. </p>
 <p>Filled by decoders and read by print functions or user application. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00107">107</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00108">108</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a1255a5b7d704d34fda83dcabcb903d4c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1255a5b7d704d34fda83dcabcb903d4c">&#9670;&nbsp;</a></span>address</h2>
@@ -156,7 +156,7 @@ Public Attributes</h2></td></tr>
 
 <p>Decoded address, Distance protocol (tMarkTicksLong (if tMarkTicksLong == 0, then tMarkTicksShort) &lt;&lt; 8) | tSpaceTicksLong. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00109">109</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00110">110</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -174,7 +174,7 @@ Public Attributes</h2></td></tr>
 
 <p>Decoded command, Distance protocol (tMarkTicksShort &lt;&lt; 8) | tSpaceTicksShort. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00110">110</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00111">111</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -192,7 +192,7 @@ Public Attributes</h2></td></tr>
 
 <p>Up to 32/64 bit decoded raw data, to be used for send functions. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00112">112</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00113">113</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -210,7 +210,7 @@ Public Attributes</h2></td></tr>
 
 <p>Contains upper 16 bit of Magiquest WandID, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks &lt;&lt; 8) | HeaderSpaceTicks. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00111">111</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00112">112</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -228,25 +228,25 @@ Public Attributes</h2></td></tr>
 
 <p>IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00119">119</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00120">120</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
-<a id="a1f13b970b6e25d00e2fb8d77adc9a1ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1f13b970b6e25d00e2fb8d77adc9a1ac">&#9670;&nbsp;</a></span>initialGap</h2>
+<a id="a39cdcb814880cd9af21f79b53669e824"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39cdcb814880cd9af21f79b53669e824">&#9670;&nbsp;</a></span>initialGapTicks</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t IRData::initialGap</td>
+          <td class="memname">uint16_t IRData::initialGapTicks</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>rawbuf[0] contains the initial gap of the last frame. </p>
+<p>contains the initial gap (pre 4.4: the value in rawbuf[0]) of the last received frame. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00127">127</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00129">129</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -264,7 +264,7 @@ Public Attributes</h2></td></tr>
 
 <p>Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00118">118</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00119">119</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -282,7 +282,7 @@ Public Attributes</h2></td></tr>
 
 <p>UNKNOWN, NEC, SONY, RC5, PULSE_DISTANCE, ... </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00108">108</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00109">109</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -300,25 +300,25 @@ Public Attributes</h2></td></tr>
 
 <p>Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00129">129</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00131">131</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
-<a id="a41e4346a5dd857a4fc6fea68e0552951"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41e4346a5dd857a4fc6fea68e0552951">&#9670;&nbsp;</a></span>rawlen</h2>
+<a id="a8a17562431120ffc7f8964e56e5db27e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a17562431120ffc7f8964e56e5db27e">&#9670;&nbsp;</a></span>rawlen</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint_fast8_t IRData::rawlen</td>
+          <td class="memname"><a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a> IRData::rawlen</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>counter of entries in rawbuf </p>
+<p>counter of entries in rawbuf of last received frame. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00123">123</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8h_source.html#l00128">128</a> of file <a class="el" href="IRProtocol_8h_source.html">IRProtocol.h</a>.</p>
 
 </div>
 </div>
@@ -331,7 +331,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structIRData.html">IRData</a></li>
-    <li class="footer">Generated on Mon Mar 11 2024 10:50:18 for IRremote by
+    <li class="footer">Generated on Thu Jul 11 2024 21:32:03 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

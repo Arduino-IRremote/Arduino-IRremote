@@ -1,7 +1,7 @@
 var ir__Pronto_8hpp =
 [
-    [ "compensateAndDumpSequence", "group__Decoder.html#ga8a8a6b504851150df425d5b490d92640", null ],
-    [ "compensateAndDumpSequence", "group__Decoder.html#ga0772587b98a7fa0cf332788b7e2bd8e6", null ],
+    [ "compensateAndDumpSequence", "group__Decoder.html#ga82d0499baeb39c2c382370d6f345c5ca", null ],
+    [ "compensateAndDumpSequence", "group__Decoder.html#ga4ee506abe914e0e747cca6dff3b58a20", null ],
     [ "dumpDigit", "group__Decoder.html#gaa36b381cf5f989d539760ac45fa75c05", null ],
     [ "dumpDigit", "group__Decoder.html#ga5000722950cb97873d4661390935185d", null ],
     [ "dumpDuration", "group__Decoder.html#ga479fbb18cdfa303a8bc4322123f831df", null ],

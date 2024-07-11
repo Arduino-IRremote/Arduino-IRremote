@@ -86,6 +86,28 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>The latest version may not be released! See also the commit log at github: <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master">https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master</a></p>
+<h1>4.4.0</h1>
+<ul>
+<li>Using 8 bit raw timing buffer for all timings except frame gap (former rawbuf[0]).</li>
+<li>Renamed decodedIRData.initialGap to decodedIRData.initialGapTicks.</li>
+<li><a class="el" href="group__TinyReceiver.html#gad56f6ae51db2f76f6b48bd6eb621b55d">sendNEC()</a> and sendNEC2() now accepts 16 bit command to better map to NECext protocol found in IRDB databases.</li>
+<li>ir_DistanceWidthProtocol() now decodes up to 10 ms mark or spaces if RAM is bigger than 2 k.</li>
+<li>Improved sensitivity and decoding of PULSE_DISTANCE + PULSE_WIDTH protocols.</li>
+<li>Changed TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING to TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT.</li>
+<li>Improved examples AllProtocolsOnLCD, UnitTest and SimpleReceiver.</li>
+<li>New functions decodePulseDistanceWidthData() with 6 parameters and decodePulseDistanceWidthDataStrict() with 7 parameters.</li>
+</ul>
+<h1>4.3.2</h1>
+<ul>
+<li>Added sendSonyMSB(unsigned long data, int nbits) as a clone of sendSony(unsigned long data, int nbits) to be more consistent.</li>
+<li>Added sendSamsungMSB(unsigned long data, int nbits) as a clone of sendSAMSUNG(unsigned long data, int nbits) to be more consistent.</li>
+<li>Added ESP32 core 3.x error message.</li>
+</ul>
+<h1>4.3.1</h1>
+<ul>
+<li>Fixed overflow bug for rawlen &gt; 254.</li>
+<li>Removed deprecated sendPulseDistance... functions with parameter aSendStopBit.</li>
+</ul>
 <h1>4.3.0</h1>
 <ul>
 <li>Removed default value USE_DEFAULT_FEEDBACK_LED_PIN for last parameter of IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin). Therefore IrSender.begin(DISABLE_LED_FEEDBACK) will not longer work!</li>
@@ -504,7 +526,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Mar 11 2024 10:50:18 for IRremote by
+    <li class="footer">Generated on Thu Jul 11 2024 21:32:03 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>
