@@ -1434,6 +1434,13 @@ void timerConfigForReceive() {
  * so it is recommended to always define SEND_PWM_BY_TIMER
  **********************************************************/
 #elif defined(ESP32)
+#  if !defined(ESP_ARDUINO_VERSION)
+#define ESP_ARDUINO_VERSION 0
+#  endif
+#  if !defined(ESP_ARDUINO_VERSION_VAL)
+#define ESP_ARDUINO_VERSION_VAL(major, minor, patch) 202
+#  endif
+
 // Variables specific to the ESP32.
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
 hw_timer_t *s50usTimer = NULL; // set by timerConfigForReceive()
@@ -1443,17 +1450,14 @@ hw_timer_t *s50usTimer = NULL; // set by timerConfigForReceive()
 #  endif
 
 void timerEnableReceiveInterrupt() {
-    #if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)	// timerAlarm() enables it automatically
+#  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)  // timerAlarm() enables it automatically
         timerAlarmEnable(s50usTimer);
-    #endif
+#  endif
 }
 
-#  if !defined(ESP_ARDUINO_VERSION)
-#define ESP_ARDUINO_VERSION 0
-#  endif
-#  if !defined(ESP_ARDUINO_VERSION_VAL)
-#define ESP_ARDUINO_VERSION_VAL(major, minor, patch) 202
-#  endif
+/*
+ * Special support for ESP core < 202
+ */
 #  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2, 0, 2)
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != NULL) {
@@ -1464,11 +1468,11 @@ void timerDisableReceiveInterrupt() {
 #  else
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != NULL) {
-        #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
             timerEnd(s50usTimer);
-        #else
+#    else
             timerAlarmDisable(s50usTimer);
-        #endif
+#    endif
     }
 }
 #  endif
@@ -1485,15 +1489,15 @@ void timerConfigForReceive() {
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
     if(s50usTimer == NULL) {
 
-        #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-            s50usTimer = timerBegin(1000000);	// only 1 parameter is required. 1 MHz corresponds to 1 uSec
+#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+            s50usTimer = timerBegin(1000000);   // only 1 parameter is required. 1 MHz corresponds to 1 uSec
             timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler);
-            timerAlarm(s50usTimer, MICROS_PER_TICK, true, 0);	// 0 in the last parameter is repeat forever
-        #else
+            timerAlarm(s50usTimer, MICROS_PER_TICK, true, 0);   // 0 in the last parameter is repeat forever
+#    else
             s50usTimer = timerBegin(1, 80, true);
             timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler, false); // false -> level interrupt, true -> edge interrupt, but this is not supported :-(
             timerAlarmWrite(s50usTimer, MICROS_PER_TICK, true);
-        #endif
+#    endif
     }
     // every 50 us, autoreload = true
 }
@@ -1505,25 +1509,27 @@ uint8_t sLastSendPin = 0; // To detach before attach, if already attached
 
 #  if defined(SEND_PWM_BY_TIMER)
 void enableSendPWMByTimer() {
-#    if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-    ledcWrite(SEND_LEDC_CHANNEL, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); //  * 256 since we have 8 bit resolution
-#    else
+#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
 #      if defined(IR_SEND_PIN)
     ledcWrite(IR_SEND_PIN, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // New API
 #      else
     ledcWrite(IrSender.sendPin, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // New API
 #      endif
+#    else
+    // ESP version < 3.0
+    ledcWrite(SEND_LEDC_CHANNEL, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); //  * 256 since we have 8 bit resolution
 #    endif
 }
 void disableSendPWMByTimer() {
-#    if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-    ledcWrite(SEND_LEDC_CHANNEL, 0);
-#    else
+#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
 #      if defined(IR_SEND_PIN)
     ledcWrite(IR_SEND_PIN, 0); // New API
 #      else
     ledcWrite(IrSender.sendPin, 0); // New API
 #      endif
+#    else
+    // ESP version < 3.0
+    ledcWrite(SEND_LEDC_CHANNEL, 0);
 #    endif
 }
 
@@ -1532,7 +1538,18 @@ void disableSendPWMByTimer() {
  * ledcWrite since ESP 2.0.2 does not work if pin mode is set.
  */
 void timerConfigForSend(uint16_t aFrequencyKHz) {
-#    if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+#      if defined(IR_SEND_PIN)
+    ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, 8); // New API
+#      else
+    if(sLastSendPin != 0 && sLastSendPin != IrSender.sendPin){
+        ledcDetach(IrSender.sendPin); // detach pin before new attaching see #1194
+    }
+    ledcAttach(IrSender.sendPin, aFrequencyKHz * 1000, 8); // New API
+    sLastSendPin = IrSender.sendPin;
+#      endif
+#    else
+    // ESP version < 3.0
     ledcSetup(SEND_LEDC_CHANNEL, aFrequencyKHz * 1000, 8);  // 8 bit PWM resolution
 #      if defined(IR_SEND_PIN)
     ledcAttachPin(IR_SEND_PIN, SEND_LEDC_CHANNEL);  // attach pin to channel
@@ -1541,16 +1558,6 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
         ledcDetachPin(IrSender.sendPin);  // detach pin before new attaching see #1194
     }
     ledcAttachPin(IrSender.sendPin, SEND_LEDC_CHANNEL);  // attach pin to channel
-    sLastSendPin = IrSender.sendPin;
-#      endif
-#    else  // New API here
-#      if defined(IR_SEND_PIN)
-    ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, 8); // New API
-#      else
-    if(sLastSendPin != 0 && sLastSendPin != IrSender.sendPin){
-        ledcDetach(IrSender.sendPin); // detach pin before new attaching see #1194
-    }
-    ledcAttach(IrSender.sendPin, aFrequencyKHz * 1000, 8); // New API
     sLastSendPin = IrSender.sendPin;
 #      endif
 #    endif

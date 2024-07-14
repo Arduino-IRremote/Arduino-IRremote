@@ -116,6 +116,8 @@ IRrecv::IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) {
  * => Minimal CPU frequency is 4 MHz
  *
  **********************************************************************************************************************/
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvolatile"
 #if defined(ESP8266) || defined(ESP32)
 IRAM_ATTR
 #endif
@@ -389,6 +391,8 @@ void IRrecv::enableIRIn() {
 
 /**
  * Configures the timer and the state machine for IR reception.
+ * We assume, that timer interrupts are disabled here, otherwise it makes no sense to use this functions.
+ * Therefore we do not need to guard the change of the volatile TickCounterForISR here :-).
  * The tick counter value is already at 100 when decode() gets true, because of the 5000 us minimal gap defined in RECORD_GAP_MICROS.
  * @param aMicrosecondsToAddToGapCounter To compensate for the amount of microseconds the timer was stopped / disabled.
  */
@@ -416,6 +420,8 @@ void IRrecv::addTicksToInternalTickCounter(uint16_t aTicksToAddToInternalTickCou
 void IRrecv::addMicrosToInternalTickCounter(uint16_t aMicrosecondsToAddToInternalTickCounter) {
     irparams.TickCounterForISR += aMicrosecondsToAddToInternalTickCounter / MICROS_PER_TICK;
 }
+#pragma GCC diagnostic push
+
 /**
  * Restarts receiver after send. Is a NOP if sending does not require a timer.
  */

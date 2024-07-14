@@ -1,6 +1,8 @@
 # Changelog
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
+# 4.4.1
+- Support for ESP 3.0 by akellai.
 
 # 4.4.0
 - Using 8 bit raw timing buffer for all timings except frame gap (former rawbuf[0]).
