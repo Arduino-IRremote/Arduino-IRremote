@@ -1450,15 +1450,17 @@ hw_timer_t *s50usTimer = NULL; // set by timerConfigForReceive()
 #  endif
 
 void timerEnableReceiveInterrupt() {
-#  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0)  // timerAlarm() enables it automatically
-        timerAlarmEnable(s50usTimer);
+#  if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)  // timerAlarm() enables it automatically
+    timerStart(s50usTimer);
+#  else
+    timerAlarmEnable(s50usTimer);
 #  endif
 }
 
+#  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2, 0, 2)
 /*
  * Special support for ESP core < 202
  */
-#  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2, 0, 2)
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != NULL) {
         timerDetachInterrupt(s50usTimer);
@@ -1466,12 +1468,13 @@ void timerDisableReceiveInterrupt() {
     }
 }
 #  else
+
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != NULL) {
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-            timerEnd(s50usTimer);
+        timerStop(s50usTimer);
 #    else
-            timerAlarmDisable(s50usTimer);
+        timerAlarmDisable(s50usTimer);
 #    endif
     }
 }
@@ -1488,15 +1491,14 @@ void timerConfigForReceive() {
     // simply call the readable API versions :)
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
     if(s50usTimer == NULL) {
-
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-            s50usTimer = timerBegin(1000000);   // only 1 parameter is required. 1 MHz corresponds to 1 uSec
-            timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler);
-            timerAlarm(s50usTimer, MICROS_PER_TICK, true, 0);   // 0 in the last parameter is repeat forever
+        s50usTimer = timerBegin(1000000);   // only 1 parameter is required. 1 MHz corresponds to 1 uSec
+        timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler);
+        timerAlarm(s50usTimer, MICROS_PER_TICK, true, 0);   // 0 in the last parameter is repeat forever
 #    else
-            s50usTimer = timerBegin(1, 80, true);
-            timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler, false); // false -> level interrupt, true -> edge interrupt, but this is not supported :-(
-            timerAlarmWrite(s50usTimer, MICROS_PER_TICK, true);
+        s50usTimer = timerBegin(1, 80, true);
+        timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler, false); // false -> level interrupt, true -> edge interrupt, but this is not supported :-(
+        timerAlarmWrite(s50usTimer, MICROS_PER_TICK, true);
 #    endif
     }
     // every 50 us, autoreload = true
@@ -1511,9 +1513,9 @@ uint8_t sLastSendPin = 0; // To detach before attach, if already attached
 void enableSendPWMByTimer() {
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
 #      if defined(IR_SEND_PIN)
-    ledcWrite(IR_SEND_PIN, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // New API
+    ledcWrite(IR_SEND_PIN, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // 3.x API
 #      else
-    ledcWrite(IrSender.sendPin, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // New API
+    ledcWrite(IrSender.sendPin, (IR_SEND_DUTY_CYCLE_PERCENT * 256) / 100); // 3.x API
 #      endif
 #    else
     // ESP version < 3.0
@@ -1523,9 +1525,9 @@ void enableSendPWMByTimer() {
 void disableSendPWMByTimer() {
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
 #      if defined(IR_SEND_PIN)
-    ledcWrite(IR_SEND_PIN, 0); // New API
+    ledcWrite(IR_SEND_PIN, 0); // 3.x API
 #      else
-    ledcWrite(IrSender.sendPin, 0); // New API
+    ledcWrite(IrSender.sendPin, 0); // 3.x API
 #      endif
 #    else
     // ESP version < 3.0
@@ -1540,12 +1542,12 @@ void disableSendPWMByTimer() {
 void timerConfigForSend(uint16_t aFrequencyKHz) {
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
 #      if defined(IR_SEND_PIN)
-    ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, 8); // New API
+    ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, 8); // 3.x API
 #      else
     if(sLastSendPin != 0 && sLastSendPin != IrSender.sendPin){
         ledcDetach(IrSender.sendPin); // detach pin before new attaching see #1194
     }
-    ledcAttach(IrSender.sendPin, aFrequencyKHz * 1000, 8); // New API
+    ledcAttach(IrSender.sendPin, aFrequencyKHz * 1000, 8); // 3.x API
     sLastSendPin = IrSender.sendPin;
 #      endif
 #    else

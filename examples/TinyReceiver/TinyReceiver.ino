@@ -106,14 +106,15 @@ void setup() {
 }
 
 void loop() {
-    if (TinyIRReceiverData.justWritten) {
-        TinyIRReceiverData.justWritten = false;
+    if (TinyReceiverDecode()) {
+
 #if !defined(USE_FAST_PROTOCOL)
         // We have no address at FAST protocol
         Serial.print(F("Address=0x"));
         Serial.print(TinyIRReceiverData.Address, HEX);
         Serial.print(' ');
 #endif
+
         Serial.print(F("Command=0x"));
         Serial.print(TinyIRReceiverData.Command, HEX);
         if (TinyIRReceiverData.Flags == IRDATA_FLAGS_IS_REPEAT) {
@@ -121,14 +122,20 @@ void loop() {
         }
         if (TinyIRReceiverData.Flags == IRDATA_FLAGS_PARITY_FAILED) {
             Serial.print(F(" Parity failed"));
+
 #if !defined(USE_EXTENDED_NEC_PROTOCOL) && !defined(USE_ONKYO_PROTOCOL)
             Serial.print(F(", try USE_EXTENDED_NEC_PROTOCOL or USE_ONKYO_PROTOCOL"));
 #endif
+
         }
         Serial.println();
     }
     /*
      * Put your code here
+     */
+
+    /*
+     * No resume() required :-)
      */
 }
 

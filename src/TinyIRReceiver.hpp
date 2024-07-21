@@ -84,7 +84,6 @@
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC / ONKYO.
 //#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
-
 #include "TinyIR.h" // If not defined, it defines IR_RECEIVE_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
 
 #include "digitalWriteFast.h"
@@ -384,7 +383,7 @@ void IRPinChangeInterruptHandler(void) {
                     // Here we have 8 bit command
                     TinyIRReceiverData.Command = TinyIRReceiverControl.IRRawData.UBytes[2];
 #  else
-                            // Here we have 16 bit command
+                    // Here we have 16 bit command
                     TinyIRReceiverData.Command = TinyIRReceiverControl.IRRawData.UWord.HighWord;
 #  endif
 
@@ -424,6 +423,17 @@ void IRPinChangeInterruptHandler(void) {
 
 bool isTinyReceiverIdle() {
     return (TinyIRReceiverControl.IRReceiverState == IR_RECEIVER_STATE_WAITING_FOR_START_MARK);
+}
+
+/*
+ * Function to be used as drop in for IrReceiver.decode()
+ */
+bool TinyReceiverDecode() {
+    bool tJustWritten = TinyIRReceiverData.justWritten;
+    if (tJustWritten) {
+        TinyIRReceiverData.justWritten = false;
+    }
+    return tJustWritten;
 }
 
 /*

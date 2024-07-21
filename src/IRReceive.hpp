@@ -62,6 +62,7 @@ IRrecv IrReceiver;
  * The control structure instance
  */
 struct irparams_struct irparams; // the irparams instance
+unsigned long sMicrosAtLastStopTimer = 0; // Used to adjust TickCounterForISR with uncounted ticks between stopTimer() and restartTimer()
 
 /**
  * Instantiate the IRrecv class. Multiple instantiation is not supported.
@@ -116,9 +117,9 @@ IRrecv::IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) {
  * => Minimal CPU frequency is 4 MHz
  *
  **********************************************************************************************************************/
+#if defined(ESP8266) || defined(ESP32)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wvolatile"
-#if defined(ESP8266) || defined(ESP32)
 IRAM_ATTR
 #endif
 void IRReceiveTimerInterruptHandler() {
@@ -377,6 +378,10 @@ void IRrecv::restartTimer() {
     // Setup for cyclic 50 us interrupt
     timerConfigForReceive(); // no interrupts enabled here!
     // Timer interrupt is enabled after state machine reset
+    if (sMicrosAtLastStopTimer != 0) {
+        irparams.TickCounterForISR += (micros() - sMicrosAtLastStopTimer) / MICROS_PER_TICK; // adjust TickCounterForISR for correct gap value, which is used for repeat detection
+        sMicrosAtLastStopTimer = 0;
+    }
     timerEnableReceiveInterrupt(); // Enables the receive sample timer interrupt which consumes a small amount of CPU every 50 us.
 #ifdef _IR_MEASURE_TIMING
     pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
@@ -394,33 +399,30 @@ void IRrecv::enableIRIn() {
  * We assume, that timer interrupts are disabled here, otherwise it makes no sense to use this functions.
  * Therefore we do not need to guard the change of the volatile TickCounterForISR here :-).
  * The tick counter value is already at 100 when decode() gets true, because of the 5000 us minimal gap defined in RECORD_GAP_MICROS.
+ * If TickCounterForISR is not adjusted with the value of the microseconds, the timer was stopped,
+ * it can happen, that a new IR frame is recognized as a repeat, because the value of RECORD_GAP_MICROS
+ * was not reached by TickCounterForISR counter before receiving the new IR frame.
  * @param aMicrosecondsToAddToGapCounter To compensate for the amount of microseconds the timer was stopped / disabled.
  */
-void IRrecv::start(uint32_t aMicrosecondsToAddToGapCounter) {
-    irparams.TickCounterForISR += aMicrosecondsToAddToGapCounter / MICROS_PER_TICK;
-    start();
-}
 void IRrecv::restartTimer(uint32_t aMicrosecondsToAddToGapCounter) {
     irparams.TickCounterForISR += aMicrosecondsToAddToGapCounter / MICROS_PER_TICK;
-    restartTimer();
-}
-void IRrecv::startWithTicksToAdd(uint16_t aTicksToAddToGapCounter) {
-    irparams.TickCounterForISR += aTicksToAddToGapCounter;
-    start();
+    timerConfigForReceive(); // no interrupts enabled here!
+    timerEnableReceiveInterrupt(); // Enables the receive sample timer interrupt which consumes a small amount of CPU every 50 us.
+#ifdef _IR_MEASURE_TIMING
+    pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
+#endif
 }
 void IRrecv::restartTimerWithTicksToAdd(uint16_t aTicksToAddToGapCounter) {
     irparams.TickCounterForISR += aTicksToAddToGapCounter;
-    restartTimer();
-}
-
-void IRrecv::addTicksToInternalTickCounter(uint16_t aTicksToAddToInternalTickCounter) {
-    irparams.TickCounterForISR += aTicksToAddToInternalTickCounter;
-}
-
-void IRrecv::addMicrosToInternalTickCounter(uint16_t aMicrosecondsToAddToInternalTickCounter) {
-    irparams.TickCounterForISR += aMicrosecondsToAddToInternalTickCounter / MICROS_PER_TICK;
-}
+    timerConfigForReceive(); // no interrupts enabled here!
+    timerEnableReceiveInterrupt(); // Enables the receive sample timer interrupt which consumes a small amount of CPU every 50 us.
+#ifdef _IR_MEASURE_TIMING
+    pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
+#endif
+    }
+#if defined(ESP8266) || defined(ESP32)
 #pragma GCC diagnostic push
+#endif
 
 /**
  * Restarts receiver after send. Is a NOP if sending does not require a timer.
@@ -438,8 +440,12 @@ void IRrecv::stop() {
     timerDisableReceiveInterrupt();
 }
 
+/*
+ * Stores microseconds of stop, to adjust TickCounterForISR in restartTimer()
+ */
 void IRrecv::stopTimer() {
     timerDisableReceiveInterrupt();
+    sMicrosAtLastStopTimer = micros();
 }
 /**
  * Alias for stop().

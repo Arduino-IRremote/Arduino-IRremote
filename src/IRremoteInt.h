@@ -113,9 +113,9 @@ typedef uint64_t IRRawDataType;
 #define BITS_IN_RAW_DATA_TYPE   64
 #endif
 
-/****************************************************
+/**********************************************************
  * Declarations for the receiver Interrupt Service Routine
- ****************************************************/
+ **********************************************************/
 // ISR State-Machine : Receiver States
 #define IR_REC_STATE_IDLE      0 // Counting the gap time and waiting for the start bit to arrive
 #define IR_REC_STATE_MARK      1 // A mark was received and we are counting the duration of it.
@@ -143,6 +143,8 @@ struct irparams_struct {
     uint16_t initialGapTicks;   ///< Tick counts of the length of the gap between previous and current IR frame. Pre 4.4: rawbuf[0].
     IRRawbufType rawbuf[RAW_BUFFER_LENGTH]; ///< raw data / tick counts per mark/space. With 8 bit we can only store up to 12.7 ms. First entry is empty to be backwards compatible.
 };
+
+extern unsigned long sMicrosAtLastStopTimer; // Used to adjust TickCounterForISR with uncounted ticks between stopTimer() and restartTimer()
 
 #include "IRProtocol.h"
 
@@ -213,17 +215,13 @@ public:
      */
     void begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback = false, uint_fast8_t aFeedbackLEDPin =
     USE_DEFAULT_FEEDBACK_LED_PIN);
-    void restartTimer();
     void start();
     void enableIRIn(); // alias for start
-    void start(uint32_t aMicrosecondsToAddToGapCounter);
+    void restartTimer();
     void restartTimer(uint32_t aMicrosecondsToAddToGapCounter);
-    void startWithTicksToAdd(uint16_t aTicksToAddToGapCounter);
     void restartTimerWithTicksToAdd(uint16_t aTicksToAddToGapCounter);
     void restartAfterSend();
 
-    void addTicksToInternalTickCounter(uint16_t aTicksToAddToInternalTickCounter);
-    void addMicrosToInternalTickCounter(uint16_t aMicrosecondsToAddToInternalTickCounter);
 
     bool available();
     IRData* read(); // returns decoded data

@@ -222,7 +222,7 @@ void sendSamsungSmartHubMacro(bool aDoSelect) {
     delay(200);
 
 #if !defined(ESP32)
-    IrReceiver.restartTimer(200000); // to compensate for 200 ms stop of receiver. This enables a correct gap measurement.
+    IrReceiver.restartTimer(); // Restart IR timer.
 #endif
 
     Serial.println(F("Wait for \"not supported\" to disappear"));

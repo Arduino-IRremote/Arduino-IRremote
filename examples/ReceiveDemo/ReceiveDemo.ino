@@ -181,8 +181,7 @@ void loop() {
             /*
              * No overflow here.
              * Stop receiver, generate a single beep, print short info and send usage and start receiver again
-             *****************************************************************************************************/
-
+             */
             if ((IrReceiver.decodedIRData.protocol != SONY) && (IrReceiver.decodedIRData.protocol != PULSE_WIDTH)
                     && (IrReceiver.decodedIRData.protocol != PULSE_DISTANCE) && (IrReceiver.decodedIRData.protocol != UNKNOWN)
                     && digitalRead(DEBUG_BUTTON_PIN) != LOW) {
@@ -256,13 +255,13 @@ void loop() {
  */
 void generateTone() {
 #if !defined(ESP8266) && !defined(NRF5) // tone on esp8266 works only once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
-#  if defined(ESP32) // ESP32 uses another timer for tone()
+#  if defined(ESP32) // ESP32 uses another timer for tone(), maybe other platforms (not tested yet) too.
     tone(TONE_PIN, 2200, 8);
 #  else
-    IrReceiver.stopTimer(); // ESP32 uses another timer for tone(), maybe other platforms (not tested yet) too.
+    IrReceiver.stopTimer(); // Stop timer consistently before calling tone() or other functions using the timer resource.
     tone(TONE_PIN, 2200, 8);
     delay(8);
-    IrReceiver.restartTimer(8000); // Restart IR timer. 8000 to compensate for 8 ms stop of receiver. This enables a correct gap measurement.
+    IrReceiver.restartTimer(); // Restart IR timer after timer resource is no longer blocked.
 #  endif
 #endif
 }
@@ -286,7 +285,7 @@ void handleOverflow() {
     delay(50);
     tone(TONE_PIN, 1100, 10);
     delay(50);
-    IrReceiver.restartTimer(100000); // to compensate for 100 ms stop of receiver. This enables a correct gap measurement.
+    IrReceiver.restartTimer();
 #  endif
 #endif
 }

@@ -240,7 +240,7 @@ void loop() {
         } else {
             // play tone
             auto tStartMillis = millis();
-            IrReceiver.stopTimer();
+//            IrReceiver.stopTimer(); // Not really required for Uno, but we then should use restartTimer(aMicrosecondsToAddToGapCounter)
             tone(TONE_PIN, 2200);
 
             if ((IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW)
@@ -259,9 +259,7 @@ void loop() {
             while ((millis() - tStartMillis) < 5)
                 ;
             noTone(TONE_PIN);
-
-            // Restore IR timer. millis() - tStartMillis to compensate for stop of receiver. This enables a correct gap measurement.
-            IrReceiver.restartTimerWithTicksToAdd((millis() - tStartMillis) * (MICROS_IN_ONE_MILLI / MICROS_PER_TICK));
+            IrReceiver.restartTimer(5000); // Restart IR timer.
 
 #if defined(USE_LCD)
             printIRResultOnLCD();
@@ -287,11 +285,11 @@ void loop() {
 #if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
         printsVCCVoltageMillivoltOnLCD();
 #endif
-        IrReceiver.stopTimer();
+//        IrReceiver.stopTimer(); // Not really required for Uno, but we then should use restartTimer(aMicrosecondsToAddToGapCounter)
         tone(TONE_PIN, 2200);
         delay(50);
         noTone(TONE_PIN);
-        IrReceiver.restartTimerWithTicksToAdd(50 * (MICROS_IN_ONE_MILLI / MICROS_PER_TICK));
+        IrReceiver.restartTimer(50000);
     }
 
 #if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
