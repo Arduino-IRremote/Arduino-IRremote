@@ -181,7 +181,7 @@ decode_results results;
 void setup()
 {
 ...
-  Serial.begin(115200);
+  Serial.begin(115200); // Establish serial communication
   irrecv.enableIRIn(); // Start the receiver
 }
 
@@ -204,7 +204,7 @@ void loop() {
 void setup()
 {
 ...
-  Serial.begin(115200);
+  Serial.begin(115200); // // Establish serial communication
   IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver
 }
 
