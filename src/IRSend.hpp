@@ -926,7 +926,7 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
             tLastBitValue = 0;
         }
     }
-    IR_TRACE_PRINTLN(F(""));
+    IR_TRACE_PRINTLN();
 }
 
 /**

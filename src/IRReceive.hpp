@@ -1542,11 +1542,11 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             /*
              * Pulse distance or pulse width here
              */
-            aSerial->print("PulseDistanceWidth");
+            aSerial->print(F("PulseDistanceWidth"));
             if(tNumberOfArrayData > 1) {
-                aSerial->print("FromArray(38, ");
+                aSerial->print(F("FromArray(38, "));
             } else {
-                aSerial->print("(38, ");
+                aSerial->print(F("(38, "));
             }
             printDistanceWidthTimingInfo(aSerial, &decodedIRData.DistanceWidthTimingInfo);
 
@@ -1707,7 +1707,7 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
     }
 
     aSerial->println();
-    aSerial->print("Sum: ");
+    aSerial->print(F("Sum: "));
     if (aOutputMicrosecondsInsteadOfTicks) {
         aSerial->println((uint32_t) tSumOfDurationTicks * MICROS_PER_TICK, DEC);
     } else {
@@ -1770,7 +1770,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
     printIRResultShort(aSerial);
 
 // Newline
-    aSerial->println("");
+    aSerial->println();
 }
 
 /**
