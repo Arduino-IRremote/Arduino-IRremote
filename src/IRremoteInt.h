@@ -203,8 +203,8 @@ class IRrecv {
 public:
 
     IRrecv();
-    IRrecv(uint_fast8_t aReceivePin);
-    IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin);
+    IRrecv(uint_fast8_t aReceivePin) __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance.")));
+    IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance..")));
     void setReceivePin(uint_fast8_t aReceivePinNumber);
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
     void registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunction)(void));

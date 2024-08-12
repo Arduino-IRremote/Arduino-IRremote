@@ -227,10 +227,12 @@ void IRReceiveTimerInterruptHandler() {
              * After resume(), decodedIRData.rawDataPtr->initialGapTicks and decodedIRData.rawDataPtr->rawlen are
              * the first variables, which are overwritten by the next received frame.
              * since 4.3.0.
+             * For backward compatibility, there are the same 2 statements in decode() if IrReceiver is not used.
              */
             IrReceiver.decodedIRData.initialGapTicks = irparams.initialGapTicks;
             IrReceiver.decodedIRData.rawlen = irparams.rawlen;
-            irparams.StateForISR = IR_REC_STATE_STOP;
+
+            irparams.StateForISR = IR_REC_STATE_STOP; // This signals the decode(), that a complete frame was received
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
             /*
              * Call callback if registered (not NULL)
@@ -419,7 +421,7 @@ void IRrecv::restartTimerWithTicksToAdd(uint16_t aTicksToAddToGapCounter) {
 #ifdef _IR_MEASURE_TIMING
     pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
-    }
+}
 #if defined(ESP8266) || defined(ESP32)
 #pragma GCC diagnostic push
 #endif
@@ -538,6 +540,14 @@ IRData* IRrecv::read() {
 bool IRrecv::decode() {
     if (irparams.StateForISR != IR_REC_STATE_STOP) {
         return false;
+    }
+
+    /*
+     * Support for old examples, which do not use the default IrReceiver instance
+     */
+    if (this != &IrReceiver) {
+        decodedIRData.initialGapTicks = irparams.initialGapTicks;
+        decodedIRData.rawlen = irparams.rawlen;
     }
 
     initDecodedIRData(); // sets IRDATA_FLAGS_WAS_OVERFLOW
