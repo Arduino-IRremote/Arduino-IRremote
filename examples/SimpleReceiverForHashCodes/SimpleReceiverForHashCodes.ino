@@ -68,22 +68,22 @@ void loop() {
     if (IrReceiver.available()) {
         IrReceiver.initDecodedIRData(); // is required, if we do not call decode();
         IrReceiver.decodeHash();
-        /*
-         * Print a summary of received data
-         */
-        // We have an unknown protocol here, print extended info
-        IrReceiver.printIRResultRawFormatted(&Serial, true);
         IrReceiver.resume(); // Early enable receiving of the next IR frame
-
+        /*
+         * Print a summary and then timing of received data
+         */
         IrReceiver.printIRResultShort(&Serial);
+        IrReceiver.printIRResultRawFormatted(&Serial, true);
+
         Serial.println();
 
         /*
          * Finally, check the received data and perform actions according to the received command
          */
-        if (IrReceiver.decodedIRData.decodedRawData == 0x4F7BE2FB) {
+        auto tDecodedRawData = IrReceiver.decodedIRData.decodedRawData; // uint32_t on 8 and 16 bit CPUs and uint64_t on 32 and 64 bit CPUs
+        if (tDecodedRawData == 0x4F7BE2FB) {
             // do something
-        } else if (IrReceiver.decodedIRData.decodedRawData == 0x97483BFB) {
+        } else if (tDecodedRawData == 0x97483BFB) {
             // do something else
         }
     }

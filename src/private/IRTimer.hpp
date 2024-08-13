@@ -1492,7 +1492,7 @@ void timerConfigForReceive() {
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
     if(s50usTimer == NULL) {
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-        s50usTimer = timerBegin(1000000);   // only 1 parameter is required. 1 MHz corresponds to 1 uSec
+        s50usTimer = timerBegin(1000000);   // Only 1 parameter is required. 1000000 corresponds to 1 MHz / 1 uSec
         timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler);
         timerAlarm(s50usTimer, MICROS_PER_TICK, true, 0);   // 0 in the last parameter is repeat forever
 #    else
