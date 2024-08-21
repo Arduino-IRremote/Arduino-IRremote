@@ -257,7 +257,7 @@ void IRReceiveTimerInterruptHandler() {
     }
 
 #if !defined(NO_LED_FEEDBACK_CODE)
-    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_RECEIVE) {
+    if (FeedbackLEDControl.LedFeedbackEnabled & LED_FEEDBACK_ENABLED_FOR_RECEIVE) {
         setFeedbackLED(tIRInputLevel == INPUT_MARK);
     }
 #endif

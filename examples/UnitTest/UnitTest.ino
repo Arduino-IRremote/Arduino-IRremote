@@ -48,7 +48,9 @@
 //#define EXCLUDE_EXOTIC_PROTOCOLS  // Saves around 240 bytes program memory if IrSender.write is used
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
+#if FLASHEND <= 0x7FFF              // For 32k flash or less, like ATmega328
 #define NO_LED_FEEDBACK_CODE        // Saves 344 bytes program memory
+#endif
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 //#define USE_MSB_DECODING_FOR_DISTANCE_DECODER
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 142.
@@ -140,6 +142,14 @@ void setup() {
     Serial.println(F("at pin " IR_RECEIVE_PIN_STRING));
 #else
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
+#endif
+
+#if defined(LED_BUILTIN) && !defined(NO_LED_FEEDBACK_CODE)
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    Serial.print(F("Active low "));
+#  endif
+    Serial.print(F("FeedbackLED at pin "));
+    Serial.println(LED_BUILTIN); // Works also for ESP32: static const uint8_t LED_BUILTIN = 8; #define LED_BUILTIN LED_BUILTIN
 #endif
 
     Serial.println(F("Use ReceiveCompleteCallback"));
@@ -390,10 +400,13 @@ void loop() {
     IrSender.sendNEC(sAddress & 0xFF, sCommand, 0);
     checkReceive(sAddress & 0xFF, sCommand);
 
+    /*
+     * Complete NEC frames as repeats to force decoding as NEC2 are tested here
+     */
     for (int8_t i = 0; i < sRepeats; i++) {
         if (digitalRead(DEBUG_BUTTON_PIN) != LOW) {
-            // if debug is enabled, printing time (50 ms) is too high anyway
-            delayMicroseconds(NEC_REPEAT_DISTANCE - 200); // 200 is just a guess
+            // If debug is enabled, printing time (50 ms) is sufficient as delay
+            delayMicroseconds(NEC_REPEAT_DISTANCE - 20000); // 20000 is just a guess
         }
         IrSender.sendNEC(sAddress & 0xFF, sCommand, 0);
         checkReceive(sAddress & 0xFF, sCommand);
@@ -492,8 +505,8 @@ void loop() {
         NO_REPEATS);
         checkReceive(0x0B, 0x10);
 #    else
-        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0xA010B02002, 48, PROTOCOL_IS_LSB_FIRST,
-        0, NO_REPEATS);
+        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0xA010B02002, 48, PROTOCOL_IS_LSB_FIRST, 0,
+                NO_REPEATS);
         checkReceivedRawData(0xA010B02002);
 #    endif
         delay(DELAY_AFTER_SEND);
@@ -507,7 +520,8 @@ void loop() {
         NO_REPEATS);
         checkReceive(0x0B, 0x10);
 #    else
-        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0x40040D000805, 48, PROTOCOL_IS_MSB_FIRST, 0, NO_REPEATS);
+        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0x40040D000805, 48, PROTOCOL_IS_MSB_FIRST, 0,
+                NO_REPEATS);
         checkReceivedRawData(0x40040D000805);
 #    endif
 
@@ -522,7 +536,7 @@ void loop() {
         tRawData[0] = 0x43D8613C;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x3BC3B;
         IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 52, PROTOCOL_IS_MSB_FIRST, 0,
-        NO_REPEATS);
+                NO_REPEATS);
         checkReceivedArray(tRawData, 2);
 #      else
         IrSender.sendPulseDistanceWidth(38, 8900, 4450, 550, 1700, 550, 600, 0x43D8613CBC3B, 52, PROTOCOL_IS_MSB_FIRST, 0, NO_REPEATS);
@@ -560,7 +574,8 @@ void loop() {
         checkReceivedArray(tRawData, 3);
 #      else
         IRRawDataType tRawData[] = { 0xAFEDCBA987654321, 0x5A }; // LSB of tRawData[0] is sent first
-        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, 0, NO_REPEATS);
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, 0,
+                NO_REPEATS);
         checkReceivedArray(tRawData, 2);
 #      endif
         delay(DELAY_AFTER_SEND);
@@ -881,6 +896,14 @@ void loop() {
     if (sRepeats > 4) {
         sRepeats = 4;
     }
+
+    /*
+     * Test stop and start of 50 us receiver timer
+     */
+    Serial.println(F("Stop receiver"));
+    IrReceiver.stop();
     delay(DELAY_AFTER_LOOP); // additional delay at the end of each loop
+    Serial.println(F("Start receiver"));
+    IrReceiver.start(); // For ESP32 timerEnableReceiveInterrupt() is sufficient here, since timer is not reconfigured by another task
 }
 

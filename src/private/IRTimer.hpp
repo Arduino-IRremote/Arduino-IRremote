@@ -1450,7 +1450,7 @@ hw_timer_t *s50usTimer = NULL; // set by timerConfigForReceive()
 #  endif
 
 void timerEnableReceiveInterrupt() {
-#  if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)  // timerAlarm() enables it automatically
+#  if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
     timerStart(s50usTimer);
 #  else
     timerAlarmEnable(s50usTimer);
@@ -1492,7 +1492,8 @@ void timerConfigForReceive() {
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
     if(s50usTimer == NULL) {
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-        s50usTimer = timerBegin(1000000);   // Only 1 parameter is required. 1000000 corresponds to 1 MHz / 1 uSec
+        s50usTimer = timerBegin(1000000);   // Only 1 parameter is required. 1000000 corresponds to 1 MHz / 1 uSec. After successful setup the timer will automatically start.
+        timerStop(s50usTimer); // Stop it here, to avoid "error E (3447) gptimer: gptimer_start(348): timer is not enabled yet" at timerEnableReceiveInterrupt()
         timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler);
         timerAlarm(s50usTimer, MICROS_PER_TICK, true, 0);   // 0 in the last parameter is repeat forever
 #    else
@@ -1505,9 +1506,8 @@ void timerConfigForReceive() {
 }
 #  endif
 
-#  if !defined(IR_SEND_PIN)
-uint8_t sLastSendPin = 0; // To detach before attach, if already attached
-#  endif
+
+uint8_t sLastSendPin = 0; // Avoid multiple attach() or if pin changes, detach before attach
 
 #  if defined(SEND_PWM_BY_TIMER)
 void enableSendPWMByTimer() {
@@ -1542,7 +1542,10 @@ void disableSendPWMByTimer() {
 void timerConfigForSend(uint16_t aFrequencyKHz) {
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
 #      if defined(IR_SEND_PIN)
-    ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, 8); // 3.x API
+    if(sLastSendPin == 0){
+        ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, 8); // 3.x API
+        sLastSendPin = IR_SEND_PIN;
+    }
 #      else
     if(sLastSendPin != 0 && sLastSendPin != IrSender.sendPin){
         ledcDetach(IrSender.sendPin); // detach pin before new attaching see #1194

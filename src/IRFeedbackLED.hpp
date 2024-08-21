@@ -109,16 +109,16 @@ void setFeedbackLED(bool aSwitchLedOn) {
     if (aSwitchLedOn) {
         if (FeedbackLEDControl.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-                digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED on
+            digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED on
 #else
             digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
 #endif
 #if defined(LED_BUILTIN) // use fast macros here
-            } else {
+        } else {
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-                digitalWriteFast(LED_BUILTIN, LOW); // For AVR, this generates a single cbi command
+            digitalWriteFast(LED_BUILTIN, LOW); // For AVR, this generates a single cbi command
 #  else
-                digitalWriteFast(LED_BUILTIN, HIGH); // For AVR, this generates a single sbi command
+            digitalWriteFast(LED_BUILTIN, HIGH); // For AVR, this generates a single sbi command
 #  endif
 #endif
         }
@@ -130,11 +130,11 @@ void setFeedbackLED(bool aSwitchLedOn) {
             digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED off
 #endif
 #if defined(LED_BUILTIN)
-            } else {
+        } else {
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-                digitalWriteFast(LED_BUILTIN, HIGH); // For AVR, this generates a single sbi command
+            digitalWriteFast(LED_BUILTIN, HIGH); // For AVR, this generates a single sbi command
 #  else
-                digitalWriteFast(LED_BUILTIN, LOW); // For AVR, this generates a single cbi command
+            digitalWriteFast(LED_BUILTIN, LOW); // For AVR, this generates a single cbi command
 #  endif
 #endif
         }

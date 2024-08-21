@@ -135,18 +135,23 @@ void setup() {
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
 #endif
 
+#if defined(LED_BUILTIN) && !defined(NO_LED_FEEDBACK_CODE)
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    Serial.print(F("Active low "));
+#  endif
+    Serial.print(F("FeedbackLED at pin "));
+    Serial.println(LED_BUILTIN); // Works also for ESP32: static const uint8_t LED_BUILTIN = 8; #define LED_BUILTIN LED_BUILTIN
+#endif
+
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     Serial.println();
-    if (digitalRead(DEBUG_BUTTON_PIN) != LOW) {
-        Serial.print(F("If you connect debug pin "));
+    Serial.print(F("If you connect debug pin "));
 #  if defined(APPLICATION_PIN_STRING)
-        Serial.print(APPLICATION_PIN_STRING);
+    Serial.print(APPLICATION_PIN_STRING);
 #  else
-        Serial.print(DEBUG_BUTTON_PIN);
+    Serial.print(DEBUG_BUTTON_PIN);
 #  endif
-        Serial.print(F(" to ground, "));
-    }
-    Serial.println(F("raw data is always printed"));
+    Serial.println(F(" to ground, raw data is always printed and tone is disabled"));
 
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);

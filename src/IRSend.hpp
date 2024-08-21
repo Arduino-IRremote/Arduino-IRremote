@@ -1040,7 +1040,7 @@ void IRsend::mark(uint16_t aMarkMicros) {
          */
         if (!FeedbackLedIsActive) {
             FeedbackLedIsActive = true;
-            if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+            if (FeedbackLEDControl.LedFeedbackEnabled & LED_FEEDBACK_ENABLED_FOR_SEND) {
                 setFeedbackLED(true);
             }
         }
@@ -1080,7 +1080,7 @@ void IRsend::mark(uint16_t aMarkMicros) {
 //            tDeltaMicros += (160 / CLOCKS_PER_MICRO); // adding this once increases program size, so do it below !
 #  if !defined(NO_LED_FEEDBACK_CODE)
             if (tDeltaMicros >= aMarkMicros - (30 + (112 / CLOCKS_PER_MICRO))) { // 30 to be constant. Using periodTimeMicros increases program size too much.
-                if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+                if (FeedbackLEDControl.LedFeedbackEnabled & LED_FEEDBACK_ENABLED_FOR_SEND) {
                     setFeedbackLED(false);
                 }
             }
@@ -1135,7 +1135,7 @@ void IRsend::IRLedOff() {
 #endif
 
 #if !defined(NO_LED_FEEDBACK_CODE)
-    if (FeedbackLEDControl.LedFeedbackEnabled == LED_FEEDBACK_ENABLED_FOR_SEND) {
+    if (FeedbackLEDControl.LedFeedbackEnabled & LED_FEEDBACK_ENABLED_FOR_SEND) {
         setFeedbackLED(false);
     }
 #endif

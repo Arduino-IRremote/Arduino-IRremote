@@ -42,7 +42,7 @@
  * SAMD21       3           4           5
  * ESP8266      14|D5       12|D6       %
  * ESP32        15          4          27
- * ESP32-C3     6           7          10
+ * ESP32-C3     2           3           4
  * BluePill     PA6         PA7       PA3
  * APOLLO3      11          12          5
  * RP2040       3|GPIO15    4|GPIO16    5|GPIO17
@@ -172,7 +172,14 @@
 
 #define tone(...) void()      // tone() inhibits receive timer
 #define noTone(a) void()
-#define TONE_PIN                42 // Dummy for examples using it
+#define TONE_PIN                42 // Dummy for examples using it#
+
+#elif defined(ARDUINO_NOLOGO_ESP32C3_SUPER_MINI)
+#define FEEDBACK_LED_IS_ACTIVE_LOW // The LED on my board (D8) is active LOW
+#define IR_RECEIVE_PIN           2
+#define IR_SEND_PIN              3
+#define TONE_PIN                 4
+#define APPLICATION_PIN         10
 
 #elif defined(CONFIG_IDF_TARGET_ESP32C3) || defined(ARDUINO_ESP32C3_DEV)
 #define NO_LED_FEEDBACK_CODE   // The  WS2812 on pin 8 of AI-C3 board crashes if used as receive feedback LED, other I/O pins are working...
