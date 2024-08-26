@@ -70,6 +70,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [How to deal with protocols not supported by IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#how-to-deal-with-protocols-not-supported-by-irremote)
 - [Examples for this library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#examples-for-this-library)
 - [WOKWI online examples](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#wokwi-online-examples)
+- [IR control of a robot car](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ir-control-of-a-robot-car)
 - [Issues and discussions](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#issues-and-discussions)
 - [Compile options / macros for this library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#compile-options--macros-for-this-library)
     + [Changing include (*.h) files with Arduino IDE](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#changing-include-h-files-with-arduino-ide)
@@ -786,6 +787,14 @@ Here you see the delay of the receiver output (blue) from the IR diode input (ye
 - [TinyReceiver](https://wokwi.com/arduino/projects/339264565653013075)
 - [ReceiverTimingAnalysis](https://wokwi.com/projects/299033930562011656)
 - [Receiver with LCD output and switch statement](https://wokwi.com/projects/298934082074575369)
+
+# IR control of a robot car
+This [example](https://github.com/ArminJo/PWMMotorControl?tab=readme-ov-file#basicircontrol) of the **Arduino PWMMotorControl library** controls the basic functions of a robot car using the IRremote library.<br/>
+It controls 2 PWM motor channels, 2 motors at each channel.<br/>
+[Here](https://www.instructables.com/Arduino-4WD-Car-Assembly-and-Code-With-Optional-In/) you can find the instructable for car assembly and code.<br/>
+
+IR_RobotCar with TL1838 IR receiver plugged into expansion board.<br/>
+![IR_RobotCar](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IR_RobotCar.jpg)
 
 <br/>
 
