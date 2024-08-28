@@ -66,16 +66,13 @@
 // !!! Enabling B&O disables detection of Sony, because the repeat gap for SONY is smaller than the B&O frame gap :-( !!!
 //#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly. It has an IR transmit frequency of 455 kHz! It prevents decoding of SONY!
 #endif
-#if defined(DECODE_BEO)
-#define RECORD_GAP_MICROS 16000 // always get the complete frame in the receive buffer, but this prevents decoding of SONY!
-#endif
 // etc. see IRremote.hpp
 //
 
 #if !defined(RAW_BUFFER_LENGTH)
 // For air condition remotes it requires 750. Default is 200.
 #  if !((defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF))
-#define RAW_BUFFER_LENGTH  750
+#define RAW_BUFFER_LENGTH  730 // this allows usage of 16 bit raw buffer, for RECORD_GAP_MICROS > 20000
 #  endif
 #endif
 
@@ -88,6 +85,9 @@
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 142.
 //#define MARK_EXCESS_MICROS    20    // Adapt it to your IR receiver module. 40 is taken for the cheap VS1838 module her, since we have high intensity.
 
+#if defined(DECODE_BEO)
+#define RECORD_GAP_MICROS 16000 // always get the complete frame in the receive buffer, but this prevents decoding of SONY!
+#endif
 //#define RECORD_GAP_MICROS 12000 // Default is 8000. Activate it for some LG air conditioner protocols
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.

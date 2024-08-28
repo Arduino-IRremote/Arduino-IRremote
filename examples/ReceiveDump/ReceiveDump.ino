@@ -38,7 +38,7 @@
 #if !defined(RAW_BUFFER_LENGTH)
 // For air condition remotes it requires 750. Default is 200.
 #  if !((defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF))
-#define RAW_BUFFER_LENGTH  750
+#define RAW_BUFFER_LENGTH  730 // this allows usage of 16 bit raw buffer, for RECORD_GAP_MICROS > 20000
 #  endif
 #endif
 

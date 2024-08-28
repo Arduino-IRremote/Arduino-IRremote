@@ -1582,8 +1582,8 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             aSerial->print(F("SB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>"));
         }
 #endif
-#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
-        if ((decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) && decodedIRData.protocol == KASEIKYO) {
+#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO) || defined(DECODE_RC6)
+        if ((decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) && (decodedIRData.protocol == KASEIKYO || decodedIRData.protocol == RC6A)) {
             aSerial->print(F(", 0x"));
             aSerial->print(decodedIRData.extra, HEX);
         }

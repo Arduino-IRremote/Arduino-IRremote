@@ -62,6 +62,7 @@ const char string_Kaseikyo_JVC[] PROGMEM = "Kaseikyo_JVC";
 const char string_Kaseikyo_Mitsubishi[] PROGMEM = "Kaseikyo_Mitsubishi";
 const char string_RC5[] PROGMEM = "RC5";
 const char string_RC6[] PROGMEM = "RC6";
+const char string_RC6A[] PROGMEM = "RC6A";
 const char string_Samsung[] PROGMEM = "Samsung";
 const char string_SamsungLG[] PROGMEM = "SamsungLG";
 const char string_Samsung48[] PROGMEM = "Samsung48";
@@ -80,7 +81,7 @@ const char string_FAST[] PROGMEM = "FAST";
 const char *const ProtocolNames[]
 PROGMEM = { string_Unknown, string_PulseWidth, string_PulseDistance, string_Apple, string_Denon, string_JVC, string_LG, string_LG2,
         string_NEC, string_NEC2, string_Onkyo, string_Panasonic, string_Kaseikyo, string_Kaseikyo_Denon, string_Kaseikyo_Sharp,
-        string_Kaseikyo_JVC, string_Kaseikyo_Mitsubishi, string_RC5, string_RC6, string_Samsung, string_SamsungLG, string_Samsung48,
+        string_Kaseikyo_JVC, string_Kaseikyo_Mitsubishi, string_RC5, string_RC6, string_RC6A, string_Samsung, string_SamsungLG, string_Samsung48,
         string_Sharp, string_Sony
 #if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
         , string_BangOlufsen, string_BoseWave, string_Lego, string_MagiQuest, string_Whynter, string_FAST

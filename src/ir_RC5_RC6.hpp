@@ -8,6 +8,8 @@
  ************************************************************************************
  * MIT License
  *
+ * Copyright (c) 2020-2024 Armin Joachimsmeyer
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -243,8 +245,8 @@ bool IRrecv::decodeRC5() {
  + 450
  Sum: 23150
  */
-// Frame RC6:   1 start bit + 1 Bit "1" + 3 mode bits (000) + 1 toggle bit + 8 address + 8 command bits + 2666us pause
-// Frame RC6A:  1 start bit + 1 Bit "1" + 3 mode bits (110) + 1 toggle bit + "1" + 14 customer bits + 8 system bits + 8 command bits (=31bits) + 2666us pause
+// Frame RC6:   1 start bit + 1 Bit "1" + 3 mode bits (000) + 1 toggle bit + 8 address + 8 command bits + 2666us pause - 22 bits incl. start bit
+// Frame RC6A:  1 start bit + 1 Bit "1" + 3 mode bits (110) + 1 toggle bit + "1" + 14 customer bits + 8 system bits + 8 command bits + 2666us pause - 37 bits incl. start bit
 // !!! toggle bit has another timing :-( !!!
 // mark->space => 1
 // space->mark => 0
@@ -261,8 +263,10 @@ bool IRrecv::decodeRC5() {
 #define RC6_TOGGLE_BIT_INDEX    RC6_MODE_BITS //  fourth position, index = 3
 #define RC6_ADDRESS_BITS        8
 #define RC6_COMMAND_BITS        8
+#define RC6_CUSTOMER_BITS      14
 
 #define RC6_BITS            (RC6_LEADING_BIT + RC6_MODE_BITS + RC6_TOGGLE_BIT + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // 21
+#define RC6A_BITS           (RC6_LEADING_BIT + RC6_MODE_BITS + RC6_TOGGLE_BIT + 1 + RC6_CUSTOMER_BITS + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // 36
 
 #define RC6_UNIT            444 // 16 periods of 36 kHz (444.4444)
 
@@ -389,6 +393,57 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
 }
 
 /**
+ * Assemble raw data for RC6 from parameters and toggle state and send
+ * We do not wait for the minimal trailing space of 2666 us
+ * @param aEnableAutomaticToggle Send toggle bit according to the state of the static sLastSendToggleValue variable.
+ */
+void IRsend::sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aCustomer,
+        bool aEnableAutomaticToggle) {
+
+    LongUnion tIRRawData;
+    tIRRawData.UByte.LowByte = aCommand;
+    tIRRawData.UByte.MidLowByte = aAddress;
+
+    tIRRawData.UWord.HighWord = aCustomer | 0x400; // bit 31 is always 1
+
+    if (aEnableAutomaticToggle) {
+        if (sLastSendToggleValue == 0) {
+            sLastSendToggleValue = 1;
+            // set toggled bit
+            IR_DEBUG_PRINT(F("Set Toggle "));
+            tIRRawData.UByte.HighByte |= 0x80; // toggle bit is bit 32
+        } else {
+            sLastSendToggleValue = 0;
+        }
+    }
+
+    // Set mode bits
+    uint64_t tRawData = tIRRawData.ULong + 0x0600000000;
+
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("RC6A: "));
+    Serial.print(F("sLastSendToggleValue="));
+    Serial.print (sLastSendToggleValue);
+    Serial.print(F(" RawData="));
+    Serial.println(tIRRawData.ULong, HEX);
+#endif
+
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+
+        // start and leading bits are sent by sendRC6
+        sendRC6Raw(tRawData, RC6A_BITS - 1); // -1 since the leading bit is additionally sent by sendRC6
+
+        tNumberOfCommands--;
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            // send repeated command in a fixed raster
+            delay(RC6_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
+        }
+    }
+}
+
+/**
  * Try to decode data as RC6 protocol
  */
 bool IRrecv::decodeRC6() {
@@ -482,7 +537,7 @@ bool IRrecv::decodeRC6() {
     tValue.ULong = tDecodedRawData;
     decodedIRData.decodedRawData = tDecodedRawData;
 
-    if (tBitIndex < 36) {
+    if (tBitIndex < 35) {
         // RC6 8 address bits, 8 command bits
         decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
         decodedIRData.command = tValue.UByte.LowByte;
@@ -494,21 +549,23 @@ bool IRrecv::decodeRC6() {
         if (tBitIndex > 20) {
             decodedIRData.flags |= IRDATA_FLAGS_EXTRA_INFO;
         }
+        decodedIRData.protocol = RC6;
+
     } else {
-        // RC6A - 32 bits
-        decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
-        if ((tValue.UByte.MidLowByte & 0x80) != 0) {
-            decodedIRData.flags = IRDATA_FLAGS_TOGGLE_BIT | IRDATA_FLAGS_IS_MSB_FIRST;
-        }
-        tValue.UByte.MidLowByte &= 0x87F; // mask toggle bit
+        // RC6A
+        decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST | IRDATA_FLAGS_EXTRA_INFO;
         decodedIRData.command = tValue.UByte.LowByte;
         decodedIRData.address = tValue.UByte.MidLowByte;
+        decodedIRData.extra = tValue.UWord.HighWord & 0x3FFF; // Mask to 14 bits, remove toggle and constant 1
+        if ((tValue.UByte.HighByte & 0x80) != 0) {
+            decodedIRData.flags |= IRDATA_FLAGS_TOGGLE_BIT;
+        }
+        decodedIRData.protocol = RC6A;
     }
 
     // check for repeat, do not check toggle bit yet
     checkForRepeatSpaceTicksAndSetFlag(RC6_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
 
-    decodedIRData.protocol = RC6;
     return true;
 }
 

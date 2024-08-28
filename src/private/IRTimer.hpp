@@ -44,15 +44,17 @@
 /*
  * Functions declared here
  */
-void timerResetInterruptPending();
-void timerEnableReceiveInterrupt();
-void timerDisableReceiveInterrupt();
-void timerConfigForReceive();
-void enableSendPWMByTimer();
-void disableSendPWMByTimer();
-void timerConfigForSend(uint16_t aFrequencyKHz);
+void timerConfigForReceive();           // Initialization of 50 us timer, interrupts are still disabled
+void timerEnableReceiveInterrupt();     // Enable interrupts of an initialized timer
+void timerDisableReceiveInterrupt();    // Disable interrupts of an initialized timer
+void timerResetInterruptPending();      // ISR helper function for some architectures, which require a manual reset
+                                        // of the pending interrupt (TIMER_REQUIRES_RESET_INTR_PENDING is defined). Otherwise empty.
 
-// SEND_PWM_BY_TIMER is defined in IRremote.hpp line 195.
+void timerConfigForSend(uint16_t aFrequencyKHz); // Initialization of timer hardware generated PWM, if defined(SEND_PWM_BY_TIMER)
+void enableSendPWMByTimer();            // Switch on PWM generation
+void disableSendPWMByTimer();           // Switch off PWM generation
+
+// SEND_PWM_BY_TIMER for different architectures is enabled / defined at IRremote.hpp line 195.
 #if  defined(SEND_PWM_BY_TIMER) && ( (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED) )
 #define SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER // Receive timer and send generation timer are independent here.
 #endif
@@ -1485,7 +1487,7 @@ void timerDisableReceiveInterrupt() {
 #undef ISR
 #  endif
 
-#  if !defined(DISABLE_CODE_FOR_RECEIVER) // &IRReceiveTimerInterruptHandler is referenced, but not available
+#  if !defined(DISABLE_CODE_FOR_RECEIVER) // Otherwise the &IRReceiveTimerInterruptHandler is referenced, but not available
 void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)

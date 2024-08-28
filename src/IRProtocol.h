@@ -57,6 +57,7 @@ typedef enum {
     KASEIKYO_MITSUBISHI,
     RC5,
     RC6,
+    RC6A, /*31 bit +  3 fixed 0b110 mode bits*/
     SAMSUNG, /* 20*/
     SAMSUNGLG,
     SAMSUNG48,
@@ -130,6 +131,8 @@ struct IRData {
 
     irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.
 };
+
+extern uint8_t sLastSendToggleValue; // Currently used by RC5 + RC6
 
 struct PulseDistanceWidthProtocolConstants {
     decode_type_t ProtocolIndex;

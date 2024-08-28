@@ -524,6 +524,21 @@ rawData[36]:
  + 550
 Sum: 23450
 
+Send RC6A with 14 bit 0x2711 as extra
+Protocol=RC6A Address=0xF1 Command=0x76 Extra=0x2711 Toggle=1 Raw-Data=0xA711F176 35 bits MSB first
+Send with: IrSender.sendRC6A(0xF1, 0x76, <numberOfRepeats>, 0x2711);
+rawData[58]:
+ -1032900
+ +2650,- 900
+ + 450,- 450 + 450,- 450 + 450,- 850 +1400,-1300
+ + 950,- 850 + 500,- 400 + 950,- 400 + 500,- 450
+ + 450,- 850 + 500,- 400 + 500,- 400 + 950,- 850
+ + 500,- 400 + 500,- 400 + 950,- 450 + 450,- 450
+ + 450,- 450 + 450,- 400 + 500,- 850 + 500,- 400
+ + 500,- 400 + 950,- 850 + 950,- 400 + 500,- 400
+ + 500,- 850 + 950,- 450 + 450,- 850 + 500
+Sum: 36850
+
 Send Bang&Olufsen
 - ENABLE_BEO_WITHOUT_FRAME_GAP is enabled
 - Now print raw data and try to decode the first 6 entries, which results in rawData 0x0!

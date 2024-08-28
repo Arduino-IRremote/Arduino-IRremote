@@ -46,8 +46,13 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-ir-codes)
   * [decodedIRData structure](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#decodedirdata-structure)
   * [Ambiguous protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ambiguous-protocols)
-  * [Unknown protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#unknown-protocol)
   * [RAM usage of different protocolsl](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ram-usage-of-different-protocols)
+  * [Handling unknown Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#handling-unknown-protocols)
+    * [Disclaimer](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#disclaimer)
+    * [Other libraries](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#other-libraries)
+    * [Protocol=PULSE_DISTANCE](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#protocolpulse_distance)
+    * [Protocol=UNKNOWN](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#protocolunknown)
+    * [How to deal with protocols not supported by IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#how-to-deal-with-protocols-not-supported-by-irremote)
 - [Sending IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-ir-codes)
   * [Sending IRDB IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-irdb-ir-codes)
   * [Send pin](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#send-pin)
@@ -63,11 +68,6 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Increase strength of sent output signal](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#increase-strength-of-sent-output-signal)
   * [Minimal CPU clock frequency](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#minimal-cpu-clock-frequency)
   * [Bang & Olufsen protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#bang--olufsen-protocol)
-- [Handling unknown Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#handling-unknown-protocols)
-  * [Disclaimer](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#disclaimer)
-  * [Protocol=PULSE_DISTANCE](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#protocolpulse_distance)
-  * [Protocol=UNKNOWN](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#protocolunknown)
-  * [How to deal with protocols not supported by IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#how-to-deal-with-protocols-not-supported-by-irremote)
 - [Examples for this library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#examples-for-this-library)
 - [WOKWI online examples](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#wokwi-online-examples)
 - [IR control of a robot car](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ir-control-of-a-robot-car)
@@ -351,6 +351,9 @@ Often the address is also constant, which further reduces memory requirements.
 # IRReceiver pinouts
 ![IRReceiver Pinout](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IRReceiverPinout.jpg)
 
+[Adafruit IR Sensor tutorial](https://learn.adafruit.com/ir-sensor)
+
+
 # Receiving IR codes
 In your program you check for a **completely received IR frame** with:<br/>
 `if (IrReceiver.decode()) {}`<br/>
@@ -435,12 +438,6 @@ But be careful, the NEC2 protocol can only be detected by the NEC library decode
 ### Samsung, SamsungLG
 On a long press, the **SamsungLG protocol** does not repeat its frame, it sends a special short repeat frame.
 
-## Unknown protocol
-Use the **ReceiveDemo example** to print out all informations about your IR protocol.<br/>
-The **ReceiveDump example** gives you more information but has bad repeat detection.
-
-If your protocol seems not to be supported by this library, you may try the [IRMP library](https://github.com/IRMP-org/IRMP), which especially supports manchester protocols much better.
-
 ## RAM usage of different protocols
 The `RAW_BUFFER_LENGTH` determines the length of the **byte buffer** where the received IR timing data is stored before decoding.<br/>
 **100** is sufficient for standard protocols **up to 48 bits**, with 1 bit consisting of one mark and space.
@@ -452,6 +449,68 @@ We always require additional 4 btes, 1 byte for initial gap, 2 bytes for header 
 - Air conditioners often send a longer protocol data stream **up to 750 bits**.
 
 If the record gap determined by `RECORD_GAP_MICROS` is changed from the default 8 ms to more than 20 ms, the buffer is no longer a byte but a uint16_t buffer, requiring twice as much RAM.
+<br/>
+
+## Handling unknown Protocols
+### Disclaimer
+**This library was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.**
+
+Use the **ReceiveDemo example** to print out all informations about your IR protocol.<br/>
+The **ReceiveDump example** gives you more information but has bad repeat detection due to the time required for printing the information.
+
+### Other libraries
+#### IRMP
+If your protocol seems not to be supported by this library, you may try the [IRMP library](https://github.com/IRMP-org/IRMP), which especially supports manchester protocols much better.
+
+#### IRremoteESP8266
+For **air conditioners** , you may try the [IRremoteESP8266 library](https://github.com/crankyoldgit/IRremoteESP8266), which supports an impressive set of protocols and a lot of air conditioners and works also on ESP32.
+
+#### rawirdecode and HeatpumpIR
+[Raw-IR-decoder-for-Arduino](https://github.com/ToniA/Raw-IR-decoder-for-Arduino) is not a library, but an arduino example sketch, which provides many methods of decoding especially **air conditioner** protocols. Sending of these protocols can be done by the Arduino library [HeatpumpIR](https://github.com/ToniA/arduino-heatpumpir).
+
+
+### Protocol=PULSE_DISTANCE
+If you get something like this:
+```
+PULSE_DISTANCE: HeaderMarkMicros=8900 HeaderSpaceMicros=4450 MarkMicros=550 OneSpaceMicros=1700 ZeroSpaceMicros=600  NumberOfBits=56 0x43D8613C 0x3BC3BC
+```
+then you have a code consisting of **56 bits**, which is probably from an air conditioner remote.<br/>
+You can send it with `sendPulseDistanceWidth()`.
+```c++
+uint32_t tRawData[] = { 0xB02002, 0xA010 };
+IrSender.sendPulseDistance(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, false, 0, 0);
+```
+You can send it with calling `sendPulseDistanceWidthData()` twice, once for the first 32 bit and next for the remaining 24 bits.<br/>
+The `PULSE_DISTANCE` / `PULSE_WIDTH` decoder just decodes a timing stream to a bitstream stored as hex values.
+These decoders can not put any semantics like address, command or checksum on this bitstream.
+But the bitstream is way more readable, than a timing stream. This bitstream is read **LSB first by default**.
+If LSB does not suit for further research, you can change it [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_DistanceProtocol.hpp#L78).
+
+**If RAM is not more than 2k, the decoder only accepts mark or space durations up to 2500 microseconds to save RAM space, otherwise it accepts durations up to 10 ms.**
+
+### Protocol=UNKNOWN
+If you see something like `Protocol=UNKNOWN Hash=0x13BD886C 35 bits received` as output of e.g. the ReceiveDemo example, you either have a problem with decoding a protocol, or an unsupported protocol.
+
+- If you have an **odd number of bits** received, your receiver circuit probably has problems. Maybe because the IR signal is too weak.
+- If you see timings like `+ 600,- 600     + 550,- 150     + 200,- 100     + 750,- 550` then one 450 &micro;s space was split into two 150 and 100 &micro;s spaces with a spike / error signal of 200 &micro;s between. Maybe because of a defective receiver or a weak signal in conjunction with another light emitting source nearby.
+- If you see timings like `+ 500,- 550     + 450,- 550     + 450,- 500     + 500,-1550`, then marks are generally shorter than spaces and therefore `MARK_EXCESS_MICROS` (specified in your ino file) should be **negative** to compensate for this at decoding.
+- If you see `Protocol=UNKNOWN Hash=0x0 1 bits received` it may be that the space after the initial mark is longer than [`RECORD_GAP_MICROS`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L124).
+  This was observed for some LG air conditioner protocols. Try again with a line e.g. `#define RECORD_GAP_MICROS 12000` before the line `#include <IRremote.hpp>` in your .ino file.
+- To see more info supporting you to find the reason for your UNKNOWN protocol, you must enable the line `//#define DEBUG` in IRremoteInt.h.
+
+### How to deal with protocols not supported by IRremote
+If you do not know which protocol your IR transmitter uses, you have several choices.
+- Just use the hash value to decide which command was received. See the [SimpleReceiverForHashCodes example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiverForHashCodes/SimpleReceiverForHashCodes.ino).
+- Use the [IRreceiveDemo example](examples/ReceiveDemo) or [IRreceiveDump example](examples/ReceiveDump) to dump out the IR timing.
+ You can then reproduce/send this timing with the [SendRawDemo example](examples/SendRawDemo).
+- The [IRMP AllProtocol example](https://github.com/IRMP-org/IRMP#allprotocol-example) prints the protocol and data for one of the **[40 supported protocols](https://github.com/IRMP-org/IRMP?tab=readme-ov-file#list-of-protocols)**.
+ The same library can be used to send this codes.
+- If you have a bigger Arduino board at hand (> 100 kByte program memory) you can try the
+ [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library [DecodeIR](https://github.com/bengtmartensson/Arduino-DecodeIR).
+- Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html).
+ It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote,
+ the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
+
 <br/>
 
 # Sending IR codes
@@ -637,60 +696,6 @@ The Bang & Olufsen protocol decoder is not enabled by default, i.e if no protoco
 This is because it has an **IR transmit frequency of 455 kHz** and therefore requires a different receiver hardware (TSOP7000).<br/>
 And because **generating a 455 kHz PWM signal is currently only implemented for `SEND_PWM_BY_TIMER`**, sending only works if `SEND_PWM_BY_TIMER` or `USE_NO_SEND_PWM` is defined.<br/>
 For more info, see [ir_BangOlufsen.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_BangOlufsen.hpp#L44).
-
-# Handling unknown Protocols
-## Disclaimer
-**This library was designed to fit inside MCUs with relatively low levels of resources and was intended to work as a library together with other applications which also require some resources of the MCU to operate.**
-
-For **air conditioners** [see this fork](https://github.com/crankyoldgit/IRremoteESP8266), which supports an impressive set of protocols and a lot of air conditioners.
-
-For **long signals** see the blog entry: ["Recording long Infrared Remote control signals with Arduino"](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino).
-
-
-## Protocol=PULSE_DISTANCE
-If you get something like this:
-```
-PULSE_DISTANCE: HeaderMarkMicros=8900 HeaderSpaceMicros=4450 MarkMicros=550 OneSpaceMicros=1700 ZeroSpaceMicros=600  NumberOfBits=56 0x43D8613C 0x3BC3BC
-```
-then you have a code consisting of **56 bits**, which is probably from an air conditioner remote.<br/>
-You can send it with `sendPulseDistanceWidth()`.
-```c++
-uint32_t tRawData[] = { 0xB02002, 0xA010 };
-IrSender.sendPulseDistance(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, false, 0, 0);
-```
-You can send it with calling `sendPulseDistanceWidthData()` twice, once for the first 32 bit and next for the remaining 24 bits.<br/>
-The `PULSE_DISTANCE` / `PULSE_WIDTH` decoder just decodes a timing stream to a bitstream stored as hex values.
-These decoders can not put any semantics like address, command or checksum on this bitstream.
-But the bitstream is way more readable, than a timing stream. This bitstream is read **LSB first by default**.
-If LSB does not suit for further research, you can change it [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_DistanceProtocol.hpp#L78).
-
-**If RAM is not more than 2k, the decoder only accepts mark or space durations up to 2500 microseconds to save RAM space, otherwise it accepts durations up to 10 ms.**
-
-## Protocol=UNKNOWN
-If you see something like `Protocol=UNKNOWN Hash=0x13BD886C 35 bits received` as output of e.g. the ReceiveDemo example, you either have a problem with decoding a protocol, or an unsupported protocol.
-
-- If you have an **odd number of bits** received, your receiver circuit probably has problems. Maybe because the IR signal is too weak.
-- If you see timings like `+ 600,- 600     + 550,- 150     + 200,- 100     + 750,- 550` then one 450 &micro;s space was split into two 150 and 100 &micro;s spaces with a spike / error signal of 200 &micro;s between. Maybe because of a defective receiver or a weak signal in conjunction with another light emitting source nearby.
-- If you see timings like `+ 500,- 550     + 450,- 550     + 450,- 500     + 500,-1550`, then marks are generally shorter than spaces and therefore `MARK_EXCESS_MICROS` (specified in your ino file) should be **negative** to compensate for this at decoding.
-- If you see `Protocol=UNKNOWN Hash=0x0 1 bits received` it may be that the space after the initial mark is longer than [`RECORD_GAP_MICROS`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.h#L124).
-  This was observed for some LG air conditioner protocols. Try again with a line e.g. `#define RECORD_GAP_MICROS 12000` before the line `#include <IRremote.hpp>` in your .ino file.
-- To see more info supporting you to find the reason for your UNKNOWN protocol, you must enable the line `//#define DEBUG` in IRremoteInt.h.
-
-## How to deal with protocols not supported by IRremote
-If you do not know which protocol your IR transmitter uses, you have several choices.
-- Just use the hash value to decide which command was received. See the [SimpleReceiverForHashCodes example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiverForHashCodes/SimpleReceiverForHashCodes.ino).
-- Use the [IRreceiveDump example](examples/ReceiveDump) to dump out the IR timing.
- You can then reproduce/send this timing with the [SendRawDemo example](examples/SendRawDemo).
- For **long codes** with more than 48 bits like from air conditioners, you can **change the length of the input buffer** in [IRremote.h](src/IRremoteInt.h#L36).
-- The [IRMP AllProtocol example](https://github.com/IRMP-org/IRMP#allprotocol-example) prints the protocol and data for one of the **40 supported protocols**.
- The same library can be used to send this codes.
-- If you have a bigger Arduino board at hand (> 100 kByte program memory) you can try the
- [IRremoteDecode example](https://github.com/bengtmartensson/Arduino-DecodeIR/blob/master/examples/IRremoteDecode/IRremoteDecode.ino) of the Arduino library [DecodeIR](https://github.com/bengtmartensson/Arduino-DecodeIR).
-- Use [IrScrutinizer](http://www.harctoolbox.org/IrScrutinizer.html).
- It can automatically generate a send sketch for your protocol by exporting as "Arduino Raw". It supports IRremote,
- the old [IRLib](https://github.com/cyborg5/IRLib) and [Infrared4Arduino](https://github.com/bengtmartensson/Infrared4Arduino).
-
-<br/>
 
 # Examples for this library
 The examples are available at File > Examples > Examples from Custom Libraries / IRremote.<br/>

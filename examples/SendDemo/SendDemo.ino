@@ -360,6 +360,11 @@ void loop() {
     IrSender.sendRC6(sAddress, sCommand, sRepeats, true);
     delay(DELAY_AFTER_SEND);
 
+    Serial.println(F("Send RC6A with 14 bit 0x2711 as extra"));
+    Serial.flush();
+    IrSender.sendRC6A(sAddress & 0xFF, sCommand, sRepeats, 0x2711, true);
+    delay(DELAY_AFTER_SEND);
+
 #if FLASHEND >= 0x3FFF && ((defined(RAMEND) && RAMEND > 0x4FF) || (defined(RAMSIZE) && RAMSIZE > 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
 
     Serial.println(F("Send MagiQuest"));

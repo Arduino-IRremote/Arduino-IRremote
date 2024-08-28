@@ -90,10 +90,11 @@
 #endif
 
 #define DECODE_BOSEWAVE
-//#define DECODE_LEGO_PF
 #define DECODE_MAGIQUEST
-//#define DECODE_WHYNTER
 #define DECODE_FAST
+
+//#define DECODE_WHYNTER
+//#define DECODE_LEGO_PF
 #endif
 
 //#undef IR_SEND_PIN // enable this, if you need to set send pin programmatically using uint8_t tSendPin below
@@ -481,11 +482,13 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 #  endif
 
+#  if __INT_WIDTH__ < 32
+        IRRawDataType tRawData[4] = { 0xB02002, 0xA010, 0x0, 0x0 }; // LSB of tRawData[0] is sent first
+#  endif
 #  if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
         Serial.flush();
 #    if __INT_WIDTH__ < 32
-        IRRawDataType tRawData[4] = { 0xB02002, 0xA010, 0x0, 0x0 }; // LSB of tRawData[0] is sent first
         IrSender.sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawData[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
         checkReceive(0x0B, 0x10);
 #    else
@@ -606,7 +609,7 @@ void loop() {
 #      endif
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send ASCII 7 bit PulseDistanceWidth LSB first"));
+        Serial.println(F("Send 7 bit ASCII character with PulseDistanceWidth LSB first"));
         Serial.flush();
         // Real PulseDistanceWidth (constant bit length) does theoretically not require a stop bit, but we know the stop bit from serial transmission
         IrSender.sendPulseDistanceWidth(38, 6000, 500, 500, 1500, 1500, 500, sCommand, 7, PROTOCOL_IS_LSB_FIRST, 0, 0);
@@ -760,9 +763,16 @@ void loop() {
 
 #if defined(DECODE_RC6)
     Serial.println(F("Send RC6"));
-    // RC6 check does not work stable without the flush
     Serial.flush();
+    sLastSendToggleValue = sAddress & 0x01; // to modify toggling at each loop
+
     IrSender.sendRC6(sAddress & 0xFF, sCommand, 0, true);
+    checkReceive(sAddress & 0xFF, sCommand);
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send RC6A with 14 bit 0x2711 as extra"));
+    Serial.flush();
+    IrSender.sendRC6A(sAddress & 0xFF, sCommand, 0, 0x2711, true);
     checkReceive(sAddress & 0xFF, sCommand);
     delay(DELAY_AFTER_SEND);
 #endif
