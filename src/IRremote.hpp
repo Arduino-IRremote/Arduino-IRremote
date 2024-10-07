@@ -306,7 +306,7 @@ void disableLEDFeedback() {}; // dummy function for examples
 #include "ir_Others.hpp"
 #include "ir_Pronto.hpp" // pronto is an universal decoder and encoder
 #  if defined(DECODE_DISTANCE_WIDTH)     // universal decoder for pulse distance width protocols - requires up to 750 bytes additional program memory
-#include <ir_DistanceWidthProtocol.hpp>
+#include "ir_DistanceWidthProtocol.hpp"
 #  endif
 #endif // #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)
 
