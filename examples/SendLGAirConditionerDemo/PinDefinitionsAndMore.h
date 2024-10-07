@@ -35,7 +35,7 @@
  * ATtiny167    9|PA3       8|PA2       5|PA7     Digispark original core
  * ATtiny84      |PB2        |PA4        |PA3     ATTinyCore
  * ATtiny88     3|PD3       4|PD4       9|PB1     ATTinyCore
- * ATtiny3217  18|PA1      19|PA2      20|PA3     MegaTinyCore
+ * ATtiny3216  14|PA1      15|PA2      16|PA3     MegaTinyCore
  * ATtiny1604   2           3|PA5       %
  * ATtiny816   14|PA1      16|PA3       1|PA5     MegaTinyCore
  * ATtiny1614   8|PA1      10|PA3       1|PA5     MegaTinyCore
@@ -93,10 +93,10 @@
 // Tiny Core Dev board
 // https://www.tindie.com/products/xkimi/tiny-core-16-dev-board-attiny1616/ - Out of Stock
 // https://www.tindie.com/products/xkimi/tiny-core-32-dev-board-attiny3217/ - Out of Stock
-#define IR_RECEIVE_PIN   PIN_PA1 // use 18 instead of PIN_PA1 for TinyCore32
-#define IR_SEND_PIN      PIN_PA2 // 19
-#define TONE_PIN         PIN_PA3 // 20
-#define APPLICATION_PIN  PIN_PA0 // 0
+#define IR_RECEIVE_PIN   PIN_PA1 // 14 use 18 instead of PIN_PA1 for TinyCore32
+#define IR_SEND_PIN      PIN_PA2 // 15, 19 for TinyCore32
+#define TONE_PIN         PIN_PA3 // 16, 20 for TinyCore32
+#define APPLICATION_PIN  PIN_PC3 // 13, PIN_PA0 is RESET
 #undef LED_BUILTIN               // No LED available on the TinyCore 32 board, take the one on the programming board which is connected to the DAC output
 #define LED_BUILTIN      PIN_PA6 // use 2 instead of PIN_PA6 for TinyCore32
 

@@ -11,6 +11,14 @@
 #ifndef __digitalWriteFast_h_
 #define __digitalWriteFast_h_ 1
 
+//#define THROW_ERROR_IF_NOT_FAST // If activated, an error is thrown if pin is not a compile time constant
+void NonConstantsUsedForPinModeFast( void )  __attribute__ (( error("Parameter for pinModeFast() function is not constant") ));
+void NonConstantsUsedForDigitalWriteFast( void )  __attribute__ (( error("Parameter for digitalWriteFast() function is not constant") ));
+void NonConstantsUsedForDigitalToggleFast( void )  __attribute__ (( error("Parameter for digitalToggleFast() function is not constant") ));
+int NonConstantsUsedForDigitalReadFast( void )  __attribute__ (( error("Parameter for digitalReadFast() function is not constant") ));
+
+#if !defined(MEGATINYCORE) // megaTinyCore has it own digitalWriteFast function set, except digitalToggleFast().
+
 //#define SANGUINO_PINOUT // define for Sanguino pinout
 
 // general macros/defines
@@ -28,10 +36,6 @@
 #endif
 
 #include <Arduino.h> // declarations for the fallback to digitalWrite(), digitalRead() etc.
-
-#if defined(MEGATINYCORE)
-#error Do not use "#include digitalWriteFast.h" because megaTinyCore has it own digitalWriteFast function set, except digitalToggleFast().
-#endif
 
 // --- Arduino Mega and ATmega128x/256x based boards ---
 #if (defined(ARDUINO_AVR_MEGA) || \
@@ -316,12 +320,6 @@
 
 #endif
 
-
-void NonConstantsUsedForPinModeFast( void )  __attribute__ (( error("Parameter for pinModeFast() function is not constant") ));
-void NonConstantsUsedForDigitalWriteFast( void )  __attribute__ (( error("Parameter for digitalWriteFast() function is not constant") ));
-void NonConstantsUsedForDigitalToggleFast( void )  __attribute__ (( error("Parameter for digitalToggleFast() function is not constant") ));
-int NonConstantsUsedForDigitalReadFast( void )  __attribute__ (( error("Parameter for digitalReadFast() function is not constant") ));
-
 #if !defined(digitalWriteFast)
 #  if (defined(__AVR__) || defined(ARDUINO_ARCH_AVR)) && defined(__digitalPinToPortReg)
 #    if defined(THROW_ERROR_IF_NOT_FAST)
@@ -420,4 +418,5 @@ if (__builtin_constant_p(P)) { \
 #  endif
 #endif // !defined(digitalToggleFast)
 
+#endif // !defined(MEGATINYCORE)
 #endif //__digitalWriteFast_h_

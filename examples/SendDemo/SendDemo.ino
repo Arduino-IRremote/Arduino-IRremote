@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2023 Armin Joachimsmeyer
+ * Copyright (c) 2020-2024 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -194,7 +194,6 @@ void loop() {
         Serial.flush();
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         delay(DELAY_AFTER_SEND);
-#endif
 
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
         Serial.flush();
@@ -260,6 +259,7 @@ void loop() {
         0, 0);
 #endif
         delay(DELAY_AFTER_SEND);
+#endif
 
         Serial.println(F("Send ASCII 7 bit PulseDistanceWidth LSB first"));
         Serial.flush();

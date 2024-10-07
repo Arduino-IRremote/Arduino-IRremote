@@ -41,6 +41,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Staying on 2.x](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#staying-on-2x)
 - [Why *.hpp instead of *.cpp](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#why-hpp-instead-of-cpp)
 - [Using the new *.hpp files](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#using-the-new-hpp-files)
+- [Tutorials](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#3tutorials)
 - [3 ways to specify an IR code](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#3-ways-to-specify-an-ir-code)
 - [IRReceiver pinouts](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irreceiver-pinouts)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-ir-codes)
@@ -49,7 +50,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [RAM usage of different protocolsl](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ram-usage-of-different-protocols)
   * [Handling unknown Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#handling-unknown-protocols)
     * [Disclaimer](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#disclaimer)
-    * [Other libraries](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#other-libraries)
+    * [Other libraries, which may cover these protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#other-libraries-which-may-cover-these-protocols)
     * [Protocol=PULSE_DISTANCE](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#protocolpulse_distance)
     * [Protocol=UNKNOWN](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#protocolunknown)
     * [How to deal with protocols not supported by IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#how-to-deal-with-protocols-not-supported-by-irremote)
@@ -64,7 +65,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Receiving sets overflow flag](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-sets-overflow-flag)
   * [Problems with Neopixels, FastLed etc.](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#problems-with-neopixels-fastled-etc)
   * [Does not work/compile with another library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#does-not-workcompile-with-another-library)
-  * [Multiple IR receiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-receiver)
+  * [Multiple IR receiver and sender instances](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-receiver-and-sender-instances)
   * [Increase strength of sent output signal](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#increase-strength-of-sent-output-signal)
   * [Minimal CPU clock frequency](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#minimal-cpu-clock-frequency)
   * [Bang & Olufsen protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#bang--olufsen-protocol)
@@ -304,6 +305,10 @@ The following macros will definitely be overridden with default values otherwise
 
 <br/>
 
+# Tutorials
+- A very elaborated introduction to IR remotes and IRremote library from [DroneBot Workshop ](https://dronebotworkshop.com/ir-remotes/).
+
+
 # 3 ways to specify an IR code
 There are 3 different ways of specifying a particular IR code.
 
@@ -458,7 +463,7 @@ If the record gap determined by `RECORD_GAP_MICROS` is changed from the default 
 Use the **ReceiveDemo example** to print out all informations about your IR protocol.<br/>
 The **ReceiveDump example** gives you more information but has bad repeat detection due to the time required for printing the information.
 
-### Other libraries
+### Other libraries, which may cover these protocols
 #### IRMP
 If your protocol seems not to be supported by this library, you may try the [IRMP library](https://github.com/IRMP-org/IRMP), which especially supports manchester protocols much better.
 
@@ -668,7 +673,7 @@ There are some other solutions to this on more powerful processors,
 **Another library is only working/compiling** if you deactivate the line `IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);`.<br/>
 This is often due to **timer resource conflicts** with the other library. Please see [below](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage).
 
-## Multiple IR receiver and sender
+## Multiple IR receiver and sender instances
 **This library supports only one IR receiver and one IR sender object (IRrecv and IRsend) per CPU.**<br/>
 However since sending is a serial task, you can use `setSendPin()` to switch the pin to send, thus emulating multiple sender.<br/>
 The receiver uses a special **timer** triggered function, which reads the digital IR signal value from one pin every 50 &micro;s.<br/>

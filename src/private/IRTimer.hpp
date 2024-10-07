@@ -196,7 +196,7 @@ void disableSendPWMByTimer() {
 // ATtiny84
 #elif defined(__AVR_ATtiny84__) || defined(__AVR_ATtiny88__)
 #  if !defined(IR_USE_AVR_TIMER1)
-#define IR_USE_AVR_TIMER1     // send pin = pin 6
+#define IR_USE_AVR_TIMER1     // send pin = pin 6, no tone() available when using ATTinyCore
 #  endif
 
 #elif  defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)

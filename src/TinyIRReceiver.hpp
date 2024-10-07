@@ -114,17 +114,18 @@ volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
 #warning "IR_INPUT_PIN is deprecated, use IR_RECEIVE_PIN"
 #define IR_RECEIVE_PIN  IR_INPUT_PIN
 #endif
+
 #if !defined(IR_RECEIVE_PIN)
-#if defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
+#  if defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)
 #warning "IR_RECEIVE_PIN is not defined, so it is set to 10"
 #define IR_RECEIVE_PIN    10
-#elif defined(__AVR_ATtiny816__)
+#  elif defined(__AVR_ATtiny816__)
 #warning "IR_RECEIVE_PIN is not defined, so it is set to 14"
 #define IR_RECEIVE_PIN    14
-#else
+#  else
 #warning "IR_RECEIVE_PIN is not defined, so it is set to 2"
 #define IR_RECEIVE_PIN    2
-#endif
+#  endif
 #endif
 
 #if !defined(IR_FEEDBACK_LED_PIN) && defined(LED_BUILTIN)
@@ -323,7 +324,7 @@ void IRPinChangeInterruptHandler(void) {
                      * Check address parity
                      * Address is sent first and contained in the lower word
                      */
-                    if (TinyIRReceiverControl.IRRawData.UBytes[0] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[1])) {
+                    if (TinyIRReceiverControl.IRRawData.UBytes[0] != (uint8_t)(~TinyIRReceiverControl.IRRawData.UBytes[1])) {
 #if defined(ENABLE_NEC2_REPEATS)
                     TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED; // here we can have the repeat flag already set
 #else
@@ -336,7 +337,7 @@ void IRPinChangeInterruptHandler(void) {
                      * Check command parity
                      */
 #if (TINY_RECEIVER_ADDRESS_BITS > 0)
-                    if (TinyIRReceiverControl.IRRawData.UBytes[2] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[3])) {
+                    if (TinyIRReceiverControl.IRRawData.UBytes[2] != (uint8_t)(~TinyIRReceiverControl.IRRawData.UBytes[3])) {
 #if defined(ENABLE_NEC2_REPEATS)
                     TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
 #else

@@ -2,8 +2,10 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+# 4.4.2
+
 # 4.4.1
-- Support for ESP 3.0 by akellai.
+- Support for ESP core 3.x by akellai.
 - restartTimer() now uses variable sMicrosAtLastStopTimer to keep track of uncounted ticks between stopTimer() and restartTimer().
 - Removed functions addTicksToInternalTickCounter() and addMicrosToInternalTickCounter(), which were added in 4.1.0.
 - Version 2.2.0 of TinyIR with new TinyReceiverDecode() function to be used as drop in for IrReceiver.decode().

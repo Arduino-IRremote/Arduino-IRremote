@@ -32,12 +32,18 @@
 
 #include <Arduino.h>
 
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+
 /*
  * Specify which protocol(s) should be used for decoding.
  * This must be done before the #include <IRremote.hpp>
  */
 #define DECODE_HASH             // special decoder for all protocols
+#if !defined(RAW_BUFFER_LENGTH)
+#  if !((defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF))
 #define RAW_BUFFER_LENGTH  1000 // Especially useful for unknown and probably long protocols
+#  endif
+#endif
 //#define DEBUG                 // Activate this for lots of lovely debug output from the decoders.
 
 /*

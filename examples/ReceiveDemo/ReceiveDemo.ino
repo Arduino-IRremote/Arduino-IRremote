@@ -65,6 +65,22 @@
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
 // !!! Enabling B&O disables detection of Sony, because the repeat gap for SONY is smaller than the B&O frame gap :-( !!!
 //#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly. It has an IR transmit frequency of 455 kHz! It prevents decoding of SONY!
+#else
+// for 8k flash
+//#define DECODE_DENON        // Includes Sharp
+#define DECODE_JVC
+#define DECODE_KASEIKYO
+#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
+#define DECODE_LG
+#define DECODE_NEC          // Includes Apple and Onkyo
+#define DECODE_SAMSUNG
+//#define DECODE_SONY
+//#define DECODE_RC5
+//#define DECODE_RC6
+#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
+#define DECODE_HASH         // special decoder for all protocols
+
+#define EXCLUDE_EXOTIC_PROTOCOLS
 #endif
 // etc. see IRremote.hpp
 //
@@ -72,7 +88,7 @@
 #if !defined(RAW_BUFFER_LENGTH)
 // For air condition remotes it requires 750. Default is 200.
 #  if !((defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF))
-#define RAW_BUFFER_LENGTH  730 // this allows usage of 16 bit raw buffer, for RECORD_GAP_MICROS > 20000
+#define RAW_BUFFER_LENGTH  730 // This big value is required to allows usage of 16 bit raw buffer, for RECORD_GAP_MICROS > 20000
 #  endif
 #endif
 
@@ -158,7 +174,7 @@ void setup() {
     Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
-#endif
+#endif // FLASHEND >= 0x3FFF
 }
 
 void loop() {
@@ -172,8 +188,7 @@ void loop() {
      */
     if (IrReceiver.decode()) {
         Serial.println();
-#if FLASHEND < 0x3FFF  //
-        // For less than 16k flash, only print a minimal summary of received data
+#if FLASHEND < 0x3FFF  // For less than 16k flash, only print a minimal summary of received data
         IrReceiver.printIRResultMinimal(&Serial);
 #else
 
@@ -255,28 +270,30 @@ void loop() {
 
 }
 
+#if FLASHEND >= 0x3FFF // No tone() available when using ATTinyCore
 /*
  * Stop receiver, generate a single beep and start receiver again
  */
 void generateTone() {
-#if !defined(ESP8266) && !defined(NRF5) // tone on esp8266 works only once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
-#  if defined(ESP32) // ESP32 uses another timer for tone(), maybe other platforms (not tested yet) too.
+#  if !defined(ESP8266) && !defined(NRF5) // tone on esp8266 works only once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
+#    if defined(ESP32) // ESP32 uses another timer for tone(), maybe other platforms (not tested yet) too.
     tone(TONE_PIN, 2200, 8);
-#  else
+#    else
     IrReceiver.stopTimer(); // Stop timer consistently before calling tone() or other functions using the timer resource.
     tone(TONE_PIN, 2200, 8);
     delay(8);
     IrReceiver.restartTimer(); // Restart IR timer after timer resource is no longer blocked.
+#    endif
 #  endif
-#endif
 }
+#endif // FLASHEND >= 0x3FFF
 
 void handleOverflow() {
     Serial.println(F("Overflow detected"));
     Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in " __FILE__));
     // see also https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library
 
-#if !defined(ESP8266) && !defined(NRF5) // tone on esp8266 works once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
+#if !defined(ESP8266) && !defined(NRF5) && FLASHEND >= 0x3FFF // tone on esp8266 works once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
     /*
      * Stop timer, generate a double beep and start timer again
      */

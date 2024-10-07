@@ -340,8 +340,9 @@ void IRrecv::setReceivePin(uint_fast8_t aReceivePinNumber) {
     irparams.IRReceivePinPortInputRegister = portInputRegister(digitalPinToPort(aReceivePinNumber)); // requires 44 bytes PGM, even if not referenced
 #  endif
 #endif
+    // Seems to be at least required by ESP32
     // Set pin mode once. pinModeFast makes no difference if used, but saves 224 if not referenced :-(
-    pinModeFast(aReceivePinNumber, INPUT); // Seems to be at least required by ESP32
+    if (__builtin_constant_p(aReceivePinNumber) ) { pinModeFast(aReceivePinNumber, INPUT);} else { pinModeFast(aReceivePinNumber, INPUT);}
 }
 
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)

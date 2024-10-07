@@ -108,10 +108,11 @@ IRAM_ATTR
 void setFeedbackLED(bool aSwitchLedOn) {
     if (aSwitchLedOn) {
         if (FeedbackLEDControl.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
+            // Turn user defined pin LED on
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-            digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED on
+            if (__builtin_constant_p(FeedbackLEDControl.FeedbackLEDPin) ) { digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, LOW);} else { digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW);}
 #else
-            digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED on
+            if (__builtin_constant_p(FeedbackLEDControl.FeedbackLEDPin) ) { digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, HIGH);} else { digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH);}
 #endif
 #if defined(LED_BUILTIN) // use fast macros here
         } else {
@@ -124,10 +125,11 @@ void setFeedbackLED(bool aSwitchLedOn) {
         }
     } else {
         if (FeedbackLEDControl.FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN) {
+            // Turn user defined pin LED off
 #if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-            digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, HIGH); // Turn user defined pin LED off
+            if (__builtin_constant_p(FeedbackLEDControl.FeedbackLEDPin) ) { digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, HIGH);} else { digitalWrite(FeedbackLEDControl.FeedbackLEDPin, HIGH);}
 #else
-            digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, LOW); // Turn user defined pin LED off
+            if (__builtin_constant_p(FeedbackLEDControl.FeedbackLEDPin) ) { digitalWriteFast(FeedbackLEDControl.FeedbackLEDPin, LOW);} else { digitalWrite(FeedbackLEDControl.FeedbackLEDPin, LOW);}
 #endif
 #if defined(LED_BUILTIN)
         } else {
