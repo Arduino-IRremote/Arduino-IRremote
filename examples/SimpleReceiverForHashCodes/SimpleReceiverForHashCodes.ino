@@ -87,10 +87,17 @@ void loop() {
          * Finally, check the received data and perform actions according to the received command
          */
         auto tDecodedRawData = IrReceiver.decodedIRData.decodedRawData; // uint32_t on 8 and 16 bit CPUs and uint64_t on 32 and 64 bit CPUs
-        if (tDecodedRawData == 0x4F7BE2FB) {
-            // do something
-        } else if (tDecodedRawData == 0x97483BFB) {
-            // do something else
+        if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
+            Serial.println(F("Repeat received. Here you can repeat the same action as before."));
+        } else {
+            Serial.print(F("Raw data received are 0x"));
+            Serial.println(tDecodedRawData);
+
+            if (IrReceiver.decodedIRData.command == 0x10) {
+                // do something
+            } else if (IrReceiver.decodedIRData.command == 0x11) {
+                // do something else
+            }
         }
     }
 }

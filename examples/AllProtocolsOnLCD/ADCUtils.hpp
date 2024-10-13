@@ -607,6 +607,8 @@ uint16_t getVoltageMillivoltWith_1_1VoltReference(uint8_t aADCChannelForVoltageM
 
 /*
  * Return true if sVCCVoltageMillivolt is > 4.3 V and < 4.95 V
+ * This does not really work for the UNO board, because it has no series Diode in the USB VCC
+ * and therefore a very low voltage drop.
  */
 bool isVCCUSBPowered() {
     readVCCVoltageMillivolt();

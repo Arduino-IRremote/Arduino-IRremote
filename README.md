@@ -138,7 +138,7 @@ Protocols can be switched off and on by defining macros before the line `#includ
 - Protocol values comply to **protocol standards**.<br/>
   NEC, Panasonic, Sony, Samsung and JVC decode & send LSB first.
 - Supports **Universal Distance protocol**, which covers a lot of previous unknown protocols.
-- Compatible with **tone()** library. See the [ReceiveDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/21b5747a58e9d47c9e3f1beb056d58c875a92b47/examples/ReceiveDemo/ReceiveDemo.ino#L159-L169) example.
+- Compatible with **tone()** library. See the [ReceiveDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L284-L298) example.
 - Simultaneous sending and receiving. See the [SendAndReceive](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendAndReceive/SendAndReceive.ino#L167-L170) example.
 - Supports **more platforms**.
 - Allows for the generation of non PWM signal to just **simulate an active low receiver signal** for direct connect to existent receiving devices without using IR.
@@ -446,7 +446,7 @@ On a long press, the **SamsungLG protocol** does not repeat its frame, it sends 
 ## RAM usage of different protocols
 The `RAW_BUFFER_LENGTH` determines the length of the **byte buffer** where the received IR timing data is stored before decoding.<br/>
 **100** is sufficient for standard protocols **up to 48 bits**, with 1 bit consisting of one mark and space.
-We always require additional 4 btes, 1 byte for initial gap, 2 bytes for header and 1 byte for stop bit.
+We always require additional 4 bytes, 1 byte for initial gap, 2 bytes for header and 1 byte for stop bit.
 - **48** bit protocols are PANASONIC, KASEIKYO, SAMSUNG48, RC6.
 - **32** bit protocols like NEC, SAMSUNG, WHYNTER, SONY(20), LG(28) require a **buffer length of 68**.
 - **16** bit protocols like BOSEWAVE, DENON, FAST, JVC, LEGO_PF, RC5, SONY(12 or 15) require a **buffer length of 36**.
@@ -519,7 +519,8 @@ If you do not know which protocol your IR transmitter uses, you have several cho
 <br/>
 
 # Sending IR codes
-If you have a device at hand which can generate the IR codes you want to work with (aka IR remote), **it is recommended** to receive the codes with the [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino), which will tell you on the serial output how to send them.
+If you have a device at hand which can generate the IR codes you want to work with (aka IR remote),
+**it is recommended** to receive the codes with the [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino), which will tell you on the serial output how to send them.
 
 ```
 Protocol=LG Address=0x2 Command=0x3434 Raw-Data=0x23434E 28 bits MSB first
@@ -568,8 +569,14 @@ http://www.harctoolbox.org/IR-resources.html
 
 
 # Tiny NEC receiver and sender
-For applications only requiring NEC, NEC variants or FAST -see below- protocol, there is a special receiver / sender included,<br/>
+For applications only requiring NEC, NEC variants or FAST -see below- protocol, there is a special receiver / sender included,
 which has very **small code size of 500 bytes and does NOT require any timer**.
+
+## Principle of operation
+The receiver uses a **pin change interrupt** for on-the-fly decoding which limits the choice of protocols.<br/>
+On each level change, the current level and the time since the last change are used to incrementally decode the protocol.<br/>
+With this operating principle, we **always need a stop bit**!
+The level change caused by this stop bit triggers the final decoding and the call of the optional **user-provided callback function** `handleTinyReceivedIRData()`.
 
 Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irdispatcherdemo) examples.<br/>
 Take care to include `TinyIRReceiver.hpp` or `TinyIRSender.hpp` instead of `IRremote.hpp`.
@@ -651,7 +658,7 @@ On some boards where a software timer is available, the software timer is used.<
 Be aware that the hardware timer used for receiving should not be used for `analogWrite()`.<br/>
 Especially **motor** control often uses the `analogWrite()` function and will therefore stop the receiving if used on the pins indicated [here](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage).<br/>
 On the Uno and other AVR boards the receiver timer ist the same as the tone timer. Thus receiving will stop after a `tone()` command.
-See [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/b962db8f4e47408df01474a57f313f5a6bbe39a1/examples/ReceiveDemo/ReceiveDemo.ino#L257) how to deal with it, i.e. how to use `IrReceiver.restartTimer()`.
+See [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L284-L298) how to deal with it, i.e. how to use `IrReceiver.restartTimer()`.
 
 ## Receiving sets overflow flag.
 The flag `IRDATA_FLAGS_WAS_OVERFLOW` is set, if `RAW_BUFFER_LENGTH` is too small for all the marks and spaces of the protocol.
@@ -693,7 +700,7 @@ On my Arduino Nanos, I always use a 100 &ohm; series resistor and one IR LED :gr
 
 ## Minimal CPU clock frequency
 For receiving, the **minimal CPU clock frequency is 4 MHz**, since the 50 &micro;s timer ISR (Interrupt Service Routine) takes around 12 &micro;s on a 16 MHz ATmega.<br/>
-The TinyReceiver, which reqires no polling, runs with 1 MHz.<br/>
+The TinyReceiver, which requires no polling, runs with 1 MHz.<br/>
 For sending, the **default software generated PWM has problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable. You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
 
 ## Bang & Olufsen protocol
@@ -712,7 +719,7 @@ The **[SimpleReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob
 A simple example can be tested online with [WOKWI](https://wokwi.com/projects/338611596994544210).
 
 #### SimpleReceiverForHashCodes
-The **[SimpleReceiverForHashCodes](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino)** uses only the hash decoder. 
+The **[SimpleReceiverForHashCodes](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino)** uses only the hash decoder.
 It converts all IR frames longer than 6 to a 32 bit hash code, thus enabling receiving of unknown protocols.<br/>
 See: http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html
 
@@ -747,7 +754,7 @@ Sends all available protocols at least once.
 Demonstrates **receiving while sending**.
 
 #### ReceiveAndSend
-Record and **play back last received IR signal** at button press. IR frames of known protocols are sent by the approriate protocol encoder. `UNKNOWN` protocol frames are stored as raw data and sent with `sendRaw()`.
+Record and **play back last received IR signal** at button press. IR frames of known protocols are sent by the appropriate protocol encoder. `UNKNOWN` protocol frames are stored as raw data and sent with `sendRaw()`.
 
 #### ReceiveAndSendDistanceWidth
 Try to decode each IR frame with the *universal* **DistanceWidth decoder**, store the data and send it on button press with `sendPulseDistanceWidthFromArray()`.<br/>
@@ -915,7 +922,7 @@ If you can provide **examples of using a periodic timer for interrupts** for the
 # Timer and pin usage
 The **receiver sample interval of 50 &micro;s is generated by a timer**. On many boards this must be a hardware timer. On some boards where a software timer is available, the software timer is used.<br/>
 On **ESP8266** `timer1` is used for receive interrupts, which makes it incompatible to the Servo and other libraries.<br/>
-On **ESP32** `hw_timer_t` is used for receive interrupts and `ledc` channel 0 is used for generating the IR PWM.
+On **ESP32** `hw_timer_t` is used for receive interrupts.
 
 Every pin can be used for receiving.<br/>
 If software PWM is selected, which is default, every pin can also be used for sending. Sending with software PWM does not require a timer!
@@ -1000,7 +1007,7 @@ For non AVR boards/platforms you must look for the appropriate section guarded b
 
 ### Stop and start timer
 Another approach can be to share the timer **sequentially** if their functionality is used only for a short period of time like for the **Arduino tone() command**.
-An example can be seen [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/21b5747a58e9d47c9e3f1beb056d58c875a92b47/examples/ReceiveDemo/ReceiveDemo.ino#L159-L169), where the IR timer is restarted after the tone has stopped.
+An example can be seen [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L284-L298), where the IR timer is restarted after the tone has stopped.
 
 ```c++
 IrReceiver.stopTimer(); // Stop timer consistently before calling tone() or other functions using the timer resource.
@@ -1014,7 +1021,7 @@ This works on AVR boards like Uno because each call to` tone()` completely initi
 If you define `SEND_PWM_BY_TIMER`, the send PWM signal is forced to be generated by a hardware timer on most platforms.<br/>
 By default, the same timer as for the receiver is used.<br/>
 Since each hardware timer has its dedicated output pin(s), you must change timer or timer sub-specifications to change PWM output pin. See [private/IRTimer.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.hpp)<br/>
-**Exeptions** are currently [ESP32, ARDUINO_ARCH_RP2040, PARTICLE and ARDUINO_ARCH_MBED](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/39bdf8d7bf5b90dc221f8ae9fb3efed9f0a8a1db/examples/SimpleSender/PinDefinitionsAndMore.h#L273), where **PWM generation does not require a timer**.
+**Exeptions** are currently [ESP32, ARDUINO_ARCH_RP2040, PARTICLE and ARDUINO_ARCH_MBED](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleSender/PinDefinitionsAndMore.h#L334), where **PWM generation does not require a timer**.
 
 ## Why do we use 30% duty cycle for sending
 We [do it](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRSend.hpp#L1192) according to the statement in the [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf):
@@ -1049,7 +1056,7 @@ Created with sigrok PulseView with IR_NEC decoder by DjordjeMandic.<br/>
 # Quick comparison of 5 Arduino IR receiving libraries
 **This is a short comparison and may not be complete or correct.**
 
-I created this comparison matrix for [myself](https://github.com/ArminJo) in order to choose a small IR lib for my project and to have a quick overview, when to choose which library.<br/>
+I created this comparison matrix for [myself](https://github.com/ArminJo) in order to choose a small IR library for my project and to have a quick overview, when to choose which library.<br/>
 It is dated from **24.06.2022** and updated 10/2023. If you have complains about the data or request for extensions, please send a PM or open a discussion.
 
 [Here](https://github.com/crankyoldgit/IRremoteESP8266) you find an **ESP8266/ESP32** version of IRremote with an **[impressive list of supported protocols](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md)**.

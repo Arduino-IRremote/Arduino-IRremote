@@ -1437,17 +1437,17 @@ void timerConfigForReceive() {
  **********************************************************/
 #elif defined(ESP32)
 #  if !defined(ESP_ARDUINO_VERSION)
-#define ESP_ARDUINO_VERSION 0
+#define ESP_ARDUINO_VERSION 0x010101 // Version 1.1.1
 #  endif
 #  if !defined(ESP_ARDUINO_VERSION_VAL)
-#define ESP_ARDUINO_VERSION_VAL(major, minor, patch) 202
+#define ESP_ARDUINO_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
 #  endif
 
 // Variables specific to the ESP32.
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
 hw_timer_t *s50usTimer = NULL; // set by timerConfigForReceive()
 
-#  if !defined(SEND_LEDC_CHANNEL)
+#  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0) && !defined(SEND_LEDC_CHANNEL)
 #define SEND_LEDC_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
 #  endif
 

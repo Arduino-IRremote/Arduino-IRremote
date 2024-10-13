@@ -224,7 +224,12 @@ void loop() {
                 }
                 IrReceiver.printIRResultRawFormatted(&Serial, true);
             }
-            if (IrReceiver.decodedIRData.protocol != UNKNOWN) {
+            if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
+                auto tDecodedRawData = IrReceiver.decodedIRData.decodedRawData; // uint32_t on 8 and 16 bit CPUs and uint64_t on 32 and 64 bit CPUs
+                Serial.print(F("Raw data received are 0x"));
+                Serial.println(tDecodedRawData);
+
+            } else {
                 /*
                  * The info output for a successful receive
                  */
@@ -244,11 +249,16 @@ void loop() {
         /*
          * Finally check the received data and perform actions according to the received address and commands
          */
-        if (IrReceiver.decodedIRData.address == 0) {
-            if (IrReceiver.decodedIRData.command == 0x10) {
-                // do something
-            } else if (IrReceiver.decodedIRData.command == 0x11) {
-                // do something else
+
+        if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
+            Serial.println(F("Repeat received. Here you can repeat the same action as before."));
+        } else {
+            if (IrReceiver.decodedIRData.address == 0) {
+                if (IrReceiver.decodedIRData.command == 0x10) {
+                    // do something
+                } else if (IrReceiver.decodedIRData.command == 0x11) {
+                    // do something else
+                }
             }
         }
 
