@@ -573,10 +573,12 @@ For applications only requiring NEC, NEC variants or FAST -see below- protocol, 
 which has very **small code size of 500 bytes and does NOT require any timer**.
 
 ## Principle of operation
-The receiver uses a **pin change interrupt** for on-the-fly decoding which limits the choice of protocols.<br/>
-On each level change, the current level and the time since the last change are used to incrementally decode the protocol.<br/>
-With this operating principle, we **always need a stop bit**!
-The level change caused by this stop bit triggers the final decoding and the call of the optional **user-provided callback function** `handleTinyReceivedIRData()`.
+Instead of sampling the input every 50 &micro;s as IRremote does, TinyReceiver receiver uses a **pin change interrupt** for on-the-fly decoding which limits the choice of protocols.<br/>
+On each level change, the level and the time since the last change are used to incrementally decode the protocol.<br/>
+With this operating principle, we **cannot wait for a timeout** and then decode the protocol as IRremote does.<br/>
+Instead, we need to know which is the last bit (level change) of a protocol to do the final decoding 
+and the call of the optional **user provided callback function** `handleTinyReceivedIRData()`.<br/>
+This means, **we need to know the number of bits in a protocol** and therefore the protocol (family).
 
 Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irdispatcherdemo) examples.<br/>
 Take care to include `TinyIRReceiver.hpp` or `TinyIRSender.hpp` instead of `IRremote.hpp`.
