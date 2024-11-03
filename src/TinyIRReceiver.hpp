@@ -84,7 +84,7 @@
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC / ONKYO.
 //#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
-#include "TinyIR.h" // If not defined, it defines IR_RECEIVE_PIN, IR_FEEDBACK_LED_PIN and TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
+#include "TinyIR.h"
 
 #include "digitalWriteFast.h"
 /** \addtogroup TinyReceiver Minimal receiver for NEC and FAST protocol
@@ -110,6 +110,8 @@ volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
 /*
  * Set input pin and output pin definitions etc.
  */
+//#define IR_RECEIVE_PIN          2
+//#define IR_FEEDBACK_LED_PIN     LED_BUILTIN
 #if defined(IR_INPUT_PIN)
 #warning "IR_INPUT_PIN is deprecated, use IR_RECEIVE_PIN"
 #define IR_RECEIVE_PIN  IR_INPUT_PIN
@@ -129,7 +131,7 @@ volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
 #endif
 
 #if !defined(IR_FEEDBACK_LED_PIN) && defined(LED_BUILTIN)
-#define IR_FEEDBACK_LED_PIN    LED_BUILTIN
+#define IR_FEEDBACK_LED_PIN     LED_BUILTIN
 #endif
 
 #if !( \

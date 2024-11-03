@@ -48,7 +48,7 @@ void timerConfigForReceive();           // Initialization of 50 us timer, interr
 void timerEnableReceiveInterrupt();     // Enable interrupts of an initialized timer
 void timerDisableReceiveInterrupt();    // Disable interrupts of an initialized timer
 void timerResetInterruptPending();      // ISR helper function for some architectures, which require a manual reset
-                                        // of the pending interrupt (TIMER_REQUIRES_RESET_INTR_PENDING is defined). Otherwise empty.
+// of the pending interrupt (TIMER_REQUIRES_RESET_INTR_PENDING is defined). Otherwise empty.
 
 void timerConfigForSend(uint16_t aFrequencyKHz); // Initialization of timer hardware generated PWM, if defined(SEND_PWM_BY_TIMER)
 void enableSendPWMByTimer();            // Switch on PWM generation
@@ -1581,8 +1581,13 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
 
 #  if !defined(IR_SAMD_TIMER)
 #    if defined(__SAMD51__)
+#      if defined(TC5)
 #define IR_SAMD_TIMER       TC5
 #define IR_SAMD_TIMER_IRQ   TC5_IRQn
+#      else
+#define IR_SAMD_TIMER       TC3
+#define IR_SAMD_TIMER_IRQ   TC3_IRQn
+#      endif
 #    else
 // SAMD21
 #define IR_SAMD_TIMER       TC3
@@ -1617,7 +1622,11 @@ void timerConfigForReceive() {
 
 #  if defined(__SAMD51__)
     // Enable the TC5 clock, use generic clock generator 0 (F_CPU) for TC5
+#    if defined(TC5_GCLK_ID)
     GCLK->PCHCTRL[TC5_GCLK_ID].reg = GCLK_PCHCTRL_GEN_GCLK0_Val | (1 << GCLK_PCHCTRL_CHEN_Pos);
+#    else
+    GCLK->PCHCTRL[TC3_GCLK_ID].reg = GCLK_PCHCTRL_GEN_GCLK0_Val | (1 << GCLK_PCHCTRL_CHEN_Pos);
+#    endif
 
     // The TC should be disabled before the TC is reset in order to avoid undefined behavior.
     TC->CTRLA.reg &= ~TC_CTRLA_ENABLE; // Disable the Timer
@@ -1674,18 +1683,12 @@ void timerConfigForReceive() {
 }
 
 #  if !defined(DISABLE_CODE_FOR_RECEIVER)
-#    if defined(__SAMD51__)
-void TC5_Handler(void) {
-    TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
-    // Check for right interrupt bit
-    if (TC->INTFLAG.bit.MC0 == 1) {
-        // reset bit for next turn
-        TC->INTFLAG.bit.MC0 = 1;
-        IRReceiveTimerInterruptHandler();
-    }
-}
+#    if defined(__SAMD51__) && defined(TC5)
+void TC5_Handler(void)
 #    else
-void TC3_Handler(void) {
+void TC3_Handler(void)
+#    endif // defined(__SAMD51__)
+{
     TcCount16 *TC = (TcCount16*) IR_SAMD_TIMER;
     // Check for right interrupt bit
     if (TC->INTFLAG.bit.MC0 == 1) {
@@ -1694,7 +1697,6 @@ void TC3_Handler(void) {
         IRReceiveTimerInterruptHandler();
     }
 }
-#    endif // defined(__SAMD51__)
 #  endif // !defined(DISABLE_CODE_FOR_RECEIVER)
 
 /***************************************

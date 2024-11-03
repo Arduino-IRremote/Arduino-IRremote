@@ -3,6 +3,7 @@ The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
 # 4.4.2
+- Support for SAMD51 timer3 if timer 5 is not available (Adafruit ItsyBitsy M4)
 
 # 4.4.1
 - Support for ESP core 3.x by akellai.

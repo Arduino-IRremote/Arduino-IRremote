@@ -57,6 +57,7 @@ jobs:
           - arduino:samd:arduino_zero_native
           - arduino:renesas_uno:unor4wifi
           - adafruit:samd:adafruit_metro_m4:cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off
+          - adafruit:samd:adafruit_itsybitsy_m4
           - arduino:mbed:nano33ble
           - arduino:mbed_rp2040:pico
           - rp2040:rp2040:arduino_nano_connect
@@ -152,6 +153,13 @@ jobs:
             sketches-exclude: TinyReceiver,IRDispatcherDemo
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
+
+          - arduino-boards-fqbn: adafruit:samd:adafruit_itsybitsy_m4
+            platform-url: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+            sketches-exclude: TinyReceiver,IRDispatcherDemo
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
+
 
           - arduino-boards-fqbn: arduino:mbed:nano33ble
             build-properties: # the flags were put in compiler.cpp.extra_flags

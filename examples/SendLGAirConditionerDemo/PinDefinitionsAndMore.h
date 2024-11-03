@@ -39,7 +39,7 @@
  * ATtiny1604   2           3|PA5       %
  * ATtiny816   14|PA1      16|PA3       1|PA5     MegaTinyCore
  * ATtiny1614   8|PA1      10|PA3       1|PA5     MegaTinyCore
- * SAMD21       3           4           5
+ * SAMD         2           3           4
  * ESP8266      14|D5       12|D6       %
  * ESP32        15          4          27
  * ESP32-C3     2           3           4

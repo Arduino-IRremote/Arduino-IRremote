@@ -906,7 +906,7 @@ ATtiny boards are only tested with [ATTinyCore](https://github.com/SpenceKonde/A
 - ATmega4809 (Nano every)
 - ATtiny3217 (Tiny Core 32 Dev Board)
 - ATtiny84, 85, 167 (Digispark + Digispark Pro)
-- SAMD21 (Zero, MKR*, **but not SAMD51 and not DUE, the latter is SAM architecture**)
+- SAMD (Zero, MKR*, **but not DUE, the latter is SAM architecture**)
 - ESP8266
 - ESP32 (ESP32-C3 since board package 2.0.2 from Espressif)
 - Sparkfun Pro Micro
