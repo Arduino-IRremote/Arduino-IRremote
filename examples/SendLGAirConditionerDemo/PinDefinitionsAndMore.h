@@ -39,6 +39,7 @@
  * ATtiny1604   2           3|PA5       %
  * ATtiny816   14|PA1      16|PA3       1|PA5     MegaTinyCore
  * ATtiny1614   8|PA1      10|PA3       1|PA5     MegaTinyCore
+ * MKR*         1           3           4
  * SAMD         2           3           4
  * ESP8266      14|D5       12|D6       %
  * ESP32        15          4          27
@@ -288,7 +289,11 @@ void noTone(uint8_t aPinNumber){
 #define _IR_TIMING_TEST_PIN 7
 
 #elif defined(ARDUINO_ARCH_SAMD) || defined(ARDUINO_ARCH_SAM)
+#  if defined(USE_ARDUINO_MKR_PIN_LAYOUT)
+#define IR_RECEIVE_PIN      1 // Pin 2 on MKR is not interrupt capable, see https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/
+#  else
 #define IR_RECEIVE_PIN      2
+#  endif
 #define IR_SEND_PIN         3
 #define TONE_PIN            4
 #define APPLICATION_PIN     5

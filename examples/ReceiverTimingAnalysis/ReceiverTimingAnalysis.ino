@@ -70,7 +70,11 @@ void setup() {
     EIMSK |= _BV(INT1);     // enable interrupt on next change
 #  endif
 #else
+#  if defined(ARDUINO_ARCH_SAMD) // see https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/ paragraph: Syntax
+    attachInterrupt(IR_RECEIVE_PIN, measureTimingISR, CHANGE);
+#  else
     attachInterrupt(digitalPinToInterrupt(IR_RECEIVE_PIN), measureTimingISR, CHANGE);
+#  endif
 #endif
     Serial.println(F("Ready to analyze NEC IR signal at pin " STR(IR_RECEIVE_PIN)));
     Serial.println();
