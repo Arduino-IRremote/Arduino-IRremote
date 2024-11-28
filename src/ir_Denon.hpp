@@ -82,7 +82,7 @@
  *                     000A 0046 000A 0046 000A 001E 000A 001E 000A 001E 000A 0046 000A 001E 000A 001E // 8 inverted command bits
  *                     000A 0046 000A 0046 000A 0679 // 2 frame bits 1,1 + stop bit + space for Repeat
  * From analyzing the codes for Tuner preset 1 to 8 in tab Main Zone ID#1 it is obvious, that the protocol is LSB first at least for command.
- * All Denon codes with 32 as 3. value use the Kaseyikyo Denon variant.
+ * All Denon codes with 32 as 3. value use the Kaseikyo Denon variant.
  */
 // LSB first, no start bit, 5 address + 8 command + 2 frame (0,0) + 1 stop bit - each frame 2 times
 // Every frame is auto repeated with a space period of 45 ms and the command and frame inverted to (1,1) or (0,1) for SHARP.
@@ -113,19 +113,31 @@ DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_L
  * Start of send and decode functions
  ************************************/
 
+/*
+ * Maybe minimal number of repeats is 1 for a press to be reliable detected by some devices
+ */
 void IRsend::sendSharp(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
-    sendDenon(aAddress, aCommand, aNumberOfRepeats, true);
+    sendDenon(aAddress, aCommand, aNumberOfRepeats, 1);
+    // see https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1272
 }
 
-void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aSendSharp) {
+void IRsend::sendSharp2(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
+    sendDenon(aAddress, aCommand, aNumberOfRepeats, 2);
+}
+
+/*
+ * Denon packets are always sent twice. A non inverted and then an inverted frame.
+ * If you specify a repeat of e.g. 3, then 6 frames are sent.
+ */
+void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t aSendSharpFrameMarker) {
     // Set IR carrier frequency
     enableIROut (DENON_KHZ); // 38 kHz
 
     // Add frame marker for sharp
     uint16_t tCommand = aCommand;
-    if (aSendSharp) {
-        tCommand |= 0x0200; // the 2 upper bits are 00 for Denon and 10 for Sharp
-    }
+    // see https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1272
+    tCommand |= aSendSharpFrameMarker << 8; // the 2 upper bits are 00 for Denon and 01 or 10 for Sharp
+
     uint16_t tData = aAddress | ((uint16_t) tCommand << DENON_ADDRESS_BITS);
     uint16_t tInvertedData = (tData ^ 0x7FE0); // Command and frame (upper 10 bits) are inverted
 
@@ -200,8 +212,8 @@ bool IRrecv::decodeDenon() {
              * Here we are in the auto repeated frame with the inverted command
              */
 #if defined(LOCAL_DEBUG)
-                Serial.print(F("Denon: "));
-                Serial.println(F("Autorepeat received="));
+            Serial.print(F("Denon: "));
+            Serial.println(F("Autorepeat received="));
 #endif
             decodedIRData.flags |= IRDATA_FLAGS_IS_AUTO_REPEAT;
             // Check parity of consecutive received commands. There is no parity in one data set.
@@ -274,7 +286,7 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
  * Old function without parameter aNumberOfRepeats
  */
 void IRsend::sendSharp(uint16_t aAddress, uint16_t aCommand) {
-    sendDenon(aAddress, aCommand, true, 0);
+    sendDenon(aAddress, aCommand, 0, true);
 }
 
 bool IRrecv::decodeDenonOld(decode_results *aResults) {

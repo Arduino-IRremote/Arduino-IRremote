@@ -95,7 +95,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Introduced common structure PulseDistanceWidthProtocolConstants.
 - Where possible, changed all send and decode functions to use PulseDistanceWidthProtocolConstants.
 - Improved MSB/LSB handling
-- New convenience fuctions bitreverse32Bit() and bitreverseOneByte().
+- New convenience functions bitreverse32Bit() and bitreverseOneByte().
 - Improved Magiquest protocol.
 - Fix for #1028 - Prevent long delay caused by overflow when frame duration < repeat period - Thanks to Stephen Humphries!
 - Support for ATtiny816 - Thanks to elockman.
