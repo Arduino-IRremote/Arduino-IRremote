@@ -32,7 +32,7 @@
 #ifndef _IR_NEC_HPP
 #define _IR_NEC_HPP
 
-#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#if defined(DEBUG)
 #define LOCAL_DEBUG // IR_DEBUG_PRINT is a real print function here. Add local debug output.
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file. IR_DEBUG_PRINT is still a void function here.

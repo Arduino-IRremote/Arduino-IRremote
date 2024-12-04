@@ -34,13 +34,17 @@ void dumpFooter();
 
 void setup() {
     Serial.begin(115200);
-    while (!Serial)
-        ; // Wait for Serial to become available. Is optimized away for some cores.
 
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
     || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217)
-    delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
+    // Wait until Serial Monitor is attached.
+    // Required for boards using USB code for Serial like Leonardo.
+    // Is void for USB Serial implementations using external chips e.g. a CH340.
+    while (!Serial)
+        ;
+    // !!! Program will not proceed if no Serial Monitor is attached !!!
 #endif
+
     // Just to know which program is running on my Arduino
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 

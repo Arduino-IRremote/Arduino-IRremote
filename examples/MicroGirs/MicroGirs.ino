@@ -292,8 +292,6 @@ static void receive(Stream &stream) {
  */
 void setup() {
     Serial.begin(BAUDRATE);
-    while (!Serial)
-        ; // Wait for Serial to become available. Is optimized away for some cores.
 
     Serial.println(F(PROGNAME " " VERSION));
     // Just to know which program is running on my Arduino

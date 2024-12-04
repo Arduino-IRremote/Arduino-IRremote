@@ -48,7 +48,7 @@
 
 //#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 
-#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#if defined(DEBUG)
 #define LOCAL_DEBUG
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file

@@ -62,7 +62,7 @@
 #define DISTANCE_WIDTH_MAXIMUM_REPEAT_DISTANCE_MICROS       100000 // 100 ms, bit it is just a guess
 #endif
 
-#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#if defined(DEBUG)
 #define LOCAL_DEBUG
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file

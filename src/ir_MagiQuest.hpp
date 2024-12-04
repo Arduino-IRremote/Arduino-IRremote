@@ -38,7 +38,7 @@
 #ifndef _IR_MAGIQUEST_HPP
 #define _IR_MAGIQUEST_HPP
 
-#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#if defined(DEBUG)
 #define LOCAL_DEBUG
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file

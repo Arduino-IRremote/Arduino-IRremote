@@ -74,8 +74,6 @@ const uint16_t *const Hob2HoodSendCommands[NUMBER_OF_HOB_TO_HOOD_COMMANDS] = { F
 
 void setup() {
     Serial.begin(115200);
-    while (!Serial)
-        ; // Wait for Serial to become available. Is optimized away for some cores.
 
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
     || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217)

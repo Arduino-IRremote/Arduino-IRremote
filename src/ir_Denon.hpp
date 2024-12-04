@@ -32,7 +32,7 @@
 #ifndef _IR_DENON_HPP
 #define _IR_DENON_HPP
 
-#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#if defined(DEBUG)
 #define LOCAL_DEBUG
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file
@@ -113,9 +113,6 @@ DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_L
  * Start of send and decode functions
  ************************************/
 
-/*
- * Maybe minimal number of repeats is 1 for a press to be reliable detected by some devices
- */
 void IRsend::sendSharp(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendDenon(aAddress, aCommand, aNumberOfRepeats, 1);
     // see https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1272
@@ -126,8 +123,10 @@ void IRsend::sendSharp2(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberO
 }
 
 /*
- * Denon packets are always sent twice. A non inverted and then an inverted frame.
- * If you specify a repeat of e.g. 3, then 6 frames are sent.
+ * Denon frames are always sent 3 times. A non inverted (normal), an inverted frame, ending with a normal frame.
+ * Repeats are done by just adding an inverted and a normal frame with no extra delay, so it is quite responsible :-)
+ * If you specify a repeat of e.g. 3, then 3 + 6 frames are sent.
+ * Measured at Denon RC 1081.
  */
 void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t aSendSharpFrameMarker) {
     // Set IR carrier frequency
@@ -152,12 +151,15 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOf
         sendPulseDistanceWidthData(&DenonProtocolConstants, tInvertedData, DENON_BITS);
 
         tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            // send repeated command with a fixed space gap
-            delay( DENON_AUTO_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
-        }
+        // send repeated command with a fixed space gap
+        delay( DENON_AUTO_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
     }
+    /*
+     * always end with a normal frame
+     * skip last delay!
+     */
+    sendPulseDistanceWidthData(&DenonProtocolConstants, tData, DENON_BITS);
+
 }
 
 bool IRrecv::decodeSharp() {

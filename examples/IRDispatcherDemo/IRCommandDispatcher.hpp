@@ -59,7 +59,7 @@
 #else
 //#define LOCAL_INFO // This enables info output only for this file
 #endif
-#if defined(DEBUG) && !defined(LOCAL_DEBUG)
+#if defined(DEBUG)
 #define LOCAL_DEBUG
 // Propagate debug level
 #define LOCAL_INFO
