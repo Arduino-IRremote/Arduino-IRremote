@@ -507,11 +507,11 @@ public:
     void sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
             uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
             IRRawDataType aData, uint_fast8_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
-            int_fast8_t aNumberOfRepeats, void (*aSpecialSendRepeatFunction)() = NULL);
+            int_fast8_t aNumberOfRepeats, void (*aSpecialSendRepeatFunction)() = nullptr);
     void sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
             uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
             IRRawDataType aData, uint_fast8_t aNumberOfBits, bool aMSBFirst, bool aSendStopBit, uint16_t aRepeatPeriodMillis,
-            int_fast8_t aNumberOfRepeats, void (*aSpecialSendRepeatFunction)() = NULL)
+            int_fast8_t aNumberOfRepeats, void (*aSpecialSendRepeatFunction)() = nullptr)
                     __attribute__ ((deprecated ("Since version 4.1.0 parameter aSendStopBit is not longer required.")));
     void sendPulseDistanceWidthData(uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros,
             uint16_t aZeroSpaceMicros, IRRawDataType aData, uint_fast8_t aNumberOfBits, uint8_t aFlags);

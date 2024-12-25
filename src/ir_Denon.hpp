@@ -107,7 +107,7 @@
 
 struct PulseDistanceWidthProtocolConstants DenonProtocolConstants = { DENON, DENON_KHZ, DENON_HEADER_MARK, DENON_HEADER_SPACE,
 DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
-        (DENON_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+        (DENON_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
 
 /************************************
  * Start of send and decode functions

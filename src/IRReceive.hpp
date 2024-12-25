@@ -199,9 +199,9 @@ void IRReceiveTimerInterruptHandler() {
                 irparams.StateForISR = IR_REC_STATE_STOP;
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
                 /*
-                 * Call callback if registered (not NULL)
+                 * Call callback if registered (not nullptr)
                  */
-                if (irparams.ReceiveCompleteCallbackFunction != NULL) {
+                if (irparams.ReceiveCompleteCallbackFunction != nullptr) {
                     irparams.ReceiveCompleteCallbackFunction();
                 }
 #endif
@@ -235,9 +235,9 @@ void IRReceiveTimerInterruptHandler() {
             irparams.StateForISR = IR_REC_STATE_STOP; // This signals the decode(), that a complete frame was received
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
             /*
-             * Call callback if registered (not NULL)
+             * Call callback if registered (not nullptr)
              */
-            if (irparams.ReceiveCompleteCallbackFunction != NULL) {
+            if (irparams.ReceiveCompleteCallbackFunction != nullptr) {
                 irparams.ReceiveCompleteCallbackFunction();
             }
 #endif
@@ -286,6 +286,7 @@ ISR()
 /**********************************************************************************************************************
  * Stream like API
  **********************************************************************************************************************/
+
 /**
  * Initializes the receive and feedback pin
  * @param aReceivePin The Arduino pin number, where a demodulating IR receiver is connected.
@@ -342,12 +343,16 @@ void IRrecv::setReceivePin(uint_fast8_t aReceivePinNumber) {
 #endif
     // Seems to be at least required by ESP32
     // Set pin mode once. pinModeFast makes no difference if used, but saves 224 if not referenced :-(
-    if (__builtin_constant_p(aReceivePinNumber) ) { pinModeFast(aReceivePinNumber, INPUT);} else { pinModeFast(aReceivePinNumber, INPUT);}
+    if (__builtin_constant_p(aReceivePinNumber)) {
+        pinModeFast(aReceivePinNumber, INPUT);
+    } else {
+        pinModeFast(aReceivePinNumber, INPUT);
+    }
 }
 
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
 /**
- * Sets the function to call if a protocol message has arrived
+ * Sets the function to call if a complete protocol frame has arrived
  */
 void IRrecv::registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunction)(void)) {
     irparams.ReceiveCompleteCallbackFunction = aReceiveCompleteCallbackFunction;
@@ -375,7 +380,7 @@ void IRrecv::start() {
 }
 
 /*
- * Do not resume() reading of IR data
+ * Restarts timer interrupts, adjusts TickCounterForISR for correct gap value after stopTimer(). Does not call resume()!
  */
 void IRrecv::restartTimer() {
     // Setup for cyclic 50 us interrupt
@@ -398,7 +403,7 @@ void IRrecv::enableIRIn() {
 }
 
 /**
- * Configures the timer and the state machine for IR reception.
+ * Configures the timer and the state machine for IR reception. Does not call resume()!
  * We assume, that timer interrupts are disabled here, otherwise it makes no sense to use this functions.
  * Therefore we do not need to guard the change of the volatile TickCounterForISR here :-).
  * The tick counter value is already at 100 when decode() gets true, because of the 5000 us minimal gap defined in RECORD_GAP_MICROS.
@@ -415,6 +420,10 @@ void IRrecv::restartTimer(uint32_t aMicrosecondsToAddToGapCounter) {
     pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
 }
+/**
+ * Configures the timer and the state machine for IR reception. Does not call resume()!
+ * @param aTicksToAddToGapCounter To compensate for the amount of ticks the timer was stopped / disabled.
+ */
 void IRrecv::restartTimerWithTicksToAdd(uint16_t aTicksToAddToGapCounter) {
     irparams.TickCounterForISR += aTicksToAddToGapCounter;
     timerConfigForReceive(); // no interrupts enabled here!
@@ -519,16 +528,16 @@ bool IRrecv::available() {
 }
 
 /**
- * If IR receiver data is available, returns pointer to IrReceiver.decodedIRData, else NULL.
+ * Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr.
  */
 IRData* IRrecv::read() {
     if (irparams.StateForISR != IR_REC_STATE_STOP) {
-        return NULL;
+        return nullptr;
     }
     if (decode()) {
         return &decodedIRData;
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -1076,16 +1085,16 @@ uint_fast8_t IRrecv::compare(uint16_t oldval, uint16_t newval) {
 }
 
 /**
- * decodeHash - decode an arbitrary IR code.
+ * Decodes an arbitrary IR code to a 32-bit value.
  * Instead of decoding using a standard encoding scheme
  * (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
  *
- * The algorithm: look at the sequence of MARK and SPACE signals, and see if each one
+ * The algorithm looks at the sequence of MARK and SPACE signals, and see if each one
  * is shorter (0), the same length (1), or longer (2) than the previous MARK or SPACE.
- * Hash the resulting sequence of 0's, 1's, and 2's to a 32-bit value.
+ * It hash the resulting sequence of 0's, 1's, and 2's to a 32-bit value.
  * This will give a unique value for each different code (probably), for most code systems.
  *
- * Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
+ * Uses FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
  * Converts the raw code values into a 32-bit hash code.
  * Hopefully this code is unique for each button.
  * This isn't a "real" decoding, just an arbitrary value.
@@ -1166,7 +1175,7 @@ bool IRrecv::checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants
 }
 
 /*
- * Do not check for same address and command, because it is almost not possible to press 2 different buttons on the remote within around 100 ms.
+ * Does not check for same address and command, because it is almost not possible to press 2 different buttons on the remote within around 100 ms.
  * And if really required, it can be enabled here, or done manually in user program.
  * And we have still no RC6 toggle bit check for detecting a second press on the same button.
  */
@@ -1284,8 +1293,8 @@ int getMarkExcessMicros() {
     return MARK_EXCESS_MICROS;
 }
 
-/*
- * Check if protocol is not detected and detected space between two transmissions
+/**
+ * Checks if protocol is not detected and detected space between two transmissions
  * is smaller than known value for protocols (Sony with around 24 ms)
  * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD)
  */
@@ -1318,6 +1327,10 @@ void IRrecv::printActiveIRProtocols(Print *aSerial) {
 // call no class function with same name
     ::printActiveIRProtocols(aSerial);
 }
+/*
+ * Prints a list of enabled protocols for this application.
+ * @param aSerial pointer to serial used for printing. Use "&Serial".
+ */
 void printActiveIRProtocols(Print *aSerial) {
 #if defined(DECODE_ONKYO)
     aSerial->print(F("Onkyo, "));

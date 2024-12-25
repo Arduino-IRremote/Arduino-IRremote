@@ -120,7 +120,7 @@
 
 struct PulseDistanceWidthProtocolConstants KaseikyoProtocolConstants = { KASEIKYO, KASEIKYO_KHZ, KASEIKYO_HEADER_MARK,
 KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST
-       , (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+       , (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
 
 /************************************
  * Start of send and decode functions

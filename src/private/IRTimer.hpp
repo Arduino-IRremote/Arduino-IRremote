@@ -1445,7 +1445,7 @@ void timerConfigForReceive() {
 
 // Variables specific to the ESP32.
 // the ledc functions behave like hardware timers for us :-), so we do not require our own soft PWM generation code.
-hw_timer_t *s50usTimer = NULL; // set by timerConfigForReceive()
+hw_timer_t *s50usTimer = nullptr; // set by timerConfigForReceive()
 
 #  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0) && !defined(SEND_LEDC_CHANNEL)
 #define SEND_LEDC_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
@@ -1464,7 +1464,7 @@ void timerEnableReceiveInterrupt() {
  * Special support for ESP core < 202
  */
 void timerDisableReceiveInterrupt() {
-    if (s50usTimer != NULL) {
+    if (s50usTimer != nullptr) {
         timerDetachInterrupt(s50usTimer);
         timerEnd(s50usTimer);
     }
@@ -1472,7 +1472,7 @@ void timerDisableReceiveInterrupt() {
 #  else
 
 void timerDisableReceiveInterrupt() {
-    if (s50usTimer != NULL) {
+    if (s50usTimer != nullptr) {
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
         timerStop(s50usTimer);
 #    else
@@ -1492,7 +1492,7 @@ void timerConfigForReceive() {
     // ESP32 has a proper API to setup timers, no weird chip macros needed
     // simply call the readable API versions :)
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
-    if(s50usTimer == NULL) {
+    if(s50usTimer == nullptr) {
 #    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
         s50usTimer = timerBegin(1000000);   // Only 1 parameter is required. 1000000 corresponds to 1 MHz / 1 uSec. After successful setup the timer will automatically start.
         timerStop(s50usTimer); // Stop it here, to avoid "error E (3447) gptimer: gptimer_start(348): timer is not enabled yet" at timerEnableReceiveInterrupt()
@@ -1775,7 +1775,7 @@ bool IRTimerInterruptHandlerHelper(repeating_timer_t*) {
 }
 
 void timerEnableReceiveInterrupt() {
-    add_repeating_timer_us(-(MICROS_PER_TICK), IRTimerInterruptHandlerHelper, NULL, &s50usTimer);
+    add_repeating_timer_us(-(MICROS_PER_TICK), IRTimerInterruptHandlerHelper, nullptr, &s50usTimer);
 }
 void timerDisableReceiveInterrupt() {
     cancel_repeating_timer(&s50usTimer);

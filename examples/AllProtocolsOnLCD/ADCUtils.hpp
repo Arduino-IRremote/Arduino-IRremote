@@ -28,7 +28,7 @@
 #include "ADCUtils.h"
 #if defined(ADC_UTILS_ARE_AVAILABLE) // set in ADCUtils.h, if supported architecture was detected
 
-#if !defined(STR_HELPER)
+#if !defined(STR)
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 #endif
@@ -403,7 +403,7 @@ uint16_t readUntil4ConsecutiveValuesAreEqual(uint8_t aADCChannelNumber, uint8_t 
         /*
          * Get min and max of the last 4 values
          */
-        tMin = 1024;
+        tMin = READING_FOR_AREF;
         tMax = 0;
         for (uint_fast8_t i = 0; i < 4; ++i) {
             if (tValues[i] < tMin) {
@@ -472,7 +472,7 @@ uint16_t readUntil4ConsecutiveValuesAreEqual(uint8_t aADCChannelNumber, uint8_t 
 float getVCCVoltageSimple(void) {
     // use AVCC with (optional) external capacitor at AREF pin as reference
     float tVCC = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
-    return ((1023 * 1.1 * 4) / tVCC);
+    return ((READING_FOR_AREF * 1.1 * 4) / tVCC);
 }
 
 /*
@@ -483,19 +483,19 @@ float getVCCVoltageSimple(void) {
 uint16_t getVCCVoltageMillivoltSimple(void) {
     // use AVCC with external capacitor at AREF pin as reference
     uint16_t tVCC = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
-    return ((1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCC);
+    return ((READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCC);
 }
 
 /*
  * Gets the hypothetical 14 bit reading of VCC using 1.1 volt reference
- * Similar to getVCCVoltageMillivolt() * 1023 / 1100
+ * Similar to getVCCVoltageMillivolt() * 1024 / 1100
  */
 uint16_t getVCCVoltageReadingFor1_1VoltReference(void) {
     uint16_t tVCC = waitAndReadADCChannelWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT);
     /*
      * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
      */
-    return ((1023L * 1023L) / tVCC);
+    return ((READING_FOR_AREF * READING_FOR_AREF) / tVCC);
 }
 
 /*
@@ -519,7 +519,7 @@ uint16_t getVCCVoltageMillivolt(void) {
     /*
      * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
      */
-    return ((1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT) / tVCC);
+    return ((READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT) / tVCC);
 }
 
 /*
@@ -547,7 +547,7 @@ void readAndPrintVCCVoltageMillivolt(Print *aSerial) {
 void readVCCVoltageSimple(void) {
     // use AVCC with (optional) external capacitor at AREF pin as reference
     float tVCC = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
-    sVCCVoltage = (1023 * (((float) ADC_INTERNAL_REFERENCE_MILLIVOLT) / 1000) * 4) / tVCC;
+    sVCCVoltage = (READING_FOR_AREF * (((float) ADC_INTERNAL_REFERENCE_MILLIVOLT) / 1000) * 4) / tVCC;
 }
 
 /*
@@ -558,7 +558,7 @@ void readVCCVoltageSimple(void) {
 void readVCCVoltageMillivoltSimple(void) {
     // use AVCC with external capacitor at AREF pin as reference
     uint16_t tVCCVoltageMillivoltRaw = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
-    sVCCVoltageMillivolt = (1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCCVoltageMillivoltRaw;
+    sVCCVoltageMillivolt = (READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCCVoltageMillivoltRaw;
 }
 
 /*
@@ -579,7 +579,7 @@ void readVCCVoltageMillivolt(void) {
     /*
      * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
      */
-    sVCCVoltageMillivolt = (1023L * ADC_INTERNAL_REFERENCE_MILLIVOLT) / tVCCVoltageMillivoltRaw;
+    sVCCVoltageMillivolt = (READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT) / tVCCVoltageMillivoltRaw;
 }
 
 /*
@@ -588,7 +588,7 @@ void readVCCVoltageMillivolt(void) {
  */
 uint16_t getVoltageMillivolt(uint16_t aVCCVoltageMillivolt, uint8_t aADCChannelForVoltageMeasurement) {
     uint16_t tInputVoltageRaw = waitAndReadADCChannelWithReference(aADCChannelForVoltageMeasurement, DEFAULT);
-    return (aVCCVoltageMillivolt * (uint32_t) tInputVoltageRaw) / 1023;
+    return (aVCCVoltageMillivolt * (uint32_t) tInputVoltageRaw) / READING_FOR_AREF;
 }
 
 /*
@@ -597,12 +597,12 @@ uint16_t getVoltageMillivolt(uint16_t aVCCVoltageMillivolt, uint8_t aADCChannelF
  */
 uint16_t getVoltageMillivolt(uint8_t aADCChannelForVoltageMeasurement) {
     uint16_t tInputVoltageRaw = waitAndReadADCChannelWithReference(aADCChannelForVoltageMeasurement, DEFAULT);
-    return (getVCCVoltageMillivolt() * (uint32_t) tInputVoltageRaw) / 1023;
+    return (getVCCVoltageMillivolt() * (uint32_t) tInputVoltageRaw) / READING_FOR_AREF;
 }
 
 uint16_t getVoltageMillivoltWith_1_1VoltReference(uint8_t aADCChannelForVoltageMeasurement) {
     uint16_t tInputVoltageRaw = waitAndReadADCChannelWithReference(aADCChannelForVoltageMeasurement, INTERNAL);
-    return (ADC_INTERNAL_REFERENCE_MILLIVOLT * (uint32_t) tInputVoltageRaw) / 1023;
+    return (ADC_INTERNAL_REFERENCE_MILLIVOLT * (uint32_t) tInputVoltageRaw) / READING_FOR_AREF;
 }
 
 /*

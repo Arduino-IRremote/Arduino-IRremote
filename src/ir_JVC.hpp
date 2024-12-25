@@ -80,7 +80,7 @@
 #define JVC_REPEAT_PERIOD     65000 // assume around 40 ms for a JVC frame. JVC IR Remotes: RM-SA911U, RM-SX463U have 45 ms period
 
 struct PulseDistanceWidthProtocolConstants JVCProtocolConstants = { JVC, JVC_KHZ, JVC_HEADER_MARK, JVC_HEADER_SPACE, JVC_BIT_MARK,
-JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
 
 /************************************
  * Start of send and decode functions

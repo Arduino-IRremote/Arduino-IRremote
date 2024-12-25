@@ -47,7 +47,7 @@ struct FeedbackLEDControlStruct {
 struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED control instance
 
 /**
- * Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving
+ * Enables blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving
  * Cannot disable it here!!! Use disableLEDFeedbackForReceive() or disableLEDFeedbackForSend()
  * @param aFeedbackLEDPin If aFeedbackLEDPin == 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  *                        If FeedbackLEDPin == 0 and no LED_BUILTIN defined, disable LED feedback

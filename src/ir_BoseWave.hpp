@@ -48,7 +48,7 @@
 
 struct PulseDistanceWidthProtocolConstants BoseWaveProtocolConstants = { BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
 BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST
-       , (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+       , (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
 
 /************************************
  * Start of send and decode functions

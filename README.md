@@ -222,6 +222,17 @@ void loop() {
 }
 ```
 
+#### Sample output
+For more, see the [UnitTest log](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/UnitTest/UnitTest.log).
+
+```
+Protocol=NEC Address=0xF1 Command=0x76 Raw-Data=0x89760EF1 32 bits LSB first
+Send with: IrSender.sendNEC(0xF1, 0x76, <numberOfRepeats>);
+
+Protocol=Kaseikyo_Denon Address=0xFF1 Command=0x76 Raw-Data=0x9976FF10 48 bits LSB first
+Send with: IrSender.sendKaseikyo_Denon(0xFF1, 0x76, <numberOfRepeats>);
+```
+
 ## How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes
 For the new decoders for **NEC, Panasonic, Sony, Samsung and JVC**, the result `IrReceiver.decodedIRData.decodedRawData` is now **LSB-first**, as the definition of these protocols suggests!<br/>
 <br/>
@@ -833,6 +844,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 |-|-:|-|
 | `RAW_BUFFER_LENGTH` | 200 | Buffer size of raw input uint16_t buffer. Must be even! If it is too small, overflow flag will be set. 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. A value of 200 requires 200 bytes RAM. |
 | `EXCLUDE_UNIVERSAL_PROTOCOLS` | disabled | Excludes the universal decoder for pulse distance width protocols and decodeHash (special decoder for all protocols) from `decode()`. Saves up to 1000 bytes program memory. |
+| `EXCLUDE_EXOTIC_PROTOCOLS` | disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
 | `DECODE_<Protocol name>` | all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |
 | `DECODE_STRICT_CHECKS` |  disabled | Check for additional required characteristics of protocol timing like length of mark for a constant mark protocol, where space length determines the bit value. Requires up to 194 additional bytes of program memory. |
 | `IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK` |  disabled | Saves up to 60 bytes of program memory and 2 bytes RAM. |
@@ -847,7 +859,6 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` | disabled | Uses or simulates open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
 | `USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN` | disabled | Only if `USE_NO_SEND_PWM` is enabled. Simulate an **active high** receiver signal instead of an active low signal. |
 | `DISABLE_CODE_FOR_RECEIVER` | disabled |  Disables static receiver code like receive timer ISR handler and static IRReceiver and irparams data. Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not required. |
-| `EXCLUDE_EXOTIC_PROTOCOLS` | disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time. |
 | `MICROS_PER_TICK` | 50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 &micro;s at 38 kHz. |
@@ -858,7 +869,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 These next macros for **TinyIRReceiver** must be defined in your program before the line `#include <TinyIRReceiver.hpp>` to take effect.
 | Name | Default value | Description |
 |-|-:|-|
-| `IR_RECEIVE_PIN` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. |
+| `IR_RECEIVE_PIN` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. Not used in IRremote. |
 | `IR_FEEDBACK_LED_PIN` | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the feedback LED function. Saves 14 bytes program memory. |
 | `DISABLE_PARITY_CHECKS` | disabled | Disables the addres and command parity checks. Saves 48 bytes program memory. |
@@ -866,7 +877,7 @@ These next macros for **TinyIRReceiver** must be defined in your program before 
 | `USE_ONKYO_PROTOCOL` | disabled | Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
 | `USE_FAST_PROTOCOL` | disabled | Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC. |
 | `ENABLE_NEC2_REPEATS` | disabled | Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat. |
-| `USE_CALLBACK_FOR_TINY_RECEIVER` | disabled | Call the fixed function `void handleReceivedTinyIRData()` each time a frame or repeat is received. |
+| `USE_CALLBACK_FOR_TINY_RECEIVER` | disabled | Call the user provided function `void handleReceivedTinyIRData()` each time a frame or repeat is received. |
 
 The next macro for **IRCommandDispatcher** must be defined in your program before the line `#include <IRCommandDispatcher.hpp>` to take effect.
 | `USE_TINY_IR_RECEIVER` | disabled | Use [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) for receiving IR codes. |

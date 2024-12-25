@@ -408,7 +408,7 @@ size_t IRsend::write(decode_type_t aProtocol, uint16_t aAddress, uint16_t aComma
 }
 
 /**
- * Function using an 16 byte microsecond timing array for every purpose.
+ * Sends a 16 byte microsecond timing array.
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
@@ -429,7 +429,7 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLe
 }
 
 /**
- * Function using an 8 byte tick timing array to save program memory
+ * Sends an 8 byte tick timing array to save program memory.
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
 void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
@@ -700,7 +700,7 @@ void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtoc
 #endif
 
     if (aNumberOfRepeats < 0) {
-        if (aProtocolConstants->SpecialSendRepeatFunction != NULL) {
+        if (aProtocolConstants->SpecialSendRepeatFunction != nullptr) {
             /*
              * Send only a special repeat and return
              */
@@ -719,7 +719,7 @@ void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtoc
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
 
-        if (tNumberOfCommands < ((uint_fast8_t) aNumberOfRepeats + 1) && aProtocolConstants->SpecialSendRepeatFunction != NULL) {
+        if (tNumberOfCommands < ((uint_fast8_t) aNumberOfRepeats + 1) && aProtocolConstants->SpecialSendRepeatFunction != nullptr) {
             // send special repeat, if specified and we are not in the first loop
             aProtocolConstants->SpecialSendRepeatFunction();
         } else {
@@ -753,7 +753,7 @@ void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtoc
  * @param aFlags            Evaluated flags are PROTOCOL_IS_MSB_FIRST and SUPPRESS_STOP_BIT. Stop bit is otherwise sent for all pulse distance protocols.
  * @param aNumberOfRepeats  If < 0 and a aProtocolConstants->SpecialSendRepeatFunction() is specified
  *                          then it is called without leading and trailing space.
- * @param aSpecialSendRepeatFunction    If NULL, the first frame is repeated completely, otherwise this function is used for sending the repeat frame.
+ * @param aSpecialSendRepeatFunction    If nullptr, the first frame is repeated completely, otherwise this function is used for sending the repeat frame.
  */
 void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
         uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros, IRRawDataType aData,
@@ -761,7 +761,7 @@ void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, uint16_t aHeader
         void (*aSpecialSendRepeatFunction)()) {
 
     if (aNumberOfRepeats < 0) {
-        if (aSpecialSendRepeatFunction != NULL) {
+        if (aSpecialSendRepeatFunction != nullptr) {
             aSpecialSendRepeatFunction();
             return;
         } else {
@@ -776,7 +776,7 @@ void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, uint16_t aHeader
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
 
-        if (tNumberOfCommands < ((uint_fast8_t) aNumberOfRepeats + 1) && aSpecialSendRepeatFunction != NULL) {
+        if (tNumberOfCommands < ((uint_fast8_t) aNumberOfRepeats + 1) && aSpecialSendRepeatFunction != nullptr) {
             // send special repeat
             aSpecialSendRepeatFunction();
         } else {

@@ -122,7 +122,7 @@ struct PulseDistanceWidthProtocolConstants NECProtocolConstants =
 
 // Like NEC but repeats are full frames instead of special NEC repeats
 struct PulseDistanceWidthProtocolConstants NEC2ProtocolConstants = { NEC2, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
-NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), NULL };
+NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
 
 /************************************
  * Start of send and decode functions

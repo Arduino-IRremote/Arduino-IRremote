@@ -65,7 +65,7 @@ Sum: 28900
 */
 struct PulseDistanceWidthProtocolConstants FASTProtocolConstants = { FAST, FAST_KHZ, FAST_HEADER_MARK, FAST_HEADER_SPACE,
 FAST_BIT_MARK, FAST_ONE_SPACE, FAST_BIT_MARK, FAST_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (FAST_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
-NULL };
+nullptr };
 
 /************************************
  * Start of send and decode functions

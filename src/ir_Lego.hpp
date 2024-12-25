@@ -85,7 +85,7 @@
 
 struct PulseDistanceWidthProtocolConstants LegoProtocolConstants = { LEGO_PF, 38, LEGO_HEADER_MARK, LEGO_HEADER_SPACE, LEGO_BIT_MARK,
 LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (LEGO_AUTO_REPEAT_PERIOD_MIN
-        / MICROS_IN_ONE_MILLI), NULL };
+        / MICROS_IN_ONE_MILLI), nullptr };
 
 /************************************
  * Start of send and decode functions

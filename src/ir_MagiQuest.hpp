@@ -111,7 +111,7 @@
 // assume 110 as repeat period
 struct PulseDistanceWidthProtocolConstants MagiQuestProtocolConstants = { MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
 MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | SUPPRESS_STOP_BIT, 110,
-        NULL };
+nullptr };
 //+=============================================================================
 //
 /**

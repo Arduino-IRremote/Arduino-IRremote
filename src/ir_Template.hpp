@@ -125,7 +125,7 @@
 // use BOSEWAVE, we have no SHUZU code
 struct PulseDistanceWidthProtocolConstants ShuzuProtocolConstants = { BOSEWAVE, 38, SHUZU_HEADER_MARK, SHUZU_HEADER_SPACE,
 SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (SHUZU_REPEAT_PERIOD
-        / MICROS_IN_ONE_MILLI), NULL };
+        / MICROS_IN_ONE_MILLI), nullptr };
 
 /************************************
  * Start of send and decode functions
