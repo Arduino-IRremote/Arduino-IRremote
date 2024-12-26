@@ -151,7 +151,7 @@ volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
  * Declaration of the callback function provided by the user application.
  * It is called every time a complete IR command or repeat was received.
  */
-extern void handleTinyReceivedIRData();
+extern void handleReceivedTinyIRData();
 
 #if defined(LOCAL_DEBUG)
 uint32_t sMicrosOfGap; // The length of the gap before the start bit

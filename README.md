@@ -588,7 +588,7 @@ Instead of sampling the input every 50 &micro;s as IRremote does, TinyReceiver r
 On each level change, the level and the time since the last change are used to incrementally decode the protocol.<br/>
 With this operating principle, we **cannot wait for a timeout** and then decode the protocol as IRremote does.<br/>
 Instead, we need to know which is the last bit (level change) of a protocol to do the final decoding 
-and the call of the optional **user provided callback function** `handleTinyReceivedIRData()`.<br/>
+and the call of the optional **user provided callback function** `handleReceivedTinyIRData()`.<br/>
 This means, **we need to know the number of bits in a protocol** and therefore the protocol (family).
 
 Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irdispatcherdemo) examples.<br/>
