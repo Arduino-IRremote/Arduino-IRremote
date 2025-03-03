@@ -59,7 +59,7 @@
 
 //#define DEBUG               // Activate this for lots of lovely debug output from the decoders.
 
-//#define RAW_BUFFER_LENGTH  750 // For air condition remotes it requires 750. Default is 200.
+//#define RAW_BUFFER_LENGTH  750 // For air condition remotes it may require up to 750. Default is 200.
 
 #include <Arduino.h>
 

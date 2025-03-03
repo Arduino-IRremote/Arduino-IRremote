@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2024 Armin Joachimsmeyer
+ * Copyright (c) 2020-2025 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@
 
 //#define DEBUG               // Activate this for lots of lovely debug output from the decoders.
 
-//#define RAW_BUFFER_LENGTH  750 // For air condition remotes it requires 750. Default is 200.
+//#define RAW_BUFFER_LENGTH  750 // For air condition remotes it may require up to 750. Default is 200.
 
 /*
  * This include defines the actual pin number for pins like IR_RECEIVE_PIN, IR_SEND_PIN for many different boards and architectures
@@ -119,8 +119,10 @@ void loop() {
             Serial.println(F("Repeat received. Here you can repeat the same action as before."));
         } else {
             if (IrReceiver.decodedIRData.command == 0x10) {
+                Serial.println(F("Received command 0x10."));
                 // do something
             } else if (IrReceiver.decodedIRData.command == 0x11) {
+                Serial.println(F("Received command 0x11."));
                 // do something else
             }
         }

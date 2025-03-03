@@ -57,7 +57,7 @@
 #define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 //
 #if !defined(RAW_BUFFER_LENGTH)
-// For air condition remotes it requires 750. Default is 200.
+// For air condition remotes it may require up to 750. Default is 200.
 #  if (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
 #define RAW_BUFFER_LENGTH  360
 #  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)

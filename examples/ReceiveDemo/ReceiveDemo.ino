@@ -10,7 +10,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2024 Armin Joachimsmeyer
+ * Copyright (c) 2020-2025 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -86,9 +86,9 @@
 //
 
 #if !defined(RAW_BUFFER_LENGTH)
-// For air condition remotes it requires 750. Default is 200.
+// For air condition remotes it may require up to 750. Default is 200.
 #  if !((defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF))
-#define RAW_BUFFER_LENGTH  730 // This big value is required to allows usage of 16 bit raw buffer, for RECORD_GAP_MICROS > 20000
+#define RAW_BUFFER_LENGTH  750
 #  endif
 #endif
 

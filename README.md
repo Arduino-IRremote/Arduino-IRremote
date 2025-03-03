@@ -42,7 +42,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Staying on 2.x](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#staying-on-2x)
 - [Why *.hpp instead of *.cpp](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#why-hpp-instead-of-cpp)
 - [Using the new *.hpp files](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#using-the-new-hpp-files)
-- [Tutorials](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#3tutorials)
+- [Tutorials](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tutorials)
 - [3 ways to specify an IR code](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#3-ways-to-specify-an-ir-code)
 - [IRReceiver pinouts](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irreceiver-pinouts)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-ir-codes)
