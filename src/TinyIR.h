@@ -2,7 +2,7 @@
  *  TinyIR.h
  *
  *
- *  Copyright (C) 2021-2023  Armin Joachimsmeyer
+ *  Copyright (C) 2021-2025  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
@@ -218,11 +218,11 @@ struct TinyIRReceiverStruct {
 
 /*
  * Definitions for member TinyIRReceiverCallbackDataStruct.Flags
- * From IRremoteInt.h
+ * This is a copy of flags from IRremoteInt.h
  */
 #define IRDATA_FLAGS_EMPTY              0x00
 #define IRDATA_FLAGS_IS_REPEAT          0x01
-#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02 // not used here, overwritten with _IRDATA_FLAGS_IS_SHORT_REPEAT
+#define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02 // not used for TinyIR
 #define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< the current (autorepeat) frame violated parity check
 
 /**

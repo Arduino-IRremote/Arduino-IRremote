@@ -248,7 +248,7 @@ void sendCode(storedIRDataStruct *aIRDataToSend) {
          * Use the write function, which does the switch for different protocols
          */
         IrSender.write(&aIRDataToSend->receivedIRData);
-        printIRResultShort(&Serial, &aIRDataToSend->receivedIRData, false);
+        printIRResultShort(&Serial, &aIRDataToSend->receivedIRData);
     }
 }
 

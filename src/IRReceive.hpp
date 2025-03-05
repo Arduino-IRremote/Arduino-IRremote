@@ -167,15 +167,18 @@ void IRReceiveTimerInterruptHandler() {
                  * Initialize all state machine variables
                  */
                 irparams.OverflowFlag = false;
-//                irparams.rawbuf[0] = irparams.TickCounterForISR;
-                irparams.initialGapTicks = irparams.TickCounterForISR; // Enabling 8 bit buffer since 4.4
+                // irparams.rawbuf[0] = irparams.TickCounterForISR;
+                // Usage of initialGapTicks enables usage of 8 bit buffer instead of 16 bit since 4.4,
+                // because the big gap value is not stored in this buffer any more
+                irparams.initialGapTicks = irparams.TickCounterForISR;
                 irparams.rawlen = 1;
                 irparams.StateForISR = IR_REC_STATE_MARK;
             } // otherwise stay in idle state
             irparams.TickCounterForISR = 0; // reset counter in both cases
         }
 
-    } else if (irparams.StateForISR == IR_REC_STATE_MARK) {  // Timing mark
+    } else if (irparams.StateForISR == IR_REC_STATE_MARK) {
+        // Timing mark here, rawlen is even
         if (tIRInputLevel != INPUT_MARK) {
             /*
              * Mark ended here. Record mark time in rawbuf array
@@ -188,35 +191,18 @@ void IRReceiveTimerInterruptHandler() {
             irparams.TickCounterForISR = 0; // This resets the tick counter also at end of frame :-)
         }
 
-    } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {  // Timing space
-        if (tIRInputLevel == INPUT_MARK) {
-            /*
-             * Space ended here. Check for overflow and record space time in rawbuf array
-             */
+    } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {
+        /*
+         * In space receiving here, rawlen is odd
+         * Check for timeout or overflow
+         */
+        if (irparams.TickCounterForISR > RECORD_GAP_TICKS || irparams.rawlen >= RAW_BUFFER_LENGTH - 1) {
             if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
                 // Flag up a read OverflowFlag; Stop the state machine
                 irparams.OverflowFlag = true;
-                irparams.StateForISR = IR_REC_STATE_STOP;
-#if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
-                /*
-                 * Call callback if registered (not nullptr)
-                 */
-                if (irparams.ReceiveCompleteCallbackFunction != nullptr) {
-                    irparams.ReceiveCompleteCallbackFunction();
-                }
-#endif
-            } else {
-#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
-//                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
-#endif
-                irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR; // record space
-                irparams.StateForISR = IR_REC_STATE_MARK;
             }
-            irparams.TickCounterForISR = 0;
-
-        } else if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
             /*
-             * Maximum space duration reached here.
+             * Overflow or maximum space duration reached here.
              * Current code is ready for processing!
              * We received a long space, which indicates gap between codes.
              * Switch to IR_REC_STATE_STOP
@@ -241,6 +227,17 @@ void IRReceiveTimerInterruptHandler() {
                 irparams.ReceiveCompleteCallbackFunction();
             }
 #endif
+        } else if (tIRInputLevel == INPUT_MARK) {
+            /*
+             * Space ended here.
+             */
+
+#if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
+//                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
+#endif
+            irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR; // record space
+            irparams.StateForISR = IR_REC_STATE_MARK;
+            irparams.TickCounterForISR = 0;
         }
     } else if (irparams.StateForISR == IR_REC_STATE_STOP) {
         /*
@@ -1181,8 +1178,9 @@ bool IRrecv::checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants
  */
 void IRrecv::checkForRepeatSpaceTicksAndSetFlag(uint16_t aMaximumRepeatSpaceTicks) {
     if (decodedIRData.initialGapTicks < aMaximumRepeatSpaceTicks
-#if defined(ENABLE_FULL_REPEAT_CHECK)
-            && decodedIRData.address == lastDecodedAddress && decodedIRData.command == lastDecodedCommand /* requires around 85 bytes program space */
+#if defined(ENABLE_COMPLETE_REPEAT_CHECK)
+// Check also for same command and address values to detect a repeat. Not sensible for standard protocols, because it is almost not possible to press 2 different buttons on the remote within around 100 ms
+            && decodedIRData.address == lastDecodedAddress && decodedIRData.command == lastDecodedCommand /* requires around 44 bytes program space */
 #endif
             ) {
         decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
@@ -1398,14 +1396,13 @@ void printActiveIRProtocols(Print *aSerial) {
  * Ends with println().
  *
  * @param aSerial   The Print object on which to write, for Arduino you can use &Serial.
- * @param aPrintRepeatGap     If true also print the gap before repeats.
  * @param aCheckForRecordGapsMicros   If true, call CheckForRecordGapsMicros() which may do a long printout,
  *                                    which in turn may block the proper detection of repeats.*
  * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD).
  */
-bool IRrecv::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
+bool IRrecv::printIRResultShort(Print *aSerial, bool aCheckForRecordGapsMicros) {
 // call no class function with same name
-    ::printIRResultShort(aSerial, &decodedIRData, aPrintRepeatGap);
+    ::printIRResultShort(aSerial, &decodedIRData);
     if (aCheckForRecordGapsMicros && decodedIRData.protocol != UNKNOWN) {
         return checkForRecordGapsMicros(aSerial);
     }
@@ -1651,6 +1648,25 @@ void IRrecv::printIRResultMinimal(Print *aSerial) {
     }
 }
 
+/*
+ * Not used yet
+ */
+void IRrecv::printIRDuration(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
+    uint16_t tSumOfDurationTicks = 0;
+    for (IRRawlenType i = 1; i < decodedIRData.rawlen; i++) {
+        tSumOfDurationTicks += decodedIRData.rawDataPtr->rawbuf[i];
+    }
+    aSerial->print(F("Duration="));
+    if (aOutputMicrosecondsInsteadOfTicks) {
+        aSerial->print((uint32_t) tSumOfDurationTicks * MICROS_PER_TICK, DEC);
+        aSerial->println(F("us"));
+
+    } else {
+        aSerial->print(tSumOfDurationTicks, DEC);
+        aSerial->println(F(" ticks"));
+    }
+}
+
 /**
  * Dump out the timings in IrReceiver.decodedIRData.rawDataPtr->rawbuf[] array 8 values per line.
  *
@@ -1731,12 +1747,17 @@ void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsI
     }
 
     aSerial->println();
-    aSerial->print(F("Sum: "));
+    aSerial->print(F("Duration="));
     if (aOutputMicrosecondsInsteadOfTicks) {
-        aSerial->println((uint32_t) tSumOfDurationTicks * MICROS_PER_TICK, DEC);
+        aSerial->print((uint32_t) tSumOfDurationTicks * MICROS_PER_TICK, DEC);
+        aSerial->println(F("us"));
+
     } else {
-        aSerial->println(tSumOfDurationTicks, DEC);
+        aSerial->print(tSumOfDurationTicks, DEC);
+        aSerial->println(F(" ticks"));
     }
+    aSerial->println();
+
 }
 
 /**

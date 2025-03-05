@@ -888,9 +888,9 @@ void loop() {
      * Force buffer overflow
      */
     Serial.println(F("Force buffer overflow by sending 450 marks and spaces"));
-    for (unsigned int i = 0; i < 225; ++i) {
-        // 400 + 400 should be received as 8/8 and sometimes as 9/7 or 7/9 if compensation by MARK_EXCESS_MICROS is optimal.
+    for (unsigned int i = 0; i < 225; ++i) { // 225 because we send 2 entries per loop
         // 210 + 540 = 750 should be received as 5/10 or 4/11 if compensation by MARK_EXCESS_MICROS is optimal.
+        // 400 + 400 should be received as 8/8 and sometimes as 9/7 or 7/9 if compensation by MARK_EXCESS_MICROS is optimal.
         IrSender.mark(210);         // 8 pulses at 38 kHz
         IrSender.space(540);        // to fill up to 750 us
     }

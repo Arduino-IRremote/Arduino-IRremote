@@ -247,6 +247,7 @@ public:
      * Useful info and print functions
      */
     void printIRResultMinimal(Print *aSerial);
+    void printIRDuration(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
     uint8_t getMaximumMarkTicksFromRawData();
@@ -257,7 +258,7 @@ public:
     /*
      * Next 4 functions are also available as non member functions
      */
-    bool printIRResultShort(Print *aSerial, bool aPrintRepeatGap = true, bool aCheckForRecordGapsMicros = true);
+    bool printIRResultShort(Print *aSerial, bool aCheckForRecordGapsMicros = true);
     void printDistanceWidthTimingInfo(Print *aSerial, DistanceWidthTimingInfoStruct *aDistanceWidthTimingInfo);
     void printIRSendUsage(Print *aSerial);
 #if defined(__AVR__)
@@ -358,10 +359,13 @@ public:
 
     IRData decodedIRData;       // Decoded IR data for the application
 
-    // Last decoded IR data for repeat detection and parity for Denon autorepeat
+    // Last decoded IR data for repeat detection and to fill in JVC, LG, NEC repeat values. Parity for Denon autorepeat
     decode_type_t lastDecodedProtocol;
-    uint32_t lastDecodedAddress;
-    uint32_t lastDecodedCommand;
+    uint16_t lastDecodedAddress;
+    uint16_t lastDecodedCommand;
+#if defined(DECODE_DISTANCE_WIDTH)
+    IRRawDataType lastDecodedRawData;
+#endif
 
     uint8_t repeatCount;        // Used e.g. for Denon decode for autorepeat decoding.
 };

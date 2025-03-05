@@ -434,8 +434,12 @@ bool IRrecv::decodeDistanceWidth() {
     decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
 #endif
 
-    // Check for repeat
-    checkForRepeatSpaceTicksAndSetFlag(DISTANCE_WIDTH_MAXIMUM_REPEAT_DISTANCE_MICROS / MICROS_PER_TICK);
+    // Check for repeat. Check also for equality of last DecodedRawData.
+    if (decodedIRData.initialGapTicks < DISTANCE_WIDTH_MAXIMUM_REPEAT_DISTANCE_MICROS / MICROS_PER_TICK
+            && decodedIRData.decodedRawDataArray[tNumberOfAdditionalArrayValues] == lastDecodedRawData) {
+        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
+    }
+    lastDecodedRawData = decodedIRData.decodedRawData;
 
     /*
      * Store timing data to reproduce frame for sending

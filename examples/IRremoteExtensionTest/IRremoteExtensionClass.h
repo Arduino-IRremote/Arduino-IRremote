@@ -40,7 +40,7 @@ public:
     IRrecv * MyIrReceiver;
     IRExtensionClass(IRrecv * aIrReceiver);
     bool decode();
-    bool printIRResultShort(Print *aSerial, bool aPrintRepeatGap = true, bool aCheckForRecordGapsMicros = true);
+    bool printIRResultShort(Print *aSerial, bool aCheckForRecordGapsMicros = true);
     void resume();
 };
 

@@ -53,8 +53,8 @@ bool IRExtensionClass::decode() {
     return MyIrReceiver->decode();
 }
 
-bool IRExtensionClass::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
-    return MyIrReceiver->printIRResultShort(aSerial, aPrintRepeatGap, aCheckForRecordGapsMicros);
+bool IRExtensionClass::printIRResultShort(Print *aSerial, bool aCheckForRecordGapsMicros) {
+    return MyIrReceiver->printIRResultShort(aSerial, aCheckForRecordGapsMicros);
 }
 
 void IRExtensionClass::resume() {
