@@ -7,6 +7,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - attachInterrupt() on SAMD has a different semantic :-(. See: https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/.
 - Fixed overflow handling.
 - Improved repeat detection for DistanceWidthProtocol.
+- Print of IR frame duration in printIRResultShort();
 
 # 4.4.1
 - Support for ESP core 3.x by akellai.

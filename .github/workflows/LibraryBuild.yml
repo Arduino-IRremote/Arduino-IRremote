@@ -100,7 +100,7 @@ jobs:
               All: -DUSE_NO_SEND_PWM
 
           - arduino-boards-fqbn: arduino:avr:uno|SEND_PWM_BY_TIMER
-            sketches-exclude: UnitTest
+            sketches-exclude: UnitTest,MultipleSendPins
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750 -DIR_SEND_PIN=3 -DSEND_PWM_BY_TIMER
               ReceiveDemo: -DDECODE_ONKYO

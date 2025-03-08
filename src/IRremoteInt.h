@@ -470,7 +470,7 @@ public:
     // The next function is a dummy to avoid acceptance of pre 4.3 calls to begin(DISABLE_LED_FEEDBACK);
     void begin(uint8_t aSendPin)
 #  if !defined (DOXYGEN)
-            __attribute__ ((deprecated ("Error: IR_SEND_PIN is still defined, therefore the function begin(aSendPin) is NOT available. You must disable '#define IR_SEND_PIN' to enable this function.")));
+            __attribute__ ((deprecated ("ERROR: IR_SEND_PIN is still defined, therefore the function begin(aSendPin) is NOT available. You must disable '#define IR_SEND_PIN' to enable this function.")));
 #  endif
 
     // The next function is a dummy to avoid acceptance of pre 4.0 calls to begin(IR_SEND_PIN, DISABLE_LED_FEEDBACK);

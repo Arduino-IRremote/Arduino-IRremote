@@ -160,6 +160,10 @@ namespace PrintULL {
  * @param aPrintRepeatGap   If true also print the gap before repeats.
  *
  */
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap) {
+    (void) aPrintRepeatGap;
+    printIRResultShort(aSerial, aIRDataPtr);
+}
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr) {
     if (aIRDataPtr->flags & IRDATA_FLAGS_WAS_OVERFLOW) {
         aSerial->println(F("Overflow"));

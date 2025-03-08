@@ -171,6 +171,7 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
 #else
 const char* getProtocolString(decode_type_t aProtocol);
 #endif
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap)  __attribute__ ((deprecated ("Remove last parameter, it is not supported any more.")));
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr); // A static function to be able to print send or copied received data.
 
 /*
