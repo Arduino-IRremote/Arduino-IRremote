@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['temp_1190',['Temp',['../unionLGProtocol.html#ae556c7e3100b062ec21581cbe61f126a',1,'LGProtocol']]],
-  ['temperature_1191',['Temperature',['../classAircondition__LG.html#a5339d1ec7928c685eb345a50b0c3781f',1,'Aircondition_LG']]],
-  ['tickcounterforisr_1192',['TickCounterForISR',['../structirparams__struct.html#a6cac39f89a3e3105e68618d61b87eec6',1,'irparams_struct']]],
-  ['tinyirreceivercontrol_1193',['TinyIRReceiverControl',['../group__TinyReceiver.html#ga30567324f26c2fae24bb11592262b6d3',1,'TinyIRReceiver.hpp']]],
-  ['tinyirreceiverdata_1194',['TinyIRReceiverData',['../group__TinyReceiver.html#gab367546db9f1c8a232471ca8b6e27053',1,'TinyIRReceiverData():&#160;TinyIRReceiver.hpp'],['../group__TinyReceiver.html#gab367546db9f1c8a232471ca8b6e27053',1,'TinyIRReceiverData():&#160;TinyIRReceiver.hpp']]],
-  ['twolongunions_1195',['TwoLongUnions',['../unionLongLongUnion.html#a2f585743273a73ecff05d48111ba1f00',1,'LongLongUnion']]],
-  ['twowordunions_1196',['TwoWordUnions',['../unionLongUnion.html#a94fdc59337221b6d4906dc1aa8016018',1,'LongUnion']]]
+  ['ubyte_1191',['UByte',['../unionWordUnion.html#ae976a1f9248ad808289d0af67d690c7a',1,'WordUnion::UByte()'],['../unionLongUnion.html#a2a351107fefa4b5173dbc8198607515e',1,'LongUnion::UByte()']]],
+  ['ubytes_1192',['UBytes',['../unionWordUnion.html#a6405b8a8817b44cde3d0f6101d9a74cc',1,'WordUnion::UBytes()'],['../unionLongUnion.html#a683822101c9e06c7cec0dde475d23ad3',1,'LongUnion::UBytes()'],['../unionLongLongUnion.html#ac094fff8006956c7d082da865f0561bf',1,'LongLongUnion::UBytes()']]],
+  ['ulong_1193',['ULong',['../unionLongUnion.html#aaf8815ca810b2d8386b5912f127586a7',1,'LongUnion::ULong()'],['../unionLongLongUnion.html#ac349a2b9febb6c2d4e4c4d443881363a',1,'LongLongUnion::ULong()']]],
+  ['ulonglong_1194',['ULongLong',['../unionLongLongUnion.html#aeddcb7029b1c47d1409857c203a988db',1,'LongLongUnion']]],
+  ['uselg2protocol_1195',['useLG2Protocol',['../classAircondition__LG.html#a7bfa209facd538812cb0fa89fef89850',1,'Aircondition_LG']]],
+  ['uword_1196',['UWord',['../unionWordUnion.html#ac72da7d551c05ed98fe75c8d239d9e23',1,'WordUnion::UWord()'],['../unionLongUnion.html#ab5c029c115e4e0d03294e27cbef24972',1,'LongUnion::UWord()'],['../unionLongLongUnion.html#ad131e93d0be6fc5d02cef733c0cfe39a',1,'LongLongUnion::UWord()']]],
+  ['uwords_1197',['UWords',['../unionLongUnion.html#a96deff8963ef4155f33a26390f8f0a4b',1,'LongUnion::UWords()'],['../unionLongLongUnion.html#a7d2c6c4f8350e564213c8803bf465cff',1,'LongLongUnion::UWords()']]]
 ];

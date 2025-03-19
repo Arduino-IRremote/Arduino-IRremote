@@ -15,6 +15,5 @@ var ir__LG_8hpp =
     [ "LG_UNIT", "group__Decoder.html#ga677656ae675af73405b65e0228ce6bc9", null ],
     [ "LG_ZERO_SPACE", "group__Decoder.html#ga8f7c839827bd908025687a175453f50a", null ],
     [ "sendLG2SpecialRepeat", "group__Decoder.html#gaddace9c2bd03f63855063a3ce5e65acc", null ],
-    [ "LG2ProtocolConstants", "group__Decoder.html#gac9dd82df6fd15506e54139e6ecf5f2da", null ],
-    [ "LGProtocolConstants", "group__Decoder.html#ga5aa81ae309491017d390106bd1b78067", null ]
+    [ "PROGMEM", "group__Decoder.html#ga9ce29c31140efb5d2d43b547d307e3a3", null ]
 ];

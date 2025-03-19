@@ -16,5 +16,6 @@ var IRReceive_8hpp =
     [ "sBiphaseCurrentTimingIntervals", "group__Receiving.html#gac33950d3b355b78a28d6f54b6af6e7b8", null ],
     [ "sBiphaseDecodeRawbuffOffset", "group__Receiving.html#ga8aabdbfa5a0a6090e938212745b4871e", null ],
     [ "sBiphaseTimeUnit", "group__Receiving.html#gae25d907bed7a0f0298f9cf105d89f86f", null ],
-    [ "sBiphaseUsedTimingIntervals", "group__Receiving.html#gafa340a1dbbee30ea603df9f63bb55027", null ]
+    [ "sBiphaseUsedTimingIntervals", "group__Receiving.html#gafa340a1dbbee30ea603df9f63bb55027", null ],
+    [ "sMicrosAtLastStopTimer", "group__Receiving.html#ga99f6267aa36f20f3aa1409b250aa6b67", null ]
 ];

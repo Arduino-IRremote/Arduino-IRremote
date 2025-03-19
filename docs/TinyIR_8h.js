@@ -70,5 +70,6 @@ var TinyIR_8h =
     [ "sendNEC", "group__TinyReceiver.html#gad56f6ae51db2f76f6b48bd6eb621b55d", null ],
     [ "sendNECMinimal", "group__TinyReceiver.html#gad46384dcfa939b9ed9538b6c907acb1f", null ],
     [ "sendONKYO", "group__TinyReceiver.html#ga42ba5dff1100c121334ae46c000631e2", null ],
+    [ "TinyReceiverDecode", "group__TinyReceiver.html#gaa97ef3a9ba3e40bd50a906788b65e79a", null ],
     [ "TinyIRReceiverData", "group__TinyReceiver.html#gab367546db9f1c8a232471ca8b6e27053", null ]
 ];

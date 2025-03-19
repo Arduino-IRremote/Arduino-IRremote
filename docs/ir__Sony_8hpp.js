@@ -16,5 +16,5 @@ var ir__Sony_8hpp =
     [ "SONY_SPACE", "group__Decoder.html#ga6bed381432686c9434b0debbda4936d0", null ],
     [ "SONY_UNIT", "group__Decoder.html#ga441cf836ba5e41a476cfaed754619e7d", null ],
     [ "SONY_ZERO_MARK", "group__Decoder.html#gaacafe83ae7609e591a845d188477b4e6", null ],
-    [ "SonyProtocolConstants", "group__Decoder.html#ga18d303101fe62d4a4998843253552e80", null ]
+    [ "PROGMEM", "group__Decoder.html#ga869e9c967e3bf52e1000f632f2ffd146", null ]
 ];

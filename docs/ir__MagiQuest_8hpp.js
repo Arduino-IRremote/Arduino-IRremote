@@ -12,5 +12,5 @@ var ir__MagiQuest_8hpp =
     [ "MAGIQUEST_WAND_ID_BITS", "ir__MagiQuest_8hpp.html#a6f9ee212ff850e280f9c241c5143cee5", null ],
     [ "MAGIQUEST_ZERO_MARK", "ir__MagiQuest_8hpp.html#ac1bc4e99d5e1b697df724d180357095d", null ],
     [ "MAGIQUEST_ZERO_SPACE", "ir__MagiQuest_8hpp.html#a95ff1854b629d4e2dce95224f470f031", null ],
-    [ "MagiQuestProtocolConstants", "ir__MagiQuest_8hpp.html#a86271aac714b1b5b2b7512d3460fca91", null ]
+    [ "PROGMEM", "ir__MagiQuest_8hpp.html#a305306e6352dd877c992851bf31da906", null ]
 ];

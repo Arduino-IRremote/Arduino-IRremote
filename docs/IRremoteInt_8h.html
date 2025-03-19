@@ -235,7 +235,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga072624eeba964d8aa105822da00090ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flash LED while receiving or sending IR data.  <a href="group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba">More...</a><br /></td></tr>
 <tr class="separator:ga072624eeba964d8aa105822da00090ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8f13aac6ecee8b3c1e59d4a2e0bb019"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019">setLEDFeedback</a> (uint8_t aFeedbackLEDPin, uint8_t aEnableLEDFeedback)</td></tr>
-<tr class="memdesc:gae8f13aac6ecee8b3c1e59d4a2e0bb019"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot disable it here!!! Use <a class="el" href="IRremoteInt_8h.html#a2e95485771d665e8227a4f42418db3f8">disableLEDFeedbackForReceive()</a> or <a class="el" href="group__FeedbackLEDFunctions.html#ga880ead90165a961244c8fc7da2375083">disableLEDFeedbackForSend()</a>  <a href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019">More...</a><br /></td></tr>
+<tr class="memdesc:gae8f13aac6ecee8b3c1e59d4a2e0bb019"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot disable it here!!! Use <a class="el" href="IRremoteInt_8h.html#a2e95485771d665e8227a4f42418db3f8">disableLEDFeedbackForReceive()</a> or <a class="el" href="group__FeedbackLEDFunctions.html#ga880ead90165a961244c8fc7da2375083">disableLEDFeedbackForSend()</a>  <a href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019">More...</a><br /></td></tr>
 <tr class="separator:gae8f13aac6ecee8b3c1e59d4a2e0bb019"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga53e5ec641a900f2c572c8bffd42da921"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921">setLEDFeedback</a> (bool aEnableLEDFeedback)</td></tr>
 <tr class="separator:ga53e5ec641a900f2c572c8bffd42da921"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -248,7 +248,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga880ead90165a961244c8fc7da2375083"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga880ead90165a961244c8fc7da2375083">disableLEDFeedbackForSend</a> ()</td></tr>
 <tr class="separator:ga880ead90165a961244c8fc7da2375083"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5f1d479f43dcd56febf146e97a3904db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">setBlinkPin</a> (uint8_t aFeedbackLEDPin) __attribute__((deprecated(&quot;Please use <a class="el" href="group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921">setLEDFeedback</a>().&quot;)))</td></tr>
-<tr class="memdesc:ga5f1d479f43dcd56febf146e97a3904db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019" title="Enable blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot ...">setLEDFeedback()</a>  <a href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">More...</a><br /></td></tr>
+<tr class="memdesc:ga5f1d479f43dcd56febf146e97a3904db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Old deprecated function name for <a class="el" href="group__FeedbackLEDFunctions.html#gae8f13aac6ecee8b3c1e59d4a2e0bb019" title="Enables blinking of feedback LED (LED_BUILTIN is taken as default) on IR sending and receiving Cannot...">setLEDFeedback()</a>  <a href="group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db">More...</a><br /></td></tr>
 <tr class="separator:ga5f1d479f43dcd56febf146e97a3904db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga770e03720a79491d7ddf347ad4b9e484"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga770e03720a79491d7ddf347ad4b9e484">IRReceiveTimerInterruptHandler</a> ()</td></tr>
 <tr class="separator:ga770e03720a79491d7ddf347ad4b9e484"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -264,6 +264,8 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:ga99f6267aa36f20f3aa1409b250aa6b67"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga99f6267aa36f20f3aa1409b250aa6b67">sMicrosAtLastStopTimer</a></td></tr>
+<tr class="separator:ga99f6267aa36f20f3aa1409b250aa6b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8aabdbfa5a0a6090e938212745b4871e"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga8aabdbfa5a0a6090e938212745b4871e">sBiphaseDecodeRawbuffOffset</a></td></tr>
 <tr class="separator:ga8aabdbfa5a0a6090e938212745b4871e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0afc0391383dc1b0fdb045cde76a93ef"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremoteInt_8h.html#a0afc0391383dc1b0fdb045cde76a93ef">enableLEDFeedbackForReceive</a> = <a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback</a></td></tr>
@@ -299,7 +301,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00111">111</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00114">114</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -333,7 +335,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00392">392</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00404">404</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -371,7 +373,7 @@ Variables</h2></td></tr>
 
 <p>If DEBUG, print the arguments, otherwise do nothing. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00162">162</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00167">167</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -393,7 +395,7 @@ Variables</h2></td></tr>
 
 <p>If DEBUG, print the arguments as a line, otherwise do nothing. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00166">166</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00171">171</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -409,7 +411,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00121">121</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00124">124</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -425,7 +427,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00122">122</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00125">125</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -441,7 +443,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00123">123</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00126">126</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -457,7 +459,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00124">124</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00127">127</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -477,7 +479,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00173">173</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00178">178</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -497,7 +499,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00174">174</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00179">179</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -513,7 +515,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00393">393</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00405">405</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -529,7 +531,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00394">394</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00406">406</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -545,7 +547,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00395">395</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00407">407</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -563,7 +565,7 @@ Variables</h2></td></tr>
 
 <p>Lower tolerance for comparison of measured data. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00424">424</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00436">436</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -597,7 +599,7 @@ Variables</h2></td></tr>
 
 <p>Just for better readability of code. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00449">449</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00461">461</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -616,7 +618,7 @@ Variables</h2></td></tr>
 <p>The RAW_BUFFER_LENGTH determines the length of the byte buffer where the received IR timing data is stored before decoding. </p>
 <p>100 is sufficient for standard protocols up to 48 bits, with 1 bit consisting of one mark and space plus 1 byte for initial gap, 2 bytes for header and 1 byte for stop bit. 48 bit protocols are PANASONIC, KASEIKYO, SAMSUNG48, RC6. 32 bit protocols like NEC, SAMSUNG, WHYNTER, SONY(20), LG(28) requires a buffer length of 68. 16 bit protocols like BOSEWAVE, DENON, FAST, JVC, LEGO_PF, RC5, SONY(12 or 15) requires a buffer length of 36. MAGIQUEST requires a buffer length of 112. Air conditioners often send a longer protocol data stream up to 750 bits. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00082">82</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00085">85</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -634,7 +636,7 @@ Variables</h2></td></tr>
 
 <p>used for e.g. NEC, where a repeat is different from just repeating the data. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00450">450</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00462">462</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -670,7 +672,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00417">417</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00429">429</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -690,7 +692,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00429">429</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00441">441</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -710,7 +712,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00428">428</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00440">440</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -726,7 +728,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00414">414</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00426">426</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -760,7 +762,7 @@ Variables</h2></td></tr>
 
 <p>Upper tolerance for comparison of measured data. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00427">427</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00439">439</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -777,7 +779,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00103">103</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00106">106</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -793,7 +795,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00109">109</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00112">112</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -809,7 +811,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00091">91</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00094">94</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -834,7 +836,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00401">401</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00413">413</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -858,7 +860,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00399">399</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00411">411</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -868,7 +870,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRremoteInt_8h.html">IRremoteInt.h</a></li>
-    <li class="footer">Generated on Thu Jul 11 2024 21:32:03 for IRremote by
+    <li class="footer">Generated on Wed Mar 19 2025 11:06:48 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

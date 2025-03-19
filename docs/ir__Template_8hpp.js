@@ -13,5 +13,5 @@ var ir__Template_8hpp =
     [ "SHUZU_REPEAT_SPACE", "ir__Template_8hpp.html#a2813fb0cb54aa7fe986f3ceadb73d74c", null ],
     [ "SHUZU_UNIT", "ir__Template_8hpp.html#acf7de30311a6d14db0d1aa23a829f39e", null ],
     [ "SHUZU_ZERO_SPACE", "ir__Template_8hpp.html#a8290df35f477610944f6e8cc9a53869d", null ],
-    [ "ShuzuProtocolConstants", "ir__Template_8hpp.html#aa7e5a73390be848996e386bf07f621ed", null ]
+    [ "PROGMEM", "ir__Template_8hpp.html#a2dbaab5151372ddeb2974d0dc33e86b1", null ]
 ];

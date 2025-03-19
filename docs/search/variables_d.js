@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['onemarkmicros_1158',['OneMarkMicros',['../structDistanceWidthTimingInfoStruct.html#a998b111c212b2352d1afc2b2b8c7adbd',1,'DistanceWidthTimingInfoStruct']]],
-  ['onespacemicros_1159',['OneSpaceMicros',['../structDistanceWidthTimingInfoStruct.html#a7485df89cd6280a36c9388e896f6cb5c',1,'DistanceWidthTimingInfoStruct']]],
-  ['overflow_1160',['overflow',['../structdecode__results.html#a821bc53c006bab3283c6b8592f0c43d3',1,'decode_results']]],
-  ['overflowflag_1161',['OverflowFlag',['../structirparams__struct.html#add9591d883df748c9ceeb46fa0de1ebc',1,'irparams_struct']]]
+  ['periodontimemicros_1159',['periodOnTimeMicros',['../classIRsend.html#a361f25ef6d623761783ed17046a244b6',1,'IRsend']]],
+  ['periodtimemicros_1160',['periodTimeMicros',['../classIRsend.html#a812c94b460a1646b5972a9a420ceff78',1,'IRsend']]],
+  ['powerison_1161',['PowerIsOn',['../classAircondition__LG.html#a4550e9ef869119bdd82f3bbdbd0a4bf0',1,'Aircondition_LG']]],
+  ['progmem_1162',['PROGMEM',['../group__Decoder.html#ga4458745b985a354ea9b7655f846240a1',1,'PROGMEM():&#160;ir_BoseWave.hpp'],['../group__Decoder.html#ga2a8eed59e74f2a45292482219d5803a7',1,'PROGMEM():&#160;ir_Denon.hpp'],['../group__Decoder.html#gaa306a0c49b6c48f6c6f5ce96b4e87fbe',1,'PROGMEM():&#160;ir_FAST.hpp'],['../group__Decoder.html#gaa79908cfaad92ad949d785cd62bb3ace',1,'PROGMEM():&#160;ir_JVC.hpp'],['../group__Decoder.html#gae9cdf0206cc7668ef3bb5fdda53841ea',1,'PROGMEM():&#160;ir_Kaseikyo.hpp'],['../group__Decoder.html#ga9ce29c31140efb5d2d43b547d307e3a3',1,'PROGMEM():&#160;ir_LG.hpp'],['../ir__MagiQuest_8hpp.html#a305306e6352dd877c992851bf31da906',1,'PROGMEM():&#160;ir_MagiQuest.hpp'],['../group__Decoder.html#ga03deae51c5a54ff932f1e5ebb4562e57',1,'PROGMEM():&#160;ir_NEC.hpp'],['../group__Decoder.html#ga43814fe40634664286fbbd8a296e0443',1,'PROGMEM():&#160;ir_Others.hpp'],['../group__Decoder.html#ga4458745b985a354ea9b7655f846240a1',1,'PROGMEM():&#160;ir_Samsung.hpp'],['../group__Decoder.html#ga869e9c967e3bf52e1000f632f2ffd146',1,'PROGMEM():&#160;ir_Sony.hpp'],['../ir__Template_8hpp.html#a2dbaab5151372ddeb2974d0dc33e86b1',1,'PROGMEM():&#160;ir_Template.hpp'],['../group__Receiving.html#ga40297ba8cf5a1c89fea2e9844c5e8d9e',1,'PROGMEM():&#160;IRProtocol.hpp']]],
+  ['protocol_1163',['protocol',['../structIRData.html#a703592faec26bab5cbe465f53ef14245',1,'IRData']]],
+  ['protocolindex_1164',['ProtocolIndex',['../structPulseDistanceWidthProtocolConstants.html#afac964e3780f921bd65787c3d20b55b3',1,'PulseDistanceWidthProtocolConstants']]],
+  ['protocolnames_1165',['ProtocolNames',['../group__Receiving.html#ga3bdd668aa583bfcd42fc7ecffbe55653',1,'IRProtocol.hpp']]]
 ];

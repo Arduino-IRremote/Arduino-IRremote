@@ -58,5 +58,6 @@ var IRremoteInt_8h =
     [ "enableLEDFeedbackForReceive", "IRremoteInt_8h.html#a0afc0391383dc1b0fdb045cde76a93ef", null ],
     [ "IrReceiver", "group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9", null ],
     [ "IrSender", "group__Sending.html#gafba8232b747be85f72c1c4612780d5cf", null ],
-    [ "sBiphaseDecodeRawbuffOffset", "group__Receiving.html#ga8aabdbfa5a0a6090e938212745b4871e", null ]
+    [ "sBiphaseDecodeRawbuffOffset", "group__Receiving.html#ga8aabdbfa5a0a6090e938212745b4871e", null ],
+    [ "sMicrosAtLastStopTimer", "group__Receiving.html#ga99f6267aa36f20f3aa1409b250aa6b67", null ]
 ];

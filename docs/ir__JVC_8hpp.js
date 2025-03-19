@@ -11,5 +11,5 @@ var ir__JVC_8hpp =
     [ "JVC_REPEAT_PERIOD", "group__Decoder.html#ga3511024575bd92aae238c9db73b9d1e1", null ],
     [ "JVC_UNIT", "group__Decoder.html#gaa79a9fdad87400415aa367568b9fdb98", null ],
     [ "JVC_ZERO_SPACE", "group__Decoder.html#ga3e161d70fe56f2ed0f76b5421fd5b1b3", null ],
-    [ "JVCProtocolConstants", "group__Decoder.html#gaa0a9300348a3451ddceca0e691dc4690", null ]
+    [ "PROGMEM", "group__Decoder.html#gaa79908cfaad92ad949d785cd62bb3ace", null ]
 ];

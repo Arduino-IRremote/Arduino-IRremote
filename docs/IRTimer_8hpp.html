@@ -112,26 +112,26 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga41e88e0b7edea76b3c77643ca7a3468f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga41e88e0b7edea76b3c77643ca7a3468f">timerResetInterruptPending</a> ()</td></tr>
-<tr class="separator:ga41e88e0b7edea76b3c77643ca7a3468f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8cca92581b5452eaac5b3075227c6c56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga8cca92581b5452eaac5b3075227c6c56">timerConfigForReceive</a> ()</td></tr>
+<tr class="memdesc:ga8cca92581b5452eaac5b3075227c6c56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the timer to be able to generate the receive sample interrupt, which consumes a small amount of CPU every 50 (MICROS_PER_TICK) us.  <a href="group__Timer.html#ga8cca92581b5452eaac5b3075227c6c56">More...</a><br /></td></tr>
+<tr class="separator:ga8cca92581b5452eaac5b3075227c6c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae0ec21c275dd13fff83445ce6cc900d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#gae0ec21c275dd13fff83445ce6cc900d7">timerEnableReceiveInterrupt</a> ()</td></tr>
 <tr class="memdesc:gae0ec21c275dd13fff83445ce6cc900d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables the receive sample timer interrupt, which consumes a small amount of CPU every 50 us.  <a href="group__Timer.html#gae0ec21c275dd13fff83445ce6cc900d7">More...</a><br /></td></tr>
 <tr class="separator:gae0ec21c275dd13fff83445ce6cc900d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0b0e97d0a44ceb967a83b44aa88c6bd2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga0b0e97d0a44ceb967a83b44aa88c6bd2">timerDisableReceiveInterrupt</a> ()</td></tr>
 <tr class="memdesc:ga0b0e97d0a44ceb967a83b44aa88c6bd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables the receive sample timer interrupt.  <a href="group__Timer.html#ga0b0e97d0a44ceb967a83b44aa88c6bd2">More...</a><br /></td></tr>
 <tr class="separator:ga0b0e97d0a44ceb967a83b44aa88c6bd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8cca92581b5452eaac5b3075227c6c56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga8cca92581b5452eaac5b3075227c6c56">timerConfigForReceive</a> ()</td></tr>
-<tr class="memdesc:ga8cca92581b5452eaac5b3075227c6c56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the timer to be able to generate the receive sample interrupt, which consumes a small amount of CPU every 50 (MICROS_PER_TICK) us.  <a href="group__Timer.html#ga8cca92581b5452eaac5b3075227c6c56">More...</a><br /></td></tr>
-<tr class="separator:ga8cca92581b5452eaac5b3075227c6c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga41e88e0b7edea76b3c77643ca7a3468f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga41e88e0b7edea76b3c77643ca7a3468f">timerResetInterruptPending</a> ()</td></tr>
+<tr class="separator:ga41e88e0b7edea76b3c77643ca7a3468f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">timerConfigForSend</a> (uint16_t aFrequencyKHz)</td></tr>
+<tr class="memdesc:gab4f8dc26e10c0481e8859252afa4d42b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with duty cycle of IR_SEND_DUTY_CYCLE_PERCENT and disables the receive interrupt if it uses the same resource.  <a href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">More...</a><br /></td></tr>
+<tr class="separator:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac67e6a15f31989aa182389cd4a8729c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9">enableSendPWMByTimer</a> ()</td></tr>
 <tr class="memdesc:gac67e6a15f31989aa182389cd4a8729c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables output of the PWM signal of the timer at the timer pin.  <a href="group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9">More...</a><br /></td></tr>
 <tr class="separator:gac67e6a15f31989aa182389cd4a8729c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga352399811c67be16548d81a18e3cd337"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga352399811c67be16548d81a18e3cd337">disableSendPWMByTimer</a> ()</td></tr>
 <tr class="memdesc:ga352399811c67be16548d81a18e3cd337"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disables output of the PWM signal of the timer at the timer pin and set it to inactive.  <a href="group__Timer.html#ga352399811c67be16548d81a18e3cd337">More...</a><br /></td></tr>
 <tr class="separator:ga352399811c67be16548d81a18e3cd337"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">timerConfigForSend</a> (uint16_t aFrequencyKHz)</td></tr>
-<tr class="memdesc:gab4f8dc26e10c0481e8859252afa4d42b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with duty cycle of IR_SEND_DUTY_CYCLE_PERCENT and disables the receive interrupt if it uses the same resource.  <a href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">More...</a><br /></td></tr>
-<tr class="separator:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>All timer specific definitions are contained in this file. Sets IR_SEND_PIN if required, e.g. if SEND_PWM_BY_TIMER for AVR is defined, which restricts the output to a dedicated pin number. </p>
@@ -150,7 +150,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d49b597d86ed44de6eb8a459f0ed40df.html">private</a></li><li class="navelem"><a class="el" href="IRTimer_8hpp.html">IRTimer.hpp</a></li>
-    <li class="footer">Generated on Thu Jul 11 2024 21:32:03 for IRremote by
+    <li class="footer">Generated on Wed Mar 19 2025 11:06:48 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

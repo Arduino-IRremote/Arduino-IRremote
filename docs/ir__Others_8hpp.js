@@ -13,6 +13,5 @@ var ir__Others_8hpp =
     [ "WHYNTER_HEADER_SPACE", "group__Decoder.html#ga516861bba8fb7df36adfcef25f2ae493", null ],
     [ "WHYNTER_ONE_SPACE", "group__Decoder.html#ga2e824e5b2ac1c06adafdbb203091ad2a", null ],
     [ "WHYNTER_ZERO_SPACE", "group__Decoder.html#gad81c68b306ebd739a90a2162e5afdba8", null ],
-    [ "DishProtocolConstants", "group__Decoder.html#gadc2297e116fe855ba3e3e541448a182a", null ],
-    [ "WhynterProtocolConstants", "group__Decoder.html#gac9e51e0ce2130b81dae8f5b6e3116787", null ]
+    [ "PROGMEM", "group__Decoder.html#ga43814fe40634664286fbbd8a296e0443", null ]
 ];

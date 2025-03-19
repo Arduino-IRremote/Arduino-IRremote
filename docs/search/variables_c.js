@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['nec2protocolconstants_1154',['NEC2ProtocolConstants',['../group__Decoder.html#gabc3c8d544eebf60b8a73495496a7c354',1,'ir_NEC.hpp']]],
-  ['necprotocolconstants_1155',['NECProtocolConstants',['../group__Decoder.html#ga7993c30413e3edec00ff3f46a9357164',1,'ir_NEC.hpp']]],
-  ['numberofbits_1156',['numberOfBits',['../structIRData.html#a945c41b8463a36cf00b0f38b0aa73200',1,'IRData']]],
-  ['numberofrepeats_1157',['NumberOfRepeats',['../classIRsend.html#abc8c3c52fc4cffa5314b8f13b99f4a23',1,'IRsend']]]
+  ['onemarkmicros_1155',['OneMarkMicros',['../structDistanceWidthTimingInfoStruct.html#a998b111c212b2352d1afc2b2b8c7adbd',1,'DistanceWidthTimingInfoStruct']]],
+  ['onespacemicros_1156',['OneSpaceMicros',['../structDistanceWidthTimingInfoStruct.html#a7485df89cd6280a36c9388e896f6cb5c',1,'DistanceWidthTimingInfoStruct']]],
+  ['overflow_1157',['overflow',['../structdecode__results.html#a821bc53c006bab3283c6b8592f0c43d3',1,'decode_results']]],
+  ['overflowflag_1158',['OverflowFlag',['../structirparams__struct.html#add9591d883df748c9ceeb46fa0de1ebc',1,'irparams_struct']]]
 ];

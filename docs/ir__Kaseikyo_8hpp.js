@@ -21,5 +21,5 @@ var ir__Kaseikyo_8hpp =
     [ "MITSUBISHI_VENDOR_ID_CODE", "group__Decoder.html#gaca397cf0ba4543c581f0f5bfaf50ef25", null ],
     [ "PANASONIC_VENDOR_ID_CODE", "group__Decoder.html#ga310adca9c81e03bc122d77251a594440", null ],
     [ "SHARP_VENDOR_ID_CODE", "group__Decoder.html#ga2ee9972dc5425130b659242589ceb098", null ],
-    [ "KaseikyoProtocolConstants", "group__Decoder.html#ga5f5da8d9b1b980c8fef61096ffb8b216", null ]
+    [ "PROGMEM", "group__Decoder.html#gae9cdf0206cc7668ef3bb5fdda53841ea", null ]
 ];

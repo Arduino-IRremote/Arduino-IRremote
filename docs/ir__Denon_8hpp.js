@@ -12,5 +12,5 @@ var ir__Denon_8hpp =
     [ "DENON_REPEAT_PERIOD", "group__Decoder.html#gadf29400cf8e1622f6bc747dff0944861", null ],
     [ "DENON_UNIT", "group__Decoder.html#gad25dca3fd4ddc00b460b66007be0b2bb", null ],
     [ "DENON_ZERO_SPACE", "group__Decoder.html#ga502f8eb1ebb964692c6593a580713064", null ],
-    [ "DenonProtocolConstants", "group__Decoder.html#ga2e60a5966e1402b20ddaaca9c1adb815", null ]
+    [ "PROGMEM", "group__Decoder.html#ga2a8eed59e74f2a45292482219d5803a7", null ]
 ];

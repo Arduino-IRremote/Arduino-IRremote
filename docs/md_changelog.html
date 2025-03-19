@@ -86,6 +86,24 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>The latest version may not be released! See also the commit log at github: <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master">https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master</a></p>
+<h1>4.4.2</h1>
+<ul>
+<li>Support for SAMD51 timer3 if timer 5 is not available (Adafruit ItsyBitsy M4).</li>
+<li>attachInterrupt() on SAMD has a different semantic :-(. See: <a href="https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/">https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/</a>.</li>
+<li>Fixed overflow handling.</li>
+<li>Improved repeat detection for DistanceWidthProtocol.</li>
+<li>Print of IR frame duration in <a class="el" href="IRProtocol_8h.html#ad2a808bfda125935aeaed2718cfcde7d">printIRResultShort()</a>;</li>
+<li><a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> now in PROGMEM, this saves 190 bytes RAM for unit test.</li>
+<li>Support for PROGMEM PulseDistanceWidthProtocol data.</li>
+</ul>
+<h1>4.4.1</h1>
+<ul>
+<li>Support for ESP core 3.x by akellai.</li>
+<li>restartTimer() now uses variable sMicrosAtLastStopTimer to keep track of uncounted ticks between stopTimer() and restartTimer().</li>
+<li>Removed functions addTicksToInternalTickCounter() and addMicrosToInternalTickCounter(), which were added in 4.1.0.</li>
+<li>Version 2.2.0 of TinyIR with new <a class="el" href="group__TinyReceiver.html#gaa97ef3a9ba3e40bd50a906788b65e79a">TinyReceiverDecode()</a> function to be used as drop in for IrReceiver.decode().</li>
+<li>Support of RC6A.</li>
+</ul>
 <h1>4.4.0</h1>
 <ul>
 <li>Using 8 bit raw timing buffer for all timings except frame gap (former rawbuf[0]).</li>
@@ -124,7 +142,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Fix wrong type of tEnableLEDFeedback in <a class="el" href="IRSend_8hpp.html">IRSend.hpp</a> and <a class="el" href="IRReceive_8hpp.html">IRReceive.hpp</a>.</li>
 <li>TinyReceiver 2.0<ul>
 <li>New TinyIRReceiverData which is filled with address, command and flags.</li>
-<li>Removed parameters address, command and flags from callback handleReceivedTinyIRData() and <a class="el" href="group__TinyReceiver.html#ga27649645d9280dfaee8095ce2dcf8f07">printTinyReceiverResultMinimal()</a>.</li>
+<li>Removed parameters address, command and flags from callback <a class="el" href="group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application.">handleReceivedTinyIRData()</a> and <a class="el" href="group__TinyReceiver.html#ga27649645d9280dfaee8095ce2dcf8f07">printTinyReceiverResultMinimal()</a>.</li>
 <li>Callback function now only enabled if USE_CALLBACK_FOR_TINY_RECEIVER is activated.</li>
 </ul>
 </li>
@@ -179,7 +197,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Introduced common structure <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.</li>
 <li>Where possible, changed all send and decode functions to use <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.</li>
 <li>Improved MSB/LSB handling</li>
-<li>New convenience fuctions <a class="el" href="group__Receiving.html#gad7c345c1b554ca8f3069b5fb767f07d6">bitreverse32Bit()</a> and <a class="el" href="group__Receiving.html#ga95e4a5acb86af8c967f8cae7e75062cb">bitreverseOneByte()</a>.</li>
+<li>New convenience functions <a class="el" href="group__Receiving.html#gad7c345c1b554ca8f3069b5fb767f07d6">bitreverse32Bit()</a> and <a class="el" href="group__Receiving.html#ga95e4a5acb86af8c967f8cae7e75062cb">bitreverseOneByte()</a>.</li>
 <li>Improved Magiquest protocol.</li>
 <li>Fix for #1028 - Prevent long delay caused by overflow when frame duration &lt; repeat period - Thanks to Stephen Humphries!</li>
 <li>Support for ATtiny816 - Thanks to elockman.</li>
@@ -526,7 +544,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jul 11 2024 21:32:03 for IRremote by
+    <li class="footer">Generated on Wed Mar 19 2025 11:06:48 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

@@ -1,4 +1,4 @@
 var ir__FAST_8hpp =
 [
-    [ "FASTProtocolConstants", "group__Decoder.html#ga8847754cf7feae92904236af9ab925cd", null ]
+    [ "PROGMEM", "group__Decoder.html#gaa306a0c49b6c48f6c6f5ce96b4e87fbe", null ]
 ];

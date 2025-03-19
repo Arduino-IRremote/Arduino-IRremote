@@ -5,6 +5,7 @@ var IRProtocol_8h =
     [ "PulseDistanceWidthProtocolConstants", "structPulseDistanceWidthProtocolConstants.html", "structPulseDistanceWidthProtocolConstants" ],
     [ "BEO_KHZ", "IRProtocol_8h.html#a28c405223cc0e826050ab76e204238ac", null ],
     [ "BOSEWAVE_KHZ", "IRProtocol_8h.html#a5e8586b46bb336ab800f4239b9bc46d1", null ],
+    [ "DECODED_RAW_DATA_ARRAY_SIZE", "IRProtocol_8h.html#aeb6f616fe33e3b374f4f269818a716b2", null ],
     [ "DENON_KHZ", "IRProtocol_8h.html#ad2ebee0d7bd6593a38e1998ddd6b0c90", null ],
     [ "IRDATA_FLAGS_EMPTY", "IRProtocol_8h.html#ad670ce496c4a3352cb9929284db11928", null ],
     [ "IRDATA_FLAGS_EXTRA_INFO", "IRProtocol_8h.html#abf3b16f9ab35f4e4b95c8c362aca2d71", null ],
@@ -23,7 +24,6 @@ var IRProtocol_8h =
     [ "NEC_KHZ", "IRProtocol_8h.html#ae1333ec007e3f586daf2b4af76894fc9", null ],
     [ "PROTOCOL_IS_LSB_FIRST", "IRProtocol_8h.html#a8717702b4019c982727719bd40af7630", null ],
     [ "PROTOCOL_IS_MSB_FIRST", "IRProtocol_8h.html#a2db53e8319cd3f5de758337fa08552d0", null ],
-    [ "RAW_DATA_ARRAY_SIZE", "IRProtocol_8h.html#a1ad0810b4eae20c260180a1c4d9f359e", null ],
     [ "RC5_RC6_KHZ", "IRProtocol_8h.html#a1e8fcd1e00b7fa15e99fae5ea30f35ae", null ],
     [ "SAMSUNG_KHZ", "IRProtocol_8h.html#ac386480bc33f2fa50193da38a023b8ce", null ],
     [ "SIRCS_12_PROTOCOL", "IRProtocol_8h.html#a8a2dbf77031a92783a200b9902c8459b", null ],
@@ -51,6 +51,7 @@ var IRProtocol_8h =
       [ "KASEIKYO_MITSUBISHI", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2516be3bdfd7614bb64961800fa49e43", null ],
       [ "RC5", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadac3c0a3883a1488209bcd91730ece33b2", null ],
       [ "RC6", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada7f7247f15587eb3812846f424b941abe", null ],
+      [ "RC6A", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2bd54038c8727876e8d1cc9f18f7937c", null ],
       [ "SAMSUNG", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada2b451b6e7bebbf070d0913ec77d5d438", null ],
       [ "SAMSUNGLG", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fadaefefa15a30b9bb48bc7fb0ae5660ca22", null ],
       [ "SAMSUNG48", "IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fada230f52f19cb835b5299ad0369a46a9e7", null ],
@@ -66,6 +67,9 @@ var IRProtocol_8h =
     [ "bitreverse32Bit", "group__Receiving.html#gad7c345c1b554ca8f3069b5fb767f07d6", null ],
     [ "bitreverseOneByte", "group__Receiving.html#ga95e4a5acb86af8c967f8cae7e75062cb", null ],
     [ "getProtocolString", "group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7", null ],
-    [ "printIRResultShort", "group__Receiving.html#gac45e8ead5e96868e61c65cd354758d4d", null ],
-    [ "ProtocolNames", "group__Receiving.html#ga3bdd668aa583bfcd42fc7ecffbe55653", null ]
+    [ "printIRResultShort", "group__Receiving.html#ga5787966f93eba6002acf82c85024955e", null ],
+    [ "printIRResultShort", "IRProtocol_8h.html#ad2a808bfda125935aeaed2718cfcde7d", null ],
+    [ "more", "IRProtocol_8h.html#abc0bb1a78d50d1deed2276b1a26b5d88", null ],
+    [ "ProtocolNames", "group__Receiving.html#ga3bdd668aa583bfcd42fc7ecffbe55653", null ],
+    [ "sLastSendToggleValue", "group__Decoder.html#ga7ddc7243bea95d0d6c21be665471e4af", null ]
 ];

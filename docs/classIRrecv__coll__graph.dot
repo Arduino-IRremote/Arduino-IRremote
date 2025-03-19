@@ -1,0 +1,12 @@
+digraph "IRrecv"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="IRrecv",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Main class for receiving IR signals."];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" decodedIRData" ,fontname="Helvetica"];
+  Node2 [label="IRData",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structIRData.html",tooltip="Data structure for the user application, available as decodedIRData."];
+  Node3 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" rawDataPtr" ,fontname="Helvetica"];
+  Node3 [label="irparams_struct",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structirparams__struct.html",tooltip="This struct contains the data and control used for receiver static functions and the ISR (interrupt s..."];
+  Node1 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" instance" ,fontname="Helvetica"];
+}

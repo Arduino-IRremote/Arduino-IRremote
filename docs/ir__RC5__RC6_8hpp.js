@@ -16,6 +16,7 @@ var ir__RC5__RC6_8hpp =
     [ "RC6_ADDRESS_BITS", "group__Decoder.html#ga998e578fa80abf8e58794f162b4e9c4f", null ],
     [ "RC6_BITS", "group__Decoder.html#gaf0ebba4bfe3db1f49f593ac87ecc78ea", null ],
     [ "RC6_COMMAND_BITS", "group__Decoder.html#ga2693e6912aaa2615f31b2c8298e84e83", null ],
+    [ "RC6_CUSTOMER_BITS", "group__Decoder.html#ga3811179a4279f3a3c3162cc27e896d2b", null ],
     [ "RC6_HEADER_MARK", "group__Decoder.html#ga89c0498dae46351ae778a263bd1c90c9", null ],
     [ "RC6_HEADER_SPACE", "group__Decoder.html#ga5c7e98f561ee9ffea33dbe1f5c6d124a", null ],
     [ "RC6_LEADING_BIT", "group__Decoder.html#gabe308752857e0c9d2aa632459efff68b", null ],
@@ -27,5 +28,6 @@ var ir__RC5__RC6_8hpp =
     [ "RC6_TOGGLE_BIT_INDEX", "group__Decoder.html#gab3e03a477dc7e59a0eed631cf75e9b61", null ],
     [ "RC6_TRAILING_SPACE", "group__Decoder.html#ga80d136268d4d727245922ae0c85464c3", null ],
     [ "RC6_UNIT", "group__Decoder.html#ga0c8422e20817bc71f9b16f013d282800", null ],
+    [ "RC6A_BITS", "group__Decoder.html#ga3f943e6a4abcdea07091bcb25c9f1d66", null ],
     [ "sLastSendToggleValue", "group__Decoder.html#ga7ddc7243bea95d0d6c21be665471e4af", null ]
 ];

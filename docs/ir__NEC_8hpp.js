@@ -18,6 +18,5 @@ var ir__NEC_8hpp =
     [ "NEC_UNIT", "group__Decoder.html#gaf3317b0cf5cf7d3063addbaa0a256158", null ],
     [ "NEC_ZERO_SPACE", "group__Decoder.html#ga5ee46914e98bf7f87f32a7104843b243", null ],
     [ "sendNECSpecialRepeat", "group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2", null ],
-    [ "NEC2ProtocolConstants", "group__Decoder.html#gabc3c8d544eebf60b8a73495496a7c354", null ],
-    [ "NECProtocolConstants", "group__Decoder.html#ga7993c30413e3edec00ff3f46a9357164", null ]
+    [ "PROGMEM", "group__Decoder.html#ga03deae51c5a54ff932f1e5ebb4562e57", null ]
 ];

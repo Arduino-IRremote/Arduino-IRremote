@@ -9,5 +9,5 @@ var ir__BoseWave_8hpp =
     [ "BOSEWAVE_REPEAT_DISTANCE", "group__Decoder.html#gabbdf7b50f7e8fa7bc9974a9c38508184", null ],
     [ "BOSEWAVE_REPEAT_PERIOD", "group__Decoder.html#ga3411e84f67ceffecca90355ae399fcca", null ],
     [ "BOSEWAVE_ZERO_SPACE", "group__Decoder.html#ga1a90821da64722ab8ddaefe4d084c4b9", null ],
-    [ "BoseWaveProtocolConstants", "group__Decoder.html#ga2b9372d46b99ffdd915e8e70d41b4360", null ]
+    [ "PROGMEM", "group__Decoder.html#ga4458745b985a354ea9b7655f846240a1", null ]
 ];
