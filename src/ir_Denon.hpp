@@ -105,9 +105,9 @@
 #define DENON_HEADER_MARK       DENON_UNIT // The length of the Header:Mark
 #define DENON_HEADER_SPACE      (3 * DENON_UNIT) // 780 // The length of the Header:Space
 
-struct PulseDistanceWidthProtocolConstants DenonProtocolConstants = { DENON, DENON_KHZ, DENON_HEADER_MARK, DENON_HEADER_SPACE,
-DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
-        (DENON_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
+struct PulseDistanceWidthProtocolConstants const DenonProtocolConstants PROGMEM = {DENON, DENON_KHZ, DENON_HEADER_MARK, DENON_HEADER_SPACE,
+    DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
+    (DENON_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -144,11 +144,11 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOf
     while (tNumberOfCommands > 0) {
 
         // Data
-        sendPulseDistanceWidthData(&DenonProtocolConstants, tData, DENON_BITS);
+        sendPulseDistanceWidthData_P(&DenonProtocolConstants, tData, DENON_BITS);
 
         // Inverted autorepeat frame
         delay(DENON_AUTO_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
-        sendPulseDistanceWidthData(&DenonProtocolConstants, tInvertedData, DENON_BITS);
+        sendPulseDistanceWidthData_P(&DenonProtocolConstants, tInvertedData, DENON_BITS);
 
         tNumberOfCommands--;
         // send repeated command with a fixed space gap
@@ -158,7 +158,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOf
      * always end with a normal frame
      * skip last delay!
      */
-    sendPulseDistanceWidthData(&DenonProtocolConstants, tData, DENON_BITS);
+    sendPulseDistanceWidthData_P(&DenonProtocolConstants, tData, DENON_BITS);
 
 }
 
@@ -179,7 +179,7 @@ bool IRrecv::decodeDenon() {
     }
 
     // Try to decode as Denon protocol
-    if (!decodePulseDistanceWidthData(&DenonProtocolConstants, DENON_BITS, 1)) {
+    if (!decodePulseDistanceWidthData_P(&DenonProtocolConstants, DENON_BITS, 1)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Denon: "));
         Serial.println(F("Decode failed"));

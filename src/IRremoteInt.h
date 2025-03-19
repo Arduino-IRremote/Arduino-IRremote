@@ -206,8 +206,12 @@ class IRrecv {
 public:
 
     IRrecv();
-    IRrecv(uint_fast8_t aReceivePin) __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance.")));
-    IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance..")));
+    IRrecv(
+            uint_fast8_t aReceivePin)
+                    __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance.")));
+    IRrecv(uint_fast8_t aReceivePin,
+            uint_fast8_t aFeedbackLEDPin)
+                    __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance..")));
     void setReceivePin(uint_fast8_t aReceivePinNumber);
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
     void registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunction)(void));
@@ -224,7 +228,6 @@ public:
     void restartTimer(uint32_t aMicrosecondsToAddToGapCounter);
     void restartTimerWithTicksToAdd(uint16_t aTicksToAddToGapCounter);
     void restartAfterSend();
-
 
     bool available();
     IRData* read(); // returns decoded data
@@ -282,6 +285,9 @@ public:
      */
     bool decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
             IRRawlenType aStartOffset = 3);
+
+    bool decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
+            uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset = 3);
 
     bool decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
             uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, bool aMSBfirst);
@@ -354,6 +360,7 @@ public:
     void initDecodedIRData();
     uint_fast8_t compare(uint16_t oldval, uint16_t newval);
     bool checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants);
+    bool checkHeader_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM);
     void checkForRepeatSpaceTicksAndSetFlag(uint16_t aMaximumRepeatSpaceTicks);
     bool checkForRecordGapsMicros(Print *aSerial);
 
@@ -494,19 +501,40 @@ public:
     void enableHighFrequencyIROut(uint_fast16_t aFrequencyKHz); // Used for Bang&Olufsen
 #endif
 
+    /*
+     * Array functions
+     */
     void sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
             uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
             IRRawDataType *aDecodedRawDataArray, uint16_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
             int_fast8_t aNumberOfRepeats);
+    void sendPulseDistanceWidthFromPGMArray(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
+            uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
+            IRRawDataType const *aDecodedRawDataPGMArray, uint16_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
+            int_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants *aProtocolConstants,
             IRRawDataType *aDecodedRawDataArray, uint16_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+    void sendPulseDistanceWidthFromPGMArray(PulseDistanceWidthProtocolConstants *aProtocolConstants,
+            IRRawDataType const *aDecodedRawDataPGMArray, uint16_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+    void sendPulseDistanceWidthFromArray_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
+            IRRawDataType *aDecodedRawDataArray, uint16_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+    void sendPulseDistanceWidthFromPGMArray_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
+            IRRawDataType const *aDecodedRawDataPGMArray, uint16_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+
     void sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, DistanceWidthTimingInfoStruct *aDistanceWidthTimingInfo,
             IRRawDataType *aDecodedRawDataArray, uint16_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
             int_fast8_t aNumberOfRepeats);
+    void sendPulseDistanceWidthFromArray_P(uint_fast8_t aFrequencyKHz,
+            DistanceWidthTimingInfoStruct const *aDistanceWidthTimingInfoPGM, IRRawDataType *aDecodedRawDataArray,
+            uint16_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
 
     void sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRRawDataType aData,
             uint_fast8_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+    void sendPulseDistanceWidth_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM, IRRawDataType aData,
+            uint_fast8_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRRawDataType aData,
+            uint_fast8_t aNumberOfBits);
+    void sendPulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM, IRRawDataType aData,
             uint_fast8_t aNumberOfBits);
     void sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
             uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
@@ -576,7 +604,8 @@ public:
 
     void sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
     void sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
-    void sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aCustomer, bool aEnableAutomaticToggle = true);
+    void sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aCustomer,
+            bool aEnableAutomaticToggle = true);
     void sendSamsungLGRepeat();
     void sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSamsung16BitAddressAnd8BitCommand(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);

@@ -50,6 +50,10 @@
 #define DELAY_AFTER_SEND 2000
 #define DELAY_AFTER_LOOP 5000
 
+#if __INT_WIDTH__ < 32
+        IRRawDataType const tRawDataPGM[] PROGMEM = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
+#endif
+
 void setup() {
     Serial.begin(115200);
 
@@ -145,7 +149,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     if (sRepeats == 0) {
-#if FLASHEND >= 0x3FFF && ((defined(RAMEND) && RAMEND > 0x6FF) || (defined(RAMSIZE) && RAMSIZE > 0x6FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && ( (!defined(RAMEND) && !defined(RAMSIZE)) || (defined(RAMEND) && RAMEND > 0x6FF) || (defined(RAMSIZE) && RAMSIZE > 0x6FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
         /*
          * Send constant values only once in this demo
          */
@@ -197,10 +201,9 @@ void loop() {
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
         Serial.flush();
 #if __INT_WIDTH__ < 32
-        IRRawDataType tRawData[] = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
-        IrSender.sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawData[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
 #else
-        IrSender.sendPulseDistanceWidth(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        IrSender.sendPulseDistanceWidth_P(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
 #endif
 
         delay(DELAY_AFTER_SEND);
@@ -212,24 +215,25 @@ void loop() {
         Serial.println(F(" LSB first"));
         Serial.flush();
 #if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48,
+        IrSender.sendPulseDistanceWidthFromPGMArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawDataPGM[0], 48,
         PROTOCOL_IS_LSB_FIRST, 0, NO_REPEATS);
 #else
-        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0xA010B02002, 48, PROTOCOL_IS_LSB_FIRST,
-         0, NO_REPEATS);
+        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0xA010B02002, 48, PROTOCOL_IS_LSB_FIRST, 0,
+                NO_REPEATS);
 #endif
         delay(DELAY_AFTER_SEND);
 
         // The same with MSB first. Use bit reversed raw data of LSB first part
         Serial.println(F(" MSB first"));
+        IRRawDataType tRawData[4];
 #if __INT_WIDTH__ < 32
         tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;
         IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48,
         PROTOCOL_IS_MSB_FIRST, 0, NO_REPEATS);
 #else
-        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0x40040D000805, 48, PROTOCOL_IS_MSB_FIRST,
-         0, NO_REPEATS);
+        IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0x40040D000805, 48, PROTOCOL_IS_MSB_FIRST, 0,
+                NO_REPEATS);
 #endif
         delay(DELAY_AFTER_SEND);
 
@@ -242,8 +246,10 @@ void loop() {
         IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, 0,
         NO_REPEATS);
 #      else
-        IRRawDataType tRawData[] = { 0xAFEDCBA987654321, 0x5A }; // LSB of tRawData[0] is sent first
-        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, 0, NO_REPEATS);
+        tRawData[0] = 0xAFEDCBA987654321;
+        tRawData[1] = 0x5A; // LSB of tRawData[0] is sent first
+        IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, 0,
+                NO_REPEATS);
 #      endif
         delay(DELAY_AFTER_SEND);
 
@@ -254,8 +260,7 @@ void loop() {
         IrSender.sendPulseDistanceWidthFromArray(38, 300, 600, 600, 300, 300, 600, &tRawData[0], 52,
         PROTOCOL_IS_LSB_FIRST, 0, 0);
 #else
-        IrSender.sendPulseDistanceWidth(38, 300, 600, 600, 300, 300, 600, 0xDCBA987654321, 52, PROTOCOL_IS_LSB_FIRST,
-        0, 0);
+        IrSender.sendPulseDistanceWidth(38, 300, 600, 600, 300, 300, 600, 0xDCBA987654321, 52, PROTOCOL_IS_LSB_FIRST, 0, 0);
 #endif
         delay(DELAY_AFTER_SEND);
 #endif
@@ -364,7 +369,7 @@ void loop() {
     IrSender.sendRC6A(sAddress & 0xFF, sCommand, sRepeats, 0x2711, true);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND >= 0x3FFF && ((defined(RAMEND) && RAMEND > 0x4FF) || (defined(RAMSIZE) && RAMSIZE > 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && ((!defined(RAMEND) && !defined(RAMSIZE)) || (defined(RAMEND) && RAMEND > 0x4FF) || (defined(RAMSIZE) && RAMSIZE > 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
 
     Serial.println(F("Send MagiQuest"));
     Serial.flush();
@@ -389,14 +394,14 @@ void loop() {
     Serial.println(F("Send next protocols with IrSender.write"));
     Serial.flush();
 
-    IRSendData.protocol = JVC; // switch protocol
+    IRSendData.protocol = JVC;// switch protocol
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
 
-    IRSendData.command = s16BitCommand;  // LG support more than 8 bit command
+    IRSendData.command = s16BitCommand;// LG support more than 8 bit command
 
     IRSendData.protocol = SAMSUNG;
     Serial.print(F("Send "));

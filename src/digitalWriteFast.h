@@ -5,6 +5,8 @@
  * by Watterott electronic (www.watterott.com)
  * based on https://code.google.com/p/digitalwritefast
  *
+ * The value of DigitalReadFast() is the content of the input register e.g. 0x04 for pin2 and NOT always 0 or 1.
+ *
  * License: BSD 3-Clause License (https://opensource.org/licenses/BSD-3-Clause)
  */
 

@@ -115,14 +115,13 @@
 
 #define APPLE_ADDRESS           0x87EE
 
-struct PulseDistanceWidthProtocolConstants NECProtocolConstants =
-        { NEC, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
-        NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
-                &sendNECSpecialRepeat };
+struct PulseDistanceWidthProtocolConstants const NECProtocolConstants PROGMEM = {NEC, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
+    NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
+    &sendNECSpecialRepeat};
 
 // Like NEC but repeats are full frames instead of special NEC repeats
-struct PulseDistanceWidthProtocolConstants NEC2ProtocolConstants = { NEC2, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
-NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
+struct PulseDistanceWidthProtocolConstants const NEC2ProtocolConstants PROGMEM = {NEC2, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
+    NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -181,7 +180,7 @@ uint32_t IRsend::computeNECRawDataAndChecksum(uint16_t aAddress, uint16_t aComma
  * @param aNumberOfRepeats  If < 0 then only a special NEC repeat frame will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendNEC(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth(&NECProtocolConstants, computeNECRawDataAndChecksum(aAddress, aCommand), NEC_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&NECProtocolConstants, computeNECRawDataAndChecksum(aAddress, aCommand), NEC_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -190,7 +189,7 @@ void IRsend::sendNEC(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOf
  *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth(&NECProtocolConstants, (uint32_t) aCommand << 16 | aAddress, NEC_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&NECProtocolConstants, (uint32_t) aCommand << 16 | aAddress, NEC_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -199,7 +198,7 @@ void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumber
  * @param aNumberOfRepeats  If < 0 then nothing is sent.
  */
 void IRsend::sendNEC2(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth(&NEC2ProtocolConstants, computeNECRawDataAndChecksum(aAddress, aCommand), NEC_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&NEC2ProtocolConstants, computeNECRawDataAndChecksum(aAddress, aCommand), NEC_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -220,7 +219,7 @@ void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, int_fast8_t aNumberO
     tRawData.UByte.MidHighByte = aCommand;
     tRawData.UByte.HighByte = aDeviceId; // e.g. 0xD7
 
-    sendPulseDistanceWidth(&NECProtocolConstants, tRawData.ULong, NEC_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&NECProtocolConstants, tRawData.ULong, NEC_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -229,7 +228,7 @@ void IRsend::sendApple(uint8_t aDeviceId, uint8_t aCommand, int_fast8_t aNumberO
  *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendNECRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth(&NECProtocolConstants, aRawData, NEC_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&NECProtocolConstants, aRawData, NEC_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -278,7 +277,7 @@ bool IRrecv::decodeNEC() {
     }
 
     // Try to decode as NEC protocol
-    if (!decodePulseDistanceWidthData(&NECProtocolConstants, NEC_BITS)) {
+    if (!decodePulseDistanceWidthData_P(&NECProtocolConstants, NEC_BITS)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("NEC: "));
         Serial.println(F("Decode failed"));

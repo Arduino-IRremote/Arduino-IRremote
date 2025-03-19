@@ -80,7 +80,7 @@
 
 // Storage for the recorded code, pre-filled with NEC data
 IRRawDataType sDecodedRawDataArray[DECODED_RAW_DATA_ARRAY_SIZE] = { 0x7B34ED12 }; // Initialize with NEC address 0x12 and command 0x34
-DistanceWidthTimingInfoStruct sDistanceWidthTimingInfo = { 9000, 4500, 560, 1690, 560, 560 }; // Initialize with NEC timing
+DistanceWidthTimingInfoStruct sDistanceWidthTimingInfo  = { 9000, 4500, 560, 1690, 560, 560 }; // Initialize with NEC timing
 uint8_t sNumberOfBits = 32;
 
 bool sSendButtonWasActive;

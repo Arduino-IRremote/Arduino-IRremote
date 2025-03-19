@@ -119,6 +119,10 @@
 volatile bool sDataJustReceived = false;
 void ReceiveCompleteCallbackHandler();
 
+#if __INT_WIDTH__ < 32
+IRRawDataType const tRawDataPGM[4] PROGMEM = { 0xB02002, 0xA010, 0x0, 0x0 }; // LSB of tRawData[0] is sent first
+#endif
+
 void setup() {
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
 
@@ -130,7 +134,7 @@ void setup() {
     // Required for boards using USB code for Serial like Leonardo.
     // Is void for USB Serial implementations using external chips e.g. a CH340.
     while (!Serial)
-        ;
+    ;
     // !!! Program will not proceed if no Serial Monitor is attached !!!
 #endif
     // Just to know which program is running on my Arduino
@@ -169,7 +173,7 @@ void setup() {
 #else
     // Here the macro IR_SEND_PIN is not defined or undefined above with #undef IR_SEND_PIN
     uint8_t tSendPin = 3;
-    IrSender.begin(tSendPin, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(tSendPin, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN);// Specify send pin and enable feedback LED at default feedback LED pin
     // You can change send pin later with IrSender.setSendPin();
 
     Serial.print(F("Send IR signals at pin "));
@@ -485,17 +489,14 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 #  endif
 
-#  if __INT_WIDTH__ < 32
-        IRRawDataType tRawData[4] = { 0xB02002, 0xA010, 0x0, 0x0 }; // LSB of tRawData[0] is sent first
-#  endif
 #  if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
         Serial.flush();
 #    if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromArray(&KaseikyoProtocolConstants, &tRawData[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
         checkReceive(0x0B, 0x10);
 #    else
-        IrSender.sendPulseDistanceWidth(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        IrSender.sendPulseDistanceWidth_P(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
         checkReceivedRawData(0xA010B02002);
 #    endif
         delay(DELAY_AFTER_SEND);
@@ -507,18 +508,19 @@ void loop() {
         Serial.println(F("-LSB first"));
         Serial.flush();
 #    if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawData[0], 48, PROTOCOL_IS_LSB_FIRST, 0,
-        NO_REPEATS);
+        IrSender.sendPulseDistanceWidthFromPGMArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawDataPGM[0], 48, PROTOCOL_IS_LSB_FIRST,
+                0, NO_REPEATS);
         checkReceive(0x0B, 0x10);
 #    else
         IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0xA010B02002, 48, PROTOCOL_IS_LSB_FIRST, 0,
-                NO_REPEATS);
+        NO_REPEATS);
         checkReceivedRawData(0xA010B02002);
 #    endif
         delay(DELAY_AFTER_SEND);
 
         // The same with MSB first. Use bit reversed raw data of LSB first part
         Serial.println(F("-MSB first"));
+        IRRawDataType tRawData[4];
 #    if __INT_WIDTH__ < 32
         tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;
@@ -527,7 +529,7 @@ void loop() {
         checkReceive(0x0B, 0x10);
 #    else
         IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0x40040D000805, 48, PROTOCOL_IS_MSB_FIRST, 0,
-                NO_REPEATS);
+        NO_REPEATS);
         checkReceivedRawData(0x40040D000805);
 #    endif
 
@@ -579,9 +581,10 @@ void loop() {
         NO_REPEATS);
         checkReceivedArray(tRawData, 3);
 #      else
-        IRRawDataType tRawData[] = { 0xAFEDCBA987654321, 0x5A }; // LSB of tRawData[0] is sent first
+        tRawData[0] = 0xAFEDCBA987654321;
+        tRawData[1] = 0x5A; // LSB of tRawData[0] is sent first
         IrSender.sendPulseDistanceWidthFromArray(38, 8900, 4450, 550, 1700, 550, 600, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, 0,
-                NO_REPEATS);
+        NO_REPEATS);
         checkReceivedArray(tRawData, 2);
 #      endif
         delay(DELAY_AFTER_SEND);

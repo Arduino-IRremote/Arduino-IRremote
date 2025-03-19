@@ -46,9 +46,9 @@
 #define BOSEWAVE_REPEAT_DISTANCE            50000
 #define BOSEWAVE_MAXIMUM_REPEAT_DISTANCE    62000
 
-struct PulseDistanceWidthProtocolConstants BoseWaveProtocolConstants = { BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
-BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST
-       , (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
+struct PulseDistanceWidthProtocolConstants const BoseWaveProtocolConstants PROGMEM = {BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
+    BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST
+    , (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -58,12 +58,12 @@ void IRsend::sendBoseWave(uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
 
     // send 8 command bits and then 8 inverted command bits LSB first
     uint16_t tData = ((~aCommand) << 8) | aCommand;
-    sendPulseDistanceWidth(&BoseWaveProtocolConstants, tData, BOSEWAVE_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&BoseWaveProtocolConstants, tData, BOSEWAVE_BITS, aNumberOfRepeats);
 }
 
 bool IRrecv::decodeBoseWave() {
 
-    if (!checkHeader(&BoseWaveProtocolConstants)) {
+    if (!checkHeader_P(&BoseWaveProtocolConstants)) {
         return false;
     }
 
@@ -76,7 +76,7 @@ bool IRrecv::decodeBoseWave() {
         return false;
     }
 
-    if (!decodePulseDistanceWidthData(&BoseWaveProtocolConstants, BOSEWAVE_BITS)) {
+    if (!decodePulseDistanceWidthData_P(&BoseWaveProtocolConstants, BOSEWAVE_BITS)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Bose: "));
         Serial.println(F("Decode failed"));

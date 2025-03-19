@@ -1,7 +1,7 @@
 /*
  *  TinyIRReceiver.hpp
  *
- *  Receives IR protocol data of NEC protocol using pin change interrupts.
+ *  Receives IR data of NEC protocol using pin change interrupts.
  *  NEC is the protocol of most cheap remote controls for Arduino.
  *
  *  Parity check is done for address and data.
@@ -228,7 +228,7 @@ void IRPinChangeInterruptHandler(void) {
             if (tMicrosOfMarkOrSpace >= lowerValue25Percent(TINY_RECEIVER_HEADER_SPACE)
                     && tMicrosOfMarkOrSpace <= upperValue25Percent(TINY_RECEIVER_HEADER_SPACE)) {
                 /*
-                 * We have a valid data header space here -> initialize data
+                 * We had a valid data header space here -> initialize data
                  */
                 TinyIRReceiverControl.IRRawDataBitCounter = 0;
 #if (TINY_RECEIVER_BITS > 16)
@@ -464,7 +464,6 @@ bool initPCIInterruptForTinyReceiver() {
 
 void printTinyReceiverResultMinimal(Print *aSerial) {
 // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
-    // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
 #if defined(USE_FAST_PROTOCOL)
     aSerial->print(F("C=0x"));
 #else

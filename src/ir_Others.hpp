@@ -58,11 +58,11 @@
 #define DISH_ZERO_SPACE     2800
 #define DISH_REPEAT_SPACE   6200 // really?
 
-struct PulseDistanceWidthProtocolConstants DishProtocolConstants = { UNKNOWN, 56, DISH_HEADER_MARK, DISH_HEADER_SPACE,
+struct PulseDistanceWidthProtocolConstants const DishProtocolConstants PROGMEM  = { UNKNOWN, 56, DISH_HEADER_MARK, DISH_HEADER_SPACE,
 DISH_BIT_MARK, DISH_ONE_SPACE, DISH_BIT_MARK, DISH_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, 40, nullptr };
 
 void IRsend::sendDish(uint16_t aData) {
-    sendPulseDistanceWidth(&DishProtocolConstants, aData, DISH_BITS, 4);
+    sendPulseDistanceWidth_P(&DishProtocolConstants, aData, DISH_BITS, 4);
 }
 
 //==============================================================================
@@ -84,11 +84,11 @@ void IRsend::sendDish(uint16_t aData) {
 #define WHYNTER_ONE_SPACE     2150
 #define WHYNTER_ZERO_SPACE     750
 
-struct PulseDistanceWidthProtocolConstants WhynterProtocolConstants = { WHYNTER, 38, WHYNTER_HEADER_MARK, WHYNTER_HEADER_SPACE,
+struct PulseDistanceWidthProtocolConstants const WhynterProtocolConstants PROGMEM = { WHYNTER, 38, WHYNTER_HEADER_MARK, WHYNTER_HEADER_SPACE,
 WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, 110, nullptr };
 
 void IRsend::sendWhynter(uint32_t aData, uint8_t aNumberOfBitsToSend) {
-    sendPulseDistanceWidth(&WhynterProtocolConstants, aData, NEC_BITS, aNumberOfBitsToSend);
+    sendPulseDistanceWidth_P(&WhynterProtocolConstants, aData, NEC_BITS, aNumberOfBitsToSend);
 }
 
 bool IRrecv::decodeWhynter() {
@@ -96,10 +96,10 @@ bool IRrecv::decodeWhynter() {
     if (decodedIRData.rawlen != (2 * WHYNTER_BITS) + 4) {
         return false;
     }
-    if (!checkHeader(&WhynterProtocolConstants)) {
+    if (!checkHeader_P(&WhynterProtocolConstants)) {
         return false;
     }
-    if (!decodePulseDistanceWidthData(&WhynterProtocolConstants, WHYNTER_BITS)) {
+    if (!decodePulseDistanceWidthData_P(&WhynterProtocolConstants, WHYNTER_BITS)) {
         return false;
     }
     // Success

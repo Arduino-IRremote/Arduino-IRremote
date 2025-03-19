@@ -102,11 +102,11 @@
 #define SAMSUNG_MAXIMUM_REPEAT_DISTANCE     (SAMSUNG_REPEAT_PERIOD + (SAMSUNG_REPEAT_PERIOD / 4)) // 137000 - Just a guess
 
 // 19 byte RAM
-struct PulseDistanceWidthProtocolConstants SamsungProtocolConstants = { SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
+struct PulseDistanceWidthProtocolConstants const SamsungProtocolConstants PROGMEM = { SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
 SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
         (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
 
-struct PulseDistanceWidthProtocolConstants SamsungLGProtocolConstants = { SAMSUNGLG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
+struct PulseDistanceWidthProtocolConstants const SamsungLGProtocolConstants PROGMEM = { SAMSUNGLG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
 SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
         (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendSamsungLGSpecialRepeat };
 /************************************
@@ -157,7 +157,7 @@ void IRsend::sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNu
     tRawData.UByte.MidHighByte = aCommand;
     tRawData.UByte.HighByte = ~aCommand;
 
-    sendPulseDistanceWidth(&SamsungLGProtocolConstants, tRawData.ULong, SAMSUNG_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&SamsungLGProtocolConstants, tRawData.ULong, SAMSUNG_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -191,7 +191,7 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumb
         tSendValue.UWords[1] = aCommand;
     }
 
-    sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULong, SAMSUNG_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&SamsungProtocolConstants, tSendValue.ULong, SAMSUNG_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -208,7 +208,7 @@ void IRsend::sendSamsung16BitAddressAnd8BitCommand(uint16_t aAddress, uint8_t aC
     tSendValue.UBytes[2] = aCommand;
     tSendValue.UBytes[3] = ~aCommand;
 
-    sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULong, SAMSUNG_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&SamsungProtocolConstants, tSendValue.ULong, SAMSUNG_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -224,7 +224,7 @@ void IRsend::sendSamsung16BitAddressAndCommand(uint16_t aAddress, uint16_t aComm
     // Send 16 command bits
     tSendValue.UWords[1] = aCommand;
 
-    sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULong, SAMSUNG_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&SamsungProtocolConstants, tSendValue.ULong, SAMSUNG_BITS, aNumberOfRepeats);
 }
 /**
  * Here we send Samsung48
@@ -244,7 +244,7 @@ void IRsend::sendSamsung48(uint16_t aAddress, uint32_t aCommand, int_fast8_t aNu
     tRawSamsungData[1] = tUpper8BitsOfCommand | (~tUpper8BitsOfCommand) << 8;
     tRawSamsungData[0] = tSendValue.ULong;
 
-    sendPulseDistanceWidthFromArray(&SamsungProtocolConstants, &tRawSamsungData[0], SAMSUNG48_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidthFromArray_P(&SamsungProtocolConstants, &tRawSamsungData[0], SAMSUNG48_BITS, aNumberOfRepeats);
 #else
     LongLongUnion tSendValue;
     tSendValue.UWords[0] = aAddress;
@@ -257,7 +257,7 @@ void IRsend::sendSamsung48(uint16_t aAddress, uint32_t aCommand, int_fast8_t aNu
     } else {
         tSendValue.ULongLong = aAddress | aCommand << 16;
     }
-    sendPulseDistanceWidth(&SamsungProtocolConstants, tSendValue.ULongLong, SAMSUNG48_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&SamsungProtocolConstants, tSendValue.ULongLong, SAMSUNG48_BITS, aNumberOfRepeats);
 #endif
 }
 
@@ -278,7 +278,7 @@ bool IRrecv::decodeSamsung() {
         return false;
     }
 
-    if (!checkHeader(&SamsungProtocolConstants)) {
+    if (!checkHeader_P(&SamsungProtocolConstants)) {
         return false;
     }
 
@@ -294,7 +294,7 @@ bool IRrecv::decodeSamsung() {
     /*
      * Decode first 32 bits
      */
-    if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, SAMSUNG_BITS, 3)) {
+    if (!decodePulseDistanceWidthData_P(&SamsungProtocolConstants, SAMSUNG_BITS, 3)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Samsung: "));
         Serial.println(F("Decode failed"));
@@ -310,7 +310,7 @@ bool IRrecv::decodeSamsung() {
          * Samsung48
          */
         // decode additional 16 bit
-        if (!decodePulseDistanceWidthData(&SamsungProtocolConstants, (SAMSUNG_COMMAND32_BITS - SAMSUNG_COMMAND16_BITS),
+        if (!decodePulseDistanceWidthData_P(&SamsungProtocolConstants, (SAMSUNG_COMMAND32_BITS - SAMSUNG_COMMAND16_BITS),
                 3 + (2 * SAMSUNG_BITS))) {
 #if defined(LOCAL_DEBUG)
             Serial.print(F("Samsung: "));

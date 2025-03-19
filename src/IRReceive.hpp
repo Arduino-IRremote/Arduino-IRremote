@@ -988,6 +988,15 @@ bool IRrecv::decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *a
             aProtocolConstants->Flags);
 }
 
+bool IRrecv::decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
+        uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset) {
+    PulseDistanceWidthProtocolConstants tTemporaryPulseDistanceWidthProtocolConstants;
+    memcpy_P(&tTemporaryPulseDistanceWidthProtocolConstants, aProtocolConstantsPGM,
+            sizeof(tTemporaryPulseDistanceWidthProtocolConstants));
+
+    return decodePulseDistanceWidthData(&tTemporaryPulseDistanceWidthProtocolConstants, aNumberOfBits, aStartOffset);
+}
+
 /*
  * Static variables for the getBiphaselevel function
  */
@@ -1162,6 +1171,25 @@ bool IRrecv::checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants
         return false;
     }
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], aProtocolConstants->DistanceWidthTimingInfo.HeaderSpaceMicros)) {
+#if defined(LOCAL_TRACE)
+        Serial.print(::getProtocolString(aProtocolConstants->ProtocolIndex));
+        Serial.println(F(": Header space length is wrong"));
+#endif
+        return false;
+    }
+    return true;
+}
+
+bool IRrecv::checkHeader_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM) {
+// Check header "mark" and "space"
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderMarkMicros))) {
+#if defined(LOCAL_TRACE)
+        Serial.print(::getProtocolString(aProtocolConstants->ProtocolIndex));
+        Serial.println(F(": Header mark length is wrong"));
+#endif
+        return false;
+    }
+    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderSpaceMicros))) {
 #if defined(LOCAL_TRACE)
         Serial.print(::getProtocolString(aProtocolConstants->ProtocolIndex));
         Serial.println(F(": Header space length is wrong"));

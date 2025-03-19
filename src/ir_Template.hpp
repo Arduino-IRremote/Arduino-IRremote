@@ -123,9 +123,9 @@
 #define SHUZU_OTHER             1234  // Other things you may need to define
 
 // use BOSEWAVE, we have no SHUZU code
-struct PulseDistanceWidthProtocolConstants ShuzuProtocolConstants = { BOSEWAVE, 38, SHUZU_HEADER_MARK, SHUZU_HEADER_SPACE,
-SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (SHUZU_REPEAT_PERIOD
-        / MICROS_IN_ONE_MILLI), nullptr };
+struct PulseDistanceWidthProtocolConstants const ShuzuProtocolConstants PROGMEM = {BOSEWAVE, 38, SHUZU_HEADER_MARK, SHUZU_HEADER_SPACE,
+    SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (SHUZU_REPEAT_PERIOD
+            / MICROS_IN_ONE_MILLI), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -133,7 +133,7 @@ SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, PROTOCOL_IS_L
 
 void IRsend::sendShuzu(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
 
-    sendPulseDistanceWidth(&ShuzuProtocolConstants, (uint32_t) aCommand << 8 | aCommand, SHUZU_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&ShuzuProtocolConstants, (uint32_t) aCommand << 8 | aCommand, SHUZU_BITS, aNumberOfRepeats);
 }
 
 bool IRrecv::decodeShuzu() {
@@ -149,12 +149,12 @@ bool IRrecv::decodeShuzu() {
     }
 
     // Check header
-    if (!checkHeader(&ShuzuProtocolConstants)) {
+    if (!checkHeader_P(&ShuzuProtocolConstants)) {
         return false;
     }
 
     // Decode
-    if (!decodePulseDistanceData(&ShuzuProtocolConstants, SHUZU_BITS)) {
+    if (!decodePulseDistanceData_P(&ShuzuProtocolConstants, SHUZU_BITS)) {
         IR_DEBUG_PRINT(F("Shuzu: "));
         IR_DEBUG_PRINTLN(F("Decode failed"));
         return false;

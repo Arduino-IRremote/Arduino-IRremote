@@ -109,7 +109,7 @@
 #define MAGIQUEST_ZERO_SPACE    (3 * MAGIQUEST_UNIT) // 864
 
 // assume 110 as repeat period
-struct PulseDistanceWidthProtocolConstants MagiQuestProtocolConstants = { MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
+struct PulseDistanceWidthProtocolConstants const MagiQuestProtocolConstants PROGMEM = { MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
 MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | SUPPRESS_STOP_BIT, 110,
 nullptr };
 //+=============================================================================
@@ -131,11 +131,11 @@ void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
     tChecksum = ~tChecksum + 1;
 
     // 8 start bits
-    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, 0, 8);
+    sendPulseDistanceWidthData_P(&MagiQuestProtocolConstants, 0, 8);
     // 48 bit data
-    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aWandId, MAGIQUEST_WAND_ID_BITS); // send only 31 bit, do not send MSB here
-    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, aMagnitude, MAGIQUEST_MAGNITUDE_BITS);
-    sendPulseDistanceWidthData(&MagiQuestProtocolConstants, tChecksum, MAGIQUEST_CHECKSUM_BITS);
+    sendPulseDistanceWidthData_P(&MagiQuestProtocolConstants, aWandId, MAGIQUEST_WAND_ID_BITS); // send only 31 bit, do not send MSB here
+    sendPulseDistanceWidthData_P(&MagiQuestProtocolConstants, aMagnitude, MAGIQUEST_MAGNITUDE_BITS);
+    sendPulseDistanceWidthData_P(&MagiQuestProtocolConstants, tChecksum, MAGIQUEST_CHECKSUM_BITS);
 #if defined(LOCAL_DEBUG)
     // must be after sending, in order not to destroy the send timing
     Serial.print(F("MagiQuest checksum=0x"));
@@ -165,7 +165,7 @@ bool IRrecv::decodeMagiQuest() {
     /*
      * Check for 8 zero header bits
      */
-    if (!decodePulseDistanceWidthData(&MagiQuestProtocolConstants, MAGIQUEST_START_BITS, 1)) {
+    if (!decodePulseDistanceWidthData_P(&MagiQuestProtocolConstants, MAGIQUEST_START_BITS, 1)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("MagiQuest: "));
         Serial.println(F("Start bit decode failed"));
@@ -184,7 +184,7 @@ bool IRrecv::decodeMagiQuest() {
     /*
      * Decode the 31 bit ID
      */
-    if (!decodePulseDistanceWidthData(&MagiQuestProtocolConstants, MAGIQUEST_WAND_ID_BITS, (MAGIQUEST_START_BITS * 2) + 1)) {
+    if (!decodePulseDistanceWidthData_P(&MagiQuestProtocolConstants, MAGIQUEST_WAND_ID_BITS, (MAGIQUEST_START_BITS * 2) + 1)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("MagiQuest: "));
         Serial.println(F("ID decode failed"));
@@ -208,7 +208,7 @@ bool IRrecv::decodeMagiQuest() {
     /*
      * Decode the 9 bit Magnitude + 8 bit checksum
      */
-    if (!decodePulseDistanceWidthData(&MagiQuestProtocolConstants, MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_CHECKSUM_BITS,
+    if (!decodePulseDistanceWidthData_P(&MagiQuestProtocolConstants, MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_CHECKSUM_BITS,
             ((MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) * 2) + 1)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("MagiQuest: "));

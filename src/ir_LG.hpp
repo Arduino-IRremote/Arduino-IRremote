@@ -114,11 +114,11 @@
 //#define LG_REPEAT_DURATION      (LG_HEADER_MARK  + LG_REPEAT_HEADER_SPACE + LG_BIT_MARK)
 //#define LG_REPEAT_DISTANCE      (LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) // 52 ms
 
-struct PulseDistanceWidthProtocolConstants LGProtocolConstants = { LG, LG_KHZ, LG_HEADER_MARK, LG_HEADER_SPACE, LG_BIT_MARK,
-LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendNECSpecialRepeat };
+struct PulseDistanceWidthProtocolConstants const LGProtocolConstants PROGMEM= {LG, LG_KHZ, LG_HEADER_MARK, LG_HEADER_SPACE, LG_BIT_MARK,
+    LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendNECSpecialRepeat};
 
-struct PulseDistanceWidthProtocolConstants LG2ProtocolConstants = { LG2, LG_KHZ, LG2_HEADER_MARK, LG2_HEADER_SPACE, LG_BIT_MARK,
-LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendLG2SpecialRepeat };
+struct PulseDistanceWidthProtocolConstants const LG2ProtocolConstants PROGMEM = {LG2, LG_KHZ, LG2_HEADER_MARK, LG2_HEADER_SPACE, LG_BIT_MARK,
+    LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendLG2SpecialRepeat};
 
 /************************************
  * Start of send and decode functions
@@ -163,14 +163,14 @@ uint32_t IRsend::computeLGRawDataAndChecksum(uint8_t aAddress, uint16_t aCommand
  * LG uses the NEC repeat.
  */
 void IRsend::sendLG(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth(&LGProtocolConstants, computeLGRawDataAndChecksum(aAddress, aCommand), LG_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&LGProtocolConstants, computeLGRawDataAndChecksum(aAddress, aCommand), LG_BITS, aNumberOfRepeats);
 }
 
 /**
  * LG2 uses a special repeat.
  */
 void IRsend::sendLG2(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth(&LG2ProtocolConstants, computeLGRawDataAndChecksum(aAddress, aCommand), LG_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&LG2ProtocolConstants, computeLGRawDataAndChecksum(aAddress, aCommand), LG_BITS, aNumberOfRepeats);
 }
 
 bool IRrecv::decodeLG() {
@@ -232,7 +232,7 @@ bool IRrecv::decodeLG() {
         return false;
     }
 
-    if (!decodePulseDistanceWidthData(&LGProtocolConstants, LG_BITS)) {
+    if (!decodePulseDistanceWidthData_P(&LGProtocolConstants, LG_BITS)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("LG: "));
         Serial.println(F("Decode failed"));
@@ -284,7 +284,7 @@ bool IRrecv::decodeLG() {
  * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent.
  */
 void IRsend::sendLGRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth(&LGProtocolConstants, aRawData, LG_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&LGProtocolConstants, aRawData, LG_BITS, aNumberOfRepeats);
 }
 
 bool IRrecv::decodeLGMSB(decode_results *aResults) {
