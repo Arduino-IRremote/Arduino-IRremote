@@ -62,7 +62,8 @@
 // IRP: {38k,525}<1,-1|1,-3>(16,-8,(D:8,F:8,1,-45)+)
 // LSB first, 1 start bit + 8 bit address + 8 bit command + 1 stop bit.
 // The JVC protocol repeats by skipping the header mark and space -> this leads to a poor repeat detection for JVC protocol.
-// Some JVC devices require to send 3 repeats. https://github.com/Arduino-IRremote/Arduino-IRremote/issues/21
+// Some JVC devices require to send 3 repeats.
+
 #define JVC_ADDRESS_BITS      8 // 8 bit address
 #define JVC_COMMAND_BITS      8 // Command
 
