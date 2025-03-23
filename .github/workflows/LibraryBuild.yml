@@ -47,7 +47,7 @@ jobs:
         #############################################################################################################
         arduino-boards-fqbn:
           - arduino:avr:uno
-          - arduino:avr:uno|DEBUG
+          - arduino:avr:uno|DEBUG_TRACE
           - arduino:avr:uno|USE_NO_SEND_PWM
           - arduino:avr:uno|SEND_PWM_BY_TIMER
           - arduino:avr:uno|USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN
@@ -61,13 +61,13 @@ jobs:
           - arduino:mbed:nano33ble
           - arduino:mbed_rp2040:pico
           - rp2040:rp2040:arduino_nano_connect
-#          - ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
-#          - ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
-#          - ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
+          - ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
+          - ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
+          - ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal # ATmega128
           - SparkFun:avr:promicro
-#          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-#          - megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
+          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
+          - megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
           - esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80
           - esp32:esp32:featheresp32:FlashFreq=80
           - esp32:esp32:esp32c3
@@ -86,11 +86,11 @@ jobs:
               ReceiveDemo: -DIR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=1200 -DIR_SEND_PIN=3
 
-          - arduino-boards-fqbn: arduino:avr:uno|DEBUG
+          - arduino-boards-fqbn: arduino:avr:uno|DEBUG_TRACE
             build-properties: # the flags were put in compiler.cpp.extra_flags
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750 -DIR_SEND_PIN=3
               TinyReceiver: -DUSE_CALLBACK_FOR_TINY_RECEIVER
-              All: -DEBUG
+              All: -DEBUG -DTRACE
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_NO_SEND_PWM
             build-properties: # the flags were put in compiler.cpp.extra_flags
@@ -128,7 +128,7 @@ jobs:
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=750
               TinyReceiver: -DNO_LED_FEEDBACK_CODE
               TinySender: -DNO_LED_FEEDBACK_CODE
-#            sketches-exclude: ReceiveAndSend # Not enough RAM for default RAW_BUFFER_LENGTH
+            sketches-exclude: UnitTest # Sketch uses 28764 bytes (100%) of program storage space. Maximum is 28672 bytes
 
           - arduino-boards-fqbn: arduino:megaavr:nona4809:mode=off
             sketches-exclude: TinyReceiver,IRDispatcherDemo
@@ -184,43 +184,45 @@ jobs:
 #
 # megaTinyCore
 #
-#          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-#            arduino-platform: megaTinyCore:megaavr
-#            platform-url: http://drazzy.com/package_drazzy.com_index.json
-#            sketches-exclude: AllProtocolsOnLCD,UnitTest # UnitTest region `text' overflowed by 997 bytes
-#            build-properties: # the flags were put in compiler.cpp.extra_flags
-#              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=360
+          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
+            arduino-platform: megaTinyCore:megaavr
+            platform-url: http://drazzy.com/package_drazzy.com_index.json
+            sketches-exclude: AllProtocolsOnLCD,UnitTest # UnitTest region `text' overflowed by 997 bytes
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=360
 
-#          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
-#            arduino-platform: megaTinyCore:megaavr
-#            platform-url: http://drazzy.com/package_drazzy.com_index.json
-#            sketches-exclude: AllProtocolsOnLCD
-#            build-properties: # the flags were put in compiler.cpp.extra_flags
-#              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=360
+          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
+            arduino-platform: megaTinyCore:megaavr
+            platform-url: http://drazzy.com/package_drazzy.com_index.json
+            sketches-exclude: AllProtocolsOnLCD
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=360
 
 #
 # ATTinyCore
 #
-#          - arduino-boards-fqbn: ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
-#            platform-url: http://drazzy.com/package_drazzy.com_index.json
-#            required-libraries: ATtinySerialOut
-#            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
-#            build-properties: # the flags were put in compiler.cpp.extra_flags
-#              SimpleSender: -DSEND_PWM_BY_TIMER
+          - arduino-boards-fqbn: ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
+            platform-url: http://drazzy.com/package_drazzy.com_index.json
+            required-libraries: ATtinySerialOut
+            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              SimpleSender: -DSEND_PWM_BY_TIMER
+              SimpleReceiver: -DDECODE_NEC
 
-#          - arduino-boards-fqbn: ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
-#            platform-url: http://drazzy.com/package_drazzy.com_index.json
-#            required-libraries: ATtinySerialOut
-#            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
-#            build-properties: # the flags were put in compiler.cpp.extra_flags
-#              SimpleSender: -DSEND_PWM_BY_TIMER
+          - arduino-boards-fqbn: ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
+            platform-url: http://drazzy.com/package_drazzy.com_index.json
+            required-libraries: ATtinySerialOut
+            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
-#          - arduino-boards-fqbn: ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
-#            platform-url: http://drazzy.com/package_drazzy.com_index.json
-#            required-libraries: ATtinySerialOut
-#            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
-#            build-properties: # the flags were put in compiler.cpp.extra_flags
-#             SimpleSender: -DSEND_PWM_BY_TIMER
+          - arduino-boards-fqbn: ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
+            platform-url: http://drazzy.com/package_drazzy.com_index.json
+            required-libraries: ATtinySerialOut
+            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+             SimpleSender: -DSEND_PWM_BY_TIMER
+             SimpleReceiver: -DDECODE_NEC
 
 #
 # MegaCore
@@ -284,6 +286,7 @@ jobs:
             platform-url: https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json # Arduino URL is not required here
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
               All: -DRAW_BUFFER_LENGTH=750
+            sketches-exclude: UnitTest # Sketch uses 28762 bytes (100%) of program storage space. Maximum is 28672 bytes.
 
           - arduino-boards-fqbn: sandeepmistry:nRF5:BBCmicrobit
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json

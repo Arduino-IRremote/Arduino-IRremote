@@ -1,6 +1,6 @@
 {
   "name": "IRremote",
-  "version": "4.4.1",
+  "version": "4.4.2",
   "description": "Send and receive infrared signals with multiple protocols",
   "keywords": "communication, infrared, ir, remote",
   "homepage": "https://github.com/Arduino-IRremote/Arduino-IRremote",

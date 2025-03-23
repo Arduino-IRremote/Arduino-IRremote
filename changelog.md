@@ -8,6 +8,9 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Fixed overflow handling.
 - Improved repeat detection for DistanceWidthProtocol.
 - Print of IR frame duration in printIRResultShort();
+- PulseDistanceWidthProtocolConstants now in PROGMEM, this saves 190 bytes RAM for unit test.
+- Support for PROGMEM PulseDistanceWidthProtocol data.
+- Support duplicated 8 bit address for sendSamsungLG().
 
 # 4.4.1
 - Support for ESP core 3.x by akellai.
@@ -310,7 +313,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Corrected keywords.txt.
 - BoseWave protocol added PR #690.
 - Formatting comply to the new stylesheet.
-- Renamed "boarddefs.h" [ISSUE #375](https://github.com/Arduino-IRremote/Arduino-IRremote/issues/375).
+- Renamed "boarddefs.h".
 - Renamed `SEND_PIN` to `IR_SEND_PIN`.
 - Renamed state macros.
 - Enabled `DUTY_CYCLE` for send signal.

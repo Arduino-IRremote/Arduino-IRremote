@@ -611,10 +611,10 @@ void IRsend::sendPulseDistanceWidthFromPGMArray(uint_fast8_t aFrequencyKHz, uint
 #if defined(LOCAL_DEBUG)
     // fist data
     Serial.print(F("Data[0]=0x"));
-    Serial.print(aDecodedRawDataArray[0], HEX);
+    Serial.print(aDecodedRawDataPGMArray[0], HEX);
     if (tNumberOf32Or64BitChunks > 1) {
         Serial.print(F(" Data[1]=0x"));
-        Serial.print(aDecodedRawDataArray[1], HEX);
+        Serial.print(aDecodedRawDataPGMArray[1], HEX);
     }
     Serial.print(F(" #="));
     Serial.println(aNumberOfBits);
@@ -798,10 +798,10 @@ void IRsend::sendPulseDistanceWidthFromPGMArray(PulseDistanceWidthProtocolConsta
 #if defined(LOCAL_DEBUG)
     // fist data
     Serial.print(F("Data[0]=0x"));
-    Serial.print(aDecodedRawDataArray[0], HEX);
+    Serial.print(aDecodedRawDataPGMArray[0], HEX);
     if (tNumberOf32Or64BitChunks > 1) {
         Serial.print(F(" Data[1]=0x"));
-        Serial.print(aDecodedRawDataArray[1], HEX);
+        Serial.print(aDecodedRawDataPGMArray[1], HEX);
     }
     Serial.print(F(" #="));
     Serial.println(aNumberOfBits);
@@ -1206,7 +1206,12 @@ void IRsend::mark(uint16_t aMarkMicros) {
 #  else
         // 3.5 us from FeedbackLed on to pin setting. 5.7 us from call of mark() to pin setting incl. setting of feedback pin.
         // 4.3 us from do{ to pin setting if sendPin is no constant
-        digitalWriteFast(sendPin, HIGH);
+        // check must be here because of MegaTinyCore and its badArg() check
+        if (__builtin_constant_p(sendPin)) {
+            digitalWriteFast(sendPin, HIGH);
+        } else {
+            digitalWrite(sendPin, HIGH);
+        }
 #  endif
         delayMicroseconds (periodOnTimeMicros); // On time is 8 us for 30% duty cycle. This is normally implemented by a blocking wait.
 
@@ -1221,7 +1226,11 @@ void IRsend::mark(uint16_t aMarkMicros) {
 #    endif
 
 #  else
-        digitalWriteFast(sendPin, LOW);
+        if (__builtin_constant_p(sendPin)) {
+            digitalWriteFast(sendPin, LOW);
+        } else {
+            digitalWrite(sendPin, LOW);
+        }
 #  endif
         /*
          * Enable interrupts at start of the longer off period. Required at least to keep micros correct.
@@ -1411,7 +1420,11 @@ void IRsend::enableIROut(uint_fast8_t aFrequencyKHz) {
 #    if defined(IR_SEND_PIN)
     pinModeFast(IR_SEND_PIN, OUTPUT);
 #    else
-    pinModeFast(sendPin, OUTPUT);
+    if (__builtin_constant_p(sendPin)) {
+        pinModeFast(sendPin, OUTPUT);
+    } else {
+        pinMode(sendPin, OUTPUT);
+    }
 #    endif
 #  endif
 #endif // defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)

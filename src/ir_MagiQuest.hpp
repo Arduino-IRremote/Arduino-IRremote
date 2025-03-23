@@ -55,7 +55,6 @@
 //==============================================================================
 /*
  * https://github.com/kitlaan/Arduino-IRremote/blob/master/ir_Magiquest.cpp
- * https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/1027#discussioncomment-3636857
  * https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1015#issuecomment-1222247231
 
  Protocol=MagiQuest Address=0xFF00 Command=0x176 Raw-Data=0x6BCDFF00 56 bits MSB first

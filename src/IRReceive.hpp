@@ -1184,14 +1184,14 @@ bool IRrecv::checkHeader_P(PulseDistanceWidthProtocolConstants const *aProtocolC
 // Check header "mark" and "space"
     if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderMarkMicros))) {
 #if defined(LOCAL_TRACE)
-        Serial.print(::getProtocolString(aProtocolConstants->ProtocolIndex));
+        Serial.print(::getProtocolString(aProtocolConstantsPGM->ProtocolIndex));
         Serial.println(F(": Header mark length is wrong"));
 #endif
         return false;
     }
     if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderSpaceMicros))) {
 #if defined(LOCAL_TRACE)
-        Serial.print(::getProtocolString(aProtocolConstants->ProtocolIndex));
+        Serial.print(::getProtocolString(aProtocolConstantsPGM->ProtocolIndex));
         Serial.println(F(": Header space length is wrong"));
 #endif
         return false;

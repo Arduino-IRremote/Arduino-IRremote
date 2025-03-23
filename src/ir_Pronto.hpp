@@ -2,6 +2,8 @@
  * @file ir_Pronto.hpp
  * @brief In this file, the functions IRrecv::compensateAndPrintPronto and IRsend::sendPronto are defined.
  *
+ * Pronto is the standard for the professional audio and video hardware market.
+ *
  * See http://www.harctoolbox.org/Glossary.html#ProntoSemantics
  * Pronto database http://www.remotecentral.com/search.htm
  *

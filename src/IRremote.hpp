@@ -259,7 +259,9 @@
  * We always use digitalWriteFast() and digitalReadFast() functions to have a consistent mapping for pins.
  * For most non AVR cpu's, it is just a mapping to digitalWrite() and digitalRead() functions.
  */
+#if !defined(MEGATINYCORE) // megaTinyCore has it own digitalWriteFast function set, except digitalToggleFast().
 #include "digitalWriteFast.h"
+#endif
 
 #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)
 #include "private/IRTimer.hpp"  // defines IR_SEND_PIN for AVR and SEND_PWM_BY_TIMER

@@ -70,6 +70,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 //
 // see: https://www.sbprojects.net/knowledge/ir/rc5.php
 // https://en.wikipedia.org/wiki/Manchester_code
+// https://en.wikipedia.org/wiki/RC-5
 // https://forum.arduino.cc/t/sending-rc-5-extended-code-using-irsender/1045841/10 - Protocol Maranz Extended
 // mark->space => 0
 // space->mark => 1

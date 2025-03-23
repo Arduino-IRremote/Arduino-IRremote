@@ -102,13 +102,13 @@
 #define SAMSUNG_MAXIMUM_REPEAT_DISTANCE     (SAMSUNG_REPEAT_PERIOD + (SAMSUNG_REPEAT_PERIOD / 4)) // 137000 - Just a guess
 
 // 19 byte RAM
-struct PulseDistanceWidthProtocolConstants const SamsungProtocolConstants PROGMEM = { SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
-SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
-        (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
+struct PulseDistanceWidthProtocolConstants const SamsungProtocolConstants PROGMEM = {SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
+    SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
+    (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
 
-struct PulseDistanceWidthProtocolConstants const SamsungLGProtocolConstants PROGMEM = { SAMSUNGLG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
-SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
-        (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendSamsungLGSpecialRepeat };
+struct PulseDistanceWidthProtocolConstants const SamsungLGProtocolConstants PROGMEM = {SAMSUNGLG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
+    SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
+    (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendSamsungLGSpecialRepeat};
 /************************************
  * Start of send and decode functions
  ************************************/
@@ -143,6 +143,7 @@ void sendSamsungLGSpecialRepeat() {
 
 /*
  * Sent e.g. by an LG 6711R1P071A remote
+ * @param aAddress 16 bit address. If < 0x100, i.e. only 8 bit, then a (standard) 16 bit address <8_bit_address><8_bit_address> is generated.
  * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent
  */
 void IRsend::sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
@@ -154,6 +155,9 @@ void IRsend::sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNu
     // send 16 bit address and  8 command bits and then 8 inverted command bits LSB first
     LongUnion tRawData;
     tRawData.UWord.LowWord = aAddress;
+    if (aAddress < 0x100) { // This disables the sending of an (non standard?) 16 bit address with upper byte = 0 like 0x0014.
+        tRawData.UByte.MidLowByte = aAddress; // here we have 8 bit address which must be duplicated
+    }
     tRawData.UByte.MidHighByte = aCommand;
     tRawData.UByte.HighByte = ~aCommand;
 
@@ -349,11 +353,15 @@ bool IRrecv::decodeSamsung() {
         if (tValue.UByte.MidHighByte == (uint8_t)(~tValue.UByte.HighByte)) {
             // 8 bit command protocol -> assume 8 bit address
             decodedIRData.command = tValue.UByte.MidHighByte; // first 8 bit
-            decodedIRData.address = tValue.UByte.LowByte;     // assume LowByte == MidLowByte
+        }
+
+        if (tValue.UByte.MidLowByte == tValue.UByte.LowByte) {
+            decodedIRData.address = tValue.UByte.LowByte; // assume LowByte == MidLowByte as seen for a LG HX906 A/V Receive E8172C2C
         } else {
             // 16 bit command protocol, address is filled above with the 16 bit value
             decodedIRData.command = tValue.UWord.HighWord; // first 16 bit
         }
+
         decodedIRData.numberOfBits = SAMSUNG_BITS;
         decodedIRData.protocol = SAMSUNG;
     }

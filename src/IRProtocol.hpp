@@ -150,6 +150,10 @@ namespace PrintULL {
 #  endif
 #endif
 
+/** @}
+ * \addtogroup Print Print functions
+ * @{
+ */
 /**
  * Function to print decoded result and flags in one line.
  * A static function to be able to print data to send or copied received data.
@@ -267,6 +271,10 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr) {
     }
 }
 
+/** @}
+ * \addtogroup Utils Utility functions
+ * @{
+ */
 /**********************************************************************************************************************
  * Function to bit reverse OLD MSB values of e.g. NEC.
  **********************************************************************************************************************/
