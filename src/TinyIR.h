@@ -263,6 +263,19 @@ void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint
 void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool aSendNEC2Repeats = false);
 void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats = 0, bool aSendNEC2Repeats = false);
 
+#if defined(NO_LED_FEEDBACK_CODE)
+#  if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
+#define NO_LED_RECEIVE_FEEDBACK_CODE
+#  endif
+#  if !defined(NO_LED_SEND_FEEDBACK_CODE)
+#define NO_LED_SEND_FEEDBACK_CODE
+#  endif
+#endif
+
+#if !defined(IR_FEEDBACK_LED_PIN) && defined(LED_BUILTIN)
+#define IR_FEEDBACK_LED_PIN     LED_BUILTIN
+#endif
+
 /*
  *  Version 2.2.0 - 7/2024
  *  - New TinyReceiverDecode() function to be used as drop in for IrReceiver.decode().

@@ -19,7 +19,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-2024 Armin Joachimsmeyer
+ * Copyright (c) 2022-2025 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +53,8 @@
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file
 #endif
+//#define NO_LED_SEND_FEEDBACK_CODE     // Disables the LED feedback code for receive.
+//#define IR_FEEDBACK_LED_PIN     12    // Use this, to disable use of LED_BUILTIN definition for IR_FEEDBACK_LED_PIN
 #include "TinyIR.h" // Defines protocol timings
 
 #include "digitalWriteFast.h"
@@ -114,6 +116,15 @@ void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
 void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
+#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
+#  else
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
+#  endif
+#endif
+
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
@@ -121,10 +132,10 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
         sendMark(aSendPin, NEC_HEADER_MARK);
         if ((!aSendNEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
             // send the NEC special repeat
-            delayMicroseconds(NEC_REPEAT_HEADER_SPACE); // - 2250
+            delayMicroseconds (NEC_REPEAT_HEADER_SPACE); // - 2250
         } else {
             // send header
-            delayMicroseconds(NEC_HEADER_SPACE);
+            delayMicroseconds (NEC_HEADER_SPACE);
             LongUnion tData;
             tData.UWord.LowWord = aAddress;
             tData.UWord.HighWord = aCommand;
@@ -132,9 +143,9 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
             for (uint_fast8_t i = 0; i < NEC_BITS; ++i) {
                 sendMark(aSendPin, NEC_BIT_MARK); // constant mark length
                 if (tData.ULong & 1) {
-                    delayMicroseconds(NEC_ONE_SPACE);
+                    delayMicroseconds (NEC_ONE_SPACE);
                 } else {
-                    delayMicroseconds(NEC_ZERO_SPACE);
+                    delayMicroseconds (NEC_ZERO_SPACE);
                 }
                 tData.ULong >>= 1; // shift command for next bit
             }
@@ -153,6 +164,14 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
             }
         }
     }
+#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
+#  else
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
+#  endif
+#endif
 }
 
 /*
@@ -168,6 +187,15 @@ void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint
 void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
+#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
+#  else
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
+#  endif
+#endif
+
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
@@ -175,10 +203,10 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
         sendMark(aSendPin, NEC_HEADER_MARK);
         if ((!aSendNEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
             // send the NEC special repeat
-            delayMicroseconds(NEC_REPEAT_HEADER_SPACE); // - 2250
+            delayMicroseconds (NEC_REPEAT_HEADER_SPACE); // - 2250
         } else {
             // send header
-            delayMicroseconds(NEC_HEADER_SPACE);
+            delayMicroseconds (NEC_HEADER_SPACE);
             LongUnion tData;
             /*
              * The compiler is intelligent and removes the code for "(aAddress > 0xFF)" if we are called with an uint8_t address :-).
@@ -201,9 +229,9 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
                 sendMark(aSendPin, NEC_BIT_MARK); // constant mark length
 
                 if (tData.ULong & 1) {
-                    delayMicroseconds(NEC_ONE_SPACE);
+                    delayMicroseconds (NEC_ONE_SPACE);
                 } else {
-                    delayMicroseconds(NEC_ZERO_SPACE);
+                    delayMicroseconds (NEC_ZERO_SPACE);
                 }
                 tData.ULong >>= 1; // shift command for next bit
             }
@@ -222,6 +250,14 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
             }
         }
     }
+#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
+#  else
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
+#  endif
+#endif
 }
 
 /*
@@ -234,6 +270,15 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
 void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
+#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
+#  else
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
+#  endif
+#endif
+
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
         unsigned long tStartOfFrameMillis = millis();
@@ -241,10 +286,10 @@ void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uin
         sendMark(aSendPin, NEC_HEADER_MARK);
         if ((!aSendNEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
             // send the NEC special repeat
-            delayMicroseconds(NEC_REPEAT_HEADER_SPACE); // - 2250
+            delayMicroseconds (NEC_REPEAT_HEADER_SPACE); // - 2250
         } else {
             // send header
-            delayMicroseconds(NEC_HEADER_SPACE);
+            delayMicroseconds (NEC_HEADER_SPACE);
             LongUnion tData;
             tData.UWord.LowWord = aAddress;
             if (aCommand > 0xFF) {
@@ -258,9 +303,9 @@ void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uin
                 sendMark(aSendPin, NEC_BIT_MARK); // constant mark length
 
                 if (tData.ULong & 1) {
-                    delayMicroseconds(NEC_ONE_SPACE);
+                    delayMicroseconds (NEC_ONE_SPACE);
                 } else {
-                    delayMicroseconds(NEC_ZERO_SPACE);
+                    delayMicroseconds (NEC_ZERO_SPACE);
                 }
                 tData.ULong >>= 1; // shift command for next bit
             }
@@ -279,6 +324,14 @@ void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uin
             }
         }
     }
+#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
+#  else
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
+#  endif
+#endif
 }
 
 /*
@@ -293,6 +346,15 @@ void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNum
  */
 void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats) {
     pinModeFast(aSendPin, OUTPUT);
+
+#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
+#  else
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
+#  endif
+#endif
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -337,6 +399,14 @@ void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats
             }
         }
     }
+#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
+#  else
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
+#  endif
+#endif
 }
 
 /** @}*/

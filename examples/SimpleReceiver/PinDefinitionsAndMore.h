@@ -186,8 +186,8 @@
 #define NO_LED_FEEDBACK_CODE   // The  WS2812 on pin 8 of AI-C3 board crashes if used as receive feedback LED, other I/O pins are working...
 #define IR_RECEIVE_PIN           6
 #define IR_SEND_PIN              7
-#define TONE_PIN                10
-#define APPLICATION_PIN         18
+#define TONE_PIN                 9
+#define APPLICATION_PIN         10
 
 #elif defined(ESP32)
 #include <Arduino.h>

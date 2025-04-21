@@ -114,6 +114,11 @@
 #else
 #define DEBUG_BUTTON_PIN   6
 #endif
+#if defined(ESP32)
+#  if !digitalPinIsValid(DEBUG_BUTTON_PIN)
+#undef DEBUG_BUTTON_PIN // DEBUG_BUTTON_PIN number is not valid, so delete definition to disable further usage
+#  endif
+#endif
 
 void generateTone();
 void handleOverflow();
@@ -121,13 +126,15 @@ bool detectLongPress(uint16_t aLongPressDurationMillis);
 
 void setup() {
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#  if defined(DEBUG_BUTTON_PIN)
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
+#  endif
 #endif
 
-    Serial.begin(115200);
+    Serial.begin(9600);
 
-    #if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
-    || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217)
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
+    || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217) || (defined(ESP32) && defined(ARDUINO_USB_MODE))
     delay(4000); // To be able to connect Serial monitor after reset or power up and before first print out. Do not wait for an attached Serial Monitor!
 #endif
 
@@ -159,13 +166,15 @@ void setup() {
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     Serial.println();
+#  if defined(DEBUG_BUTTON_PIN)
     Serial.print(F("If you connect debug pin "));
-#  if defined(APPLICATION_PIN_STRING)
+#    if defined(APPLICATION_PIN_STRING)
     Serial.print(APPLICATION_PIN_STRING);
-#  else
+#    else
     Serial.print(DEBUG_BUTTON_PIN);
-#  endif
+#    endif
     Serial.println(F(" to ground, raw data is always printed and tone is disabled"));
+#  endif
 
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);
@@ -202,7 +211,10 @@ void loop() {
              */
             if ((IrReceiver.decodedIRData.protocol != SONY) && (IrReceiver.decodedIRData.protocol != PULSE_WIDTH)
                     && (IrReceiver.decodedIRData.protocol != PULSE_DISTANCE) && (IrReceiver.decodedIRData.protocol != UNKNOWN)
-                    && digitalRead(DEBUG_BUTTON_PIN) != LOW) {
+#if defined(DEBUG_BUTTON_PIN)
+                    && digitalRead(DEBUG_BUTTON_PIN) != LOW
+#endif
+            ) {
                 /*
                  * For SONY the tone prevents the detection of a repeat after the 15 ms SONY gap.
                  * In debug mode and for unknown protocols, we need the time for extended output.
@@ -215,7 +227,11 @@ void loop() {
             /*
              * Print info
              */
-            if (IrReceiver.decodedIRData.protocol == UNKNOWN || digitalRead(DEBUG_BUTTON_PIN) == LOW) {
+            if (IrReceiver.decodedIRData.protocol == UNKNOWN
+#if defined(DEBUG_BUTTON_PIN)
+                    || digitalRead(DEBUG_BUTTON_PIN) == LOW)
+#endif
+            {
                 // We have debug enabled or an unknown protocol, print extended info
                 if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                     Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));

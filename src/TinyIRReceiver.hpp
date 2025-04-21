@@ -56,9 +56,11 @@
  *
  * - IR_RECEIVE_PIN         The pin number for TinyIRReceiver IR input.
  * - IR_FEEDBACK_LED_PIN    The pin number for TinyIRReceiver feedback LED.
- * - NO_LED_FEEDBACK_CODE   Disables the feedback LED function. Saves 14 bytes program memory.
- * - DISABLE_PARITY_CHECKS  Disable parity checks. Saves 48 bytes of program memory.
- * - USE_EXTENDED_NEC_PROTOCOL Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
+ * - NO_LED_FEEDBACK_CODE   Disables the feedback LED function for send and receive. Saves 14 bytes program memory.
+ * - NO_LED_RECEIVE_FEEDBACK_CODE Disables the LED feedback code for receive.
+ * - NO_LED_SEND_FEEDBACK_CODE    Disables the LED feedback code for send.
+ * - DISABLE_PARITY_CHECKS        Disable parity checks. Saves 48 bytes of program memory.
+ * - USE_EXTENDED_NEC_PROTOCOL    Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
  * - USE_ONKYO_PROTOCOL     Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
  * - USE_FAST_PROTOCOL      Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC.
  * - ENABLE_NEC2_REPEATS    Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
@@ -78,6 +80,10 @@
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC / ONKYO.
 //#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
+
+//#define IR_RECEIVE_PIN          2
+//#define NO_LED_RECEIVE_FEEDBACK_CODE  // Disables the LED feedback code for receive.
+//#define IR_FEEDBACK_LED_PIN     12    // Use this, to disable use of LED_BUILTIN definition for IR_FEEDBACK_LED_PIN
 #include "TinyIR.h"
 
 #include "digitalWriteFast.h"
@@ -107,8 +113,6 @@ volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
 /*
  * Set input pin and output pin definitions etc.
  */
-//#define IR_RECEIVE_PIN          2
-//#define IR_FEEDBACK_LED_PIN     LED_BUILTIN
 #if defined(IR_INPUT_PIN)
 #warning "IR_INPUT_PIN is deprecated, use IR_RECEIVE_PIN"
 #define IR_RECEIVE_PIN  IR_INPUT_PIN
@@ -127,9 +131,6 @@ volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
 #  endif
 #endif
 
-#if !defined(IR_FEEDBACK_LED_PIN) && defined(LED_BUILTIN)
-#define IR_FEEDBACK_LED_PIN     LED_BUILTIN
-#endif
 
 #if !( \
    (defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)) /* ATtinyX5 */ \
@@ -170,8 +171,12 @@ void IRPinChangeInterruptHandler(void) {
      */
     uint_fast8_t tIRLevel = digitalReadFast(IR_RECEIVE_PIN);
 
-#if !defined(NO_LED_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, tIRLevel);
+#  else
     digitalWriteFast(IR_FEEDBACK_LED_PIN, !tIRLevel);
+#  endif
 #endif
 
     /*
@@ -452,8 +457,11 @@ bool isIRReceiverAttachedForTinyReceiver() {
 bool initPCIInterruptForTinyReceiver() {
     pinModeFast(IR_RECEIVE_PIN, INPUT);
 
-#if !defined(NO_LED_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
+#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
+    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
+#  endif
 #endif
     return enablePCIInterruptForTinyReceiver();
 }

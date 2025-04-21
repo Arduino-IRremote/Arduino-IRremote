@@ -13,7 +13,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2015-2023 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
+ * Copyright (c) 2015-2025 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +56,8 @@
  * - RECORD_GAP_MICROS                  Minimum gap between IR transmissions, to detect the end of a protocol.
  * - FEEDBACK_LED_IS_ACTIVE_LOW         Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low.
  * - NO_LED_FEEDBACK_CODE               This completely disables the LED feedback code for send and receive.
+ * - NO_LED_RECEIVE_FEEDBACK_CODE       This disables the LED feedback code for receive.
+ * - NO_LED_SEND_FEEDBACK_CODE          This disables the LED feedback code for send.
  * - IR_INPUT_IS_ACTIVE_HIGH            Enable it if you use a RF receiver, which has an active HIGH output signal.
  * - IR_SEND_DUTY_CYCLE_PERCENT         Duty cycle of IR send signal.
  * - MICROS_PER_TICK                    Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 us at 38 kHz.
@@ -253,6 +255,15 @@
 #define MILLIS_IN_ONE_SECOND 1000L
 #define MICROS_IN_ONE_SECOND 1000000L
 #define MICROS_IN_ONE_MILLI 1000L
+
+#if defined(NO_LED_FEEDBACK_CODE)
+#  if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
+#define NO_LED_RECEIVE_FEEDBACK_CODE
+#  endif
+#  if !defined(NO_LED_SEND_FEEDBACK_CODE)
+#define NO_LED_SEND_FEEDBACK_CODE
+#  endif
+#endif
 
 #include "IRremoteInt.h"
 /*

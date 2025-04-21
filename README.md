@@ -869,6 +869,8 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `DISABLE_CODE_FOR_RECEIVER` | disabled |  Disables static receiver code like receive timer ISR handler and static IRReceiver and irparams data. Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not required. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time. |
+| `NO_LED_RECEIVE_FEEDBACK_CODE` | disabled | Disables the LED feedback code for receive. Saves around 100 bytes program memory for receiving and halving the receiver ISR (Interrupt Service Routine) processing time. |
+| `NO_LED_SEND_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send. Saves around  500 bytes for sending. |
 | `MICROS_PER_TICK` | 50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 &micro;s at 38 kHz. |
 | `TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT` | 25 | Relative tolerance for matchTicks(), matchMark() and matchSpace() functions used for protocol decoding. |
 | `DEBUG` | disabled | Enables lots of lovely debug output. |
@@ -879,7 +881,9 @@ These next macros for **TinyIRReceiver** must be defined in your program before 
 |-|-:|-|
 | `IR_RECEIVE_PIN` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. Not used in IRremote. |
 | `IR_FEEDBACK_LED_PIN` | `LED_BUILTIN` | The pin number for TinyIRReceiver feedback LED, which gets compiled in. |
-| `NO_LED_FEEDBACK_CODE` | disabled | Disables the feedback LED function. Saves 14 bytes program memory. |
+| `NO_LED_FEEDBACK_CODE` | disabled | Disables the feedback LED codefor send and receive. Saves 14 bytes program memory. |
+| `NO_LED_RECEIVE_FEEDBACK_CODE` | disabled | Disables the LED feedback code for receive. |
+| `NO_LED_SEND_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send. |
 | `DISABLE_PARITY_CHECKS` | disabled | Disables the addres and command parity checks. Saves 48 bytes program memory. |
 | `USE_EXTENDED_NEC_PROTOCOL` | disabled | Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
 | `USE_ONKYO_PROTOCOL` | disabled | Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
