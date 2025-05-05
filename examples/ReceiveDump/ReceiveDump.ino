@@ -10,7 +10,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2024 Armin Joachimsmeyer
+ * Copyright (c) 2020-2025 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,14 +44,15 @@
 
 /*
  * MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
- * to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 142.
+ * to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 135.
+ * 20 is taken as default if not otherwise specified / defined.
  *
  * You can change this value accordingly to the receiver module you use.
  * The required value can be derived from the timings printed here.
  * Keep in mind that the timings may change with the distance
  * between sender and receiver as well as with the ambient light intensity.
  */
-#define MARK_EXCESS_MICROS    20    // Adapt it to your IR receiver module. 20 is recommended for the cheap VS1838 modules.
+//#define MARK_EXCESS_MICROS    40    // Adapt it to your IR receiver module. 40 is recommended for the cheap VS1838 modules at high intensity.
 
 //#define RECORD_GAP_MICROS 12000 // Default is 8000. Activate it for some LG air conditioner protocols
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
@@ -90,6 +91,7 @@ void setup() {
     Serial.print(RECORD_GAP_MICROS);
     Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
     Serial.print(MARK_EXCESS_MICROS);
+    Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
     Serial.println();
     Serial.println(F("Because of the verbose output (>200 ms at 115200 baud), repeats are not dumped correctly!"));
     Serial.println();

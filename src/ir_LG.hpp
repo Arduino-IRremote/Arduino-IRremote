@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2024 Darryl Smith, Armin Joachimsmeyer
+ * Copyright (c) 2017-2025 Darryl Smith, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

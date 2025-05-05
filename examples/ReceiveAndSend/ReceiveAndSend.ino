@@ -86,8 +86,9 @@
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
-// to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 142.
-#define MARK_EXCESS_MICROS    20    // Adapt it to your IR receiver module. 20 is recommended for the cheap VS1838 modules.
+// to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 135.
+// 20 is taken as default if not otherwise specified / defined.
+//#define MARK_EXCESS_MICROS    40    // Adapt it to your IR receiver module. 40 is recommended for the cheap VS1838 modules at high intensity.
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 

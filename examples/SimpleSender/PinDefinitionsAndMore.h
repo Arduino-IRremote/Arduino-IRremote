@@ -51,7 +51,7 @@
 //#define _IR_MEASURE_TIMING // For debugging purposes.
 
 #if defined(__AVR__)
-#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) // Digispark board. For use with ATTinyCore.
+#if (defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)) && defined(PIN_PB0) // Digispark board. For use with ATTinyCore.
 #include "ATtinySerialOut.hpp" // TX is at pin 2 - Available as Arduino library "ATtinySerialOut". Saves 700 bytes program memory and 70 bytes RAM for ATtinyCore.
 #define IR_RECEIVE_PIN  PIN_PB0
 #define IR_SEND_PIN     PIN_PB4 // Pin 2 is serial output with ATtinySerialOut. Pin 1 is internal LED and Pin3 is USB+ with pullup on Digispark board.
@@ -61,28 +61,30 @@
 #  elif defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__) // Digispark pro board
 #include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut"
 // For ATtiny167 Pins PB6 and PA3 are usable as interrupt source.
-#  if defined(ARDUINO_AVR_DIGISPARKPRO)
+#    if defined(ARDUINO_AVR_DIGISPARKPRO)
 // For use with Digispark original core
 #define IR_RECEIVE_PIN   9 // PA3 - on Digispark board labeled as pin 9
 //#define IR_RECEIVE_PIN  14 // PB6 / INT0 is connected to USB+ on DigisparkPro boards
 #define IR_SEND_PIN      8 // PA2 - on Digispark board labeled as pin 8
 #define TONE_PIN         5 // PA7 - on Digispark board labeled as pin 5
 #define _IR_TIMING_TEST_PIN 10 // PA4
-#  else
+#    elif  !defined(PIN_PA3)
+#error ATtiny87 or ATtiny167 is not supported for the selected core. Please extend PinDefinitionsAndMore.h.
+#    else
 // For use with ATTinyCore
 #define IR_RECEIVE_PIN  PIN_PA3 // On Digispark board labeled as pin 9 - INT0 is connected to USB+ on DigisparkPro boards
 #define IR_SEND_PIN     PIN_PA2 // On Digispark board labeled as pin 8
 #define TONE_PIN        PIN_PA7 // On Digispark board labeled as pin 5
-#  endif
+#    endif
 
-#  elif defined(__AVR_ATtiny84__) // For use with ATTinyCore
+#  elif defined(__AVR_ATtiny84__) && defined(PIN_PB2) // For use with ATTinyCore
 #include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". Saves 128 bytes program memory.
 #define IR_RECEIVE_PIN   PIN_PB2 // INT0
 #define IR_SEND_PIN      PIN_PA4
 #define TONE_PIN         PIN_PA3
 #define _IR_TIMING_TEST_PIN PIN_PA5
 
-#  elif defined(__AVR_ATtiny88__) // MH-ET Tiny88 board. For use with ATTinyCore.
+#  elif defined(__AVR_ATtiny88__) && defined(PIN_PD3) // MH-ET Tiny88 board. For use with ATTinyCore.
 #include "ATtinySerialOut.hpp" // Available as Arduino library "ATtinySerialOut". Saves 128 bytes program memory.
 // Pin 6 is TX, pin 7 is RX
 #define IR_RECEIVE_PIN   PIN_PD3 // 3 - INT1
@@ -90,7 +92,7 @@
 #define TONE_PIN         PIN_PB1 // 9
 #define _IR_TIMING_TEST_PIN PIN_PB0 // 8
 
-#  elif defined(__AVR_ATtiny1616__)  || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // For use with megaTinyCore
+#  elif (defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)) && defined(PIN_PA1) // For use with megaTinyCore
 // Tiny Core Dev board
 // https://www.tindie.com/products/xkimi/tiny-core-16-dev-board-attiny1616/ - Out of Stock
 // https://www.tindie.com/products/xkimi/tiny-core-32-dev-board-attiny3217/ - Out of Stock
@@ -101,21 +103,21 @@
 #undef LED_BUILTIN               // No LED available on the TinyCore 32 board, take the one on the programming board which is connected to the DAC output
 #define LED_BUILTIN      PIN_PA6 // use 2 instead of PIN_PA6 for TinyCore32
 
-#  elif defined(__AVR_ATtiny816__) // For use with megaTinyCore
+#  elif defined(__AVR_ATtiny816__) && defined(PIN_PA1) // For use with megaTinyCore
 #define IR_RECEIVE_PIN  PIN_PA1 // 14
-#define IR_SEND_PIN     PIN_PA1 // 16
+#define IR_SEND_PIN     PIN_PA3 // 16
 #define TONE_PIN        PIN_PA5 // 1
 #define APPLICATION_PIN PIN_PA4 // 0
 #undef LED_BUILTIN              // No LED available, take the one which is connected to the DAC output
 #define LED_BUILTIN     PIN_PB5 // 4
 
-#  elif defined(__AVR_ATtiny1614__) // For use with megaTinyCore
+#  elif defined(__AVR_ATtiny1614__) && defined(PIN_PA1) // For use with megaTinyCore
 #define IR_RECEIVE_PIN   PIN_PA1 // 8
 #define IR_SEND_PIN      PIN_PA3 // 10
 #define TONE_PIN         PIN_PA5 // 1
 #define APPLICATION_PIN  PIN_PA4 // 0
 
-#  elif defined(__AVR_ATtiny1604__) // For use with megaTinyCore
+#  elif defined(__AVR_ATtiny1604__) && defined(PIN_PA6) // For use with megaTinyCore
 #define IR_RECEIVE_PIN   PIN_PA6 // 2 - To be compatible with interrupt example, pin 2 is chosen here.
 #define IR_SEND_PIN      PIN_PA7 // 3
 #define APPLICATION_PIN  PIN_PB2 // 5
@@ -221,7 +223,7 @@ void noTone(uint8_t aPinNumber){
 #define TONE_PIN                27  // D27 25 & 26 are DAC0 and 1
 #define APPLICATION_PIN         16  // RX2 pin
 
-#elif defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_STM32F1) // BluePill
+#elif (defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_STM32F1)) && defined(PA6) // BluePill
 // Timer 3 blocks PA6, PA7, PB0, PB1 for use by Servo or tone()
 #define IR_RECEIVE_PIN          PA6
 #define IR_RECEIVE_PIN_STRING   "PA6"
@@ -263,7 +265,7 @@ void noTone(uint8_t aPinNumber){
 #undef LED_BUILTIN
 #define LED_BUILTIN          6
 
-#elif defined(PARTICLE) // !!!UNTESTED!!!
+#elif defined(PARTICLE) && defined(A4) // !!!UNTESTED!!!
 #define IR_RECEIVE_PIN      A4
 #define IR_SEND_PIN         A5 // Particle supports multiple pins
 
@@ -326,7 +328,7 @@ void noTone(uint8_t aPinNumber){
 #define TONE_PIN           42 // Dummy for examples using it
 
 #else
-#warning Board / CPU is not detected using pre-processor symbols -> using default values, which may not fit. Please extend PinDefinitionsAndMore.h.
+#warning Board and Core / CPU is not detected using pre-processor symbols -> using default values, which may not fit. Please extend PinDefinitionsAndMore.h.
 // Default valued for unidentified boards
 #define IR_RECEIVE_PIN      2
 #define IR_SEND_PIN         3

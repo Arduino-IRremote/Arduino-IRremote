@@ -507,7 +507,12 @@ void timerConfigForReceive() {
 #define IR_SEND_PIN  14             // MightyCore, MegaCore
 
 #    else
-#define IR_SEND_PIN  3              // Arduino Duemilanove, Diecimila, LilyPad, etc
+/*
+ * Using pin 11 / PB3 / OC2A for this purpose is NOT possible, since we need a PWM with a selectable frequency.
+ * This is only possible by using Phase Correct with Top as OCR2A.
+ * Thus the OCR2A register cannot be used for comparing for channel A and TOP with OCR2B is not supported by Hardware :-(.
+ */
+#define IR_SEND_PIN  3              // Arduino Uno Pin PD3, Duemilanove, Diecimila, LilyPad, etc
 #    endif // defined(CORE_OC2B_PIN)
 
 void enableSendPWMByTimer() {

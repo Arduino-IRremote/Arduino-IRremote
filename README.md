@@ -592,7 +592,7 @@ which has very **small code size of 500 bytes and does NOT require any timer**.
 Instead of sampling the input every 50 &micro;s as IRremote does, TinyReceiver receiver uses a **pin change interrupt** for on-the-fly decoding which limits the choice of protocols.<br/>
 On each level change, the level and the time since the last change are used to incrementally decode the protocol.<br/>
 With this operating principle, we **cannot wait for a timeout** and then decode the protocol as IRremote does.<br/>
-Instead, we need to know which is the last bit (level change) of a protocol to do the final decoding 
+Instead, we need to know which is the last bit (level change) of a protocol to do the final decoding
 and the call of the optional **user provided callback function** `handleReceivedTinyIRData()`.<br/>
 This means, **we need to know the number of bits in a protocol** and therefore the protocol (family).
 
@@ -729,7 +729,7 @@ For more info, see [ir_BangOlufsen.hpp](https://github.com/Arduino-IRremote/Ardu
 
 # Examples for this library
 The examples are available at File > Examples > Examples from Custom Libraries / IRremote.<br/>
- In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.<br/>
+**In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.**<br/>
 See also [DroneBot Workshop SimpleReceiver](https://dronebotworkshop.com/ir-remotes/#SimpleReceiver_Example_Code) and [SimpleSender](https://dronebotworkshop.com/ir-remotes/#SimpleSender_Example_Code).
 
 #### SimpleReceiver + SimpleSender
@@ -763,7 +763,8 @@ By connecting debug pin to ground, you can force printing of the raw values for 
 This example also serves as an **example how to use IRremote and tone() together**.
 
 #### ReceiveDump
-Receives all protocols and dumps the received signal in different flavors including Pronto format. Since the printing takes much time, repeat signals may be skipped or interpreted as UNKNOWN.
+Receives all protocols and dumps the received signal in different flavors including **Pronto format**.<br/>
+Since the printing takes much time, repeat signals may be skipped or interpreted as UNKNOWN.
 
 #### SendDemo
 Sends all available protocols at least once.
@@ -861,7 +862,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE` | 50 if RAM <= 2k, else 200 | A value of 200 allows to decode mark or space durations up to 10 ms. |
 | `IR_INPUT_IS_ACTIVE_HIGH` | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |
 | `IR_SEND_PIN` | disabled | If specified, it reduces program size and improves send timing for AVR. If you want to use a variable to specify send pin e.g. with `setSendPin(uint8_t aSendPinNumber)`, you must not use / disable this macro in your source. |
-| `SEND_PWM_BY_TIMER` | disabled | Disables carrier PWM generation in software and use hardware PWM (by timer). Has the advantage of more exact PWM generation, especially the duty cycle (which is not very relevant for most IR receiver circuits), and the disadvantage of using a hardware timer, which in turn is not available for other libraries and to fix the send pin (but not the receive pin) at the [dedicated timer output pin(s)](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage). Is enabled for ESP32 and RP2040 in all examples, since they support PWM gereration for each pin without using a shared resource (timer). |
+| `SEND_PWM_BY_TIMER` | disabled | Disables carrier PWM generation in software and use hardware PWM (by timer). Has the **advantage of more exact PWM generation**, especially the duty cycle (which is not very relevant for most IR receiver circuits), and the **disadvantage of using a hardware timer**, which in turn is not available for other libraries and to fix the send pin (but not the receive pin) at the [dedicated timer output pin(s)](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage). Is enabled for ESP32 and RP2040 in all examples, since they support PWM gereration for each pin without using a shared resource (timer). |
 | `IR_SEND_DUTY_CYCLE_PERCENT` | 30 | Duty cycle of IR send signal. |
 | `USE_NO_SEND_PWM` | disabled | Uses no carrier PWM, just simulate an **active low** receiver signal. Used for transferring signal by cable instead of IR. Overrides `SEND_PWM_BY_TIMER` definition. |
 | `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` | disabled | Uses or simulates open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
@@ -914,10 +915,11 @@ If you are using [Sloeber](https://eclipse.baeyens.it) as your IDE, you can easi
 
 # Supported Boards
 **Issues and discussions with the content "Is it possible to use this library with the ATTinyXYZ? / board XYZ" without any reasonable explanations will be immediately closed without further notice.**<br/>
-For **ESP8266/ESP32**, [this library](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols and a lot of air conditioners](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md)<br/>
+For **ESP8266/ESP32**, [the IRremoteESP8266 library](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols and a lot of air conditioners](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md)<br/>
+**ATtiny CPU's are tested with the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) library**.<br/>
 <br/>
 Digispark boards are only tested with [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) using `New Style` pin mapping for the Digispark Pro board.<br/>
-ATtiny boards are only tested with [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore#supported-devices) or [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore).
+**ATtiny boards** are tested with **[ATTinyCore](https://github.com/SpenceKonde/ATTinyCore#supported-devices) or [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) only**.
 
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Arduino Uno R4, but not yet tested, because of lack of a R4 board. **Sending does not work** on the `arduino:renesas_uno:unor4wifi`.
@@ -1110,6 +1112,7 @@ It is dated from **24.06.2022** and updated 10/2023. If you have complains about
 # [History](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/changelog.md)
 
 # Useful links
+- [Online NEC to Pronto converting tool](https://www.yamaha.com/ypab/irhex_converter.asp)
 - [List of public IR code databases](http://www.harctoolbox.org/IR-resources.html)
 - [LIRC database](http://lirc-remotes.sourceforge.net/remotes-table.html)
 - [IRMP list of IR protocols](https://www.mikrocontroller.net/articles/IRMP_-_english#IR_Protocols)
@@ -1131,4 +1134,4 @@ From the version 2.8.0, the license is the MIT license.
 # Copyright
 Initially coded 2009 Ken Shirriff http://www.righto.com<br/>
 Copyright (c) 2016-2017 Rafi Khan https://rafikhan.io<br/>
-Copyright (c) 2020-2024 [Armin Joachimsmeyer](https://github.com/ArminJo)
+Copyright (c) 2020-2025 [Armin Joachimsmeyer](https://github.com/ArminJo)

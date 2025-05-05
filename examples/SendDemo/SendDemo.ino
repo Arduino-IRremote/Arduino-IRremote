@@ -52,7 +52,14 @@
 #define DELAY_AFTER_LOOP 5000
 
 #if __INT_WIDTH__ < 32
-        IRRawDataType const tRawDataPGM[] PROGMEM = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
+IRRawDataType const tRawDataPGM[] PROGMEM = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
+/*
+ * Alternative definition of tRawDataPGM as byte array of same size with same content as { 0xB02002, 0xA010}
+ * But be aware, that this requires a cast when using tRawDataPGM as parameter.
+ * Like sendPulseDistanceWidthFromPGMArray_P(..., (IRRawDataType*) &tRawDataPGM[0], ...);
+ */
+//uint8_t const tRawDataPGM[] PROGMEM = { 0x02, 0x20, 0xB0, 0x00, /*0xB02002*/
+//0x10, 0xA0, 0x0, 0x0, /*0xA010*/};
 #endif
 
 void setup() {
@@ -199,10 +206,10 @@ void loop() {
         IrSender.sendNECMSB(0x40802CD3, 32, false);
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance using ProtocolConstants"));
+        Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance PGM using ProtocolConstants"));
         Serial.flush();
 #  if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, (IRRawDataType*) &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
 #  else
         IrSender.sendPulseDistanceWidth_P(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
 #  endif
@@ -212,11 +219,11 @@ void loop() {
         /*
          * Send 2 Panasonic 48 bit codes as Pulse Distance data, once with LSB and once with MSB first
          */
-        Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance"));
+        Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance PGM"));
         Serial.println(F(" LSB first"));
         Serial.flush();
 #  if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromPGMArray(38, 3450, 1700, 450, 1250, 450, 400, &tRawDataPGM[0], 48,
+        IrSender.sendPulseDistanceWidthFromPGMArray(38, 3450, 1700, 450, 1250, 450, 400, (IRRawDataType*) tRawDataPGM, 48,
         PROTOCOL_IS_LSB_FIRST, 0, NO_REPEATS);
 #  else
         IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0xA010B02002, 48, PROTOCOL_IS_LSB_FIRST, 0,
@@ -395,14 +402,14 @@ void loop() {
     Serial.println(F("Send next protocols with IrSender.write"));
     Serial.flush();
 
-    IRSendData.protocol = JVC;// switch protocol
+    IRSendData.protocol = JVC; // switch protocol
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
     IrSender.write(&IRSendData, sRepeats);
     delay(DELAY_AFTER_SEND);
 
-    IRSendData.command = s16BitCommand;// LG support more than 8 bit command
+    IRSendData.command = s16BitCommand; // LG support more than 8 bit command
 
     IRSendData.protocol = SAMSUNG;
     Serial.print(F("Send "));

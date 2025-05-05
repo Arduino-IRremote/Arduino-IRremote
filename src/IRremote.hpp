@@ -134,21 +134,23 @@
  ****************************************************/
 /**
  * MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
- * to compensate for the signal forming of different IR receiver modules
+ * to compensate for the signal forming of different IR receiver modules.
+ * 20 is taken as default if not otherwise specified / defined.
  * For Vishay TSOP*, marks tend to be too long and spaces tend to be too short.
- * If you set MARK_EXCESS_MICROS to approx. 50us then the TSOP4838 works best.
- * At 100us it also worked, but not as well.
- * Set MARK_EXCESS to 100us and the VS1838 doesn't work at all.
+ * If you set MARK_EXCESS_MICROS to approx. 40 to 50 us then the TSOP4838 works best.
+ * At 100 us it also worked, but not as well.
+ * Set MARK_EXCESS to 100 us and the VS1838 doesn't work at all.
  *
  * The right value is critical for IR codes using short pulses like Denon / Sharp / Lego
  *
  *  Observed values:
- *  Delta of each signal type is around 50 up to 100 and at low signals up to 200. TSOP is better, especially at low IR signal level.
- *  VS1838      Mark Excess -50 at low intensity to +50 us at high intensity
+ *  Delta of each signal type is around 50 up to 100 us and at low signals up to 200 us.
+ *  TSOP is better, especially at low IR signal level.
+ *  VS1838      Mark Excess -50 us at low intensity to +50 us at high intensity
  *  TSOP31238   Mark Excess 0 to +50
  */
 #if !defined(MARK_EXCESS_MICROS)
-// To change this value, you simply can add a line #define "MARK_EXCESS_MICROS <My_new_value>" in your ino file before the line "#include <IRremote.hpp>"
+// To override this value, you simply can add a line #define "MARK_EXCESS_MICROS <My_new_value>" in your ino file before the line "#include <IRremote.hpp>"
 #define MARK_EXCESS_MICROS    20
 #endif
 

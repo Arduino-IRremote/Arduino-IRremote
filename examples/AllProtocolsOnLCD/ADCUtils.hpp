@@ -32,6 +32,9 @@
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 #endif
+#if !defined(BITS_PER_BYTE)
+#define BITS_PER_BYTE 8
+#endif
 
 /*
  * By replacing this value with the voltage you measured a the AREF pin after a conversion
