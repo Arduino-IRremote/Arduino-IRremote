@@ -1428,6 +1428,11 @@ void printActiveIRProtocols(Print *aSerial) {
  *                                    which in turn may block the proper detection of repeats.*
  * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD).
  */
+bool IRrecv::printIRResultShort(Print *aSerial,  bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
+    // DEPRECATED
+    (void) aPrintRepeatGap;
+    return printIRResultShort(aSerial, aCheckForRecordGapsMicros);
+}
 bool IRrecv::printIRResultShort(Print *aSerial, bool aCheckForRecordGapsMicros) {
 // call no class function with same name
     ::printIRResultShort(aSerial, &decodedIRData);

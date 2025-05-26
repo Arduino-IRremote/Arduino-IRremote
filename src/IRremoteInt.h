@@ -261,6 +261,8 @@ public:
     /*
      * Next 4 functions are also available as non member functions
      */
+    bool printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros)
+            __attribute__ ((deprecated ("Remove second parameter, it is not supported any more! Third one was true by default.")));
     bool printIRResultShort(Print *aSerial, bool aCheckForRecordGapsMicros = true);
     void printDistanceWidthTimingInfo(Print *aSerial, DistanceWidthTimingInfoStruct *aDistanceWidthTimingInfo);
     void printIRSendUsage(Print *aSerial);
