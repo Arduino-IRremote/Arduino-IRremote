@@ -46,9 +46,11 @@
  *
  * - RAW_BUFFER_LENGTH                  Buffer size of raw input buffer. Must be even! 100 is sufficient for *regular* protocols of up to 48 bits.
  * - IR_SEND_PIN                        If specified (as constant), reduces program size and improves send timing for AVR.
+ * - USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN Reverts the polarity at the send pin.
+ * - USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
  * - SEND_PWM_BY_TIMER                  Disable carrier PWM generation in software and use (restricted) hardware PWM.
  * - USE_NO_SEND_PWM                    Use no carrier PWM, just simulate an **active low** receiver signal. Overrides SEND_PWM_BY_TIMER definition.
- * - USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
+ * - USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM  Simulate an **active high** receiver signal instead of an active low signal.
  * - EXCLUDE_EXOTIC_PROTOCOLS           If activated, BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF are excluded in decode() and in sending with IrSender.write().
  * - EXCLUDE_UNIVERSAL_PROTOCOLS        If activated, the universal decoder for pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in decode().
  * - DECODE_*                           Selection of individual protocols to be decoded. See below.
@@ -246,6 +248,7 @@
 #if ! defined(IR_SEND_DUTY_CYCLE_PERCENT)
 #define IR_SEND_DUTY_CYCLE_PERCENT 30 // 30 saves power and is compatible to the old existing code
 #endif
+
 
 /**
  * microseconds per clock interrupt tick

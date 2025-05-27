@@ -27,6 +27,7 @@
 
 #include "ADCUtils.h"
 #if defined(ADC_UTILS_ARE_AVAILABLE) // set in ADCUtils.h, if supported architecture was detected
+#define ADC_UTILS_ARE_INCLUDED
 
 #if !defined(STR)
 #define STR_HELPER(x) #x
@@ -65,6 +66,11 @@ union WordUnionForADCUtils {
 #define LOCAL_DEBUG
 #else
 //#define LOCAL_DEBUG // This enables debug output only for this file
+#endif
+#if defined(INFO)
+#define LOCAL_INFO
+#else
+//#define LOCAL_INFO // This enables debug output only for this file
 #endif
 
 /*
@@ -639,13 +645,13 @@ bool isVCCUSBPowered(Print *aSerial) {
 }
 
 /*
+ * It checks every 10 seconds for 6 times, and then returns true if the undervoltage condition ( <3.4V ) still applies.
  * @ return true only once, when VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP (6) times voltage too low -> shutdown
  */
 bool isVCCUndervoltageMultipleTimes() {
     /*
      * Check VCC every VCC_CHECK_PERIOD_MILLIS (10) seconds
      */
-
     if (millis() - sLastVCCCheckMillis >= VCC_CHECK_PERIOD_MILLIS) {
         sLastVCCCheckMillis = millis();
 
@@ -655,30 +661,32 @@ bool isVCCUndervoltageMultipleTimes() {
         readVCCVoltageMillivolt();
 #  endif
 
-        if (sVCCTooLowCounter < VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP) {
-            /*
-             * Do not check again if shutdown has happened
-             */
+        /*
+         * Do not check again if shutdown signaling (sVCCTooLowCounter >= 6) has happened
+         */
+        if (sVCCTooLowCounter < VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP) { // VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP = 6
             if (sVCCVoltageMillivolt > VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) {
                 sVCCTooLowCounter = 0; // reset counter
             } else {
                 /*
-                 * Voltage too low, wait VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP (6) times and then shut down.
+                 * Voltage too low, wait VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP (6) times and then signal shut down.
                  */
                 if (sVCCVoltageMillivolt < VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) {
                     // emergency shutdown
                     sVCCTooLowCounter = VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP;
-#  if defined(INFO)
+#  if defined(LOCAL_INFO)
                     Serial.println(
                             F(
                                     "Voltage < " STR(VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV detected -> emergency shutdown"));
 #  endif
                 } else {
                     sVCCTooLowCounter++;
-#  if defined(INFO)
-                    Serial.print(F("Voltage < " STR(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV detected: "));
+#  if defined(LOCAL_INFO)
+                    Serial.print(sVCCVoltageMillivolt);
+                    Serial.print(F(" mV < " STR(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV detected: "));
+
                     Serial.print(VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP - sVCCTooLowCounter);
-                    Serial.println(F(" tries left"));
+                    Serial.println(F(" attempts left"));
 #  endif
                 }
                 if (sVCCTooLowCounter == VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP) {
@@ -819,5 +827,8 @@ float getVCCVoltage() {
 
 #if defined(LOCAL_DEBUG)
 #undef LOCAL_DEBUG
+#endif
+#if defined(LOCAL_INFO)
+#undef LOCAL_INFO
 #endif
 #endif // _ADC_UTILS_HPP

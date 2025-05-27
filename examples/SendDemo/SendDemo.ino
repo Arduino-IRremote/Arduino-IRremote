@@ -37,10 +37,12 @@
 #if !defined(ARDUINO_ESP32C3_DEV) // This is due to a bug in RISC-V compiler, which requires unused function sections :-(.
 #define DISABLE_CODE_FOR_RECEIVER // Disables static receiver code like receive timer ISR handler and static IRReceiver and irparams data. Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not required.
 #endif
+//#define IR_USE_AVR_TIMER1
 //#define EXCLUDE_EXOTIC_PROTOCOLS  // Saves around 240 bytes program memory if IrSender.write is used
+//#define USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN // Reverts the polarity at the send pin.
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
-//#define USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN // Simulate an active high receiver signal instead of an active low signal.
+//#define USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM // Simulate an active high receiver signal instead of an active low signal.
 //#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN  // Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
 #if FLASHEND <= 0x1FFF              // For 8k flash or less like ATtiny85
 #define NO_LED_FEEDBACK_CODE        // Saves 344 bytes program memory

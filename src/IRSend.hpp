@@ -1165,7 +1165,7 @@ void IRsend::mark(uint16_t aMarkMicros) {
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
     // Here we have no hardware supported Open Drain outputs, so we must mimicking it
     pinModeFast(sendPin, OUTPUT); // active state for mimicking open drain
-#  elif defined(USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN)
+#  elif defined(USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM) || defined(USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN) // USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN is old and deprecated
     digitalWriteFast(sendPin, HIGH); // Set output to active high.
 #  else
     digitalWriteFast(sendPin, LOW); // Set output to active low.
@@ -1194,12 +1194,16 @@ void IRsend::mark(uint16_t aMarkMicros) {
     do {
 //        digitalToggleFast(_IR_TIMING_TEST_PIN);
         /*
-         * Output the PWM pulse
+         * Output the PWM pulse - IR LED is active
          */
         noInterrupts(); // do not let interrupts extend the short on period
-#  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
-#    if defined(OUTPUT_OPEN_DRAIN)
-        digitalWriteFast(sendPin, LOW); // set output with pin mode OUTPUT_OPEN_DRAIN to active low
+#  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) || defined(USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN)
+#    if defined(USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN) || defined(OUTPUT_OPEN_DRAIN)
+        if (__builtin_constant_p(sendPin)) {
+            digitalWriteFast(sendPin, LOW); // set output to active low. Also applicable for pin with mode OUTPUT_OPEN_DRAIN :-)
+        } else {
+            digitalWrite(sendPin, LOW);
+        }
 #    else
         pinModeFast(sendPin, OUTPUT); // active state for mimicking open drain
 #    endif
@@ -1216,11 +1220,15 @@ void IRsend::mark(uint16_t aMarkMicros) {
         delayMicroseconds (periodOnTimeMicros); // On time is 8 us for 30% duty cycle. This is normally implemented by a blocking wait.
 
         /*
-         * Output the PWM pause
+         * Output the PWM pause - IR LED is inactive
          */
-#  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
-#    if defined(OUTPUT_OPEN_DRAIN)
-        digitalWriteFast(sendPin, HIGH); // Set output with pin mode OUTPUT_OPEN_DRAIN to inactive high.
+#  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) || defined(USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN)
+#    if defined(USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN) || defined(OUTPUT_OPEN_DRAIN)
+        if (__builtin_constant_p(sendPin)) {
+            digitalWriteFast(sendPin, HIGH);  // Set output to inactive high. Also applicable for pin with mode OUTPUT_OPEN_DRAIN
+        } else {
+            digitalWrite(sendPin, HIGH);
+        }
 #    else
         pinModeFast(sendPin, INPUT); // to mimic the open drain inactive state
 #    endif
@@ -1321,20 +1329,28 @@ void IRsend::IRLedOff() {
 #  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) && !defined(OUTPUT_OPEN_DRAIN)
     digitalWriteFast(sendPin, LOW); // prepare for all next active states.
     pinModeFast(sendPin, INPUT);// inactive state for open drain
-#  elif defined(USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN)
+#  elif defined(USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM) || defined(USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN) // USE_ACTIVE_HIGH_OUTPUT_FOR_SEND_PIN is old and deprecated
     digitalWriteFast(sendPin, LOW); // Set output to inactive low.
 #  else
     digitalWriteFast(sendPin, HIGH); // Set output to inactive high.
 #  endif
 #else
-#  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN)
-#    if defined(OUTPUT_OPEN_DRAIN)
-    digitalWriteFast(sendPin, HIGH); // Set output to inactive high.
+#  if defined(USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN) || defined(USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN)
+#    if defined(USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN) || defined(OUTPUT_OPEN_DRAIN)
+    if (__builtin_constant_p(sendPin)) {
+        digitalWriteFast(sendPin, HIGH); // set output to inactive high.
+    } else {
+        digitalWrite(sendPin, HIGH);
+    }
 #    else
     pinModeFast(sendPin, INPUT); // inactive state to mimic open drain
 #    endif
 #  else
-    digitalWriteFast(sendPin, LOW);
+    if (__builtin_constant_p(sendPin)) {
+        digitalWriteFast(sendPin, LOW); // set output to active low.
+    } else {
+        digitalWrite(sendPin, LOW);
+    }
 #  endif
 #endif
 
