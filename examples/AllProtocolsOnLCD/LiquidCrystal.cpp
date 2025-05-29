@@ -5,6 +5,20 @@
 #include <inttypes.h>
 #include "Arduino.h"
 
+#if defined(__AVR__)
+/*
+ * The datasheet says: a command need > 37us to settle.
+ * Use a delay of 2 us instead of 100 us after each command,
+ * because the overhead of this library seems to be using the other 35 us.
+ * At least it works perfectly for all my LCD's connected to Uno, Nano etc.
+ * and it saves a lot of time in realtime applications using LCD as display,
+ * like https://github.com/ArminJo/Arduino-DTSU666H_PowerMeter
+ */
+#  if !defined(DO_NOT_USE_FAST_LCD_TIMING)
+#define USE_FAST_LCD_TIMING
+#  endif
+#endif
+
 // When the display powers up, it is configured as follows:
 //
 // 1. Display clear
@@ -21,7 +35,7 @@
 //    S = 0; No shift
 //
 // Note, however, that resetting the Arduino doesn't reset the LCD, so we
-// can't assume that its in that state when a sketch starts (and the
+// can't assume that it is in that state when a sketch starts (and the
 // LiquidCrystal constructor is called).
 
 LiquidCrystal::LiquidCrystal(uint8_t rs, uint8_t rw, uint8_t enable,
@@ -72,7 +86,7 @@ void LiquidCrystal::init(uint8_t fourbitmode, uint8_t rs, uint8_t rw, uint8_t en
   else
     _displayfunction = LCD_8BITMODE | LCD_1LINE | LCD_5x8DOTS;
 
-  begin(16, 1);
+   begin(16, 1); // initializing for a 1601 LCD, but the user must call begin() with the right values at startup. Outcommenting increases program size
 }
 
 void LiquidCrystal::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
@@ -262,12 +276,14 @@ void LiquidCrystal::noAutoscroll(void) {
 
 // Allows us to fill the first 8 CGRAM locations
 // with custom characters
+// This also sets cursor to 0.0
 void LiquidCrystal::createChar(uint8_t location, uint8_t charmap[]) {
   location &= 0x7; // we only have 8 locations 0-7
   command(LCD_SETCGRAMADDR | (location << 3));
   for (int i=0; i<8; i++) {
     write(charmap[i]);
   }
+  command(LCD_SETDDRAMADDR); // set cursor to 0.0, this avoids overwriting CGRAM by next write() command.
 }
 
 /*********** mid level commands, for sending data/cmds */
@@ -278,7 +294,7 @@ inline void LiquidCrystal::command(uint8_t value) {
 
 inline size_t LiquidCrystal::write(uint8_t value) {
   send(value, HIGH);
-  return 1; // assume sucess
+  return 1; // assume success
 }
 
 /************ low level data pushing commands **********/
@@ -306,7 +322,11 @@ void LiquidCrystal::pulseEnable(void) {
   digitalWrite(_enable_pin, HIGH);
   delayMicroseconds(1);    // enable pulse must be >450ns
   digitalWrite(_enable_pin, LOW);
+#if defined(USE_FAST_LCD_TIMING)
+  delayMicroseconds(2);   // commands need > 37us to settle
+#else
   delayMicroseconds(100);   // commands need > 37us to settle
+#endif
 }
 
 void LiquidCrystal::write4bits(uint8_t value) {

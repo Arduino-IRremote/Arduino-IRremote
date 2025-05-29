@@ -46,8 +46,11 @@
 
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 //#define EXCLUDE_EXOTIC_PROTOCOLS  // Saves around 240 bytes program memory if IrSender.write is used
+//#define USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN // Reverses the polarity at the send pin.
+//#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN  // Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
+//#define USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM // Simulate an active high receiver signal instead of an active low signal.
 #if FLASHEND <= 0x7FFF              // For 32k flash or less, like ATmega328
 #define NO_LED_FEEDBACK_CODE        // Saves 344 bytes program memory
 #endif
