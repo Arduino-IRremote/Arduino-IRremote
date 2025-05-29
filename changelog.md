@@ -69,7 +69,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Usage of ATTinyCore pin numbering scheme e.g. PIN_PB2.
 - Added ARDUINO_ARCH_NRF52 to support Seeed XIAO nRF52840 Sense.
 - First untested support of Uno R4.
-- Extraced version macros to IRVersion.h.
+- Extracted version macros to IRVersion.h.
 
 ## 4.1.2
 - Workaround for ESP32 RTOS delay() timing bug influencing the mark() function.
