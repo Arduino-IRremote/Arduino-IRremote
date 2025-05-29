@@ -172,7 +172,7 @@ If IR_SEND_PIN is not defined (before the line `#include <IRremote.hpp>`) you mu
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRProtocol.h#L90-L101).
 - Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
 
-- The 5 protocols **NEC, Panasonic, Sony, Samsung and JVC** have been converted to LSB first. Send functions for sending old MSB data were renamed to `sendNECMSB`, `sendSamsungMSB()`, `sendSonyMSB()` and `sendJVCMSB()`. The old  `sendSAMSUNG()` and `sendSony()` MSB functions are still available. The old MSB version of `sendPanasonic()` function was deleted, since it had bugs nobody recognized and therfore was assumed to be never used.<br/>
+- The 5 protocols **NEC, Panasonic, Sony, Samsung and JVC** have been converted to LSB first. Send functions for sending old MSB data were renamed to `sendNECMSB`, `sendSamsungMSB()`, `sendSonyMSB()` and `sendJVCMSB()`. The old  `sendSAMSUNG()` and `sendSony()` MSB functions are still available. The old MSB version of `sendPanasonic()` function was deleted, since it had bugs nobody recognized and therefore was assumed to be never used.<br/>
 For converting MSB codes to LSB see [below](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes).
 
 ### Example
