@@ -11,40 +11,21 @@ body:
         **Issues are expected to lead to changes in the repository, like code or documentation improvements or bug fixes.**
         If you have handling problems or questions, consider to post in [Discussions](../discussions) instead.
 
-        # Environment
-
-  - type: dropdown
-    id: Board
+  - type: input
+    id: Board_FQBN
     attributes:
-      label: The type of board you are using.
-      options:
-        - Arduino ATmega328* board (Uno, Nano, etc.)
-        - Arduino ATmega2560 board (Mega)
-        - Arduino ATmega32U4 board (Leonardo, etc.)
-        - Arduino ATmega4809 megaAVR board (NanoEvery)
-        - Arduino SAM board (Due)
-        - Arduino SAMD board (Zero, MKR*)
-        - ATtiny85 board (ATTinyCore by Spence Conde)
-        - Digispark board
-        - ATtiny3217 board (TinyCore)
-        - ESP32 board - first check https://github.com/crankyoldgit/IRremoteESP8266
-        - STM32F1 board (BluePill)
-        - Teensy board
-        - Other - please specify below
+      label: Please specify **FQBN** (Fully Qualified Board Name).
+        It is the first line in the compiler output in the Arduino IDE 2.x.
+        The FQBN starts with the core name, which is essential for bugfixing.
+        For example, at least two prominent cores are available for the Bluepill board, namely STMicroelectronics and STM32duino.
+        **Without the FQBN we are most likely not able to fix the the issue.**
     validations:
       required: true
 
   - type: input
-    id: Other_board_NAME_FQBN
+    id: Exotic_core_URL
     attributes:
-      label: The boards name or FQBN (e.g. esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80) for unspecified board.
-    validations:
-      required: false
-
-  - type: input
-    id: Other_board_URL
-    attributes:
-      label: The board manager URL used for unspecified board.
+      label: The board manager URL used for exotic cores.
       value: "https://"
     validations:
       required: false
@@ -54,11 +35,11 @@ body:
     attributes:
       label: What IDE are you using?
       options:
-        - Arduino IDE
-        - Arduino Web Editor
-        - Arduino Pro IDE
-        - Sloeber IDE
+        - Arduino 2.x IDE
         - PlatformIO IDE
+        - Arduino 1.x IDE
+        - Arduino Web Editor
+        - Sloeber IDE
         - Other - please specify below
       multiple: false
     validations:
@@ -83,6 +64,7 @@ body:
         - Samsung
         - Sharp
         - Sony
+        - Universal Pulse Distance
         - Whynter
         - Other - please specify below
       multiple: true
@@ -107,15 +89,15 @@ body:
         - label: ReceiveDemo
         - label: SendRawDemo
         - label: ReceiverTimingAnalysis
+        - label: ReceiveDump
         - label: TinyReceiver
         - label: TinySender
         - label: ReceiveAndSend
         - label: SimpleSender
         - label: SendDemo
-        - label: SendLGAirConditionerDemo
         - label: UnitTest
         - label: Other - please specify below
-        - label: I checked, if at least one of the examples was working.
+        - label: I checked, whether at least one of the examples was working.
           required: true
 
   - type: checkboxes
@@ -128,12 +110,12 @@ body:
         - label: ReceiveDemo
         - label: SendRawDemo
         - label: ReceiverTimingAnalysis
+        - label: ReceiveDump
         - label: TinyReceiver
         - label: TinySender
         - label: ReceiveAndSend
         - label: SimpleSender
         - label: SendDemo
-        - label: SendLGAirConditionerDemo
         - label: UnitTest
         - label: Other - please specify below
 
@@ -162,7 +144,7 @@ body:
         1.
         2.
         3.
-        4. See error
+        4.
     validations:
       required: true
 
@@ -177,9 +159,9 @@ body:
   - type: textarea
     id: bug-logs
     attributes:
-      label: The serial output which indicates the error happened.
+      label: The output which indicates the error happened.
       description: |
-        Please copy and paste any relevant serial output. This will be automatically formatted into code, so no need for backticks.
+        Please copy and paste any relevant output. This will be automatically formatted into code, so no need for backticks.
       render: shell
     validations:
       required: false
@@ -212,9 +194,7 @@ body:
       options:
         - label: I have **read** the README.md file thoroughly
           required: true
-        - label: I have searched existing issues to see if there is anything I have missed.
-          required: true
-        - label: I have browsed the examples for one, that matches my use case.
+        - label: I have browsed the examples for one that matches my use case.
           required: true
         - label: The title of the issue is helpful and relevant.
           required: true

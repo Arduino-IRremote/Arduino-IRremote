@@ -69,14 +69,14 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Usage of ATTinyCore pin numbering scheme e.g. PIN_PB2.
 - Added ARDUINO_ARCH_NRF52 to support Seeed XIAO nRF52840 Sense.
 - First untested support of Uno R4.
-- Extraced version macros to IRVersion.h.
+- Extracted version macros to IRVersion.h.
 
 ## 4.1.2
 - Workaround for ESP32 RTOS delay() timing bug influencing the mark() function.
 
 ## 4.1.1
 - SAMD51 use timer3 if timer5 not available.
-- Disabled #define LOCAL_DEBUG in IRReceive.hpp, which was accidently enabled at 4.1.0.
+- Disabled #define LOCAL_DEBUG in IRReceive.hpp, which was accidentally enabled at 4.1.0.
 
 ## 4.1.0
 - Fixed bug in printing durations > 64535 in printIRResultRawFormatted().
@@ -147,7 +147,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Improved pin mapping for TinyReceiver.
 
 ## 3.7.1
-- SendRaw now supports bufferlenght > 255.
+- SendRaw now supports buffer length > 255.
 - Improved DistanceProtocol decoder output.
 - Fixed ESP32 send bug for 2.x ESP32 cores.
 
@@ -382,7 +382,7 @@ Changes from #268 by adamlhumphreys
 - Fixed #110 Mess
 - Created Gitter Room
 - Added Gitter Badge
-- Standardised Code Base
+- Standardized Code Base
 - Clean Debug Output
 - Optimized Send Loops
 - Modularized Design

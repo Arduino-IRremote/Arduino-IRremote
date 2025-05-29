@@ -18,7 +18,7 @@ Refrain from using overly long or capitalized titles as they are usually annoyin
 We use the original [C Style by Kerninghan / Ritchie](https://en.wikipedia.org/wiki/Indentation_style#K&R_style) in [variant: 1TBS (OTBS)](https://en.wikipedia.org/wiki/Indentation_style#Variant:_1TBS_(OTBS)).<br/>
 In short: 4 spaces indentation, no tabs, opening braces on the same line, braces are mandatory on all if/while/do, no hard line length limit.<br/>
 To beautify your code, you may use the online formatter [here](https://www.freecodeformat.com/c-format.php).
-#### Cover **all** occurences of the problem / addition you address with your PR
+#### Cover **all** occurrences of the problem / addition you address with your PR
  Do not forget the documentation like it is done for existing code. Code changes without proper documentation will be rejected!
 
 ## Adding new protocols

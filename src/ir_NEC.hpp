@@ -72,7 +72,7 @@
 // http://www.hifi-remote.com/wiki/index.php/NEC
 // https://www.sbprojects.net/knowledge/ir/nec.php
 // NEC: LSB first, <start bit><address:16> (or <address:8><inverted address:8>) <command:16><command:8><inverted command:8><stop bit>.
-// ONKYO: like NEC but force to 16 independent address and 16 bit command bits: <start bit><address:16><command:16><stop bit>
+// ONKYO (sometimes called NECext): like NEC but force to 16 independent address and 16 bit command bits: <start bit><address:16><command:16><stop bit>
 // Standard NEC sends a special fixed repeat frame.
 // NEC2: like NEC, but for repeat, the same full frame is sent after the 110 ms. I have a DVD remote with NEC2.
 // NEC and NEC 2 only differ in the repeat frames, so the protocol can only be detected correctly after the first repeat.

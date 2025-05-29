@@ -222,7 +222,7 @@ void storeCode() {
         /*
          * Print info
          */
-        Serial.print(F("Received unknown code and store "));
+        Serial.print(F("Received unknown or pulse width/distance code and store "));
         Serial.print(IrReceiver.decodedIRData.rawDataPtr->rawlen - 1);
         Serial.println(F(" timing entries as raw in buffer of size " STR(RAW_BUFFER_LENGTH)));
         IrReceiver.printIRResultRawFormatted(&Serial, true); // Output the results in RAW format
