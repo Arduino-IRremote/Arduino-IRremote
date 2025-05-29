@@ -892,7 +892,7 @@ These next macros for **TinyIRReceiver** must be defined in your program before 
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the feedback LED codefor send and receive. Saves 14 bytes program memory. |
 | `NO_LED_RECEIVE_FEEDBACK_CODE` | disabled | Disables the LED feedback code for receive. |
 | `NO_LED_SEND_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send. |
-| `DISABLE_PARITY_CHECKS` | disabled | Disables the addres and command parity checks. Saves 48 bytes program memory. |
+| `DISABLE_PARITY_CHECKS` | disabled | Disables the address and command parity checks. Saves 48 bytes program memory. |
 | `USE_EXTENDED_NEC_PROTOCOL` | disabled | Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
 | `USE_ONKYO_PROTOCOL` | disabled | Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
 | `USE_FAST_PROTOCOL` | disabled | Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC. |
