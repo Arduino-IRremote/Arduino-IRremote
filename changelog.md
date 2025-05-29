@@ -76,7 +76,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 
 ## 4.1.1
 - SAMD51 use timer3 if timer5 not available.
-- Disabled #define LOCAL_DEBUG in IRReceive.hpp, which was accidently enabled at 4.1.0.
+- Disabled #define LOCAL_DEBUG in IRReceive.hpp, which was accidentally enabled at 4.1.0.
 
 ## 4.1.0
 - Fixed bug in printing durations > 64535 in printIRResultRawFormatted().
