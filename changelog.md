@@ -1,8 +1,13 @@
 # Changelog
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
+# 4.4.4
+
+
 # 4.4.3
-- Added USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN to make the software aware of reverse external connection.
+- Added USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN to make the software aware of send LED connected between VCC and send pin.
+- Fixed backward compatibility bug for printIRResultShort(3 params).
+- Minor improvements.
 
 # 4.4.2
 - Support for SAMD51 timer3 if timer 5 is not available (Adafruit ItsyBitsy M4).
