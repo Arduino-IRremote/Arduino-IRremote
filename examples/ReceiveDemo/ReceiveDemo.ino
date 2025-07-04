@@ -113,9 +113,9 @@
 #if defined(APPLICATION_PIN)
 #define DEBUG_BUTTON_PIN    APPLICATION_PIN // if low, print timing for each received data set
 #else
-#define DEBUG_BUTTON_PIN   6
+#define DEBUG_BUTTON_PIN    6
 #endif
-#if defined(ESP32)
+#if defined(ESP32) && defined(DEBUG_BUTTON_PIN)
 #  if !digitalPinIsValid(DEBUG_BUTTON_PIN)
 #undef DEBUG_BUTTON_PIN // DEBUG_BUTTON_PIN number is not valid, so delete definition to disable further usage
 #  endif
@@ -230,9 +230,9 @@ void loop() {
              */
             if (IrReceiver.decodedIRData.protocol == UNKNOWN
 #if defined(DEBUG_BUTTON_PIN)
-                    || digitalRead(DEBUG_BUTTON_PIN) == LOW)
+                    || digitalRead(DEBUG_BUTTON_PIN) == LOW
 #endif
-            {
+           ) {
                 // We have debug enabled or an unknown protocol, print extended info
                 if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                     Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
