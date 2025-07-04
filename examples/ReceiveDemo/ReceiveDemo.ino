@@ -230,9 +230,9 @@ void loop() {
              */
             if (IrReceiver.decodedIRData.protocol == UNKNOWN
 #if defined(DEBUG_BUTTON_PIN)
-                    || digitalRead(DEBUG_BUTTON_PIN) == LOW)
+                    || digitalRead(DEBUG_BUTTON_PIN) == LOW
 #endif
-            {
+            ) {
                 // We have debug enabled or an unknown protocol, print extended info
                 if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                     Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
