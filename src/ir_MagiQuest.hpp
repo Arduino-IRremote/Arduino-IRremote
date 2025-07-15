@@ -191,10 +191,6 @@ bool IRrecv::decodeMagiQuest() {
         return false;
     }
     LongUnion tDecodedRawData;
-#if defined(LOCAL_DEBUG)
-    Serial.print(F("31 bit WandId=0x"));
-    Serial.println(decodedIRData.decodedRawData, HEX);
-#endif
     uint32_t tWandId = decodedIRData.decodedRawData; // save tWandId for later use
     tDecodedRawData.ULong = decodedIRData.decodedRawData << 1; // shift for checksum computation
     uint8_t tChecksum = tDecodedRawData.Bytes[0] + tDecodedRawData.Bytes[1] + tDecodedRawData.Bytes[2] + tDecodedRawData.Bytes[3];

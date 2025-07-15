@@ -1025,7 +1025,7 @@ The code for the timer and the **timer selection** is located in [private/IRTime
 | [Teensy 4.0 - 4.1](https://www.pjrc.com/teensy/pinout.html)              | **FlexPWM1.3**    | **8**               | 7, 25 |
 | [BluePill / STM32F103C8T6](https://github.com/stm32duino/Arduino_Core_STM32)  | **3**        | %                   | **PA6 & PA7 & PB0 & PB1** |
 | [BluePill / STM32F103C8T6](https://stm32-base.org/boards/STM32F103C8T6-Blue-Pill) | **TIM4** | %                   | **PB6 & PB7 & PB8 & PB9** |
-| [RP2040 / Pi Pico](https://github.com/earlephilhower/arduino-pico)       | [default alarm pool](https://raspberrypi.github.io/pico-sdk-doxygen/group__repeating__timer.html) | All pins | No pin |
+| [RP2040 / Pi Pico](https://github.com/earlephilhower/arduino-pico)       | [default alarm pool](https://www.raspberrypi.com/documentation/pico-sdk/high_level.html#group_alarm_1ga40b4a03bf9e967d4e7170d20c5c9fb15) | All pins | No pin |
 | [RP2040 / Mbed based](https://github.com/arduino/ArduinoCore-mbed)       | Mbed Ticker       | All pins            | No pin |
 
 ### No timer required for sending

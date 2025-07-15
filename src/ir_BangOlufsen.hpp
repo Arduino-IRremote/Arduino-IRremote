@@ -10,7 +10,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-2023 Daniel Wallner and Armin Joachimsmeyer
+ * Copyright (c) 2022-2025 Daniel Wallner and Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,22 +59,22 @@
 // If you need to parallel a receiver with another one you may need to delay the signal to get in phase with the other receiver
 
 // 2. A stream of messages can be sent back to back with a new message immediately following the previous stop space
-
 // It might be that this only happens over IR and not on the datalink protocol
 // You can choose to support this or not:
 
 // Mode 1: Mode with gaps between frames
-// Set RECORD_GAP_MICROS to at least 16000 to accept the unusually long 3. start space
+// Do NOT define ENABLE_BEO_WITHOUT_FRAME_GAP and set RECORD_GAP_MICROS to at least 16000 to accept the unusually long 3. start space
 // Can only receive single messages. Back to back repeats will result in overflow
 
 // Mode 2: Break at start mode
 // Define ENABLE_BEO_WITHOUT_FRAME_GAP and set RECORD_GAP_MICROS to less than 15000
-// to treat the 3. start space of 15.5 ms as a gap between messages, which makes decoding easier :-).
+
+// This treats the 3. start space of 15.5 ms as a gap between 2 messages, which makes decoding easier :-).
 // The receiving of a transmission will then result in a dummy decode of the first 2 start bits with 0 bits data
 // followed by a 15.5 ms gap and a data frame with one start bit (originally sent as 4. start bit).
-// If the receiver is not resumed within a ms or so, partial messages will be decoded
-// Debug printing in the wrong place is very likely to break reception
-// Make sure to check the number of bits to filter dummy and incomplete messages
+// If the receiver is not immediately resumed after the 2 start bit frame, partial second frame will be decoded!
+// Thus debug printing in the wrong place is very likely to break reception!
+// Make sure to check the number of bits to filter dummy and incomplete messages.
 
 // !!! We assume that the real implementations never set the official first header bit to anything other than 0 !!!
 // !!! We therefore use 4 start bits instead of the specified 3 and in turn ignore the first header bit of the specification !!!
@@ -85,7 +85,7 @@
 
 // B&O is a pulse distance protocol, but it has 3 bit values 0, 1 and (equal/repeat) as well as a special start and trailing bit.
 //
-// MSB first, 4 start bits + 8 to 16? bit address + 8 bit command + 1 special trailing bit + 1 stop bit.
+// MSB first, 4 start bits + 8 (to 16?) bit address + 8 bit command + 1 special trailing bit + 1 stop bit.
 // Address can be longer than 8 bit.
 
 /*
@@ -111,6 +111,10 @@
 #define BEO_UNIT              3125             // All timings are in microseconds
 
 #define BEO_IR_MARK           200              // The length of a mark in the IR protocol
+
+// With decode we see length from 200 to 300 and the 300 leads to errors, if we use 200 as mark length for decode.
+// And the space value is at least 3125, so we can do a reluctant test for the mark anyway.
+#define BEO_IR_MARK_FOR_DECODE 250
 #define BEO_DATALINK_MARK     (BEO_UNIT / 2)   // The length of a mark in the Datalink protocol
 
 #define BEO_PULSE_LENGTH_ZERO           BEO_UNIT      // The length of a one to zero transition
@@ -147,16 +151,17 @@
 
 /*
  * TODO aNumberOfRepeats are handled not correctly if ENABLE_BEO_WITHOUT_FRAME_GAP is defined
+ * @param aNumberOfHeaderBits   default is 8
  */
 void IRsend::sendBangOlufsen(uint16_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats, int8_t aNumberOfHeaderBits) {
     for (int_fast8_t i = 0; i < aNumberOfRepeats + 1; ++i) {
-        sendBangOlufsenRaw((uint32_t(aHeader) << 8) | aData, aNumberOfHeaderBits + 8, i != 0);
+        sendBangOlufsenRaw((uint32_t(aHeader) << aNumberOfHeaderBits) | aData, aNumberOfHeaderBits + BEO_DATA_BITS, i != 0);
     }
 }
 
 void IRsend::sendBangOlufsenDataLink(uint32_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats, int8_t aNumberOfHeaderBits) {
     for (int_fast8_t i = 0; i < aNumberOfRepeats + 1; ++i) {
-        sendBangOlufsenRawDataLink((uint64_t(aHeader) << 8) | aData, aNumberOfHeaderBits + 8, i != 0, true);
+        sendBangOlufsenRawDataLink((uint64_t(aHeader) << aNumberOfHeaderBits) | aData, aNumberOfHeaderBits + BEO_DATA_BITS, i != 0, true);
     }
 }
 
@@ -293,8 +298,16 @@ static bool matchBeoLength(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) 
 bool IRrecv::decodeBangOlufsen() {
 #if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
     if (decodedIRData.rawlen != 6 && decodedIRData.rawlen < 36) { // 16 bits minimum
+        BEO_DEBUG_PRINT(F("B&O: "));
+        BEO_DEBUG_PRINT(F("Data length="));
+        BEO_DEBUG_PRINT(decodedIRData.rawlen);
+        BEO_DEBUG_PRINTLN(F(" is not < 36 or 6"));
 #else
     if (decodedIRData.rawlen < 44) { // 16 bits minimum
+        BEO_DEBUG_PRINT(F("B&O: "));
+        BEO_DEBUG_PRINT(F("Data length="));
+        BEO_DEBUG_PRINT(decodedIRData.rawlen);
+        BEO_DEBUG_PRINTLN(F(" is not < 44"));
 #endif
         return false;
     }
@@ -310,7 +323,7 @@ bool IRrecv::decodeBangOlufsen() {
     uint8_t tBitNumber = 0;
 
     BEO_TRACE_PRINT(F("Pre gap: "));
-    BEO_TRACE_PRINT(decodedIRData.initialGapTicks * 50);
+    BEO_TRACE_PRINT((uint32_t)decodedIRData.initialGapTicks * 50);
     BEO_TRACE_PRINT(F(" raw len: "));
     BEO_TRACE_PRINTLN(decodedIRData.rawlen);
 
@@ -319,34 +332,33 @@ bool IRrecv::decodeBangOlufsen() {
      * Check if we have the AGC part of the first frame, i.e. start bit 1 and 2.
      */
     if (decodedIRData.rawlen == 6) {
-        if ((matchMark(decodedIRData.rawDataPtr->rawbuf[3], BEO_IR_MARK)
+        if ((matchMark(decodedIRData.rawDataPtr->rawbuf[3], BEO_IR_MARK_FOR_DECODE)
                 || matchMark(decodedIRData.rawDataPtr->rawbuf[3], BEO_DATALINK_MARK))
-                && (matchSpace(decodedIRData.rawDataPtr->rawbuf[4], BEO_PULSE_LENGTH_ZERO - BEO_IR_MARK)
+                && (matchSpace(decodedIRData.rawDataPtr->rawbuf[4], BEO_PULSE_LENGTH_ZERO - BEO_IR_MARK_FOR_DECODE)
                         || matchSpace(decodedIRData.rawDataPtr->rawbuf[4], BEO_PULSE_LENGTH_ZERO - BEO_DATALINK_MARK))) {
-            BEO_TRACE_PRINT(::getProtocolString(BANG_OLUFSEN));
             BEO_TRACE_PRINTLN(F("B&O: AGC only part (start bits 1 + 2 of 4) detected"));
         } else {
             return false; // no B&O protocol
         }
     } else {
         /*
-         * Check if leading gap is trailing bit of first frame
+         * Check if leading gap is trailing bit of first AGC frame
          */
         if (!matchSpace(decodedIRData.initialGapTicks, BEO_PULSE_LENGTH_START_BIT)) {
-            BEO_TRACE_PRINT(::getProtocolString(BANG_OLUFSEN));
-            BEO_TRACE_PRINTLN(F(": Leading gap is wrong")); // Leading gap is trailing bit of first frame
+            BEO_TRACE_PRINT(F("B&O: Leading gap of ")); // Leading gap is trailing bit of first frame
+            BEO_TRACE_PRINT((uint32_t)decodedIRData.initialGapTicks * 50); // Leading gap is trailing bit of first frame
+            BEO_TRACE_PRINTLN(F(" us is wrong")); // Leading gap is trailing bit of first frame
             return false; // no B&O protocol
         }
 
-        if (matchMark(decodedIRData.rawDataPtr->rawbuf[1], BEO_IR_MARK)) {
+        if (matchMark(decodedIRData.rawDataPtr->rawbuf[1], BEO_IR_MARK_FOR_DECODE)) {
 #  if defined(SUPPORT_BEO_DATALINK_TIMING_FOR_DECODE)
-            protocolMarkLength = BEO_IR_MARK;
+            protocolMarkLength = BEO_IR_MARK_FOR_DECODE;
         } else if (matchMark(decodedIRData.rawDataPtr->rawbuf[1], BEO_DATALINK_MARK)) {
             protocolMarkLength = BEO_DATALINK_MARK;
 #  endif
         } else {
-            BEO_TRACE_PRINT(::getProtocolString(BANG_OLUFSEN));
-            BEO_TRACE_PRINTLN(F(": mark length is wrong"));
+            BEO_TRACE_PRINTLN(F("B&O: mark length is wrong"));
             return false;
         }
 
@@ -376,29 +388,27 @@ bool IRrecv::decodeBangOlufsen() {
         if (tPulseNumber < 4) {
             if (tPulseNumber < 2) {
                 // bit 0 and 1
-                if (matchSpace(spaceLength, BEO_PULSE_LENGTH_START_BIT - BEO_IR_MARK)) {
+                if (matchSpace(spaceLength, BEO_PULSE_LENGTH_START_BIT - BEO_IR_MARK_FOR_DECODE)) {
                     BEO_TRACE_PRINTLN(F(": detected long start bit -> synchronize state now"));
                     tPulseNumber = 2;
                 }
             } else {
                 if (tPulseNumber == 3) {
-                    if (matchMark(markLength, BEO_IR_MARK)) {
+                    if (matchMark(markLength, BEO_IR_MARK_FOR_DECODE)) {
 #  if defined(SUPPORT_BEO_DATALINK_TIMING_FOR_DECODE)
-                        protocolMarkLength = BEO_IR_MARK;
+                        protocolMarkLength = BEO_IR_MARK_FOR_DECODE;
                         } else if (matchMark(markLength, BEO_DATALINK_MARK)) {
                             protocolMarkLength = BEO_DATALINK_MARK;
 #  endif
                     } else {
-                        BEO_DEBUG_PRINT(::getProtocolString(BANG_OLUFSEN));
-                        BEO_DEBUG_PRINTLN(F(": 4. (start) mark length is wrong"));
+                        BEO_DEBUG_PRINTLN(F("B&O: 4. (start) mark length is wrong"));
                         return false;
                     }
                 }
                 // bit 2 and 3
                 if (!matchBeoLength(markLength + spaceLength,
                         (tPulseNumber == 2) ? BEO_PULSE_LENGTH_START_BIT : BEO_PULSE_LENGTH_ZERO)) {
-                    BEO_DEBUG_PRINT(::getProtocolString(BANG_OLUFSEN));
-                    BEO_DEBUG_PRINTLN(F(": Start length is wrong"));
+                    BEO_DEBUG_PRINTLN(F("B&O: Start length is wrong"));
                     return false;
                 }
             }
@@ -412,10 +422,9 @@ bool IRrecv::decodeBangOlufsen() {
 #if defined(SUPPORT_BEO_DATALINK_TIMING_FOR_DECODE)
             if (!matchMark(markLength, protocolMarkLength)) {
 #else
-            if (!matchMark(markLength, BEO_IR_MARK)) {
+            if (!matchMark(markLength, BEO_IR_MARK_FOR_DECODE)) {
 #endif
-                BEO_DEBUG_PRINT(::getProtocolString(BANG_OLUFSEN));
-                BEO_DEBUG_PRINTLN(F(": Mark length is wrong"));
+                BEO_DEBUG_PRINTLN(F("B&O: Mark length is wrong"));
                 return false;
             }
 
@@ -424,14 +433,12 @@ bool IRrecv::decodeBangOlufsen() {
              */
             if (tBitNumber > BEO_DATA_BITS + 4) {
                 if (matchBeoLength(markLength + spaceLength, BEO_PULSE_LENGTH_TRAILING_BIT)) {
-                    BEO_DEBUG_PRINT(::getProtocolString(BANG_OLUFSEN));
-                    BEO_DEBUG_PRINTLN(F(": Trailing bit detected"));
+                    BEO_DEBUG_PRINTLN(F("B&O: Trailing bit detected"));
                     break;
                 }
 #if !defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
                 if (tRawBufferMarkIndex >= decodedIRData.rawlen - 3) { // (rawlen - 3) is index of trailing bit mark
-                    BEO_DEBUG_PRINT(::getProtocolString(BANG_OLUFSEN));
-                    BEO_DEBUG_PRINTLN(F(": End of buffer, but no trailing bit detected"));
+                    BEO_DEBUG_PRINTLN(F("B&O: End of buffer, but no trailing bit detected"));
                     return false;
                 }
 #endif
@@ -445,8 +452,7 @@ bool IRrecv::decodeBangOlufsen() {
             } else if (tLastDecodedBitValue == 1 && matchBeoLength(markLength + spaceLength, BEO_PULSE_LENGTH_ZERO)) {
                 tLastDecodedBitValue = 0;
             } else if (!matchBeoLength(markLength + spaceLength, BEO_PULSE_LENGTH_EQUAL)) {
-                BEO_DEBUG_PRINT(::getProtocolString(BANG_OLUFSEN));
-                BEO_DEBUG_PRINT(F(": Index="));
+                BEO_DEBUG_PRINT(F("B&O: Index="));
                 BEO_DEBUG_PRINT(tRawBufferMarkIndex);
                 BEO_DEBUG_PRINT(F(" Length "));
                 BEO_DEBUG_PRINT((markLength + spaceLength) * MICROS_PER_TICK);
@@ -471,8 +477,7 @@ bool IRrecv::decodeBangOlufsen() {
              * Check for last bit after decoding it
              */
             if (tRawBufferMarkIndex >= decodedIRData.rawlen - 3) { // (rawlen - 3) is index of last bit mark
-                BEO_TRACE_PRINT(::getProtocolString(BANG_OLUFSEN));
-                BEO_TRACE_PRINTLN(F(": Last bit reached"));
+                BEO_TRACE_PRINTLN(F("B&O: Last bit reached"));
                 break;
             }
 #endif

@@ -110,10 +110,10 @@
 
 #include <IRremote.hpp>
 
-#if defined(APPLICATION_PIN)
-#define DEBUG_BUTTON_PIN    APPLICATION_PIN // if low, print timing for each received data set
+#if defined(APPLICATION_PIN) && !defined(DEBUG_BUTTON_PIN)
+#define DEBUG_BUTTON_PIN    APPLICATION_PIN // if held low, print timing for each received data
 #else
-#define DEBUG_BUTTON_PIN    6
+#define DEBUG_BUTTON_PIN   6
 #endif
 #if defined(ESP32) && defined(DEBUG_BUTTON_PIN)
 #  if !digitalPinIsValid(DEBUG_BUTTON_PIN)
@@ -132,7 +132,7 @@ void setup() {
 #  endif
 #endif
 
-    Serial.begin(9600);
+    Serial.begin(115200);
 
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_PORT_USBVIRTUAL) || defined(SERIAL_USB) /*stm32duino*/|| defined(USBCON) /*STM32_stm32*/ \
     || defined(SERIALUSB_PID)  || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_attiny3217) || (defined(ESP32) && defined(ARDUINO_USB_MODE))
@@ -169,11 +169,7 @@ void setup() {
     Serial.println();
 #  if defined(DEBUG_BUTTON_PIN)
     Serial.print(F("If you connect debug pin "));
-#    if defined(APPLICATION_PIN_STRING)
-    Serial.print(APPLICATION_PIN_STRING);
-#    else
     Serial.print(DEBUG_BUTTON_PIN);
-#    endif
     Serial.println(F(" to ground, raw data is always printed and tone is disabled"));
 #  endif
 

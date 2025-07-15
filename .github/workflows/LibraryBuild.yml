@@ -245,25 +245,19 @@ jobs:
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
-#              IRremoteExtensionTest: -MMD -c # see https://github.com/espressif/arduino-esp32/issues/8815
-#              All: -DRAW_BUFFER_LENGTH=750 -MMD -c
               All: -DRAW_BUFFER_LENGTH=1500
 
           - arduino-boards-fqbn: esp32:esp32:esp32c3
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
-#              IRremoteExtensionTest: -MMD -c # see https://github.com/espressif/arduino-esp32/issues/8815
-#              All: -DRAW_BUFFER_LENGTH=750 -MMD -c
-              All: -DRAW_BUFFER_LENGTH=1000
+              All: -DRAW_BUFFER_LENGTH=1500
 
           - arduino-boards-fqbn: esp32:esp32:lolin_s2_mini
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
-#              IRremoteExtensionTest: -MMD -c # see https://github.com/espressif/arduino-esp32/issues/8815
-#              All: -DRAW_BUFFER_LENGTH=750 -MMD -c
-              All: -DRAW_BUFFER_LENGTH=750
+              All: -DRAW_BUFFER_LENGTH=1500
 
 #
 # STM

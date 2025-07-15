@@ -139,11 +139,13 @@ void IRReceiveTimerInterruptHandler() {
     uint_fast8_t tIRInputLevel = (uint_fast8_t) digitalReadFast(irparams.IRReceivePin);
 #endif
 
+    uint_fast16_t tTickCounterForISR = irparams.TickCounterForISR;
     /*
      * Increase TickCounter and clip it at maximum 0xFFFF / 3.2 seconds at 50 us ticks
      */
     if (irparams.TickCounterForISR < UINT16_MAX) {
-        irparams.TickCounterForISR++;  // One more 50uS tick
+        tTickCounterForISR++;  // One more 50uS tick
+        irparams.TickCounterForISR = tTickCounterForISR;
     }
 
     /*
@@ -152,13 +154,14 @@ void IRReceiveTimerInterruptHandler() {
      */
 //    switch (irparams.StateForISR) {
 //
-    if (irparams.StateForISR == IR_REC_STATE_IDLE) {
+    uint_fast8_t tStateForISR = irparams.StateForISR;
+    if (tStateForISR == IR_REC_STATE_IDLE) {
         /*
          * Here we are just resumed and maybe in the middle of a transmission
          */
         if (tIRInputLevel == INPUT_MARK) {
             // check if we did not start in the middle of a transmission by checking the minimum length of leading space
-            if (irparams.TickCounterForISR > RECORD_GAP_TICKS) {
+            if (tTickCounterForISR > RECORD_GAP_TICKS) {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
@@ -170,14 +173,14 @@ void IRReceiveTimerInterruptHandler() {
                 // irparams.rawbuf[0] = irparams.TickCounterForISR;
                 // Usage of initialGapTicks enables usage of 8 bit buffer instead of 16 bit since 4.4,
                 // because the big gap value is not stored in this buffer any more
-                irparams.initialGapTicks = irparams.TickCounterForISR;
+                irparams.initialGapTicks = tTickCounterForISR;
                 irparams.rawlen = 1;
                 irparams.StateForISR = IR_REC_STATE_MARK;
             } // otherwise stay in idle state
             irparams.TickCounterForISR = 0; // reset counter in both cases
         }
 
-    } else if (irparams.StateForISR == IR_REC_STATE_MARK) {
+    } else if (tStateForISR == IR_REC_STATE_MARK) {
         // Timing mark here, rawlen is even
         if (tIRInputLevel != INPUT_MARK) {
             /*
@@ -186,17 +189,22 @@ void IRReceiveTimerInterruptHandler() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //            digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-            irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR; // record mark
+#if RECORD_GAP_TICKS <= 400
+            if (tTickCounterForISR > UINT8_MAX) {
+                tTickCounterForISR = UINT8_MAX;
+            }
+#endif
+            irparams.rawbuf[irparams.rawlen++] = tTickCounterForISR; // record mark
             irparams.StateForISR = IR_REC_STATE_SPACE;
             irparams.TickCounterForISR = 0; // This resets the tick counter also at end of frame :-)
         }
 
-    } else if (irparams.StateForISR == IR_REC_STATE_SPACE) {
+    } else if (tStateForISR == IR_REC_STATE_SPACE) {
         /*
          * In space receiving here, rawlen is odd
          * Check for timeout or overflow
          */
-        if (irparams.TickCounterForISR > RECORD_GAP_TICKS || irparams.rawlen >= RAW_BUFFER_LENGTH - 1) {
+        if (tTickCounterForISR > RECORD_GAP_TICKS || irparams.rawlen >= RAW_BUFFER_LENGTH - 1) {
             if (irparams.rawlen >= RAW_BUFFER_LENGTH) {
                 // Flag up a read OverflowFlag; Stop the state machine
                 irparams.OverflowFlag = true;
@@ -235,11 +243,16 @@ void IRReceiveTimerInterruptHandler() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-            irparams.rawbuf[irparams.rawlen++] = irparams.TickCounterForISR; // record space
+#if RECORD_GAP_TICKS <= 400
+            if (tTickCounterForISR > UINT8_MAX) {
+                tTickCounterForISR = UINT8_MAX;
+            }
+#endif
+            irparams.rawbuf[irparams.rawlen++] = tTickCounterForISR; // record space
             irparams.StateForISR = IR_REC_STATE_MARK;
             irparams.TickCounterForISR = 0;
         }
-    } else if (irparams.StateForISR == IR_REC_STATE_STOP) {
+    } else if (tStateForISR == IR_REC_STATE_STOP) {
         /*
          * Complete command received
          * stay here until resume() is called, which switches state to IR_REC_STATE_IDLE
@@ -1182,14 +1195,16 @@ bool IRrecv::checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants
 
 bool IRrecv::checkHeader_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM) {
 // Check header "mark" and "space"
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderMarkMicros))) {
+    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1],
+            pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderMarkMicros))) {
 #if defined(LOCAL_TRACE)
         Serial.print(::getProtocolString(aProtocolConstantsPGM->ProtocolIndex));
         Serial.println(F(": Header mark length is wrong"));
 #endif
         return false;
     }
-    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderSpaceMicros))) {
+    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2],
+            pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderSpaceMicros))) {
 #if defined(LOCAL_TRACE)
         Serial.print(::getProtocolString(aProtocolConstantsPGM->ProtocolIndex));
         Serial.println(F(": Header space length is wrong"));
@@ -1428,7 +1443,7 @@ void printActiveIRProtocols(Print *aSerial) {
  *                                    which in turn may block the proper detection of repeats.*
  * @return true, if CheckForRecordGapsMicros() has printed a message, i.e. gap < 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD).
  */
-bool IRrecv::printIRResultShort(Print *aSerial,  bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
+bool IRrecv::printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) {
     // DEPRECATED
     (void) aPrintRepeatGap;
     return printIRResultShort(aSerial, aCheckForRecordGapsMicros);
