@@ -11,7 +11,7 @@
  *************************************************************************************
  * MIT License
  *
- * Copyright (c) 2021-2023 Armin Joachimsmeyer
+ * Copyright (c) 2021-2025 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -1606,13 +1606,13 @@ hw_timer_t *s50usTimer = nullptr; // set by timerConfigForReceive()
 #define _IRREMOTE_ESP32_LEDC_RESOLUTION_MAX_PWM_VALUE 255
 
 //#  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(3, 0, 0) && !defined(SEND_LEDC_CHANNEL)
-#  if ESP_ARDUINO_VERSION < (3 << 16 + 0 >> 8 + 0) && !defined(SEND_LEDC_CHANNEL)
+#  if ESP_ARDUINO_VERSION < (3 << 16 | 0 << 8 | 0) && !defined(SEND_LEDC_CHANNEL) // works also in case ESP_ARDUINO_VERSION_VAL is not defined
 #define SEND_LEDC_CHANNEL 0 // The channel used for PWM 0 to 7 are high speed PWM channels
 #  endif
 
 void timerEnableReceiveInterrupt() {
 //#  if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-#  if ESP_ARDUINO_VERSION >= (3 << 16 + 0 >> 8 + 0)
+#  if ESP_ARDUINO_VERSION >= (3 << 16 | 0 << 8 | 0)
     timerStart(s50usTimer);
 #  else
     timerAlarmEnable(s50usTimer);
@@ -1620,7 +1620,7 @@ void timerEnableReceiveInterrupt() {
 }
 
 //#  if ESP_ARDUINO_VERSION < ESP_ARDUINO_VERSION_VAL(2, 0, 2)
-#  if ESP_ARDUINO_VERSION < (2 << 16 + 0 >> 8 + 2)
+#  if ESP_ARDUINO_VERSION < (2 << 16 | 0 << 8 | 2)
 /*
  * Special support for ESP core < 202
  */
@@ -1635,7 +1635,7 @@ void timerDisableReceiveInterrupt() {
 void timerDisableReceiveInterrupt() {
     if (s50usTimer != nullptr) {
 //#  if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
-#  if ESP_ARDUINO_VERSION >= (3 << 16 + 0 >> 8 + 0)
+#  if ESP_ARDUINO_VERSION >= (3 << 16 | 0 << 8 | 0)
         timerStop(s50usTimer);
 #    else
         timerAlarmDisable(s50usTimer);
@@ -1655,7 +1655,8 @@ void timerConfigForReceive() {
     // simply call the readable API versions :)
     // 3 timers, choose #1, 80 divider for microsecond precision @80MHz clock, count_up = true
     if (s50usTimer == nullptr) {
-#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+//#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+#    if ESP_ARDUINO_VERSION >= (3 << 16 | 0 << 8 | 0)
         s50usTimer = timerBegin(1000000); // Only 1 parameter is required. 1000000 corresponds to 1 MHz / 1 uSec. After successful setup the timer will automatically start.
         timerStop(s50usTimer); // Stop it here, to avoid "error E (3447) gptimer: gptimer_start(348): timer is not enabled yet" at timerEnableReceiveInterrupt()
         timerAttachInterrupt(s50usTimer, &IRReceiveTimerInterruptHandler);
@@ -1674,7 +1675,8 @@ uint8_t sLastSendPin = 0; // Avoid multiple attach() or if pin changes, detach b
 
 #  if defined(SEND_PWM_BY_TIMER)
 void enableSendPWMByTimer() {
-#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+//#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+#    if ESP_ARDUINO_VERSION >= (3 << 16 | 0 << 8 | 0)
 #      if defined(IR_SEND_PIN)
     ledcWrite(IR_SEND_PIN, (IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH * _IRREMOTE_ESP32_LEDC_RESOLUTION_MAX_PWM_VALUE) / 100); // 3.x API
 #      else
@@ -1686,7 +1688,8 @@ void enableSendPWMByTimer() {
 #    endif
 }
 void disableSendPWMByTimer() {
-#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+//#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+#    if ESP_ARDUINO_VERSION >= (3 << 16 | 0 << 8 | 0)
 #      if defined(IR_SEND_PIN)
 #        if defined(USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN)
     ledcWrite(IR_SEND_PIN, _IRREMOTE_ESP32_LEDC_RESOLUTION_MAX_PWM_VALUE); // 3.x API
@@ -1711,7 +1714,8 @@ void disableSendPWMByTimer() {
  * ledcWrite since ESP 2.0.2 does not work if pin mode is set.
  */
 void timerConfigForSend(uint16_t aFrequencyKHz) {
-#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+//#    if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(3, 0, 0)
+#    if ESP_ARDUINO_VERSION >= (3 << 16 | 0 << 8 | 0)
 #      if defined(IR_SEND_PIN)
     if(sLastSendPin == 0){
         ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, _IRREMOTE_ESP32_LEDC_RESOLUTION); // 3.x API

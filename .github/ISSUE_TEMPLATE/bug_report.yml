@@ -16,9 +16,10 @@ body:
     attributes:
       label: Please specify **FQBN** (Fully Qualified Board Name).
         It is the first line in the compiler output in the Arduino IDE 2.x.
+        E.g. "esp32:esp32:featheresp32:FlashFreq=80".
         The FQBN starts with the core name, which is essential for bugfixing.
         For example, at least two prominent cores are available for the Bluepill board, namely STMicroelectronics and STM32duino.
-        **Without the FQBN we are most likely not able to fix the the issue.**
+        Without the FQBN we are most likely not able to fix the the issue.
     validations:
       required: true
 
