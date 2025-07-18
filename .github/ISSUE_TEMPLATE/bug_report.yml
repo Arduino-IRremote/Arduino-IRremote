@@ -14,7 +14,7 @@ body:
   - type: input
     id: Board_FQBN
     attributes:
-      label: Please specify **FQBN** (Fully Qualified Board Name).
+      label: Please specify "FQBN" (Fully Qualified Board Name).
         It is the first line in the compiler output in the Arduino IDE 2.x.
         E.g. "esp32:esp32:featheresp32:FlashFreq=80".
         The FQBN starts with the core name, which is essential for bugfixing.
@@ -27,7 +27,6 @@ body:
     id: Exotic_core_URL
     attributes:
       label: The board manager URL used for exotic cores.
-      value: "https://"
     validations:
       required: false
 
@@ -105,7 +104,7 @@ body:
     id: Failed_examples
     attributes:
       label: Example(s) to reproduce the issue.
-      description: Select only the examples which shows your error.
+      description: Select only the examples which shows your error!
       options:
         - label: SimpleReceiver
         - label: ReceiveDemo
@@ -203,6 +202,6 @@ body:
   - type: markdown
     attributes:
       value: |
-        ** We will start to close or delete issues that do not follow these guidelines 
-        as it doesn't help the contributors who spend time trying to solve issues if the community ignores guidelines!**
+        We will start to close or delete issues that do not follow these guidelines 
+        as it doesn't help the contributors who spend time trying to solve issues if the community ignores guidelines!
 
