@@ -364,7 +364,7 @@ void printIRResultOnLCD() {
          * Print number of bits received and hash code or microseconds of signal
          */
         myLCD.setCursor(0, 1);
-        uint8_t tNumberOfBits = (IrReceiver.decodedIRData.rawDataPtr->rawlen + 1) / 2;
+        uint8_t tNumberOfBits = (IrReceiver.irparams.rawlen + 1) / 2;
         uint_fast8_t tPrintedStringLength = myLCD.print(tNumberOfBits);
         myLCD.print(F(" bit "));
 

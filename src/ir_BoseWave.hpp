@@ -85,7 +85,7 @@ bool IRrecv::decodeBoseWave() {
     }
 
     // Stop bit
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {
+    if (!matchMark(irparams.rawbuf[3 + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Bose: "));
         Serial.println(F("Stop bit mark length is wrong"));

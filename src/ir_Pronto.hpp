@@ -266,7 +266,7 @@ void IRrecv::compensateAndPrintIRResultAsPronto(Print *aSerial, uint16_t aFreque
     dumpNumberHex(aSerial, (decodedIRData.rawlen + 1) / 2);
     dumpNumberHex(aSerial, 0); // no repeat data
     uint16_t timebase = toTimebase(aFrequencyHertz);
-    compensateAndDumpSequence(aSerial, &decodedIRData.rawDataPtr->rawbuf[1], decodedIRData.rawlen - 1, timebase); // skip leading space
+    compensateAndDumpSequence(aSerial, &irparams.rawbuf[1], decodedIRData.rawlen - 1, timebase); // skip leading space
     aSerial->println(F("\";"));
 }
 
@@ -335,7 +335,7 @@ size_t IRrecv::compensateAndStorePronto(String *aString, uint16_t frequency) {
     size += dumpNumberHex(aString, toFrequencyCode(frequency));
     size += dumpNumberHex(aString, (decodedIRData.rawlen + 1) / 2);
     size += dumpNumberHex(aString, 0);
-    size += compensateAndDumpSequence(aString, &decodedIRData.rawDataPtr->rawbuf[1], decodedIRData.rawlen - 1, timebase); // skip leading space
+    size += compensateAndDumpSequence(aString, &irparams.rawbuf[1], decodedIRData.rawlen - 1, timebase); // skip leading space
 
     return size;
 }

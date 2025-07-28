@@ -171,7 +171,7 @@ If IR_SEND_PIN is not defined (before the line `#include <IRremote.hpp>`) you mu
 - The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value` and `results.decode_type` (and similar) to
  `IrReceiver.decodedIRData.decodedRawData` and `IrReceiver.decodedIRData.protocol`.
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRProtocol.h#L90-L101).
-- Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.decodedIRData.rawDataPtr->rawbuf` and `IrReceiver.decodedIRData.rawDataPtr->rawlen`.
+- Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.irparams.rawbuf` and `IrReceiver.irparams.rawlen`.
 
 - The 5 protocols **NEC, Panasonic, Sony, Samsung and JVC** have been converted to LSB first. Send functions for sending old MSB data were renamed to `sendNECMSB`, `sendSamsungMSB()`, `sendSonyMSB()` and `sendJVCMSB()`.
 The old  `sendSAMSUNG()` and `sendSony()` MSB functions are still available.

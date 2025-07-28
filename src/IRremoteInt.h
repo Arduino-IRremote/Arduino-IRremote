@@ -126,8 +126,8 @@ typedef uint64_t IRRawDataType;
 #define IR_REC_STATE_STOP      3 // Stopped until set to IR_REC_STATE_IDLE which can only be done by resume()
 
 /**
- * This struct contains the data and control used for receiver static functions and the ISR (interrupt service routine)
- * Only StateForISR needs to be volatile. All the other fields are not written by ISR after data available and before start/resume.
+ * This struct contains the data and control used for receiver functions and the ISR (interrupt service routine)
+ * Only StateForISR needs to be volatile. All the other fields are not written by ISR after available() == true and before start() / resume().
  */
 struct irparams_struct {
     // The fields are ordered to reduce memory overflow caused by struct-padding
@@ -194,8 +194,8 @@ struct decode_results {
     bool isRepeat;              // deprecated, moved to decodedIRData.flags ///< True if repeat of value is detected
 
 // next 3 values are copies of irparams_struct values - see above
-    uint16_t *rawbuf;           // deprecated, moved to decodedIRData.rawDataPtr->rawbuf ///< Raw intervals in 50uS ticks
-    uint_fast8_t rawlen;        // deprecated, moved to decodedIRData.rawDataPtr->rawlen ///< Number of records in rawbuf
+    uint16_t *rawbuf;           // deprecated, moved to irparams.rawbuf ///< Raw intervals in 50uS ticks
+    uint_fast8_t rawlen;        // deprecated, moved to irparams.rawlen ///< Number of records in rawbuf
     bool overflow;              // deprecated, moved to decodedIRData.flags ///< true if IR raw code too long
 };
 
@@ -206,16 +206,22 @@ class IRrecv {
 public:
 
     IRrecv();
+#if defined(SUPPORT_MULTIPLE_RECEIVER_INSTANCES)
+    IRrecv(uint_fast8_t aReceivePin);
+    IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin);
+#else
     IRrecv(
             uint_fast8_t aReceivePin)
                     __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance.")));
     IRrecv(uint_fast8_t aReceivePin,
             uint_fast8_t aFeedbackLEDPin)
                     __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance..")));
+#endif
     void setReceivePin(uint_fast8_t aReceivePinNumber);
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
     void registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunction)(void));
 #endif
+    void ReceiveInterruptHandler();
 
     /*
      * Stream like API
@@ -366,6 +372,7 @@ public:
     void checkForRepeatSpaceTicksAndSetFlag(uint16_t aMaximumRepeatSpaceTicks);
     bool checkForRecordGapsMicros(Print *aSerial);
 
+    irparams_struct irparams;
     IRData decodedIRData;       // Decoded IR data for the application
 
     // Last decoded IR data for repeat detection and to fill in JVC, LG, NEC repeat values. Parity for Denon autorepeat

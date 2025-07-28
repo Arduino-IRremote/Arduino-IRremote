@@ -258,13 +258,13 @@ static void sendRaw(const microseconds_t intro[], unsigned lengthIntro, const mi
 #if defined(RECEIVE)
 
 static void dump(Stream &stream) {
-    unsigned int count = IrReceiver.decodedIRData.rawDataPtr->rawlen;
+    unsigned int count = IrReceiver.irparams.rawlen;
     // If buffer gets full, count = RAW_BUFFER_LENGTH, which is odd,
     // and IrScrutinizer does not like that.
     count &= ~1;
     for (unsigned int i = 1; i < count; i++) {
         stream.write(i & 1 ? '+' : '-');
-        stream.print(IrReceiver.decodedIRData.rawDataPtr->rawbuf[i] * MICROS_PER_TICK, DEC);
+        stream.print(IrReceiver.irparams.rawbuf[i] * MICROS_PER_TICK, DEC);
         stream.print(" ");
     }
     stream.print('-');

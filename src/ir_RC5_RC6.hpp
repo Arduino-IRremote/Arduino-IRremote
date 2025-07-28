@@ -461,8 +461,8 @@ bool IRrecv::decodeRC6() {
     }
 
     // Check header "mark" and "space", this must be done for repeat and data
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], RC6_HEADER_MARK)
-            || !matchSpace(decodedIRData.rawDataPtr->rawbuf[2], RC6_HEADER_SPACE)) {
+    if (!matchMark(irparams.rawbuf[1], RC6_HEADER_MARK)
+            || !matchSpace(irparams.rawbuf[2], RC6_HEADER_SPACE)) {
         // no debug output, since this check is mainly to determine the received protocol
         IR_DEBUG_PRINT(F("RC6: "));
         IR_DEBUG_PRINTLN(F("Header mark or space length is wrong"));

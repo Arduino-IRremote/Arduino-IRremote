@@ -193,8 +193,8 @@ bool IRrecv::decodeLG() {
     }
 
 // Check header "mark" this must be done for repeat and data
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG_HEADER_MARK)) {
-        if (matchMark(decodedIRData.rawDataPtr->rawbuf[1], LG2_HEADER_MARK)) {
+    if (!matchMark(irparams.rawbuf[1], LG_HEADER_MARK)) {
+        if (matchMark(irparams.rawbuf[1], LG2_HEADER_MARK)) {
             tProtocol = LG2;
             tHeaderSpace = LG2_HEADER_SPACE;
         } else {
@@ -208,8 +208,8 @@ bool IRrecv::decodeLG() {
 
 // Check for repeat - here we have another header space length
     if (decodedIRData.rawlen == 4) {
-        if (matchSpace(decodedIRData.rawDataPtr->rawbuf[2], LG_REPEAT_HEADER_SPACE)
-                && matchMark(decodedIRData.rawDataPtr->rawbuf[3], LG_BIT_MARK)) {
+        if (matchSpace(irparams.rawbuf[2], LG_REPEAT_HEADER_SPACE)
+                && matchMark(irparams.rawbuf[3], LG_BIT_MARK)) {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_MSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
@@ -224,7 +224,7 @@ bool IRrecv::decodeLG() {
     }
 
 // Check command header space
-    if (!matchSpace(decodedIRData.rawDataPtr->rawbuf[2], tHeaderSpace)) {
+    if (!matchSpace(irparams.rawbuf[2], tHeaderSpace)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("LG: "));
         Serial.println(F("Header space length is wrong"));

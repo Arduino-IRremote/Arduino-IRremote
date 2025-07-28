@@ -137,8 +137,8 @@ bool IRrecv::decodeJVC() {
          * Check leading space and first and last mark length
          */
         if (decodedIRData.initialGapTicks < ((JVC_REPEAT_DISTANCE + (JVC_REPEAT_DISTANCE / 4) / MICROS_PER_TICK))
-                && matchMark(decodedIRData.rawDataPtr->rawbuf[1], JVC_BIT_MARK)
-                && matchMark(decodedIRData.rawDataPtr->rawbuf[decodedIRData.rawlen - 1], JVC_BIT_MARK)) {
+                && matchMark(irparams.rawbuf[1], JVC_BIT_MARK)
+                && matchMark(irparams.rawbuf[decodedIRData.rawlen - 1], JVC_BIT_MARK)) {
             /*
              * We have a repeat here, so do not check for start bit
              */

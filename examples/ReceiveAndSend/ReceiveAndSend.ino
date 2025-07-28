@@ -185,9 +185,9 @@ void loop() {
 // Stores the code for later playback in sStoredIRData
 // Most of this code is just logging
 void storeCode() {
-    if (IrReceiver.decodedIRData.rawDataPtr->rawlen < 4) {
+    if (IrReceiver.irparams.rawlen < 4) {
         Serial.print(F("Ignore data with rawlen="));
-        Serial.println(IrReceiver.decodedIRData.rawDataPtr->rawlen);
+        Serial.println(IrReceiver.irparams.rawlen);
         return;
     }
     if (IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT) {
@@ -214,7 +214,7 @@ void storeCode() {
     auto tProtocol = sStoredIRData.receivedIRData.protocol;
     if (tProtocol == UNKNOWN || tProtocol == PULSE_WIDTH || tProtocol == PULSE_DISTANCE) {
         // TODO: support PULSE_WIDTH and PULSE_DISTANCE with IrSender.write
-        sStoredIRData.rawCodeLength = IrReceiver.decodedIRData.rawDataPtr->rawlen - 1;
+        sStoredIRData.rawCodeLength = IrReceiver.irparams.rawlen - 1;
         /*
          * Store the current raw data in a dedicated array for later usage
          */
@@ -223,7 +223,7 @@ void storeCode() {
          * Print info
          */
         Serial.print(F("Received unknown or pulse width/distance code and store "));
-        Serial.print(IrReceiver.decodedIRData.rawDataPtr->rawlen - 1);
+        Serial.print(IrReceiver.irparams.rawlen - 1);
         Serial.println(F(" timing entries as raw in buffer of size " STR(RAW_BUFFER_LENGTH)));
         IrReceiver.printIRResultRawFormatted(&Serial, true); // Output the results in RAW format
 

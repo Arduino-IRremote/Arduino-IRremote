@@ -143,7 +143,7 @@ bool IRrecv::decodeShuzu() {
      * Next try the decode
      */
     // Check we have the right amount of data (28). The +4 is for initial gap, start bit mark and space + stop bit mark
-    if (decodedIRData.rawDataPtr->rawlen != (2 * SHUZU_BITS) + 4) {
+    if (irparams.rawlen != (2 * SHUZU_BITS) + 4) {
         // no debug output, since this check is mainly to determine the received protocol
         return false;
     }

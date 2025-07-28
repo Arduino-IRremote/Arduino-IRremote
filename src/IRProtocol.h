@@ -122,14 +122,12 @@ struct IRData {
 
     /*
      * These 2 variables allow to call resume() directly after decode.
-     * After resume(), decodedIRData.rawDataPtr->initialGapTicks and decodedIRData.rawDataPtr->rawlen are
+     * After resume(), irparams.initialGapTicks and irparams.rawlen are
      * the first variables, which are overwritten by the next received frame.
      * since 4.3.0.
      */
     IRRawlenType rawlen;        ///< counter of entries in rawbuf of last received frame.
     uint16_t initialGapTicks;   ///< contains the initial gap (pre 4.4: the value in rawbuf[0]) of the last received frame.
-
-    irparams_struct *rawDataPtr; ///< Pointer of the raw timing data to be decoded. Mainly the OverflowFlag and the data buffer filled by receiving ISR.
 };
 
 extern uint8_t sLastSendToggleValue; // Currently used by RC5 + RC6

@@ -155,19 +155,23 @@ namespace PrintULL {
  * @{
  */
 /**
- * Function to print decoded result and flags in one line.
  * A static function to be able to print data to send or copied received data.
  * Ends with println().
  *
- * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
+ * @param aSerial           The Print object on which to write, for Arduino you can use &Serial.
  * @param aIRDataPtr        Pointer to the data to be printed.
  * @param aPrintRepeatGap   If true also print the gap before repeats.
  *
  */
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap) {
+    // DEPRECATED
+
     (void) aPrintRepeatGap;
     printIRResultShort(aSerial, aIRDataPtr);
 }
+/*
+ * Only used in example ReceiveAndSend.cpp
+ */
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr) {
     if (aIRDataPtr->flags & IRDATA_FLAGS_WAS_OVERFLOW) {
         aSerial->println(F("Overflow"));
@@ -256,14 +260,6 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr) {
 #if !defined(DISABLE_CODE_FOR_RECEIVER)
         aSerial->print(F(" Gap="));
         aSerial->print((uint32_t) aIRDataPtr->initialGapTicks * MICROS_PER_TICK);
-        aSerial->print(F("us"));
-
-        uint16_t tSumOfDurationTicks = 0;
-        for (IRRawlenType i = 1; i < aIRDataPtr->rawlen; i++) {
-            tSumOfDurationTicks += aIRDataPtr->rawDataPtr->rawbuf[i];
-        }
-        aSerial->print(F(" Duration="));
-        aSerial->print((uint32_t) tSumOfDurationTicks * MICROS_PER_TICK, DEC);
         aSerial->println(F("us"));
 #else
         aSerial->println();

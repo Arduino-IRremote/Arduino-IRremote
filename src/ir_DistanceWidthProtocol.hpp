@@ -224,7 +224,7 @@ bool IRrecv::decodeDistanceWidth() {
      * Count number of mark durations. Skip leading start and trailing stop bit.
      */
     for (IRRawlenType i = 3; i < decodedIRData.rawlen - 2; i += 2) {
-        auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
+        auto tDurationTicks = irparams.rawbuf[i];
         if (tDurationTicks < DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++; // count duration if less than DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE
             if (tIndexOfMaxDuration < tDurationTicks) {
@@ -271,7 +271,7 @@ bool IRrecv::decodeDistanceWidth() {
      */
     tIndexOfMaxDuration = 0;
     for (IRRawlenType i = 4; i < decodedIRData.rawlen - 2; i += 2) {
-        auto tDurationTicks = decodedIRData.rawDataPtr->rawbuf[i];
+        auto tDurationTicks = irparams.rawbuf[i];
         if (tDurationTicks < DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++;
             if (tIndexOfMaxDuration < tDurationTicks) {
@@ -325,9 +325,9 @@ bool IRrecv::decodeDistanceWidth() {
      */
 #if defined(LOCAL_DEBUG)
     Serial.print(F("DistanceWidthTimingInfoStruct: "));
-    Serial.print(decodedIRData.rawDataPtr->rawbuf[1] * MICROS_PER_TICK);
+    Serial.print(irparams.rawbuf[1] * MICROS_PER_TICK);
     Serial.print(F(", "));
-    Serial.print(decodedIRData.rawDataPtr->rawbuf[2] * MICROS_PER_TICK);
+    Serial.print(irparams.rawbuf[2] * MICROS_PER_TICK);
     Serial.print(F(", "));
     Serial.print(tMarkTicksLong * MICROS_PER_TICK);
     Serial.print(F(", "));
@@ -448,8 +448,8 @@ bool IRrecv::decodeDistanceWidth() {
     /*
      * Store timing data to reproduce frame for sending
      */
-    decodedIRData.DistanceWidthTimingInfo.HeaderMarkMicros = (decodedIRData.rawDataPtr->rawbuf[1] * MICROS_PER_TICK);
-    decodedIRData.DistanceWidthTimingInfo.HeaderSpaceMicros = (decodedIRData.rawDataPtr->rawbuf[2] * MICROS_PER_TICK);
+    decodedIRData.DistanceWidthTimingInfo.HeaderMarkMicros = (irparams.rawbuf[1] * MICROS_PER_TICK);
+    decodedIRData.DistanceWidthTimingInfo.HeaderSpaceMicros = (irparams.rawbuf[2] * MICROS_PER_TICK);
     decodedIRData.DistanceWidthTimingInfo.ZeroMarkMicros = tMarkMicrosShort;
     decodedIRData.DistanceWidthTimingInfo.ZeroSpaceMicros = tSpaceMicrosShort;
     if (tMarkMicrosLong != 0) {

@@ -821,9 +821,9 @@ void loop() {
     Serial.println(F("- ENABLE_BEO_WITHOUT_FRAME_GAP is enabled"));
     IrReceiver.printIRResultRawFormatted(&Serial, true);
     Serial.println(F("- Now try to decode the first 6 entries, which results in rawData 0x0"));
-    uint8_t tOriginalRawlen = IrReceiver.decodedIRData.rawDataPtr->rawlen;
+    uint8_t tOriginalRawlen = IrReceiver.irparams.rawlen;
     IrReceiver.decodedIRData.rawlen = 6;
-    IrReceiver.decodedIRData.rawDataPtr->rawlen = 6;
+    IrReceiver.irparams.rawlen = 6;
     /*
      * decode first part / AGC part of frame
      */
@@ -836,11 +836,11 @@ void loop() {
             F(
                     "- Remove trailing 6 entries, which is equivalent to define RECORD_GAP_MICROS < 15000, to enable successful B&O decode"));
     IrReceiver.decodedIRData.rawlen = tOriginalRawlen - 6;
-    IrReceiver.decodedIRData.rawDataPtr->rawlen = tOriginalRawlen - 6;
+    IrReceiver.irparams.rawlen = tOriginalRawlen - 6;
     for (uint_fast8_t i = 0; i < IrReceiver.decodedIRData.rawlen; ++i) {
-        IrReceiver.decodedIRData.rawDataPtr->rawbuf[i] = IrReceiver.decodedIRData.rawDataPtr->rawbuf[i + 6];
+        IrReceiver.irparams.rawbuf[i] = IrReceiver.irparams.rawbuf[i + 6];
     }
-    IrReceiver.decodedIRData.initialGapTicks = IrReceiver.decodedIRData.rawDataPtr->rawbuf[0];
+    IrReceiver.decodedIRData.initialGapTicks = IrReceiver.irparams.rawbuf[0];
 #  endif
     checkReceive(sAddress & 0x0FF, sCommand);
     delay(DELAY_AFTER_SEND);

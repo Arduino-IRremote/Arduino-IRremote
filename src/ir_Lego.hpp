@@ -135,7 +135,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
     if (decodedIRData.rawlen != (2 * LEGO_BITS) + 4) {
         IR_DEBUG_PRINT(F("LEGO: "));
         IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawDataPtr->rawlen);
+        IR_DEBUG_PRINT(irparams.rawlen);
         IR_DEBUG_PRINTLN(F(" is not 36"));
         return false;
     }
@@ -147,7 +147,7 @@ bool IRrecv::decodeLegoPowerFunctions() {
     }
 
     // Stop bit
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[3 + (2 * LEGO_BITS)], LEGO_BIT_MARK)) {
+    if (!matchMark(irparams.rawbuf[3 + (2 * LEGO_BITS)], LEGO_BIT_MARK)) {
         IR_DEBUG_PRINT(F("LEGO: "));
         IR_DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;

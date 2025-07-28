@@ -188,7 +188,7 @@ bool IRrecv::decodeDenon() {
     }
 
     // Check for stop mark
-    if (!matchMark(decodedIRData.rawDataPtr->rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
+    if (!matchMark(irparams.rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Denon: "));
         Serial.println(F("Stop bit mark length is wrong"));

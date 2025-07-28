@@ -332,10 +332,10 @@ bool IRrecv::decodeBangOlufsen() {
      * Check if we have the AGC part of the first frame, i.e. start bit 1 and 2.
      */
     if (decodedIRData.rawlen == 6) {
-        if ((matchMark(decodedIRData.rawDataPtr->rawbuf[3], BEO_IR_MARK_FOR_DECODE)
-                || matchMark(decodedIRData.rawDataPtr->rawbuf[3], BEO_DATALINK_MARK))
-                && (matchSpace(decodedIRData.rawDataPtr->rawbuf[4], BEO_PULSE_LENGTH_ZERO - BEO_IR_MARK_FOR_DECODE)
-                        || matchSpace(decodedIRData.rawDataPtr->rawbuf[4], BEO_PULSE_LENGTH_ZERO - BEO_DATALINK_MARK))) {
+        if ((matchMark(irparams.rawbuf[3], BEO_IR_MARK_FOR_DECODE)
+                || matchMark(irparams.rawbuf[3], BEO_DATALINK_MARK))
+                && (matchSpace(irparams.rawbuf[4], BEO_PULSE_LENGTH_ZERO - BEO_IR_MARK_FOR_DECODE)
+                        || matchSpace(irparams.rawbuf[4], BEO_PULSE_LENGTH_ZERO - BEO_DATALINK_MARK))) {
             BEO_TRACE_PRINTLN(F("B&O: AGC only part (start bits 1 + 2 of 4) detected"));
         } else {
             return false; // no B&O protocol
@@ -351,10 +351,10 @@ bool IRrecv::decodeBangOlufsen() {
             return false; // no B&O protocol
         }
 
-        if (matchMark(decodedIRData.rawDataPtr->rawbuf[1], BEO_IR_MARK_FOR_DECODE)) {
+        if (matchMark(irparams.rawbuf[1], BEO_IR_MARK_FOR_DECODE)) {
 #  if defined(SUPPORT_BEO_DATALINK_TIMING_FOR_DECODE)
             protocolMarkLength = BEO_IR_MARK_FOR_DECODE;
-        } else if (matchMark(decodedIRData.rawDataPtr->rawbuf[1], BEO_DATALINK_MARK)) {
+        } else if (matchMark(irparams.rawbuf[1], BEO_DATALINK_MARK)) {
             protocolMarkLength = BEO_DATALINK_MARK;
 #  endif
         } else {
@@ -368,8 +368,8 @@ bool IRrecv::decodeBangOlufsen() {
     for (uint8_t tRawBufferMarkIndex = 1; tRawBufferMarkIndex < decodedIRData.rawlen; tRawBufferMarkIndex += 2) {
 #endif // defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
 
-            uint16_t markLength = decodedIRData.rawDataPtr->rawbuf[tRawBufferMarkIndex];
-            uint16_t spaceLength = decodedIRData.rawDataPtr->rawbuf[tRawBufferMarkIndex + 1];
+            uint16_t markLength = irparams.rawbuf[tRawBufferMarkIndex];
+            uint16_t spaceLength = irparams.rawbuf[tRawBufferMarkIndex + 1];
 
             BEO_TRACE_PRINT(tPulseNumber);
             BEO_TRACE_PRINT(' ');
