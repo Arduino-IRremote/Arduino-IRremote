@@ -167,10 +167,60 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap
     // DEPRECATED
 
     (void) aPrintRepeatGap;
-    printIRResultShort(aSerial, aIRDataPtr);
+    printIRDataShort(aSerial, aIRDataPtr);
 }
+
 /*
  * Only used in example ReceiveAndSend.cpp
+ */
+void printIRDataShort(Print *aSerial, IRData *aIRDataPtr) {
+
+    aSerial->print(F("Protocol="));
+    aSerial->print(getProtocolString(aIRDataPtr->protocol));
+#if defined(DECODE_DISTANCE_WIDTH)
+        if (aIRDataPtr->protocol != PULSE_DISTANCE && aIRDataPtr->protocol != PULSE_WIDTH) {
+#endif
+    /*
+     * New decoders have address and command
+     */
+    aSerial->print(F(" Address=0x"));
+    aSerial->print(aIRDataPtr->address, HEX);
+
+    aSerial->print(F(" Command=0x"));
+    aSerial->print(aIRDataPtr->command, HEX);
+
+#if defined(DECODE_DISTANCE_WIDTH)
+        }
+#endif
+
+    /*
+     * Print number of bits
+     */
+    aSerial->print(' ');
+    aSerial->print(aIRDataPtr->numberOfBits, DEC);
+    aSerial->print(F(" bits"));
+
+    if (aIRDataPtr->flags & IRDATA_FLAGS_IS_MSB_FIRST) {
+        aSerial->print(F(" MSB first"));
+    } else {
+        aSerial->print(F(" LSB first"));
+    }
+
+    /*
+     * Print gap and duration, in order to be able to compute the repeat period of the protocol by adding the next gap time
+     */
+    if (aIRDataPtr->flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) {
+        aSerial->print(' ');
+        if (aIRDataPtr->flags & IRDATA_FLAGS_IS_AUTO_REPEAT) {
+            aSerial->print(F("Auto-"));
+        }
+        aSerial->print(F("Repeat"));
+    }
+    aSerial->println();
+}
+
+/*
+ * Deprecated
  */
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr) {
     if (aIRDataPtr->flags & IRDATA_FLAGS_WAS_OVERFLOW) {

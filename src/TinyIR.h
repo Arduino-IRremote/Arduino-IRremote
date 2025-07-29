@@ -53,14 +53,14 @@
 
 #define NEC_UNIT                560
 
-#define NEC_HEADER_MARK         (16 * NEC_UNIT) // 9000
-#define NEC_HEADER_SPACE        (8 * NEC_UNIT)  // 4500
+#define NEC_HEADER_MARK         (16 * NEC_UNIT) // 8860
+#define NEC_HEADER_SPACE        (8 * NEC_UNIT)  // 4480
 
 #define NEC_BIT_MARK            NEC_UNIT
-#define NEC_ONE_SPACE           (3 * NEC_UNIT)  // 1690
+#define NEC_ONE_SPACE           (3 * NEC_UNIT)  // 1680
 #define NEC_ZERO_SPACE          NEC_UNIT
 
-#define NEC_REPEAT_HEADER_SPACE (4 * NEC_UNIT)  // 2250
+#define NEC_REPEAT_HEADER_SPACE (4 * NEC_UNIT)  // 2240
 
 #define NEC_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define NEC_MINIMAL_DURATION     49900 // NEC_HEADER_MARK + NEC_HEADER_SPACE + 32 * 2 * NEC_UNIT + NEC_UNIT // 2.5 because we assume more zeros than ones
@@ -122,10 +122,12 @@
 
 #define TINY_RECEIVER_HEADER_MARK           FAST_HEADER_MARK
 #define TINY_RECEIVER_HEADER_SPACE          FAST_HEADER_SPACE
+#define TINY_RECEIVER_MARK_TIMEOUT          (2 * FAST_HEADER_MARK)
 
 #define TINY_RECEIVER_BIT_MARK              FAST_BIT_MARK
 #define TINY_RECEIVER_ONE_SPACE             FAST_ONE_SPACE
 #define TINY_RECEIVER_ZERO_SPACE            FAST_ZERO_SPACE
+#define TINY_RECEIVER_ONE_THRESHOLD         (2 * FAST_UNIT)  // 1052
 
 #define TINY_RECEIVER_MAXIMUM_REPEAT_DISTANCE  FAST_MAXIMUM_REPEAT_DISTANCE // for repeat detection
 
@@ -151,11 +153,13 @@
 #define TINY_RECEIVER_UNIT                  NEC_UNIT
 
 #define TINY_RECEIVER_HEADER_MARK           NEC_HEADER_MARK
+#define TINY_RECEIVER_MARK_TIMEOUT          (2 * NEC_HEADER_MARK)
 #define TINY_RECEIVER_HEADER_SPACE          NEC_HEADER_SPACE
 
 #define TINY_RECEIVER_BIT_MARK              NEC_BIT_MARK
 #define TINY_RECEIVER_ONE_SPACE             NEC_ONE_SPACE
 #define TINY_RECEIVER_ZERO_SPACE            NEC_ZERO_SPACE
+#define TINY_RECEIVER_ONE_THRESHOLD         (2 * NEC_UNIT)  // 1120
 
 #define TINY_RECEIVER_MAXIMUM_REPEAT_DISTANCE  NEC_MAXIMUM_REPEAT_DISTANCE
 #endif

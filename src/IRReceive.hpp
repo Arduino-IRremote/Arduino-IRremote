@@ -733,6 +733,7 @@ bool IRrecv::decode() {
  **********************************************************************************************************************/
 /**
  * Decode pulse distance width protocols. We only check the mark or space length of a 1, otherwise we always assume a 0!
+ * Timing check of +/- 25 percent by matchSpace() or matchMark().
  *
  * We can have the following protocol timings
  * PULSE_DISTANCE:       Pause/spaces have different length and determine the bit value, longer space is 1. Pulses/marks can be constant, like NEC.
@@ -757,15 +758,13 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenTy
 
     auto *tRawBufPointer = &irparams.rawbuf[aStartOffset];
 
+    // Assume PULSE_DISTANCE if aOneMarkMicros == aZeroMarkMicros
     bool isPulseDistanceProtocol = (aOneMarkMicros == aZeroMarkMicros); // If true, we check aOneSpaceMicros -> pulse distance protocol
 
     IRRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
     IRRawDataType tMask = 1UL; // Mask is only used for LSB first
 
     for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
-        // get one mark and space pair
-        unsigned int tMarkTicks;
-        unsigned int tSpaceTicks;
         bool tBitValue;
 
         if (isPulseDistanceProtocol) {
@@ -774,7 +773,7 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenTy
              * !!!We only check variable length space indicating a 1 or 0!!!
              */
             tRawBufPointer++;
-            tSpaceTicks = *tRawBufPointer++; // maybe buffer overflow for last bit, but we do not evaluate this value :-)
+            unsigned int tSpaceTicks = *tRawBufPointer++; // maybe buffer overflow for last bit, but we do not evaluate this value :-)
             tBitValue = matchSpace(tSpaceTicks, aOneSpaceMicros); // Check for variable length space indicating a 1 or 0
 
         } else {
@@ -782,8 +781,83 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenTy
              * PULSE_WIDTH here.
              * !!!We only check variable length mark indicating a 1 or 0!!!
              */
-            tMarkTicks = *tRawBufPointer++;
+            unsigned int tMarkTicks = *tRawBufPointer++;
             tBitValue = matchMark(tMarkTicks, aOneMarkMicros); // Check for variable length mark indicating a 1 or 0
+            tRawBufPointer++;
+        }
+
+        if (aMSBfirst) {
+            tDecodedData <<= 1;
+        }
+
+        if (tBitValue) {
+            // It's a 1 -> set the bit
+            if (aMSBfirst) {
+                tDecodedData |= 1;
+            } else {
+                tDecodedData |= tMask;
+            }
+            IR_TRACE_PRINTLN(F("=> 1"));
+        } else {
+            // do not set the bit
+            IR_TRACE_PRINTLN(F("=> 0"));
+        }
+        tMask <<= 1;
+    }
+    decodedIRData.decodedRawData = tDecodedData;
+    return true;
+}
+
+/**
+ * Decode pulse distance width protocols. We only check the mark or space length of a 1 against a threshold value, otherwise we always assume a 0!
+ *
+ * We can have the following protocol timings
+ * PULSE_DISTANCE:       Pause/spaces have different length and determine the bit value, longer space is 1. Pulses/marks can be constant, like NEC.
+ * PULSE_WIDTH:          Pulses/marks have different length and determine the bit value, longer mark is 1. Pause/spaces can be constant, like Sony.
+ * PULSE_DISTANCE_WIDTH: Pulses/marks and pause/spaces have different length, often the bit length is constant, like MagiQuest. Can be decoded using the PULSE_DISTANCE decoding.
+ *
+ * Input is     IrReceiver.irparams.rawbuf[]
+ * Output is    IrReceiver.decodedIRData.decodedRawData
+ *
+ * @param   aNumberOfBits       Number of bits to decode from irparams.rawbuf[] array.
+ * @param   aStartOffset        Offset in irparams.rawbuf[] to start decoding. Must point to a mark.
+ * @param   aOneThresholdMicros threshold value for 0 or 1
+ * @param   aIsPulseDistanceProtocol
+ * @param   aMSBfirst           If true send Most Significant Bit first, else send Least Significant Bit (lowest bit) first.
+ * @return  true                assume always successful decoding
+ */
+/*
+ * Experimental threshold decoder to be activated by USE_THRESHOLD_DECODING
+ * I hope that this will give better results for noisy signals and protocols with short pulses/ pauses
+ * Currently experimental and requires up to 310 bytes more program space, if more than 1 protocol is involved
+ * but saves 90 bytes if only e.g. NEC is selected.
+ */
+//#define USE_THRESHOLD_DECODING
+bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneThresholdMicros,
+        bool aIsPulseDistanceProtocol, bool aMSBfirst) {
+
+    auto *tRawBufPointer = &irparams.rawbuf[aStartOffset];
+
+    IRRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
+    IRRawDataType tMask = 1UL; // Mask is only used for LSB first
+
+    for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
+
+        uint16_t tOneThresholdMicros;
+        if (aIsPulseDistanceProtocol) {
+            /*
+             * PULSE_DISTANCE -including PULSE_DISTANCE_WIDTH- here.
+             * !!!We only check variable length space indicating a 1 or 0!!!
+             */
+            tRawBufPointer++;
+            tOneThresholdMicros = aOneThresholdMicros - MARK_EXCESS_MICROS;
+        } else {
+            tOneThresholdMicros = aOneThresholdMicros + MARK_EXCESS_MICROS;
+        }
+        unsigned int tCurrentTicks = *tRawBufPointer++; // maybe buffer overflow for last bit, but we do not evaluate this value :-)
+        bool tBitValue = ((tCurrentTicks * MICROS_PER_TICK) > tOneThresholdMicros); // Check for variable length space indicating a 1 or 0
+
+        if (!aIsPulseDistanceProtocol) {
             tRawBufPointer++;
         }
 
@@ -823,25 +897,21 @@ bool IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenTy
     IRRawDataType tMask = 1UL; // Mask is only used for LSB first
 
     for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
-        // get one mark and space pair
-        unsigned int tMarkTicks;
-        unsigned int tSpaceTicks;
         bool tBitValue;
 
         if (isPulseDistanceProtocol) {
             /*
              * Pulse distance here, it is not required to check constant mark duration (aOneMarkMicros) and zero space duration.
              */
-
             (void) aZeroSpaceMicros;
             tRawBufPointer++;
-            tSpaceTicks = *tRawBufPointer++; // maybe buffer overflow for last bit, but we do not evaluate this value :-)
+            unsigned int tSpaceTicks = *tRawBufPointer++; // maybe buffer overflow for last bit, but we do not evaluate this value :-)
             tBitValue = matchSpace(tSpaceTicks, aOneSpaceMicros); // Check for variable length space indicating a 1 or 0
         } else {
             /*
              * Pulse width here, it is not required to check (constant) space duration and zero mark duration.
              */
-            tMarkTicks = *tRawBufPointer++;
+            unsigned int tMarkTicks = *tRawBufPointer++;
             tBitValue = matchMark(tMarkTicks, aOneMarkMicros); // Check for variable length mark indicating a 1 or 0
             tRawBufPointer++;
         }
@@ -1005,10 +1075,28 @@ bool IRrecv::decodePulseDistanceWidthDataStrict(uint_fast8_t aNumberOfBits, IRRa
  */
 bool IRrecv::decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
         IRRawlenType aStartOffset) {
-
+#if defined(USE_THRESHOLD_DECODING)
+    /*
+     * I hope that this will give better results for noisy signals and protocols with short pulses/ pauses
+     * Still experimental and requires up to 310 bytes more program space, if more than 1 protocol is involved
+     * but saves 90 bytes if only e.g. NEC is selected.
+     */
+    bool tIsPulseDistanceProtocol = aProtocolConstants->Flags & PROTOCOL_IS_PULSE_DISTANCE;
+    uint16_t tOneThresholdMicros = aProtocolConstants->DistanceWidthTimingInfo.OneSpaceMicros;
+    if (tIsPulseDistanceProtocol) {
+        tOneThresholdMicros = (aProtocolConstants->DistanceWidthTimingInfo.OneSpaceMicros
+                + aProtocolConstants->DistanceWidthTimingInfo.ZeroSpaceMicros) / 2;
+    } else {
+        tOneThresholdMicros = (aProtocolConstants->DistanceWidthTimingInfo.OneMarkMicros
+                + aProtocolConstants->DistanceWidthTimingInfo.ZeroMarkMicros) / 2;
+    }
+    return decodePulseDistanceWidthData(aNumberOfBits, aStartOffset, tOneThresholdMicros, tIsPulseDistanceProtocol,
+            (aProtocolConstants->Flags & PROTOCOL_IS_MSB_FIRST));
+#else
     return decodePulseDistanceWidthData(aNumberOfBits, aStartOffset, aProtocolConstants->DistanceWidthTimingInfo.OneMarkMicros,
             aProtocolConstants->DistanceWidthTimingInfo.OneSpaceMicros, aProtocolConstants->DistanceWidthTimingInfo.ZeroMarkMicros,
-            aProtocolConstants->Flags);
+            (aProtocolConstants->Flags & PROTOCOL_IS_MSB_FIRST));
+#endif
 }
 
 bool IRrecv::decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
@@ -1509,14 +1597,14 @@ bool IRrecv::printIRResultShort(Print *aSerial, bool aCheckForRecordGapsMicros) 
 #endif
 
             /*
-             * Print raw data
+             * Print raw data, numberOfBits and MSB or LSB
              */
             if (!(tFlags & IRDATA_FLAGS_IS_REPEAT) || decodedIRData.decodedRawData != 0) {
                 aSerial->print(F(" Raw-Data=0x"));
 #if (__INT_WIDTH__ < 32)
                 aSerial->print(decodedIRData.decodedRawData, HEX);
 #else
-            PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
+                PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
 #endif
                 /*
                  * Print number of bits processed

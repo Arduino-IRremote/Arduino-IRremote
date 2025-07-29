@@ -144,9 +144,11 @@ struct PulseDistanceWidthProtocolConstants {
 /*
  * Definitions for member PulseDistanceWidthProtocolConstants.Flags
  */
-#define SUPPRESS_STOP_BIT       0x20 // Stop bit is otherwise sent for all pulse distance protocols, i.e. aOneSpaceMicros != aZeroSpaceMicros.
-#define PROTOCOL_IS_MSB_FIRST   IRDATA_FLAGS_IS_MSB_FIRST
-#define PROTOCOL_IS_LSB_FIRST   IRDATA_FLAGS_IS_LSB_FIRST
+#define PROTOCOL_IS_PULSE_DISTANCE  0x00
+#define PROTOCOL_IS_PULSE_WIDTH     0x10
+#define SUPPRESS_STOP_BIT           0x20 // Stop bit is otherwise sent for all pulse distance protocols, i.e. aOneSpaceMicros != aZeroSpaceMicros.
+#define PROTOCOL_IS_MSB_FIRST       IRDATA_FLAGS_IS_MSB_FIRST
+#define PROTOCOL_IS_LSB_FIRST       IRDATA_FLAGS_IS_LSB_FIRST
 
 /*
  * Carrier frequencies for various protocols
@@ -170,8 +172,9 @@ const __FlashStringHelper* getProtocolString(decode_type_t aProtocol);
 const char* getProtocolString(decode_type_t aProtocol);
 #endif
 void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap)  __attribute__ ((deprecated ("Remove last parameter, it is not supported any more.")));
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr); // A static function to be able to print send or copied received data.
-
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr) __attribute__ ((deprecated ("Use member function or printIRDataShort() instead.")));;
+// A static function to be able to print send or copied received data.
+void printIRDataShort(Print *aSerial, IRData *aIRDataPtr);
 /*
  * Convenience functions to convert MSB to LSB values
  */

@@ -300,6 +300,9 @@ public:
     bool decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
             uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, bool aMSBfirst);
 
+    bool decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneThresholdMicros,
+            bool aIsPulseDistanceProtocol, bool aMSBfirst);
+
     bool decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
             uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst)
                     __attribute__ ((deprecated ("Please use decodePulseDistanceWidthData() with 6 parameters.")));

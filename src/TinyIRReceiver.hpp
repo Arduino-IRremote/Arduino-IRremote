@@ -184,7 +184,7 @@ void IRPinChangeInterruptHandler(void) {
      */
     // Repeats can be sent after a pause, which is longer than 64000 microseconds, so we need a 32 bit value for check of repeats
     uint32_t tCurrentMicros = micros();
-    uint32_t tMicrosOfMarkOrSpace32 = tCurrentMicros - TinyIRReceiverControl.LastChangeMicros;
+    uint32_t tMicrosOfMarkOrSpace32 = tCurrentMicros - TinyIRReceiverControl.LastChangeMicros; // statement is required to force 32 bit arithmetic
     uint16_t tMicrosOfMarkOrSpace = tMicrosOfMarkOrSpace32;
 
     TinyIRReceiverControl.LastChangeMicros = tCurrentMicros;
@@ -202,9 +202,9 @@ void IRPinChangeInterruptHandler(void) {
 
     if (tIRLevel == LOW) {
         /*
-         * We have a mark here
+         * We are at the start of a mark here and tMicrosOfMarkOrSpace is the time of the previous space
          */
-        if (tMicrosOfMarkOrSpace > 2 * TINY_RECEIVER_HEADER_MARK) {
+        if (tMicrosOfMarkOrSpace > TINY_RECEIVER_MARK_TIMEOUT) {
             // timeout -> must reset state machine
             tState = IR_RECEIVER_STATE_WAITING_FOR_START_MARK;
         }
@@ -229,7 +229,7 @@ void IRPinChangeInterruptHandler(void) {
             if (tMicrosOfMarkOrSpace >= lowerValue25Percent(TINY_RECEIVER_HEADER_SPACE)
                     && tMicrosOfMarkOrSpace <= upperValue25Percent(TINY_RECEIVER_HEADER_SPACE)) {
                 /*
-                 * We had a valid data header space here -> initialize data
+                 * We had a valid data header space before -> initialize data
                  */
                 TinyIRReceiverControl.IRRawDataBitCounter = 0;
 #if (TINY_RECEIVER_BITS > 16)
@@ -239,8 +239,9 @@ void IRPinChangeInterruptHandler(void) {
 #endif
                 TinyIRReceiverControl.IRRawDataMask = 1;
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
+
 #if !defined(ENABLE_NEC2_REPEATS)
-                // Check for NEC repeat header
+                // Alternatively check for NEC repeat header space length
             } else if (tMicrosOfMarkOrSpace >= lowerValue25Percent(NEC_REPEAT_HEADER_SPACE)
                     && tMicrosOfMarkOrSpace <= upperValue25Percent(NEC_REPEAT_HEADER_SPACE)
                     && TinyIRReceiverControl.IRRawDataBitCounter >= TINY_RECEIVER_BITS) {
@@ -257,13 +258,17 @@ void IRPinChangeInterruptHandler(void) {
             }
         }
 
+
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_MARK) {
-            // Check data space length
+            /*
+             * Start of data mark here, check data space length
+             * Maybe the minimum length check could be removed here.
+             */
             if (tMicrosOfMarkOrSpace >= lowerValue50Percent(TINY_RECEIVER_ZERO_SPACE)
                     && tMicrosOfMarkOrSpace <= upperValue50Percent(TINY_RECEIVER_ONE_SPACE)) {
                 // We have a valid bit here
                 tState = IR_RECEIVER_STATE_WAITING_FOR_DATA_SPACE;
-                if (tMicrosOfMarkOrSpace >= 2 * TINY_RECEIVER_UNIT) {
+                if (tMicrosOfMarkOrSpace >= TINY_RECEIVER_ONE_THRESHOLD) {
                     // we received a 1
 #if (TINY_RECEIVER_BITS > 16)
                     TinyIRReceiverControl.IRRawData.ULong |= TinyIRReceiverControl.IRRawDataMask;
@@ -288,7 +293,8 @@ void IRPinChangeInterruptHandler(void) {
 
     else {
         /*
-         * We have a space here
+         * We are at the start of a space here and tMicrosOfMarkOrSpace is the time of the previous mark
+         *
          */
         if (tState == IR_RECEIVER_STATE_WAITING_FOR_START_SPACE) {
             /*
