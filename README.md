@@ -7,7 +7,7 @@ A library enabling the sending & receiving of infra-red signals.
  &nbsp; &nbsp;
 [![Badge Version](https://img.shields.io/github/v/release/Arduino-IRremote/Arduino-IRremote?include_prereleases&style=for-the-badge&color=33660e&labelColor=428813&logoColor=white&logo=DocuSign)](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/latest)
  &nbsp; &nbsp;
-[![Badge Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest?style=for-the-badge&color=004463&labelColor=00557f)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
+[![Badge Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremoteMultipleMultiple/Arduino-IRremote/latest?style=for-the-badge&color=004463&labelColor=00557f)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
  &nbsp; &nbsp;
 [![Badge LibraryBuild](https://img.shields.io/github/actions/workflow/status/Arduino-IRremote/Arduino-IRremote/LibraryBuild.yml?branch=master&style=for-the-badge&color=551f47&labelColor=752a61)](https://github.com/Arduino-IRremote/Arduino-IRremote/actions)
 <br/>
@@ -67,7 +67,8 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Receiving sets overflow flag](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-sets-overflow-flag)
   * [Problems with Neopixels, FastLed etc.](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#problems-with-neopixels-fastled-etc)
   * [Does not work/compile with another library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#does-not-workcompile-with-another-library)
-  * [Multiple IR receiver and sender instances](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-receiver-and-sender-instances)
+  * [Multiple IR receivers](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-receivers) 
+  * [Multiple IR sender instances](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-sender-instances)
   * [Increase strength of sent output signal](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#increase-strength-of-sent-output-signal)
   * [Minimal CPU clock frequency](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#minimal-cpu-clock-frequency)
   * [Bang & Olufsen protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#bang--olufsen-protocol)
@@ -727,14 +728,19 @@ There are some other solutions to this on more powerful processors,
 **Another library is only working/compiling** if you deactivate the line `IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);`.<br/>
 This is often due to **timer resource conflicts** with the other library. Please see [below](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage).
 
-## Multiple IR receiver and sender instances
-**This library supports only one IR receiver and one IR sender object (IRrecv and IRsend) per CPU.**<br/>
-However since sending is a serial task, you can use `setSendPin()` to switch the pin to send, thus emulating multiple sender.<br/>
-The receiver uses a special **timer** triggered function, which reads the digital IR signal value from one pin every 50 &micro;s.<br/>
-So **multiple IR receivers** can only be used by connecting the output pins of several IR receivers together.
+## Multiple IR receivers
+**This library now supports multiple IR receiver instances (IRrecv) per CPU** see the [MultipleReceivers example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/MultipleReceivers/MultipleReceivers.ino).
+
+There is also another way to use multiple receivers.
+You can connect the output pins of each IR receiver to one input pin.
+Then you can use the standard receiver object (IrReceiver).
 The IR receiver modules internally use an NPN transistor as output device with just a 30k resistor to VCC.
 This is basically an "open collector" and allows multiple output pins to be connected to one Arduino input pin.<br/>
 However, keep in mind that any weak / disturbed signal from one of the receivers will also interfere with a good signal from another receiver.
+
+## Multiple IR sender instances
+**This library only supports one IR sender object (IRsend) per CPU.**<br/>
+However since sending is a serial task, you can use `setSendPin()` to switch the pin to send, thus emulating multiple sender.<br/>
 
 ## Increase strength of sent output signal
 **The best way to increase the IR power for free** is to use 2 or 3 IR diodes in series. One diode requires 1.2 volt at 20 mA or 1.5 volt at 100 mA so you can supply up to 3 diodes with a 5 volt output.<br/>
@@ -889,8 +895,9 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `EXCLUDE_EXOTIC_PROTOCOLS` | disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
 | `DECODE_<Protocol name>` | all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |
 | `DECODE_STRICT_CHECKS` |  disabled | Check for additional required characteristics of protocol timing like length of mark for a constant mark protocol, where space length determines the bit value. Requires up to 194 additional bytes of program memory. |
+| `USE_THRESHOLD_DECODER` | disabled | If enabled, may give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses and forces value of MARK_EXCESS_MICROS to 0 to save program memory. Requires up to additional 120 bytes program memory. |
 | `IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK` |  disabled | Saves up to 60 bytes of program memory and 2 bytes RAM. |
-| `MARK_EXCESS_MICROS` | 20 | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. |
+| `MARK_EXCESS_MICROS` | 0  | MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. Is set to 20 if `DO_NOT_USE_THRESHOLD_DECODER` is enabled. |
 | `RECORD_GAP_MICROS` | 5000 | Minimum gap between IR transmissions, to detect the end of a protocol.<br/>Must be greater than any space of a protocol e.g. the NEC header space of 4500 &micro;s.<br/>Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br/>Keep in mind, that this is the delay between the end of the received command and the start of decoding. |
 | `DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE` | 50 if RAM <= 2k, else 200 | A value of 200 allows to decode mark or space durations up to 10 ms. |
 | `IR_INPUT_IS_ACTIVE_HIGH` | disabled | Enable it if you use a RF receiver, which has an active HIGH output signal. |

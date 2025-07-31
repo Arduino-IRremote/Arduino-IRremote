@@ -32,6 +32,8 @@
 
 #include <Arduino.h>
 
+#define IR_RECEIVE_PIN_OF_SECOND_RECEIVER   5
+
 /*
  * Specify which protocol(s) should be used for decoding.
  * If no protocol is defined, all protocols (except Bang&Olufsen) are active.
@@ -58,8 +60,7 @@
 //#define DEBUG               // Activate this for lots of lovely debug output from the decoders.
 //#define RAW_BUFFER_LENGTH  750 // For air condition remotes it may require up to 750. Default is 200.
 #define SUPPORT_MULTIPLE_RECEIVER_INSTANCES
-#define IR_RECEIVE_PIN_OF_SECOND_RECEIVER   5
-void UserIRReceiveTimerInterruptHandler(); // must be before line #include <IRremote.hpp>
+void UserIRReceiveTimerInterruptHandler(); // must also be before line #include <IRremote.hpp>
 
 /*
  * This include defines the actual pin number for pins like IR_RECEIVE_PIN, IR_SEND_PIN for many different boards and architectures
@@ -69,7 +70,7 @@ void UserIRReceiveTimerInterruptHandler(); // must be before line #include <IRre
 
 IRrecv MySecondIrReceiver(IR_RECEIVE_PIN_OF_SECOND_RECEIVER); // This sets the pin for the second instance
 
-void handleSuccessfulDecoding(IRrecv * aIRReceiverInstance);
+void handleSuccessfulDecoding(IRrecv *aIRReceiverInstance);
 
 void setup() {
     Serial.begin(115200);
@@ -102,7 +103,7 @@ void loop() {
     }
 }
 
-void handleSuccessfulDecoding(IRrecv * aIRReceiverInstance) {
+void handleSuccessfulDecoding(IRrecv *aIRReceiverInstance) {
 
     Serial.print(F("Receiver at pin "));
     Serial.print(aIRReceiverInstance->irparams.IRReceivePin);

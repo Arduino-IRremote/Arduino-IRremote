@@ -91,6 +91,7 @@ jobs:
 
           - arduino-boards-fqbn: arduino:avr:uno|DEBUG_TRACE
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              UnitTest: -DUSE_THRESHOLD_DECODER
               IRremoteExtensionTest: -DIR_SEND_PIN=3
               TinyReceiver: -DUSE_CALLBACK_FOR_TINY_RECEIVER
               All: -DEBUG -DTRACE

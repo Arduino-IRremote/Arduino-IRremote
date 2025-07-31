@@ -47,7 +47,7 @@
 #define BOSEWAVE_MAXIMUM_REPEAT_DISTANCE    62000
 
 struct PulseDistanceWidthProtocolConstants const BoseWaveProtocolConstants PROGMEM = {BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
-    BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST
+    BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE
     , (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
 
 /************************************
@@ -76,13 +76,7 @@ bool IRrecv::decodeBoseWave() {
         return false;
     }
 
-    if (!decodePulseDistanceWidthData_P(&BoseWaveProtocolConstants, BOSEWAVE_BITS)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Bose: "));
-        Serial.println(F("Decode failed"));
-#endif
-        return false;
-    }
+    decodePulseDistanceWidthData_P(&BoseWaveProtocolConstants, BOSEWAVE_BITS);
 
     // Stop bit
     if (!matchMark(irparams.rawbuf[3 + (2 * BOSEWAVE_BITS)], BOSEWAVE_BIT_MARK)) {

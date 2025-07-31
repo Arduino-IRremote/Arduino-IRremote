@@ -103,11 +103,11 @@
 
 // 19 byte RAM
 struct PulseDistanceWidthProtocolConstants const SamsungProtocolConstants PROGMEM = {SAMSUNG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
-    SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
+    SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE,
     (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
 
 struct PulseDistanceWidthProtocolConstants const SamsungLGProtocolConstants PROGMEM = {SAMSUNGLG, SAMSUNG_KHZ, SAMSUNG_HEADER_MARK,
-    SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
+    SAMSUNG_HEADER_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, SAMSUNG_BIT_MARK, SAMSUNG_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE,
     (SAMSUNG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendSamsungLGSpecialRepeat};
 /************************************
  * Start of send and decode functions
@@ -298,13 +298,7 @@ bool IRrecv::decodeSamsung() {
     /*
      * Decode first 32 bits
      */
-    if (!decodePulseDistanceWidthData_P(&SamsungProtocolConstants, SAMSUNG_BITS, 3)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Samsung: "));
-        Serial.println(F("Decode failed"));
-#endif
-        return false;
-    }
+    decodePulseDistanceWidthData_P(&SamsungProtocolConstants, SAMSUNG_BITS, 3);
     LongUnion tValue;
     tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.address = tValue.UWord.LowWord;
@@ -314,14 +308,8 @@ bool IRrecv::decodeSamsung() {
          * Samsung48
          */
         // decode additional 16 bit
-        if (!decodePulseDistanceWidthData_P(&SamsungProtocolConstants, (SAMSUNG_COMMAND32_BITS - SAMSUNG_COMMAND16_BITS),
-                3 + (2 * SAMSUNG_BITS))) {
-#if defined(LOCAL_DEBUG)
-            Serial.print(F("Samsung: "));
-            Serial.println(F("Decode failed"));
-#endif
-            return false;
-        }
+        decodePulseDistanceWidthData_P(&SamsungProtocolConstants, (SAMSUNG_COMMAND32_BITS - SAMSUNG_COMMAND16_BITS),
+                3 + (2 * SAMSUNG_BITS));
 
         /*
          * LSB data is already in tValue.UWord.HighWord!
@@ -401,11 +389,8 @@ bool IRrecv::decodeSAMSUNG(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceWidthData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST)) {
-        return false;
-    }
+    decodePulseDistanceWidthData(SAMSUNG_BITS, offset, SAMSUNG_BIT_MARK, SAMSUNG_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST);
 
-    // Success
     aResults->value = decodedIRData.decodedRawData;
     aResults->bits = SAMSUNG_BITS;
     aResults->decode_type = SAMSUNG;

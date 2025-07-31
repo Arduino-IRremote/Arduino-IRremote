@@ -1,9 +1,14 @@
 # Changelog
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
-# 4.4.4
+# 4.5.0
+- Removed return value for all decodePulseDistanceWidthData() decoding functions, which returned a constant true.
+- New handling of MARK_EXCESS_MICROS without strange rounding inconsistency.
 - Fixed bug in ReceiveDemo.cpp if DEBUG_BUTTON_PIN is not defined. #1306.
-
+- Fixed minor bugs in Denon decoder.
+- Added threshold decoding.
+- Added support for multiple receiver instances.
+- Minor bug fixes for DEBUG.
 
 # 4.4.3
 - Added USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN to make the software aware of send LED connected between VCC and send pin.

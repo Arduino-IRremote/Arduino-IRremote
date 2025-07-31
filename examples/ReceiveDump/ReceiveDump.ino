@@ -90,8 +90,14 @@ void setup() {
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);
     Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
+
+#  if defined(USE_THRESHOLD_DECODER)
+    Serial.println(F("Threshold decoding is active and thus MARK_EXCESS_MICROS is set to 0"));
+#  else
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
+#  endif
+
     Serial.println();
     Serial.println(F("Because of the verbose output (>200 ms at 115200 baud), repeats are not dumped correctly!"));
     Serial.println();

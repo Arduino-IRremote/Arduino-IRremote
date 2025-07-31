@@ -106,7 +106,7 @@
 #define DENON_HEADER_SPACE      (3 * DENON_UNIT) // 780 // The length of the Header:Space
 
 struct PulseDistanceWidthProtocolConstants const DenonProtocolConstants PROGMEM = {DENON, DENON_KHZ, DENON_HEADER_MARK, DENON_HEADER_SPACE,
-    DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST,
+    DENON_BIT_MARK, DENON_ONE_SPACE, DENON_BIT_MARK, DENON_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE,
     (DENON_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
 
 /************************************
@@ -138,7 +138,7 @@ void IRsend::sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOf
     tCommand |= aSendSharpFrameMarker << 8; // the 2 upper bits are 00 for Denon and 01 or 10 for Sharp
 
     uint16_t tData = aAddress | ((uint16_t) tCommand << DENON_ADDRESS_BITS);
-    uint16_t tInvertedData = (tData ^ 0x7FE0); // Command and frame (upper 10 bits) are inverted
+    uint16_t tInvertedData = (tData ^ 0x7FE0); // Command and frame (upper 10 bits, bit 5 to 14) are inverted
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -179,15 +179,9 @@ bool IRrecv::decodeDenon() {
     }
 
     // Try to decode as Denon protocol
-    if (!decodePulseDistanceWidthData_P(&DenonProtocolConstants, DENON_BITS, 1)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Denon: "));
-        Serial.println(F("Decode failed"));
-#endif
-        return false;
-    }
+    decodePulseDistanceWidthData_P(&DenonProtocolConstants, DENON_BITS, 1);
 
-    // Check for stop mark
+    // Check for stop mark, this stop bit distinguishes it from decoding as Sony
     if (!matchMark(irparams.rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("Denon: "));
@@ -204,49 +198,53 @@ bool IRrecv::decodeDenon() {
 
     // Check for (auto) repeat
     if (decodedIRData.initialGapTicks < ((DENON_AUTO_REPEAT_DISTANCE + (DENON_AUTO_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)) {
-        repeatCount++;
-        if (repeatCount > 1) { // skip first auto repeat
-            decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
-        }
+        decodedIRData.flags |= IRDATA_FLAGS_IS_AUTO_REPEAT;
 
-        if (tFrameBits & 0x01) {
+        repeatCount++;
+        /*
+         * 1. repeat is inverted autorepeat -> IRDATA_FLAGS_IS_AUTO_REPEAT
+         * 2. repeat is normal autorepeat (end) or 1. normal repeat -> IRDATA_FLAGS_IS_AUTO_REPEAT
+         * 3. repeat is inverted autorepeat of the 1. repeat -> IRDATA_FLAGS_IS_REPEAT (not the correct frame, but this enables easy counting of repeats)
+         * 4. repeat is normal autorepeat (end) or 2. normal repeat -> IRDATA_FLAGS_IS_AUTO_REPEAT
+         * 5. repeat is inverted autorepeat of the 2. repeat -> IRDATA_FLAGS_IS_REPEAT (not the correct frame, but this enables easy counting of repeats)
+         * 6. repeat is normal autorepeat (end) or 3. normal repeat -> IRDATA_FLAGS_IS_AUTO_REPEAT
+         */
+
+        if (repeatCount & 0x01) {
             /*
-             * Here we are in the auto repeated frame with the inverted command
+             * Here we are in an inverted auto repeated frame where the command and frame bits are inverted
              */
 #if defined(LOCAL_DEBUG)
-            Serial.print(F("Denon: "));
-            Serial.println(F("Autorepeat received="));
+            Serial.print(F("Denon: Inverted frame"));
 #endif
-            decodedIRData.flags |= IRDATA_FLAGS_IS_AUTO_REPEAT;
+            if (repeatCount > 1) { // skip first auto repeat
+                decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
+            }
             // Check parity of consecutive received commands. There is no parity in one data set.
             if ((uint8_t) lastDecodedCommand != (uint8_t)(~decodedIRData.command)) {
                 decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
 #if defined(LOCAL_DEBUG)
-                Serial.print(F("Denon: "));
-                Serial.print(F("Parity check for repeat failed. Last command="));
-                Serial.print(lastDecodedCommand, HEX);
+                Serial.print(F("Denon: Parity check of inverted with non inverted frame failed. Last command="));
+                Serial.print((uint8_t)lastDecodedCommand, HEX);
                 Serial.print(F(" current="));
-                Serial.println(~decodedIRData.command, HEX);
+                Serial.println((uint8_t)~decodedIRData.command, HEX);
 #endif
             }
             // always take non inverted command
             decodedIRData.command = lastDecodedCommand;
-        }
 
-        // repeated command here
-        if (tFrameBits == 1 || tFrameBits == 2) {
-            decodedIRData.protocol = SHARP;
-        } else {
-            decodedIRData.protocol = DENON;
+            // inverted command here, re-invert the frame bits for later protocol decoding
+            tFrameBits = tFrameBits ^ 0x03;
         }
     } else {
-        repeatCount = 0;
         // first command here
-        if (tFrameBits == 2) {
-            decodedIRData.protocol = SHARP;
-        } else {
-            decodedIRData.protocol = DENON;
-        }
+        repeatCount = 0;
+    }
+
+    if (tFrameBits) {
+        decodedIRData.protocol = SHARP;
+    } else {
+        decodedIRData.protocol = DENON;
     }
 
     decodedIRData.numberOfBits = DENON_BITS;
@@ -308,9 +306,7 @@ bool IRrecv::decodeDenonOld(decode_results *aResults) {
     }
 
     // Try to decode as Denon protocol.
-    if (!decodePulseDistanceWidthData(DENON_BITS, 3, DENON_BIT_MARK, DENON_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST)) {
-        return false;
-    }
+    decodePulseDistanceWidthData(DENON_BITS, 3, DENON_BIT_MARK, DENON_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST);
 
     // Success
     aResults->value = decodedIRData.decodedRawData;

@@ -64,9 +64,8 @@
  Sum: 28900
  */
 struct PulseDistanceWidthProtocolConstants const FASTProtocolConstants PROGMEM = { FAST, FAST_KHZ, FAST_HEADER_MARK,
-        FAST_HEADER_SPACE,
-        FAST_BIT_MARK, FAST_ONE_SPACE, FAST_BIT_MARK, FAST_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (FAST_REPEAT_PERIOD
-                / MICROS_IN_ONE_MILLI), nullptr };
+FAST_HEADER_SPACE, FAST_BIT_MARK, FAST_ONE_SPACE, FAST_BIT_MARK, FAST_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST
+        | PROTOCOL_IS_PULSE_DISTANCE, (FAST_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
 
 /************************************
  * Start of send and decode functions
@@ -113,14 +112,7 @@ bool IRrecv::decodeFAST() {
         return false;
     }
 
-    if (!decodePulseDistanceWidthData_P(&FASTProtocolConstants, FAST_BITS)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("FAST: "));
-        Serial.println(F("Decode failed"));
-#endif
-        return false;
-    }
-
+    decodePulseDistanceWidthData_P(&FASTProtocolConstants, FAST_BITS);
     WordUnion tValue;
     tValue.UWord = decodedIRData.decodedRawData;
 
@@ -128,7 +120,7 @@ bool IRrecv::decodeFAST() {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("FAST: "));
         Serial.print(F("8 bit parity is not correct. Expected=0x"));
-        Serial.print((uint8_t)~(tValue.UByte.LowByte), HEX);
+        Serial.print((uint8_t) ~(tValue.UByte.LowByte), HEX);
         Serial.print(F(" received=0x"));
         Serial.print(tValue.UByte.HighByte, HEX);
         Serial.print(F(" data=0x"));

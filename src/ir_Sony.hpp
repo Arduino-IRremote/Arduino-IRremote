@@ -91,7 +91,7 @@
 #define SONY_MAXIMUM_REPEAT_DISTANCE    (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION_MIN) // 24 ms
 
 struct PulseDistanceWidthProtocolConstants const SonyProtocolConstants PROGMEM = { SONY, SONY_KHZ, SONY_HEADER_MARK, SONY_SPACE, SONY_ONE_MARK,
-SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST, (SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
+SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_WIDTH, (SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
 
 /************************************
  * Start of send and decode functions
@@ -122,13 +122,7 @@ bool IRrecv::decodeSony() {
         return false;
     }
 
-    if (!decodePulseDistanceWidthData_P(&SonyProtocolConstants, (decodedIRData.rawlen - 1) / 2, 3)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Sony: "));
-        Serial.println(F("Decode failed"));
-#endif
-        return false;
-    }
+    decodePulseDistanceWidthData_P(&SonyProtocolConstants, (decodedIRData.rawlen - 1) / 2, 3);
 
     // Success
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value

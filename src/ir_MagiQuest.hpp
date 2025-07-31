@@ -93,6 +93,8 @@
 #define MAGIQUEST_BITS          (MAGIQUEST_CHECKSUM_BITS + MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) // 56 Size of the command with the start bits
 
 /*
+ * Protocol is Pulse Distance Width not pure Pulse Distance and a longer space is not a one but a zero
+ *
  * 0 = 25% mark & 75% space across 1 period
  *     1150 * 0.25 = 288 usec mark
  *     1150 - 288 = 862 usec space
@@ -107,10 +109,10 @@
 #define MAGIQUEST_ZERO_MARK     MAGIQUEST_UNIT       // 287.5
 #define MAGIQUEST_ZERO_SPACE    (3 * MAGIQUEST_UNIT) // 864
 
-// assume 110 as repeat period
-struct PulseDistanceWidthProtocolConstants const MagiQuestProtocolConstants PROGMEM = { MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
-MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | SUPPRESS_STOP_BIT, 110,
-nullptr };
+// assume 110 as repeat period.
+struct PulseDistanceWidthProtocolConstants const MagiQuestProtocolConstants PROGMEM = {MAGIQUEST, 38, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
+    MAGIQUEST_ONE_MARK, MAGIQUEST_ONE_SPACE, MAGIQUEST_ZERO_MARK, MAGIQUEST_ZERO_SPACE,
+    PROTOCOL_IS_MSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE_WIDTH | SUPPRESS_STOP_BIT, 110, nullptr};
 //+=============================================================================
 //
 /**
@@ -164,14 +166,13 @@ bool IRrecv::decodeMagiQuest() {
     /*
      * Check for 8 zero header bits
      */
-    if (!decodePulseDistanceWidthData_P(&MagiQuestProtocolConstants, MAGIQUEST_START_BITS, 1)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("MagiQuest: "));
-        Serial.println(F("Start bit decode failed"));
+    decodePulseDistanceWidthData_P(&MagiQuestProtocolConstants, MAGIQUEST_START_BITS, 1);
+#if defined(USE_THRESHOLD_DECODER)
+    if (decodedIRData.decodedRawData != 0xFF) // For Magiquest a small pause is a 1 which is inverse to threshold decoding
+#else
+    if (decodedIRData.decodedRawData != 0)
 #endif
-        return false;
-    }
-    if (decodedIRData.decodedRawData != 0) {
+            {
 #if defined(LOCAL_DEBUG)
         Serial.print(F("MagiQuest: "));
         Serial.print(F("Not 8 leading zero start bits received, RawData=0x"));
@@ -183,13 +184,11 @@ bool IRrecv::decodeMagiQuest() {
     /*
      * Decode the 31 bit ID
      */
-    if (!decodePulseDistanceWidthData_P(&MagiQuestProtocolConstants, MAGIQUEST_WAND_ID_BITS, (MAGIQUEST_START_BITS * 2) + 1)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("MagiQuest: "));
-        Serial.println(F("ID decode failed"));
+    decodePulseDistanceWidthData_P(&MagiQuestProtocolConstants, MAGIQUEST_WAND_ID_BITS, (MAGIQUEST_START_BITS * 2) + 1);
+#if defined(USE_THRESHOLD_DECODER)
+    decodedIRData.decodedRawData = decodedIRData.decodedRawData ^ 0x7FFFFFFF; // We have 31 bit. For Magiquest a small pause is a 1 which is inverse to threshold decoding
 #endif
-        return false;
-    }
+
     LongUnion tDecodedRawData;
     uint32_t tWandId = decodedIRData.decodedRawData; // save tWandId for later use
     tDecodedRawData.ULong = decodedIRData.decodedRawData << 1; // shift for checksum computation
@@ -203,14 +202,13 @@ bool IRrecv::decodeMagiQuest() {
     /*
      * Decode the 9 bit Magnitude + 8 bit checksum
      */
-    if (!decodePulseDistanceWidthData_P(&MagiQuestProtocolConstants, MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_CHECKSUM_BITS,
-            ((MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) * 2) + 1)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("MagiQuest: "));
-        Serial.println(F("Magnitude + checksum decode failed"));
+    decodePulseDistanceWidthData_P(&MagiQuestProtocolConstants, MAGIQUEST_MAGNITUDE_BITS + MAGIQUEST_CHECKSUM_BITS,
+            ((MAGIQUEST_WAND_ID_BITS + MAGIQUEST_START_BITS) * 2) + 1);
+
+#if defined(USE_THRESHOLD_DECODER)
+    decodedIRData.decodedRawData = decodedIRData.decodedRawData ^ 0x0001FFFF; // We have 17 bit. For Magiquest a small pause is a 1 which is inverse to threshold decoding
+
 #endif
-        return false;
-    }
 
 #if defined(LOCAL_DEBUG)
     Serial.print(F("Magnitude + checksum=0x"));

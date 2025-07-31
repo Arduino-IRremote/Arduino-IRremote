@@ -54,6 +54,7 @@
  * - EXCLUDE_EXOTIC_PROTOCOLS           If activated, BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF are excluded in decode() and in sending with IrSender.write().
  * - EXCLUDE_UNIVERSAL_PROTOCOLS        If activated, the universal decoder for pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in decode().
  * - DECODE_*                           Selection of individual protocols to be decoded. See below.
+ * - USE_THRESHOLD_DECODER              May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses.
  * - MARK_EXCESS_MICROS                 Value is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules.
  * - RECORD_GAP_MICROS                  Minimum gap between IR transmissions, to detect the end of a protocol.
  * - FEEDBACK_LED_IS_ACTIVE_LOW         Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low.
@@ -74,60 +75,7 @@
 // activate it for all cores that does not use the -flto flag, if you get false error messages regarding begin() during compilation.
 //#define SUPPRESS_ERROR_MESSAGE_FOR_BEGIN
 
-/*
- * If activated, BANG_OLUFSEN, BOSEWAVE, MAGIQUEST, WHYNTER, FAST and LEGO_PF are excluded in decoding and in sending with IrSender.write
- */
-//#define EXCLUDE_EXOTIC_PROTOCOLS
-/****************************************************
- *                     PROTOCOLS
- ****************************************************/
-/*
- * Supported IR protocols
- * Each protocol you include costs memory and, during decode, costs time
- * Copy the lines with the protocols you need in your program before the  #include <IRremote.hpp> line
- * See also SimpleReceiver example
- */
-
-#if !defined(NO_DECODER) // for sending raw only
-#  if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
-|| defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_ONKYO) || defined(DECODE_SAMSUNG) \
-|| defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) \
-|| defined(DECODE_DISTANCE_WIDTH) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
-|| defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_FAST) || defined(DECODE_WHYNTER)))
-/*
- * If no protocol is explicitly enabled, we enable all protocols
- */
-#define DECODE_DENON        // Includes Sharp
-#define DECODE_JVC
-#define DECODE_KASEIKYO
-#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
-#define DECODE_LG
-#define DECODE_NEC          // Includes Apple and Onkyo
-#define DECODE_SAMSUNG
-#define DECODE_SONY
-#define DECODE_RC5
-#define DECODE_RC6
-
-#    if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program memory
-#define DECODE_BOSEWAVE
-#define DECODE_LEGO_PF
-#define DECODE_MAGIQUEST
-#define DECODE_WHYNTER
-#define DECODE_FAST
-#    endif
-
-#    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
-#define DECODE_DISTANCE_WIDTH     // universal decoder for pulse distance width protocols - requires up to 750 bytes additional program memory
-#define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program memory
-#    endif
-#  endif
-#endif // !defined(NO_DECODER)
-
-//#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly. It prevents decoding of SONY!
-
-#if defined(DECODE_NEC) && !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)
-#warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."
-#endif
+#include "IRProtocol.h"
 
 //#define DEBUG // Activate this for lots of lovely debug output from the IRremote core.
 
@@ -143,8 +91,6 @@
  * At 100 us it also worked, but not as well.
  * Set MARK_EXCESS to 100 us and the VS1838 doesn't work at all.
  *
- * The right value is critical for IR codes using short pulses like Denon / Sharp / Lego
- *
  *  Observed values:
  *  Delta of each signal type is around 50 up to 100 us and at low signals up to 200 us.
  *  TSOP is better, especially at low IR signal level.
@@ -152,8 +98,12 @@
  *  TSOP31238   Mark Excess 0 to +50
  */
 #if !defined(MARK_EXCESS_MICROS)
+#  if defined(USE_THRESHOLD_DECODER)
+#define MARK_EXCESS_MICROS    0 // MARK_EXCESS_MICROS is not very relevant here, so we set it to 0 to save up to 164 bytes programming space
+#  else
 // To override this value, you simply can add a line #define "MARK_EXCESS_MICROS <My_new_value>" in your ino file before the line "#include <IRremote.hpp>"
-#define MARK_EXCESS_MICROS    20
+#define MARK_EXCESS_MICROS    20 // a value != 0 requires up to 100 bytes program space
+#  endif
 #endif
 
 /**

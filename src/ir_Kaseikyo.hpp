@@ -119,7 +119,7 @@
 #define JVC_VENDOR_ID_CODE          0x0103
 
 struct PulseDistanceWidthProtocolConstants const KaseikyoProtocolConstants PROGMEM = {KASEIKYO, KASEIKYO_KHZ, KASEIKYO_HEADER_MARK,
-    KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST
+    KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE
     , (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
 
 /************************************
@@ -213,13 +213,7 @@ bool IRrecv::decodeKaseikyo() {
     }
 
     // decode first 16 Vendor ID bits
-    if (!decodePulseDistanceWidthData_P(&KaseikyoProtocolConstants, KASEIKYO_VENDOR_ID_BITS)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Kaseikyo: "));
-        Serial.println(F("Vendor ID decode failed"));
-#endif
-        return false;
-    }
+    decodePulseDistanceWidthData_P(&KaseikyoProtocolConstants, KASEIKYO_VENDOR_ID_BITS);
 
     uint16_t tVendorId = decodedIRData.decodedRawData;
     if (tVendorId == PANASONIC_VENDOR_ID_CODE) {
@@ -243,15 +237,9 @@ bool IRrecv::decodeKaseikyo() {
     /*
      * Decode next 32 bits, 8 VendorID parity parity + 12 address (device and subdevice) + 8 command + 8 parity
      */
-    if (!decodePulseDistanceWidthData_P(&KaseikyoProtocolConstants,
+    decodePulseDistanceWidthData_P(&KaseikyoProtocolConstants,
     KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,
-            3 + (2 * KASEIKYO_VENDOR_ID_BITS))) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Kaseikyo: "));
-        Serial.println(F("VendorID parity, address, command + parity decode failed"));
-#endif
-        return false;
-    }
+            3 + (2 * KASEIKYO_VENDOR_ID_BITS));
 
     // Success
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value

@@ -81,7 +81,7 @@
 #define JVC_REPEAT_PERIOD     65000 // assume around 40 ms for a JVC frame. JVC IR Remotes: RM-SA911U, RM-SX463U have 45 ms period
 
 struct PulseDistanceWidthProtocolConstants const JVCProtocolConstants PROGMEM = {JVC, JVC_KHZ, JVC_HEADER_MARK, JVC_HEADER_SPACE, JVC_BIT_MARK,
-    JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
+    JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -153,15 +153,8 @@ bool IRrecv::decodeJVC() {
             return false;
         }
 
-        if (!decodePulseDistanceWidthData_P(&JVCProtocolConstants, JVC_BITS)) {
-#if defined(LOCAL_DEBUG)
-            Serial.print(F("JVC: "));
-            Serial.println(F("Decode failed"));
-#endif
-            return false;
-        }
+        decodePulseDistanceWidthData_P(&JVCProtocolConstants, JVC_BITS);
 
-        // Success
 //    decodedIRData.flags = IRDATA_FLAGS_IS_LSB_FIRST; // Not required, since this is the start value
         decodedIRData.command = decodedIRData.decodedRawData >> JVC_ADDRESS_BITS;  // upper 8 bits of LSB first value
         decodedIRData.address = decodedIRData.decodedRawData & 0xFF;    // lowest 8 bit of LSB first value
@@ -208,9 +201,7 @@ bool IRrecv::decodeJVCMSB(decode_results *aResults) {
     }
     offset++;
 
-    if (!decodePulseDistanceWidthData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST)) {
-        return false;
-    }
+    decodePulseDistanceWidthData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST);
 
     // Stop bit
     if (!matchMark(aResults->rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {

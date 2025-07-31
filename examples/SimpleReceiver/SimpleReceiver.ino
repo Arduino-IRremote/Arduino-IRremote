@@ -62,6 +62,7 @@
 
 //#define DEBUG               // Activate this for lots of lovely debug output from the decoders.
 
+//#define USE_THRESHOLD_DECODER  // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Saves 110 bytes program memory.
 //#define RAW_BUFFER_LENGTH  750 // For air condition remotes it may require up to 750. Default is 200.
 
 /*

@@ -149,7 +149,34 @@ struct irparams_struct {
 
 extern unsigned long sMicrosAtLastStopTimer; // Used to adjust TickCounterForISR with uncounted ticks between stopTimer() and restartTimer()
 
-#include "IRProtocol.h"
+#define DECODED_RAW_DATA_ARRAY_SIZE     ((((RAW_BUFFER_LENGTH - 2) - 1) / (2 * BITS_IN_RAW_DATA_TYPE)) + 1) // The -2 is for initial gap + stop bit mark, 128 mark + spaces for 64 bit.
+/**
+ * Data structure for the user application, available as decodedIRData.
+ * Filled by decoders and read by print functions or user application.
+ */
+struct IRData {
+    decode_type_t protocol; ///< UNKNOWN, NEC, SONY, RC5, PULSE_DISTANCE, ...
+    uint16_t address; ///< Decoded address, Distance protocol (tMarkTicksLong (if tMarkTicksLong == 0, then tMarkTicksShort) << 8) | tSpaceTicksLong
+    uint16_t command;       ///< Decoded command, Distance protocol (tMarkTicksShort << 8) | tSpaceTicksShort
+    uint16_t extra; ///< Contains upper 16 bit of Magiquest WandID, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks << 8) | HeaderSpaceTicks.
+    IRRawDataType decodedRawData; ///< Up to 32/64 bit decoded raw data, to be used for send functions.
+#if defined(DECODE_DISTANCE_WIDTH)
+    // This replaces the address, command, extra and decodedRawData in case of protocol == PULSE_DISTANCE or -rather seldom- protocol == PULSE_WIDTH.
+    DistanceWidthTimingInfoStruct DistanceWidthTimingInfo; // 12 bytes
+    IRRawDataType decodedRawDataArray[DECODED_RAW_DATA_ARRAY_SIZE]; ///< 32/64 bit decoded raw data, to be used for send function.
+#endif
+    uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
+    uint8_t flags;          ///< IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above
+
+    /*
+     * These 2 variables allow to call resume() directly after decode.
+     * After resume(), irparams.initialGapTicks and irparams.rawlen are
+     * the first variables, which are overwritten by the next received frame.
+     * since 4.3.0.
+     */
+    IRRawlenType rawlen;        ///< counter of entries in rawbuf of last received frame.
+    uint16_t initialGapTicks;   ///< contains the initial gap (pre 4.4: the value in rawbuf[0]) of the last received frame.
+};
 
 /*
  * Debug directives
@@ -279,6 +306,7 @@ public:
 #endif
     static void printActiveIRProtocols(Print *aSerial);
 
+    void printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true, bool aDoCompensate = true);
     void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void compensateAndPrintIRResultAsPronto(Print *aSerial, uint16_t frequency = 38000U);
 
@@ -291,19 +319,22 @@ public:
     /*
      * The main decoding functions used by the individual decoders
      */
-    bool decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
+    void decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
             IRRawlenType aStartOffset = 3);
 
-    bool decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
+    void decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
             uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset = 3);
 
-    bool decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
+    void decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMicros,
+            bool aIsPulseWidthProtocol, bool aMSBfirst);
+
+    void decodeWithThresholdPulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset,
+            uint16_t aOneThresholdMicros, bool aIsPulseWidthProtocol, bool aMSBfirst);
+
+    void decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
             uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, bool aMSBfirst);
 
-    bool decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneThresholdMicros,
-            bool aIsPulseDistanceProtocol, bool aMSBfirst);
-
-    bool decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
+    void decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
             uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst)
                     __attribute__ ((deprecated ("Please use decodePulseDistanceWidthData() with 6 parameters.")));
 
@@ -389,12 +420,18 @@ public:
     uint8_t repeatCount;        // Used e.g. for Denon decode for autorepeat decoding.
 };
 
-extern uint_fast8_t sBiphaseDecodeRawbuffOffset; //
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap)  __attribute__ ((deprecated ("Remove last parameter, it is not supported any more.")));
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr) __attribute__ ((deprecated ("Use member function or printIRDataShort() instead.")));;
+// A static function to be able to print send or copied received data.
+void printIRDataShort(Print *aSerial, IRData *aIRDataPtr);
+
+extern uint_fast8_t sBiphaseDecodeRawbuffOffset;
 
 /*
  * Mark & Space matching functions
  */
 bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
+bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks);
 bool matchMark(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
 bool matchSpace(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
 
@@ -439,8 +476,8 @@ void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please us
 
 #define TICKS(us)       ((us)/MICROS_PER_TICK)  // (us)/50
 #if MICROS_PER_TICK == 50 && TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT == 25           // Defaults
-#define TICKS_LOW(us)   ((us)/67 )              // 67 = MICROS_PER_TICK / ((100-25)/100) = (MICROS_PER_TICK * 100) / (100-25)
-#define TICKS_HIGH(us)  (((us)/40) + 1)         // 40 = MICROS_PER_TICK / ((100+25)/100) = (MICROS_PER_TICK * 100) / (100+25)
+#define TICKS_LOW(us)   ((us)/67 )       // =(us * 0.75 /MICROS_PER_TICK), 67 = MICROS_PER_TICK / ((100-25)/100) = (MICROS_PER_TICK * 100) / (100-25)
+#define TICKS_HIGH(us)  (((us)/40) + 1)  // =(us * 1,25 /MICROS_PER_TICK), 40 = MICROS_PER_TICK / ((100+25)/100) = (MICROS_PER_TICK * 100) / (100+25)
 #else
 /** Lower tolerance for comparison of measured data */
 //#define LTOL            (1.0 - (TOLERANCE/100.))

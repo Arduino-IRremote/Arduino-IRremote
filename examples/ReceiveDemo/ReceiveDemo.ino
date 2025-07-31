@@ -48,7 +48,6 @@
 //#define DECODE_KASEIKYO
 //#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
 //#define DECODE_LG
-//#define DECODE_ONKYO        // Decodes only Onkyo and not NEC or Apple
 //#define DECODE_NEC          // Includes Apple and Onkyo
 //#define DECODE_SAMSUNG
 //#define DECODE_SONY
@@ -61,6 +60,7 @@
 //#define DECODE_FAST
 //#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 //#define DECODE_HASH         // special decoder for all protocols
+//#define DECODE_ONKYO        // Disables NEC and Apple
 //#define DECODE_BEO          // This protocol must always be enabled manually, i.e. it is NOT enabled if no protocol is defined. It prevents decoding of SONY!
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
 // !!! Enabling B&O disables detection of Sony, because the repeat gap for SONY is smaller than the B&O frame gap :-( !!!
@@ -95,7 +95,9 @@
 //#define NO_LED_FEEDBACK_CODE // saves 92 bytes program memory
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
+//#define USE_THRESHOLD_DECODER   // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Requires additional 1 bytes program memory.
 //#define IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK // saves 32 bytes program memory
+
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 135.
 // 20 is taken as default if not otherwise specified / defined.
@@ -176,8 +178,13 @@ void setup() {
     // infos for receive
     Serial.print(RECORD_GAP_MICROS);
     Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
+
+#  if defined(USE_THRESHOLD_DECODER)
+    Serial.println(F("Threshold decoding is active and thus MARK_EXCESS_MICROS is set to 0"));
+#  else
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
+#  endif
 #endif // FLASHEND >= 0x3FFF
 }
 
@@ -228,7 +235,7 @@ void loop() {
 #if defined(DEBUG_BUTTON_PIN)
                     || digitalRead(DEBUG_BUTTON_PIN) == LOW
 #endif
-           ) {
+            ) {
                 // We have debug enabled or an unknown protocol, print extended info
                 if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                     Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));

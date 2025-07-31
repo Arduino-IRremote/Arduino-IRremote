@@ -59,6 +59,7 @@
 #endif
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
+//#define USE_THRESHOLD_DECODER   // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Requires additional 120 bytes program memory.
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 135.
@@ -124,7 +125,7 @@ bool ProtocolStringOverwritesVoltage = false;
 void printsVCCVoltageMillivoltOnLCD();
 void printIRResultOnLCD();
 size_t printByteHexOnLCD(uint16_t aHexByteValue);
-void printSpacesOnLCD(uint_fast8_t aNumberOfSpacesToPrint);
+void printSpacesOnLCD(int_fast8_t aNumberOfSpacesToPrint);
 
 #endif // defined(USE_SERIAL_LCD) || defined(USE_PARALLEL_LCD)
 
@@ -184,8 +185,13 @@ void setup() {
     // Info for receive
     Serial.print(RECORD_GAP_MICROS);
     Serial.println(F(" us is the (minimum) gap, after which the start of a new IR packet is assumed"));
+
+#  if defined(USE_THRESHOLD_DECODER)
+    Serial.println(F("Threshold decoding is active and thus MARK_EXCESS_MICROS is set to 0"));
+#  else
     Serial.print(MARK_EXCESS_MICROS);
     Serial.println(F(" us are subtracted from all marks and added to all spaces for decoding"));
+#  endif
 #endif
 
 #if defined(USE_LCD) && defined(ADC_UTILS_ARE_AVAILABLE)
@@ -368,17 +374,14 @@ void printIRResultOnLCD() {
         uint_fast8_t tPrintedStringLength = myLCD.print(tNumberOfBits);
         myLCD.print(F(" bit "));
 
-        if (IrReceiver.decodedIRData.decodedRawData != 0) {
-            if (tNumberOfBits < 10) {
-                myLCD.print('0');
-                tPrintedStringLength++;
-            }
-            myLCD.print('x');
-            tPrintedStringLength += myLCD.print(IrReceiver.decodedIRData.decodedRawData, HEX) + 1;
-        } else {
-            tPrintedStringLength += myLCD.print(IrReceiver.getTotalDurationOfRawData());
-            myLCD.print(F(" \xE4s")); // \xE4 is micro symbol
+        if (tNumberOfBits < 10) {
+            myLCD.print('0');
+            tPrintedStringLength++;
         }
+        if (tNumberOfBits < 100) {
+            myLCD.print('x');
+        }
+        tPrintedStringLength += myLCD.print(IrReceiver.decodedIRData.decodedRawData, HEX) + 1;
         printSpacesOnLCD(11 - tPrintedStringLength);
         sLastProtocolAddress = 4711;
         sLastCommand = 44711;
@@ -386,7 +389,7 @@ void printIRResultOnLCD() {
     } else {
         /*
          * Protocol is know here
-         * Print address only if it has changed
+         * Print address only if it has changed or is PULSE_DISTANCE or PULSE_WIDTH
          */
         if (sLastProtocolAddress != IrReceiver.decodedIRData.address || IrReceiver.decodedIRData.protocol == PULSE_DISTANCE
                 || IrReceiver.decodedIRData.protocol == PULSE_WIDTH) {
@@ -473,9 +476,11 @@ size_t printByteHexOnLCD(uint16_t aHexByteValue) {
     return myLCD.print(aHexByteValue, HEX) + tPrintSize;
 }
 
-void printSpacesOnLCD(uint_fast8_t aNumberOfSpacesToPrint) {
-    for (uint_fast8_t i = 0; i < aNumberOfSpacesToPrint; ++i) {
-        myLCD.print(' ');
+void printSpacesOnLCD(int_fast8_t aNumberOfSpacesToPrint) {
+    if (aNumberOfSpacesToPrint > 0) {
+        for (uint_fast8_t i = 0; i < aNumberOfSpacesToPrint; ++i) {
+            myLCD.print(' ');
+        }
     }
 }
 #endif // defined(USE_LCD)
