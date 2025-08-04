@@ -319,7 +319,12 @@ public:
     /*
      * The main decoding functions used by the individual decoders
      */
-    void decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
+#if defined(USE_STRICT_DECODER)
+    bool
+#else
+    void
+#endif
+    decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
             IRRawlenType aStartOffset = 3);
 
     void decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
@@ -338,8 +343,8 @@ public:
             uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst)
                     __attribute__ ((deprecated ("Please use decodePulseDistanceWidthData() with 6 parameters.")));
 
-    bool decodePulseDistanceWidthDataStrict(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
-            uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst);
+    bool decodeStrictPulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
+            uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst);
 
     bool decodeBiPhaseData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint_fast8_t aStartClockCount,
             uint_fast8_t aValueOfSpaceToMarkTransition, uint16_t aBiphaseTimeUnit);
@@ -420,8 +425,11 @@ public:
     uint8_t repeatCount;        // Used e.g. for Denon decode for autorepeat decoding.
 };
 
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap)  __attribute__ ((deprecated ("Remove last parameter, it is not supported any more.")));
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr) __attribute__ ((deprecated ("Use member function or printIRDataShort() instead.")));;
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap)
+        __attribute__ ((deprecated ("Remove last parameter, it is not supported any more.")));
+void printIRResultShort(Print *aSerial, IRData *aIRDataPtr)
+        __attribute__ ((deprecated ("Use member function or printIRDataShort() instead.")));
+;
 // A static function to be able to print send or copied received data.
 void printIRDataShort(Print *aSerial, IRData *aIRDataPtr);
 

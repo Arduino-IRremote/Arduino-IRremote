@@ -46,7 +46,8 @@
 
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 //#define EXCLUDE_EXOTIC_PROTOCOLS  // Saves around 240 bytes program memory if IrSender.write is used
-//#define USE_THRESHOLD_DECODER   // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Requires additional 458 bytes program memory.
+//#define USE_THRESHOLD_DECODER   // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Requires additional 24 bytes program memory.
+//#define USE_STRICT_DECODER      // Check for additional required characteristics of protocol timing. Requires 300 additional bytes program memory.
 //#define USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN // Reverses the polarity at the send pin.
 //#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN  // Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
@@ -87,9 +88,7 @@
 #define DECODE_SONY
 #define DECODE_SAMSUNG
 #define DECODE_LG
-#  if defined(USE_THRESHOLD_DECODER)
 #define DECODE_LEGO_PF // LEGO is skipped, since it is difficult to receive because of its short marks and spaces
-#  endif
 #endif
 
 #define DECODE_BEO // It prevents decoding of SONY (default repeats), which we are not using here.

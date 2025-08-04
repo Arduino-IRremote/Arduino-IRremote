@@ -85,15 +85,15 @@ jobs:
         include:
           - arduino-boards-fqbn: arduino:avr:uno
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              ReceiveDemo: -DUSE_STRICT_DECODER -DDEBUG -DIR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
               SimpleSender: -DUSE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN
-              ReceiveDemo: -DIR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK
               IRremoteExtensionTest: -DRAW_BUFFER_LENGTH=1200 -DIR_SEND_PIN=3
 
           - arduino-boards-fqbn: arduino:avr:uno|DEBUG_TRACE
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              UnitTest: -DUSE_THRESHOLD_DECODER
-              IRremoteExtensionTest: -DIR_SEND_PIN=3
-              TinyReceiver: -DUSE_CALLBACK_FOR_TINY_RECEIVER
+              ReceiveDemo: -DUSE_THRESHOLD_DECODER -DEBUG -DTRACE
+              IRremoteExtensionTest: -DIR_SEND_PIN=3 -DEBUG -DTRACE
+              TinyReceiver: -DUSE_CALLBACK_FOR_TINY_RECEIVER -DEBUG -DTRACE
               All: -DEBUG -DTRACE
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_NO_SEND_PWM
