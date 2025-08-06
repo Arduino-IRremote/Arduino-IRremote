@@ -7,7 +7,7 @@ A library enabling the sending & receiving of infra-red signals.
  &nbsp; &nbsp;
 [![Badge Version](https://img.shields.io/github/v/release/Arduino-IRremote/Arduino-IRremote?include_prereleases&style=for-the-badge&color=33660e&labelColor=428813&logoColor=white&logo=DocuSign)](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/latest)
  &nbsp; &nbsp;
-[![Badge Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremoteMultipleMultiple/Arduino-IRremote/latest?style=for-the-badge&color=004463&labelColor=00557f)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
+[![Badge Commits since latest](https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest?style=for-the-badge&color=004463&labelColor=00557f)](https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master)
  &nbsp; &nbsp;
 [![Badge LibraryBuild](https://img.shields.io/github/actions/workflow/status/Arduino-IRremote/Arduino-IRremote/LibraryBuild.yml?branch=master&style=for-the-badge&color=551f47&labelColor=752a61)](https://github.com/Arduino-IRremote/Arduino-IRremote/actions)
 <br/>
@@ -34,6 +34,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [Supported IR Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#supported-ir-protocols)
 - [Common problem with IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#common-problem-with-irremote)
 - [Using the new library version for old examples](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#using-the-new-library-version-for-old-examples)
+  * [New features of version 4.5](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-45)
   * [New features of version 4.x](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-4x)
   * [New features of version 3.x](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-3x)
   * [Converting your 2.x program to the 4.x version](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#converting-your-2x-program-to-the-4x-version)
@@ -123,8 +124,14 @@ See [this table](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme
 # Using the new library version for old examples
 This library has been refactored, breaking backward compatibility with the old version, on which many examples on the Internet are based.
 
+## New features of version 4.5
+- Support for **multiple receiver instances**.
+- LED feedback is always enabled for sending. It can only be disabled by using `#define NO_LED_SEND_FEEDBACK_CODE` or `#define NO_LED_FEEDBACK_CODE`.
+- The second parameter of the function `IrSender.begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback)` has changed to `uint_fast8_t aFeedbackLEDPin`. Therefore this function call no longer works as expected because it uses the old boolean value of e.g. `ENABLE_LED_FEEDBACK` which evaluates to true or 1 as pin number of the LED feedback pin number.
+- New experimental Velux send function.
+
 ## New features of version 4.x
-- **Since 4.3 `IrSender.begin(DISABLE_LED_FEEDBACK)` will no longer work**, use `IrSender.begin(DISABLE_LED_FEEDBACK, 0)` instead.
+- **Since 4.3 `IrSender.begin(DISABLE_LED_FEEDBACK)` will no longer work**, use `#define NO_LED_SEND_FEEDBACK_CODE` instead.
 - New universal **Pulse Distance / Pulse Width / Pulse Distance Width decoder** added, which covers many previous unknown protocols.
 - Printout of code how to send received command by `IrReceiver.printIRSendUsage(&Serial)`.
 - RawData type is now 64 bit for 32 bit platforms and therefore `decodedIRData.decodedRawData` can contain complete frame information for more protocols than with 32 bit as before.
@@ -163,21 +170,19 @@ if you get false error messages regarding begin() during compilation.
 
 - **IRreceiver** and **IRsender** object have been added and can be used without defining them, like the well known Arduino **Serial** object.
 - Just remove the line `IRrecv IrReceiver(IR_RECEIVE_PIN);` and/or `IRsend IrSender;` in your program and replace all occurrences of `IRrecv.` or `irrecv.` with `IrReceiver` and replace all `IRsend` or `irsend` with `IrSender`.
-- Since the decoded values are now in `IrReceiver.decodedIRData` and not in `results` any more, remove the line `decode_results results` or similar.
 - Like for the Serial object, call [`IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK)`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L106)
  or `IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK)` instead of the `IrReceiver.enableIRIn()` or `irrecv.enableIRIn()` in setup().<br/>
-For sending, call `IrSender.begin();` in setup().<br/>
-If IR_SEND_PIN is not defined (before the line `#include <IRremote.hpp>`) you must use e.g. `IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN);`
+If IR_SEND_PIN is not defined (before the line `#include <IRremote.hpp>`) you must use e.g. `IrSender.begin(3);`
 - Old `decode(decode_results *aResults)` function is replaced by simple `decode()`. So if you have a statement `if(irrecv.decode(&results))` replace it with `if (IrReceiver.decode())`.
 - The decoded result is now in in `IrReceiver.decodedIRData` and not in `results` any more, therefore replace any occurrences of `results.value` and `results.decode_type` (and similar) to
  `IrReceiver.decodedIRData.decodedRawData` and `IrReceiver.decodedIRData.protocol`.
 - Overflow, Repeat and other flags are now in [`IrReceiver.receivedIRData.flags`](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRProtocol.h#L90-L101).
-- Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.irparams.rawbuf` and `IrReceiver.irparams.rawlen`.
+- Seldom used: `results.rawbuf` and `results.rawlen` must be replaced by `IrReceiver.irparams.rawbuf` and `IrReceiver.decodedIRData.rawlen`.
 
 - The 5 protocols **NEC, Panasonic, Sony, Samsung and JVC** have been converted to LSB first. Send functions for sending old MSB data were renamed to `sendNECMSB`, `sendSamsungMSB()`, `sendSonyMSB()` and `sendJVCMSB()`.
 The old  `sendSAMSUNG()` and `sendSony()` MSB functions are still available.
 The old MSB version of `sendPanasonic()` function was deleted, since it had bugs nobody recognized and therefore was assumed to be never used.<br/>
-For converting MSB codes to LSB see [below](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes).
+For converting MSB codes to LSB see [below](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes) or use the new functions `bitreverseOneByte()` or `bitreverse32Bit()` for reversing.
 
 ### Example
 #### Old 2.x program:
@@ -245,7 +250,8 @@ Send with: IrSender.sendKaseikyo_Denon(0xFF1, 0x76, <numberOfRepeats>);
 ## How to convert old MSB first 32 bit IR data codes to new LSB first 32 bit IR data codes
 For the new decoders for **NEC, Panasonic, Sony, Samsung and JVC**, the result `IrReceiver.decodedIRData.decodedRawData` is now **LSB-first**, as the definition of these protocols suggests!<br/>
 <br/>
-To convert one into the other, you must reverse the nibble (4 bit / Hex numbers) positions and then reverse all bit positions of each nibble or write it as one binary string and reverse/mirror it.
+To convert one into the other, you must reverse the nibble (4 bit / Hex numbers) positions and then reverse all bit positions of each nibble or write it as one binary string and reverse/mirror it.<br/>
+This can be done by using the new functions `bitreverseOneByte()` or `bitreverse32Bit()`.
 
 ### Nibble reverse
 `0xCB 34 01 02` MSB value<br/>
@@ -264,9 +270,6 @@ To convert one into the other, you must reverse the nibble (4 bit / Hex numbers)
 If you **read the first binary sequence backwards** (right to left), you get the second sequence.<br/>
 `0xCB340102` is binary `1100 1011 0011 0100 0000 0001 0000 0010`.<br/>
 `0x40802CD3` is binary `0100 0000 1000 0000 0010 1100 1101 0011`.
-
-### IRremote functions
-Use `bitreverseOneByte()` or `bitreverse32Bit()` for reversing.
 
 ### Online tool which reverses every byte, but not the order of the bytes
 Use this [tool provided by analysir](https://www.analysir.com/hex2nec.php).
@@ -287,7 +290,7 @@ Most likely your code will run and you will not miss the new features.
 Consider using the [original 2.4 release form 2017](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0)
 or the last backwards compatible [2.8 version](https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/2.8.0) for you project.<br/>
 It may be sufficient and deals flawlessly with 32 bit IR codes.<br/>
-If this doesn't fit your case, be assured that 4.x is at least trying to be backwards compatible, so your old examples should still work fine.
+If this doesn't work for you, you can be sure that 4.x is trying to be compatible with earlier versions, so your old examples should work just fine.
 
 ### Drawbacks of using 2.x
 - Only the following decoders are available:<br/>
@@ -302,10 +305,10 @@ If this doesn't fit your case, be assured that 4.x is at least trying to be back
 **Every \*.cpp file is compiled separately** by a call of the compiler exclusively for this cpp file. These calls are managed by the IDE / make system.
 In the Arduino IDE the calls are executed when you click on *Verify* or *Upload*.
 
-And now our problem with Arduino is:<br/>
+And now **our problem with Arduino** is:<br/>
 **How to set [compile options](#compile-options--macros-for-this-library) for all *.cpp files, especially for libraries used?**<br/>
-IDE's like [Sloeber](https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-sloeber-ide) or
-[PlatformIO](https://github.com/ArminJo/ServoEasing#modifying-compile-options--macros-with-platformio) support this by allowing to specify a set of options per project.
+IDE's like [Sloeber](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#modifying-compile-options--macros-with-sloeber-ide) or
+[PlatformIO](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#modifying-compile-options--macros-with-platformio) support this by allowing to specify a set of options per project.
 They add these options at each compiler call e.g. `-DTRACE`.
 
 But Arduino lacks this feature.
@@ -313,10 +316,10 @@ So the **workaround** is not to compile all sources separately, but to concatena
 This is done by e.g. `#include "IRremote.hpp"`.
 
 But why not `#include "IRremote.cpp"`?<br/>
-Try it and you will see tons of errors, because each function of the *.cpp file is now compiled twice,
-first by compiling the huge file and second by compiling the *.cpp file separately, like described above.<br/>
-So using the extension *cpp* is not longer possible, and one solution is to use *hpp* as extension, to show that it is an included *.cpp file.<br/>
-Every other extension e.g. *cinclude* would do, but *hpp* seems to be common sense.
+If you try it, you will see lots of errors, because each function of the *.cpp file is now compiled twice:<br/>
+first when the huge file is compiled, and second when the .cpp file is compiled separately, as described above.<br/>
+Therefore, using the **.cpp** extension is no longer possible. One solution is to use the **.hpp** extension to indicate that it is an included .cpp file.<br/>
+Any other extension would work, e.g. *cinclude*, but *hpp* seems to be common sense.
 
 # Using the new *.hpp files
 In order to support [compile options](#compile-options--macros-for-this-library) more easily,
@@ -404,15 +407,19 @@ struct IRData {
     uint16_t address;           // Decoded address
     uint16_t command;           // Decoded command
     uint16_t extra;             // Used for Kaseikyo unknown vendor ID. Ticks used for decoding Distance protocol.
+    IRRawDataType decodedRawData; // Up to 32 (64 bit for 32 bit CPU architectures) bit decoded raw data, used for send<protocol>Raw functions.
+#if defined(DECODE_DISTANCE_WIDTH)
+    DistanceWidthTimingInfoStruct DistanceWidthTimingInfo; // 12 bytes
+    IRRawDataType decodedRawDataArray[DECODED_RAW_DATA_ARRAY_SIZE]; // 32/64 bit decoded raw data, to be used for sendPulseDistanceWidthFromArray functions.
+#endif
     uint16_t numberOfBits;      // Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;              // IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions
-    IRRawDataType decodedRawData;    // Up to 32 (64 bit for 32 bit CPU architectures) bit decoded raw data, used for sendRaw functions.
-    uint32_t decodedRawDataArray[RAW_DATA_ARRAY_SIZE]; // 32 bit decoded raw data, to be used for send function.
-    irparams_struct *rawDataPtr; // Pointer of the raw timing data to be decoded. Mainly the data buffer filled by receiving ISR.
+    IRRawlenType rawlen;        // Counter of entries in rawbuf of last received frame.
+    uint16_t initialGapTicks;   // Contains the initial gap of the last received frame.
 };
 ```
 #### Flags
-This is the [list of flags](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRProtocol.h#L88) contained in the flags field.<br/>
+This is the [list of flags](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRProtocol.h#L143) contained in the flags field.<br/>
 Check it with e.g. `if(IrReceiver.decodedIRData.flags & IRDATA_FLAGS_IS_REPEAT)`.
 
 | Flag name | Description |
@@ -912,7 +919,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time. |
 | `NO_LED_RECEIVE_FEEDBACK_CODE` | disabled | Disables the LED feedback code for receive. Saves around 100 bytes program memory for receiving and halving the receiver ISR (Interrupt Service Routine) processing time. |
-| `NO_LED_SEND_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send. Saves around  500 bytes for sending. |
+| `NO_LED_SEND_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send. Saves around 322 bytes for sending. |
 | `MICROS_PER_TICK` | 50 | Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 &micro;s at 38 kHz. |
 | `TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT` | 25 | Relative tolerance for matchTicks(), matchMark() and matchSpace() functions used for protocol decoding. |
 | `DEBUG` | disabled | Enables lots of lovely debug output. |
@@ -1089,10 +1096,10 @@ This works on AVR boards like Uno because each call to` tone()` completely initi
 If you define `SEND_PWM_BY_TIMER`, the send PWM signal is forced to be generated by a hardware timer on most platforms.<br/>
 By default, the same timer as for the receiver is used.<br/>
 Since each hardware timer has its dedicated output pin(s), you must change timer or timer sub-specifications to change PWM output pin. See [private/IRTimer.hpp](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/private/IRTimer.hpp)<br/>
-**Exceptions** are currently [ESP32, ARDUINO_ARCH_RP2040, PARTICLE and ARDUINO_ARCH_MBED](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleSender/PinDefinitionsAndMore.h#L334),where **PWM generation does not require a timer**.
+**Exceptions** are currently [ESP32, ARDUINO_ARCH_RP2040, PARTICLE and ARDUINO_ARCH_MBED](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleSender/PinDefinitionsAndMore.h#L341), where **PWM generation does not require a timer**.
 
 ## Why do we use 30% duty cycle for sending
-We [do it](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRSend.hpp#L1192) according to the statement in the [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf):
+We [do it](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRSend.hpp#L1194) according to the statement in the [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf):
 - Carrier duty cycle 50 %, peak current of emitter IF = 200 mA, the resulting transmission distance is 25 m.
 - Carrier duty cycle 10 %, peak current of emitter IF = 800 mA, the resulting transmission distance is 29 m. - Factor 1.16
 The reason is, that it is not the pure energy of the fundamental which is responsible for the receiver to detect a signal.
@@ -1103,14 +1110,14 @@ Due to automatic gain control and other bias effects, high intensity of the 38 k
 # How we decode signals
 The IR signal is sampled at a **50 &micro;s interval**. For a constant 525 &micro;s pulse or pause we therefore get 10 or 11 samples, each with 50% probability.<br/>
 And believe me, if you send a 525 &micro;s signal, your receiver will output something between around 400 and 700 &micro;s!<br/>
-Therefore **we decode by default with a +/- 25% margin** using the formulas [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L376-L399).<br/>
+Therefore **we decode by default with a +/- 25% margin** using the formulas [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremoteInt.h#L469-L491).<br/>
 E.g. for the NEC protocol with its 560 &micro;s unit length, we have TICKS_LOW = 8.358 and TICKS_HIGH = 15.0.
 This means, we accept any value between 8 ticks / 400 &micro;s and 15 ticks / 750 &micro;s (inclusive) as a mark or as a zero space.
 For a one space we have TICKS_LOW = 25.07 and TICKS_HIGH = 45.0.<br/>
 And since the receivers generated marks are longer or shorter than the spaces,
 we have introduced the [`MARK_EXCESS_MICROS`](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#compile-options--macros-for-this-library) macro
-to compensate for this receiver (and signal strength as well as ambient light dependent :disappointed: ) specific deviation.<br/>
-Welcome to the world of **real world signal processing**.
+to compensate for this receiver and signal strength as well as ambient light dependent :disappointed: specific deviation.<br/>
+**Welcome to the world of real world signal processing**.
 
 <br/>
 

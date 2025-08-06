@@ -19,6 +19,7 @@
 #endif
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
+//#define NO_LED_FEEDBACK_CODE      // Saves 216 bytes program memory
 
 /*
  * This include defines the actual pin number for pins like IR_RECEIVE_PIN, IR_SEND_PIN for many different boards and architectures
@@ -37,10 +38,10 @@ void setup() {
     Serial.println(IR_SEND_PIN);
 
     /*
-     * The IR library setup. That's all!
+     * No IR library setup required :-)
+     * Default is to use IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin
+     * and use feedback LED at default feedback LED pin if not disabled by #define NO_LED_SEND_FEEDBACK_CODE
      */
-    IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
-    disableLEDFeedback(); // Disable feedback LED at default feedback LED pin
 }
 
 /*

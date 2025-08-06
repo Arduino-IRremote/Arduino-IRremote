@@ -50,6 +50,11 @@
 //#define _IR_MEASURE_TIMING // for ISR
 //#define _IR_TIMING_TEST_PIN 7 // "pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);" is executed at start()
 //
+
+#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
+#define LED_RECEIVE_FEEDBACK_CODE // Resolve the double negative
+#endif
+
 /** \addtogroup Receiving Receiving IR data for multiple protocols
  * @{
  */
@@ -70,16 +75,10 @@ unsigned long sMicrosAtLastStopTimer = 0; // Used to adjust TickCounterForISR wi
  */
 IRrecv::IRrecv() {
     setReceivePin(0);
-#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
-    setLEDFeedback(0, DO_NOT_ENABLE_LED_FEEDBACK);
-#endif
 }
 
 IRrecv::IRrecv(uint_fast8_t aReceivePin) {
     setReceivePin(aReceivePin);
-#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
-    setLEDFeedback(0, DO_NOT_ENABLE_LED_FEEDBACK);
-#endif
 }
 
 /**
@@ -89,8 +88,8 @@ IRrecv::IRrecv(uint_fast8_t aReceivePin) {
  */
 IRrecv::IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) {
     setReceivePin(aReceivePin);
-#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
-    setLEDFeedback(aFeedbackLEDPin, DO_NOT_ENABLE_LED_FEEDBACK);
+#if defined(LED_RECEIVE_FEEDBACK_CODE)
+    setLEDFeedbackPin(aFeedbackLEDPin);
 #else
     (void) aFeedbackLEDPin;
 #endif
@@ -264,8 +263,8 @@ void IRrecv::ReceiveInterruptHandler() {
         }
     }
 
-#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
-    if (FeedbackLEDControl.LedFeedbackEnabled & LED_FEEDBACK_ENABLED_FOR_RECEIVE) {
+#if defined(LED_RECEIVE_FEEDBACK_CODE)
+    if (FeedbackLEDControl.LedFeedbackEnabled) {
         setFeedbackLED(tIRInputLevel == INPUT_MARK);
     }
 #endif
@@ -317,12 +316,9 @@ ISR()
 void IRrecv::begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) {
 
     setReceivePin(aReceivePin);
-#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
-    uint_fast8_t tEnableLEDFeedback = DO_NOT_ENABLE_LED_FEEDBACK;
-    if (aEnableLEDFeedback) {
-        tEnableLEDFeedback = LED_FEEDBACK_ENABLED_FOR_RECEIVE;
-    }
-    setLEDFeedback(aFeedbackLEDPin, tEnableLEDFeedback);
+#if defined(LED_RECEIVE_FEEDBACK_CODE)
+    setLEDFeedback(aEnableLEDFeedback);
+    setLEDFeedbackPin(aFeedbackLEDPin);
 #else
     (void) aEnableLEDFeedback;
     (void) aFeedbackLEDPin;

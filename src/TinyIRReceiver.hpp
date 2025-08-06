@@ -131,6 +131,9 @@ volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
 #  endif
 #endif
 
+#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
+#define LED_RECEIVE_FEEDBACK_CODE // Resolve the double negative
+#endif
 
 #if !( \
    (defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)) /* ATtinyX5 */ \
@@ -171,7 +174,7 @@ void IRPinChangeInterruptHandler(void) {
      */
     uint_fast8_t tIRLevel = digitalReadFast(IR_RECEIVE_PIN);
 
-#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_RECEIVE_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, tIRLevel);
 #  else
@@ -463,7 +466,7 @@ bool isIRReceiverAttachedForTinyReceiver() {
 bool initPCIInterruptForTinyReceiver() {
     pinModeFast(IR_RECEIVE_PIN, INPUT);
 
-#if !defined(NO_LED_RECEIVE_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_RECEIVE_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);

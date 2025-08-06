@@ -9,6 +9,10 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Added threshold decoding.
 - Added support for multiple receiver instances.
 - Minor bug fixes for DEBUG.
+- LED feedback is always enabled for sending. It can only be disabled by using the macro NO_LED_SEND_FEEDBACK_CODE.
+- Removed parameter aEnableLEDFeedback in function IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) and IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin).
+- Added experimental Velux send function.
+
 
 # 4.4.3
 - Added USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN to make the software aware of send LED connected between VCC and send pin.

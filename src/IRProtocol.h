@@ -122,7 +122,8 @@ typedef enum {
     LEGO_PF,
     MAGIQUEST,
     WHYNTER, /* 30 */
-    FAST
+    FAST,
+    OTHER
 } decode_type_t;
 extern const char *const ProtocolNames[]; // The array of name strings for the decode_type_t enum
 

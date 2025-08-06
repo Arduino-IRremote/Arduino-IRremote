@@ -34,8 +34,11 @@
 
 #define DECODE_HASH                 // Only decoder, which works for Hob2Hood. protocol is UNKNOWN and only raw data is set.
 
-//#define NO_LED_FEEDBACK_CODE      // saves 92 bytes program memory
-//#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
+//#define NO_LED_FEEDBACK_CODE          // saves 92 bytes program memory
+//#define SEND_PWM_BY_TIMER             // Disable carrier PWM generation in software and use (restricted) hardware PWM.
+//#define NO_LED_FEEDBACK_CODE          // Saves 310 bytes program memory
+//#define NO_LED_RECEIVE_FEEDBACK_CODE  // Saves 44 bytes program memory
+//#define NO_LED_SEND_FEEDBACK_CODE     // Saves 34 bytes program memory
 
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 #include <IRremote.hpp>
@@ -86,7 +89,11 @@ void setup() {
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive Hob2Hood IR signals at pin " STR(IR_RECEIVE_PIN)));
-    IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
+    /*
+     * No IR send setup required :-)
+     * Default is to use IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin
+     * and use feedback LED at default feedback LED pin if not disabled by #define NO_LED_SEND_FEEDBACK_CODE
+     */
     Serial.println(F("Send Hob2Hood IR signals at pin " STR(IR_SEND_PIN)));
 }
 

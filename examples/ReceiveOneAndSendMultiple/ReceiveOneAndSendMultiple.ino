@@ -90,6 +90,8 @@
 
 #include <Arduino.h>
 
+//#define NO_LED_FEEDBACK_CODE          // Saves 104 bytes program memory
+
 // select only Samsung protocol for sending and receiving
 #define DECODE_SAMSUNG
 #define ADDRESS_OF_SAMSUNG_REMOTE   0x07 // The value you see as address in printIRResultShort()
@@ -125,7 +127,11 @@ void setup() {
     printActiveIRProtocols(&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
 
-    IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
+    /*
+     * No IR send setup required :-)
+     * Default is to use IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin
+     * and use feedback LED at default feedback LED pin if not disabled by #define NO_LED_SEND_FEEDBACK_CODE
+     */
     Serial.println(F("Ready to send IR signals at pin " STR(IR_SEND_PIN)));
 }
 

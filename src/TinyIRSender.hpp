@@ -66,6 +66,10 @@
 #warning "IR_SEND_PIN is not defined, so it is set to 3"
 #define IR_SEND_PIN    3
 #endif
+#if !defined(NO_LED_SEND_FEEDBACK_CODE)
+#define LED_SEND_FEEDBACK_CODE // Resolve the double negative
+#endif
+
 /*
  * Generate 38 kHz IR signal by bit banging
  */
@@ -164,7 +168,7 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
             }
         }
     }
-#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
@@ -187,7 +191,7 @@ void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint
 void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
-#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
@@ -250,7 +254,7 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
             }
         }
     }
-#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
@@ -270,7 +274,7 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
 void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
-#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
@@ -324,7 +328,7 @@ void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uin
             }
         }
     }
-#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
@@ -347,7 +351,7 @@ void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNum
 void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats) {
     pinModeFast(aSendPin, OUTPUT);
 
-#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
@@ -399,7 +403,7 @@ void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats
             }
         }
     }
-#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);

@@ -57,13 +57,6 @@
 //#define TRACE // Activate this for more debug output.
 
 /**
- * For better readability of code
- */
-#define DISABLE_LED_FEEDBACK            false
-#define ENABLE_LED_FEEDBACK             true
-#define USE_DEFAULT_FEEDBACK_LED_PIN    0
-
-/**
  * The RAW_BUFFER_LENGTH determines the length of the byte buffer where the received IR timing data is stored before decoding.
  * 100 is sufficient for standard protocols up to 48 bits, with 1 bit consisting of one mark and space plus 1 byte for initial gap, 2 bytes for header and 1 byte for stop bit.
  * 48 bit protocols are PANASONIC, KASEIKYO, SAMSUNG48, RC6.
@@ -159,11 +152,11 @@ struct IRData {
     uint16_t address; ///< Decoded address, Distance protocol (tMarkTicksLong (if tMarkTicksLong == 0, then tMarkTicksShort) << 8) | tSpaceTicksLong
     uint16_t command;       ///< Decoded command, Distance protocol (tMarkTicksShort << 8) | tSpaceTicksShort
     uint16_t extra; ///< Contains upper 16 bit of Magiquest WandID, Kaseikyo unknown vendor ID and Distance protocol (HeaderMarkTicks << 8) | HeaderSpaceTicks.
-    IRRawDataType decodedRawData; ///< Up to 32/64 bit decoded raw data, to be used for send functions.
+    IRRawDataType decodedRawData; ///< Up to 32/64 bit decoded raw data, to be used for send<protocol>Raw functions.
 #if defined(DECODE_DISTANCE_WIDTH)
     // This replaces the address, command, extra and decodedRawData in case of protocol == PULSE_DISTANCE or -rather seldom- protocol == PULSE_WIDTH.
     DistanceWidthTimingInfoStruct DistanceWidthTimingInfo; // 12 bytes
-    IRRawDataType decodedRawDataArray[DECODED_RAW_DATA_ARRAY_SIZE]; ///< 32/64 bit decoded raw data, to be used for send function.
+    IRRawDataType decodedRawDataArray[DECODED_RAW_DATA_ARRAY_SIZE]; ///< 32/64 bit decoded raw data, to be used for sendPulseDistanceWidthFromArray functions.
 #endif
     uint16_t numberOfBits; ///< Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;          ///< IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions above
@@ -174,8 +167,8 @@ struct IRData {
      * the first variables, which are overwritten by the next received frame.
      * since 4.3.0.
      */
-    IRRawlenType rawlen;        ///< counter of entries in rawbuf of last received frame.
-    uint16_t initialGapTicks;   ///< contains the initial gap (pre 4.4: the value in rawbuf[0]) of the last received frame.
+    IRRawlenType rawlen;        ///< Counter of entries in rawbuf of last received frame.
+    uint16_t initialGapTicks;   ///< Contains the initial gap (pre 4.4: the value in rawbuf[0]) of the last received frame.
 };
 
 /*
@@ -229,6 +222,7 @@ struct decode_results {
 /**
  * Main class for receiving IR signals
  */
+#define USE_DEFAULT_FEEDBACK_LED_PIN        0 // we need it here
 class IRrecv {
 public:
 
@@ -457,13 +451,12 @@ void printActiveIRProtocols(Print *aSerial);
 /****************************************************
  * Feedback LED related functions
  ****************************************************/
-#define DO_NOT_ENABLE_LED_FEEDBACK          0x00
-#define LED_FEEDBACK_DISABLED_COMPLETELY    0x00
-#define LED_FEEDBACK_ENABLED_FOR_RECEIVE    0x01
-#define LED_FEEDBACK_ENABLED_FOR_SEND       0x02
-void setFeedbackLED(bool aSwitchLedOn);
-void setLEDFeedback(uint8_t aFeedbackLEDPin, uint8_t aEnableLEDFeedback); // if aFeedbackLEDPin == 0, then take board BLINKLED_ON() and BLINKLED_OFF() functions
+#define DISABLE_LED_FEEDBACK                false
+#define ENABLE_LED_FEEDBACK                 true
+//#define USE_DEFAULT_FEEDBACK_LED_PIN        0 // repeated definition for info
 void setLEDFeedback(bool aEnableLEDFeedback); // Direct replacement for blink13()
+void setLEDFeedbackPin(uint8_t aFeedbackLEDPin);
+void setFeedbackLED(bool aSwitchLedOn);
 void enableLEDFeedback();
 constexpr auto enableLEDFeedbackForReceive = enableLEDFeedback; // alias for enableLEDFeedback
 void disableLEDFeedback();
@@ -530,25 +523,17 @@ public:
 #if defined(IR_SEND_PIN)
     void begin();
     // The default parameter allowed to specify IrSender.begin(7); without errors, if IR_SEND_PIN was defined. But the semantics is not the one the user expect.
-    void begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin); // 4.3.1 Removed default value USE_DEFAULT_FEEDBACK_LED_PIN for last parameter
-    // The next function is a dummy to avoid acceptance of pre 4.3 calls to begin(DISABLE_LED_FEEDBACK);
-    void begin(uint8_t aSendPin)
-#  if !defined (DOXYGEN)
-            __attribute__ ((deprecated ("ERROR: IR_SEND_PIN is still defined, therefore the function begin(aSendPin) is NOT available. You must disable '#define IR_SEND_PIN' to enable this function.")));
-#  endif
-
-    // The next function is a dummy to avoid acceptance of pre 4.0 calls to begin(IR_SEND_PIN, DISABLE_LED_FEEDBACK);
-    void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback)
-#  if !defined (DOXYGEN)
-            __attribute__ ((deprecated ("You must use begin() and enableLEDFeedback() or disableLEDFeedback() since version 4.3.")));
-#  endif
+    void begin(uint_fast8_t aFeedbackLEDPin);
 #else
     IRsend(uint_fast8_t aSendPin);
     void begin(uint_fast8_t aSendPin);
     void setSendPin(uint_fast8_t aSendPin); // required if we use IRsend() as constructor
-    // Since 4.0 guarded and without default parameter
-    void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin); // aFeedbackLEDPin can be USE_DEFAULT_FEEDBACK_LED_PIN
 #endif
+    void begin(uint_fast8_t aSendPin, uint_fast8_t aFeedbackLEDPin); // aFeedbackLEDPin is by default USE_DEFAULT_FEEDBACK_LED_PIN
+    void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)
+#  if !defined (DOXYGEN)
+            __attribute__ ((deprecated ("Use begin(aSendPin, aFeedbackLEDPin) instead.")));
+#  endif
 
     size_t write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
     size_t write(decode_type_t aProtocol, uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats = NO_REPEATS);
@@ -732,7 +717,10 @@ public:
             int nbits)
                     __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSony(aAddress, aCommand, aNumberOfRepeats).")));
 
-    void sendWhynter(uint32_t aData, uint8_t aNumberOfBitsToSend);
+    void sendWhynter(uint32_t aData, int_fast8_t aNumberOfRepeats);
+    void sendVelux(uint8_t aCommand, uint8_t aMotorNumber, uint8_t aMotorSet, uint16_t aSecurityCode, uint8_t aCRC,
+            int_fast8_t aNumberOfRepeats);
+    void sendVelux(uint32_t aData, int_fast8_t aNumberOfRepeats);
 
 #if !defined(IR_SEND_PIN)
     uint8_t sendPin;

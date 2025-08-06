@@ -295,6 +295,21 @@ rawData[18]:
 Duration=20950us
 
 
+Send Velux 0x765432 decoded as PulseDistanceWidth 0x44D5E6 LSB first 1=1275|475, 0=475|1275
+Protocol=PulseDistance, Raw-Data=0x44D5E6, 23 bits, LSB first, Gap=746700us, Duration=42700us
+Send on a 8 bit platform with: IrSender.sendPulseDistanceWidth(38, 600, 1200, 550, 1200, 1300, 400, 0x44D5E6, 23, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
+rawData[50]:
+ -746700
+ + 600,-1200
+ +1300,- 450 + 500,-1200 + 550,-1200 +1350,- 350
+ +1300,- 400 + 550,-1200 + 550,-1150 + 600,-1150
+ + 550,-1200 +1300,- 400 + 550,-1150 +1300,- 400
+ + 550,-1200 +1350,- 350 + 550,-1150 + 550,-1200
+ +1300,- 400 +1300,- 400 + 600,-1150 +1350,- 350
+ +1300,- 400 +1350,- 400 + 500,-1200 +1350
+Duration=42700us
+
+
 Send Sony12 as PulseWidth LSB first 1=1200|300, 0=600|600
 Protocol=Sony Address=0x11, Command=0x76, Raw-Data=0x8F6, 12 bits, LSB first, Gap=744650us, Duration=21050us
 Send with: IrSender.sendSony(0x11, 0x76, 2, 12);
@@ -813,7 +828,7 @@ ERROR: Unknown protocol
 Stop receiver
 Start receiver
 
-address=0xF2 command=0x87
+address=0xF2 command=0x87 repeats=1
 
 Send NEC with 8 bit address and complete NEC frames as repeats to force decoding as NEC2
 Protocol=NEC Address=0xF2, Command=0x87, Raw-Data=0x78870DF2, 32 bits, LSB first, Gap=923450us, Duration=67850us
@@ -1354,7 +1369,7 @@ ERROR: Unknown protocol
 Stop receiver
 Start receiver
 
-address=0x1F3 command=0x98
+address=0x1F3 command=0x98 repeats=2
 
 Send NEC with 8 bit address and complete NEC frames as repeats to force decoding as NEC2
 Protocol=NEC Address=0xF3, Command=0x98, Raw-Data=0x67980CF3, 32 bits, LSB first, Gap=923500us, Duration=67850us

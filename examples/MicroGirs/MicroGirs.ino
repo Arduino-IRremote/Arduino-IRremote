@@ -82,6 +82,8 @@
 #define BAUDRATE 115200
 #define NO_DECODER
 
+//#define NO_LED_FEEDBACK_CODE      // Saves 346 bytes program memory
+
 #include "IRremote.hpp"
 #include <limits.h>
 
@@ -307,9 +309,13 @@ void setup() {
 #endif
 
 #if defined(IR_SEND_PIN)
-    IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
+    /*
+     * No IR library setup required :-)
+     * Default is to use IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin
+     * and use feedback LED at default feedback LED pin if not disabled by #define NO_LED_SEND_FEEDBACK_CODE
+     */
 #else
-    IrSender.begin(3, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(3); // Specify send pin and enable feedback LED at default feedback LED pin
 #endif
 
 }

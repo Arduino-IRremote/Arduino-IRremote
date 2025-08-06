@@ -38,10 +38,12 @@
 
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
-//#define NO_LED_FEEDBACK_CODE      // saves 92 bytes program memory
 //#define RECORD_GAP_MICROS 12000   // Default is 8000. Activate it for some LG air conditioner protocols
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
+//#define NO_LED_FEEDBACK_CODE      // saves 318 bytes program memory
+//#define NO_LED_RECEIVE_FEEDBACK_CODE  // Saves 44 bytes program memory
+//#define NO_LED_SEND_FEEDBACK_CODE     // Saves 36 bytes program memory
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
@@ -67,7 +69,11 @@ void setup() {
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
-    IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
+    /*
+     * No IR send setup required :-)
+     * Default is to use IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin
+     * and use feedback LED at default feedback LED pin if not disabled by #define NO_LED_SEND_FEEDBACK_CODE
+     */
     Serial.println(F("Send IR signals at pin " STR(IR_SEND_PIN)));
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604

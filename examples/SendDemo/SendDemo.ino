@@ -44,8 +44,9 @@
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
 //#define USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM // Simulate an active high receiver signal instead of an active low signal.
+//#define NO_LED_FEEDBACK_CODE      // Saves 322 bytes program memory
 #if FLASHEND <= 0x1FFF              // For 8k flash or less like ATtiny85
-#define NO_LED_FEEDBACK_CODE        // Saves 344 bytes program memory
+#define NO_LED_FEEDBACK_CODE
 #endif
 //#undef IR_SEND_PIN // enable this, if you need to set send pin programmatically using uint8_t tSendPin below
 #include <IRremote.hpp>
@@ -76,8 +77,11 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
 #if defined(IR_SEND_PIN)
-    IrSender.begin(); // Start with IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin and enable feedback LED at default feedback LED pin
-//    disableLEDFeedback(); // Disable feedback LED at default feedback LED pin
+    /*
+     * No IR library setup required :-)
+     * Default is to use IR_SEND_PIN -which is defined in PinDefinitionsAndMore.h- as send pin
+     * and use feedback LED at default feedback LED pin if not disabled by #define NO_LED_SEND_FEEDBACK_CODE
+     */
 #  if defined(IR_SEND_PIN_STRING)
     Serial.println(F("Send IR signals at pin " IR_SEND_PIN_STRING));
 #  else
@@ -86,7 +90,7 @@ void setup() {
 #else
     // Here the macro IR_SEND_PIN is not defined or undefined above with #undef IR_SEND_PIN
     uint8_t tSendPin = 3;
-    IrSender.begin(tSendPin, ENABLE_LED_FEEDBACK, USE_DEFAULT_FEEDBACK_LED_PIN); // Specify send pin and enable feedback LED at default feedback LED pin
+    IrSender.begin(tSendPin); // Specify send pin and use feedback LED at default feedback LED pin
     // You can change send pin later with IrSender.setSendPin();
 
     Serial.print(F("Send IR signals at pin "));
@@ -107,7 +111,7 @@ void setup() {
     Serial.println(F(" us"));
 #endif
 
-#if defined(LED_BUILTIN) && !defined(NO_LED_FEEDBACK_CODE)
+#if defined(LED_BUILTIN) && !defined(NO_LED_FEEDBACK_CODE) && !defined(NO_LED_SEND_FEEDBACK_CODE)
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     Serial.print(F("Active low "));
 #  endif

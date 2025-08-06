@@ -212,12 +212,16 @@
 #define MICROS_IN_ONE_MILLI 1000L
 
 #if defined(NO_LED_FEEDBACK_CODE)
+// convert to receive and send macros
 #  if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
 #define NO_LED_RECEIVE_FEEDBACK_CODE
 #  endif
 #  if !defined(NO_LED_SEND_FEEDBACK_CODE)
 #define NO_LED_SEND_FEEDBACK_CODE
 #  endif
+#endif
+#if defined(NO_LED_RECEIVE_FEEDBACK_CODE) && defined(NO_LED_SEND_FEEDBACK_CODE) && !defined(NO_LED_FEEDBACK_CODE)
+#define NO_LED_FEEDBACK_CODE
 #endif
 
 #include "IRremoteInt.h"
@@ -232,7 +236,8 @@
 #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)
 #include "private/IRTimer.hpp"  // defines IR_SEND_PIN for AVR and SEND_PWM_BY_TIMER
 
-#  if !defined(NO_LED_FEEDBACK_CODE)
+#  if !defined(NO_LED_FEEDBACK_CODE) && !(defined(DISABLE_CODE_FOR_RECEIVER) && defined(NO_LED_SEND_FEEDBACK_CODE))
+// Led feedback code enabled here
 #    if !defined(LED_BUILTIN)
 /*
  * print a warning
