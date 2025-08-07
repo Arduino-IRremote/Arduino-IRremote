@@ -4,6 +4,8 @@ var modules =
     [ "Decoders and encoders for different protocols", "group__Decoder.html", "group__Decoder" ],
     [ "Feedback LED functions", "group__FeedbackLEDFunctions.html", "group__FeedbackLEDFunctions" ],
     [ "Receiving IR data for multiple protocols", "group__Receiving.html", "group__Receiving" ],
+    [ "Utility functions", "group__Utils.html", "group__Utils" ],
+    [ "Print functions", "group__Print.html", "group__Print" ],
     [ "Sending IR data for multiple protocols", "group__Sending.html", "group__Sending" ],
     [ "Minimal receiver for NEC and FAST protocol", "group__TinyReceiver.html", "group__TinyReceiver" ],
     [ "Minimal sender for NEC and FAST protocol", "group__TinySender.html", "group__TinySender" ],

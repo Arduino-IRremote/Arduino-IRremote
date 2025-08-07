@@ -100,6 +100,8 @@ Collaboration diagram for Usage of timers for the different CPU / boards:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:ga1178972e07d5f81a7561429a18da71e3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga1178972e07d5f81a7561429a18da71e3">IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH</a>&#160;&#160;&#160;<a class="el" href="IRremote_8hpp.html#a6be706039d9083db8cb072478e0a09f8">IR_SEND_DUTY_CYCLE_PERCENT</a></td></tr>
+<tr class="separator:ga1178972e07d5f81a7561429a18da71e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4cb394b3b749f9302940902fb05bd920"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga4cb394b3b749f9302940902fb05bd920">IR_SEND_PIN</a></td></tr>
 <tr class="memdesc:ga4cb394b3b749f9302940902fb05bd920"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hardware / timer dependent pin number for sending IR if SEND_PWM_BY_TIMER is defined.  <a href="group__Timer.html#ga4cb394b3b749f9302940902fb05bd920">More...</a><br /></td></tr>
 <tr class="separator:ga4cb394b3b749f9302940902fb05bd920"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,7 +120,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga41e88e0b7edea76b3c77643ca7a3468f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga41e88e0b7edea76b3c77643ca7a3468f">timerResetInterruptPending</a> ()</td></tr>
 <tr class="separator:ga41e88e0b7edea76b3c77643ca7a3468f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">timerConfigForSend</a> (uint16_t aFrequencyKHz)</td></tr>
-<tr class="memdesc:gab4f8dc26e10c0481e8859252afa4d42b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with duty cycle of IR_SEND_DUTY_CYCLE_PERCENT and disables the receive interrupt if it uses the same resource.  <a href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">More...</a><br /></td></tr>
+<tr class="memdesc:gab4f8dc26e10c0481e8859252afa4d42b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with HIGH output level of duty cycle of IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH and disables the receive interrupt if it uses the same resource.  <a href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">More...</a><br /></td></tr>
 <tr class="separator:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac67e6a15f31989aa182389cd4a8729c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9">enableSendPWMByTimer</a> ()</td></tr>
 <tr class="memdesc:gac67e6a15f31989aa182389cd4a8729c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables output of the PWM signal of the timer at the timer pin.  <a href="group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9">More...</a><br /></td></tr>
@@ -129,6 +131,22 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ga1178972e07d5f81a7561429a18da71e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1178972e07d5f81a7561429a18da71e3">&#9670;&nbsp;</a></span>IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH&#160;&#160;&#160;<a class="el" href="IRremote_8hpp.html#a6be706039d9083db8cb072478e0a09f8">IR_SEND_DUTY_CYCLE_PERCENT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00071">71</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
+
+</div>
+</div>
 <a id="ga4cb394b3b749f9302940902fb05bd920"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga4cb394b3b749f9302940902fb05bd920">&#9670;&nbsp;</a></span>IR_SEND_PIN</h2>
 
@@ -144,7 +162,7 @@ Functions</h2></td></tr>
 <p>Hardware / timer dependent pin number for sending IR if SEND_PWM_BY_TIMER is defined. </p>
 <p>Otherwise used as default for IrSender.sendPin. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00098">98</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00105">105</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
 
 </div>
 </div>
@@ -166,7 +184,7 @@ Functions</h2></td></tr>
 
 <p>Disables output of the PWM signal of the timer at the timer pin and set it to inactive. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00140">140</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00147">147</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
 
 </div>
 </div>
@@ -187,7 +205,7 @@ Functions</h2></td></tr>
 
 <p>Enables output of the PWM signal of the timer at the timer pin. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00135">135</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00142">142</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
 
 </div>
 </div>
@@ -209,7 +227,7 @@ Functions</h2></td></tr>
 <p>Configures the timer to be able to generate the receive sample interrupt, which consumes a small amount of CPU every 50 (MICROS_PER_TICK) us. </p>
 <p>The actual interrupt generation is controlled by <a class="el" href="group__Timer.html#gae0ec21c275dd13fff83445ce6cc900d7" title="Enables the receive sample timer interrupt, which consumes a small amount of CPU every 50 us.">timerEnableReceiveInterrupt()</a> and <a class="el" href="group__Timer.html#ga0b0e97d0a44ceb967a83b44aa88c6bd2" title="Disables the receive sample timer interrupt.">timerDisableReceiveInterrupt()</a>. <a class="el" href="group__Timer.html#ga8cca92581b5452eaac5b3075227c6c56" title="Configures the timer to be able to generate the receive sample interrupt, which consumes a small amou...">timerConfigForReceive()</a> is used exclusively by <a class="el" href="group__Receiving.html#ga2c06971f0e4e0c4131930c8903eb21dc" title="Start the receiving process.">IRrecv::start()</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00105">105</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00112">112</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
 
 </div>
 </div>
@@ -229,7 +247,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with duty cycle of IR_SEND_DUTY_CYCLE_PERCENT and disables the receive interrupt if it uses the same resource. </p>
+<p>IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with HIGH output level of duty cycle of IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH and disables the receive interrupt if it uses the same resource. </p>
 <p>For most architectures, the pin number(s) which can be used for output is determined by the timer used! The output of the PWM signal is controlled by <a class="el" href="group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9" title="Enables output of the PWM signal of the timer at the timer pin.">enableSendPWMByTimer()</a> and <a class="el" href="group__Timer.html#ga352399811c67be16548d81a18e3cd337" title="Disables output of the PWM signal of the timer at the timer pin and set it to inactive.">disableSendPWMByTimer()</a>. <a class="el" href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,...">timerConfigForSend()</a> is used exclusively by <a class="el" href="group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15" title="Enables IR output.">IRsend::enableIROut()</a>. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aFrequencyKHz</td><td>Frequency of the sent PWM signal in kHz. There is no practical reason to have a sub kHz resolution for sending frequency :-). </td></tr>
@@ -237,7 +255,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00129">129</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00136">136</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
 
 </div>
 </div>
@@ -259,7 +277,7 @@ Functions</h2></td></tr>
 <p>Disables the receive sample timer interrupt. </p>
 <p>This must be done before using the timer for e.g. tone(). Is a synonym for calling end() or stop(). </p>
 
-<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00117">117</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00124">124</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
 
 </div>
 </div>
@@ -280,7 +298,7 @@ Functions</h2></td></tr>
 
 <p>Enables the receive sample timer interrupt, which consumes a small amount of CPU every 50 us. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00110">110</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRTimer_8hpp_source.html#l00117">117</a> of file <a class="el" href="IRTimer_8hpp_source.html">IRTimer.hpp</a>.</p>
 
 </div>
 </div>
@@ -306,7 +324,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Mar 19 2025 11:06:48 for IRremote by
+    <li class="footer">Generated on Thu Aug 7 2025 11:03:20 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

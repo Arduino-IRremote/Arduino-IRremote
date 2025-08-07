@@ -107,14 +107,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ga170701fb079d24717aded137dee808e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga218982c1abdb34314e6d8f4b07086db7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga218982c1abdb34314e6d8f4b07086db7">setSendPin</a> (uint_fast8_t aSendPin)</td></tr>
 <tr class="separator:ga218982c1abdb34314e6d8f4b07086db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac7abd96c6c4adb907dcc3adec54ebe77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gac7abd96c6c4adb907dcc3adec54ebe77">begin</a> (uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)</td></tr>
-<tr class="memdesc:gac7abd96c6c4adb907dcc3adec54ebe77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the send and feedback pin.  <a href="group__Sending.html#gac7abd96c6c4adb907dcc3adec54ebe77">More...</a><br /></td></tr>
-<tr class="separator:gac7abd96c6c4adb907dcc3adec54ebe77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7954d4b7ff55e43b69fbf6e483f422b2"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga7954d4b7ff55e43b69fbf6e483f422b2">write</a> (<a class="el" href="structIRData.html">IRData</a> *aIRSendData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
-<tr class="memdesc:ga7954d4b7ff55e43b69fbf6e483f422b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interprets and sends a <a class="el" href="structIRData.html" title="Data structure for the user application, available as decodedIRData.">IRData</a> structure.  <a href="group__Sending.html#ga7954d4b7ff55e43b69fbf6e483f422b2">More...</a><br /></td></tr>
-<tr class="separator:ga7954d4b7ff55e43b69fbf6e483f422b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4a9848f2971880d6c197cd8e5c49f839"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga4a9848f2971880d6c197cd8e5c49f839">begin</a> (uint_fast8_t aSendPin, uint_fast8_t aFeedbackLEDPin)</td></tr>
+<tr class="memdesc:ga4a9848f2971880d6c197cd8e5c49f839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the send and feedback pin.  <a href="group__Sending.html#ga4a9848f2971880d6c197cd8e5c49f839">More...</a><br /></td></tr>
+<tr class="separator:ga4a9848f2971880d6c197cd8e5c49f839"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafb0b2ecc23c160d0f9589931c6093615"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gafb0b2ecc23c160d0f9589931c6093615">begin</a> (uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) size_t <a class="el" href="group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d">write</a>(<a class="el" href="structIRData.html">IRData</a> *aIRSendData</td></tr>
+<tr class="separator:gafb0b2ecc23c160d0f9589931c6093615"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaafdc6909c8794dc65aa702b84230ea7d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d">write</a> (<a class="el" href="IRProtocol_8h.html#ad5b287a488a8c1b7b8661f029ab56fad">decode_type_t</a> aProtocol, uint16_t aAddress, uint16_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>=<a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
-<tr class="memdesc:gaafdc6909c8794dc65aa702b84230ea7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple version of write without support for MAGIQUEST and numberOfBits for SONY protocol.  <a href="group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d">More...</a><br /></td></tr>
+<tr class="memdesc:gaafdc6909c8794dc65aa702b84230ea7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interprets and sends a <a class="el" href="structIRData.html" title="Data structure for the user application, available as decodedIRData.">IRData</a> structure.  <a href="group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d">More...</a><br /></td></tr>
 <tr class="separator:gaafdc6909c8794dc65aa702b84230ea7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga30b1c8f6029a2f72b4dee0eeb2fb7f15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15">enableIROut</a> (uint_fast8_t aFrequencyKHz)</td></tr>
 <tr class="memdesc:ga30b1c8f6029a2f72b4dee0eeb2fb7f15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables IR output.  <a href="group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15">More...</a><br /></td></tr>
@@ -343,8 +342,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ga4c99ff67282a3b58eb42c9f4d4ba5bb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8d1abfc5910cf3f0964498e8bf22bd4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga8d1abfc5910cf3f0964498e8bf22bd4e">sendSony</a> (unsigned long data, int nbits) <a class="el" href="classIRsend.html#a47ef75994f6381a6bfe8a715a6b8cdd5">__attribute__</a>((deprecated(&quot;This old function sends MSB first! Please use sendSony(aAddress</td></tr>
 <tr class="separator:ga8d1abfc5910cf3f0964498e8bf22bd4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga305c54c3b558c7fc13b05b792858cb8d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga305c54c3b558c7fc13b05b792858cb8d">sendWhynter</a> (uint32_t aData, uint8_t aNumberOfBitsToSend)</td></tr>
-<tr class="separator:ga305c54c3b558c7fc13b05b792858cb8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad67720e20da375a8ed77339f93d607ea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad67720e20da375a8ed77339f93d607ea">sendWhynter</a> (uint32_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="separator:gad67720e20da375a8ed77339f93d607ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga24342e53af73156f6ee49ae7862ebade"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga24342e53af73156f6ee49ae7862ebade">sendVelux</a> (uint8_t <a class="el" href="classIRsend.html#a5f5d819c72ce2f74395d14166e77c7cc">aCommand</a>, uint8_t aMotorNumber, uint8_t aMotorSet, uint16_t aSecurityCode, uint8_t aCRC, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="separator:ga24342e53af73156f6ee49ae7862ebade"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga76ec17e7cf8bbc8b255328f37baad2cf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga76ec17e7cf8bbc8b255328f37baad2cf">sendVelux</a> (uint32_t aData, int_fast8_t <a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a>)</td></tr>
+<tr class="separator:ga76ec17e7cf8bbc8b255328f37baad2cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2197b815b50508e7901209bff307fdc1"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Sending.html#ga2197b815b50508e7901209bff307fdc1">getPulseCorrectionNanos</a> ()</td></tr>
 <tr class="separator:ga2197b815b50508e7901209bff307fdc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -359,7 +362,7 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aff233b57d2382a713926797ce5da0fd3"><td class="memItemLeft" align="right" valign="top">void int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a></td></tr>
+<tr class="memitem:aff233b57d2382a713926797ce5da0fd3"><td class="memItemLeft" align="right" valign="top">void int_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#aff233b57d2382a713926797ce5da0fd3">aNumberOfRepeats</a> = <a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td></tr>
 <tr class="separator:aff233b57d2382a713926797ce5da0fd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7c94e763aed8525c6574cfc6ba0b502"><td class="memItemLeft" align="right" valign="top">void nbits is deprecated and may not work as expected ! Use&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIRsend.html#ae7c94e763aed8525c6574cfc6ba0b502">Command</a></td></tr>
 <tr class="separator:ae7c94e763aed8525c6574cfc6ba0b502"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -379,7 +382,7 @@ Public Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main class for sending IR signals. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00466">466</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00516">516</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a47ef75994f6381a6bfe8a715a6b8cdd5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a47ef75994f6381a6bfe8a715a6b8cdd5">&#9670;&nbsp;</a></span>__attribute__()</h2>
@@ -437,7 +440,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00151">151</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00156">156</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
 
 </div>
 </div>
@@ -479,7 +482,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00157">157</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00162">162</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
 
 </div>
 </div>
@@ -515,7 +518,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00166">166</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00171">171</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
 
 </div>
 </div>
@@ -557,7 +560,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00230">230</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__BangOlufsen_8hpp_source.html#l00235">235</a> of file <a class="el" href="ir__BangOlufsen_8hpp_source.html">ir_BangOlufsen.hpp</a>.</p>
 
 </div>
 </div>
@@ -684,7 +687,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ir__MagiQuest_8hpp_source.html#l00121">121</a> of file <a class="el" href="ir__MagiQuest_8hpp_source.html">ir_MagiQuest.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ir__MagiQuest_8hpp_source.html#l00122">122</a> of file <a class="el" href="ir__MagiQuest_8hpp_source.html">ir_MagiQuest.hpp</a>.</p>
 
 </div>
 </div>
@@ -893,7 +896,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00646">646</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00688">688</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -904,14 +907,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void IRsend::aNumberOfRepeats</td>
+          <td class="memname">void IRsend::aNumberOfRepeats = <a class="el" href="IRremoteInt_8h.html#a5d35fb37031b53f0083f8b88ae3cf2c2">NO_REPEATS</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">        <a class="code" href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">sendNECMSB</a>(aRawData, nbits)</div>
-</div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00580">580</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00538">538</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -929,7 +930,7 @@ Public Attributes</h2></td></tr>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">        <a class="code" href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">sendJVCMSB</a>(data, nbits, repeat)</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00646">646</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00688">688</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -945,7 +946,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00642">642</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00684">684</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -961,7 +962,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00642">642</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00684">684</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -977,7 +978,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00684">684</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00729">729</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -993,7 +994,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00683">683</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00728">728</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -1009,7 +1010,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00681">681</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremoteInt_8h_source.html#l00726">726</a> of file <a class="el" href="IRremoteInt_8h_source.html">IRremoteInt.h</a>.</p>
 
 </div>
 </div>
@@ -1034,13 +1035,12 @@ Public Attributes</h2></td></tr>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="agroup__Decoder_html_ga0184d3edbfe2659b12fc157c3be0cd63"><div class="ttname"><a href="group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63">IRsend::sendNECMSB</a></div><div class="ttdeci">void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat=false)</div><div class="ttdoc">With Send sendNECMSB() you can send your old 32 bit codes.</div><div class="ttdef"><b>Definition:</b> <a href="ir__NEC_8hpp_source.html#l00419">ir_NEC.hpp:419</a></div></div>
-<div class="ttc" id="agroup__Decoder_html_gae3ffaf23301bec85ca0c2c7499f484a3"><div class="ttname"><a href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">IRsend::sendJVCMSB</a></div><div class="ttdeci">void sendJVCMSB(unsigned long data, int nbits, bool repeat=false)</div><div class="ttdoc">With Send sendJVCMSB() you can send your old 32 bit codes.</div><div class="ttdef"><b>Definition:</b> <a href="ir__JVC_8hpp_source.html#l00242">ir_JVC.hpp:242</a></div></div>
+<div class="ttc" id="agroup__Decoder_html_gae3ffaf23301bec85ca0c2c7499f484a3"><div class="ttname"><a href="group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3">IRsend::sendJVCMSB</a></div><div class="ttdeci">void sendJVCMSB(unsigned long data, int nbits, bool repeat=false)</div><div class="ttdoc">With Send sendJVCMSB() you can send your old 32 bit codes.</div><div class="ttdef"><b>Definition:</b> <a href="ir__JVC_8hpp_source.html#l00234">ir_JVC.hpp:234</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classIRsend.html">IRsend</a></li>
-    <li class="footer">Generated on Wed Mar 19 2025 11:06:49 for IRremote by
+    <li class="footer">Generated on Thu Aug 7 2025 11:03:20 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

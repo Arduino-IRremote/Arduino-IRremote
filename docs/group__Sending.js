@@ -3,7 +3,8 @@ var group__Sending =
     [ "IRsend", "group__Sending.html#ga047d9e3f47864869afaa5076579c9f63", null ],
     [ "IRsend", "group__Sending.html#ga89441d6de01ddea7e79305281dbbfdbd", null ],
     [ "begin", "group__Sending.html#ga170701fb079d24717aded137dee808e7", null ],
-    [ "begin", "group__Sending.html#gac7abd96c6c4adb907dcc3adec54ebe77", null ],
+    [ "begin", "group__Sending.html#gafb0b2ecc23c160d0f9589931c6093615", null ],
+    [ "begin", "group__Sending.html#ga4a9848f2971880d6c197cd8e5c49f839", null ],
     [ "customDelayMicroseconds", "group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798", null ],
     [ "enableIROut", "group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15", null ],
     [ "getPulseCorrectionNanos", "group__Sending.html#ga2197b815b50508e7901209bff307fdc1", null ],
@@ -31,6 +32,5 @@ var group__Sending =
     [ "setSendPin", "group__Sending.html#ga218982c1abdb34314e6d8f4b07086db7", null ],
     [ "space", "group__Sending.html#ga914d45f08addaf1142e167a8ebf7d5a4", null ],
     [ "write", "group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d", null ],
-    [ "write", "group__Sending.html#ga7954d4b7ff55e43b69fbf6e483f422b2", null ],
     [ "IrSender", "group__Sending.html#gafba8232b747be85f72c1c4612780d5cf", null ]
 ];

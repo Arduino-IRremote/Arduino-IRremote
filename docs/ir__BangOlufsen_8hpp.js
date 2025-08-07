@@ -5,6 +5,7 @@ var ir__BangOlufsen_8hpp =
     [ "BEO_DEBUG_PRINT", "ir__BangOlufsen_8hpp.html#a6533fed2491c66f33f7ef26861f70af5", null ],
     [ "BEO_DEBUG_PRINTLN", "ir__BangOlufsen_8hpp.html#a878d02f272efa96377a1e5b2730817f5", null ],
     [ "BEO_IR_MARK", "ir__BangOlufsen_8hpp.html#addc2eaec33ae3c451f1de32bb96d8c32", null ],
+    [ "BEO_IR_MARK_FOR_DECODE", "ir__BangOlufsen_8hpp.html#a098f22ad22af8eb9290e210882198729", null ],
     [ "BEO_MATCH_DELTA", "ir__BangOlufsen_8hpp.html#af3a940cda904f9dabe888f7a646ba535", null ],
     [ "BEO_PULSE_LENGTH_EQUAL", "ir__BangOlufsen_8hpp.html#ada22fa82fa68df891ce6db75f05eb8a2", null ],
     [ "BEO_PULSE_LENGTH_ONE", "ir__BangOlufsen_8hpp.html#ae010cf7cd52aaaedfe1bdafc55efb413", null ],
