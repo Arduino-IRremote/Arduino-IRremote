@@ -1,0 +1,12 @@
+<map id="IRrecv::compensateAndStorePronto" name="IRrecv::compensateAndStorePronto">
+<area shape="rect" id="node1" title=" " alt="" coords="5,128,199,172"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga82d0499baeb39c2c382370d6f345c5ca" title=" " alt="" coords="247,57,455,85"/>
+<area shape="rect" id="node4" href="$group__Decoder.html#ga6ca13149379be6090106f32ca8ae8896" title=" " alt="" coords="702,57,826,85"/>
+<area shape="rect" id="node8" href="$group__Decoder.html#ga155ad672d0494903d7c89e73650879ae" title=" " alt="" coords="289,161,413,189"/>
+<area shape="rect" id="node10" href="$group__Decoder.html#ga356fabeed3a4b0a010a35550e86285c5" title=" " alt="" coords="306,213,396,241"/>
+<area shape="rect" id="node3" href="$group__Decoder.html#gab11a798dd7d177582a97e040d1f2442a" title=" " alt="" coords="516,5,642,33"/>
+<area shape="rect" id="node7" href="$group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863" title="Getter function for MARK_EXCESS_MICROS." alt="" coords="503,57,654,85"/>
+<area shape="rect" id="node5" href="$group__Decoder.html#ga7f7277c21122272a16b4381aebd8ee8b" title=" " alt="" coords="874,57,978,85"/>
+<area shape="rect" id="node6" href="$group__Decoder.html#gaa07800bfebfc97fed150e3bcacc42c5a" title=" " alt="" coords="1026,57,1112,85"/>
+<area shape="rect" id="node9" href="$group__Decoder.html#ga1272f3783a3b8d2cf2241f1e76674c8a" title=" " alt="" coords="513,187,644,215"/>
+</map>

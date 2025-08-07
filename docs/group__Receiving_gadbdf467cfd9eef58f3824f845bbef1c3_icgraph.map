@@ -1,0 +1,5 @@
+<map id="IRrecv::setReceivePin" name="IRrecv::setReceivePin">
+<area shape="rect" id="node1" title="Sets / changes the receiver pin number." alt="" coords="161,32,314,60"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#gae15cd27543814209aba08637c943a14c" title="Initializes the receive and feedback pin." alt="" coords="9,5,109,33"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga81eee3a1f9153578d595c771688003e8" title="Instantiate the IRrecv class." alt="" coords="5,57,113,85"/>
+</map>

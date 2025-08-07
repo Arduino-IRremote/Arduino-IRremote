@@ -1,0 +1,13 @@
+<map id="IRrecv::decodeJVC" name="IRrecv::decodeJVC">
+<area shape="rect" id="node1" title=" " alt="" coords="5,57,142,85"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="693,5,854,33"/>
+<area shape="rect" id="node5" href="$group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="960,57,1046,85"/>
+<area shape="rect" id="node8" href="$group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="190,109,385,153"/>
+<area shape="rect" id="node3" href="$group__Print.html#gad59a9b756d71f983bf9f0a28d25f238f" title=" " alt="" coords="919,5,1087,33"/>
+<area shape="rect" id="node7" href="$group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="956,109,1050,137"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="1135,5,1256,33"/>
+<area shape="rect" id="node6" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="1151,83,1240,111"/>
+<area shape="rect" id="node9" href="$group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="433,109,628,153"/>
+<area shape="rect" id="node10" href="$group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="686,109,861,153"/>
+<area shape="rect" id="node11" href="$group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="676,177,871,221"/>
+</map>

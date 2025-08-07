@@ -1,0 +1,5 @@
+<map id="IRrecv::IRrecv" name="IRrecv::IRrecv">
+<area shape="rect" id="node1" title="Instantiate the IRrecv class." alt="" coords="5,32,113,60"/>
+<area shape="rect" id="node2" href="$group__FeedbackLEDFunctions.html#ga087e229d96da3f9e352eae507c698409" title=" " alt="" coords="167,5,308,33"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#gadbdf467cfd9eef58f3824f845bbef1c3" title="Sets / changes the receiver pin number." alt="" coords="161,57,314,85"/>
+</map>

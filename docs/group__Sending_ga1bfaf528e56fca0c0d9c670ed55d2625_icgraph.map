@@ -1,0 +1,4 @@
+<map id="IRsend::sendRaw_P" name="IRsend::sendRaw_P">
+<area shape="rect" id="node1" title="New function using an 8 byte tick (50 us) timing array in FLASH to save program memory Raw data start..." alt="" coords="196,5,338,33"/>
+<area shape="rect" id="node2" href="$group__Sending.html#ga7b60e0d3c7b65092c30757915d914cd2" title=" " alt="" coords="5,5,148,33"/>
+</map>

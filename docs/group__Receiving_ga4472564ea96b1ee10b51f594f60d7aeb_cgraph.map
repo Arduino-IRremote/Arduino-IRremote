@@ -1,0 +1,4 @@
+<map id="matchMark" name="matchMark">
+<area shape="rect" id="node1" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="5,5,92,33"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="140,5,229,33"/>
+</map>

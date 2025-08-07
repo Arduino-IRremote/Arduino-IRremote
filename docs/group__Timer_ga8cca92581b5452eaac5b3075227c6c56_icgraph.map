@@ -1,0 +1,9 @@
+<map id="timerConfigForReceive" name="timerConfigForReceive">
+<area shape="rect" id="node1" title="Configures the timer to be able to generate the receive sample interrupt, which consumes a small amou..." alt="" coords="430,65,585,93"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#gaf95227684dae4d0509c17e54394ef7c0" title=" " alt="" coords="230,5,368,33"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga6ce783c588794c1ce90ca95a0a8d198e" title="Configures the timer and the state machine for IR reception." alt="" coords="217,57,382,101"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#ga2c06971f0e4e0c4131930c8903eb21dc" title="Start the receiving process." alt="" coords="252,125,346,153"/>
+<area shape="rect" id="node5" href="$group__Receiving.html#gae15cd27543814209aba08637c943a14c" title="Initializes the receive and feedback pin." alt="" coords="37,73,137,101"/>
+<area shape="rect" id="node6" href="$group__Receiving.html#ga69d3e9314aea4a37b43b74a0b4f3f976" title="Alias for start()." alt="" coords="21,125,153,153"/>
+<area shape="rect" id="node7" href="$group__Receiving.html#gacf2ba4aadc8118c4d1012302f985f62a" title="Restarts receiver after send." alt="" coords="5,177,169,205"/>
+</map>

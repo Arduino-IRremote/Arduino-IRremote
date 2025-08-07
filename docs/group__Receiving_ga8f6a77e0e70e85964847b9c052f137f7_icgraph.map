@@ -1,0 +1,4 @@
+<map id="IRrecv::checkForRecordGapsMicros" name="IRrecv::checkForRecordGapsMicros">
+<area shape="rect" id="node1" title="Checks if protocol is not detected and detected space between two transmissions is smaller than known..." alt="" coords="230,5,425,49"/>
+<area shape="rect" id="node2" href="$group__Print.html#ga0545a1c9f1b2e57c22f5ad3bf846df1c" title=" " alt="" coords="5,13,182,41"/>
+</map>

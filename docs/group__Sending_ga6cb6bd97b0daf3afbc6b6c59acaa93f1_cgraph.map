@@ -1,0 +1,4 @@
+<map id="IRsend::sendPulseDistanceWidthData_P" name="IRsend::sendPulseDistanceWidthData_P">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,190,49"/>
+<area shape="rect" id="node2" href="$group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="238,5,422,49"/>
+</map>

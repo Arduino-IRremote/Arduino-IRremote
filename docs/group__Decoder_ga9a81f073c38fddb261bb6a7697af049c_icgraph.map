@@ -1,0 +1,5 @@
+<map id="IRsend::sendRC6Raw" name="IRsend::sendRC6Raw">
+<area shape="rect" id="node1" title=" " alt="" coords="189,32,342,60"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#gafbba909b7fa7ef0f4770dc124e2c4804" title="Main RC6 send function." alt="" coords="10,5,136,33"/>
+<area shape="rect" id="node3" href="$group__Decoder.html#gaf6543af3a39c51ed70a6ce90da00c05a" title="Assemble raw data for RC6 from parameters and toggle state and send We do not wait for the minimal tr..." alt="" coords="5,57,141,85"/>
+</map>

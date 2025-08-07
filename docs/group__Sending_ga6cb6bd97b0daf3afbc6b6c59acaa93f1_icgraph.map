@@ -1,0 +1,11 @@
+<map id="IRsend::sendPulseDistanceWidthData_P" name="IRsend::sendPulseDistanceWidthData_P">
+<area shape="rect" id="node1" title=" " alt="" coords="550,231,735,275"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga4f68cb05cfe18a8ae84e96138459a734" title=" " alt="" coords="365,109,502,137"/>
+<area shape="rect" id="node7" href="$group__Decoder.html#ga39702704a52a99d8cb7d118d8a9e0251" title="The FAST protocol repeats by skipping the header mark and space &#45;&gt; this leads to a poor repeat detect..." alt="" coords="368,212,500,240"/>
+<area shape="rect" id="node8" href="$group__Decoder.html#gaa10da0665ac4d44b06dba845420ab7f1" title="The JVC protocol repeats by skipping the header mark and space &#45;&gt; this leads to a poor repeat detecti..." alt="" coords="371,264,496,292"/>
+<area shape="rect" id="node9" href="$classIRsend.html#a71e0a4a000f5dcb541ca889be34442ce" title=" " alt="" coords="154,316,316,344"/>
+<area shape="rect" id="node3" href="$group__Decoder.html#ga76790d94a80f32ee90591f8803b79d28" title=" " alt="" coords="153,5,317,33"/>
+<area shape="rect" id="node4" href="$group__Decoder.html#ga9b819c19d95d4d880e9d6ecb056c0e0a" title=" " alt="" coords="168,57,302,85"/>
+<area shape="rect" id="node5" href="$group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d" title="Interprets and sends a IRData structure." alt="" coords="5,213,105,241"/>
+<area shape="rect" id="node6" href="$group__Decoder.html#gaa7e864dec776c5d35caa3718740e8390" title=" " alt="" coords="165,161,305,189"/>
+</map>

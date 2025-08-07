@@ -1,0 +1,6 @@
+<map id="IRrecv::printIRResultShort" name="IRrecv::printIRResultShort">
+<area shape="rect" id="node1" title=" " alt="" coords="5,44,182,72"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#ga8f6a77e0e70e85964847b9c052f137f7" title="Checks if protocol is not detected and detected space between two transmissions is smaller than known..." alt="" coords="230,5,425,49"/>
+<area shape="rect" id="node3" href="$group__Print.html#gad59a9b756d71f983bf9f0a28d25f238f" title=" " alt="" coords="243,73,412,101"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="473,73,594,101"/>
+</map>

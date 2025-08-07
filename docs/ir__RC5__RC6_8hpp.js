@@ -8,6 +8,7 @@ var ir__RC5__RC6_8hpp =
     [ "RC5_COMMAND_BITS", "group__Decoder.html#gad486165e9022f3ee3a36c2d6c0068901", null ],
     [ "RC5_COMMAND_FIELD_BIT", "group__Decoder.html#ga736ff0f98dd2db7eb6998fd0d99f4764", null ],
     [ "RC5_DURATION", "group__Decoder.html#ga72ef3521775a056c2009b22cc9a50a28", null ],
+    [ "RC5_EXTENSION_BITS", "group__Decoder.html#ga9279f4c06cb8c92dad99be4fc25f966b", null ],
     [ "RC5_MAXIMUM_REPEAT_DISTANCE", "group__Decoder.html#gad5be6473101d5d85483a3c8e5f0afe24", null ],
     [ "RC5_REPEAT_DISTANCE", "group__Decoder.html#ga9274e35497925d4e13817a580abb6014", null ],
     [ "RC5_REPEAT_PERIOD", "group__Decoder.html#ga985b139053cd231f47e363981e6a32e4", null ],

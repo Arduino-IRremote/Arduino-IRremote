@@ -1,0 +1,5 @@
+<map id="enablePCIInterruptForTinyReceiver" name="enablePCIInterruptForTinyReceiver">
+<area shape="rect" id="node1" title="Initializes hardware interrupt generation according to IR_RECEIVE_PIN or use attachInterrupt() functi..." alt="" coords="5,5,180,49"/>
+<area shape="rect" id="node2" href="$group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69" title="The ISR (Interrupt Service Routine) of TinyIRRreceiver." alt="" coords="228,13,420,41"/>
+<area shape="rect" id="node3" href="$group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application." alt="" coords="468,13,649,41"/>
+</map>

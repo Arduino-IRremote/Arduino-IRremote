@@ -1,0 +1,7 @@
+<map id="IRrecv::restartAfterSend" name="IRrecv::restartAfterSend">
+<area shape="rect" id="node1" title="Restarts receiver after send." alt="" coords="5,57,169,85"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#ga2c06971f0e4e0c4131930c8903eb21dc" title="Start the receiving process." alt="" coords="217,57,311,85"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5" title="Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame." alt="" coords="396,5,508,33"/>
+<area shape="rect" id="node4" href="$group__Timer.html#ga8cca92581b5452eaac5b3075227c6c56" title="Configures the timer to be able to generate the receive sample interrupt, which consumes a small amou..." alt="" coords="374,57,530,85"/>
+<area shape="rect" id="node5" href="$group__Timer.html#gae0ec21c275dd13fff83445ce6cc900d7" title="Enables the receive sample timer interrupt, which consumes a small amount of CPU every 50 us." alt="" coords="359,109,545,137"/>
+</map>

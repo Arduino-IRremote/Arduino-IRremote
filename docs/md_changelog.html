@@ -86,15 +86,38 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>The latest version may not be released! See also the commit log at github: <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master">https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master</a></p>
+<h1>4.5.0</h1>
+<ul>
+<li>Added support for multiple receiver instances.</li>
+<li><a class="el" href="structirparams__struct.html" title="This struct contains the data and control used for receiver functions and the ISR (interrupt service ...">irparams_struct</a> irparams is now member of <a class="el" href="classIRrecv.html">IRrecv</a>. Thus removed rawDataPtr (pointer to irparams) from IrReceiver.decodedIRData.</li>
+<li>Removed return value for all decodePulseDistanceWidthData() decoding functions, which returned a constant true.</li>
+<li>New handling of MARK_EXCESS_MICROS without strange rounding inconsistency.</li>
+<li>Fixed bug in ReceiveDemo.cpp if DEBUG_BUTTON_PIN is not defined. #1306.</li>
+<li>Fixed minor bugs in Denon decoder.</li>
+<li>Added threshold decoding.</li>
+<li>Minor bug fixes for DEBUG.</li>
+<li>LED feedback is always enabled for sending. It can only be disabled by using the macro NO_LED_SEND_FEEDBACK_CODE.</li>
+<li>Removed parameter aEnableLEDFeedback in function IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) and <a class="el" href="group__Sending.html#gafb0b2ecc23c160d0f9589931c6093615">IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)</a>.</li>
+<li>Added experimental sendVelux().</li>
+<li>Added sendMaranz().</li>
+<li>Added output for UNKNOWN protocol to printIRSendUsage().</li>
+</ul>
+<h1>4.4.3</h1>
+<ul>
+<li>Added USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN to make the software aware of send LED connected between VCC and send pin.</li>
+<li>Fixed backward compatibility bug for printIRResultShort(3 params).</li>
+<li>Minor improvements.</li>
+</ul>
 <h1>4.4.2</h1>
 <ul>
 <li>Support for SAMD51 timer3 if timer 5 is not available (Adafruit ItsyBitsy M4).</li>
 <li>attachInterrupt() on SAMD has a different semantic :-(. See: <a href="https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/">https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/</a>.</li>
 <li>Fixed overflow handling.</li>
 <li>Improved repeat detection for DistanceWidthProtocol.</li>
-<li>Print of IR frame duration in <a class="el" href="IRProtocol_8h.html#ad2a808bfda125935aeaed2718cfcde7d">printIRResultShort()</a>;</li>
+<li>Print of IR frame duration in <a class="el" href="group__Print.html#gac45e8ead5e96868e61c65cd354758d4d" title="Deprecated static function to be able to print data to send or copied received data.">printIRResultShort()</a>;</li>
 <li><a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> now in PROGMEM, this saves 190 bytes RAM for unit test.</li>
 <li>Support for PROGMEM PulseDistanceWidthProtocol data.</li>
+<li>Support duplicated 8 bit address for sendSamsungLG().</li>
 </ul>
 <h1>4.4.1</h1>
 <ul>
@@ -159,7 +182,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Usage of ATTinyCore pin numbering scheme e.g. PIN_PB2.</li>
 <li>Added ARDUINO_ARCH_NRF52 to support Seeed XIAO nRF52840 Sense.</li>
 <li>First untested support of Uno R4.</li>
-<li>Extraced version macros to <a class="el" href="IRVersion_8h.html">IRVersion.h</a>.</li>
+<li>Extracted version macros to <a class="el" href="IRVersion_8h.html">IRVersion.h</a>.</li>
 </ul>
 <h2>4.1.2</h2>
 <ul>
@@ -168,7 +191,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <h2>4.1.1</h2>
 <ul>
 <li>SAMD51 use timer3 if timer5 not available.</li>
-<li>Disabled #define LOCAL_DEBUG in <a class="el" href="IRReceive_8hpp.html">IRReceive.hpp</a>, which was accidently enabled at 4.1.0.</li>
+<li>Disabled #define LOCAL_DEBUG in <a class="el" href="IRReceive_8hpp.html">IRReceive.hpp</a>, which was accidentally enabled at 4.1.0.</li>
 </ul>
 <h2>4.1.0</h2>
 <ul>
@@ -197,7 +220,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Introduced common structure <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.</li>
 <li>Where possible, changed all send and decode functions to use <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>.</li>
 <li>Improved MSB/LSB handling</li>
-<li>New convenience functions <a class="el" href="group__Receiving.html#gad7c345c1b554ca8f3069b5fb767f07d6">bitreverse32Bit()</a> and <a class="el" href="group__Receiving.html#ga95e4a5acb86af8c967f8cae7e75062cb">bitreverseOneByte()</a>.</li>
+<li>New convenience functions <a class="el" href="group__Utils.html#gad7c345c1b554ca8f3069b5fb767f07d6">bitreverse32Bit()</a> and <a class="el" href="group__Utils.html#ga95e4a5acb86af8c967f8cae7e75062cb">bitreverseOneByte()</a>.</li>
 <li>Improved Magiquest protocol.</li>
 <li>Fix for #1028 - Prevent long delay caused by overflow when frame duration &lt; repeat period - Thanks to Stephen Humphries!</li>
 <li>Support for ATtiny816 - Thanks to elockman.</li>
@@ -244,7 +267,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </ul>
 <h2>3.7.1</h2>
 <ul>
-<li>SendRaw now supports bufferlenght &gt; 255.</li>
+<li>SendRaw now supports buffer length &gt; 255.</li>
 <li>Improved DistanceProtocol decoder output.</li>
 <li>Fixed ESP32 send bug for 2.x ESP32 cores.</li>
 </ul>
@@ -303,7 +326,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Renamed *.cpp.h to .hpp.</li>
 <li>organized carrier frequencies.</li>
 <li>Compiler switch USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN added.</li>
-<li>Moved blink13() back to <a class="el" href="classIRrecv.html" title="Main class for receiving IR signals.">IRrecv</a> class.</li>
+<li>Moved blink13() back to <a class="el" href="classIRrecv.html">IRrecv</a> class.</li>
 <li>Added Kaseikyo convenience functions like sendKaseikyo_Denon().</li>
 <li>Improved / adjusted LG protocol and added class <a class="el" href="classAircondition__LG.html">Aircondition_LG</a> based on real hardware supplied by makerspace 201 (<a href="https://wiki.hackerspaces.org/ZwoNullEins">https://wiki.hackerspaces.org/ZwoNullEins</a>) from Cologne.</li>
 <li>Improved universal decoder for pulse distance protocols to support more than 32 bits.</li>
@@ -332,7 +355,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <ul>
 <li>Generation of PWM by software is active by default.</li>
 <li>Removed <a class="el" href="structdecode__results.html" title="Results returned from old decoders !!!deprecated!!!">decode_results</a> results.</li>
-<li>Renamed most <a class="el" href="structirparams__struct.html" title="This struct contains the data and control used for receiver static functions and the ISR (interrupt s...">irparams_struct</a> values.</li>
+<li>Renamed most <a class="el" href="structirparams__struct.html" title="This struct contains the data and control used for receiver functions and the ISR (interrupt service ...">irparams_struct</a> values.</li>
 <li>Fixed LG send bug and added unit test.</li>
 <li>Replaced <code>#define DECODE_NEC 1/0</code> by defining/not defining.</li>
 <li>Use LED_BUILTIN instead of FEEDBACK_LED if FeedbackLEDPin is 0.</li>
@@ -429,7 +452,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Corrected keywords.txt.</li>
 <li>BoseWave protocol added PR #690.</li>
 <li>Formatting comply to the new stylesheet.</li>
-<li>Renamed "boarddefs.h" <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/issues/375">ISSUE #375</a>.</li>
+<li>Renamed "boarddefs.h".</li>
 <li>Renamed <code>SEND_PIN</code> to <code>IR_SEND_PIN</code>.</li>
 <li>Renamed state macros.</li>
 <li>Enabled <code>DUTY_CYCLE</code> for send signal.</li>
@@ -505,7 +528,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <li>Fixed #110 Mess</li>
 <li>Created Gitter Room</li>
 <li>Added Gitter Badge</li>
-<li>Standardised Code Base</li>
+<li>Standardized Code Base</li>
 <li>Clean Debug Output</li>
 <li>Optimized Send Loops</li>
 <li>Modularized Design</li>
@@ -544,7 +567,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Mar 19 2025 11:06:48 for IRremote by
+    <li class="footer">Generated on Mon Aug 25 2025 22:35:30 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

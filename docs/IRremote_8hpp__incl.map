@@ -1,32 +1,32 @@
 <map id="src/IRremote.hpp" name="src/IRremote.hpp">
-<area shape="rect" id="node1" title="Public API to the library." alt="" coords="1519,5,1640,32"/>
-<area shape="rect" id="node2" href="$IRVersion_8h.html" title=" " alt="" coords="5,80,95,107"/>
-<area shape="rect" id="node3" href="$IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="170,80,269,107"/>
-<area shape="rect" id="node6" href="$digitalWriteFast_8h.html" title=" " alt="" coords="48,155,172,181"/>
-<area shape="rect" id="node7" href="$IRTimer_8hpp.html" title="All timer specific definitions are contained in this file. Sets IR_SEND_PIN if required,..." alt="" coords="293,80,425,107"/>
-<area shape="rect" id="node8" href="$IRFeedbackLED_8hpp.html" title="All Feedback LED specific functions are contained in this file." alt="" coords="450,80,591,107"/>
-<area shape="rect" id="node9" href="$LongUnion_8h.html" title=" " alt="" coords="1621,229,1716,256"/>
-<area shape="rect" id="node11" href="$IRProtocol_8hpp.html" title=" " alt="" coords="735,80,842,107"/>
-<area shape="rect" id="node12" href="$IRReceive_8hpp.html" title=" " alt="" coords="866,80,970,107"/>
-<area shape="rect" id="node13" href="$IRSend_8hpp.html" title=" " alt="" coords="995,80,1084,107"/>
-<area shape="rect" id="node14" href="$ir__BangOlufsen_8hpp.html" title=" " alt="" coords="1108,80,1243,107"/>
-<area shape="rect" id="node15" href="$ir__BoseWave_8hpp.html" title=" " alt="" coords="1267,80,1390,107"/>
-<area shape="rect" id="node16" href="$ir__Denon_8hpp.html" title=" " alt="" coords="1414,80,1513,107"/>
-<area shape="rect" id="node17" href="$ir__JVC_8hpp.html" title=" " alt="" coords="1537,80,1622,107"/>
-<area shape="rect" id="node18" href="$ir__Kaseikyo_8hpp.html" title=" " alt="" coords="1646,80,1761,107"/>
-<area shape="rect" id="node19" href="$ir__Lego_8hpp.html" title=" " alt="" coords="1785,80,1875,107"/>
-<area shape="rect" id="node20" href="$ir__LG_8hpp.html" title=" " alt="" coords="1899,80,1977,107"/>
-<area shape="rect" id="node21" href="$ir__MagiQuest_8hpp.html" title=" " alt="" coords="2001,80,2125,107"/>
-<area shape="rect" id="node22" href="$ir__NEC_8hpp.html" title=" " alt="" coords="2150,80,2238,107"/>
-<area shape="rect" id="node23" href="$ir__RC5__RC6_8hpp.html" title=" " alt="" coords="2263,80,2381,107"/>
-<area shape="rect" id="node24" href="$ir__Samsung_8hpp.html" title=" " alt="" coords="2405,80,2521,107"/>
-<area shape="rect" id="node25" href="$ir__Sony_8hpp.html" title=" " alt="" coords="2546,80,2637,107"/>
-<area shape="rect" id="node26" href="$ir__FAST_8hpp.html" title=" " alt="" coords="616,80,711,107"/>
-<area shape="rect" id="node28" href="$ir__Others_8hpp.html" title=" " alt="" coords="2712,80,2812,107"/>
-<area shape="rect" id="node29" href="$ir__Pronto_8hpp.html" title=" " alt="" coords="2837,80,2935,107"/>
-<area shape="rect" id="node30" href="$ir__DistanceWidthProtocol_8hpp.html" title=" " alt="" coords="2959,80,3154,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="289,229,366,256"/>
-<area shape="rect" id="node5" href="$IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="197,155,290,181"/>
-<area shape="rect" id="node10" title=" " alt="" coords="1636,304,1701,331"/>
-<area shape="rect" id="node27" href="$TinyIR_8h.html" title=" " alt="" coords="629,155,698,181"/>
+<area shape="rect" id="node1" title="Public API to the library." alt="" coords="1512,5,1635,33"/>
+<area shape="rect" id="node2" href="$IRVersion_8h.html" title=" " alt="" coords="5,81,94,109"/>
+<area shape="rect" id="node3" href="$IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="118,81,213,109"/>
+<area shape="rect" id="node4" href="$IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="199,157,300,185"/>
+<area shape="rect" id="node6" href="$digitalWriteFast_8h.html" title=" " alt="" coords="324,157,447,185"/>
+<area shape="rect" id="node7" href="$IRTimer_8hpp.html" title="All timer specific definitions are contained in this file. Sets IR_SEND_PIN if required,..." alt="" coords="338,81,473,109"/>
+<area shape="rect" id="node8" href="$IRFeedbackLED_8hpp.html" title="All Feedback LED specific functions are contained in this file." alt="" coords="498,81,641,109"/>
+<area shape="rect" id="node9" href="$LongUnion_8h.html" title=" " alt="" coords="1670,233,1765,261"/>
+<area shape="rect" id="node11" href="$IRProtocol_8hpp.html" title=" " alt="" coords="781,81,889,109"/>
+<area shape="rect" id="node12" href="$IRReceive_8hpp.html" title=" " alt="" coords="913,81,1021,109"/>
+<area shape="rect" id="node13" href="$IRSend_8hpp.html" title=" " alt="" coords="1046,81,1136,109"/>
+<area shape="rect" id="node14" href="$ir__BangOlufsen_8hpp.html" title=" " alt="" coords="1160,81,1296,109"/>
+<area shape="rect" id="node15" href="$ir__BoseWave_8hpp.html" title=" " alt="" coords="1320,81,1443,109"/>
+<area shape="rect" id="node16" href="$ir__Denon_8hpp.html" title=" " alt="" coords="1467,81,1565,109"/>
+<area shape="rect" id="node17" href="$ir__JVC_8hpp.html" title=" " alt="" coords="1589,81,1675,109"/>
+<area shape="rect" id="node18" href="$ir__Kaseikyo_8hpp.html" title=" " alt="" coords="1699,81,1813,109"/>
+<area shape="rect" id="node19" href="$ir__Lego_8hpp.html" title=" " alt="" coords="1837,81,1926,109"/>
+<area shape="rect" id="node20" href="$ir__LG_8hpp.html" title=" " alt="" coords="1950,81,2027,109"/>
+<area shape="rect" id="node21" href="$ir__MagiQuest_8hpp.html" title=" " alt="" coords="2050,81,2174,109"/>
+<area shape="rect" id="node22" href="$ir__NEC_8hpp.html" title=" " alt="" coords="2198,81,2288,109"/>
+<area shape="rect" id="node23" href="$ir__RC5__RC6_8hpp.html" title=" " alt="" coords="2312,81,2433,109"/>
+<area shape="rect" id="node24" href="$ir__Samsung_8hpp.html" title=" " alt="" coords="2457,81,2572,109"/>
+<area shape="rect" id="node25" href="$ir__Sony_8hpp.html" title=" " alt="" coords="2597,81,2686,109"/>
+<area shape="rect" id="node26" href="$ir__FAST_8hpp.html" title=" " alt="" coords="665,81,757,109"/>
+<area shape="rect" id="node28" href="$ir__Others_8hpp.html" title=" " alt="" coords="2761,81,2860,109"/>
+<area shape="rect" id="node29" href="$ir__Pronto_8hpp.html" title=" " alt="" coords="2884,81,2983,109"/>
+<area shape="rect" id="node30" href="$ir__DistanceWidthProtocol_8hpp.html" title=" " alt="" coords="3007,81,3201,109"/>
+<area shape="rect" id="node5" title=" " alt="" coords="347,233,424,261"/>
+<area shape="rect" id="node10" title=" " alt="" coords="1685,309,1750,337"/>
+<area shape="rect" id="node27" href="$TinyIR_8h.html" title=" " alt="" coords="675,157,746,185"/>
 </map>

@@ -1,6 +1,7 @@
 var TinyIRSender_8hpp =
 [
     [ "IR_SEND_PIN", "group__TinySender.html#ga4cb394b3b749f9302940902fb05bd920", null ],
+    [ "LED_SEND_FEEDBACK_CODE", "group__TinySender.html#ga25079ee5753523646fcd990e5c956d91", null ],
     [ "sendExtendedNEC", "group__TinySender.html#ga397e1b9d2e6457c3707ea35e85008415", null ],
     [ "sendFAST", "group__TinySender.html#ga03e7b24211df9d9b321032bf11449df8", null ],
     [ "sendFast8BitAndParity", "group__TinySender.html#gac2a48685f769fa815bb473f6c97c9677", null ],

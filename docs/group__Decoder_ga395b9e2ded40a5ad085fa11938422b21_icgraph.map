@@ -1,0 +1,5 @@
+<map id="IRsend::sendSamsungLGRepeat" name="IRsend::sendSamsungLGRepeat">
+<area shape="rect" id="node1" title="Send repeat Repeat commands should be sent in a 110 ms raster." alt="" coords="372,5,585,33"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga09ed812db755a2db480d8e9233036629" title=" " alt="" coords="153,5,324,33"/>
+<area shape="rect" id="node3" href="$group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d" title="Interprets and sends a IRData structure." alt="" coords="5,5,105,33"/>
+</map>

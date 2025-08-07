@@ -33,7 +33,7 @@ var NAVTREE =
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ]
       ] ]
     ] ],
@@ -55,12 +55,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "IRFeedbackLED_8hpp.html",
-"functions_v.html",
-"group__Decoder.html#ga2ab110e480a4b16fe516c2afd16a1ea2",
-"group__Decoder.html#ga92da2b7d1208de09d496438a32e46ecf",
-"group__FeedbackLEDFunctions.html#gac7fc50c7e08b8c339b2c1c912a0c6e89",
-"group__Timer.html#ga41e88e0b7edea76b3c77643ca7a3468f",
-"ir__Pronto_8hpp.html"
+"functions_func_d.html",
+"group__Decoder.html#ga22d50c9e05c2de32c73cda0a9b05a8c4",
+"group__Decoder.html#ga80d136268d4d727245922ae0c85464c3",
+"group__Decoder.html#gaee1c9e1d8ab6dcf642d6707b4528385b",
+"group__Sending.html#ga170701fb079d24717aded137dee808e7",
+"group__TinyReceiver.html#gaea72a0ef27558236aee7b351c3a336cb",
+"unionWordUnion.html#a0e1088e17c9fefa37f9ac54d2151bed3"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

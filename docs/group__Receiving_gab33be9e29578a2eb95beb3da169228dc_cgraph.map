@@ -1,0 +1,4 @@
+<map id="IRrecv::decodeHash" name="IRrecv::decodeHash">
+<area shape="rect" id="node1" title="Decodes an arbitrary IR code to a 32&#45;bit value." alt="" coords="5,5,147,33"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157" title="Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g." alt="" coords="195,5,313,33"/>
+</map>

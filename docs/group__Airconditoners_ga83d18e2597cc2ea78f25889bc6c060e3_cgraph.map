@@ -1,0 +1,18 @@
+<map id="Aircondition_LG::sendTemperatureFanSpeedAndMode" name="Aircondition_LG::sendTemperatureFanSpeedAndMode">
+<area shape="rect" id="node1" title=" " alt="" coords="5,95,227,139"/>
+<area shape="rect" id="node2" href="$group__Airconditoners.html#ga113704b3b19c8477635210341163bf9e" title=" " alt="" coords="275,103,498,131"/>
+<area shape="rect" id="node3" href="$group__Decoder.html#gad8b3a7ce5ae5adb098ca0dc004b7b71b" title="LG2 uses a special repeat." alt="" coords="546,103,669,131"/>
+<area shape="rect" id="node4" href="$group__Decoder.html#ga6ada889ebd0aeb60e7284c2060f61871" title=" " alt="" coords="717,60,911,104"/>
+<area shape="rect" id="node5" href="$group__Sending.html#ga7d38a25bd93ee37c1ad769a87d9e48f6" title=" " alt="" coords="722,128,906,172"/>
+<area shape="rect" id="node6" href="$group__Sending.html#gacc820b71185ccb9571fcfaba9af6803f" title="Sends PulseDistance frames and repeats." alt="" coords="959,128,1143,172"/>
+<area shape="rect" id="node7" href="$group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15" title="Enables IR output." alt="" coords="1211,36,1355,64"/>
+<area shape="rect" id="node9" href="$group__Sending.html#ga71a76987183f83b366fa59660e80253b" title="Sends an IR mark for the specified number of microseconds." alt="" coords="1233,105,1333,133"/>
+<area shape="rect" id="node15" href="$group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="1191,157,1375,201"/>
+<area shape="rect" id="node16" href="$group__Sending.html#ga914d45f08addaf1142e167a8ebf7d5a4" title="Sends an IR space for the specified number of microseconds." alt="" coords="1230,225,1336,253"/>
+<area shape="rect" id="node8" href="$group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="1469,5,1607,33"/>
+<area shape="rect" id="node10" href="$group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798" title="Custom delay function that circumvents Arduino&#39;s delayMicroseconds 16 bit limit and is (mostly) not e..." alt="" coords="1423,217,1653,245"/>
+<area shape="rect" id="node11" href="$group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9" title="Enables output of the PWM signal of the timer at the timer pin." alt="" coords="1452,57,1624,85"/>
+<area shape="rect" id="node12" href="$group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0" title="Just switch the IR sending LED off to send an IR space A space is &quot;no output&quot;, so the PWM output is d..." alt="" coords="1476,109,1600,137"/>
+<area shape="rect" id="node14" href="$group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba" title="Flash LED while receiving or sending IR data." alt="" coords="1727,161,1849,189"/>
+<area shape="rect" id="node13" href="$group__Timer.html#ga352399811c67be16548d81a18e3cd337" title="Disables output of the PWM signal of the timer at the timer pin and set it to inactive." alt="" coords="1701,109,1875,137"/>
+</map>

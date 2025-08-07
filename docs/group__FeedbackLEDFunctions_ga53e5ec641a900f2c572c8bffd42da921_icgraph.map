@@ -1,0 +1,5 @@
+<map id="setLEDFeedback" name="setLEDFeedback">
+<area shape="rect" id="node1" title=" " alt="" coords="163,32,285,60"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#gae15cd27543814209aba08637c943a14c" title="Initializes the receive and feedback pin." alt="" coords="10,5,110,33"/>
+<area shape="rect" id="node3" href="$group__FeedbackLEDFunctions.html#gac7fc50c7e08b8c339b2c1c912a0c6e89" title="Old deprecated function name for setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback()" alt="" coords="5,57,115,85"/>
+</map>

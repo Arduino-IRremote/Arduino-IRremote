@@ -1,0 +1,10 @@
+<map id="IRsend::sendBiphaseData" name="IRsend::sendBiphaseData">
+<area shape="rect" id="node1" title="Sends Biphase (Manchester) coded data MSB first This function concatenates two marks to one longer ma..." alt="" coords="5,32,180,60"/>
+<area shape="rect" id="node2" href="$group__Sending.html#ga71a76987183f83b366fa59660e80253b" title="Sends an IR mark for the specified number of microseconds." alt="" coords="231,57,331,85"/>
+<area shape="rect" id="node8" href="$group__Sending.html#ga914d45f08addaf1142e167a8ebf7d5a4" title="Sends an IR space for the specified number of microseconds." alt="" coords="228,5,334,33"/>
+<area shape="rect" id="node3" href="$group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798" title="Custom delay function that circumvents Arduino&#39;s delayMicroseconds 16 bit limit and is (mostly) not e..." alt="" coords="382,5,611,33"/>
+<area shape="rect" id="node4" href="$group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9" title="Enables output of the PWM signal of the timer at the timer pin." alt="" coords="411,57,582,85"/>
+<area shape="rect" id="node5" href="$group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0" title="Just switch the IR sending LED off to send an IR space A space is &quot;no output&quot;, so the PWM output is d..." alt="" coords="435,109,558,137"/>
+<area shape="rect" id="node7" href="$group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba" title="Flash LED while receiving or sending IR data." alt="" coords="685,161,808,189"/>
+<area shape="rect" id="node6" href="$group__Timer.html#ga352399811c67be16548d81a18e3cd337" title="Disables output of the PWM signal of the timer at the timer pin and set it to inactive." alt="" coords="659,109,834,137"/>
+</map>

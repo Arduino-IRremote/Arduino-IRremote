@@ -1,0 +1,5 @@
+<map id="IRrecv::restartTimerWithTicksToAdd" name="IRrecv::restartTimerWithTicksToAdd">
+<area shape="rect" id="node1" title="Configures the timer and the state machine for IR reception." alt="" coords="5,24,171,68"/>
+<area shape="rect" id="node2" href="$group__Timer.html#ga8cca92581b5452eaac5b3075227c6c56" title="Configures the timer to be able to generate the receive sample interrupt, which consumes a small amou..." alt="" coords="234,5,390,33"/>
+<area shape="rect" id="node3" href="$group__Timer.html#gae0ec21c275dd13fff83445ce6cc900d7" title="Enables the receive sample timer interrupt, which consumes a small amount of CPU every 50 us." alt="" coords="219,57,405,85"/>
+</map>

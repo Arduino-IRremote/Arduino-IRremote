@@ -1,0 +1,5 @@
+<map id="IRrecv::compensateAndPrintIRResultAsCArray" name="IRrecv::compensateAndPrintIRResultAsCArray">
+<area shape="rect" id="node1" title="Dump out the IrReceiver.irparams.rawbuf[] to be used as C definition for sendRaw()." alt="" coords="5,5,195,49"/>
+<area shape="rect" id="node2" href="$group__Print.html#ga44435c5dee7e55f4a0180b0a397e737c" title=" " alt="" coords="243,13,445,41"/>
+<area shape="rect" id="node3" href="$group__Print.html#gab6f0815692479730ca205bdb11199cb2" title="Function to print values and flags of IrReceiver.decodedIRData in one line." alt="" coords="493,13,669,41"/>
+</map>

@@ -1,5 +1,6 @@
 var group__Timer =
 [
+    [ "IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH", "group__Timer.html#ga1178972e07d5f81a7561429a18da71e3", null ],
     [ "IR_SEND_PIN", "group__Timer.html#ga4cb394b3b749f9302940902fb05bd920", null ],
     [ "disableSendPWMByTimer", "group__Timer.html#ga352399811c67be16548d81a18e3cd337", null ],
     [ "enableSendPWMByTimer", "group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9", null ],

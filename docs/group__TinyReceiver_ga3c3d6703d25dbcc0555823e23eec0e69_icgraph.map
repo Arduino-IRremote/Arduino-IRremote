@@ -1,0 +1,5 @@
+<map id="IRPinChangeInterruptHandler" name="IRPinChangeInterruptHandler">
+<area shape="rect" id="node1" title="The ISR (Interrupt Service Routine) of TinyIRRreceiver." alt="" coords="481,13,673,41"/>
+<area shape="rect" id="node2" href="$group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10" title="Initializes hardware interrupt generation according to IR_RECEIVE_PIN or use attachInterrupt() functi..." alt="" coords="259,5,433,49"/>
+<area shape="rect" id="node3" href="$group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2" title="Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mo..." alt="" coords="5,13,211,41"/>
+</map>

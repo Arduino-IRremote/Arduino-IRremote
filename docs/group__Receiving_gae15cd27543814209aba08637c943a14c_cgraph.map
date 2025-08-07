@@ -1,0 +1,10 @@
+<map id="IRrecv::begin" name="IRrecv::begin">
+<area shape="rect" id="node1" title="Initializes the receive and feedback pin." alt="" coords="5,84,105,112"/>
+<area shape="rect" id="node2" href="$group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921" title=" " alt="" coords="168,5,290,33"/>
+<area shape="rect" id="node3" href="$group__FeedbackLEDFunctions.html#ga087e229d96da3f9e352eae507c698409" title=" " alt="" coords="159,57,300,85"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#gadbdf467cfd9eef58f3824f845bbef1c3" title="Sets / changes the receiver pin number." alt="" coords="153,109,306,137"/>
+<area shape="rect" id="node5" href="$group__Receiving.html#ga2c06971f0e4e0c4131930c8903eb21dc" title="Start the receiving process." alt="" coords="182,161,276,189"/>
+<area shape="rect" id="node6" href="$group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5" title="Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame." alt="" coords="392,109,503,137"/>
+<area shape="rect" id="node7" href="$group__Timer.html#ga8cca92581b5452eaac5b3075227c6c56" title="Configures the timer to be able to generate the receive sample interrupt, which consumes a small amou..." alt="" coords="370,161,525,189"/>
+<area shape="rect" id="node8" href="$group__Timer.html#gae0ec21c275dd13fff83445ce6cc900d7" title="Enables the receive sample timer interrupt, which consumes a small amount of CPU every 50 us." alt="" coords="354,213,540,241"/>
+</map>

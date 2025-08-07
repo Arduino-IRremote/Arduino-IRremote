@@ -1,0 +1,4 @@
+<map id="IRsend::sendPronto" name="IRsend::sendPronto">
+<area shape="rect" id="node1" title=" " alt="" coords="191,5,328,33"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#gae58b0eca1937aca61ee9c609f0396827" title="Parse the string given as Pronto Hex, and send it a number of times given as the second argument." alt="" coords="5,5,143,33"/>
+</map>

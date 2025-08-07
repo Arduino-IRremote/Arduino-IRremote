@@ -1,0 +1,4 @@
+<map id="IRsend::enableIROut" name="IRsend::enableIROut">
+<area shape="rect" id="node1" title="Enables IR output." alt="" coords="5,5,150,33"/>
+<area shape="rect" id="node2" href="$group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="198,5,335,33"/>
+</map>

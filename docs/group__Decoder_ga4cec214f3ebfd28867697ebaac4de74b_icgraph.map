@@ -1,0 +1,6 @@
+<map id="IRsend::computeNECRawDataAndChecksum" name="IRsend::computeNECRawDataAndChecksum">
+<area shape="rect" id="node1" title="Convert 16 bit address and 16 bit command to 32 bit NECRaw data If we get a command &lt; 0x100,..." alt="" coords="336,24,541,68"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga3dc9ab05c90197b056c226dcc187cc3a" title="NEC Send frame and special repeats There is NO delay after the last sent repeat!" alt="" coords="156,5,284,33"/>
+<area shape="rect" id="node4" href="$group__Decoder.html#gabf1692bf9eb21e6e27989d5be05c9c11" title="NEC2 Send frame !!! and repeat the frame for each requested repeat !!! There is NO delay after the la..." alt="" coords="153,57,288,85"/>
+<area shape="rect" id="node3" href="$group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d" title="Interprets and sends a IRData structure." alt="" coords="5,32,105,60"/>
+</map>

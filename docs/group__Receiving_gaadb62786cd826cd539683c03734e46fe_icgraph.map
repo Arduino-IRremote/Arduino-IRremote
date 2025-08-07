@@ -1,0 +1,5 @@
+<map id="IRrecv::stop" name="IRrecv::stop">
+<area shape="rect" id="node1" title="Disables the timer for IR reception." alt="" coords="188,32,281,60"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#gaf828d23c733b1bde8f61e39230d9dbcd" title="Alias for stop()." alt="" coords="5,5,140,33"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga8ffd22c2d4c6e93918d987a4b7c3ba5b" title="Alias for stop()." alt="" coords="28,57,117,85"/>
+</map>

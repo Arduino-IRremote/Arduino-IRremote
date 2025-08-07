@@ -1,0 +1,7 @@
+<map id="IRrecv::decodeRC5" name="IRrecv::decodeRC5">
+<area shape="rect" id="node1" title="Try to decode data as RC5 protocol." alt="" coords="346,32,483,60"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="176,5,286,33"/>
+<area shape="rect" id="node4" href="$group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="164,57,298,85"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="14,5,107,33"/>
+<area shape="rect" id="node5" href="$classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="5,57,116,85"/>
+</map>

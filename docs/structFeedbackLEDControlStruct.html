@@ -96,12 +96,12 @@ $(document).ready(function(){initNavTree('structFeedbackLEDControlStruct.html','
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a759f018b8bdb93695bd4ebb0d61a3c4c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFeedbackLEDControlStruct.html#a759f018b8bdb93695bd4ebb0d61a3c4c">FeedbackLEDPin</a></td></tr>
-<tr class="memdesc:a759f018b8bdb93695bd4ebb0d61a3c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions  <a href="structFeedbackLEDControlStruct.html#a759f018b8bdb93695bd4ebb0d61a3c4c">More...</a><br /></td></tr>
+<tr class="memitem:a759f018b8bdb93695bd4ebb0d61a3c4c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFeedbackLEDControlStruct.html#a759f018b8bdb93695bd4ebb0d61a3c4c">FeedbackLEDPin</a> = <a class="el" href="IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d">USE_DEFAULT_FEEDBACK_LED_PIN</a></td></tr>
+<tr class="memdesc:a759f018b8bdb93695bd4ebb0d61a3c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">if USE_DEFAULT_FEEDBACK_LED_PIN / 0, then use digitalWriteFast(LED_BUILTIN,..) otherwise use digitalWrite(FeedbackLEDPin,..)  <a href="structFeedbackLEDControlStruct.html#a759f018b8bdb93695bd4ebb0d61a3c4c">More...</a><br /></td></tr>
 <tr class="separator:a759f018b8bdb93695bd4ebb0d61a3c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaca16b47301e6cc0fcd0c76216f76417"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFeedbackLEDControlStruct.html#aaca16b47301e6cc0fcd0c76216f76417">LedFeedbackEnabled</a></td></tr>
-<tr class="memdesc:aaca16b47301e6cc0fcd0c76216f76417"><td class="mdescLeft">&#160;</td><td class="mdescRight">LED_FEEDBACK_ENABLED_FOR_RECEIVE or LED_FEEDBACK_ENABLED_FOR_SEND -&gt; enable blinking of pin on IR processing.  <a href="structFeedbackLEDControlStruct.html#aaca16b47301e6cc0fcd0c76216f76417">More...</a><br /></td></tr>
-<tr class="separator:aaca16b47301e6cc0fcd0c76216f76417"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49467187b92e40e5122b14d82a9fa500"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFeedbackLEDControlStruct.html#a49467187b92e40e5122b14d82a9fa500">LedFeedbackEnabled</a></td></tr>
+<tr class="memdesc:a49467187b92e40e5122b14d82a9fa500"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disabled for receive at default. Feedback for send is always enabled and can be disabled by NO_LED_SEND_FEEDBACK_CODE or #define NO_LED_FEEDBACK_CODE macros.  <a href="structFeedbackLEDControlStruct.html#a49467187b92e40e5122b14d82a9fa500">More...</a><br /></td></tr>
+<tr class="separator:a49467187b92e40e5122b14d82a9fa500"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains pin number and enable status of the feedback LED. </p>
@@ -115,30 +115,30 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t FeedbackLEDControlStruct::FeedbackLEDPin</td>
+          <td class="memname">uint8_t FeedbackLEDControlStruct::FeedbackLEDPin = <a class="el" href="IRremoteInt_8h.html#a575e74508c30d1ccf92f7e142a43dd3d">USE_DEFAULT_FEEDBACK_LED_PIN</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions </p>
+<p>if USE_DEFAULT_FEEDBACK_LED_PIN / 0, then use digitalWriteFast(LED_BUILTIN,..) otherwise use digitalWrite(FeedbackLEDPin,..) </p>
 
 <p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00043">43</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
 </div>
 </div>
-<a id="aaca16b47301e6cc0fcd0c76216f76417"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaca16b47301e6cc0fcd0c76216f76417">&#9670;&nbsp;</a></span>LedFeedbackEnabled</h2>
+<a id="a49467187b92e40e5122b14d82a9fa500"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49467187b92e40e5122b14d82a9fa500">&#9670;&nbsp;</a></span>LedFeedbackEnabled</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t FeedbackLEDControlStruct::LedFeedbackEnabled</td>
+          <td class="memname">bool FeedbackLEDControlStruct::LedFeedbackEnabled</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>LED_FEEDBACK_ENABLED_FOR_RECEIVE or LED_FEEDBACK_ENABLED_FOR_SEND -&gt; enable blinking of pin on IR processing. </p>
+<p>Disabled for receive at default. Feedback for send is always enabled and can be disabled by NO_LED_SEND_FEEDBACK_CODE or #define NO_LED_FEEDBACK_CODE macros. </p>
 
 <p class="definition">Definition at line <a class="el" href="IRFeedbackLED_8hpp_source.html#l00044">44</a> of file <a class="el" href="IRFeedbackLED_8hpp_source.html">IRFeedbackLED.hpp</a>.</p>
 
@@ -153,7 +153,7 @@ Public Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="structFeedbackLEDControlStruct.html">FeedbackLEDControlStruct</a></li>
-    <li class="footer">Generated on Wed Mar 19 2025 11:06:48 for IRremote by
+    <li class="footer">Generated on Mon Aug 25 2025 22:35:35 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

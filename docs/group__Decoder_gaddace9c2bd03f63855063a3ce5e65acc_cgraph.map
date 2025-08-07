@@ -1,0 +1,12 @@
+<map id="sendLG2SpecialRepeat" name="sendLG2SpecialRepeat">
+<area shape="rect" id="node1" title="Static function for sending special repeat frame." alt="" coords="5,57,164,85"/>
+<area shape="rect" id="node2" href="$group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15" title="Enables IR output." alt="" coords="212,5,356,33"/>
+<area shape="rect" id="node4" href="$group__Sending.html#ga71a76987183f83b366fa59660e80253b" title="Sends an IR mark for the specified number of microseconds." alt="" coords="234,109,334,137"/>
+<area shape="rect" id="node10" href="$group__Sending.html#ga914d45f08addaf1142e167a8ebf7d5a4" title="Sends an IR space for the specified number of microseconds." alt="" coords="231,57,337,85"/>
+<area shape="rect" id="node3" href="$group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="450,5,587,33"/>
+<area shape="rect" id="node5" href="$group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798" title="Custom delay function that circumvents Arduino&#39;s delayMicroseconds 16 bit limit and is (mostly) not e..." alt="" coords="404,57,633,85"/>
+<area shape="rect" id="node6" href="$group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9" title="Enables output of the PWM signal of the timer at the timer pin." alt="" coords="433,109,604,137"/>
+<area shape="rect" id="node7" href="$group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0" title="Just switch the IR sending LED off to send an IR space A space is &quot;no output&quot;, so the PWM output is d..." alt="" coords="457,161,580,189"/>
+<area shape="rect" id="node9" href="$group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba" title="Flash LED while receiving or sending IR data." alt="" coords="707,213,830,241"/>
+<area shape="rect" id="node8" href="$group__Timer.html#ga352399811c67be16548d81a18e3cd337" title="Disables output of the PWM signal of the timer at the timer pin and set it to inactive." alt="" coords="681,161,856,189"/>
+</map>

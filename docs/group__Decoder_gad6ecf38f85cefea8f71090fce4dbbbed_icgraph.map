@@ -1,0 +1,5 @@
+<map id="IRrecv::decodeJVC" name="IRrecv::decodeJVC">
+<area shape="rect" id="node1" title=" " alt="" coords="305,5,441,33"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="147,5,257,33"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,5,99,33"/>
+</map>

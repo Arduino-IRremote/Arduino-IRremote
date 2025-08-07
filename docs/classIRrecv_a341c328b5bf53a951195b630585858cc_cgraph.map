@@ -1,0 +1,7 @@
+<map id="IRrecv::decodeBangOlufsen" name="IRrecv::decodeBangOlufsen">
+<area shape="rect" id="node1" title=" " alt="" coords="5,57,191,85"/>
+<area shape="rect" id="node2" href="$ir__BangOlufsen_8hpp.html#ac5080b165c41b5f1d1245017b9fbc3f8" title=" " alt="" coords="239,5,358,33"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="255,57,342,85"/>
+<area shape="rect" id="node5" href="$group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="251,109,346,137"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="406,84,495,112"/>
+</map>

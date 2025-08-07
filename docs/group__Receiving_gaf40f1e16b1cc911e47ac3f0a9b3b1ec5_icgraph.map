@@ -1,0 +1,9 @@
+<map id="IRrecv::resume" name="IRrecv::resume">
+<area shape="rect" id="node1" title="Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame." alt="" coords="399,59,510,87"/>
+<area shape="rect" id="node2" href="$group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="217,19,351,47"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#ga2c06971f0e4e0c4131930c8903eb21dc" title="Start the receiving process." alt="" coords="237,84,331,112"/>
+<area shape="rect" id="node3" href="$classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="32,5,142,33"/>
+<area shape="rect" id="node5" href="$group__Receiving.html#gae15cd27543814209aba08637c943a14c" title="Initializes the receive and feedback pin." alt="" coords="37,57,137,85"/>
+<area shape="rect" id="node6" href="$group__Receiving.html#ga69d3e9314aea4a37b43b74a0b4f3f976" title="Alias for start()." alt="" coords="21,109,153,137"/>
+<area shape="rect" id="node7" href="$group__Receiving.html#gacf2ba4aadc8118c4d1012302f985f62a" title="Restarts receiver after send." alt="" coords="5,161,169,189"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="IRReceiveTimerInterruptHandler" name="IRReceiveTimerInterruptHandler">
+<area shape="rect" id="node1" title=" " alt="" coords="5,32,215,60"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#ga31747913e7bd56cd7fb7fb96e8d1b618" title=" " alt="" coords="263,24,427,68"/>
+<area shape="rect" id="node3" href="$group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba" title="Flash LED while receiving or sending IR data." alt="" coords="504,5,626,33"/>
+<area shape="rect" id="node4" href="$group__Timer.html#ga41e88e0b7edea76b3c77643ca7a3468f" title=" " alt="" coords="475,57,655,85"/>
+</map>

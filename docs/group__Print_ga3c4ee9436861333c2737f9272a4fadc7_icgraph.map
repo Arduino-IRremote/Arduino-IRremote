@@ -1,0 +1,7 @@
+<map id="IRrecv::printDistanceWidthTimingInfo" name="IRrecv::printDistanceWidthTimingInfo">
+<area shape="rect" id="node1" title=" " alt="" coords="549,24,729,68"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="305,5,501,33"/>
+<area shape="rect" id="node5" href="$group__Print.html#gabe924ffc10b8814a5f3303b3df907dd7" title="Function to print values and flags of IrReceiver.decodedIRData in one line." alt="" coords="316,57,491,85"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="147,5,257,33"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,5,99,33"/>
+</map>

@@ -1,0 +1,52 @@
+<map id="timerConfigForSend" name="timerConfigForSend">
+<area shape="rect" id="node1" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="910,853,1047,881"/>
+<area shape="rect" id="node2" href="$group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15" title="Enables IR output." alt="" coords="717,853,862,881"/>
+<area shape="rect" id="node3" href="$classIRsend.html#a9f0668c744fa5f27401d1089a1b42c8c" title=" " alt="" coords="462,16,663,44"/>
+<area shape="rect" id="node5" href="$classIRsend.html#a01622320e53e93b0695b2cece65a724f" title=" " alt="" coords="462,89,663,133"/>
+<area shape="rect" id="node7" href="$group__Decoder.html#ga4f68cb05cfe18a8ae84e96138459a734" title=" " alt="" coords="494,265,631,293"/>
+<area shape="rect" id="node12" href="$group__Decoder.html#ga39702704a52a99d8cb7d118d8a9e0251" title="The FAST protocol repeats by skipping the header mark and space &#45;&gt; this leads to a poor repeat detect..." alt="" coords="229,369,361,397"/>
+<area shape="rect" id="node13" href="$group__Decoder.html#gaa10da0665ac4d44b06dba845420ab7f1" title="The JVC protocol repeats by skipping the header mark and space &#45;&gt; this leads to a poor repeat detecti..." alt="" coords="232,473,358,501"/>
+<area shape="rect" id="node14" href="$group__Decoder.html#gae3ffaf23301bec85ca0c2c7499f484a3" title="With Send sendJVCMSB() you can send your old 32 bit codes." alt="" coords="486,421,640,449"/>
+<area shape="rect" id="node16" href="$group__Decoder.html#gada6382d5c398922c22ace404179a5744" title="Address can be interpreted as sub&#45;device &lt;&lt; 4 + 4 bit device." alt="" coords="486,681,639,709"/>
+<area shape="rect" id="node22" href="$group__Decoder.html#gaed2ff12fe3d0692ca58bc6cb5cab6495" title=" " alt="" coords="504,525,621,553"/>
+<area shape="rect" id="node23" href="$group__Decoder.html#gaaea3e264abb5eb70d01e792817af23e6" title=" " alt="" coords="480,577,645,605"/>
+<area shape="rect" id="node24" href="$group__Decoder.html#gaddace9c2bd03f63855063a3ce5e65acc" title="Static function for sending special repeat frame." alt="" coords="484,629,642,657"/>
+<area shape="rect" id="node25" href="$classIRsend.html#a71e0a4a000f5dcb541ca889be34442ce" title=" " alt="" coords="214,833,376,861"/>
+<area shape="rect" id="node26" href="$group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63" title="With Send sendNECMSB() you can send your old 32 bit codes." alt="" coords="216,1379,374,1407"/>
+<area shape="rect" id="node28" href="$group__Decoder.html#gae8fff4f1d8703ca18ea85a15289dc44c" title="Send special NEC repeat frame Repeat commands should be sent in a 110 ms raster." alt="" coords="478,1405,648,1433"/>
+<area shape="rect" id="node29" href="$group__Decoder.html#ga7c4ddfbbbe38d11709d079dee617f2b2" title="Static function variant of IRsend::sendNECRepeat For use in ProtocolConstants." alt="" coords="481,853,644,881"/>
+<area shape="rect" id="node30" href="$group__Sending.html#ga27b10df490f9fc951d8d132056850702" title="Sends PulseDistance frames and repeats." alt="" coords="470,905,655,949"/>
+<area shape="rect" id="node31" href="$group__Sending.html#ga3993584a7493d8f464e060c523d4efac" title=" " alt="" coords="470,785,655,829"/>
+<area shape="rect" id="node34" href="$group__Sending.html#ga14cb3d84baec9c8ef839605949926b38" title=" " alt="" coords="470,973,655,1017"/>
+<area shape="rect" id="node36" href="$group__Sending.html#ga875f514d9cf039cbad7f781595247952" title="Sends a 16 byte microsecond timing array." alt="" coords="500,1093,626,1121"/>
+<area shape="rect" id="node37" href="$group__Sending.html#ga96aab27dfa1a7a28b547a43ec64c9612" title="Function using an 16 byte microsecond timing array in FLASH for every purpose." alt="" coords="492,1145,634,1173"/>
+<area shape="rect" id="node38" href="$group__Decoder.html#gacce74f70ce85c35d92bb3f1af08e6ff4" title=" " alt="" coords="500,1041,626,1069"/>
+<area shape="rect" id="node39" href="$group__Decoder.html#gaee1c9e1d8ab6dcf642d6707b4528385b" title=" " alt="" coords="490,1249,635,1277"/>
+<area shape="rect" id="node40" href="$group__Decoder.html#ga3d5753c6e76034f7460874559661cecf" title=" " alt="" coords="476,1301,649,1329"/>
+<area shape="rect" id="node41" href="$group__Decoder.html#ga9a81f073c38fddb261bb6a7697af049c" title=" " alt="" coords="486,1197,639,1225"/>
+<area shape="rect" id="node44" href="$group__Decoder.html#ga395b9e2ded40a5ad085fa11938422b21" title="Send repeat Repeat commands should be sent in a 110 ms raster." alt="" coords="456,201,669,229"/>
+<area shape="rect" id="node46" href="$group__Decoder.html#gad3b594eed28121c2406e7d80d1636c82" title="Like above, but implemented as a static function Used for sending special repeat frame." alt="" coords="460,1457,666,1485"/>
+<area shape="rect" id="node47" href="$group__Decoder.html#gaefb488359ec673f6268d5e18629e8344" title=" " alt="" coords="471,1509,654,1537"/>
+<area shape="rect" id="node49" href="$group__Decoder.html#ga4c99ff67282a3b58eb42c9f4d4ba5bb3" title="Old version with MSB first data." alt="" coords="484,1561,642,1589"/>
+<area shape="rect" id="node4" href="$classIRsend.html#afc39200973383b94811ac59f29c56efb" title=" " alt="" coords="208,5,382,33"/>
+<area shape="rect" id="node6" href="$classIRsend.html#a97581e3c4d1df5e63d221df687655aaf" title=" " alt="" coords="182,57,408,85"/>
+<area shape="rect" id="node8" href="$group__Decoder.html#ga76790d94a80f32ee90591f8803b79d28" title=" " alt="" coords="213,213,377,241"/>
+<area shape="rect" id="node9" href="$group__Decoder.html#ga9b819c19d95d4d880e9d6ecb056c0e0a" title=" " alt="" coords="228,265,362,293"/>
+<area shape="rect" id="node10" href="$group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d" title="Interprets and sends a IRData structure." alt="" coords="20,564,119,592"/>
+<area shape="rect" id="node11" href="$group__Decoder.html#gaa7e864dec776c5d35caa3718740e8390" title=" " alt="" coords="225,161,365,189"/>
+<area shape="rect" id="node15" href="$classIRsend.html#a623ebe3659a8600fd09ccd4391a632af" title=" " alt="" coords="232,421,358,449"/>
+<area shape="rect" id="node17" href="$group__Decoder.html#ga266389f19755fdef8f6dc0155191bf3b" title="Stub using Kaseikyo with DENON_VENDOR_ID_CODE." alt="" coords="218,525,372,569"/>
+<area shape="rect" id="node18" href="$group__Decoder.html#ga87a6a2163f2608a0c90014586bb04cfa" title="Stub using Kaseikyo with JVC_VENDOR_ID_CODE." alt="" coords="202,593,388,621"/>
+<area shape="rect" id="node19" href="$group__Decoder.html#ga8853de09de0669d147a40e8344ee2dc4" title="Stub using Kaseikyo with MITSUBISHI_VENDOR_ID_CODE." alt="" coords="218,645,372,689"/>
+<area shape="rect" id="node20" href="$group__Decoder.html#gaf60a31544006d2e18eb25b3b0205a261" title="Stub using Kaseikyo with SHARP_VENDOR_ID_CODE." alt="" coords="218,713,372,757"/>
+<area shape="rect" id="node21" href="$group__Decoder.html#gaf720308fa32a1f182ff17772c32c3cea" title="Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE." alt="" coords="215,781,375,809"/>
+<area shape="rect" id="node27" href="$classIRsend.html#a540e86b4ba238175930b1d4fd8845c15" title=" " alt="" coords="5,1379,134,1407"/>
+<area shape="rect" id="node32" href="$group__Sending.html#gae3184d665eabcaca813d4cab9227e691" title="Sends PulseDistance data from array For LSB First the LSB of array[0] is sent first then all bits unt..." alt="" coords="203,953,387,997"/>
+<area shape="rect" id="node33" href="$group__Sending.html#ga7fb3b0f7068765b82f0fdc618ad144f6" title=" " alt="" coords="203,885,387,929"/>
+<area shape="rect" id="node35" href="$group__Sending.html#gabb9ae65e0d6dc056b9f4daa8d17392c1" title=" " alt="" coords="203,1021,387,1065"/>
+<area shape="rect" id="node42" href="$group__Decoder.html#gafbba909b7fa7ef0f4770dc124e2c4804" title="Main RC6 send function." alt="" coords="232,1224,358,1252"/>
+<area shape="rect" id="node43" href="$group__Decoder.html#gaf6543af3a39c51ed70a6ce90da00c05a" title="Assemble raw data for RC6 from parameters and toggle state and send We do not wait for the minimal tr..." alt="" coords="227,1172,362,1200"/>
+<area shape="rect" id="node45" href="$group__Decoder.html#ga09ed812db755a2db480d8e9233036629" title=" " alt="" coords="209,109,380,137"/>
+<area shape="rect" id="node48" href="$group__Decoder.html#ga7b4ca49d8fceaf6ccfa26df2d1b553d5" title=" " alt="" coords="211,1509,378,1537"/>
+<area shape="rect" id="node50" href="$group__Decoder.html#ga8d1abfc5910cf3f0964498e8bf22bd4e" title=" " alt="" coords="230,1561,360,1589"/>
+</map>

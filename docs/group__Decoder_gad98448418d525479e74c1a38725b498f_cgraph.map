@@ -1,0 +1,9 @@
+<map id="IRrecv::decodeRC6" name="IRrecv::decodeRC6">
+<area shape="rect" id="node1" title="Try to decode data as RC6 protocol." alt="" coords="5,125,143,153"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#gad00cc7b682411c68ccd2056b1d45fa84" title=" " alt="" coords="191,5,392,49"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9" title="Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer." alt="" coords="211,73,372,101"/>
+<area shape="rect" id="node5" href="$group__Receiving.html#gacd517e921cf41136c8744799797c75e2" title=" " alt="" coords="212,125,371,153"/>
+<area shape="rect" id="node6" href="$group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="248,177,334,205"/>
+<area shape="rect" id="node7" href="$group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="244,229,338,257"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="440,177,529,205"/>
+</map>

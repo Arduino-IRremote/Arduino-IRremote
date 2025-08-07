@@ -1,0 +1,4 @@
+<map id="IRrecv::getBiphaselevel" name="IRrecv::getBiphaselevel">
+<area shape="rect" id="node1" title="Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer." alt="" coords="5,5,166,33"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="214,5,303,33"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="IRsend::space" name="IRsend::space">
+<area shape="rect" id="node1" title="Sends an IR space for the specified number of microseconds." alt="" coords="5,5,112,33"/>
+<area shape="rect" id="node2" href="$group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798" title="Custom delay function that circumvents Arduino&#39;s delayMicroseconds 16 bit limit and is (mostly) not e..." alt="" coords="160,5,389,33"/>
+</map>

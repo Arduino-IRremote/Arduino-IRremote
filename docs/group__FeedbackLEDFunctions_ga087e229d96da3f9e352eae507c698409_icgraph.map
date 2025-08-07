@@ -1,0 +1,7 @@
+<map id="setLEDFeedbackPin" name="setLEDFeedbackPin">
+<area shape="rect" id="node1" title=" " alt="" coords="161,84,302,112"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#gae15cd27543814209aba08637c943a14c" title="Initializes the receive and feedback pin." alt="" coords="9,5,109,33"/>
+<area shape="rect" id="node3" href="$group__Sending.html#ga4a9848f2971880d6c197cd8e5c49f839" title="Initializes the send and feedback pin." alt="" coords="8,57,110,85"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#ga9056445e9fe704bbeeb921183f7482ab" title="Instantiate the IRrecv class." alt="" coords="5,109,113,137"/>
+<area shape="rect" id="node5" href="$group__FeedbackLEDFunctions.html#ga5f1d479f43dcd56febf146e97a3904db" title="Old deprecated function name for setLEDFeedback()" alt="" coords="15,161,103,189"/>
+</map>

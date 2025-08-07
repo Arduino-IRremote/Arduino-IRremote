@@ -104,6 +104,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a3f4de9472b009540a525e6e648fab0f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRReceive_8hpp.html#a3f4de9472b009540a525e6e648fab0f3">LED_RECEIVE_FEEDBACK_CODE</a></td></tr>
+<tr class="separator:a3f4de9472b009540a525e6e648fab0f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6a18c840bbf00da32a4e35a85342095a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga6a18c840bbf00da32a4e35a85342095a">FNV_PRIME_32</a>&#160;&#160;&#160;16777619</td></tr>
 <tr class="memdesc:ga6a18c840bbf00da32a4e35a85342095a"><td class="mdescLeft">&#160;</td><td class="mdescRight">used for decodeHash()  <a href="group__Receiving.html#ga6a18c840bbf00da32a4e35a85342095a">More...</a><br /></td></tr>
 <tr class="separator:ga6a18c840bbf00da32a4e35a85342095a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,8 +118,11 @@ Functions</h2></td></tr>
 <tr class="memitem:ga770e03720a79491d7ddf347ad4b9e484"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga770e03720a79491d7ddf347ad4b9e484">IRReceiveTimerInterruptHandler</a> ()</td></tr>
 <tr class="separator:ga770e03720a79491d7ddf347ad4b9e484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga495b7f49ff71cde1289b118fac0f0674"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">matchTicks</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros)</td></tr>
-<tr class="memdesc:ga495b7f49ff71cde1289b118fac0f0674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function without compensating for marks exceeded or spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">More...</a><br /></td></tr>
+<tr class="memdesc:ga495b7f49ff71cde1289b118fac0f0674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">More...</a><br /></td></tr>
 <tr class="separator:ga495b7f49ff71cde1289b118fac0f0674"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8e72b4f557d829fa6ac413d170eb5507"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga8e72b4f557d829fa6ac413d170eb5507">matchTicks</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks)</td></tr>
+<tr class="memdesc:ga8e72b4f557d829fa6ac413d170eb5507"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function WITH compensating for marks exceeded or spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga8e72b4f557d829fa6ac413d170eb5507">More...</a><br /></td></tr>
+<tr class="separator:ga8e72b4f557d829fa6ac413d170eb5507"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0f9263ab71af2d2895add92f72a05ee9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga0f9263ab71af2d2895add92f72a05ee9">MATCH</a> (uint16_t measured_ticks, uint16_t desired_us)</td></tr>
 <tr class="separator:ga0f9263ab71af2d2895add92f72a05ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4472564ea96b1ee10b51f594f60d7aeb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb">matchMark</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros)</td></tr>
@@ -135,14 +140,19 @@ Functions</h2></td></tr>
 <tr class="separator:gab1d28d4dd67d6bf808c0328a92e2d863"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gada0f2fe0704a217c16ee497ba7b3630e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gada0f2fe0704a217c16ee497ba7b3630e">printActiveIRProtocols</a> (Print *aSerial)</td></tr>
 <tr class="separator:gada0f2fe0704a217c16ee497ba7b3630e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa518aa6ea29a64b5afcfdd7c7c2527ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Print.html#gaa518aa6ea29a64b5afcfdd7c7c2527ef">printIRDataShort</a> (Print *aSerial, <a class="el" href="structIRData.html">IRData</a> *aIRDataPtr)</td></tr>
+<tr class="separator:gaa518aa6ea29a64b5afcfdd7c7c2527ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac45e8ead5e96868e61c65cd354758d4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Print.html#gac45e8ead5e96868e61c65cd354758d4d">printIRResultShort</a> (Print *aSerial, <a class="el" href="structIRData.html">IRData</a> *aIRDataPtr, bool aPrintRepeatGap)</td></tr>
+<tr class="memdesc:gac45e8ead5e96868e61c65cd354758d4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deprecated static function to be able to print data to send or copied received data.  <a href="group__Print.html#gac45e8ead5e96868e61c65cd354758d4d">More...</a><br /></td></tr>
+<tr class="separator:gac45e8ead5e96868e61c65cd354758d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5787966f93eba6002acf82c85024955e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Print.html#ga5787966f93eba6002acf82c85024955e">printIRResultShort</a> (Print *aSerial, <a class="el" href="structIRData.html">IRData</a> *aIRDataPtr)</td></tr>
+<tr class="separator:ga5787966f93eba6002acf82c85024955e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:ga6813a2b456e5359ce674699c85a61cf9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIRrecv.html">IRrecv</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9">IrReceiver</a></td></tr>
 <tr class="memdesc:ga6813a2b456e5359ce674699c85a61cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The receiver instance.  <a href="group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9">More...</a><br /></td></tr>
 <tr class="separator:ga6813a2b456e5359ce674699c85a61cf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga938046a49af083b7d470e61fd77e12ed"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structirparams__struct.html">irparams_struct</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga938046a49af083b7d470e61fd77e12ed">irparams</a></td></tr>
-<tr class="separator:ga938046a49af083b7d470e61fd77e12ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga99f6267aa36f20f3aa1409b250aa6b67"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga99f6267aa36f20f3aa1409b250aa6b67">sMicrosAtLastStopTimer</a> = 0</td></tr>
 <tr class="separator:ga99f6267aa36f20f3aa1409b250aa6b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8aabdbfa5a0a6090e938212745b4871e"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga8aabdbfa5a0a6090e938212745b4871e">sBiphaseDecodeRawbuffOffset</a></td></tr>
@@ -154,13 +164,30 @@ Variables</h2></td></tr>
 <tr class="memitem:gae25d907bed7a0f0298f9cf105d89f86f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gae25d907bed7a0f0298f9cf105d89f86f">sBiphaseTimeUnit</a></td></tr>
 <tr class="separator:gae25d907bed7a0f0298f9cf105d89f86f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a3f4de9472b009540a525e6e648fab0f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f4de9472b009540a525e6e648fab0f3">&#9670;&nbsp;</a></span>LED_RECEIVE_FEEDBACK_CODE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LED_RECEIVE_FEEDBACK_CODE</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00055">55</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRReceive_8hpp.html">IRReceive.hpp</a></li>
-    <li class="footer">Generated on Wed Mar 19 2025 11:06:48 for IRremote by
+    <li class="footer">Generated on Mon Aug 25 2025 22:35:30 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

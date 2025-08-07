@@ -1,0 +1,13 @@
+<map id="IRrecv::checkHeader_P" name="IRrecv::checkHeader_P">
+<area shape="rect" id="node1" title=" " alt="" coords="526,188,688,216"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="305,5,478,33"/>
+<area shape="rect" id="node5" href="$group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="320,57,463,85"/>
+<area shape="rect" id="node6" href="$group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="324,109,460,137"/>
+<area shape="rect" id="node7" href="$group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="310,161,474,189"/>
+<area shape="rect" id="node8" href="$group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="309,213,474,241"/>
+<area shape="rect" id="node9" href="$classIRrecv.html#a6207eb34d90c00db7d8d6c79e53e721d" title=" " alt="" coords="318,265,465,293"/>
+<area shape="rect" id="node10" href="$group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="322,317,462,345"/>
+<area shape="rect" id="node11" href="$group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="312,369,471,397"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="147,161,257,189"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,161,99,189"/>
+</map>

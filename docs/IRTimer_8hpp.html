@@ -106,6 +106,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:ga1178972e07d5f81a7561429a18da71e3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga1178972e07d5f81a7561429a18da71e3">IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH</a>&#160;&#160;&#160;<a class="el" href="IRremote_8hpp.html#a6be706039d9083db8cb072478e0a09f8">IR_SEND_DUTY_CYCLE_PERCENT</a></td></tr>
+<tr class="separator:ga1178972e07d5f81a7561429a18da71e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4cb394b3b749f9302940902fb05bd920"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga4cb394b3b749f9302940902fb05bd920">IR_SEND_PIN</a></td></tr>
 <tr class="memdesc:ga4cb394b3b749f9302940902fb05bd920"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hardware / timer dependent pin number for sending IR if SEND_PWM_BY_TIMER is defined.  <a href="group__Timer.html#ga4cb394b3b749f9302940902fb05bd920">More...</a><br /></td></tr>
 <tr class="separator:ga4cb394b3b749f9302940902fb05bd920"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,7 +126,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga41e88e0b7edea76b3c77643ca7a3468f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#ga41e88e0b7edea76b3c77643ca7a3468f">timerResetInterruptPending</a> ()</td></tr>
 <tr class="separator:ga41e88e0b7edea76b3c77643ca7a3468f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">timerConfigForSend</a> (uint16_t aFrequencyKHz)</td></tr>
-<tr class="memdesc:gab4f8dc26e10c0481e8859252afa4d42b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with duty cycle of IR_SEND_DUTY_CYCLE_PERCENT and disables the receive interrupt if it uses the same resource.  <a href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">More...</a><br /></td></tr>
+<tr class="memdesc:gab4f8dc26e10c0481e8859252afa4d42b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IF PWM should be generated not by software, but by a timer, this function sets output pin mode, configures the timer for generating a PWM with HIGH output level of duty cycle of IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH and disables the receive interrupt if it uses the same resource.  <a href="group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b">More...</a><br /></td></tr>
 <tr class="separator:gab4f8dc26e10c0481e8859252afa4d42b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac67e6a15f31989aa182389cd4a8729c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9">enableSendPWMByTimer</a> ()</td></tr>
 <tr class="memdesc:gac67e6a15f31989aa182389cd4a8729c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables output of the PWM signal of the timer at the timer pin.  <a href="group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9">More...</a><br /></td></tr>
@@ -138,7 +140,7 @@ Functions</h2></td></tr>
 <p>timerConfigForSend(aFrequencyKHz) must set output pin mode and disable receive interrupt if it uses the same resource</p>
 <p>This file is part of Arduino-IRremote <a href="https://github.com/Arduino-IRremote/Arduino-IRremote">https://github.com/Arduino-IRremote/Arduino-IRremote</a>.</p>
 <p>MIT License</p>
-<p>Copyright (c) 2021-2023 Armin Joachimsmeyer</p>
+<p>Copyright (c) 2021-2025 Armin Joachimsmeyer</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. </p>
@@ -150,7 +152,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_d49b597d86ed44de6eb8a459f0ed40df.html">private</a></li><li class="navelem"><a class="el" href="IRTimer_8hpp.html">IRTimer.hpp</a></li>
-    <li class="footer">Generated on Wed Mar 19 2025 11:06:48 for IRremote by
+    <li class="footer">Generated on Mon Aug 25 2025 22:35:30 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

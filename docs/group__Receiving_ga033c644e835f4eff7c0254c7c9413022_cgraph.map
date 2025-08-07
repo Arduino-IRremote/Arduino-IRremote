@@ -1,0 +1,4 @@
+<map id="IRrecv::stopTimer" name="IRrecv::stopTimer">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,132,33"/>
+<area shape="rect" id="node2" href="$group__Timer.html#ga0b0e97d0a44ceb967a83b44aa88c6bd2" title="Disables the receive sample timer interrupt." alt="" coords="180,5,370,33"/>
+</map>

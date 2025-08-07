@@ -1,0 +1,6 @@
+<map id="IRsend::sendBiphaseData" name="IRsend::sendBiphaseData">
+<area shape="rect" id="node1" title="Sends Biphase (Manchester) coded data MSB first This function concatenates two marks to one longer ma..." alt="" coords="374,32,548,60"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#gacce74f70ce85c35d92bb3f1af08e6ff4" title=" " alt="" coords="176,5,302,33"/>
+<area shape="rect" id="node4" href="$group__Decoder.html#ga3d5753c6e76034f7460874559661cecf" title=" " alt="" coords="153,57,326,85"/>
+<area shape="rect" id="node3" href="$group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d" title="Interprets and sends a IRData structure." alt="" coords="5,5,105,33"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="IRsend::sendPanasonic" name="IRsend::sendPanasonic">
+<area shape="rect" id="node1" title="Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE." alt="" coords="153,5,313,33"/>
+<area shape="rect" id="node2" href="$group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d" title="Interprets and sends a IRData structure." alt="" coords="5,5,105,33"/>
+</map>

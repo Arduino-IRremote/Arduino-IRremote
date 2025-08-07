@@ -1,0 +1,23 @@
+<map id="IRrecv::decode_old" name="IRrecv::decode_old">
+<area shape="rect" id="node1" title=" " alt="" coords="5,616,140,644"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="193,469,361,497"/>
+<area shape="rect" id="node9" href="$group__Receiving.html#gacc379370caac8ca6ab6f1fd1a4cc4359" title=" " alt="" coords="196,769,358,797"/>
+<area shape="rect" id="node11" href="$group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="194,589,360,617"/>
+<area shape="rect" id="node12" href="$group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="199,157,355,185"/>
+<area shape="rect" id="node13" href="$group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="193,324,361,352"/>
+<area shape="rect" id="node14" href="$group__Decoder.html#ga5720b53e427e0346ecc248e55c57e2b9" title="Try to decode data as RC5 protocol." alt="" coords="686,720,823,748"/>
+<area shape="rect" id="node18" href="$group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="686,668,823,696"/>
+<area shape="rect" id="node19" href="$group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="188,389,366,417"/>
+<area shape="rect" id="node20" href="$group__Decoder.html#ga7ea1a0eb3b832974be8fd6c2cbde602f" title=" " alt="" coords="192,821,362,849"/>
+<area shape="rect" id="node21" href="$group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5" title="Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame." alt="" coords="221,873,332,901"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="414,345,609,389"/>
+<area shape="rect" id="node5" href="$group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="957,464,1044,492"/>
+<area shape="rect" id="node7" href="$group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="953,322,1048,350"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="667,225,842,269"/>
+<area shape="rect" id="node8" href="$group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="657,345,852,389"/>
+<area shape="rect" id="node6" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="1149,464,1238,492"/>
+<area shape="rect" id="node10" href="$group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157" title="Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g." alt="" coords="452,769,571,797"/>
+<area shape="rect" id="node15" href="$group__Receiving.html#gad00cc7b682411c68ccd2056b1d45fa84" title=" " alt="" coords="900,660,1101,704"/>
+<area shape="rect" id="node16" href="$group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9" title="Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer." alt="" coords="920,608,1080,636"/>
+<area shape="rect" id="node17" href="$group__Receiving.html#gacd517e921cf41136c8744799797c75e2" title=" " alt="" coords="921,728,1080,756"/>
+</map>

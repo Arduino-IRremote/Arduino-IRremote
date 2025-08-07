@@ -1,0 +1,6 @@
+<map id="IRsend::sendRaw" name="IRsend::sendRaw">
+<area shape="rect" id="node1" title="Sends an 8 byte tick timing array to save program memory." alt="" coords="196,57,322,85"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga0836c4c6bdbf55977199d6975d6782dc" title=" " alt="" coords="8,5,145,33"/>
+<area shape="rect" id="node3" href="$group__Sending.html#ga9a614d6be8130adde5fe36521f3a8dd3" title=" " alt="" coords="13,57,140,85"/>
+<area shape="rect" id="node4" href="$group__Sending.html#ga96aab27dfa1a7a28b547a43ec64c9612" title="Function using an 16 byte microsecond timing array in FLASH for every purpose." alt="" coords="5,109,148,137"/>
+</map>

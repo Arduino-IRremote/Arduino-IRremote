@@ -1,0 +1,11 @@
+<map id="IRsend::sendPulseDistanceWidthFromArray_P" name="IRsend::sendPulseDistanceWidthFromArray_P">
+<area shape="rect" id="node1" title=" " alt="" coords="603,216,788,260"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#gada6382d5c398922c22ace404179a5744" title="Address can be interpreted as sub&#45;device &lt;&lt; 4 + 4 bit device." alt="" coords="394,168,548,196"/>
+<area shape="rect" id="node9" href="$group__Decoder.html#gaa72ec4013c647400e0dc43a4ede328e4" title="Here we send Samsung48 We send 2 x (8 bit command and then ~command)" alt="" coords="387,249,555,277"/>
+<area shape="rect" id="node3" href="$group__Decoder.html#ga266389f19755fdef8f6dc0155191bf3b" title="Stub using Kaseikyo with DENON_VENDOR_ID_CODE." alt="" coords="169,5,322,49"/>
+<area shape="rect" id="node5" href="$group__Decoder.html#ga87a6a2163f2608a0c90014586bb04cfa" title="Stub using Kaseikyo with JVC_VENDOR_ID_CODE." alt="" coords="153,73,339,101"/>
+<area shape="rect" id="node6" href="$group__Decoder.html#ga8853de09de0669d147a40e8344ee2dc4" title="Stub using Kaseikyo with MITSUBISHI_VENDOR_ID_CODE." alt="" coords="169,125,322,169"/>
+<area shape="rect" id="node7" href="$group__Decoder.html#gaf60a31544006d2e18eb25b3b0205a261" title="Stub using Kaseikyo with SHARP_VENDOR_ID_CODE." alt="" coords="169,193,322,237"/>
+<area shape="rect" id="node8" href="$group__Decoder.html#gaf720308fa32a1f182ff17772c32c3cea" title="Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE." alt="" coords="166,261,326,289"/>
+<area shape="rect" id="node4" href="$group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d" title="Interprets and sends a IRData structure." alt="" coords="5,168,105,196"/>
+</map>

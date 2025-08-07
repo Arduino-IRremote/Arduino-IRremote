@@ -1,0 +1,9 @@
+<map id="IRsend::computeLGRawDataAndChecksum" name="IRsend::computeLGRawDataAndChecksum">
+<area shape="rect" id="node1" title=" " alt="" coords="975,24,1168,68"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#gab0200ca785ce3be24c4ad2efc95f37f7" title="LG uses the NEC repeat." alt="" coords="807,5,923,33"/>
+<area shape="rect" id="node4" href="$group__Decoder.html#gad8b3a7ce5ae5adb098ca0dc004b7b71b" title="LG2 uses a special repeat." alt="" coords="803,57,927,85"/>
+<area shape="rect" id="node3" href="$group__Sending.html#gaafdc6909c8794dc65aa702b84230ea7d" title="Interprets and sends a IRData structure." alt="" coords="594,5,693,33"/>
+<area shape="rect" id="node5" href="$group__Airconditoners.html#ga113704b3b19c8477635210341163bf9e" title=" " alt="" coords="532,57,755,85"/>
+<area shape="rect" id="node6" href="$group__Airconditoners.html#ga65bba14a0302268cc515831d37e95b7a" title=" " alt="" coords="5,49,215,93"/>
+<area shape="rect" id="node7" href="$group__Airconditoners.html#ga83d18e2597cc2ea78f25889bc6c060e3" title=" " alt="" coords="263,79,484,123"/>
+</map>
