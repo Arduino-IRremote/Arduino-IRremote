@@ -295,19 +295,19 @@ rawData[18]:
 Duration=20950us
 
 
-Send Velux 0x765432 decoded as PulseDistanceWidth 0x44D5E6 LSB first 1=1275|475, 0=475|1275
-Protocol=PulseDistance, Raw-Data=0x44D5E6, 23 bits, LSB first, Gap=746700us, Duration=42700us
-Send on a 8 bit platform with: IrSender.sendPulseDistanceWidth(38, 600, 1200, 550, 1200, 1300, 400, 0x44D5E6, 23, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
+Send Velux 0x654321 decoded as PulseDistanceWidth 0x3D9EAC LSB first 1=1275|475, 0=475|1275
+Protocol=PulseDistance, Raw-Data=0x3D9EAC, 23 bits, LSB first, Gap=747400us, Duration=42350us
+Send on a 8 bit platform with: IrSender.sendPulseDistanceWidth(38, 550, 1250, 500, 1250, 1300, 400, 0x3D9EAC, 23, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
 rawData[50]:
- -746700
- + 600,-1200
- +1300,- 450 + 500,-1200 + 550,-1200 +1350,- 350
- +1300,- 400 + 550,-1200 + 550,-1150 + 600,-1150
- + 550,-1200 +1300,- 400 + 550,-1150 +1300,- 400
- + 550,-1200 +1350,- 350 + 550,-1150 + 550,-1200
- +1300,- 400 +1300,- 400 + 600,-1150 +1350,- 350
- +1300,- 400 +1350,- 400 + 500,-1200 +1350
-Duration=42700us
+ -747400
+ + 550,-1250
+ +1300,- 400 +1300,- 400 + 450,-1250 + 450,-1250
+ +1300,- 450 + 450,-1250 +1300,- 350 + 500,-1200
+ +1350,- 400 + 450,-1250 + 500,-1200 + 500,-1200
+ + 500,-1250 +1300,- 400 +1300,- 350 + 500,-1250
+ + 450,-1250 +1300,- 400 + 450,-1250 + 500,-1200
+ + 500,-1200 + 500,-1200 +1350,- 400 +1300
+Duration=42350us
 
 
 Send Sony12 as PulseWidth LSB first 1=1200|300, 0=600|600

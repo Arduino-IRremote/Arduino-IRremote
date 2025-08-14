@@ -682,20 +682,31 @@ void loop() {
         checkReceivedRawData(sCommand);
         delay(DELAY_AFTER_SEND);
 
-#      if defined(DECODE_SONY)
-        Serial.println(F("Send Velux 0x765432 decoded as PulseDistanceWidth 0x44D5E6 LSB first 1=1275|475, 0=475|1275"));
+        Serial.println(F("Send Velux 0x654321 decoded as PulseDistanceWidth 0x3D9EAC LSB first 1=1275|475, 0=475|1275"));
         Serial.flush();
-        IrSender.sendPulseDistanceWidth_P(&VeluxProtocolConstants, 0x765432, VELUX_BITS, 0);
-        // We send without header, so >> 1. We send as pulse width so we must invert result, which is decoded as pulse distance
-        checkReceivedRawData((~(0x765432 >> 1)) & 0x7FFFFF); // ~0x3B2A19 = FFC4D5E6 & 0x7FFFFF = 0x44D5E6
+        IrSender.sendPulseDistanceWidth_P(&VeluxProtocolConstants, 0x654321, VELUX_BITS, 0);
+        /*
+         * We send 24 bit MSB first so bitreverse32Bit() >> 8
+         * We send without header, so >> 1.
+         * We send as pulse width so we must invert result, which is decoded as pulse distance
+         */
+        checkReceivedRawData((~(((bitreverse32Bit(0x654321)) >> 8) >> 1)) & 0x7FFFFF);
+#if false
+        Serial.print(F("bitreverse32Bit(0x654321) >> 8 =0x"));
+        Serial.print(bitreverse32Bit(0x654321) >> 8, HEX);
+        Serial.print(F(" >> 1 =0x"));
+        Serial.print((bitreverse32Bit(0x654321) >> 8) >> 1, HEX);
+        Serial.print(F(" ~ =0x"));
+        Serial.println((~((bitreverse32Bit(0x654321) >> 8) >> 1)) & 0x7FFFFF, HEX);
+#endif
+
         delay(DELAY_AFTER_SEND);
-#      endif
 
 #      if defined(DECODE_SONY)
         Serial.println(F("Send Sony12 as PulseWidth LSB first 1=1200|300, 0=600|600"));
         Serial.flush();
         IrSender.sendPulseDistanceWidth(38, 2400, 600, 1200, 600, 600, 600, (sAddress << 7 | (sCommand & 0x7F)), SIRCS_12_PROTOCOL,
-                PROTOCOL_IS_LSB_FIRST, 0, 0);
+        PROTOCOL_IS_LSB_FIRST, 0, 0);
         checkReceive(sAddress & 0x1F, sCommand & 0x7F);
         delay(DELAY_AFTER_SEND);
 #      endif

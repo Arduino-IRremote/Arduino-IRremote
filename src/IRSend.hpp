@@ -1081,7 +1081,9 @@ void IRsend::sendPulseDistanceWidth_P(PulseDistanceWidthProtocolConstants const 
 }
 
 /**
- * Sends Biphase data MSB first
+ * Sends Biphase (Manchester) coded data MSB first
+ * This function concatenates two marks to one longer mark,
+ * thus avoiding the programmatically pause between the generation of two separate marks.
  * Always send start bit, do not send the trailing space of the start bit
  * 0 -> mark+space
  * 1 -> space+mark
