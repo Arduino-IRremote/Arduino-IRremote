@@ -718,8 +718,7 @@ public:
                     __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSony(aAddress, aCommand, aNumberOfRepeats).")));
 
     void sendWhynter(uint32_t aData, int_fast8_t aNumberOfRepeats);
-    void sendVelux(uint8_t aCommand, uint8_t aMotorNumber, uint8_t aMotorSet, uint16_t aSecurityCode, uint8_t aCRC,
-            int_fast8_t aNumberOfRepeats);
+    void sendVelux(uint8_t aCommand, uint8_t aMotorNumber, uint8_t aMotorSet, uint16_t aSecurityCode, int_fast8_t aNumberOfRepeats);
     void sendVelux(uint32_t aData, int_fast8_t aNumberOfRepeats);
 
 #if !defined(IR_SEND_PIN)

@@ -114,27 +114,42 @@ bool IRrecv::decodeWhynter() {
  * We have a pulse width protocol with constant bit length of 1700 us with no header and one autorepeat after 27 ms.
  * Length of one frame is constant 23 * 1700 + 425 (for stop bit) = 39525 = 40 ms
  *
- * BIT meaning:
- * Bit 0 is stop
- * Bit 1 is up | 0 or down | 1
- * Bit 2 is automatic and also set for stop
- * Bit 3 is Motor 3
- * Bit 4 is Motor 2
- * Bit 5 is Motor 1
- * [6:9] is motor set (from 1 to 10), 0 = all sets
- * [10:19] security code
- * [20:23] is checksum, no clue how to compute it. It is no simple XOR or addition
- * Here some checksum raw data to verify a checksum function:
- * 0x424 -> 1
- * 0x426 -> B
- * 0x425 -> 4
- * 0x414 -> B
- * 0x415 -> E
- * 0x7626 -> 3
- * 0x7624 -> 9
- * 0x7614 -> 3
- * 0x760C -> 6
- * 0x760A -> 1
+ * BIT meaning for MSB first:
+ * Bit 23 is stop
+ * Bit 22 is up = 0 or down = 1, 0 for stop
+ * Bit 21 is automatic and also set for stop
+ * Bit 20 is Motor 3
+ * Bit 19 is Motor 2
+ * Bit 18 is Motor 1
+ * [14:17] is 4 bit motor set (from 1 to 10), 0 = all sets
+ * [4:13] 10 bit security code
+ * [1:3] is checksum
+ *
+ * Checksum is independent of the 10 bit security code
+ *
+ * !!! MOTOR 3 is coded with 0x04, since motor numbers are bit position coded to enable 0x07 as all motors!!!
+ * Automatic bit is set for all following codes!
+ * Checksum for UP (0x1):
+ * All (Motor = 0x7, set = 0) -> 2 == Motor 1 set A or Motor 3 set 5
+ * Table of checksum (x) for motor / set combinations
+ *        Set 1 2 3 4 5 6 7 8 9 A
+ * Motor 1    9 A B C D E F 0 1 2 3 4 5 6 | x XOR set = 8 or set XOR 8 = checksum
+ * Motor 2    C F E 9 8 B A 5 4 7 6 1 0 2 | x XOR set = D = 8 XOR 5 or set XOR 8 XOR 5 = checksum
+ * Motor 3/4  6 5 4 3 2 1 0 F E D C B A 9 | x XOR set = 7 = 8 XOR F or set XOR 8 XOR F = checksum
+ * Checksum for DOWN (0x3):
+ * All -> 7 == Motor 1 set A
+ * Table of checksum (x) for motor / set combinations
+ *        Set 1 2 3 4 5 6 7 8 9 A
+ * Motor 1    C F E 9 8 B A 5 4 7 6 1 0 2 | x XOR set = D
+ * Motor 2    9 A B C D E F 0 1 2 3 4 5 6 | x XOR set = 8 = D XOR 5
+ * Motor 3/4  3 0 1 6 7 4 5 A B 8 9 E F D | x XOR set = 2 = D XOR F
+ * Checksum for STOP (0x5):
+ * All -> 8 == Motor 1 set A
+ * Table of checksum (x) for motor / set combinations
+ *        Set 1 2 3 4 5 6 7 8 9 A
+ * Motor 1    3 0 1 6 7 4 5 A B 8 9 E F D | x XOR set = 2
+ * Motor 2    6 5 4 3 2 1 0 F E D C B A 9 | x XOR set = 7 = 2 XOR 5
+ * Motor 3/4  C F E 9 8 B A 5 4 7 6 1 0 2 | x XOR set = D = 2 XOR F
  */
 
 // All timings are in microseconds
@@ -150,13 +165,51 @@ bool IRrecv::decodeWhynter() {
 #define VELUX_AUTOREPEAT_SPACE  27000 // 27ms
 #define VELUX_REPEAT_SPACE  100000 // 100ms, which is just a guess
 
+#define VELUX_COMMAND_AUTO_UP       0x1
+#define VELUX_COMMAND_AUTO_DOWN     0x3
+#define VELUX_COMMAND_STOP          0x5
+
 struct PulseDistanceWidthProtocolConstants const VeluxProtocolConstants PROGMEM = {OTHER, 30, VELUX_HEADER_MARK, VELUX_HEADER_SPACE,
-    VELUX_ONE_MARK, VELUX_ONE_SPACE, VELUX_ZERO_MARK, VELUX_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_WIDTH, 27, nullptr};
+    VELUX_ONE_MARK, VELUX_ONE_SPACE, VELUX_ZERO_MARK, VELUX_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | PROTOCOL_IS_PULSE_WIDTH, 27, nullptr};
 
-void IRsend::sendVelux(uint8_t aCommand, uint8_t aMotorNumber, uint8_t aMotorSet, uint16_t aSecurityCode, uint8_t aCRC,
+/*
+ * @param aCommand      VELUX_COMMAND_AUTO_UP or VELUX_COMMAND_AUTO_DOWN or VELUX_COMMAND_STOP
+ * @param aMotorNumber  1, 2, 4 = Motor3, 7 = All
+ * @param aMotorSet     0 = All, 1 to 10
+ * !!!NO parameter range check here!!!
+ */
+void IRsend::sendVelux(uint8_t aCommand, uint8_t aMotorNumber, uint8_t aMotorSet, uint16_t aSecurityCode,
         int_fast8_t aNumberOfRepeats) {
+    // Just in case...
+    if (aMotorNumber == 3) {
+        aMotorNumber = 4; // motor numbers are bit position coded
+    }
 
-    sendVelux(((uint32_t)aCRC << 20) | ((uint32_t)aSecurityCode << 10) | (aMotorSet << 6) | (aMotorNumber << 3) | aCommand, aNumberOfRepeats);
+    /*
+     * Compute checksum (only for automatic bit set to 1)
+     */
+    uint8_t tChecksum = 8; // Start checksum for command
+    if (aCommand == VELUX_COMMAND_AUTO_DOWN) {
+        tChecksum = 0xD;
+    }
+    if (aCommand == VELUX_COMMAND_STOP) {
+        tChecksum = 2;
+    }
+
+    uint8_t tXORForMotor = 0;
+    if (aMotorNumber == 2) {
+        tXORForMotor = 5;
+    }
+    if (aMotorNumber == 4) {
+        tXORForMotor = 0xF;
+    }
+
+    tChecksum ^= aMotorSet;
+    tChecksum ^= tXORForMotor;
+
+    sendVelux(
+            ((uint32_t) aCommand << 21) | ((uint32_t) aMotorNumber << 18) | (aMotorSet << 14) | ((uint32_t) aSecurityCode << 4)
+                    | tChecksum, aNumberOfRepeats);
 }
 
 void IRsend::sendVelux(uint32_t aData, int_fast8_t aNumberOfRepeats) {
