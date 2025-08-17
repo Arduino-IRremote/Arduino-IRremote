@@ -644,7 +644,8 @@ public:
     void sendKaseikyo_Sharp(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
     void sendKaseikyo_JVC(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
 
-    void sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
+    void sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats,
+        bool aEnableAutomaticToggle = true, bool aEnableMarantzExtension = false, uint8_t aMarantzExtension = 0);
     void sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
     void sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aCustomer,
             bool aEnableAutomaticToggle = true);

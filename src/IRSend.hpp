@@ -115,6 +115,7 @@ void IRsend::setSendPin(uint_fast8_t aSendPin) {
 /**
  * Initializes the send and feedback pin
  * @param aSendPin The Arduino pin number, where a IR sender diode is connected.
+ * @param aEnableLEDFeedback    If true the feedback LED is activated while receiving or sending a PWM signal /a mark
  * @param aFeedbackLEDPin       If 0 / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(uint_fast8_t aSendPin, uint_fast8_t aFeedbackLEDPin) {
@@ -1113,7 +1114,8 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
             Serial.print('1');
 #endif
             space(aBiphaseTimeUnit);
-            if (tNextBitIsOne) {
+            if (tNextBitIsOne || (i == 13 && aNumberOfBits == 19)) {
+                // if next bit is 1 or we are before the pause before the bits of command and extension in Marantz-RC5x, send a single mark
                 mark(aBiphaseTimeUnit);
             } else {
                 // if next bit is 0, extend the current mark in order to generate a continuous signal without short breaks
@@ -1125,10 +1127,16 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
 #if defined(LOCAL_TRACE)
             Serial.print('0');
 #endif
-            if (!tLastBitValue) {
+            if (!tLastBitValue || (i == 12 && aNumberOfBits == 19)) {
+                // if last bit was 0 or we are after the pause before the bits of command and extension in Marantz-RC5x, send a space
                 mark(aBiphaseTimeUnit);
             }
             space(aBiphaseTimeUnit);
+            tLastBitValue = 0;
+        }
+        if (i == 13 && aNumberOfBits == 19) {
+            // Marantz-RC5x has a pause before the bits of command and extension
+            space(4 * aBiphaseTimeUnit);
             tLastBitValue = 0;
         }
     }
