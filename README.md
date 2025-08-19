@@ -777,93 +777,92 @@ The examples are available at File > Examples > Examples from Custom Libraries /
 **In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) is required for this CPU's.**<br/>
 See also [DroneBot Workshop SimpleReceiver](https://dronebotworkshop.com/ir-remotes/#SimpleReceiver_Example_Code) and [SimpleSender](https://dronebotworkshop.com/ir-remotes/#SimpleSender_Example_Code).
 
-#### SimpleReceiver + SimpleSender
-The **[SimpleReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino)**
-and **[SimpleSender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleSender/SimpleSender.ino)** examples are a good starting point.
+### [SimpleReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino) + [SimpleSender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleSender/SimpleSender.ino)
+The **SimpleReceiver** and **SimpleSender** examples are a good starting point.
 A simple example can be tested online with [WOKWI](https://wokwi.com/projects/338611596994544210).
 
-#### SimpleReceiverForHashCodes
-The **[SimpleReceiverForHashCodes](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino)** uses only the hash decoder.
+### [SimpleReceiverForHashCodes](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiverForHashCodes/SimpleReceiverForHashCodes.ino)
+The **SimpleReceiverForHashCodes** uses only the hash decoder.
 It converts all IR frames longer than 6 to a 32 bit hash code, thus enabling receiving of unknown protocols.<br/>
 See: http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html
 
-#### TinyReceiver + TinySender
+### [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinyReceiver/TinyReceiver.ino) + [TinySender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinySender/TinySender.ino)
 If **code size** or **timer usage** matters, look at these examples.<br/>
-The **[TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinyReceiver/TinyReceiver.ino)** example uses the **TinyIRReceiver** library
+The **TinyReceiver** example uses the **TinyIRReceiver** library
 which can **only receive NEC, Extended NEC, ONKYO and FAST protocols, but does not require any timer**.
 They use pin change interrupt for on the fly decoding, which is the reason for the restricted protocol choice.<br/>
 TinyReceiver can be tested online with [WOKWI](https://wokwi.com/arduino/projects/339264565653013075).
 
-The **[TinySender](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/TinySender/TinySender.ino)** example uses the **TinyIRSender** library  which can **only send NEC, ONKYO and FAST protocols**.<br/>
+The **TinySender** example uses the **TinyIRSender** library  which can **only send NEC, ONKYO and FAST protocols**.<br/>
 It sends NEC protocol codes in standard format with 8 bit address and 8 bit command as in SimpleSender example. It has options to send using Extended NEC, ONKYO and FAST protocols.
 Saves  780 bytes program memory and 26 bytes RAM compared to SimpleSender, which does the same, but uses the IRRemote library (and is therefore much more flexible).
 
-#### SmallReceiver
+### [SmallReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiverTimingAnalysis/ReceiverTimingAnalysis.ino)
 If the protocol is not NEC and code size matters, look at this [example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SmallReceiver/SmallReceiver.ino).<br/>
 
-#### ReceiveDemo + AllProtocolsOnLCD
-[ReceiveDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino) receives all protocols and **generates a beep with the Arduino tone() function** on each packet received.<br/>
+### [ReceiveDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino) + [AllProtocolsOnLCD](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/AllProtocolsOnLCD/AllProtocolsOnLCD.ino)
+ReceiveDemo receives all protocols and **generates a beep with the Arduino tone() function** on each packet received.<br/>
 Long press of one IR button (receiving of multiple repeats for one command) is detected.<br/>
-[AllProtocolsOnLCD](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/AllProtocolsOnLCD/AllProtocolsOnLCD.ino) additionally **displays the short result on a 1602 LCD**.
+AllProtocolsOnLCD additionally **displays the short result on a 1602 LCD**.
 The LCD can be connected parallel or serial (I2C).<br/>
 By connecting debug pin to ground, you can force printing of the raw values for each frame. The pin number of the debug pin is printed during setup, because it depends on board and LCD connection type.<br/>
 This example also serves as an **example how to use IRremote and tone() together**.
 
-#### ReceiveDump
+#### [ReceiveDump](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDump/ReceiveDump.ino)
 Receives all protocols and dumps the received signal in different flavors including **Pronto format**.<br/>
 Since the printing takes much time, repeat signals may be skipped or interpreted as UNKNOWN.
 
-#### SendDemo
+#### [SendDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendDemo/SendDemo.ino)
 Sends all available protocols at least once.
 
-#### MultipleSendPins
+#### [MultipleSendPins](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/MultipleSendPins/MultipleSendPins.ino)
 Demonstrates sending IR codes toggling between 2 **different send pins**.
 
-#### SendAndReceive
+#### [SendAndReceive](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendAndReceive/SendAndReceive.ino)
 Demonstrates **receiving while sending**.
 
-#### ReceiveAndSend
+#### [ReceiveAndSend](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveAndSend/ReceiveAndSend.ino)
 Record and **play back last received IR signal** at button press. IR frames of known protocols are sent by the appropriate protocol encoder.
 `UNKNOWN` protocol frames are stored as raw data and sent with `sendRaw()`.
 
-#### ReceiveAndSendDistanceWidth
+#### [ReceiveAndSendDistanceWidth](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveAndSendDistanceWidth/ReceiveAndSendDistanceWidth.ino)
 Try to decode each IR frame with the *universal* **DistanceWidth decoder**, store the data and send it on button press with `sendPulseDistanceWidthFromArray()`.<br/>
 If RAM is not more than 2k, the decoder only accepts mark or space durations up to 2500 microseconds to save RAM space, otherwise it accepts durations up to 10 ms.<br/>
 Storing data for distance width protocol requires 17 bytes.
 The ReceiveAndSend example requires 16 bytes for known protocol data and 37 bytes for raw data of e.g.NEC protocol.
 
-#### ReceiveOneAndSendMultiple
+#### [ReceiveOneAndSendMultiple](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveOneAndSendMultiple/ReceiveOneAndSendMultiple.ino)
 Serves as a IR **remote macro expander**. Receives Samsung32 protocol and on receiving a specified input frame, it sends multiple Samsung32 frames with appropriate delays in between.
 This serves as a **Netflix-key emulation** for my old Samsung H5273 TV.
 
-#### IRDispatcherDemo
+#### [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRDispatcherDemo/IRDispatcherDemo.ino)
 Framework for **calling different functions of your program** for different IR codes.
 
-#### IRrelay
+#### [ControlRelay](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ControlRelay/ControlRelay.ino)
 **Control a relay** (connected to an output pin) with your remote.
 
-#### IRremoteExtensionTest
-[Example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRremoteExtensionTest/IRremoteExtensionTest.ino) for a user defined class, which itself uses the IRrecv class from IRremote.
+#### [IRremoteExtensionTest](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRremoteExtensionTest/IRremoteExtensionTest.ino)
+Example for a user defined class, which itself uses the IRrecv class from IRremote.
 
-#### SendLGAirConditionerDemo
-[Example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendLGAirConditionerDemo/SendLGAirConditionerDemo.ino) for sending LG air conditioner IR codes controlled by Serial input.<br/>
+#### [SendLGAirConditionerDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendLGAirConditionerDemo/SendLGAirConditionerDemo.ino)
+Example for sending LG air conditioner IR codes controlled by Serial input.<br/>
 By just using the function `bool Aircondition_LG::sendCommandAndParameter(char aCommand, int aParameter)` you can control the air conditioner by any other command source.<br/>
 The file *acLG.h* contains the command documentation of the LG air conditioner IR protocol. Based on reverse engineering of the LG AKB73315611 remote.
 ![LG AKB73315611 remote](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/LG_AKB73315611.jpg)<br/>
 IReceiverTimingAnalysis can be tested online with [WOKWI](https://wokwi.com/projects/299033930562011656)
 Click on the receiver while simulation is running to specify individual IR codes.
 
-#### ReceiveAndSendHob2Hood
-[Example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendLGAirConditionerDemo/ReceiveAndSendHobToHood.ino) for receiving and sending AEG / Elektrolux Hob2Hood protocol.<br/>
+#### [ReceiveAndSendHob2Hood](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveAndSendHob2Hood/ReceiveAndSendHob2Hood.ino)
+Example for receiving and sending AEG / Elektrolux Hob2Hood protocol.<br/>
 
-#### ReceiverTimingAnalysis
-This [example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiverTimingAnalysis/ReceiverTimingAnalysis.ino) analyzes the signal delivered by your IR receiver module.
+#### [ReceiverTimingAnalysis](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiverTimingAnalysis/ReceiverTimingAnalysis.ino)
+This example analyzes the signal delivered by your IR receiver module.
 Values can be used to determine the stability of the received signal as well as a hint for determining the protocol.<br/>
 It also computes the `MARK_EXCESS_MICROS` value, which is the extension of the mark (pulse) duration introduced by the IR receiver module.<br/>
 It can be tested online with [WOKWI](https://wokwi.com/arduino/projects/299033930562011656).
 Click on the receiver while simulation is running to specify individual NEC IR codes.
 
-#### UnitTest
+#### [UnitTest](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/UnitTest/UnitTest.ino)
 ReceiveDemo + SendDemo in one program. Demonstrates **receiving while sending**.
 Here you see the delay of the receiver output (blue) from the IR diode input (yellow).
 ![Delay](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/pictures/IR_UnitTest_delay.bmp)
