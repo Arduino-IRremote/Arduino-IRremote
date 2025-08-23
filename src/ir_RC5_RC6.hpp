@@ -102,38 +102,83 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 
 /**
  * @param aCommand If aCommand is >=0x40 then we switch automatically to RC5X.
+ * @param aMarantzExtension 6 bit command extension which is sent after aCommand. aCommand and aMarantzExtension are sent after a short pause.
  * @param aEnableAutomaticToggle Send toggle bit according to the state of the static sLastSendToggleValue variable.
  */
-void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats,
-    bool aEnableAutomaticToggle, bool aEnableMarantzExtension, uint8_t aMarantzExtension) {
+void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand,  uint8_t aMarantzExtension, int_fast8_t aNumberOfRepeats,
+    bool aEnableAutomaticToggle) {
 
-    uint8_t rc5_ext_bits = 0;
-    if (aEnableMarantzExtension) {
-        rc5_ext_bits = RC5_EXTENSION_BITS; // Set the extension bits for Marantz RC5X
-    }
         // Set IR carrier frequency
     enableIROut (RC5_RC6_KHZ);
 
-    uint32_t tIRData = ((aAddress & 0x1F) << (RC5_COMMAND_BITS + rc5_ext_bits));
+    uint16_t tIRData = (aAddress & 0x1F);
 
     if (aCommand < 0x40) {
         // Auto discovery of RC5X, set field bit to 1
-        tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS + rc5_ext_bits);
+        tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS);
     } else {
         // Mask bit 7 of command and let field bit 0
         aCommand &= 0x3F;
     }
-    tIRData |= (aCommand << rc5_ext_bits);
-    if (aEnableMarantzExtension) {
-        // Set the Marantz extension bits
-        tIRData |= (aMarantzExtension & 0x3F);
-    }
+        // Set the command to the 2nd partof data to be sent after the pause
+    uint16_t tIRExtData = (aCommand << RC5_EXTENSION_BITS);
+        // Set the Marantz command extension bits
+    tIRExtData |= (aMarantzExtension & 0x3F);
 
     if (aEnableAutomaticToggle) {
         if (sLastSendToggleValue == 0) {
             sLastSendToggleValue = 1;
             // set toggled bit
-            tIRData |= 1 << (RC5_ADDRESS_BITS + RC5_COMMAND_BITS + rc5_ext_bits);
+            tIRData |= 1 << (RC5_ADDRESS_BITS);
+        } else {
+            sLastSendToggleValue = 0;
+        }
+    }
+
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+
+        // start bit is sent by sendBiphaseData folllowed by the field bit and toggle bit and address
+        sendBiphaseData(RC5_UNIT, tIRData, RC5_COMMAND_FIELD_BIT + RC5_TOGGLE_BIT + RC5_ADDRESS_BITS);
+        // pause before the bits of command and command extension to indicate that it's Marantz-RC5x
+        space(4 * RC5_UNIT); // Marantz-RC5x has a pause before the bits of command and command extension
+        // send command and command extension
+        sendBiphaseData(RC5_UNIT, tIRExtData, RC5_COMMAND_BITS + RC5_EXTENSION_BITS, false);
+
+        tNumberOfCommands--;
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            // send repeated command in a fixed raster
+            delay(RC5_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
+        }
+    }
+}
+
+/**
+ * @param aCommand If aCommand is >=0x40 then we switch automatically to RC5X.
+ * @param aEnableAutomaticToggle Send toggle bit according to the state of the static sLastSendToggleValue variable.
+ */
+void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
+
+        // Set IR carrier frequency
+    enableIROut (RC5_RC6_KHZ);
+
+    uint16_t tIRData = ((aAddress & 0x1F) << (RC5_COMMAND_BITS));
+
+    if (aCommand < 0x40) {
+        // Auto discovery of RC5X, set field bit to 1
+        tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS);
+    } else {
+        // Mask bit 7 of command and let field bit 0
+        aCommand &= 0x3F;
+    }
+    tIRData |= aCommand;
+
+    if (aEnableAutomaticToggle) {
+        if (sLastSendToggleValue == 0) {
+            sLastSendToggleValue = 1;
+            // set toggled bit
+            tIRData |= 1 << (RC5_ADDRESS_BITS + RC5_COMMAND_BITS);
         } else {
             sLastSendToggleValue = 0;
         }
@@ -143,7 +188,7 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
     while (tNumberOfCommands > 0) {
 
         // start bit is sent by sendBiphaseData
-        sendBiphaseData(RC5_UNIT, tIRData, RC5_BITS + rc5_ext_bits);
+        sendBiphaseData(RC5_UNIT, tIRData, RC5_BITS);
 
         tNumberOfCommands--;
         // skip last delay!
