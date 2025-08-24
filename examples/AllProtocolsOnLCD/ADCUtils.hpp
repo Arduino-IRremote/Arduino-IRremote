@@ -677,13 +677,13 @@ bool isVCCUndervoltageMultipleTimes() {
 #  if defined(LOCAL_INFO)
                     Serial.println(
                             F(
-                                    "Voltage < " STR(VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV detected -> emergency shutdown"));
+                                    "Undervoltage < " STR(VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV detected -> emergency shutdown"));
 #  endif
                 } else {
                     sVCCTooLowCounter++;
 #  if defined(LOCAL_INFO)
                     Serial.print(sVCCVoltageMillivolt);
-                    Serial.print(F(" mV < " STR(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV detected: "));
+                    Serial.print(F(" mV < " STR(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV undervoltage detected: "));
 
                     Serial.print(VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP - sVCCTooLowCounter);
                     Serial.println(F(" attempts left"));

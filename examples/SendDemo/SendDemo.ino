@@ -280,7 +280,8 @@ void loop() {
 #  endif
         delay(DELAY_AFTER_SEND);
 
-        Serial.println(F("Send 52 bit PulseDistanceWidth 0xDCBA9 87654321 LSB first with inverse timing and data 1=600|300, 0=300|600"));
+        Serial.println(
+                F("Send 52 bit PulseDistanceWidth 0xDCBA9 87654321 LSB first with inverse timing and data 1=600|300, 0=300|600"));
         Serial.flush();
 #        if __INT_WIDTH__ < 32
         tRawData[2] = ~tRawData[0];
@@ -346,16 +347,6 @@ void loop() {
     IrSender.sendSharp(sAddress & 0x1F, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
-    Serial.println(F("Send Marantz variant of RC5x with 6 command bits and additiaonal command extension"));
-    Serial.flush();
-    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand, sCommandExtension, sRepeats);
-    delay(DELAY_AFTER_SEND);
-
-    Serial.println(F("Send Marantz variant of RC5x with 7 command bits and additiaonal command extension"));
-    Serial.flush();
-    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand & 0x7F, sCommandExtension, sRepeats);
-    delay(DELAY_AFTER_SEND);
-
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0x1F, sCommand & 0x7F, sRepeats);
@@ -394,6 +385,16 @@ void loop() {
     Serial.println(F("Send RC5X with 7.th MSB of command set"));
     Serial.flush();
     IrSender.sendRC5(sAddress & 0x1F, (sCommand & 0x3F) + 0x40, sRepeats, true); // 5 address, 7 command bits
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send Marantz variant of RC5x with 6 command bits and additional command extension"));
+    Serial.flush();
+    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand, sCommandExtension, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send Marantz variant of RC5x with 7 command bits and additional command extension"));
+    Serial.flush();
+    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand & 0x7F, sCommandExtension, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send RC6"));
