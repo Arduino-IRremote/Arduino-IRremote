@@ -99,7 +99,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 # Supported IR Protocols
 ` NEC / Onkyo / Apple ` &nbsp; &nbsp; ` Denon / Sharp ` &nbsp; &nbsp; ` Panasonic / Kaseikyo `
 
-` JVC ` &nbsp; &nbsp; ` LG ` &nbsp; &nbsp; ` RC5 ` &nbsp; &nbsp; ` RC6 ` &nbsp; &nbsp; ` Samsung ` &nbsp; &nbsp; ` Sony `
+` JVC ` &nbsp; &nbsp; ` LG ` &nbsp; &nbsp; ` RC5 ` &nbsp; &nbsp; ` RC6 ` &nbsp; &nbsp; ` Samsung ` &nbsp; &nbsp; ` Sony ` &nbsp; &nbsp; ` Marantz `
 
 ` Universal Pulse Distance ` &nbsp; &nbsp; ` Universal Pulse Width ` &nbsp; &nbsp; ` Universal Pulse Distance Width`
 
@@ -131,6 +131,7 @@ Old `IrReceiver.decodedIRData.rawDataPtr->rawbuf` is now `IrReceiver.irparams.ra
 - LED feedback is always enabled for sending. It can only be disabled by using `#define NO_LED_SEND_FEEDBACK_CODE` or `#define NO_LED_FEEDBACK_CODE`.
 - The second parameter of the function `IrSender.begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback)` has changed to `uint_fast8_t aFeedbackLEDPin`. Therefore this function call no longer works as expected because it uses the old boolean value of e.g. `ENABLE_LED_FEEDBACK` which evaluates to true or 1 as pin number of the LED feedback pin number.
 - New experimental Velux send function.
+- Send function for Marantz version of the RC5x protocol. This protocol has an additional 6 bit command extension and adds a short pause after the address is sent to identify this variant of the protocol. 
 
 ## New features of version 4.x
 - **Since 4.3 `IrSender.begin(DISABLE_LED_FEEDBACK)` will no longer work**, use `#define NO_LED_SEND_FEEDBACK_CODE` instead.

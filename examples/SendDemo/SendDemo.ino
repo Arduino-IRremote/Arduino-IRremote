@@ -125,10 +125,12 @@ void setup() {
  * Set up the data to be sent.
  * For most protocols, the data is build up with a constant 8 (or 16 byte) address
  * and a variable 8 bit command.
- * There are exceptions like Sony and Denon, which have 5 bit address.
+ * There are exceptions like Sony, Denon or Marantz, which have 5 bit address.
+ * Furthermore, the extended protocol from Marantz has a 6 bit command extension.
  */
 uint16_t sAddress = 0x0102;
 uint8_t sCommand = 0x34;
+uint8_t sCommandExtension = 0x0B; // Only used for Marantz extended protocol
 uint16_t s16BitCommand = 0x5634;
 uint8_t sRepeats = 0;
 
@@ -342,6 +344,16 @@ void loop() {
     Serial.println(F("Send Denon/Sharp variant"));
     Serial.flush();
     IrSender.sendSharp(sAddress & 0x1F, sCommand, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send Marantz variant of RC5x with 6 command bits and additiaonal command extension"));
+    Serial.flush();
+    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand, sCommandExtension, sRepeats);
+    delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send Marantz variant of RC5x with 7 command bits and additiaonal command extension"));
+    Serial.flush();
+    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand & 0x7F, sCommandExtension, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Sony/SIRCS with 7 command and 5 address bits"));

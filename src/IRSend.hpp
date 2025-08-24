@@ -115,6 +115,7 @@ void IRsend::setSendPin(uint_fast8_t aSendPin) {
 /**
  * Initializes the send and feedback pin
  * @param aSendPin The Arduino pin number, where a IR sender diode is connected.
+ * @param aEnableLEDFeedback    If true the feedback LED is activated while receiving or sending a PWM signal /a mark
  * @param aFeedbackLEDPin       If 0 / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(uint_fast8_t aSendPin, uint_fast8_t aFeedbackLEDPin) {
@@ -1084,15 +1085,16 @@ void IRsend::sendPulseDistanceWidth_P(PulseDistanceWidthProtocolConstants const 
  * Sends Biphase (Manchester) coded data MSB first
  * This function concatenates two marks to one longer mark,
  * thus avoiding the programmatically pause between the generation of two separate marks.
- * Always send start bit, do not send the trailing space of the start bit
+ * Send an additional start bit if specified, do not send the trailing space of the start bit
  * 0 -> mark+space
  * 1 -> space+mark
  * The output always ends with a space
- * can only send 31 bit data, since we put the start bit as 32th bit on front
+ * can only send 31 bit data, since we may put the start bit as 32th bit on front
  * @param aData             uint32 or uint64 holding the bits to be sent.
  * @param aNumberOfBits     Number of bits from aData to be actually sent.
+ * @param aSendStartBit     if true sends an additional start bit with value 1 as MSB, if false no start bit is sent and data may start with 0 or 1.
  */
-void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits) {
+void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits, bool aSendStartBit) {
 
     IR_TRACE_PRINT(F("0x"));
     IR_TRACE_PRINT(aData, HEX);
@@ -1101,12 +1103,25 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
     Serial.print('S');
 #endif
 
+    uint32_t tMask; 
+    uint_fast8_t tLastBitValue;
+    bool tNextBitIsOne;
+// total number of bits to send including start bit if specified
+    uint8_t aBitsToSend = aNumberOfBits + (aSendStartBit ? 1 : 0);
 // Data - Biphase code MSB first
+    if (aSendStartBit) {
 // prepare for start with sending the start bit, which is 1
-    uint32_t tMask = 1UL << aNumberOfBits;    // mask is now set for the virtual start bit
-    uint_fast8_t tLastBitValue = 1;    // Start bit is a 1
-    bool tNextBitIsOne = 1;    // Start bit is a 1
-    for (uint_fast8_t i = aNumberOfBits + 1; i > 0; i--) {
+        tMask = 1UL << aNumberOfBits;    // mask is now set for the virtual start bit
+        tLastBitValue = 1;    // Start bit is a 1
+        tNextBitIsOne = 1;    // Start bit is a 1
+    } else {
+// prepare to send only the data which may start with a 0 or 1 (e.g. after a defined pause or header when no additional start bit is needed)
+        tMask = 1UL << (aNumberOfBits - 1); // mask is now set for the MSB of data
+        tLastBitValue = ((aData & tMask) != 0) ? 1 : 0; // remember the value of the first bit to be sent
+        tNextBitIsOne = tLastBitValue;
+    }
+// now send all bits
+    for (uint_fast8_t i = aBitsToSend; i > 0; i--) {
         bool tCurrentBitIsOne = tNextBitIsOne;
         tMask >>= 1;
         tNextBitIsOne = ((aData & tMask) != 0) || (i == 1); // true for last bit to avoid extension of mark
@@ -1116,6 +1131,7 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
 #endif
             space(aBiphaseTimeUnit);
             if (tNextBitIsOne) {
+                // if next bit is 1 send a single mark
                 mark(aBiphaseTimeUnit);
             } else {
                 // if next bit is 0, extend the current mark in order to generate a continuous signal without short breaks
@@ -1128,6 +1144,7 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
             Serial.print('0');
 #endif
             if (!tLastBitValue) {
+                // if last bit was 0 send a space
                 mark(aBiphaseTimeUnit);
             }
             space(aBiphaseTimeUnit);
