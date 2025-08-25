@@ -414,6 +414,32 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLe
         }
     }
 }
+/*
+ * Version with repeat
+ * @param aRepeatPeriodMillis - Time between start of two frames. Thus independent from frame length.
+ */
+void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz,
+        uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats) {
+
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+        unsigned long tStartOfFrameMillis = millis();
+        sendRaw(aBufferWithMicroseconds, aLengthOfBuffer, aIRFrequencyKilohertz);
+
+        tNumberOfCommands--;
+
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            auto tCurrentFrameDurationMillis = millis() - tStartOfFrameMillis;
+            /*
+             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
+             */
+            if (aRepeatPeriodMillis > tCurrentFrameDurationMillis) {
+                delay(aRepeatPeriodMillis - tCurrentFrameDurationMillis);
+            }
+        }
+    }
+}
 
 /**
  * Sends an 8 byte tick timing array to save program memory.
@@ -431,25 +457,53 @@ void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBu
             mark(aBufferWithTicks[i] * MICROS_PER_TICK);
         }
     }
-    IRLedOff();  // Always end with the LED off
+}
+void IRsend::sendRaw(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz,
+        uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats) {
+
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+        unsigned long tStartOfFrameMillis = millis();
+        sendRaw(aBufferWithTicks, aLengthOfBuffer, aIRFrequencyKilohertz);
+
+        tNumberOfCommands--;
+
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            auto tCurrentFrameDurationMillis = millis() - tStartOfFrameMillis;
+            /*
+             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
+             */
+            if (aRepeatPeriodMillis > tCurrentFrameDurationMillis) {
+                delay(aRepeatPeriodMillis - tCurrentFrameDurationMillis);
+            }
+        }
+    }
 }
 
 /**
  * Function using an 16 byte microsecond timing array in FLASH for every purpose.
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
-void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer,
+void IRsend::sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer,
         uint_fast8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
-    sendRaw(aBufferWithMicroseconds, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
+    sendRaw(aPGMBufferWithMicroseconds, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
 #else
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
     /*
      * Raw data starts with a mark
      */
+#  if defined(LOCAL_DEBUG)
+    // If the PROGMEM array is defined in the function, the C-compiler uses a wrong address :-(. sizeof() works.
+    Serial.print(F("aPGMBufferWithMicroseconds=0x"));
+    Serial.println((uint16_t)aPGMBufferWithMicroseconds,HEX);
+#endif
+
     for (uint_fast16_t i = 0; i < aLengthOfBuffer; i++) {
-        auto duration = pgm_read_word(&aBufferWithMicroseconds[i]);
+        uint16_t duration = pgm_read_word(&aPGMBufferWithMicroseconds[i]);
+//        uint16_t duration = pgm_read_word(aPGMBufferWithMicroseconds); // is equivalent for the compiler
         if (i & 1) {
             // Odd
             space(duration);
@@ -469,20 +523,42 @@ void IRsend::sendRaw_P(const uint16_t aBufferWithMicroseconds[], uint_fast16_t a
 #endif
 }
 
+void IRsend::sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer,
+        uint_fast8_t aIRFrequencyKilohertz, uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats) {
+
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+        unsigned long tStartOfFrameMillis = millis();
+        sendRaw_P(aPGMBufferWithMicroseconds, aLengthOfBuffer, aIRFrequencyKilohertz);
+
+        tNumberOfCommands--;
+
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            auto tCurrentFrameDurationMillis = millis() - tStartOfFrameMillis;
+            /*
+             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
+             */
+            if (aRepeatPeriodMillis > tCurrentFrameDurationMillis) {
+                delay(aRepeatPeriodMillis - tCurrentFrameDurationMillis);
+            }
+        }
+    }
+}
+
 /**
  * New function using an 8 byte tick (50 us) timing array in FLASH to save program memory
  * Raw data starts with a Mark. No leading space as in received timing data!
  */
-void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
+void IRsend::sendRaw_P(const uint8_t aPGMBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz) {
 #if !defined(__AVR__)
-    sendRaw(aBufferWithTicks, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
+    sendRaw(aPGMBufferWithTicks, aLengthOfBuffer, aIRFrequencyKilohertz); // Let the function work for non AVR platforms
 #else
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
-    uint_fast16_t duration;
     for (uint_fast16_t i = 0; i < aLengthOfBuffer; i++) {
-        duration = pgm_read_byte(&aBufferWithTicks[i]) * (uint_fast16_t) MICROS_PER_TICK;
+        uint16_t duration = pgm_read_byte(&aPGMBufferWithTicks[i]) * (uint_fast16_t) MICROS_PER_TICK;
         if (i & 1) {
             // Odd
             space(duration);
@@ -495,12 +571,33 @@ void IRsend::sendRaw_P(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOf
             Serial.print(F("M="));
 #  endif
         }
-    }
-    IRLedOff();  // Always end with the LED off
 #  if defined(LOCAL_DEBUG)
-    Serial.println(duration);
+        Serial.println(duration);
 #  endif
+    }
 #endif
+}
+void IRsend::sendRaw_P(const uint8_t aPGMBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz,
+        uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats) {
+
+    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
+    while (tNumberOfCommands > 0) {
+        unsigned long tStartOfFrameMillis = millis();
+        sendRaw_P(aPGMBufferWithTicks, aLengthOfBuffer, aIRFrequencyKilohertz);
+
+        tNumberOfCommands--;
+
+        // skip last delay!
+        if (tNumberOfCommands > 0) {
+            auto tCurrentFrameDurationMillis = millis() - tStartOfFrameMillis;
+            /*
+             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
+             */
+            if (aRepeatPeriodMillis > tCurrentFrameDurationMillis) {
+                delay(aRepeatPeriodMillis - tCurrentFrameDurationMillis);
+            }
+        }
+    }
 }
 
 /**********************************************************************************************************************
@@ -874,6 +971,7 @@ void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtoc
         }
 
         tNumberOfCommands--;
+
         // skip last delay!
         if (tNumberOfCommands > 0) {
             auto tCurrentFrameDurationMillis = millis() - tStartOfFrameMillis;

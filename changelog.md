@@ -1,6 +1,7 @@
 # Changelog
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
+
 # 4.5.0
 - Added support for multiple receiver instances.
 - irparams_struct irparams is now member of IRrecv. Thus removed rawDataPtr (pointer to irparams) from IrReceiver.decodedIRData.
@@ -12,8 +13,9 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Minor bug fixes for DEBUG.
 - LED feedback is always enabled for sending. It can only be disabled by using the macro NO_LED_SEND_FEEDBACK_CODE.
 - Removed parameter aEnableLEDFeedback in function IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) and IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin).
-- Added experimental Velux send function.
-
+- Added experimental sendVelux().
+- Added sendMaranz().
+- Added output for UNKNOWN protocol to printIRSendUsage().
 
 # 4.4.3
 - Added USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN to make the software aware of send LED connected between VCC and send pin.

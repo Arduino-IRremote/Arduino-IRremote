@@ -50,7 +50,6 @@
 //#define _IR_MEASURE_TIMING // for ISR
 //#define _IR_TIMING_TEST_PIN 7 // "pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);" is executed at start()
 //
-
 #if !defined(NO_LED_RECEIVE_FEEDBACK_CODE)
 #define LED_RECEIVE_FEEDBACK_CODE // Resolve the double negative
 #endif
@@ -1116,6 +1115,7 @@ IRrecv::decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProto
 
 void IRrecv::decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
         uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset) {
+
     PulseDistanceWidthProtocolConstants tTemporaryPulseDistanceWidthProtocolConstants;
     memcpy_P(&tTemporaryPulseDistanceWidthProtocolConstants, aProtocolConstantsPGM,
             sizeof(tTemporaryPulseDistanceWidthProtocolConstants));
@@ -1968,6 +1968,8 @@ uint32_t IRrecv::getTotalDurationOfRawData() {
     return tSumOfDurationTicks * (uint32_t) MICROS_PER_TICK;
 }
 
+// @formatter:off
+
 /**
  * Function to print values and flags of IrReceiver.decodedIRData in one line.
  * do not print for repeats except IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT.
@@ -1977,9 +1979,19 @@ uint32_t IRrecv::getTotalDurationOfRawData() {
  * @param aSerial The Print object on which to write, for Arduino you can use &Serial.
  */
 void IRrecv::printIRSendUsage(Print *aSerial) {
-    if (decodedIRData.protocol != UNKNOWN
-            && ((decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) == 0x00
+    if (((decodedIRData.flags & (IRDATA_FLAGS_IS_AUTO_REPEAT | IRDATA_FLAGS_IS_REPEAT)) == 0x00
                     || (decodedIRData.flags & IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT))) {
+
+        /*
+         * Generating the string:
+         * Send on a 8 bit platform with:
+         *     uint32_t tRawData[]={0x87654321, 0xAFEDCBA9, 0x5A};
+         *     IrSender.send
+         * or
+         * Send on a 8 bit platform with: IrSender.send
+         * or
+         * Send with: IrSender.send
+         */
 #if defined(DECODE_DISTANCE_WIDTH)
         uint_fast8_t tNumberOfArrayData = 0;
         if (decodedIRData.protocol == PULSE_DISTANCE || decodedIRData.protocol == PULSE_WIDTH) {
@@ -1988,113 +2000,134 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             tNumberOfArrayData = ((decodedIRData.numberOfBits - 1) / 32) + 1;
             if(tNumberOfArrayData > 1) {
                 aSerial->println();
-                aSerial->print(F("    uint32_t tRawData[]={0x"));
+                aSerial->print(F("  uint32_t tRawData[]={0x"));
+                for (uint_fast8_t i = 0; i < tNumberOfArrayData; ++i) {
+                    aSerial->print(decodedIRData.decodedRawDataArray[i], HEX);
 #  else
-                aSerial->print(F("Send on a 32 bit platform with: "));
-                tNumberOfArrayData = ((decodedIRData.numberOfBits - 1) / 64) + 1;
-                if(tNumberOfArrayData > 1) {
-                    aSerial->println();
-                    aSerial->print(F("    uint64_t tRawData[]={0x"));
+            aSerial->print(F("Send on a 32 bit platform with: "));
+            tNumberOfArrayData = ((decodedIRData.numberOfBits - 1) / 64) + 1;
+            if(tNumberOfArrayData > 1) {
+                aSerial->println();
+                aSerial->print(F("  uint64_t tRawData[]={0x"));
+                for (uint_fast8_t i = 0; i < tNumberOfArrayData; ++i) {
+                    PrintULL::print(aSerial, decodedIRData.decodedRawDataArray[i], HEX);
 #  endif
-                    for (uint_fast8_t i = 0; i < tNumberOfArrayData; ++i) {
-#  if (__INT_WIDTH__ < 32)
-                        aSerial->print(decodedIRData.decodedRawDataArray[i], HEX);
-#  else
-                        PrintULL::print(aSerial, decodedIRData.decodedRawDataArray[i], HEX);
-#  endif
-                        if (i != tNumberOfArrayData - 1) {
-                            aSerial->print(F(", 0x"));
-                        }
+                    if (i != tNumberOfArrayData - 1) {
+                        aSerial->print(F(", 0x"));
                     }
-                    aSerial->println(F("};"));
-                    aSerial->print(F("    "));
                 }
-            } else {
-                aSerial->print(F("Send with: "));
+                aSerial->println(F("};"));
+                aSerial->print(F("  "));
             }
-            aSerial->print(F("IrSender.send"));
+        } else { // if (decodedIRData.protocol == PULSE_DISTANCE || decodedIRData.protocol == PULSE_WIDTH)
+            aSerial->print(F("Send with: "));
+        }
+        if (decodedIRData.protocol == UNKNOWN){
+            aSerial->println();
+            aSerial->print(F("  "));
+            printIRResultAsCArray(&Serial);
+            aSerial->print(F("  "));
+        }
+        aSerial->print(F("IrSender.send"));
 
 #else
         aSerial->print(F("Send with: IrSender.send"));
-#endif
+#endif // #if defined(DECODE_DISTANCE_WIDTH)
 
-#if defined(DECODE_DISTANCE_WIDTH)
-            if (decodedIRData.protocol != PULSE_DISTANCE && decodedIRData.protocol != PULSE_WIDTH) {
-#endif
-        aSerial->print(getProtocolString());
-        aSerial->print(F("(0x"));
-#if defined(DECODE_MAGIQUEST)
-                if (decodedIRData.protocol == MAGIQUEST) {
-#  if (__INT_WIDTH__ < 32)
-                    aSerial->print(decodedIRData.decodedRawData, HEX);
-#  else
-                    PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
-#  endif
-                } else {
-                    aSerial->print(decodedIRData.address, HEX);
-                }
-#else
         /*
-         * New decoders have address and command
+         * Generating the string:
+         * Raw(rawIRTimings, sizeof(rawIRTimings) / sizeof(rawIRTimings[0]), 38, <RepeatPeriodMillis>, <numberOfRepeats>
+         * or
+         * PulseDistanceWidth(38, 550, 1250, 500, 1250, 1300, 400, 0x3D9EAC, 23, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
+         * or
+         * PulseDistanceWidthFromArray(38, 8900, 4350, 600, 1650, 600, 550, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
+         * or
+         * <Protocol_Name>(0x<Address>, 0x<Command>, <numberOfRepeats>);
          */
-        aSerial->print(decodedIRData.address, HEX);
+        if (decodedIRData.protocol == UNKNOWN){
+            aSerial->print(F("Raw(rawIRTimings, sizeof(rawIRTimings) / sizeof(rawIRTimings[0]), 38, <RepeatPeriodMillis>, <numberOfRepeats>"));
+        }
+#if defined(DECODE_DISTANCE_WIDTH)
+        else if (decodedIRData.protocol == PULSE_DISTANCE || decodedIRData.protocol == PULSE_WIDTH) {
+            /*
+             * Pulse distance or pulse width here
+             */
+            aSerial->print(F("PulseDistanceWidth"));
+            if(tNumberOfArrayData > 1) {
+                aSerial->print(F("FromArray(38, "));
+            } else {
+                aSerial->print(F("(38, "));
+            }
+            printDistanceWidthTimingInfo(aSerial, &decodedIRData.DistanceWidthTimingInfo);
+
+            if(tNumberOfArrayData > 1) {
+                aSerial->print(F(", &tRawData[0], "));
+            } else {
+                aSerial->print(F(", 0x"));
+#  if (__INT_WIDTH__ < 32)
+                aSerial->print(decodedIRData.decodedRawData, HEX);
+#  else
+                PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
+#  endif
+                aSerial->print(F(", "));
+            }
+            aSerial->print(decodedIRData.numberOfBits); // aNumberOfBits
+            aSerial->print(F(", PROTOCOL_IS_"));
+
+            if (decodedIRData.flags & IRDATA_FLAGS_IS_MSB_FIRST) {
+                aSerial->print('M');
+            } else {
+                aSerial->print('L');
+            }
+            aSerial->print(F("SB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>"));
+        }
+#endif // defined(DECODE_DISTANCE_WIDTH)
+        else {
+            /*
+             * Regular protocols here
+             */
+            aSerial->print(getProtocolString());
+            aSerial->print(F("(0x"));
+#if defined(DECODE_MAGIQUEST)
+            if (decodedIRData.protocol == MAGIQUEST) {
+#  if (__INT_WIDTH__ < 32)
+                aSerial->print(decodedIRData.decodedRawData, HEX);
+#  else
+                PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
+#  endif
+            } else {
+                aSerial->print(decodedIRData.address, HEX);
+            }
+#else
+            /*
+             * New decoders have address and command
+             */
+            aSerial->print(decodedIRData.address, HEX);
 #endif
 
-        aSerial->print(F(", 0x"));
-        aSerial->print(decodedIRData.command, HEX);
-        if (decodedIRData.protocol == SONY) {
-            aSerial->print(F(", 2, "));
-            aSerial->print(decodedIRData.numberOfBits);
-        } else {
-            aSerial->print(F(", <numberOfRepeats>"));
+            aSerial->print(F(", 0x"));
+            aSerial->print(decodedIRData.command, HEX);
+            if (decodedIRData.protocol == SONY) {
+                aSerial->print(F(", 2, "));
+                aSerial->print(decodedIRData.numberOfBits);
+            } else {
+                aSerial->print(F(", <numberOfRepeats>"));
+            }
         }
 
-#if defined(DECODE_DISTANCE_WIDTH)
-            } else {
-                /*
-                 * Pulse distance or pulse width here
-                 */
-                aSerial->print(F("PulseDistanceWidth"));
-                if(tNumberOfArrayData > 1) {
-                    aSerial->print(F("FromArray(38, "));
-                } else {
-                    aSerial->print(F("(38, "));
-                }
-                printDistanceWidthTimingInfo(aSerial, &decodedIRData.DistanceWidthTimingInfo);
-
-                if(tNumberOfArrayData > 1) {
-                    aSerial->print(F(", &tRawData[0], "));
-                } else {
-                    aSerial->print(F(", 0x"));
-#  if (__INT_WIDTH__ < 32)
-                    aSerial->print(decodedIRData.decodedRawData, HEX);
-#  else
-                    PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
-#  endif
-                    aSerial->print(F(", "));
-                }
-                aSerial->print(decodedIRData.numberOfBits); // aNumberOfBits
-                aSerial->print(F(", PROTOCOL_IS_"));
-
-                if (decodedIRData.flags & IRDATA_FLAGS_IS_MSB_FIRST) {
-                    aSerial->print('M');
-                } else {
-                    aSerial->print('L');
-                }
-                aSerial->print(F("SB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>"));
-            }
-#endif
 #if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO) || defined(DECODE_RC6)
-            if ((decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) && (decodedIRData.protocol == KASEIKYO || decodedIRData.protocol == RC6A)) {
-                aSerial->print(F(", 0x"));
-                aSerial->print(decodedIRData.extra, HEX);
-            }
+        if ((decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) && (decodedIRData.protocol == KASEIKYO || decodedIRData.protocol == RC6A)) {
+            // Vendor code parameter, which is after numberOfRepeats parameter
+            aSerial->print(F(", 0x"));
+            aSerial->print(decodedIRData.extra, HEX);
+        }
 #endif
         aSerial->print(F(");"));
         aSerial->println();
     }
 }
 
+// @formatter:on
 /**
  * Function to print protocol number, address, command, raw data and repeat flag of IrReceiver.decodedIRData in one short line.
  * Does not print a Newline / does not end with println().
@@ -2167,7 +2200,7 @@ void IRrecv::printIRDuration(Print *aSerial, bool aOutputMicrosecondsInsteadOfTi
 void IRrecv::printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks) {
 
 // Print Raw data
-    aSerial->print(F("rawData["));
+    aSerial->print(F("rawIRTimings["));
     aSerial->print(decodedIRData.rawlen);
     aSerial->println(F("]: "));
 
@@ -2269,7 +2302,7 @@ void IRrecv::compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicr
 void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks, bool aDoCompensate) {
 // Start declaration
     if (aOutputMicrosecondsInsteadOfTicks) {
-        aSerial->print(F("uint16_t rawData["));         // variable type, array name
+        aSerial->print(F("uint16_t rawIRTimings["));         // variable type, array name
     } else {
         aSerial->print(F("uint8_t rawTicks["));          // variable type, array name
     }
@@ -2310,9 +2343,6 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
 // Comment
     aSerial->print(F("  // "));
     printIRResultShort(aSerial);
-
-// Newline
-    aSerial->println();
 }
 
 /**
@@ -2369,9 +2399,9 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
 
         // All protocols have raw data
 #if __INT_WIDTH__ < 32
-        aSerial->print(F("uint32_t rawData = 0x"));
+        aSerial->print(F("uint32_t rawIRTimings = 0x"));
 #else
-            aSerial->print(F("uint64_t rawData = 0x"));
+            aSerial->print(F("uint64_t rawIRTimings = 0x"));
 #endif
 #if (__INT_WIDTH__ < 32)
         aSerial->print(decodedIRData.decodedRawData, HEX);
@@ -2379,7 +2409,6 @@ void IRrecv::printIRResultAsCVariables(Print *aSerial) {
             PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
 #endif
         aSerial->println(';');
-        aSerial->println();
     }
 }
 
