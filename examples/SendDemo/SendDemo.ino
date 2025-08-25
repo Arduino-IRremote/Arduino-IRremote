@@ -65,6 +65,13 @@ IRRawDataType const tRawDataPGM[] PROGMEM = { 0xB02002, 0xA010 }; // LSB of tRaw
 //0x10, 0xA0, 0x0, 0x0, /*0xA010*/};
 #endif
 
+const uint16_t rawIRTimingsNEC[] PROGMEM
+= { 9000, 4500/*Start bit*/, 560, 560, 560, 560, 560, 1690, 560, 560/*0010 0x4 of 16 bit address LSB first*/, 560, 560, 560, 560,
+        560, 560, 560, 560/*0000*/, 560, 1690, 560, 1690, 560, 560, 560, 1690/*1101 0xB*/, 560, 1690, 560, 1690, 560, 1690, 560,
+        1690/*1111*/, 560, 560, 560, 560, 560, 560, 560, 1690/*0001 0x08 of command LSB first*/, 560, 560, 560, 560, 560, 560, 560,
+        560/*0000 0x00*/, 560, 1690, 560, 1690, 560, 1690, 560, 560/*1110 Inverted 8 of command*/, 560, 1690, 560, 1690, 560, 1690,
+        560, 1690/*1111 inverted 0 of command*/, 560 /*stop bit*/}; // Using exact NEC timing
+
 void setup() {
     Serial.begin(115200);
 
@@ -169,7 +176,18 @@ void loop() {
         /*
          * Send constant values only once in this demo
          */
-        Serial.println(F("Sending NEC Pronto data with 8 bit address 0x80 and command 0x45 and no repeats"));
+
+        /*
+         * Test send usage for UNKNOWN protocol
+         */
+        const uint16_t rawIRTimings[] = { 9000, 4500/*Start bit*/, 500, 1000, 1000, 500, 500, 2000, 2000, 500, 500, 3000, 3000, 500,
+                500, 250, 250, 500 };
+        Serial.println(F("Send arbitrary raw data with exact timing (16 bit array format) with sendRaw()"));
+        Serial.flush();
+        IrSender.sendRaw(rawIRTimings, sizeof(rawIRTimings) / sizeof(rawIRTimings[0]), NEC_KHZ, 80, 1); // Note the approach used to automatically calculate the size of the array.
+        delay(DELAY_AFTER_SEND);
+
+        Serial.println(F("Send NEC data with 8 bit address 0x80 and command 0x45 and no repeats with sendPronto()"));
         Serial.flush();
         IrSender.sendPronto(F("0000 006D 0022 0000 015E 00AB " /* Pronto header + start bit */
                 "0017 0015 0017 0015 0017 0017 0015 0017 0017 0015 0017 0015 0017 0015 0017 003F " /* Lower address byte */
@@ -180,18 +198,13 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 
         /*
-         * !!! The next data occupies 136 bytes RAM !!!
+         * Test sending NEC protocol using sendRaw_P
          */
         Serial.println(
-                F("Send NEC sendRaw data with 8 bit address=0xFB04 and command 0x08 and exact timing (16 bit array format)"));
+                F(
+                        "Send NEC data with 8 bit address=0xFB04 and command 0x08 and exact timing (16 bit array format) with sendRaw_P()"));
         Serial.flush();
-        const uint16_t irSignal[] = { 9000, 4500/*Start bit*/, 560, 560, 560, 560, 560, 1690, 560,
-                560/*0010 0x4 of 16 bit address LSB first*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000*/, 560, 1690, 560, 1690,
-                560, 560, 560, 1690/*1101 0xB*/, 560, 1690, 560, 1690, 560, 1690, 560, 1690/*1111*/, 560, 560, 560, 560, 560, 560,
-                560, 1690/*0001 0x08 of command LSB first*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000 0x00*/, 560, 1690, 560,
-                1690, 560, 1690, 560, 560/*1110 Inverted 8 of command*/, 560, 1690, 560, 1690, 560, 1690, 560,
-                1690/*1111 inverted 0 of command*/, 560 /*stop bit*/}; // Using exact NEC timing
-        IrSender.sendRaw(irSignal, sizeof(irSignal) / sizeof(irSignal[0]), NEC_KHZ); // Note the approach used to automatically calculate the size of the array.
+        IrSender.sendRaw_P(rawIRTimingsNEC, sizeof(rawIRTimingsNEC) / sizeof(rawIRTimingsNEC[0]), NEC_KHZ, 110, 1); // Note the approach used to automatically calculate the size of the array.
         delay(DELAY_AFTER_SEND);
 
         /*
