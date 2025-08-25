@@ -57,6 +57,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
     * [Protocol=UNKNOWN](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#protocolunknown)
     * [How to deal with protocols not supported by IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#how-to-deal-with-protocols-not-supported-by-irremote)
 - [Sending IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-ir-codes)
+  * [Sending UNKNOWN protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-unknown-protocol)
   * [Sending IRDB IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-irdb-ir-codes)
   * [Send pin](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#send-pin)
   * [Polarity of send pin](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#polarity-of-send-pin)
@@ -71,6 +72,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Multiple IR receivers](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-receivers) 
   * [Multiple IR sender instances](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-sender-instances)
   * [Increase strength of sent output signal](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#increase-strength-of-sent-output-signal)
+  * [Simulate an IR receiver module](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#simulate-an-ir-receiver-module)
   * [Minimal CPU clock frequency](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#minimal-cpu-clock-frequency)
   * [Bang & Olufsen protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#bang--olufsen-protocol)
 - [Examples for this library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#examples-for-this-library)
@@ -580,8 +582,16 @@ Repeat frames are sent at a fixed period determined by the protocol. e.g. 110 ms
 Keep in mind, that **there is no delay after the last sent mark**.
 If you handle the sending of repeat frames by your own, you must insert sensible delays before the repeat frames to enable correct decoding.
 
+Bear in mind, that **some devices only accept commands if they are repeated one or two times**.
+
 Sending **old MSB codes without conversion** can be done by using `sendNECMSB()`, `sendSonyMSB()`, `sendSamsungMSB()`, `sendJVCMSB()`
 or by [converting them manually to LSB](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#how-to-convert-old-msb-first-32-bit-ir-data-codes-to-new-lsb-first-32-bit-ir-data-codes).
+
+## Sending UNKNOWN protocol
+If the protocol is unknown by IRremote, which often is the case for airconditioner codes, 
+you can store the timing sequence in an array and send it with IrSender.sendRaw() or IrSender.sendRaw_P()
+like done in [SendDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendDemo/SendDemo.ino#L180).
+Do not forget to send repeats.
 
 ## Sending IRDB IR codes
 The codes found in the [Flipper-IRDB database](https://github.com/Lucaslhm/Flipper-IRDB) are quite straightforward to convert, because the also use the address / command scheme.<br/>
@@ -752,6 +762,7 @@ However, keep in mind that any weak / disturbed signal from one of the receivers
 **This library only supports one IR sender object (IRsend) per CPU.**<br/>
 However since sending is a serial task, you can use `setSendPin()` to switch the pin to send, thus emulating multiple sender.<br/>
 
+
 ## Increase strength of sent output signal
 **The best way to increase the IR power for free** is to use 2 or 3 IR diodes in series. One diode requires 1.2 volt at 20 mA or 1.5 volt at 100 mA so you can supply up to 3 diodes with a 5 volt output.<br/>
 To power **2 diodes** with 1.2 V and 20 mA and a 5 V supply, set the resistor to: (5 V - 2.4 V) -> 2.6 V / 20 mA = **130 &ohm;**.<br/>
@@ -760,6 +771,10 @@ The actual current might be lower since of **loss at the AVR pin**. E.g. 0.3 V a
 If you do not require more current than 20 mA, there is no need to use an external transistor (at least for AVR chips).
 
 On my Arduino Nanos, I always use a 100 &ohm; series resistor and one IR LED :grinning:.
+
+## Simulate an IR receiver module
+To simulate an IR receiver (such as the TSOP1738) which provides an active-low output, you only need to enable the `USE_NO_SEND_PWM` macro.
+In the case you must simulate exotic IR receivers, which provides an active-high output, you also need to enable the `USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM` macro.
 
 ## Minimal CPU clock frequency
 For receiving, the **minimal CPU clock frequency is 4 MHz**, since the 50 &micro;s timer ISR (Interrupt Service Routine) takes around 12 &micro;s on a 16 MHz ATmega.<br/>
@@ -913,10 +928,10 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `IR_SEND_PIN` | disabled | If specified, it reduces program size and improves send timing for AVR. If you want to use a variable to specify send pin e.g. with `setSendPin(uint8_t aSendPinNumber)`, you must not use / disable this macro in your source. |
 | `SEND_PWM_BY_TIMER` | disabled | Disables carrier PWM generation in software and use hardware PWM (by timer). Has the **advantage of more exact PWM generation**, especially the duty cycle (which is not very relevant for most IR receiver circuits), and the **disadvantage of using a hardware timer**, which in turn is not available for other libraries and to fix the send pin (but not the receive pin) at the [dedicated timer output pin(s)](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage). Is enabled for ESP32 and RP2040 in all examples, since they support PWM generation for each pin without using a shared resource (timer). |
 | `IR_SEND_DUTY_CYCLE_PERCENT` | 30 | Duty cycle of IR send signal. |
-| `USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN` | disabled | Reverses the polarity at the send pin. Can be used to connect IR LED between VCC and the send pin. It is like open drain but with electrical active high in its logical inactive state. |
-| `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` | disabled | Uses or simulates open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
+| `USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN` | disabled | Reverses the polarity of space level for PWM at the send pin, i.e. space is high. Can be used to connect IR LED between VCC and the send pin. It is like open drain but with electrical active high in its logical inactive state. |
+| `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` | disabled | Uses or simulates open drain output mode for PWM at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
 | `USE_NO_SEND_PWM` | disabled | Uses no carrier PWM, just simulate an **active low** receiver signal. Used for transferring signal by cable instead of IR. Overrides `SEND_PWM_BY_TIMER` definition. |
-| `USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM` | disabled | Only if `USE_NO_SEND_PWM` is enabled. Simulate an **active high** receiver signal instead of an active low signal. |
+| `USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM` | disabled | Only evaluated if `USE_NO_SEND_PWM` is enabled. Simulate an **active high** receiver signal instead of an active low signal. |
 | `DISABLE_CODE_FOR_RECEIVER` | disabled |  Disables static receiver code like receive timer ISR handler and static IRReceiver and irparams data. Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not required. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time. |
