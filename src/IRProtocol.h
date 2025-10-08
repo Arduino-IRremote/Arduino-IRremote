@@ -32,6 +32,8 @@
 #ifndef _IR_PROTOCOL_H
 #define _IR_PROTOCOL_H
 
+#include <stdint.h>
+
 /*
  * If activated, BANG_OLUFSEN, BOSEWAVE, MAGIQUEST, WHYNTER, FAST and LEGO_PF are excluded in decoding and in sending with IrSender.write
  */
