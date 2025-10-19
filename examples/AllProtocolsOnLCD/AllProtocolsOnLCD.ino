@@ -86,7 +86,7 @@
 #define LCD_ROWS 2
 
 #if defined(USE_SERIAL_LCD)
-#include "LiquidCrystal_I2C.h" // Use an up to date library version, which has the init method
+#include "LiquidCrystal_I2C.hpp" // Here we use an enhanced version, which supports SoftI2CMaster
 LiquidCrystal_I2C myLCD(0x27, LCD_COLUMNS, LCD_ROWS);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 #elif !defined(USE_NO_LCD)
 #define USE_PARALLEL_LCD
