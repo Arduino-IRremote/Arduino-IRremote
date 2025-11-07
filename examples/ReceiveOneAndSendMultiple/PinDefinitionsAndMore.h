@@ -353,7 +353,7 @@ void noTone(uint8_t aPinNumber){
 /*
  * Helper macro for getting a macro definition as string
  */
-#if !defined(STR_HELPER)
+#if !defined(STR_HELPER) && !defined(STR)
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 #endif

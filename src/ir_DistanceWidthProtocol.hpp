@@ -7,7 +7,11 @@
  * If RAM is not more than 2k, the decoder only accepts mark or space durations up to 50 * 50 (MICROS_PER_TICK) = 2500 microseconds
  * to save RAM space, otherwise it accepts durations up to 10 ms.
  *
- * This decoder tries to decode a pulse distance or pulse distance width with constant period (or pulse width - not enabled yet) protocol.
+ * This decoder tries to decode the protocols:
+ * - Pulse distance with constant pulse length
+ * - Pulse distance width with constant period length
+ * - Pulse width with constant pause length - not enabled yet
+ *
  * 1. Analyze all space and mark length
  * 2. Decide which protocol we have
  * 3. Try to decode with the mark and space data found in step 1
