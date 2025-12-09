@@ -73,6 +73,7 @@ jobs:
           - esp32:esp32:featheresp32:FlashFreq=80
           - esp32:esp32:esp32c3
           - esp32:esp32:lolin_s2_mini
+          - esp32:esp32:nano_nora
           - STMicroelectronics:stm32:GenF1:pnum=BLUEPILL_F103C8
           - STMicroelectronics:stm32:GenL0:pnum=THUNDERPACK_L072
           - stm32duino:STM32F1:genericSTM32F103C
@@ -255,6 +256,12 @@ jobs:
               All: -DRAW_BUFFER_LENGTH=1500
 
           - arduino-boards-fqbn: esp32:esp32:lolin_s2_mini
+            platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+            sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
+            build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
+              All: -DRAW_BUFFER_LENGTH=1500
+
+          - arduino-boards-fqbn: esp32:esp32:nano_nora
             platform-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
             sketches-exclude: TinyReceiver # undefined reference to `TwoWire::onReceive(void (*)(int))'
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!

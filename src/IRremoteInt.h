@@ -222,7 +222,7 @@ struct decode_results {
 /**
  * Main class for receiving IR signals
  */
-#define USE_DEFAULT_FEEDBACK_LED_PIN        0 // we need it here
+#define USE_DEFAULT_FEEDBACK_LED_PIN        0xFF // we need it here
 class IRrecv {
 public:
 

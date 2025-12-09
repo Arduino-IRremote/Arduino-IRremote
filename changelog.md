@@ -2,6 +2,10 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+# 4.6.0
+- Changed USE_DEFAULT_FEEDBACK_LED_PIN from 0 to 0xFF, because megaTinyCore defines the not special pin PIN_PA4 as 0.
+- Changed timer for ATtiny16X4.
+
 # 4.5.0
 - Added support for multiple receiver instances.
 - irparams_struct irparams is now member of IRrecv. Thus removed rawDataPtr (pointer to irparams) from IrReceiver.decodedIRData.

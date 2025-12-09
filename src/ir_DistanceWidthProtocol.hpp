@@ -231,7 +231,11 @@ bool IRrecv::decodeDistanceWidth() {
      * Count number of mark durations. Skip leading start and trailing stop bit.
      */
     for (IRRawlenType i = 3; i < decodedIRData.rawlen - 2; i += 2) {
+#if(DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE > 0xFF)
+        uint16_t tDurationTicks = irparams.rawbuf[i];
+#else
         auto tDurationTicks = irparams.rawbuf[i];
+#endif
         if (tDurationTicks < DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE) {
             tDurationArray[tDurationTicks]++; // count duration if less than DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE
             if (tIndexOfMaxDuration < tDurationTicks) {

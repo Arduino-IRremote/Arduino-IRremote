@@ -809,7 +809,7 @@ void IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenTy
 /**
  * New threshold decoder to be activated by USE_THRESHOLD_DECODER
  * Assumes a 0 for shorter and a 1 for longer timing. Thus the value must be eventually inverted by the calling protocol decoder (MagiQuest).
- * In normal decoder we check the if we have a timing for a 1 (normally the longer timing) within a range of 75 % and 125 % of the nominal timing see TICKS_LOW.
+ * In normal decoder, we check whether there is a timing for a 1 (usually the longer timing) within a range of 75 % to 125 % of the nominal timing. See TICKS_LOW.
  * Many protocols have a ratio of 1 to 3 between short and long timing. In this case this decoder extends the range to 66% and the upper bound does not matter anyway.
  * I hope that this will give slightly better results especially for
  *  - jittering signals

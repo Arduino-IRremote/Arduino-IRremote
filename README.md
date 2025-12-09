@@ -328,7 +328,7 @@ Any other extension would work, e.g. *cinclude*, but *hpp* seems to be common se
 
 # Using the new *.hpp files
 In order to support [compile options](#compile-options--macros-for-this-library) more easily,
-you must use the statement `#include <IRremote.hpp>` instead of `#include <IRremote.h>` in your main program (aka *.ino file with setup() and loop()).
+you **must** use the statement `#include <IRremote.hpp>` instead of `#include <IRremote.h>` in your main program (aka *.ino file with setup() and loop()).
 
 In **all other files** you must use the following, to **prevent `multiple definitions` linker errors**:
 
@@ -1033,6 +1033,7 @@ The code for the timer and the **timer selection** is located in [private/IRTime
 | [ATtiny167 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore/blob/v2.0.0-devThis-is-the-head-submit-PRs-against-this/avr/extras/ATtiny_x7.md) | **1**    | **9**, 8 - 15 | **8 - 15**            |
 | [ATtiny1604](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x04.md)            | **TCB0**      | **PA05**   |
 | [ATtiny1614, ATtiny816](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x14.md) | **TCA0**      | **PA3**    |
+| [ATtiny1624](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x24.md)            | **TCA0**      | **PA3**    |
 | [ATtiny3217](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x17.md)            | **TCA0**, TCD | %          |
 | [ATmega8](https://github.com/MCUdude/MiniCore#supported-microcontrollers)                                     | **1**         | **9**      |
 | [ATmega1284](https://github.com/MCUdude/MightyCore#supported-microcontrollers)                                | 1, **2**, 3   | 13, 14, 6  |

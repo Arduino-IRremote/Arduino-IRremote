@@ -80,7 +80,7 @@ size_t LCDPrintHex(LiquidCrystal *aLCD, uint16_t aHexByteValue);
 void LCDPrintAsFloatAs5CharacterString(LiquidCrystal *aLCD, uint16_t aValueInMillivolts);
 void LCDPrintFloatValueRightAligned(LiquidCrystal *aLCD, float aFloatValue, uint8_t aNumberOfCharactersToPrint,
         bool aNoLeadingSpaceForPositiveValues = false);
-void LCDTestPrintFloatValueRightAligned(LiquidCrystal *aLCD);
+void LCDTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal *aLCD);
 void LCDShowSpecialCharacters(LiquidCrystal *aLCD);
 void LCDShowCustomCharacters(LiquidCrystal *aLCD);
 #else
@@ -264,12 +264,12 @@ void LCDPrintFloatValueRightAligned(LiquidCrystal_I2C *aLCD, float aFloatValue, 
 }
 
 #if defined(USE_PARALLEL_LCD)
-void LCDTestPrintFloatValueRightAligned(LiquidCrystal *aLCD)
+void LCDTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal *aLCD)
 #else
-void LCDTestPrintFloatValueRightAligned(LiquidCrystal_I2C *aLCD)
+void LCDTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal_I2C *aLCD)
 #endif
         {
-    Serial.println(F("LCDTestPrintFloatValueRightAligned: 1."));
+    aSerial->println(F("LCDTestPrintFloatValueRightAligned: 1."));
 
     aLCD->clear();
     float tTestValue = 123.45;
@@ -305,7 +305,7 @@ void LCDTestPrintFloatValueRightAligned(LiquidCrystal_I2C *aLCD)
     // Result="-.1234-.123-.12-.1-0"
 
     delay(4000);
-    Serial.println(F("LCDTestPrintFloatValueRightAligned: 2."));
+    aSerial->println(F("LCDTestPrintFloatValueRightAligned: 2."));
 
     aLCD->clear();
     tTestValue = 123.45;
@@ -342,7 +342,7 @@ void LCDTestPrintFloatValueRightAligned(LiquidCrystal_I2C *aLCD)
     // Result=".12344.1234.123.12.1"
 
     delay(4000);
-    Serial.println(F("LCDTestPrintFloatValueRightAligned: End"));
+    aSerial->println(F("LCDTestPrintFloatValueRightAligned: End"));
 }
 
 /*

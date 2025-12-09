@@ -127,7 +127,7 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing IRMP library version " VERSION_IRMP));
 #endif
 
-#if !defined(ESP8266) && !defined(NRF5)
+#if !defined(ESP8266) && !defined(NRF5) && defined(TONE_PIN)
     // play feedback tone before setup, since it kills the IR timer settings
     tone(TONE_PIN, 1000, 50);
     delay(50);
@@ -233,23 +233,19 @@ void doLedBlink20times() {
 }
 
 void doTone1800() {
-#if defined(USE_IRMP_LIBRARY) && !defined(IRMP_ENABLE_PIN_CHANGE_INTERRUPT)
+#if defined(USE_IRMP_LIBRARY) && !defined(IRMP_ENABLE_PIN_CHANGE_INTERRUPT) && defined(TONE_PIN)
     irmp_tone(TONE_PIN, 1800, 200);
-#else
-#  if !defined(ESP8266) && !defined(NRF5) // tone() stops timer 1 for ESP8266
+#elif !defined(ESP8266) && !defined(NRF5) && defined(TONE_PIN) // tone() stops timer 1 for ESP8266
     tone(TONE_PIN, 1800, 200);
-#  endif
 #endif
 }
 
 void doTone2200() {
-#if defined(USE_IRMP_LIBRARY) && !defined(IRMP_ENABLE_PIN_CHANGE_INTERRUPT)
+#if defined(USE_IRMP_LIBRARY) && !defined(IRMP_ENABLE_PIN_CHANGE_INTERRUPT) && defined(TONE_PIN)
     // use IRMP compatible function for tone()
     irmp_tone(TONE_PIN, 2200, 50);
-#else
-#  if !defined(ESP8266) && !defined(NRF5) // tone() stops timer 1 for ESP8266
+#elif !defined(ESP8266) && !defined(NRF5) && defined(TONE_PIN) // tone() stops timer 1 for ESP8266
     tone(TONE_PIN, 2200, 50);
-#  endif
 #endif
 }
 
