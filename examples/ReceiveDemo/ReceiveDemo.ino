@@ -303,7 +303,7 @@ void loop() {
  * Stop receiver, generate a single beep and start receiver again
  */
 void generateTone() {
-#  if !defined(ESP8266) && !defined(NRF5) // tone on esp8266 works only once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
+#  if !defined(ESP8266) && !defined(NRF5) && defined(TONE_PIN) // tone on esp8266 works only once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
 #    if defined(ESP32) // ESP32 uses another timer for tone(), maybe other platforms (not tested yet) too.
     tone(TONE_PIN, 2200, 8);
 #    else
@@ -321,7 +321,7 @@ void handleOverflow() {
     Serial.println(F("Try to increase the \"RAW_BUFFER_LENGTH\" value of " STR(RAW_BUFFER_LENGTH) " in " __FILE__));
     // see also https://github.com/Arduino-IRremote/Arduino-IRremote#compile-options--macros-for-this-library
 
-#if !defined(ESP8266) && !defined(NRF5) && FLASHEND >= 0x3FFF // tone on esp8266 works once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
+#if !defined(ESP8266) && !defined(NRF5) && FLASHEND >= 0x3FFF && defined(TONE_PIN) // tone on esp8266 works once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
     /*
      * Stop timer, generate a double beep and start timer again
      */

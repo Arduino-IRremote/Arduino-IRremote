@@ -14,7 +14,7 @@
 #include "Arduino.h"
 
 #if defined(__AVR__) && !defined(USE_SOFT_I2C_MASTER) && __has_include("SoftI2CMasterConfig.h")
-#define USE_SOFT_I2C_MASTER // must be before #include "LiquidCrystal_I2C.h"
+#define USE_SOFT_I2C_MASTER // must be before #include "LiquidCrystal_I2C.hpp"
 #endif
 
 #include "LiquidCrystal_I2C.h"

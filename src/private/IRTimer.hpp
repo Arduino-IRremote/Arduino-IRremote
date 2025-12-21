@@ -183,12 +183,13 @@ void disableSendPWMByTimer() {
 
 // Nano Every, Uno WiFi Rev2 and similar
 #elif defined(__AVR_ATmega808__) || defined(__AVR_ATmega809__) || defined(__AVR_ATmega3208__) || defined(__AVR_ATmega3209__) \
-     || defined(__AVR_ATmega1608__) || defined(__AVR_ATmega1609__) || defined(__AVR_ATmega4808__) || defined(__AVR_ATmega4809__) || defined(__AVR_ATtiny1604__)
+     || defined(__AVR_ATmega1608__) || defined(__AVR_ATmega1609__) || defined(__AVR_ATmega4808__) || defined(__AVR_ATmega4809__)
 #  if !defined(IR_USE_AVR_TIMER_B)
 #define IR_USE_AVR_TIMER_B     //  send pin = pin 6 on ATmega4809 1 on ATmega4809
 #  endif
 
-#elif defined(__AVR_ATtiny816__) || defined(__AVR_ATtiny1614__) || defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // e.g. TinyCore boards
+#elif defined(__AVR_ATtiny816__) || defined(__AVR_ATtiny1604__) || defined(__AVR_ATtiny1614__) || defined(__AVR_ATtiny1624__) \
+    || defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // e.g. TinyCore boards
 #  if !defined(IR_USE_AVR_TIMER_A) && !defined(IR_USE_AVR_TIMER_D)
 #define IR_USE_AVR_TIMER_A // use this if you use megaTinyCore, Tone is on TCB and millis() on TCD
 //#define IR_USE_AVR_TIMER_D // use this if you use TinyCore
@@ -1671,7 +1672,8 @@ void timerConfigForReceive() {
 }
 #  endif
 
-uint8_t sLastSendPin = 0; // Avoid multiple attach() or if pin changes, detach before attach
+uint8_t sLastSendPin = 0; // 0 means channel not initialized / pin not attached
+uint16_t sLastFrequencyKHz = 0;
 
 #  if defined(SEND_PWM_BY_TIMER)
 void enableSendPWMByTimer() {
@@ -1718,27 +1720,42 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
 #    if ESP_ARDUINO_VERSION >= (3 << 16 | 0 << 8 | 0)
 #      if defined(IR_SEND_PIN)
     if(sLastSendPin == 0){
-        ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, _IRREMOTE_ESP32_LEDC_RESOLUTION); // 3.x API
+        // Do it only once - except for frequency change
+        ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, _IRREMOTE_ESP32_LEDC_RESOLUTION);
         sLastSendPin = IR_SEND_PIN;
+    } else if(sLastFrequencyKHz != aFrequencyKHz){
+        // Frequency change here
+        ledcDetach(IR_SEND_PIN); // detach pin before new attaching see #1194
+        ledcAttach(IR_SEND_PIN, aFrequencyKHz * 1000, _IRREMOTE_ESP32_LEDC_RESOLUTION); // 3.x API
+        sLastFrequencyKHz = aFrequencyKHz;
     }
 #      else
-    if(sLastSendPin != 0 && sLastSendPin != IrSender.sendPin){
-        ledcDetach(IrSender.sendPin); // detach pin before new attaching see #1194
+    if(sLastSendPin != IrSender.sendPin || sLastFrequencyKHz != aFrequencyKHz){
+        if(sLastSendPin != 0) {
+            // do not detach initially
+            ledcDetach(sLastSendPin); // detach pin before new attaching see #1194
+        }
+        ledcAttach(IrSender.sendPin, aFrequencyKHz * 1000, _IRREMOTE_ESP32_LEDC_RESOLUTION); // 3.x API
+        sLastSendPin = IrSender.sendPin;
+        sLastFrequencyKHz = aFrequencyKHz;
     }
-    ledcAttach(IrSender.sendPin, aFrequencyKHz * 1000, _IRREMOTE_ESP32_LEDC_RESOLUTION); // 3.x API
-    sLastSendPin = IrSender.sendPin;
 #      endif
 #    else
-    // ESP version < 3.0
+    // ESP version < 3.0 - no support for changing frequency
     ledcSetup(SEND_LEDC_CHANNEL, aFrequencyKHz * 1000, _IRREMOTE_ESP32_LEDC_RESOLUTION);  // 8 bit PWM resolution
 #      if defined(IR_SEND_PIN)
     ledcAttachPin(IR_SEND_PIN, SEND_LEDC_CHANNEL);  // attach pin to channel
 #      else
     if(sLastSendPin != 0 && sLastSendPin != IrSender.sendPin){
-        ledcDetachPin(IrSender.sendPin);  // detach pin before new attaching see #1194
     }
-    ledcAttachPin(IrSender.sendPin, SEND_LEDC_CHANNEL);  // attach pin to channel
-    sLastSendPin = IrSender.sendPin;
+    if( sLastSendPin != IrSender.sendPin){
+        if(sLastSendPin != 0) {
+            // do not detach initially
+            ledcDetachPin(sLastSendPin);  // detach pin before new attaching see #1194
+        }
+        ledcAttachPin(IrSender.sendPin, SEND_LEDC_CHANNEL);  // attach pin to channel
+        sLastSendPin = IrSender.sendPin;
+    }
 #      endif
 #    endif
 }

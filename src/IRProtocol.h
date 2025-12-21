@@ -32,6 +32,8 @@
 #ifndef _IR_PROTOCOL_H
 #define _IR_PROTOCOL_H
 
+#include <stdint.h>
+
 /*
  * If activated, BANG_OLUFSEN, BOSEWAVE, MAGIQUEST, WHYNTER, FAST and LEGO_PF are excluded in decoding and in sending with IrSender.write
  */
@@ -163,7 +165,7 @@ struct PulseDistanceWidthProtocolConstants {
     uint_fast8_t FrequencyKHz;
     DistanceWidthTimingInfoStruct DistanceWidthTimingInfo;
     uint8_t Flags;
-    unsigned int RepeatPeriodMillis;
+    unsigned int RepeatPeriodMillis; // Time between start of two frames. Thus independent from frame length.
     void (*SpecialSendRepeatFunction)(); // using non member functions here saves up to 250 bytes for send demo
 //    void (IRsend::*SpecialSendRepeatFunction)();
 };

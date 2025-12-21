@@ -35,5 +35,6 @@ These are the active contributors of this project that you may contact if there 
 - [Hayden McAfee](https://github.com/haydenmc) Help with UnoR4 support.
 - [Yonghwan SO](https://github.com/sio4) Fixed bug in ReceiveDemo.cpp if DEBUG_BUTTON_PIN is not defined. #1306.
 - [A.R.Jung](https://github.com/arjung467) Marantz-RC5 extension support #1314.
+- [silen72](https://github.com/silen72) Fixing ESP32 multiple attach bug #1324.
 
 Note: Please let [ArminJo](https://github.com/ArminJo) know if you have been missed.

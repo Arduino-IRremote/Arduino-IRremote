@@ -40,15 +40,15 @@
  * Contains pin number and enable status of the feedback LED
  */
 struct FeedbackLEDControlStruct {
-    uint8_t FeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN; ///< if USE_DEFAULT_FEEDBACK_LED_PIN / 0, then use digitalWriteFast(LED_BUILTIN,..) otherwise use digitalWrite(FeedbackLEDPin,..)
+    uint8_t FeedbackLEDPin = USE_DEFAULT_FEEDBACK_LED_PIN; ///< if USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF, then use digitalWriteFast(LED_BUILTIN,..) otherwise use digitalWrite(FeedbackLEDPin,..)
     bool LedFeedbackEnabled; ///< Disabled for receive at default. Feedback for send is always enabled and can be disabled by NO_LED_SEND_FEEDBACK_CODE or #define NO_LED_FEEDBACK_CODE macros
 };
 
 struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED control instance
 
 /**
- * @param aFeedbackLEDPin If FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN / 0, then use digitalWrite(FeedbackLEDPin,..)
- *                        If FeedbackLEDPin == USE_DEFAULT_FEEDBACK_LED_PIN / 0 and no LED_BUILTIN defined, disable LED feedback
+ * @param aFeedbackLEDPin If FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF, then use digitalWrite(FeedbackLEDPin,..)
+ *                        If FeedbackLEDPin == USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF and no LED_BUILTIN defined, disable LED feedback
  */
 void setLEDFeedbackPin(uint8_t aFeedbackLEDPin) {
     FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin;
@@ -73,7 +73,7 @@ void disableLEDFeedback() {
 
 /**
  * Flash LED while receiving or sending IR data. Does not check if enabled, this must be done by the caller.
- * Handles the USE_DEFAULT_FEEDBACK_LED_PIN / 0 value of FeedbackLEDPin and the macro FEEDBACK_LED_IS_ACTIVE_LOW.
+ * Handles the USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF value of FeedbackLEDPin and the macro FEEDBACK_LED_IS_ACTIVE_LOW.
  * If FeedbackLEDPin == USE_DEFAULT_FEEDBACK_LED_PIN and LED_BUILTIN is NOT defined no action is done
  */
 #if defined(ESP32) || defined(ESP8266)

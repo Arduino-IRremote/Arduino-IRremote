@@ -72,6 +72,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Multiple IR receivers](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-receivers) 
   * [Multiple IR sender instances](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-sender-instances)
   * [Increase strength of sent output signal](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#increase-strength-of-sent-output-signal)
+  * [Simulate an IR receiver module](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#simulate-an-ir-receiver-module)
   * [Minimal CPU clock frequency](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#minimal-cpu-clock-frequency)
   * [Bang & Olufsen protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#bang--olufsen-protocol)
 - [Examples for this library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#examples-for-this-library)
@@ -327,7 +328,7 @@ Any other extension would work, e.g. *cinclude*, but *hpp* seems to be common se
 
 # Using the new *.hpp files
 In order to support [compile options](#compile-options--macros-for-this-library) more easily,
-you must use the statement `#include <IRremote.hpp>` instead of `#include <IRremote.h>` in your main program (aka *.ino file with setup() and loop()).
+you **must** use the statement `#include <IRremote.hpp>` instead of `#include <IRremote.h>` in your main program (aka *.ino file with setup() and loop()).
 
 In **all other files** you must use the following, to **prevent `multiple definitions` linker errors**:
 
@@ -761,6 +762,7 @@ However, keep in mind that any weak / disturbed signal from one of the receivers
 **This library only supports one IR sender object (IRsend) per CPU.**<br/>
 However since sending is a serial task, you can use `setSendPin()` to switch the pin to send, thus emulating multiple sender.<br/>
 
+
 ## Increase strength of sent output signal
 **The best way to increase the IR power for free** is to use 2 or 3 IR diodes in series. One diode requires 1.2 volt at 20 mA or 1.5 volt at 100 mA so you can supply up to 3 diodes with a 5 volt output.<br/>
 To power **2 diodes** with 1.2 V and 20 mA and a 5 V supply, set the resistor to: (5 V - 2.4 V) -> 2.6 V / 20 mA = **130 &ohm;**.<br/>
@@ -769,6 +771,10 @@ The actual current might be lower since of **loss at the AVR pin**. E.g. 0.3 V a
 If you do not require more current than 20 mA, there is no need to use an external transistor (at least for AVR chips).
 
 On my Arduino Nanos, I always use a 100 &ohm; series resistor and one IR LED :grinning:.
+
+## Simulate an IR receiver module
+To simulate an IR receiver (such as the TSOP1738) which provides an active-low output, you only need to enable the `USE_NO_SEND_PWM` macro.
+In the case you must simulate exotic IR receivers, which provides an active-high output, you also need to enable the `USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM` macro.
 
 ## Minimal CPU clock frequency
 For receiving, the **minimal CPU clock frequency is 4 MHz**, since the 50 &micro;s timer ISR (Interrupt Service Routine) takes around 12 &micro;s on a 16 MHz ATmega.<br/>
@@ -922,10 +928,10 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `IR_SEND_PIN` | disabled | If specified, it reduces program size and improves send timing for AVR. If you want to use a variable to specify send pin e.g. with `setSendPin(uint8_t aSendPinNumber)`, you must not use / disable this macro in your source. |
 | `SEND_PWM_BY_TIMER` | disabled | Disables carrier PWM generation in software and use hardware PWM (by timer). Has the **advantage of more exact PWM generation**, especially the duty cycle (which is not very relevant for most IR receiver circuits), and the **disadvantage of using a hardware timer**, which in turn is not available for other libraries and to fix the send pin (but not the receive pin) at the [dedicated timer output pin(s)](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage). Is enabled for ESP32 and RP2040 in all examples, since they support PWM generation for each pin without using a shared resource (timer). |
 | `IR_SEND_DUTY_CYCLE_PERCENT` | 30 | Duty cycle of IR send signal. |
-| `USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN` | disabled | Reverses the polarity at the send pin. Can be used to connect IR LED between VCC and the send pin. It is like open drain but with electrical active high in its logical inactive state. |
-| `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` | disabled | Uses or simulates open drain output mode at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
+| `USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN` | disabled | Reverses the polarity of space level for PWM at the send pin, i.e. space is high. Can be used to connect IR LED between VCC and the send pin. It is like open drain but with electrical active high in its logical inactive state. |
+| `USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN` | disabled | Uses or simulates open drain output mode for PWM at send pin. **Attention, active state of open drain is LOW**, so connect the send LED between positive supply and send pin! |
 | `USE_NO_SEND_PWM` | disabled | Uses no carrier PWM, just simulate an **active low** receiver signal. Used for transferring signal by cable instead of IR. Overrides `SEND_PWM_BY_TIMER` definition. |
-| `USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM` | disabled | Only if `USE_NO_SEND_PWM` is enabled. Simulate an **active high** receiver signal instead of an active low signal. |
+| `USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM` | disabled | Only evaluated if `USE_NO_SEND_PWM` is enabled. Simulate an **active high** receiver signal instead of an active low signal. |
 | `DISABLE_CODE_FOR_RECEIVER` | disabled |  Disables static receiver code like receive timer ISR handler and static IRReceiver and irparams data. Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not required. |
 | `FEEDBACK_LED_IS_ACTIVE_LOW` | disabled | Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low. |
 | `NO_LED_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time. |
@@ -974,11 +980,11 @@ If you are using [Sloeber](https://eclipse.baeyens.it) as your IDE, you can easi
 
 # Supported Boards
 **Issues and discussions with the content "Is it possible to use this library with the ATTinyXYZ? / board XYZ" without any reasonable explanations will be immediately closed without further notice.**<br/>
-For **ESP8266/ESP32**, [the IRremoteESP8266 library](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols and a lot of air conditioners](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md)<br/>
+For **ESP8266/ESP32**, [the IRremoteESP8266 library](https://github.com/crankyoldgit/IRremoteESP8266) supports an [impressive set of protocols and a lot of air conditioners](https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md).<br/>
 **ATtiny CPU's are tested with the [Arduino library ATtinySerialOut](https://github.com/ArminJo/ATtinySerialOut) library**.<br/>
 <br/>
-Digispark boards are only tested with [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) using `New Style` pin mapping for the Digispark Pro board.<br/>
-**ATtiny boards** are tested with **[ATTinyCore](https://github.com/SpenceKonde/ATTinyCore#supported-devices) or [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore) only**.
+Digispark boards are tested only with [ATTinyCore](https://github.com/SpenceKonde/ATTinyCore) using the `New Style` pin mapping for the Digispark Pro board.<br/>
+**ATtiny boards** are tested only with **[ATTinyCore](https://github.com/SpenceKonde/ATTinyCore#supported-devices) or [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore)**.
 
 - Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.
 - Arduino Uno R4, but not yet tested, because of lack of a R4 board. **Sending does not work** on the `arduino:renesas_uno:unor4wifi`.
@@ -1027,6 +1033,7 @@ The code for the timer and the **timer selection** is located in [private/IRTime
 | [ATtiny167 > 4 MHz](https://github.com/SpenceKonde/ATTinyCore/blob/v2.0.0-devThis-is-the-head-submit-PRs-against-this/avr/extras/ATtiny_x7.md) | **1**    | **9**, 8 - 15 | **8 - 15**            |
 | [ATtiny1604](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x04.md)            | **TCB0**      | **PA05**   |
 | [ATtiny1614, ATtiny816](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x14.md) | **TCA0**      | **PA3**    |
+| [ATtiny1624](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x24.md)            | **TCA0**      | **PA3**    |
 | [ATtiny3217](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x17.md)            | **TCA0**, TCD | %          |
 | [ATmega8](https://github.com/MCUdude/MiniCore#supported-microcontrollers)                                     | **1**         | **9**      |
 | [ATmega1284](https://github.com/MCUdude/MightyCore#supported-microcontrollers)                                | 1, **2**, 3   | 13, 14, 6  |
@@ -1181,7 +1188,8 @@ It is dated from **24.06.2022** and updated 10/2023. If you have complains about
 - [IRP definition files for IR protocols](https://github.com/probonopd/MakeHex/tree/master/protocols)
 - [Good introduction to IR remotes by DroneBot Workshop](https://dronebotworkshop.com/ir-remotes/)
 - [IR Remote Control Theory and some protocols (upper right hamburger icon)](https://www.sbprojects.net/knowledge/ir/)
-- [Interpreting Decoded IR Signals (v2.45)](http://www.hifi-remote.com/johnsfine/DecodeIR.html)
+- [Overviev of many protocols](https://www.hifi-remote.com/wiki/index.php/Category:DecodeIR)
+- [Overviev of many protocols on one page (v2.45)](http://www.hifi-remote.com/johnsfine/DecodeIR.html)
 - ["Recording long Infrared Remote control signals with Arduino"](https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino)
 - The original blog post of Ken Shirriff [A Multi-Protocol Infrared Remote Library for the Arduino](http://www.arcfn.com/2009/08/multi-protocol-infrared-remote-library.html)
 - [Vishay datasheet](https://www.vishay.com/docs/80069/circuit.pdf)

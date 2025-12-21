@@ -17,8 +17,8 @@
  * - Repeats are sent as complete frames but in a 50 ms period / with a 21 ms distance.
  *
  *
- *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
+ *  This file is also part of IRMP https://github.com/IRMP-org/IRMP.
  *
  ************************************************************************************
  * MIT License
