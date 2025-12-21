@@ -1203,7 +1203,7 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
     uint_fast8_t tLastBitValue;
     bool tNextBitIsOne;
 // total number of bits to send including start bit if specified
-    uint8_t aBitsToSend = aNumberOfBits + (aSendStartBit ? 1 : 0);
+    uint8_t tBitsToSend = aNumberOfBits + (aSendStartBit ? 1 : 0);
 // Data - Biphase code MSB first
     if (aSendStartBit) {
         // prepare for start with sending the start bit, which is 1
@@ -1217,7 +1217,7 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
         tNextBitIsOne = tLastBitValue;
     }
     // now send all bits
-    for (uint_fast8_t i = aBitsToSend; i > 0; i--) {
+    for (uint_fast8_t i = tBitsToSend; i > 0; i--) {
         bool tCurrentBitIsOne = tNextBitIsOne;
         tMask >>= 1;
         tNextBitIsOne = ((aData & tMask) != 0) || (i == 1); // true for last bit to avoid extension of mark
