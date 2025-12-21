@@ -1207,15 +1207,15 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
     uint8_t tBitsToSend; // total number of bits to send including start bit if specified
 
     // Data - Biphase code MSB first
-    tMask = 1UL << aNumberOfBits; // mask is now set for the virtual start bit
+    tMask = 1UL << aNumberOfBits; // mask is now set for the virtual start bit before the MSB of data
     if (aSendStartBit) {
         tBitsToSend = aNumberOfBits + 1; // +1 for additional start bit
         // prepare for start with sending the start bit, which is 1
         tNextBitIsOne = 1; // Start bit is a 1, value is copied to tCurrentBitIsOne
-        tLastBitValue = 0; // Force to send the mark if tNextBitIsOne is 0 (which it is not here). Does not increase code size :-).
+        tLastBitValue = 0; // Force to send the mark if tNextBitIsOne is 0 (which it is not the case here). Does not increase code size :-).
     } else {
         // prepare to send only the data which may start with a 0 or 1 (e.g. after a defined pause or header when no additional start bit is needed)
-        tMask = 1UL >> 1; // mask is now set for the MSB of data
+        tMask = 1UL >> 1; // adjust mask to the MSB of data
         tBitsToSend = aNumberOfBits;
         tNextBitIsOne = ((aData & tMask) != 0) ? 1 : 0; // Value is copied to tCurrentBitIsOne
         tLastBitValue = 0; // Force to send the mark if tNextBitIsOne is 0

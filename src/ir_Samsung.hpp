@@ -337,17 +337,15 @@ bool IRrecv::decodeSamsung() {
     } else {
         /*
          * Samsung32
+         * check if we have 8 bit command and / or 8 bit address
          */
         if (tValue.UByte.MidHighByte == (uint8_t)(~tValue.UByte.HighByte)) {
-            // 8 bit command protocol -> assume 8 bit address
+            // 8 bit command
             decodedIRData.command = tValue.UByte.MidHighByte; // first 8 bit
         }
 
         if (tValue.UByte.MidLowByte == tValue.UByte.LowByte) {
-            decodedIRData.address = tValue.UByte.LowByte; // assume LowByte == MidLowByte as seen for a LG HX906 A/V Receive E8172C2C
-        } else {
-            // 16 bit command protocol, address is filled above with the 16 bit value
-            decodedIRData.command = tValue.UWord.HighWord; // first 16 bit
+            decodedIRData.address = tValue.UByte.LowByte; // 8 bit address as seen for a LG HX906 A/V Receive E8172C2C
         }
 
         decodedIRData.numberOfBits = SAMSUNG_BITS;
