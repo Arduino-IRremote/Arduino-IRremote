@@ -380,10 +380,14 @@ void loop() {
     IrSender.sendSamsung(sAddress, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
-    Serial.println(F("Send Samsung 16 bit command"));
+    Serial.println(F("Send Samsung 8 bit command and 16 bit address"));
     Serial.flush();
-    IrSender.sendSamsung(sAddress, s16BitCommand, sRepeats);
+    IrSender.sendSamsung16BitAddressAnd8BitCommand(sAddress, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
+
+    Serial.println(F("Send Samsung 16 bit command and address"));
+    Serial.flush();
+    IrSender.sendSamsung16BitAddressAndCommand(sAddress, s16BitCommand, sRepeats);
 
     Serial.println(F("Send Samsung48 16 bit command"));
     Serial.flush();
@@ -402,7 +406,7 @@ void loop() {
 
     Serial.println(F("Send Marantz variant of RC5x with 6 command bits and additional command extension"));
     Serial.flush();
-    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand, sCommandExtension, sRepeats);
+    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand & 0x3F, sCommandExtension, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Marantz variant of RC5x with 7 command bits and additional command extension"));

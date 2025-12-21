@@ -59,7 +59,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
  +1800
  Sum: 23100
 
- RC5X with 7.th MSB of command set
+ RC5X with 7.th MSB of command set as 1
  Protocol=RC5 Address=0x11 Command=0x76 Toggle=1 Raw-Data=0xC76 13 bits MSB first
  +1800,-1750
  + 850,- 900 +1800,- 850 + 950,- 850 + 900,-1750
@@ -101,28 +101,34 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
  ************************************/
 
 /**
+ * !!! Not tested, because no Marantz remote was at hand and no receive function was contributed!!!
  * @param aCommand If aCommand is >=0x40 then we switch automatically to RC5X.
  * @param aMarantzExtension 6 bit command extension which is sent after aCommand. aCommand and aMarantzExtension are sent after a short pause.
  * @param aEnableAutomaticToggle Send toggle bit according to the state of the static sLastSendToggleValue variable.
  */
-void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand,  uint8_t aMarantzExtension, int_fast8_t aNumberOfRepeats,
-    bool aEnableAutomaticToggle) {
+void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, uint8_t aMarantzExtension, int_fast8_t aNumberOfRepeats,
+        bool aEnableAutomaticToggle) {
 
-        // Set IR carrier frequency
+    // Set IR carrier frequency
     enableIROut (RC5_RC6_KHZ);
 
     uint16_t tIRData = (aAddress & 0x1F);
 
-    if (aCommand < 0x40) {
-        // Auto discovery of RC5X, set field bit to 1
-        tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS);
-    } else {
-        // Mask bit 7 of command and let field bit 0
+    /*
+     * Process field bit (the bit after start bit)
+     * Field bit is 1 for RC5 and 0 (inverted 7. command bit) for RC5X
+     */
+    if (aCommand >= 0x40) { // Auto discovery of RC5X
+        // Mask bit 7 of command to set field bit to 0 (inverted 1) for RC5X
         aCommand &= 0x3F;
+    } else {
+        // Set field bit to 1 for RC5
+        tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS); // 1 << 6 = 0x40
     }
-        // Set the command to the 2nd part of data to be sent after the pause
+
+    // Set the command to the 2nd part of data to be sent after the pause
     uint16_t tIRExtData = (aCommand << RC5_EXTENSION_BITS);
-        // Set the Marantz command extension bits
+    // Set the Marantz command extension bits
     tIRExtData |= (aMarantzExtension & 0x3F);
 
     if (aEnableAutomaticToggle) {
@@ -160,17 +166,21 @@ void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand,  uint8_t aMarant
  */
 void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
 
-        // Set IR carrier frequency
+    // Set IR carrier frequency
     enableIROut (RC5_RC6_KHZ);
 
-    uint16_t tIRData = ((aAddress & 0x1F) << (RC5_COMMAND_BITS));
+    uint16_t tIRData = ((aAddress & 0x1F) << (RC5_COMMAND_BITS)); // << 6
 
-    if (aCommand < 0x40) {
-        // Auto discovery of RC5X, set field bit to 1
-        tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS);
-    } else {
-        // Mask bit 7 of command and let field bit 0
+    /*
+     * Process field bit (the bit after start bit)
+     * Field bit is 1 for RC5 and 0 (inverted 7. command bit) for RC5X
+     */
+    if (aCommand >= 0x40) { // Auto discovery of RC5X
+        // Mask bit 7 of command to set field bit to 0 (inverted 1) for RC5X
         aCommand &= 0x3F;
+    } else {
+        // Set field bit to 1 for RC5
+        tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS); // 1 << 12 = 0x1000
     }
     tIRData |= aCommand;
 
@@ -201,14 +211,17 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
 
 /**
  * Try to decode data as RC5 protocol
+ *  mark->space => 0
+ *  space->mark => 1
  *                             _   _   _   _   _   _   _   _   _   _   _   _   _
  * Clock                 _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |
  *                                ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    End of each data bit period
- *                               _   _     - Mark
- * 2 Start bits for RC5    _____| |_| ...  - Data starts with a space->mark bit
- *                                         - Space
+ *                              ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    sample point for bit value
+ *                               _   _
+ * 2 Start bits for RC5    _____| |_| ..|...|..
+ *
  *                               _
- * 1 Start bit for RC5X    _____| ...
+ * 1 Start bit for RC5X    _____| ..|...|...|..
  *
  */
 bool IRrecv::decodeRC5() {
@@ -517,8 +530,7 @@ bool IRrecv::decodeRC6() {
     }
 
     // Check header "mark" and "space", this must be done for repeat and data
-    if (!matchMark(irparams.rawbuf[1], RC6_HEADER_MARK)
-            || !matchSpace(irparams.rawbuf[2], RC6_HEADER_SPACE)) {
+    if (!matchMark(irparams.rawbuf[1], RC6_HEADER_MARK) || !matchSpace(irparams.rawbuf[2], RC6_HEADER_SPACE)) {
         // no debug output, since this check is mainly to determine the received protocol
         IR_DEBUG_PRINT(F("RC6: "));
         IR_DEBUG_PRINTLN(F("Header mark or space length is wrong"));

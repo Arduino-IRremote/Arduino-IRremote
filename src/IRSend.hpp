@@ -115,7 +115,7 @@ void IRsend::setSendPin(uint_fast8_t aSendPin) {
 /**
  * Initializes the send and feedback pin
  * @param aSendPin The Arduino pin number, where a IR sender diode is connected.
- * @param aFeedbackLEDPin       If 0 / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aFeedbackLEDPin       If 0xFF / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
  */
 void IRsend::begin(uint_fast8_t aSendPin, uint_fast8_t aFeedbackLEDPin) {
 #if defined(IR_SEND_PIN)
@@ -1200,25 +1200,23 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
 #endif
 
 // Data - Biphase code MSB first
-// prepare for start with sending the start bit, which is 1
-    uint32_t tMask;
-    uint_fast8_t tLastBitValue;
-    bool tNextBitIsOne;
-    uint8_t tBitsToSend; // total number of bits to send including start bit if specified
 
-    // Data - Biphase code MSB first
-    tMask = 1UL << aNumberOfBits; // mask is now set for the virtual start bit before the MSB of data
+    uint8_t tBitsToSend = aNumberOfBits; // total number of bits to send including start bit if specified
     if (aSendStartBit) {
-        tBitsToSend = aNumberOfBits + 1; // +1 for additional start bit
+        tBitsToSend++; // +1 for additional start bit
+    }
+    uint32_t tMask = 1UL << (tBitsToSend - 1); // Mask is now set to the the MSB of data or the virtual start bit before the MSB of data
+
+    bool tLastBitWasOne;
+    bool tNextBitIsOne;
+    if (aSendStartBit) {
         // prepare for start with sending the start bit, which is 1
-        tNextBitIsOne = 1; // Start bit is a 1, value is copied to tCurrentBitIsOne
-        tLastBitValue = 0; // Force to send the mark if tNextBitIsOne is 0 (which it is not the case here). Does not increase code size :-).
+        tNextBitIsOne = true; // Start bit is a 1, value is copied to tCurrentBitIsOne
+        tLastBitWasOne = false; // Force to send the mark if tNextBitIsOne is 0 (which it is not the case here). Does not increase code size :-).
     } else {
         // prepare to send only the data which may start with a 0 or 1 (e.g. after a defined pause or header when no additional start bit is needed)
-        tMask = 1UL >> 1; // adjust mask to the MSB of data
-        tBitsToSend = aNumberOfBits;
         tNextBitIsOne = ((aData & tMask) != 0) ? 1 : 0; // Value is copied to tCurrentBitIsOne
-        tLastBitValue = 0; // Force to send the mark if tNextBitIsOne is 0
+        tLastBitWasOne = false; // Force to send the mark if tNextBitIsOne is 0
     }
 
     // now send all bits
@@ -1237,17 +1235,17 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
                 // if next bit is 0, extend the current mark in order to generate a continuous signal without short breaks
                 mark(2 * aBiphaseTimeUnit);
             }
-            tLastBitValue = 1;
+            tLastBitWasOne = true;
 
         } else {
 #if defined(LOCAL_TRACE)
             Serial.print('0');
 #endif
-            if (tLastBitValue == 0) {
-                mark(aBiphaseTimeUnit); // if next bit is 1 send a single mark
+            if (!tLastBitWasOne) {
+                mark(aBiphaseTimeUnit); // if last bit was 0 send a single mark
             }
             space(aBiphaseTimeUnit);
-            tLastBitValue = 0;
+            tLastBitWasOne = false;
         }
     }
     IR_TRACE_PRINTLN();

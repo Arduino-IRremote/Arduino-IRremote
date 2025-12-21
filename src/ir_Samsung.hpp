@@ -342,6 +342,9 @@ bool IRrecv::decodeSamsung() {
         if (tValue.UByte.MidHighByte == (uint8_t)(~tValue.UByte.HighByte)) {
             // 8 bit command
             decodedIRData.command = tValue.UByte.MidHighByte; // first 8 bit
+        } else {
+            // 16 bit command
+            decodedIRData.command = tValue.UWord.HighWord;
         }
 
         if (tValue.UByte.MidLowByte == tValue.UByte.LowByte) {

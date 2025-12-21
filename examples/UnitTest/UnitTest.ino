@@ -841,6 +841,12 @@ void loop() {
     checkReceive(sAddress & 0xFF, sCommand);
     delay(DELAY_AFTER_SEND);
 
+    Serial.println(F("Send Samsung 8 bit command and 16 bit address"));
+    Serial.flush();
+    IrSender.sendSamsung16BitAddressAnd8BitCommand(sAddress, sCommand, sRepeats);
+    checkReceive(sAddress, sCommand);
+    delay(DELAY_AFTER_SEND);
+
     Serial.println(F("Send Samsung 16 bit command and address"));
     Serial.flush();
     IrSender.sendSamsung16BitAddressAndCommand(sAddress, s16BitCommand, sRepeats);
