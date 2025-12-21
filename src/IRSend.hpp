@@ -1216,6 +1216,7 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
         tLastBitValue = ((aData & tMask) != 0) ? 1 : 0; // remember the value of the first bit to be sent
         tNextBitIsOne = tLastBitValue;
     }
+
     // now send all bits
     for (uint_fast8_t i = tBitsToSend; i > 0; i--) {
         bool tCurrentBitIsOne = tNextBitIsOne;
