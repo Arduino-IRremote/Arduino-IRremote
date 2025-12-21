@@ -52,6 +52,11 @@ struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED contro
  */
 void setLEDFeedbackPin(uint8_t aFeedbackLEDPin) {
     FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin;
+    if (__builtin_constant_p(aFeedbackLEDPin)) {
+        pinModeFast(aFeedbackLEDPin, OUTPUT);
+    } else {
+        pinMode(aFeedbackLEDPin, OUTPUT);
+    }
 }
 
 /*
