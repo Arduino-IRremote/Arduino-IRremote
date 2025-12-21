@@ -20,13 +20,13 @@
  * - Repeats are sent as complete frames but in a 50 ms period / with a 21 ms distance.
  *
  *
- *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
+ *  This file is also part of IRMP https://github.com/IRMP-org/IRMP.
  *
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-2024 Armin Joachimsmeyer
+ * Copyright (c) 2022-2025 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -74,7 +74,7 @@
 /*
  * Helper macro for getting a macro definition as string
  */
-#if !defined(STR_HELPER)
+#if !defined(STR_HELPER) && !defined(STR)
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 #endif
