@@ -283,7 +283,7 @@ void LiquidCrystal::createChar(uint8_t location, uint8_t charmap[]) {
   for (int i=0; i<8; i++) {
     write(charmap[i]);
   }
-  command(LCD_SETDDRAMADDR); // set cursor to 0.0, this avoids overwriting CGRAM by next write() command.
+  // command(LCD_SETDDRAMADDR); // set cursor to 0.0, this avoids overwriting CGRAM by next write() command. Not contained anymore in the Arduino version
 }
 
 /*********** mid level commands, for sending data/cmds */

@@ -120,7 +120,7 @@ void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand,  uint8_t aMarant
         // Mask bit 7 of command and let field bit 0
         aCommand &= 0x3F;
     }
-        // Set the command to the 2nd partof data to be sent after the pause
+        // Set the command to the 2nd part of data to be sent after the pause
     uint16_t tIRExtData = (aCommand << RC5_EXTENSION_BITS);
         // Set the Marantz command extension bits
     tIRExtData |= (aMarantzExtension & 0x3F);
@@ -138,7 +138,7 @@ void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand,  uint8_t aMarant
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
 
-        // start bit is sent by sendBiphaseData folllowed by the field bit and toggle bit and address
+        // start bit is sent by sendBiphaseData followed by the field bit and toggle bit and address
         sendBiphaseData(RC5_UNIT, tIRData, RC5_COMMAND_FIELD_BIT + RC5_TOGGLE_BIT + RC5_ADDRESS_BITS);
         // pause before the bits of command and command extension to indicate that it's Marantz-RC5x
         space(4 * RC5_UNIT); // Marantz-RC5x has a pause before the bits of command and command extension
