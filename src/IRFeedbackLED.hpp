@@ -47,15 +47,24 @@ struct FeedbackLEDControlStruct {
 struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED control instance
 
 /**
- * @param aFeedbackLEDPin If FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF, then use digitalWrite(FeedbackLEDPin,..)
+ * @param aFeedbackLEDPin If FeedbackLEDPin != USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF, then use digitalWrite / digitalWriteFast(FeedbackLEDPin,..)
+ *                        If FeedbackLEDPin == USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF and LED_BUILTIN defined, then use digitalWriteFast(LED_BUILTIN,..)
  *                        If FeedbackLEDPin == USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF and no LED_BUILTIN defined, disable LED feedback
  */
 void setLEDFeedbackPin(uint8_t aFeedbackLEDPin) {
     FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin;
-    if (__builtin_constant_p(aFeedbackLEDPin)) {
-        pinModeFast(aFeedbackLEDPin, OUTPUT);
+
+    // use fast macros here
+    if (aFeedbackLEDPin == USE_DEFAULT_FEEDBACK_LED_PIN) {
+#if defined(LED_BUILTIN)
+        pinModeFast(LED_BUILTIN, OUTPUT);
+#endif
     } else {
-        pinMode(aFeedbackLEDPin, OUTPUT);
+        if (__builtin_constant_p(aFeedbackLEDPin)) {
+            pinModeFast(aFeedbackLEDPin, OUTPUT);
+        } else {
+            pinMode(aFeedbackLEDPin, OUTPUT);
+        }
     }
 }
 

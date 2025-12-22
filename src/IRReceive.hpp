@@ -83,7 +83,7 @@ IRrecv::IRrecv(uint_fast8_t aReceivePin) {
 /**
  * Instantiate the IRrecv class. Multiple instantiation is not supported.
  * @param aReceivePin Arduino pin to use, where a demodulating IR receiver is connected.
- * @param aFeedbackLEDPin if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aFeedbackLEDPin if 0xFF, then take board specific LED_BUILTIN pin if it is defined as macro
  */
 IRrecv::IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin) {
     setReceivePin(aReceivePin);
@@ -310,7 +310,7 @@ ISR()
  * Initializes the receive and feedback pin
  * @param aReceivePin The Arduino pin number, where a demodulating IR receiver is connected.
  * @param aEnableLEDFeedback if true / ENABLE_LED_FEEDBACK, then let the feedback led blink on receiving IR signal
- * @param aFeedbackLEDPin if 0 / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aFeedbackLEDPin if 0xFF, then take board specific LED_BUILTIN pin if it is defined as macro
  */
 void IRrecv::begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) {
 
@@ -1203,7 +1203,7 @@ uint_fast8_t IRrecv::getBiphaselevel() {
 
 /**
  * Compare two (tick) values for Hash decoder
- * Use a tolerance of 20% to enable e.g. 500 and 600 (NEC timing) to be equal
+ * Use a tolerance of 20% to enable e.g. 500 and 600 (NEC timing) and at least 200 and 250 to be equal
  * @return  0 if newval is shorter, 1 if newval is equal, and 2 if newval is longer
  */
 uint_fast8_t IRrecv::compare(uint16_t oldval, uint16_t newval) {
@@ -1222,7 +1222,7 @@ uint_fast8_t IRrecv::compare(uint16_t oldval, uint16_t newval) {
  * (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.
  *
  * The algorithm looks at the sequence of MARK and SPACE signals, and see if each one
- * is shorter (0), the same length (1), or longer (2) than the previous MARK or SPACE.
+ * is more than 20% shorter (0), the same (+/- 20%) length (1), or more than 20% longer (2) than the previous MARK or SPACE.
  * It hash the resulting sequence of 0's, 1's, and 2's to a 32-bit value.
  * This will give a unique value for each different code (probably), for most code systems.
  *
@@ -1247,7 +1247,7 @@ bool IRrecv::decodeHash() {
     for (IRRawlenType i = 1; (i + 2) < decodedIRData.rawlen; i++) {
         // Compare mark with mark and space with space
         uint_fast8_t value = compare(irparams.rawbuf[i], irparams.rawbuf[i + 2]);
-        // Add value into the hash
+        // Add value into the hash - (0 if rawbuf[i + 2] is more than 20 % shorter, 1 if rawbuf[i + 2] is equal, and 2 if rawbuf[i + 2] is longer than rawbuf[i])
         hash = (hash * FNV_PRIME_32) ^ value;
     }
 

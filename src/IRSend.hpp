@@ -89,7 +89,7 @@ void IRsend::begin(){
 
 /**
  * Only required to set LED feedback pin
- * @param aFeedbackLEDPin       If USE_DEFAULT_FEEDBACK_LED_PIN / 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aFeedbackLEDPin       If USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF, then take board specific LED_BUILTIN pin if it is defined as macro
  */
 void IRsend::begin(uint_fast8_t aFeedbackLEDPin) {
     setLEDFeedbackPin(aFeedbackLEDPin);
@@ -101,7 +101,7 @@ IRsend::IRsend(uint_fast8_t aSendPin) { // @suppress("Class members should be pr
 }
 
 /**
- * Initializes the send pin and enable LED feedback with board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * Initializes the send pin and enable LED feedback with board specific LED_BUILTIN pin if it is defined as macro
  * @param aSendPin The Arduino pin number, where a IR sender diode is connected.
  */
 void IRsend::begin(uint_fast8_t aSendPin) {
@@ -115,7 +115,7 @@ void IRsend::setSendPin(uint_fast8_t aSendPin) {
 /**
  * Initializes the send and feedback pin
  * @param aSendPin The Arduino pin number, where a IR sender diode is connected.
- * @param aFeedbackLEDPin       If 0xFF / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions
+ * @param aFeedbackLEDPin       If 0xFF, then take board specific LED_BUILTIN pin if it is defined as macro
  */
 void IRsend::begin(uint_fast8_t aSendPin, uint_fast8_t aFeedbackLEDPin) {
 #if defined(IR_SEND_PIN)
