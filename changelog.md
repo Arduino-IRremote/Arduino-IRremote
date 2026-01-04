@@ -5,6 +5,9 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 # 4.6.0
 - Changed USE_DEFAULT_FEEDBACK_LED_PIN from 0 to 0xFF, because megaTinyCore defines the not special pin PIN_PA4 as 0.
 - Changed timer for ATtiny16X4.
+- Fixed missing initialization with pinMode() for feedback LED.
+- Fixed bitmask error in sendBiphaseData() when not sending start bit.
+- Improved decodeSamsung().
 
 # 4.5.0
 - Added support for multiple receiver instances.

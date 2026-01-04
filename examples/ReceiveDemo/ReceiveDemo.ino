@@ -244,7 +244,7 @@ void loop() {
             }
             if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
                 auto tDecodedRawData = IrReceiver.decodedIRData.decodedRawData; // uint32_t on 8 and 16 bit CPUs and uint64_t on 32 and 64 bit CPUs
-                Serial.print(F("Raw data received are 0x"));
+                Serial.print(F("Raw data from hash decoder is 0x"));
                 Serial.println(tDecodedRawData);
 
             } else {

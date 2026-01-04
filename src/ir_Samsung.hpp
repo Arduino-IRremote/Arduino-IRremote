@@ -61,6 +61,7 @@
  + 600,- 550 + 600,- 550 + 550,- 550 + 600,-1650
  + 550
  Sum: 68750
+ * Values are like NEC except SAMSUNG_HEADER_MARK (4500 instead of 9000)
  */
 /*
  * Samsung repeat frame can be the original frame again or a special short repeat frame,
@@ -88,7 +89,7 @@
 #define SAMSUNG_BITS                (SAMSUNG_ADDRESS_BITS + SAMSUNG_COMMAND16_BITS)
 #define SAMSUNG48_BITS              (SAMSUNG_ADDRESS_BITS + SAMSUNG_COMMAND32_BITS)
 
-// except SAMSUNG_HEADER_MARK, values are like NEC
+// Values are like NEC except SAMSUNG_HEADER_MARK (4500 instead of 9000)
 #define SAMSUNG_UNIT                560             // 21.28 periods of 38 kHz, 11.2 ticks TICKS_LOW = 8.358 TICKS_HIGH = 15.0
 #define SAMSUNG_HEADER_MARK         (8 * SAMSUNG_UNIT) // 4500 | 180 periods
 #define SAMSUNG_HEADER_SPACE        (8 * SAMSUNG_UNIT) // 4500

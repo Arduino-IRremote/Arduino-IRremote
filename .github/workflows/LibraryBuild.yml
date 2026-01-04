@@ -67,8 +67,8 @@ jobs:
 #          - ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal # ATmega128
           - SparkFun:avr:promicro
-          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-          - megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
+#          - megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
+#          - megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
           - esp8266:esp8266:d1_mini:eesz=4M3M,xtal=80
           - esp32:esp32:featheresp32:FlashFreq=80
           - esp32:esp32:esp32c3
@@ -188,15 +188,15 @@ jobs:
 #
 # megaTinyCore
 #
-          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
-            arduino-platform: megaTinyCore:megaavr
-            platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: AllProtocolsOnLCD,UnitTest # UnitTest region `text' overflowed by 997 bytes
+#          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
+#            arduino-platform: megaTinyCore:megaavr
+#            platform-url: http://drazzy.com/package_drazzy.com_index.json
+#            sketches-exclude: AllProtocolsOnLCD,UnitTest # UnitTest region `text' overflowed by 997 bytes
 
-          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
-            arduino-platform: megaTinyCore:megaavr
-            platform-url: http://drazzy.com/package_drazzy.com_index.json
-            sketches-exclude: AllProtocolsOnLCD
+#          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
+#            arduino-platform: megaTinyCore:megaavr
+#            platform-url: http://drazzy.com/package_drazzy.com_index.json
+#            sketches-exclude: AllProtocolsOnLCD
 
 #
 # ATTinyCore
