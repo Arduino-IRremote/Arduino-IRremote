@@ -23,7 +23,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2009-2025 Ken Shirriff, Armin Joachimsmeyer
+ * Copyright (c) 2009-2026 Ken Shirriff, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -104,7 +104,7 @@ struct storedIRDataStruct {
     IRData receivedIRData;
     // extensions for sendRaw
     uint8_t rawCode[RAW_BUFFER_LENGTH]; // The durations if raw
-    uint8_t rawCodeLength; // The length of the code
+    uint16_t rawCodeLength; // The length of the code
 } sStoredIRData;
 
 bool sSendButtonWasActive;

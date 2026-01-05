@@ -62,8 +62,8 @@ jobs:
           - arduino:mbed:nano33ble
           - arduino:mbed_rp2040:pico
           - rp2040:rp2040:arduino_nano_connect
-#          - ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
-#          - ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
+          - ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
+          - ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
 #          - ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
           - MegaCore:avr:128:bootloader=no_bootloader,eeprom=keep,BOD=2v7,LTO=Os_flto,clock=8MHz_internal # ATmega128
           - SparkFun:avr:promicro
@@ -201,28 +201,28 @@ jobs:
 #
 # ATTinyCore
 #
-#          - arduino-boards-fqbn: ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
-#            platform-url: http://drazzy.com/package_drazzy.com_index.json
-#            required-libraries: ATtinySerialOut
-#            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
-#            build-properties: # the flags were put in compiler.cpp.extra_flags
-#              SimpleSender: -DSEND_PWM_BY_TIMER
-#              SimpleReceiver: -DDECODE_NEC
+          - arduino-boards-fqbn: ATTinyCore:avr:attinyx5micr:LTO=enable,sketchclock=16pll
+            platform-url: https://felias-fogg.github.io/downloads/package_debug_enabled_index.json
+            required-libraries: ATtinySerialOut
+            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              SimpleSender: -DSEND_PWM_BY_TIMER
+              SimpleReceiver: -DDECODE_NEC
 
-#          - arduino-boards-fqbn: ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
-#            platform-url: http://drazzy.com/package_drazzy.com_index.json
-#            required-libraries: ATtinySerialOut
-#            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
-#            build-properties: # the flags were put in compiler.cpp.extra_flags
-#              SimpleSender: -DSEND_PWM_BY_TIMER
+          - arduino-boards-fqbn: ATTinyCore:avr:attinyx7micr:LTO=enable,sketchclock=16external,pinmapping=new,millis=enabled
+            platform-url: https://felias-fogg.github.io/downloads/package_debug_enabled_index.json
+            required-libraries: ATtinySerialOut
+            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              SimpleSender: -DSEND_PWM_BY_TIMER
 
 #          - arduino-boards-fqbn: ATTinyCore:avr:attinyx8micr:LTO=enable,sketchclock=16external,pinmapping=mhtiny,millis=enabled  # ATtiny88 China clone board @16 MHz
 #            platform-url: http://drazzy.com/package_drazzy.com_index.json
 #            required-libraries: ATtinySerialOut
 #            sketch-names: TinyReceiver.ino,IRremoteInfo.ino,SimpleReceiver.ino,ReceiveDemo.ino,ControlRelay.ino,SimpleSender.ino,SendDemo.ino,SendRawDemo.ino,SendAndReceive.ino,SimpleReceiverForHashCodes.ino
 #            build-properties: # the flags were put in compiler.cpp.extra_flags
-#             SimpleSender: -DSEND_PWM_BY_TIMER
-#             SimpleReceiver: -DDECODE_NEC
+#              SimpleSender: -DSEND_PWM_BY_TIMER
+#              SimpleReceiver: -DDECODE_NEC
 
 #
 # MegaCore
