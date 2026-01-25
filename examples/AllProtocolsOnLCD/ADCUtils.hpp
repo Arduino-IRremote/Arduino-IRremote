@@ -29,7 +29,8 @@
 #if defined(ADC_UTILS_ARE_AVAILABLE) // set in ADCUtils.h, if supported architecture was detected
 #define ADC_UTILS_ARE_INCLUDED
 
-#if !defined(STR)
+// Helper macro for getting a macro definition as string
+#if !defined(STR_HELPER) && !defined(STR)
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 #endif
@@ -694,7 +695,7 @@ bool isVCCUSBPowered(Print *aSerial) {
 }
 
 /*
- * It checks every 10 seconds for 6 times, and then returns true if the undervoltage condition ( <3.4V ) still applies.
+ * It checks every 10 seconds for 6 times, and then returns once true if the undervoltage condition ( <3.4V ) still applies.
  * @ return true only once, when VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP (6) times voltage too low -> shutdown
  */
 bool isVCCUndervoltageMultipleTimes() {
@@ -732,7 +733,7 @@ bool isVCCUndervoltageMultipleTimes() {
                     sVCCTooLowCounter++;
 #  if defined(LOCAL_INFO)
                     Serial.print(sVCCVoltageMillivolt);
-                    Serial.print(F(" mV < " STR(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV undervoltage detected: "));
+                    Serial.print(F(" mV < " STR(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV -> undervoltage detected: "));
 
                     Serial.print(VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP - sVCCTooLowCounter);
                     Serial.println(F(" attempts left"));

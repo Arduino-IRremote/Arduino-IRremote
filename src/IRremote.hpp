@@ -79,6 +79,12 @@
 
 //#define DEBUG // Activate this for lots of lovely debug output from the IRremote core.
 
+// Helper macro for getting a macro definition as string
+#if !defined(STR_HELPER) && !defined(STR)
+#define STR_HELPER(x) #x
+#define STR(x) STR_HELPER(x)
+#endif
+
 /****************************************************
  *                    RECEIVING
  ****************************************************/
@@ -199,7 +205,6 @@
 #define IR_SEND_DUTY_CYCLE_PERCENT 30 // 30 saves power and is compatible to the old existing code
 #endif
 
-
 /**
  * microseconds per clock interrupt tick
  */
@@ -257,6 +262,10 @@ void disableLEDFeedback() {}; // dummy function for examples
 #include "IRProtocol.hpp" // must be first, it includes definition for PrintULL (unsigned long long)
 #if !defined(DISABLE_CODE_FOR_RECEIVER)
 #include "IRReceive.hpp"
+#endif
+// Get absolute value of difference of two unsigned values
+#if !defined(uintDifferenceAbs)
+#define uintDifferenceAbs(a, b) ((a >= b) ? a - b : b - a)
 #endif
 #include "IRSend.hpp"
 

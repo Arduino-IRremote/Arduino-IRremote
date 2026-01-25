@@ -1343,6 +1343,7 @@ void IRrecv::checkForRepeatSpaceTicksAndSetFlag(uint16_t aMaximumRepeatSpaceTick
 
 /**
  * Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware
+ * Match is true, if signal value is bigger/equal 75% and less/equal 125% of match value.
  * @return true, if values match
  */
 bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
@@ -1522,7 +1523,7 @@ bool IRrecv::checkForRecordGapsMicros(Print *aSerial) {
         aSerial->print(decodedIRData.initialGapTicks * MICROS_PER_TICK);
         aSerial->print(F(" us between two detected transmission is smaller than the minimal gap of "));
         aSerial->print(RECORD_GAP_MICROS_WARNING_THRESHOLD);
-        aSerial->println(F(" us known for implemented protocols like NEC, Sony, RC% etc.."));
+        aSerial->println(F(" us known for implemented protocols like NEC, Sony, RC5 etc.."));
         aSerial->println(F("But it can be OK for some yet unsupported protocols, and especially for repeats."));
         aSerial->println(F("If you get unexpected results, try to increase the RECORD_GAP_MICROS in IRremote.h."));
         aSerial->println();

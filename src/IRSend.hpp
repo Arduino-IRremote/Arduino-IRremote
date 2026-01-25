@@ -648,7 +648,7 @@ void IRsend::sendPulseDistanceWidthData(uint16_t aOneMarkMicros, uint16_t aOneSp
      * Therefore it is not sent for Sony :-)
      * For sending from an array, no intermediate stop bit must be sent for all but last data chunk.
      */
-    if ((!(aFlags & SUPPRESS_STOP_BIT)) && (abs(aOneSpaceMicros - aZeroSpaceMicros) > (aOneSpaceMicros / 4))) {
+    if ((!(aFlags & SUPPRESS_STOP_BIT)) && (uintDifferenceAbs(aOneSpaceMicros, aZeroSpaceMicros) > (aOneSpaceMicros / 4))) {
         // Send stop bit here
 #if defined(LOCAL_TRACE)
         Serial.print('S');

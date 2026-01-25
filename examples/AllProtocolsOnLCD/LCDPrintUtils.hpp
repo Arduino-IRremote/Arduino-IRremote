@@ -54,9 +54,7 @@
 #define LCD_ROWS        4
 #endif
 
-/*
- * Helper macro for getting a macro definition as string
- */
+// Helper macro for getting a macro definition as string
 #if !defined(STR_HELPER) && !defined(STR)
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
@@ -223,7 +221,7 @@ void LCDPrintFloatValueRightAligned(LiquidCrystal_I2C *aLCD, float aFloatValue, 
     }
 #if defined(LOCAL_DEBUG)
     Serial.print(F("NumberOfDecimalPlaces("));
-    Serial.print(tAbsValue);
+    Serial.print(tNumberOfDecimals);
     Serial.print(F(", "));
     Serial.print(aNumberOfCharactersToPrint);
     Serial.print(F(")="));

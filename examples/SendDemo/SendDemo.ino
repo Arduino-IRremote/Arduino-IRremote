@@ -172,8 +172,9 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     if (sRepeats == 0) {
-#if FLASHEND >= 0x3FFF && ((!defined(RAMEND) && !defined(RAMSIZE)) || (defined(RAMEND) && RAMEND > 0x6FF) || (defined(RAMSIZE) && RAMSIZE > 0x6FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && ((!defined(RAMEND) && !defined(RAMSIZE)) || (defined(RAMEND) && RAMEND > 0x6FF) || (defined(RAMSIZE) && RAMSIZE > 0x6FF))
         /*
+         * For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
          * Send constant values only once in this demo
          */
 

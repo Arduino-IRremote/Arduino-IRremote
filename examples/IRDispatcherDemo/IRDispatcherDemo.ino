@@ -100,11 +100,11 @@ void doTone2200();
 #include "DemoIRCommandMapping.h" // must be included before IRCommandDispatcher.hpp to define IR_ADDRESS and IRMapping and string "unknown".
 #include "IRCommandDispatcher.hpp"
 
-/*
- * Helper macro for getting a macro definition as string
- */
+// Helper macro for getting a macro definition as string
+#if !defined(STR_HELPER) && !defined(STR)
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
+#endif
 
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);

@@ -36,11 +36,11 @@
 #define IR_RECEIVE_PIN    2
 //#define IR_RECEIVE_PIN    3
 
-/*
- * Helper macro for getting a macro definition as string
- */
+// Helper macro for getting a macro definition as string
+#if !defined(STR_HELPER) && !defined(STR)
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
+#endif
 
 #if !(defined(EICRA) && defined(EIFR) && defined(EIMSK))
 void measureTimingISR(void);

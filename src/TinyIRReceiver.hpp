@@ -496,7 +496,7 @@ void printTinyReceiverResultMinimal(Print *aSerial) {
     aSerial->println();
 }
 
-#if defined (LOCAL_DEBUG_ATTACH_INTERRUPT) && !defined(STR)
+#if !defined(STR_HELPER) && !defined(STR)
 // Helper macro for getting a macro definition as string
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
