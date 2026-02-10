@@ -593,6 +593,13 @@ bool IRrecv::decode() {
     }
 #endif
 
+#if defined(DECODE_OPENLASIR)
+    IR_TRACE_PRINTLN(F("Attempting OpenLASIR decode"));
+    if (decodeOpenLASIR()) {
+        return true;
+    }
+#endif
+
 #if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
     IR_TRACE_PRINTLN(F("Attempting Panasonic/Kaseikyo decode"));
     if (decodeKaseikyo()) {
@@ -1594,6 +1601,9 @@ void printActiveIRProtocols(Print *aSerial) {
 #endif
 #if defined(DECODE_MAGIQUEST)
         aSerial->print(F("MagiQuest, "));
+#endif
+#if defined(DECODE_OPENLASIR)
+        aSerial->print(F("OpenLASIR, "));
 #endif
 #if defined(DECODE_DISTANCE_WIDTH)
         aSerial->print(F("Universal Pulse Distance Width, "));

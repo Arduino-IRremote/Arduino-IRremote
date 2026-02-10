@@ -51,7 +51,8 @@
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_ONKYO) || defined(DECODE_SAMSUNG) \
 || defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) \
 || defined(DECODE_DISTANCE_WIDTH) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
-|| defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_FAST) || defined(DECODE_WHYNTER)))
+|| defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_FAST) || defined(DECODE_WHYNTER) \
+|| defined(DECODE_OPENLASIR)))
 /*
  * If no protocol is explicitly enabled, we enable all protocols
  */
@@ -72,6 +73,7 @@
 #define DECODE_MAGIQUEST
 #define DECODE_WHYNTER
 #define DECODE_FAST
+#define DECODE_OPENLASIR    // Modified NEC with 8-bit validated address + 16-bit command
 #    endif
 
 #    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
@@ -125,6 +127,7 @@ typedef enum {
     MAGIQUEST,
     WHYNTER, /* 30 */
     FAST,
+    OPENLASIR,
     OTHER
 } decode_type_t;
 extern const char *const ProtocolNames[]; // The array of name strings for the decode_type_t enum
@@ -193,6 +196,7 @@ struct PulseDistanceWidthProtocolConstants {
 #define JVC_KHZ         38
 #define LG_KHZ          38
 #define NEC_KHZ         38
+#define OPENLASIR_KHZ   38
 #define SAMSUNG_KHZ     38
 #define KASEIKYO_KHZ    37
 #define RC5_RC6_KHZ     36
