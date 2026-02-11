@@ -408,6 +408,14 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLe
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("aPGMBufferWithMicroseconds=0x"));
+    Serial.print((uint32_t) aBufferWithMicroseconds, HEX);
+    Serial.print(F(" [0]="));
+    Serial.println(aBufferWithMicroseconds[0]);  // this crashes on ESP8266 if aBufferWithMicroseconds is PROGMEM
+    Serial.flush();
+#endif
+
     /*
      * Raw data starts with a mark.
      */
@@ -504,7 +512,7 @@ void IRsend::sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_
 #  if defined(LOCAL_DEBUG)
     // If the PROGMEM array is defined in the function, the C-compiler uses a wrong address :-(. sizeof() works.
     Serial.print(F("aPGMBufferWithMicroseconds=0x"));
-    Serial.println((uint16_t)aPGMBufferWithMicroseconds,HEX);
+    Serial.println((uint16_t) aPGMBufferWithMicroseconds, HEX);
 #endif
 
     for (uint_fast16_t i = 0; i < aLengthOfBuffer; i++) {
@@ -531,6 +539,14 @@ void IRsend::sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_
 
 void IRsend::sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer,
         uint_fast8_t aIRFrequencyKilohertz, uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats) {
+
+#if defined(LOCAL_DEBUG)
+    Serial.print(F("aPGMBufferWithMicroseconds=0x"));
+    Serial.print((uint32_t) aPGMBufferWithMicroseconds, HEX);
+    Serial.print(F(" [0]="));
+    Serial.println(aPGMBufferWithMicroseconds[0]); // this crashes on ESP8266
+    Serial.flush();
+#endif
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {

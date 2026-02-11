@@ -1007,7 +1007,7 @@ Digispark boards are tested only with [ATTinyCore](https://github.com/SpenceKond
 - ATtiny84, 85, 167 (Digispark + Digispark Pro)
 - SAMD (Zero, MKR*, **but not DUE, the latter is SAM architecture**)
 - ESP8266
-- ESP32 (ESP32-C3 since board package 2.0.2 from Espressif). New CPUs (as of January 2025) are not guaranteed to work!
+- ESP32, ESP32-C3 since board package 2.0.2 from Espressif. Other CPUs are not tested! SP32-S3 is not supported (yet).
 - Sparkfun Pro Micro
 - Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
 - BluePill with STM32

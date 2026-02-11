@@ -8,6 +8,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Fixed missing initialization with pinMode() for feedback LED.
 - Fixed bitmask error in sendBiphaseData() when not sending start bit.
 - Improved decodeSamsung().
+- OpenLASIR protocol added by [danielweidman](https://github.com/danielweidman).
 
 # 4.5.0
 - Added support for multiple receiver instances.

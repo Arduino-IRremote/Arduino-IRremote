@@ -191,12 +191,12 @@ jobs:
 #
 #          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy4:chip=1604,clock=16internal
 #            arduino-platform: megaTinyCore:megaavr
-#            platform-url: http://drazzy.com/package_drazzy.com_index.json
+#            platform-url: https://felias-fogg.github.io/downloads/package_debug_enabled_index.json
 #            sketches-exclude: AllProtocolsOnLCD,UnitTest # UnitTest region `text' overflowed by 997 bytes
 
 #          - arduino-boards-fqbn: megaTinyCore:megaavr:atxy7:chip=3217,clock=16internal
 #            arduino-platform: megaTinyCore:megaavr
-#            platform-url: http://drazzy.com/package_drazzy.com_index.json
+#            platform-url: https://felias-fogg.github.io/downloads/package_debug_enabled_index.json
 #            sketches-exclude: AllProtocolsOnLCD
 
 #

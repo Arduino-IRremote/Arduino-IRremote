@@ -142,7 +142,10 @@ uint8_t const tRawDataPGM[] PROGMEM = { 0x02, 0x20, 0xB0, 0x00, /*0xB02002*/
 #endif
 
 // if this definition is contained in a function, the address, the compiler uses is wrong :-(
-const uint16_t rawIRTimingsNEC[] PROGMEM
+const uint16_t rawIRTimingsNEC[]
+#if defined(__AVR__)
+PROGMEM // this crashes on ESP8266
+#endif
 = { 9000, 4500/*Start bit*/, 560, 560, 560, 560, 560, 1690, 560, 560/*0010 0x4 of 16 bit address LSB first*/, 560, 560, 560, 560,
         560, 560, 560, 560/*0000*/, 560, 1690, 560, 1690, 560, 560, 560, 1690/*1101 0xB*/, 560, 1690, 560, 1690, 560, 1690, 560,
         1690/*1111*/, 560, 560, 560, 560, 560, 560, 560, 1690/*0001 0x08 of command LSB first*/, 560, 560, 560, 560, 560, 560, 560,

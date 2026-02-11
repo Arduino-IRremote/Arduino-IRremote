@@ -65,7 +65,10 @@ IRRawDataType const tRawDataPGM[] PROGMEM = { 0xB02002, 0xA010 }; // LSB of tRaw
 //0x10, 0xA0, 0x0, 0x0, /*0xA010*/};
 #endif
 
-const uint16_t rawIRTimingsNEC[] PROGMEM
+const uint16_t rawIRTimingsNEC[]
+#if defined(__AVR__)
+PROGMEM // this crashes on ESP8266
+#endif
 = { 9000, 4500/*Start bit*/, 560, 560, 560, 560, 560, 1690, 560, 560/*0010 0x4 of 16 bit address LSB first*/, 560, 560, 560, 560,
         560, 560, 560, 560/*0000*/, 560, 1690, 560, 1690, 560, 560, 560, 1690/*1101 0xB*/, 560, 1690, 560, 1690, 560, 1690, 560,
         1690/*1111*/, 560, 560, 560, 560, 560, 560, 560, 1690/*0001 0x08 of command LSB first*/, 560, 560, 560, 560, 560, 560, 560,

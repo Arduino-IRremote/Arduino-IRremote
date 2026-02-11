@@ -30,8 +30,8 @@
 #define ADC_UTILS_ARE_AVAILABLE
 
 // External Reference Current is 150 uA for 5 V and 100 uA for 3.5 V
-#define READING_FOR_AREF 1024L // Datasheet 24.2: The minimum value represents GND and the maximum value represents the voltage on the AREF pin minus 1 LSB
-#define MAX_ADC_VALUE    1023L
+#define READING_FOR_AREF 1024 // Datasheet 24.2: The minimum value represents GND and the maximum value represents the voltage on the AREF pin minus 1 LSB
+#define MAX_ADC_VALUE    1023
 
 // PRESCALE4 => 13 * 4 = 52 microseconds per ADC conversion at 1 MHz Clock => 19,2 kHz
 #define ADC_PRESCALE2    1 // 26 microseconds per ADC conversion at 1 MHz

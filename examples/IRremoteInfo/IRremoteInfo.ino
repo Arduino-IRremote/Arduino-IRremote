@@ -11,6 +11,8 @@
  */
 #include <Arduino.h>
 
+//#define DEBUG
+
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 240 bytes program memory if IrSender.write is used
 //#define SEND_PWM_BY_TIMER
 //#define USE_NO_SEND_PWM
@@ -213,7 +215,7 @@ void dumpSignalParams() {
 
 void dumpDebugMode() {
     Serial.print(F("Debug Mode: "));
-#if DEBUG
+#if defined(DEBUG)
   Serial.println(F("ON"));
 #else
     Serial.println(F("OFF (Normal)"));
