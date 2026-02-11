@@ -593,12 +593,6 @@ bool IRrecv::decode() {
     }
 #endif
 
-#if defined(DECODE_OPENLASIR)
-    IR_TRACE_PRINTLN(F("Attempting OpenLASIR decode"));
-    if (decodeOpenLASIR()) {
-        return true;
-    }
-#endif
 
 #if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
     IR_TRACE_PRINTLN(F("Attempting Panasonic/Kaseikyo decode"));
@@ -697,6 +691,13 @@ bool IRrecv::decode() {
 #if defined(DECODE_MAGIQUEST)
     IR_TRACE_PRINTLN(F("Attempting MagiQuest decode"));
     if (decodeMagiQuest()) {
+        return true;
+    }
+#endif
+
+#if defined(DECODE_OPENLASIR)
+    IR_TRACE_PRINTLN(F("Attempting OpenLASIR decode"));
+    if (decodeOpenLASIR()) {
         return true;
     }
 #endif
