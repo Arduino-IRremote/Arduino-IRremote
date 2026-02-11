@@ -785,7 +785,7 @@ void loop() {
          */
         Serial.println(
                 F(
-                        "Send OpenLASIR data with address=0x00, command=0x8000, 0 repeats and exact timing (16 bit array format) with sendRaw_P()"));
+                        "Send OpenLASIR data with address=0x00, command=0x8000 with sendRaw_P()"));
         Serial.flush();
         IrSender.sendRaw_P(rawIRTimingsOpenLASIR, sizeof(rawIRTimingsOpenLASIR) / sizeof(rawIRTimingsOpenLASIR[0]), NEC_KHZ, 110, 0);
         checkReceive(0x00, 0x8000);
