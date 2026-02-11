@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2009-2025 Ken Shirriff, Rafi Khan, Armin Joachimsmeyer
+ * Copyright (c) 2009-2026 Ken Shirriff, Rafi Khan, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -276,7 +276,7 @@ void IRrecv::ReceiveInterruptHandler() {
 /*
  * The handler which directly calls the interrupt handler function of the IRrecv object.
  * This must be a separate function, because we need this static function in IRTimer.hpp.
- * Doing it this way, we are able to modify the body of this function to support multiple IRrecv instances for receiving
+ * Doing it this way, we are able to modify the body of this function to support more than 2 IRrecv instances for receiving
  */
 void IRReceiveTimerInterruptHandler() {
     IrReceiver.ReceiveInterruptHandler();
@@ -592,7 +592,6 @@ bool IRrecv::decode() {
         return true;
     }
 #endif
-
 
 #if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
     IR_TRACE_PRINTLN(F("Attempting Panasonic/Kaseikyo decode"));

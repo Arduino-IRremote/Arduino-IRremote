@@ -34,7 +34,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [Supported IR Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#supported-ir-protocols)
 - [Common issues when using IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#common-issues-when-using-irremote)
 - [Migrating legacy projects to the latest version](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#migrating-legacy-projects-to-the-latest-version)
-  * [New features of version 4.5](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-45)
+  * [New features and changes in version 4.5](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-and-changes-in-version-45)
   * [New features of version 4.x](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-4x)
   * [New features of version 3.x](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-3x)
   * [Converting your 2.x program to the 4.x version](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#converting-your-2x-program-to-the-4x-version)
@@ -64,6 +64,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
     + [List of public IR code databases](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#list-of-public-ir-code-databases)
 - [Tiny NEC receiver and sender](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tiny-nec-receiver-and-sender)
 - [The FAST protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#the-fast-protocol)
+- [Feedback LED](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#feedback-led)
 - [FAQ and hints](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#faq-and-hints)
   * [Receiving stops after analogWrite() or tone() or after running a motor](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-stops-after-analogwrite-or-tone-or-after-running-a-motor)
   * [Receiving sets overflow flag](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-sets-overflow-flag)
@@ -481,7 +482,7 @@ The decoder interprets this as a NEC 8 bit address 0x00 / 0x32 with correct pari
 One way to handle this, is to force the library to **always** use the ONKYO protocol interpretation by using `#define DECODE_ONKYO`.
 Another way is to check if `IrReceiver.decodedIRData.protocol` is NEC and not ONKYO and to revert the parity reducing manually.
 
-The **[OpenLASIR protocol](https://github.com/danielweidman/OpenLASIR)** (like NEC Extended, but with but with 16 bit command [no parity check] and 8 bit address [with parity check]) can also be ambiguous with NEC (and ONKYO). It is recommended to use `#define DECODE_OPENLASIR` when working with OpenLASIR.
+The **[OpenLASIR protocol](https://github.com/danielweidman/OpenLASIR)** is binary identical to ONKYO but has a different semantics. It is recommended to disable `#define DECODE_ONKYO` and enable `#define DECODE_OPENLASIR` when working with OpenLASIR.
 
 ### NEC, NEC2
 On a long press, the **NEC protocol** does not repeat its frame, it sends a special short repeat frame.
@@ -724,6 +725,21 @@ void loop() {}
 <br/>
 
 The FAST protocol can be received by IRremote and TinyIRReceiver.
+
+# Feedback LED
+The feedback LED output is enabled by default. This means that **the LED is on when we receive or send a mark**.
+The feedback LED code can be completely removed at compile time using the following macros:
+- `NO_LED_RECEIVE_FEEDBACK_CODE` for receiving
+- `NO_LED_SEND_FEEDBACK_CODE` for sending
+- `NO_LED_FEEDBACK_CODE` for receiving and sending
+
+### Receiving
+For receiving, feedback LED can be activated or deactivated programmatically by `enableLEDFeedback()`, `disableLEDFeedback()` or `setLEDFeedback(bool aEnableLEDFeedback)`.<br/>
+The starting value is set by the second parameter of `begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)`. You can use the macros `ENABLE_LED_FEEDBACK` and `DISABLE_LED_FEEDBACK` for the second parameter.
+
+### Sending
+LED feedback is **always enabled** when sending and cannot be deactivated programmatically.
+It can only be deactivated at compile time.
 
 # FAQ and hints
 ## Receiving stops after analogWrite() or tone() or after running a motor.

@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2025 Armin Joachimsmeyer
+ * Copyright (c) 2020-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,6 @@
  * If activated, BANG_OLUFSEN, BOSEWAVE, MAGIQUEST, WHYNTER, FAST and LEGO_PF are excluded in decoding and in sending with IrSender.write
  */
 //#define EXCLUDE_EXOTIC_PROTOCOLS
-
 /*
  * Supported IR protocols
  * Each protocol you include costs memory and, during decode, costs time
@@ -95,40 +94,13 @@
  * !!!Must be the same order as ProtocolNames in IRReceive.hpp!!!
  */
 typedef enum {
-    UNKNOWN = 0,
-    PULSE_WIDTH,
-    PULSE_DISTANCE,
-    APPLE,
-    DENON,
-    JVC,
-    LG,
-    LG2,
-    NEC,
-    NEC2, /* 10 NEC with full frame as repeat */
-    ONKYO,
-    PANASONIC,
-    KASEIKYO,
-    KASEIKYO_DENON,
-    KASEIKYO_SHARP,
-    KASEIKYO_JVC,
-    KASEIKYO_MITSUBISHI,
-    RC5,
-    RC6,
-    RC6A, /*31 bit +  3 fixed 0b110 mode bits*/
+    UNKNOWN = 0, PULSE_WIDTH, PULSE_DISTANCE, APPLE, DENON, JVC, LG, LG2, NEC, NEC2, /* 10 NEC with full frame as repeat */
+    ONKYO, PANASONIC, KASEIKYO, KASEIKYO_DENON, KASEIKYO_SHARP, KASEIKYO_JVC, KASEIKYO_MITSUBISHI, RC5, RC6, RC6A, /*31 bit +  3 fixed 0b110 mode bits*/
     SAMSUNG, /* 20*/
-    SAMSUNGLG,
-    SAMSUNG48,
-    SHARP,
-    SONY,
+    SAMSUNGLG, SAMSUNG48, SHARP, SONY,
     /* Now the exotic protocols */
-    BANG_OLUFSEN,
-    BOSEWAVE,
-    LEGO_PF,
-    MAGIQUEST,
-    WHYNTER, /* 30 */
-    FAST,
-    OPENLASIR,
-    OTHER
+    BANG_OLUFSEN, BOSEWAVE, LEGO_PF, MAGIQUEST, WHYNTER, /* 30 */
+    FAST, OPENLASIR, OTHER
 } decode_type_t;
 extern const char *const ProtocolNames[]; // The array of name strings for the decode_type_t enum
 

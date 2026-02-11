@@ -675,6 +675,24 @@ rawData[112]:
 Duration=64000us
 
 
+Send OpenLASIR mode fire and color orange
+Protocol=Onkyo Address=0xF1, Command=0x6076, Raw-Data=0x60760EF1, 32 bits, LSB first, Gap=791350us, Duration=66750us
+Send with: IrSender.sendOnkyo(0xF1, 0x6076, <numberOfRepeats>);
+rawIRTimings[68]:
+ -791350
+ +8900,-4450
+ + 600,-1650 + 650,- 450 + 600,- 550 + 650,- 500
+ + 650,-1550 + 650,-1600 + 650,-1600 + 650,-1600
+ + 600,- 500 + 650,-1600 + 650,-1600 + 600,-1650
+ + 650,- 450 + 600,- 550 + 600,- 550 + 600,- 500
+ + 650,- 500 + 600,-1600 + 650,-1600 + 650,- 500
+ + 600,-1650 + 600,-1600 + 650,-1600 + 650,- 500
+ + 600,- 500 + 600,- 550 + 650,- 500 + 650,- 450
+ + 600,- 550 + 600,-1650 + 650,-1600 + 600,- 500
+ + 600
+Duration=66750us
+
+
 Send Lego with 2 channel and with 4 command bits
 Protocol=Lego Address=0x1, Command=0x16, Raw-Data=0x1169, 16 bits, MSB first, Gap=791500us, Duration=9950us
 Send with: IrSender.sendLego(0x1, 0x16, <numberOfRepeats>);
@@ -1214,6 +1232,24 @@ rawData[112]:
  + 300,- 850 + 300,- 850 + 600,- 550 + 300,- 850
  + 350,- 800 + 350,- 800 + 600,- 550 + 350
 Duration=63700us
+
+
+Send OpenLASIR mode fire and color orange
+Protocol=Onkyo Address=0xF2, Command=0x6087, Raw-Data=0x60870DF2, 32 bits, LSB first, Gap=791650us, Duration=65650us
+Send with: IrSender.sendOnkyo(0xF2, 0x6087, <numberOfRepeats>);
+rawIRTimings[68]: 
+ -791650
+ +8950,-4400
+ + 650,- 450 + 650,-1600 + 650,- 500 + 650,- 450
+ + 650,-1600 + 650,-1600 + 600,-1650 + 650,-1600
+ + 600,-1600 + 600,- 550 + 600,-1650 + 600,-1600
+ + 650,- 500 + 600,- 550 + 600,- 500 + 650,- 500
+ + 650,-1600 + 650,-1600 + 650,-1550 + 650,- 500
+ + 600,- 550 + 600,- 500 + 650,- 500 + 650,-1600
+ + 650,- 450 + 650,- 500 + 650,- 500 + 600,- 500
+ + 600,- 550 + 650,-1600 + 600,-1600 + 650,- 500
+ + 600
+Duration=65650us
 
 
 Send Lego with 2 channel and with 4 command bits

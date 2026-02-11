@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2025 Armin Joachimsmeyer
+ * Copyright (c) 2020-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -102,6 +102,7 @@
 
 #define DECODE_BOSEWAVE
 #define DECODE_MAGIQUEST
+#define DECODE_OPENLASIR
 #define DECODE_FAST
 
 //#define DECODE_WHYNTER
@@ -902,6 +903,15 @@ void loop() {
     checkReceive(sAddress, s16BitCommand & 0x1FF); // we have 9 bit command
     delay(DELAY_AFTER_SEND);
 #endif
+
+#if defined(DECODE_OPENLASIR)
+    Serial.println(F("Send OpenLASIR mode fire and color orange"));
+    Serial.flush();
+    IrSender.sendOpenLASIR(sAddress & 0xFF, sCommand, OPENLASIR_MODE_LASER_TAG_FIRE, OPENLASIR_COLOR_ORANGE, sRepeats);
+    checkReceive(sAddress & 0xFF, IrSender.computeOpenLASIRRawCommand(sCommand, OPENLASIR_MODE_LASER_TAG_FIRE,OPENLASIR_COLOR_ORANGE));
+    delay(DELAY_AFTER_SEND);
+#endif
+
 
 #if defined(DECODE_LEGO_PF)
     Serial.println(F("Send Lego with 2 channel and with 4 command bits"));

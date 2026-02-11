@@ -22,7 +22,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2025
+ * Copyright (c) 2025-2026 Daniel Weidmann, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -63,6 +63,11 @@
  * OpenLASIR uses the same timing as NEC but rearranges the address/command structure:
  *   - 8-bit address with 8-bit inverted complement (for error checking)
  *   - 16-bit command with no error check
+ *     Bits  0-7:   Block ID              (8 bits)  ← Address low byte
+ *     Bits  8-15:  ~Block ID             (8 bits)  ← Address high byte (inverted, for error check)
+ *     Bits 16-23:  Device ID             (8 bits)  ← Command bits 0-7
+ *     Bits 24-28:  Mode                  (5 bits)  ← Command bits 8-12
+ *     Bits 29-31:  Data (color, etc.)    (3 bits)  ← Command bits 13-15
  *
  * This is the opposite of NEC Extended, which uses 16-bit address and 8-bit validated command.
  *
@@ -82,21 +87,36 @@
 #define OPENLASIR_COMMAND_BITS  16 // 16 bit command, no error check
 #define OPENLASIR_BITS          (OPENLASIR_ADDRESS_BITS + OPENLASIR_COMMAND_BITS) // 32 bits total
 
-// Timing is identical to NEC (reuse NEC_* constants from ir_NEC.hpp)
+/*
+ * Constants for Mode
+ */
+#define OPENLASIR_MODE_LASER_TAG_FIRE                               0 // Laser tag shot. Data = color.
+#define OPENLASIR_MODE_USER_PRESENCE_ANNOUNCEMENT                   1 // User device saying "I'm here." No response expected.
+#define OPENLASIR_MODE_BASE_STATION_PRESENCE_ANNOUNCEMENT           2 // Fixed base station saying "I'm here."
+#define OPENLASIR_MODE_USER_TO_USER_HANDSHAKE_INITIATION            3 // User badge initiates handshake with another user badge.
+#define OPENLASIR_MODE_USER_TO_USER_HANDSHAKE_RESPONSE              4 // Response to a user-to-user handshake initiation.
+#define OPENLASIR_MODE_USER_TO_BASE_STATION_HANDSHAKE_INITIATION    5 // User badge initiates handshake with a base station.
+#define OPENLASIR_MODE_USER_TO_BASE_STATION_HANDSHAKE_RESPONSE      6 // Base station responds to a user-initiated handshake.
+#define OPENLASIR_MODE_BASE_STATION_TO_USER_HANDSHAKE_INITIATION    7 // Base station initiates handshake with a user badge.
+#define OPENLASIR_MODE_BASE_STATION_TO_USER_HANDSHAKE_RESPONSE      8 // User badge responds to a base-station-initiated handshake.
+#define OPENLASIR_MODE_COLOR_SET_TEMPORARY                          9 // Tell a badge to display a color temporarily.
+#define OPENLASIR_MODE_COLOR_SET_PERMANENT                         10 // Tell a badge to display a color and "remember" it according to some device-specific logic.
+#define OPENLASIR_MODE_GENERAL_INTERACT                            11 // Tell a device to execute a general "interact" action. The specific behavior is defined by the receiver.
+// modes 12 to 31 are reserved for future use
 
-struct PulseDistanceWidthProtocolConstants const OpenLASIRProtocolConstants PROGMEM = {
-    OPENLASIR,
-    NEC_KHZ,
-    NEC_HEADER_MARK,
-    NEC_HEADER_SPACE,
-    NEC_BIT_MARK,
-    NEC_ONE_SPACE,
-    NEC_BIT_MARK,
-    NEC_ZERO_SPACE,
-    PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE,
-    (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
-    &sendOpenLASIRSpecialRepeat
-};
+/*
+ * Constants for Data / Color
+ */
+#define OPENLASIR_COLOR_CYAN        0 // (0, 255, 255)
+#define OPENLASIR_COLOR_MAGENTA     1 // (255, 0, 255)
+#define OPENLASIR_COLOR_YELLOW      2 // (255, 255, 0)
+#define OPENLASIR_COLOR_GREEN       3 // (0, 255, 0)
+#define OPENLASIR_COLOR_RED         4 // (255, 0, 0)
+#define OPENLASIR_COLOR_BLUE        5 // (0, 0, 255)
+#define OPENLASIR_COLOR_ORANGE      6 // (255, 165, 0)
+#define OPENLASIR_COLOR_WHITE       7 // (255, 255, 255)
+
+// Timing is identical to NEC (reuse NEC_* constants from ir_NEC.hpp)
 
 /************************************
  * Start of send and decode functions
@@ -107,10 +127,7 @@ struct PulseDistanceWidthProtocolConstants const OpenLASIRProtocolConstants PROG
  * Repeat commands should be sent in a 110 ms raster.
  */
 void IRsend::sendOpenLASIRRepeat() {
-    enableIROut(NEC_KHZ);            // 38 kHz
-    mark(NEC_HEADER_MARK);           // + 9000
-    space(NEC_REPEAT_HEADER_SPACE);  // - 2250
-    mark(NEC_BIT_MARK);              // + 560
+    sendNECRepeat();
 }
 
 /**
@@ -118,10 +135,7 @@ void IRsend::sendOpenLASIRRepeat() {
  * For use in ProtocolConstants. Saves up to 250 bytes compared to a member function.
  */
 void sendOpenLASIRSpecialRepeat() {
-    IrSender.enableIROut(NEC_KHZ);            // 38 kHz
-    IrSender.mark(NEC_HEADER_MARK);           // + 9000
-    IrSender.space(NEC_REPEAT_HEADER_SPACE);  // - 2250
-    IrSender.mark(NEC_BIT_MARK);              // + 560
+    sendNECSpecialRepeat();
 }
 
 /**
@@ -147,6 +161,24 @@ uint32_t IRsend::computeOpenLASIRRawDataAndChecksum(uint8_t aAddress, uint16_t a
 }
 
 /**
+ * Compute the raw 32-bit data for an OpenLASIR frame from 8-bit address, 8-bit DeviceID, 5-bit Mode and 3-bit Data.
+ *
+ * @param aAddress  8-bit address (Block ID). Only lower 8 bits are used.
+ * @param aDeviceID     8-bit Device ID.
+ * @param aMode         5-bit Mode.
+ * @param aData         3-bit Data (color, etc.).
+ * @return 32-bit raw data ready for transmission.
+ */
+uint16_t IRsend::computeOpenLASIRRawCommand(uint8_t aDeviceID, uint8_t aMode, uint8_t aData) {
+    WordUnion tRawCommand;
+
+    tRawCommand.UByte.LowByte = aDeviceID;
+    tRawCommand.UByte.HighByte = (aMode & 0x1F) | ((aData & 0x07) << 5);
+
+    return tRawCommand.UWord;
+}
+
+/**
  * Send an OpenLASIR frame with special NEC-style repeats.
  * There is NO delay after the last sent repeat!
  *
@@ -155,8 +187,24 @@ uint32_t IRsend::computeOpenLASIRRawDataAndChecksum(uint8_t aAddress, uint16_t a
  * @param aNumberOfRepeats  If < 0 then only a special repeat frame will be sent.
  */
 void IRsend::sendOpenLASIR(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth_P(&OpenLASIRProtocolConstants,
-            computeOpenLASIRRawDataAndChecksum(aAddress, aCommand), OPENLASIR_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&NECProtocolConstants, computeOpenLASIRRawDataAndChecksum(aAddress, aCommand), OPENLASIR_BITS,
+            aNumberOfRepeats);
+}
+
+/**
+ * Send an OpenLASIR frame with special NEC-style repeats.
+ * There is NO delay after the last sent repeat!
+ *
+ * @param aAddress      8-bit address (Block ID). Only lower 8 bits are used.
+ * @param aDeviceID     8-bit Device ID.
+ * @param aMode         5-bit Mode.
+ * @param aData         3-bit Data (color, etc.).
+ * @param aNumberOfRepeats  If < 0 then only a special repeat frame will be sent.
+ */
+void IRsend::sendOpenLASIR(uint8_t aAddress, uint8_t aDeviceID, uint8_t aMode, uint8_t aData, int_fast8_t aNumberOfRepeats) {
+    sendPulseDistanceWidth_P(&NECProtocolConstants,
+            computeOpenLASIRRawDataAndChecksum(aAddress, computeOpenLASIRRawCommand(aDeviceID, aMode, aData)),
+            OPENLASIR_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -165,7 +213,7 @@ void IRsend::sendOpenLASIR(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNum
  * @param aNumberOfRepeats  If < 0 then only a special repeat frame will be sent.
  */
 void IRsend::sendOpenLASIRRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth_P(&OpenLASIRProtocolConstants, aRawData, OPENLASIR_BITS, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&NECProtocolConstants, aRawData, OPENLASIR_BITS, aNumberOfRepeats);
 }
 
 /**
@@ -204,8 +252,7 @@ bool IRrecv::decodeOpenLASIR() {
     // Check for repeat - here we have another header space length
     if (decodedIRData.rawlen == 4) {
         // Only claim this repeat if the last decoded protocol was OpenLASIR
-        if (lastDecodedProtocol == OPENLASIR
-                && matchSpace(irparams.rawbuf[2], NEC_REPEAT_HEADER_SPACE)
+        if (lastDecodedProtocol == OPENLASIR && matchSpace(irparams.rawbuf[2], NEC_REPEAT_HEADER_SPACE)
                 && matchMark(irparams.rawbuf[3], NEC_BIT_MARK)) {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
@@ -226,7 +273,7 @@ bool IRrecv::decodeOpenLASIR() {
     }
 
     // Decode the pulse distance data using NEC timing
-    decodePulseDistanceWidthData_P(&OpenLASIRProtocolConstants, OPENLASIR_BITS);
+    decodePulseDistanceWidthData_P(&NECProtocolConstants, OPENLASIR_BITS);
 
     // Success - now interpret the 32 raw bits
     LongUnion tValue;
@@ -257,7 +304,7 @@ bool IRrecv::decodeOpenLASIR() {
 
     // Valid OpenLASIR frame
     decodedIRData.protocol = OPENLASIR;
-    decodedIRData.address = tValue.UByte.LowByte;       // 8-bit validated address (Block ID)
+    decodedIRData.address = tValue.UByte.LowByte;        // 8-bit validated address (Block ID)
     decodedIRData.command = tValue.UWord.HighWord;       // 16-bit command (Device ID + Mode + Data)
     decodedIRData.numberOfBits = OPENLASIR_BITS;
 

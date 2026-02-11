@@ -4,7 +4,7 @@
  *  Contains pin definitions for IRremote examples for various platforms
  *  as well as definitions for feedback LED and tone() and includes
  *
- *  Copyright (C) 2021-2023  Armin Joachimsmeyer
+ *  Copyright (C) 2021-2026  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -44,6 +44,7 @@
  * ESP8266      14|D5       12|D6       %
  * ESP32        15          4          27
  * ESP32-C3     2           3           4
+ * ESP32-S3     2           3           4
  * BluePill     PA6         PA7       PA3
  * APOLLO3      11          12          5
  * RP2040       3|GPIO15    4|GPIO16    5|GPIO17
@@ -181,6 +182,7 @@
 #define TONE_PIN                42 // Dummy for examples using it#
 
 #elif defined(ARDUINO_NOLOGO_ESP32C3_SUPER_MINI)
+// ESP32 - C3 super mini
 #define FEEDBACK_LED_IS_ACTIVE_LOW // The LED on my board (D8) is active LOW
 #define IR_RECEIVE_PIN           2
 #define IR_SEND_PIN              3
@@ -188,11 +190,19 @@
 #define APPLICATION_PIN         10
 
 #elif defined(CONFIG_IDF_TARGET_ESP32C3) || defined(ARDUINO_ESP32C3_DEV)
+// ESP32 - C3 other
 #define NO_LED_FEEDBACK_CODE   // The  WS2812 on pin 8 of AI-C3 board crashes if used as receive feedback LED, other I/O pins are working...
 #define IR_RECEIVE_PIN           6
 #define IR_SEND_PIN              7
 #define TONE_PIN                 9
 #define APPLICATION_PIN         10
+
+#elif defined(CONFIG_IDF_TARGET_ESP32S3) || defined(ARDUINO_ESP32S3_DEV)
+// ESP32 - S3 - !!! NOT tested !!!
+#define IR_RECEIVE_PIN          15 // alternatively 13
+#define IR_SEND_PIN             16 // alternatively 14
+#define TONE_PIN                17
+#define APPLICATION_PIN         18
 
 #elif defined(ESP32)
 #include <Arduino.h>

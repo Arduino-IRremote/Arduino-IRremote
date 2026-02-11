@@ -96,6 +96,7 @@ jobs:
               ReceiveDemo: -DUSE_THRESHOLD_DECODER -DEBUG -DTRACE
               IRremoteExtensionTest: -DIR_SEND_PIN=3 -DEBUG -DTRACE
               TinyReceiver: -DUSE_CALLBACK_FOR_TINY_RECEIVER -DEBUG -DTRACE
+              UnitTest: -DEBUG # otherwise Sketch uses 32486 bytes (100%) of program storage space. Maximum is 32256 bytes.
               All: -DEBUG -DTRACE
 
           - arduino-boards-fqbn: arduino:avr:uno|USE_NO_SEND_PWM

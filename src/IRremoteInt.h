@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2015-2025 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
+ * Copyright (c) 2015-2026 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -646,8 +646,13 @@ public:
 
     void sendOpenLASIRRepeat();
     uint32_t computeOpenLASIRRawDataAndChecksum(uint8_t aAddress, uint16_t aCommand);
+    uint16_t computeOpenLASIRRawCommand(uint8_t aDeviceID, uint8_t aMode, uint8_t aData);
     void sendOpenLASIR(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
+    void sendOpenLASIR(uint8_t aAddress, uint8_t aDeviceID, uint8_t aMode, uint8_t aData, int_fast8_t aNumberOfRepeats);
     void sendOpenLASIRRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+#define OpenLASIR_GetMDeviceId(aCommand)    (aCommand & 0xFF)
+#define OpenLASIR_GetMode(aCommand)         ((aCommand >> 8) & 0x1F)
+#define OpenLASIR_GetData(aCommand)         (aCommand >> 13)
 
     void sendKaseikyo(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats, uint16_t aVendorCode); // LSB first
     void sendPanasonic(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first

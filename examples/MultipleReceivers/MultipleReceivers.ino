@@ -143,6 +143,11 @@ void handleSuccessfulDecoding(IRrecv *aIRReceiverInstance) {
 
 }
 
+/*
+ * This handler is called in ISR context after IrReceiver.ReceiveInterruptHandler() if SUPPORT_MULTIPLE_RECEIVER_INSTANCES is active.
+ * Here we just call the standard ReceiveInterruptHandler for the second receiver.
+ * Doing it this way, we are able to modify the body of this function to support more than 2 IRrecv instances for receiving.
+ */
 void UserIRReceiveTimerInterruptHandler() {
     MySecondIrReceiver.ReceiveInterruptHandler();
 }
