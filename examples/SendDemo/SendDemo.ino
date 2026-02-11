@@ -434,6 +434,11 @@ void loop() {
     Serial.flush();
     IrSender.sendMagiQuest(0x6BCD0000 | (uint32_t) sAddress, s16BitCommand); // we have 31 bit address
     delay(DELAY_AFTER_SEND);
+    
+    Serial.println(F("Send OpenLASIR"));
+    Serial.flush();
+    IrSender.sendOpenLASIR(0x00, 0x8000, sRepeats);
+    delay(DELAY_AFTER_SEND);
 
     // Bang&Olufsen must be sent with 455 kHz
 //    Serial.println(F("Send Bang&Olufsen"));

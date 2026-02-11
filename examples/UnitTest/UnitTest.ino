@@ -103,6 +103,7 @@
 #define DECODE_BOSEWAVE
 #define DECODE_MAGIQUEST
 #define DECODE_FAST
+#define DECODE_OPENLASIR
 
 //#define DECODE_WHYNTER
 
@@ -151,6 +152,16 @@ PROGMEM // this crashes on ESP8266
         1690/*1111*/, 560, 560, 560, 560, 560, 560, 560, 1690/*0001 0x08 of command LSB first*/, 560, 560, 560, 560, 560, 560, 560,
         560/*0000 0x00*/, 560, 1690, 560, 1690, 560, 1690, 560, 560/*1110 Inverted 8 of command*/, 560, 1690, 560, 1690, 560, 1690,
         560, 1690/*1111 inverted 0 of command*/, 560 /*stop bit*/}; // Using exact NEC timing
+
+const uint16_t rawIRTimingsOpenLASIR[]
+#if defined(__AVR__)
+PROGMEM // this crashes on ESP8266
+#endif
+= { 9000, 4500/*Start bit*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000 0x0 of 8 bit address LSB first*/, 560, 560, 560, 560,
+        560, 560, 560, 560/*0000*/, 560, 1690, 560, 1690, 560, 1690, 560, 1690/*1111 0xF of ~address*/, 560, 1690, 560, 1690, 560,
+        1690, 560, 1690/*1111*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000 0x0 of 16 bit command LSB first*/, 560, 560, 560, 560,
+        560, 560, 560, 560/*0000*/, 560, 560, 560, 560, 560, 560, 560, 560/*0000 0x0 of command high byte*/, 560, 560, 560, 560, 560,
+        560, 560, 1690/*0001 0x8*/, 560 /*stop bit*/}; // Using exact NEC timing for OpenLASIR
 
 void setup() {
 #if defined(DEBUG_BUTTON_PIN)
@@ -766,6 +777,21 @@ void loop() {
         }
         delay(DELAY_AFTER_SEND);
 #  endif // defined(DECODE_MAGIQUEST)
+
+#  if defined(DECODE_OPENLASIR)
+        /*
+         * Test sending OpenLASIR protocol using sendRaw_P
+         * Block 0, Device 0, laser_tag_fire, Red -> address=0x00, command=0x8000, raw=0x8000FF00
+         */
+        Serial.println(
+                F(
+                        "Send OpenLASIR data with address=0x00, command=0x8000, 0 repeats and exact timing (16 bit array format) with sendRaw_P()"));
+        Serial.flush();
+        IrSender.sendRaw_P(rawIRTimingsOpenLASIR, sizeof(rawIRTimingsOpenLASIR) / sizeof(rawIRTimingsOpenLASIR[0]), NEC_KHZ, 110, 0);
+        checkReceive(0x00, 0x8000);
+        delay(DELAY_AFTER_SEND);
+#  endif // defined(DECODE_OPENLASIR)
+
     } // end of once at first loop
 #endif // if FLASHEND >= 0x7FFF
 
@@ -900,6 +926,17 @@ void loop() {
     Serial.flush();
     IrSender.sendMagiQuest(tWandId, s16BitCommand); // we have 31 bit address
     checkReceive(sAddress, s16BitCommand & 0x1FF); // we have 9 bit command
+    delay(DELAY_AFTER_SEND);
+#endif
+
+#if defined(DECODE_OPENLASIR)
+    Serial.println(F("Send OpenLASIR"));
+    Serial.flush();
+    // OpenLASIR: 8-bit address (Block ID) with inverted complement, 16-bit command (no parity)
+    // Since DECODE_ONKYO is defined, this will be recognized as an ONKYO packet, but the address and
+    // command will still be correct.
+    IrSender.sendOpenLASIR(sAddress & 0xFF, s16BitCommand, sRepeats);
+    checkReceive(sAddress & 0xFF, s16BitCommand);
     delay(DELAY_AFTER_SEND);
 #endif
 
