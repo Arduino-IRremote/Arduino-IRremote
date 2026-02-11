@@ -281,6 +281,7 @@ void disableLEDFeedback() {}; // dummy function for examples
 #include "ir_LG.hpp"
 #include "ir_MagiQuest.hpp"
 #include "ir_NEC.hpp"
+#include "ir_OpenLASIR.hpp"
 #include "ir_RC5_RC6.hpp"
 #include "ir_Samsung.hpp"
 #include "ir_Sony.hpp"

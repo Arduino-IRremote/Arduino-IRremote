@@ -107,7 +107,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 
 ` Hash `, &nbsp; &nbsp; ` Pronto `
 
-` BoseWave `, &nbsp; &nbsp; ` Bang & Olufsen `, &nbsp; &nbsp; ` Lego `, &nbsp; &nbsp; ` FAST `, &nbsp; &nbsp; ` Whynter `, &nbsp; &nbsp; ` MagiQuest `, &nbsp; &nbsp; ` Velux `
+` BoseWave `, &nbsp; &nbsp; ` Bang & Olufsen `, &nbsp; &nbsp; ` Lego `, &nbsp; &nbsp; ` FAST `, &nbsp; &nbsp; ` Whynter `, &nbsp; &nbsp; ` MagiQuest `, &nbsp; &nbsp; ` Velux `, &nbsp; &nbsp; ` OpenLASIR `
 
 Protocols can be switched off and on by defining macros before the line `#include <IRremote.hpp>` like [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L33):
 
@@ -466,7 +466,7 @@ IrReceiver.printIRSendUsage(&Serial);
 ```
 
 ## Ambiguous protocols
-### NEC, Extended NEC, ONKYO
+### NEC, Extended NEC, ONKYO, OpenLASIR
 The **NEC protocol** is defined as 8 bit address and 8 bit command. But the physical address and data fields are each 16 bit wide.
 The additional 8 bits are used to send the inverted address or command for parity checking.<br/>
 The **extended NEC protocol** uses the additional 8 parity bit of address for a 16 bit address, thus disabling the parity check for address.<br/>
@@ -480,6 +480,8 @@ The decoder interprets this as a NEC 8 bit address 0x00 / 0x32 with correct pari
 
 One way to handle this, is to force the library to **always** use the ONKYO protocol interpretation by using `#define DECODE_ONKYO`.
 Another way is to check if `IrReceiver.decodedIRData.protocol` is NEC and not ONKYO and to revert the parity reducing manually.
+
+The **[OpenLASIR protocol](https://github.com/danielweidman/OpenLASIR)** (like NEC Extended, but with but with 16 bit command [no parity check] and 8 bit address [with parity check]) can also be ambiguous with NEC (and ONKYO). It is recommended to use `#define DECODE_OPENLASIR` when working with OpenLASIR.
 
 ### NEC, NEC2
 On a long press, the **NEC protocol** does not repeat its frame, it sends a special short repeat frame.
@@ -497,7 +499,7 @@ The `RAW_BUFFER_LENGTH` determines the length of the **byte buffer** where the r
 **100** is sufficient for standard protocols **up to 48 bits**, with 1 bit consisting of one mark and space.
 We always require additional 4 bytes, 1 byte for initial gap, 2 bytes for header and 1 byte for stop bit.
 - **48** bit protocols are PANASONIC, KASEIKYO, SAMSUNG48, RC6.
-- **32** bit protocols like NEC, SAMSUNG, WHYNTER, SONY(20), LG(28) require a **buffer length of 68**.
+- **32** bit protocols like NEC, SAMSUNG, WHYNTER, SONY(20), LG(28), OpenLASIR require a **buffer length of 68**.
 - **16** bit protocols like BOSEWAVE, DENON, FAST, JVC, LEGO_PF, RC5, SONY(12 or 15) require a **buffer length of 36**.
 - MAGIQUEST requires a buffer length of **112**.
 - Air conditioners often send a longer protocol data stream **up to 750 bits**.
@@ -923,7 +925,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 |-|-:|-|
 | `RAW_BUFFER_LENGTH` | 200 | Buffer size of raw input uint16_t buffer. Must be even! If it is too small, overflow flag will be set. 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. A value of 200 requires 200 bytes RAM. |
 | `EXCLUDE_UNIVERSAL_PROTOCOLS` | disabled | Excludes the universal decoder for pulse distance width protocols and decodeHash (special decoder for all protocols) from `decode()`. Saves up to 1000 bytes program memory. |
-| `EXCLUDE_EXOTIC_PROTOCOLS` | disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
+| `EXCLUDE_EXOTIC_PROTOCOLS` | disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST LEGO_PF, and OpenLASIR from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
 | `DECODE_<Protocol name>` | all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |
 | `USE_THRESHOLD_DECODER` | disabled | If enabled, may give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses and forces value of MARK_EXCESS_MICROS to 0 to save program memory. Requires up to additional 120 bytes program memory. |
 | `USE_STRICT_DECODER` |  disabled | Check for all 4 one and zero protocol timings. Only sensible for development or very exotic requirements. Requires up to 300 additional bytes of program memory. |

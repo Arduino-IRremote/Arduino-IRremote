@@ -265,6 +265,9 @@ size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
 
     } else if (tProtocol == LEGO_PF) {
         sendLegoPowerFunctions(tAddress, tCommand, tCommand >> 4, tIsRepeat); // send 5 autorepeats
+
+    } else if (tProtocol == OPENLASIR) {
+        sendOpenLASIR(tAddress, tCommand, aNumberOfRepeats);
 #endif
 
     } else {
@@ -382,6 +385,9 @@ size_t IRsend::write(decode_type_t aProtocol, uint16_t aAddress, uint16_t aComma
 
     } else if (aProtocol == LEGO_PF) {
         sendLegoPowerFunctions(aAddress, aCommand, aCommand >> 4, (aNumberOfRepeats < 0)); // send 5 autorepeats, except for dedicated repeats
+
+    } else if (aProtocol == OPENLASIR) {
+        sendOpenLASIR(aAddress, aCommand, aNumberOfRepeats);
 #endif
 
     } else {

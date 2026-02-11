@@ -359,6 +359,7 @@ public:
     bool decodeLG();
     bool decodeMagiQuest(); // not completely standard
     bool decodeNEC();
+    bool decodeOpenLASIR();
     bool decodeRC5();
     bool decodeRC6();
     bool decodeSamsung();
@@ -643,6 +644,11 @@ public:
     void sendOnkyo(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendApple(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);
 
+    void sendOpenLASIRRepeat();
+    uint32_t computeOpenLASIRRawDataAndChecksum(uint8_t aAddress, uint16_t aCommand);
+    void sendOpenLASIR(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
+    void sendOpenLASIRRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+
     void sendKaseikyo(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats, uint16_t aVendorCode); // LSB first
     void sendPanasonic(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
     void sendKaseikyo_Denon(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
@@ -745,6 +751,7 @@ public:
 extern IRsend IrSender;
 
 void sendNECSpecialRepeat();
+void sendOpenLASIRSpecialRepeat();
 void sendLG2SpecialRepeat();
 void sendSamsungLGSpecialRepeat();
 
