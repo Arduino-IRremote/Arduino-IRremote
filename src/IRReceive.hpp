@@ -278,6 +278,9 @@ void IRrecv::ReceiveInterruptHandler() {
  * This must be a separate function, because we need this static function in IRTimer.hpp.
  * Doing it this way, we are able to modify the body of this function to support more than 2 IRrecv instances for receiving
  */
+#if defined(ESP8266) || defined(ESP32)
+IRAM_ATTR
+#endif
 void IRReceiveTimerInterruptHandler() {
     IrReceiver.ReceiveInterruptHandler();
 #if defined(SUPPORT_MULTIPLE_RECEIVER_INSTANCES)

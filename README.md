@@ -34,7 +34,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [Supported IR Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#supported-ir-protocols)
 - [Common issues when using IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#common-issues-when-using-irremote)
 - [Migrating legacy projects to the latest version](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#migrating-legacy-projects-to-the-latest-version)
-  * [New features and changes in version 4.5](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-and-changes-in-version-45)
+  * [New features and changes in version 4.6](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-and-changes-in-version-46)
   * [New features of version 4.x](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-4x)
   * [New features of version 3.x](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-3x)
   * [Converting your 2.x program to the 4.x version](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#converting-your-2x-program-to-the-4x-version)
@@ -128,7 +128,8 @@ See [this table](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme
 This library has been refactored, breaking backward compatibility with the old version, on which many examples on the Internet are based.<br/>
 If your code uses `irrecv.decode(&results)`, it is written for Version 2.x. This library (Version 4.x) now uses a simpler `IrReceiver.decode()` syntax. See the Conversion guide below.
 
-## New features and changes in version 4.5
+## New features and changes in version 4.6
+** Version 4.5.0 does not work for ESP platform, because of missing ESP IRAM_ATTR for receiving interrupt.**
 - Support for **multiple receiver instances**.<br/>
 `irparams_struct irparams` is now member of `IRrecv`. Thus `rawDataPtr` (pointer to irparams) was removed from `IrReceiver.decodedIRData`.<br/>
 Old `IrReceiver.decodedIRData.rawDataPtr->rawbuf` is now `IrReceiver.irparams.rawbuf`, the same holds for `IrReceiver.irparams.rawlen`.

@@ -3,6 +3,7 @@ The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
 # 4.6.0
+- Fixed missing ESP IRAM_ATTR for receiving interrupt.
 - Changed USE_DEFAULT_FEEDBACK_LED_PIN from 0 to 0xFF, because megaTinyCore defines the not special pin PIN_PA4 as 0.
 - Changed timer for ATtiny16X4.
 - Fixed missing initialization with pinMode() for feedback LED.
@@ -10,7 +11,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Improved decodeSamsung().
 - OpenLASIR protocol added by [danielweidman](https://github.com/danielweidman).
 
-# 4.5.0
+# 4.5.0 - does not work for ESP platform, because of missing ESP IRAM_ATTR for receiving interrupt.
 - Added support for multiple receiver instances.
 - irparams_struct irparams is now member of IRrecv. Thus removed rawDataPtr (pointer to irparams) from IrReceiver.decodedIRData.
 - Removed return value for all decodePulseDistanceWidthData() decoding functions, which returned a constant true.
