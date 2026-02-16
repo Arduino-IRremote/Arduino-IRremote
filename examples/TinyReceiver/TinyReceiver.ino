@@ -4,19 +4,19 @@
  *  Small memory footprint and no timer usage!
  *
  *  Receives IR protocol data of NEC protocol using pin change interrupts.
- *  On complete received IR command the function handleReceivedIRData(uint16_t aAddress, uint8_t aCommand, uint8_t aFlags)
- *  is called in Interrupt context but with interrupts being enabled to enable use of delay() etc.
+ *  For each complete IR frame/command received, the decoded data is copied to the TinyIRReceiverData structure
+ *  and the handleReceivedTinyIRData() function is called in an interrupt context.
+ *  However, interrupts are explicitly enabled here to allow the use of delay() and millis() etc.
  *  !!!!!!!!!!!!!!!!!!!!!!
  *  Functions called in interrupt context should be running as short as possible,
- *  so if you require longer action, save the data (address + command) and handle it in the main loop.
  *  !!!!!!!!!!!!!!!!!!!!!
  *
  * The FAST protocol is a proprietary modified JVC protocol without address, with parity and with a shorter header.
  *  FAST Protocol characteristics:
  * - Bit timing is like NEC or JVC
  * - The header is shorter, 3156 vs. 12500
- * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command,
- *     leading to a fixed protocol length of (6 + (16 * 3) + 1) * 526 = 55 * 526 = 28930 microseconds or 29 ms.
+ * - No address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command.
+ *     This results in a fixed protocol length of (6 + (16 * 3) + 1) * 526 = 55 * 526 = 28930 microseconds or 29 ms.
  * - Repeats are sent as complete frames but in a 50 ms period / with a 21 ms distance.
  *
  *
@@ -26,7 +26,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-2025 Armin Joachimsmeyer
+ * Copyright (c) 2022-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -71,14 +71,6 @@
 
 #include "TinyIRReceiver.hpp" // include the code
 
-/*
- * Helper macro for getting a macro definition as string
- */
-#if !defined(STR_HELPER) && !defined(STR)
-#define STR_HELPER(x) #x
-#define STR(x) STR_HELPER(x)
-#endif
-
 void setup() {
     Serial.begin(115200);
 
@@ -111,7 +103,10 @@ void setup() {
 
 void loop() {
     if (TinyReceiverDecode()) {
-
+        /*
+         * The library has already copied the data used for this output,
+         * so there is no need to do this in the callback function.
+         */
 #if !defined(USE_FAST_PROTOCOL)
         // We have no address at FAST protocol
         Serial.print(F("Address=0x"));
@@ -149,25 +144,28 @@ void loop() {
 #if defined(USE_CALLBACK_FOR_TINY_RECEIVER)
 /*
  * This is the function, which is called if a complete frame was received
- * It runs in an ISR context with interrupts enabled, so functions like delay() etc. should work here
+ * This function is executed in an ISR (Interrupt Service Routine) context but with interrupts enabled!
+ * However, it is always best to keep this callback function short and fast!
  */
 #  if defined(ESP8266) || defined(ESP32)
 IRAM_ATTR
 #  endif
-
 void handleReceivedTinyIRData() {
 #  if defined(ARDUINO_ARCH_MBED) || defined(ESP32)
     /*
-     * Printing is not allowed in ISR context for any kind of RTOS, so we use the slihjtly more complex,
-     * but recommended way for handling a callback :-). Copy data for main loop.
+     * Printing is not allowed in ISR context for RTOS based cores like ESP, even when interrupts are enabled.
      * For Mbed we get a kernel panic and "Error Message: Semaphore: 0x0, Not allowed in ISR context" for Serial.print()
      * for ESP32 we get a "Guru Meditation Error: Core  1 panic'ed" (we also have an RTOS running!)
      */
-    // Do something useful here...
 #  else
     // As an example, print very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
     printTinyReceiverResultMinimal(&Serial);
 #  endif
+    if (TinyIRReceiverData.Command == 0x10) {
+        // do something SHORT here
+    } else if (TinyIRReceiverData.Command == 0x11) {
+        // do something SHORT here too
+    }
 }
 #endif
 

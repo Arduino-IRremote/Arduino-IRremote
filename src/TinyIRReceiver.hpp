@@ -108,7 +108,7 @@
 //#define _IR_MEASURE_TIMING        // Activate this if you want to enable internal hardware timing measurement.
 //#define _IR_TIMING_TEST_PIN 7
 TinyIRReceiverStruct TinyIRReceiverControl;
-volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData;
+volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData; // The persistent copy of all IR data after receiving a complete frame. To be used by main program.
 
 /*
  * Set input pin and output pin definitions etc.
@@ -378,7 +378,7 @@ void IRPinChangeInterruptHandler(void) {
                      * The parameter size is dependent of the code variant used in order to save program memory.
                      * We have 6 cases: 0, 8 bit or 16 bit address, each with 8 or 16 bit command
                      */
-#if !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) // no Serial etc. in callback for ESP -> no interrupt required, WDT is running!
+#if !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) // no Serial etc. possible in callback for RTOS based cores like ESP, even when interrupts are enabled
                     interrupts(); // enable interrupts, so delay() etc. works in callback
 #endif
                     TinyIRReceiverData.justWritten = true;

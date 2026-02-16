@@ -492,14 +492,6 @@ void IRrecv::end() {
 }
 
 /**
- * Returns status of reception
- * @return true if no reception is on-going.
- */
-bool IRrecv::isIdle() {
-    return (irparams.StateForISR == IR_REC_STATE_IDLE || irparams.StateForISR == IR_REC_STATE_STOP) ? true : false;
-}
-
-/**
  * Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame.
  * Internal counting of gap timing is independent of StateForISR and therefore independent of call time of resume().
  */
@@ -540,7 +532,14 @@ void IRrecv::initDecodedIRData() {
 }
 
 /**
- * Returns true if IR receiver data is available.
+ * @return true if available() is true or IR receiver has not received a mark/signal since last resume().
+ */
+bool IRrecv::isIdle() {
+    return (irparams.StateForISR == IR_REC_STATE_IDLE || available());
+}
+
+/**
+ * Returns true if IR receiver has received a complete IR frame (detected by timeout after last mark).
  */
 bool IRrecv::available() {
     return (irparams.StateForISR == IR_REC_STATE_STOP);

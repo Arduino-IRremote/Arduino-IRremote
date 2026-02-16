@@ -48,6 +48,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [IRReceiver pinouts](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irreceiver-pinouts)
 - [Receiving IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-ir-codes)
   * [decodedIRData structure](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#decodedirdata-structure)
+  * [Callback functionality](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#callback-functionality)
   * [Ambiguous protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ambiguous-protocols)
   * [RAM usage of different protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ram-usage-of-different-protocols)
   * [Handling unknown Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#handling-unknown-protocols)
@@ -73,7 +74,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Multiple IR receivers](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-receivers) 
   * [Multiple IR sender instances](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-sender-instances)
   * [Increase strength of sent output signal](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#increase-strength-of-sent-output-signal)
-  * [Simulate an IR receiver module](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#simulate-an-ir-receiver-module)
+  * [Simulate an IR receiver module for sending](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#simulate-an-ir-receiver-module-for-sending)
   * [Minimal CPU clock frequency](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#minimal-cpu-clock-frequency)
   * [Bang & Olufsen protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#bang--olufsen-protocol)
 - [Examples for this library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#examples-for-this-library)
@@ -143,7 +144,7 @@ Old `IrReceiver.decodedIRData.rawDataPtr->rawbuf` is now `IrReceiver.irparams.ra
 - New universal **Pulse Distance / Pulse Width / Pulse Distance Width decoder** added, which covers many previous unknown protocols.
 - Printout of code how to send received command by `IrReceiver.printIRSendUsage(&Serial)`.
 - RawData type is now 64 bit for 32 bit platforms and therefore `decodedIRData.decodedRawData` can contain complete frame information for more protocols than with 32 bit as before.
-- **Callback** after receiving a command - It calls your code as soon as a message was received.
+- **Callback** after receiving a command - It calls your code as soon as a frame was received.
 - Improved handling of `PULSE_DISTANCE` + `PULSE_WIDTH` protocols.
 - New FAST protocol.
 - Automatic printout of the **corresponding send function** with `printIRSendUsage()`.
@@ -467,6 +468,11 @@ The decoded values are the interpreted ones which are tolerant to such slight di
 IrReceiver.printIRSendUsage(&Serial);
 ```
 
+## Callback functionality
+Sometimes it can be difficult to call decode() periodically in the main loop to avoid missing any IR frames.
+In this case you can use the callback functionality as demonstrated in the [CallbackDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/CallbackDemo/CallbackDemo.ino#L136) example.
+This enables you to perform `resume()` and short actions independently of the state of your main loop.
+
 ## Ambiguous protocols
 ### NEC, Extended NEC, ONKYO, OpenLASIR
 The **NEC protocol** is defined as 8 bit address and 8 bit command. But the physical address and data fields are each 16 bit wide.
@@ -647,12 +653,17 @@ For applications only requiring NEC, NEC variants or FAST -see below- protocol, 
 which has very **small code size of 500 bytes and does NOT require any timer**.
 
 ## Principle of operation
-Instead of sampling the input every 50 &micro;s as IRremote does, TinyReceiver receiver uses a **pin change interrupt** for on-the-fly decoding which limits the choice of protocols.<br/>
+Unlike IRremote, which samples the input every 50 &micro;s, the TinyReceiver receiver uses a **pin change interrupt** for on-the-fly decoding.
+This restricts the range of protocols that can be recognised.<br/>
 On each level change, the level and the time since the last change are used to incrementally decode the protocol.<br/>
 With this operating principle, we **cannot wait for a timeout** and then decode the protocol as IRremote does.<br/>
-Instead, we need to know which is the last bit (level change) of a protocol to do the final decoding
-and the call of the optional **user provided callback function** `handleReceivedTinyIRData()`.<br/>
-This means, **we need to know the number of bits in a protocol** and therefore the protocol (family).
+Instead, we need to know which is the last bit (level change) of a protocol in order to perform the final decoding
+and call of the optional **user-provided callback function** `handleReceivedTinyIRData()`.<br/>
+This means that **we need to know the number of bits in a protocol** and therefore the protocol family in order to decode successfully.
+
+For each complete IR frame/command received, the decoded data is copied to the `TinyIRReceiverData` structure
+and the user-provided `handleReceivedTinyIRData()` function is called in an interrupt context.
+However, **interrupts are explicitly enabled here** to allow the use of delay() and millis() etc.
 
 Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irdispatcherdemo) examples.<br/>
 Take care to include `TinyIRReceiver.hpp` or `TinyIRSender.hpp` instead of `IRremote.hpp`.
@@ -743,7 +754,7 @@ LED feedback is **always enabled** when sending and cannot be deactivated progra
 It can only be deactivated at compile time.
 
 # FAQ and hints
-## Receiving stops after analogWrite() or tone() or after running a motor.
+## Receiving stops after analogWrite() or tone() or after running a motor
 The receiver sample interval of 50 µs is generated by a timer. On many boards this must be a [hardware timer](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage).
 On some boards where a software timer is available, the software timer is used.<br/>
 Be aware that the hardware timer used for receiving should not be used for `analogWrite()`.<br/>
@@ -751,7 +762,7 @@ Especially **motor** control often uses the `analogWrite()` function and will th
 On the Uno and other AVR boards the receiver timer ist the same as the tone timer. Thus receiving will stop after a `tone()` command.
 See [ReceiveDemo example](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L284-L298) how to deal with it, i.e. how to use `IrReceiver.restartTimer()`.
 
-## Receiving sets overflow flag.
+## Receiving sets overflow flag
 The flag `IRDATA_FLAGS_WAS_OVERFLOW` is set, if `RAW_BUFFER_LENGTH` is too small for all the marks and spaces of the protocol.
 This can happen on long protocol frames like the ones from air conditioner.
 It also can happen, if `RECORD_GAP_MICROS` is smaller than the real gap between a frame and the repetition frame, thus interpreting both as one consecutive frame.
@@ -798,7 +809,7 @@ If you do not require more current than 20 mA, there is no need to use an extern
 
 On my Arduino Nanos, I always use a 100 &ohm; series resistor and one IR LED :grinning:.
 
-## Simulate an IR receiver module
+## Simulate an IR receiver module for sending
 To simulate an IR receiver (such as the TSOP1738) which provides an active-low output, you only need to enable the `USE_NO_SEND_PWM` macro.
 In the case you must simulate exotic IR receivers, which provides an active-high output, you also need to enable the `USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM` macro.
 

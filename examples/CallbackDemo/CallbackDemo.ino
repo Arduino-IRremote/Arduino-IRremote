@@ -1,14 +1,15 @@
 /*
- * SimpleReceiverWithCallback.cpp
+ * CallbackDemo.cpp
  *
- * Demonstrates receiving NEC IR codes with IRrecv
+ * Demonstrates receiving NEC IR codes with IRrecv using callback function
+ * Based on SimpleReceiver example
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022 Armin Joachimsmeyer
+ * Copyright (c) 2022-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -67,12 +68,9 @@
 #include <IRremote.hpp>
 
 /*
- * For callback
+ * Callback specific variables and functions
  */
-#define PROCESS_IR_RESULT_IN_MAIN_LOOP
-#if defined(PROCESS_IR_RESULT_IN_MAIN_LOOP) || defined(ARDUINO_ARCH_MBED) || defined(ESP32)
 volatile bool sIRDataJustReceived = false;
-#endif
 void ReceiveCompleteCallbackHandler();
 
 void setup() {
@@ -83,11 +81,17 @@ void setup() {
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
     IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+
+    /*
+     * Tell the ISR to call this function, when a complete frame has been received
+     */
     IrReceiver.registerReceiveCompleteCallback(ReceiveCompleteCallbackHandler);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);
     Serial.println(F("at pin " STR(IR_RECEIVE_PIN)));
+    Serial.print(F("Using callback function for processing received data"));
+
 }
 
 void loop() {
@@ -95,15 +99,21 @@ void loop() {
      * Print in loop (interrupts are enabled here) if received data is available.
      */
     if (sIRDataJustReceived) {
-        // Print a summary of received data
+        sIRDataJustReceived = false;
+        /*
+         * Print info of the received data
+         */
         if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
             Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
             /*
              * We have an unknown protocol here, print more info.
-             * !!!Attention!!! This prints incorrect values, if we are late (not in this simple example :-))
-             * and the the first mark of the next (repeat) data was yet received
+             * This will print incorrect timing values, if we are late (not in this simple example :-))
+             * and the the first mark of the next (repeat) data was yet received.
+             * Therefore we first test for this condition.
              */
-            IrReceiver.printIRResultRawFormatted(&Serial, true); //
+            if (!IrReceiver.isIdle()) {
+                IrReceiver.printIRResultRawFormatted(&Serial, true);
+            }
         } else {
             IrReceiver.printIRResultShort(&Serial);
             IrReceiver.printIRSendUsage(&Serial);
@@ -115,19 +125,28 @@ void loop() {
 /*
  * Callback function
  * Here we know, that data is available.
- * This function is executed in ISR (Interrupt Service Routine) context (interrupts are blocked here).
- * Make it short and fast and keep in mind, that you can not use delay(), prints longer than print buffer size etc.,
- * because they require interrupts enabled to return.
- * In order to enable other interrupts you can call sei() (enable interrupt again) after evaluating/copying data.
- * Good practice, but somewhat more complex, is to copy relevant data and signal receiving to main loop.
+ * This function is executed in an ISR (Interrupt Service Routine) context.
+ * This means that interrupts are blocked here, so delay(), millis() and Serial prints of data longer than the print buffer size etc. will block forever.
+ * This is because they require their internal interrupt routines to run in order to return.
+ * Therefore it is best to make this callback function short and fast!
+ * A dirty hack is to enable interrupts again by calling sei() (enable interrupt again), but you should know what you are doing,
+ *
+ * A good practice -but somewhat more complex- is to perform small and time critical actions in the callback function,
+ * copy the relevant data to local variables and signal the receiving to main loop, which in turn processes this data.
+ * This is similar to simply using "if (IrReceiver.decode())", but has the advantage,
+ * that it does not block the receiving of the next IR frame, until the main loop reaches this statement.
  */
 #if defined(ESP32) || defined(ESP8266)
 IRAM_ATTR
 # endif
 void ReceiveCompleteCallbackHandler() {
-    IrReceiver.decode(); // fill IrReceiver.decodedIRData
     /*
-     * Enable receiving of the next value.
+     * Fill IrReceiver.decodedIRData
+     */
+    IrReceiver.decode();
+
+    /*
+     * Enable receiving of the next frame.
      */
     IrReceiver.resume();
 
@@ -151,5 +170,4 @@ void ReceiveCompleteCallbackHandler() {
      * running in ISR (Interrupt Service Routine) context where interrupts are disabled.
      */
     sIRDataJustReceived = true;
-
 }
