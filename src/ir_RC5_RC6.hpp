@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2025 Armin Joachimsmeyer
+ * Copyright (c) 2020-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -71,17 +71,20 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 // see: https://www.sbprojects.net/knowledge/ir/rc5.php
 // https://en.wikipedia.org/wiki/Manchester_code
 // https://en.wikipedia.org/wiki/RC-5
-// https://forum.arduino.cc/t/sending-rc-5-extended-code-using-irsender/1045841/10 - Protocol Maranz Extended
 // mark->space => 0
 // space->mark => 1
-// MSB first 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit
-// Field bit is 1 for RC5 and inverted 7. command bit for RC5X. That way the first 64 commands of RC5X remain compatible with the original RC5.
+// MSB first, 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit
+// Field bit is 1 for RC5 and 0 (=inverted 7. command bit) for RC5X. That way the first 64 commands of RC5X are indistinguishable from RC5.
 // SF TAAA  AACC CCCC
-// IR duty factor is 25%,
+// IR duty factor is 25%
+//
+// MARANTZ
+// https://forum.arduino.cc/t/sending-rc-5-extended-code-using-irsender/1045841/10 - Protocol Maranz Extended
+// Marantz uses RC5X and adds a a pause after the address / first 8 bits
+// After the 6 bit command another 6 bit command extension is sent
 //
 #define RC5_ADDRESS_BITS        5
 #define RC5_COMMAND_BITS        6
-#define RC5_EXTENSION_BITS      6
 #define RC5_COMMAND_FIELD_BIT   1
 #define RC5_TOGGLE_BIT          1
 
@@ -91,10 +94,19 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 
 #define MIN_RC5_MARKS       ((RC5_BITS + 1) / 2) // 7 - Divided by 2 to handle the bit sequence of 01010101 which gives one mark and space for each 2 bits
 
-#define RC5_DURATION        (15L * RC5_UNIT) // 13335
+#define RC5_DURATION        (15 * RC5_UNIT) // 13335
 #define RC5_REPEAT_PERIOD   (128L * RC5_UNIT) // 113792
 #define RC5_REPEAT_DISTANCE (RC5_REPEAT_PERIOD - RC5_DURATION) // 100 ms
 #define RC5_MAXIMUM_REPEAT_DISTANCE     (RC5_REPEAT_DISTANCE + (RC5_REPEAT_DISTANCE / 4)) // Just a guess
+
+#define MARANTZ_COMMAND_EXTENSION_BITS      6
+#define MARANTZ_BITS                (RC5_COMMAND_FIELD_BIT + RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS + MARANTZ_COMMAND_EXTENSION_BITS) // 19
+#define MARANTZ_PAUSE_BIT_INDEX     (RC5_COMMAND_FIELD_BIT + RC5_TOGGLE_BIT + RC5_ADDRESS_BITS) // 7
+#define MARANTZ_PAUSE_DURATION      (4 * RC5_UNIT) // 3556
+
+#define MARANTZ_DURATION        (24 * RC5_UNIT) // RC5 + 6 Extension bits + 4 pause units = 22225
+#define MARANTZ_REPEAT_DISTANCE (RC5_REPEAT_PERIOD - MARANTZ_DURATION) // 100 ms
+
 
 /************************************
  * Start of send and decode functions
@@ -102,11 +114,15 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0
 
 /**
  * !!! Not tested, because no Marantz remote was at hand and no receive function was contributed!!!
- * @param aCommand If aCommand is >=0x40 then we switch automatically to RC5X.
- * @param aMarantzExtension 6 bit command extension which is sent after aCommand. aCommand and aMarantzExtension are sent after a short pause.
+ * Send function for the Marantz version of RC5(X) with a pause of 4 * RC5_UNIT after address / first 8 bits
+ * and before the bits of command and command extension.
+ * Marantz seems to require at least one repetition with toggle bit set
+ * @param aAddress 5 address bits to be sent first (MSB first).
+ * @param aCommand 6 or 7 (RC5X) bits. If aCommand is >=0x40 then we switch automatically to RC5X.
+ * @param aMarantzExtension 6 bit command extension which is sent after 6 command bits of aCommand. aCommand and aMarantzExtension are sent after a short pause.
  * @param aEnableAutomaticToggle Send toggle bit according to the state of the static sLastSendToggleValue variable.
  */
-void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, uint8_t aMarantzExtension, int_fast8_t aNumberOfRepeats,
+void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats,uint8_t aMarantzExtension,
         bool aEnableAutomaticToggle) {
 
     // Set IR carrier frequency
@@ -126,8 +142,8 @@ void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, uint8_t aMarantz
         tIRData |= 1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS); // 1 << 6 = 0x40
     }
 
-    // Set the command to the 2nd part of data to be sent after the pause
-    uint16_t tIRExtData = (aCommand << RC5_EXTENSION_BITS);
+    // Combine command and command extension for the 2nd part of data to be sent after the pause
+    uint16_t tIRExtData = (aCommand << MARANTZ_COMMAND_EXTENSION_BITS);
     // Set the Marantz command extension bits
     tIRExtData |= (aMarantzExtension & 0x3F);
 
@@ -147,21 +163,22 @@ void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, uint8_t aMarantz
         // start bit is sent by sendBiphaseData followed by the field bit and toggle bit and address
         sendBiphaseData(RC5_UNIT, tIRData, RC5_COMMAND_FIELD_BIT + RC5_TOGGLE_BIT + RC5_ADDRESS_BITS);
         // pause before the bits of command and command extension to indicate that it's Marantz-RC5x
-        space(4 * RC5_UNIT); // Marantz-RC5x has a pause before the bits of command and command extension
+        space(MARANTZ_PAUSE_DURATION); // Marantz-RC5x has a pause before the bits of command and command extension
         // send command and command extension
-        sendBiphaseData(RC5_UNIT, tIRExtData, RC5_COMMAND_BITS + RC5_EXTENSION_BITS, false);
+        sendBiphaseData(RC5_UNIT, tIRExtData, RC5_COMMAND_BITS + MARANTZ_COMMAND_EXTENSION_BITS, false);
 
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay(RC5_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
+            delay(MARANTZ_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         }
     }
 }
 
 /**
- * @param aCommand If aCommand is >=0x40 then we switch automatically to RC5X.
+ * @param aAddress 5 address bits to be sent first (MSB first).
+ * @param aCommand 6 or 7 (RC5X) bits. If aCommand is >=0x40 then we switch automatically to RC5X.
  * @param aEnableAutomaticToggle Send toggle bit according to the state of the static sLastSendToggleValue variable.
  */
 void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) {
@@ -209,14 +226,87 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
     }
 }
 
+/*
+ * Static variables for the getBiphaselevel function
+ */
+uint_fast8_t sBiphaseDecodeRawbuffOffset;   // Index into raw timing array
+uint16_t sBiphaseCurrentTimingIntervals; // 1, 2 or 3. Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
+uint_fast8_t sBiphaseUsedTimingIntervals;   // Number of already used intervals of sCurrentTimingIntervals.
+uint16_t sBiphaseTimeUnit;
+
+void IRrecv::initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit) {
+    sBiphaseDecodeRawbuffOffset = aRCDecodeRawbuffOffset;
+    sBiphaseTimeUnit = aBiphaseTimeUnit;
+    sBiphaseUsedTimingIntervals = 0;
+}
+
+/**
+ * Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer.
+ * The RC5/6 decoding is easier if the data is broken into time intervals.
+ * E.g. if the buffer has mark for 2 time intervals and space for 1,
+ * successive calls to getBiphaselevel will return 1, 1, 0.
+ *
+ *               _   _   _   _   _   _   _   _   _   _   _   _   _
+ *         _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |
+ *                ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    Significant clock edge /sample point for bit value
+ *                  ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^      End of clock / each data bit period
+ *               _     _   _   ___   _     ___     ___   _   - Mark
+ * Data    _____| |___| |_| |_|   |_| |___|   |___|   |_| |  - Data starts with a mark->space bit
+ *                1   0   0   0   1   1   0   1   0   1   1  - Space
+ * A mark to space at a significant clock edge results in a 1
+ * A space to mark at a significant clock edge results in a 0
+ * Returns current level [MARK or SPACE] or NO_MARK_OR_SPACE for error (measured time interval is not a multiple of sBiphaseTimeUnit).
+ */
+uint_fast8_t IRrecv::getBiphaselevel() {
+    uint_fast8_t tLevelOfCurrentInterval; // 0 (SPACE) or 1 (MARK)
+
+    if (sBiphaseDecodeRawbuffOffset >= decodedIRData.rawlen) {
+        return SPACE;  // After end of recorded buffer, assume space.
+    }
+
+    tLevelOfCurrentInterval = (sBiphaseDecodeRawbuffOffset) & 1; // on odd rawbuf offsets we have mark timings
+
+    /*
+     * Setup data if sUsedTimingIntervals is 0
+     */
+    if (sBiphaseUsedTimingIntervals == 0) {
+        uint16_t tCurrentTimingWith = irparams.rawbuf[sBiphaseDecodeRawbuffOffset];
+        uint16_t tMarkExcessCorrection = (tLevelOfCurrentInterval == MARK) ? MARK_EXCESS_MICROS : -MARK_EXCESS_MICROS;
+
+        if (matchTicks(tCurrentTimingWith, sBiphaseTimeUnit + tMarkExcessCorrection)) {
+            sBiphaseCurrentTimingIntervals = 1;
+        } else if (matchTicks(tCurrentTimingWith, (2 * sBiphaseTimeUnit) + tMarkExcessCorrection)) {
+            sBiphaseCurrentTimingIntervals = 2;
+        } else if (matchTicks(tCurrentTimingWith, (3 * sBiphaseTimeUnit) + tMarkExcessCorrection)) {
+            sBiphaseCurrentTimingIntervals = 3;
+        } else {
+            return NO_MARK_OR_SPACE;
+        }
+    }
+
+// We use another interval from tCurrentTimingIntervals
+    sBiphaseUsedTimingIntervals++;
+
+// keep track of current timing offset
+    if (sBiphaseUsedTimingIntervals >= sBiphaseCurrentTimingIntervals) {
+        // we have used all intervals of current timing, switch to next timing value
+        sBiphaseUsedTimingIntervals = 0;
+        sBiphaseDecodeRawbuffOffset++;
+    }
+
+    IR_TRACE_PRINTLN(tLevelOfCurrentInterval);
+
+    return tLevelOfCurrentInterval;
+}
+
 /**
  * Try to decode data as RC5 protocol
  *  mark->space => 0
  *  space->mark => 1
  *                             _   _   _   _   _   _   _   _   _   _   _   _   _
  * Clock                 _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |
- *                                ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    End of each data bit period
- *                              ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    sample point for bit value
+ *                                ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^  End of clock / each data bit period
+ *                              ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    Significant clock edge /sample point for bit value
  *                               _   _
  * 2 Start bits for RC5    _____| |_| ..|...|..
  *
@@ -251,6 +341,9 @@ bool IRrecv::decodeRC5() {
     /*
      * Get data bits - MSB first
      */
+#if defined(DECODE_MARANTZ)
+    bool RC5Marantz = false;
+#endif
     for (tBitIndex = 0; sBiphaseDecodeRawbuffOffset < decodedIRData.rawlen; tBitIndex++) {
         // get next 2 levels and check for transition
         uint8_t tStartLevel = getBiphaselevel();
@@ -262,6 +355,28 @@ bool IRrecv::decodeRC5() {
         } else if ((tStartLevel == MARK) && (tEndLevel == SPACE)) {
             // we have a mark to space transition here
             tDecodedRawData = (tDecodedRawData << 1) | 0;
+#if defined(DECODE_MARANTZ)
+        } else if (tBitIndex == MARANTZ_PAUSE_BIT_INDEX) {
+            Serial.print(F("Off="));
+            Serial.print(sBiphaseDecodeRawbuffOffset);
+            Serial.print(F(" ticks="));
+            Serial.print(irparams.rawbuf[sBiphaseDecodeRawbuffOffset]);
+            Serial.print(F(" + "));
+            Serial.print(irparams.rawbuf[sBiphaseDecodeRawbuffOffset + 1]);
+            Serial.println();
+            /*
+             * Check for RC5 Marantz format i.e. long space after 8 bits (including start bit)
+             * Check if timing buffer contains a pause, which is longer than 3/4 the expected pause
+             */
+            if (irparams.rawbuf[sBiphaseDecodeRawbuffOffset] > (((MARANTZ_PAUSE_DURATION * 3)/ MICROS_PER_TICK * 4))) {
+                RC5Marantz = true;
+                // consume the long space
+                getBiphaselevel();
+                getBiphaselevel();
+                getBiphaselevel();
+                getBiphaselevel();
+            }
+#endif
         } else {
 #if defined(LOCAL_DEBUG)
             Serial.print(F("RC5: "));
@@ -277,11 +392,26 @@ bool IRrecv::decodeRC5() {
     LongUnion tValue;
     tValue.ULong = tDecodedRawData;
     decodedIRData.decodedRawData = tDecodedRawData;
+
+#if defined(DECODE_MARANTZ)
+    if (RC5Marantz) {
+        decodedIRData.extra = tValue.UWord.LowWord & 0x3F;
+        decodedIRData.command = (tValue.UWord.LowWord > MARANTZ_COMMAND_EXTENSION_BITS) & 0x3F;
+        decodedIRData.address = (tValue.ULong >> (RC5_COMMAND_BITS + MARANTZ_COMMAND_EXTENSION_BITS)) & 0x1F;
+
+        decodedIRData.flags = IRDATA_FLAGS_IS_MSB_FIRST;
+        if (tValue.ULong & (1L << (RC5_ADDRESS_BITS + RC5_COMMAND_BITS + MARANTZ_COMMAND_EXTENSION_BITS))) {
+            decodedIRData.flags |= IRDATA_FLAGS_TOGGLE_BIT;
+        }
+        decodedIRData.protocol = MARANTZ;
+    } else {
+#endif
     decodedIRData.command = tValue.UByte.LowByte & 0x3F;
     decodedIRData.address = (tValue.UWord.LowWord >> RC5_COMMAND_BITS) & 0x1F;
 
-    // Get the inverted 7. command bit for RC5X, the inverted value is always 1 for RC5 and serves as a second start bit.
+    // Get the inverted 7. command bit to decide if we have RC5X. For RC5, the inverted value is always 1 and serves as a second start bit.
     if ((tValue.UWord.LowWord & (1 << (RC5_TOGGLE_BIT + RC5_ADDRESS_BITS + RC5_COMMAND_BITS))) == 0) {
+        // Here we have detected RC5X!
         decodedIRData.command += 0x40;
     }
 
@@ -291,6 +421,9 @@ bool IRrecv::decodeRC5() {
     }
     decodedIRData.protocol = RC5;
 
+#if defined(DECODE_MARANTZ)
+    }
+#endif
     // check for repeat
     checkForRepeatSpaceTicksAndSetFlag(RC5_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
 
@@ -352,7 +485,7 @@ bool IRrecv::decodeRC5() {
 /**
  * Main RC6 send function
  */
-void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
+void IRsend::sendRC6(uint32_t aRawData, uint8_t aNumberOfBitsToSend) { // Deprecated
     sendRC6Raw(aRawData, aNumberOfBitsToSend);
 }
 void IRsend::sendRC6Raw(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
@@ -386,7 +519,7 @@ void IRsend::sendRC6Raw(uint32_t aRawData, uint8_t aNumberOfBitsToSend) {
  * Send RC6 64 bit raw data
  * Can be used to send RC6A with ?31? data bits
  */
-void IRsend::sendRC6(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
+void IRsend::sendRC6(uint64_t aRawData, uint8_t aNumberOfBitsToSend) { // Deprecated
     sendRC6Raw(aRawData, aNumberOfBitsToSend);
 }
 void IRsend::sendRC6Raw(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
@@ -540,12 +673,13 @@ bool IRrecv::decodeRC6() {
     // Set Biphase decoding start values
     initBiphaselevel(3, RC6_UNIT); // Skip gap-space and start-bit mark + space
 
-// Process first bit, which is known to be a 1 (mark->space)
+    // Check first bit, which is known to be a 1 (mark->space)
     if (getBiphaselevel() != MARK) {
         IR_DEBUG_PRINT(F("RC6: "));
         IR_DEBUG_PRINTLN(F("first getBiphaselevel() is not MARK"));
         return false;
     }
+    // Check second bit
     if (getBiphaselevel() != SPACE) {
         IR_DEBUG_PRINT(F("RC6: "));
         IR_DEBUG_PRINTLN(F("second getBiphaselevel() is not SPACE"));
@@ -557,21 +691,21 @@ bool IRrecv::decodeRC6() {
         uint8_t tEndLevel;   // end level of coded bit
 
         tStartLevel = getBiphaselevel();
+        tEndLevel = getBiphaselevel();
+
         if (tBitIndex == RC6_TOGGLE_BIT_INDEX) {
-            // Toggle bit is double wide; make sure second half is equal first half
-            if (tStartLevel != getBiphaselevel()) {
+            /*
+             * Toggle bit is double wide; level of 1. and 2. time slot and 3. and 4.time slot must be equal
+             */
+            if (tStartLevel != tEndLevel) { // 1. and 2. time slot must be equal
 #if defined(LOCAL_DEBUG)
                 Serial.print(F("RC6: "));
                 Serial.println(F("Toggle mark or space length is wrong"));
 #endif
                 return false;
             }
-        }
-
-        tEndLevel = getBiphaselevel();
-        if (tBitIndex == RC6_TOGGLE_BIT_INDEX) {
-            // Toggle bit is double wide; make sure second half matches
-            if (tEndLevel != getBiphaselevel()) {
+            tEndLevel = getBiphaselevel();
+            if (tEndLevel != getBiphaselevel()) { // 3. and 4. time slot must be equal
 #if defined(LOCAL_DEBUG)
                 Serial.print(F("RC6: "));
                 Serial.println(F("Toggle mark or space length is wrong"));
@@ -667,7 +801,7 @@ void IRsend::sendRC5(uint32_t data, uint8_t nbits) {
 }
 
 /*
- * Not longer required, use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead
+ * Deprecated, use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead
  */
 void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
 // Set IR carrier frequency

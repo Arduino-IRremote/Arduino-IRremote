@@ -35,8 +35,9 @@
 
 #include <Arduino.h>
 
-#define MARK   1
 #define SPACE  0
+#define MARK   1
+#define NO_MARK_OR_SPACE  2 // Used as return value for getBiphaselevel()
 
 #if defined(PARTICLE)
 #define F_CPU 16000000 // definition for a board for which F_CPU is not defined
@@ -662,7 +663,7 @@ public:
     void sendKaseikyo_JVC(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
 
     void sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
-    void sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, uint8_t aMarantzExtension, int_fast8_t aNumberOfRepeats,
+    void sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t aMarantzExtension,
             bool aEnableAutomaticToggle = true);
     void sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
     void sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aCustomer,
@@ -719,8 +720,8 @@ public:
         sendNECMSB(aRawData, nbits);
     }
     void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat = false);
-    void sendRC5(uint32_t data, uint8_t nbits);
-    void sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle);
+    void sendRC5(uint32_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead.")));;
+    void sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) __attribute__ ((deprecated ("Please use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead.")));;
     void sendRC6Raw(uint32_t data, uint8_t nbits);
     void sendRC6(uint32_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC6Raw().")));
     void sendRC6Raw(uint64_t data, uint8_t nbits);

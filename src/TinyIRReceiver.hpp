@@ -28,7 +28,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-2025 Armin Joachimsmeyer
+ * Copyright (c) 2022-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -75,15 +75,14 @@
 /*
  * Protocol selection
  */
-//#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 //#define USE_EXTENDED_NEC_PROTOCOL // Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC / ONKYO.
-//#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 
+//#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
+//#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 //#define IR_RECEIVE_PIN          2
-//#define NO_LED_RECEIVE_FEEDBACK_CODE  // Disables the LED feedback code for receive.
-//#define IR_FEEDBACK_LED_PIN     12    // Use this, to disable use of LED_BUILTIN definition for IR_FEEDBACK_LED_PIN
+//#define IR_FEEDBACK_LED_PIN     12 // Use this, to disable use of LED_BUILTIN definition for IR_FEEDBACK_LED_PIN
 #include "TinyIR.h"
 
 #include "digitalWriteFast.h"
@@ -146,7 +145,11 @@ volatile TinyIRReceiverCallbackDataStruct TinyIRReceiverData; // The persistent 
 || ( (defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__)) && ( (defined(ARDUINO_AVR_DIGISPARKPRO) && ((IR_RECEIVE_PIN == 3) || (IR_RECEIVE_PIN == 9))) /*ATtinyX7(digisparkpro) and pin 3 or 9 */\
         || (! defined(ARDUINO_AVR_DIGISPARKPRO) && ((IR_RECEIVE_PIN == 3) || (IR_RECEIVE_PIN == 14)))) ) /*ATtinyX7(ATTinyCore) and pin 3 or 14 */ \
 )
-#define TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT // Cannot use any static ISR vector here. In other cases we have code provided for generating interrupt on pin change.
+/*
+ * Cannot use any static ISR vector here. In other cases we have code provided for generating interrupt on pin change.
+ * Requires additional 112 bytes program memory + 4 bytes RAM
+ */
+#define TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT
 #endif
 
 /**
@@ -261,7 +264,6 @@ void IRPinChangeInterruptHandler(void) {
             }
         }
 
-
         else if (tState == IR_RECEIVER_STATE_WAITING_FOR_DATA_MARK) {
             /*
              * Start of data mark here, check data space length
@@ -335,7 +337,7 @@ void IRPinChangeInterruptHandler(void) {
                      * Check address parity
                      * Address is sent first and contained in the lower word
                      */
-                    if (TinyIRReceiverControl.IRRawData.UBytes[0] != (uint8_t)(~TinyIRReceiverControl.IRRawData.UBytes[1])) {
+                    if (TinyIRReceiverControl.IRRawData.UBytes[0] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[1])) {
 #if defined(ENABLE_NEC2_REPEATS)
                     TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED; // here we can have the repeat flag already set
 #else
@@ -348,17 +350,17 @@ void IRPinChangeInterruptHandler(void) {
                      * Check command parity
                      */
 #if (TINY_RECEIVER_ADDRESS_BITS > 0)
-                    if (TinyIRReceiverControl.IRRawData.UBytes[2] != (uint8_t)(~TinyIRReceiverControl.IRRawData.UBytes[3])) {
+                    if (TinyIRReceiverControl.IRRawData.UBytes[2] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[3])) {
 #if defined(ENABLE_NEC2_REPEATS)
                     TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
 #else
                         TinyIRReceiverControl.Flags = IRDATA_FLAGS_PARITY_FAILED;
 #endif
 #  if defined(LOCAL_DEBUG)
-                    Serial.print(F("Parity check for command failed. Command="));
-                    Serial.print(TinyIRReceiverControl.IRRawData.UBytes[2], HEX);
-                    Serial.print(F(" parity="));
-                    Serial.println(TinyIRReceiverControl.IRRawData.UBytes[3], HEX);
+                        Serial.print(F("Parity check for command failed. Command="));
+                        Serial.print(TinyIRReceiverControl.IRRawData.UBytes[2], HEX);
+                        Serial.print(F(" parity="));
+                        Serial.println(TinyIRReceiverControl.IRRawData.UBytes[3], HEX);
 #  endif
 #else
                     // No address, so command and parity are in the lowest bytes

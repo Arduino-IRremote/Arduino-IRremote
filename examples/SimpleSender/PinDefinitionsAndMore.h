@@ -341,7 +341,7 @@ void noTone(uint8_t aPinNumber){
 #define TONE_PIN           42 // Dummy for examples using it
 
 #else
-#warning Board and Core / CPU is not detected using pre-processor symbols -> using default values, which may not fit. Please extend PinDefinitionsAndMore.h.
+#warning Board and Core / CPU is not detected using pre-processor symbols -> using default values for IR_RECEIVE_PIN etc., which may not fit. Please extend PinDefinitionsAndMore.h.
 // Default valued for unidentified boards
 #define IR_RECEIVE_PIN      2
 #define IR_SEND_PIN         3

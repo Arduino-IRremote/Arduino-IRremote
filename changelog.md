@@ -4,59 +4,61 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 
 # 4.6.0
 - Fixed missing ESP IRAM_ATTR for receiving interrupt.
-- Changed USE_DEFAULT_FEEDBACK_LED_PIN from 0 to 0xFF, because megaTinyCore defines the not special pin PIN_PA4 as 0.
-- Changed timer for ATtiny16X4.
-- Fixed missing initialization with pinMode() for feedback LED.
-- Fixed bitmask error in sendBiphaseData() when not sending start bit.
-- Improved decodeSamsung().
-- OpenLASIR protocol added by [danielweidman](https://github.com/danielweidman).
+- Changed `USE_DEFAULT_FEEDBACK_LED_PIN` from 0 to 0xFF, because megaTinyCore defines the not special pin PIN_PA4 as 0.
+- Changed timer for **ATtiny16X4**.
+- Fixed missing initialization with `pinMode()` for feedback LED.
+- Fixed bitmask error in `sendBiphaseData()` when not sending start bit.
+- Improved `decodeSamsung()`.
+- `OpenLASIR` protocol added by [danielweidman](https://github.com/danielweidman).
+- Added `DECODE_MARANTZ` and swapped parameter aMarantzExtension and aNumberOfRepeats of `sendMaranz()` to be consistent with other extensions.
+- Moved `IRCommandDispatcher` from demo to main library folder.
 
 # 4.5.0 - does not work for ESP platform, because of missing ESP IRAM_ATTR for receiving interrupt.
-- Added support for multiple receiver instances.
-- irparams_struct irparams is now member of IRrecv. Thus removed rawDataPtr (pointer to irparams) from IrReceiver.decodedIRData.
-- Removed return value for all decodePulseDistanceWidthData() decoding functions, which returned a constant true.
-- Removed parameter aEnableLEDFeedback in function IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) and IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin).
-- LED feedback is always enabled for sending. It can only be disabled by using the macro NO_LED_SEND_FEEDBACK_CODE.
-- Added output for UNKNOWN protocol to printIRSendUsage().
-- Added experimental sendVelux().
-- Added sendMaranz().
+- Added support for **multiple receiver instances**.
+- irparams_struct `irparams` is now member of IRrecv. Thus removed `rawDataPt`r (pointer to irparams) from `IrReceiver.decodedIRData`.
+- Removed return value for all `decodePulseDistanceWidthData()` decoding functions, which returned a constant true.
+- Removed parameter `aEnableLEDFeedback` in function `IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)` and `IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)`.
+- **LED feedback is always enabled for sending**. It can only be disabled by using the macro `NO_LED_SEND_FEEDBACK_CODE`.
+- Added output for UNKNOWN protocol to `printIRSendUsage()`.
+- Added experimental `sendVelux()`.
+- Added `sendMaranz()`.
 - Fixed bug in ReceiveDemo.cpp if DEBUG_BUTTON_PIN is not defined. #1306.
 - Fixed minor bugs in Denon decoder.
 - Minor bug fixes for DEBUG.
-- New handling of MARK_EXCESS_MICROS without strange rounding inconsistency.
+- New handling of `MARK_EXCESS_MICROS` without strange rounding inconsistency.
 - Added experimental threshold decoding.
 
 # 4.4.3
-- Added USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN to make the software aware of send LED connected between VCC and send pin.
-- Fixed backward compatibility bug for printIRResultShort(3 params).
+- Added `USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN` to make the software aware of send LED connected between VCC and send pin.
+- Fixed backward compatibility bug for `printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros)`.
 - Minor improvements.
 
 # 4.4.2
-- Support for SAMD51 timer3 if timer 5 is not available (Adafruit ItsyBitsy M4).
-- attachInterrupt() on SAMD has a different semantic :-(. See: https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/.
+- Support for `SAMD51` timer3 if timer 5 is not available (Adafruit ItsyBitsy M4).
+- attachInterrupt() on `SAMD` has a different semantic :-(. See: https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/.
 - Fixed overflow handling.
-- Improved repeat detection for DistanceWidthProtocol.
-- Print of IR frame duration in printIRResultShort();
-- PulseDistanceWidthProtocolConstants now in PROGMEM, this saves 190 bytes RAM for unit test.
+- Improved repeat detection for `DistanceWidthProtocol`.
+- Print of IR frame duration in `printIRResultShort()`;
+- `PulseDistanceWidthProtocolConstants` now in PROGMEM, this saves 190 bytes RAM for unit test.
 - Support for PROGMEM PulseDistanceWidthProtocol data.
-- Support duplicated 8 bit address for sendSamsungLG().
+- Support duplicated 8 bit address for `sendSamsungLG()`.
 
 # 4.4.1
-- Support for ESP core 3.x by akellai.
-- restartTimer() now uses variable sMicrosAtLastStopTimer to keep track of uncounted ticks between stopTimer() and restartTimer().
-- Removed functions addTicksToInternalTickCounter() and addMicrosToInternalTickCounter(), which were added in 4.1.0.
-- Version 2.2.0 of TinyIR with new TinyReceiverDecode() function to be used as drop in for IrReceiver.decode().
-- Support of RC6A.
+- Support for **ESP core 3.x** by akellai.
+- `restartTimer()` now uses variable sMicrosAtLastStopTimer to keep track of uncounted ticks between stopTimer() and restartTimer().
+- **Removed functions** addTicksToInternalTickCounter() and addMicrosToInternalTickCounter(), which were added in 4.1.0.
+- Version 2.2.0 of TinyIR with new `TinyReceiverDecode()` function to be used as **drop in for IrReceiver.decode()**.
+- Support of `RC6A`.
 
 # 4.4.0
 - Using 8 bit raw timing buffer for all timings except frame gap (former rawbuf[0]).
-- Renamed decodedIRData.initialGap to decodedIRData.initialGapTicks.
-- sendNEC() and sendNEC2() now accepts 16 bit command to better map to NECext protocol found in IRDB databases.
-- ir_DistanceWidthProtocol() now decodes up to 10 ms mark or spaces if RAM is bigger than 2 k.
-- Improved sensitivity and decoding of PULSE_DISTANCE + PULSE_WIDTH protocols.
-- Changed TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING to TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT.
+- Renamed `decodedIRData.initialGap` to `decodedIRData.initialGapTicks`.
+- `sendNEC()` and `sendNEC2()` now **accepts 16 bit command** to better map to **NECext protocol** found in IRDB databases.
+- `ir_DistanceWidthProtocol()` now decodes up to 10 ms mark or spaces if RAM is bigger than 2 k.
+- Improved sensitivity and decoding of `PULSE_DISTANCE` + `PULSE_WIDTH` protocols.
+- Changed `TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING` to `TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT`.
 - Improved examples AllProtocolsOnLCD, UnitTest and SimpleReceiver.
-- New functions decodePulseDistanceWidthData() with 6 parameters and decodePulseDistanceWidthDataStrict() with 7 parameters.
+- New functions `decodePulseDistanceWidthData()` with 6 parameters and `decodePulseDistanceWidthDataStrict()` with 7 parameters.
 
 # 4.3.2
 - Added sendSonyMSB(unsigned long data, int nbits) as a clone of sendSony(unsigned long data, int nbits) to be more consistent.

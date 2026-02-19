@@ -148,6 +148,9 @@ void handleSuccessfulDecoding(IRrecv *aIRReceiverInstance) {
  * Here we just call the standard ReceiveInterruptHandler for the second receiver.
  * Doing it this way, we are able to modify the body of this function to support more than 2 IRrecv instances for receiving.
  */
+#if defined(ESP8266) || defined(ESP32)
+IRAM_ATTR
+#endif
 void UserIRReceiveTimerInterruptHandler() {
     MySecondIrReceiver.ReceiveInterruptHandler();
 }

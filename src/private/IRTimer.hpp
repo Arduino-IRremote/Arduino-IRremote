@@ -2265,10 +2265,52 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
 }
 #  endif // defined(SEND_PWM_BY_TIMER)
 
+#elif defined(VEGA_ARIES_V2) || defined(VEGA_ARIES_V3) || defined(VEGA_ARIES_IOT) || defined(VEGA_ARIES_MICRO)
+#include "Timer.h"
+Timer Timer(0);
+
+#define TIMER_RESET_INTR_PENDING
+#define TIMER_ENABLE_RECEIVE_INTR       Timer.attachInterrupt(IRTimerInterruptHandler)
+#define TIMER_DISABLE_RECEIVE_INTR      Timer.detachInterrupt()
+
+void timerEnableReceiveInterrupt() {
+    Timer.resume();
+}
+void timerDisableReceiveInterrupt() {
+    Timer.stop();
+}
+
+#  if defined(ISR)
+#undef ISR
+#  endif
+#define ISR() void IRTimerInterruptHandler(void)
+void IRTimerInterruptHandler(void);
+
+void timerConfigForReceive() {
+    Timer.initialize(MICROS_PER_TICK); // 50 uS
+    Timer.attachInterrupt(IRTimerInterruptHandler);
+    Timer.resume();
+}
+
+#  if defined(SEND_PWM_BY_TIMER)
+#define ENABLE_SEND_PWM_BY_TIMER
+#define DISABLE_SEND_PWM_BY_TIMER
+
+void timerConfigForSend(uint8_t aFrequencyKHz) {
+    TIMER_DISABLE_RECEIVE_INTR;
+#    if defined(IR_SEND_PIN)
+    pinMode(IR_SEND_PIN, OUTPUT);
+#    else
+    pinMode(IrSender.sendPin, OUTPUT);
+#    endif
+    (void) aFrequencyKHz;
+}
+#  endif // defined(SEND_PWM_BY_TIMER)
+
+#else // CPU types
 /***************************************
  * Unknown CPU board
  ***************************************/
-#else
 #error Internal code configuration error, no timer functions implemented for this CPU / board
 /*
  * Dummy definitions to avoid more irritating compile errors

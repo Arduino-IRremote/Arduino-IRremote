@@ -616,8 +616,14 @@ bool IRrecv::decode() {
     }
 #endif
 
-#if defined(DECODE_RC5)
+#if defined(DECODE_RC5) || defined(DECODE_MARANTZ)
+#  if defined(DECODE_RC5) && !defined(DECODE_MARANTZ)
     IR_TRACE_PRINTLN(F("Attempting RC5 decode"));
+#  elif !defined(DECODE_RC5) && defined(DECODE_MARANTZ)
+    IR_TRACE_PRINTLN(F("Attempting Marantz decode"));
+#  else
+    IR_TRACE_PRINTLN(F("Attempting RC5 and Marantz decode"));
+#  endif
     if (decodeRC5()) {
         return true;
     }
@@ -1130,78 +1136,6 @@ void IRrecv::decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants 
             sizeof(tTemporaryPulseDistanceWidthProtocolConstants));
 
     decodePulseDistanceWidthData(&tTemporaryPulseDistanceWidthProtocolConstants, aNumberOfBits, aStartOffset);
-}
-
-/*
- * Static variables for the getBiphaselevel function
- */
-uint_fast8_t sBiphaseDecodeRawbuffOffset;   // Index into raw timing array
-uint16_t sBiphaseCurrentTimingIntervals; // 1, 2 or 3. Number of aBiphaseTimeUnit intervals of the current rawbuf[sBiphaseDecodeRawbuffOffset] timing.
-uint_fast8_t sBiphaseUsedTimingIntervals;   // Number of already used intervals of sCurrentTimingIntervals.
-uint16_t sBiphaseTimeUnit;
-
-void IRrecv::initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit) {
-    sBiphaseDecodeRawbuffOffset = aRCDecodeRawbuffOffset;
-    sBiphaseTimeUnit = aBiphaseTimeUnit;
-    sBiphaseUsedTimingIntervals = 0;
-}
-
-/**
- * Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer.
- * The RC5/6 decoding is easier if the data is broken into time intervals.
- * E.g. if the buffer has mark for 2 time intervals and space for 1,
- * successive calls to getBiphaselevel will return 1, 1, 0.
- *
- *               _   _   _   _   _   _   _   _   _   _   _   _   _
- *         _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |
- *                ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    Significant clock edge
- *               _     _   _   ___   _     ___     ___   _   - Mark
- * Data    _____| |___| |_| |_|   |_| |___|   |___|   |_| |  - Data starts with a mark->space bit
- *                1   0   0   0   1   1   0   1   0   1   1  - Space
- * A mark to space at a significant clock edge results in a 1
- * A space to mark at a significant clock edge results in a 0 (for RC6)
- * Returns current level [MARK or SPACE] or -1 for error (measured time interval is not a multiple of sBiphaseTimeUnit).
- */
-uint_fast8_t IRrecv::getBiphaselevel() {
-    uint_fast8_t tLevelOfCurrentInterval; // 0 (SPACE) or 1 (MARK)
-
-    if (sBiphaseDecodeRawbuffOffset >= decodedIRData.rawlen) {
-        return SPACE;  // After end of recorded buffer, assume space.
-    }
-
-    tLevelOfCurrentInterval = (sBiphaseDecodeRawbuffOffset) & 1; // on odd rawbuf offsets we have mark timings
-
-    /*
-     * Setup data if sUsedTimingIntervals is 0
-     */
-    if (sBiphaseUsedTimingIntervals == 0) {
-        uint16_t tCurrentTimingWith = irparams.rawbuf[sBiphaseDecodeRawbuffOffset];
-        uint16_t tMarkExcessCorrection = (tLevelOfCurrentInterval == MARK) ? MARK_EXCESS_MICROS : -MARK_EXCESS_MICROS;
-
-        if (matchTicks(tCurrentTimingWith, sBiphaseTimeUnit + tMarkExcessCorrection)) {
-            sBiphaseCurrentTimingIntervals = 1;
-        } else if (matchTicks(tCurrentTimingWith, (2 * sBiphaseTimeUnit) + tMarkExcessCorrection)) {
-            sBiphaseCurrentTimingIntervals = 2;
-        } else if (matchTicks(tCurrentTimingWith, (3 * sBiphaseTimeUnit) + tMarkExcessCorrection)) {
-            sBiphaseCurrentTimingIntervals = 3;
-        } else {
-            return -1;
-        }
-    }
-
-// We use another interval from tCurrentTimingIntervals
-    sBiphaseUsedTimingIntervals++;
-
-// keep track of current timing offset
-    if (sBiphaseUsedTimingIntervals >= sBiphaseCurrentTimingIntervals) {
-        // we have used all intervals of current timing, switch to next timing value
-        sBiphaseUsedTimingIntervals = 0;
-        sBiphaseDecodeRawbuffOffset++;
-    }
-
-    IR_TRACE_PRINTLN(tLevelOfCurrentInterval);
-
-    return tLevelOfCurrentInterval;
 }
 
 /**********************************************************************************************************************
@@ -1983,6 +1917,10 @@ uint32_t IRrecv::getTotalDurationOfRawData() {
 
 // @formatter:off
 
+void printNumberOfRepeats(Print *aSerial) {
+    aSerial->print(F(", <numberOfRepeats>"));
+}
+
 /**
  * Function to print values and flags of IrReceiver.decodedIRData in one line.
  * do not print for repeats except IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT.
@@ -2058,7 +1996,8 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
          * <Protocol_Name>(0x<Address>, 0x<Command>, <numberOfRepeats>);
          */
         if (decodedIRData.protocol == UNKNOWN){
-            aSerial->print(F("Raw(rawIRTimings, sizeof(rawIRTimings) / sizeof(rawIRTimings[0]), 38, <RepeatPeriodMillis>, <numberOfRepeats>"));
+            aSerial->print(F("Raw(rawIRTimings, sizeof(rawIRTimings) / sizeof(rawIRTimings[0]), 38, <RepeatPeriodMillis>"));
+            printNumberOfRepeats(aSerial);
         }
 #if defined(DECODE_DISTANCE_WIDTH)
         else if (decodedIRData.protocol == PULSE_DISTANCE || decodedIRData.protocol == PULSE_WIDTH) {
@@ -2092,7 +2031,9 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             } else {
                 aSerial->print('L');
             }
-            aSerial->print(F("SB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>"));
+            aSerial->print(F("SB_FIRST, <RepeatPeriodMillis>"));
+            printNumberOfRepeats(aSerial);
+
         }
 #endif // defined(DECODE_DISTANCE_WIDTH)
         else {
@@ -2121,16 +2062,18 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             aSerial->print(F(", 0x"));
             aSerial->print(decodedIRData.command, HEX);
             if (decodedIRData.protocol == SONY) {
-                aSerial->print(F(", 2, "));
+                printNumberOfRepeats(aSerial);
+                aSerial->print(F(", "));
                 aSerial->print(decodedIRData.numberOfBits);
             } else {
-                aSerial->print(F(", <numberOfRepeats>"));
+                printNumberOfRepeats(aSerial);
+
             }
         }
 
-#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO) || defined(DECODE_RC6)
-        if ((decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) && (decodedIRData.protocol == KASEIKYO || decodedIRData.protocol == RC6A)) {
-            // Vendor code parameter, which is after numberOfRepeats parameter
+#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO) || defined(DECODE_RC6) || defined(DECODE_MARANTZ)
+        if ((decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) && (decodedIRData.protocol == KASEIKYO || decodedIRData.protocol == RC6A || decodedIRData.protocol == MARANTZ)) {
+            // Vendor code, Customer or MarantzExtension parameter, which is after numberOfRepeats parameter
             aSerial->print(F(", 0x"));
             aSerial->print(decodedIRData.extra, HEX);
         }

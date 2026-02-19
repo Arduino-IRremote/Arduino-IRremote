@@ -80,6 +80,7 @@ jobs:
           - stm32duino:STM32F1:genericSTM32F103C
           - sandeepmistry:nRF5:BBCmicrobit
           - Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
+          - vega:riscv:aries_v3
 
         # Specify parameters for each board.
         # With sketches-exclude you may exclude specific examples for a board. Use a comma separated list.
@@ -317,6 +318,12 @@ jobs:
             sketches-exclude: AllProtocolsOnLCD,UnitTest,ReceiveAndSendDistanceWidth,ReceiveDemo,SimpleReceiverForHashCodes  # No print(uint64_t,.) available
             build-properties: # the flags were put in compiler.cpp.extra_flags
               All: -DRAW_BUFFER_LENGTH=750
+
+          - arduino-boards-fqbn: vega:riscv:aries_v3
+            platform-url: https://gitlab.com/riscv-vega/vega-arduino/-/raw/main/package_vega_index.json
+            #sketches-exclude: AllProtocolsOnLCD,UnitTest,ReceiveAndSendDistanceWidth,ReceiveDemo,SimpleReceiverForHashCodes  # No print(uint64_t,.) available
+            build-properties: # the flags were put in compiler.cpp.extra_flags
+              All: -DF_CPU=100000000LL -DVEGA_ARIES_V3 -DRAW_BUFFER_LENGTH=750
 
 #      fail-fast: false # false -> do not cancel all jobs / architectures if one job fails
 

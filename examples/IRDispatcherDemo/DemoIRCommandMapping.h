@@ -1,10 +1,26 @@
 /*
  * DemoIRCommandMapping.h
  *
- * IR remote button codes, strings, and functions to call
+ * Contains IR remote button codes, strings, and the mapping of codes to functions to call by the dispatcher
  *
- *  Copyright (C) 2019-2022  Armin Joachimsmeyer
+ *  Copyright (C) 2019-2026  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
+ *
+ *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
+ *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
+ *
+ *  IRMP is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
  *
  */
 
@@ -12,15 +28,16 @@
 #define _IR_COMMAND_MAPPING_H
 
 #include <Arduino.h>
-//#include "Commands.h" // includes all the commands used in the mapping arrays below
+
+#include "IRCommandDispatcher.h" // IRToCommandMappingStruct, IR_COMMAND_FLAG_BLOCKING etc. are defined here
 
 /*
  * !!! Choose your remote !!!
  */
-//#define USE_KEYES_REMOTE_CLONE With number pad and direction control switched, will be taken as default
+//#define USE_KEYES_REMOTE_CLONE With number pad and direction control swapped, will be taken as default
 //#define USE_KEYES_REMOTE
 #if !defined(USE_KEYES_REMOTE) && !defined(USE_KEYES_REMOTE_CLONE)
-#define USE_KEYES_REMOTE_CLONE // the one you can buy at aliexpress
+#define USE_KEYES_REMOTE_CLONE // the one you can buy at Aliexpress
 #endif
 
 #if (defined(USE_KEYES_REMOTE) && defined(USE_KEYES_REMOTE_CLONE))
@@ -144,7 +161,7 @@
  * Main mapping of commands to C functions
  */
 
-// IR strings of functions for output
+// Strings of commands for Serial output
 static const char LEDon[] PROGMEM ="LED on";
 static const char LEDoff[] PROGMEM ="LED off";
 
@@ -164,20 +181,19 @@ static const char stop[] PROGMEM ="stop";
 // not used yet
 static const char test[] PROGMEM ="test";
 static const char pattern[] PROGMEM ="pattern";
-static const char unknown[] PROGMEM ="unknown";
 
 /*
  * Main mapping array of commands to C functions and command strings
  */
 const struct IRToCommandMappingStruct IRMapping[] = { /**/
-{ COMMAND_BLINK, IR_COMMAND_FLAG_BLOCKING, &doLedBlink20times, blink20times }, /**/
+{ COMMAND_BLINK, IR_COMMAND_FLAG_BLOCKING | IR_COMMAND_FLAG_BEEP, &doLedBlink20times, blink20times }, /**/
 { COMMAND_STOP, IR_COMMAND_FLAG_BLOCKING, &doStop, stop },
 
 /*
- * Short commands, which can be executed always
+ * Short commands that can always be executed
  */
-{ COMMAND_TONE1, IR_COMMAND_FLAG_BLOCKING, &doTone1800, tone1800 }, /**/
-{ COMMAND_TONE3, IR_COMMAND_FLAG_BLOCKING, &doPrintMenu, printMenu }, /**/
+{ COMMAND_TONE1, IR_COMMAND_FLAG_NON_BLOCKING, &doTone1800, tone1800 }, /**/
+{ COMMAND_TONE3, IR_COMMAND_FLAG_NON_BLOCKING, &doPrintMenu, printMenu }, /**/
 { COMMAND_ON, IR_COMMAND_FLAG_NON_BLOCKING, &doLedOn, LEDon }, /**/
 { COMMAND_OFF, IR_COMMAND_FLAG_NON_BLOCKING, &doLedOff, LEDoff }, /**/
 { COMMAND_START, IR_COMMAND_FLAG_NON_BLOCKING, &doLedBlinkStart, blinkStart }, /**/

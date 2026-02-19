@@ -64,6 +64,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Polarity of send pin](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#polarity-of-send-pin)
     + [List of public IR code databases](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#list-of-public-ir-code-databases)
 - [Tiny NEC receiver and sender](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tiny-nec-receiver-and-sender)
+- [IRCommandDispatcher class](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ircommanddispatcher-class)
 - [The FAST protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#the-fast-protocol)
 - [Feedback LED](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#feedback-led)
 - [FAQ and hints](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#faq-and-hints)
@@ -81,8 +82,11 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 - [WOKWI online examples](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#wokwi-online-examples)
 - [IR control of a robot car](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ir-control-of-a-robot-car)
 - [Issues and discussions](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#issues-and-discussions)
-- [Compile options / macros for this library](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#compile-options--macros-for-this-library)
+- [Compile options / macros for IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#compile-options--macros-for-irremote)
+- [Macros for TinyIR](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#macros-for-tinyir)
+- [Macros for IRCommandDispatcher](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#macros-for-ircommanddispatcher)
     + [Changing include (*.h) files with Arduino IDE](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#changing-include-h-files-with-arduino-ide)
+    + [Modifying compile options / macros with PlatformIO](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#modifying-compile-options--macros-with-platformio)
     + [Modifying compile options with Sloeber IDE](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#modifying-compile-options--macros-with-sloeber-ide)
 - [Supported Boards](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#supported-boards)
 - [Timer and pin usage](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage)
@@ -109,7 +113,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 
 ` Hash `, &nbsp; &nbsp; ` Pronto `
 
-` BoseWave `, &nbsp; &nbsp; ` Bang & Olufsen `, &nbsp; &nbsp; ` Lego `, &nbsp; &nbsp; ` FAST `, &nbsp; &nbsp; ` Whynter `, &nbsp; &nbsp; ` MagiQuest `, &nbsp; &nbsp; ` Velux `, &nbsp; &nbsp; ` OpenLASIR `
+` BoseWave `, &nbsp; &nbsp; ` Bang & Olufsen `, &nbsp; &nbsp; ` Lego `, &nbsp; &nbsp; ` FAST `, &nbsp; &nbsp; ` Whynter `, &nbsp; &nbsp; ` Marantz `, &nbsp; &nbsp; ` MagiQuest `, &nbsp; &nbsp; ` Velux `, &nbsp; &nbsp; ` OpenLASIR `
 
 Protocols can be switched off and on by defining macros before the line `#include <IRremote.hpp>` like [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L33):
 
@@ -470,7 +474,7 @@ IrReceiver.printIRSendUsage(&Serial);
 
 ## Callback functionality
 Sometimes it can be difficult to call decode() periodically in the main loop to avoid missing any IR frames.
-In this case you can use the callback functionality as demonstrated in the [CallbackDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/CallbackDemo/CallbackDemo.ino#L136) example.
+In this case you can use the callback functionality as demonstrated in the [CallbackDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/CallbackDemo/CallbackDemo.ino#L126) example.
 This enables you to perform `resume()` and short actions independently of the state of your main loop.
 
 ## Ambiguous protocols
@@ -647,6 +651,65 @@ http://www.harctoolbox.org/IR-resources.html
 
 <br/>
 
+# IRCommandDispatcher class
+If you want to **handle many IR commands** in a structured way, you can use a big **switch statement**, or use the class `IRCommandDispatcher`.<br/>
+The IRCommandDispatcher class receives IR commands and maps them to different functions by means of a mapping array `IRMapping[]`.
+
+By default, every mapped command is **blocking**. However it can be declared as **non-blocking** and / or **repeatable**.<br/>
+Non-blocking commands are executed immediately, blocking commands are executed if no other command is just running.
+If another blocking command is currently running, a **request to stop** is set
+and the command is stored for the main loop to be executed by `checkAndRunSuspendedBlockingCommands()`.
+The request to stop must be checked by any blocking function using the macros `DELAY_AND_RETURN_IF_STOP()`, `RETURN_IF_STOP`, `BREAK_IF_STOP` and `IS_STOP_REQUESTED`.<br/>
+Only commands that are marked as **repeatable** will be exectuted when a IR repeat frame is received.
+Therefore this only makes sense for non-blocking comands :-).
+
+Code snippets are from [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRDispatcherDemo).
+
+```c++
+// IR code mapping which is useful if more than one remote is supported
+#define IR_0            0x19
+#define IR_HASH         0x0D
+#define COMMAND_BLINK   IR_0
+#define COMMAND_STOP    IR_HASH
+
+// Strings of commands for Serial output
+static const char blink20times[] PROGMEM ="blink 20 times";
+static const char stop[] PROGMEM ="stop";
+
+/*
+ * Main mapping array of commands to C functions and command strings
+ */
+const struct IRToCommandMappingStruct IRMapping[] = {
+{ COMMAND_BLINK, IR_COMMAND_FLAG_BLOCKING | IR_COMMAND_FLAG_BEEP, &doLedBlink20times, blink20times },
+{ COMMAND_STOP, IR_COMMAND_FLAG_BLOCKING, &doStop, stop },
+/*
+ * Short commands that can always be executed
+ */
+{ COMMAND_TONE1, IR_COMMAND_FLAG_NON_BLOCKING, &doTone1800, tone1800 },
+...
+/*
+ * Repeatable short commands
+ */
+{ COMMAND_INCREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &doIncreaseBlinkFrequency, increaseBlink },
+...
+
+/*
+ * This is a blocking function which checks for stop
+ */
+void doLedBlink20times() {
+    for (int i = 0; i < 20; ++i) {
+        digitalWrite(LED_BUILTIN, HIGH);
+        DELAY_AND_RETURN_IF_STOP(200);
+        digitalWrite(LED_BUILTIN, LOW);
+        DELAY_AND_RETURN_IF_STOP(200);
+    }
+}
+// Other useful macros are RETURN_IF_STOP, BREAK_IF_STOP and IS_STOP_REQUESTED.
+```
+
+Examples of mapping arrays can be found in the [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRDispatcherDemo/DemoIRCommandMapping.h#L185), for [QuadrupedControl](https://github.com/ArminJo/QuadrupedControl/blob/master/examples/QuadrupedControl/QuadrupedIRCommandMapping.h#L445), for [RobotArmControl](https://github.com/ArminJo/RobotArmControl/blob/master/RobotArmControl/RobotArmIRCommandMapping.h#L320) or for [4 WD RobotCar control](https://github.com/ArminJo/PWMMotorControl/blob/master/examples/IRDispatcherControl/RobotCarIRCommandMapping.h#L308)<br/>
+
+<br/>
 
 # Tiny NEC receiver and sender
 For applications only requiring NEC, NEC variants or FAST -see below- protocol, there is a special receiver / sender included,
@@ -889,7 +952,7 @@ Serves as a IR **remote macro expander**. Receives Samsung32 protocol and on rec
 This serves as a **Netflix-key emulation** for my old Samsung H5273 TV.
 
 #### [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRDispatcherDemo/IRDispatcherDemo.ino)
-Framework for **calling different functions of your program** for different IR codes.
+**Calling different functions** of your program for different IR codes.
 
 #### [ControlRelay](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ControlRelay/ControlRelay.ino)
 **Control a relay** (connected to an output pin) with your remote.
@@ -944,7 +1007,7 @@ IR_RobotCar with TL1838 IR receiver plugged into expansion board.<br/>
 
 <br/>
 
-# Compile options / macros for this library
+# Compile options / macros for IRremote
 To customize the library to different requirements, there are some compile options / macros available.<br/>
 These macros must be defined in your program **before** the line `#include <IRremote.hpp>` to take effect.<br/>
 Modify them by enabling / disabling them, or change the values if applicable.
@@ -979,7 +1042,8 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | `DEBUG` | disabled | Enables lots of lovely debug output. |
 | `IR_USE_AVR_TIMER*` |  | Selection of timer to be used for generating IR receiving sample interval. |
 
-These next macros for **TinyIRReceiver** must be defined in your program before the line `#include <TinyIRReceiver.hpp>` to take effect.
+# Macros for TinyIR
+These macros must be defined in your program before the line `#include <TinyIRReceiver.hpp>` to take effect.
 | Name | Default value | Description |
 |-|-:|-|
 | `IR_RECEIVE_PIN` | 2 | The pin number for TinyIRReceiver IR input, which gets compiled in. Not used in IRremote. |
@@ -988,16 +1052,23 @@ These next macros for **TinyIRReceiver** must be defined in your program before 
 | `NO_LED_RECEIVE_FEEDBACK_CODE` | disabled | Disables the LED feedback code for receive. |
 | `NO_LED_SEND_FEEDBACK_CODE` | disabled | Disables the LED feedback code for send. |
 | `DISABLE_PARITY_CHECKS` | disabled | Disables the address and command parity checks. Saves 48 bytes program memory. |
-| `USE_EXTENDED_NEC_PROTOCOL` | disabled | Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
-| `USE_ONKYO_PROTOCOL` | disabled | Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
+| `USE_EXTENDED_NEC_PROTOCOL` | disabled | Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value. || `USE_ONKYO_PROTOCOL` | disabled | Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value. |
 | `USE_FAST_PROTOCOL` | disabled | Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC. |
 | `ENABLE_NEC2_REPEATS` | disabled | Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat. |
 | `USE_CALLBACK_FOR_TINY_RECEIVER` | disabled | Call the user provided function `void handleReceivedTinyIRData()` each time a frame or repeat is received. |
 
-The next macro for **IRCommandDispatcher** must be defined in your program before the line `#include <IRCommandDispatcher.hpp>` to take effect.
+<br/>
+
+# Macros for IRCommandDispatcher
+These macros must be defined in your program before the line `#include <IRCommandDispatcher.hpp>` to take effect.
+| Name | Default value | Description |
+|-|-:|-|
 | `USE_TINY_IR_RECEIVER` | disabled | Use [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) for receiving IR codes. |
 | `IR_COMMAND_HAS_MORE_THAN_8_BIT` | disabled | Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 4 bytes RAM + 1 byte RAM per mapping entry. |
-| `BUZZER_PIN` |  | If `USE_TINY_IR_RECEIVER` is enabled, the pin to be used for the optional 50 ms buzzer feedback before executing a command. Other IR libraries than Tiny are not compatible with tone() command. |
+| `IR_ADDRESS` | empty | If set, compare the address returned by the IR library with this value before executing a command. |
+| `DISPATCHER_BUZZER_FEEDBACK_PIN` |  | If `USE_TINY_IR_RECEIVER` is enabled, the pin to be used for the optional 50 ms buzzer feedback before executing a command. Other IR libraries than Tiny are not compatible with tone() command. |
+
+<br/>
 
 ### Changing include (*.h) files with Arduino IDE
 First, use *Sketch > Show Sketch Folder (Ctrl+K)*.<br/>
@@ -1040,7 +1111,7 @@ Digispark boards are tested only with [ATTinyCore](https://github.com/SpenceKond
 - Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE
 - BluePill with STM32
 - RP2040 based boards (Raspberry Pi Pico, Nano RP2040 Connect etc.)
-
+- Indian VEGA RISC-V boards - not tested
 
 
 We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.<br/>
