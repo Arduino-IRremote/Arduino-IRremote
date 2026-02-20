@@ -11,6 +11,8 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Improved `decodeSamsung()`.
 - `OpenLASIR` protocol added by [danielweidman](https://github.com/danielweidman).
 - Added `DECODE_MARANTZ` and swapped parameter aMarantzExtension and aNumberOfRepeats of `sendMaranz()` to be consistent with other extensions.
+- Improved biphase decoding.
+- Improved debug output handling.
 - Moved `IRCommandDispatcher` from demo to main library folder.
 
 # 4.5.0 - does not work for ESP platform, because of missing ESP IRAM_ATTR for receiving interrupt.

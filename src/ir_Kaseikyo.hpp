@@ -32,11 +32,9 @@
 #ifndef _IR_KASEIKYO_HPP
 #define _IR_KASEIKYO_HPP
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
+// This block must be located after the includes of other *.hpp files
+//#define LOCAL_DEBUG // This enables debug output only for this file - only for development
+#include "LocalDebugLevelStart.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -201,10 +199,9 @@ bool IRrecv::decodeKaseikyo() {
     decode_type_t tProtocol;
     // Check we have enough data (96 + 4) 4 for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawlen != ((2 * KASEIKYO_BITS) + 4)) {
-        IR_DEBUG_PRINT(F("Kaseikyo: "));
-        IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 100"));
+        DEBUG_PRINT(F("Kaseikyo: Data length="));
+        DEBUG_PRINT(decodedIRData.rawlen);
+        DEBUG_PRINTLN(F(" is not 100"));
         return false;
     }
 
@@ -256,15 +253,12 @@ bool IRrecv::decodeKaseikyo() {
     if (tVendorParity != (tValue.UByte.LowByte & 0xF)) {
         decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_LSB_FIRST;
 
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Kaseikyo: "));
-        Serial.print(F("4 bit VendorID parity is not correct. Expected=0x"));
-        Serial.print(tVendorParity, HEX);
-        Serial.print(F(" received=0x"));
-        Serial.print(decodedIRData.decodedRawData, HEX);
-        Serial.print(F(" VendorID=0x"));
-        Serial.println(tVendorId, HEX);
-#endif
+        DEBUG_PRINT(F("Kaseikyo: 4 bit VendorID parity is not correct. Expected=0x"));
+        DEBUG_PRINT(tVendorParity, HEX);
+        DEBUG_PRINT(F(" received=0x"));
+        DEBUG_PRINT(decodedIRData.decodedRawData, HEX);
+        DEBUG_PRINT(F(" VendorID=0x"));
+        DEBUG_PRINTLN(tVendorId, HEX);
     }
 
     if (tProtocol == KASEIKYO) {
@@ -275,17 +269,14 @@ bool IRrecv::decodeKaseikyo() {
     if (tValue.UByte.HighByte != tParity) {
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
 
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Kaseikyo: "));
-        Serial.print(F("8 bit parity is not correct. Expected=0x"));
-        Serial.print(tParity, HEX);
-        Serial.print(F(" received=0x"));
-        Serial.print(decodedIRData.decodedRawData >> KASEIKYO_COMMAND_BITS, HEX);
-        Serial.print(F(" address=0x"));
-        Serial.print(decodedIRData.address, HEX);
-        Serial.print(F(" command=0x"));
-        Serial.println(decodedIRData.command, HEX);
-#endif
+        DEBUG_PRINT(F("Kaseikyo: 8 bit parity is not correct. Expected=0x"));
+        DEBUG_PRINT(tParity, HEX);
+        DEBUG_PRINT(F(" received=0x"));
+        DEBUG_PRINT(decodedIRData.decodedRawData >> KASEIKYO_COMMAND_BITS, HEX);
+        DEBUG_PRINT(F(" address=0x"));
+        DEBUG_PRINT(decodedIRData.address, HEX);
+        DEBUG_PRINT(F(" command=0x"));
+        DEBUG_PRINTLN(decodedIRData.command, HEX);
     }
 
     decodedIRData.numberOfBits = KASEIKYO_BITS;
@@ -304,7 +295,6 @@ bool IRrecv::decodeKaseikyo() {
  */
 
 /** @}*/
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_KASEIKYO_HPP

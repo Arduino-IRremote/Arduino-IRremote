@@ -32,11 +32,7 @@
 #ifndef _IR_SAMSUNG_HPP
 #define _IR_SAMSUNG_HPP
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
+#include "LocalDebugLevelStart.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -276,10 +272,9 @@ bool IRrecv::decodeSamsung() {
     // Check we have enough data (68). The +4 is for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawlen != ((2 * SAMSUNG_BITS) + 4) && decodedIRData.rawlen != ((2 * SAMSUNG48_BITS) + 4)
             && (decodedIRData.rawlen != 6)) {
-        IR_DEBUG_PRINT(F("Samsung: "));
-        IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 6 or 68 or 100"));
+        DEBUG_PRINT(F("Samsung: Data length="));
+        DEBUG_PRINT(decodedIRData.rawlen);
+        DEBUG_PRINTLN(F(" is not 6 or 68 or 100"));
         return false;
     }
 
@@ -418,7 +413,6 @@ void IRsend::sendSAMSUNG(unsigned long data, int nbits) {
 }
 
 /** @}*/
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_SAMSUNG_HPP

@@ -32,10 +32,17 @@
 //#define USE_TINY_IR_RECEIVER // Recommended and default, but only for NEC protocol!!! If disabled and IRMP_INPUT_PIN is defined, the IRMP library is used for decoding
 //#define USE_IRREMOTE_LIBRARY // The IRremote library is used for decoding
 //#define USE_IRMP_LIBRARY     // The IRMP library is used for decoding
-//#define NO_LED_FEEDBACK_CODE   // Activate this if you want to suppress LED feedback or if you do not have a LED. This saves 14 bytes code and 2 clock cycles per interrupt.
+//#define DISPATCHER_IR_COMMAND_HAS_MORE_THAN_8_BIT // Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 5 bytes RAM + 1 byte RAM per mapping entry.
+#define NO_LED_FEEDBACK_CODE   // We use LED_BUILTIN for command feedback and therefore cannot use is as IR receiving feedback
+#define INFO // To see some informative output of the IRCommandDispatcher library
+//#define DEBUG // To see some additional debug output of the IRCommandDispatcher library
+
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
 
-#if defined(USE_TINY_IR_RECEIVER) && defined(TONE_PIN)
+#if defined(INFO) || defined(DEBUG)
+#define USE_DISPATCHER_COMMAND_STRINGS // Enables the printing of command strings. Requires additional 2 bytes RAM for each command mapping. Requires program memory for strings, but saves snprintf() code (1.5k) if INFO or DEBUG is activated, which has no effect if snprintf() is also used in other parts of your program / libraries.
+#endif
+#if defined(TONE_PIN)
 #define DISPATCHER_BUZZER_FEEDBACK_PIN  TONE_PIN // The pin to be used for the optional 50 ms buzzer feedback before executing a command. Only available for TinyIR.
 #endif
 
@@ -44,8 +51,6 @@
 #define IRMP_SUPPORT_NEC_PROTOCOL         1 // this enables only one protocol
 //#define IRMP_SUPPORT_KASEIKYO_PROTOCOL    1
 //#define IRMP_ENABLE_PIN_CHANGE_INTERRUPT  // Enable interrupt functionality (not for all protocols) - requires around 376 additional bytes of program memory
-
-void irmp_tone(uint8_t _pin, unsigned int frequency, unsigned long duration);
 #endif // defined(USE_IRMP_LIBRARY)
 
 bool doBlink = false;
@@ -70,11 +75,13 @@ void doTone2200();
 /*
  * Set definitions and include IRCommandDispatcher library after the declaration of all commands required for mapping
  */
-#define INFO // to see some informative output of the IRCommandDispatcher library
 #include "DemoIRCommandMapping.h" // must be included before IRCommandDispatcher.hpp to define IRMapping array, IR_ADDRESS etc.
-#include "IRCommandDispatcher.hpp"
+#include "IRCommandDispatcher.hpp" // This can optionally set USE_TINY_IR_RECEIVER
 
-void setup() {
+void IRremoteTone(uint8_t aTonePin, unsigned int aFrequency, unsigned long aDuration);
+
+void setup()
+{
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(115200);
 
@@ -105,23 +112,33 @@ void setup() {
     IRDispatcher.printIRInfo(&Serial);
 
     doPrintMenu();
+#if defined(DEBUG) && defined(SP)
+    Serial.print(F("SP=0x"));
+    Serial.println(SP, HEX);
+#endif
 }
 
-void loop() {
+void loop()
+{
 
     IRDispatcher.checkAndRunSuspendedBlockingCommands();
 
-    if (doBlink) {
+    if (doBlink)
+    {
         digitalWrite(LED_BUILTIN, HIGH);
         DELAY_AND_RETURN_IF_STOP(sBlinkDelay);
         digitalWrite(LED_BUILTIN, LOW);
         DELAY_AND_RETURN_IF_STOP(sBlinkDelay);
     }
 
-    if (millis() - IRDispatcher.IRReceivedData.MillisOfLastCode > 120000) {
-        //Short beep as remainder, if we did not receive any command in the last 2 minutes
-        IRDispatcher.IRReceivedData.MillisOfLastCode += 120000;
+    if (millis() - IRDispatcher.IRReceivedData.MillisOfLastCode > 120000)
+    {
+        // Short beep as remainder, if we did not receive any command in the last 2 minutes
+        IRDispatcher.IRReceivedData.MillisOfLastCode = millis();
         doTone1800();
+#if defined(INFO)
+        Serial.println(F("2 minutes timeout"));
+#endif
     }
 
 //    delay(10);
@@ -130,7 +147,8 @@ void loop() {
 /*
  * Menu for simple China Keyes or Keyes clone IR controls with number pad and direction control pad
  */
-void doPrintMenu() {
+void doPrintMenu()
+{
     Serial.println();
     Serial.println(F("Press 1 for tone 1800 Hz"));
     Serial.println(F("Press 2 for tone 2200 Hz"));
@@ -148,39 +166,50 @@ void doPrintMenu() {
 /*
  * Here the actions that are matched to IR keys
  */
-void doLedOn() {
+void doLedOn()
+{
     digitalWrite(LED_BUILTIN, HIGH);
     doBlink = false;
 }
-void doLedOff() {
+void doLedOff()
+{
     digitalWrite(LED_BUILTIN, LOW);
     doBlink = false;
 }
-void doIncreaseBlinkFrequency() {
+void doIncreaseBlinkFrequency()
+{
     doBlink = true;
-    if (sBlinkDelay > 5) {
+    if (sBlinkDelay > 5)
+    {
         sBlinkDelay -= sBlinkDelay / 4;
     }
 }
-void doDecreaseBlinkFrequency() {
+void doDecreaseBlinkFrequency()
+{
     doBlink = true;
     sBlinkDelay += sBlinkDelay / 4;
 }
-void doStop() {
+void doStop()
+{
     doBlink = false;
+    digitalWrite(LED_BUILTIN, LOW);
 }
-void doResetBlinkFrequency() {
+void doResetBlinkFrequency()
+{
     sBlinkDelay = 200;
     digitalWrite(LED_BUILTIN, LOW);
 }
-void doLedBlinkStart() {
+void doLedBlinkStart()
+{
     doBlink = true;
 }
 /*
  * This is a blocking function which checks for stop
  */
-void doLedBlink20times() {
-    for (int i = 0; i < 20; ++i) {
+void doLedBlink20times()
+{
+    for (int i = 0; i < 20; ++i)
+    {
         digitalWrite(LED_BUILTIN, HIGH);
         DELAY_AND_RETURN_IF_STOP(200);
         digitalWrite(LED_BUILTIN, LOW);
@@ -188,46 +217,63 @@ void doLedBlink20times() {
     }
 }
 
-void doTone1800() {
-#if defined(USE_IRMP_LIBRARY) && !defined(IRMP_ENABLE_PIN_CHANGE_INTERRUPT) && defined(TONE_PIN)
-    irmp_tone(TONE_PIN, 1800, 200);
-#elif !defined(ESP8266) && !defined(NRF5) && defined(TONE_PIN) // tone() stops timer 1 for ESP8266
-    tone(TONE_PIN, 1800, 200);
-#endif
-}
-
-void doTone2200() {
-#if defined(USE_IRMP_LIBRARY) && !defined(IRMP_ENABLE_PIN_CHANGE_INTERRUPT) && defined(TONE_PIN)
-    // use IRMP compatible function for tone()
-    irmp_tone(TONE_PIN, 2200, 50);
-#elif !defined(ESP8266) && !defined(NRF5) && defined(TONE_PIN) // tone() stops timer 1 for ESP8266
-    tone(TONE_PIN, 2200, 50);
-#endif
-}
-
-#if defined(USE_IRMP_LIBRARY)
 /*
- * Convenience IRMP compatible wrapper function for Arduino tone() if IRMP_ENABLE_PIN_CHANGE_INTERRUPT is NOT activated
+ * Lasts 200 ms and blocks receiving of repeats. tone() requires interrupts enabled
+ */
+void doTone1800()
+{
+#if defined(TONE_PIN)
+    IRremoteTone(TONE_PIN, 1800, 200);
+#endif
+}
+
+/*
+ * Lasts 50 ms and allows receiving of repeats
+ */
+void doTone2200()
+{
+#if defined(TONE_PIN)
+    IRremoteTone(TONE_PIN, 2200, 50);
+#endif
+}
+
+/*
+ * Convenience IR library wrapper function for Arduino tone()
  * It currently disables the receiving of repeats
  * It is not part of the library because it statically allocates the tone interrupt vector 7.
  */
-void irmp_tone(uint8_t _pin, unsigned int frequency, unsigned long duration) {
-#  if defined(__AVR__) && !defined(IRMP_ENABLE_PIN_CHANGE_INTERRUPT)
-    storeIRTimer();
-    tone(_pin, frequency, 0);
-    if (duration == 0) {
-        duration = 100;
-    }
-    delay(duration);
-    noTone(_pin);
-    restoreIRTimer();
-#elif defined(ESP8266)
-    // tone() stops timer 1
-    (void)  _pin;
-    (void)  frequency;
-    (void)  duration;
+void IRremoteTone(uint8_t aTonePin, unsigned int aFrequency, unsigned long aDuration)
+{
+    // IRMP_ENABLE_PIN_CHANGE_INTERRUPT currently disables the receiving of repeats
+#if defined(ESP8266) || defined(NRF5) || defined(IRMP_ENABLE_PIN_CHANGE_INTERRUPT) // tone on esp8266 works only once, then it disables IrReceiver.restartTimer() / timerConfigForReceive().
+    (void)  aTonePin;
+    (void)  aFrequency;
+    (void)  aDuration;
+    return;
 #else
-    tone(_pin, frequency, duration);
+    /*
+     * Stop receiver, generate a single beep and start receiver again
+     */
+#  if defined(ESP32) || defined(USE_TINY_IR_RECEIVER )// ESP32 uses another timer for tone(), maybe other platforms (not tested yet) too.
+    tone(aTonePin, aFrequency, aDuration);
+#  else
+#    if defined(USE_IRREMOTE_LIBRARY)
+    IrReceiver.stopTimer(); // Stop timer consistently before calling tone() or other functions using the timer resource.
+#    else
+    storeIRTimer();
+#    endif
+    tone(aTonePin, aFrequency, 0);
+    if (aDuration == 0)
+    {
+        aDuration = 100;
+    }
+    delay(aDuration);
+    noTone(aTonePin);
+#    if defined(USE_IRREMOTE_LIBRARY)
+    IrReceiver.restartTimer(); // Restart IR timer after timer resource is no longer blocked.
+#    else
+    restoreIRTimer();
+#    endif
+#  endif
 #endif
 }
-#endif // #if defined(USE_IRMP_LIBRARY)

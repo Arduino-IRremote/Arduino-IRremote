@@ -182,7 +182,12 @@ void loop() {
             if (sDecodedRawDataArray[0] != IrReceiver.decodedIRData.decodedRawDataArray[0]) {
                 *sDecodedRawDataArray = *IrReceiver.decodedIRData.decodedRawDataArray; // copy content here
                 Serial.print(F("Store new sDecodedRawDataArray[0]=0x"));
+#  if (__INT_WIDTH__ < 32)
                 Serial.println(IrReceiver.decodedIRData.decodedRawDataArray[0], HEX);
+#  else
+                PrintULL::print(&Serial, IrReceiver.decodedIRData.decodedRawDataArray[0], HEX);
+#  endif
+
             }
         }
         IrReceiver.resume(); // resume receiver

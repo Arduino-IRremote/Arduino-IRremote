@@ -38,11 +38,13 @@
 #ifndef _IR_MAGIQUEST_HPP
 #define _IR_MAGIQUEST_HPP
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
+// This block must be located after the includes of other *.hpp files
+//#define LOCAL_DEBUG // This enables debug output only for this file - only for development
+#include "LocalDebugLevelStart.h"
+
+/** \addtogroup Decoder Decoders and encoders for different protocols
+ * @{
+ */
 //
 //==============================================================================
 //
@@ -137,11 +139,10 @@ void IRsend::sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude) {
     sendPulseDistanceWidthData_P(&MagiQuestProtocolConstants, aWandId, MAGIQUEST_WAND_ID_BITS); // send only 31 bit, do not send MSB here
     sendPulseDistanceWidthData_P(&MagiQuestProtocolConstants, aMagnitude, MAGIQUEST_MAGNITUDE_BITS);
     sendPulseDistanceWidthData_P(&MagiQuestProtocolConstants, tChecksum, MAGIQUEST_CHECKSUM_BITS);
-#if defined(LOCAL_DEBUG)
+
     // must be after sending, in order not to destroy the send timing
-    Serial.print(F("MagiQuest checksum=0x"));
-    Serial.println(tChecksum, HEX);
-#endif
+    DEBUG_PRINT(F("MagiQuest checksum=0x"));
+    DEBUG_PRINTLN(tChecksum, HEX);
 }
 
 //+=============================================================================
@@ -156,10 +157,9 @@ bool IRrecv::decodeMagiQuest() {
 
     // Check we have the right amount of data, magnitude and ID bits and 8 start bits + 0 stop bit
     if (decodedIRData.rawlen != (2 * MAGIQUEST_BITS)) {
-        IR_DEBUG_PRINT(F("MagiQuest: "));
-        IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 112"));
+        DEBUG_PRINT(F("MagiQuest: Data length="));
+        DEBUG_PRINT(decodedIRData.rawlen);
+        DEBUG_PRINTLN(F(" is not 112"));
         return false;
     }
 
@@ -173,11 +173,8 @@ bool IRrecv::decodeMagiQuest() {
     if (decodedIRData.decodedRawData != 0)
 #endif
             {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("MagiQuest: "));
-        Serial.print(F("Not 8 leading zero start bits received, RawData=0x"));
-        Serial.println(decodedIRData.decodedRawData, HEX);
-#endif
+        DEBUG_PRINT(F("MagiQuest: Not 8 leading zero start bits received, RawData=0x"));
+        DEBUG_PRINTLN(decodedIRData.decodedRawData, HEX);
         return false;
     }
 
@@ -193,12 +190,12 @@ bool IRrecv::decodeMagiQuest() {
     uint32_t tWandId = decodedIRData.decodedRawData; // save tWandId for later use
     tDecodedRawData.ULong = decodedIRData.decodedRawData << 1; // shift for checksum computation
     uint8_t tChecksum = tDecodedRawData.Bytes[0] + tDecodedRawData.Bytes[1] + tDecodedRawData.Bytes[2] + tDecodedRawData.Bytes[3];
-#if defined(LOCAL_DEBUG)
-    Serial.print(F("31 bit WandId=0x"));
-    Serial.print(decodedIRData.decodedRawData, HEX);
-    Serial.print(F(" shifted=0x"));
-    Serial.println(tDecodedRawData.ULong, HEX);
-#endif
+
+    DEBUG_PRINT(F("31 bit WandId=0x"));
+    DEBUG_PRINT(decodedIRData.decodedRawData, HEX);
+    DEBUG_PRINT(F(" shifted=0x"));
+    DEBUG_PRINTLN(tDecodedRawData.ULong, HEX);
+
     /*
      * Decode the 9 bit Magnitude + 8 bit checksum
      */
@@ -210,21 +207,18 @@ bool IRrecv::decodeMagiQuest() {
 
 #endif
 
-#if defined(LOCAL_DEBUG)
-    Serial.print(F("Magnitude + checksum=0x"));
-    Serial.println(decodedIRData.decodedRawData, HEX);
-#endif
+    DEBUG_PRINT(F("Magnitude + checksum=0x"));
+    DEBUG_PRINTLN(decodedIRData.decodedRawData, HEX);
+
     tDecodedRawData.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tDecodedRawData.UBytes[1] | tDecodedRawData.UBytes[2] << 8; // Values observed are 0x102,01,04,37,05,38,2D| 02,06,04|03,103,12,18,0E|09
 
     tChecksum += tDecodedRawData.UBytes[2] /* only one bit */+ tDecodedRawData.UBytes[1] + tDecodedRawData.UBytes[0];
     if (tChecksum != 0) {
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Checksum 0x"));
-        Serial.print(tChecksum, HEX);
-        Serial.println(F(" is not 0"));
-#endif
+        DEBUG_PRINT(F("Checksum 0x"));
+        DEBUG_PRINT(tChecksum, HEX);
+        DEBUG_PRINTLN(F(" is not 0"));
     }
 
     // Success
@@ -238,7 +232,8 @@ bool IRrecv::decodeMagiQuest() {
 
     return true;
 }
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
+
+/** @}*/
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_MAGIQUEST_HPP

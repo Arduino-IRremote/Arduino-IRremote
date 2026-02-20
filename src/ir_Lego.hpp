@@ -32,11 +32,7 @@
 #ifndef _IR_LEGO_HPP
 #define _IR_LEGO_HPP
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
+#include "LocalDebugLevelStart.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -127,10 +123,8 @@ void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t 
 
 void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
 
-#if defined(LOCAL_DEBUG)
-    Serial.print(F("sendLego aRawData=0x"));
-    Serial.println(aRawData, HEX);
-#endif
+    DEBUG_PRINT(F("sendLego aRawData=0x"));
+    DEBUG_PRINTLN(aRawData, HEX);
 
     aChannel &= 0x03; // we have 4 channels
 
@@ -159,10 +153,9 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     // Check we have enough data - +4 for initial gap, start bit mark and space + stop bit mark
     if (decodedIRData.rawlen != (2 * LEGO_BITS) + 4) {
-        IR_DEBUG_PRINT(F("LEGO: "));
-        IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(irparams.rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 36"));
+        DEBUG_PRINT(F("LEGO: Data length="));
+        DEBUG_PRINT(irparams.rawlen);
+        DEBUG_PRINTLN(F(" is not 36"));
         return false;
     }
 
@@ -170,10 +163,8 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     // Stop bit, use threshold decoding - not required :-)
 //    if (irparams.rawbuf[3 + (2 * LEGO_BITS)] > (2 * LEGO_BIT_MARK)) {
-//#if defined(LOCAL_DEBUG)
-//        Serial.print(F("LEGO: "));
-//        Serial.println(F("Stop bit mark length is wrong"));
-//#endif
+//        DEBUG_PRINT(F("LEGO: "));
+//        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
 //        return false;
 //    }
 
@@ -191,21 +182,18 @@ bool IRrecv::decodeLegoPowerFunctions() {
 
     // parity check
     if (tParityReceived != tParityComputed) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("LEGO: "));
-        Serial.print(F("Parity is not correct. expected=0x"));
-        Serial.print(tParityComputed, HEX);
-        Serial.print(F(" received=0x"));
-        Serial.print(tParityReceived, HEX);
-        Serial.print(F(", raw=0x"));
-        Serial.print(tDecodedValue, HEX);
-        Serial.print(F(", 3 nibbles are 0x"));
-        Serial.print(tToggleEscapeChannel, HEX);
-        Serial.print(F(", 0x"));
-        Serial.print(tMode, HEX);
-        Serial.print(F(", 0x"));
-        Serial.println(tData, HEX);
-#endif
+        DEBUG_PRINT(F("LEGO: Parity is not correct. expected=0x"));
+        DEBUG_PRINT(tParityComputed, HEX);
+        DEBUG_PRINT(F(" received=0x"));
+        DEBUG_PRINT(tParityReceived, HEX);
+        DEBUG_PRINT(F(", raw=0x"));
+        DEBUG_PRINT(tDecodedValue, HEX);
+        DEBUG_PRINT(F(", 3 nibbles are 0x"));
+        DEBUG_PRINT(tToggleEscapeChannel, HEX);
+        DEBUG_PRINT(F(", 0x"));
+        DEBUG_PRINT(tMode, HEX);
+        DEBUG_PRINT(F(", 0x"));
+        DEBUG_PRINTLN(tData, HEX);
         // might not be an error, so just continue
         decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED | IRDATA_FLAGS_IS_MSB_FIRST;
     }
@@ -233,7 +221,6 @@ void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
 }
 
 /** @}*/
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_LEGO_HPP

@@ -46,11 +46,9 @@
 #ifndef _IR_OPENLASIR_HPP
 #define _IR_OPENLASIR_HPP
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
+// This block must be located after the includes of other *.hpp files
+//#define LOCAL_DEBUG // This enables debug output only for this file - only for development
+#include "LocalDebugLevelStart.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -237,10 +235,9 @@ bool IRrecv::decodeOpenLASIR() {
 
     // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawlen != ((2 * OPENLASIR_BITS) + 4) && (decodedIRData.rawlen != 4)) {
-        IR_DEBUG_PRINT(F("OpenLASIR: "));
-        IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 68 or 4"));
+        DEBUG_PRINT(F("OpenLASIR: Data length="));
+        DEBUG_PRINT(decodedIRData.rawlen);
+        DEBUG_PRINTLN(F(" is not 68 or 4"));
         return false;
     }
 
@@ -265,10 +262,7 @@ bool IRrecv::decodeOpenLASIR() {
 
     // Check command header space
     if (!matchSpace(irparams.rawbuf[2], NEC_HEADER_SPACE)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("OpenLASIR: "));
-        Serial.println(F("Header space length is wrong"));
-#endif
+        DEBUG_PRINTLN(F("OpenLASIR: Header space length is wrong"));
         return false;
     }
 
@@ -282,8 +276,7 @@ bool IRrecv::decodeOpenLASIR() {
     // Validate address: second byte must be inverted first byte
     if (tValue.UByte.LowByte != (uint8_t)(~tValue.UByte.MidLowByte)) {
         // Address validation failed - this is not a valid OpenLASIR frame
-        IR_DEBUG_PRINT(F("OpenLASIR: "));
-        IR_DEBUG_PRINTLN(F("Address validation failed"));
+        DEBUG_PRINTLN(F("OpenLASIR: Address validation failed"));
         return false;
     }
 
@@ -297,8 +290,7 @@ bool IRrecv::decodeOpenLASIR() {
      *  with NEC devices except in very rare cases of collisions.")
      */
     if (tValue.UByte.MidHighByte == (uint8_t)(~tValue.UByte.HighByte)) {
-        IR_DEBUG_PRINT(F("OpenLASIR: "));
-        IR_DEBUG_PRINTLN(F("Command has valid inverse - looks like standard NEC, skipping"));
+        DEBUG_PRINTLN(F("OpenLASIR: Command has valid inverse - looks like standard NEC, skipping"));
         return false;
     }
 
@@ -315,7 +307,6 @@ bool IRrecv::decodeOpenLASIR() {
 }
 
 /** @}*/
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_OPENLASIR_HPP

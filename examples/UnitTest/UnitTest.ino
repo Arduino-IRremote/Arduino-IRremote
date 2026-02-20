@@ -62,7 +62,7 @@
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 135.
 // 20 is taken as default if not otherwise specified / defined.
-//#define MARK_EXCESS_MICROS    40    // Adapt it to your IR receiver module. 40 is recommended for the cheap VS1838 modules at high intensity.
+#define MARK_EXCESS_MICROS    40    // Adapt it to your IR receiver module. 40 is recommended for the cheap VS1838 modules at high intensity.
 
 //#define RECORD_GAP_MICROS 12000 // Default is 8000. Activate it for some LG air conditioner protocols.
 
@@ -79,6 +79,7 @@
 #if FLASHEND >= 0x3FFF      // For 16k flash or more, like ATtiny1604
 #define DECODE_JVC
 #define DECODE_RC5
+#define DECODE_MARANTZ
 #define DECODE_RC6
 
 #define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
@@ -97,7 +98,7 @@
 #if defined(DECODE_BEO)
 #define RECORD_GAP_MICROS 16000 // Force to get the complete frame including the 3. space of 15 ms in the receive buffer
 #define SUPPRESS_BEO_RECORD_GAP_MICROS_WARNING // We know, what we do here :-)
-#define BEO_KHZ         38  // We send and receive Bang&Olufsen with 38 kHz here (instead of 455 kHz).
+#define BEO_KHZ         38  // We send and receive Bang&Olufsen with 38 kHz instead of 455 kHz in order to be able to test it
 #endif
 
 #define DECODE_BOSEWAVE
@@ -362,7 +363,19 @@ void ReceiveCompleteCallbackHandler() {
     sDataJustReceived = true;
 }
 
-void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
+/*
+ * Must be called after checkReceive, because it does not wait for signal to be received and does not call decode()
+ */
+void checkReceivedExtra(uint16_t aSentExtra) {
+    if (IrReceiver.decodedIRData.extra != aSentExtra) {
+        Serial.print(F("ERROR: Received extra=0x"));
+        Serial.print(IrReceiver.decodedIRData.extra, HEX);
+        Serial.print(F(" != sent extra=0x"));
+        Serial.println(aSentExtra, HEX);
+    }
+}
+
+void waitForReceived() {
     // wait until signal has received
     uint16_t tTimeoutCounter = 1000; // gives 10 seconds timeout
     while (!sDataJustReceived) {
@@ -374,6 +387,15 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
         tTimeoutCounter--;
     }
     sDataJustReceived = false;
+}
+
+/*
+ * @return true if NO error, false if error
+ */
+bool checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
+    bool tReturnValueIsSuccess = true;
+
+    waitForReceived();
 
     if (IrReceiver.decode()) {
 // Print a short summary of received data
@@ -403,6 +425,7 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
 
         if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
             Serial.println(F("ERROR: Unknown protocol"));
+            tReturnValueIsSuccess = false;
         } else {
             /*
              * Check address
@@ -412,6 +435,7 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
                 Serial.print(IrReceiver.decodedIRData.address, HEX);
                 Serial.print(F(" != sent address=0x"));
                 Serial.println(aSentAddress, HEX);
+                tReturnValueIsSuccess = false;
             }
             /*
              * Check command
@@ -421,14 +445,17 @@ void checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
                 Serial.print(IrReceiver.decodedIRData.command, HEX);
                 Serial.print(F(" != sent command=0x"));
                 Serial.println(aSentCommand, HEX);
+                tReturnValueIsSuccess = false;
             }
         }
 
     } else {
         Serial.println(F("No data received"));
+        tReturnValueIsSuccess = false;
         IrReceiver.resume();
     }
     Serial.println();
+    return tReturnValueIsSuccess;
 }
 
 /*
@@ -518,7 +545,9 @@ void loop() {
         Serial.println(F("Send arbitrary raw data with 1 repeat and exact timing (16 bit array format) with sendRaw()"));
         Serial.flush();
         IrSender.sendRaw(rawIRTimings, sizeof(rawIRTimings) / sizeof(rawIRTimings[0]), NEC_KHZ, 80, 1); // Note the approach used to automatically calculate the size of the array.
-        checkReceive(0xFB04 & 0xFF, 0x08);
+        waitForReceived();
+        IrReceiver.printIRResultRawFormatted(&Serial, true);
+        IrReceiver.resume();
         delay(DELAY_AFTER_SEND);
 
 #  if defined(DECODE_NEC)
@@ -791,10 +820,12 @@ void loop() {
     checkReceive(sAddress & 0xFFF, sCommand);
     delay(DELAY_AFTER_SEND);
 
-    Serial.println(F("Send Kaseikyo with 0x4711 as Vendor ID"));
+    Serial.println(F("Send Kaseikyo with extra=0x4711 as Vendor ID"));
     Serial.flush();
     IrSender.sendKaseikyo(sAddress & 0xFFF, sCommand, sRepeats, 0x4711);
-    checkReceive(sAddress & 0xFFF, sCommand);
+    if (checkReceive(sAddress & 0xFFF, sCommand)) {
+        checkReceivedExtra(0x4711);
+    }
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Kaseikyo_Denon variant"));
@@ -805,13 +836,13 @@ void loop() {
 #endif
 
 #if defined(DECODE_DENON)
-    Serial.println(F("Send Denon with repeats"));
+    Serial.println(F("Send Denon with 2 autorepeats after 45 ms")); // Only first frame is received!
     Serial.flush();
     IrSender.sendDenon(sAddress & 0x1F, sCommand, sRepeats);
     checkReceive(sAddress & 0x1F, sCommand);
     delay(DELAY_AFTER_SEND);
 
-    Serial.println(F("Send Denon/Sharp variant with repeats"));
+    Serial.println(F("Send Denon/Sharp variant with 2 autorepeat5 after 45 ms"));
     Serial.flush();
     IrSender.sendSharp(sAddress & 0x1F, sCommand, sRepeats);
     checkReceive(sAddress & 0x1F, sCommand);
@@ -831,9 +862,16 @@ void loop() {
     checkReceive(sAddress & 0xFF, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
 
+#  if defined(DECODE_BEO)
+    // BEO sets RECORD_GAP_MICROS 16000 which leads to concatenating the Sony repeats
+    Serial.println(F("Send Sony/SIRCS with 7 command and 13 address bits and no repeats"));
+    Serial.flush();
+    IrSender.sendSony(sAddress & 0x1FFF, sCommand, 0, SIRCS_20_PROTOCOL);
+#  else
     Serial.println(F("Send Sony/SIRCS with 7 command and 13 address bits"));
     Serial.flush();
     IrSender.sendSony(sAddress & 0x1FFF, sCommand, sRepeats, SIRCS_20_PROTOCOL);
+#  endif
     checkReceive(sAddress & 0x1FFF, sCommand & 0x7F);
     delay(DELAY_AFTER_SEND);
 #endif
@@ -878,6 +916,26 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 #endif
 
+#if defined(DECODE_MARANTZ)
+    Serial.print(F("Send Marantz with RC5 and extra=0x"));
+    Serial.println(~sCommand & 0x3F, HEX);
+    Serial.flush();
+    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand & 0x3F, sRepeats, ~sCommand & 0x3F, true);  // 5 address, 6 command bits
+    if (checkReceive(sAddress & 0x1F, sCommand & 0x3F)) {
+        checkReceivedExtra(~sCommand & 0x3F);
+    }
+    delay(DELAY_AFTER_SEND);
+
+    Serial.print(F("Send Marantz with RC5A and extra=0x"));
+    Serial.println(~sCommand & 0x3F, HEX);
+    Serial.flush();
+    IrSender.sendRC5Marantz(sAddress & 0x1F, (sCommand & 0x3F) + 0x40, sRepeats, ~sCommand & 0x3F, true); // 5 address, 7 command bits
+    if (checkReceive(sAddress & 0x1F, (sCommand & 0x3F) + 0x40)) {
+        checkReceivedExtra(~sCommand & 0x3F);
+    }
+    delay(DELAY_AFTER_SEND);
+#endif
+
 #if defined(DECODE_RC6)
     Serial.println(F("Send RC6"));
     Serial.flush();
@@ -887,10 +945,12 @@ void loop() {
     checkReceive(sAddress & 0xFF, sCommand);
     delay(DELAY_AFTER_SEND);
 
-    Serial.println(F("Send RC6A with 14 bit 0x2711 as extra"));
+    Serial.println(F("Send RC6A with 14 bit and extra=0x2711"));
     Serial.flush();
     IrSender.sendRC6A(sAddress & 0xFF, sCommand, sRepeats, 0x2711, true);
-    checkReceive(sAddress & 0xFF, sCommand);
+    if (checkReceive(sAddress & 0xFF, sCommand)) {
+        checkReceivedExtra(0x2711);
+    }
     delay(DELAY_AFTER_SEND);
 #endif
 
@@ -900,18 +960,20 @@ void loop() {
     Serial.println(tWandId, HEX);
     Serial.flush();
     IrSender.sendMagiQuest(tWandId, s16BitCommand); // we have 31 bit address
-    checkReceive(sAddress, s16BitCommand & 0x1FF); // we have 9 bit command
+    if (checkReceive(sAddress, s16BitCommand & 0x1FF)) { // we have 9 bit command
+        checkReceivedExtra(0x6BCD);
+    }
     delay(DELAY_AFTER_SEND);
 #endif
 
 #if defined(DECODE_OPENLASIR)
-    Serial.println(F("Send OpenLASIR mode fire and color orange"));
+    Serial.println(F("Send OpenLASIR mode fire and color orange, detected as ONKYO"));
     Serial.flush();
     IrSender.sendOpenLASIR(sAddress & 0xFF, sCommand, OPENLASIR_MODE_LASER_TAG_FIRE, OPENLASIR_COLOR_ORANGE, sRepeats);
-    checkReceive(sAddress & 0xFF, IrSender.computeOpenLASIRRawCommand(sCommand, OPENLASIR_MODE_LASER_TAG_FIRE,OPENLASIR_COLOR_ORANGE));
+    checkReceive(sAddress & 0xFF,
+            IrSender.computeOpenLASIRRawCommand(sCommand, OPENLASIR_MODE_LASER_TAG_FIRE, OPENLASIR_COLOR_ORANGE));
     delay(DELAY_AFTER_SEND);
 #endif
-
 
 #if defined(DECODE_LEGO_PF)
     Serial.println(F("Send Lego with 2 channel and with 4 command bits"));
@@ -922,9 +984,9 @@ void loop() {
 #endif
 
 #if defined(DECODE_BEO)
-    Serial.println(F("Send Bang&Olufsen / originally with 455 kHz"));
+    Serial.println(F("Send 16 bit Bang&Olufsen / originally with 455 kHz"));
     Serial.flush();
-    IrSender.sendBangOlufsen(sAddress & 0x0FF, sCommand, sRepeats);
+    IrSender.sendBangOlufsen(sAddress, sCommand, sRepeats); // send 8 bit command and 8 bit address / header
 #  if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
     delay((RECORD_GAP_MICROS / 1000) + 1);
     Serial.println(F("- ENABLE_BEO_WITHOUT_FRAME_GAP is enabled"));
@@ -951,7 +1013,7 @@ void loop() {
     }
     IrReceiver.decodedIRData.initialGapTicks = IrReceiver.irparams.rawbuf[0];
 #  endif
-    checkReceive(sAddress & 0x0FF, sCommand);
+    checkReceive(sAddress & 0xFF, sCommand); // only 8 bit of address is sent
     delay(DELAY_AFTER_SEND);
 #endif
 
@@ -1021,7 +1083,9 @@ void loop() {
         IrSender.mark(210);         // 8 pulses at 38 kHz
         IrSender.space(540);        // to fill up to 750 us
     }
-    checkReceive(sAddress, sCommand);
+    waitForReceived();
+    IrReceiver.printIRResultRawFormatted(&Serial, true);
+    IrReceiver.resume();
     delay(DELAY_AFTER_SEND);
 
     /*
@@ -1036,6 +1100,9 @@ void loop() {
     if (sRepeats > 4) {
         sRepeats = 4;
     }
+
+    Serial.println(F("Invert toggle value for next loop"));
+    sLastSendToggleValue = !sLastSendToggleValue;
 
     /*
      * Test stop and start of 50 us receiver timer

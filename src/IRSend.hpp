@@ -32,17 +32,10 @@
 #ifndef _IR_SEND_HPP
 #define _IR_SEND_HPP
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
-
-#if defined(TRACE) && !defined(LOCAL_TRACE)
-#define LOCAL_TRACE
-#else
-//#define LOCAL_TRACE // This enables debug output only for this file
-#endif
+// This block must be located after the includes of other *.hpp files
+//#define LOCAL_DEBUG // This enables debug output only for this file - only for development
+//#define LOCAL_TRACE // This enables trace output only for this file - only for development
+#include "LocalDebugLevelStart.h"
 
 /*
  * Low level hardware timing measurement
@@ -408,13 +401,11 @@ void IRsend::sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLe
 // Set IR carrier frequency
     enableIROut(aIRFrequencyKilohertz);
 
-#if defined(LOCAL_DEBUG)
-    Serial.print(F("aPGMBufferWithMicroseconds=0x"));
-    Serial.print((uint32_t) aBufferWithMicroseconds, HEX);
-    Serial.print(F(" [0]="));
-    Serial.println(aBufferWithMicroseconds[0]);  // this crashes on ESP8266 if aBufferWithMicroseconds is PROGMEM
-    Serial.flush();
-#endif
+    DEBUG_PRINT(F("aPGMBufferWithMicroseconds=0x"));
+    DEBUG_PRINT((uint32_t) aBufferWithMicroseconds, HEX);
+    DEBUG_PRINT(F(" [0]="));
+    DEBUG_PRINTLN(aBufferWithMicroseconds[0]);  // this crashes on ESP8266 if aBufferWithMicroseconds is PROGMEM
+    DEBUG_FLUSH();
 
     /*
      * Raw data starts with a mark.
@@ -509,11 +500,9 @@ void IRsend::sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_
     /*
      * Raw data starts with a mark
      */
-#  if defined(LOCAL_DEBUG)
     // If the PROGMEM array is defined in the function, the C-compiler uses a wrong address :-(. sizeof() works.
-    Serial.print(F("aPGMBufferWithMicroseconds=0x"));
-    Serial.println((uint16_t) aPGMBufferWithMicroseconds, HEX);
-#endif
+    DEBUG_PRINT(F("aPGMBufferWithMicroseconds=0x"));
+    DEBUG_PRINTLN((uint16_t) aPGMBufferWithMicroseconds, HEX);
 
     for (uint_fast16_t i = 0; i < aLengthOfBuffer; i++) {
         uint16_t duration = pgm_read_word(&aPGMBufferWithMicroseconds[i]);
@@ -521,18 +510,12 @@ void IRsend::sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_
         if (i & 1) {
             // Odd
             space(duration);
-#  if defined(LOCAL_DEBUG)
-            Serial.print(F("S="));
-#  endif
+            DEBUG_PRINT(F("S="));
         } else {
             mark(duration);
-#  if defined(LOCAL_DEBUG)
-            Serial.print(F("M="));
-#  endif
+            DEBUG_PRINT(F("M="));
         }
-#  if defined(LOCAL_DEBUG)
-        Serial.println(duration);
-#  endif
+        DEBUG_PRINTLN(duration);
     }
 #endif
 }
@@ -540,13 +523,11 @@ void IRsend::sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_
 void IRsend::sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer,
         uint_fast8_t aIRFrequencyKilohertz, uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats) {
 
-#if defined(LOCAL_DEBUG)
-    Serial.print(F("aPGMBufferWithMicroseconds=0x"));
-    Serial.print((uint32_t) aPGMBufferWithMicroseconds, HEX);
-    Serial.print(F(" [0]="));
-    Serial.println(aPGMBufferWithMicroseconds[0]); // this crashes on ESP8266
-    Serial.flush();
-#endif
+    DEBUG_PRINT(F("aPGMBufferWithMicroseconds=0x"));
+    DEBUG_PRINT((uint32_t) aPGMBufferWithMicroseconds, HEX);
+    DEBUG_PRINT(F(" [0]="));
+    DEBUG_PRINTLN(aPGMBufferWithMicroseconds[0]); // this crashes on ESP8266
+    DEBUG_FLUSH();
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
@@ -584,18 +565,12 @@ void IRsend::sendRaw_P(const uint8_t aPGMBufferWithTicks[], uint_fast16_t aLengt
         if (i & 1) {
             // Odd
             space(duration);
-#  if defined(LOCAL_DEBUG)
-            Serial.print(F("S="));
-#  endif
+            DEBUG_PRINT(F("S="));
         } else {
             mark(duration);
-#  if defined(LOCAL_DEBUG)
-            Serial.print(F("M="));
-#  endif
+            DEBUG_PRINT(F("M="));
         }
-#  if defined(LOCAL_DEBUG)
-        Serial.println(duration);
-#  endif
+        DEBUG_PRINTLN(duration);
     }
 #endif
 }
@@ -636,26 +611,20 @@ void IRsend::sendRaw_P(const uint8_t aPGMBufferWithTicks[], uint_fast16_t aLengt
 void IRsend::sendPulseDistanceWidthData(uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros,
         uint16_t aZeroSpaceMicros, IRRawDataType aData, uint_fast8_t aNumberOfBits, uint8_t aFlags) {
 
-#if defined(LOCAL_DEBUG)
-    Serial.print(aData, HEX);
-    Serial.print('|');
-    Serial.println(aNumberOfBits);
-    Serial.flush();
-#endif
+    DEBUG_PRINT(aData, HEX);
+    DEBUG_PRINT('|');
+    DEBUG_PRINTLN(aNumberOfBits);
+    DEBUG_FLUSH();
 
     // For MSBFirst, send data from MSB to LSB until mask bit is shifted out
     IRRawDataType tMask = 1ULL << (aNumberOfBits - 1);
     for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
         if (((aFlags & PROTOCOL_IS_MSB_MASK) && (aData & tMask)) || (!(aFlags & PROTOCOL_IS_MSB_MASK) && (aData & 1))) {
-#if defined(LOCAL_TRACE)
-            Serial.print('1');
-#endif
+            TRACE_PRINT('1');
             mark(aOneMarkMicros);
             space(aOneSpaceMicros);
         } else {
-#if defined(LOCAL_TRACE)
-            Serial.print('0');
-#endif
+            TRACE_PRINT('0');
             mark(aZeroMarkMicros);
             space(aZeroSpaceMicros);
         }
@@ -672,14 +641,10 @@ void IRsend::sendPulseDistanceWidthData(uint16_t aOneMarkMicros, uint16_t aOneSp
      */
     if ((!(aFlags & SUPPRESS_STOP_BIT)) && (uintDifferenceAbs(aOneSpaceMicros, aZeroSpaceMicros) > (aOneSpaceMicros / 4))) {
         // Send stop bit here
-#if defined(LOCAL_TRACE)
-        Serial.print('S');
-#endif
+        TRACE_PRINT('S');
         mark(aOneMarkMicros); // Use aOneMarkMicros for stop bits. This seems to be correct for all protocols :-)
     }
-#if defined(LOCAL_TRACE)
-    Serial.println();
-#endif
+    TRACE_PRINTLN();
 }
 
 /**********************************************************************************************************************
@@ -952,13 +917,11 @@ void IRsend::sendPulseDistanceWidthFromArray_P(uint_fast8_t aFrequencyKHz,
 void IRsend::sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRRawDataType aData,
         uint_fast8_t aNumberOfBits, int_fast8_t aNumberOfRepeats) {
 
-#if defined(LOCAL_DEBUG)
-    Serial.print(F("Data=0x"));
-    Serial.print(aData, HEX);
-    Serial.print(F(" #="));
-    Serial.println(aNumberOfBits);
-    Serial.flush();
-#endif
+    DEBUG_PRINT(F("Data=0x"));
+    DEBUG_PRINT(aData, HEX);
+    DEBUG_PRINT(F(" #="));
+    DEBUG_PRINTLN(aNumberOfBits);
+    DEBUG_FLUSH();
 
     if (aNumberOfRepeats < 0) {
         if (aProtocolConstants->SpecialSendRepeatFunction != nullptr) {
@@ -1207,19 +1170,16 @@ void IRsend::sendPulseDistanceWidth_P(PulseDistanceWidthProtocolConstants const 
  * Send an additional start bit if specified
  * 0 -> mark+space
  * 1 -> space+mark
- * The output always ends with a space
- * @param aData             uint32 or uint64 holding the bits to be sent.
+ * The output always ends with a space / inactive level
+ * @param aData             uint32 holding the bits to be sent.
  * @param aNumberOfBits     Number of bits from aData to be actually sent.
  * @param aSendStartBit     if true sends an additional start bit with value 1 as MSB, if false no start bit is sent and data may start with 0 or 1.
  */
 void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits, bool aSendStartBit) {
 
-    IR_TRACE_PRINT(F("0x"));
-    IR_TRACE_PRINT(aData, HEX);
-
-#if defined(LOCAL_TRACE)
-    Serial.print('S');
-#endif
+    TRACE_PRINT(F("0x"));
+    TRACE_PRINT(aData, HEX);
+    TRACE_PRINT('S');
 
 // Data - Biphase code MSB first
 
@@ -1247,9 +1207,7 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
         tMask >>= 1;
         tNextBitIsOne = ((aData & tMask) != 0) || (i == 1); // true for last bit to avoid extension of mark
         if (tCurrentBitIsOne) {
-#if defined(LOCAL_TRACE)
-            Serial.print('1');
-#endif
+            TRACE_PRINT('1');
             space(aBiphaseTimeUnit);
             if (tNextBitIsOne) {
                 mark(aBiphaseTimeUnit); // if next bit is 1 send a single mark
@@ -1260,9 +1218,7 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
             tLastBitWasOne = true;
 
         } else {
-#if defined(LOCAL_TRACE)
-            Serial.print('0');
-#endif
+            TRACE_PRINT('0');
             if (!tLastBitWasOne) {
                 mark(aBiphaseTimeUnit); // if last bit was 0 send a single mark
             }
@@ -1270,7 +1226,7 @@ void IRsend::sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fas
             tLastBitWasOne = false;
         }
     }
-    IR_TRACE_PRINTLN();
+    TRACE_PRINTLN();
 }
 
 /**
@@ -1604,10 +1560,6 @@ uint16_t IRsend::getPulseCorrectionNanos() {
 #if defined(_IR_MEASURE_TIMING)
 #undef _IR_MEASURE_TIMING
 #endif
-#if defined(LOCAL_TRACE)
-#undef LOCAL_TRACE
-#endif
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_SEND_HPP

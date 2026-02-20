@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2023 Armin Joachimsmeyer
+ * Copyright (c) 2020-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,11 +32,9 @@
 #ifndef _IR_DENON_HPP
 #define _IR_DENON_HPP
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
+// This block must be located after the includes of other *.hpp files
+//#define LOCAL_DEBUG // This enables debug output only for this file - only for development
+#include "LocalDebugLevelStart.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -171,24 +169,21 @@ bool IRrecv::decodeDenon() {
     // we have no start bit, so check for the exact amount of data bits
     // Check we have the right amount of data (32). The + 2 is for initial gap + stop bit mark
     if (decodedIRData.rawlen != (2 * DENON_BITS) + 2) {
-        IR_DEBUG_PRINT(F("Denon: "));
-        IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 32"));
+        DEBUG_PRINT(F("Denon: Data length="));
+        DEBUG_PRINT(decodedIRData.rawlen);
+        DEBUG_PRINTLN(F(" is not 32"));
+        return false;
+    }
+
+    // Check for first mark, which is no AGC or start bit. This prevents Sony15 from being decoded as Denon.
+    // matchMark is too sensitive!
+    if (irparams.rawbuf[1] >= ((2 * DENON_HEADER_MARK) / MICROS_PER_TICK)) {
+        DEBUG_PRINTLN(F("Denon: First mark length is wrong"));
         return false;
     }
 
     // Try to decode as Denon protocol
     decodePulseDistanceWidthData_P(&DenonProtocolConstants, DENON_BITS, 1);
-
-    // Check for stop mark, this stop bit distinguishes it from decoding as Sony
-    if (!matchMark(irparams.rawbuf[(2 * DENON_BITS) + 1], DENON_HEADER_MARK)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("Denon: "));
-        Serial.println(F("Stop bit mark length is wrong"));
-#endif
-        return false;
-    }
 
     // Success
     decodedIRData.address = decodedIRData.decodedRawData & 0x1F;
@@ -214,21 +209,19 @@ bool IRrecv::decodeDenon() {
             /*
              * Here we are in an inverted auto repeated frame where the command and frame bits are inverted
              */
-#if defined(LOCAL_DEBUG)
-            Serial.print(F("Denon: Inverted frame"));
-#endif
+            DEBUG_PRINTLN(F("Denon: Inverted frame"));
+
             if (repeatCount > 1) { // skip first auto repeat
                 decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
             }
             // Check parity of consecutive received commands. There is no parity in one data set.
             if ((uint8_t) lastDecodedCommand != (uint8_t)(~decodedIRData.command)) {
                 decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
-#if defined(LOCAL_DEBUG)
-                Serial.print(F("Denon: Parity check of inverted with non inverted frame failed. Last command="));
-                Serial.print((uint8_t)lastDecodedCommand, HEX);
-                Serial.print(F(" current="));
-                Serial.println((uint8_t)~decodedIRData.command, HEX);
-#endif
+
+                DEBUG_PRINT(F("Denon: Parity check of inverted with non inverted frame failed. Last command="));
+                DEBUG_PRINT((uint8_t )lastDecodedCommand, HEX);
+                DEBUG_PRINT(F(" current="));
+                DEBUG_PRINTLN((uint8_t )~decodedIRData.command, HEX);
             }
             // always take non inverted command
             decodedIRData.command = lastDecodedCommand;
@@ -269,8 +262,8 @@ void IRsend::sendDenon(unsigned long data, int nbits) {
     // Set IR carrier frequency
     enableIROut (DENON_KHZ);
 #if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
-//    Serial.println(
-//            "The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).");
+    DEBUG_PRINTLN(
+            "The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).");
 #endif
 
     // Header
@@ -317,7 +310,6 @@ bool IRrecv::decodeDenonOld(decode_results *aResults) {
 }
 
 /** @}*/
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_DENON_HPP

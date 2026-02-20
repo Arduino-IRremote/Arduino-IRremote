@@ -149,8 +149,8 @@ struct PulseDistanceWidthProtocolConstants {
  * Definitions for member PulseDistanceWidthProtocolConstants.Flags
  */
 #define PROTOCOL_IS_PULSE_DISTANCE      0x00
-#define PROTOCOL_IS_PULSE_DISTANCE_WIDTH 0x00 // can often successfully be decoded as pulse distance
-#define PROTOCOL_IS_PULSE_WIDTH         0x10
+#define PROTOCOL_IS_PULSE_DISTANCE_WIDTH 0x00 // Can often be decoded successfully as pulse distance
+#define PROTOCOL_IS_PULSE_WIDTH         0x10  // Currently only Sony protocol
 #define PROTOCOL_IS_PULSE_WIDTH_MASK    PROTOCOL_IS_PULSE_WIDTH
 #define SUPPRESS_STOP_BIT               0x20 // Stop bit is otherwise sent for all pulse distance protocols, i.e. aOneSpaceMicros != aZeroSpaceMicros.
 #define PROTOCOL_IS_MSB_FIRST           IRDATA_FLAGS_IS_MSB_FIRST

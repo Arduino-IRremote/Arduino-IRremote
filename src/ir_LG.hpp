@@ -32,11 +32,7 @@
 #ifndef _IR_LG_HPP
 #define _IR_LG_HPP
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
+#include "LocalDebugLevelStart.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -186,10 +182,9 @@ bool IRrecv::decodeLG() {
 // Check we have the right amount of data (60). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawlen != ((2 * LG_BITS) + 4) && (decodedIRData.rawlen != 4)) {
         // Is only printed, if LOCAL_DEBUG is defined globally
-        IR_DEBUG_PRINT(F("LG: "));
-        IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 60 or 4"));
+        DEBUG_PRINT(F("LG: Data length="));
+        DEBUG_PRINT(decodedIRData.rawlen);
+        DEBUG_PRINTLN(F(" is not 60 or 4"));
         return false;
     }
 
@@ -199,10 +194,7 @@ bool IRrecv::decodeLG() {
             tProtocol = LG2;
             tHeaderSpace = LG2_HEADER_SPACE;
         } else {
-#if defined(LOCAL_DEBUG)
-            Serial.print(F("LG: "));
-            Serial.println(F("Header mark is wrong"));
-#endif
+            DEBUG_PRINTLN(F("LG: Header mark is wrong"));
             return false; // neither LG nor LG2 header
         }
     }
@@ -216,19 +208,13 @@ bool IRrecv::decodeLG() {
             decodedIRData.protocol = lastDecodedProtocol;
             return true;
         }
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("LG: "));
-        Serial.print(F("Repeat header space is wrong"));
-#endif
+        DEBUG_PRINTLN(F("LG: Repeat header space is wrong"));
         return false;
     }
 
 // Check command header space
     if (!matchSpace(irparams.rawbuf[2], tHeaderSpace)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("LG: "));
-        Serial.println(F("Header space length is wrong"));
-#endif
+        DEBUG_PRINTLN(F("LG: Header space length is wrong"));
         return false;
     }
 
@@ -250,15 +236,14 @@ bool IRrecv::decodeLG() {
     }
 // Checksum check
     if ((tChecksum & 0xF) != (decodedIRData.decodedRawData & 0xF)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("LG: "));
-        Serial.print(F("4 bit checksum is not correct. expected=0x"));
-        Serial.print(tChecksum, HEX);
-        Serial.print(F(" received=0x"));
-        Serial.print((decodedIRData.decodedRawData & 0xF), HEX);
-        Serial.print(F(" data=0x"));
-        Serial.println(decodedIRData.command, HEX);
-#endif
+
+        DEBUG_PRINT(F("LG: 4 bit checksum is not correct. expected=0x"));
+        DEBUG_PRINT(tChecksum, HEX);
+        DEBUG_PRINT(F(" received=0x"));
+        DEBUG_PRINT((decodedIRData.decodedRawData & 0xF), HEX);
+        DEBUG_PRINT(F(" data=0x"));
+        DEBUG_PRINTLN(decodedIRData.command, HEX);
+
         decodedIRData.flags |= IRDATA_FLAGS_PARITY_FAILED;
     }
 
@@ -304,9 +289,7 @@ bool IRrecv::decodeLGMSB(decode_results *aResults) {
 
 // Stop bit
     if (!matchMark(aResults->rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
-#if defined(LOCAL_DEBUG)
-        Serial.println(F("Stop bit mark length is wrong"));
-#endif
+        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
         return false;
     }
 
@@ -323,20 +306,18 @@ void IRsend::sendLG(unsigned long data, int nbits) {
 // Set IR carrier frequency
     enableIROut (LG_KHZ);
 #if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
-//    Serial.println(F(
-//            "The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats)."));
+    DEBUG_PRINTLN(
+            F( "The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats)."));
 #endif
 // Header
     mark(LG_HEADER_MARK);
     space(LG_HEADER_SPACE);
-//    mark(LG_BIT_MARK);
 
 // Data + stop bit
     sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
 }
 
 /** @}*/
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_LG_HPP

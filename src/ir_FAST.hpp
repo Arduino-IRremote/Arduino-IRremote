@@ -35,11 +35,9 @@
 
 #include "TinyIR.h"
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
+// This block must be located after the includes of other *.hpp files
+//#define LOCAL_DEBUG // This enables debug output only for this file - only for development
+#include "LocalDebugLevelStart.h"
 
 /** \addtogroup Decoder Decoders and encoders for different protocols
  * @{
@@ -101,10 +99,9 @@ bool IRrecv::decodeFAST() {
 
     // Check we have the right amount of data (36). The +4 is for initial gap, start bit mark and space + stop bit mark.
     if (decodedIRData.rawlen != ((2 * FAST_BITS) + 4)) {
-        IR_DEBUG_PRINT(F("FAST: "));
-        IR_DEBUG_PRINT(F("Data length="));
-        IR_DEBUG_PRINT(decodedIRData.rawlen);
-        IR_DEBUG_PRINTLN(F(" is not 36"));
+        DEBUG_PRINT(F("FAST: Data length="));
+        DEBUG_PRINT(decodedIRData.rawlen);
+        DEBUG_PRINTLN(F(" is not 36"));
         return false;
     }
 
@@ -117,15 +114,13 @@ bool IRrecv::decodeFAST() {
     tValue.UWord = decodedIRData.decodedRawData;
 
     if (tValue.UByte.LowByte != (uint8_t) ~(tValue.UByte.HighByte)) {
-#if defined(LOCAL_DEBUG)
-        Serial.print(F("FAST: "));
-        Serial.print(F("8 bit parity is not correct. Expected=0x"));
-        Serial.print((uint8_t) ~(tValue.UByte.LowByte), HEX);
-        Serial.print(F(" received=0x"));
-        Serial.print(tValue.UByte.HighByte, HEX);
-        Serial.print(F(" data=0x"));
-        Serial.println(tValue.UWord, HEX);
-#endif
+        DEBUG_PRINT(F("FAST: 8 bit parity is not correct. Expected=0x"));
+        DEBUG_PRINT((uint8_t) ~(tValue.UByte.LowByte), HEX);
+        DEBUG_PRINT(F(" received=0x"));
+        DEBUG_PRINT(tValue.UByte.HighByte, HEX);
+        DEBUG_PRINT(F(" data=0x"));
+        DEBUG_PRINTLN(tValue.UWord, HEX);
+
         decodedIRData.flags = IRDATA_FLAGS_PARITY_FAILED;
     }
 
@@ -142,7 +137,6 @@ bool IRrecv::decodeFAST() {
 }
 
 /** @}*/
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_FAST_HPP

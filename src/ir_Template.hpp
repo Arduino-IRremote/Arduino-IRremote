@@ -92,6 +92,8 @@
 #ifndef _IR_SHUZU_HPP
 #define _IR_SHUZU_HPP
 
+#include "LocalDebugLevelStart.h"
+
 //==============================================================================
 //
 //
@@ -155,8 +157,7 @@ bool IRrecv::decodeShuzu() {
 
     // Decode
     if (!decodePulseDistanceData_P(&ShuzuProtocolConstants, SHUZU_BITS)) {
-        IR_DEBUG_PRINT(F("Shuzu: "));
-        IR_DEBUG_PRINTLN(F("Decode failed"));
+        DEBUG_PRINTLN(F("Shuzu: Decode failed"));
         return false;
     }
 
@@ -172,4 +173,7 @@ bool IRrecv::decodeShuzu() {
 
     return true;
 }
+
+#include "LocalDebugLevelEnd.h"
+
 #endif // _IR_SHUZU_HPP

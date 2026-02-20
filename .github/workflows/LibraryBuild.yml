@@ -1,7 +1,7 @@
 # https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/.github/workflows/LibraryBuild.yml
 # Github workflow script to test compile all examples of an Arduino library repository.
 #
-# Copyright (C) 2020-2023  Armin Joachimsmeyer
+# Copyright (C) 2020-2026  Armin Joachimsmeyer
 # https://github.com/ArminJo/Github-Actions
 #
 # Before being able to push to my .github\workflows directories,
@@ -321,9 +321,9 @@ jobs:
 
           - arduino-boards-fqbn: vega:riscv:aries_v3
             platform-url: https://gitlab.com/riscv-vega/vega-arduino/-/raw/main/package_vega_index.json
-            #sketches-exclude: AllProtocolsOnLCD,UnitTest,ReceiveAndSendDistanceWidth,ReceiveDemo,SimpleReceiverForHashCodes  # No print(uint64_t,.) available
+            sketches-exclude: MicroGirs,SendLGAirConditionerDemo  # No Stream:: available and readBytesUntil
             build-properties: # the flags were put in compiler.cpp.extra_flags
-              All: -DF_CPU=100000000LL -DVEGA_ARIES_V3 -DRAW_BUFFER_LENGTH=750
+              All: -DF_CPU=100000000LL -DVEGA_ARIES_V3 -DRAW_BUFFER_LENGTH=750 -DCHANGE=1
 
 #      fail-fast: false # false -> do not cancel all jobs / architectures if one job fails
 

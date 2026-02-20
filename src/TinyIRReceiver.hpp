@@ -78,7 +78,6 @@
 //#define USE_EXTENDED_NEC_PROTOCOL // Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC / ONKYO.
-
 //#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 //#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 //#define IR_RECEIVE_PIN          2
@@ -90,18 +89,14 @@
  * @{
  */
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
+// This block must be located after the includes of other *.hpp files
+//#define LOCAL_DEBUG // This enables debug output only for this file - only for development
+//#define LOCAL_TRACE // This enables trace output only for this file - only for development
+#include "LocalDebugLevelStart.h"
+#if defined(LOCAL_DEBUG)
 #define LOCAL_DEBUG_ATTACH_INTERRUPT
 #else
-//#define LOCAL_DEBUG // This enables debug output only for this file
 //#define LOCAL_DEBUG_ATTACH_INTERRUPT  // To see if attachInterrupt() or static interrupt (by register tweaking) is used and no other debug output
-#endif
-
-#if defined(TRACE)
-#define LOCAL_TRACE_STATE_MACHINE
-#else
-//#define LOCAL_TRACE_STATE_MACHINE  // to see the state of the ISR (Interrupt Service Routine) state machine
 #endif
 
 //#define _IR_MEASURE_TIMING        // Activate this if you want to enable internal hardware timing measurement.
@@ -197,14 +192,12 @@ void IRPinChangeInterruptHandler(void) {
 
     uint8_t tState = TinyIRReceiverControl.IRReceiverState;
 
-#if defined(LOCAL_TRACE_STATE_MACHINE)
-    Serial.print(tState);
-    Serial.print(F(" D="));
-    Serial.print(tMicrosOfMarkOrSpace);
-//    Serial.print(F(" I="));
-//    Serial.print(tIRLevel);
-    Serial.print('|');
-#endif
+    TRACE_PRINT(tState);
+    TRACE_PRINT(F(" D="));
+    TRACE_PRINT(tMicrosOfMarkOrSpace);
+//    TRACE_PRINT(F(" I="));
+//    TRACE_PRINT(tIRLevel);
+    TRACE_PRINT('|');
 
     if (tIRLevel == LOW) {
         /*
@@ -356,22 +349,18 @@ void IRPinChangeInterruptHandler(void) {
 #else
                         TinyIRReceiverControl.Flags = IRDATA_FLAGS_PARITY_FAILED;
 #endif
-#  if defined(LOCAL_DEBUG)
-                        Serial.print(F("Parity check for command failed. Command="));
-                        Serial.print(TinyIRReceiverControl.IRRawData.UBytes[2], HEX);
-                        Serial.print(F(" parity="));
-                        Serial.println(TinyIRReceiverControl.IRRawData.UBytes[3], HEX);
-#  endif
+                        DEBUG_PRINT(F("Parity check for command failed. Command="));
+                        DEBUG_PRINT(TinyIRReceiverControl.IRRawData.UBytes[2], HEX);
+                        DEBUG_PRINT(F(" parity="));
+                        DEBUG_PRINTLN(TinyIRReceiverControl.IRRawData.UBytes[3], HEX);
 #else
                     // No address, so command and parity are in the lowest bytes
                     if (TinyIRReceiverControl.IRRawData.UBytes[0] != (uint8_t) (~TinyIRReceiverControl.IRRawData.UBytes[1])) {
                         TinyIRReceiverControl.Flags |= IRDATA_FLAGS_PARITY_FAILED;
-#  if defined(LOCAL_DEBUG)
-                        Serial.print(F("Parity check for command failed. Command="));
-                        Serial.print(TinyIRReceiverControl.IRRawData.UBytes[0], HEX);
-                        Serial.print(F(" parity="));
-                        Serial.println(TinyIRReceiverControl.IRRawData.UBytes[1], HEX);
-#  endif
+                        DEBUG_PRINT(F("Parity check for command failed. Command="));
+                        DEBUG_PRINT(TinyIRReceiverControl.IRRawData.UBytes[0], HEX);
+                        DEBUG_PRINT(F(" parity="));
+                        DEBUG_PRINTLN(TinyIRReceiverControl.IRRawData.UBytes[1], HEX);
 #endif
                     }
 #endif
@@ -593,7 +582,7 @@ bool enablePCIInterruptForTinyReceiver() {
 #    if defined(ARDUINO_ARCH_SAMD) // see https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/ paragraph: Syntax
     attachInterrupt(IR_RECEIVE_PIN, IRPinChangeInterruptHandler, CHANGE); // no extra pin mapping here :-(
 #    else
-    attachInterrupt(digitalPinToInterrupt(IR_RECEIVE_PIN), IRPinChangeInterruptHandler, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(IR_RECEIVE_PIN), IRPinChangeInterruptHandler, CHANGE); // CHANGE can be an enum :-(
 #    endif
 #  else
     // USE_ATTACH_INTERRUPT_DIRECT here, only defined for ATtinies *16, see above
@@ -606,7 +595,7 @@ bool enablePCIInterruptForTinyReceiver() {
 #  endif
 #else
 #  if defined(LOCAL_DEBUG_ATTACH_INTERRUPT)
-    Serial.println(F("Use static interrupt for pin=" STR(IR_RECEIVE_PIN)));
+    Serial.println(F("Use hardware/static interrupt for pin=" STR(IR_RECEIVE_PIN)));
 #  endif
 
 #  if defined(USE_INT0)
@@ -724,11 +713,6 @@ void dummyFunctionToAvoidCompilerErrors()
 #if defined(LOCAL_DEBUG_ATTACH_INTERRUPT)
 #undef LOCAL_DEBUG_ATTACH_INTERRUPT
 #endif
-#if defined(LOCAL_TRACE_STATE_MACHINE)
-#undef LOCAL_TRACE_STATE_MACHINE
-#endif
+#include "LocalDebugLevelEnd.h"
 
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
 #endif // _TINY_IR_RECEIVER_HPP

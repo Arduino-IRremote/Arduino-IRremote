@@ -33,12 +33,6 @@
 #ifndef _IR_PROTOCOL_HPP
 #define _IR_PROTOCOL_HPP
 
-#if defined(DEBUG)
-#define LOCAL_DEBUG
-#else
-//#define LOCAL_DEBUG // This enables debug output only for this file
-#endif
-
 /** \addtogroup Receiving Receiving IR data for multiple protocols
  * @{
  */
@@ -138,10 +132,20 @@ size_t print(PrintImplType *p, unsigned long long value, int base) {
     tLength += p->print(static_cast<uint32_t>(value), base);
     return tLength;
 }
+template<typename PrintImplType, typename std::enable_if<!has_ull_print<PrintImplType>::value, bool>::type = true>
+size_t println(PrintImplType *p, unsigned long long value, int base) {
+    size_t tLength = p->print(static_cast<uint32_t>(value >> 32), base);
+    tLength += p->println(static_cast<uint32_t>(value), base);
+    return tLength;
+}
 
 template<typename PrintImplType, typename std::enable_if<has_ull_print<PrintImplType>::value, bool>::type = true>
 size_t print(PrintImplType *p, unsigned long long value, int base) {
     return p->print(value, base);
+}
+template<typename PrintImplType, typename std::enable_if<has_ull_print<PrintImplType>::value, bool>::type = true>
+size_t println(PrintImplType *p, unsigned long long value, int base) {
+    return p->println(value, base);
 }
 }
 ;
@@ -149,6 +153,9 @@ size_t print(PrintImplType *p, unsigned long long value, int base) {
 namespace PrintULL {
     size_t print(Print *aSerial, unsigned long long n, int base) {
         return aSerial->print(n, base);
+    }
+    size_t println(Print *aSerial, unsigned long long n, int base) {
+        return aSerial->println(n, base);
     }
 };
 #  endif
@@ -186,7 +193,4 @@ uint32_t bitreverse32Bit(uint32_t aInput) {
 
 /** @}*/
 
-#if defined(LOCAL_DEBUG)
-#undef LOCAL_DEBUG
-#endif
 #endif // _IR_PROTOCOL_HPP

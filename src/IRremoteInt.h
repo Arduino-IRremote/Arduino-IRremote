@@ -135,6 +135,13 @@ struct irparams_struct {
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
     void (*ReceiveCompleteCallbackFunction)(void); ///< The function to call if a protocol message has arrived, i.e. StateForISR changed to IR_REC_STATE_STOP
 #endif
+#if defined(DECODE_RC5) || defined(DECODE_RC6) || defined(DECODE_MARANTZ)
+    // Static variables for the getBiphaselevel() function
+    uint_fast8_t RawbuffOffsetForNextBiphaseLevel;   // Index into raw timing array
+    uint16_t NumberOfTimingIntervalsInCurrentInterval; // 1, 2 or 3. Number of aBiphaseTimeUnit intervals of the current rawbuf[RawbuffOffsetForNextBiphaseLevel] timing.
+    uint_fast8_t AlreadyUsedTimingIntervalsOfCurrentInterval;   // Number of already used intervals of sCurrentTimingIntervals.
+    uint16_t BiphaseTimeUnit;
+#endif
     bool OverflowFlag;                  ///< Raw buffer OverflowFlag occurred
     IRRawlenType rawlen;                ///< counter of entries in rawbuf
     uint16_t initialGapTicks;   ///< Tick counts of the length of the gap between previous and current IR frame. Pre 4.4: rawbuf[0].
@@ -171,33 +178,6 @@ struct IRData {
     IRRawlenType rawlen;        ///< Counter of entries in rawbuf of last received frame.
     uint16_t initialGapTicks;   ///< Contains the initial gap (pre 4.4: the value in rawbuf[0]) of the last received frame.
 };
-
-/*
- * Debug directives
- * Outputs with IR_DEBUG_PRINT can only be activated by defining DEBUG!
- * If LOCAL_DEBUG is defined in one file, all outputs with IR_DEBUG_PRINT are still suppressed.
- */
-#if defined(DEBUG) || defined(TRACE)
-#  define IR_DEBUG_PRINT(...)    Serial.print(__VA_ARGS__)
-#  define IR_DEBUG_PRINTLN(...)  Serial.println(__VA_ARGS__)
-#else
-/**
- * If DEBUG, print the arguments, otherwise do nothing.
- */
-#  define IR_DEBUG_PRINT(...) void()
-/**
- * If DEBUG, print the arguments as a line, otherwise do nothing.
- */
-#  define IR_DEBUG_PRINTLN(...) void()
-#endif
-
-#if defined(TRACE)
-#  define IR_TRACE_PRINT(...)    Serial.print(__VA_ARGS__)
-#  define IR_TRACE_PRINTLN(...)  Serial.println(__VA_ARGS__)
-#else
-#  define IR_TRACE_PRINT(...) void()
-#  define IR_TRACE_PRINTLN(...) void()
-#endif
 
 /****************************************************
  *                     RECEIVING
@@ -341,11 +321,11 @@ public:
     bool decodeStrictPulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
             uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst);
 
-    bool decodeBiPhaseData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint_fast8_t aStartClockCount,
-            uint_fast8_t aValueOfSpaceToMarkTransition, uint16_t aBiphaseTimeUnit);
-
+#if defined(DECODE_RC5) || defined(DECODE_MARANTZ) || defined(DECODE_RC6)
     void initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit);
+    static uint8_t getNumberOfUnitsInInterval(uint16_t aCurrentInterval, uint16_t aTimeUnit);
     uint_fast8_t getBiphaselevel();
+#endif
 
     /*
      * All standard (decode address + command) protocol decoders
@@ -361,8 +341,12 @@ public:
     bool decodeMagiQuest(); // not completely standard
     bool decodeNEC();
     bool decodeOpenLASIR();
+#if defined(DECODE_RC5) || defined(DECODE_MARANTZ)
     bool decodeRC5();
+#endif
+#if defined(DECODE_RC6)
     bool decodeRC6();
+#endif
     bool decodeSamsung();
     bool decodeSharp(); // redirected to decodeDenon()
     bool decodeSony();
@@ -428,8 +412,6 @@ void printIRResultShort(Print *aSerial, IRData *aIRDataPtr)
 ;
 // A static function to be able to print send or copied received data.
 void printIRDataShort(Print *aSerial, IRData *aIRDataPtr);
-
-extern uint_fast8_t sBiphaseDecodeRawbuffOffset;
 
 /*
  * Mark & Space matching functions
@@ -720,8 +702,14 @@ public:
         sendNECMSB(aRawData, nbits);
     }
     void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat = false);
-    void sendRC5(uint32_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead.")));;
-    void sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) __attribute__ ((deprecated ("Please use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead.")));;
+    void sendRC5(uint32_t data,
+            uint8_t nbits)
+                    __attribute__ ((deprecated ("Please use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead.")));
+    ;
+    void sendRC5ext(uint8_t addr, uint8_t cmd,
+            bool toggle)
+                    __attribute__ ((deprecated ("Please use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead.")));
+    ;
     void sendRC6Raw(uint32_t data, uint8_t nbits);
     void sendRC6(uint32_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC6Raw().")));
     void sendRC6Raw(uint64_t data, uint8_t nbits);

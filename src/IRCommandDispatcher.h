@@ -5,7 +5,7 @@
  *
  * To run this example you need to install the "IRremote" or "IRMP" library under "Tools -> Manage Libraries..." or "Ctrl+Shift+I"
  *
- *  Copyright (C) 2019-2024  Armin Joachimsmeyer
+ *  Copyright (C) 2019-2026  Armin Joachimsmeyer
  *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of ServoEasing https://github.com/ArminJo/ServoEasing.
@@ -31,6 +31,13 @@
 
 #include <stdint.h>
 
+//#define DISPATCHER_IR_COMMAND_HAS_MORE_THAN_8_BIT // Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 5 bytes RAM + 1 byte RAM per mapping entry.
+//#define USE_DISPATCHER_COMMAND_STRINGS // Enables the printing of command strings. Requires additional 2 bytes RAM for each command mapping. Requires program memory for strings, but saves snprintf() code (1.5k) if INFO or DEBUG is activated, which has no effect if snprintf() is also used in other parts of your program / libraries.
+#if defined(USE_DISPATCHER_COMMAND_STRINGS)
+#define COMMAND_STRING(anyString)   anyString
+#else
+#define COMMAND_STRING(anyString)
+#endif
 /*
  * For command mapping file
  */
@@ -40,7 +47,6 @@
 #define IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING (IR_COMMAND_FLAG_REPEATABLE | IR_COMMAND_FLAG_NON_BLOCKING)
 #define IR_COMMAND_FLAG_BEEP            0x04 // Do a single short beep before executing command. May not be useful for short or repeating commands.
 #define IR_COMMAND_FLAG_BLOCKING_BEEP   (IR_COMMAND_FLAG_BLOCKING | IR_COMMAND_FLAG_BEEP)
-
 
 #if !defined(IS_STOP_REQUESTED)
 #define IS_STOP_REQUESTED               IRDispatcher.requestToStopReceived
@@ -55,38 +61,34 @@
 #define DELAY_AND_RETURN_IF_STOP(aDurationMillis)   if (IRDispatcher.delayAndCheckForStop(aDurationMillis)) return
 #endif
 
+/*
+ * Define as COMMAND_EMPTY a code which is not sent by the remote - otherwise please redefine it here
+ */
+#if defined(DISPATCHER_IR_COMMAND_HAS_MORE_THAN_8_BIT)
+#define COMMAND_EMPTY       __UINT_FAST16_MAX__ // 0xFFFF code no command
+typedef uint_fast16_t IRCommandType;
+#else
+typedef uint_fast8_t IRCommandType;
+#define COMMAND_EMPTY       __UINT_FAST8_MAX__ // 0xFF code no command
+#endif
+
 // Basic mapping structure
 struct IRToCommandMappingStruct {
-#if defined(IR_COMMAND_HAS_MORE_THAN_8_BIT)
-    uint16_t IRCode;
-#else
-    uint8_t IRCode;
-#endif
+    IRCommandType IRCode;
     uint8_t Flags;
     void (*CommandToCall)();
+#if defined(USE_DISPATCHER_COMMAND_STRINGS)
     const char *CommandString;
+#endif
 };
 
 struct IRDataForCommandDispatcherStruct {
     uint16_t address;           // to distinguish between multiple senders
-#if defined(IR_COMMAND_HAS_MORE_THAN_8_BIT)
-    uint16_t command;
-#else
-    uint8_t command;
-#endif
+    IRCommandType command;
     bool isRepeat;
-    uint32_t MillisOfLastCode;  // millis() of last IR command -including repeats!- received - for timeouts etc.
-    volatile bool isAvailable;  // flag for a polling interpreting function, that a new command has arrived. Is set true by library and set false by main loop.
+    volatile uint32_t MillisOfLastCode;  // millis() of last IR command -including repeats!- received - for timeouts etc.
+    volatile bool isAvailable; // flag for a polling interpreting function, that a new command has arrived. Is set true by library and set false by main loop.
 };
-
-/*
- * Special codes (hopefully) not sent by the remote - otherwise please redefine it here
- */
-#if defined(IR_COMMAND_HAS_MORE_THAN_8_BIT)
-#define COMMAND_EMPTY       0xFFFF // code no command
-#else
-#define COMMAND_EMPTY       0xFF // code no command
-#endif
 
 class IRCommandDispatcher {
 public:
@@ -95,29 +97,20 @@ public:
 
     bool checkAndRunNonBlockingCommands();
     bool checkAndRunSuspendedBlockingCommands();
-#if defined(IR_COMMAND_HAS_MORE_THAN_8_BIT)
-    void setNextBlockingCommand(uint16_t aBlockingCommandToRunNext);
-#else
-    void setNextBlockingCommand(uint8_t aBlockingCommandToRunNext);
-#endif
+    void setNextBlockingCommand(IRCommandType aBlockingCommandToRunNext);
     bool delayAndCheckForStop(uint16_t aDelayMillis);
 
     // The main dispatcher function
     void checkAndCallCommand(bool aCallBlockingCommandImmediately);
 
     void printIRCommandString(Print *aSerial);
+    void printIRCommandString(Print *aSerial, uint_fast8_t aMappingArrayIndex);
     void setRequestToStopReceived(bool aRequestToStopReceived = true);
 
-#if defined(IR_COMMAND_HAS_MORE_THAN_8_BIT)
-    uint16_t currentBlockingCommandCalled = COMMAND_EMPTY; // The code for the current called command
-    uint16_t lastBlockingCommandCalled = COMMAND_EMPTY; // The code for the last called command. Can be evaluated by main loop
-    uint16_t BlockingCommandToRunNext = COMMAND_EMPTY;  // Storage for command currently suspended to allow the current command to end, before it is called by main loop
-#else
-    uint8_t currentBlockingCommandCalled = COMMAND_EMPTY; // The code for the current called command
-    uint8_t lastBlockingCommandCalled = COMMAND_EMPTY;  // The code for the last called command. Can be evaluated by main loop
-    uint8_t BlockingCommandToRunNext = COMMAND_EMPTY;   // Storage for command currently suspended to allow the current command to end, before it is called by main loop
-#endif
-    bool justCalledBlockingCommand = false;             // Flag that a blocking command was received and called - is set before call of command
+    IRCommandType currentBlockingCommandCalled = COMMAND_EMPTY; // The code for the current called command
+    IRCommandType lastBlockingCommandCalled = COMMAND_EMPTY;  // The code for the last called command. Can be evaluated by main loop
+    IRCommandType BlockingCommandToRunNext = COMMAND_EMPTY; // Storage for command currently suspended to allow the current command to end, before it is called by main loop
+    bool justCalledBlockingCommand = false;  // Flag that a blocking command was received and called - is set before call of command
     /*
      * Flag for running blocking commands to terminate. To check, you can use "if (IRDispatcher.requestToStopReceived) return;" (available as macro RETURN_IF_STOP).
      * It is set if a blocking IR command received, which cannot be executed directly. Can be reset by main loop, if command has stopped.
