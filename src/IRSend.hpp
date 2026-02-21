@@ -561,7 +561,7 @@ void IRsend::sendRaw_P(const uint8_t aPGMBufferWithTicks[], uint_fast16_t aLengt
     enableIROut(aIRFrequencyKilohertz);
 
     for (uint_fast16_t i = 0; i < aLengthOfBuffer; i++) {
-        uint16_t duration = pgm_read_byte(&aPGMBufferWithTicks[i]) * (uint_fast16_t) MICROS_PER_TICK;
+        uint16_t duration = pgm_read_byte(&aPGMBufferWithTicks[i]) * MICROS_PER_TICK;
         if (i & 1) {
             // Odd
             space(duration);

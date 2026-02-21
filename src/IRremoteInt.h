@@ -90,16 +90,16 @@ typedef unsigned int IRRawlenType;
 
 /*
  * Use 8 bit buffer for IR timing in 50 ticks units.
- * It is save to use 8 bit if RECORD_GAP_TICKS < 256, since any value greater 255 is interpreted as frame gap of 12750 us.
- * The default for frame gap is currently 8000!
- * But if we assume that for most protocols the frame gap is way greater than the biggest mark or space duration,
- * we can choose to use a 8 bit buffer even for frame gaps up to 200000 us.
- * This enables the use of 8 bit buffer even for more some protocols like B&O or LG air conditioner etc.
+ * It is save to use 8 bit if we must not distinguish 2 different timings greater than 12750 us (255 * 50) for decoding.
+ * With 8 bit every timing greater than 12750 us is clipped as 12750 us.
+ * Therefore one timing greater than 12750 us can be detected by checking for value 12750,
+ * only two different timings both greater 12750 us cannot be distinguish if using 8 bit.
+ * Because I currently (2/2026) do not know any protocol, which require this, we use 8 bit.
  */
-#if RECORD_GAP_TICKS <= 400 // Corresponds to RECORD_GAP_MICROS of 200000. A value of 255 is foolproof, but we assume, that the frame gap is way greater than the biggest mark or space duration.
-typedef uint8_t IRRawbufType; // all timings up to the gap fit into 8 bit.
+#if !defined(USE_16_BIT_TIMING_BUFFER_ELEMENTS) // this can be used to override our selection of 8 the bit array
+typedef uint8_t IRRawbufType; // all timings up to 12750 us fit into 8 bit (for MICROS_PER_TICK == 50).
 #else
-typedef uint16_t IRRawbufType; // The gap does not fit into 8 bit ticks value. This must not be a reason to use 16 bit for buffer, but it is at least save.
+typedef uint16_t IRRawbufType; // Use 16 bit array
 #endif
 
 #if (__INT_WIDTH__ < 32)

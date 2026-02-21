@@ -177,7 +177,8 @@ void IRrecv::ReceiveInterruptHandler() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //            digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-#if RECORD_GAP_TICKS <= 400
+#if !defined(USE_16_BIT_TIMING_BUFFER_ELEMENTS)
+            // Clip timings > 12750 us (255 * 50) to 12750
             if (tTickCounterForISR > UINT8_MAX) {
                 tTickCounterForISR = UINT8_MAX;
             }
@@ -234,7 +235,8 @@ void IRrecv::ReceiveInterruptHandler() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-#if RECORD_GAP_TICKS <= 400
+#if !defined(USE_16_BIT_TIMING_BUFFER_ELEMENTS)
+            // Clip timings > 12750 us (255 * 50) to 12750
             if (tTickCounterForISR > UINT8_MAX) {
                 tTickCounterForISR = UINT8_MAX;
             }
@@ -1886,7 +1888,7 @@ uint32_t IRrecv::getTotalDurationOfRawData() {
     for (IRRawlenType i = 1; i < decodedIRData.rawlen; i++) {
         tSumOfDurationTicks += irparams.rawbuf[i];
     }
-    return tSumOfDurationTicks * (uint32_t) MICROS_PER_TICK;
+    return (uint32_t) tSumOfDurationTicks * MICROS_PER_TICK;
 }
 
 // @formatter:off
@@ -2242,7 +2244,7 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
 
 // Dump data
     for (IRRawlenType i = 1; i < decodedIRData.rawlen; i++) {
-        uint32_t tDuration = irparams.rawbuf[i] * MICROS_PER_TICK;
+        uint32_t tDuration = irparams.rawbuf[i] * MICROS_PER_TICK; // no problem to use 50 instead of 50L here!
 
         if (aDoCompensate) {
             if (i & 1) {
@@ -2263,10 +2265,8 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
             tTicks = (tTicks > UINT8_MAX) ? UINT8_MAX : tTicks;
             aSerial->print(tTicks);
         }
-        if (i + 1 < decodedIRData.rawlen)
-            aSerial->print(',');                // ',' not required on last one
-        if (!(i & 1))
-            aSerial->print(' ');
+        if (i + 1 < decodedIRData.rawlen) aSerial->print(',');                // ',' not required on last one
+        if (!(i & 1)) aSerial->print(' ');
     }
 
 // End declaration
@@ -2282,8 +2282,7 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
  *
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding and store it in an array.
  *
- * Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
- * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
+ * Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR frame.
  * @param aArrayPtr Address of an array provided by the caller.
  */
 void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
@@ -2291,7 +2290,7 @@ void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
 // Store data, skip leading space#
     IRRawlenType i;
     for (i = 1; i < decodedIRData.rawlen; i++) {
-        uint32_t tDuration = irparams.rawbuf[i] * MICROS_PER_TICK;
+        uint32_t tDuration = irparams.rawbuf[i] * MICROS_PER_TICK; // no problem to use 50 instead of 50L here!
         if (i & 1) {
             // Mark
             tDuration -= MARK_EXCESS_MICROS;

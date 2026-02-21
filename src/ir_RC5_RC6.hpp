@@ -79,7 +79,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0. Only 
 // https://en.wikipedia.org/wiki/RC-5
 // mark->space => 0
 // space->mark => 1
-// MSB first, 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit
+// MSB first, 1 start bit, 1 field bit, 1 toggle bit + 5 bit address + 6 bit command, no stop bit 14 bits incl. field bit and start bit
 // Field bit is 1 for RC5 and 0 (=inverted 7. command bit) for RC5X. That way the first 64 commands of RC5X are indistinguishable from RC5.
 // SF TAAA  AACC CCCC
 // IR duty factor is 25%
@@ -87,7 +87,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0. Only 
 // MARANTZ
 // https://forum.arduino.cc/t/sending-rc-5-extended-code-using-irsender/1045841/10 - Protocol Maranz Extended
 // Marantz uses RC5X and adds a a pause after the address / first 8 bits
-// After the 6 bit command another 6 bit command extension is sent
+// After the 6 bit command (of RC5) an additional 6 bit command extension is sent -> 20 bits incl. field bit and start bit
 //
 #define RC5_ADDRESS_BITS        5
 #define RC5_COMMAND_BITS        6
@@ -482,7 +482,7 @@ bool IRrecv::decodeRC5() {
  + 500,- 900 +1000,- 350 + 550,- 850 + 500
  Duration=37450us
  */
-// Frame RC6:   1 start bit + 1 Bit "1" + 3 mode bits (000) + 1 toggle bit + 8 address + 8 command bits + 2666us pause - 22 bits incl. start bit
+// Frame RC6:   1 start bit + 1 Bit "1" + 3 mode bits (000) + 1 toggle bit + 8 address + 8 command bits + 2666us pause - 22 bits incl. start bit and constant bit 1
 // Frame RC6A:  1 start bit + 1 Bit "1" + 3 mode bits (110) + 1 toggle bit + "1" + 14 customer bits + 8 system bits + 8 command bits + 2666us pause - 37 bits incl. start bit
 // !!! toggle bit has double timing !!!
 // mark->space => 1 - Inverse of RC5!
