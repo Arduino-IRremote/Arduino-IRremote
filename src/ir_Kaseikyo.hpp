@@ -141,7 +141,7 @@ void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumb
     tSendValue.UWord.LowWord = (aAddress << KASEIKYO_VENDOR_ID_PARITY_BITS) | tVendorParity; // set low nibble with vendor parity
     tSendValue.UBytes[2] = aCommand;
     tSendValue.UBytes[3] = aCommand ^ tSendValue.UBytes[0] ^ tSendValue.UBytes[1]; // 8 bit parity of 3 bytes command, address and vendor parity
-    IRRawDataType tRawKaseikyoData[2];
+    IRDecodedRawDataType tRawKaseikyoData[2];
     tRawKaseikyoData[0] = (uint32_t) tSendValue.UWord.LowWord << 16 | aVendorCode; // LSB of tRawKaseikyoData[0] is sent first
     tRawKaseikyoData[1] = tSendValue.UWord.HighWord;
     sendPulseDistanceWidthFromArray_P(&KaseikyoProtocolConstants, &tRawKaseikyoData[0], KASEIKYO_BITS, aNumberOfRepeats);

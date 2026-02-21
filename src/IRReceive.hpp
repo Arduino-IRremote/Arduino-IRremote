@@ -46,6 +46,8 @@
 #define LED_RECEIVE_FEEDBACK_CODE // Resolve the double negative
 #endif
 
+unsigned long sMicrosAtLastStopTimer = 0; // Used to adjust TickCounterForISR with uncounted ticks between stopTimer() and restartTimer()
+
 /** \addtogroup Receiving Receiving IR data for multiple protocols
  * @{
  */
@@ -53,12 +55,6 @@
  * The receiver instance
  */
 IRrecv IrReceiver;
-
-/*
- * The control structure instance
- */
-//struct irparams_struct irparams; // the irparams instance
-unsigned long sMicrosAtLastStopTimer = 0; // Used to adjust TickCounterForISR with uncounted ticks between stopTimer() and restartTimer()
 
 /**
  * Instantiate the IRrecv class. Multiple instantiation is not supported.
@@ -177,7 +173,8 @@ void IRrecv::ReceiveInterruptHandler() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //            digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-#if RECORD_GAP_TICKS <= 400
+#if !defined(USE_16_BIT_TIMING_BUFFER)
+            // Clip timings > 12750 us (255 * 50) to 12750
             if (tTickCounterForISR > UINT8_MAX) {
                 tTickCounterForISR = UINT8_MAX;
             }
@@ -234,7 +231,8 @@ void IRrecv::ReceiveInterruptHandler() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
 //                digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
 #endif
-#if RECORD_GAP_TICKS <= 400
+#if !defined(USE_16_BIT_TIMING_BUFFER)
+            // Clip timings > 12750 us (255 * 50) to 12750
             if (tTickCounterForISR > UINT8_MAX) {
                 tTickCounterForISR = UINT8_MAX;
             }
@@ -765,8 +763,8 @@ void IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenTy
     DEBUG_PRINT(aIsPulseWidthProtocol);
     DEBUG_PRINTLN();
 
-    IRRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
-    IRRawDataType tMask = 1UL; // Mask is only used for LSB first
+    IRDecodedRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
+    IRDecodedRawDataType tMask = 1UL; // Mask is only used for LSB first
     auto *tRawBufPointer = &irparams.rawbuf[aStartOffset];
 
     for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
@@ -841,8 +839,8 @@ void IRrecv::decodeWithThresholdPulseDistanceWidthData(uint_fast8_t aNumberOfBit
     DEBUG_PRINT(aIsPulseWidthProtocol);
     DEBUG_PRINTLN();
 
-    IRRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
-    IRRawDataType tMask = 1UL; // Mask is only used for LSB first
+    IRDecodedRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
+    IRDecodedRawDataType tMask = 1UL; // Mask is only used for LSB first
     auto *tRawBufPointer = &irparams.rawbuf[aStartOffset];
 
     for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
@@ -891,8 +889,8 @@ void IRrecv::decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenTy
 
     bool isPulseDistanceProtocol = (aOneMarkMicros == aZeroMarkMicros); // If true, we check aOneSpaceMicros -> pulse distance protocol
 
-    IRRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
-    IRRawDataType tMask = 1UL; // Mask is only used for LSB first
+    IRDecodedRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
+    IRDecodedRawDataType tMask = 1UL; // Mask is only used for LSB first
 
     for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
         // get one mark and space pair
@@ -967,8 +965,8 @@ bool IRrecv::decodeStrictPulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRa
 
     bool isPulseDistanceProtocol = (aOneMarkMicros == aZeroMarkMicros); // If true, we have a constant mark -> pulse distance protocol
 
-    IRRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
-    IRRawDataType tMask = 1UL; // Mask is only used for LSB first
+    IRDecodedRawDataType tDecodedData = 0; // For MSB first tDecodedData is shifted left each loop
+    IRDecodedRawDataType tMask = 1UL; // Mask is only used for LSB first
 
     for (uint_fast8_t i = aNumberOfBits; i > 0; i--) {
         // get one mark and space pair
@@ -1886,7 +1884,7 @@ uint32_t IRrecv::getTotalDurationOfRawData() {
     for (IRRawlenType i = 1; i < decodedIRData.rawlen; i++) {
         tSumOfDurationTicks += irparams.rawbuf[i];
     }
-    return tSumOfDurationTicks * (uint32_t) MICROS_PER_TICK;
+    return (uint32_t) tSumOfDurationTicks * MICROS_PER_TICK;
 }
 
 // @formatter:off
@@ -2242,7 +2240,7 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
 
 // Dump data
     for (IRRawlenType i = 1; i < decodedIRData.rawlen; i++) {
-        uint32_t tDuration = irparams.rawbuf[i] * MICROS_PER_TICK;
+        uint32_t tDuration = irparams.rawbuf[i] * MICROS_PER_TICK; // no problem to use 50 instead of 50L here!
 
         if (aDoCompensate) {
             if (i & 1) {
@@ -2263,10 +2261,8 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
             tTicks = (tTicks > UINT8_MAX) ? UINT8_MAX : tTicks;
             aSerial->print(tTicks);
         }
-        if (i + 1 < decodedIRData.rawlen)
-            aSerial->print(',');                // ',' not required on last one
-        if (!(i & 1))
-            aSerial->print(' ');
+        if (i + 1 < decodedIRData.rawlen) aSerial->print(',');                // ',' not required on last one
+        if (!(i & 1)) aSerial->print(' ');
     }
 
 // End declaration
@@ -2282,8 +2278,7 @@ void IRrecv::printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInste
  *
  * Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding and store it in an array.
  *
- * Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence.
- * Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms).
+ * Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR frame.
  * @param aArrayPtr Address of an array provided by the caller.
  */
 void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
@@ -2291,7 +2286,7 @@ void IRrecv::compensateAndStoreIRResultInArray(uint8_t *aArrayPtr) {
 // Store data, skip leading space#
     IRRawlenType i;
     for (i = 1; i < decodedIRData.rawlen; i++) {
-        uint32_t tDuration = irparams.rawbuf[i] * MICROS_PER_TICK;
+        uint32_t tDuration = irparams.rawbuf[i] * MICROS_PER_TICK; // no problem to use 50 instead of 50L here!
         if (i & 1) {
             // Mark
             tDuration -= MARK_EXCESS_MICROS;

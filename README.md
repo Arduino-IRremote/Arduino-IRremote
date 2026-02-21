@@ -423,10 +423,10 @@ struct IRData {
     uint16_t address;           // Decoded address
     uint16_t command;           // Decoded command
     uint16_t extra;             // Used for Kaseikyo unknown vendor ID. Ticks used for decoding Distance protocol.
-    IRRawDataType decodedRawData; // Up to 32 (64 bit for 32 bit CPU architectures) bit decoded raw data, used for send<protocol>Raw functions.
+    IRDecodedRawDataType decodedRawData; // Up to 32 (64 bit for 32 bit CPU architectures) bit decoded raw data, used for send<protocol>Raw functions.
 #if defined(DECODE_DISTANCE_WIDTH)
     DistanceWidthTimingInfoStruct DistanceWidthTimingInfo; // 12 bytes
-    IRRawDataType decodedRawDataArray[DECODED_RAW_DATA_ARRAY_SIZE]; // 32/64 bit decoded raw data, to be used for sendPulseDistanceWidthFromArray functions.
+    IRDecodedRawDataType decodedRawDataArray[DECODED_RAW_DATA_ARRAY_SIZE]; // 32/64 bit decoded raw data, to be used for sendPulseDistanceWidthFromArray functions.
 #endif
     uint16_t numberOfBits;      // Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.
     uint8_t flags;              // IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions
@@ -1016,6 +1016,7 @@ Modify them by enabling / disabling them, or change the values if applicable.
 | Name | Default value | Description |
 |-|-:|-|
 | `RAW_BUFFER_LENGTH` | 200 | Buffer size of raw input uint16_t buffer. Must be even! If it is too small, overflow flag will be set. 100 is sufficient for *regular* protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. A value of 200 requires 200 bytes RAM. |
+| `USE_16_BIT_TIMING_BUFFER` | disabled | Use a 16-bit buffer if raw timing capture is required and exact values above 12750 us must be preserved. This doubles the RAM size of the buffer. |
 | `EXCLUDE_UNIVERSAL_PROTOCOLS` | disabled | Excludes the universal decoder for pulse distance width protocols and decodeHash (special decoder for all protocols) from `decode()`. Saves up to 1000 bytes program memory. |
 | `EXCLUDE_EXOTIC_PROTOCOLS` | disabled | Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST LEGO_PF, and OpenLASIR from `decode()` and from sending with `IrSender.write()`. Saves up to 650 bytes program memory. |
 | `DECODE_<Protocol name>` | all | Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See [here](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121)  |

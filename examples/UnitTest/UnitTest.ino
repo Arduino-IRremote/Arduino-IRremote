@@ -56,6 +56,7 @@
 #define NO_LED_FEEDBACK_CODE          // Saves 270 bytes program memory
 //#define NO_LED_RECEIVE_FEEDBACK_CODE  // Saves 176 bytes program memory
 //#define NO_LED_SEND_FEEDBACK_CODE     // Saves 38 bytes program memory
+//#define USE_16_BIT_TIMING_BUFFER      // Use a 16-bit buffer to preserve values above 12750 us
 
 //#define USE_MSB_DECODING_FOR_DISTANCE_DECODER
 
@@ -138,7 +139,7 @@ volatile bool sDataJustReceived = false;
 void ReceiveCompleteCallbackHandler();
 
 #if __INT_WIDTH__ < 32
-//IRRawDataType const tRawDataPGM[] PROGMEM = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
+//IRDecodedRawDataType const tRawDataPGM[] PROGMEM = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
 uint8_t const tRawDataPGM[] PROGMEM = { 0x02, 0x20, 0xB0, 0x00, /*0xB02002*/
 0x10, 0xA0, 0x0, 0x0, /*0xA010*/}; // Define tRawDataPGM as byte array of same size with same content as { 0xB02002, 0xA010}
 #endif
@@ -254,7 +255,7 @@ void setup() {
 
 }
 
-void checkReceivedRawData(IRRawDataType aRawData) {
+void checkReceivedRawData(IRDecodedRawDataType aRawData) {
     // wait until signal has received
     while (!sDataJustReceived) {
     };
@@ -306,7 +307,7 @@ void checkReceivedRawData(IRRawDataType aRawData) {
 }
 
 #if defined(DECODE_DISTANCE_WIDTH)
-void checkReceivedArray(IRRawDataType *aRawDataArrayPointer, uint8_t aArraySize) {
+void checkReceivedArray(IRDecodedRawDataType *aRawDataArrayPointer, uint8_t aArraySize) {
     // wait until signal has received
     while (!sDataJustReceived) {
     };
@@ -535,7 +536,7 @@ void loop() {
         /*
          * Do this only once at the first loop
          */
-        IRRawDataType tRawData[4];
+        IRDecodedRawDataType tRawData[4];
 
         /*
          * Test send usage for UNKNOWN protocol
@@ -604,7 +605,7 @@ void loop() {
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance PGM using ProtocolConstants 1=432|1296, 0=432|432"));
         Serial.flush();
 #    if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, (IRRawDataType*) &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, (IRDecodedRawDataType*) &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
         checkReceive(0x0B, 0x10);
 #    else
         IrSender.sendPulseDistanceWidth_P(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
@@ -619,7 +620,7 @@ void loop() {
         Serial.println(F("-LSB first"));
         Serial.flush();
 #    if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromPGMArray(38, 3450, 1700, 450, 1250, 450, 400, (IRRawDataType*) tRawDataPGM, 48,
+        IrSender.sendPulseDistanceWidthFromPGMArray(38, 3450, 1700, 450, 1250, 450, 400, (IRDecodedRawDataType*) tRawDataPGM, 48,
         PROTOCOL_IS_LSB_FIRST, 0, NO_REPEATS);
         checkReceive(0x0B, 0x10);
 #    else
@@ -774,7 +775,7 @@ void loop() {
         Serial.println(F("Send MagiQuest 0x6BCDFF00, 0x176 as 55 bit PulseDistanceWidth MSB first 1=576|576, 0=287|864"));
         Serial.flush();
 #    if __INT_WIDTH__ < 32
-        IRRawDataType tRawData1[2];
+        IRDecodedRawDataType tRawData1[2];
         tRawData1[0] = 0x01AF37FC; // We have 1 header (start) bit and 7 start bits and 31 address bits for MagiQuest, so 0x6BCDFF00 is shifted 2 left
         tRawData1[1] = 0x017619; // We send only 23 bits here! 0x19 is the checksum
         IrSender.sendPulseDistanceWidthFromArray(38, 287, 864, 576, 576, 287, 864, &tRawData1[0], 55,

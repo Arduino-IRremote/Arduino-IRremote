@@ -228,7 +228,7 @@ bool isVCCTooHighSimple();      // Version not using readVCCVoltageMillivoltSimp
 #endif //  defined(__AVR__) ...
 
 /*
- * Variables and functions defined as dummies to allow for seamless compiling on non AVR platforms
+ * The next variables and functions are defined as stubs on non-AVR platforms to allow for seamless compiling
  */
 extern float sVCCVoltage;
 extern uint16_t sVCCVoltageMillivolt;

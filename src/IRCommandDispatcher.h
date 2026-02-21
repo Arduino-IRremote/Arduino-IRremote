@@ -103,8 +103,8 @@ public:
     // The main dispatcher function
     void checkAndCallCommand(bool aCallBlockingCommandImmediately);
 
-    void printIRCommandString(Print *aSerial);
-    void printIRCommandString(Print *aSerial, uint_fast8_t aMappingArrayIndex);
+    void printIRCommandString(Print *aSerial, IRCommandType aCommand);
+    void printIRCommandStringForArrayIndex(Print *aSerial, uint_fast8_t aMappingArrayIndex);
     void setRequestToStopReceived(bool aRequestToStopReceived = true);
 
     IRCommandType currentBlockingCommandCalled = COMMAND_EMPTY; // The code for the current called command

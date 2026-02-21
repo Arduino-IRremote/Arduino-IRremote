@@ -436,7 +436,7 @@ bool IRCommandDispatcher::checkAndRunSuspendedBlockingCommands() {
         IRReceivedData.command = BlockingCommandToRunNext;
         BlockingCommandToRunNext = COMMAND_EMPTY;
         IRReceivedData.isRepeat = false;
-        requestToStopReceived = false; // Do not stop the command executed now
+        requestToStopReceived = false; // Signal to main loop to stop the command currently executed
         checkAndCallCommand(true);
         return true;
     }
@@ -447,8 +447,16 @@ bool IRCommandDispatcher::checkAndRunSuspendedBlockingCommands() {
  * Not used internally
  */
 void IRCommandDispatcher::setNextBlockingCommand(IRCommandType aBlockingCommandToRunNext) {
-    INFO_PRINT(F("Set next command to run to 0x"));
-    INFO_PRINTLN(aBlockingCommandToRunNext, HEX);
+#if defined(LOCAL_INFO)
+    Serial.print(F("Set next command to run to 0x"));
+    Serial.print(aBlockingCommandToRunNext, HEX);
+#  if defined(USE_DISPATCHER_COMMAND_STRINGS)
+    Serial.print('|');
+    printIRCommandString(&Serial, aBlockingCommandToRunNext);
+#  endif
+    Serial.println();
+#endif
+
     BlockingCommandToRunNext = aBlockingCommandToRunNext;
     requestToStopReceived = true;
 }
@@ -468,7 +476,7 @@ bool IRCommandDispatcher::delayAndCheckForStop(uint16_t aDelayMillis) {
     return false;
 }
 
-void IRCommandDispatcher::printIRCommandString(Print *aSerial, uint_fast8_t aMappingArrayIndex) {
+void IRCommandDispatcher::printIRCommandStringForArrayIndex(Print *aSerial, uint_fast8_t aMappingArrayIndex) {
 #if defined(__AVR__)
 #  if defined(USE_DISPATCHER_COMMAND_STRINGS)
     aSerial->println(reinterpret_cast<const __FlashStringHelper*>(IRMapping[aMappingArrayIndex].CommandString));
@@ -486,10 +494,10 @@ void IRCommandDispatcher::printIRCommandString(Print *aSerial, uint_fast8_t aMap
 #endif
 }
 
-void IRCommandDispatcher::printIRCommandString(Print *aSerial) {
+void IRCommandDispatcher::printIRCommandString(Print *aSerial, IRCommandType aCommand) {
     for (uint_fast8_t i = 0; i < sizeof(IRMapping) / sizeof(struct IRToCommandMappingStruct); ++i) {
-        if (IRReceivedData.command == IRMapping[i].IRCode) {
-            printIRCommandString(aSerial, i);
+        if (aCommand == IRMapping[i].IRCode) {
+            printIRCommandStringForArrayIndex(aSerial, i);
             return;
         }
     }

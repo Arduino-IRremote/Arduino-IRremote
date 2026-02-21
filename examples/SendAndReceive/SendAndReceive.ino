@@ -44,6 +44,7 @@
 //#define NO_LED_FEEDBACK_CODE      // saves 318 bytes program memory
 //#define NO_LED_RECEIVE_FEEDBACK_CODE  // Saves 44 bytes program memory
 //#define NO_LED_SEND_FEEDBACK_CODE     // Saves 36 bytes program memory
+//#define USE_16_BIT_TIMING_BUFFER  // Use a 16-bit buffer to preserve values above 12750 us
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 

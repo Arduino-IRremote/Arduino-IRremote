@@ -55,11 +55,11 @@
 #define DELAY_AFTER_LOOP 5000
 
 #if __INT_WIDTH__ < 32
-IRRawDataType const tRawDataPGM[] PROGMEM = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
+IRDecodedRawDataType const tRawDataPGM[] PROGMEM = { 0xB02002, 0xA010 }; // LSB of tRawData[0] is sent first
 /*
  * Alternative definition of tRawDataPGM as byte array of same size with same content as { 0xB02002, 0xA010}
  * But be aware, that this requires a cast when using tRawDataPGM as parameter.
- * Like sendPulseDistanceWidthFromPGMArray_P(..., (IRRawDataType*) &tRawDataPGM[0], ...);
+ * Like sendPulseDistanceWidthFromPGMArray_P(..., (IRDecodedRawDataType*) &tRawDataPGM[0], ...);
  */
 //uint8_t const tRawDataPGM[] PROGMEM = { 0x02, 0x20, 0xB0, 0x00, /*0xB02002*/
 //0x10, 0xA0, 0x0, 0x0, /*0xA010*/};
@@ -234,7 +234,7 @@ void loop() {
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance PGM using ProtocolConstants 1=432|1296, 0=432|432"));
         Serial.flush();
 #  if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, (IRRawDataType*) &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, (IRDecodedRawDataType*) &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
 #  else
         IrSender.sendPulseDistanceWidth_P(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
 #  endif
@@ -248,7 +248,7 @@ void loop() {
         Serial.println(F(" LSB first"));
         Serial.flush();
 #  if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromPGMArray(38, 3450, 1700, 450, 1250, 450, 400, (IRRawDataType*) tRawDataPGM, 48,
+        IrSender.sendPulseDistanceWidthFromPGMArray(38, 3450, 1700, 450, 1250, 450, 400, (IRDecodedRawDataType*) tRawDataPGM, 48,
         PROTOCOL_IS_LSB_FIRST, 0, NO_REPEATS);
 #  else
         IrSender.sendPulseDistanceWidth(38, 3450, 1700, 450, 1250, 450, 400, 0xA010B02002, 48, PROTOCOL_IS_LSB_FIRST, 0,
@@ -258,7 +258,7 @@ void loop() {
 
         // The same with MSB first. Use bit reversed raw data of LSB first part
         Serial.println(F(" MSB first"));
-        IRRawDataType tRawData[4];
+        IRDecodedRawDataType tRawData[4];
 #  if __INT_WIDTH__ < 32
         tRawData[0] = 0x40040D00;  // MSB of tRawData[0] is sent first
         tRawData[1] = 0x805;

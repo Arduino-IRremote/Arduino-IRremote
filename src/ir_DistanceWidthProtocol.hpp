@@ -367,7 +367,7 @@ bool IRrecv::decodeDistanceWidth() {
     Serial.println(tSpaceTicksShort * MICROS_PER_TICK);
 #endif
 
-    uint8_t tNumberOfAdditionalArrayValues = (tNumberOfBits - 1) / BITS_IN_RAW_DATA_TYPE;
+    uint8_t tNumberOfAdditionalArrayValues = (tNumberOfBits - 1) / BITS_IN_DECODED_RAW_DATA_TYPE;
 
     /*
      * We can have the following protocol timings
@@ -398,8 +398,8 @@ bool IRrecv::decodeDistanceWidth() {
         /*
          * Decode in 32/64 bit chunks. Only the last chunk can contain less than 32/64 bits
          */
-        if (tNumberOfBitsForOneDecode > BITS_IN_RAW_DATA_TYPE) {
-            tNumberOfBitsForOneDecode = BITS_IN_RAW_DATA_TYPE;
+        if (tNumberOfBitsForOneDecode > BITS_IN_DECODED_RAW_DATA_TYPE) {
+            tNumberOfBitsForOneDecode = BITS_IN_DECODED_RAW_DATA_TYPE;
         }
         if (tSpaceTicksLong > 0) {
             /*
@@ -454,8 +454,8 @@ bool IRrecv::decodeDistanceWidth() {
 
         // fill array with decoded data
         decodedIRData.decodedRawDataArray[i] = decodedIRData.decodedRawData;
-        tStartIndex += (2 * BITS_IN_RAW_DATA_TYPE);
-        tNumberOfBits -= BITS_IN_RAW_DATA_TYPE;
+        tStartIndex += (2 * BITS_IN_DECODED_RAW_DATA_TYPE);
+        tNumberOfBits -= BITS_IN_DECODED_RAW_DATA_TYPE;
     }
 
 #if defined(USE_MSB_DECODING_FOR_DISTANCE_DECODER)
