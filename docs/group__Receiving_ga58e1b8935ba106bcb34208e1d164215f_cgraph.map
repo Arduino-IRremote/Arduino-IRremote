@@ -2,5 +2,5 @@
 <area shape="rect" id="node1" title="Decode pulse distance width protocols." alt="" coords="5,24,201,68"/>
 <area shape="rect" id="node2" href="$group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="253,5,339,33"/>
 <area shape="rect" id="node4" href="$group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="249,57,343,85"/>
-<area shape="rect" id="node3" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="391,32,480,60"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="391,32,480,60"/>
 </map>

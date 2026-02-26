@@ -25,10 +25,8 @@ var group__Receiving =
     [ "disableIRIn", "group__Receiving.html#gaf828d23c733b1bde8f61e39230d9dbcd", null ],
     [ "enableIRIn", "group__Receiving.html#ga69d3e9314aea4a37b43b74a0b4f3f976", null ],
     [ "end", "group__Receiving.html#ga8ffd22c2d4c6e93918d987a4b7c3ba5b", null ],
-    [ "getBiphaselevel", "group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9", null ],
     [ "getMarkExcessMicros", "group__Receiving.html#gab1d28d4dd67d6bf808c0328a92e2d863", null ],
     [ "getProtocolString", "group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7", null ],
-    [ "initBiphaselevel", "group__Receiving.html#gacd517e921cf41136c8744799797c75e2", null ],
     [ "initDecodedIRData", "group__Receiving.html#ga26e37f666387134ed18393fd930f68db", null ],
     [ "IRReceiveTimerInterruptHandler", "group__Receiving.html#ga770e03720a79491d7ddf347ad4b9e484", null ],
     [ "isIdle", "group__Receiving.html#gacfbf39fb284cc2d200158f20747c4ae3", null ],
@@ -55,10 +53,5 @@ var group__Receiving =
     [ "stopTimer", "group__Receiving.html#ga033c644e835f4eff7c0254c7c9413022", null ],
     [ "IrReceiver", "group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9", null ],
     [ "PROGMEM", "group__Receiving.html#ga40297ba8cf5a1c89fea2e9844c5e8d9e", null ],
-    [ "ProtocolNames", "group__Receiving.html#ga3bdd668aa583bfcd42fc7ecffbe55653", null ],
-    [ "sBiphaseCurrentTimingIntervals", "group__Receiving.html#gac33950d3b355b78a28d6f54b6af6e7b8", null ],
-    [ "sBiphaseDecodeRawbuffOffset", "group__Receiving.html#ga8aabdbfa5a0a6090e938212745b4871e", null ],
-    [ "sBiphaseTimeUnit", "group__Receiving.html#gae25d907bed7a0f0298f9cf105d89f86f", null ],
-    [ "sBiphaseUsedTimingIntervals", "group__Receiving.html#gafa340a1dbbee30ea603df9f63bb55027", null ],
-    [ "sMicrosAtLastStopTimer", "group__Receiving.html#ga99f6267aa36f20f3aa1409b250aa6b67", null ]
+    [ "ProtocolNames", "group__Receiving.html#ga3bdd668aa583bfcd42fc7ecffbe55653", null ]
 ];

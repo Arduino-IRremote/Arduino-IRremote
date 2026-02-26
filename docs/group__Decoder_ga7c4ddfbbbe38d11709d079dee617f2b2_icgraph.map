@@ -1,0 +1,4 @@
+<map id="sendNECSpecialRepeat" name="sendNECSpecialRepeat">
+<area shape="rect" id="node1" title="Static function variant of IRsend::sendNECRepeat For use in ProtocolConstants." alt="" coords="258,5,421,33"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga6b9360063035fab184cb00ad96fa5788" title="Static function variant of IRsend::sendOpenLASIRRepeat For use in ProtocolConstants." alt="" coords="5,5,210,33"/>
+</map>

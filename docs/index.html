@@ -86,15 +86,15 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a></p><div align="center"></div><div align="center"><h1>Arduino IRremote</h1>
-</div><div align="center"> A library enabling the sending &amp; receiving of infra-red signals.</div><div align="center"><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-ac8b11.svg?style=for-the-badge&amp;labelColor=yellow" alt="Badge License: MIT" style="pointer-events: none;" class="inline"/></a> &#160; &#160; <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/releases/latest"><img src="https://img.shields.io/github/v/release/Arduino-IRremote/Arduino-IRremote?include_prereleases&amp;style=for-the-badge&amp;color=33660e&amp;labelColor=428813&amp;logoColor=white&amp;logo=DocuSign" alt="Badge Version" class="inline"/></a> &#160; &#160; <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master"><img src="https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest?style=for-the-badge&amp;color=004463&amp;labelColor=00557f" alt="Badge Commits since latest" class="inline"/></a> &#160; &#160; <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/actions"><img src="https://img.shields.io/github/actions/workflow/status/Arduino-IRremote/Arduino-IRremote/LibraryBuild.yml?branch=master&amp;style=for-the-badge&amp;color=551f47&amp;labelColor=752a61" alt="Badge LibraryBuild" class="inline"/></a> <br  />
+</div><div align="center"> A library enabling the sending &amp; receiving of infrared signals.</div><div align="center"><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-ac8b11.svg?style=for-the-badge&amp;labelColor=yellow" alt="Badge License: MIT" style="pointer-events: none;" class="inline"/></a> &#160; &#160; <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/releases/latest"><img src="https://img.shields.io/github/v/release/Arduino-IRremote/Arduino-IRremote?include_prereleases&amp;style=for-the-badge&amp;color=33660e&amp;labelColor=428813&amp;logoColor=white&amp;logo=DocuSign" alt="Badge Version" class="inline"/></a> &#160; &#160; <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master"><img src="https://img.shields.io/github/commits-since/Arduino-IRremote/Arduino-IRremote/latest?style=for-the-badge&amp;color=004463&amp;labelColor=00557f" alt="Badge Commits since latest" class="inline"/></a> &#160; &#160; <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/actions"><img src="https://img.shields.io/github/actions/workflow/status/Arduino-IRremote/Arduino-IRremote/LibraryBuild.yml?branch=master&amp;style=for-the-badge&amp;color=551f47&amp;labelColor=752a61" alt="Badge LibraryBuild" class="inline"/></a> <br  />
  <br  />
  <a href="https://stand-with-ukraine.pp.ua"><img src="https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg" alt="Stand With Ukraine" style="pointer-events: none;" class="inline"/></a></div><div align="center">Available as <a href="https://www.arduinolibraries.info/libraries/i-rremote">Arduino library "IRremote"</a>.</div><div align="center"><a href="https://www.ardu-badge.com/IRremote"><img src="https://img.shields.io/badge/Install-yellow?style=for-the-badge&amp;logoColor=white&amp;logo=GitBook" alt="Button Install" class="inline"/></a> &#160; &#160; <a href="https://arduino-irremote.github.io/Arduino-IRremote/classIRrecv.html"><img src="https://img.shields.io/badge/API-1c8840?style=for-the-badge&amp;logoColor=white&amp;logo=OpenStreetMap" alt="Button API" class="inline"/></a> &#160; &#160; <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/changelog.md"><img src="https://img.shields.io/badge/Changelog-00557f?style=for-the-badge&amp;logoColor=white&amp;logo=AzureArtifacts" alt="Button Changelog" class="inline"/></a> &#160; &#160; <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/Contributing.md"><img src="https://img.shields.io/badge/Contribute-752a61?style=for-the-badge&amp;logoColor=white&amp;logo=GitHub" alt="Button Contribute" class="inline"/></a></div><div align="center"><h4>If you find this program useful, please give it a star.</h4>
-</div><div align="center"></div><div align="center">&amp;#x1F30E; <a href="https://translate.google.com/translate?sl=en&amp;u=https://github.com/Arduino-IRremote/Arduino-IRremote">Google Translate</a></div><div align="center"></div><h1>Table of content</h1>
+</div><div align="center"></div><div align="center">&amp;#x1F30E; <a href="https://translate.google.com/translate?sl=en&amp;u=https://github.com/Arduino-IRremote/Arduino-IRremote">Google Translate</a></div><div align="center"></div><h1>Table of contents</h1>
 <ul>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#supported-ir-protocols">Supported IR Protocols</a></li>
-<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#common-problem-with-irremote">Common problem with IRremote</a></li>
-<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#using-the-new-library-version-for-old-examples">Using the new library version for old examples</a><ul>
-<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-45">New features of version 4.5</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#common-issues-when-using-irremote">Common issues when using IRremote</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#migrating-legacy-projects-to-the-latest-version">Migrating legacy projects to the latest version</a><ul>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-and-changes-in-version-46">New features and changes in version 4.6</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-4x">New features of version 4.x</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-of-version-3x">New features of version 3.x</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#converting-your-2x-program-to-the-4x-version">Converting your 2.x program to the 4.x version</a></li>
@@ -103,15 +103,16 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#staying-on-2x">Staying on 2.x</a></li>
 </ul>
 </li>
-<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#why-hpp-instead-of-cpp">Why *.hpp instead of *.cpp</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#why-hpp-instead-of-cpp-files">Why *.hpp instead of *.cpp files</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#using-the-new-hpp-files">Using the new *.hpp files</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tutorials">Tutorials</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#3-ways-to-specify-an-ir-code">3 ways to specify an IR code</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irreceiver-pinouts">IRReceiver pinouts</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-ir-codes">Receiving IR codes</a><ul>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#decodedirdata-structure">decodedIRData structure</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#callback-functionality">Callback functionality</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ambiguous-protocols">Ambiguous protocols</a></li>
-<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ram-usage-of-different-protocols">RAM usage of different protocolsl</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ram-usage-of-different-protocols">RAM usage of different protocols</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#handling-unknown-protocols">Handling unknown Protocols</a><ul>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#disclaimer">Disclaimer</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#other-libraries-which-may-cover-these-protocols">Other libraries, which may cover these protocols</a></li>
@@ -133,7 +134,9 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </ul>
 </li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tiny-nec-receiver-and-sender">Tiny NEC receiver and sender</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ircommanddispatcher-class">IRCommandDispatcher class</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#the-fast-protocol">The FAST protocol</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#feedback-led">Feedback LED</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#faq-and-hints">FAQ and hints</a><ul>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-stops-after-analogwrite-or-tone-or-after-running-a-motor">Receiving stops after analogWrite() or tone() or after running a motor</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-sets-overflow-flag">Receiving sets overflow flag</a></li>
@@ -142,6 +145,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-receivers">Multiple IR receivers</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-sender-instances">Multiple IR sender instances</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#increase-strength-of-sent-output-signal">Increase strength of sent output signal</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#simulate-an-ir-receiver-module-for-sending">Simulate an IR receiver module for sending</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#minimal-cpu-clock-frequency">Minimal CPU clock frequency</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#bang--olufsen-protocol">Bang &amp; Olufsen protocol</a></li>
 </ul>
@@ -150,8 +154,11 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#wokwi-online-examples">WOKWI online examples</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#ir-control-of-a-robot-car">IR control of a robot car</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#issues-and-discussions">Issues and discussions</a></li>
-<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#compile-options--macros-for-this-library">Compile options / macros for this library</a><ul>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#compile-options--macros-for-irremote">Compile options / macros for IRremote</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#macros-for-tinyir">Macros for TinyIR</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#macros-for-ircommanddispatcher">Macros for IRCommandDispatcher</a><ul>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#changing-include-h-files-with-arduino-ide">Changing include (*.h) files with Arduino IDE</a></li>
+<li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#modifying-compile-options--macros-with-platformio">Modifying compile options / macros with PlatformIO</a></li>
 <li><a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#modifying-compile-options--macros-with-sloeber-ide">Modifying compile options with Sloeber IDE</a></li>
 </ul>
 </li>
@@ -174,11 +181,11 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <p><br  />
 </p>
 <h1>Supported IR Protocols</h1>
-<p><code>NEC / Onkyo / Apple</code> &#160; &#160; <code>Denon / Sharp</code> &#160; &#160; <code>Panasonic / Kaseikyo</code></p>
-<p><code>JVC</code> &#160; &#160; <code>LG</code> &#160; &#160; <code>RC5</code> &#160; &#160; <code>RC6</code> &#160; &#160; <code>Samsung</code> &#160; &#160; <code>Sony</code> &#160; &#160; <code>Marantz</code></p>
-<p><code>Universal Pulse Distance</code> &#160; &#160; <code>Universal Pulse Width</code> &#160; &#160; <code>Universal Pulse Distance Width</code></p>
-<p><code>Hash</code> &#160; &#160; <code>Pronto</code></p>
-<p><code>BoseWave</code> &#160; &#160; <code>Bang &amp; Olufsen</code> &#160; &#160; <code>Lego</code> &#160; &#160; <code>FAST</code> &#160; &#160; <code>Whynter</code> &#160; &#160; <code>MagiQuest</code> &#160; &#160; <code>Velux</code></p>
+<p><code>NEC / Onkyo / Apple</code>, &#160; &#160; <code>Denon / Sharp</code>, &#160; &#160; <code>Panasonic / Kaseikyo</code>,</p>
+<p><code>JVC</code>, &#160; &#160; <code>LG</code>, &#160; &#160; <code>RC5</code>, &#160; &#160; <code>RC6</code>, &#160; &#160; <code>Samsung</code>, &#160; &#160; <code>Sony</code>, &#160; &#160; <code>Marantz</code></p>
+<p><code>Universal Pulse Distance</code>, &#160; &#160; <code>Universal Pulse Width</code>, &#160; &#160; <code>Universal Pulse Distance Width</code></p>
+<p><code>Hash</code>, &#160; &#160; <code>Pronto</code></p>
+<p><code>BoseWave</code>, &#160; &#160; <code>Bang &amp; Olufsen</code>, &#160; &#160; <code>Lego</code>, &#160; &#160; <code>FAST</code>, &#160; &#160; <code>Whynter</code>, &#160; &#160; <code>Marantz</code>, &#160; &#160; <code>MagiQuest</code>, &#160; &#160; <code>Velux</code>, &#160; &#160; <code>OpenLASIR</code></p>
 <p>Protocols can be switched off and on by defining macros before the line <code>#include &lt;<a class="el" href="IRremote_8hpp.html" title="Public API to the library.">IRremote.hpp</a>&gt;</code> like <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L33">here</a>:</p>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">#define DECODE_NEC</div>
@@ -186,14 +193,15 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="line">#include &lt;IRremote.hpp&gt;</div>
 </div><!-- fragment --><p><br  />
 </p>
-<h1>Common problem with IRremote</h1>
-<p>Or *"I build a gadged with 2 motors controlled by IR and the [IR stops after the first motor command](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-stops-after-analogwrite-or-tone-or-after-running-a-motor)"*.<br  />
+<h1>Common issues when using IRremote</h1>
+<p>Or *"I build a gadget with 2 motors controlled by IR and the [IR stops after the first motor command](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#receiving-stops-after-analogwrite-or-tone-or-after-running-a-motor)"*.<br  />
  This is due to the fact, that the motor control by AnalogWrite() uses the same timer as IR receiving.<br  />
  See <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage">this table</a> for the list of timers and pins.</p>
-<h1>Using the new library version for old examples</h1>
-<p>This library has been refactored, breaking backward compatibility with the old version, on which many examples on the Internet are based.</p>
-<h2>New features of version 4.5</h2>
-<ul>
+<h1>Migrating legacy projects to the latest version</h1>
+<p>This library has been refactored, breaking backward compatibility with the old version, on which many examples on the Internet are based.<br  />
+ If your code uses <code>irrecv.decode(&amp;results)</code>, it is written for Version 2.x. This library (Version 4.x) now uses a simpler <code>IrReceiver.decode()</code> syntax. See the Conversion guide below.</p>
+<h2>New features and changes in version 4.6</h2>
+<p>** Version 4.5.0 does not work for ESP platform, because of missing ESP IRAM_ATTR for receiving interrupt.**</p><ul>
 <li>Support for <b>multiple receiver instances</b>.<br  />
  <code><a class="el" href="structirparams__struct.html" title="This struct contains the data and control used for receiver functions and the ISR (interrupt service ...">irparams_struct</a> irparams</code> is now member of <code><a class="el" href="classIRrecv.html">IRrecv</a></code>. Thus <code>rawDataPtr</code> (pointer to irparams) was removed from <code>IrReceiver.decodedIRData</code>.<br  />
  Old <code>IrReceiver.decodedIRData.rawDataPtr-&gt;rawbuf</code> is now <code>IrReceiver.irparams.rawbuf</code>, the same holds for <code>IrReceiver.irparams.rawlen</code>.</li>
@@ -208,7 +216,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li>New universal <b>Pulse Distance / Pulse Width / Pulse Distance Width decoder</b> added, which covers many previous unknown protocols.</li>
 <li>Printout of code how to send received command by <code>IrReceiver.printIRSendUsage(&amp;Serial)</code>.</li>
 <li>RawData type is now 64 bit for 32 bit platforms and therefore <code>decodedIRData.decodedRawData</code> can contain complete frame information for more protocols than with 32 bit as before.</li>
-<li><b>Callback</b> after receiving a command - It calls your code as soon as a message was received.</li>
+<li><b>Callback</b> after receiving a command - It calls your code as soon as a frame was received.</li>
 <li>Improved handling of <code>PULSE_DISTANCE</code> + <code>PULSE_WIDTH</code> protocols.</li>
 <li>New FAST protocol.</li>
 <li>Automatic printout of the <b>corresponding send function</b> with <code>printIRSendUsage()</code>.</li>
@@ -216,20 +224,20 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <h3>Converting your 3.x program to the 4.x version</h3>
 <ul>
 <li>You must replace <code>#define DECODE_DISTANCE</code> by <code>#define DECODE_DISTANCE_WIDTH</code> (only if you explicitly enabled this decoder).</li>
-<li>The parameter <code>bool hasStopBit</code> is not longer required and removed e.g. for function <code>sendPulseDistanceWidth()</code>.</li>
+<li>The parameter <code>bool hasStopBit</code> is no longer required and removed e.g. for function <code>sendPulseDistanceWidth()</code>.</li>
 </ul>
 <h2>New features of version 3.x</h2>
 <ul>
 <li><b>Any pin</b> can be used for receiving and if <code>SEND_PWM_BY_TIMER</code> is not defined also for sending.</li>
 <li>Feedback LED can be activated for sending / receiving.</li>
-<li>An 8/16 bit ****command** value as well as an 16 bit <b>address</b> and a protocol number is provided for decoding (instead of the old 32 bit value).</li>
+<li>An 8/16 bit ****command** value as well as a 16-bit <b>address</b> and a protocol number is provided for decoding (instead of the old 32 bit value).</li>
 <li>Protocol values comply to <b>protocol standards</b>.<br  />
  NEC, Panasonic, Sony, Samsung and JVC decode &amp; send LSB first.</li>
 <li>Supports <b>Universal Distance protocol</b>, which covers a lot of previous unknown protocols.</li>
 <li>Compatible with <b>tone()</b> library. See the <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L284-L298">ReceiveDemo</a> example.</li>
 <li>Simultaneous sending and receiving. See the <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendAndReceive/SendAndReceive.ino#L167-L170">SendAndReceive</a> example.</li>
 <li>Supports <b>more platforms</b>.</li>
-<li>Allows for the generation of non PWM signal to just <b>simulate an active low receiver signal</b> for direct connect to existent receiving devices without using IR.</li>
+<li>Allows for the generation of non-PWM signal to just <b>simulate an active low receiver signal</b> for direct connect to existing receiving devices without using IR.</li>
 <li>Easy protocol configuration, <b>directly in your <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino#L33-L57">source code</a></b>.<br  />
  Reduces memory footprint and decreases decoding time.</li>
 <li>Contains a <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#minimal-nec-receiver">very small NEC only decoder</a>, which <b>does not require any timer resource</b>.</li>
@@ -335,7 +343,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <p><br  />
 </p>
 <h2>Staying on 2.x</h2>
-<p>Consider using the <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0">original 2.4 release form 2017</a> or the last backwards compatible <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/2.8.0">2.8 version</a> for you project.<br  />
+<p>Consider using the <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/v2.4.0">original 2.4 release from 2017</a> or the last backwards compatible <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/releases/tag/2.8.0">2.8 version</a> for you project.<br  />
  It may be sufficient and deals flawlessly with 32 bit IR codes.<br  />
  If this doesn't work for you, you can be sure that 4.x is trying to be compatible with earlier versions, so your old examples should work just fine.</p>
 <h3>Drawbacks of using 2.x</h3>
@@ -348,7 +356,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </ul>
 <p><br  />
 </p>
-<h1>Why *.hpp instead of *.cpp?</h1>
+<h1>Why *.hpp instead of *.cpp files?</h1>
 <p><b>Every *.cpp file is compiled separately</b> by a call of the compiler exclusively for this cpp file. These calls are managed by the IDE / make system. In the Arduino IDE the calls are executed when you click on <em>Verify</em> or <em>Upload</em>.</p>
 <p>And now <b>our problem with Arduino</b> is:<br  />
  <b>How to set <a href="#compile-options--macros-for-this-library">compile options</a> for all *.cpp files, especially for libraries used?</b><br  />
@@ -361,7 +369,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
  Therefore, using the **.cpp** extension is no longer possible. One solution is to use the **.hpp** extension to indicate that it is an included .cpp file.<br  />
  Any other extension would work, e.g. <em>cinclude</em>, but <em>hpp</em> seems to be common sense.</p>
 <h1>Using the new *.hpp files</h1>
-<p>In order to support <a href="#compile-options--macros-for-this-library">compile options</a> more easily, you must use the statement <code>#include &lt;<a class="el" href="IRremote_8hpp.html" title="Public API to the library.">IRremote.hpp</a>&gt;</code> instead of <code>#include &lt;<a class="el" href="IRremote_8h.html" title="Stub for backward compatibility.">IRremote.h</a>&gt;</code> in your main program (aka *.ino file with setup() and loop()).</p>
+<p>In order to support <a href="#compile-options--macros-for-this-library">compile options</a> more easily, you <b>must</b> use the statement <code>#include &lt;<a class="el" href="IRremote_8hpp.html" title="Public API to the library.">IRremote.hpp</a>&gt;</code> instead of <code>#include &lt;<a class="el" href="IRremote_8h.html" title="Stub for backward compatibility.">IRremote.h</a>&gt;</code> in your main program (aka *.ino file with setup() and loop()).</p>
 <p>In <b>all other files</b> you must use the following, to <b>prevent <code>multiple definitions</code> linker errors</b>:</p>
 <div class="fragment"><div class="line"> {c++}</div>
 <div class="line">#define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE</div>
@@ -379,13 +387,17 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <li>A very elaborated introduction to IR remotes and IRremote library from <a href="https://dronebotworkshop.com/ir-remotes/">DroneBot Workshop</a>.</li>
 </ul>
 <h1>3 ways to specify an IR code</h1>
-<p>There are 3 different ways of specifying a particular IR code.</p>
+<p>There are 3 different ways of specifying a particular IR code.</p><ul>
+<li><b>Timing (Raw):</b> Records the exact duration of pulses. Uses the most memory but works for everything.</li>
+<li><b>Encoding Schemes:</b> General rules for each data bit (like how 1s and 0s are shaped).</li>
+<li><b>Protocols (Recommended):</b> Uses predefined names (like NEC or Sony) and small 8 or 16-bit addresses and commands. Most efficient and easiest to read.</li>
+</ul>
 <h2>1. Timing</h2>
 <p>The timing of each mark/pulse and space/distance_between_pulses is specified in a list or array. This enables specifying <b>all IR codes</b>, but requires a lot of memory and is <b>not readable at all</b>. One formal definition of such a timing array, including <b>specification of frequency and repeats</b> is the <a href="http://www.harctoolbox.org/Glossary.html#ProntoSemantics"><b>Pronto</b> format</a>.<br  />
  Memory can be saved by using a lower time resolution. For IRremote you can use a 50 &micro;s resolution which halves the memory requirement by using byte values instead of int16 values. For receiving purposes you can use the <b>hash of the timing</b> provided by the <code>decodeHash()</code> decoder.</p>
 <h2>2. Encoding schemes</h2>
-<p>There are 3 main encoding schemes which encodes a binary bitstream / hex value:</p><ol type="1">
-<li><code>PULSE_DISTANCE</code>. The distance between pulses determines the bit value. This requires always a stop bit! Examples are NEC and KASEIKYO protocols. The pulse width is constant for most protocols.</li>
+<p>There are 3 main encoding schemes which encode a binary bitstream / hex value:</p><ol type="1">
+<li><code>PULSE_DISTANCE</code>. The distance between pulses determines the bit value. This always requires a stop bit! Examples are NEC and KASEIKYO protocols. The pulse width is constant for most protocols.</li>
 <li><code>PULSE_WIDTH</code>. The width of a pulse determines the bit value, pulse distance is constant. This requires no stop bit! The only known example is the SONY protocol.</li>
 <li><a href="https://en.wikipedia.org/wiki/Manchester_code">Phase / Manchester encoding</a>. The time of the pulse/pause transition (phase) relative to the clock determines the bit value. Examples are RC5 and RC6 protocols.</li>
 </ol>
@@ -411,10 +423,10 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="line">    uint16_t address;           // Decoded address</div>
 <div class="line">    uint16_t command;           // Decoded command</div>
 <div class="line">    uint16_t extra;             // Used for Kaseikyo unknown vendor ID. Ticks used for decoding Distance protocol.</div>
-<div class="line">    IRRawDataType decodedRawData; // Up to 32 (64 bit for 32 bit CPU architectures) bit decoded raw data, used for send&lt;protocol&gt;Raw functions.</div>
+<div class="line">    IRDecodedRawDataType decodedRawData; // Up to 32 (64 bit for 32 bit CPU architectures) bit decoded raw data, used for send&lt;protocol&gt;Raw functions.</div>
 <div class="line">#if defined(DECODE_DISTANCE_WIDTH)</div>
 <div class="line">    DistanceWidthTimingInfoStruct DistanceWidthTimingInfo; // 12 bytes</div>
-<div class="line">    IRRawDataType decodedRawDataArray[DECODED_RAW_DATA_ARRAY_SIZE]; // 32/64 bit decoded raw data, to be used for sendPulseDistanceWidthFromArray functions.</div>
+<div class="line">    IRDecodedRawDataType decodedRawDataArray[DECODED_RAW_DATA_ARRAY_SIZE]; // 32/64 bit decoded raw data, to be used for sendPulseDistanceWidthFromArray functions.</div>
 <div class="line">#endif</div>
 <div class="line">    uint16_t numberOfBits;      // Number of bits received for data (address + command + parity) - to determine protocol length if different length are possible.</div>
 <div class="line">    uint8_t flags;              // IRDATA_FLAGS_IS_REPEAT, IRDATA_FLAGS_WAS_OVERFLOW etc. See IRDATA_FLAGS_* definitions</div>
@@ -428,7 +440,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <tr class="markdownTableHead">
 <th class="markdownTableHeadLeft">Flag name </th><th class="markdownTableHeadNone">Description  </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft">IRDATA_FLAGS_IS_REPEAT </td><td class="markdownTableBodyNone">The gap between the preceding frame is as smaller than the maximum gap expected for a repeat. !!!We do not check for changed command or address, because it is almost not possible to press 2 different buttons on the remote within around 100 ms!!!  </td></tr>
+<td class="markdownTableBodyLeft">IRDATA_FLAGS_IS_REPEAT </td><td class="markdownTableBodyNone">The gap between the preceding frame is as smaller than the maximum gap expected for a repeat. !!!We do not check for changed command or address, because it is virtually impossible to press 2 different buttons on the remote within around 100 ms!!!  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft">IRDATA_FLAGS_IS_AUTO_REPEAT </td><td class="markdownTableBodyNone">The current repeat frame is a repeat, that is always sent after a regular frame and cannot be avoided. Only specified for protocols DENON, and LEGO.  </td></tr>
 <tr class="markdownTableRowOdd">
@@ -456,14 +468,17 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="line">#### Print how to send the received data:</div>
 <div class="line">```c++</div>
 <div class="line">IrReceiver.printIRSendUsage(&amp;Serial);</div>
-</div><!-- fragment --><h2>Ambiguous protocols</h2>
-<h3>NEC, Extended NEC, ONKYO</h3>
+</div><!-- fragment --><h2>Callback functionality</h2>
+<p>Sometimes it can be difficult to call decode() periodically in the main loop to avoid missing any IR frames. In this case you can use the callback functionality as demonstrated in the <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master/examples/CallbackDemo/CallbackDemo.ino#L126">CallbackDemo</a> example. This enables you to perform <code>resume()</code> and short actions independently of the state of your main loop.</p>
+<h2>Ambiguous protocols</h2>
+<h3>NEC, Extended NEC, ONKYO, OpenLASIR</h3>
 <p>The <b>NEC protocol</b> is defined as 8 bit address and 8 bit command. But the physical address and data fields are each 16 bit wide. The additional 8 bits are used to send the inverted address or command for parity checking.<br  />
  The <b>extended NEC protocol</b> uses the additional 8 parity bit of address for a 16 bit address, thus disabling the parity check for address.<br  />
  The <b>ONKYO protocol</b> in turn uses the additional 8 parity bit of address and command for a 16 bit address and command.</p>
 <p>The decoder reduces the 16 bit values to 8 bit ones if the parity is correct. If the parity is not correct, it assumes no parity error, but takes the values as 16 bit values without parity assuming extended NEC or extended NEC protocol protocol.</p>
 <p>But now we have a problem when we want to receive e.g. the <b>16 bit</b> address 0x00FF or 0x32CD! The decoder interprets this as a NEC 8 bit address 0x00 / 0x32 with correct parity of 0xFF / 0xCD and reduces it to 0x00 / 0x32.</p>
 <p>One way to handle this, is to force the library to <b>always</b> use the ONKYO protocol interpretation by using <code>#define DECODE_ONKYO</code>. Another way is to check if <code>IrReceiver.decodedIRData.protocol</code> is NEC and not ONKYO and to revert the parity reducing manually.</p>
+<p>The <b><a href="https://github.com/danielweidman/OpenLASIR">OpenLASIR protocol</a></b> is binary identical to ONKYO but has a different semantics. It is recommended to disable <code>#define DECODE_ONKYO</code> and enable <code>#define DECODE_OPENLASIR</code> when working with OpenLASIR.</p>
 <h3>NEC, NEC2</h3>
 <p>On a long press, the <b>NEC protocol</b> does not repeat its frame, it sends a special short repeat frame. This enables an easy distinction between long presses and repeated presses and saves a bit of battery energy. This behavior is quite unique for NEC and its derived protocols like LG and Samsung.</p>
 <p>But of course there are also remote control systems, that uses the NEC protocol but only repeat the first frame when a long press is made instead of sending the special short repeat frame. We named this the <b>NEC2</b> protocol and it is sent with <code>sendNEC2()</code>.<br  />
@@ -474,7 +489,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <p>The <code>RAW_BUFFER_LENGTH</code> determines the length of the <b>byte buffer</b> where the received IR timing data is stored before decoding.<br  />
  <b>100</b> is sufficient for standard protocols <b>up to 48 bits</b>, with 1 bit consisting of one mark and space. We always require additional 4 bytes, 1 byte for initial gap, 2 bytes for header and 1 byte for stop bit.</p><ul>
 <li><b>48</b> bit protocols are PANASONIC, KASEIKYO, SAMSUNG48, RC6.</li>
-<li><b>32</b> bit protocols like NEC, SAMSUNG, WHYNTER, SONY(20), LG(28) require a <b>buffer length of 68</b>.</li>
+<li><b>32</b> bit protocols like NEC, SAMSUNG, WHYNTER, SONY(20), LG(28), OpenLASIR require a <b>buffer length of 68</b>.</li>
 <li><b>16</b> bit protocols like BOSEWAVE, DENON, FAST, JVC, LEGO_PF, RC5, SONY(12 or 15) require a <b>buffer length of 36</b>.</li>
 <li>MAGIQUEST requires a buffer length of <b>112</b>.</li>
 <li>Air conditioners often send a longer protocol data stream <b>up to 750 bits</b>.</li>
@@ -569,14 +584,67 @@ Address 0x6A8, sendPanasonic (for 02 20) and Command 0x35 </td><td class="markdo
 </table>
 <p><br  />
 </p>
+<h1><a class="el" href="classIRCommandDispatcher.html">IRCommandDispatcher</a> class</h1>
+<p>If you want to <b>handle many IR commands</b> in a structured way, you can use a big <b>switch statement</b>, or use the class <code><a class="el" href="classIRCommandDispatcher.html">IRCommandDispatcher</a></code>.<br  />
+ The <a class="el" href="classIRCommandDispatcher.html">IRCommandDispatcher</a> class receives IR commands and maps them to different functions by means of a mapping array <code>IRMapping[]</code>.</p>
+<p>By default, every mapped command is <b>blocking</b>. However it can be declared as <b>non-blocking</b> and / or <b>repeatable</b>.<br  />
+ Non-blocking commands are executed immediately, blocking commands are executed if no other command is just running. If another blocking command is currently running, a <b>request to stop</b> is set and the command is stored for the main loop to be executed by <code>checkAndRunSuspendedBlockingCommands()</code>. The request to stop must be checked by any blocking function using the macros <code><a class="el" href="IRCommandDispatcher_8h.html#a618090545f0bc3f43362f27ecc64c008">DELAY_AND_RETURN_IF_STOP()</a></code>, <code>RETURN_IF_STOP</code>, <code>BREAK_IF_STOP</code> and <code>IS_STOP_REQUESTED</code>.<br  />
+ Only commands that are marked as <b>repeatable</b> will be exectuted when a IR repeat frame is received. Therefore this only makes sense for non-blocking comands :-).</p>
+<p>Code snippets are from <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRDispatcherDemo">IRDispatcherDemo</a>.</p>
+<div class="fragment"><div class="line"> {c++}</div>
+<div class="line">// IR code mapping which is useful if more than one remote is supported</div>
+<div class="line">#define IR_0            0x19</div>
+<div class="line">#define IR_HASH         0x0D</div>
+<div class="line">#define COMMAND_BLINK   IR_0</div>
+<div class="line">#define COMMAND_STOP    IR_HASH</div>
+<div class="line"> </div>
+<div class="line">// Strings of commands for Serial output</div>
+<div class="line">static const char blink20times[] PROGMEM =&quot;blink 20 times&quot;;</div>
+<div class="line">static const char stop[] PROGMEM =&quot;stop&quot;;</div>
+<div class="line"> </div>
+<div class="line">/*</div>
+<div class="line"> * Main mapping array of commands to C functions and command strings</div>
+<div class="line"> * The macro COMMAND_STRING() removes the strings from memory, if USE_DISPATCHER_COMMAND_STRINGS is not enabled</div>
+<div class="line"> */</div>
+<div class="line">const struct IRToCommandMappingStruct IRMapping[] = {</div>
+<div class="line">{ COMMAND_BLINK, IR_COMMAND_FLAG_BLOCKING | IR_COMMAND_FLAG_BEEP, &amp;doLedBlink20times, COMMAND_STRING(blink20times) },</div>
+<div class="line">{ COMMAND_STOP, IR_COMMAND_FLAG_BLOCKING, &amp;doStop, COMMAND_STRING(stop) },</div>
+<div class="line">/*</div>
+<div class="line"> * Short commands that can always be executed</div>
+<div class="line"> */</div>
+<div class="line">{ COMMAND_TONE1, IR_COMMAND_FLAG_NON_BLOCKING, &amp;doTone1800, tone1800 },</div>
+<div class="line">...</div>
+<div class="line">/*</div>
+<div class="line"> * Repeatable short commands</div>
+<div class="line"> */</div>
+<div class="line">{ COMMAND_INCREASE_BLINK, IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING, &amp;doIncreaseBlinkFrequency, increaseBlink },</div>
+<div class="line">...</div>
+<div class="line"> </div>
+<div class="line">/*</div>
+<div class="line"> * This is a blocking function which checks for stop</div>
+<div class="line"> */</div>
+<div class="line">void doLedBlink20times() {</div>
+<div class="line">    for (int i = 0; i &lt; 20; ++i) {</div>
+<div class="line">        digitalWrite(LED_BUILTIN, HIGH);</div>
+<div class="line">        DELAY_AND_RETURN_IF_STOP(200);</div>
+<div class="line">        digitalWrite(LED_BUILTIN, LOW);</div>
+<div class="line">        DELAY_AND_RETURN_IF_STOP(200);</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="line">// Other useful macros are RETURN_IF_STOP, BREAK_IF_STOP and IS_STOP_REQUESTED.</div>
+</div><!-- fragment --><p>Examples of mapping arrays can be found in the <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRDispatcherDemo/DemoIRCommandMapping.h#L185">IRDispatcherDemo</a>, for <a href="https://github.com/ArminJo/QuadrupedControl/blob/master/examples/QuadrupedControl/QuadrupedIRCommandMapping.h#L445">QuadrupedControl</a>, for <a href="https://github.com/ArminJo/RobotArmControl/blob/master/RobotArmControl/RobotArmIRCommandMapping.h#L320">RobotArmControl</a> or for <a href="https://github.com/ArminJo/PWMMotorControl/blob/master/examples/IRDispatcherControl/RobotCarIRCommandMapping.h#L308">4 WD RobotCar control</a><br  />
+</p>
+<p><br  />
+</p>
 <h1>Tiny NEC receiver and sender</h1>
 <p>For applications only requiring NEC, NEC variants or FAST -see below- protocol, there is a special receiver / sender included, which has very <b>small code size of 500 bytes and does NOT require any timer</b>.</p>
 <h2>Principle of operation</h2>
-<p>Instead of sampling the input every 50 &micro;s as IRremote does, TinyReceiver receiver uses a <b>pin change interrupt</b> for on-the-fly decoding which limits the choice of protocols.<br  />
+<p>Unlike IRremote, which samples the input every 50 &micro;s, the TinyReceiver receiver uses a <b>pin change interrupt</b> for on-the-fly decoding. This restricts the range of protocols that can be recognised.<br  />
  On each level change, the level and the time since the last change are used to incrementally decode the protocol.<br  />
  With this operating principle, we <b>cannot wait for a timeout</b> and then decode the protocol as IRremote does.<br  />
- Instead, we need to know which is the last bit (level change) of a protocol to do the final decoding and the call of the optional <b>user provided callback function</b> <code><a class="el" href="group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application.">handleReceivedTinyIRData()</a></code>.<br  />
- This means, <b>we need to know the number of bits in a protocol</b> and therefore the protocol (family).</p>
+ Instead, we need to know which is the last bit (level change) of a protocol in order to perform the final decoding and call of the optional <b>user-provided callback function</b> <code><a class="el" href="group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application.">handleReceivedTinyIRData()</a></code>.<br  />
+ This means that <b>we need to know the number of bits in a protocol</b> and therefore the protocol family in order to decode successfully.</p>
+<p>For each complete IR frame/command received, the decoded data is copied to the <code>TinyIRReceiverData</code> structure and the user-provided <code><a class="el" href="group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application.">handleReceivedTinyIRData()</a></code> function is called in an interrupt context. However, <b>interrupts are explicitly enabled here</b> to allow the use of delay() and millis() etc.</p>
 <p>Check out the <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender">TinyReceiver</a> and <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irdispatcherdemo">IRDispatcherDemo</a> examples.<br  />
  Take care to include <code><a class="el" href="TinyIRReceiver_8hpp.html">TinyIRReceiver.hpp</a></code> or <code><a class="el" href="TinyIRSender_8hpp.html">TinyIRSender.hpp</a></code> instead of <code><a class="el" href="IRremote_8hpp.html" title="Public API to the library.">IRremote.hpp</a></code>.</p>
 <h3>TinyIRReceiver usage</h3>
@@ -637,20 +705,34 @@ Address 0x6A8, sendPanasonic (for 02 20) and Command 0x35 </td><td class="markdo
 </div><!-- fragment --><p><br  />
 </p>
 <p>The FAST protocol can be received by IRremote and TinyIRReceiver.</p>
+<h1>Feedback LED</h1>
+<p>The feedback LED output is enabled by default. This means that <b>the LED is on when we receive or send a mark</b>. The feedback LED code can be completely removed at compile time using the following macros:</p><ul>
+<li><code>NO_LED_RECEIVE_FEEDBACK_CODE</code> for receiving</li>
+<li><code>NO_LED_SEND_FEEDBACK_CODE</code> for sending</li>
+<li><code>NO_LED_FEEDBACK_CODE</code> for receiving and sending</li>
+</ul>
+<h3>Receiving</h3>
+<p>For receiving, feedback LED can be activated or deactivated programmatically by <code><a class="el" href="group__FeedbackLEDFunctions.html#ga1150b1e371cd7d424d53dbcae6619e54">enableLEDFeedback()</a></code>, <code><a class="el" href="group__FeedbackLEDFunctions.html#gab72e6123a449de7feaaa1c3dcb9f8630">disableLEDFeedback()</a></code> or <code><a class="el" href="group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921">setLEDFeedback(bool aEnableLEDFeedback)</a></code>.<br  />
+ The starting value is set by the second parameter of <code>begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)</code>. You can use the macros <code>ENABLE_LED_FEEDBACK</code> and <code>DISABLE_LED_FEEDBACK</code> for the second parameter.</p>
+<h3>Sending</h3>
+<p>LED feedback is <b>always enabled</b> when sending and cannot be deactivated programmatically. It can only be deactivated at compile time.</p>
 <h1>FAQ and hints</h1>
-<h2>Receiving stops after analogWrite() or tone() or after running a motor.</h2>
+<h2>Receiving stops after analogWrite() or tone() or after running a motor</h2>
 <p>The receiver sample interval of 50 µs is generated by a timer. On many boards this must be a <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage">hardware timer</a>. On some boards where a software timer is available, the software timer is used.<br  />
  Be aware that the hardware timer used for receiving should not be used for <code>analogWrite()</code>.<br  />
  Especially <b>motor</b> control often uses the <code>analogWrite()</code> function and will therefore stop the receiving if used on the pins indicated <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage">here</a>.<br  />
  On the Uno and other AVR boards the receiver timer ist the same as the tone timer. Thus receiving will stop after a <code>tone()</code> command. See <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveDemo/ReceiveDemo.ino#L284-L298">ReceiveDemo example</a> how to deal with it, i.e. how to use <code>IrReceiver.restartTimer()</code>.</p>
-<h2>Receiving sets overflow flag.</h2>
+<h2>Receiving sets overflow flag</h2>
 <p>The flag <code>IRDATA_FLAGS_WAS_OVERFLOW</code> is set, if <code>RAW_BUFFER_LENGTH</code> is too small for all the marks and spaces of the protocol. This can happen on long protocol frames like the ones from air conditioner. It also can happen, if <code>RECORD_GAP_MICROS</code> is smaller than the real gap between a frame and the repetition frame, thus interpreting both as one consecutive frame. Best is to dump the timing then, to see which reason holds.</p>
 <h2>Problems with Neopixels, FastLed etc.</h2>
 <p>IRremote will not work right when you use <b>Neopixels</b> (aka WS2811/WS2812/WS2812B) or other libraries blocking interrupts for a longer time (&gt; 50 &micro;s).<br  />
- Whether you use the Adafruit Neopixel library, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 &micro;s. In turn, this stops the IR interrupt handler from running when it needs to. See also this <a href="https://www.youtube.com/watch?v=62-nEJtm070">video</a>.</p>
+ Whether you use the Adafruit Neopixel library, or FastLED, interrupts get disabled on many lower end CPUs like the basic Arduinos for longer than 50 &micro;s.<br  />
+ In turn, this stops the IR interrupt handler from sampling the IR signal.</p>
+<p>Each WS2812 LED requires 30 &micro;s at <b>800 kHz</b>, an <b>8 pixel</b> strip requires 240 &micro;s and therefore <b>skips 4 samples</b> of the IR signal, which is sampled each 50 &micro;s. <br  />
+ For example, the standard timing for the NEC protocol is 560 &micro;s or 11 samples. However, with a loss of four samples, however, we <b>exceed the accepted 25 %</b> decoding deviation threshold.</p>
 <p>One <b>workaround</b> is to wait for the IR receiver to be idle before you send the Neopixel data with <code>if (IrReceiver.isIdle()) { strip.show();}</code>.<br  />
- This <b>prevents at least breaking a running IR transmission</b> and -depending of the update rate of the Neopixel- may work quite well.<br  />
- There are some other solutions to this on more powerful processors, <a href="http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html">see this page from Marc MERLIN</a></p>
+ This <b>prevents a running IR transmission from beeing broken</b>, and depending on the update rate of the Neopixel, it may work quite well.<br  />
+ There are some other solutions to this on <b>more powerful CPU's</b>, <a href="http://marc.merlins.org/perso/arduino/post_2017-04-03_Arduino-328P-Uno-Teensy3_1-ESP8266-ESP32-IR-and-Neopixels.html">see this page from Marc MERLIN</a></p>
 <h2>Does not work/compile with another library</h2>
 <p><b>Another library is only working/compiling</b> if you deactivate the line <code>IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);</code>.<br  />
  This is often due to <b>timer resource conflicts</b> with the other library. Please see <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage">below</a>.</p>
@@ -669,6 +751,8 @@ Address 0x6A8, sendPanasonic (for 02 20) and Command 0x35 </td><td class="markdo
  The actual current might be lower since of <b>loss at the AVR pin</b>. E.g. 0.3 V at 20 mA.<br  />
  If you do not require more current than 20 mA, there is no need to use an external transistor (at least for AVR chips).</p>
 <p>On my Arduino Nanos, I always use a 100  series resistor and one IR LED :grinning:.</p>
+<h2>Simulate an IR receiver module for sending</h2>
+<p>To simulate an IR receiver (such as the TSOP1738) which provides an active-low output, you only need to enable the <code>USE_NO_SEND_PWM</code> macro. In the case you must simulate exotic IR receivers, which provides an active-high output, you also need to enable the <code>USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM</code> macro.</p>
 <h2>Minimal CPU clock frequency</h2>
 <p>For receiving, the <b>minimal CPU clock frequency is 4 MHz</b>, since the 50 &micro;s timer ISR (Interrupt Service Routine) takes around 12 &micro;s on a 16 MHz ATmega.<br  />
  The TinyReceiver, which requires no polling, runs with 1 MHz.<br  />
@@ -678,7 +762,7 @@ Address 0x6A8, sendPanasonic (for 02 20) and Command 0x35 </td><td class="markdo
  And because <b>generating a 455 kHz PWM signal is currently only implemented for <code>SEND_PWM_BY_TIMER</code></b>, sending only works if <code>SEND_PWM_BY_TIMER</code> or <code>USE_NO_SEND_PWM</code> is defined.<br  />
  For more info, see <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/ir_BangOlufsen.hpp#L44">ir_BangOlufsen.hpp</a>.</p>
 <h1>Examples for this library</h1>
-<p>The examples are available at File &gt; Examples &gt; Examples from Custom Libraries / IRremote.<br  />
+<p>These examples can be found in the Arduino IDE under File &gt; Examples &gt; Examples from Custom Libraries / IRremote.<br  />
  <b>In order to fit the examples to the 8K flash of ATtiny85 and ATtiny88, the <a href="https://github.com/ArminJo/ATtinySerialOut">Arduino library ATtinySerialOut</a> is required for this CPU's.</b><br  />
  See also <a href="https://dronebotworkshop.com/ir-remotes/#SimpleReceiver_Example_Code">DroneBot Workshop SimpleReceiver</a> and <a href="https://dronebotworkshop.com/ir-remotes/#SimpleSender_Example_Code">SimpleSender</a>.</p>
 <h3><a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleReceiver/SimpleReceiver.ino">SimpleReceiver</a> + <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SimpleSender/SimpleSender.ino">SimpleSender</a></h3>
@@ -719,7 +803,7 @@ Address 0x6A8, sendPanasonic (for 02 20) and Command 0x35 </td><td class="markdo
 <h4><a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ReceiveOneAndSendMultiple/ReceiveOneAndSendMultiple.ino">ReceiveOneAndSendMultiple</a></h4>
 <p>Serves as a IR <b>remote macro expander</b>. Receives Samsung32 protocol and on receiving a specified input frame, it sends multiple Samsung32 frames with appropriate delays in between. This serves as a <b>Netflix-key emulation</b> for my old Samsung H5273 TV.</p>
 <h4><a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRDispatcherDemo/IRDispatcherDemo.ino">IRDispatcherDemo</a></h4>
-<p>Framework for <b>calling different functions of your program</b> for different IR codes.</p>
+<p><b>Calling different functions</b> of your program for different IR codes.</p>
 <h4><a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/ControlRelay/ControlRelay.ino">ControlRelay</a></h4>
 <p><b>Control a relay</b> (connected to an output pin) with your remote.</p>
 <h4><a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/IRremoteExtensionTest/IRremoteExtensionTest.ino">IRremoteExtensionTest</a></h4>
@@ -763,7 +847,7 @@ Address 0x6A8, sendPanasonic (for 02 20) and Command 0x35 </td><td class="markdo
 </ul>
 <p><br  />
 </p>
-<h1>Compile options / macros for this library</h1>
+<h1>Compile options / macros for IRremote</h1>
 <p>To customize the library to different requirements, there are some compile options / macros available.<br  />
  These macros must be defined in your program <b>before</b> the line <code>#include &lt;<a class="el" href="IRremote_8hpp.html" title="Public API to the library.">IRremote.hpp</a>&gt;</code> to take effect.<br  />
  Modify them by enabling / disabling them, or change the values if applicable.</p>
@@ -773,62 +857,65 @@ Address 0x6A8, sendPanasonic (for 02 20) and Command 0x35 </td><td class="markdo
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>RAW_BUFFER_LENGTH</code> </td><td class="markdownTableBodyRight">200 </td><td class="markdownTableBodyNone">Buffer size of raw input uint16_t buffer. Must be even! If it is too small, overflow flag will be set. 100 is sufficient for <em>regular</em> protocols of up to 48 bits, but for most air conditioner protocols a value of up to 750 is required. Use the ReceiveDump example to find smallest value for your requirements. A value of 200 requires 200 bytes RAM.  </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>USE_16_BIT_TIMING_BUFFER</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Use a 16-bit buffer if raw timing capture is required and exact values above 12750 us must be preserved. This doubles the RAM size of the buffer.  </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>EXCLUDE_UNIVERSAL_PROTOCOLS</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Excludes the universal decoder for pulse distance width protocols and decodeHash (special decoder for all protocols) from <code>decode()</code>. Saves up to 1000 bytes program memory.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>EXCLUDE_EXOTIC_PROTOCOLS</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF from <code>decode()</code> and from sending with <code>IrSender.write()</code>. Saves up to 650 bytes program memory.  </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>EXCLUDE_EXOTIC_PROTOCOLS</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Excludes BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST LEGO_PF, and OpenLASIR from <code>decode()</code> and from sending with <code>IrSender.write()</code>. Saves up to 650 bytes program memory.  </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>DECODE_&lt;Protocol name&gt;</code> </td><td class="markdownTableBodyRight">all </td><td class="markdownTableBodyNone">Selection of individual protocol(s) to be decoded. You can specify multiple protocols. See <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/IRremote.hpp#L98-L121">here</a>  </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>USE_THRESHOLD_DECODER</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">If enabled, may give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses and forces value of MARK_EXCESS_MICROS to 0 to save program memory. Requires up to additional 120 bytes program memory.  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>USE_STRICT_DECODER</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Check for all 4 one and zero protocol timings. Only sensible for development or very exotic requirements. Requires up to 300 additional bytes of program memory.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Saves up to 60 bytes of program memory and 2 bytes RAM.  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>MARK_EXCESS_MICROS</code> </td><td class="markdownTableBodyRight">0 </td><td class="markdownTableBodyNone">MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. Is set to 20 if <code>DO_NOT_USE_THRESHOLD_DECODER</code> is enabled.  </td></tr>
+<td class="markdownTableBodyNone"><code>IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Saves up to 60 bytes of program memory and 2 bytes RAM.  </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>MARK_EXCESS_MICROS</code> </td><td class="markdownTableBodyRight">20 </td><td class="markdownTableBodyNone">MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules. Is set to 20 if <code>DO_NOT_USE_THRESHOLD_DECODER</code> is enabled.  </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>RECORD_GAP_MICROS</code> </td><td class="markdownTableBodyRight">5000 </td><td class="markdownTableBodyNone">Minimum gap between IR transmissions, to detect the end of a protocol.<br  />
 Must be greater than any space of a protocol e.g. the NEC header space of 4500 &micro;s.<br  />
 Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 24 ms.<br  />
 Keep in mind, that this is the delay between the end of the received command and the start of decoding.  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE</code> </td><td class="markdownTableBodyRight">50 if RAM &lt;= 2k, else 200 </td><td class="markdownTableBodyNone">A value of 200 allows to decode mark or space durations up to 10 ms.  </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>IR_INPUT_IS_ACTIVE_HIGH</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Enable it if you use a RF receiver, which has an active HIGH output signal.  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>IR_SEND_PIN</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">If specified, it reduces program size and improves send timing for AVR. If you want to use a variable to specify send pin e.g. with <code>setSendPin(uint8_t aSendPinNumber)</code>, you must not use / disable this macro in your source.  </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>SEND_PWM_BY_TIMER</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Disables carrier PWM generation in software and use hardware PWM (by timer). Has the <b>advantage of more exact PWM generation</b>, especially the duty cycle (which is not very relevant for most IR receiver circuits), and the <b>disadvantage of using a hardware timer</b>, which in turn is not available for other libraries and to fix the send pin (but not the receive pin) at the <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#timer-and-pin-usage">dedicated timer output pin(s)</a>. Is enabled for ESP32 and RP2040 in all examples, since they support PWM generation for each pin without using a shared resource (timer).  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>IR_SEND_DUTY_CYCLE_PERCENT</code> </td><td class="markdownTableBodyRight">30 </td><td class="markdownTableBodyNone">Duty cycle of IR send signal.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Reverses the polarity at the send pin. Can be used to connect IR LED between VCC and the send pin. It is like open drain but with electrical active high in its logical inactive state.  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Uses or simulates open drain output mode at send pin. <b>Attention, active state of open drain is LOW</b>, so connect the send LED between positive supply and send pin!  </td></tr>
+<td class="markdownTableBodyNone"><code>USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Reverses the polarity of space level for PWM at the send pin, i.e. space is high. Can be used to connect IR LED between VCC and the send pin. It is like open drain but with electrical active high in its logical inactive state.  </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Uses or simulates open drain output mode for PWM at send pin. <b>Attention, active state of open drain is LOW</b>, so connect the send LED between positive supply and send pin!  </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>USE_NO_SEND_PWM</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Uses no carrier PWM, just simulate an <b>active low</b> receiver signal. Used for transferring signal by cable instead of IR. Overrides <code>SEND_PWM_BY_TIMER</code> definition.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Only if <code>USE_NO_SEND_PWM</code> is enabled. Simulate an <b>active high</b> receiver signal instead of an active low signal.  </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Only evaluated if <code>USE_NO_SEND_PWM</code> is enabled. Simulate an <b>active high</b> receiver signal instead of an active low signal.  </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>DISABLE_CODE_FOR_RECEIVER</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Disables static receiver code like receive timer ISR handler and static IRReceiver and irparams data. Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not required.  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>FEEDBACK_LED_IS_ACTIVE_LOW</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Required on some boards (like my BluePill and my ESP8266 board), where the feedback LED is active low.  </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>NO_LED_FEEDBACK_CODE</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Disables the LED feedback code for send and receive. Saves around 100 bytes program memory for receiving, around 500 bytes for sending and halving the receiver ISR (Interrupt Service Routine) processing time.  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>NO_LED_RECEIVE_FEEDBACK_CODE</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Disables the LED feedback code for receive. Saves around 100 bytes program memory for receiving and halving the receiver ISR (Interrupt Service Routine) processing time.  </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>NO_LED_SEND_FEEDBACK_CODE</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Disables the LED feedback code for send. Saves around 322 bytes for sending.  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><code>MICROS_PER_TICK</code> </td><td class="markdownTableBodyRight">50 </td><td class="markdownTableBodyNone">Resolution of the raw input buffer data. Corresponds to 2 pulses of each 26.3 &micro;s at 38 kHz.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT</code> </td><td class="markdownTableBodyRight">25 </td><td class="markdownTableBodyNone">Relative tolerance for <a class="el" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware.">matchTicks()</a>, <a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware.">matchMark()</a> and <a class="el" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware.">matchSpace()</a> functions used for protocol decoding.  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>DEBUG</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Enables lots of lovely debug output.  </td></tr>
+<td class="markdownTableBodyNone"><code>TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT</code> </td><td class="markdownTableBodyRight">25 </td><td class="markdownTableBodyNone">Relative tolerance for <a class="el" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma...">matchTicks()</a>, <a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware.">matchMark()</a> and <a class="el" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware.">matchSpace()</a> functions used for protocol decoding.  </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>DEBUG</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Enables lots of lovely debug output.  </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>IR_USE_AVR_TIMER*</code> </td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyNone">Selection of timer to be used for generating IR receiving sample interval.  </td></tr>
 </table>
-<p>These next macros for <b>TinyIRReceiver</b> must be defined in your program before the line <code>#include &lt;<a class="el" href="TinyIRReceiver_8hpp.html">TinyIRReceiver.hpp</a>&gt;</code> to take effect. </p><table class="markdownTable">
+<h1>Macros for TinyIR</h1>
+<p>These macros must be defined in your program before the line <code>#include &lt;<a class="el" href="TinyIRReceiver_8hpp.html">TinyIRReceiver.hpp</a>&gt;</code> to take effect. </p><table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Name </th><th class="markdownTableHeadRight">Default value </th><th class="markdownTableHeadNone">Description  </th></tr>
 <tr class="markdownTableRowOdd">
@@ -843,18 +930,27 @@ Keep in mind, that this is the delay between the end of the received command and
 <td class="markdownTableBodyNone"><code>NO_LED_SEND_FEEDBACK_CODE</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Disables the LED feedback code for send.  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><code>DISABLE_PARITY_CHECKS</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Disables the address and command parity checks. Saves 48 bytes program memory.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>USE_EXTENDED_NEC_PROTOCOL</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>USE_ONKYO_PROTOCOL</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>USE_FAST_PROTOCOL</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC.  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><code>ENABLE_NEC2_REPEATS</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><code>USE_CALLBACK_FOR_TINY_RECEIVER</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Call the user provided function <code>void <a class="el" href="group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application.">handleReceivedTinyIRData()</a></code> each time a frame or repeat is received.  </td></tr>
 </table>
-<p>The next macro for <b>IRCommandDispatcher</b> must be defined in your program before the line <code>#include &lt;IRCommandDispatcher.hpp&gt;</code> to take effect. | <code>USE_TINY_IR_RECEIVER</code> | disabled | Use <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender">TinyReceiver</a> for receiving IR codes. | | <code>IR_COMMAND_HAS_MORE_THAN_8_BIT</code> | disabled | Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 4 bytes RAM + 1 byte RAM per mapping entry. | | <code>BUZZER_PIN</code> | | If <code>USE_TINY_IR_RECEIVER</code> is enabled, the pin to be used for the optional 50 ms buzzer feedback before executing a command. Other IR libraries than Tiny are not compatible with tone() command. |</p>
+<p>| <code>USE_EXTENDED_NEC_PROTOCOL</code> | disabled | Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value. || <code>USE_ONKYO_PROTOCOL</code> | disabled | Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value. | | <code>USE_FAST_PROTOCOL</code> | disabled | Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC. | | <code>ENABLE_NEC2_REPEATS</code> | disabled | Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat. | | <code>USE_CALLBACK_FOR_TINY_RECEIVER</code> | disabled | Call the user provided function <code>void <a class="el" href="group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application.">handleReceivedTinyIRData()</a></code> each time a frame or repeat is received. |</p>
+<p><br  />
+</p>
+<h1>Macros for <a class="el" href="classIRCommandDispatcher.html">IRCommandDispatcher</a></h1>
+<p>These macros must be defined in your program before the line <code>#include &lt;<a class="el" href="IRCommandDispatcher_8hpp.html">IRCommandDispatcher.hpp</a>&gt;</code> to take effect. </p><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Name </th><th class="markdownTableHeadRight">Default value </th><th class="markdownTableHeadNone">Description  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>USE_TINY_IR_RECEIVER</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Use <a href="https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender">TinyReceiver</a> for receiving IR codes.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>IR_COMMAND_HAS_MORE_THAN_8_BIT</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 5 bytes RAM + 1 byte RAM per mapping entry.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>IR_ADDRESS</code> </td><td class="markdownTableBodyRight">empty </td><td class="markdownTableBodyNone">If set, compare the address returned by the IR library with this value before executing a command.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>DISPATCHER_BUZZER_FEEDBACK_PIN</code> </td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyNone">If <code>USE_TINY_IR_RECEIVER</code> is enabled, the pin to be used for the optional 50 ms buzzer feedback before executing a command. Other IR libraries than Tiny are not compatible with tone() command.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>USE_DISPATCHER_COMMAND_STRINGS</code> </td><td class="markdownTableBodyRight">disabled </td><td class="markdownTableBodyNone">Enables printing of command strings. Requires additional 2 bytes RAM for each command mapping. Requires program memory for strings, but saves snprintf() code (1.5k) if INFO or DEBUG is activated, which has no effect if snprintf() is also used in other parts of your program / libraries.  </td></tr>
+</table>
+<p><br  />
+</p>
 <h3>Changing include (*.h) files with Arduino IDE</h3>
 <p>First, use <em>Sketch &gt; Show Sketch Folder (Ctrl+K)</em>.<br  />
  If you have not yet saved the example as your own sketch, then you are instantly in the right library folder.<br  />
@@ -870,11 +966,11 @@ Keep in mind, that this is the delay between the end of the received command and
 </p>
 <h1>Supported Boards</h1>
 <p><b>Issues and discussions with the content "Is it possible to use this library with the ATTinyXYZ? / board XYZ" without any reasonable explanations will be immediately closed without further notice.</b><br  />
- For <b>ESP8266/ESP32</b>, <a href="https://github.com/crankyoldgit/IRremoteESP8266">the IRremoteESP8266 library</a> supports an <a href="https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md">impressive set of protocols and a lot of air conditioners</a><br  />
+ For <b>ESP8266/ESP32</b>, <a href="https://github.com/crankyoldgit/IRremoteESP8266">the IRremoteESP8266 library</a> supports an <a href="https://github.com/crankyoldgit/IRremoteESP8266/blob/master/SupportedProtocols.md">impressive set of protocols and a lot of air conditioners</a>.<br  />
  <b>ATtiny CPU's are tested with the <a href="https://github.com/ArminJo/ATtinySerialOut">Arduino library ATtinySerialOut</a> library</b>.<br  />
  <br  />
- Digispark boards are only tested with <a href="https://github.com/SpenceKonde/ATTinyCore">ATTinyCore</a> using <code>New Style</code> pin mapping for the Digispark Pro board.<br  />
- <b>ATtiny boards</b> are tested with <b><a href="https://github.com/SpenceKonde/ATTinyCore#supported-devices">ATTinyCore</a> or <a href="https://github.com/SpenceKonde/megaTinyCore">megaTinyCore</a> only</b>.</p>
+ Digispark boards are tested only with <a href="https://github.com/SpenceKonde/ATTinyCore">ATTinyCore</a> using the <code>New Style</code> pin mapping for the Digispark Pro board.<br  />
+ <b>ATtiny boards</b> are tested only with <b><a href="https://github.com/SpenceKonde/ATTinyCore#supported-devices">ATTinyCore</a> or <a href="https://github.com/SpenceKonde/megaTinyCore">megaTinyCore</a></b>.</p>
 <ul>
 <li>Arduino Uno / Mega / Leonardo / Duemilanove / Diecimila / LilyPad / Mini / Fio / Nano etc.</li>
 <li>Arduino Uno R4, but not yet tested, because of lack of a R4 board. <b>Sending does not work</b> on the <code>arduino:renesas_uno:unor4wifi</code>.</li>
@@ -888,11 +984,12 @@ Keep in mind, that this is the delay between the end of the received command and
 <li>ATtiny84, 85, 167 (Digispark + Digispark Pro)</li>
 <li>SAMD (Zero, MKR*, <b>but not DUE, the latter is SAM architecture</b>)</li>
 <li>ESP8266</li>
-<li>ESP32 (ESP32-C3 since board package 2.0.2 from Espressif). New CPUs (as of January 2025) are not guaranteed to work!</li>
+<li>ESP32, ESP32-C3 since board package 2.0.2 from Espressif. Other CPUs are not tested! SP32-S3 is not supported (yet).</li>
 <li>Sparkfun Pro Micro</li>
 <li>Nano Every, Uno WiFi Rev2, nRF5 BBC MicroBit, Nano33_BLE</li>
 <li>BluePill with STM32</li>
 <li>RP2040 based boards (Raspberry Pi Pico, Nano RP2040 Connect etc.)</li>
+<li>Indian VEGA RISC-V boards - not tested</li>
 </ul>
 <p>We are open to suggestions for adding support to new boards, however we highly recommend you contact your supplier first and ask them to provide support from their side.<br  />
  If you can provide <b>examples of using a periodic timer for interrupts</b> for the new board, and the board name for selection in the Arduino IDE, then you have way better chances to get your board supported by IRremote.</p>
@@ -923,7 +1020,7 @@ pins occupied by timer  </th></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a href="https://github.com/SpenceKonde/ATTinyCore/blob/v2.0.0-devThis-is-the-head-submit-PRs-against-this/avr/extras/ATtiny_x7.md">ATtiny167 &gt; 4 MHz</a> </td><td class="markdownTableBodyNone"><b>1</b> </td><td class="markdownTableBodyNone"><b>9</b>, 8 - 15 </td><td class="markdownTableBodyNone"><b>8 - 15</b>  </td></tr>
 </table>
-<p>| <a href="https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x04.md">ATtiny1604</a> | <b>TCB0</b> | <b>PA05</b> | | <a href="https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x14.md">ATtiny1614, ATtiny816</a> | <b>TCA0</b> | <b>PA3</b> | | <a href="https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x17.md">ATtiny3217</a> | <b>TCA0</b>, TCD | % | | <a href="https://github.com/MCUdude/MiniCore#supported-microcontrollers">ATmega8</a> | <b>1</b> | <b>9</b> | | <a href="https://github.com/MCUdude/MightyCore#supported-microcontrollers">ATmega1284</a> | 1, <b>2</b>, 3 | 13, 14, 6 | | <a href="https://github.com/MCUdude/MightyCore#supported-microcontrollers">ATmega164, ATmega324, ATmega644</a> | 1, <b>2</b> | 13, <b>14</b> | | <a href="https://github.com/MCUdude/MightyCore#supported-microcontrollers">ATmega8535 ATmega16, ATmega32</a> | <b>1</b> | <b>13</b> | | <a href="https://github.com/MCUdude/MegaCore#supported-microcontrollers">ATmega64, ATmega128, ATmega1281, ATmega2561</a> | <b>1</b> | <b>13</b> | | <a href="https://github.com/MCUdude/MajorCore#pinout">ATmega8515, ATmega162</a> | <b>1</b> | <b>13</b> | | ATmega168, <b>ATmega328</b> | 1, <b>2</b> | 9, <b>3</b> | 9 &amp; 10, <b>3 &amp; 11</b> | | ATmega1280, <b>ATmega2560</b> | 1, <b>2</b>, 3, 4, 5 | 5, 6, <b>9</b>, 11, 46 | 5, 6, <b>9</b>, 11, 46 | | ATmega4809 | <b>TCB0</b> | <b>A4</b> | | | Leonardo (Atmega32u4) | 1, 3, <b>4_HS</b> | 5, <b>9</b>, 13 | 5, <b>9</b>, 13 | | Zero (SAMD) | <b>TC3</b> | *, <b>9</b> | | | <a href="http://esp8266.net/">ESP8266</a> | <b>timer1</b> | % | | | <a href="http://esp32.net/">ESP32</a> | <b>hw_timer_t</b><br  />
+<p>| <a href="https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x04.md">ATtiny1604</a> | <b>TCB0</b> | <b>PA05</b> | | <a href="https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x14.md">ATtiny1614, ATtiny816</a> | <b>TCA0</b> | <b>PA3</b> | | <a href="https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x24.md">ATtiny1624</a> | <b>TCA0</b> | <b>PA3</b> | | <a href="https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/ATtiny_x17.md">ATtiny3217</a> | <b>TCA0</b>, TCD | % | | <a href="https://github.com/MCUdude/MiniCore#supported-microcontrollers">ATmega8</a> | <b>1</b> | <b>9</b> | | <a href="https://github.com/MCUdude/MightyCore#supported-microcontrollers">ATmega1284</a> | 1, <b>2</b>, 3 | 13, 14, 6 | | <a href="https://github.com/MCUdude/MightyCore#supported-microcontrollers">ATmega164, ATmega324, ATmega644</a> | 1, <b>2</b> | 13, <b>14</b> | | <a href="https://github.com/MCUdude/MightyCore#supported-microcontrollers">ATmega8535 ATmega16, ATmega32</a> | <b>1</b> | <b>13</b> | | <a href="https://github.com/MCUdude/MegaCore#supported-microcontrollers">ATmega64, ATmega128, ATmega1281, ATmega2561</a> | <b>1</b> | <b>13</b> | | <a href="https://github.com/MCUdude/MajorCore#pinout">ATmega8515, ATmega162</a> | <b>1</b> | <b>13</b> | | ATmega168, <b>ATmega328</b> | 1, <b>2</b> | 9, <b>3</b> | 9 &amp; 10, <b>3 &amp; 11</b> | | ATmega1280, <b>ATmega2560</b> | 1, <b>2</b>, 3, 4, 5 | 5, 6, <b>9</b>, 11, 46 | 5, 6, <b>9</b>, 11, 46 | | ATmega4809 | <b>TCB0</b> | <b>A4</b> | | | Leonardo (Atmega32u4) | 1, 3, <b>4_HS</b> | 5, <b>9</b>, 13 | 5, <b>9</b>, 13 | | Zero (SAMD) | <b>TC3</b> | *, <b>9</b> | | | <a href="http://esp8266.net/">ESP8266</a> | <b>timer1</b> | % | | | <a href="http://esp32.net/">ESP32</a> | <b>hw_timer_t</b><br  />
 **Ledc channel 0** | All pins | | | <a href="https://www.sparkfun.com/products/12640">Sparkfun Pro Micro</a> | 1, <b>3</b> | <b>5</b>, 9 | | | <a href="https://www.pjrc.com/teensy/pinout.html">Teensy 1.0</a> | <b>1</b> | <b>17</b> | 15, 18 | | <a href="https://www.pjrc.com/teensy/pinout.html">Teensy 2.0</a> | 1, 3, <b>4_HS</b> | 9, <b>10</b>, 14 | 12 | | <a href="https://www.pjrc.com/teensy/pinout.html">Teensy++ 1.0 / 2.0</a> | 1, <b>2</b>, 3 | <b>1</b>, 16, 25 | 0 | | <a href="https://www.pjrc.com/teensy/pinout.html">Teensy-LC</a> | <b>TPM1</b> | <b>16</b> | 17 | | <a href="https://www.pjrc.com/teensy/pinout.html">Teensy 3.0 - 3.6</a> | <b>CMT</b> | <b>5</b> | | | <a href="https://www.pjrc.com/teensy/pinout.html">Teensy 4.0 - 4.1</a> | <b>FlexPWM1.3</b> | <b>8</b> | 7, 25 | | <a href="https://github.com/stm32duino/Arduino_Core_STM32">BluePill / STM32F103C8T6</a> | <b>3</b> | % | <b>PA6 &amp; PA7 &amp; PB0 &amp; PB1</b> | | <a href="https://stm32-base.org/boards/STM32F103C8T6-Blue-Pill">BluePill / STM32F103C8T6</a> | <b>TIM4</b> | % | <b>PB6 &amp; PB7 &amp; PB8 &amp; PB9</b> | | <a href="https://github.com/earlephilhower/arduino-pico">RP2040 / Pi Pico</a> | <a href="https://www.raspberrypi.com/documentation/pico-sdk/high_level.html#group_alarm_1ga40b4a03bf9e967d4e7170d20c5c9fb15">default alarm pool</a> | All pins | No pin | | <a href="https://github.com/arduino/ArduinoCore-mbed">RP2040 / Mbed based</a> | Mbed Ticker | All pins | No pin |</p>
 <h3>No timer required for sending</h3>
 <p>The <b>send PWM signal</b> is by default generated by software. <b>Therefore every pin can be used for sending</b>. The PWM pulse length is guaranteed to be constant by using <code>delayMicroseconds()</code>. Take care not to generate interrupts during sending with software generated PWM, otherwise you will get jitter in the generated PWM. E.g. wait for a former <code>Serial.print()</code> statement to be finished by <code>Serial.flush()</code>. Since the Arduino <code>micros()</code> function has a resolution of 4 &micro;s at 16 MHz, we always see a small jitter in the signal, which seems to be OK for the receivers.</p>
@@ -1056,7 +1153,8 @@ Supports **Pronto</b> codes and sending of raw timing values. </td><td class="ma
 <li><a href="https://github.com/probonopd/MakeHex/tree/master/protocols">IRP definition files for IR protocols</a></li>
 <li><a href="https://dronebotworkshop.com/ir-remotes/">Good introduction to IR remotes by DroneBot Workshop</a></li>
 <li><a href="https://www.sbprojects.net/knowledge/ir/">IR Remote Control Theory and some protocols (upper right hamburger icon)</a></li>
-<li><a href="http://www.hifi-remote.com/johnsfine/DecodeIR.html">Interpreting Decoded IR Signals (v2.45)</a></li>
+<li><a href="https://www.hifi-remote.com/wiki/index.php/Category:DecodeIR">Overviev of many protocols</a></li>
+<li><a href="http://www.hifi-remote.com/johnsfine/DecodeIR.html">Overviev of many protocols on one page (v2.45)</a></li>
 <li><a href="https://www.analysir.com/blog/2014/03/19/air-conditioners-problems-recording-long-infrared-remote-control-signals-arduino">"Recording long Infrared Remote control signals with Arduino"</a></li>
 <li>The original blog post of Ken Shirriff <a href="http://www.arcfn.com/2009/08/multi-protocol-infrared-remote-library.html">A Multi-Protocol Infrared Remote Library for the Arduino</a></li>
 <li><a href="https://www.vishay.com/docs/80069/circuit.pdf">Vishay datasheet</a></li>
@@ -1074,7 +1172,7 @@ Supports **Pronto</b> codes and sending of raw timing values. </td><td class="ma
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:35 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:21:04 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

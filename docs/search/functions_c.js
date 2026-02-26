@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['read_1028',['read',['../group__Receiving.html#ga471a42c75e807e43827e319852536e3c',1,'IRrecv']]],
-  ['receiveinterrupthandler_1029',['ReceiveInterruptHandler',['../group__Receiving.html#ga31747913e7bd56cd7fb7fb96e8d1b618',1,'IRrecv']]],
-  ['registerreceivecompletecallback_1030',['registerReceiveCompleteCallback',['../group__Receiving.html#ga51001d826521bdd541762bfc5e8d7599',1,'IRrecv']]],
-  ['restartaftersend_1031',['restartAfterSend',['../group__Receiving.html#gacf2ba4aadc8118c4d1012302f985f62a',1,'IRrecv']]],
-  ['restarttimer_1032',['restartTimer',['../group__Receiving.html#gaf95227684dae4d0509c17e54394ef7c0',1,'IRrecv::restartTimer()'],['../group__Receiving.html#ga0a37950cfb8f052ac3b05692661bbaf6',1,'IRrecv::restartTimer(uint32_t aMicrosecondsToAddToGapCounter)']]],
-  ['restarttimerwithtickstoadd_1033',['restartTimerWithTicksToAdd',['../group__Receiving.html#ga6ce783c588794c1ce90ca95a0a8d198e',1,'IRrecv']]],
-  ['resume_1034',['resume',['../group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5',1,'IRrecv']]]
+  ['read_1130',['read',['../group__Receiving.html#ga471a42c75e807e43827e319852536e3c',1,'IRrecv']]],
+  ['receiveinterrupthandler_1131',['ReceiveInterruptHandler',['../group__Receiving.html#ga31747913e7bd56cd7fb7fb96e8d1b618',1,'IRrecv']]],
+  ['registerreceivecompletecallback_1132',['registerReceiveCompleteCallback',['../group__Receiving.html#ga51001d826521bdd541762bfc5e8d7599',1,'IRrecv']]],
+  ['restartaftersend_1133',['restartAfterSend',['../group__Receiving.html#gacf2ba4aadc8118c4d1012302f985f62a',1,'IRrecv']]],
+  ['restarttimer_1134',['restartTimer',['../group__Receiving.html#gaf95227684dae4d0509c17e54394ef7c0',1,'IRrecv::restartTimer()'],['../group__Receiving.html#ga0a37950cfb8f052ac3b05692661bbaf6',1,'IRrecv::restartTimer(uint32_t aMicrosecondsToAddToGapCounter)']]],
+  ['restarttimerwithtickstoadd_1135',['restartTimerWithTicksToAdd',['../group__Receiving.html#ga6ce783c588794c1ce90ca95a0a8d198e',1,'IRrecv']]],
+  ['resume_1136',['resume',['../group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5',1,'IRrecv']]]
 ];

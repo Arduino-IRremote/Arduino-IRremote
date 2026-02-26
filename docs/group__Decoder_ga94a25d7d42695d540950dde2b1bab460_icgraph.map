@@ -1,0 +1,4 @@
+<map id="IRsend::computeOpenLASIRRawCommand" name="IRsend::computeOpenLASIRRawCommand">
+<area shape="rect" id="node1" title="Compute the raw 32&#45;bit data for an OpenLASIR frame from 8&#45;bit address, 8&#45;bit DeviceID,..." alt="" coords="223,5,441,49"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga8b7208a1688137a718afaf55512fd108" title="Send an OpenLASIR frame with special NEC&#45;style repeats." alt="" coords="5,13,175,41"/>
+</map>

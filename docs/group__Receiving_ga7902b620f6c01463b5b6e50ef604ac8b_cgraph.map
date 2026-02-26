@@ -1,4 +1,4 @@
 <map id="matchSpace" name="matchSpace">
 <area shape="rect" id="node1" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="5,5,100,33"/>
-<area shape="rect" id="node2" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="148,5,237,33"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="148,5,237,33"/>
 </map>

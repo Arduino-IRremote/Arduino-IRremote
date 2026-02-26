@@ -1,0 +1,4 @@
+<map id="initPCIInterruptForTinyReceiver" name="initPCIInterruptForTinyReceiver">
+<area shape="rect" id="node1" title="Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mo..." alt="" coords="212,13,417,41"/>
+<area shape="rect" id="node2" href="$classIRCommandDispatcher.html#ad68d5fcdbe439e175cfe1c8b9107d0db" title=" " alt="" coords="5,5,164,49"/>
+</map>

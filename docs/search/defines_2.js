@@ -1,28 +1,5 @@
 var searchData=
 [
-  ['decode_5fbosewave_1304',['DECODE_BOSEWAVE',['../IRProtocol_8h.html#a2935e3b14cf449b00b4166f71eecf8af',1,'IRProtocol.h']]],
-  ['decode_5fdenon_1305',['DECODE_DENON',['../IRProtocol_8h.html#a589c5f91ad251aff0cbdc179a5faaa60',1,'IRProtocol.h']]],
-  ['decode_5fdistance_5fwidth_1306',['DECODE_DISTANCE_WIDTH',['../IRProtocol_8h.html#adfd8ff3c8859e3d8f53f39b5837520c5',1,'IRProtocol.h']]],
-  ['decode_5ffast_1307',['DECODE_FAST',['../IRProtocol_8h.html#ab9694ea0f1078f534605b0b7227d6198',1,'IRProtocol.h']]],
-  ['decode_5fhash_1308',['DECODE_HASH',['../IRProtocol_8h.html#a4ee00d8b9631462888e74c95712234e1',1,'IRProtocol.h']]],
-  ['decode_5fjvc_1309',['DECODE_JVC',['../IRProtocol_8h.html#ac1f2b013768a77943b002953197cb573',1,'IRProtocol.h']]],
-  ['decode_5fkaseikyo_1310',['DECODE_KASEIKYO',['../IRProtocol_8h.html#acd46d28198948511f9c8b97328b5fdde',1,'IRProtocol.h']]],
-  ['decode_5flego_5fpf_1311',['DECODE_LEGO_PF',['../IRProtocol_8h.html#a95bc1b009436547a892527e2c2f43384',1,'IRProtocol.h']]],
-  ['decode_5flg_1312',['DECODE_LG',['../IRProtocol_8h.html#a54d5d4710700ef373384f64409df677f',1,'IRProtocol.h']]],
-  ['decode_5fmagiquest_1313',['DECODE_MAGIQUEST',['../IRProtocol_8h.html#a4f3f73855171522cc6a9fa5ba5f51896',1,'IRProtocol.h']]],
-  ['decode_5fnec_1314',['DECODE_NEC',['../IRProtocol_8h.html#ac1592db6a7ef80a046d9f33a5a2ed5d8',1,'IRProtocol.h']]],
-  ['decode_5fpanasonic_1315',['DECODE_PANASONIC',['../IRProtocol_8h.html#a018b3df8bf49d3f6cc094db8491ad2ad',1,'IRProtocol.h']]],
-  ['decode_5frc5_1316',['DECODE_RC5',['../IRProtocol_8h.html#aa1dbf245adf93ffa573dc4863ea29c5b',1,'IRProtocol.h']]],
-  ['decode_5frc6_1317',['DECODE_RC6',['../IRProtocol_8h.html#a4f3761bb8157be080bee1d9e4c1bc8c8',1,'IRProtocol.h']]],
-  ['decode_5fsamsung_1318',['DECODE_SAMSUNG',['../IRProtocol_8h.html#aa460f8aea781d305b7e0fef9b6748523',1,'IRProtocol.h']]],
-  ['decode_5fsony_1319',['DECODE_SONY',['../IRProtocol_8h.html#a308d000d6a90fac72f4dcf47323bef21',1,'IRProtocol.h']]],
-  ['decode_5fwhynter_1320',['DECODE_WHYNTER',['../IRProtocol_8h.html#ad1f31ad2d36110ba06286b7fb1d1ddcf',1,'IRProtocol.h']]],
-  ['decoded_5fraw_5fdata_5farray_5fsize_1321',['DECODED_RAW_DATA_ARRAY_SIZE',['../IRremoteInt_8h.html#aeb6f616fe33e3b374f4f269818a716b2',1,'IRremoteInt.h']]],
-  ['denon_5fkhz_1322',['DENON_KHZ',['../IRProtocol_8h.html#ad2ebee0d7bd6593a38e1998ddd6b0c90',1,'IRProtocol.h']]],
-  ['digitalreadfast_1323',['digitalReadFast',['../digitalWriteFast_8h.html#a3d35ce09bbea79b9f4e9fb0c291da92c',1,'digitalWriteFast.h']]],
-  ['digitaltogglefast_1324',['digitalToggleFast',['../digitalWriteFast_8h.html#a37533a4829c5931c2ea20fe4282bb910',1,'digitalWriteFast.h']]],
-  ['digitalwritefast_1325',['digitalWriteFast',['../digitalWriteFast_8h.html#a9bef074dfc5a83ffbb27929185ef9597',1,'digitalWriteFast.h']]],
-  ['disable_5fled_5ffeedback_1326',['DISABLE_LED_FEEDBACK',['../IRremoteInt_8h.html#a3033a7d78620f2d895d7268ceb685129',1,'IRremoteInt.h']]],
-  ['distance_5fwidth_5fdecoder_5fduration_5farray_5fsize_1327',['DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE',['../ir__DistanceWidthProtocol_8hpp.html#a763ba6fb65e0192fb2fe8f08905bdfe1',1,'ir_DistanceWidthProtocol.hpp']]],
-  ['distance_5fwidth_5fmaximum_5frepeat_5fdistance_5fmicros_1328',['DISTANCE_WIDTH_MAXIMUM_REPEAT_DISTANCE_MICROS',['../ir__DistanceWidthProtocol_8hpp.html#a35b092b20e9ffb507a29377a1737d06a',1,'ir_DistanceWidthProtocol.hpp']]]
+  ['command_5fempty_1410',['COMMAND_EMPTY',['../IRCommandDispatcher_8h.html#acbc3d5dcbe00eec6cb338d2dfc8f1b68',1,'IRCommandDispatcher.h']]],
+  ['command_5fstring_1411',['COMMAND_STRING',['../IRCommandDispatcher_8h.html#afa15a9b6c253d6f68edf6de8c1043a42',1,'IRCommandDispatcher.h']]]
 ];

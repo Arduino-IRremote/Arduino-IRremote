@@ -1,6 +1,8 @@
 <map id="initPCIInterruptForTinyReceiver" name="initPCIInterruptForTinyReceiver">
-<area shape="rect" id="node1" title="Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mo..." alt="" coords="5,13,211,41"/>
-<area shape="rect" id="node2" href="$group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10" title="Initializes hardware interrupt generation according to IR_RECEIVE_PIN or use attachInterrupt() functi..." alt="" coords="259,5,433,49"/>
-<area shape="rect" id="node3" href="$group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69" title="The ISR (Interrupt Service Routine) of TinyIRRreceiver." alt="" coords="481,13,673,41"/>
-<area shape="rect" id="node4" href="$group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application." alt="" coords="721,13,903,41"/>
+<area shape="rect" id="node1" title="Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mo..." alt="" coords="5,44,211,72"/>
+<area shape="rect" id="node2" href="$group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10" title="Initializes hardware interrupt generation according to IR_RECEIVE_PIN or use attachInterrupt() functi..." alt="" coords="259,36,433,80"/>
+<area shape="rect" id="node3" href="$group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69" title="The ISR (Interrupt Service Routine) of TinyIRRreceiver." alt="" coords="481,44,673,72"/>
+<area shape="rect" id="node4" href="$group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application." alt="" coords="721,44,903,72"/>
+<area shape="rect" id="node5" href="$classIRCommandDispatcher.html#aed3b40ff7afbcae900829027cfe7fb00" title=" " alt="" coords="969,5,1139,49"/>
+<area shape="rect" id="node6" href="$group__TinyReceiver.html#ga27649645d9280dfaee8095ce2dcf8f07" title=" " alt="" coords="951,73,1157,101"/>
 </map>

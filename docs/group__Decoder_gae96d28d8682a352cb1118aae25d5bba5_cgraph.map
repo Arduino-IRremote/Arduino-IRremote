@@ -5,5 +5,5 @@
 <area shape="rect" id="node3" href="$group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="539,5,713,49"/>
 <area shape="rect" id="node7" href="$group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="529,73,723,117"/>
 <area shape="rect" id="node4" href="$group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="775,13,862,41"/>
-<area shape="rect" id="node5" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="914,40,1003,68"/>
+<area shape="rect" id="node5" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="914,40,1003,68"/>
 </map>

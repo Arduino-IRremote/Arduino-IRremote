@@ -88,7 +88,19 @@ $(document).ready(function(){initNavTree('ir__RC5__RC6_8hpp.html',''); initResiz
 <div class="title">ir_RC5_RC6.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &quot;<a class="el" href="LocalDebugLevelStart_8h_source.html">LocalDebugLevelStart.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="LocalDebugLevelEnd_8h_source.html">LocalDebugLevelEnd.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for ir_RC5_RC6.hpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="ir__RC5__RC6_8hpp__incl.png" border="0" usemap="#src_2ir__RC5__RC6_8hpp" alt=""/></div>
+<map name="src_2ir__RC5__RC6_8hpp" id="src_2ir__RC5__RC6_8hpp">
+<area shape="rect" title=" " alt="" coords="104,5,248,33"/>
+<area shape="rect" href="LocalDebugLevelStart_8h.html" title=" " alt="" coords="5,81,166,109"/>
+<area shape="rect" href="LocalDebugLevelEnd_8h.html" title=" " alt="" coords="189,81,344,109"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ir__RC5__RC6_8hpp__dep__incl.png" border="0" usemap="#src_2ir__RC5__RC6_8hppdep" alt=""/></div>
@@ -107,8 +119,6 @@ Macros</h2></td></tr>
 <tr class="separator:ga6a67feee58533e6520c703ce2f21c74d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad486165e9022f3ee3a36c2d6c0068901"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad486165e9022f3ee3a36c2d6c0068901">RC5_COMMAND_BITS</a>&#160;&#160;&#160;6</td></tr>
 <tr class="separator:gad486165e9022f3ee3a36c2d6c0068901"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9279f4c06cb8c92dad99be4fc25f966b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga9279f4c06cb8c92dad99be4fc25f966b">RC5_EXTENSION_BITS</a>&#160;&#160;&#160;6</td></tr>
-<tr class="separator:ga9279f4c06cb8c92dad99be4fc25f966b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga736ff0f98dd2db7eb6998fd0d99f4764"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga736ff0f98dd2db7eb6998fd0d99f4764">RC5_COMMAND_FIELD_BIT</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:ga736ff0f98dd2db7eb6998fd0d99f4764"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5b54edc58ba3827fa05eb934f570f27d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga5b54edc58ba3827fa05eb934f570f27d">RC5_TOGGLE_BIT</a>&#160;&#160;&#160;1</td></tr>
@@ -119,7 +129,7 @@ Macros</h2></td></tr>
 <tr class="separator:ga29c2e67aa7b0ee1ed87b0e154eaf6f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaace57f5ebe7ac2d2f80a496702065627"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gaace57f5ebe7ac2d2f80a496702065627">MIN_RC5_MARKS</a>&#160;&#160;&#160;((<a class="el" href="group__Decoder.html#gabc94db01a9d2e2f8caccaa32ec2ffa8a">RC5_BITS</a> + 1) / 2)</td></tr>
 <tr class="separator:gaace57f5ebe7ac2d2f80a496702065627"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga72ef3521775a056c2009b22cc9a50a28"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga72ef3521775a056c2009b22cc9a50a28">RC5_DURATION</a>&#160;&#160;&#160;(15L * <a class="el" href="group__Decoder.html#ga29c2e67aa7b0ee1ed87b0e154eaf6f69">RC5_UNIT</a>)</td></tr>
+<tr class="memitem:ga72ef3521775a056c2009b22cc9a50a28"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga72ef3521775a056c2009b22cc9a50a28">RC5_DURATION</a>&#160;&#160;&#160;(26 * <a class="el" href="group__Decoder.html#ga29c2e67aa7b0ee1ed87b0e154eaf6f69">RC5_UNIT</a>)</td></tr>
 <tr class="separator:ga72ef3521775a056c2009b22cc9a50a28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga985b139053cd231f47e363981e6a32e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga985b139053cd231f47e363981e6a32e4">RC5_REPEAT_PERIOD</a>&#160;&#160;&#160;(128L * <a class="el" href="group__Decoder.html#ga29c2e67aa7b0ee1ed87b0e154eaf6f69">RC5_UNIT</a>)</td></tr>
 <tr class="separator:ga985b139053cd231f47e363981e6a32e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,6 +137,18 @@ Macros</h2></td></tr>
 <tr class="separator:ga9274e35497925d4e13817a580abb6014"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad5be6473101d5d85483a3c8e5f0afe24"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad5be6473101d5d85483a3c8e5f0afe24">RC5_MAXIMUM_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#ga9274e35497925d4e13817a580abb6014">RC5_REPEAT_DISTANCE</a> + (<a class="el" href="group__Decoder.html#ga9274e35497925d4e13817a580abb6014">RC5_REPEAT_DISTANCE</a> / 4))</td></tr>
 <tr class="separator:gad5be6473101d5d85483a3c8e5f0afe24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6ca34504f0568a7e1ccd4a5779ad1b52"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga6ca34504f0568a7e1ccd4a5779ad1b52">MARANTZ_COMMAND_EXTENSION_BITS</a>&#160;&#160;&#160;6</td></tr>
+<tr class="separator:ga6ca34504f0568a7e1ccd4a5779ad1b52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafc7e902c5ff4e4f3f6567865f0cdd303"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gafc7e902c5ff4e4f3f6567865f0cdd303">MARANTZ_BITS</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#ga736ff0f98dd2db7eb6998fd0d99f4764">RC5_COMMAND_FIELD_BIT</a> + <a class="el" href="group__Decoder.html#ga5b54edc58ba3827fa05eb934f570f27d">RC5_TOGGLE_BIT</a> + <a class="el" href="group__Decoder.html#ga6a67feee58533e6520c703ce2f21c74d">RC5_ADDRESS_BITS</a> + <a class="el" href="group__Decoder.html#gad486165e9022f3ee3a36c2d6c0068901">RC5_COMMAND_BITS</a> + <a class="el" href="group__Decoder.html#ga6ca34504f0568a7e1ccd4a5779ad1b52">MARANTZ_COMMAND_EXTENSION_BITS</a>)</td></tr>
+<tr class="separator:gafc7e902c5ff4e4f3f6567865f0cdd303"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade81b812a0eb1b0b66f5109465b8c37d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gade81b812a0eb1b0b66f5109465b8c37d">MARANTZ_PAUSE_BIT_INDEX</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#ga736ff0f98dd2db7eb6998fd0d99f4764">RC5_COMMAND_FIELD_BIT</a> + <a class="el" href="group__Decoder.html#ga5b54edc58ba3827fa05eb934f570f27d">RC5_TOGGLE_BIT</a> + <a class="el" href="group__Decoder.html#ga6a67feee58533e6520c703ce2f21c74d">RC5_ADDRESS_BITS</a>)</td></tr>
+<tr class="separator:gade81b812a0eb1b0b66f5109465b8c37d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad30f07b08154b5775768dc7810b1894c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gad30f07b08154b5775768dc7810b1894c">MARANTZ_PAUSE_DURATION</a>&#160;&#160;&#160;(4 * <a class="el" href="group__Decoder.html#ga29c2e67aa7b0ee1ed87b0e154eaf6f69">RC5_UNIT</a>)</td></tr>
+<tr class="separator:gad30f07b08154b5775768dc7810b1894c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab7ad8822bbc697cee0622d3c66af9329"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab7ad8822bbc697cee0622d3c66af9329">MARANTZ_DURATION</a>&#160;&#160;&#160;(42L * <a class="el" href="group__Decoder.html#ga29c2e67aa7b0ee1ed87b0e154eaf6f69">RC5_UNIT</a>)</td></tr>
+<tr class="separator:gab7ad8822bbc697cee0622d3c66af9329"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2cb884d50a26bfc1a6a2eda690f108c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga2cb884d50a26bfc1a6a2eda690f108c4">MARANTZ_REPEAT_DISTANCE</a>&#160;&#160;&#160;(<a class="el" href="group__Decoder.html#ga985b139053cd231f47e363981e6a32e4">RC5_REPEAT_PERIOD</a> - <a class="el" href="group__Decoder.html#gab7ad8822bbc697cee0622d3c66af9329">MARANTZ_DURATION</a>)</td></tr>
+<tr class="separator:ga2cb884d50a26bfc1a6a2eda690f108c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga864aa6044417289d715eb819c1be3e10"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#ga864aa6044417289d715eb819c1be3e10">MIN_RC6_SAMPLES</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:ga864aa6044417289d715eb819c1be3e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab20744e40f55c70de7fd11c163643d03"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Decoder.html#gab20744e40f55c70de7fd11c163643d03">RC6_RPT_LENGTH</a>&#160;&#160;&#160;46000</td></tr>
@@ -175,7 +197,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="ir__RC5__RC6_8hpp.html">ir_RC5_RC6.hpp</a></li>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:29 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:20:58 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

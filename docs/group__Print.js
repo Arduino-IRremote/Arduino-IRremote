@@ -19,5 +19,6 @@ var group__Print =
     [ "printIRResultShort", "group__Print.html#gab6f0815692479730ca205bdb11199cb2", null ],
     [ "printIRResultShort", "group__Print.html#ga5787966f93eba6002acf82c85024955e", null ],
     [ "printIRResultShort", "group__Print.html#gac45e8ead5e96868e61c65cd354758d4d", null ],
-    [ "printIRSendUsage", "group__Print.html#gabe924ffc10b8814a5f3303b3df907dd7", null ]
+    [ "printIRSendUsage", "group__Print.html#gabe924ffc10b8814a5f3303b3df907dd7", null ],
+    [ "printNumberOfRepeats", "group__Print.html#ga83ee206a3c18eb8612e42d39351b22f1", null ]
 ];

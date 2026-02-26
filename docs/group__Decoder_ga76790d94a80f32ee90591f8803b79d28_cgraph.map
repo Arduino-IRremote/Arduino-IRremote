@@ -2,7 +2,7 @@
 <area shape="rect" id="node1" title=" " alt="" coords="5,36,170,64"/>
 <area shape="rect" id="node2" href="$group__Decoder.html#ga4f68cb05cfe18a8ae84e96138459a734" title=" " alt="" coords="218,36,355,64"/>
 <area shape="rect" id="node3" href="$group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15" title="Enables IR output." alt="" coords="423,5,567,33"/>
-<area shape="rect" id="node5" href="$group__Sending.html#ga6cb6bd97b0daf3afbc6b6c59acaa93f1" title=" " alt="" coords="403,57,587,101"/>
+<area shape="rect" id="node5" href="$group__Sending.html#ga35a4ccb8f15a1e6aca20213689b437a4" title=" " alt="" coords="403,57,587,101"/>
 <area shape="rect" id="node4" href="$group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="659,5,796,33"/>
-<area shape="rect" id="node6" href="$group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="635,57,820,101"/>
+<area shape="rect" id="node6" href="$group__Sending.html#gabd98da9d8f888f306fc6236d103cf406" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="635,57,820,101"/>
 </map>

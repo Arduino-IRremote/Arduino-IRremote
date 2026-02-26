@@ -5,7 +5,7 @@
 <area shape="rect" id="node5" href="$group__Sending.html#ga71a76987183f83b366fa59660e80253b" title="Sends an IR mark for the specified number of microseconds." alt="" coords="641,128,742,156"/>
 <area shape="rect" id="node11" href="$group__Decoder.html#gae8fff4f1d8703ca18ea85a15289dc44c" title="Send special NEC repeat frame Repeat commands should be sent in a 110 ms raster." alt="" coords="394,101,564,129"/>
 <area shape="rect" id="node12" href="$group__Sending.html#ga914d45f08addaf1142e167a8ebf7d5a4" title="Sends an IR space for the specified number of microseconds." alt="" coords="638,64,745,92"/>
-<area shape="rect" id="node13" href="$group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="387,205,571,249"/>
+<area shape="rect" id="node13" href="$group__Sending.html#gabd98da9d8f888f306fc6236d103cf406" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="387,205,571,249"/>
 <area shape="rect" id="node4" href="$group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="858,5,995,33"/>
 <area shape="rect" id="node6" href="$group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798" title="Custom delay function that circumvents Arduino&#39;s delayMicroseconds 16 bit limit and is (mostly) not e..." alt="" coords="812,64,1041,92"/>
 <area shape="rect" id="node7" href="$group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9" title="Enables output of the PWM signal of the timer at the timer pin." alt="" coords="841,116,1012,144"/>

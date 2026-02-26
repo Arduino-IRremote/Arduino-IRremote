@@ -2,11 +2,11 @@
 <area shape="rect" id="node1" title=" " alt="" coords="5,103,229,131"/>
 <area shape="rect" id="node2" href="$group__Decoder.html#gad8b3a7ce5ae5adb098ca0dc004b7b71b" title="LG2 uses a special repeat." alt="" coords="277,103,400,131"/>
 <area shape="rect" id="node3" href="$group__Decoder.html#ga6ada889ebd0aeb60e7284c2060f61871" title=" " alt="" coords="448,60,641,104"/>
-<area shape="rect" id="node4" href="$group__Sending.html#ga7d38a25bd93ee37c1ad769a87d9e48f6" title=" " alt="" coords="452,128,637,172"/>
-<area shape="rect" id="node5" href="$group__Sending.html#gacc820b71185ccb9571fcfaba9af6803f" title="Sends PulseDistance frames and repeats." alt="" coords="689,128,874,172"/>
+<area shape="rect" id="node4" href="$group__Sending.html#gadef7bbdaff62c80b192c22ba2520dc14" title=" " alt="" coords="452,128,637,172"/>
+<area shape="rect" id="node5" href="$group__Sending.html#ga7f513cec4af96e2f773d511815e7ce6f" title="Sends PulseDistance frames and repeats." alt="" coords="689,128,874,172"/>
 <area shape="rect" id="node6" href="$group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15" title="Enables IR output." alt="" coords="942,36,1086,64"/>
 <area shape="rect" id="node8" href="$group__Sending.html#ga71a76987183f83b366fa59660e80253b" title="Sends an IR mark for the specified number of microseconds." alt="" coords="964,105,1064,133"/>
-<area shape="rect" id="node14" href="$group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="922,157,1106,201"/>
+<area shape="rect" id="node14" href="$group__Sending.html#gabd98da9d8f888f306fc6236d103cf406" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="922,157,1106,201"/>
 <area shape="rect" id="node15" href="$group__Sending.html#ga914d45f08addaf1142e167a8ebf7d5a4" title="Sends an IR space for the specified number of microseconds." alt="" coords="961,225,1067,253"/>
 <area shape="rect" id="node7" href="$group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="1200,5,1337,33"/>
 <area shape="rect" id="node9" href="$group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798" title="Custom delay function that circumvents Arduino&#39;s delayMicroseconds 16 bit limit and is (mostly) not e..." alt="" coords="1154,217,1383,245"/>

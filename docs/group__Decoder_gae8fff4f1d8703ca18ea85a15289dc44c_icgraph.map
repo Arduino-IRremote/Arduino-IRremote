@@ -1,5 +1,6 @@
 <map id="IRsend::sendNECRepeat" name="IRsend::sendNECRepeat">
-<area shape="rect" id="node1" title="Send special NEC repeat frame Repeat commands should be sent in a 110 ms raster." alt="" coords="387,5,557,33"/>
-<area shape="rect" id="node2" href="$group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63" title="With Send sendNECMSB() you can send your old 32 bit codes." alt="" coords="182,5,339,33"/>
+<area shape="rect" id="node1" title="Send special NEC repeat frame Repeat commands should be sent in a 110 ms raster." alt="" coords="441,32,611,60"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga0184d3edbfe2659b12fc157c3be0cd63" title="With Send sendNECMSB() you can send your old 32 bit codes." alt="" coords="209,5,366,33"/>
+<area shape="rect" id="node4" href="$group__Decoder.html#ga66a531960ba31a579e4f3151459a8526" title="Send special OpenLASIR repeat frame (same as NEC repeat frame)." alt="" coords="182,57,393,85"/>
 <area shape="rect" id="node3" href="$classIRsend.html#a540e86b4ba238175930b1d4fd8845c15" title=" " alt="" coords="5,5,134,33"/>
 </map>

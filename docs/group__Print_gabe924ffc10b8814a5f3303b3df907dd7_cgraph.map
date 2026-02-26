@@ -1,8 +1,9 @@
 <map id="IRrecv::printIRSendUsage" name="IRrecv::printIRSendUsage">
-<area shape="rect" id="node1" title="Function to print values and flags of IrReceiver.decodedIRData in one line." alt="" coords="5,65,181,93"/>
+<area shape="rect" id="node1" title="Function to print values and flags of IrReceiver.decodedIRData in one line." alt="" coords="5,96,181,124"/>
 <area shape="rect" id="node2" href="$group__Print.html#gad59a9b756d71f983bf9f0a28d25f238f" title=" " alt="" coords="246,5,414,33"/>
 <area shape="rect" id="node4" href="$group__Print.html#ga3c4ee9436861333c2737f9272a4fadc7" title=" " alt="" coords="240,57,420,101"/>
 <area shape="rect" id="node5" href="$group__Print.html#ga44435c5dee7e55f4a0180b0a397e737c" title=" " alt="" coords="229,125,431,153"/>
+<area shape="rect" id="node7" href="$group__Print.html#ga83ee206a3c18eb8612e42d39351b22f1" title=" " alt="" coords="252,177,408,205"/>
 <area shape="rect" id="node3" href="$group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="506,5,628,33"/>
 <area shape="rect" id="node6" href="$group__Print.html#gab6f0815692479730ca205bdb11199cb2" title="Function to print values and flags of IrReceiver.decodedIRData in one line." alt="" coords="479,125,655,153"/>
 </map>

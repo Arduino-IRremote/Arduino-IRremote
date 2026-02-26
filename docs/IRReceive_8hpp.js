@@ -16,10 +16,7 @@ var IRReceive_8hpp =
     [ "printIRDataShort", "group__Print.html#gaa518aa6ea29a64b5afcfdd7c7c2527ef", null ],
     [ "printIRResultShort", "group__Print.html#ga5787966f93eba6002acf82c85024955e", null ],
     [ "printIRResultShort", "group__Print.html#gac45e8ead5e96868e61c65cd354758d4d", null ],
+    [ "printNumberOfRepeats", "group__Print.html#ga83ee206a3c18eb8612e42d39351b22f1", null ],
     [ "IrReceiver", "group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9", null ],
-    [ "sBiphaseCurrentTimingIntervals", "group__Receiving.html#gac33950d3b355b78a28d6f54b6af6e7b8", null ],
-    [ "sBiphaseDecodeRawbuffOffset", "group__Receiving.html#ga8aabdbfa5a0a6090e938212745b4871e", null ],
-    [ "sBiphaseTimeUnit", "group__Receiving.html#gae25d907bed7a0f0298f9cf105d89f86f", null ],
-    [ "sBiphaseUsedTimingIntervals", "group__Receiving.html#gafa340a1dbbee30ea603df9f63bb55027", null ],
-    [ "sMicrosAtLastStopTimer", "group__Receiving.html#ga99f6267aa36f20f3aa1409b250aa6b67", null ]
+    [ "sMicrosAtLastStopTimer", "IRReceive_8hpp.html#a99f6267aa36f20f3aa1409b250aa6b67", null ]
 ];

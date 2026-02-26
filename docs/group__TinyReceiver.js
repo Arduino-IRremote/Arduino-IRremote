@@ -56,6 +56,8 @@ var group__TinyReceiver =
     [ "NEC_REPEAT_PERIOD", "group__TinyReceiver.html#gac2dab5c4a22f8c4915217d3ee4676f08", null ],
     [ "NEC_UNIT", "group__TinyReceiver.html#gaf3317b0cf5cf7d3063addbaa0a256158", null ],
     [ "NEC_ZERO_SPACE", "group__TinyReceiver.html#ga5ee46914e98bf7f87f32a7104843b243", null ],
+    [ "STR", "group__TinyReceiver.html#ga18d295a837ac71add5578860b55e5502", null ],
+    [ "STR_HELPER", "group__TinyReceiver.html#ga890d84b9b5d0b0aede9eea1092a7a10a", null ],
     [ "TINY_RECEIVER_ADDRESS_BITS", "group__TinyReceiver.html#gaa86e62c87863e10d44fcf9047d3802bd", null ],
     [ "TINY_RECEIVER_ADDRESS_HAS_8_BIT_PARITY", "group__TinyReceiver.html#ga771b0ae69abb340bb723b3e49698e946", null ],
     [ "TINY_RECEIVER_BIT_MARK", "group__TinyReceiver.html#gaa70bb82f3342768a4c569172a475fe41", null ],

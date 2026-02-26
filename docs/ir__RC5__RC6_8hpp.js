@@ -1,5 +1,11 @@
 var ir__RC5__RC6_8hpp =
 [
+    [ "MARANTZ_BITS", "group__Decoder.html#gafc7e902c5ff4e4f3f6567865f0cdd303", null ],
+    [ "MARANTZ_COMMAND_EXTENSION_BITS", "group__Decoder.html#ga6ca34504f0568a7e1ccd4a5779ad1b52", null ],
+    [ "MARANTZ_DURATION", "group__Decoder.html#gab7ad8822bbc697cee0622d3c66af9329", null ],
+    [ "MARANTZ_PAUSE_BIT_INDEX", "group__Decoder.html#gade81b812a0eb1b0b66f5109465b8c37d", null ],
+    [ "MARANTZ_PAUSE_DURATION", "group__Decoder.html#gad30f07b08154b5775768dc7810b1894c", null ],
+    [ "MARANTZ_REPEAT_DISTANCE", "group__Decoder.html#ga2cb884d50a26bfc1a6a2eda690f108c4", null ],
     [ "MIN_RC5_MARKS", "group__Decoder.html#gaace57f5ebe7ac2d2f80a496702065627", null ],
     [ "MIN_RC6_MARKS", "group__Decoder.html#ga9d1c512ada596652f29f24b17ef7f900", null ],
     [ "MIN_RC6_SAMPLES", "group__Decoder.html#ga864aa6044417289d715eb819c1be3e10", null ],
@@ -8,7 +14,6 @@ var ir__RC5__RC6_8hpp =
     [ "RC5_COMMAND_BITS", "group__Decoder.html#gad486165e9022f3ee3a36c2d6c0068901", null ],
     [ "RC5_COMMAND_FIELD_BIT", "group__Decoder.html#ga736ff0f98dd2db7eb6998fd0d99f4764", null ],
     [ "RC5_DURATION", "group__Decoder.html#ga72ef3521775a056c2009b22cc9a50a28", null ],
-    [ "RC5_EXTENSION_BITS", "group__Decoder.html#ga9279f4c06cb8c92dad99be4fc25f966b", null ],
     [ "RC5_MAXIMUM_REPEAT_DISTANCE", "group__Decoder.html#gad5be6473101d5d85483a3c8e5f0afe24", null ],
     [ "RC5_REPEAT_DISTANCE", "group__Decoder.html#ga9274e35497925d4e13817a580abb6014", null ],
     [ "RC5_REPEAT_PERIOD", "group__Decoder.html#ga985b139053cd231f47e363981e6a32e4", null ],

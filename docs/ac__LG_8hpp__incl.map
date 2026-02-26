@@ -1,8 +1,10 @@
 <map id="src/ac_LG.hpp" name="src/ac_LG.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="74,5,181,33"/>
-<area shape="rect" id="node2" title=" " alt="" coords="35,157,111,185"/>
-<area shape="rect" id="node3" href="$IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="22,81,124,109"/>
-<area shape="rect" id="node4" href="$ac__LG_8h.html" title=" " alt="" coords="147,81,217,109"/>
-<area shape="rect" id="node5" href="$LongUnion_8h.html" title=" " alt="" coords="242,81,336,109"/>
-<area shape="rect" id="node6" title=" " alt="" coords="257,157,321,185"/>
+<area shape="rect" id="node1" title=" " alt="" coords="265,5,371,33"/>
+<area shape="rect" id="node2" title=" " alt="" coords="225,157,301,185"/>
+<area shape="rect" id="node3" href="$LocalDebugLevelStart_8h.html" title=" " alt="" coords="28,81,189,109"/>
+<area shape="rect" id="node4" href="$IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="213,81,314,109"/>
+<area shape="rect" id="node5" href="$ac__LG_8h.html" title=" " alt="" coords="337,81,408,109"/>
+<area shape="rect" id="node6" href="$LongUnion_8h.html" title=" " alt="" coords="432,81,526,109"/>
+<area shape="rect" id="node8" href="$LocalDebugLevelEnd_8h.html" title=" " alt="" coords="551,81,706,109"/>
+<area shape="rect" id="node7" title=" " alt="" coords="447,157,511,185"/>
 </map>

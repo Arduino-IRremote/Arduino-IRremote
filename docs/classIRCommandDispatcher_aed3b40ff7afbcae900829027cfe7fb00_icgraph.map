@@ -1,0 +1,9 @@
+<map id="IRCommandDispatcher::checkAndCallCommand" name="IRCommandDispatcher::checkAndCallCommand">
+<area shape="rect" id="node1" title=" " alt="" coords="1202,48,1372,92"/>
+<area shape="rect" id="node2" href="$classIRCommandDispatcher.html#a62d3944d8e464859f17fa3ddc00168c7" title=" " alt="" coords="928,5,1154,65"/>
+<area shape="rect" id="node3" href="$group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application." alt="" coords="950,89,1132,117"/>
+<area shape="rect" id="node4" href="$group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69" title="The ISR (Interrupt Service Routine) of TinyIRRreceiver." alt="" coords="687,89,880,117"/>
+<area shape="rect" id="node5" href="$group__TinyReceiver.html#gacc1eec5de7563e88aa73d16aa9e60a10" title="Initializes hardware interrupt generation according to IR_RECEIVE_PIN or use attachInterrupt() functi..." alt="" coords="465,81,639,125"/>
+<area shape="rect" id="node6" href="$group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2" title="Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mo..." alt="" coords="212,89,417,117"/>
+<area shape="rect" id="node7" href="$classIRCommandDispatcher.html#ad68d5fcdbe439e175cfe1c8b9107d0db" title=" " alt="" coords="5,81,164,125"/>
+</map>

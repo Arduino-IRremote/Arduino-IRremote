@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pulsedistancewidthprotocolconstants_872',['PulseDistanceWidthProtocolConstants',['../structPulseDistanceWidthProtocolConstants.html',1,'']]]
+  ['pulsedistancewidthprotocolconstants_962',['PulseDistanceWidthProtocolConstants',['../structPulseDistanceWidthProtocolConstants.html',1,'']]]
 ];

@@ -1,4 +1,4 @@
 <map id="IRsend::begin" name="IRsend::begin">
-<area shape="rect" id="node1" title="Initializes the send pin and enable LED feedback with board specific FEEDBACK_LED_ON() and FEEDBACK_L..." alt="" coords="156,5,258,33"/>
+<area shape="rect" id="node1" title="Initializes the send pin and enable LED feedback with board specific LED_BUILTIN pin if it is defined..." alt="" coords="156,5,258,33"/>
 <area shape="rect" id="node2" href="$group__Sending.html#gafb0b2ecc23c160d0f9589931c6093615" title=" " alt="" coords="5,5,108,33"/>
 </map>

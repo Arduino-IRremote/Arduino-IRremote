@@ -86,57 +86,71 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>The latest version may not be released! See also the commit log at github: <a href="https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master">https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master</a></p>
-<h1>4.5.0</h1>
+<h1>4.6.0</h1>
 <ul>
-<li>Added support for multiple receiver instances.</li>
-<li><a class="el" href="structirparams__struct.html" title="This struct contains the data and control used for receiver functions and the ISR (interrupt service ...">irparams_struct</a> irparams is now member of <a class="el" href="classIRrecv.html">IRrecv</a>. Thus removed rawDataPtr (pointer to irparams) from IrReceiver.decodedIRData.</li>
-<li>Removed return value for all decodePulseDistanceWidthData() decoding functions, which returned a constant true.</li>
-<li>New handling of MARK_EXCESS_MICROS without strange rounding inconsistency.</li>
+<li>Fixed missing ESP IRAM_ATTR for receiving interrupt.</li>
+<li>Changed <code>USE_DEFAULT_FEEDBACK_LED_PIN</code> from 0 to 0xFF, because megaTinyCore defines the not special pin PIN_PA4 as 0.</li>
+<li>Changed timer for <b>ATtiny16X4</b>.</li>
+<li>Fixed missing initialization with <code>pinMode()</code> for feedback LED.</li>
+<li>Fixed bitmask error in <code>sendBiphaseData()</code> when not sending start bit.</li>
+<li>Improved <code>decodeSamsung()</code>.</li>
+<li><code>OpenLASIR</code> protocol added by <a href="https://github.com/danielweidman">danielweidman</a>.</li>
+<li>Added <code>DECODE_MARANTZ</code> and swapped parameter aMarantzExtension and aNumberOfRepeats of <code>sendMaranz()</code> to be consistent with other extensions.</li>
+<li>Improved biphase decoding.</li>
+<li>Improved debug output handling.</li>
+<li>Moved <code><a class="el" href="classIRCommandDispatcher.html">IRCommandDispatcher</a></code> from demo to main library folder.</li>
+</ul>
+<h1>4.5.0 - does not work for ESP platform, because of missing ESP IRAM_ATTR for receiving interrupt.</h1>
+<ul>
+<li>Added support for <b>multiple receiver instances</b>.</li>
+<li><a class="el" href="structirparams__struct.html" title="This struct contains the data and control used for receiver functions and the ISR (interrupt service ...">irparams_struct</a> <code>irparams</code> is now member of <a class="el" href="classIRrecv.html">IRrecv</a>. Thus removed <code>rawDataPt</code>r (pointer to irparams) from <code>IrReceiver.decodedIRData</code>.</li>
+<li>Removed return value for all <code>decodePulseDistanceWidthData()</code> decoding functions, which returned a constant true.</li>
+<li>Removed parameter <code>aEnableLEDFeedback</code> in function <code>IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)</code> and <code><a class="el" href="group__Sending.html#gafb0b2ecc23c160d0f9589931c6093615">IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)</a></code>.</li>
+<li><b>LED feedback is always enabled for sending</b>. It can only be disabled by using the macro <code>NO_LED_SEND_FEEDBACK_CODE</code>.</li>
+<li>Added output for UNKNOWN protocol to <code>printIRSendUsage()</code>.</li>
+<li>Added experimental <code>sendVelux()</code>.</li>
+<li>Added <code>sendMaranz()</code>.</li>
 <li>Fixed bug in ReceiveDemo.cpp if DEBUG_BUTTON_PIN is not defined. #1306.</li>
 <li>Fixed minor bugs in Denon decoder.</li>
-<li>Added threshold decoding.</li>
 <li>Minor bug fixes for DEBUG.</li>
-<li>LED feedback is always enabled for sending. It can only be disabled by using the macro NO_LED_SEND_FEEDBACK_CODE.</li>
-<li>Removed parameter aEnableLEDFeedback in function IRsend::begin(bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin) and <a class="el" href="group__Sending.html#gafb0b2ecc23c160d0f9589931c6093615">IRsend::begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)</a>.</li>
-<li>Added experimental sendVelux().</li>
-<li>Added sendMaranz().</li>
-<li>Added output for UNKNOWN protocol to printIRSendUsage().</li>
+<li>New handling of <code>MARK_EXCESS_MICROS</code> without strange rounding inconsistency.</li>
+<li>Added experimental threshold decoding.</li>
 </ul>
 <h1>4.4.3</h1>
 <ul>
-<li>Added USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN to make the software aware of send LED connected between VCC and send pin.</li>
-<li>Fixed backward compatibility bug for printIRResultShort(3 params).</li>
+<li>Added <code>USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN</code> to make the software aware of send LED connected between VCC and send pin.</li>
+<li>Fixed backward compatibility bug for <code>printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros)</code>.</li>
 <li>Minor improvements.</li>
 </ul>
 <h1>4.4.2</h1>
 <ul>
-<li>Support for SAMD51 timer3 if timer 5 is not available (Adafruit ItsyBitsy M4).</li>
-<li>attachInterrupt() on SAMD has a different semantic :-(. See: <a href="https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/">https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/</a>.</li>
+<li>Support for <code>SAMD51</code> timer3 if timer 5 is not available (Adafruit ItsyBitsy M4).</li>
+<li>attachInterrupt() on <code>SAMD</code> has a different semantic :-(. See: <a href="https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/">https://www.arduino.cc/reference/tr/language/functions/external-interrupts/attachinterrupt/</a>.</li>
 <li>Fixed overflow handling.</li>
-<li>Improved repeat detection for DistanceWidthProtocol.</li>
-<li>Print of IR frame duration in <a class="el" href="group__Print.html#gac45e8ead5e96868e61c65cd354758d4d" title="Deprecated static function to be able to print data to send or copied received data.">printIRResultShort()</a>;</li>
-<li><a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> now in PROGMEM, this saves 190 bytes RAM for unit test.</li>
+<li>Improved repeat detection for <code>DistanceWidthProtocol</code>.</li>
+<li>Print of IR frame duration in <code><a class="el" href="group__Print.html#gac45e8ead5e96868e61c65cd354758d4d" title="Deprecated static function to be able to print data to send or copied received data.">printIRResultShort()</a></code>;</li>
+<li><code><a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a></code> now in PROGMEM, this saves 190 bytes RAM for unit test.</li>
 <li>Support for PROGMEM PulseDistanceWidthProtocol data.</li>
-<li>Support duplicated 8 bit address for sendSamsungLG().</li>
+<li>Support duplicated 8 bit address for <code>sendSamsungLG()</code>.</li>
 </ul>
 <h1>4.4.1</h1>
 <ul>
-<li>Support for ESP core 3.x by akellai.</li>
-<li>restartTimer() now uses variable sMicrosAtLastStopTimer to keep track of uncounted ticks between stopTimer() and restartTimer().</li>
-<li>Removed functions addTicksToInternalTickCounter() and addMicrosToInternalTickCounter(), which were added in 4.1.0.</li>
-<li>Version 2.2.0 of TinyIR with new <a class="el" href="group__TinyReceiver.html#gaa97ef3a9ba3e40bd50a906788b65e79a">TinyReceiverDecode()</a> function to be used as drop in for IrReceiver.decode().</li>
-<li>Support of RC6A.</li>
+<li>Support for <b>ESP core 3.x</b> by akellai.</li>
+<li><code>restartTimer()</code> now uses variable sMicrosAtLastStopTimer to keep track of uncounted ticks between stopTimer() and restartTimer().</li>
+<li><b>Removed functions</b> addTicksToInternalTickCounter() and addMicrosToInternalTickCounter(), which were added in 4.1.0.</li>
+<li>Version 2.2.0 of TinyIR with new <code><a class="el" href="group__TinyReceiver.html#gaa97ef3a9ba3e40bd50a906788b65e79a">TinyReceiverDecode()</a></code> function to be used as <b>drop in for IrReceiver.decode()</b>.</li>
+<li>Support of <code>RC6A</code>.</li>
 </ul>
 <h1>4.4.0</h1>
 <ul>
 <li>Using 8 bit raw timing buffer for all timings except frame gap (former rawbuf[0]).</li>
-<li>Renamed decodedIRData.initialGap to decodedIRData.initialGapTicks.</li>
-<li><a class="el" href="group__TinyReceiver.html#gad56f6ae51db2f76f6b48bd6eb621b55d">sendNEC()</a> and sendNEC2() now accepts 16 bit command to better map to NECext protocol found in IRDB databases.</li>
-<li>ir_DistanceWidthProtocol() now decodes up to 10 ms mark or spaces if RAM is bigger than 2 k.</li>
-<li>Improved sensitivity and decoding of PULSE_DISTANCE + PULSE_WIDTH protocols.</li>
-<li>Changed TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING to TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT.</li>
+<li>Renamed <code>decodedIRData.initialGap</code> to <code>decodedIRData.initialGapTicks</code>.</li>
+<li><code><a class="el" href="group__TinyReceiver.html#gad56f6ae51db2f76f6b48bd6eb621b55d">sendNEC()</a></code> and <code>sendNEC2()</code> now <b>accepts 16 bit command</b> to better map to <b>NECext protocol</b> found in IRDB databases.</li>
+<li><code>ir_DistanceWidthProtocol()</code> now decodes up to 10 ms mark or spaces if RAM is bigger than 2 k.</li>
+<li>Improved sensitivity and decoding of <code>PULSE_DISTANCE</code> + <code>PULSE_WIDTH</code> protocols.</li>
+<li>Changed <code>TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING</code> to <code>TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT</code>.</li>
 <li>Improved examples AllProtocolsOnLCD, UnitTest and SimpleReceiver.</li>
-<li>New functions decodePulseDistanceWidthData() with 6 parameters and decodePulseDistanceWidthDataStrict() with 7 parameters.</li>
+<li>New functions <code>decodePulseDistanceWidthData()</code> with 6 parameters and <code>decodePulseDistanceWidthDataStrict()</code> with 7 parameters.</li>
 </ul>
 <h1>4.3.2</h1>
 <ul>
@@ -567,7 +581,7 @@ $(document).ready(function(){initNavTree('md_changelog.html',''); initResizable(
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:30 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:20:58 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

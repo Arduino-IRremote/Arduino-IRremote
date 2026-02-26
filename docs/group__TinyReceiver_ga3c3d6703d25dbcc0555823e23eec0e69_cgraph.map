@@ -1,4 +1,6 @@
 <map id="IRPinChangeInterruptHandler" name="IRPinChangeInterruptHandler">
-<area shape="rect" id="node1" title="The ISR (Interrupt Service Routine) of TinyIRRreceiver." alt="" coords="5,5,198,33"/>
-<area shape="rect" id="node2" href="$group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application." alt="" coords="246,5,427,33"/>
+<area shape="rect" id="node1" title="The ISR (Interrupt Service Routine) of TinyIRRreceiver." alt="" coords="5,44,198,72"/>
+<area shape="rect" id="node2" href="$group__TinyReceiver.html#ga87d2d2e9d720b7b1bb4a58936de525f0" title="Declaration of the callback function provided by the user application." alt="" coords="246,44,427,72"/>
+<area shape="rect" id="node3" href="$classIRCommandDispatcher.html#aed3b40ff7afbcae900829027cfe7fb00" title=" " alt="" coords="493,5,663,49"/>
+<area shape="rect" id="node4" href="$group__TinyReceiver.html#ga27649645d9280dfaee8095ce2dcf8f07" title=" " alt="" coords="475,73,681,101"/>
 </map>

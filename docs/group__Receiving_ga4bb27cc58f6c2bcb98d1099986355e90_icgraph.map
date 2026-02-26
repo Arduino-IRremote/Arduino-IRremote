@@ -1,17 +1,18 @@
 <map id="IRrecv::decodePulseDistanceWidthData_P" name="IRrecv::decodePulseDistanceWidthData_P">
-<area shape="rect" id="node1" title=" " alt="" coords="560,257,756,301"/>
-<area shape="rect" id="node2" href="$group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="339,57,512,85"/>
-<area shape="rect" id="node5" href="$group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="352,5,500,33"/>
-<area shape="rect" id="node7" href="$group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="354,109,497,137"/>
-<area shape="rect" id="node8" href="$group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="358,161,494,189"/>
-<area shape="rect" id="node9" href="$group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="344,213,508,241"/>
-<area shape="rect" id="node10" href="$group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="362,265,489,293"/>
-<area shape="rect" id="node11" href="$classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="339,317,512,345"/>
-<area shape="rect" id="node12" href="$group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="356,369,495,397"/>
-<area shape="rect" id="node13" href="$group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="343,421,508,449"/>
-<area shape="rect" id="node14" href="$group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="356,473,496,501"/>
-<area shape="rect" id="node15" href="$group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="346,525,505,553"/>
-<area shape="rect" id="node3" href="$group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,265,274,293"/>
-<area shape="rect" id="node4" href="$group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,265,99,293"/>
+<area shape="rect" id="node1" title=" " alt="" coords="567,284,763,328"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="342,57,516,85"/>
+<area shape="rect" id="node5" href="$group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="355,5,503,33"/>
+<area shape="rect" id="node7" href="$group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="358,109,501,137"/>
+<area shape="rect" id="node8" href="$group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="361,161,497,189"/>
+<area shape="rect" id="node9" href="$group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="347,213,511,241"/>
+<area shape="rect" id="node10" href="$group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="366,265,493,293"/>
+<area shape="rect" id="node11" href="$group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="342,317,516,345"/>
+<area shape="rect" id="node12" href="$group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="360,369,499,397"/>
+<area shape="rect" id="node13" href="$group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="339,421,519,449"/>
+<area shape="rect" id="node14" href="$group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="346,473,512,501"/>
+<area shape="rect" id="node15" href="$group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="359,525,499,553"/>
+<area shape="rect" id="node16" href="$group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="350,577,509,605"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,291,274,319"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,291,99,319"/>
 <area shape="rect" id="node6" href="$group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,5,291,33"/>
 </map>

@@ -1,0 +1,27 @@
+var ir__OpenLASIR_8hpp =
+[
+    [ "OPENLASIR_ADDRESS_BITS", "group__Decoder.html#gaa69134aa4504514903a5f197323b0eba", null ],
+    [ "OPENLASIR_BITS", "group__Decoder.html#ga4044385f51d9f0d27fc68b379862c5ef", null ],
+    [ "OPENLASIR_COLOR_BLUE", "group__Decoder.html#ga3f57684853d8129cd5c83a14ce575fd4", null ],
+    [ "OPENLASIR_COLOR_CYAN", "group__Decoder.html#gaecd66dd54a41c5eb4bc61229b6b784e2", null ],
+    [ "OPENLASIR_COLOR_GREEN", "group__Decoder.html#gadf5c14cb38e1188fc3fca3543ab3975a", null ],
+    [ "OPENLASIR_COLOR_MAGENTA", "group__Decoder.html#gaaaa8322fb99dd6acb6d32ba71f029f55", null ],
+    [ "OPENLASIR_COLOR_ORANGE", "group__Decoder.html#gaf8a95a2fed4f1eca372331dbb2d7ea03", null ],
+    [ "OPENLASIR_COLOR_RED", "group__Decoder.html#gac10037314ea033a3ecc4ef1e956394ff", null ],
+    [ "OPENLASIR_COLOR_WHITE", "group__Decoder.html#ga21db3cc701f32049ecf932c2e0225b06", null ],
+    [ "OPENLASIR_COLOR_YELLOW", "group__Decoder.html#gacddb0b135c4b53086fbd5122f41b90e8", null ],
+    [ "OPENLASIR_COMMAND_BITS", "group__Decoder.html#gaa3ed67434a8639bde4df2385a0f59de8", null ],
+    [ "OPENLASIR_MODE_BASE_STATION_PRESENCE_ANNOUNCEMENT", "group__Decoder.html#gac087ef1057669ad8d41889546a40494f", null ],
+    [ "OPENLASIR_MODE_BASE_STATION_TO_USER_HANDSHAKE_INITIATION", "group__Decoder.html#ga175f4136b8b3c54a82fc18bfef7d3fab", null ],
+    [ "OPENLASIR_MODE_BASE_STATION_TO_USER_HANDSHAKE_RESPONSE", "group__Decoder.html#ga95fbfe2cd90e445ae8b111b061cf20bc", null ],
+    [ "OPENLASIR_MODE_COLOR_SET_PERMANENT", "group__Decoder.html#gad038664616c7d5e5cf8472d3e78ef995", null ],
+    [ "OPENLASIR_MODE_COLOR_SET_TEMPORARY", "group__Decoder.html#ga239c4fb574087fc614e14e83ae5c98a7", null ],
+    [ "OPENLASIR_MODE_GENERAL_INTERACT", "group__Decoder.html#gaa83384bf31f9cc28b0980c427d2ca9eb", null ],
+    [ "OPENLASIR_MODE_LASER_TAG_FIRE", "group__Decoder.html#gaa8d82047a28799549cee0605bec9a247", null ],
+    [ "OPENLASIR_MODE_USER_PRESENCE_ANNOUNCEMENT", "group__Decoder.html#gab7b86eae6ceb21aeef88342e6e154b8f", null ],
+    [ "OPENLASIR_MODE_USER_TO_BASE_STATION_HANDSHAKE_INITIATION", "group__Decoder.html#gac444c845a7467fc2e19a6a8210f377c6", null ],
+    [ "OPENLASIR_MODE_USER_TO_BASE_STATION_HANDSHAKE_RESPONSE", "group__Decoder.html#ga503d4c742829d44885d75fb6f22b4b88", null ],
+    [ "OPENLASIR_MODE_USER_TO_USER_HANDSHAKE_INITIATION", "group__Decoder.html#gae13b796fc9b0b27e4ca4fe7161776955", null ],
+    [ "OPENLASIR_MODE_USER_TO_USER_HANDSHAKE_RESPONSE", "group__Decoder.html#ga36a88a4b7800bb6ac0bc54cc327f7e79", null ],
+    [ "sendOpenLASIRSpecialRepeat", "group__Decoder.html#ga6b9360063035fab184cb00ad96fa5788", null ]
+];

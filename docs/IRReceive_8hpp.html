@@ -89,7 +89,19 @@ $(document).ready(function(){initNavTree('IRReceive_8hpp.html',''); initResizabl
 <div class="title">IRReceive.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &quot;<a class="el" href="LocalDebugLevelStart_8h_source.html">LocalDebugLevelStart.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="LocalDebugLevelEnd_8h_source.html">LocalDebugLevelEnd.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for IRReceive.hpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="IRReceive_8hpp__incl.png" border="0" usemap="#src_2IRReceive_8hpp" alt=""/></div>
+<map name="src_2IRReceive_8hpp" id="src_2IRReceive_8hpp">
+<area shape="rect" title=" " alt="" coords="111,5,241,33"/>
+<area shape="rect" href="LocalDebugLevelStart_8h.html" title=" " alt="" coords="5,81,166,109"/>
+<area shape="rect" href="LocalDebugLevelEnd_8h.html" title=" " alt="" coords="189,81,344,109"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="IRReceive_8hpp__dep__incl.png" border="0" usemap="#src_2IRReceive_8hppdep" alt=""/></div>
@@ -118,7 +130,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga770e03720a79491d7ddf347ad4b9e484"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga770e03720a79491d7ddf347ad4b9e484">IRReceiveTimerInterruptHandler</a> ()</td></tr>
 <tr class="separator:ga770e03720a79491d7ddf347ad4b9e484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga495b7f49ff71cde1289b118fac0f0674"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">matchTicks</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros)</td></tr>
-<tr class="memdesc:ga495b7f49ff71cde1289b118fac0f0674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">More...</a><br /></td></tr>
+<tr class="memdesc:ga495b7f49ff71cde1289b118fac0f0674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Match is true, if signal value is bigger/equal 75% and less/equal 125% of aMatchValueMicros.  <a href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">More...</a><br /></td></tr>
 <tr class="separator:ga495b7f49ff71cde1289b118fac0f0674"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8e72b4f557d829fa6ac413d170eb5507"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga8e72b4f557d829fa6ac413d170eb5507">matchTicks</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks)</td></tr>
 <tr class="memdesc:ga8e72b4f557d829fa6ac413d170eb5507"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function WITH compensating for marks exceeded or spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga8e72b4f557d829fa6ac413d170eb5507">More...</a><br /></td></tr>
@@ -147,22 +159,16 @@ Functions</h2></td></tr>
 <tr class="separator:gac45e8ead5e96868e61c65cd354758d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5787966f93eba6002acf82c85024955e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Print.html#ga5787966f93eba6002acf82c85024955e">printIRResultShort</a> (Print *aSerial, <a class="el" href="structIRData.html">IRData</a> *aIRDataPtr)</td></tr>
 <tr class="separator:ga5787966f93eba6002acf82c85024955e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga83ee206a3c18eb8612e42d39351b22f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Print.html#ga83ee206a3c18eb8612e42d39351b22f1">printNumberOfRepeats</a> (Print *aSerial)</td></tr>
+<tr class="separator:ga83ee206a3c18eb8612e42d39351b22f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a99f6267aa36f20f3aa1409b250aa6b67"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRReceive_8hpp.html#a99f6267aa36f20f3aa1409b250aa6b67">sMicrosAtLastStopTimer</a> = 0</td></tr>
+<tr class="separator:a99f6267aa36f20f3aa1409b250aa6b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6813a2b456e5359ce674699c85a61cf9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIRrecv.html">IRrecv</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9">IrReceiver</a></td></tr>
 <tr class="memdesc:ga6813a2b456e5359ce674699c85a61cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The receiver instance.  <a href="group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9">More...</a><br /></td></tr>
 <tr class="separator:ga6813a2b456e5359ce674699c85a61cf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga99f6267aa36f20f3aa1409b250aa6b67"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga99f6267aa36f20f3aa1409b250aa6b67">sMicrosAtLastStopTimer</a> = 0</td></tr>
-<tr class="separator:ga99f6267aa36f20f3aa1409b250aa6b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8aabdbfa5a0a6090e938212745b4871e"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga8aabdbfa5a0a6090e938212745b4871e">sBiphaseDecodeRawbuffOffset</a></td></tr>
-<tr class="separator:ga8aabdbfa5a0a6090e938212745b4871e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac33950d3b355b78a28d6f54b6af6e7b8"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gac33950d3b355b78a28d6f54b6af6e7b8">sBiphaseCurrentTimingIntervals</a></td></tr>
-<tr class="separator:gac33950d3b355b78a28d6f54b6af6e7b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafa340a1dbbee30ea603df9f63bb55027"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gafa340a1dbbee30ea603df9f63bb55027">sBiphaseUsedTimingIntervals</a></td></tr>
-<tr class="separator:gafa340a1dbbee30ea603df9f63bb55027"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae25d907bed7a0f0298f9cf105d89f86f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gae25d907bed7a0f0298f9cf105d89f86f">sBiphaseTimeUnit</a></td></tr>
-<tr class="separator:gae25d907bed7a0f0298f9cf105d89f86f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a3f4de9472b009540a525e6e648fab0f3"></a>
@@ -177,7 +183,24 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00055">55</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00047">47</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a99f6267aa36f20f3aa1409b250aa6b67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99f6267aa36f20f3aa1409b250aa6b67">&#9670;&nbsp;</a></span>sMicrosAtLastStopTimer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned long sMicrosAtLastStopTimer = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00049">49</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -187,7 +210,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRReceive_8hpp.html">IRReceive.hpp</a></li>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:30 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:20:58 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

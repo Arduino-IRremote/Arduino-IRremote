@@ -7,5 +7,5 @@
 <area shape="rect" id="node4" href="$group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="442,125,637,169"/>
 <area shape="rect" id="node5" href="$group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="695,193,870,237"/>
 <area shape="rect" id="node9" href="$group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="685,125,880,169"/>
-<area shape="rect" id="node7" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="1070,203,1159,231"/>
+<area shape="rect" id="node7" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="1070,203,1159,231"/>
 </map>

@@ -1,47 +1,49 @@
 <map id="IRsend::write" name="IRsend::write">
-<area shape="rect" id="node1" title="Interprets and sends a IRData structure." alt="" coords="5,678,105,706"/>
-<area shape="rect" id="node2" href="$group__Decoder.html#ga101c9bd6ac69748f27ec4abe65b04803" title="Apple: Send NEC with fixed 16 bit Apple address 0x87EE." alt="" coords="458,1091,591,1119"/>
-<area shape="rect" id="node15" href="$group__Decoder.html#ga1288521054e8b5afb8aece28355829ff" title=" " alt="" coords="444,591,606,619"/>
-<area shape="rect" id="node16" href="$group__Decoder.html#ga4f68cb05cfe18a8ae84e96138459a734" title=" " alt="" coords="946,114,1083,142"/>
-<area shape="rect" id="node18" href="$group__Decoder.html#ga39702704a52a99d8cb7d118d8a9e0251" title="The FAST protocol repeats by skipping the header mark and space &#45;&gt; this leads to a poor repeat detect..." alt="" coords="948,218,1080,246"/>
-<area shape="rect" id="node19" href="$group__Decoder.html#gaa10da0665ac4d44b06dba845420ab7f1" title="The JVC protocol repeats by skipping the header mark and space &#45;&gt; this leads to a poor repeat detecti..." alt="" coords="952,322,1077,350"/>
-<area shape="rect" id="node20" href="$group__Decoder.html#ga266389f19755fdef8f6dc0155191bf3b" title="Stub using Kaseikyo with DENON_VENDOR_ID_CODE." alt="" coords="187,610,340,654"/>
-<area shape="rect" id="node24" href="$group__Decoder.html#ga87a6a2163f2608a0c90014586bb04cfa" title="Stub using Kaseikyo with JVC_VENDOR_ID_CODE." alt="" coords="170,370,356,398"/>
-<area shape="rect" id="node25" href="$group__Decoder.html#ga8853de09de0669d147a40e8344ee2dc4" title="Stub using Kaseikyo with MITSUBISHI_VENDOR_ID_CODE." alt="" coords="187,422,340,466"/>
-<area shape="rect" id="node26" href="$group__Decoder.html#gaf60a31544006d2e18eb25b3b0205a261" title="Stub using Kaseikyo with SHARP_VENDOR_ID_CODE." alt="" coords="187,490,340,534"/>
-<area shape="rect" id="node27" href="$group__Decoder.html#gaa62e64650aaae09b6f001a53a31f00b8" title=" " alt="" coords="153,1247,374,1275"/>
-<area shape="rect" id="node28" href="$group__Decoder.html#gab0200ca785ce3be24c4ad2efc95f37f7" title="LG uses the NEC repeat." alt="" coords="205,987,322,1015"/>
-<area shape="rect" id="node30" href="$classIRsend.html#a71e0a4a000f5dcb541ca889be34442ce" title=" " alt="" coords="933,166,1096,194"/>
-<area shape="rect" id="node31" href="$group__Decoder.html#ga3dc9ab05c90197b056c226dcc187cc3a" title="NEC Send frame and special repeats There is NO delay after the last sent repeat!" alt="" coords="199,883,328,911"/>
-<area shape="rect" id="node33" href="$group__Decoder.html#gabf1692bf9eb21e6e27989d5be05c9c11" title="NEC2 Send frame !!! and repeat the frame for each requested repeat !!! There is NO delay after the la..." alt="" coords="196,831,331,859"/>
-<area shape="rect" id="node34" href="$group__Decoder.html#ga5a1e296f0350dc379cb925d13ca59d87" title="There is NO delay after the last sent repeat!" alt="" coords="456,1039,593,1067"/>
-<area shape="rect" id="node35" href="$group__Decoder.html#gaf720308fa32a1f182ff17772c32c3cea" title="Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE." alt="" coords="183,558,344,586"/>
-<area shape="rect" id="node36" href="$group__Decoder.html#gacce74f70ce85c35d92bb3f1af08e6ff4" title=" " alt="" coords="704,374,831,402"/>
-<area shape="rect" id="node38" href="$group__Decoder.html#gaff709569cc91804f55dd6c50a9df6c6b" title="Assemble raw data for RC6 from parameters and toggle state and send We do not wait for the minimal tr..." alt="" coords="704,1067,831,1095"/>
-<area shape="rect" id="node40" href="$group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915" title="Here we send Samsung32 If we get a command &lt; 0x100, we send command and then ~command If we get an ad..." alt="" coords="448,643,602,671"/>
-<area shape="rect" id="node41" href="$group__Decoder.html#gaa72ec4013c647400e0dc43a4ede328e4" title="Here we send Samsung48 We send 2 x (8 bit command and then ~command)" alt="" coords="440,539,609,567"/>
-<area shape="rect" id="node42" href="$group__Decoder.html#ga09ed812db755a2db480d8e9233036629" title=" " alt="" coords="439,1143,610,1171"/>
-<area shape="rect" id="node44" href="$group__Decoder.html#ga9b819c19d95d4d880e9d6ecb056c0e0a" title=" " alt="" coords="701,114,834,142"/>
-<area shape="rect" id="node45" href="$group__Decoder.html#gafef2381435874c06374a40c6f06aa92b" title=" " alt="" coords="460,867,589,895"/>
-<area shape="rect" id="node3" href="$group__Sending.html#ga7d38a25bd93ee37c1ad769a87d9e48f6" title=" " alt="" coords="675,747,860,791"/>
-<area shape="rect" id="node4" href="$group__Sending.html#gacc820b71185ccb9571fcfaba9af6803f" title="Sends PulseDistance frames and repeats." alt="" coords="922,494,1106,538"/>
-<area shape="rect" id="node5" href="$group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15" title="Enables IR output." alt="" coords="1189,331,1333,359"/>
-<area shape="rect" id="node7" href="$group__Sending.html#ga71a76987183f83b366fa59660e80253b" title="Sends an IR mark for the specified number of microseconds." alt="" coords="1211,554,1311,582"/>
-<area shape="rect" id="node13" href="$group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="1424,391,1608,435"/>
-<area shape="rect" id="node14" href="$group__Sending.html#ga914d45f08addaf1142e167a8ebf7d5a4" title="Sends an IR space for the specified number of microseconds." alt="" coords="1208,502,1314,530"/>
-<area shape="rect" id="node6" href="$group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="1447,331,1585,359"/>
-<area shape="rect" id="node8" href="$group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798" title="Custom delay function that circumvents Arduino&#39;s delayMicroseconds 16 bit limit and is (mostly) not e..." alt="" coords="1401,502,1631,530"/>
-<area shape="rect" id="node9" href="$group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9" title="Enables output of the PWM signal of the timer at the timer pin." alt="" coords="1430,554,1602,582"/>
-<area shape="rect" id="node10" href="$group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0" title="Just switch the IR sending LED off to send an IR space A space is &quot;no output&quot;, so the PWM output is d..." alt="" coords="1454,606,1578,634"/>
-<area shape="rect" id="node12" href="$group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba" title="Flash LED while receiving or sending IR data." alt="" coords="1705,658,1827,686"/>
-<area shape="rect" id="node11" href="$group__Timer.html#ga352399811c67be16548d81a18e3cd337" title="Disables output of the PWM signal of the timer at the timer pin and set it to inactive." alt="" coords="1679,606,1853,634"/>
-<area shape="rect" id="node17" href="$group__Sending.html#ga6cb6bd97b0daf3afbc6b6c59acaa93f1" title=" " alt="" coords="1169,210,1353,254"/>
-<area shape="rect" id="node21" href="$group__Decoder.html#gada6382d5c398922c22ace404179a5744" title="Address can be interpreted as sub&#45;device &lt;&lt; 4 + 4 bit device." alt="" coords="448,487,601,515"/>
-<area shape="rect" id="node22" href="$group__Sending.html#gaf815453c4c0e800df1684fe8693b2ca1" title=" " alt="" coords="675,479,860,523"/>
-<area shape="rect" id="node23" href="$group__Sending.html#ga3993584a7493d8f464e060c523d4efac" title=" " alt="" coords="922,426,1106,470"/>
-<area shape="rect" id="node29" href="$group__Decoder.html#ga6ada889ebd0aeb60e7284c2060f61871" title=" " alt="" coords="428,919,621,963"/>
-<area shape="rect" id="node32" href="$group__Decoder.html#ga4cec214f3ebfd28867697ebaac4de74b" title="Convert 16 bit address and 16 bit command to 32 bit NECRaw data If we get a command &lt; 0x100,..." alt="" coords="422,747,627,791"/>
-<area shape="rect" id="node37" href="$group__Sending.html#ga3894d577db623d77e42a3caf2fe670cf" title="Sends Biphase (Manchester) coded data MSB first This function concatenates two marks to one longer ma..." alt="" coords="927,666,1102,694"/>
-<area shape="rect" id="node39" href="$group__Decoder.html#ga9a81f073c38fddb261bb6a7697af049c" title=" " alt="" coords="938,614,1091,642"/>
-<area shape="rect" id="node43" href="$group__Decoder.html#ga395b9e2ded40a5ad085fa11938422b21" title="Send repeat Repeat commands should be sent in a 110 ms raster." alt="" coords="908,562,1121,590"/>
+<area shape="rect" id="node1" title="Interprets and sends a IRData structure." alt="" coords="5,715,105,743"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga101c9bd6ac69748f27ec4abe65b04803" title="Apple: Send NEC with fixed 16 bit Apple address 0x87EE." alt="" coords="465,1222,597,1250"/>
+<area shape="rect" id="node15" href="$group__Decoder.html#ga1288521054e8b5afb8aece28355829ff" title=" " alt="" coords="450,722,612,750"/>
+<area shape="rect" id="node16" href="$group__Decoder.html#ga4f68cb05cfe18a8ae84e96138459a734" title=" " alt="" coords="959,175,1096,203"/>
+<area shape="rect" id="node18" href="$group__Decoder.html#ga39702704a52a99d8cb7d118d8a9e0251" title="The FAST protocol repeats by skipping the header mark and space &#45;&gt; this leads to a poor repeat detect..." alt="" coords="961,381,1094,409"/>
+<area shape="rect" id="node19" href="$group__Decoder.html#gaa10da0665ac4d44b06dba845420ab7f1" title="The JVC protocol repeats by skipping the header mark and space &#45;&gt; this leads to a poor repeat detecti..." alt="" coords="965,485,1090,513"/>
+<area shape="rect" id="node20" href="$group__Decoder.html#ga266389f19755fdef8f6dc0155191bf3b" title="Stub using Kaseikyo with DENON_VENDOR_ID_CODE." alt="" coords="187,501,340,545"/>
+<area shape="rect" id="node24" href="$group__Decoder.html#ga87a6a2163f2608a0c90014586bb04cfa" title="Stub using Kaseikyo with JVC_VENDOR_ID_CODE." alt="" coords="170,569,356,597"/>
+<area shape="rect" id="node25" href="$group__Decoder.html#ga8853de09de0669d147a40e8344ee2dc4" title="Stub using Kaseikyo with MITSUBISHI_VENDOR_ID_CODE." alt="" coords="187,621,340,665"/>
+<area shape="rect" id="node26" href="$group__Decoder.html#gaf60a31544006d2e18eb25b3b0205a261" title="Stub using Kaseikyo with SHARP_VENDOR_ID_CODE." alt="" coords="187,381,340,425"/>
+<area shape="rect" id="node27" href="$group__Decoder.html#gaa62e64650aaae09b6f001a53a31f00b8" title=" " alt="" coords="153,1378,374,1406"/>
+<area shape="rect" id="node28" href="$group__Decoder.html#gab0200ca785ce3be24c4ad2efc95f37f7" title="LG uses the NEC repeat." alt="" coords="205,741,322,769"/>
+<area shape="rect" id="node30" href="$group__Decoder.html#ga71e0a4a000f5dcb541ca889be34442ce" title=" " alt="" coords="946,277,1108,305"/>
+<area shape="rect" id="node31" href="$group__Decoder.html#ga3dc9ab05c90197b056c226dcc187cc3a" title="NEC Send frame and special repeats There is NO delay after the last sent repeat!" alt="" coords="199,1050,328,1078"/>
+<area shape="rect" id="node33" href="$group__Decoder.html#gabf1692bf9eb21e6e27989d5be05c9c11" title="NEC2 Send frame !!! and repeat the frame for each requested repeat !!! There is NO delay after the la..." alt="" coords="196,1110,331,1138"/>
+<area shape="rect" id="node34" href="$group__Decoder.html#ga5a1e296f0350dc379cb925d13ca59d87" title="There is NO delay after the last sent repeat!" alt="" coords="462,998,600,1026"/>
+<area shape="rect" id="node35" href="$group__Decoder.html#gad805788df818c1bb25ea77de14361686" title="Send an OpenLASIR frame with special NEC&#45;style repeats." alt="" coords="179,895,348,923"/>
+<area shape="rect" id="node37" href="$group__Decoder.html#gaf720308fa32a1f182ff17772c32c3cea" title="Stub using Kaseikyo with PANASONIC_VENDOR_ID_CODE." alt="" coords="183,449,344,477"/>
+<area shape="rect" id="node38" href="$group__Decoder.html#gacce74f70ce85c35d92bb3f1af08e6ff4" title=" " alt="" coords="717,433,844,461"/>
+<area shape="rect" id="node40" href="$group__Decoder.html#gaff709569cc91804f55dd6c50a9df6c6b" title="Assemble raw data for RC6 from parameters and toggle state and send We do not wait for the minimal tr..." alt="" coords="717,1246,844,1274"/>
+<area shape="rect" id="node42" href="$group__Decoder.html#ga6e694626edcde10e0d5a4e6a2bc6b915" title="Here we send Samsung32 If we get a command &lt; 0x100, we send command and then ~command If we get an ad..." alt="" coords="454,774,608,802"/>
+<area shape="rect" id="node43" href="$group__Decoder.html#gaa72ec4013c647400e0dc43a4ede328e4" title="Here we send Samsung48 We send 2 x (8 bit command and then ~command)" alt="" coords="447,550,615,578"/>
+<area shape="rect" id="node44" href="$group__Decoder.html#ga09ed812db755a2db480d8e9233036629" title=" " alt="" coords="446,1274,617,1302"/>
+<area shape="rect" id="node46" href="$group__Decoder.html#ga9b819c19d95d4d880e9d6ecb056c0e0a" title=" " alt="" coords="714,125,847,153"/>
+<area shape="rect" id="node47" href="$group__Decoder.html#gafef2381435874c06374a40c6f06aa92b" title=" " alt="" coords="466,946,596,974"/>
+<area shape="rect" id="node3" href="$group__Sending.html#gadef7bbdaff62c80b192c22ba2520dc14" title=" " alt="" coords="688,886,873,930"/>
+<area shape="rect" id="node4" href="$group__Sending.html#ga7f513cec4af96e2f773d511815e7ce6f" title="Sends PulseDistance frames and repeats." alt="" coords="935,605,1120,649"/>
+<area shape="rect" id="node5" href="$group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15" title="Enables IR output." alt="" coords="1202,446,1346,474"/>
+<area shape="rect" id="node7" href="$group__Sending.html#ga71a76987183f83b366fa59660e80253b" title="Sends an IR mark for the specified number of microseconds." alt="" coords="1224,665,1324,693"/>
+<area shape="rect" id="node13" href="$group__Sending.html#gabd98da9d8f888f306fc6236d103cf406" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="1437,502,1621,546"/>
+<area shape="rect" id="node14" href="$group__Sending.html#ga914d45f08addaf1142e167a8ebf7d5a4" title="Sends an IR space for the specified number of microseconds." alt="" coords="1221,613,1327,641"/>
+<area shape="rect" id="node6" href="$group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="1460,446,1598,474"/>
+<area shape="rect" id="node8" href="$group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798" title="Custom delay function that circumvents Arduino&#39;s delayMicroseconds 16 bit limit and is (mostly) not e..." alt="" coords="1414,613,1644,641"/>
+<area shape="rect" id="node9" href="$group__Timer.html#gac67e6a15f31989aa182389cd4a8729c9" title="Enables output of the PWM signal of the timer at the timer pin." alt="" coords="1443,665,1615,693"/>
+<area shape="rect" id="node10" href="$group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0" title="Just switch the IR sending LED off to send an IR space A space is &quot;no output&quot;, so the PWM output is d..." alt="" coords="1467,717,1591,745"/>
+<area shape="rect" id="node12" href="$group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba" title="Flash LED while receiving or sending IR data." alt="" coords="1718,769,1840,797"/>
+<area shape="rect" id="node11" href="$group__Timer.html#ga352399811c67be16548d81a18e3cd337" title="Disables output of the PWM signal of the timer at the timer pin and set it to inactive." alt="" coords="1692,717,1866,745"/>
+<area shape="rect" id="node17" href="$group__Sending.html#ga35a4ccb8f15a1e6aca20213689b437a4" title=" " alt="" coords="1182,373,1366,417"/>
+<area shape="rect" id="node21" href="$group__Decoder.html#gada6382d5c398922c22ace404179a5744" title="Address can be interpreted as sub&#45;device &lt;&lt; 4 + 4 bit device." alt="" coords="454,498,608,526"/>
+<area shape="rect" id="node22" href="$group__Sending.html#ga5520e85088552f4f29bfc8d559f34a7c" title=" " alt="" coords="688,537,873,581"/>
+<area shape="rect" id="node23" href="$group__Sending.html#ga530d355ddcb40a10c0ba8e1c22b77b02" title=" " alt="" coords="935,537,1120,581"/>
+<area shape="rect" id="node29" href="$group__Decoder.html#ga6ada889ebd0aeb60e7284c2060f61871" title=" " alt="" coords="434,602,628,646"/>
+<area shape="rect" id="node32" href="$group__Decoder.html#ga4cec214f3ebfd28867697ebaac4de74b" title="Convert 16 bit address and 16 bit command to 32 bit NECRaw data If we get a command &lt; 0x100,..." alt="" coords="428,1102,634,1146"/>
+<area shape="rect" id="node36" href="$group__Decoder.html#ga2c20f01ebfa1e153c59b3ab3fe4195e4" title="Compute the raw 32&#45;bit data for an OpenLASIR frame from 8&#45;bit address and 16&#45;bit command." alt="" coords="422,826,640,870"/>
+<area shape="rect" id="node39" href="$group__Sending.html#ga3894d577db623d77e42a3caf2fe670cf" title="Sends Biphase (Manchester) coded data MSB first This function concatenates two marks to one longer ma..." alt="" coords="940,777,1114,805"/>
+<area shape="rect" id="node41" href="$group__Decoder.html#ga9a81f073c38fddb261bb6a7697af049c" title=" " alt="" coords="951,725,1104,753"/>
+<area shape="rect" id="node45" href="$group__Decoder.html#ga395b9e2ded40a5ad085fa11938422b21" title="Send repeat Repeat commands should be sent in a 110 ms raster." alt="" coords="921,673,1134,701"/>
 </map>

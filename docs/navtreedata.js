@@ -54,14 +54,14 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"IRFeedbackLED_8hpp.html",
-"functions_func_d.html",
-"group__Decoder.html#ga22d50c9e05c2de32c73cda0a9b05a8c4",
-"group__Decoder.html#ga80d136268d4d727245922ae0c85464c3",
-"group__Decoder.html#gaee1c9e1d8ab6dcf642d6707b4528385b",
-"group__Sending.html#ga170701fb079d24717aded137dee808e7",
-"group__TinyReceiver.html#gaea72a0ef27558236aee7b351c3a336cb",
-"unionWordUnion.html#a0e1088e17c9fefa37f9ac54d2151bed3"
+"IRCommandDispatcher_8h.html",
+"classIRrecv.html#a75a2cb038de23ec735c044f176c84b3a",
+"group__Decoder.html#ga03deae51c5a54ff932f1e5ebb4562e57",
+"group__Decoder.html#ga5b41314206902e7eec1c396b3999eab9",
+"group__Decoder.html#gaac808076aabe5cefd0b648f1cd3df89d",
+"group__FeedbackLEDFunctions.html#ga53e5ec641a900f2c572c8bffd42da921",
+"group__Sending.html#gafba8232b747be85f72c1c4612780d5cf",
+"ir__OpenLASIR_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

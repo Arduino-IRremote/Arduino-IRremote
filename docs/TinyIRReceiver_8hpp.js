@@ -2,6 +2,8 @@ var TinyIRReceiver_8hpp =
 [
     [ "IR_RECEIVE_PIN", "group__TinyReceiver.html#ga32204b2259848fb5fdcf5cec09b6437a", null ],
     [ "LED_RECEIVE_FEEDBACK_CODE", "group__TinyReceiver.html#ga3f4de9472b009540a525e6e648fab0f3", null ],
+    [ "STR", "group__TinyReceiver.html#ga18d295a837ac71add5578860b55e5502", null ],
+    [ "STR_HELPER", "group__TinyReceiver.html#ga890d84b9b5d0b0aede9eea1092a7a10a", null ],
     [ "TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT", "group__TinyReceiver.html#gae7054616db7e69e979dfcd5ad38fb968", null ],
     [ "USE_ATTACH_INTERRUPT", "group__TinyReceiver.html#gafae76562a7daac7eba30e8c5439f2cf7", null ],
     [ "disablePCIInterruptForTinyReceiver", "group__TinyReceiver.html#ga4217cae1ded4a9b2ed54bc3a1e8cd86e", null ],

@@ -106,7 +106,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga770e03720a79491d7ddf347ad4b9e484"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga770e03720a79491d7ddf347ad4b9e484">IRReceiveTimerInterruptHandler</a> ()</td></tr>
 <tr class="separator:ga770e03720a79491d7ddf347ad4b9e484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga495b7f49ff71cde1289b118fac0f0674"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">matchTicks</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros)</td></tr>
-<tr class="memdesc:ga495b7f49ff71cde1289b118fac0f0674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">More...</a><br /></td></tr>
+<tr class="memdesc:ga495b7f49ff71cde1289b118fac0f0674"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Match is true, if signal value is bigger/equal 75% and less/equal 125% of aMatchValueMicros.  <a href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674">More...</a><br /></td></tr>
 <tr class="separator:ga495b7f49ff71cde1289b118fac0f0674"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8e72b4f557d829fa6ac413d170eb5507"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga8e72b4f557d829fa6ac413d170eb5507">matchTicks</a> (uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks)</td></tr>
 <tr class="memdesc:ga8e72b4f557d829fa6ac413d170eb5507"><td class="mdescLeft">&#160;</td><td class="mdescRight">Match function WITH compensating for marks exceeded or spaces shortened by demodulator hardware.  <a href="group__Receiving.html#ga8e72b4f557d829fa6ac413d170eb5507">More...</a><br /></td></tr>
@@ -175,17 +175,16 @@ Functions</h2></td></tr>
 <tr class="memitem:ga8ffd22c2d4c6e93918d987a4b7c3ba5b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga8ffd22c2d4c6e93918d987a4b7c3ba5b">IRrecv::end</a> ()</td></tr>
 <tr class="memdesc:ga8ffd22c2d4c6e93918d987a4b7c3ba5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for <a class="el" href="group__Receiving.html#gaadb62786cd826cd539683c03734e46fe" title="Disables the timer for IR reception.">stop()</a>.  <a href="group__Receiving.html#ga8ffd22c2d4c6e93918d987a4b7c3ba5b">More...</a><br /></td></tr>
 <tr class="separator:ga8ffd22c2d4c6e93918d987a4b7c3ba5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacfbf39fb284cc2d200158f20747c4ae3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gacfbf39fb284cc2d200158f20747c4ae3">IRrecv::isIdle</a> ()</td></tr>
-<tr class="memdesc:gacfbf39fb284cc2d200158f20747c4ae3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns status of reception.  <a href="group__Receiving.html#gacfbf39fb284cc2d200158f20747c4ae3">More...</a><br /></td></tr>
-<tr class="separator:gacfbf39fb284cc2d200158f20747c4ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf40f1e16b1cc911e47ac3f0a9b3b1ec5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5">IRrecv::resume</a> ()</td></tr>
 <tr class="memdesc:gaf40f1e16b1cc911e47ac3f0a9b3b1ec5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame.  <a href="group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5">More...</a><br /></td></tr>
 <tr class="separator:gaf40f1e16b1cc911e47ac3f0a9b3b1ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga26e37f666387134ed18393fd930f68db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga26e37f666387134ed18393fd930f68db">IRrecv::initDecodedIRData</a> ()</td></tr>
 <tr class="memdesc:ga26e37f666387134ed18393fd930f68db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is internally called by decode before calling decoders.  <a href="group__Receiving.html#ga26e37f666387134ed18393fd930f68db">More...</a><br /></td></tr>
 <tr class="separator:ga26e37f666387134ed18393fd930f68db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacfbf39fb284cc2d200158f20747c4ae3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gacfbf39fb284cc2d200158f20747c4ae3">IRrecv::isIdle</a> ()</td></tr>
+<tr class="separator:gacfbf39fb284cc2d200158f20747c4ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa4f466138c416bf4e1548f5399be0298"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gaa4f466138c416bf4e1548f5399be0298">IRrecv::available</a> ()</td></tr>
-<tr class="memdesc:gaa4f466138c416bf4e1548f5399be0298"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if IR receiver data is available.  <a href="group__Receiving.html#gaa4f466138c416bf4e1548f5399be0298">More...</a><br /></td></tr>
+<tr class="memdesc:gaa4f466138c416bf4e1548f5399be0298"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if IR receiver has received a complete IR frame (detected by timeout after last mark).  <a href="group__Receiving.html#gaa4f466138c416bf4e1548f5399be0298">More...</a><br /></td></tr>
 <tr class="separator:gaa4f466138c416bf4e1548f5399be0298"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga471a42c75e807e43827e319852536e3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structIRData.html">IRData</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c">IRrecv::read</a> ()</td></tr>
 <tr class="memdesc:ga471a42c75e807e43827e319852536e3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr.  <a href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c">More...</a><br /></td></tr>
@@ -211,11 +210,6 @@ Functions</h2></td></tr>
 <tr class="separator:gae685d2feb67db271c30eb711017346ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4bb27cc58f6c2bcb98d1099986355e90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90">IRrecv::decodePulseDistanceWidthData_P</a> (<a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a> const *aProtocolConstantsPGM, uint_fast8_t aNumberOfBits, <a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRRawlenType</a> aStartOffset=3)</td></tr>
 <tr class="separator:ga4bb27cc58f6c2bcb98d1099986355e90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacd517e921cf41136c8744799797c75e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gacd517e921cf41136c8744799797c75e2">IRrecv::initBiphaselevel</a> (uint_fast8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit)</td></tr>
-<tr class="separator:gacd517e921cf41136c8744799797c75e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac44c88dd418acc5d8068dbacda37e8e9"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9">IRrecv::getBiphaselevel</a> ()</td></tr>
-<tr class="memdesc:gac44c88dd418acc5d8068dbacda37e8e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer.  <a href="group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9">More...</a><br /></td></tr>
-<tr class="separator:gac44c88dd418acc5d8068dbacda37e8e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9d6653a616af4dd5cde8f4abf2b1c157"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157">IRrecv::compare</a> (uint16_t oldval, uint16_t newval)</td></tr>
 <tr class="memdesc:ga9d6653a616af4dd5cde8f4abf2b1c157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g.  <a href="group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157">More...</a><br /></td></tr>
 <tr class="separator:ga9d6653a616af4dd5cde8f4abf2b1c157"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,16 +237,6 @@ Variables</h2></td></tr>
 <tr class="memitem:ga6813a2b456e5359ce674699c85a61cf9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIRrecv.html">IRrecv</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9">IrReceiver</a></td></tr>
 <tr class="memdesc:ga6813a2b456e5359ce674699c85a61cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The receiver instance.  <a href="group__Receiving.html#ga6813a2b456e5359ce674699c85a61cf9">More...</a><br /></td></tr>
 <tr class="separator:ga6813a2b456e5359ce674699c85a61cf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga99f6267aa36f20f3aa1409b250aa6b67"><td class="memItemLeft" align="right" valign="top">unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga99f6267aa36f20f3aa1409b250aa6b67">sMicrosAtLastStopTimer</a> = 0</td></tr>
-<tr class="separator:ga99f6267aa36f20f3aa1409b250aa6b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8aabdbfa5a0a6090e938212745b4871e"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga8aabdbfa5a0a6090e938212745b4871e">sBiphaseDecodeRawbuffOffset</a></td></tr>
-<tr class="separator:ga8aabdbfa5a0a6090e938212745b4871e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac33950d3b355b78a28d6f54b6af6e7b8"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gac33950d3b355b78a28d6f54b6af6e7b8">sBiphaseCurrentTimingIntervals</a></td></tr>
-<tr class="separator:gac33950d3b355b78a28d6f54b6af6e7b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafa340a1dbbee30ea603df9f63bb55027"><td class="memItemLeft" align="right" valign="top">uint_fast8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gafa340a1dbbee30ea603df9f63bb55027">sBiphaseUsedTimingIntervals</a></td></tr>
-<tr class="separator:gafa340a1dbbee30ea603df9f63bb55027"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae25d907bed7a0f0298f9cf105d89f86f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#gae25d907bed7a0f0298f9cf105d89f86f">sBiphaseTimeUnit</a></td></tr>
-<tr class="separator:gae25d907bed7a0f0298f9cf105d89f86f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3bdd668aa583bfcd42fc7ecffbe55653"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Receiving.html#ga3bdd668aa583bfcd42fc7ecffbe55653">ProtocolNames</a> []</td></tr>
 <tr class="separator:ga3bdd668aa583bfcd42fc7ecffbe55653"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -272,7 +256,7 @@ Variables</h2></td></tr>
 
 <p>used for decodeHash() </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01203">1203</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01127">1127</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -290,7 +274,7 @@ Variables</h2></td></tr>
 
 <p>used for decodeHash() </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01202">1202</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01126">1126</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -318,7 +302,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00075">75</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00063">63</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -347,7 +331,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00079">79</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00067">67</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -390,12 +374,12 @@ Here is the call graph for this function:</div>
 <p>Multiple instantiation is not supported. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aReceivePin</td><td>Arduino pin to use, where a demodulating IR receiver is connected. </td></tr>
-    <tr><td class="paramname">aFeedbackLEDPin</td><td>if 0, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions </td></tr>
+    <tr><td class="paramname">aFeedbackLEDPin</td><td>if 0xFF, then take board specific LED_BUILTIN pin if it is defined as macro </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00088">88</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00076">76</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -424,9 +408,18 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Returns true if IR receiver data is available. </p>
+<p>Returns true if IR receiver has received a complete IR frame (detected by timeout after last mark). </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00542">542</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00536">536</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__Receiving_gaa4f466138c416bf4e1548f5399be0298_icgraph.png" border="0" usemap="#group__Receiving_gaa4f466138c416bf4e1548f5399be0298_icgraph" alt=""/></div>
+<map name="group__Receiving_gaa4f466138c416bf4e1548f5399be0298_icgraph" id="group__Receiving_gaa4f466138c416bf4e1548f5399be0298_icgraph">
+<area shape="rect" title="Returns true if IR receiver has received a complete IR frame (detected by timeout after last mark)." alt="" coords="153,5,272,33"/>
+<area shape="rect" href="group__Receiving.html#gacfbf39fb284cc2d200158f20747c4ae3" title=" " alt="" coords="5,5,105,33"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -467,12 +460,12 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramname">aReceivePin</td><td>The Arduino pin number, where a demodulating IR receiver is connected. </td></tr>
     <tr><td class="paramname">aEnableLEDFeedback</td><td>if true / ENABLE_LED_FEEDBACK, then let the feedback led blink on receiving IR signal </td></tr>
-    <tr><td class="paramname">aFeedbackLEDPin</td><td>if 0 / USE_DEFAULT_FEEDBACK_LED_PIN, then take board specific FEEDBACK_LED_ON() and FEEDBACK_LED_OFF() functions </td></tr>
+    <tr><td class="paramname">aFeedbackLEDPin</td><td>if 0xFF, then take board specific LED_BUILTIN pin if it is defined as macro </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00315">315</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00311">311</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -510,7 +503,7 @@ Here is the call graph for this function:</div>
 <p>Checks if protocol is not detected and detected space between two transmissions is smaller than known value for protocols (Sony with around 24 ms) </p>
 <dl class="section return"><dt>Returns</dt><dd>true, if CheckForRecordGapsMicros() has printed a message, i.e. gap &lt; 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01513">1513</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01429">1429</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -539,25 +532,22 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01333">1333</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01248">1248</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_gad00cc7b682411c68ccd2056b1d45fa84_icgraph.png" border="0" usemap="#group__Receiving_gad00cc7b682411c68ccd2056b1d45fa84_icgraph" alt=""/></div>
 <map name="group__Receiving_gad00cc7b682411c68ccd2056b1d45fa84_icgraph" id="group__Receiving_gad00cc7b682411c68ccd2056b1d45fa84_icgraph">
-<area shape="rect" title=" " alt="" coords="567,180,769,224"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="346,5,519,33"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="361,57,504,85"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="350,109,515,137"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="363,161,502,189"/>
-<area shape="rect" href="group__Decoder.html#ga5720b53e427e0346ecc248e55c57e2b9" title="Try to decode data as RC5 protocol." alt="" coords="364,317,501,345"/>
-<area shape="rect" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="364,369,501,397"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="350,213,515,241"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="362,265,503,293"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="176,188,286,216"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="14,188,107,216"/>
-<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="164,343,298,371"/>
-<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="5,343,116,371"/>
+<area shape="rect" title=" " alt="" coords="533,153,735,197"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="308,5,482,33"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="324,57,467,85"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="313,109,477,137"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="326,161,465,189"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="305,213,485,241"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="312,265,478,293"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="325,317,465,345"/>
+<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="147,161,257,189"/>
+<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,161,99,189"/>
 </map>
 </div>
 
@@ -579,7 +569,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01290">1290</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01213">1213</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -590,7 +580,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="240,57,326,85"/>
 <area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="236,109,330,137"/>
 <area shape="rect" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="415,5,536,33"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="431,83,520,111"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="431,83,520,111"/>
 </map>
 </div>
 
@@ -612,7 +602,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01309">1309</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01228">1228</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -623,7 +613,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="256,57,342,85"/>
 <area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="252,109,346,137"/>
 <area shape="rect" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="431,5,552,33"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="447,83,536,111"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="447,83,536,111"/>
 </map>
 </div>
 <div class="dynheader">
@@ -674,9 +664,9 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g. </p>
-<p>500 and 600 (NEC timing) to be equal </p><dl class="section return"><dt>Returns</dt><dd>0 if newval is shorter, 1 if newval is equal, and 2 if newval is longer </dd></dl>
+<p>500 and 600 (NEC timing) and at least 200 and 250 to be equal </p><dl class="section return"><dt>Returns</dt><dd>0 if newval is shorter, 1 if newval is equal, and 2 if newval is longer </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01209">1209</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01133">1133</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -712,48 +702,45 @@ Here is the caller graph for this function:</div>
 <p>The main decode function, attempts to decode the recently receive IR signal. </p>
 <p>The set of decoders used is determined by active definitions of the DECODE_&lt;PROTOCOL&gt; macros. Results of decoding are stored in IrReceiver.decodedIRData.* like e.g. IrReceiver.decodedIRData.command. </p><dl class="section return"><dt>Returns</dt><dd>false if no IR receiver data available, true if data available. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00566">566</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00560">560</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga913af602be49b9182fb0b22e9e351b36_cgraph.png" border="0" usemap="#group__Receiving_ga913af602be49b9182fb0b22e9e351b36_cgraph" alt=""/></div>
 <map name="group__Receiving_ga913af602be49b9182fb0b22e9e351b36_cgraph" id="group__Receiving_ga913af602be49b9182fb0b22e9e351b36_cgraph">
-<area shape="rect" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="5,512,116,540"/>
-<area shape="rect" href="classIRrecv.html#a341c328b5bf53a951195b630585858cc" title=" " alt="" coords="919,98,1104,126"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="167,173,340,201"/>
-<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="179,537,328,565"/>
-<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="409,968,605,996"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="182,329,325,357"/>
-<area shape="rect" href="group__Receiving.html#gab33be9e29578a2eb95beb3da169228dc" title="Decodes an arbitrary IR code to a 32&#45;bit value." alt="" coords="183,900,324,928"/>
-<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="185,121,322,149"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="171,381,336,409"/>
-<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="391,912,623,940"/>
-<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="190,745,317,773"/>
-<area shape="rect" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="167,433,340,461"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="184,589,323,617"/>
-<area shape="rect" href="group__Decoder.html#ga5720b53e427e0346ecc248e55c57e2b9" title="Try to decode data as RC5 protocol." alt="" coords="185,641,322,669"/>
-<area shape="rect" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="185,693,322,721"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="171,485,336,513"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="183,277,324,305"/>
-<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="174,225,333,253"/>
-<area shape="rect" href="group__Receiving.html#ga26e37f666387134ed18393fd930f68db" title="Is internally called by decode before calling decoders." alt="" coords="164,952,343,980"/>
-<area shape="rect" href="ir__BangOlufsen_8hpp.html#ac5080b165c41b5f1d1245017b9fbc3f8" title=" " alt="" coords="1157,98,1276,126"/>
-<area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1174,453,1260,481"/>
-<area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1170,757,1264,785"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="1324,630,1414,658"/>
-<area shape="rect" href="group__Receiving.html#gad00cc7b682411c68ccd2056b1d45fa84" title=" " alt="" coords="406,373,608,417"/>
-<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="426,253,588,281"/>
-<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="410,305,605,349"/>
-<area shape="rect" href="group__Print.html#gad59a9b756d71f983bf9f0a28d25f238f" title=" " alt="" coords="685,253,853,281"/>
-<area shape="rect" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="951,253,1072,281"/>
-<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="671,904,867,948"/>
-<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="925,834,1099,878"/>
-<area shape="rect" href="group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="915,954,1109,998"/>
-<area shape="rect" href="group__Decoder.html#ga90217576bd30a0755127207435731549" title=" " alt="" coords="693,1142,845,1170"/>
-<area shape="rect" href="group__Print.html#ga3c4ee9436861333c2737f9272a4fadc7" title=" " alt="" coords="679,1074,859,1118"/>
-<area shape="rect" href="group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157" title="Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g." alt="" coords="448,1020,566,1048"/>
-<area shape="rect" href="group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9" title="Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer." alt="" coords="427,698,587,726"/>
-<area shape="rect" href="group__Receiving.html#gacd517e921cf41136c8744799797c75e2" title=" " alt="" coords="428,594,587,622"/>
+<area shape="rect" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="5,555,116,583"/>
+<area shape="rect" href="group__Decoder.html#ga341c328b5bf53a951195b630585858cc" title=" " alt="" coords="920,108,1106,136"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="167,867,340,895"/>
+<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="180,555,328,583"/>
+<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="410,124,606,152"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="182,659,326,687"/>
+<area shape="rect" href="group__Receiving.html#gab33be9e29578a2eb95beb3da169228dc" title="Decodes an arbitrary IR code to a 32&#45;bit value." alt="" coords="183,72,324,100"/>
+<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="186,919,322,947"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="172,607,336,635"/>
+<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="392,295,624,323"/>
+<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="190,347,318,375"/>
+<area shape="rect" href="group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="167,503,340,531"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="184,399,324,427"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="164,451,344,479"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="171,815,336,843"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="184,763,324,791"/>
+<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="174,711,334,739"/>
+<area shape="rect" href="group__Receiving.html#ga26e37f666387134ed18393fd930f68db" title="Is internally called by decode before calling decoders." alt="" coords="164,971,344,999"/>
+<area shape="rect" href="group__Decoder.html#gac5080b165c41b5f1d1245017b9fbc3f8" title=" " alt="" coords="1158,108,1277,136"/>
+<area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1174,600,1261,628"/>
+<area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1170,372,1265,400"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="1325,499,1415,527"/>
+<area shape="rect" href="group__Receiving.html#gad00cc7b682411c68ccd2056b1d45fa84" title=" " alt="" coords="408,720,609,764"/>
+<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="428,788,589,816"/>
+<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="410,652,606,696"/>
+<area shape="rect" href="group__Print.html#gad59a9b756d71f983bf9f0a28d25f238f" title=" " alt="" coords="686,736,854,764"/>
+<area shape="rect" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="952,736,1074,764"/>
+<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="672,228,868,272"/>
+<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="926,228,1100,272"/>
+<area shape="rect" href="group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="916,160,1110,204"/>
+<area shape="rect" href="group__Decoder.html#ga90217576bd30a0755127207435731549" title=" " alt="" coords="694,73,846,101"/>
+<area shape="rect" href="group__Print.html#ga3c4ee9436861333c2737f9272a4fadc7" title=" " alt="" coords="680,5,860,49"/>
+<area shape="rect" href="group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157" title="Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g." alt="" coords="449,72,567,100"/>
 </map>
 </div>
 <div class="dynheader">
@@ -785,11 +772,11 @@ Here is the caller graph for this function:</div>
 
 <p>Decodes an arbitrary IR code to a 32-bit value. </p>
 <p>Instead of decoding using a standard encoding scheme (e.g. Sony, NEC, RC5), the code is hashed to a 32-bit value.</p>
-<p>The algorithm looks at the sequence of MARK and SPACE signals, and see if each one is shorter (0), the same length (1), or longer (2) than the previous MARK or SPACE. It hash the resulting sequence of 0's, 1's, and 2's to a 32-bit value. This will give a unique value for each different code (probably), for most code systems.</p>
+<p>The algorithm looks at the sequence of MARK and SPACE signals, and see if each one is more than 20% shorter (0), the same (+/- 20%) length (1), or more than 20% longer (2) than the previous MARK or SPACE. It hash the resulting sequence of 0's, 1's, and 2's to a 32-bit value. This will give a unique value for each different code (probably), for most code systems.</p>
 <p>Uses FNV hash algorithm: <a href="http://isthe.com/chongo/tech/comp/fnv/#FNV-param">http://isthe.com/chongo/tech/comp/fnv/#FNV-param</a> Converts the raw code values into a 32-bit hash code. Hopefully this code is unique for each button. This isn't a "real" decoding, just an arbitrary value.</p>
 <p>see: <a href="http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html">http://www.righto.com/2010/01/using-arbitrary-remotes-with-arduino.html</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01236">1236</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01160">1160</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -828,7 +815,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01261">1261</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01184">1184</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -886,7 +873,7 @@ Here is the caller graph for this function:</div>
 <p>Decode pulse distance protocols for <a class="el" href="structPulseDistanceWidthProtocolConstants.html">PulseDistanceWidthProtocolConstants</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if decoding was successful </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01080">1080</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01076">1076</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -897,7 +884,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="249,91,443,135"/>
 <area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="495,5,581,33"/>
 <area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="491,57,585,85"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="633,32,723,60"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="633,32,723,60"/>
 </map>
 </div>
 <div class="dynheader">
@@ -905,31 +892,32 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_gae685d2feb67db271c30eb711017346ac_icgraph.png" border="0" usemap="#group__Receiving_gae685d2feb67db271c30eb711017346ac_icgraph" alt=""/></div>
 <map name="group__Receiving_gae685d2feb67db271c30eb711017346ac_icgraph" id="group__Receiving_gae685d2feb67db271c30eb711017346ac_icgraph">
-<area shape="rect" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="841,205,1036,249"/>
-<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="592,109,761,137"/>
-<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="578,265,775,293"/>
-<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="594,161,759,189"/>
-<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="560,317,793,345"/>
-<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="598,213,755,241"/>
-<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="592,5,761,33"/>
-<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="579,559,774,603"/>
-<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="579,491,774,535"/>
-<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="587,57,766,85"/>
-<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="358,109,493,137"/>
+<area shape="rect" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="848,205,1043,249"/>
+<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="599,109,768,137"/>
+<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="585,265,782,293"/>
+<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="601,161,766,189"/>
+<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="567,317,800,345"/>
+<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="605,213,762,241"/>
+<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="599,5,768,33"/>
+<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="586,585,781,629"/>
+<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="586,517,781,561"/>
+<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="594,57,773,85"/>
+<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="362,109,496,137"/>
 <area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,109,274,137"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,499,274,527"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,499,99,527"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="339,603,512,631"/>
-<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="352,239,500,267"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="354,655,497,683"/>
-<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="358,707,494,735"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="344,759,508,787"/>
-<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="362,811,489,839"/>
-<area shape="rect" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="339,343,512,371"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="356,395,495,423"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="343,447,508,475"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="356,499,496,527"/>
-<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="346,551,505,579"/>
+<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,524,274,552"/>
+<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,524,99,552"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="342,551,516,579"/>
+<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="355,239,503,267"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="358,603,501,631"/>
+<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="361,655,497,683"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="347,707,511,735"/>
+<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="366,759,493,787"/>
+<area shape="rect" href="group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="342,811,516,839"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="360,863,499,891"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="339,343,519,371"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="346,395,512,423"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="359,447,499,475"/>
+<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="350,499,509,527"/>
 <area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,239,291,267"/>
 </map>
 </div>
@@ -988,7 +976,7 @@ Here is the caller graph for this function:</div>
 
 <p>Old deprecated version with 3 timing parameters instead of one and a aIsPulseWidthProtocol flag. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00881">881</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00885">885</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -997,7 +985,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" title="Old deprecated version with 3 timing parameters instead of one and a aIsPulseWidthProtocol flag." alt="" coords="5,24,201,68"/>
 <area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="253,5,339,33"/>
 <area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="249,57,343,85"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="391,32,480,60"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="391,32,480,60"/>
 </map>
 </div>
 
@@ -1059,7 +1047,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00940">940</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00944">944</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1071,7 +1059,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="492,91,686,135"/>
 <area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="738,5,825,33"/>
 <area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="734,57,829,85"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="877,32,966,60"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="877,32,966,60"/>
 </map>
 </div>
 
@@ -1122,7 +1110,7 @@ Here is the call graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Decode pulse distance width protocols. </p>
-<p>We only check the mark or space length of a 1 against a threshold value, otherwise we always assume a 0! using <a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware.">matchMark()</a> and <a class="el" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware.">matchSpace()</a>, which includes MARK_EXCESS_MICROS in comparison.</p>
+<p>We only check the mark or space length of a 1 against a threshold value, otherwise we always assume a 0! We do not check the length of the constant pulse for the widely used PulseDistance width and the constant pause for PulseWidth (currently only sony protocol). using <a class="el" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware.">matchMark()</a> and <a class="el" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware.">matchSpace()</a>, which includes MARK_EXCESS_MICROS in comparison.</p>
 <p>We can have the following protocol timings PULSE_DISTANCE: Pause/spaces have different length and determine the bit value, longer space is 1. Pulses/marks can be constant, like NEC. PULSE_WIDTH: Pulses/marks have different length and determine the bit value, longer mark is 1. Pause/spaces can be constant, like Sony. PULSE_DISTANCE_WIDTH: Pulses/marks and pause/spaces have different length, often the bit length is constant, like MagiQuest. Can be decoded using the PULSE_DISTANCE decoding.</p>
 <p>Input is IrReceiver.irparams.rawbuf[] Output is IrReceiver.decodedIRData.decodedRawData</p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1136,7 +1124,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00747">747</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00755">755</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1145,7 +1133,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" title="Decode pulse distance width protocols." alt="" coords="5,24,201,68"/>
 <area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="253,5,339,33"/>
 <area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="249,57,343,85"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="391,32,480,60"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="391,32,480,60"/>
 </map>
 </div>
 
@@ -1183,7 +1171,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01116">1116</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01112">1112</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1195,7 +1183,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="492,91,686,135"/>
 <area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="738,5,825,33"/>
 <area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="734,57,829,85"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="877,32,966,60"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="877,32,966,60"/>
 </map>
 </div>
 <div class="dynheader">
@@ -1203,20 +1191,21 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga4bb27cc58f6c2bcb98d1099986355e90_icgraph.png" border="0" usemap="#group__Receiving_ga4bb27cc58f6c2bcb98d1099986355e90_icgraph" alt=""/></div>
 <map name="group__Receiving_ga4bb27cc58f6c2bcb98d1099986355e90_icgraph" id="group__Receiving_ga4bb27cc58f6c2bcb98d1099986355e90_icgraph">
-<area shape="rect" title=" " alt="" coords="560,257,756,301"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="339,57,512,85"/>
-<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="352,5,500,33"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="354,109,497,137"/>
-<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="358,161,494,189"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="344,213,508,241"/>
-<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="362,265,489,293"/>
-<area shape="rect" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="339,317,512,345"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="356,369,495,397"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="343,421,508,449"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="356,473,496,501"/>
-<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="346,525,505,553"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,265,274,293"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,265,99,293"/>
+<area shape="rect" title=" " alt="" coords="567,284,763,328"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="342,57,516,85"/>
+<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="355,5,503,33"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="358,109,501,137"/>
+<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="361,161,497,189"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="347,213,511,241"/>
+<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="366,265,493,293"/>
+<area shape="rect" href="group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="342,317,516,345"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="360,369,499,397"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="339,421,519,449"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="346,473,512,501"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="359,525,499,553"/>
+<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="350,577,509,605"/>
+<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,291,274,319"/>
+<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,291,99,319"/>
 <area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,5,291,33"/>
 </map>
 </div>
@@ -1279,7 +1268,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00957">957</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00961">961</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1288,7 +1277,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" title=" " alt="" coords="5,24,180,68"/>
 <area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="232,5,318,33"/>
 <area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="228,57,322,85"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="370,32,459,60"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="370,32,459,60"/>
 </map>
 </div>
 <div class="dynheader">
@@ -1296,32 +1285,33 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga406b91116e4a81f8c06838c8548833bf_icgraph.png" border="0" usemap="#group__Receiving_ga406b91116e4a81f8c06838c8548833bf_icgraph" alt=""/></div>
 <map name="group__Receiving_ga406b91116e4a81f8c06838c8548833bf_icgraph" id="group__Receiving_ga406b91116e4a81f8c06838c8548833bf_icgraph">
-<area shape="rect" title=" " alt="" coords="1084,205,1258,249"/>
-<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="841,205,1036,249"/>
-<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="592,109,761,137"/>
-<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="578,265,775,293"/>
-<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="594,161,759,189"/>
-<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="560,317,793,345"/>
-<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="598,213,755,241"/>
-<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="592,5,761,33"/>
-<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="579,559,774,603"/>
-<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="579,491,774,535"/>
-<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="587,57,766,85"/>
-<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="358,109,493,137"/>
+<area shape="rect" title=" " alt="" coords="1091,205,1265,249"/>
+<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="848,205,1043,249"/>
+<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="599,109,768,137"/>
+<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="585,265,782,293"/>
+<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="601,161,766,189"/>
+<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="567,317,800,345"/>
+<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="605,213,762,241"/>
+<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="599,5,768,33"/>
+<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="586,585,781,629"/>
+<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="586,517,781,561"/>
+<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="594,57,773,85"/>
+<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="362,109,496,137"/>
 <area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,109,274,137"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,499,274,527"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,499,99,527"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="339,603,512,631"/>
-<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="352,239,500,267"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="354,655,497,683"/>
-<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="358,707,494,735"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="344,759,508,787"/>
-<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="362,811,489,839"/>
-<area shape="rect" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="339,343,512,371"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="356,395,495,423"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="343,447,508,475"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="356,499,496,527"/>
-<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="346,551,505,579"/>
+<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,524,274,552"/>
+<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,524,99,552"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="342,551,516,579"/>
+<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="355,239,503,267"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="358,603,501,631"/>
+<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="361,655,497,683"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="347,707,511,735"/>
+<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="366,759,493,787"/>
+<area shape="rect" href="group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="342,811,516,839"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="360,863,499,891"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="339,343,519,371"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="346,395,512,423"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="359,447,499,475"/>
+<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="350,499,509,527"/>
 <area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,239,291,267"/>
 </map>
 </div>
@@ -1373,7 +1363,7 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for longer timing. </p>
-<p>Thus the value must be eventually inverted by the calling protocol decoder (MagiQuest). In normal decoder we check the if we have a timing for a 1 (normally the longer timing) within a range of 75 % and 125 % of the nominal timing see TICKS_LOW. Many protocols have a ratio of 1 to 3 between short and long timing. In this case this decoder extends the range to 66% and the upper bound does not matter anyway. I hope that this will give slightly better results especially for</p><ul>
+<p>Thus the value must be eventually inverted by the calling protocol decoder (MagiQuest). In normal decoder, we check whether there is a timing for a 1 (usually the longer timing) within a range of 75 % to 125 % of the nominal timing. See TICKS_LOW. Many protocols have a ratio of 1 to 3 between short and long timing. In this case this decoder extends the range to 66% and the upper bound does not matter anyway. I hope that this will give slightly better results especially for</p><ul>
 <li>jittering signals</li>
 <li>protocols with a smaller timing ratio than 1 to 2</li>
 <li>protocols with short 1 pulses / pauses like MagiQuest. Requires up to 458 bytes more program space, if more than 1 protocol is involved. but saves 90 bytes if only e.g. NEC is selected.</li>
@@ -1389,39 +1379,40 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00827">827</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00833">833</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga9a83a88e77d4434be420246a6d11430f_icgraph.png" border="0" usemap="#group__Receiving_ga9a83a88e77d4434be420246a6d11430f_icgraph" alt=""/></div>
 <map name="group__Receiving_ga9a83a88e77d4434be420246a6d11430f_icgraph" id="group__Receiving_ga9a83a88e77d4434be420246a6d11430f_icgraph">
-<area shape="rect" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="1084,435,1278,479"/>
-<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="578,261,775,289"/>
-<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="841,464,1036,508"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,308,274,336"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,308,99,336"/>
-<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="592,605,761,633"/>
-<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="594,501,759,529"/>
-<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="560,313,793,341"/>
-<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="598,553,755,581"/>
-<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="592,709,761,737"/>
-<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="579,433,774,477"/>
-<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="579,365,774,409"/>
-<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="587,657,766,685"/>
-<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="358,672,493,700"/>
-<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,672,274,700"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="339,412,512,440"/>
-<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="352,48,500,76"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="354,464,497,492"/>
-<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="358,516,494,544"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="344,568,508,596"/>
-<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="362,620,489,648"/>
-<area shape="rect" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="339,152,512,180"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="356,204,495,232"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="343,256,508,284"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="356,308,496,336"/>
-<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="346,360,505,388"/>
-<area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,48,291,76"/>
+<area shape="rect" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="1091,476,1285,520"/>
+<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="585,302,782,330"/>
+<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="848,505,1043,549"/>
+<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,337,274,365"/>
+<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,337,99,365"/>
+<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="599,646,768,674"/>
+<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="601,542,766,570"/>
+<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="567,354,800,382"/>
+<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="605,594,762,622"/>
+<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="599,750,768,778"/>
+<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="586,474,781,518"/>
+<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="586,406,781,450"/>
+<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="594,698,773,726"/>
+<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="362,726,496,754"/>
+<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,726,274,754"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="342,362,516,390"/>
+<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="355,50,503,78"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="358,414,501,442"/>
+<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="361,466,497,494"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="347,518,511,546"/>
+<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="366,570,493,598"/>
+<area shape="rect" href="group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="342,622,516,650"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="360,674,499,702"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="339,154,519,182"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="346,206,512,234"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="359,258,499,286"/>
+<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="350,310,509,338"/>
+<area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,50,291,78"/>
 </map>
 </div>
 
@@ -1444,7 +1435,7 @@ Here is the caller graph for this function:</div>
 
 <p>Alias for <a class="el" href="group__Receiving.html#gaadb62786cd826cd539683c03734e46fe" title="Disables the timer for IR reception.">stop()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00481">481</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00477">477</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1475,7 +1466,7 @@ Here is the call graph for this function:</div>
 
 <p>Alias for <a class="el" href="group__Receiving.html#ga2c06971f0e4e0c4131930c8903eb21dc" title="Start the receiving process.">start()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00417">417</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00413">413</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1508,7 +1499,7 @@ Here is the call graph for this function:</div>
 
 <p>Alias for <a class="el" href="group__Receiving.html#gaadb62786cd826cd539683c03734e46fe" title="Disables the timer for IR reception.">stop()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00487">487</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00483">483</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1517,55 +1508,6 @@ Here is the call graph for this function:</div>
 <area shape="rect" title="Alias for stop()." alt="" coords="5,5,95,33"/>
 <area shape="rect" href="group__Receiving.html#gaadb62786cd826cd539683c03734e46fe" title="Disables the timer for IR reception." alt="" coords="143,5,236,33"/>
 <area shape="rect" href="group__Timer.html#ga0b0e97d0a44ceb967a83b44aa88c6bd2" title="Disables the receive sample timer interrupt." alt="" coords="284,5,474,33"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="gac44c88dd418acc5d8068dbacda37e8e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac44c88dd418acc5d8068dbacda37e8e9">&#9670;&nbsp;</a></span>getBiphaselevel()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint_fast8_t IRrecv::getBiphaselevel </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer. </p>
-<p>The RC5/6 decoding is easier if the data is broken into time intervals. E.g. if the buffer has mark for 2 time intervals and space for 1, successive calls to getBiphaselevel will return 1, 1, 0. </p><pre class="fragment">          _   _   _   _   _   _   _   _   _   _   _   _   _
-    _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |
-           ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    Significant clock edge
-          _     _   _   ___   _     ___     ___   _   - Mark
-</pre><p> Data _____| |___| |_| |_| |_| |___| |___| |_| | - Data starts with a mark-&gt;space bit 1 0 0 0 1 1 0 1 0 1 1 - Space A mark to space at a significant clock edge results in a 1 A space to mark at a significant clock edge results in a 0 (for RC6) Returns current level [MARK or SPACE] or -1 for error (measured time interval is not a multiple of sBiphaseTimeUnit). </p>
-
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01156">1156</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="group__Receiving_gac44c88dd418acc5d8068dbacda37e8e9_cgraph.png" border="0" usemap="#group__Receiving_gac44c88dd418acc5d8068dbacda37e8e9_cgraph" alt=""/></div>
-<map name="group__Receiving_gac44c88dd418acc5d8068dbacda37e8e9_cgraph" id="group__Receiving_gac44c88dd418acc5d8068dbacda37e8e9_cgraph">
-<area shape="rect" title="Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer." alt="" coords="5,5,166,33"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="214,5,303,33"/>
-</map>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="group__Receiving_gac44c88dd418acc5d8068dbacda37e8e9_icgraph.png" border="0" usemap="#group__Receiving_gac44c88dd418acc5d8068dbacda37e8e9_icgraph" alt=""/></div>
-<map name="group__Receiving_gac44c88dd418acc5d8068dbacda37e8e9_icgraph" id="group__Receiving_gac44c88dd418acc5d8068dbacda37e8e9_icgraph">
-<area shape="rect" title="Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer." alt="" coords="531,32,692,60"/>
-<area shape="rect" href="group__Decoder.html#ga5720b53e427e0346ecc248e55c57e2b9" title="Try to decode data as RC5 protocol." alt="" coords="346,5,483,33"/>
-<area shape="rect" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="346,57,483,85"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="176,5,286,33"/>
-<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="164,57,298,85"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="14,5,107,33"/>
-<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="5,57,116,85"/>
 </map>
 </div>
 
@@ -1588,7 +1530,7 @@ Here is the caller graph for this function:</div>
 
 <p>Getter function for MARK_EXCESS_MICROS. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01504">1504</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01420">1420</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1619,7 +1561,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8hpp_source.html#l00098">98</a> of file <a class="el" href="IRProtocol_8hpp_source.html">IRProtocol.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8hpp_source.html#l00095">95</a> of file <a class="el" href="IRProtocol_8hpp_source.html">IRProtocol.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1649,50 +1591,6 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="gacd517e921cf41136c8744799797c75e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacd517e921cf41136c8744799797c75e2">&#9670;&nbsp;</a></span>initBiphaselevel()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void IRrecv::initBiphaselevel </td>
-          <td>(</td>
-          <td class="paramtype">uint_fast8_t&#160;</td>
-          <td class="paramname"><em>aRCDecodeRawbuffOffset</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>aBiphaseTimeUnit</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01134">1134</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="group__Receiving_gacd517e921cf41136c8744799797c75e2_icgraph.png" border="0" usemap="#group__Receiving_gacd517e921cf41136c8744799797c75e2_icgraph" alt=""/></div>
-<map name="group__Receiving_gacd517e921cf41136c8744799797c75e2_icgraph" id="group__Receiving_gacd517e921cf41136c8744799797c75e2_icgraph">
-<area shape="rect" title=" " alt="" coords="531,32,691,60"/>
-<area shape="rect" href="group__Decoder.html#ga5720b53e427e0346ecc248e55c57e2b9" title="Try to decode data as RC5 protocol." alt="" coords="346,5,483,33"/>
-<area shape="rect" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="346,57,483,85"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="176,5,286,33"/>
-<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="164,57,298,85"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="14,5,107,33"/>
-<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="5,57,116,85"/>
-</map>
-</div>
-
-</div>
-</div>
 <a id="ga26e37f666387134ed18393fd930f68db"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga26e37f666387134ed18393fd930f68db">&#9670;&nbsp;</a></span>initDecodedIRData()</h2>
 
@@ -1711,7 +1609,7 @@ Here is the caller graph for this function:</div>
 <p>Is internally called by decode before calling decoders. </p>
 <p>Must be used to setup data, if you call decoders manually. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00514">514</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00502">502</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1740,7 +1638,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00281">281</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00277">277</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1769,11 +1667,18 @@ Here is the call graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="section return"><dt>Returns</dt><dd>true if <a class="el" href="group__Receiving.html#gaa4f466138c416bf4e1548f5399be0298" title="Returns true if IR receiver has received a complete IR frame (detected by timeout after last mark).">available()</a> is true or IR receiver has not received a mark/signal since last <a class="el" href="group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5" title="Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame.">resume()</a>. </dd></dl>
 
-<p>Returns status of reception. </p>
-<dl class="section return"><dt>Returns</dt><dd>true if no reception is on-going. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00495">495</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00529">529</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__Receiving_gacfbf39fb284cc2d200158f20747c4ae3_cgraph.png" border="0" usemap="#group__Receiving_gacfbf39fb284cc2d200158f20747c4ae3_cgraph" alt=""/></div>
+<map name="group__Receiving_gacfbf39fb284cc2d200158f20747c4ae3_cgraph" id="group__Receiving_gacfbf39fb284cc2d200158f20747c4ae3_cgraph">
+<area shape="rect" title=" " alt="" coords="5,5,105,33"/>
+<area shape="rect" href="group__Receiving.html#gaa4f466138c416bf4e1548f5399be0298" title="Returns true if IR receiver has received a complete IR frame (detected by timeout after last mark)." alt="" coords="153,5,272,33"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -1803,14 +1708,14 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01403">1403</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01319">1319</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga0f9263ab71af2d2895add92f72a05ee9_cgraph.png" border="0" usemap="#group__Receiving_ga0f9263ab71af2d2895add92f72a05ee9_cgraph" alt=""/></div>
 <map name="group__Receiving_ga0f9263ab71af2d2895add92f72a05ee9_cgraph" id="group__Receiving_ga0f9263ab71af2d2895add92f72a05ee9_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,74,33"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="122,5,211,33"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="122,5,211,33"/>
 </map>
 </div>
 
@@ -1842,7 +1747,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01451">1451</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01367">1367</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1850,7 +1755,7 @@ Here is the call graph for this function:</div>
 <map name="group__Receiving_gadab293a71386f20571db6d779d1d84b7_cgraph" id="group__Receiving_gadab293a71386f20571db6d779d1d84b7_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,120,33"/>
 <area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="168,5,254,33"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="302,5,391,33"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="302,5,391,33"/>
 </map>
 </div>
 
@@ -1882,7 +1787,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01497">1497</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01413">1413</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1890,7 +1795,7 @@ Here is the call graph for this function:</div>
 <map name="group__Receiving_gab91e763e3ae44501f7c4f7b7ff8aca0f_cgraph" id="group__Receiving_gab91e763e3ae44501f7c4f7b7ff8aca0f_cgraph">
 <area shape="rect" title=" " alt="" coords="5,5,126,33"/>
 <area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="174,5,268,33"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="316,5,405,33"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="316,5,405,33"/>
 </map>
 </div>
 
@@ -1925,14 +1830,14 @@ Here is the call graph for this function:</div>
 <p>Compensate for marks exceeded by demodulator hardware. </p>
 <dl class="section return"><dt>Returns</dt><dd>true, if values match </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01411">1411</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01327">1327</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga4472564ea96b1ee10b51f594f60d7aeb_cgraph.png" border="0" usemap="#group__Receiving_ga4472564ea96b1ee10b51f594f60d7aeb_cgraph" alt=""/></div>
 <map name="group__Receiving_ga4472564ea96b1ee10b51f594f60d7aeb_cgraph" id="group__Receiving_ga4472564ea96b1ee10b51f594f60d7aeb_cgraph">
 <area shape="rect" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="5,5,92,33"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="140,5,229,33"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="140,5,229,33"/>
 </map>
 </div>
 <div class="dynheader">
@@ -1940,41 +1845,41 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga4472564ea96b1ee10b51f594f60d7aeb_icgraph.png" border="0" usemap="#group__Receiving_ga4472564ea96b1ee10b51f594f60d7aeb_icgraph" alt=""/></div>
 <map name="group__Receiving_ga4472564ea96b1ee10b51f594f60d7aeb_icgraph" id="group__Receiving_ga4472564ea96b1ee10b51f594f60d7aeb_icgraph">
-<area shape="rect" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1327,669,1414,697"/>
-<area shape="rect" href="group__Receiving.html#ga69b3bcea4b42c620264d9212e409238e" title=" " alt="" coords="1109,119,1254,147"/>
-<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="596,325,757,353"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="339,79,512,107"/>
-<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="358,183,494,211"/>
-<area shape="rect" href="classIRrecv.html#a341c328b5bf53a951195b630585858cc" title=" " alt="" coords="846,95,1031,123"/>
-<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="352,703,500,731"/>
-<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="592,997,761,1025"/>
-<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="594,1049,759,1077"/>
-<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="362,547,489,575"/>
-<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="598,1101,755,1129"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="356,599,495,627"/>
-<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="592,825,761,853"/>
-<area shape="rect" href="group__Receiving.html#ga58e1b8935ba106bcb34208e1d164215f" title="Decode pulse distance width protocols." alt="" coords="1084,1077,1279,1121"/>
-<area shape="rect" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="608,617,745,645"/>
-<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="587,945,766,973"/>
-<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="1094,793,1269,837"/>
-<area shape="rect" href="group__Receiving.html#gadab293a71386f20571db6d779d1d84b7" title=" " alt="" coords="1124,1145,1239,1173"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="354,443,497,471"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="344,235,508,263"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="343,287,508,315"/>
-<area shape="rect" href="classIRrecv.html#a6207eb34d90c00db7d8d6c79e53e721d" title=" " alt="" coords="352,131,499,159"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="356,339,496,367"/>
-<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="346,391,505,419"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,443,274,471"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,443,99,471"/>
-<area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,703,291,731"/>
-<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="358,970,493,998"/>
-<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,970,274,998"/>
-<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="841,805,1036,849"/>
-<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="578,773,775,801"/>
-<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="560,721,793,749"/>
-<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="579,877,774,921"/>
-<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="579,398,774,442"/>
-<area shape="rect" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="339,495,512,523"/>
+<area shape="rect" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1334,613,1421,641"/>
+<area shape="rect" href="group__Receiving.html#ga69b3bcea4b42c620264d9212e409238e" title=" " alt="" coords="1116,35,1261,63"/>
+<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="603,265,764,293"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="342,59,516,87"/>
+<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="361,163,497,191"/>
+<area shape="rect" href="group__Decoder.html#ga341c328b5bf53a951195b630585858cc" title=" " alt="" coords="853,309,1038,337"/>
+<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="599,781,768,809"/>
+<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="601,833,766,861"/>
+<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="366,527,493,555"/>
+<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="605,885,762,913"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="360,579,499,607"/>
+<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="599,937,768,965"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="339,631,519,659"/>
+<area shape="rect" href="group__Receiving.html#ga58e1b8935ba106bcb34208e1d164215f" title="Decode pulse distance width protocols." alt="" coords="1091,1009,1286,1053"/>
+<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="594,989,773,1017"/>
+<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="1102,661,1276,705"/>
+<area shape="rect" href="group__Receiving.html#gadab293a71386f20571db6d779d1d84b7" title=" " alt="" coords="1132,1077,1246,1105"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="358,371,501,399"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="347,423,511,451"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="346,215,512,243"/>
+<area shape="rect" href="classIRrecv.html#a6207eb34d90c00db7d8d6c79e53e721d" title=" " alt="" coords="356,111,503,139"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="359,267,499,295"/>
+<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="350,319,509,347"/>
+<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,423,274,451"/>
+<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,423,99,451"/>
+<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="362,885,496,913"/>
+<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,885,274,913"/>
+<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="848,687,1043,731"/>
+<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="585,729,782,757"/>
+<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="567,609,800,637"/>
+<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="586,661,781,705"/>
+<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="586,388,781,432"/>
+<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="355,735,503,763"/>
+<area shape="rect" href="group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="342,475,516,503"/>
+<area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,735,291,763"/>
 </map>
 </div>
 
@@ -2009,14 +1914,14 @@ Here is the caller graph for this function:</div>
 <p>Compensate for spaces shortened by demodulator hardware. </p>
 <dl class="section return"><dt>Returns</dt><dd>true, if values match </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01459">1459</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01375">1375</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga7902b620f6c01463b5b6e50ef604ac8b_cgraph.png" border="0" usemap="#group__Receiving_ga7902b620f6c01463b5b6e50ef604ac8b_cgraph" alt=""/></div>
 <map name="group__Receiving_ga7902b620f6c01463b5b6e50ef604ac8b_cgraph" id="group__Receiving_ga7902b620f6c01463b5b6e50ef604ac8b_cgraph">
 <area shape="rect" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="5,5,100,33"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="148,5,237,33"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="148,5,237,33"/>
 </map>
 </div>
 <div class="dynheader">
@@ -2024,41 +1929,41 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga7902b620f6c01463b5b6e50ef604ac8b_icgraph.png" border="0" usemap="#group__Receiving_ga7902b620f6c01463b5b6e50ef604ac8b_icgraph" alt=""/></div>
 <map name="group__Receiving_ga7902b620f6c01463b5b6e50ef604ac8b_icgraph" id="group__Receiving_ga7902b620f6c01463b5b6e50ef604ac8b_icgraph">
-<area shape="rect" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1327,736,1422,764"/>
-<area shape="rect" href="group__Receiving.html#ga69b3bcea4b42c620264d9212e409238e" title=" " alt="" coords="1109,380,1254,408"/>
-<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="596,271,757,299"/>
-<area shape="rect" href="classIRrecv.html#a341c328b5bf53a951195b630585858cc" title=" " alt="" coords="846,221,1031,249"/>
-<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="592,1065,761,1093"/>
-<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="594,789,759,817"/>
-<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="560,633,793,661"/>
-<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="362,531,489,559"/>
-<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="598,909,755,937"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="356,685,495,713"/>
-<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="592,961,761,989"/>
-<area shape="rect" href="group__Receiving.html#ga58e1b8935ba106bcb34208e1d164215f" title="Decode pulse distance width protocols." alt="" coords="1084,1060,1279,1104"/>
-<area shape="rect" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="608,581,745,609"/>
-<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="587,1013,766,1041"/>
-<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="1094,788,1269,832"/>
-<area shape="rect" href="group__Receiving.html#gab91e763e3ae44501f7c4f7b7ff8aca0f" title=" " alt="" coords="1122,1128,1242,1156"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="339,219,512,247"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="354,271,497,299"/>
-<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="358,323,494,351"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="344,375,508,403"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="343,427,508,455"/>
-<area shape="rect" href="classIRrecv.html#a6207eb34d90c00db7d8d6c79e53e721d" title=" " alt="" coords="352,63,499,91"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="356,115,496,143"/>
-<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="346,167,505,195"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,427,274,455"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,427,99,455"/>
-<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="358,935,493,963"/>
-<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,935,274,963"/>
-<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="841,788,1036,832"/>
-<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="578,737,775,765"/>
-<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="579,841,774,885"/>
-<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="579,392,774,436"/>
-<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="352,737,500,765"/>
-<area shape="rect" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="339,479,512,507"/>
-<area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,737,291,765"/>
+<area shape="rect" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1334,701,1429,729"/>
+<area shape="rect" href="group__Receiving.html#ga69b3bcea4b42c620264d9212e409238e" title=" " alt="" coords="1116,281,1261,309"/>
+<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="603,315,764,343"/>
+<area shape="rect" href="group__Decoder.html#ga341c328b5bf53a951195b630585858cc" title=" " alt="" coords="853,385,1038,413"/>
+<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="599,761,768,789"/>
+<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="601,813,766,841"/>
+<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="567,263,800,291"/>
+<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="366,558,493,586"/>
+<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="605,865,762,893"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="360,610,499,638"/>
+<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="599,917,768,945"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="339,662,519,690"/>
+<area shape="rect" href="group__Receiving.html#ga58e1b8935ba106bcb34208e1d164215f" title="Decode pulse distance width protocols." alt="" coords="1091,1015,1286,1059"/>
+<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="594,969,773,997"/>
+<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="1102,693,1276,737"/>
+<area shape="rect" href="group__Receiving.html#gab91e763e3ae44501f7c4f7b7ff8aca0f" title=" " alt="" coords="1128,1083,1249,1111"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="342,350,516,378"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="358,402,501,430"/>
+<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="361,454,497,482"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="347,142,511,170"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="346,194,512,222"/>
+<area shape="rect" href="classIRrecv.html#a6207eb34d90c00db7d8d6c79e53e721d" title=" " alt="" coords="356,90,503,118"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="359,246,499,274"/>
+<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="350,298,509,326"/>
+<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,402,274,430"/>
+<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,402,99,430"/>
+<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="362,865,496,893"/>
+<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,865,274,893"/>
+<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="848,693,1043,737"/>
+<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="585,641,782,669"/>
+<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="586,693,781,737"/>
+<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="586,419,781,463"/>
+<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="355,766,503,794"/>
+<area shape="rect" href="group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="342,506,516,534"/>
+<area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,766,291,794"/>
 </map>
 </div>
 
@@ -2090,56 +1995,54 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware. </p>
+<p>Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Match is true, if signal value is bigger/equal 75% and less/equal 125% of aMatchValueMicros. </p>
 <dl class="section return"><dt>Returns</dt><dd>true, if values match </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01348">1348</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01264">1264</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga495b7f49ff71cde1289b118fac0f0674_icgraph.png" border="0" usemap="#group__Receiving_ga495b7f49ff71cde1289b118fac0f0674_icgraph" alt=""/></div>
 <map name="group__Receiving_ga495b7f49ff71cde1289b118fac0f0674_icgraph" id="group__Receiving_ga495b7f49ff71cde1289b118fac0f0674_icgraph">
-<area shape="rect" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="1536,781,1625,809"/>
-<area shape="rect" href="group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9" title="Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer." alt="" coords="1327,287,1488,315"/>
-<area shape="rect" href="group__Receiving.html#ga0f9263ab71af2d2895add92f72a05ee9" title=" " alt="" coords="1373,1072,1442,1100"/>
-<area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1364,516,1451,544"/>
-<area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1360,1020,1455,1048"/>
-<area shape="rect" href="group__Decoder.html#ga5720b53e427e0346ecc248e55c57e2b9" title="Try to decode data as RC5 protocol." alt="" coords="608,504,745,532"/>
-<area shape="rect" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="1113,287,1250,315"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,521,274,549"/>
-<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="358,1140,493,1168"/>
-<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,521,99,549"/>
-<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,1140,274,1168"/>
-<area shape="rect" href="group__Receiving.html#ga69b3bcea4b42c620264d9212e409238e" title=" " alt="" coords="1109,799,1254,827"/>
-<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="596,384,757,412"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="339,340,512,368"/>
-<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="358,288,494,316"/>
-<area shape="rect" href="classIRrecv.html#a341c328b5bf53a951195b630585858cc" title=" " alt="" coords="1089,695,1274,723"/>
-<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="352,81,500,109"/>
-<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="592,916,761,944"/>
-<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="594,1140,759,1168"/>
-<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="362,756,489,784"/>
-<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="598,1192,755,1220"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="356,808,495,836"/>
-<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="592,1268,761,1296"/>
-<area shape="rect" href="group__Receiving.html#ga58e1b8935ba106bcb34208e1d164215f" title="Decode pulse distance width protocols." alt="" coords="1084,851,1279,895"/>
-<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="587,1368,766,1396"/>
-<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="1094,1123,1269,1167"/>
-<area shape="rect" href="group__Receiving.html#gadab293a71386f20571db6d779d1d84b7" title=" " alt="" coords="1124,132,1239,160"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="354,444,497,472"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="344,496,508,524"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="343,548,508,576"/>
-<area shape="rect" href="classIRrecv.html#a6207eb34d90c00db7d8d6c79e53e721d" title=" " alt="" coords="352,236,499,264"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="356,600,496,628"/>
-<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="346,392,505,420"/>
-<area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,81,291,109"/>
-<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="841,1021,1036,1065"/>
-<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="578,1020,775,1048"/>
-<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="560,968,793,996"/>
-<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="579,1072,774,1116"/>
-<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="579,436,774,480"/>
-<area shape="rect" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="339,652,512,680"/>
-<area shape="rect" href="group__Receiving.html#gab91e763e3ae44501f7c4f7b7ff8aca0f" title=" " alt="" coords="1122,1395,1242,1423"/>
+<area shape="rect" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="1477,588,1566,616"/>
+<area shape="rect" href="group__Receiving.html#ga0f9263ab71af2d2895add92f72a05ee9" title=" " alt="" coords="1347,536,1416,564"/>
+<area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1338,588,1425,616"/>
+<area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1334,1160,1429,1188"/>
+<area shape="rect" href="group__Receiving.html#ga69b3bcea4b42c620264d9212e409238e" title=" " alt="" coords="1116,981,1261,1009"/>
+<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="603,264,764,292"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="342,212,516,240"/>
+<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="361,160,497,188"/>
+<area shape="rect" href="group__Decoder.html#ga341c328b5bf53a951195b630585858cc" title=" " alt="" coords="1096,588,1281,616"/>
+<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="599,904,768,932"/>
+<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="601,732,766,760"/>
+<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="366,680,493,708"/>
+<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="605,956,762,984"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="360,732,499,760"/>
+<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="599,1440,768,1468"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="339,628,519,656"/>
+<area shape="rect" href="group__Receiving.html#ga58e1b8935ba106bcb34208e1d164215f" title="Decode pulse distance width protocols." alt="" coords="1091,913,1286,957"/>
+<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="594,659,773,687"/>
+<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="1102,743,1276,787"/>
+<area shape="rect" href="group__Receiving.html#gadab293a71386f20571db6d779d1d84b7" title=" " alt="" coords="1132,5,1246,33"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="358,472,501,500"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="347,264,511,292"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="346,316,512,344"/>
+<area shape="rect" href="classIRrecv.html#a6207eb34d90c00db7d8d6c79e53e721d" title=" " alt="" coords="356,108,503,136"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="359,368,499,396"/>
+<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="350,420,509,448"/>
+<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="164,472,274,500"/>
+<area shape="rect" href="group__Receiving.html#ga471a42c75e807e43827e319852536e3c" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,472,99,500"/>
+<area shape="rect" href="group__Print.html#ga00d69eee1eaf3d055334399b567e6f79" title=" " alt="" coords="362,904,496,932"/>
+<area shape="rect" href="classIRrecv.html#a9705c2ae98b44014e6e8bf55191b2eba" title=" " alt="" coords="164,904,274,932"/>
+<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="848,841,1043,885"/>
+<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="585,784,782,812"/>
+<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="567,1008,800,1036"/>
+<area shape="rect" href="group__Receiving.html#ga09b19b2323b965f4e0b1332e7025348c" title=" " alt="" coords="586,836,781,880"/>
+<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="586,316,781,360"/>
+<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="355,576,503,604"/>
+<area shape="rect" href="group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="342,524,516,552"/>
+<area shape="rect" href="group__Decoder.html#ga7edfd9309ccd7f87762a17480635dcd6" title=" " alt="" coords="147,576,291,604"/>
+<area shape="rect" href="group__Receiving.html#gab91e763e3ae44501f7c4f7b7ff8aca0f" title=" " alt="" coords="1128,1491,1249,1519"/>
 </map>
 </div>
 
@@ -2180,7 +2083,7 @@ Here is the caller graph for this function:</div>
 <p>Match function WITH compensating for marks exceeded or spaces shortened by demodulator hardware. </p>
 <dl class="section return"><dt>Returns</dt><dd>true, if values match </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01378">1378</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01294">1294</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -2208,7 +2111,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01538">1538</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01454">1454</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -2228,7 +2131,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01546">1546</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01462">1462</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -2249,49 +2152,46 @@ Here is the caller graph for this function:</div>
 
 <p>Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00549">549</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00543">543</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Receiving_ga471a42c75e807e43827e319852536e3c_cgraph.png" border="0" usemap="#group__Receiving_ga471a42c75e807e43827e319852536e3c_cgraph" alt=""/></div>
 <map name="group__Receiving_ga471a42c75e807e43827e319852536e3c_cgraph" id="group__Receiving_ga471a42c75e807e43827e319852536e3c_cgraph">
-<area shape="rect" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,512,99,540"/>
-<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="147,512,257,540"/>
-<area shape="rect" href="classIRrecv.html#a341c328b5bf53a951195b630585858cc" title=" " alt="" coords="1060,98,1246,126"/>
-<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="308,173,481,201"/>
-<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="320,537,469,565"/>
-<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="550,968,747,996"/>
-<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="323,329,466,357"/>
-<area shape="rect" href="group__Receiving.html#gab33be9e29578a2eb95beb3da169228dc" title="Decodes an arbitrary IR code to a 32&#45;bit value." alt="" coords="324,900,465,928"/>
-<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="326,121,463,149"/>
-<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="312,381,477,409"/>
-<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="532,912,765,940"/>
-<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="331,745,458,773"/>
-<area shape="rect" href="classIRrecv.html#a436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="308,433,481,461"/>
-<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="325,589,464,617"/>
-<area shape="rect" href="group__Decoder.html#ga5720b53e427e0346ecc248e55c57e2b9" title="Try to decode data as RC5 protocol." alt="" coords="326,641,463,669"/>
-<area shape="rect" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="326,693,463,721"/>
-<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="312,485,477,513"/>
-<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="324,277,465,305"/>
-<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="315,225,474,253"/>
-<area shape="rect" href="group__Receiving.html#ga26e37f666387134ed18393fd930f68db" title="Is internally called by decode before calling decoders." alt="" coords="305,952,484,980"/>
-<area shape="rect" href="ir__BangOlufsen_8hpp.html#ac5080b165c41b5f1d1245017b9fbc3f8" title=" " alt="" coords="1298,98,1418,126"/>
-<area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1315,453,1401,481"/>
-<area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1311,757,1405,785"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="1466,630,1555,658"/>
-<area shape="rect" href="group__Receiving.html#gad00cc7b682411c68ccd2056b1d45fa84" title=" " alt="" coords="548,373,749,417"/>
-<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="568,253,729,281"/>
-<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="551,305,746,349"/>
-<area shape="rect" href="group__Print.html#gad59a9b756d71f983bf9f0a28d25f238f" title=" " alt="" coords="826,253,994,281"/>
-<area shape="rect" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="1092,253,1214,281"/>
-<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="813,904,1008,948"/>
-<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="1066,834,1240,878"/>
-<area shape="rect" href="group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="1056,954,1250,998"/>
-<area shape="rect" href="group__Decoder.html#ga90217576bd30a0755127207435731549" title=" " alt="" coords="835,1142,986,1170"/>
-<area shape="rect" href="group__Print.html#ga3c4ee9436861333c2737f9272a4fadc7" title=" " alt="" coords="821,1074,1000,1118"/>
-<area shape="rect" href="group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157" title="Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g." alt="" coords="589,1020,708,1048"/>
-<area shape="rect" href="group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9" title="Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer." alt="" coords="568,698,729,726"/>
-<area shape="rect" href="group__Receiving.html#gacd517e921cf41136c8744799797c75e2" title=" " alt="" coords="569,594,728,622"/>
+<area shape="rect" title="Returns pointer to IrReceiver.decodedIRData if IR receiver data is available, else nullptr." alt="" coords="5,555,99,583"/>
+<area shape="rect" href="group__Receiving.html#ga913af602be49b9182fb0b22e9e351b36" title="The main decode function, attempts to decode the recently receive IR signal." alt="" coords="147,555,257,583"/>
+<area shape="rect" href="group__Decoder.html#ga341c328b5bf53a951195b630585858cc" title=" " alt="" coords="1062,108,1247,136"/>
+<area shape="rect" href="group__Decoder.html#gaf9a5bf8248971aca9d4f5b68f3e9f858" title=" " alt="" coords="308,867,482,895"/>
+<area shape="rect" href="group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="321,555,469,583"/>
+<area shape="rect" href="group__Decoder.html#ga651ca3f9f6e3d98962bf98d61610df61" title=" " alt="" coords="551,124,748,152"/>
+<area shape="rect" href="group__Decoder.html#ga26e0c4b0bd3cc4f5e007cd63904a7253" title=" " alt="" coords="324,659,467,687"/>
+<area shape="rect" href="group__Receiving.html#gab33be9e29578a2eb95beb3da169228dc" title="Decodes an arbitrary IR code to a 32&#45;bit value." alt="" coords="324,72,466,100"/>
+<area shape="rect" href="group__Decoder.html#gad6ecf38f85cefea8f71090fce4dbbbed" title=" " alt="" coords="327,919,463,947"/>
+<area shape="rect" href="group__Decoder.html#ga099d67ab5fef881af8838d6cb11d0b14" title=" " alt="" coords="313,607,477,635"/>
+<area shape="rect" href="group__Decoder.html#gae96d28d8682a352cb1118aae25d5bba5" title=" " alt="" coords="533,295,766,323"/>
+<area shape="rect" href="group__Decoder.html#gac098ec62da77aa75ca9016d289f3d7aa" title=" " alt="" coords="332,347,459,375"/>
+<area shape="rect" href="group__Decoder.html#ga436c84fc521802e1a22f480b39df8e5d" title=" " alt="" coords="308,503,482,531"/>
+<area shape="rect" href="group__Decoder.html#ga3f1a3a12862517a61341a92dfb0ea7f8" title="Decodes also Onkyo and Apple." alt="" coords="326,399,465,427"/>
+<area shape="rect" href="group__Decoder.html#gab70f3d6b379cc6b2caa6686b7ab0d70e" title="Decode an OpenLASIR frame." alt="" coords="305,451,485,479"/>
+<area shape="rect" href="group__Decoder.html#ga06311ef402fe0a9cc85ad9defd35fdec" title=" " alt="" coords="312,815,478,843"/>
+<area shape="rect" href="group__Decoder.html#gaa4b87d095decf4ec8d9e4c445d6dfa27" title=" " alt="" coords="325,763,465,791"/>
+<area shape="rect" href="group__Decoder.html#ga1de38e9831f29991f9be0e7a2583f142" title=" " alt="" coords="316,711,475,739"/>
+<area shape="rect" href="group__Receiving.html#ga26e37f666387134ed18393fd930f68db" title="Is internally called by decode before calling decoders." alt="" coords="306,971,485,999"/>
+<area shape="rect" href="group__Decoder.html#gac5080b165c41b5f1d1245017b9fbc3f8" title=" " alt="" coords="1299,108,1419,136"/>
+<area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1316,600,1402,628"/>
+<area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1312,372,1406,400"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="1467,499,1556,527"/>
+<area shape="rect" href="group__Receiving.html#gad00cc7b682411c68ccd2056b1d45fa84" title=" " alt="" coords="549,720,750,764"/>
+<area shape="rect" href="group__Receiving.html#gac2c92609657c5afc84b8c52f03aec747" title=" " alt="" coords="569,788,730,816"/>
+<area shape="rect" href="group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="552,652,747,696"/>
+<area shape="rect" href="group__Print.html#gad59a9b756d71f983bf9f0a28d25f238f" title=" " alt="" coords="827,736,996,764"/>
+<area shape="rect" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="1094,736,1215,764"/>
+<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="814,228,1009,272"/>
+<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="1067,228,1241,272"/>
+<area shape="rect" href="group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="1057,160,1251,204"/>
+<area shape="rect" href="group__Decoder.html#ga90217576bd30a0755127207435731549" title=" " alt="" coords="836,73,987,101"/>
+<area shape="rect" href="group__Print.html#ga3c4ee9436861333c2737f9272a4fadc7" title=" " alt="" coords="822,5,1001,49"/>
+<area shape="rect" href="group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157" title="Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g." alt="" coords="590,72,709,100"/>
 </map>
 </div>
 
@@ -2312,7 +2212,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00121">121</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00109">109</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -2353,7 +2253,7 @@ Here is the caller graph for this function:</div>
 
 <p>Sets the function to call if a complete protocol frame has arrived. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00373">373</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00369">369</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -2375,7 +2275,7 @@ Here is the caller graph for this function:</div>
 <p>Restarts receiver after send. </p>
 <p>Is a NOP if sending does not require a timer. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00458">458</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00454">454</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -2406,7 +2306,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00401">401</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00397">397</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -2444,7 +2344,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00431">431</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00427">427</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -2482,7 +2382,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00443">443</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00439">439</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -2514,7 +2414,7 @@ Here is the call graph for this function:</div>
 <p>Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame. </p>
 <p>Internal counting of gap timing is independent of StateForISR and therefore independent of call time of <a class="el" href="group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5" title="Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame.">resume()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00503">503</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00491">491</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -2550,7 +2450,7 @@ Here is the caller graph for this function:</div>
 
 <p>Sets / changes the receiver pin number. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00335">335</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00331">331</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -2582,7 +2482,7 @@ Here is the caller graph for this function:</div>
 <p>Start the receiving process. </p>
 <p>This configures the timer and the state machine for IR reception and enables the receive sample timer interrupt which consumes a small amount of CPU every 50 us. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00383">383</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00379">379</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -2625,7 +2525,7 @@ Here is the caller graph for this function:</div>
 
 <p>Disables the timer for IR reception. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00467">467</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00463">463</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -2663,7 +2563,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00474">474</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00470">470</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -2691,7 +2591,7 @@ Here is the call graph for this function:</div>
 
 <p>The receiver instance. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00063">63</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00057">57</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -2707,7 +2607,7 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8hpp_source.html#l00046">46</a> of file <a class="el" href="IRProtocol_8hpp_source.html">IRProtocol.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8hpp_source.html#l00040">40</a> of file <a class="el" href="IRProtocol_8hpp_source.html">IRProtocol.hpp</a>.</p>
 
 </div>
 </div>
@@ -2727,91 +2627,12 @@ Here is the call graph for this function:</div>
 <div class="line">        string_Kaseikyo_JVC, string_Kaseikyo_Mitsubishi, string_RC5, string_RC6, string_RC6A, string_Samsung, string_SamsungLG,</div>
 <div class="line">        string_Samsung48, string_Sharp, string_Sony</div>
 <div class="line"> </div>
-<div class="line">        , string_BangOlufsen, string_BoseWave, string_Lego, string_MagiQuest, string_Whynter, string_FAST, string_Other</div>
+<div class="line">        , string_BangOlufsen, string_BoseWave, string_Lego, string_MagiQuest, string_Whynter, string_Marantz, string_FAST,</div>
+<div class="line">        string_OpenLASIR, string_Other</div>
 <div class="line"> </div>
 <div class="line">        }</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="IRProtocol_8hpp_source.html#l00083">83</a> of file <a class="el" href="IRProtocol_8hpp_source.html">IRProtocol.hpp</a>.</p>
-
-</div>
-</div>
-<a id="gac33950d3b355b78a28d6f54b6af6e7b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac33950d3b355b78a28d6f54b6af6e7b8">&#9670;&nbsp;</a></span>sBiphaseCurrentTimingIntervals</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t sBiphaseCurrentTimingIntervals</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01130">1130</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga8aabdbfa5a0a6090e938212745b4871e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8aabdbfa5a0a6090e938212745b4871e">&#9670;&nbsp;</a></span>sBiphaseDecodeRawbuffOffset</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint_fast8_t sBiphaseDecodeRawbuffOffset</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01129">1129</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
-
-</div>
-</div>
-<a id="gae25d907bed7a0f0298f9cf105d89f86f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae25d907bed7a0f0298f9cf105d89f86f">&#9670;&nbsp;</a></span>sBiphaseTimeUnit</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t sBiphaseTimeUnit</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01132">1132</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
-
-</div>
-</div>
-<a id="gafa340a1dbbee30ea603df9f63bb55027"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafa340a1dbbee30ea603df9f63bb55027">&#9670;&nbsp;</a></span>sBiphaseUsedTimingIntervals</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint_fast8_t sBiphaseUsedTimingIntervals</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01131">1131</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ga99f6267aa36f20f3aa1409b250aa6b67"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga99f6267aa36f20f3aa1409b250aa6b67">&#9670;&nbsp;</a></span>sMicrosAtLastStopTimer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unsigned long sMicrosAtLastStopTimer = 0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l00069">69</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRProtocol_8hpp_source.html#l00079">79</a> of file <a class="el" href="IRProtocol_8hpp_source.html">IRProtocol.hpp</a>.</p>
 
 </div>
 </div>
@@ -2820,7 +2641,7 @@ Here is the call graph for this function:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:33 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:21:02 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

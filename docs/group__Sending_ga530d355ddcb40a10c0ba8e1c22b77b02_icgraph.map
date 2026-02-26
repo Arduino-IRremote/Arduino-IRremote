@@ -1,0 +1,5 @@
+<map id="IRsend::sendPulseDistanceWidthFromArray" name="IRsend::sendPulseDistanceWidthFromArray">
+<area shape="rect" id="node1" title=" " alt="" coords="238,40,422,84"/>
+<area shape="rect" id="node2" href="$group__Sending.html#ga97a451561812c6e1f3f207fb08e68c7a" title="Sends PulseDistance data from array For LSB First the LSB of array[0] is sent first then all bits unt..." alt="" coords="5,5,190,49"/>
+<area shape="rect" id="node3" href="$group__Sending.html#ga2a85d06cf1150eeb3b8b5b04ad3b0836" title=" " alt="" coords="5,73,190,117"/>
+</map>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['tinyirreceivercallbackdatastruct_873',['TinyIRReceiverCallbackDataStruct',['../structTinyIRReceiverCallbackDataStruct.html',1,'']]],
-  ['tinyirreceiverstruct_874',['TinyIRReceiverStruct',['../structTinyIRReceiverStruct.html',1,'']]]
+  ['tinyirreceivercallbackdatastruct_963',['TinyIRReceiverCallbackDataStruct',['../structTinyIRReceiverCallbackDataStruct.html',1,'']]],
+  ['tinyirreceiverstruct_964',['TinyIRReceiverStruct',['../structTinyIRReceiverStruct.html',1,'']]]
 ];

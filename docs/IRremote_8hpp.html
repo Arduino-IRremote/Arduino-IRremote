@@ -109,6 +109,7 @@ $(document).ready(function(){initNavTree('IRremote_8hpp.html',''); initResizable
 <code>#include &quot;<a class="el" href="ir__LG_8hpp_source.html">ir_LG.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ir__MagiQuest_8hpp_source.html">ir_MagiQuest.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ir__NEC_8hpp_source.html">ir_NEC.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ir__OpenLASIR_8hpp_source.html">ir_OpenLASIR.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ir__RC5__RC6_8hpp_source.html">ir_RC5_RC6.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ir__Samsung_8hpp_source.html">ir_Samsung.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ir__Sony_8hpp_source.html">ir_Sony.hpp</a>&quot;</code><br />
@@ -121,36 +122,39 @@ Include dependency graph for IRremote.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="IRremote_8hpp__incl.png" border="0" usemap="#src_2IRremote_8hpp" alt=""/></div>
 <map name="src_2IRremote_8hpp" id="src_2IRremote_8hpp">
-<area shape="rect" title="Public API to the library." alt="" coords="1512,5,1635,33"/>
+<area shape="rect" title="Public API to the library." alt="" coords="1351,5,1473,33"/>
 <area shape="rect" href="IRVersion_8h.html" title=" " alt="" coords="5,81,94,109"/>
-<area shape="rect" href="IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="118,81,213,109"/>
-<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="199,157,300,185"/>
-<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="324,157,447,185"/>
-<area shape="rect" href="IRTimer_8hpp.html" title="All timer specific definitions are contained in this file. Sets IR_SEND_PIN if required,..." alt="" coords="338,81,473,109"/>
-<area shape="rect" href="IRFeedbackLED_8hpp.html" title="All Feedback LED specific functions are contained in this file." alt="" coords="498,81,641,109"/>
-<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="1670,233,1765,261"/>
-<area shape="rect" href="IRProtocol_8hpp.html" title=" " alt="" coords="781,81,889,109"/>
-<area shape="rect" href="IRReceive_8hpp.html" title=" " alt="" coords="913,81,1021,109"/>
-<area shape="rect" href="IRSend_8hpp.html" title=" " alt="" coords="1046,81,1136,109"/>
-<area shape="rect" href="ir__BangOlufsen_8hpp.html" title=" " alt="" coords="1160,81,1296,109"/>
-<area shape="rect" href="ir__BoseWave_8hpp.html" title=" " alt="" coords="1320,81,1443,109"/>
-<area shape="rect" href="ir__Denon_8hpp.html" title=" " alt="" coords="1467,81,1565,109"/>
-<area shape="rect" href="ir__JVC_8hpp.html" title=" " alt="" coords="1589,81,1675,109"/>
-<area shape="rect" href="ir__Kaseikyo_8hpp.html" title=" " alt="" coords="1699,81,1813,109"/>
-<area shape="rect" href="ir__Lego_8hpp.html" title=" " alt="" coords="1837,81,1926,109"/>
-<area shape="rect" href="ir__LG_8hpp.html" title=" " alt="" coords="1950,81,2027,109"/>
-<area shape="rect" href="ir__MagiQuest_8hpp.html" title=" " alt="" coords="2050,81,2174,109"/>
-<area shape="rect" href="ir__NEC_8hpp.html" title=" " alt="" coords="2198,81,2288,109"/>
-<area shape="rect" href="ir__RC5__RC6_8hpp.html" title=" " alt="" coords="2312,81,2433,109"/>
-<area shape="rect" href="ir__Samsung_8hpp.html" title=" " alt="" coords="2457,81,2572,109"/>
-<area shape="rect" href="ir__Sony_8hpp.html" title=" " alt="" coords="2597,81,2686,109"/>
-<area shape="rect" href="ir__FAST_8hpp.html" title=" " alt="" coords="665,81,757,109"/>
-<area shape="rect" href="ir__Others_8hpp.html" title=" " alt="" coords="2761,81,2860,109"/>
-<area shape="rect" href="ir__Pronto_8hpp.html" title=" " alt="" coords="2884,81,2983,109"/>
-<area shape="rect" href="ir__DistanceWidthProtocol_8hpp.html" title=" " alt="" coords="3007,81,3201,109"/>
-<area shape="rect" title=" " alt="" coords="347,233,424,261"/>
-<area shape="rect" title=" " alt="" coords="1685,309,1750,337"/>
-<area shape="rect" href="TinyIR_8h.html" title=" " alt="" coords="675,157,746,185"/>
+<area shape="rect" href="IRProtocol_8h.html" title="Common declarations for receiving and sending." alt="" coords="84,233,178,261"/>
+<area shape="rect" href="IRremoteInt_8h.html" title="Contains all declarations required for the interface to IRremote. Could not be named IRremote...." alt="" coords="366,157,467,185"/>
+<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="219,157,341,185"/>
+<area shape="rect" href="IRTimer_8hpp.html" title="All timer specific definitions are contained in this file. Sets IR_SEND_PIN if required,..." alt="" coords="2752,81,2888,109"/>
+<area shape="rect" href="IRFeedbackLED_8hpp.html" title="All Feedback LED specific functions are contained in this file." alt="" coords="2912,81,3056,109"/>
+<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="202,233,297,261"/>
+<area shape="rect" href="IRProtocol_8hpp.html" title=" " alt="" coords="3079,81,3188,109"/>
+<area shape="rect" href="IRReceive_8hpp.html" title=" " alt="" coords="2505,81,2613,109"/>
+<area shape="rect" href="IRSend_8hpp.html" title=" " alt="" coords="2638,81,2728,109"/>
+<area shape="rect" href="ir__BangOlufsen_8hpp.html" title=" " alt="" coords="460,81,596,109"/>
+<area shape="rect" href="ir__BoseWave_8hpp.html" title=" " alt="" coords="620,81,743,109"/>
+<area shape="rect" href="ir__Denon_8hpp.html" title=" " alt="" coords="767,81,865,109"/>
+<area shape="rect" href="ir__JVC_8hpp.html" title=" " alt="" coords="889,81,975,109"/>
+<area shape="rect" href="ir__Kaseikyo_8hpp.html" title=" " alt="" coords="999,81,1113,109"/>
+<area shape="rect" href="ir__Lego_8hpp.html" title=" " alt="" coords="1137,81,1226,109"/>
+<area shape="rect" href="ir__LG_8hpp.html" title=" " alt="" coords="1250,81,1327,109"/>
+<area shape="rect" href="ir__MagiQuest_8hpp.html" title=" " alt="" coords="1350,81,1474,109"/>
+<area shape="rect" href="ir__NEC_8hpp.html" title=" " alt="" coords="1498,81,1588,109"/>
+<area shape="rect" href="ir__OpenLASIR_8hpp.html" title=" " alt="" coords="1611,81,1741,109"/>
+<area shape="rect" href="ir__RC5__RC6_8hpp.html" title=" " alt="" coords="1765,81,1886,109"/>
+<area shape="rect" href="ir__Samsung_8hpp.html" title=" " alt="" coords="1910,81,2026,109"/>
+<area shape="rect" href="ir__Sony_8hpp.html" title=" " alt="" coords="2050,81,2140,109"/>
+<area shape="rect" href="ir__FAST_8hpp.html" title=" " alt="" coords="345,81,437,109"/>
+<area shape="rect" href="ir__Others_8hpp.html" title=" " alt="" coords="3212,81,3311,109"/>
+<area shape="rect" href="ir__Pronto_8hpp.html" title=" " alt="" coords="2163,81,2261,109"/>
+<area shape="rect" href="ir__DistanceWidthProtocol_8hpp.html" title=" " alt="" coords="2286,81,2480,109"/>
+<area shape="rect" title=" " alt="" coords="157,309,222,337"/>
+<area shape="rect" title=" " alt="" coords="378,233,454,261"/>
+<area shape="rect" href="LocalDebugLevelStart_8h.html" title=" " alt="" coords="1488,157,1648,185"/>
+<area shape="rect" href="LocalDebugLevelEnd_8h.html" title=" " alt="" coords="1309,157,1464,185"/>
+<area shape="rect" href="TinyIR_8h.html" title=" " alt="" coords="491,157,562,185"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -167,18 +171,24 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a890d84b9b5d0b0aede9eea1092a7a10a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a890d84b9b5d0b0aede9eea1092a7a10a">STR_HELPER</a>(x)&#160;&#160;&#160;#x</td></tr>
+<tr class="separator:a890d84b9b5d0b0aede9eea1092a7a10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18d295a837ac71add5578860b55e5502"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a18d295a837ac71add5578860b55e5502">STR</a>(x)&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga890d84b9b5d0b0aede9eea1092a7a10a">STR_HELPER</a>(x)</td></tr>
+<tr class="separator:a18d295a837ac71add5578860b55e5502"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cb4ad1bc3f0b5d2c4503615058a1d90"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a6cb4ad1bc3f0b5d2c4503615058a1d90">MARK_EXCESS_MICROS</a>&#160;&#160;&#160;20</td></tr>
 <tr class="memdesc:a6cb4ad1bc3f0b5d2c4503615058a1d90"><td class="mdescLeft">&#160;</td><td class="mdescRight">MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding, to compensate for the signal forming of different IR receiver modules.  <a href="IRremote_8hpp.html#a6cb4ad1bc3f0b5d2c4503615058a1d90">More...</a><br /></td></tr>
 <tr class="separator:a6cb4ad1bc3f0b5d2c4503615058a1d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2eb6de0bae8bc6f19f3832c00e91f499"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a2eb6de0bae8bc6f19f3832c00e91f499">RECORD_GAP_MICROS</a>&#160;&#160;&#160;8000</td></tr>
-<tr class="memdesc:a2eb6de0bae8bc6f19f3832c00e91f499"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum gap between IR transmissions, to detect the end of a protocol.  <a href="IRremote_8hpp.html#a2eb6de0bae8bc6f19f3832c00e91f499">More...</a><br /></td></tr>
+<tr class="memdesc:a2eb6de0bae8bc6f19f3832c00e91f499"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum gap between IR transmissions, only used to detect the end of a frame.  <a href="IRremote_8hpp.html#a2eb6de0bae8bc6f19f3832c00e91f499">More...</a><br /></td></tr>
 <tr class="separator:a2eb6de0bae8bc6f19f3832c00e91f499"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ba5a08e87f922d04e6acb5c07867386"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a1ba5a08e87f922d04e6acb5c07867386">RECORD_GAP_TICKS</a>&#160;&#160;&#160;(<a class="el" href="IRremote_8hpp.html#a2eb6de0bae8bc6f19f3832c00e91f499">RECORD_GAP_MICROS</a> / <a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a>)</td></tr>
+<tr class="separator:a1ba5a08e87f922d04e6acb5c07867386"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c7eebb527483c272812530caa313d20"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a>&#160;&#160;&#160;50</td></tr>
+<tr class="memdesc:a1c7eebb527483c272812530caa313d20"><td class="mdescLeft">&#160;</td><td class="mdescRight">microseconds per clock interrupt tick  <a href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">More...</a><br /></td></tr>
+<tr class="separator:a1c7eebb527483c272812530caa313d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6afa54ea105253cce361d8c571da5fa9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a6afa54ea105253cce361d8c571da5fa9">RECORD_GAP_MICROS_WARNING_THRESHOLD</a>&#160;&#160;&#160;15000</td></tr>
 <tr class="memdesc:a6afa54ea105253cce361d8c571da5fa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Threshold for warnings at printIRResult*() to report about changing the RECORD_GAP_MICROS value to a higher value.  <a href="IRremote_8hpp.html#a6afa54ea105253cce361d8c571da5fa9">More...</a><br /></td></tr>
 <tr class="separator:a6afa54ea105253cce361d8c571da5fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ba5a08e87f922d04e6acb5c07867386"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a1ba5a08e87f922d04e6acb5c07867386">RECORD_GAP_TICKS</a>&#160;&#160;&#160;(<a class="el" href="IRremote_8hpp.html#a2eb6de0bae8bc6f19f3832c00e91f499">RECORD_GAP_MICROS</a> / <a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a>)</td></tr>
-<tr class="memdesc:a1ba5a08e87f922d04e6acb5c07867386"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimum gap between IR transmissions, in MICROS_PER_TICK.  <a href="IRremote_8hpp.html#a1ba5a08e87f922d04e6acb5c07867386">More...</a><br /></td></tr>
-<tr class="separator:a1ba5a08e87f922d04e6acb5c07867386"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace39503e8ded5ffb7a1c0d6f651f8d43"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#ace39503e8ded5ffb7a1c0d6f651f8d43">INPUT_MARK</a>&#160;&#160;&#160;0</td></tr>
 <tr class="memdesc:ace39503e8ded5ffb7a1c0d6f651f8d43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sensor output for a mark ("flash")  <a href="IRremote_8hpp.html#ace39503e8ded5ffb7a1c0d6f651f8d43">More...</a><br /></td></tr>
 <tr class="separator:ace39503e8ded5ffb7a1c0d6f651f8d43"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,15 +198,14 @@ Macros</h2></td></tr>
 <tr class="memitem:a6be706039d9083db8cb072478e0a09f8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a6be706039d9083db8cb072478e0a09f8">IR_SEND_DUTY_CYCLE_PERCENT</a>&#160;&#160;&#160;30</td></tr>
 <tr class="memdesc:a6be706039d9083db8cb072478e0a09f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duty cycle in percent for sent signals.  <a href="IRremote_8hpp.html#a6be706039d9083db8cb072478e0a09f8">More...</a><br /></td></tr>
 <tr class="separator:a6be706039d9083db8cb072478e0a09f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c7eebb527483c272812530caa313d20"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">MICROS_PER_TICK</a>&#160;&#160;&#160;50L</td></tr>
-<tr class="memdesc:a1c7eebb527483c272812530caa313d20"><td class="mdescLeft">&#160;</td><td class="mdescRight">microseconds per clock interrupt tick  <a href="IRremote_8hpp.html#a1c7eebb527483c272812530caa313d20">More...</a><br /></td></tr>
-<tr class="separator:a1c7eebb527483c272812530caa313d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a551a361e5f7fbdcf8ec8e9679976b462"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a551a361e5f7fbdcf8ec8e9679976b462">MILLIS_IN_ONE_SECOND</a>&#160;&#160;&#160;1000L</td></tr>
 <tr class="separator:a551a361e5f7fbdcf8ec8e9679976b462"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af33c8a218dd35ede965cf20a68a0068d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#af33c8a218dd35ede965cf20a68a0068d">MICROS_IN_ONE_SECOND</a>&#160;&#160;&#160;1000000L</td></tr>
 <tr class="separator:af33c8a218dd35ede965cf20a68a0068d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9ba0b7dd556e22688f7da01019bba68"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#ae9ba0b7dd556e22688f7da01019bba68">MICROS_IN_ONE_MILLI</a>&#160;&#160;&#160;1000L</td></tr>
 <tr class="separator:ae9ba0b7dd556e22688f7da01019bba68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ab2c0adfeec2b58e67c9414bebac156"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#a4ab2c0adfeec2b58e67c9414bebac156">uintDifferenceAbs</a>(a,  b)&#160;&#160;&#160;((a &gt;= b) ? a - b : b - a)</td></tr>
+<tr class="separator:a4ab2c0adfeec2b58e67c9414bebac156"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb919079668bcc14433d4c857ab8a196"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="IRremote_8hpp.html#abb919079668bcc14433d4c857ab8a196">RAWBUF</a>&#160;&#160;&#160;101</td></tr>
 <tr class="memdesc:abb919079668bcc14433d4c857ab8a196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macros for legacy compatibility.  <a href="IRremote_8hpp.html#abb919079668bcc14433d4c857ab8a196">More...</a><br /></td></tr>
 <tr class="separator:abb919079668bcc14433d4c857ab8a196"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -235,7 +244,7 @@ Macros</h2></td></tr>
 
 <p>Sensor output for a mark ("flash") </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00141">141</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00154">154</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -253,7 +262,7 @@ Macros</h2></td></tr>
 
 <p>Duty cycle in percent for sent signals. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00200">200</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00213">213</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -269,7 +278,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00293">293</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00303">303</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -289,7 +298,7 @@ Macros</h2></td></tr>
 <p>20 is taken as default if not otherwise specified / defined. For Vishay TSOP*, marks tend to be too long and spaces tend to be too short. If you set MARK_EXCESS_MICROS to approx. 40 to 50 us then the TSOP4838 works best. At 100 us it also worked, but not as well. Set MARK_EXCESS to 100 us and the VS1838 doesn't work at all.</p>
 <p>Observed values: Delta of each signal type is around 50 up to 100 us and at low signals up to 200 us. TSOP is better, especially at low IR signal level. VS1838 Mark Excess -50 us at low intensity to +50 us at high intensity TSOP31238 Mark Excess 0 to +50 </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00106">106</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00112">112</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -305,7 +314,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00213">213</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00218">218</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -321,7 +330,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00212">212</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00217">217</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -332,14 +341,14 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MICROS_PER_TICK&#160;&#160;&#160;50L</td>
+          <td class="memname">#define MICROS_PER_TICK&#160;&#160;&#160;50</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>microseconds per clock interrupt tick </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00208">208</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00134">134</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -355,7 +364,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00211">211</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00216">216</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -374,7 +383,7 @@ Macros</h2></td></tr>
 <p>Define to disable carrier PWM generation in software and use (restricted) hardware PWM. </p>
 <p>Define to use no carrier PWM, just simulate an active low receiver signal. Define to use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin! This amount is subtracted from the on-time of the pulses generated for software PWM generation. It should be the time used for digitalWrite(sendPin, LOW) and the call to delayMicros() Measured value for Nano @16MHz is around 3000, for Bluepill @72MHz is around 700, for Zero 3600 </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00192">192</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00205">205</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -392,7 +401,7 @@ Macros</h2></td></tr>
 
 <p>Macros for legacy compatibility. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00290">290</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00300">300</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -408,10 +417,10 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Minimum gap between IR transmissions, to detect the end of a protocol. </p>
-<p>Must be greater than any space of a protocol e.g. the NEC header space of 4500 us. Must be smaller than any gap between a command and a repeat; e.g. the retransmission gap for Sony is around 15 ms for Sony20 protocol. Keep in mind, that this is the delay between the end of the received command and the start of decoding. </p>
+<p>Minimum gap between IR transmissions, only used to detect the end of a frame. </p>
+<p>Must be greater than any space of a protocol e.g. the NEC header space of 4500 us. Must be smaller than any gap between a frame and a repeat frame; e.g. the retransmission gap for Sony is around 12 ms for Sony20 protocol. Bear in mind, that this is the delay between the end of the received frame and the time at which the software detects the end of this frame and can start decoding! </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00119">119</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00126">126</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -429,7 +438,7 @@ Macros</h2></td></tr>
 
 <p>Threshold for warnings at printIRResult*() to report about changing the RECORD_GAP_MICROS value to a higher value. </p>
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00126">126</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00142">142</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -445,9 +454,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Minimum gap between IR transmissions, in MICROS_PER_TICK. </p>
-
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00130">130</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00128">128</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -463,7 +470,77 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00291">291</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00301">301</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a18d295a837ac71add5578860b55e5502"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18d295a837ac71add5578860b55e5502">&#9670;&nbsp;</a></span>STR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STR</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga890d84b9b5d0b0aede9eea1092a7a10a">STR_HELPER</a>(x)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00086">86</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a890d84b9b5d0b0aede9eea1092a7a10a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a890d84b9b5d0b0aede9eea1092a7a10a">&#9670;&nbsp;</a></span>STR_HELPER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define STR_HELPER</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">x</td><td>)</td>
+          <td>&#160;&#160;&#160;#x</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00085">85</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4ab2c0adfeec2b58e67c9414bebac156"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ab2c0adfeec2b58e67c9414bebac156">&#9670;&nbsp;</a></span>uintDifferenceAbs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define uintDifferenceAbs</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">a, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">b&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;((a &gt;= b) ? a - b : b - a)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00269">269</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -479,7 +556,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00292">292</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRremote_8hpp_source.html#l00302">302</a> of file <a class="el" href="IRremote_8hpp_source.html">IRremote.hpp</a>.</p>
 
 </div>
 </div>
@@ -489,7 +566,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="IRremote_8hpp.html">IRremote.hpp</a></li>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:30 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:20:58 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

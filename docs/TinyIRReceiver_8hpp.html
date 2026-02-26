@@ -92,17 +92,30 @@ $(document).ready(function(){initNavTree('TinyIRReceiver_8hpp.html',''); initRes
 <div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="TinyIR_8h_source.html">TinyIR.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="digitalWriteFast_8h_source.html">digitalWriteFast.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="LocalDebugLevelStart_8h_source.html">LocalDebugLevelStart.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="LocalDebugLevelEnd_8h_source.html">LocalDebugLevelEnd.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for TinyIRReceiver.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="TinyIRReceiver_8hpp__incl.png" border="0" usemap="#src_2TinyIRReceiver_8hpp" alt=""/></div>
 <map name="src_2TinyIRReceiver_8hpp" id="src_2TinyIRReceiver_8hpp">
-<area shape="rect" title=" " alt="" coords="7,5,161,32"/>
-<area shape="rect" title=" " alt="" coords="45,155,123,181"/>
-<area shape="rect" href="TinyIR_8h.html" title=" " alt="" coords="171,80,240,107"/>
-<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="22,80,146,107"/>
-<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="158,155,253,181"/>
-<area shape="rect" title=" " alt="" coords="173,229,238,256"/>
+<area shape="rect" title=" " alt="" coords="126,5,286,33"/>
+<area shape="rect" title=" " alt="" coords="46,157,123,185"/>
+<area shape="rect" href="TinyIR_8h.html" title=" " alt="" coords="170,81,242,109"/>
+<area shape="rect" href="digitalWriteFast_8h.html" title=" " alt="" coords="23,81,146,109"/>
+<area shape="rect" href="LocalDebugLevelStart_8h.html" title=" " alt="" coords="266,81,426,109"/>
+<area shape="rect" href="LocalDebugLevelEnd_8h.html" title=" " alt="" coords="450,81,605,109"/>
+<area shape="rect" href="LongUnion_8h.html" title=" " alt="" coords="159,157,253,185"/>
+<area shape="rect" title=" " alt="" coords="174,233,238,261"/>
+</map>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><img src="TinyIRReceiver_8hpp__dep__incl.png" border="0" usemap="#src_2TinyIRReceiver_8hppdep" alt=""/></div>
+<map name="src_2TinyIRReceiver_8hppdep" id="src_2TinyIRReceiver_8hppdep">
+<area shape="rect" title=" " alt="" coords="28,5,188,33"/>
+<area shape="rect" href="IRCommandDispatcher_8hpp.html" title=" " alt="" coords="5,81,211,109"/>
 </map>
 </div>
 </div>
@@ -116,6 +129,10 @@ Macros</h2></td></tr>
 <tr class="separator:ga3f4de9472b009540a525e6e648fab0f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae7054616db7e69e979dfcd5ad38fb968"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gae7054616db7e69e979dfcd5ad38fb968">TINY_RECEIVER_USE_ARDUINO_ATTACH_INTERRUPT</a></td></tr>
 <tr class="separator:gae7054616db7e69e979dfcd5ad38fb968"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga890d84b9b5d0b0aede9eea1092a7a10a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga890d84b9b5d0b0aede9eea1092a7a10a">STR_HELPER</a>(x)&#160;&#160;&#160;#x</td></tr>
+<tr class="separator:ga890d84b9b5d0b0aede9eea1092a7a10a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga18d295a837ac71add5578860b55e5502"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#ga18d295a837ac71add5578860b55e5502">STR</a>(x)&#160;&#160;&#160;<a class="el" href="group__TinyReceiver.html#ga890d84b9b5d0b0aede9eea1092a7a10a">STR_HELPER</a>(x)</td></tr>
+<tr class="separator:ga18d295a837ac71add5578860b55e5502"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafae76562a7daac7eba30e8c5439f2cf7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__TinyReceiver.html#gafae76562a7daac7eba30e8c5439f2cf7">USE_ATTACH_INTERRUPT</a></td></tr>
 <tr class="separator:gafae76562a7daac7eba30e8c5439f2cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -159,7 +176,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="TinyIRReceiver_8hpp.html">TinyIRReceiver.hpp</a></li>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:30 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:20:58 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

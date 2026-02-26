@@ -1,11 +1,11 @@
 <map id="IRrecv::decodeSharp" name="IRrecv::decodeSharp">
-<area shape="rect" id="node1" title=" " alt="" coords="5,112,150,140"/>
-<area shape="rect" id="node2" href="$group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="198,112,346,140"/>
-<area shape="rect" id="node3" href="$group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="394,73,589,117"/>
-<area shape="rect" id="node6" href="$group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1127,65,1213,93"/>
-<area shape="rect" id="node4" href="$group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="637,73,833,117"/>
-<area shape="rect" id="node5" href="$group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="891,5,1065,49"/>
-<area shape="rect" id="node9" href="$group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="881,73,1075,117"/>
-<area shape="rect" id="node8" href="$group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1123,13,1217,41"/>
-<area shape="rect" id="node7" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="1265,40,1355,68"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,65,150,93"/>
+<area shape="rect" id="node2" href="$group__Decoder.html#ga680c0090daf6945a85fd2658af84dfac" title=" " alt="" coords="198,65,346,93"/>
+<area shape="rect" id="node3" href="$group__Receiving.html#ga4bb27cc58f6c2bcb98d1099986355e90" title=" " alt="" coords="394,57,589,101"/>
+<area shape="rect" id="node4" href="$group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="637,57,833,101"/>
+<area shape="rect" id="node5" href="$group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="891,23,1065,67"/>
+<area shape="rect" id="node9" href="$group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="881,91,1075,135"/>
+<area shape="rect" id="node6" href="$group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="1127,5,1213,33"/>
+<area shape="rect" id="node8" href="$group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="1123,57,1217,85"/>
+<area shape="rect" id="node7" href="$group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="1265,32,1355,60"/>
 </map>

@@ -1,0 +1,4 @@
+<map id="IRrecv::available" name="IRrecv::available">
+<area shape="rect" id="node1" title="Returns true if IR receiver has received a complete IR frame (detected by timeout after last mark)." alt="" coords="153,5,272,33"/>
+<area shape="rect" id="node2" href="$group__Receiving.html#gacfbf39fb284cc2d200158f20747c4ae3" title=" " alt="" coords="5,5,105,33"/>
+</map>

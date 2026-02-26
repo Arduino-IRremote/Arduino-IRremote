@@ -97,6 +97,8 @@ Functions</h2></td></tr>
 <tr class="separator:gac45e8ead5e96868e61c65cd354758d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5787966f93eba6002acf82c85024955e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Print.html#ga5787966f93eba6002acf82c85024955e">printIRResultShort</a> (Print *aSerial, <a class="el" href="structIRData.html">IRData</a> *aIRDataPtr)</td></tr>
 <tr class="separator:ga5787966f93eba6002acf82c85024955e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga83ee206a3c18eb8612e42d39351b22f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Print.html#ga83ee206a3c18eb8612e42d39351b22f1">printNumberOfRepeats</a> (Print *aSerial)</td></tr>
+<tr class="separator:ga83ee206a3c18eb8612e42d39351b22f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab6f0815692479730ca205bdb11199cb2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Print.html#gab6f0815692479730ca205bdb11199cb2">IRrecv::printIRResultShort</a> (Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros) __attribute__((deprecated(&quot;Remove second parameter</td></tr>
 <tr class="memdesc:gab6f0815692479730ca205bdb11199cb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to print values and flags of IrReceiver.decodedIRData in one line.  <a href="group__Print.html#gab6f0815692479730ca205bdb11199cb2">More...</a><br /></td></tr>
 <tr class="separator:gab6f0815692479730ca205bdb11199cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,7 +180,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02299">2299</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02227">2227</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -210,14 +212,14 @@ Here is the call graph for this function:</div>
 
 <p>Store the decodedIRData to be used for sendRaw(). </p>
 <p>Compensate received values by MARK_EXCESS_MICROS, like it is done for decoding and store it in an array.</p>
-<p>Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR sequence. Recording of IRremote anyway stops at a gap of RECORD_GAP_MICROS (5 ms). </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Maximum for uint8_t is 255*50 microseconds = 12750 microseconds = 12.75 ms, which hardly ever occurs inside an IR frame. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aArrayPtr</td><td>Address of an array provided by the caller. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02357">2357</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02284">2284</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -237,33 +239,28 @@ Here is the call graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02434">2434</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02361">2361</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Print_ga00d69eee1eaf3d055334399b567e6f79_cgraph.png" border="0" usemap="#group__Print_ga00d69eee1eaf3d055334399b567e6f79_cgraph" alt=""/></div>
 <map name="group__Print_ga00d69eee1eaf3d055334399b567e6f79_cgraph" id="group__Print_ga00d69eee1eaf3d055334399b567e6f79_cgraph">
-<area shape="rect" title=" " alt="" coords="5,616,140,644"/>
-<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="193,469,361,497"/>
-<area shape="rect" href="group__Receiving.html#gacc379370caac8ca6ab6f1fd1a4cc4359" title=" " alt="" coords="196,769,358,797"/>
-<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="194,589,360,617"/>
-<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="199,157,355,185"/>
-<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="193,324,361,352"/>
-<area shape="rect" href="group__Decoder.html#ga5720b53e427e0346ecc248e55c57e2b9" title="Try to decode data as RC5 protocol." alt="" coords="686,720,823,748"/>
-<area shape="rect" href="group__Decoder.html#gad98448418d525479e74c1a38725b498f" title="Try to decode data as RC6 protocol." alt="" coords="686,668,823,696"/>
-<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="188,389,366,417"/>
-<area shape="rect" href="group__Decoder.html#ga7ea1a0eb3b832974be8fd6c2cbde602f" title=" " alt="" coords="192,821,362,849"/>
-<area shape="rect" href="group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5" title="Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame." alt="" coords="221,873,332,901"/>
-<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="414,345,609,389"/>
-<area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="957,464,1044,492"/>
-<area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="953,322,1048,350"/>
-<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="667,225,842,269"/>
-<area shape="rect" href="group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="657,345,852,389"/>
-<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware." alt="" coords="1149,464,1238,492"/>
-<area shape="rect" href="group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157" title="Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g." alt="" coords="452,769,571,797"/>
-<area shape="rect" href="group__Receiving.html#gad00cc7b682411c68ccd2056b1d45fa84" title=" " alt="" coords="900,660,1101,704"/>
-<area shape="rect" href="group__Receiving.html#gac44c88dd418acc5d8068dbacda37e8e9" title="Gets the level of one time interval (aBiphaseTimeUnit) at a time from the raw buffer." alt="" coords="920,608,1080,636"/>
-<area shape="rect" href="group__Receiving.html#gacd517e921cf41136c8744799797c75e2" title=" " alt="" coords="921,728,1080,756"/>
+<area shape="rect" title=" " alt="" coords="5,439,140,467"/>
+<area shape="rect" href="group__Decoder.html#ga5d11ba281c103fe66e0912c46276c26e" title=" " alt="" coords="193,413,361,441"/>
+<area shape="rect" href="group__Receiving.html#gacc379370caac8ca6ab6f1fd1a4cc4359" title=" " alt="" coords="196,517,358,545"/>
+<area shape="rect" href="group__Decoder.html#gad7512fb183efc882f493ce5ab4c2bd10" title=" " alt="" coords="194,465,360,493"/>
+<area shape="rect" href="group__Decoder.html#ga1db023ba20fabb7190751b66445cc872" title=" " alt="" coords="199,357,355,385"/>
+<area shape="rect" href="group__Decoder.html#ga2b6633498c7e7b1ce64bb7f12a1ab4bd" title=" " alt="" coords="193,159,361,187"/>
+<area shape="rect" href="group__Decoder.html#ga6bdd668914f10932bc87bc57c4059ccd" title=" " alt="" coords="188,299,366,327"/>
+<area shape="rect" href="group__Decoder.html#ga7ea1a0eb3b832974be8fd6c2cbde602f" title=" " alt="" coords="192,569,362,597"/>
+<area shape="rect" href="group__Receiving.html#gaf40f1e16b1cc911e47ac3f0a9b3b1ec5" title="Restart the ISR (Interrupt Service Routine) state machine, to enable receiving of the next IR frame." alt="" coords="221,621,332,649"/>
+<area shape="rect" href="group__Receiving.html#gae685d2feb67db271c30eb711017346ac" title="Decode pulse distance protocols for PulseDistanceWidthProtocolConstants." alt="" coords="414,346,609,390"/>
+<area shape="rect" href="group__Receiving.html#ga4472564ea96b1ee10b51f594f60d7aeb" title="Compensate for marks exceeded by demodulator hardware." alt="" coords="904,294,990,322"/>
+<area shape="rect" href="group__Receiving.html#ga7902b620f6c01463b5b6e50ef604ac8b" title="Compensate for spaces shortened by demodulator hardware." alt="" coords="900,234,994,262"/>
+<area shape="rect" href="group__Receiving.html#ga406b91116e4a81f8c06838c8548833bf" title=" " alt="" coords="667,226,842,270"/>
+<area shape="rect" href="group__Receiving.html#ga9a83a88e77d4434be420246a6d11430f" title="New threshold decoder to be activated by USE_THRESHOLD_DECODER Assumes a 0 for shorter and a 1 for lo..." alt="" coords="657,346,852,390"/>
+<area shape="rect" href="group__Receiving.html#ga495b7f49ff71cde1289b118fac0f0674" title="Match function WITHOUT compensating for marks exceeded or spaces shortened by demodulator hardware Ma..." alt="" coords="1042,265,1131,293"/>
+<area shape="rect" href="group__Receiving.html#ga9d6653a616af4dd5cde8f4abf2b1c157" title="Compare two (tick) values for Hash decoder Use a tolerance of 20% to enable e.g." alt="" coords="452,669,571,697"/>
 </map>
 </div>
 <div class="dynheader">
@@ -293,7 +290,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01921">1921</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01840">1840</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -312,7 +309,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01931">1931</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01850">1850</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -332,7 +329,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01945">1945</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01864">1864</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -351,7 +348,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02421">2421</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02348">2348</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -401,7 +398,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01962">1962</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01881">1881</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -431,7 +428,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01903">1903</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01822">1822</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -473,7 +470,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01745">1745</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01664">1664</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -521,7 +518,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02178">2178</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02106">2106</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -557,7 +554,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02302">2302</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02230">2230</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -604,7 +601,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02383">2383</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02310">2310</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -633,7 +630,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02137">2137</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02065">2065</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -672,7 +669,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02200">2200</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l02128">2128</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 
 </div>
 </div>
@@ -702,7 +699,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01627">1627</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01546">1546</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -760,7 +757,7 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true, if CheckForRecordGapsMicros() has printed a message, i.e. gap &lt; 15ms (RECORD_GAP_MICROS_WARNING_THRESHOLD). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01622">1622</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01541">1541</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -801,7 +798,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01806">1806</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01725">1725</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -857,7 +854,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01800">1800</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01719">1719</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -896,18 +893,48 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01981">1981</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01904">1904</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="group__Print_gabe924ffc10b8814a5f3303b3df907dd7_cgraph.png" border="0" usemap="#group__Print_gabe924ffc10b8814a5f3303b3df907dd7_cgraph" alt=""/></div>
 <map name="group__Print_gabe924ffc10b8814a5f3303b3df907dd7_cgraph" id="group__Print_gabe924ffc10b8814a5f3303b3df907dd7_cgraph">
-<area shape="rect" title="Function to print values and flags of IrReceiver.decodedIRData in one line." alt="" coords="5,65,181,93"/>
+<area shape="rect" title="Function to print values and flags of IrReceiver.decodedIRData in one line." alt="" coords="5,96,181,124"/>
 <area shape="rect" href="group__Print.html#gad59a9b756d71f983bf9f0a28d25f238f" title=" " alt="" coords="246,5,414,33"/>
 <area shape="rect" href="group__Print.html#ga3c4ee9436861333c2737f9272a4fadc7" title=" " alt="" coords="240,57,420,101"/>
 <area shape="rect" href="group__Print.html#ga44435c5dee7e55f4a0180b0a397e737c" title=" " alt="" coords="229,125,431,153"/>
+<area shape="rect" href="group__Print.html#ga83ee206a3c18eb8612e42d39351b22f1" title=" " alt="" coords="252,177,408,205"/>
 <area shape="rect" href="group__Receiving.html#gab93c1433c1d6ab5e5bcdcb37339b2fb7" title=" " alt="" coords="506,5,628,33"/>
 <area shape="rect" href="group__Print.html#gab6f0815692479730ca205bdb11199cb2" title="Function to print values and flags of IrReceiver.decodedIRData in one line." alt="" coords="479,125,655,153"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ga83ee206a3c18eb8612e42d39351b22f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga83ee206a3c18eb8612e42d39351b22f1">&#9670;&nbsp;</a></span>printNumberOfRepeats()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void printNumberOfRepeats </td>
+          <td>(</td>
+          <td class="paramtype">Print *&#160;</td>
+          <td class="paramname"><em>aSerial</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="IRReceive_8hpp_source.html#l01892">1892</a> of file <a class="el" href="IRReceive_8hpp_source.html">IRReceive.hpp</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__Print_ga83ee206a3c18eb8612e42d39351b22f1_icgraph.png" border="0" usemap="#group__Print_ga83ee206a3c18eb8612e42d39351b22f1_icgraph" alt=""/></div>
+<map name="group__Print_ga83ee206a3c18eb8612e42d39351b22f1_icgraph" id="group__Print_ga83ee206a3c18eb8612e42d39351b22f1_icgraph">
+<area shape="rect" title=" " alt="" coords="229,5,384,33"/>
+<area shape="rect" href="group__Print.html#gabe924ffc10b8814a5f3303b3df907dd7" title="Function to print values and flags of IrReceiver.decodedIRData in one line." alt="" coords="5,5,181,33"/>
 </map>
 </div>
 
@@ -918,7 +945,7 @@ Here is the call graph for this function:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:34 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:21:03 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

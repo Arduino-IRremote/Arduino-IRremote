@@ -1,8 +1,10 @@
 <map id="src/TinyIRReceiver.hpp" name="src/TinyIRReceiver.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="7,5,161,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="45,155,123,181"/>
-<area shape="rect" id="node3" href="$TinyIR_8h.html" title=" " alt="" coords="171,80,240,107"/>
-<area shape="rect" id="node6" href="$digitalWriteFast_8h.html" title=" " alt="" coords="22,80,146,107"/>
-<area shape="rect" id="node4" href="$LongUnion_8h.html" title=" " alt="" coords="158,155,253,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="173,229,238,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="126,5,286,33"/>
+<area shape="rect" id="node2" title=" " alt="" coords="46,157,123,185"/>
+<area shape="rect" id="node3" href="$TinyIR_8h.html" title=" " alt="" coords="170,81,242,109"/>
+<area shape="rect" id="node6" href="$digitalWriteFast_8h.html" title=" " alt="" coords="23,81,146,109"/>
+<area shape="rect" id="node7" href="$LocalDebugLevelStart_8h.html" title=" " alt="" coords="266,81,426,109"/>
+<area shape="rect" id="node8" href="$LocalDebugLevelEnd_8h.html" title=" " alt="" coords="450,81,605,109"/>
+<area shape="rect" id="node4" href="$LongUnion_8h.html" title=" " alt="" coords="159,157,253,185"/>
+<area shape="rect" id="node5" title=" " alt="" coords="174,233,238,261"/>
 </map>

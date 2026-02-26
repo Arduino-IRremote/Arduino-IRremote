@@ -93,6 +93,7 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>address
 : <a class="el" href="structdecode__results.html#a63091d6d39138248dd2c3bc35ca8ab46">decode_results</a>
 , <a class="el" href="structIRData.html#a1255a5b7d704d34fda83dcabcb903d4c">IRData</a>
+, <a class="el" href="structIRDataForCommandDispatcherStruct.html#a13c689dd26d8cdefee50db6f78196229">IRDataForCommandDispatcherStruct</a>
 </li>
 <li>Address
 : <a class="el" href="structTinyIRReceiverCallbackDataStruct.html#a90f587192055c4569e8bf2ea76b83f75">TinyIRReceiverCallbackDataStruct</a>
@@ -106,6 +107,9 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <h3><a id="index_b"></a>- b -</h3><ul>
 <li>bits
 : <a class="el" href="structdecode__results.html#aa22c703c3ba7308dc7663bf1058a6686">decode_results</a>
+</li>
+<li>BlockingCommandToRunNext
+: <a class="el" href="classIRCommandDispatcher.html#a3b1f972bc3fe8b83fbe325d7f7b954e6">IRCommandDispatcher</a>
 </li>
 <li>Byte
 : <a class="el" href="unionLongUnion.html#a718f6c5df5ea017a086a02470aefb718">LongUnion</a>
@@ -128,10 +132,17 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 </li>
 <li>command
 : <a class="el" href="structIRData.html#ab0ce2b36765ea429e8c4bfa0706a45e7">IRData</a>
+, <a class="el" href="structIRDataForCommandDispatcherStruct.html#ad425058bb048565bfb419fed544f3cd7">IRDataForCommandDispatcherStruct</a>
 </li>
 <li>Command
 : <a class="el" href="classIRsend.html#ae7c94e763aed8525c6574cfc6ba0b502">IRsend</a>
 , <a class="el" href="structTinyIRReceiverCallbackDataStruct.html#aaee6d40528d1e3310ea66de6d81b01e5">TinyIRReceiverCallbackDataStruct</a>
+</li>
+<li>CommandToCall
+: <a class="el" href="structIRToCommandMappingStruct.html#ab4996ab6fe4c989cff02a8447d412465">IRToCommandMappingStruct</a>
+</li>
+<li>currentBlockingCommandCalled
+: <a class="el" href="classIRCommandDispatcher.html#a2ec56e1074a775fef688674cdacef6bf">IRCommandDispatcher</a>
 </li>
 </ul>
 
@@ -144,10 +155,13 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 : <a class="el" href="classIRrecv.html#a19d71758b1b0e1fbee948ad917c5b828">IRrecv</a>
 </li>
 <li>decodedRawData
-: <a class="el" href="structIRData.html#a1aca80950279db7f8631f96268f012d9">IRData</a>
+: <a class="el" href="structIRData.html#a26d161b0696610e68fb69a33c896db2a">IRData</a>
 </li>
 <li>DistanceWidthTimingInfo
 : <a class="el" href="structPulseDistanceWidthProtocolConstants.html#aa7e9164be5b2227f1a8ac41d1a5e07e7">PulseDistanceWidthProtocolConstants</a>
+</li>
+<li>doNotUseDispatcher
+: <a class="el" href="classIRCommandDispatcher.html#a5214f344ec32f7d60e19f638a482f73e">IRCommandDispatcher</a>
 </li>
 <li>Double
 : <a class="el" href="unionLongLongUnion.html#ad639ee45132e99aee9b824cc85045c00">LongLongUnion</a>
@@ -179,7 +193,8 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 : <a class="el" href="structIRData.html#aaaad48fc0d90e5c6daec601987848a51">IRData</a>
 </li>
 <li>Flags
-: <a class="el" href="structPulseDistanceWidthProtocolConstants.html#a254c0862391ddcacd26a17351481d27b">PulseDistanceWidthProtocolConstants</a>
+: <a class="el" href="structIRToCommandMappingStruct.html#a68893217c19668481020c3f2104438a7">IRToCommandMappingStruct</a>
+, <a class="el" href="structPulseDistanceWidthProtocolConstants.html#a254c0862391ddcacd26a17351481d27b">PulseDistanceWidthProtocolConstants</a>
 , <a class="el" href="structTinyIRReceiverCallbackDataStruct.html#ad96a1443f9fe0cc2c079345c9aaa2e0f">TinyIRReceiverCallbackDataStruct</a>
 , <a class="el" href="structTinyIRReceiverStruct.html#abead77902575acdd1ab470cea07a3611">TinyIRReceiverStruct</a>
 </li>
@@ -227,6 +242,12 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>instance
 : <a class="el" href="classIRrecv.html#acf4f0c1b9fa95ab078679456c86652c3">IRrecv</a>
 </li>
+<li>instead
+: <a class="el" href="classIRsend.html#ad599537bcddb049c61a1a85ba981e0f7">IRsend</a>
+</li>
+<li>IRCode
+: <a class="el" href="structIRToCommandMappingStruct.html#af95b6c8de0202aedf4744a339ef631eb">IRToCommandMappingStruct</a>
+</li>
 <li>irparams
 : <a class="el" href="classIRrecv.html#a9bd24021f2c131ddce4433d3332d67e7">IRrecv</a>
 </li>
@@ -239,19 +260,29 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <li>IRRawDataMask
 : <a class="el" href="structTinyIRReceiverStruct.html#aa6f580c1bf0c11c37edefd255283361a">TinyIRReceiverStruct</a>
 </li>
+<li>IRReceivedData
+: <a class="el" href="classIRCommandDispatcher.html#a53e11d63aef8f7bb2c6445f84ac94a2e">IRCommandDispatcher</a>
+</li>
 <li>IRReceivePin
 : <a class="el" href="structirparams__struct.html#a6a7570065b3dac05690883865c757752">irparams_struct</a>
 </li>
 <li>IRReceiverState
 : <a class="el" href="structTinyIRReceiverStruct.html#aca59e5c5331a581e0603a59c552fa8c9">TinyIRReceiverStruct</a>
 </li>
+<li>isAvailable
+: <a class="el" href="structIRDataForCommandDispatcherStruct.html#a1aa9c39efbd730c02a81af535f48dc2b">IRDataForCommandDispatcherStruct</a>
+</li>
 <li>isRepeat
 : <a class="el" href="structdecode__results.html#a90be852473f99ee751a1db7f4041c15e">decode_results</a>
+, <a class="el" href="structIRDataForCommandDispatcherStruct.html#a178fc257401a44e276e24df8bf4d7450">IRDataForCommandDispatcherStruct</a>
 </li>
 </ul>
 
 
 <h3><a id="index_j"></a>- j -</h3><ul>
+<li>justCalledBlockingCommand
+: <a class="el" href="classIRCommandDispatcher.html#aca80d0e3db5cadaf8ba7951572d8f076">IRCommandDispatcher</a>
+</li>
 <li>justWritten
 : <a class="el" href="structTinyIRReceiverCallbackDataStruct.html#a98164fef32d1716173ecbb35a2d69111">TinyIRReceiverCallbackDataStruct</a>
 </li>
@@ -259,6 +290,9 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 
 
 <h3><a id="index_l"></a>- l -</h3><ul>
+<li>lastBlockingCommandCalled
+: <a class="el" href="classIRCommandDispatcher.html#a6bbfd183759e51fd11920f7c41a4a3ee">IRCommandDispatcher</a>
+</li>
 <li>LastChangeMicros
 : <a class="el" href="structTinyIRReceiverStruct.html#a978f2ac480cb3ab428ff3016239413f1">TinyIRReceiverStruct</a>
 </li>
@@ -286,11 +320,11 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 , <a class="el" href="unionWordUnion.html#ade13e75ba3678d0b5b0590906156d9ec">WordUnion</a>
 </li>
 <li>LowLong
-: <a class="el" href="unionLongLongUnion.html#aacae5363fc2807618767c8b6be083fb9">LongLongUnion</a>
+: <a class="el" href="unionLongLongUnion.html#ac4311eaea1f3d194ea475534b33fe9cc">LongLongUnion</a>
 </li>
 <li>LowWord
-: <a class="el" href="unionLongLongUnion.html#abe041795b3367cfc357e06bc0af12a9e">LongLongUnion</a>
-, <a class="el" href="unionLongUnion.html#a45adb668aa3c266c1caa869b64f5110f">LongUnion</a>
+: <a class="el" href="unionLongLongUnion.html#a06b7aa96ffe50697e4f42f6f5cae8469">LongLongUnion</a>
+, <a class="el" href="unionLongUnion.html#a05f946f8845eb4dda0407470d34854e2">LongUnion</a>
 </li>
 </ul>
 
@@ -310,6 +344,9 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 </li>
 <li>MidLowWord
 : <a class="el" href="unionLongLongUnion.html#a6365cd32d3caeaf32dd3f706c1ae9ef1">LongLongUnion</a>
+</li>
+<li>MillisOfLastCode
+: <a class="el" href="structIRDataForCommandDispatcherStruct.html#ae727dee8070abae9c8890465d49dab68">IRDataForCommandDispatcherStruct</a>
 </li>
 <li>Mode
 : <a class="el" href="classAircondition__LG.html#a953f8d7dd483a1c406cf808a9c1ffe9a">Aircondition_LG</a>
@@ -387,6 +424,9 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 </li>
 <li>RepeatPeriodMillis
 : <a class="el" href="structPulseDistanceWidthProtocolConstants.html#a8c119fecf1b42ecbec61b000e177e7b0">PulseDistanceWidthProtocolConstants</a>
+</li>
+<li>requestToStopReceived
+: <a class="el" href="classIRCommandDispatcher.html#a313bcae5a6fff14e6ca725dff4751454">IRCommandDispatcher</a>
 </li>
 </ul>
 
@@ -494,7 +534,7 @@ $(document).ready(function(){initNavTree('functions_vars.html',''); initResizabl
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:35 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:21:05 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

@@ -2,7 +2,7 @@
 <area shape="rect" id="node1" title="The JVC protocol repeats by skipping the header mark and space &#45;&gt; this leads to a poor repeat detecti..." alt="" coords="5,84,131,112"/>
 <area shape="rect" id="node2" href="$group__Sending.html#ga30b1c8f6029a2f72b4dee0eeb2fb7f15" title="Enables IR output." alt="" coords="199,5,343,33"/>
 <area shape="rect" id="node4" href="$group__Sending.html#ga71a76987183f83b366fa59660e80253b" title="Sends an IR mark for the specified number of microseconds." alt="" coords="221,109,321,137"/>
-<area shape="rect" id="node10" href="$group__Sending.html#ga6cb6bd97b0daf3afbc6b6c59acaa93f1" title=" " alt="" coords="179,213,363,257"/>
+<area shape="rect" id="node10" href="$group__Sending.html#ga35a4ccb8f15a1e6aca20213689b437a4" title=" " alt="" coords="179,213,363,257"/>
 <area shape="rect" id="node12" href="$group__Sending.html#ga914d45f08addaf1142e167a8ebf7d5a4" title="Sends an IR space for the specified number of microseconds." alt="" coords="218,57,324,85"/>
 <area shape="rect" id="node3" href="$group__Timer.html#gab4f8dc26e10c0481e8859252afa4d42b" title="IF PWM should be generated not by software, but by a timer, this function sets output pin mode,..." alt="" coords="457,5,594,33"/>
 <area shape="rect" id="node5" href="$group__Sending.html#ga78e52089f1ee53b3d080db7d8c25f798" title="Custom delay function that circumvents Arduino&#39;s delayMicroseconds 16 bit limit and is (mostly) not e..." alt="" coords="411,57,640,85"/>
@@ -10,5 +10,5 @@
 <area shape="rect" id="node7" href="$group__Sending.html#ga5242741b8da4fbfaae237eee2b279dd0" title="Just switch the IR sending LED off to send an IR space A space is &quot;no output&quot;, so the PWM output is d..." alt="" coords="464,161,587,189"/>
 <area shape="rect" id="node9" href="$group__FeedbackLEDFunctions.html#ga072624eeba964d8aa105822da00090ba" title="Flash LED while receiving or sending IR data." alt="" coords="714,213,837,241"/>
 <area shape="rect" id="node8" href="$group__Timer.html#ga352399811c67be16548d81a18e3cd337" title="Disables output of the PWM signal of the timer at the timer pin and set it to inactive." alt="" coords="688,161,863,189"/>
-<area shape="rect" id="node11" href="$group__Sending.html#ga0e697969acd5ea115afd45d0c08a03db" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="434,265,618,309"/>
+<area shape="rect" id="node11" href="$group__Sending.html#gabd98da9d8f888f306fc6236d103cf406" title="Sends PulseDistance from data contained in parameter using ProtocolConstants structure for timing etc..." alt="" coords="434,265,618,309"/>
 </map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kaseikyo_5fkhz_1354',['KASEIKYO_KHZ',['../IRProtocol_8h.html#ae59fcf8145e60472b2b94f7e72a1d441',1,'IRProtocol.h']]]
+  ['jvc_5fkhz_1470',['JVC_KHZ',['../IRProtocol_8h.html#abcc6e2b61050500362daed1341bef91b',1,'IRProtocol.h']]]
 ];

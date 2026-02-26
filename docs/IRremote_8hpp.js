@@ -14,5 +14,8 @@ var IRremote_8hpp =
     [ "RECORD_GAP_MICROS_WARNING_THRESHOLD", "IRremote_8hpp.html#a6afa54ea105253cce361d8c571da5fa9", null ],
     [ "RECORD_GAP_TICKS", "IRremote_8hpp.html#a1ba5a08e87f922d04e6acb5c07867386", null ],
     [ "REPEAT", "IRremote_8hpp.html#a2c9384c67919c632913b8db2088f8341", null ],
+    [ "STR", "IRremote_8hpp.html#a18d295a837ac71add5578860b55e5502", null ],
+    [ "STR_HELPER", "IRremote_8hpp.html#a890d84b9b5d0b0aede9eea1092a7a10a", null ],
+    [ "uintDifferenceAbs", "IRremote_8hpp.html#a4ab2c0adfeec2b58e67c9414bebac156", null ],
     [ "USECPERTICK", "IRremote_8hpp.html#aad2fcaac88c28bf54ecbd42146a56e3f", null ]
 ];

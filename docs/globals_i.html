@@ -84,17 +84,38 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 <div class="textblock">Here is a list of all file members with links to the files they belong to:</div>
 
 <h3><a id="index_i"></a>- i -</h3><ul>
+<li>INFO_FLUSH
+: <a class="el" href="LocalDebugLevelStart_8h.html#ac7b73c848e03f65075edd730e08df2f9">LocalDebugLevelStart.h</a>
+</li>
+<li>INFO_PRINT
+: <a class="el" href="LocalDebugLevelStart_8h.html#abe2194229f4d20b5a2e5a97be7ffbf06">LocalDebugLevelStart.h</a>
+</li>
+<li>INFO_PRINTLN
+: <a class="el" href="LocalDebugLevelStart_8h.html#a00ff2cc8e36f88b0645479798ecf2e62">LocalDebugLevelStart.h</a>
+</li>
 <li>initPCIInterruptForTinyReceiver()
 : <a class="el" href="group__TinyReceiver.html#gaafb51bc656ba199129d261afa3f950c2">TinyIR.h</a>
 </li>
 <li>INPUT_MARK
 : <a class="el" href="IRremote_8hpp.html#ace39503e8ded5ffb7a1c0d6f651f8d43">IRremote.hpp</a>
 </li>
-<li>IR_DEBUG_PRINT
-: <a class="el" href="IRremoteInt_8h.html#a093a1c04e9dd4d6845a48163554143a0">IRremoteInt.h</a>
+<li>IR_COMMAND_FLAG_BEEP
+: <a class="el" href="IRCommandDispatcher_8h.html#a28d284806339f6c3461479b613a25e44">IRCommandDispatcher.h</a>
 </li>
-<li>IR_DEBUG_PRINTLN
-: <a class="el" href="IRremoteInt_8h.html#aebf95fa57eb370cfe65ce6a9728b6e1f">IRremoteInt.h</a>
+<li>IR_COMMAND_FLAG_BLOCKING
+: <a class="el" href="IRCommandDispatcher_8h.html#a62c08296c5e3e1a7ae3fef2f7705480d">IRCommandDispatcher.h</a>
+</li>
+<li>IR_COMMAND_FLAG_BLOCKING_BEEP
+: <a class="el" href="IRCommandDispatcher_8h.html#a90a3ebf189fd91f6fab61c0bd2dfb8a3">IRCommandDispatcher.h</a>
+</li>
+<li>IR_COMMAND_FLAG_NON_BLOCKING
+: <a class="el" href="IRCommandDispatcher_8h.html#a4d007d3ed1180784ca66f009edb63946">IRCommandDispatcher.h</a>
+</li>
+<li>IR_COMMAND_FLAG_REPEATABLE
+: <a class="el" href="IRCommandDispatcher_8h.html#ae8c7fe7214dfabd4c4778dd68723e237">IRCommandDispatcher.h</a>
+</li>
+<li>IR_COMMAND_FLAG_REPEATABLE_NON_BLOCKING
+: <a class="el" href="IRCommandDispatcher_8h.html#a0c201f3ee3fb31b0b5c362ceb9a2b33d">IRCommandDispatcher.h</a>
 </li>
 <li>IR_REC_STATE_IDLE
 : <a class="el" href="IRremoteInt_8h.html#a92edad56cde0f027e20711dcf83da843">IRremoteInt.h</a>
@@ -139,11 +160,8 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 : <a class="el" href="group__TinySender.html#ga4cb394b3b749f9302940902fb05bd920">TinyIRSender.hpp</a>
 , <a class="el" href="group__Timer.html#ga4cb394b3b749f9302940902fb05bd920">IRTimer.hpp</a>
 </li>
-<li>IR_TRACE_PRINT
-: <a class="el" href="IRremoteInt_8h.html#af7b7c32d41d80a578f482d2828b05326">IRremoteInt.h</a>
-</li>
-<li>IR_TRACE_PRINTLN
-: <a class="el" href="IRremoteInt_8h.html#a5eafde7d90e22ca8caed5fa952448228">IRremoteInt.h</a>
+<li>IRCommandType
+: <a class="el" href="IRCommandDispatcher_8h.html#a0170bcb5e3a56c58fdf372958be482aa">IRCommandDispatcher.h</a>
 </li>
 <li>IRDATA_FLAGS_EMPTY
 : <a class="el" href="IRProtocol_8h.html#ad670ce496c4a3352cb9929284db11928">IRProtocol.h</a>
@@ -153,8 +171,8 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 : <a class="el" href="IRProtocol_8h.html#abf3b16f9ab35f4e4b95c8c362aca2d71">IRProtocol.h</a>
 </li>
 <li>IRDATA_FLAGS_IS_AUTO_REPEAT
-: <a class="el" href="IRProtocol_8h.html#a5c5e6ae69aa440bfa132550d120ace08">IRProtocol.h</a>
-, <a class="el" href="group__TinyReceiver.html#ga5c5e6ae69aa440bfa132550d120ace08">TinyIR.h</a>
+: <a class="el" href="group__TinyReceiver.html#ga5c5e6ae69aa440bfa132550d120ace08">TinyIR.h</a>
+, <a class="el" href="IRProtocol_8h.html#a5c5e6ae69aa440bfa132550d120ace08">IRProtocol.h</a>
 </li>
 <li>IRDATA_FLAGS_IS_LSB_FIRST
 : <a class="el" href="IRProtocol_8h.html#a035e96118f9daf6d8e5152a1ae466538">IRProtocol.h</a>
@@ -166,15 +184,15 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 : <a class="el" href="IRProtocol_8h.html#ab0aefeb2bf89e81593b0ae4af274e81a">IRProtocol.h</a>
 </li>
 <li>IRDATA_FLAGS_IS_REPEAT
-: <a class="el" href="group__TinyReceiver.html#gaaa9952cd64b58083c28873484c494abf">TinyIR.h</a>
-, <a class="el" href="IRProtocol_8h.html#aaa9952cd64b58083c28873484c494abf">IRProtocol.h</a>
+: <a class="el" href="IRProtocol_8h.html#aaa9952cd64b58083c28873484c494abf">IRProtocol.h</a>
+, <a class="el" href="group__TinyReceiver.html#gaaa9952cd64b58083c28873484c494abf">TinyIR.h</a>
 </li>
 <li>IRDATA_FLAGS_LSB_MSB_FIRST_MASK
 : <a class="el" href="IRProtocol_8h.html#ac61c0b8691c3b14397cdec4d42d8e740">IRProtocol.h</a>
 </li>
 <li>IRDATA_FLAGS_PARITY_FAILED
-: <a class="el" href="IRProtocol_8h.html#a1a60f95f0885b1865dc5514ddd80e093">IRProtocol.h</a>
-, <a class="el" href="group__TinyReceiver.html#ga1a60f95f0885b1865dc5514ddd80e093">TinyIR.h</a>
+: <a class="el" href="group__TinyReceiver.html#ga1a60f95f0885b1865dc5514ddd80e093">TinyIR.h</a>
+, <a class="el" href="IRProtocol_8h.html#a1a60f95f0885b1865dc5514ddd80e093">IRProtocol.h</a>
 </li>
 <li>IRDATA_FLAGS_TOGGLE_BIT
 : <a class="el" href="IRProtocol_8h.html#a169a0ae23ab363f24027f769881db0b0">IRProtocol.h</a>
@@ -185,14 +203,18 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 <li>IRDATA_TOGGLE_BIT_MASK
 : <a class="el" href="IRProtocol_8h.html#a6a8eaa19dc6174814fedc9d5b495560c">IRProtocol.h</a>
 </li>
+<li>IRDecodedRawDataType
+: <a class="el" href="IRremoteInt_8h.html#aba5a4424284e2e1dc1b5e5c41851e126">IRremoteInt.h</a>
+</li>
+<li>IRDispatcher
+: <a class="el" href="IRCommandDispatcher_8h.html#abd4ec492c11f65024d878f0d0e85f2c9">IRCommandDispatcher.h</a>
+, <a class="el" href="IRCommandDispatcher_8hpp.html#abd4ec492c11f65024d878f0d0e85f2c9">IRCommandDispatcher.hpp</a>
+</li>
 <li>IRPinChangeInterruptHandler()
 : <a class="el" href="group__TinyReceiver.html#ga3c3d6703d25dbcc0555823e23eec0e69">TinyIRReceiver.hpp</a>
 </li>
 <li>IRRawbufType
 : <a class="el" href="IRremoteInt_8h.html#aab036f2207a88bf2cc5bf610d8d4838b">IRremoteInt.h</a>
-</li>
-<li>IRRawDataType
-: <a class="el" href="IRremoteInt_8h.html#a5f80a14df19acb8907b21cd1ee154d53">IRremoteInt.h</a>
 </li>
 <li>IRRawlenType
 : <a class="el" href="IRremoteInt_8h.html#a8f3582a3489d865ffa5e2f612511c363">IRremoteInt.h</a>
@@ -206,8 +228,11 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 , <a class="el" href="group__Receiving.html#ga770e03720a79491d7ddf347ad4b9e484">IRReceive.hpp</a>
 </li>
 <li>IrSender
-: <a class="el" href="group__Sending.html#gafba8232b747be85f72c1c4612780d5cf">IRremoteInt.h</a>
-, <a class="el" href="group__Sending.html#gafba8232b747be85f72c1c4612780d5cf">IRSend.hpp</a>
+: <a class="el" href="group__Sending.html#gafba8232b747be85f72c1c4612780d5cf">IRSend.hpp</a>
+, <a class="el" href="group__Sending.html#gafba8232b747be85f72c1c4612780d5cf">IRremoteInt.h</a>
+</li>
+<li>IS_STOP_REQUESTED
+: <a class="el" href="IRCommandDispatcher_8h.html#ab714ca016af9cb361ec1e5bc699dc48e">IRCommandDispatcher.h</a>
 </li>
 <li>isIRReceiverAttachedForTinyReceiver()
 : <a class="el" href="group__TinyReceiver.html#ga2553571086097dd6e7ba319a6da2c743">TinyIR.h</a>
@@ -221,7 +246,7 @@ $(document).ready(function(){initNavTree('globals_i.html',''); initResizable(); 
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Aug 25 2025 22:35:35 for IRremote by
+    <li class="footer">Generated on Thu Feb 26 2026 12:21:05 for IRremote by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

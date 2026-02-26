@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['version_5fhex_5fvalue_1426',['VERSION_HEX_VALUE',['../IRVersion_8h.html#a8fe70c54038764ee815bb4940c58ad3c',1,'IRVersion.h']]],
-  ['version_5firremote_1427',['VERSION_IRREMOTE',['../IRVersion_8h.html#ad9f03906065f749788cc9e3f68fb6253',1,'IRVersion.h']]],
-  ['version_5firremote_5fhex_1428',['VERSION_IRREMOTE_HEX',['../IRVersion_8h.html#ac2a16f9b7dd2cf6fc0ca9c5f78e7824c',1,'IRVersion.h']]],
-  ['version_5firremote_5fmajor_1429',['VERSION_IRREMOTE_MAJOR',['../IRVersion_8h.html#a5fccc9834ba25cd17b7ca45e14aa7751',1,'IRVersion.h']]],
-  ['version_5firremote_5fminor_1430',['VERSION_IRREMOTE_MINOR',['../IRVersion_8h.html#a824e2f61336bde09dd9b835e8606683f',1,'IRVersion.h']]],
-  ['version_5firremote_5fpatch_1431',['VERSION_IRREMOTE_PATCH',['../IRVersion_8h.html#a190ee428ccd5ea2362e913f114718779',1,'IRVersion.h']]]
+  ['ticks_1532',['TICKS',['../IRremoteInt_8h.html#a6e5c7978c4e78b0793f317c349508f9d',1,'IRremoteInt.h']]],
+  ['ticks_5fhigh_1533',['TICKS_HIGH',['../IRremoteInt_8h.html#ac0d006cd9c029a2e6c4bd513ee5e7951',1,'IRremoteInt.h']]],
+  ['ticks_5flow_1534',['TICKS_LOW',['../IRremoteInt_8h.html#a92632ec97aa1c7a60a990811744a6902',1,'IRremoteInt.h']]],
+  ['tolerance_5ffor_5fdecoders_5fmark_5for_5fspace_5fmatching_5fpercent_1535',['TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT',['../IRremoteInt_8h.html#a9832b61d69c07442a77e06e5fd076f3f',1,'IRremoteInt.h']]],
+  ['trace_5fflush_1536',['TRACE_FLUSH',['../LocalDebugLevelStart_8h.html#a2dbbbd7118d497f34f028885a7e9b586',1,'LocalDebugLevelStart.h']]],
+  ['trace_5fprint_1537',['TRACE_PRINT',['../LocalDebugLevelStart_8h.html#a7fe6e015379d45242e1580bcbfd62f86',1,'LocalDebugLevelStart.h']]],
+  ['trace_5fprintln_1538',['TRACE_PRINTLN',['../LocalDebugLevelStart_8h.html#a6901cce4dcd0260721fb1364a7d705cb',1,'LocalDebugLevelStart.h']]]
 ];
