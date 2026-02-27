@@ -650,7 +650,7 @@ public:
     void sendKaseikyo_Sharp(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
     void sendKaseikyo_JVC(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
 
-    void setRC5ToggleBitValue(uint8_t aRC5ToggleBitValue);
+    void setToggleBitValueForRC5AndRC6(uint8_t aRC5ToggleBitValue);
     void sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
     void sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t aMarantzExtension,
             bool aEnableAutomaticToggle = true);

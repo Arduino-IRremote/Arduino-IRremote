@@ -122,7 +122,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0. Only 
  * or to reset toggle bit after a transmission with automatic toggling.
  * @param aRC5ToggleBitValue 0 or 1, only LSB is taken
  */
-void IRsend::setRC5ToggleBitValue(uint8_t aRC5ToggleBitValue){
+void IRsend::setToggleBitValueForRC5AndRC6(uint8_t aRC5ToggleBitValue) {
     sLastSendToggleValue = aRC5ToggleBitValue & 0x01;
 }
 
@@ -165,7 +165,6 @@ void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNum
         // invert toggle bit if enabled
         sLastSendToggleValue ^= 1;
     }
-
     // set toggled bit independent of current state of aEnableAutomaticToggle
     if (sLastSendToggleValue) {
         tIRData |= 1 << RC5_ADDRESS_BITS;
@@ -215,12 +214,10 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
     }
     tIRData |= aCommand;
 
-
     if (aEnableAutomaticToggle) {
         // invert toggle bit if enabled
         sLastSendToggleValue ^= 1;
     }
-
     // set toggled bit independent of current state of aEnableAutomaticToggle
     if (sLastSendToggleValue) {
         tIRData |= 1 << (RC5_ADDRESS_BITS + RC5_COMMAND_BITS);
@@ -605,14 +602,14 @@ void IRsend::sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
     tIRRawData.UByte.MidLowByte = aAddress;
 
     tIRRawData.UWord.HighWord = 0; // must clear high word for the 3 mode bits to be 0
+
     if (aEnableAutomaticToggle) {
-        if (sLastSendToggleValue == 0) {
-            sLastSendToggleValue = 1;
-            // set toggle bit
-            tIRRawData.UByte.MidHighByte = 1; // 3 Mode bits are 0
-        } else {
-            sLastSendToggleValue = 0;
-        }
+        // invert toggle bit if enabled
+        sLastSendToggleValue ^= 1;
+    }
+    // set toggled bit independent of current state of aEnableAutomaticToggle
+    if (sLastSendToggleValue) {
+        tIRRawData.UByte.MidHighByte = 1; // 3 Mode bits are 0
     }
 
     DEBUG_PRINT(F("RC6: ToggleValue="));
@@ -650,13 +647,12 @@ void IRsend::sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfR
     tIRRawData.UWord.HighWord = aCustomer | 0x400; // bit 31 is always 1
 
     if (aEnableAutomaticToggle) {
-        if (sLastSendToggleValue == 0) {
-            sLastSendToggleValue = 1;
-            // set toggled bit
-            tIRRawData.UByte.HighByte |= 0x80; // toggle bit is bit 32
-        } else {
-            sLastSendToggleValue = 0;
-        }
+        // invert toggle bit if enabled
+        sLastSendToggleValue ^= 1;
+    }
+    // set toggled bit independent of current state of aEnableAutomaticToggle
+    if (sLastSendToggleValue) {
+        tIRRawData.UByte.HighByte |= 0x80; // toggle bit is bit 32
     }
 
     // Set mode bits

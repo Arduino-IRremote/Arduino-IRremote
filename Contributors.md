@@ -37,5 +37,6 @@ These are the active contributors of this project that you may contact if there 
 - [A.R.Jung](https://github.com/arjung467) Marantz-RC5 extension support #1314.
 - [silen72](https://github.com/silen72) Fixing ESP32 multiple attach bug #1324.
 - [danielweidman](https://github.com/danielweidman) Adding OpenLASIR protocol.
+- [Craig Leres](https://github.com/leres) Found bug #1347 in RC5/RC6 autorepeat bit handling.
 
 Note: Please let [ArminJo](https://github.com/ArminJo) know if you have been missed.

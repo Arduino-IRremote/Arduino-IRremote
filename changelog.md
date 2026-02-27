@@ -2,6 +2,10 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+# 4.6.1
+- Fixed bug #1347 in RC5/RC6 autorepeat bit handling. Thanks to Craig Leres.
+- Added function `setToggleBitValueForRC5AndRC6()`.
+
 # 4.6.0
 - Fixed missing ESP IRAM_ATTR for receiving interrupt.
 - Changed `USE_DEFAULT_FEEDBACK_LED_PIN` from 0 to 0xFF, because megaTinyCore defines the not special pin PIN_PA4 as 0.

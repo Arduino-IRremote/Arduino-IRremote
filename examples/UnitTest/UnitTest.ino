@@ -940,7 +940,7 @@ void loop() {
 #if defined(DECODE_RC6)
     Serial.println(F("Send RC6"));
     Serial.flush();
-    sLastSendToggleValue = sAddress & 0x01; // to modify toggling at each loop
+    IrSender.setToggleBitValueForRC5AndRC6(sAddress); // To modify start value of toggling for each loop. Only LSB is taken :-).
 
     IrSender.sendRC6(sAddress & 0xFF, sCommand, sRepeats, true);
     checkReceive(sAddress & 0xFF, sCommand);
