@@ -117,6 +117,15 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0. Only 
  * Start of send and decode functions
  ************************************/
 
+/*
+ * Just in case to permanently send it as 0 because start value is 1,
+ * or to reset toggle bit after a transmission with automatic toggling.
+ * @param aRC5ToggleBitValue 0 or 1, only LSB is taken
+ */
+void IRsend::setRC5ToggleBitValue(uint8_t aRC5ToggleBitValue){
+    sLastSendToggleValue = aRC5ToggleBitValue & 0x01;
+}
+
 /**
  * !!! Not tested, because no Marantz remote was at hand and no receive function was contributed!!!
  * Send function for the Marantz version of RC5(X) with a pause of 4 * RC5_UNIT after address / first 8 bits
@@ -153,13 +162,13 @@ void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNum
     tIRExtData |= (aMarantzExtension & 0x3F);
 
     if (aEnableAutomaticToggle) {
-        if (sLastSendToggleValue == 0) {
-            sLastSendToggleValue = 1;
-            // set toggled bit
-            tIRData |= 1 << (RC5_ADDRESS_BITS);
-        } else {
-            sLastSendToggleValue = 0;
-        }
+        // invert toggle bit if enabled
+        sLastSendToggleValue ^= 1;
+    }
+
+    // set toggled bit independent of current state of aEnableAutomaticToggle
+    if (sLastSendToggleValue) {
+        tIRData |= 1 << RC5_ADDRESS_BITS;
     }
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
@@ -206,14 +215,15 @@ void IRsend::sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
     }
     tIRData |= aCommand;
 
+
     if (aEnableAutomaticToggle) {
-        if (sLastSendToggleValue == 0) {
-            sLastSendToggleValue = 1;
-            // set toggled bit
-            tIRData |= 1 << (RC5_ADDRESS_BITS + RC5_COMMAND_BITS);
-        } else {
-            sLastSendToggleValue = 0;
-        }
+        // invert toggle bit if enabled
+        sLastSendToggleValue ^= 1;
+    }
+
+    // set toggled bit independent of current state of aEnableAutomaticToggle
+    if (sLastSendToggleValue) {
+        tIRData |= 1 << (RC5_ADDRESS_BITS + RC5_COMMAND_BITS);
     }
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
@@ -857,6 +867,7 @@ void IRsend::sendRC5ext(uint8_t addr, uint8_t cmd, bool toggle) {
 // Toggle bit
     static int toggleBit = 1;
     if (toggle) {
+        // invert static toggle bit
         if (toggleBit == 0) {
             toggleBit = 1;
         } else {
