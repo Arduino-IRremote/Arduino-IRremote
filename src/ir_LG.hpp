@@ -63,7 +63,7 @@
 // see: https://www.mikrocontroller.net/articles/IRMP_-_english#LGAIR
 // MSB first, 1 start bit + 8 bit address + 16 bit command + 4 bit checksum + 1 stop bit (28 data bits).
 // Bit and repeat timing is like NEC
-// LG2 has different header timing and a shorter bit time
+// LG2 has different header timing and a shorter bit time than LG
 /*
  * LG remote IR-LED measurements: Type AKB 73315611 for air conditioner, Ver1.1 from 2011.03.01
  * Protocol: LG2

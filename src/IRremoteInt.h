@@ -154,6 +154,8 @@ typedef uint32_t IRDecodedRawDataType;
 typedef uint64_t IRDecodedRawDataType;
 #define BITS_IN_DECODED_RAW_DATA_TYPE   64
 #endif
+typedef IRDecodedRawDataType IRRawDataType; // Define old IRRawDataType (removed in 4.6.0) for backward compatibility
+
 #define DECODED_RAW_DATA_ARRAY_SIZE     ((((RAW_BUFFER_LENGTH - 2) - 1) / (2 * BITS_IN_DECODED_RAW_DATA_TYPE)) + 1) // The -2 is for initial gap + stop bit mark, 128 mark + spaces for 64 bit.
 /**
  * Data structure for the user application, available as decodedIRData.

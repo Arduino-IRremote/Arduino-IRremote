@@ -2,6 +2,9 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
+# 4.6.2
+- Added removed typedef `IRRawDataType` for backward compatibility.
+
 # 4.6.1
 - Fixed bug #1347 in RC5/RC6 autorepeat bit handling. Thanks to Craig Leres.
 - Added function `setToggleBitValueForRC5AndRC6()`.
@@ -18,6 +21,7 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 - Improved biphase decoding.
 - Improved debug output handling.
 - Moved `IRCommandDispatcher` from demo to main library folder.
+- Changed `IRRawDataType` to `IRDecodedRawDataType`.
 
 # 4.5.0 - does not work for ESP platform, because of missing ESP IRAM_ATTR for receiving interrupt.
 - Added support for **multiple receiver instances**.
