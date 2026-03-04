@@ -57,7 +57,9 @@ unsigned long sMicrosAtLastStopTimer = 0; // Used to adjust TickCounterForISR wi
 IRrecv IrReceiver;
 
 /**
- * Instantiate the IRrecv class. Multiple instantiation is not supported.
+ * Instantiate the IRrecv class. Multiple instantiation is supported by activating SUPPORT_MULTIPLE_RECEIVER_INSTANCES and providing
+ * the simple function UserIRReceiveTimerInterruptHandler(). This function is required, because we have only one timer resource.
+ * See the MultipleReceivers example.
  * @param IRReceivePin Arduino pin to use. No sanity check is made.
  */
 IRrecv::IRrecv() {
@@ -69,7 +71,7 @@ IRrecv::IRrecv(uint_fast8_t aReceivePin) {
 }
 
 /**
- * Instantiate the IRrecv class. Multiple instantiation is not supported.
+ * Instantiate the IRrecv class.
  * @param aReceivePin Arduino pin to use, where a demodulating IR receiver is connected.
  * @param aFeedbackLEDPin if 0xFF, then take board specific LED_BUILTIN pin if it is defined as macro
  */
