@@ -699,6 +699,8 @@ However, **interrupts are explicitly enabled here** to allow the use of delay() 
 Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irdispatcherdemo) examples.<br/>
 Take care to include `TinyIRReceiver.hpp` or `TinyIRSender.hpp` instead of `IRremote.hpp`.
 
+The **TinyIRSender** generates its 38 kHz signal by **[bit banging](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/TinyIRSender.hpp#L68)** using the `delayMicroseconds()` and `micros()` functions.
+
 ### TinyIRReceiver usage
 ```c++
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
@@ -728,7 +730,7 @@ void setup() {
 void loop() {}
 ```
 
-Another tiny receiver and sender **supporting more protocols** can be found [here](https://github.com/LuisMiCa/IRsmallDecoder).
+Another tiny receiver **supporting more protocols** can be found [here](https://github.com/LuisMiCa/IRsmallDecoder).
 
 # The FAST protocol
 The FAST protocol is a proprietary modified JVC protocol **without address, with parity and with a shorter header**.
@@ -880,8 +882,8 @@ This is often due to **timer resource conflicts** with the other library. Please
 
 ## Minimal CPU clock frequency
 For receiving, the **minimal CPU clock frequency is 4 MHz**, since the 50 &micro;s timer ISR (Interrupt Service Routine) takes around 12 &micro;s on a 16 MHz ATmega.<br/>
-The TinyReceiver, which requires no polling, runs with 1 MHz.<br/>
-For sending, the **default software generated PWM has problems on AVR running with 8 MHz**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable.
+The TinyReceiver, which requires no polling, works down to 1 MHz.<br/>
+For sending, the **default software generated PWM has problems on AVR running with 8 MHz and lower**. The PWM frequency is around 30 instead of 38 kHz and RC6 is not reliable.
 You can switch to timer PWM generation by `#define SEND_PWM_BY_TIMER`.
 
 ## Bang & Olufsen protocol

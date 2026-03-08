@@ -114,6 +114,8 @@
 #define SHOW_DISTANCE_WIDTH_DECODER_ERRORS  // Prints errors which prevents data to be decoded as distance width data
 #include <IRremote.hpp>
 
+#include "TinyIRSender.hpp"
+
 #if defined(APPLICATION_PIN) && !defined(DEBUG_BUTTON_PIN)
 #define DEBUG_BUTTON_PIN    APPLICATION_PIN // if held low, print timing for each received data
 #else
@@ -798,6 +800,21 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 #  endif // defined(DECODE_MAGIQUEST)
     } // end of once at first loop
+
+    Serial.println(F("Send NEC with TinyIRSender"));
+    Serial.flush();
+    sendNEC(IR_SEND_PIN, (uint8_t)sAddress, sCommand, sRepeats); // Casting saves 18 bytes
+    checkReceive(sAddress & 0xFF, sCommand);
+    delay(DELAY_AFTER_SEND);
+
+#  if defined(DECODE_FAST)
+    Serial.println(F("Send FAST with TinyIRSender"));
+    Serial.flush();
+    sendFAST(IR_SEND_PIN, sCommand, sRepeats);
+    checkReceive(0, sCommand);
+    delay(DELAY_AFTER_SEND);
+#  endif
+
 #endif // if FLASHEND >= 0x7FFF
 
 #if defined(DECODE_NEC)
