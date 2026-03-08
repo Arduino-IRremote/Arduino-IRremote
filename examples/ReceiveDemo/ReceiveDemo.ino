@@ -34,7 +34,7 @@
 
 #include <Arduino.h>
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 
 //#define LOCAL_DEBUG // If defined, print timing for each received data set (the same as if DEBUG_BUTTON_PIN was connected to low)
 
@@ -86,8 +86,9 @@
 //
 
 #if !defined(RAW_BUFFER_LENGTH)
-// For air condition remotes it may require up to 750. Default is 200.
-#  if !((defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF))
+// Use more than the default values of 100 for 512 bytes RAM, 200 for 2k RAM and 750 for more than 2k RAM
+#  if RAMSIZE >= 0x400
+// Here we have 1 k RAM or more
 #define RAW_BUFFER_LENGTH  750
 #  endif
 #endif

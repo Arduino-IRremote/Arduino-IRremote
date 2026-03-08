@@ -37,7 +37,7 @@
 #define INFO // To see some informative output of the IRCommandDispatcher library
 //#define DEBUG // To see some additional debug output of the IRCommandDispatcher library
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 
 #if defined(INFO) || defined(DEBUG)
 #define USE_DISPATCHER_COMMAND_STRINGS // Enables the printing of command strings. Requires additional 2 bytes RAM for each command mapping. Requires program memory for strings, but saves snprintf() code (1.5k) if INFO or DEBUG is activated, which has no effect if snprintf() is also used in other parts of your program / libraries.

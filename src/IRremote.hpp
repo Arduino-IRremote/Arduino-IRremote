@@ -167,10 +167,11 @@
 #else
 #  if defined(SEND_PWM_BY_TIMER)
 #    if defined(IR_SEND_PIN)
+#pragma message("INFO: Since SEND_PWM_BY_TIMER is defined, the current value of IR_SEND_PIN \"" STR(IR_SEND_PIN) "\" is discarded and will be replaced in IRTimer.hpp by the value determined by the timer used for PWM generation." )
+//#warning INFO: Since SEND_PWM_BY_TIMER is defined, the current value of IR_SEND_PIN is discarded and will be replaced in IRTimer.hpp by the value determined by the timer used for PWM generation
 #undef IR_SEND_PIN // to avoid warning 3 lines later
-#warning Since SEND_PWM_BY_TIMER is defined, the existing value of IR_SEND_PIN is discarded and replaced by the value determined by timer used for PWM generation
 #    endif
-#define IR_SEND_PIN     DeterminedByTimer // must be set here, since it is evaluated at IRremoteInt.h, before the include of private/IRTimer.hpp
+//#define IR_SEND_PIN     DeterminedByTimer // Must be set here to a dummy value, since it is evaluated at IRremoteInt.h, before the include of private/IRTimer.hpp
 #  endif
 #endif
 
@@ -212,9 +213,9 @@
 #define IR_SEND_DUTY_CYCLE_PERCENT 30 // 30 saves power and is compatible to the old existing code
 #endif
 
-#define MILLIS_IN_ONE_SECOND 1000L
+#define MILLIS_IN_ONE_SECOND 1000U // unused
 #define MICROS_IN_ONE_SECOND 1000000L
-#define MICROS_IN_ONE_MILLI 1000L
+#define MICROS_IN_ONE_MILLI 1000U
 
 #if defined(NO_LED_FEEDBACK_CODE)
 // convert to receive and send macros
@@ -229,7 +230,6 @@
 #define NO_LED_FEEDBACK_CODE
 #endif
 
-#include "IRremoteInt.h"
 /*
  * We always use digitalWriteFast() and digitalReadFast() functions to have a consistent mapping for pins.
  * For most non AVR cpu's, it is just a mapping to digitalWrite() and digitalRead() functions.
@@ -240,6 +240,8 @@
 
 #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)
 #include "private/IRTimer.hpp"  // defines IR_SEND_PIN for AVR and SEND_PWM_BY_TIMER
+
+#include "IRremoteInt.h"
 
 #  if !defined(NO_LED_FEEDBACK_CODE) && !(defined(DISABLE_CODE_FOR_RECEIVER) && defined(NO_LED_SEND_FEEDBACK_CODE))
 // Led feedback code enabled here

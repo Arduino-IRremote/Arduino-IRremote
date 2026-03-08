@@ -61,11 +61,11 @@
  * OpenLASIR uses the same timing as NEC but rearranges the address/command structure:
  *   - 8-bit address with 8-bit inverted complement (for error checking)
  *   - 16-bit command with no error check
- *     Bits  0-7:   Block ID              (8 bits)  ← Address low byte
- *     Bits  8-15:  ~Block ID             (8 bits)  ← Address high byte (inverted, for error check)
- *     Bits 16-23:  Device ID             (8 bits)  ← Command bits 0-7
- *     Bits 24-28:  Mode                  (5 bits)  ← Command bits 8-12
- *     Bits 29-31:  Data (color, etc.)    (3 bits)  ← Command bits 13-15
+ *     Bits  0-7:   Block ID              (8 bits)  - Address low byte
+ *     Bits  8-15:  ~Block ID             (8 bits)  - Address high byte (inverted, for error check)
+ *     Bits 16-23:  Device ID             (8 bits)  - Command bits 0-7
+ *     Bits 24-28:  Mode                  (5 bits)  - Command bits 8-12
+ *     Bits 29-31:  Data (color, etc.)    (3 bits)  - Command bits 13-15
  *
  * This is the opposite of NEC Extended, which uses 16-bit address and 8-bit validated command.
  *
@@ -182,7 +182,7 @@ uint16_t IRsend::computeOpenLASIRRawCommand(uint8_t aDeviceID, uint8_t aMode, ui
  *
  * @param aAddress        8-bit address (Block ID). Only lower 8 bits are used.
  * @param aCommand        16-bit command (Device ID + Mode + Data).
- * @param aNumberOfRepeats  If < 0 then only a special repeat frame will be sent.
+ * @param aNumberOfRepeats  If < 0 then only a special NEC repeat frame will be sent.
  */
 void IRsend::sendOpenLASIR(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendPulseDistanceWidth_P(&NECProtocolConstants, computeOpenLASIRRawDataAndChecksum(aAddress, aCommand), OPENLASIR_BITS,
@@ -197,7 +197,7 @@ void IRsend::sendOpenLASIR(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNum
  * @param aDeviceID     8-bit Device ID.
  * @param aMode         5-bit Mode.
  * @param aData         3-bit Data (color, etc.).
- * @param aNumberOfRepeats  If < 0 then only a special repeat frame will be sent.
+ * @param aNumberOfRepeats  If < 0 then only a special NEC repeat frame will be sent.
  */
 void IRsend::sendOpenLASIR(uint8_t aAddress, uint8_t aDeviceID, uint8_t aMode, uint8_t aData, int_fast8_t aNumberOfRepeats) {
     sendPulseDistanceWidth_P(&NECProtocolConstants,
@@ -208,7 +208,7 @@ void IRsend::sendOpenLASIR(uint8_t aAddress, uint8_t aDeviceID, uint8_t aMode, u
 /**
  * Send raw 32-bit OpenLASIR data.
  * @param aRawData          The pre-computed 32-bit raw data.
- * @param aNumberOfRepeats  If < 0 then only a special repeat frame will be sent.
+ * @param aNumberOfRepeats  If < 0 then only a special NEC repeat frame will be sent.
  */
 void IRsend::sendOpenLASIRRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
     sendPulseDistanceWidth_P(&NECProtocolConstants, aRawData, OPENLASIR_BITS, aNumberOfRepeats);

@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2025 Armin Joachimsmeyer
+ * Copyright (c) 2025-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,10 +62,7 @@
 #define SUPPORT_MULTIPLE_RECEIVER_INSTANCES
 void UserIRReceiveTimerInterruptHandler(); // Is defined below and must be declared before line #include <IRremote.hpp>
 
-/*
- * This include defines the actual pin number for pins like IR_RECEIVE_PIN, IR_SEND_PIN for many different boards and architectures
- */
-#include "PinDefinitionsAndMore.h"
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 #include <IRremote.hpp> // include the library
 
 IRrecv MySecondIrReceiver(IR_RECEIVE_PIN_OF_SECOND_RECEIVER); // This sets the pin for the second instance
@@ -144,7 +141,7 @@ void handleSuccessfulDecoding(IRrecv *aIRReceiverInstance) {
 }
 
 /*
- * This handler is called in ISR context after IrReceiver.ReceiveInterruptHandler() if SUPPORT_MULTIPLE_RECEIVER_INSTANCES is active.
+ * If SUPPORT_MULTIPLE_RECEIVER_INSTANCES is active, this handler is called in ISR context after IrReceiver.ReceiveInterruptHandler().
  * Here we just call the standard ReceiveInterruptHandler for the second receiver.
  * Doing it this way, we are able to modify the body of this function to support more than 2 IRrecv instances for receiving.
  */

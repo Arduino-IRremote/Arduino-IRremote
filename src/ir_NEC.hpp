@@ -183,7 +183,7 @@ void IRsend::sendNEC(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOf
 
 /**
  * There is NO delay after the last sent repeat!
- * @param aNumberOfRepeats  If < 0 then only a special repeat frame without leading and trailing space
+ * @param aNumberOfRepeats  If < 0 then only a special NEC repeat frame without leading and trailing space
  *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
 void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {

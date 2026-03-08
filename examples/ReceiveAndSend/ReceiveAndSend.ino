@@ -46,8 +46,6 @@
  */
 #include <Arduino.h>
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
-
 /*
  * Specify which protocol(s) should be used for decoding.
  * If no protocol is defined, all protocols (except Bang&Olufsen) are active.
@@ -72,15 +70,19 @@
 //
 
 #if !defined(RAW_BUFFER_LENGTH)
-// For air condition remotes it may require up to 750. Default is 200.
-#  if !((defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF))
+// Use more than the default values of 100 for 512 bytes RAM, 200 for 2k RAM and 750 for more than 2k RAM
+#  if RAMSIZE <= 0x400
+// Here we have 1 k RAM or less
+#define RAW_BUFFER_LENGTH  360
+#  else
 // Here we most likely have 2 k RAM or more
-#define RAW_BUFFER_LENGTH  700 // we require 2 buffer of this size for this example
+#define RAW_BUFFER_LENGTH  750
 #  endif
-#  if !((defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF))
+#endif
+
+#if RAMSIZE >= 0x1000
 // Here we most likely have 4 k RAM or more
-#define USE_16_BIT_TIMING_BUFFER    // Use a 16-bit buffer to preserve values above 12750 us
-#  endif
+#define USE_16_BIT_TIMING_BUFFER    // Use a 16-bit buffer to preserve timing values above 12750 us
 #endif
 
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
@@ -98,6 +100,7 @@
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 #include <IRremote.hpp>
 
 int SEND_BUTTON_PIN = APPLICATION_PIN;

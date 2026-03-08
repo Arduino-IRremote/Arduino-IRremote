@@ -65,10 +65,7 @@
 //#define USE_THRESHOLD_DECODER  // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Saves 110 bytes program memory.
 //#define RAW_BUFFER_LENGTH  750 // For air condition remotes it may require up to 750. Default is 200.
 
-/*
- * This include defines the actual pin number for pins like IR_RECEIVE_PIN, IR_SEND_PIN for many different boards and architectures
- */
-#include "PinDefinitionsAndMore.h"
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 #include <IRremote.hpp> // include the library
 
 void setup() {

@@ -363,6 +363,9 @@ void noTone(uint8_t aPinNumber){
 #define FLASHEND 0xFFFF // Dummy value for platforms where FLASHEND is not defined
 #endif
 
-#if !defined (RAMEND)
-#define RAMEND 0x0FFF // Dummy value for platforms where RAMEND is not defined
+#if !defined (RAMSIZE) && defined(RAMEND) && defined(RAMSTART)
+#define RAMSIZE (RAMEND - RAMSTART + 1) //
+#endif
+#if !defined (RAMSIZE)
+#define RAMSIZE 0x1000 // 4k Dummy value for platforms where RAMSIZE is not defined
 #endif

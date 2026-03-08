@@ -33,17 +33,19 @@
 
 #include <Arduino.h>
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 
 #if !defined(RAW_BUFFER_LENGTH)
-// For air condition remotes it may require up to 750. Default is 200.
-#  if (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
+// Use more than the default values of 100 for 512 bytes RAM, 200 for 2k RAM and 750 for more than 2k RAM
+#  if RAMSIZE <= 0x400
+// Here we have 1 k RAM or less
 #define RAW_BUFFER_LENGTH  360
 #  else
+// Here we most likely have 2 k RAM or more
 #define RAW_BUFFER_LENGTH  750
 #  endif
 
-#  if (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
+#  if RAMSIZE <= 0x800
 #define DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE 200 // The decoder accepts mark or space durations up to 200 * 50 (MICROS_PER_TICK) = 10 milliseconds
 #  else
 #define DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE 400 // The decoder accepts mark or space durations up to 400 * 50 (MICROS_PER_TICK) = 20 milliseconds

@@ -40,7 +40,7 @@
 //#define NO_LED_RECEIVE_FEEDBACK_CODE  // Saves 44 bytes program memory
 //#define NO_LED_SEND_FEEDBACK_CODE     // Saves 34 bytes program memory
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 #include <IRremote.hpp>
 
 // IR commands from AEG hob2hood device

@@ -96,7 +96,7 @@
 #define DECODE_SAMSUNG
 #define ADDRESS_OF_SAMSUNG_REMOTE   0x07 // The value you see as address in printIRResultShort()
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 #include <IRremote.hpp>
 
 void sendSamsungSmartHubMacro(bool aDoSelect);

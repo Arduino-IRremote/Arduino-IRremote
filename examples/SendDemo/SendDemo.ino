@@ -32,8 +32,6 @@
 
 #include <Arduino.h>
 
-#include "PinDefinitionsAndMore.h"  // Define macros for input and output pin etc.
-
 #if !defined(ARDUINO_ESP32C3_DEV) // This is due to a bug in RISC-V compiler, which requires unused function sections :-(.
 #define DISABLE_CODE_FOR_RECEIVER // Disables static receiver code like receive timer ISR handler and static IRReceiver and irparams data. Saves 450 bytes program memory and 269 bytes RAM if receiving functions are not required.
 #endif
@@ -45,6 +43,9 @@
 //#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
 //#define USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM // Simulate an active high receiver signal instead of an active low signal.
 //#define NO_LED_FEEDBACK_CODE      // Saves 322 bytes program memory
+
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
+
 #if FLASHEND <= 0x1FFF              // For 8k flash or less like ATtiny85
 #define NO_LED_FEEDBACK_CODE
 #endif
@@ -175,7 +176,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 
     if (sRepeats == 0) {
-#if FLASHEND >= 0x3FFF && ((!defined(RAMEND) && !defined(RAMSIZE)) || (defined(RAMEND) && RAMEND > 0x6FF) || (defined(RAMSIZE) && RAMSIZE > 0x6FF))
+#if FLASHEND >= 0x3FFF && RAMSIZE >= 0x600
         /*
          * For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
          * Send constant values only once in this demo
@@ -234,7 +235,8 @@ void loop() {
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance PGM using ProtocolConstants 1=432|1296, 0=432|432"));
         Serial.flush();
 #  if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, (IRDecodedRawDataType*) &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, (IRDecodedRawDataType*) &tRawDataPGM[0], 48,
+                NO_REPEATS); // Panasonic is a Kaseikyo variant
 #  else
         IrSender.sendPulseDistanceWidth_P(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
 #  endif
@@ -379,9 +381,9 @@ void loop() {
     IrSender.sendSony(sAddress & 0x1FFF, sCommand & 0x7F, sRepeats, SIRCS_20_PROTOCOL);
     delay(DELAY_AFTER_SEND);
 
-    Serial.println(F("Send Samsung 8 bit command"));
+    Serial.println(F("Send Samsung 8 bit command and 8 bit address"));
     Serial.flush();
-    IrSender.sendSamsung(sAddress, sCommand, sRepeats);
+    IrSender.sendSamsung(sAddress & 0xFF, sCommand, sRepeats);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Samsung 8 bit command and 16 bit address"));
@@ -392,6 +394,7 @@ void loop() {
     Serial.println(F("Send Samsung 16 bit command and address"));
     Serial.flush();
     IrSender.sendSamsung16BitAddressAndCommand(sAddress, s16BitCommand, sRepeats);
+    delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Samsung48 16 bit command"));
     Serial.flush();
@@ -410,12 +413,12 @@ void loop() {
 
     Serial.println(F("Send Marantz variant of RC5x with 6 command bits and additional command extension"));
     Serial.flush();
-    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand & 0x3F, sCommandExtension, sRepeats);
+    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand & 0x3F, sRepeats, sCommandExtension);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send Marantz variant of RC5x with 7 command bits and additional command extension"));
     Serial.flush();
-    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand & 0x7F, sCommandExtension, sRepeats);
+    IrSender.sendRC5Marantz(sAddress & 0x1F, sCommand & 0x7F, sRepeats, sCommandExtension);
     delay(DELAY_AFTER_SEND);
 
     Serial.println(F("Send RC6"));
@@ -428,7 +431,7 @@ void loop() {
     IrSender.sendRC6A(sAddress & 0xFF, sCommand, sRepeats, 0x2711, true);
     delay(DELAY_AFTER_SEND);
 
-#if FLASHEND >= 0x3FFF && ((!defined(RAMEND) && !defined(RAMSIZE)) || (defined(RAMEND) && RAMEND > 0x4FF) || (defined(RAMSIZE) && RAMSIZE > 0x4FF)) // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
+#if FLASHEND >= 0x3FFF && RAMSIZE >= 0x400 // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
 
     Serial.println(F("Send MagiQuest"));
     Serial.flush();

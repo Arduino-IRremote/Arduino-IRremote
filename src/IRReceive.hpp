@@ -1968,6 +1968,8 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
          * PulseDistanceWidthFromArray(38, 8900, 4350, 600, 1650, 600, 550, &tRawData[0], 72, PROTOCOL_IS_LSB_FIRST, <RepeatPeriodMillis>, <numberOfRepeats>);
          * or
          * <Protocol_Name>(0x<Address>, 0x<Command>, <numberOfRepeats>);
+         * or
+         * FAST(0x<Command>, <numberOfRepeats>);
          */
         if (decodedIRData.protocol == UNKNOWN){
             aSerial->print(F("Raw(rawIRTimings, sizeof(rawIRTimings) / sizeof(rawIRTimings[0]), 38, <RepeatPeriodMillis>"));
@@ -2020,20 +2022,28 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             if (decodedIRData.protocol == MAGIQUEST) {
 #  if (__INT_WIDTH__ < 32)
                 aSerial->print(decodedIRData.decodedRawData, HEX);
+                aSerial->print(F(", 0x"));
 #  else
                 PrintULL::print(aSerial, decodedIRData.decodedRawData, HEX);
+                aSerial->print(F(", 0x"));
 #  endif
             } else {
+#  if defined(DECODE_FAST)
+                // do not print address parameter for FAST protocol
+                if (decodedIRData.protocol != FAST) {
+                    aSerial->print(decodedIRData.address, HEX);
+                    aSerial->print(F(", 0x"));
+                }
+#  else
                 aSerial->print(decodedIRData.address, HEX);
+                aSerial->print(F(", 0x"));
+#  endif
             }
 #else
-            /*
-             * New decoders have address and command
-             */
             aSerial->print(decodedIRData.address, HEX);
+            aSerial->print(F(", 0x"));
 #endif
 
-            aSerial->print(F(", 0x"));
             aSerial->print(decodedIRData.command, HEX);
             if (decodedIRData.protocol == SONY) {
                 printNumberOfRepeats(aSerial);

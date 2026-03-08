@@ -33,17 +33,6 @@
 
 #include <Arduino.h>
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
-
-#if !defined(RAW_BUFFER_LENGTH)
-// For air condition remotes it requires 600 (maximum for 2k RAM) to 750. Default is 112 if DECODE_MAGIQUEST is enabled, otherwise 100.
-#  if (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
-#define RAW_BUFFER_LENGTH  360
-#  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
-#define RAW_BUFFER_LENGTH  400 // 400 is OK with Pronto and 1000 is OK without Pronto. 1200 is too much here, because then variables are overwritten.
-#  endif
-#endif
-
 //#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 //#define EXCLUDE_EXOTIC_PROTOCOLS  // Saves around 240 bytes program memory if IrSender.write is used
 //#define USE_THRESHOLD_DECODER   // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Requires additional 24 bytes program memory.
@@ -57,6 +46,19 @@
 //#define NO_LED_RECEIVE_FEEDBACK_CODE  // Saves 176 bytes program memory
 //#define NO_LED_SEND_FEEDBACK_CODE     // Saves 38 bytes program memory
 //#define USE_16_BIT_TIMING_BUFFER      // Use a 16-bit buffer to preserve values above 12750 us
+
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
+
+#if !defined(RAW_BUFFER_LENGTH)
+// Use more than the default values of 100 for 512 bytes RAM, 200 for 2k RAM and 750 for more than 2k RAM
+#  if RAMSIZE <= 0x400
+// Here we have 1 k RAM or less
+#define RAW_BUFFER_LENGTH  360
+#  elif RAMSIZE <= 0x800
+// Here we have 2 k RAM or less, otherwise use default of 750
+#define RAW_BUFFER_LENGTH  400 // 400 is OK with Pronto and 1000 is OK without Pronto. 1200 is too much here, because then variables are overwritten.
+#  endif
+#endif
 
 //#define USE_MSB_DECODING_FOR_DISTANCE_DECODER
 
@@ -113,6 +115,8 @@
 
 #define SHOW_DISTANCE_WIDTH_DECODER_ERRORS  // Prints errors which prevents data to be decoded as distance width data
 #include <IRremote.hpp>
+
+#include "TinyIRSender.hpp"
 
 #if defined(APPLICATION_PIN) && !defined(DEBUG_BUTTON_PIN)
 #define DEBUG_BUTTON_PIN    APPLICATION_PIN // if held low, print timing for each received data
@@ -531,7 +535,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 #endif // defined(DECODE_NEC)
 
-#if FLASHEND >= 0x7FFF && ((!defined(RAMEND) && !defined(RAMSIZE)) || (defined(RAMEND) && RAMEND > 0x6FF) || (defined(RAMSIZE) && RAMSIZE > 0x6FF)) // For 32k flash or more, like Uno. Code does not fit in program memory of ATtiny1604 etc.
+#if FLASHEND >= 0x7FFF && RAMSIZE >= 0x600 // For 32k flash or more, like Uno. Code does not fit in program memory of ATtiny1604 etc.
     if (sCommand == 0x76) {
         /*
          * Do this only once at the first loop
@@ -605,7 +609,8 @@ void loop() {
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance PGM using ProtocolConstants 1=432|1296, 0=432|432"));
         Serial.flush();
 #    if __INT_WIDTH__ < 32
-        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, (IRDecodedRawDataType*) &tRawDataPGM[0], 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
+        IrSender.sendPulseDistanceWidthFromPGMArray_P(&KaseikyoProtocolConstants, (IRDecodedRawDataType*) &tRawDataPGM[0], 48,
+        NO_REPEATS); // Panasonic is a Kaseikyo variant
         checkReceive(0x0B, 0x10);
 #    else
         IrSender.sendPulseDistanceWidth_P(&KaseikyoProtocolConstants, 0xA010B02002, 48, NO_REPEATS); // Panasonic is a Kaseikyo variant
@@ -798,6 +803,21 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 #  endif // defined(DECODE_MAGIQUEST)
     } // end of once at first loop
+
+    Serial.println(F("Send NEC with TinyIRSender"));
+    Serial.flush();
+    sendNEC(IR_SEND_PIN, (uint8_t) sAddress, sCommand, sRepeats); // Casting saves 18 bytes
+    checkReceive(sAddress & 0xFF, sCommand);
+    delay(DELAY_AFTER_SEND);
+
+#  if defined(DECODE_FAST)
+    Serial.println(F("Send FAST with TinyIRSender"));
+    Serial.flush();
+    sendFAST(IR_SEND_PIN, sCommand, sRepeats);
+    checkReceive(0, sCommand);
+    delay(DELAY_AFTER_SEND);
+#  endif
+
 #endif // if FLASHEND >= 0x7FFF
 
 #if defined(DECODE_NEC)

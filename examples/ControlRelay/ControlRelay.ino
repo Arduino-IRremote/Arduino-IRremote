@@ -33,9 +33,9 @@
  */
 #include <Arduino.h>
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 
-#if FLASHEND <= 0x1FFF || (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)  // For 8k flash or 512 bytes RAM or less, like ATtiny85, ATtiny167
+#if FLASHEND <= 0x1FFF || RAMSIZE <= 0x400 // For 8k flash or 512 bytes RAM or less, like ATtiny85, ATtiny167
 #define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #endif

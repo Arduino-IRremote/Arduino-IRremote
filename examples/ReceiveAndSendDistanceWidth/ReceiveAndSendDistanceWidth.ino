@@ -46,21 +46,18 @@
  */
 #include <Arduino.h>
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
-#if !defined(IR_SEND_PIN)
-#define IR_SEND_PIN         3
-#endif
-
 /*
  * Specify DistanceWidthProtocol for decoding. This must be done before the #include <IRremote.hpp>
  */
 #define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
 //
 #if !defined(RAW_BUFFER_LENGTH)
-// For air condition remotes it may require up to 750. Default is 200.
-#  if (defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF)
+// Use more than the default values of 100 for 512 bytes RAM, 200 for 2k RAM and 750 for more than 2k RAM
+#  if RAMSIZE <= 0x400
+// Here we have 1 k RAM or less
 #define RAW_BUFFER_LENGTH  360
-#  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
+#  else
+// Here we most likely have 2 k RAM or more
 #define RAW_BUFFER_LENGTH  750
 #  endif
 #endif
@@ -75,6 +72,7 @@
 
 //#define DEBUG // Activate this for lots of lovely debug output from the decoders.
 
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 #include <IRremote.hpp>
 
 #define SEND_BUTTON_PIN                     APPLICATION_PIN

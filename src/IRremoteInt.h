@@ -65,17 +65,18 @@
  * 16 bit protocols like BOSEWAVE, DENON, FAST, JVC, LEGO_PF, RC5, SONY(12 or 15) requires a buffer length of 36.
  * MAGIQUEST requires a buffer length of 112.
  * Air conditioners often send a longer protocol data stream up to 750 bits.
+ * Default is 100 for 512 bytes RAM, 200 for 2k RAM and 750 for more than 2k RAM
  */
 #if !defined(RAW_BUFFER_LENGTH)
-#  if (defined(RAMEND) && RAMEND <= 0x2FF) || (defined(RAMSIZE) && RAMSIZE < 0x2FF)
-// for RAMsize <= 512 bytes
+#  if (defined(RAMSIZE) && RAMSIZE <= 0x200) || (defined(RAMEND) && RAMEND <= 0x2FF) // assuming RAMSTART at 0x100
+// For RAMSIZE <= 512 bytes
 #define RAW_BUFFER_LENGTH  100  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
-#  elif (defined(RAMEND) && RAMEND <= 0x8FF) || (defined(RAMSIZE) && RAMSIZE < 0x8FF)
-// for RAMsize <= 2k
+#  elif (defined(RAMSIZE) && RAMSIZE < 0x8FF) || (defined(RAMEND) && RAMEND <= 0x8FF)  // assuming RAMSTART at 0x100
+// For RAMSIZE <= 2k
 #define RAW_BUFFER_LENGTH  200  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
 #  else
 // For undefined or bigger RAMsize
-#define RAW_BUFFER_LENGTH  750 // The value for air condition remotes.
+#define RAW_BUFFER_LENGTH  750 // The value required for air condition remotes.
 #  endif
 #endif
 #if RAW_BUFFER_LENGTH % 2 == 1

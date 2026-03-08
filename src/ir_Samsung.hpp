@@ -197,7 +197,7 @@ void IRsend::sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumb
 
 /**
  * Maybe no one needs it in the wild...
- * As above, but we are able to send e.g. 0x0042 as 16 bit address
+ * As above, but we are able to send e.g. 0x0042 as 16 bit address, which is otherwise interpreted as 8 bit address
  * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent
  */
 void IRsend::sendSamsung16BitAddressAnd8BitCommand(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
@@ -214,7 +214,7 @@ void IRsend::sendSamsung16BitAddressAnd8BitCommand(uint16_t aAddress, uint8_t aC
 
 /**
  * Maybe no one needs it in the wild...
- * As above, but we are able to send e.g. 0x0042 as 16 bit address
+ * As above, but we are able to send e.g. 0x0042 as 16 bit address, which is otherwise interpreted as 8 bit address
  * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent
  */
 void IRsend::sendSamsung16BitAddressAndCommand(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {

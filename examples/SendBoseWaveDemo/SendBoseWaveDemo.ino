@@ -39,7 +39,7 @@
 
 //#define NO_LED_FEEDBACK_CODE      // Saves 216 bytes program memory
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 #include <IRremote.hpp>
 
 //......................................................................

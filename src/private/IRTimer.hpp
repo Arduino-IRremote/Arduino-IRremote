@@ -11,7 +11,7 @@
  *************************************************************************************
  * MIT License
  *
- * Copyright (c) 2021-2025 Armin Joachimsmeyer
+ * Copyright (c) 2021-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,14 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  ************************************************************************************
+ */
+
+/**
+ * Hardware PWM generation of sending signal with 8 bit timer:
+ * 16 MHZ F_CPU and 38 kHz -> prescaling = 2, divider = 210.526 -> 38.1 kHz with divider 210
+ * 8 MHZ F_CPU and 38 kHz -> no prescaling , divider = 210.526 -> 38.1 kHz with divider 210
+ * 4 MHZ F_CPU and 38 kHz -> no prescaling , divider = 105.26 -> 38.1 kHz with divider 105
+ * 1 MHZ F_CPU and 38 kHz -> no prescaling , divider = 26.31 -> 38.4 kHz with divider 36
  */
 #ifndef _IR_TIMER_HPP
 #define _IR_TIMER_HPP
@@ -1049,7 +1057,7 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
     TCNT1 = 0;// not really required, since we have an 8 bit counter, but makes the signal more reproducible
     GTCCR = _BV(PWM1B) | _BV(COM1B0);// PWM1B = 1: Enable PWM for OCR1B, COM1B0 Clear on compare match
 #  else
-    const uint16_t tPWMWrapValue = ((F_CPU / 2) / 1000) / (aFrequencyKHz); // 210 for 16 MHz and 38 kHz
+    const uint16_t tPWMWrapValue = ((F_CPU / 2) / 1000) / (aFrequencyKHz); // 210.526 for 16 MHz and 38 kHz or 38.1 kHz for 210
     TCCR1 = _BV(CTC1) | _BV(CS11); // CTC1 = 1: TOP value set to OCR1C, CS11 Prescaling by 2
     OCR1C = tPWMWrapValue - 1;
     OCR1B = ((tPWMWrapValue * IR_SEND_DUTY_CYCLE_PERCENT_FOR_LEVEL_HIGH) / 100) - 1;
@@ -2343,8 +2351,11 @@ void timerConfigForSend(uint16_t aFrequencyKHz) {
     (void) aFrequencyKHz;
 }
 #  endif // defined(SEND_PWM_BY_TIMER)
-
 #endif // defined(DOXYGEN / CPU_TYPES)
+
+#if defined(SEND_PWM_BY_TIMER) && defined(IR_SEND_PIN)
+#pragma message("INFO: Value of IR_SEND_PIN determined by SEND_PWM_BY_TIMER is: " STR(IR_SEND_PIN))
+#endif
 
 /** @}*/
 /** @}*/

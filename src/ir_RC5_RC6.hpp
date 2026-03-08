@@ -86,7 +86,7 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0. Only 
 //
 // MARANTZ
 // https://forum.arduino.cc/t/sending-rc-5-extended-code-using-irsender/1045841/10 - Protocol Maranz Extended
-// Marantz uses RC5X and adds a a pause after the address / first 8 bits
+// Marantz uses RC5X and adds a 3.5 ms pause after the address / first 8 bits
 // After the 6 bit command (of RC5) an additional 6 bit command extension is sent -> 20 bits incl. field bit and start bit
 //
 #define RC5_ADDRESS_BITS        5
@@ -127,7 +127,6 @@ void IRsend::setToggleBitValueForRC5AndRC6(uint8_t aRC5ToggleBitValue) {
 }
 
 /**
- * !!! Not tested, because no Marantz remote was at hand and no receive function was contributed!!!
  * Send function for the Marantz version of RC5(X) with a pause of 4 * RC5_UNIT after address / first 8 bits
  * and before the bits of command and command extension.
  * Marantz seems to require at least one repetition with toggle bit set
@@ -176,14 +175,14 @@ void IRsend::sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNum
         // start bit is sent by sendBiphaseData followed by the field bit and toggle bit and address
         sendBiphaseData(RC5_UNIT, tIRData, RC5_COMMAND_FIELD_BIT + RC5_TOGGLE_BIT + RC5_ADDRESS_BITS);
         // pause before the bits of command and command extension to indicate that it's Marantz-RC5x
-        space(MARANTZ_PAUSE_DURATION); // Marantz-RC5x has a pause before the bits of command and command extension
+        space(MARANTZ_PAUSE_DURATION); // 3556, Marantz-RC5x has a pause before the bits of command and command extension
         // send command and command extension
         sendBiphaseData(RC5_UNIT, tIRExtData, RC5_COMMAND_BITS + MARANTZ_COMMAND_EXTENSION_BITS, false);
 
         tNumberOfCommands--;
         // skip last delay!
         if (tNumberOfCommands > 0) {
-            // send repeated command in a fixed raster
+            // send repeated command in a fixed raster of 100 ms
             delay(MARANTZ_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
         }
     }

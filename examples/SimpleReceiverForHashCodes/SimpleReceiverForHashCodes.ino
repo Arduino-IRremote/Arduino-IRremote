@@ -32,7 +32,7 @@
 
 #include <Arduino.h>
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc.
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 
 /*
  * Specify which protocol(s) should be used for decoding.
@@ -40,16 +40,17 @@
  */
 #define DECODE_HASH             // special decoder for all protocols
 #if !defined(RAW_BUFFER_LENGTH)
-#  if !((defined(RAMEND) && RAMEND <= 0x4FF) || (defined(RAMSIZE) && RAMSIZE < 0x4FF))
+// Use more than the default values of 100 for 512 bytes RAM, 200 for 2k RAM and 750 for more than 2k RAM
+#  if RAMSIZE >= 0x400
+// Here we have 1 k RAM or more
+#define RAW_BUFFER_LENGTH  750
+#  elif RAMSIZE >= 0x800
+// Here we have 2 k RAM or more
 #define RAW_BUFFER_LENGTH  1000 // Especially useful for unknown and probably long protocols
 #  endif
 #endif
 //#define DEBUG                 // Activate this for lots of lovely debug output from the decoders.
 
-/*
- * This include defines the actual pin number for pins like IR_RECEIVE_PIN, IR_SEND_PIN for many different boards and architectures
- */
-#include "PinDefinitionsAndMore.h"
 #include <IRremote.hpp> // include the library
 
 void setup() {

@@ -369,6 +369,38 @@ rawIRTimings[112]:
 Duration=64900us
 
 
+Send NEC with TinyIRSender
+Protocol=NEC Address=0xF1, Command=0x76, Raw-Data=0x89760EF1, 32 bits, LSB first, Gap=790250us, Duration=75050us
+Send with: IrSender.sendNEC(0xF1, 0x76, <numberOfRepeats>);
+rawIRTimings[68]:
+ -790250
+ +8900,-5250
+ + 600,-1950 + 600,- 650 + 600,- 600 + 600,- 650
+ + 500,-2000 + 650,-1900 + 600,-1950 + 600,-1950
+ + 650,- 600 + 550,-1950 + 650,-1900 + 650,-1900
+ + 650,- 600 + 650,- 550 + 600,- 650 + 600,- 600
+ + 650,- 550 + 650,-1900 + 600,-1950 + 600,- 650
+ + 600,-1950 + 650,-1900 + 650,-1900 + 550,- 650
+ + 600,-1950 + 650,- 550 + 650,- 600 + 600,-1900
+ + 650,- 600 + 600,- 600 + 600,- 650 + 600,-1950
+ + 600
+Duration=75050us
+
+
+Send FAST with TinyIRSender
+Protocol=FAST Address=0x0, Command=0x76, Raw-Data=0x8976, 16 bits, LSB first, Gap=764700us, Duration=32050us
+Send with: IrSender.sendFAST(0x76, <numberOfRepeats>);
+rawIRTimings[36]:
+ -764700
+ +2100,-1200
+ + 550,- 600 + 550,-1850 + 600,-1750 + 600,- 550
+ + 500,-1900 + 600,-1800 + 550,-1800 + 550,- 600
+ + 600,-1800 + 550,- 600 + 600,- 550 + 550,-1800
+ + 600,- 550 + 550,- 600 + 600,- 550 + 550,-1800
+ + 550
+Duration=32050us
+
+
 Send Onkyo (NEC with 16 bit command)
 Protocol=Onkyo Address=0xFFF1, Command=0x7776, Raw-Data=0x7776FFF1, 32 bits, LSB first, Gap=791150us, Duration=76750us
 Send with: IrSender.sendOnkyo(0xFFF1, 0x7776, <numberOfRepeats>);
@@ -823,7 +855,7 @@ Duration=27150us
 
 Send FAST
 Protocol=FAST Address=0x0, Command=0x76, Raw-Data=0x8976, 16 bits, LSB first, Gap=746700us, Duration=29250us
-Send with: IrSender.sendFAST(0x0, 0x76, <numberOfRepeats>);
+Send with: IrSender.sendFAST(0x76, <numberOfRepeats>);
 rawIRTimings[36]:
  -746700
  +2200,-1000
@@ -965,7 +997,38 @@ rawIRTimings[68]:
  + 600,- 550 + 600,- 500 + 600,- 550 + 600,-1650
  + 600,-1650 + 650,-1550 + 600,-1650 + 650,- 500
  + 600
-Duration=67900us
+
+
+Send NEC with TinyIRSender
+Protocol=NEC Address=0xF2, Command=0x87, Raw-Data=0x78870DF2, 32 bits, LSB first, Gap=744800us, Duration=75100us
+Send with: IrSender.sendNEC(0xF2, 0x87, <numberOfRepeats>);
+rawIRTimings[68]:
+ -744800
+ +8950,-5250
+ + 550,- 650 + 650,-1900 + 650,- 550 + 550,- 700
+ + 650,-1900 + 650,-1900 + 600,-1950 + 600,-1950
+ + 650,-1900 + 600,- 600 + 550,-2000 + 650,-1900
+ + 600,- 600 + 650,- 600 + 600,- 600 + 650,- 600
+ + 600,-1950 + 600,-1950 + 650,-1900 + 600,- 600
+ + 550,- 700 + 650,- 550 + 650,- 600 + 600,-1950
+ + 650,- 550 + 650,- 550 + 650,- 600 + 600,-1950
+ + 600,-1950 + 600,-1950 + 600,-1950 + 600,- 600
+ + 600
+Duration=75100us
+
+
+Send FAST with TinyIRSender
+Protocol=FAST Address=0x0, Command=0x87, Raw-Data=0x7887, 16 bits, LSB first, Gap=745000us, Duration=32150us
+Send with: IrSender.sendFAST(0x87, <numberOfRepeats>);
+rawIRTimings[36]:
+ -745000
+ +2050,-1250
+ + 600,-1800 + 600,-1800 + 550,-1800 + 600,- 550
+ + 500,- 650 + 550,- 600 + 550,- 600 + 600,-1800
+ + 550,- 600 + 550,- 600 + 550,- 550 + 550,-1850
+ + 600,-1800 + 600,-1750 + 600,-1800 + 550,- 600
+ + 600
+Duration=32150usDuration=67900us
 
 
 Send Onkyo (NEC with 16 bit command)
@@ -1433,7 +1496,7 @@ Duration=27150us
 
 Send FAST
 Protocol=FAST Address=0x0, Command=0x87, Raw-Data=0x7887, 16 bits, LSB first, Gap=726950us, Duration=29200us
-Send with: IrSender.sendFAST(0x0, 0x87, <numberOfRepeats>);
+Send with: IrSender.sendFAST(0x87, <numberOfRepeats>);
 rawIRTimings[36]:
  -726950
  +2200,-1000
