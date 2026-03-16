@@ -80,7 +80,7 @@ jobs:
           - stm32duino:STM32F1:genericSTM32F103C
           - sandeepmistry:nRF5:BBCmicrobit
           - Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
-          - vega:riscv:aries_v3
+#          - vega:riscv:aries_v3
 
         # Specify parameters for each board.
         # With sketches-exclude you may exclude specific examples for a board. Use a comma separated list.
@@ -143,6 +143,7 @@ jobs:
 
           - arduino-boards-fqbn: arduino:avr:leonardo
             build-properties: # the flags were put in compiler.cpp.extra_flags
+              SimpleSender: -DSEND_PWM_BY_TIMER
               TinyReceiver: -DNO_LED_FEEDBACK_CODE
               TinySender: -DNO_LED_FEEDBACK_CODE
             sketches-exclude: UnitTest # Sketch uses 28764 bytes (100%) of program storage space. Maximum is 28672 bytes
@@ -155,23 +156,30 @@ jobs:
               TinySender: -DUSE_ONKYO_PROTOCOL -DENABLE_NEC2_REPEATS -DNO_LED_FEEDBACK_CODE
 
           - arduino-boards-fqbn: arduino:samd:arduino_zero_native
+#            build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER #error PWM generation by hardware is not yet implemented for SAMD
             sketches-exclude: TinyReceiver,IRDispatcherDemo
 
           - arduino-boards-fqbn: arduino:renesas_uno:unor4wifi
+#            build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER #error PWM generation by hardware not yet implemented for Arduino Uno R4
             sketches-exclude: TinyReceiver,IRDispatcherDemo
 
           - arduino-boards-fqbn: adafruit:samd:adafruit_metro_m4:cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off
             platform-url: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+#            build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER #error PWM generation by hardware is not yet implemented for SAMD
             sketches-exclude: TinyReceiver,IRDispatcherDemo
 
           - arduino-boards-fqbn: adafruit:samd:adafruit_itsybitsy_m4
             platform-url: https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
+#            build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER #error PWM generation by hardware is not yet implemented for SAMD
             sketches-exclude: TinyReceiver,IRDispatcherDemo
 
-
           - arduino-boards-fqbn: arduino:mbed:nano33ble
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              SimpleSender: -DSEND_PWM_BY_TIMER
+#            build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER  #warning INFO: For ESP32, RP2040, mbed and particle boards SEND_PWM_BY_TIMER is enabled by default
 
 #
 # RP2040
@@ -283,18 +291,20 @@ jobs:
             platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
             sketches-exclude: TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER #error PWM generation by hardware not implemented for STM32
               All: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: STMicroelectronics:stm32:GenL0:pnum=THUNDERPACK_L072 # ST version
             platform-url: https://raw.githubusercontent.com/stm32duino/BoardManagerFiles/main/package_stmicroelectronics_index.json
             sketches-exclude: TinyReceiver,IRDispatcherDemo
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              All: -DRAW_BUFFER_LENGTH=750
+#            build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER #error PWM generation by hardware not implemented for STM32
 
           - arduino-boards-fqbn: stm32duino:STM32F1:genericSTM32F103C # Roger Clark version
             platform-url: http://dan.drown.org/stm32duino/package_STM32duino_index.json
             sketches-exclude: TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER # PWM generation by hardware not implemented for STM32
               All: -DRAW_BUFFER_LENGTH=750
 
 #
@@ -304,6 +314,7 @@ jobs:
             arduino-platform: arduino:avr,SparkFun:avr
             platform-url: https://raw.githubusercontent.com/sparkfun/Arduino_Boards/master/IDE_Board_Manager/package_sparkfun_index.json # Arduino URL is not required here
             build-properties: # the flags were put in compiler.cpp.extra_flags. SEND_PWM_BY_TIMER is always enabled!
+              SimpleSender: -DSEND_PWM_BY_TIMER
               All: -DRAW_BUFFER_LENGTH=750
             sketches-exclude: UnitTest # Sketch uses 28762 bytes (100%) of program storage space. Maximum is 28672 bytes.
 
@@ -311,19 +322,22 @@ jobs:
             platform-url: https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
             sketches-exclude: IRDispatcherDemo,MicroGirs,TinyReceiver
             build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER #error PWM generation by hardware not implemented for NRF5
               All: -DRAW_BUFFER_LENGTH=750
 
           - arduino-boards-fqbn: Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include
             platform-url: https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
             sketches-exclude: AllProtocolsOnLCD,UnitTest,ReceiveAndSendDistanceWidth,ReceiveDemo,SimpleReceiverForHashCodes  # No print(uint64_t,.) available
             build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER #error PWM generation by hardware is not yet implemented for SAMD
               All: -DRAW_BUFFER_LENGTH=750
 
-          - arduino-boards-fqbn: vega:riscv:aries_v3
-            platform-url: https://gitlab.com/riscv-vega/vega-arduino/-/raw/main/package_vega_index.json
-            sketches-exclude: MicroGirs,SendLGAirConditionerDemo  # No Stream:: available and readBytesUntil
-            build-properties: # the flags were put in compiler.cpp.extra_flags
-              All: -DF_CPU=100000000LL -DVEGA_ARIES_V3 -DRAW_BUFFER_LENGTH=750 -DCHANGE=1
+#          - arduino-boards-fqbn: vega:riscv:aries_v3
+#            platform-url: https://gitlab.com/riscv-vega/vega-arduino/-/raw/main/package_vega_index.json
+#            sketches-exclude: MicroGirs,SendLGAirConditionerDemo  # No Stream:: available and readBytesUntil
+#            build-properties: # the flags were put in compiler.cpp.extra_flags
+#              SimpleSender: -DSEND_PWM_BY_TIMER
+#              All: -DF_CPU=100000000LL -DVEGA_ARIES_V3 -DRAW_BUFFER_LENGTH=750 -DCHANGE=1
 
 #      fail-fast: false # false -> do not cancel all jobs / architectures if one job fails
 

@@ -69,9 +69,13 @@
  * Generate 38 kHz IR signal by bit banging and using delayMicroseconds() and micros()
  */
 void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
-    unsigned long tStartMicros = micros();
-    unsigned long tNextPeriodEnding = tStartMicros;
-    unsigned long tMicros;
+    unsigned long tMicros = micros();
+    unsigned long tNextPeriodEnding = tMicros;
+#if defined(F_CPU)
+    unsigned long tEndMicros = tMicros + (112 / (F_CPU / MICROS_IN_ONE_SECOND)) + aMarkMicros; // To compensate for call duration - 112 is an empirical value
+#else
+    unsigned long tEndMicros = tMicros + aMarkMicros;
+#endif
     do {
         /*
          * Generate pulse
@@ -92,13 +96,7 @@ void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
             /*
              * Exit the forever loop if aMarkMicros has reached
              */
-            unsigned int tDeltaMicros = tMicros - tStartMicros;
-#if defined(__AVR__)
-            // Just getting variables and check for end condition takes minimal 3.8 us
-            if (tDeltaMicros >= aMarkMicros - (112 / (F_CPU / MICROS_IN_ONE_SECOND))) { // To compensate for call duration - 112 is an empirical value
-#else
-                if (tDeltaMicros >= aMarkMicros) {
-#endif
+            if (tMicros >= tEndMicros) {
                 return;
             }
         } while (tMicros < tNextPeriodEnding);

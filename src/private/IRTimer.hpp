@@ -62,6 +62,8 @@ void timerConfigForSend(uint16_t aFrequencyKHz); // Initialization of timer hard
 void enableSendPWMByTimer();            // Switch on PWM generation
 void disableSendPWMByTimer();           // Switch off PWM generation
 
+void IRReceiveTimerInterruptHandler(); // defined in IRReceive.hpp
+
 // SEND_PWM_BY_TIMER for different architectures is enabled / defined at IRremote.hpp line 195.
 #if  defined(SEND_PWM_BY_TIMER) && ( (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED) )
 #define SEND_PWM_DOES_NOT_USE_RECEIVE_TIMER // Receive timer and send generation timer are independent here.

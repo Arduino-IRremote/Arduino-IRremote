@@ -667,8 +667,8 @@ void IRsend::sendPulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aPr
             aProtocolConstants->DistanceWidthTimingInfo.ZeroSpaceMicros, aData, aNumberOfBits, aProtocolConstants->Flags);
 }
 
-void IRsend::sendPulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM, IRDecodedRawDataType aData,
-        uint_fast8_t aNumberOfBits) {
+void IRsend::sendPulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
+        IRDecodedRawDataType aData, uint_fast8_t aNumberOfBits) {
 
     PulseDistanceWidthProtocolConstants tTemporaryPulseDistanceWidthProtocolConstants;
     memcpy_P(&tTemporaryPulseDistanceWidthProtocolConstants, aProtocolConstantsPGM,
@@ -691,9 +691,9 @@ void IRsend::sendPulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants co
  * @param aSpecialSendRepeatFunction    If nullptr, the first frame is repeated completely, otherwise this function is used for sending the repeat frame.
  */
 void IRsend::sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
-        uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros, IRDecodedRawDataType aData,
-        uint_fast8_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats,
-        void (*aSpecialSendRepeatFunction)()) {
+        uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
+        IRDecodedRawDataType aData, uint_fast8_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
+        int_fast8_t aNumberOfRepeats, void (*aSpecialSendRepeatFunction)()) {
 
     if (aNumberOfRepeats < 0) {
         if (aSpecialSendRepeatFunction != nullptr) {
@@ -1283,12 +1283,13 @@ void IRsend::mark(uint16_t aMarkMicros) {
 
 #else // defined(SEND_PWM_BY_TIMER)
 
-    unsigned long tMicrosOfEndOfNextPWMPause = micros();
+    unsigned long tMicros = micros();
+    unsigned long tMicrosOfEndOfNextPWMPause = tMicros;
 #  if defined(LED_SEND_FEEDBACK_CODE)
-    unsigned long tStartMicros = tMicrosOfEndOfNextPWMPause + (136 / CLOCKS_PER_MICRO); // To compensate for call duration and activating of LED
+    unsigned long tEndMicros = tMicros + (136 / CLOCKS_PER_MICRO) + aMarkMicros; // To compensate for call duration and activating of LED
     bool tFeedbackLedIsActive = false;
 #else
-    unsigned long tStartMicros = tMicrosOfEndOfNextPWMPause + (112 / CLOCKS_PER_MICRO); // To compensate for call duration - 112 is an empirical value
+    unsigned long tEndMicros = tMicros + (112 / CLOCKS_PER_MICRO) + aMarkMicros; // To compensate for call duration - 112 is an empirical value
 #endif
 
     /***************************************************************************************************
@@ -1367,12 +1368,12 @@ void IRsend::mark(uint16_t aMarkMicros) {
          * This generates the timing for the transmit frequency e.g. 38 kHz
          * Measured delta between pause duration values are 8 us for a 16 MHz Uno (from 15 to 23), if interrupts are disabled below
          * Minimal pause duration is 5.2 us
+         * For an 8 MHz Attiny we measure 10 us, 18 us and 27 us pause. Minimal pause duration is 10 us. (80 us for 1MHz -> 12 kHz)
          *******************************************************************************************************************************/
-        tMicrosOfEndOfNextPWMPause += periodTimeMicros;
-#if defined(__AVR__) // micros() for STM sometimes give decreasing values if interrupts are disabled. See https://github.com/stm32duino/Arduino_Core_STM32/issues/1680
-        noInterrupts(); // disable interrupts (especially the 20 us receive interrupts) only at start of the PWM pause. Otherwise it may extend the pause too much.
-#endif
-        unsigned long tMicros;
+        tMicrosOfEndOfNextPWMPause += periodTimeMicros; // Period time is 26 us for 38.46 kHz, 27 us for 37.04 kHz, 25 us for 40 kHz.
+//#if defined(__AVR__) // micros() for STM sometimes give decreasing values if interrupts are disabled. See https://github.com/stm32duino/Arduino_Core_STM32/issues/1680
+//        noInterrupts(); // disable interrupts (especially the 20 us receive interrupts) only at start of the PWM pause. Otherwise it may extend the pause too much.
+//#endif
         do {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
             digitalWriteFast(_IR_TIMING_TEST_PIN, HIGH); // 2 clock cycles
@@ -1391,18 +1392,17 @@ void IRsend::mark(uint16_t aMarkMicros) {
              * Check for end of mark duration / PWM generation
              ************************************************/
             tMicros = micros();
-            uint16_t tDeltaMicros = tMicros - tStartMicros;
-            // reset feedback led in the last pause before end
-//            tDeltaMicros += (160 / CLOCKS_PER_MICRO); // adding this once increases program size, so do it below !
-            if (tDeltaMicros >= aMarkMicros) {
+            if (tMicros >= tEndMicros) {
+                // reset feedback led in the last pause before end
 #if defined(LED_SEND_FEEDBACK_CODE)
                 setFeedbackLED(false);
 #endif
-#if defined(__AVR__)
-                interrupts();
-#endif
+//#if defined(__AVR__)
+//                interrupts(); // enable interrupts again before leaving mark()
+//#endif
                 return;
             }
+
         } while (tMicros < tMicrosOfEndOfNextPWMPause); // = End of one PWM period
     } while (true);
 #  endif

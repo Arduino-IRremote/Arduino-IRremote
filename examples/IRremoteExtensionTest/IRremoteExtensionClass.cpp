@@ -31,6 +31,8 @@
  */
 #include <Arduino.h>
 
+#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
+
 /*
  * !!! The value of RAW_BUFFER_LENGTH (and some other macros) must be the same in all compile units !!!
  * Otherwise you may get warnings like "type 'struct IRData' itself violates the C++ One Definition Rule"

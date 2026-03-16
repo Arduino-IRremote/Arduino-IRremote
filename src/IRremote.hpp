@@ -160,18 +160,18 @@
  */
 //#define SEND_PWM_BY_TIMER // restricts send pin on many platforms to fixed pin numbers
 #if (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED)
-#  if !defined(SEND_PWM_BY_TIMER)
-#define SEND_PWM_BY_TIMER       // the best and default method for ESP32 etc.
-#warning INFO: For ESP32, RP2040, mbed and particle boards SEND_PWM_BY_TIMER is enabled by default, since we have the resources and timing is more exact than the software generated one. If this is not intended, deactivate the line in IRremote.hpp over this warning message in file IRremote.hpp.
+#  if defined(SEND_PWM_BY_TIMER)
+#pragma message("INFO: For ESP32, RP2040, mbed and particle boards SEND_PWM_BY_TIMER is enabled by default, since we have the resources and timing is more exact than the software generated one.")
+#  else
+#define SEND_PWM_BY_TIMER // the best and default method for ESP32 etc. If you want to use software generated PWM, you must deactivate this line.
 #  endif
 #else
 #  if defined(SEND_PWM_BY_TIMER)
 #    if defined(IR_SEND_PIN)
 #pragma message("INFO: Since SEND_PWM_BY_TIMER is defined, the current value of IR_SEND_PIN \"" STR(IR_SEND_PIN) "\" is discarded and will be replaced in IRTimer.hpp by the value determined by the timer used for PWM generation." )
 //#warning INFO: Since SEND_PWM_BY_TIMER is defined, the current value of IR_SEND_PIN is discarded and will be replaced in IRTimer.hpp by the value determined by the timer used for PWM generation
-#undef IR_SEND_PIN // to avoid warning 3 lines later
 #    endif
-//#define IR_SEND_PIN     DeterminedByTimer // Must be set here to a dummy value, since it is evaluated at IRremoteInt.h, before the include of private/IRTimer.hpp
+#define IR_SEND_PIN  ToBeOverwrittenLaterByPinNumberDeterminedByTimer // Must be set here to a dummy value, since it is evaluated at IRremoteInt.h, before the include of private/IRTimer.hpp
 #  endif
 #endif
 
@@ -238,10 +238,10 @@
 #include "digitalWriteFast.h"
 #endif
 
+#include "IRremoteInt.h" // definition (or no definition) of IR_SEND_PIN define determines the IRSender function signatures
+
 #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)
 #include "private/IRTimer.hpp"  // defines IR_SEND_PIN for AVR and SEND_PWM_BY_TIMER
-
-#include "IRremoteInt.h"
 
 #  if !defined(NO_LED_FEEDBACK_CODE) && !(defined(DISABLE_CODE_FOR_RECEIVER) && defined(NO_LED_SEND_FEEDBACK_CODE))
 // Led feedback code enabled here
