@@ -85,7 +85,7 @@
 #include "TinyIR.h"
 
 #include "digitalWriteFast.h"
-/** \addtogroup TinyReceiver Minimal receiver for NEC and FAST protocol
+/** \addtogroup TinyIRReceiver Minimal receiver for NEC and FAST protocol
  * @{
  */
 
@@ -424,37 +424,46 @@ void IRPinChangeInterruptHandler(void) {
 #endif
 }
 
-bool isTinyReceiverIdle() {
+bool isTinyIRReceiverIdle() {
     return (TinyIRReceiverControl.IRReceiverState == IR_RECEIVER_STATE_WAITING_FOR_START_MARK);
+}
+bool isTinyReceiverIdle() {
+    return isTinyIRReceiverIdle();
 }
 
 /*
  * Function to be used as drop in for IrReceiver.decode()
  */
-bool TinyReceiverDecode() {
+bool TinyIRReceiverDecode() {
     bool tJustWritten = TinyIRReceiverData.justWritten;
     if (tJustWritten) {
         TinyIRReceiverData.justWritten = false;
     }
     return tJustWritten;
 }
+bool TinyReceiverDecode() {
+    return TinyIRReceiverDecode();
+}
 
 /*
  * Checks if IR_RECEIVE_PIN is connected and high
  * @return true, if IR Receiver is attached
  */
-bool isIRReceiverAttachedForTinyReceiver() {
+bool isIRReceiverAttachedForTinyIRReceiver() {
     pinModeFast(IR_RECEIVE_PIN, OUTPUT);
     digitalWriteFast(IR_RECEIVE_PIN, LOW); // discharge pin capacity
     pinModeFast(IR_RECEIVE_PIN, INPUT);
     return digitalRead(IR_RECEIVE_PIN); // use slow digitalRead here, since the pin capacity is not fully charged again if we use digitalReadFast.
 }
+bool isIRReceiverAttachedForTinyReceiver() {
+    return isIRReceiverAttachedForTinyIRReceiver();
+}
 
 /**
  * Sets IR_RECEIVE_PIN mode to INPUT, and if IR_FEEDBACK_LED_PIN is defined, sets feedback LED output mode.
- * Then call enablePCIInterruptForTinyReceiver()
+ * Then call enablePCIInterruptForTinyIRReceiver()
  */
-bool initPCIInterruptForTinyReceiver() {
+bool initPCIInterruptForTinyIRReceiver() {
     pinModeFast(IR_RECEIVE_PIN, INPUT);
 
 #if defined(LED_RECEIVE_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
@@ -465,8 +474,11 @@ bool initPCIInterruptForTinyReceiver() {
 #endif
     return enablePCIInterruptForTinyReceiver();
 }
+bool initPCIInterruptForTinyReceiver() {
+    return initPCIInterruptForTinyIRReceiver();
+}
 
-void printTinyReceiverResultMinimal(Print *aSerial) {
+void printTinyIRReceiverResultMinimal(Print *aSerial) {
 // Print only very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
 #if defined(USE_FAST_PROTOCOL)
     aSerial->print(F("C=0x"));
@@ -485,6 +497,9 @@ void printTinyReceiverResultMinimal(Print *aSerial) {
     }
 #endif
     aSerial->println();
+}
+void printTinyReceiverResultMinimal(Print *aSerial) {
+    printTinyIRReceiverResultMinimal(aSerial);
 }
 
 #if !defined(STR_HELPER) && !defined(STR)
@@ -566,7 +581,7 @@ void printTinyReceiverResultMinimal(Print *aSerial) {
  * Initializes hardware interrupt generation according to IR_RECEIVE_PIN or use attachInterrupt() function.
  * @return true if interrupt was successfully enabled
  */
-bool enablePCIInterruptForTinyReceiver() {
+bool enablePCIInterruptForTinyIRReceiver() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
     pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
@@ -636,8 +651,11 @@ bool enablePCIInterruptForTinyReceiver() {
 #endif // defined(USE_ATTACH_INTERRUPT)
     return true;
 }
+bool enablePCIInterruptForTinyReceiver() {
+    return enablePCIInterruptForTinyIRReceiver();
+}
 
-void disablePCIInterruptForTinyReceiver() {
+void disablePCIInterruptForTinyIRReceiver() {
 #if defined(_IR_MEASURE_TIMING) && defined(_IR_TIMING_TEST_PIN)
     pinModeFast(_IR_TIMING_TEST_PIN, OUTPUT);
 #endif
@@ -677,6 +695,9 @@ void disablePCIInterruptForTinyReceiver() {
 
 #  endif
 #endif // defined(USE_ATTACH_INTERRUPT)
+}
+void disablePCIInterruptForTinyReceiver() {
+    disablePCIInterruptForTinyIRReceiver();
 }
 
 /*

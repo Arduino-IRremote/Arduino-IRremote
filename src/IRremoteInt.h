@@ -44,6 +44,8 @@
 #endif
 #if defined(F_CPU) // F_CPU is used to generate the receive send timings in some CPU's
 #define CLOCKS_PER_MICRO (F_CPU / MICROS_IN_ONE_SECOND)
+#else
+#define CLOCKS_PER_MICRO 48 // just a guess if F_CPU is not specified
 #endif
 
 /*

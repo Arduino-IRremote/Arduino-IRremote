@@ -74,10 +74,10 @@ IRCommandDispatcher IRDispatcher;
 #include "LocalDebugLevelStart.h"
 
 void IRCommandDispatcher::init() {
-    initPCIInterruptForTinyReceiver();
+    initPCIInterruptForTinyIRReceiver();
 }
 /*
- * This is the TinyReceiver callback function, which is called if a complete command was received.
+ * This is the TinyIRReceiver callback function, which is called if a complete command was received.
  * Interrupts are enabled here to allow e.g. delay() in commands.
  * Copy the (volatile) IR data in order not to be overwritten on receiving of next frame.
  * Next, check for right address if IR_ADDRESS is defined.
@@ -93,7 +93,7 @@ void handleReceivedTinyIRData() {
     IRDispatcher.IRReceivedData.MillisOfLastCode = millis();
 
 #  if defined(LOCAL_INFO)
-    printTinyReceiverResultMinimal(&Serial);
+    printTinyIRReceiverResultMinimal(&Serial);
 #  endif
 
 #  if defined(IR_ADDRESS)

@@ -684,7 +684,7 @@ For applications only requiring NEC, NEC variants or FAST -see below- protocol, 
 which has very **small code size of 500 bytes and does NOT require any timer**.
 
 ## Principle of operation
-Unlike IRremote, which samples the input every 50 &micro;s, the TinyReceiver receiver uses a **pin change interrupt** for on-the-fly decoding.
+Unlike IRremote, which samples the input every 50 &micro;s, the TinyIRReceiver uses a **pin change interrupt** for on-the-fly decoding.
 This restricts the range of protocols that can be recognised.<br/>
 On each level change, the level and the time since the last change are used to incrementally decode the protocol.<br/>
 With this operating principle, we **cannot wait for a timeout** and then decode the protocol as IRremote does.<br/>
@@ -699,7 +699,7 @@ However, **interrupts are explicitly enabled here** to allow the use of delay() 
 Check out the [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) and [IRDispatcherDemo](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#irdispatcherdemo) examples.<br/>
 Take care to include `TinyIRReceiver.hpp` or `TinyIRSender.hpp` instead of `IRremote.hpp`.
 
-The **TinyIRSender** generates its 38 kHz signal by **[bit banging](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/TinyIRSender.hpp#L68)** using the `delayMicroseconds()` and `micros()` functions.
+The **TinyIRSender** generates its 38 kHz PWM signal by **[software bit banging](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/src/TinyIRSender.hpp#L68)** using the `delayMicroseconds()` and `micros()` functions.
 
 ### TinyIRReceiver usage
 ```c++
@@ -708,12 +708,12 @@ The **TinyIRSender** generates its 38 kHz signal by **[bit banging](https://gith
 #include "TinyIRReceiver.hpp"
 
 void setup() {
-  initPCIInterruptForTinyReceiver(); // Enables the interrupt generation on change of IR input signal
+  initPCIInterruptForTinyIRReceiver(); // Enables the interrupt generation on change of IR input signal
 }
 
 void loop() {
-    if (TinyReceiverDecode()) {
-        printTinyReceiverResultMinimal(&Serial);
+    if (TinyIRReceiverDecode()) {
+        printTinyIRReceiverResultMinimal(&Serial);
     }
     // No resume() required :-)
 }
@@ -882,7 +882,7 @@ This is often due to **timer resource conflicts** with the other library. Please
 
 ## Minimal CPU clock frequency
 For receiving, the **minimal CPU clock frequency is 4 MHz**, since the 50 &micro;s timer ISR (Interrupt Service Routine) takes around 12 &micro;s on a 16 MHz ATmega.<br/>
-The TinyReceiver, which requires no polling, works down to 1 MHz.<br/>
+The TinyIRReceiver, which requires no polling, works down to 1 MHz.<br/>
 For sending, the **minimal CPU clock frequency for software generated PWM is 8 MHz**.
 You can switch to timer and hardware PWM generation at fixed pins by `#define SEND_PWM_BY_TIMER`.
 ### Hardware PWM generation of sending signal with 8 bit timer
@@ -890,6 +890,7 @@ You can switch to timer and hardware PWM generation at fixed pins by `#define SE
 - 8 MHZ F_CPU and 38 kHz -> no prescaling , divider = 210.526 -> 38.1 kHz with divider 210
 - 4 MHZ F_CPU and 38 kHz -> no prescaling , divider = 105.26 -> 38.1 kHz with divider 105
 - 1 MHZ F_CPU and 38 kHz -> no prescaling , divider = 26.31 -> 38.4 kHz with divider 36
+TinyIRSender does not support hardware PWM generation.
 
 ## Bang & Olufsen protocol
 The Bang & Olufsen protocol decoder is not enabled by default, i.e if no protocol is enabled explicitly by #define `DECODE_<XYZ>`. It must always be enabled explicitly by `#define DECODE_BEO`.
@@ -1073,7 +1074,7 @@ These macros must be defined in your program before the line `#include <TinyIRRe
 These macros must be defined in your program before the line `#include <IRCommandDispatcher.hpp>` to take effect.
 | Name | Default value | Description |
 |-|-:|-|
-| `USE_TINY_IR_RECEIVER` | disabled | Use [TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) for receiving IR codes. |
+| `USE_TINY_IR_RECEIVER` | disabled | Use [TinyIRReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tinyreceiver--tinysender) for receiving IR codes. |
 | `IR_COMMAND_HAS_MORE_THAN_8_BIT` | disabled | Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 5 bytes RAM + 1 byte RAM per mapping entry. |
 | `IR_ADDRESS` | empty | If set, compare the address returned by the IR library with this value before executing a command. |
 | `DISPATCHER_BUZZER_FEEDBACK_PIN` |  | If `USE_TINY_IR_RECEIVER` is enabled, the pin to be used for the optional 50 ms buzzer feedback before executing a command. Other IR libraries than Tiny are not compatible with tone() command. |
@@ -1193,8 +1194,8 @@ Since the Arduino `micros()` function has a resolution of 4 &micro;s at 16 MHz, 
 ## Incompatibilities to other libraries and Arduino commands like tone() and analogWrite()
 If you use a library which requires the same timer as IRremote, you have a problem, since **the timer resource cannot be shared simultaneously** by both libraries.
 
-### Use NEC protocol and TinyReceiver
-[TinyReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tiny-nec-receiver-and-sender) does not require a timer, it relies on interrupts, thus avoiding any timer resource problems.
+### Use NEC protocol and TinyIRReceiver
+[TinyIRReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#tiny-nec-receiver-and-sender) does not require a timer, it relies on interrupts, thus avoiding any timer resource problems.
 
 ### Change timer
 The best approach is to **change the timer** used for IRremote, which can be accomplished by specifying the timer before `#include <IRremote.hpp>`.<br/>
