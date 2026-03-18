@@ -234,7 +234,7 @@ bool IRrecv::decodeOpenLASIR() {
      */
 
     // Check we have the right amount of data (68). The +4 is for initial gap, start bit mark and space + stop bit mark.
-    if (decodedIRData.rawlen != ((2 * OPENLASIR_BITS) + 4) && (decodedIRData.rawlen != 4)) {
+    if (!(decodedIRData.rawlen == ((2 * OPENLASIR_BITS) + 4) || (decodedIRData.rawlen == 4))) {
         DEBUG_PRINT(F("OpenLASIR: Data length="));
         DEBUG_PRINT(decodedIRData.rawlen);
         DEBUG_PRINTLN(F(" is not 68 or 4"));
@@ -246,19 +246,19 @@ bool IRrecv::decodeOpenLASIR() {
         return false;
     }
 
+#if !defined(DECODE_NEC) // This code is also contained in NEC sources and does also decode LASIR Repeats :-)
     // Check for repeat - here we have another header space length
     if (decodedIRData.rawlen == 4) {
-        // Only claim this repeat if the last decoded protocol was OpenLASIR
-        if (lastDecodedProtocol == OPENLASIR && matchSpace(irparams.rawbuf[2], NEC_REPEAT_HEADER_SPACE)
-                && matchMark(irparams.rawbuf[3], NEC_BIT_MARK)) {
+        if (matchSpace(irparams.rawbuf[2], NEC_REPEAT_HEADER_SPACE) && matchMark(irparams.rawbuf[3], NEC_BIT_MARK)) {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
-            decodedIRData.protocol = OPENLASIR;
+            decodedIRData.protocol = lastDecodedProtocol; // Allow recognition of repeats of another look alike protocol
             return true;
         }
         return false;
     }
+#endif
 
     // Check command header space
     if (!matchSpace(irparams.rawbuf[2], NEC_HEADER_SPACE)) {

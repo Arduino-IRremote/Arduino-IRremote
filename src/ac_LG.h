@@ -131,7 +131,6 @@ public:
     uint8_t FanIntensity = 1;    // 0 -> low, 4 high, 5 -> cycle
     uint8_t Temperature = 22;    // temperature : 18 ~ 30
     uint8_t Mode = AC_MODE_COOLING;
-    bool useLG2Protocol = false;
 };
 
 /** @}*/

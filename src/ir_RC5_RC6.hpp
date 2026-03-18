@@ -65,6 +65,26 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0. Only 
  +1850
  Duration=23250us
 
+ RC5 minimal length (RX5X)
+ Protocol=RC5 Address=0xA, Command=0x6A, Toggle=1, Raw-Data=0xAAA, 13 bits, MSB first
+ rawIRTimings[14]:
+ -746950
+ +1900,-1700
+ +1850,-1700 +1800,-1750 +1800,-1750 +1800,-1750
+ +1800,-1750 +1750
+ Duration=23100us
+
+ RC5 maximal length
+ Protocol=RC5 Address=0x1F, Command=0x3F, Toggle=1, Raw-Data=0x1FFF, 13 bits, MSB first
+ rawIRTimings[28]:
+ -391800
+ + 950,- 850
+ + 950,- 800 + 950,- 850 + 900,- 900 + 950,- 800
+ + 950,- 850 + 900,- 900 + 900,- 850 +1000,- 800
+ +1000,- 800 + 850,- 950 + 950,- 800 +1000,- 800
+ + 900
+ Duration=24100us
+
  Protocol=Marantz Address=0x11, Command=0x76, Extra=0x9, Toggle=1, Raw-Data=0x31D89, 19 bits, MSB first
  +1850,-1700
  + 950,- 850 +1850,- 850 + 950,- 800 +1000,-1700
@@ -72,6 +92,18 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0. Only 
  +1850,- 850 + 950,- 800 +1000,-1700 +1800,- 900
  + 900,-1750 + 950
  Duration=38400us
+
+Marantz maximal length
+Protocol=Marantz Address=0x1F, Command=0x3F, Extra=0x3F, Toggle=1, Raw-Data=0x7FFFF, 19 bits, MSB first
+rawIRTimings[40]:
+ -398900
+ + 950,- 850
+ + 850,- 950 + 900,- 900 + 950,- 850 + 950,- 800
+ +1000,- 800 + 900,- 900 + 950,-4350 + 950,- 850
+ + 950,- 800 +1000,- 800 + 850,- 950 + 950,- 850
+ + 900,- 850 + 950,- 850 + 950,- 850 + 950,- 800
+ +1000,- 800 + 950,- 850 + 850
+Duration=38350us
  */
 //
 // see: https://www.sbprojects.net/knowledge/ir/rc5.php
@@ -120,10 +152,11 @@ uint8_t sLastSendToggleValue = 1; // To start first command with toggle 0. Only 
 /*
  * Just in case to permanently send it as 0 because start value is 1,
  * or to reset toggle bit after a transmission with automatic toggling.
+ * Sets sLastSendToggleValue to inverse in order to get aRC5ToggleBitValue as next sent toggle value because it is inverted before each sending!
  * @param aRC5ToggleBitValue 0 or 1, only LSB is taken
  */
-void IRsend::setToggleBitValueForRC5AndRC6(uint8_t aRC5ToggleBitValue) {
-    sLastSendToggleValue = aRC5ToggleBitValue & 0x01;
+void IRsend::setNextToggleBitValueForRC5AndRC6(uint8_t aRC5ToggleBitValue) {
+    sLastSendToggleValue = (aRC5ToggleBitValue & 0x01) ^ 0x01;
 }
 
 /**
@@ -260,12 +293,11 @@ uint8_t IRrecv::getNumberOfUnitsInInterval(uint16_t aCurrentInterval, uint16_t a
  *               _   _   _   _   _   _   _   _   _   _   _   _   _
  *         _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |
  *                ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    Significant clock edge /sample point for bit value
- *                  ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^      End of clock / each data bit period
+ *            |   |   |   |   |   |   |   |   |   |   |   |   |   |    Bit period
  *               _     _   _   ___   _     ___     ___   _   - Mark
  * Data    _____| |___| |_| |_|   |_| |___|   |___|   |_| |  - Data starts with a mark->space bit
  *                1   0   0   0   1   1   0   1   0   1   1  - Space
- * A mark to space at a significant clock edge results in a 1
- * A space to mark at a significant clock edge results in a 0
+ *
  * Returns current level [MARK or SPACE] or NO_MARK_OR_SPACE for error (measured time interval is not a multiple of BiphaseTimeUnit).
  */
 uint_fast8_t IRrecv::getBiphaselevel() {
@@ -316,18 +348,18 @@ uint_fast8_t IRrecv::getBiphaselevel() {
 #if defined(DECODE_RC5) || defined(DECODE_MARANTZ)
 /**
  * Try to decode data as RC5 protocol
- *  mark->space => 0
+ *  mark->space => 0 - Inverse of RC6!
  *  space->mark => 1
  *                             _   _   _   _   _   _   _   _   _   _   _   _   _
  * Clock                 _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |
- *                                ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^  End of clock / each data bit period
  *                              ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    Significant clock edge /sample point for bit value
+ *                            |   |   |   |   |   |   |   |   |   |   |   |   |  Bit period
  *                               _   _
  * 2 Start bits for RC5    _____| |_| ..|...|..
- *
- *                               _
- * 1 Start bit for RC5X    _____| ..|...|...|..
- *
+ *                              S   S   T   Address
+ *                               ___
+ * 1 Start bit for RC5X    _____|   |_..|...|..
+ *                              S   0   T   Address
  */
 bool IRrecv::decodeRC5() {
     uint8_t tBitIndex;
@@ -336,12 +368,22 @@ bool IRrecv::decodeRC5() {
     // Set Biphase decoding start values
     initBiphaselevel(1, RC5_UNIT); // Skip gap space
 
-    // Check we have the right amount of data (11 to 26). The +2 is for initial gap and start bit mark.
-    if (decodedIRData.rawlen < ((RC5_BITS + 1) / 2) + 2 && (RC5_BITS + 2) < decodedIRData.rawlen) {
+    // Check we have the right amount of data (14 to 26). The +1 is for initial gap. +2 for initial gap and mark of last bit which is a 1
+    if (decodedIRData.rawlen < (RC5_BITS + 1)  /* 14 */ ||
+#if defined(DECODE_MARANTZ)
+            ((MARANTZ_BITS * 2) + 2) /* 40, the pause is just extended */ < decodedIRData.rawlen
+#else
+            ((RC5_BITS * 2) + 2) /* 28 */ < decodedIRData.rawlen
+#endif
+            ) {
         // no debug output, since this check is mainly to determine the received protocol
         DEBUG_PRINT(F("RC5: Data length="));
         DEBUG_PRINT(decodedIRData.rawlen);
-        DEBUG_PRINTLN(F(" is not between 9 and 15"));
+#if defined(DECODE_MARANTZ)
+        DEBUG_PRINTLN(F(" is not between 14 and 40"));
+#else
+        DEBUG_PRINTLN(F(" is not between 14 and 28"));
+#endif
         return false;
     }
 
@@ -487,6 +529,32 @@ bool IRrecv::decodeRC5() {
  + 550,- 400 +1000,- 800 +1000,- 400 + 500,- 400
  + 500,- 900 +1000,- 350 + 550,- 850 + 500
  Duration=37450us
+
+ RC6 minimal length
+ Protocol=RC6 Address=0x55, Command=0x55, Toggle=1, Raw-Data=0x15555, 20 bits, MSB first
+ rawIRTimings[26]:
+ -397700
+ +2700,- 800
+ + 550,- 850 + 450,- 450 + 500,- 400 +1400,-1300
+ + 950,- 850 + 900,- 900 +1000,- 850 + 950,- 850
+ +1000,- 850 + 950,- 850 + 900,- 900 +1000
+ Duration=23100us
+
+ RC6A maximal length
+ Protocol=RC6A Address=0xFF, Command=0xFF, Extra=0x3FFF, Raw-Data=0x7FFFFFFF, 35 bits, MSB first
+ rawIRTimings[72]:
+ -399750
+ +2700,- 850
+ + 500,- 400 + 550,- 400 + 400,- 900 + 500,- 850
+ +1450,- 400 + 500,- 400 + 550,- 400 + 400,- 500
+ + 500,- 400 + 550,- 350 + 550,- 400 + 400,- 500
+ + 450,- 450 + 500,- 400 + 500,- 400 + 550,- 400
+ + 400,- 500 + 450,- 450 + 550,- 350 + 500,- 450
+ + 400,- 500 + 450,- 450 + 550,- 350 + 500,- 450
+ + 400,- 500 + 450,- 450 + 550,- 350 + 550,- 400
+ + 400,- 500 + 450,- 450 + 550,- 350 + 550,- 400
+ + 450,- 450 + 450,- 450 + 450
+ Duration=36800us
  */
 // Frame RC6:   1 start bit + 1 Bit "1" + 3 mode bits (000) + 1 toggle bit + 8 address + 8 command bits + 2666us pause - 22 bits incl. start bit and constant bit 1
 // Frame RC6A:  1 start bit + 1 Bit "1" + 3 mode bits (110) + 1 toggle bit + "1" + 14 customer bits + 8 system bits + 8 command bits + 2666us pause - 37 bits incl. start bit
@@ -500,16 +568,19 @@ bool IRrecv::decodeRC5() {
 
 #define RC6_RPT_LENGTH      46000
 
-#define RC6_LEADING_BIT         1
-#define RC6_MODE_BITS           3 // never seen others than all 0 for Philips TV
-#define RC6_TOGGLE_BIT          1 // toggles at every key press. Can be used to distinguish repeats from 2 key presses and has another timing :-(.
+#define RC6_LEADING_BIT_ONE     1
+#define RC6_MODE_BITS           3 // Never seen others than all 0 for Philips TV :-)
+#define RC6_TOGGLE_BIT          1 // Toggles at every key press. Can be used to distinguish repeats from 2 key presses and has another timing :-(.
 #define RC6_TOGGLE_BIT_INDEX    RC6_MODE_BITS //  fourth position, index = 3
 #define RC6_ADDRESS_BITS        8
 #define RC6_COMMAND_BITS        8
-#define RC6_CUSTOMER_BITS      14
+#define RC6A_CUSTOMER_BIT_ONE   1
+#define RC6A_CUSTOMER_BITS      14
 
-#define RC6_BITS            (RC6_LEADING_BIT + RC6_MODE_BITS + RC6_TOGGLE_BIT + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // 21
-#define RC6A_BITS           (RC6_LEADING_BIT + RC6_MODE_BITS + RC6_TOGGLE_BIT + 1 + RC6_CUSTOMER_BITS + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // 36
+#define RC6_BITS            (RC6_LEADING_BIT_ONE + RC6_MODE_BITS + RC6_TOGGLE_BIT + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // 21
+#define RC6A_BITS           (RC6_LEADING_BIT_ONE + RC6_MODE_BITS + RC6_TOGGLE_BIT + RC6A_CUSTOMER_BIT_ONE + RC6A_CUSTOMER_BITS + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // 36
+#define RC6A_FIXED_BITS     (RC6_LEADING_BIT_ONE + RC6_MODE_BITS) // 4
+#define RC6A_VARIABLE_BITS  (RC6_TOGGLE_BIT + RC6A_CUSTOMER_BIT_ONE + RC6A_CUSTOMER_BITS + RC6_ADDRESS_BITS + RC6_COMMAND_BITS) // Without fixed protocol specific bits 33
 
 #define RC6_UNIT            444 // 16 periods of 36 kHz (444.4444)
 
@@ -517,7 +588,7 @@ bool IRrecv::decodeRC5() {
 #define RC6_HEADER_SPACE    (2 * RC6_UNIT) // 889
 
 #define RC6_TRAILING_SPACE  (6 * RC6_UNIT) // 2666
-#define MIN_RC6_MARKS       4 + ((RC6_ADDRESS_BITS + RC6_COMMAND_BITS) / 2) // 12, 4 are for preamble
+#define MIN_RC6_MARKS       (4 + ((RC6_ADDRESS_BITS + RC6_COMMAND_BITS) / 2)) // 12, 4 are for preamble
 
 #define RC6_REPEAT_DISTANCE 107000 // just a guess but > 2.666ms
 #define RC6_MAXIMUM_REPEAT_DISTANCE     (RC6_REPEAT_DISTANCE + (RC6_REPEAT_DISTANCE / 4)) // Just a guess
@@ -570,15 +641,15 @@ void IRsend::sendRC6Raw(uint64_t aRawData, uint8_t aNumberOfBitsToSend) {
     mark(RC6_HEADER_MARK);
     space(RC6_HEADER_SPACE);
 
-// Start bit
+// Leading bit 1
     mark(RC6_UNIT);
     space(RC6_UNIT);
 
 // Data MSB first
     uint64_t mask = 1ULL << (aNumberOfBitsToSend - 1);
-    for (uint_fast8_t i = 1; mask; i++, mask >>= 1) {
+    for (uint_fast8_t i = 0; mask; i++, mask >>= 1) {
         // The fourth bit we send is the "double width toggle bit"
-        unsigned int t = (i == (RC6_TOGGLE_BIT_INDEX + 1)) ? (RC6_UNIT * 2) : (RC6_UNIT);
+        unsigned int t = (i == RC6_TOGGLE_BIT_INDEX) ? (RC6_UNIT * 2) : (RC6_UNIT);
         if (aRawData & mask) {
             mark(t);
             space(t);
@@ -643,7 +714,7 @@ void IRsend::sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfR
     tIRRawData.UByte.LowByte = aCommand;
     tIRRawData.UByte.MidLowByte = aAddress;
 
-    tIRRawData.UWord.HighWord = aCustomer | 0x400; // bit 31 is always 1
+    tIRRawData.UWord.HighWord = aCustomer | 0x4000; // bit 31 is always 1
 
     if (aEnableAutomaticToggle) {
         // invert toggle bit if enabled
@@ -666,7 +737,7 @@ void IRsend::sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfR
     while (tNumberOfCommands > 0) {
 
         // start and leading bits are sent by sendRC6
-        sendRC6Raw(tRawData, RC6A_BITS - 1); // -1 since the leading bit is additionally sent by sendRC6
+        sendRC6Raw(tRawData, RC6A_BITS - 1); // -1 since the leading bit 1 is sent by sendRC6Raw()
 
         tNumberOfCommands--;
         // skip last delay!
@@ -683,26 +754,28 @@ void IRsend::sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfR
  *  Unit is 444 us and half of RC5 unit 888
  *  mark->space => 1 - Inverse of RC5!
  *  space->mark => 0
- *                           _   _   _   _   _   _   _   _   _   _   _   _   _
- * Clock               _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| | 444 us high and low
- *                              ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^  End of clock / each data bit period
- *                            ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^   ^    Significant clock edge /sample point for bit value
- *                          ______   _     _   _   _
- * Start bit for RC6  _____|      |_| |___| |_| |_| ......|.......|..
- *                          Start     1   0   0   0       ^double timing toggle bit + 8 bit address + 8 bit command
- *                          ______   _   _   _     _             _
- * Start bit for RC6A _____|      |_| |_| |_| |___| ......|...... |_..
- *                          Start     1   1   1   0 toggle^ bit   1  + 14 bit extra + 8 bit address + 8 bit command
+ *                            _   _   _   _   _   _   _   _   _   _   _   _   _
+ * Clock                _____| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| |_| | 444 us high and low
+ *                             ^   ^   ^   ^   ^   ^       ^       ^   ^   ^    Significant clock edge /sample point for bit value
+ *                                   |   |   |   |   |           |   |   |   |  Bit period
+ *                          ______    _     _   _   _
+ * Start bit for RC6  _____|      |__| |___| |_| |_| ......|.......|..
+ *                          Start      1   0   0   0       ^double timing toggle bit + 8 bit address + 8 bit command
+ *                          ______    _   _   _     _             _
+ * Start bit for RC6A _____|      |__| |_| |_| |___| ......|...... |_..
+ *                          Start      1   1   1   0       ^       1  + 14 bit extra + 8 bit address + 8 bit command
+ *                                     ^             toggle bit    ^
+ *                               Fixed 1 for RC6             Fixed 1 for RC6A
  */
 bool IRrecv::decodeRC6() {
     uint8_t tBitIndex;
     uint32_t tDecodedRawData = 0;
 
-    // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space
-    if (decodedIRData.rawlen < MIN_RC6_MARKS + 3 && (RC6_BITS + 3) < decodedIRData.rawlen) {
+    // Check we have the right amount of data (). The +3 for initial gap, start bit mark and space. +6 for timing of fixed 1 and mode
+    if (decodedIRData.rawlen < 26 || 72 < decodedIRData.rawlen) {
         DEBUG_PRINT(F("RC6: Data length="));
         DEBUG_PRINT(decodedIRData.rawlen);
-        DEBUG_PRINTLN(F(" is not between 15 and 25"));
+        DEBUG_PRINTLN(F(" is not between 26 and 72"));
         return false;
     }
 
@@ -714,19 +787,21 @@ bool IRrecv::decodeRC6() {
     }
 
     // Set Biphase decoding start values
-    initBiphaselevel(3, RC6_UNIT); // Skip gap-space and start-bit mark + space
+    initBiphaselevel(3, RC6_UNIT); // Skip gap-space and start-bit mark and space
 
-    // Check first bit, which is known to be a 1 (mark->space)
+    /*
+     * Check first bit, which is known to be a 1 (mark->space)
+     */
     if (getBiphaselevel() != MARK) {
         DEBUG_PRINTLN(F("RC6: first getBiphaselevel() is not MARK"));
         return false;
     }
-    // Check second bit
     if (getBiphaselevel() != SPACE) {
         DEBUG_PRINTLN(F("RC6: second getBiphaselevel() is not SPACE"));
         return false;
     }
 
+    // Now start decoding at bit 2 / mode bits
     for (tBitIndex = 0; irparams.RawbuffOffsetForNextBiphaseLevel < decodedIRData.rawlen; tBitIndex++) {
         uint8_t tStartLevel; // start level of coded bit
         uint8_t tEndLevel;   // end level of coded bit
@@ -753,11 +828,11 @@ bool IRrecv::decodeRC6() {
          * Determine tDecodedRawData bit value by checking the transition type
          */
         if ((tStartLevel == MARK) && (tEndLevel == SPACE)) {
-            // we have a mark to space transition here
-            tDecodedRawData = (tDecodedRawData << 1) | 1;  // inverted compared to RC5
+            // we have a mark to space transition here -> 1
+            tDecodedRawData = (tDecodedRawData << 1) | 1;  // inverted value compared to RC5
         } else if ((tStartLevel == SPACE) && (tEndLevel == MARK)) {
-            // we have a space to mark transition here
-            tDecodedRawData = (tDecodedRawData << 1) | 0;
+            // we have a space to mark transition here -> 0
+            tDecodedRawData = (tDecodedRawData << 1);
         } else {
             DEBUG_PRINTLN(F("RC6: Decode failed"));
             // we have no transition here or one level is -1 -> error

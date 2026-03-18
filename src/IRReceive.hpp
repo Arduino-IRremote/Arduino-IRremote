@@ -35,6 +35,7 @@
 
 // This block must be located after the includes of other *.hpp files
 //#define LOCAL_DEBUG // This enables debug output only for this file - only for development
+//#define LOCAL_TRACE // This enables trace output only for this file - only for development
 #include "LocalDebugLevelStart.h"
 /*
  * Low level hardware timing measurement
@@ -1230,12 +1231,12 @@ bool IRrecv::checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants
 bool IRrecv::checkHeader_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM) {
 // Check header "mark" and "space"
     if (!matchMark(irparams.rawbuf[1], pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderMarkMicros))) {
-        TRACE_PRINT(::getProtocolString((decode_type_t) pgm_read_byte(&aProtocolConstantsPGM->ProtocolIndex)));
+        TRACE_PRINT(::getProtocolString((decode_type_t ) pgm_read_byte(&aProtocolConstantsPGM->ProtocolIndex)));
         TRACE_PRINTLN(F(": Header mark length is wrong"));
         return false;
     }
     if (!matchSpace(irparams.rawbuf[2], pgm_read_word(&aProtocolConstantsPGM->DistanceWidthTimingInfo.HeaderSpaceMicros))) {
-        TRACE_PRINT(::getProtocolString((decode_type_t) pgm_read_byte(&aProtocolConstantsPGM->ProtocolIndex)));
+        TRACE_PRINT(::getProtocolString((decode_type_t ) pgm_read_byte(&aProtocolConstantsPGM->ProtocolIndex)));
         TRACE_PRINTLN(F(": Header space length is wrong"));
         return false;
     }
@@ -1280,17 +1281,43 @@ bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
 
     bool passed = (tMeasuredMicros >= (tMatchValueMicrosQuarter * 3) && tMeasuredMicros <= (tMatchValueMicrosQuarter * 5));
 #if defined(LOCAL_TRACE)
-        if (passed) {
-            Serial.println(F(" => passed"));
-        } else {
-            Serial.println(F(" => FAILED"));
-        }
+    if (passed) {
+        Serial.println(F(" => passed"));
+    } else {
+        Serial.println(F(" => FAILED"));
+    }
 #endif
     return passed;
 }
 
+bool matchTicksWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
+    uint16_t tMeasuredMicros = (aMeasuredTicks * MICROS_PER_TICK);
+    uint16_t tMatchValueMicrosQuarter = aMatchValueMicros / 4;
+
+    TRACE_PRINT(F("Testing with greater range (actual vs desired): "));
+    TRACE_PRINT(tMeasuredMicros);
+    TRACE_PRINT(F("us vs "));
+    TRACE_PRINT(aMatchValueMicros);
+    TRACE_PRINT(F("us: "));
+    TRACE_PRINT(tMatchValueMicrosQuarter * 2); // rounded value because we divide first
+    TRACE_PRINT(F(" <= "));
+    TRACE_PRINT(aMeasuredTicks * MICROS_PER_TICK);
+    TRACE_PRINT(F(" <= "));
+    TRACE_PRINT(tMatchValueMicrosQuarter * 6);
+
+    bool passed = (tMeasuredMicros >= (tMatchValueMicrosQuarter * 2) && tMeasuredMicros <= (tMatchValueMicrosQuarter * 6));
+#if defined(LOCAL_TRACE)
+    if (passed) {
+        Serial.println(F(" => passed"));
+    } else {
+        Serial.println(F(" => FAILED"));
+    }
+#endif
+    return passed;
+}
 /**
  * Match function WITH compensating for marks exceeded or spaces shortened by demodulator hardware
+ * With MARK_EXCESS_MICROS default value of 20 we cannot match 200 to 250, because we have 186 < 180 <= 310
  * @return true, if values match
  */
 bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks) {
@@ -1304,20 +1331,47 @@ bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCo
     TRACE_PRINT(F("us: "));
     TRACE_PRINT(tMatchValueMicrosQuarter * 3); // rounded value because we divide first
     TRACE_PRINT(F(" < "));
-    TRACE_PRINT(aMeasuredTicks * MICROS_PER_TICK);
+    TRACE_PRINT(tMeasuredMicros);
     TRACE_PRINT(F(" <= "));
     TRACE_PRINT(tMatchValueMicrosQuarter * 5);
 
     bool passed = (tMeasuredMicros > (tMatchValueMicrosQuarter * 3) && tMeasuredMicros <= (tMatchValueMicrosQuarter * 5));
 #if defined(LOCAL_TRACE)
-        if (passed) {
-            Serial.println(F(" => passed"));
-        } else {
-            Serial.println(F(" => FAILED"));
-        }
+    if (passed) {
+        Serial.println(F(" => passed"));
+    } else {
+        Serial.println(F(" => FAILED"));
+    }
 #endif
     return passed;
 }
+
+bool matchTicksWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks) {
+    uint16_t tMeasuredMicros = (aMeasuredTicks * MICROS_PER_TICK) + aCompensationMicrosForTicks;
+    uint16_t tMatchValueMicrosQuarter = aMatchValueMicros / 4;
+
+    TRACE_PRINT(F("Testing with greater range (actual vs desired): "));
+    TRACE_PRINT(tMeasuredMicros);
+    TRACE_PRINT(F("us vs "));
+    TRACE_PRINT(aMatchValueMicros);
+    TRACE_PRINT(F("us: "));
+    TRACE_PRINT(tMatchValueMicrosQuarter * 2); // rounded value because we divide first
+    TRACE_PRINT(F(" < "));
+    TRACE_PRINT(tMeasuredMicros);
+    TRACE_PRINT(F(" <= "));
+    TRACE_PRINT(tMatchValueMicrosQuarter * 6);
+
+    bool passed = (tMeasuredMicros > (tMatchValueMicrosQuarter * 2) && tMeasuredMicros <= (tMatchValueMicrosQuarter * 6));
+#if defined(LOCAL_TRACE)
+    if (passed) {
+        Serial.println(F(" => passed"));
+    } else {
+        Serial.println(F(" => FAILED"));
+    }
+#endif
+    return passed;
+}
+
 bool MATCH(uint16_t measured_ticks, uint16_t desired_us) {
     return matchTicks(measured_ticks, desired_us);
 }
@@ -1366,6 +1420,14 @@ bool matchMark(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
 #endif
 }
 
+bool matchMarkWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
+#if (MARK_EXCESS_MICROS == 0)
+    return matchTicksWithGreaterRange(aMeasuredTicks, aMatchValueMicros);
+#else
+    return matchTicksWithGreaterRange(aMeasuredTicks, aMatchValueMicros, -MARK_EXCESS_MICROS); // New handling of MARK_EXCESS_MICROS without strange rounding errors
+#endif
+}
+
 bool MATCH_MARK(uint16_t measured_ticks, uint16_t desired_us) {
     return matchMark(measured_ticks, desired_us);
 }
@@ -1409,6 +1471,14 @@ bool matchSpace(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
         }
 #  endif
         return passed;
+#endif
+}
+
+bool matchSpaceWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) {
+#if (MARK_EXCESS_MICROS == 0)
+    return matchTicksWithGreaterRange(aMeasuredTicks, aMatchValueMicros);
+#else
+    return matchTicksWithGreaterRange(aMeasuredTicks, aMatchValueMicros, MARK_EXCESS_MICROS); // New handling of MARK_EXCESS_MICROS without strange rounding errors
 #endif
 }
 

@@ -50,11 +50,12 @@
 //
 //
 //==============================================================================
-// https://www.mikrocontroller.net/attachment/33137/datalink.pdf
+// https://www.mikrocontroller.net/attachment/33137/datalink.pdf page 6
 // https://www.mikrocontroller.net/articles/IRMP_-_english#B&O
 // BEO is a Pulse Distance Protocol with 200 us pulse
 // This protocol is unusual in two ways:
 // 1. The carrier frequency is 455 kHz
+//
 // You can build your own receiver as Bang & Olufsen did (check old schematics) or use a TSOP7000
 // Vishay stopped producing TSOP7000 since 2009 so you will probably only find counterfeits:
 // https://www.vishay.com/files/whatsnew/doc/ff_FastFacts_CounterfeitTSOP7000_Dec72018.pdf
@@ -64,12 +65,15 @@
 // Other examples may require a different treatment
 // This particular receiver also did receive lower frequencies but rather poorly and with a lower delay than usual
 // If you need to parallel a receiver with another one you may need to delay the signal to get in phase with the other receiver
+//
 // 2. A stream of messages can be sent back to back with a new message immediately following the previous stop space
 // It might be that this only happens over IR and not on the datalink protocol
 // You can choose to support this or not:
+//
 // Mode 1: Mode with gaps between frames
 // Do NOT define ENABLE_BEO_WITHOUT_FRAME_GAP and set RECORD_GAP_MICROS to at least 16000 to accept the unusually long 3. start space
 // Can only receive single messages. Back to back repeats will result in overflow
+//
 // Mode 2: Break at start mode
 // Define ENABLE_BEO_WITHOUT_FRAME_GAP and set RECORD_GAP_MICROS to less than 15000
 // This treats the 3. start space of 15.5 ms as a gap between 2 messages, which makes decoding easier :-).
@@ -80,16 +84,32 @@
 // Make sure to check the number of bits to filter dummy and incomplete messages.
 // !!! We assume that the real implementations never set the official first header bit to anything other than 0 !!!
 // !!! We therefore use 4 start bits instead of the specified 3 and in turn ignore the first header bit of the specification !!!
+//
 // IR messages are 16 bits long. Datalink messages have different lengths.
 // This implementation supports up to 40 bits total length split into 8 bit data/command and a header/address of variable length
 // Header data with more than 16 bits is stored in decodedIRData.extra
 // B&O is a pulse distance protocol, but it has 3 bit values 0, 1 and (equal/repeat) as well as a special start and trailing bit.
 //
-// MSB first, 4 start bits + 8 (to 16?) bit address + 8 bit command + 1 special trailing bit + 1 stop bit.
-// Address can be longer than 8 bit.
+/*
+ 16 bit Bang&Olufsen, ENABLE_BEO_WITHOUT_FRAME_GAP is enabled
+ rawIRTimings[44]:
+ -749450
+ + 250,-2850
+ + 300,-2850 + 250,-12750 + 250,-2850 + 250,-9050 // 12750 is clipped big value of 15425
+ + 250,-5950 + 250,-5950 + 300,-5950 + 250,-2850
+ + 250,-5950 + 300,-5900 + 300,-9000 + 250,-2900
+ + 250,-9050 + 250,-5950 + 300,-5900 + 300,-2850
+ + 300,-9000 + 250,-5950 + 250,-2850 + 300,-12100 // +300, -12100 is trailing bit
+ + 300 // stop bit
+ Duration=134400us
+
+ MSB first, 4 start bits + 8 (to 16?) bit address + 8 bit command + 1 special trailing bit + 1 stop bit.
+ 4 Start bits have the length 1, 1, 5, 1 and are +200 -2925, +200 -2925, +200 -15425, +200 -2925
+ Address can be longer than 8 bit.
+ */
+
 /*
  * Options for this decoder
- *
  */
 #define ENABLE_BEO_WITHOUT_FRAME_GAP // Requires additional 30 bytes program memory. Enabled by default, see https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/1181
 //#define SUPPORT_BEO_DATALINK_TIMING_FOR_DECODE // This also supports headers up to 32 bit. Requires additional 150 bytes program memory.
@@ -113,7 +133,7 @@
 
 // With decode we see length from 200 to 300 and the 300 leads to errors, if we use 200 as mark length for decode.
 // And the space value is at least 3125, so we can do a reluctant test for the mark anyway.
-#define BEO_BIT_MARK_FOR_DECODE 250
+#define BEO_BIT_MARK_FOR_DECODE     250
 #define BEO_DATALINK_BIT_MARK       (BEO_UNIT / 2)   // The length of a mark in the Datalink protocol
 
 /*
@@ -133,7 +153,7 @@
  ************************************/
 
 /*
- * TODO aNumberOfRepeats are handled not correctly if ENABLE_BEO_WITHOUT_FRAME_GAP is defined
+ * TODO aNumberOfRepeats is handled not correctly if ENABLE_BEO_WITHOUT_FRAME_GAP is defined
  * By default 16 bits are sent.
  * @param aNumberOfHeaderBits   default is 8, can be 24 at maximum
  */
@@ -188,14 +208,17 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
     uint32_t mask = 1UL << (aBits - 1);
     for (; mask; mask >>= 1) {
         if (tLastBitValueWasOne && !(aRawData & mask)) {
+            // 1 to 0 transition
             mark(BEO_BIT_MARK);
             space(BEO_ZERO_SPACE - BEO_BIT_MARK);
             tLastBitValueWasOne = false;
         } else if (!tLastBitValueWasOne && (aRawData & mask)) {
+            // 0 to 1 transition
             mark(BEO_BIT_MARK);
             space(BEO_ONE_SPACE - BEO_BIT_MARK);
             tLastBitValueWasOne = true;
         } else {
+            // Both values are equal
             mark(BEO_BIT_MARK);
             space(BEO_REPETITION_OF_PREVIOUS_BIT_SPACE - BEO_BIT_MARK);
         }
@@ -283,15 +306,15 @@ static bool matchBeoLength(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros) 
 
 bool IRrecv::decodeBangOlufsen() {
 #if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
-    if (decodedIRData.rawlen != 6 && decodedIRData.rawlen < 36) { // 16 bits minimum
+    if (decodedIRData.rawlen != 6 && decodedIRData.rawlen < 38) { // 16 bits minimum
         DEBUG_PRINT(F("B&O: Data length="));
         DEBUG_PRINT(decodedIRData.rawlen);
-        DEBUG_PRINTLN(F(" is not < 36 or 6"));
+        DEBUG_PRINTLN(F(" is not 6 or not greater equal 38"));
 #else
     if (decodedIRData.rawlen < 44) { // 16 bits minimum
         DEBUG_PRINT(F("B&O: Data length="));
         DEBUG_PRINT(decodedIRData.rawlen);
-        DEBUG_PRINTLN(F(" is not < 44"));
+        DEBUG_PRINTLN(F(" is not greater equal 44"));
 #endif
         return false;
     }
@@ -312,36 +335,41 @@ bool IRrecv::decodeBangOlufsen() {
     TRACE_PRINTLN(decodedIRData.rawlen);
 
 #if defined(ENABLE_BEO_WITHOUT_FRAME_GAP)
-    /*
-     * Check if we have the AGC part of the first frame, i.e. start bit 1 and 2.
-     */
     if (decodedIRData.rawlen == 6) {
-        if ((matchMark(irparams.rawbuf[3], BEO_BIT_MARK_FOR_DECODE) || matchMark(irparams.rawbuf[3], BEO_DATALINK_BIT_MARK))
-                && (matchSpace(irparams.rawbuf[4], BEO_ZERO_SPACE - BEO_BIT_MARK_FOR_DECODE)
-                        || matchSpace(irparams.rawbuf[4], BEO_ZERO_SPACE - BEO_DATALINK_BIT_MARK))) {
+        /*
+         * Here we have the AGC part of the "Break at start mode"  i.e. start bit 1 and 2.
+         * Test start bit 2 using IR or Datalink timing
+         */
+        if ((matchMarkWithGreaterRange(irparams.rawbuf[3], BEO_BIT_MARK_FOR_DECODE)
+                && (matchSpace(irparams.rawbuf[4], BEO_ZERO_SPACE - BEO_BIT_MARK_FOR_DECODE)))
+                || (matchMark(irparams.rawbuf[3], BEO_DATALINK_BIT_MARK)
+                        && matchSpace(irparams.rawbuf[4], BEO_ZERO_SPACE - BEO_DATALINK_BIT_MARK))) {
             TRACE_PRINTLN(F("B&O: AGC only part (start bits 1 + 2 of 4) detected"));
         } else {
-            return false; // no B&O protocol
+            DEBUG_PRINTLN(F("B&O: No AGC only part (start bits 1 + 2 of 4) detected"));
+            DEBUG_PRINT(F("matchMarkWithGreaterRange([3], 250)="));
+            DEBUG_PRINTLN(matchMarkWithGreaterRange(irparams.rawbuf[3], BEO_BIT_MARK_FOR_DECODE));
+            return false;
         }
     } else {
         /*
-         * Check if leading gap is trailing bit of first AGC frame
+         * Check if leading gap is the start bit space we interpret as gap in "Break at start mode"
          */
         if (!matchSpace(decodedIRData.initialGapTicks, BEO_START_BIT_SPACE)) {
-            TRACE_PRINT(F("B&O: Leading gap of ")); // Leading gap is trailing bit of first frame
-            TRACE_PRINT((uint32_t)decodedIRData.initialGapTicks * 50); // Leading gap is trailing bit of first frame
-            TRACE_PRINTLN(F(" us is wrong")); // Leading gap is trailing bit of first frame
-            return false; // no B&O protocol
+            DEBUG_PRINT(F("B&O: Leading gap of "));
+            DEBUG_PRINT((uint32_t)decodedIRData.initialGapTicks * 50);
+            DEBUG_PRINTLN(F(" us is wrong"));
+            return false;
         }
 
-        if (matchMark(irparams.rawbuf[1], BEO_BIT_MARK_FOR_DECODE)) {
+        if (matchMarkWithGreaterRange(irparams.rawbuf[1], BEO_BIT_MARK_FOR_DECODE)) {
 #  if defined(SUPPORT_BEO_DATALINK_TIMING_FOR_DECODE)
             protocolMarkLength = BEO_BIT_MARK_FOR_DECODE;
         } else if (matchMark(irparams.rawbuf[1], BEO_DATALINK_BIT_MARK)) {
             protocolMarkLength = BEO_DATALINK_BIT_MARK;
 #  endif
         } else {
-            TRACE_PRINTLN(F("B&O: mark length is wrong"));
+            DEBUG_PRINTLN(F("B&O: mark length is wrong"));
             return false;
         }
 
@@ -377,7 +405,7 @@ bool IRrecv::decodeBangOlufsen() {
                 }
             } else {
                 if (tPulseNumber == 3) {
-                    if (matchMark(markLength, BEO_BIT_MARK_FOR_DECODE)) {
+                    if (matchMarkWithGreaterRange(markLength, BEO_BIT_MARK_FOR_DECODE)) {
 #  if defined(SUPPORT_BEO_DATALINK_TIMING_FOR_DECODE)
                         protocolMarkLength = BEO_BIT_MARK_FOR_DECODE;
                         } else if (matchMark(markLength, BEO_DATALINK_BIT_MARK)) {
@@ -405,7 +433,7 @@ bool IRrecv::decodeBangOlufsen() {
 #if defined(SUPPORT_BEO_DATALINK_TIMING_FOR_DECODE)
             if (!matchMark(markLength, protocolMarkLength)) {
 #else
-            if (!matchMark(markLength, BEO_BIT_MARK_FOR_DECODE)) {
+            if (!matchMarkWithGreaterRange(markLength, BEO_BIT_MARK_FOR_DECODE)) {
 #endif
                 DEBUG_PRINTLN(F("B&O: Mark length is wrong"));
                 return false;

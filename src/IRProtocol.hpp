@@ -44,7 +44,6 @@ const char string_Apple[] PROGMEM = "Apple";
 const char string_Denon[] PROGMEM = "Denon";
 const char string_JVC[] PROGMEM = "JVC";
 const char string_LG[] PROGMEM = "LG";
-const char string_LG2[] PROGMEM = "LG2";
 const char string_NEC[] PROGMEM = "NEC";
 const char string_NEC2[] PROGMEM = "NEC2";
 const char string_Onkyo[] PROGMEM = "Onkyo";
@@ -76,7 +75,7 @@ const char string_Other[] PROGMEM = "OTHER";
  * !!Must be the same order as in decode_type_t in IRProtocol.h!!!
  */
 const char *const ProtocolNames[]
-PROGMEM = { string_Unknown, string_PulseWidth, string_PulseDistance, string_Apple, string_Denon, string_JVC, string_LG, string_LG2,
+PROGMEM = { string_Unknown, string_PulseWidth, string_PulseDistance, string_Apple, string_Denon, string_JVC, string_LG,
         string_NEC, string_NEC2, string_Onkyo, string_Panasonic, string_Kaseikyo, string_Kaseikyo_Denon, string_Kaseikyo_Sharp,
         string_Kaseikyo_JVC, string_Kaseikyo_Mitsubishi, string_RC5, string_RC6, string_RC6A, string_Samsung, string_SamsungLG,
         string_Samsung48, string_Sharp, string_Sony

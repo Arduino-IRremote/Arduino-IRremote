@@ -95,9 +95,9 @@
  * !!!Must be the same order as ProtocolNames in IRProtocol.hpp!!!
  */
 typedef enum {
-    UNKNOWN = 0, PULSE_WIDTH, PULSE_DISTANCE, APPLE, DENON, JVC, LG, LG2, NEC, NEC2, /* 10 entries */
-    ONKYO, PANASONIC, KASEIKYO, KASEIKYO_DENON, KASEIKYO_SHARP, KASEIKYO_JVC, KASEIKYO_MITSUBISHI, RC5, RC6, RC6A, /*31 bit +  3 fixed 0b110 mode bits*/
-    SAMSUNG, /* 11 entries */
+    UNKNOWN = 0, PULSE_WIDTH, PULSE_DISTANCE, APPLE, DENON, JVC, LG, NEC, NEC2, ONKYO, /* 10 entries */
+    PANASONIC, KASEIKYO, KASEIKYO_DENON, KASEIKYO_SHARP, KASEIKYO_JVC, KASEIKYO_MITSUBISHI, RC5, RC6, RC6A, /*31 bit +  3 fixed 0b110 mode bits*/
+    SAMSUNG, /* 10 entries */
     SAMSUNGLG, SAMSUNG48, SHARP, SONY,
     /* Now the exotic protocols */
     BANG_OLUFSEN, BOSEWAVE, LEGO_PF, MAGIQUEST, WHYNTER, MARANTZ,/* 10 entries */

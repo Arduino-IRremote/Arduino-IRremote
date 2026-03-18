@@ -35,13 +35,12 @@
 //#define NO_LED_FEEDBACK_CODE          // Saves 276 bytes program memory
 
 /*
- * LG2 has different header timing and a shorter bit time
- * Known LG remote controls, which uses LG2 protocol are:
+ * LG has different header timing and a shorter bit time
+ * Known LG remote controls, which uses LG protocol are:
  * AKB75215403
  * AKB74955603
  * AKB73757604:
  */
-//#define USE_LG2_PROTOCOL // Try it if you do not have success with the default LG protocol
 #define NUMBER_OF_COMMANDS_BETWEEN_PRINT_OF_MENU 5
 
 #if !defined(ARDUINO_ESP32C3_DEV) // This is due to a bug in RISC-V compiler, which requires unused function sections :-(.

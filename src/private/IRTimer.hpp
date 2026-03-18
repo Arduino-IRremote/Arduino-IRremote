@@ -39,6 +39,7 @@
  * 8 MHZ F_CPU and 38 kHz -> no prescaling , divider = 210.526 -> 38.1 kHz with divider 210
  * 4 MHZ F_CPU and 38 kHz -> no prescaling , divider = 105.26 -> 38.1 kHz with divider 105
  * 1 MHZ F_CPU and 38 kHz -> no prescaling , divider = 26.31 -> 38.4 kHz with divider 36
+ * 38 kHz = 26.3157 us
  */
 #ifndef _IR_TIMER_HPP
 #define _IR_TIMER_HPP

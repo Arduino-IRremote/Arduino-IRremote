@@ -1453,7 +1453,7 @@ void IRsend::IRLedOff() {
 /**
  * Sends an IR space for the specified number of microseconds.
  * A space is "no output", so just wait.
- * Executing program between end of mark and start of next mark uses around 15 to 20 us @ 16 MHz. This time is adds to the space delay here.
+ * Executing program between end of mark and start of next mark uses around 15 to 20 us @ 16 MHz. This time is added to the space delay here.
  */
 void IRsend::space(uint16_t aSpaceMicros) {
     customDelayMicroseconds(aSpaceMicros);

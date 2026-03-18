@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2022-2025 Armin Joachimsmeyer
+ * Copyright (c) 2022-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 135.
 // 20 is taken as default if not otherwise specified / defined.
-//#define MARK_EXCESS_MICROS    40    // Adapt it to your IR receiver module. 40 is recommended for the cheap VS1838 modules at high intensity.
+#define MARK_EXCESS_MICROS    40    // Adapt it to your IR receiver module. 40 is recommended for the cheap VS1838 modules at high intensity.
 
 //#define RECORD_GAP_MICROS 12000 // Default is 8000. Activate it for some LG air conditioner protocols.
 
@@ -162,18 +162,16 @@ void setup() {
 
 #if FLASHEND >= 0x3FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
     Serial.println();
-    Serial.print(F("If you connect debug pin "));
-#  if defined(APPLICATION_PIN_STRING)
-    Serial.print(APPLICATION_PIN_STRING);
-#  else
-    Serial.print(DEBUG_BUTTON_PIN);
-#  endif
-    Serial.print(F(" to ground"));
+    if (digitalRead(DEBUG_BUTTON_PIN) != LOW) {
+        Serial.print(F("If you connect debug pin "));
+        Serial.print(DEBUG_BUTTON_PIN);
+        Serial.print(F(" to ground"));
 #  if defined(AUXILIARY_DEBUG_BUTTON_PIN)
-    Serial.print(F(" or to pin "));
-    Serial.print(AUXILIARY_DEBUG_BUTTON_PIN);
+        Serial.print(F(" or to pin "));
+        Serial.print(AUXILIARY_DEBUG_BUTTON_PIN);
 #endif
-    Serial.println(F(", raw data is always printed"));
+        Serial.println(F(", raw data is always printed"));
+    }
 
     // Info for receive
     Serial.print(RECORD_GAP_MICROS);

@@ -4,6 +4,11 @@ See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-I
 
 # 4.6.2
 - Added removed typedef `IRRawDataType` for backward compatibility.
+- Modified and renamed function `setToggleBitValueForRC5AndRC6()` to `setNextToggleBitValueForRC5AndRC6()`.
+- Fixed bug in sending RC6A.
+- Updated `LG` protocol and removed useless `LG2` protocol.
+- Added new functions `match*WithGreaterRange()`, e.g. `matchMarkWithGreaterRange()`.
+- Improved B&O decoding using new functions.
 
 # 4.6.1
 - Fixed bug #1347 in RC5/RC6 autorepeat bit handling. Thanks to Craig Leres.

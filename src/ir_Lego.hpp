@@ -147,7 +147,8 @@ bool IRrecv::decodeLegoPowerFunctions() {
      * Check header timings
      * Since LEGO_HEADER_MARK is just 158 us use a relaxed threshold compare (237) for it instead of matchMark()
      */
-    if ((irparams.rawbuf[1] > LEGO_HEADER_MARK + (LEGO_HEADER_MARK / 2)) || (!matchSpace(irparams.rawbuf[2], LEGO_HEADER_SPACE))) {
+    if (!(matchMarkWithGreaterRange(irparams.rawbuf[1], LEGO_HEADER_MARK) && (matchSpace(irparams.rawbuf[2], LEGO_HEADER_SPACE)))) {
+        DEBUG_PRINTLN(F("LEGO: No header mark and space"));
         return false;
     }
 

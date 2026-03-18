@@ -254,7 +254,7 @@ void Aircondition_LG::sendIRCommand(uint16_t aCommand) {
     INFO_PRINTLN(aCommand, BIN);
 
 
-    IrSender.sendLG2((uint8_t) LG_ADDRESS, aCommand, 0);
+    IrSender.sendLG((uint8_t) LG_ADDRESS, aCommand, 0);
 }
 
 /*

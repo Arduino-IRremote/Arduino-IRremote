@@ -431,6 +431,10 @@ bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
 bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks);
 bool matchMark(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
 bool matchSpace(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
+bool matchTicksWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
+bool matchTicksWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks);
+bool matchMarkWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
+bool matchSpaceWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
 
 /*
  * Old function names
@@ -623,10 +627,9 @@ public:
     void sendFAST(uint8_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendJVC(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);
 
-    void sendLG2Repeat();
+    void sendLGRepeat();
     uint32_t computeLGRawDataAndChecksum(uint8_t aAddress, uint16_t aCommand);
     void sendLG(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
-    void sendLG2(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendLGRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
 
     void sendNECRepeat();
@@ -655,7 +658,7 @@ public:
     void sendKaseikyo_Sharp(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
     void sendKaseikyo_JVC(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
 
-    void setToggleBitValueForRC5AndRC6(uint8_t aRC5ToggleBitValue);
+    void setNextToggleBitValueForRC5AndRC6(uint8_t aRC5ToggleBitValue);
     void sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
     void sendRC5Marantz(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t aMarantzExtension,
             bool aEnableAutomaticToggle = true);
@@ -758,7 +761,7 @@ extern IRsend IrSender;
 
 void sendNECSpecialRepeat();
 void sendOpenLASIRSpecialRepeat();
-void sendLG2SpecialRepeat();
+void sendLGSpecialRepeat();
 void sendSamsungLGSpecialRepeat();
 
 #endif // _IR_REMOTE_INT_H

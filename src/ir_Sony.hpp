@@ -83,10 +83,10 @@
 #define SONY_ZERO_MARK          SONY_UNIT
 #define SONY_SPACE              SONY_UNIT
 
-#define SONY_AVERAGE_DURATION_MIN   21000 // SONY_HEADER_MARK + SONY_SPACE  + 12 * 2,5 * SONY_UNIT  // 2.5 because we assume more zeros than ones
-#define SONY_AVERAGE_DURATION_MAX   33000 // SONY_HEADER_MARK + SONY_SPACE  + 20 * 2,5 * SONY_UNIT  // 2.5 because we assume more zeros than ones
-#define SONY_REPEAT_PERIOD          45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
-#define SONY_MAXIMUM_REPEAT_DISTANCE    (SONY_REPEAT_PERIOD - SONY_AVERAGE_DURATION_MIN) // 24 ms
+#define SONY_DURATION_MIN       17400 // SONY_HEADER_MARK + SONY_SPACE + 12 * 2 * SONY_UNIT = 29 * SONY_UNIT
+#define SONY_DURATION_MAX       37200 // SONY_HEADER_MARK + SONY_SPACE + 20 * 3 * SONY_UNIT = 65 * SONY_UNIT
+#define SONY_REPEAT_PERIOD      45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
+#define SONY_MAXIMUM_REPEAT_DISTANCE    (SONY_REPEAT_PERIOD - SONY_DURATION_MIN) // 27,6 ms
 
 struct PulseDistanceWidthProtocolConstants const SonyProtocolConstants PROGMEM = { SONY, SONY_KHZ, SONY_HEADER_MARK, SONY_SPACE, SONY_ONE_MARK,
 SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_WIDTH, (SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
@@ -111,8 +111,8 @@ bool IRrecv::decodeSony() {
     }
 
     // Check we have enough data. +2 for initial gap and start bit mark and space minus the last/MSB space. NO stop bit! 26, 32, 42
-    if (decodedIRData.rawlen != (2 * SONY_BITS_MIN) + 2 && decodedIRData.rawlen != (2 * SONY_BITS_MAX) + 2
-            && decodedIRData.rawlen != (2 * SONY_BITS_15) + 2) {
+    if (!(decodedIRData.rawlen == (2 * SONY_BITS_MIN) + 2 || decodedIRData.rawlen == (2 * SONY_BITS_MAX) + 2
+            || decodedIRData.rawlen == (2 * SONY_BITS_15) + 2)) {
         DEBUG_PRINT(F("Sony: Data length="));
         DEBUG_PRINT(decodedIRData.rawlen);
         DEBUG_PRINTLN(F(" is not 12, 15 or 20"));

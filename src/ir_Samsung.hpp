@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2025 Darryl Smith, Armin Joachimsmeyer
+ * Copyright (c) 2017-2026 Darryl Smith, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -93,7 +93,7 @@
 #define SAMSUNG_ONE_SPACE           (3 * SAMSUNG_UNIT) // 1690 | 33.8  TICKS_LOW = 25.07 TICKS_HIGH = 45.0
 #define SAMSUNG_ZERO_SPACE          SAMSUNG_UNIT
 
-#define SAMSUNG_AVERAGE_DURATION    55000 // SAMSUNG_HEADER_MARK + SAMSUNG_HEADER_SPACE  + 32 * 2,5 * SAMSUNG_UNIT + SAMSUNG_UNIT // 2.5 because we assume more zeros than ones
+#define SAMSUNG_AVERAGE_DURATION    55000 // Not used. SAMSUNG_HEADER_MARK + SAMSUNG_HEADER_SPACE  + 32 * 2,5 * SAMSUNG_UNIT + SAMSUNG_UNIT // 2.5 because we assume more zeros than ones
 #define SAMSUNG_REPEAT_DURATION     (SAMSUNG_HEADER_MARK  + SAMSUNG_HEADER_SPACE + SAMSUNG_BIT_MARK + SAMSUNG_ZERO_SPACE + SAMSUNG_BIT_MARK)
 #define SAMSUNG_REPEAT_PERIOD       110000 // Commands are repeated every 110 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define SAMSUNG_MAXIMUM_REPEAT_DISTANCE     (SAMSUNG_REPEAT_PERIOD + (SAMSUNG_REPEAT_PERIOD / 4)) // 137000 - Just a guess
@@ -270,8 +270,8 @@ void IRsend::sendSamsung48(uint16_t aAddress, uint32_t aCommand, int_fast8_t aNu
 bool IRrecv::decodeSamsung() {
 
     // Check we have enough data (68). The +4 is for initial gap, start bit mark and space + stop bit mark
-    if (decodedIRData.rawlen != ((2 * SAMSUNG_BITS) + 4) && decodedIRData.rawlen != ((2 * SAMSUNG48_BITS) + 4)
-            && (decodedIRData.rawlen != 6)) {
+    if (!(decodedIRData.rawlen == ((2 * SAMSUNG_BITS) + 4) || decodedIRData.rawlen == ((2 * SAMSUNG48_BITS) + 4)
+            || (decodedIRData.rawlen == 6))) {
         DEBUG_PRINT(F("Samsung: Data length="));
         DEBUG_PRINT(decodedIRData.rawlen);
         DEBUG_PRINTLN(F(" is not 6 or 68 or 100"));
@@ -283,7 +283,7 @@ bool IRrecv::decodeSamsung() {
     }
 
     // Check for SansungLG style repeat
-    if (decodedIRData.rawlen == 6) {
+    if (lastDecodedProtocol == SAMSUNGLG && decodedIRData.rawlen == 6) {
         decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
         decodedIRData.address = lastDecodedAddress;
         decodedIRData.command = lastDecodedCommand;

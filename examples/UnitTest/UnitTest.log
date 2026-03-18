@@ -65,6 +65,74 @@ rawIRTimings[68]:
 Duration=73450us
 
 
+Send RC5 minimal length
+Protocol=RC5 Address=0xA, Command=0x6A, Toggle=1, Raw-Data=0xAAA, 13 bits, MSB first, Gap=765600us, Duration=23100us
+Send with: IrSender.sendRC5(0xA, 0x6A, <numberOfRepeats>);
+rawIRTimings[14]:
+ -765600
+ +1850,-1700
+ +1850,-1700 +1850,-1700 +1850,-1700 +1850,-1700
+ +1800,-1750 +1800
+Duration=23100us
+
+
+Send RC5 maximal length
+Protocol=RC5 Address=0x1F, Command=0x3F, Toggle=1, Raw-Data=0x1FFF, 13 bits, MSB first, Gap=391600us, Duration=24200us
+Send with: IrSender.sendRC5(0x1F, 0x3F, <numberOfRepeats>);
+rawIRTimings[28]:
+ -391600
+ + 900,- 900
+ + 950,- 800 +1000,- 800 + 900,- 900 + 950,- 850
+ + 900,- 850 + 950,- 850 + 900,- 900 + 900,- 900
+ + 900,- 900 + 900,- 900 + 900,- 900 + 950,- 850
+ + 900
+Duration=24200us
+
+
+Send Marantz maximal length
+Protocol=Marantz Address=0x1F, Command=0x3F, Extra=0x3F, Toggle=1, Raw-Data=0x7FFFF, 19 bits, MSB first, Gap=398900us, Duration=38350us
+Send with: IrSender.sendMarantz(0x1F, 0x3F, <numberOfRepeats>, 0x3F);
+rawIRTimings[40]:
+ -398900
+ + 950,- 850
+ + 850,- 950 + 900,- 900 + 950,- 850 + 950,- 800
+ +1000,- 800 + 900,- 900 + 950,-4350 + 950,- 850
+ + 950,- 800 +1000,- 800 + 850,- 950 + 950,- 850
+ + 900,- 850 + 950,- 850 + 950,- 850 + 950,- 800
+ +1000,- 800 + 950,- 850 + 850
+Duration=38350us
+
+
+Send RC6 minimal length
+Protocol=RC6 Address=0x55, Command=0x55, Toggle=1, Raw-Data=0x15555, 20 bits, MSB first, Gap=744250us, Duration=23100us
+Send with: IrSender.sendRC6(0x55, 0x55, <numberOfRepeats>);
+rawIRTimings[26]:
+ -744250
+ +2750,- 800
+ + 550,- 800 + 500,- 400 + 500,- 450 +1400,-1250
+ +1000,- 800 + 950,- 900 + 950,- 850 +1000,- 800
+ + 950,- 850 + 950,- 900 +1000,- 800 +1000
+Duration=23100us
+
+
+Send RC6A maximal length
+Protocol=RC6A Address=0xFF, Command=0xFF, Extra=0x3FFF, Raw-Data=0x7FFFFFFF, 35 bits, MSB first, Gap=397100us, Duration=36850us
+Send with: IrSender.sendRC6A(0xFF, 0xFF, <numberOfRepeats>, 0x3FFF);
+rawIRTimings[72]:
+ -397100
+ +2650,- 900
+ + 550,- 400 + 400,- 500 + 500,- 850 + 500,- 850
+ +1450,- 350 + 550,- 400 + 400,- 500 + 450,- 450
+ + 500,- 400 + 550,- 400 + 400,- 500 + 450,- 450
+ + 550,- 350 + 550,- 400 + 500,- 400 + 450,- 450
+ + 500,- 400 + 500,- 450 + 400,- 500 + 450,- 450
+ + 500,- 400 + 500,- 400 + 450,- 500 + 450,- 450
+ + 500,- 400 + 550,- 350 + 450,- 500 + 450,- 450
+ + 500,- 400 + 500,- 450 + 400,- 500 + 450,- 450
+ + 450,- 450 + 550,- 350 + 500
+Duration=36850us
+
+
 Send arbitrary raw data with 1 repeat and exact timing (16 bit array format) with sendRaw()
 rawIRTimings[18]:
  -770450
@@ -776,7 +844,7 @@ rawIRTimings[36]:
 Duration=10250us
 
 
-Send 16 bit Bang&Olufsen / originally with 455 kHz
+Send 16 bit Bang&Olufsen - requires originally 455 kHz
 - ENABLE_BEO_WITHOUT_FRAME_GAP is enabled
 rawIRTimings[44]:
  -749450
@@ -823,20 +891,20 @@ Duration=40700us
 
 
 Send LG
-Protocol=LG Address=0xF1, Command=0x9876, Raw-Data=0xF19876E, 28 bits, MSB first, Gap=745850us, Duration=59800us
+Protocol=LG Address=0xF1, Command=0x9876, Raw-Data=0xF19876E, 28 bits, MSB first, Gap=745900us, Duration=59900us
 Send with: IrSender.sendLG(0xF1, 0x9876, <numberOfRepeats>);
 rawIRTimings[60]:
- -745850
- +8950,-4150
- + 550,-1500 + 550,-1550 + 550,-1550 + 550,-1500
- + 600,- 500 + 550,- 500 + 600,- 450 + 550,-1550
- + 550,-1550 + 550,- 500 + 550,- 500 + 550,-1550
- + 550,-1550 + 600,- 450 + 550,- 500 + 550,- 500
- + 550,- 550 + 550,-1550 + 550,-1500 + 600,-1500
- + 550,- 500 + 550,-1550 + 600,-1500 + 550,- 500
- + 600,-1500 + 550,-1550 + 550,-1500 + 600,- 500
+ -745900
+ +8350,-4150
+ + 550,-1550 + 600,-1550 + 550,-1550 + 550,-1550
+ + 600,- 550 + 500,- 550 + 550,- 550 + 550,-1550
+ + 550,-1550 + 550,- 550 + 550,- 550 + 550,-1550
+ + 550,-1550 + 550,- 550 + 550,- 550 + 550,- 550
+ + 550,- 550 + 550,-1550 + 550,-1550 + 550,-1550
+ + 550,- 550 + 550,-1550 + 550,-1550 + 550,- 550
+ + 550,-1550 + 550,-1550 + 550,-1550 + 550,- 550
  + 550
-Duration=59800us
+Duration=59900us
 
 
 Send Bosewave with no address and 8 command bits
@@ -1407,7 +1475,7 @@ rawIRTimings[36]:
 Duration=10850us
 
 
-Send 16 bit Bang&Olufsen / originally with 455 kHz
+Send 16 bit Bang&Olufsen - requires originally 455 kHz
 - ENABLE_BEO_WITHOUT_FRAME_GAP is enabled
 rawIRTimings[86]:
  -749450
