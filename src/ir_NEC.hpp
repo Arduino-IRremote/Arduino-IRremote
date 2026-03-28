@@ -279,7 +279,7 @@ bool IRrecv::decodeNEC() {
     tValue.ULong = decodedIRData.decodedRawData;
     decodedIRData.command = tValue.UByte.MidHighByte; // 8 bit
 
-#if defined(DECODE_ONKYO)
+#if defined(DECODE_ONKYO) // Decodes NEC and Apple as Onkyo
     // Here only Onkyo protocol is supported -> force 16 bit address and command decoding. No NEC decoding possible!
     decodedIRData.address = tValue.UWord.LowWord; // first 16 bit
     decodedIRData.protocol = ONKYO;

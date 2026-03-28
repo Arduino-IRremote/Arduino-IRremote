@@ -200,10 +200,9 @@ void disableSendPWMByTimer() {
 #  endif
 
 #elif defined(__AVR_ATtiny816__) || defined(__AVR_ATtiny1604__) || defined(__AVR_ATtiny1614__) || defined(__AVR_ATtiny1624__) \
-    || defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__) // e.g. TinyCore boards
+    || defined(__AVR_ATtiny1616__) || defined(__AVR_ATtiny3216__) || defined(__AVR_ATtiny3217__)  || defined(__AVR_ATtiny3227__) // e.g. TinyCore boards
 #  if !defined(IR_USE_AVR_TIMER_A) && !defined(IR_USE_AVR_TIMER_D)
 #define IR_USE_AVR_TIMER_A // use this if you use megaTinyCore, Tone is on TCB and millis() on TCD
-//#define IR_USE_AVR_TIMER_D // use this if you use TinyCore
 #  endif
 
 // ATmega8u2, ATmega16U2, ATmega32U2, ATmega8 - Timer 2 does not work with existing code below

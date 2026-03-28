@@ -74,18 +74,17 @@
 
 #if FLASHEND >= 0x1FFF      // For 8k flash or more, like ATtiny85
 #define DECODE_DENON        // Includes Sharp
-#define DECODE_KASEIKYO
-#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
-#define DECODE_NEC          // Includes Apple and Onkyo
+#define DECODE_KASEIKYO     // Includes Panasonic ~ 640 bytes
+#define DECODE_NEC          // Includes Apple and Onkyo ~ 1050 bytes
 #endif
 
 #if FLASHEND >= 0x3FFF      // For 16k flash or more, like ATtiny1604
 #define DECODE_JVC
-#define DECODE_RC5
+#define DECODE_RC5 // with DECODE_MARANTZ ~ 1270
 #define DECODE_MARANTZ
-#define DECODE_RC6
+#define DECODE_RC6 // ~ 940 bytes
 
-#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols
+#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols ~ 2430 bytes
 #define DECODE_HASH         // special decoder for all protocols
 #endif
 
@@ -94,20 +93,20 @@
 #define DECODE_SAMSUNG
 #define DECODE_LG
 #define DECODE_LEGO_PF // LEGO is skipped, since it is difficult to receive because of its short marks and spaces
-#endif
 
-#define DECODE_BEO // It prevents decoding of SONY (default repeats), which we are not using here.
+#define DECODE_BEO // It prevents decoding of SONY (default repeats), which we are not using here. ~ 1340 bytes
 //#define ENABLE_BEO_WITHOUT_FRAME_GAP // !!!For successful unit testing we must see the warning at ir_BangOlufsen.hpp:100:2!!!
-#if defined(DECODE_BEO)
+#  if defined(DECODE_BEO)
 #define RECORD_GAP_MICROS 16000 // Force to get the complete frame including the 3. space of 15 ms in the receive buffer
 #define SUPPRESS_BEO_RECORD_GAP_MICROS_WARNING // We know, what we do here :-)
 #define BEO_KHZ         38  // We send and receive Bang&Olufsen with 38 kHz instead of 455 kHz in order to be able to test it
+#  endif
 #endif
 
-#define DECODE_BOSEWAVE
-#define DECODE_MAGIQUEST
-#define DECODE_OPENLASIR
-#define DECODE_FAST
+#define DECODE_BOSEWAVE     // ~ 250 bytes
+#define DECODE_MAGIQUEST    // ~ 460 bytes
+#define DECODE_OPENLASIR    // ~ 330 bytes
+#define DECODE_FAST         // ~ 210 bytes
 
 //#define DECODE_WHYNTER
 
@@ -382,7 +381,7 @@ void checkReceivedExtra(uint16_t aSentExtra) {
 
 void waitForReceived() {
     // wait until signal has received
-    uint16_t tTimeoutCounter = 1000; // gives 10 seconds timeout
+    uint16_t tTimeoutCounter = 500; // gives 5 seconds timeout
     while (!sDataJustReceived) {
         delay(10);
         if (tTimeoutCounter == 0) {
@@ -656,7 +655,7 @@ void loop() {
         delay(DELAY_AFTER_SEND);
 #  endif // defined(DECODE_NEC)
 
-#  if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
+#  if defined(DECODE_KASEIKYO)
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance PGM using ProtocolConstants 1=432|1296, 0=432|432"));
         Serial.flush();
 #    if __INT_WIDTH__ < 32
@@ -701,7 +700,7 @@ void loop() {
 #    endif
 
         delay(DELAY_AFTER_SEND);
-#  endif // defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
+#  endif // defined(DECODE_KASEIKYO)
 
 #  if defined(DECODE_DISTANCE_WIDTH)
 #    if defined(USE_MSB_DECODING_FOR_DISTANCE_DECODER)
@@ -913,7 +912,7 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 #endif
 
-#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
+#if defined(DECODE_KASEIKYO)
     Serial.println(F("Send Panasonic"));
     Serial.flush();
     IrSender.sendPanasonic(sAddress & 0xFFF, sCommand, sRepeats);

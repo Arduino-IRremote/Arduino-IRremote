@@ -45,6 +45,11 @@
  * See also SimpleReceiver example
  */
 
+// For backward compatibility
+#if defined(DECODE_PANASONIC)
+#define DECODE_KASEIKYO
+#endif
+
 #if !defined(NO_DECODER) // for sending raw only
 #  if (!(defined(DECODE_DENON) || defined(DECODE_JVC) || defined(DECODE_KASEIKYO) \
 || defined(DECODE_PANASONIC) || defined(DECODE_LG) || defined(DECODE_NEC) || defined(DECODE_ONKYO) || defined(DECODE_SAMSUNG) \
@@ -54,31 +59,31 @@
 || defined(DECODE_OPENLASIR)))
 /*
  * If no protocol is explicitly enabled, we enable all protocols
+ * In alphabetic order:
  */
-#define DECODE_DENON        // Includes Sharp
-#define DECODE_JVC
-#define DECODE_KASEIKYO
-#define DECODE_PANASONIC    // alias for DECODE_KASEIKYO
-#define DECODE_LG
-#define DECODE_NEC          // Includes Apple and Onkyo
-#define DECODE_SAMSUNG
-#define DECODE_SONY
-#define DECODE_RC5
-#define DECODE_RC6
+#define DECODE_DENON        // Includes Sharp - requires around 250 bytes of program memory on ATmega328
+#define DECODE_JVC          // ~ 200 bytes
+#define DECODE_KASEIKYO     // Includes Panasonic ~ 300 bytes
+#define DECODE_LG           // ~ 400 bytes
+#define DECODE_NEC          // Includes Apple and Onkyo ~ 250 bytes
+#define DECODE_SAMSUNG      // ~ 300 bytes
+#define DECODE_SONY         // ~ 175 bytes
+#define DECODE_RC5          // RC5 + MARANTZ: ~ 425 bytes
+#define DECODE_RC6          // ~ 375 bytes
 
 #    if !defined(EXCLUDE_EXOTIC_PROTOCOLS) // saves around 2000 bytes program memory
-#define DECODE_BOSEWAVE
-#define DECODE_LEGO_PF
-#define DECODE_MAGIQUEST
-#define DECODE_WHYNTER
-#define DECODE_MARANTZ
-#define DECODE_FAST
-#define DECODE_OPENLASIR    // Modified NEC with 8-bit validated address + 16-bit command
+#define DECODE_BOSEWAVE     // ~ 140 bytes
+#define DECODE_FAST         // ~ 135 bytes
+#define DECODE_LEGO_PF      // ~ 300 bytes
+#define DECODE_MAGIQUEST    // ~ 270 bytes
+#define DECODE_MARANTZ      // RC5 + MARANTZ: ~ 425 bytes
+#define DECODE_OPENLASIR    // Modified NEC with 8-bit validated address + 16-bit command. ~ 175 bytes
+#define DECODE_WHYNTER      // ~ 90 bytes
 #    endif
 
 #    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
-#define DECODE_DISTANCE_WIDTH     // universal decoder for pulse distance width protocols - requires up to 750 bytes additional program memory
-#define DECODE_HASH         // special decoder for all protocols - requires up to 250 bytes additional program memory
+#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols ~ 2275 bytes
+#define DECODE_HASH         // special decoder for all protocols ~ 250 bytes
 #    endif
 #  endif
 #endif // !defined(NO_DECODER)

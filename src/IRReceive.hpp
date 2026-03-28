@@ -590,7 +590,7 @@ bool IRrecv::decode() {
     }
 #endif
 
-#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
+#if defined(DECODE_KASEIKYO)
     TRACE_PRINTLN(F("Attempting Panasonic/Kaseikyo decode"));
     if (decodeKaseikyo()) {
         return true;
@@ -1537,7 +1537,7 @@ void printActiveIRProtocols(Print *aSerial) {
 #elif defined(DECODE_NEC)
         aSerial->print(F("NEC/NEC2/Onkyo/Apple, "));
 #endif
-#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO)
+#if defined(DECODE_KASEIKYO)
         aSerial->print(F("Panasonic/Kaseikyo, "));
 #endif
 #if defined(DECODE_DENON)
@@ -2125,7 +2125,7 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
             }
         }
 
-#if defined(DECODE_PANASONIC) || defined(DECODE_KASEIKYO) || defined(DECODE_RC6) || defined(DECODE_MARANTZ)
+#if defined(DECODE_KASEIKYO) || defined(DECODE_RC6) || defined(DECODE_MARANTZ)
         if ((decodedIRData.flags & IRDATA_FLAGS_EXTRA_INFO) && (decodedIRData.protocol == KASEIKYO || decodedIRData.protocol == RC6A || decodedIRData.protocol == MARANTZ)) {
             // Vendor code, Customer or MarantzExtension parameter, which is after numberOfRepeats parameter
             aSerial->print(F(", 0x"));
