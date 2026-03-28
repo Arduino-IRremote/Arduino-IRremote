@@ -2,7 +2,7 @@
 The latest version may not be released!
 See also the commit log at github: https://github.com/Arduino-IRremote/Arduino-IRremote/commits/master
 
-# 4.6.2
+# 4.7.0
 - Added removed typedef `IRRawDataType` for backward compatibility.
 - Modified and renamed function `setToggleBitValueForRC5AndRC6()` to `setNextToggleBitValueForRC5AndRC6()`.
 - Fixed bug in sending RC6A.

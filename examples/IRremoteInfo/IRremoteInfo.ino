@@ -269,13 +269,6 @@ void dumpProtocols() {
     Serial.println(F("Disabled"));
 #endif
 
-    Serial.print(F("PANASONIC:    "));
-#if defined(DECODE_PANASONIC)
-    Serial.println(F("Enabled"));
-#else
-    Serial.println(F("Disabled"));
-#endif
-
     Serial.print(F("JVC:          "));
 #if defined(DECODE_JVC)
     Serial.println(F("Enabled"));
