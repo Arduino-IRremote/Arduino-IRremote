@@ -278,7 +278,7 @@ void IRCommandDispatcher::printIRInfo(Print *aSerial) {
     aSerial->println(F("Listening to IR remote at pin " STR(IRMP_INPUT_PIN)));
 #  endif
     aSerial->print(F("Accepted protocols are: "));
-    irmp_print_active_protocols(&Serial);
+    irmp_print_active_protocols(aSerial);
     aSerial->println();
 #else
 #  if defined(IR_REMOTE_NAME)

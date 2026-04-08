@@ -2020,7 +2020,7 @@ void IRrecv::printIRSendUsage(Print *aSerial) {
         if (decodedIRData.protocol == UNKNOWN){
             aSerial->println();
             aSerial->print(F("  "));
-            printIRResultAsCArray(&Serial);
+            printIRResultAsCArray(aSerial);
             aSerial->print(F("  "));
         }
         aSerial->print(F("IrSender.send"));
