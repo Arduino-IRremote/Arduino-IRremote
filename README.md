@@ -60,6 +60,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
   * [Multiple IR receivers](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#multiple-ir-receivers) 
 - [Sending IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-ir-codes)
   * [Sending UNKNOWN protocol](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-unknown-protocol)
+  * [Sending protocol from description](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-protocol-from-description)
   * [Sending IRDB IR codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#sending-irdb-ir-codes)
     + [List of public IR code databases](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#list-of-public-ir-code-databases)
   * [Flipper Zero Codes](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#flipper-zero-codes)
@@ -623,6 +624,32 @@ If the protocol is unknown by IRremote, which often is the case for aircondition
 you can store the timing sequence in an array and send it with IrSender.sendRaw() or IrSender.sendRaw_P()
 like done in [SendDemo](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/examples/SendDemo/SendDemo.ino#L180).
 Do not forget to send repeats.
+
+## Sending protocol from description
+If you only have the description of the protocol, but no sender which can generate the IR codes, 
+then you can try to send the protocol with:
+
+```
+sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
+    uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
+    IRDecodedRawDataType aData, uint_fast8_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
+    int_fast8_t aNumberOfRepeats, void (*aSpecialSendRepeatFunction)() = nullptr)
+```
+
+E.g. for the CDTV IR Keyboard protocol a description can be found [here](https://github.com/Korinel/Amiga-CDTV-IR-Keyboard).
+Thus, the right parameters for CDTV IR Keyboard Protocol on a 32 bit platform are: 
+
+```
+sendPulseDistanceWidth(40, 9000, 4500, 1200, 400, 400, 400, <Your 40 bits>, 40, 
+    IRDATA_FLAGS_IS_MSB_FIRST, 110, 3); // 110 and 3 are guessed values!
+```
+
+On an 8 bit platform, you must store the 40 bits into an array of two 32 bit unsigned integers and send it with:
+
+```
+sendPulseDistanceWidthFromArray(40, 9000, 4500, 1200, 400, 400, 400, <address of your array> 40,
+    IRDATA_FLAGS_IS_MSB_FIRST, 110, 3); // 110 and 3 are guessed values!
+```
 
 ## Sending IRDB IR codes
 The codes found in the [irdb database](https://github.com/probonopd/irdb/tree/master/codes) specify  a **device**, a **subdevice** and a **function**.

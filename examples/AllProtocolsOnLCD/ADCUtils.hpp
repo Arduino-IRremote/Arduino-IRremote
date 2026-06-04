@@ -41,9 +41,10 @@
 /*
  * By replacing this value with the voltage you measured a the AREF pin after a conversion
  * with INTERNAL you can calibrate your ADC readout. For my Nanos I measured e.g. 1060 mV and 1093 mV.
+ * If value > real AREF voltage, measured values are > real values
  */
 #if !defined(ADC_INTERNAL_REFERENCE_MILLIVOLT)
-#define ADC_INTERNAL_REFERENCE_MILLIVOLT    1100 // Change to value measured at the AREF pin. If value > real AREF voltage, measured values are > real values
+#define ADC_INTERNAL_REFERENCE_MILLIVOLT    1100 // Change to value measured at the AREF pin.
 #endif
 
 // Union to speed up the combination of low and high bytes to a word
@@ -78,7 +79,7 @@ union WordUnionForADCUtils {
  * Persistent storage for VCC value
  */
 float sVCCVoltage;
-uint16_t sVCCVoltageMillivolt;
+uint16_t sVCCVoltageMillivolt; // Set by readVCCVoltageMillivoltSimple(), readVCCVoltageMillivolt()
 
 // for isVCCTooLowMultipleTimes()
 long sLastVCCCheckMillis;
