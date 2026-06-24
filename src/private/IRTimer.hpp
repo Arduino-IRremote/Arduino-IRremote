@@ -1990,7 +1990,10 @@ void timerDisableReceiveInterrupt() {
 void timerConfigForReceive() {
     // no need for initializing timer at setup()
 }
+
+#if !defined(USE_NO_SEND_PWM)
 #define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
+#endif
 
 #  if defined(SEND_PWM_BY_TIMER)
 #include "hardware/pwm.h"
