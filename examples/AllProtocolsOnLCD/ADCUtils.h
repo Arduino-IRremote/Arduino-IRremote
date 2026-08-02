@@ -2,7 +2,6 @@
  * ADCUtils.h
  *
  *  Copyright (C) 2016-2022  Armin Joachimsmeyer
- *  Email: armin.joachimsmeyer@gmail.com
  *
  *  This file is part of Arduino-Utils https://github.com/ArminJo/Arduino-Utils.
  *

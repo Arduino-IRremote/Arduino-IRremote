@@ -12,7 +12,6 @@
  * The blocking command can in turn be executed by main loop by calling IRDispatcher.checkAndRunSuspendedBlockingCommands().
  *
  *  Copyright (C) 2019-2026  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of ServoEasing https://github.com/ArminJo/ServoEasing.
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.

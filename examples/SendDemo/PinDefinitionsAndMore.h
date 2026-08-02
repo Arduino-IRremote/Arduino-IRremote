@@ -5,7 +5,6 @@
  *  as well as definitions for feedback LED and tone() and includes
  *
  *  Copyright (C) 2021-2026  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *

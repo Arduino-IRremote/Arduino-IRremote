@@ -6,7 +6,6 @@
  * To run this example you need to install the "IRremote" or "IRMP" library under "Tools -> Manage Libraries..." or "Ctrl+Shift+I"
  *
  *  Copyright (C) 2019-2026  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of ServoEasing https://github.com/ArminJo/ServoEasing.
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.

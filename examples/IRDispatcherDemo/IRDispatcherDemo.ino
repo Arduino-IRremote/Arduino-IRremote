@@ -4,7 +4,6 @@
  *  Example how to use IRCommandDispatcher to receive IR commands and map them to different actions / functions by means of a mapping array.
  *
  *  Copyright (C) 2020-2026  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.

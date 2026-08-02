@@ -6,7 +6,6 @@
  *  Sending IR codes using several pins for sending is implements in the MultipleSendPins example.
  *
  *  Copyright (C) 2020-2026  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *

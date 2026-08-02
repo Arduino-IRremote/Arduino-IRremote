@@ -4,7 +4,6 @@
  * Contains IR remote button codes, strings, and the mapping of codes to functions to call by the dispatcher
  *
  *  Copyright (C) 2019-2026  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.

@@ -5,7 +5,6 @@
  *  Sets symbols USE_SERIAL_LCD or USE_PARALLEL_LCD and LCD_COLUMNS and LCD_ROWS
  *
  *  Copyright (C) 2024-2025  Armin Joachimsmeyer
- *  Email: armin.joachimsmeyer@gmail.com
  *
  *  This file is part of Arduino-Utils https://github.com/ArminJo/Arduino-Utils.
  *
