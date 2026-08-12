@@ -5,7 +5,6 @@
  *  Based on SimpleSender.
  *
  *  Copyright (C) 2025  Armin Joachimsmeyer
- *  armin.joachimsmeyer@gmail.com
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *

@@ -223,6 +223,9 @@ size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
     } else if (tProtocol == RC6) {
         sendRC6(tAddress, tCommand, aNumberOfRepeats, !tIsRepeat); // No toggle for repeats
 
+    } else if (tProtocol == RC6A) {
+        sendRC6A(tAddress, tCommand, aNumberOfRepeats,  aIRSendData->extra, !tIsRepeat);
+
     } else if (tProtocol == KASEIKYO_JVC) {
         sendKaseikyo_JVC(tAddress, tCommand, aNumberOfRepeats);
 
@@ -270,7 +273,7 @@ size_t IRsend::write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats) {
 }
 
 /**
- * Simple version of write without support for MAGIQUEST and numberOfBits for SONY protocol
+ * Simple version of write without support for RC6A, MAGIQUEST and numberOfBits for SONY protocol
  * @param aNumberOfRepeats  If aNumberOfRepeats < 0 then only a special repeat frame without leading and trailing space
  *                          will be sent by calling NECProtocolConstants.SpecialSendRepeatFunction().
  */
