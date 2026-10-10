@@ -101,34 +101,31 @@ void setup() {
 void loop() {
     if (TinyIRReceiverDecode()) {
         /*
-         * The library has already copied the data used for this output,
-         * so there is no need to do this in the callback function.
+         * The library has already copied the data used for this output
          */
-#if !defined(USE_FAST_PROTOCOL)
-        // We have no address at FAST protocol
-        Serial.print(F("Address=0x"));
-        Serial.print(TinyIRReceiverData.Address, HEX);
-        Serial.print(' ');
-#endif
-
-        Serial.print(F("Command=0x"));
-        Serial.print(TinyIRReceiverData.Command, HEX);
-        if (TinyIRReceiverData.Flags == IRDATA_FLAGS_IS_REPEAT) {
-            Serial.print(F(" Repeat"));
-        }
-        if (TinyIRReceiverData.Flags == IRDATA_FLAGS_PARITY_FAILED) {
-            Serial.print(F(" Parity failed"));
+        printTinyIRReceiverResultMinimal(&Serial);
 
 #if !defined(USE_EXTENDED_NEC_PROTOCOL) && !defined(USE_ONKYO_PROTOCOL)
-            Serial.print(F(", try USE_EXTENDED_NEC_PROTOCOL or USE_ONKYO_PROTOCOL"));
+        if (TinyIRReceiverData.Flags == IRDATA_FLAGS_PARITY_FAILED) {
+            Serial.println(F("Parity error, try USE_EXTENDED_NEC_PROTOCOL or USE_ONKYO_PROTOCOL"));
+        }
 #endif
 
+#if !defined(USE_CALLBACK_FOR_TINY_RECEIVER)
+        /*
+         * Check the received data and perform actions according to the received command
+         */
+        if (TinyIRReceiverData.Flags == IRDATA_FLAGS_IS_REPEAT) {
+            Serial.println(F("Repeat received. Here you can repeat the same action as before."));
+        } else {
+            if (TinyIRReceiverData.Command == 0x10) {
+                // do something
+            } else if (TinyIRReceiverData.Command == 0x11) {
+                // do something else
+            }
         }
-        Serial.println();
+#endif
     }
-    /*
-     * Put your code here
-     */
 
     /*
      * No resume() required :-)

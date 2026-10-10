@@ -34,26 +34,26 @@
 
 // PRESCALE4 => 13 * 4 = 52 microseconds per ADC conversion at 1 MHz Clock => 19,2 kHz
 #define ADC_PRESCALE2    1 // 26 microseconds per ADC conversion at 1 MHz
-#define ADC_PRESCALE4    2 // 52 microseconds per ADC conversion at 1 MHz
+#define ADC_PRESCALE4    2 // 3.25/52 microseconds per ADC conversion at 16/1 MHz
 // PRESCALE8 => 13 * 8 = 104 microseconds per ADC sample at 1 MHz Clock => 9,6 kHz
-#define ADC_PRESCALE8    3 // 104 microseconds per ADC conversion at 1 MHz
+#define ADC_PRESCALE8    3 // 6.5/104 microseconds per ADC conversion at 16/1 MHz
 #define ADC_PRESCALE16   4 // 13/208 microseconds per ADC conversion at 16/1 MHz - degradations in linearity at 16 MHz
 #define ADC_PRESCALE32   5 // 26/416 microseconds per ADC conversion at 16/1 MHz - very good linearity at 16 MHz
 #define ADC_PRESCALE64   6 // 52 microseconds per ADC conversion at 16 MHz
 #define ADC_PRESCALE128  7 // 104 microseconds per ADC conversion at 16 MHz --- Arduino default
 
-// definitions for 0.1 ms conversion time
+// Definitions for 0.1 ms conversion time
 #if (F_CPU == 1000000)
-#define ADC_PRESCALE ADC_PRESCALE8
+#define ADC_PRESCALE    ADC_PRESCALE8
 #elif (F_CPU == 8000000)
-#define ADC_PRESCALE ADC_PRESCALE64
+#define ADC_PRESCALE    ADC_PRESCALE64
 #elif (F_CPU == 16000000)
-#define ADC_PRESCALE ADC_PRESCALE128
+#define ADC_PRESCALE    ADC_PRESCALE128
 #endif
 
 /*
  * Reference shift values are complicated for ATtinyX5 since we have the extra register bit REFS2
- * in ATTinyCore, this bit is handled programmatical and therefore the defines are different.
+ * in ATTinyCore, this bit is handled programmatically and therefore the defines are different.
  * To keep my library small, I use the changed defines.
  * After including this file you can not call the ATTinyCore readAnalog functions reliable, if you specify references other than default!
  */
@@ -216,7 +216,7 @@ float getTemperature(void) __attribute__ ((deprecated ("Renamed to getCPUTempera
 
 bool isVCCUSBPowered();
 bool isVCCUSBPowered(Print *aSerial);
-bool isVCCUndervoltageMultipleTimes();
+bool isVCCUndervoltageMultipleTimes(Print *aSerial);
 void resetCounterForVCCUndervoltageMultipleTimes();
 bool isVCCUndervoltage();
 bool isVCCEmergencyUndervoltage();

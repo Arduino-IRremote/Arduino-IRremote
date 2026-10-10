@@ -1,9 +1,10 @@
 /*
  * ADCUtils.hpp
  *
- * ADC utility functions. Conversion time is defined as 0.104 milliseconds for 16 MHz Arduinos in ADCUtils.h.
+ * ADC utility functions. Conversion time is defined as 0.104 milliseconds for 16 MHz Arduinos in ADCUtils.h by setting ADC_PRESCALE.
+ * Formula for 1.1V reference is: mV = <Reading> * <ADC_INTERNAL_REFERENCE_MILLIVOLT> / READING_FOR_AREF = <Reading> * 1100 / 1024 =  <Reading> * 1.07421875
  *
- *  Copyright (C) 2016-2023  Armin Joachimsmeyer
+ *  Copyright (C) 2016-2026  Armin Joachimsmeyer
  *
  *  This file is part of Arduino-Utils https://github.com/ArminJo/Arduino-Utils.
  *
@@ -233,7 +234,7 @@ uint8_t checkAndWaitForReferenceAndChannelToSwitch(uint8_t aADCChannelNumber, ui
             /*
              * Internal 1.1 Volt channel requires  <= 200 us for Nano board
              */
-            delayMicroseconds(350); // 350 was ok and 300 was too less for UltimateBatteryTester - result was 226 instead of 225
+            delayMicroseconds(350); // 350 was OK and 300 was too less for UltimateBatteryTester - result was 226 instead of 225
         } else {
             /*
              * 100 kOhm requires < 100 us, 1 MOhm requires 120 us S&H switching time
@@ -373,6 +374,7 @@ uint32_t readADCChannelMultiSamplesWithReferenceAndPrescaler(uint8_t aADCChannel
 /*
  * Returns sum of all sample values
  * Assumes, that channel and reference are still set to the right values
+ * !!!We do NOT disable interrupts here!!!
  * @ param aNumberOfSamples If > 16k an overflow may occur.
  */
 uint32_t readADCChannelMultiSamples(uint8_t aPrescale, uint16_t aNumberOfSamples) {
@@ -696,9 +698,14 @@ bool isVCCUSBPowered(Print *aSerial) {
 
 /*
  * It checks every 10 seconds for 6 times, and then returns once true if the undervoltage condition ( <3.4V ) still applies.
+ * Uses the following macros: - The default values are suitable for Li-ion batteries.
+ * VCC_CHECK_PERIOD_MILLIS, VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP, VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT, VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT
  * @ return true only once, when VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP (6) times voltage too low -> shutdown
  */
-bool isVCCUndervoltageMultipleTimes() {
+bool isVCCUndervoltageMultipleTimes(Print *aSerial) {
+#if !defined(LOCAL_INFO)
+    (void) aSerial;
+#endif
     /*
      * Check VCC every VCC_CHECK_PERIOD_MILLIS - default is 10 seconds
      */
@@ -706,7 +713,7 @@ bool isVCCUndervoltageMultipleTimes() {
         sLastVCCCheckMillis = millis();
 
 #  if defined(INFO)
-        readAndPrintVCCVoltageMillivolt(&Serial);
+        readAndPrintVCCVoltageMillivolt(aSerial);
 #  else
         readVCCVoltageMillivolt();
 #  endif
@@ -725,18 +732,18 @@ bool isVCCUndervoltageMultipleTimes() {
                     // emergency shutdown
                     sVCCTooLowCounter = VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP;
 #  if defined(LOCAL_INFO)
-                    Serial.println(
+                    aSerial->println(
                             F(
                                     "Undervoltage < " STR(VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV detected -> emergency shutdown"));
 #  endif
                 } else {
                     sVCCTooLowCounter++;
 #  if defined(LOCAL_INFO)
-                    Serial.print(sVCCVoltageMillivolt);
-                    Serial.print(F(" mV < " STR(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV -> undervoltage detected: "));
+                    aSerial->print(sVCCVoltageMillivolt);
+                    aSerial->print(F(" mV < " STR(VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT) " mV -> undervoltage detected: "));
 
-                    Serial.print(VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP - sVCCTooLowCounter);
-                    Serial.println(F(" attempts left"));
+                    aSerial->print(VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP - sVCCTooLowCounter);
+                    aSerial->println(F(" attempts left"));
 #  endif
                 }
                 if (sVCCTooLowCounter == VCC_UNDERVOLTAGE_CHECKS_BEFORE_STOP) {

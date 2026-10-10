@@ -45,7 +45,7 @@
  * Macro to convert 3 version parts into an integer
  * To be used in preprocessor comparisons, such as #if VERSION_IRREMOTE_HEX >= VERSION_HEX_VALUE(3, 7, 0)
  */
-#define VERSION_HEX_VALUE(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
+#define VERSION_HEX_VALUE(major, minor, patch) (((major) << 16) | ((minor) << 8) | (patch))
 #define VERSION_IRREMOTE_HEX  VERSION_HEX_VALUE(VERSION_IRREMOTE_MAJOR, VERSION_IRREMOTE_MINOR, VERSION_IRREMOTE_PATCH)
 
 #endif // _IR_VERSION_HPP

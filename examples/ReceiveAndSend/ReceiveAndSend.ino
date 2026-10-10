@@ -3,7 +3,7 @@
  *
  * Record and play back last received IR signal at button press.
  * The logic is:
- * If the button is pressed, send the IR code.
+ * If the button is pressed, send the IR code and repeat it as long as it is pressed.
  * If an IR code is received, record it.
  * If the protocol is unknown or not enabled, store it as raw data for later sending.
  *
@@ -157,7 +157,7 @@ void loop() {
      */
     if (tSendButtonIsActive) {
         if (!sSendButtonWasActive) {
-            Serial.println(F("Stop receiving"));
+            Serial.println(F("Button pressed, stop receiving"));
             IrReceiver.stop();
         }
         /*
@@ -172,7 +172,7 @@ void loop() {
         }
         Serial.flush(); // To avoid disturbing the software PWM generation by serial output interrupts
         sendCode(&sStoredIRData);
-        delay(DELAY_BETWEEN_REPEAT); // Wait a bit between retransmissions
+        delay(DELAY_BETWEEN_REPEAT); // Wait a bit between retransmissions, can be fine adjusted to the protocol sent
 
     } else if (sSendButtonWasActive) {
         /*

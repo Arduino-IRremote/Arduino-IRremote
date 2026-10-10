@@ -340,6 +340,25 @@ void LCDUnitTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal_I2C *a
 }
 
 /*
+ * Like LiquidCrystal::createChar(uint8_t location, uint8_t charmap[])
+ * but with PROGMEM input
+ * This also sets cursor to 0.0
+ */
+#if defined(USE_PARALLEL_LCD)
+void LCDCreateCustomCharPGM(LiquidCrystal *aLCD, uint_fast8_t aCharacterIndex, const uint8_t *CustomPatternMapPGM)
+#else
+void LCDCreateCustomCharPGM(LiquidCrystal_I2C *aLCD, uint_fast8_t aCharacterIndex, const uint8_t *CustomPatternMapPGM)
+#endif
+        {
+    aCharacterIndex &= 0x7; // we only have 8 locations 0-7
+    aLCD->command(LCD_SETCGRAMADDR | (aCharacterIndex << 3));
+    for (uint_fast8_t i = 0; i < 8; i++) {
+        aLCD->write(pgm_read_byte(CustomPatternMapPGM++));
+    }
+    aLCD->command(LCD_SETDDRAMADDR); // set cursor to 0.0, this avoids overwriting CGRAM by next write() command.
+}
+
+/*
  * On my 2004 LCD the custom characters are available under 0 to 7 and mirrored to 8 to 15
  * The characters 0x80 to 0x8F are blanks
  */
