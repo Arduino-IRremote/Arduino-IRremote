@@ -32,6 +32,7 @@ Available as [Arduino library "IRremote"](https://www.arduinolibraries.info/libr
 
 # Table of contents
 - [Supported IR Protocols](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#supported-ir-protocols)
+- [Usage](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#usage)
 - [Common issues when using IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#common-issues-when-using-irremote)
 - [Migrating legacy projects to the latest version](https://github.com/Arduino-IRremote/Arduino-IRremote/blob/master/Migrating.md)
   * [New features and changes in version 4.6](https://github.com/Arduino-IRremote/Arduino-IRremote?tab=readme-ov-file#new-features-and-changes-in-version-46)
@@ -118,6 +119,55 @@ Protocols can be switched off and on by defining macros before the line `#includ
 //#define DECODE_DENON
 #include <IRremote.hpp>
 ```
+<br/>
+
+# Usage
+See also [SimpleReceiver](https://github.com/Arduino-IRremote/Arduino-IRremote#simplereceiver--simplesender).
+
+```c++
+#include <IRremote.hpp>
+void setup() {
+  Serial.begin(115200);
+  IrReceiver.begin(2, ENABLE_LED_FEEDBACK); // Pin 2 is IR signal input
+}
+void loop() {
+  if (IrReceiver.decode()) {
+    IrReceiver.printIRResultShort(&Serial);
+    if (IrReceiver.decodedIRData.command == 0x10) {
+        // do something here
+    }
+    IrReceiver.resume(); // Enable receiving of the next IR frame
+  }
+}
+```
+
+Usage for TinyIRReceiver:
+
+```c++
+#include "TinyIRReceiver.hpp"
+#define IR_RECEIVE_PIN    2 // Pin 2 is IR signal input
+
+void setup() {
+  Serial.begin(115200);
+}
+void loop() {
+  if (TinyIRReceiverDecode()) {
+    printTinyIRReceiverResultMinimal(&Serial);
+    if (TinyIRReceiverData.Command == 0x10) {
+        // do something here
+    }
+  }
+}
+```
+
+This library is also used in following Arduino examples not included in this library:
+- Control of a 2 or 4 wheel robot car
+  - [BasicIRControl using TinyIRReceiver](https://github.com/ArminJo/PWMMotorControl/blob/master/examples/BasicIRControl/BasicIRControl.ino)
+  - [IRDispatcherControl](https://github.com/ArminJo/PWMMotorControl/blob/master/examples/BasicIRControl/IRDispatcherControl.ino)
+  - [SmartCarFollower](https://github.com/ArminJo/PWMMotorControl/blob/master/examples/BasicIRControl/IRDispatcherControl.ino)
+- [QuadrupedControl using IRCommandDispatcher](https://github.com/ArminJo/QuadrupedControl/blob/master/examples/QuadrupedControl/QuadrupedControl.ino)
+  
+
 <br/>
 
 # Common issues when using IRremote
