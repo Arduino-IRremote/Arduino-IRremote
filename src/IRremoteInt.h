@@ -73,9 +73,9 @@
 #  if (defined(RAMSIZE) && RAMSIZE <= 0x200) || (defined(RAMEND) && RAMEND <= 0x2FF) // assuming RAMSTART at 0x100
 // For RAMSIZE <= 512 bytes
 #define RAW_BUFFER_LENGTH  100  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
-#  elif (defined(RAMSIZE) && RAMSIZE < 0x8FF) || (defined(RAMEND) && RAMEND <= 0x8FF)  // assuming RAMSTART at 0x100
+#  elif (defined(RAMSIZE) && RAMSIZE < 0x800) || (defined(RAMEND) && RAMEND <= 0x8FF)  // assuming RAMSTART at 0x100 after the memory mapped registers
 // For RAMSIZE <= 2k
-#define RAW_BUFFER_LENGTH  200  ///< Length of raw duration buffer. Must be even. 100 supports up to 48 bit codings inclusive 1 start and 1 stop bit.
+#define RAW_BUFFER_LENGTH  200
 #  else
 // For undefined or bigger RAMsize
 #define RAW_BUFFER_LENGTH  750 // The value required for air condition remotes.
@@ -92,8 +92,8 @@ typedef unsigned int IRRawlenType;
 #endif
 
 /*
- * We store IR timing values in an 8-bit buffer, where each unit represents 50 ticks.
- * Since 8 bits can hold values from 0 to 255, the maximum measurable timing is 255 × 50 ticks = 12750 us.
+ * We store IR timing values (ticks) in an 8-bit buffer, using 50 microseconds for one tick.
+ * Since 8 bits can hold values from 0 to 255, the maximum measurable timing is 255 × 50 microseconds = 12750 us.
  *
  * This means:
  * - Any timing up to 12750 us is stored accurately.
@@ -130,6 +130,7 @@ struct irparams_struct {
     volatile uint8_t StateForISR;       ///< State Machine state
     uint_fast8_t IRReceivePin;          ///< Pin connected to IR data from detector
 #if defined(__AVR__)
+    // For low ISR reading delay for AVR even with dynamic pin numbers
     volatile uint8_t *IRReceivePinPortInputRegister;
     uint8_t IRReceivePinMask;
 #endif
@@ -138,10 +139,10 @@ struct irparams_struct {
     void (*ReceiveCompleteCallbackFunction)(void); ///< The function to call if a protocol message has arrived, i.e. StateForISR changed to IR_REC_STATE_STOP
 #endif
 #if defined(DECODE_RC5) || defined(DECODE_RC6) || defined(DECODE_MARANTZ)
-    // Static variables for the getBiphaselevel() function
-    uint_fast8_t RawbuffOffsetForNextBiphaseLevel;   // Index into raw timing array
-    uint16_t NumberOfTimingIntervalsInCurrentInterval; // 1, 2 or 3. Number of aBiphaseTimeUnit intervals of the current rawbuf[RawbuffOffsetForNextBiphaseLevel] timing.
-    uint_fast8_t AlreadyUsedTimingIntervalsOfCurrentInterval;   // Number of already used intervals of sCurrentTimingIntervals.
+    // variables for the getBiphaselevel() function
+    uint_fast8_t RawbuffOffsetForNextBiphaseLevel;
+    uint16_t NumberOfTimingIntervalsInCurrentInterval; // 1, 2 or 3. Number of aBiphaseTimeUnit intervals.
+    uint_fast8_t AlreadyUsedTimingIntervalsOfCurrentInterval;   // Number of already used intervals of current timing interval pointed to by RawbuffOffsetForNextBiphaseLevel.
     uint16_t BiphaseTimeUnit;
 #endif
     bool OverflowFlag;                  ///< Raw buffer OverflowFlag occurred
@@ -152,9 +153,11 @@ struct irparams_struct {
 
 #if (__INT_WIDTH__ < 32)
 typedef uint32_t IRDecodedRawDataType;
+typedef int32_t IRDecodedRawDataSignedType;
 #define BITS_IN_DECODED_RAW_DATA_TYPE   32
 #else
 typedef uint64_t IRDecodedRawDataType;
+typedef int64_t IRDecodedRawDataSignedType;
 #define BITS_IN_DECODED_RAW_DATA_TYPE   64
 #endif
 typedef IRDecodedRawDataType IRRawDataType; // Define old IRRawDataType (removed in 4.6.0) for backward compatibility
@@ -191,24 +194,6 @@ struct IRData {
 /****************************************************
  *                     RECEIVING
  ****************************************************/
-
-/**
- * Results returned from old decoders !!!deprecated!!!
- */
-struct decode_results {
-    decode_type_t decode_type;  // deprecated, moved to decodedIRData.protocol ///< UNKNOWN, NEC, SONY, RC5, ...
-    uint16_t address;           // Used by Panasonic & Sharp [16-bits]
-    uint32_t value;             // deprecated, moved to decodedIRData.decodedRawData ///< Decoded value / command [max 32-bits]
-    uint8_t bits;               // deprecated, moved to decodedIRData.numberOfBits ///< Number of bits in decoded value
-    uint16_t magnitude;         // deprecated, moved to decodedIRData.extra ///< Used by MagiQuest [16-bits]
-    bool isRepeat;              // deprecated, moved to decodedIRData.flags ///< True if repeat of value is detected
-
-// next 3 values are copies of irparams_struct values - see above
-    uint16_t *rawbuf;           // deprecated, moved to irparams.rawbuf ///< Raw intervals in 50uS ticks
-    uint_fast8_t rawlen;        // deprecated, moved to irparams.rawlen ///< Number of records in rawbuf
-    bool overflow;              // deprecated, moved to decodedIRData.flags ///< true if IR raw code too long
-};
-
 extern unsigned long sMicrosAtLastStopTimer; // Used to adjust TickCounterForISR with uncounted ticks between stopTimer() and restartTimer()
 
 /**
@@ -219,18 +204,9 @@ class IRrecv {
 public:
 
     IRrecv();
-#if defined(SUPPORT_MULTIPLE_RECEIVER_INSTANCES)
     IRrecv(uint_fast8_t aReceivePin);
     IRrecv(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin);
-#else
-    IRrecv(
-            uint_fast8_t aReceivePin)
-                    __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance.")));
-    IRrecv(uint_fast8_t aReceivePin,
-            uint_fast8_t aFeedbackLEDPin)
-                    __attribute__ ((deprecated ("Please use the default IRrecv instance \"IrReceiver\" and IrReceiver.begin(), and not your own IRrecv instance..")));
-#endif
-    void setReceivePin(uint_fast8_t aReceivePinNumber);
+    void setReceivePin(uint_fast8_t aReceivePin);
 #if !defined(IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK)
     void registerReceiveCompleteCallback(void (*aReceiveCompleteCallbackFunction)(void));
 #endif
@@ -239,10 +215,9 @@ public:
     /*
      * Stream like API
      */
-    void begin(uint_fast8_t aReceivePin, bool aEnableLEDFeedback = false, uint_fast8_t aFeedbackLEDPin =
-    USE_DEFAULT_FEEDBACK_LED_PIN);
+    void begin(uint_fast8_t aReceivePin, uint_fast8_t aFeedbackLEDPin, bool aEnableLEDFeedback);
+    void begin(uint_fast8_t aReceivePin);
     void start();
-    void enableIRIn(); // alias for start
     void restartTimer();
     void restartTimer(uint32_t aMicrosecondsToAddToGapCounter);
     void restartTimerWithTicksToAdd(uint16_t aTicksToAddToGapCounter);
@@ -251,11 +226,13 @@ public:
     bool available();
     IRData* read(); // returns decoded data
     // write is a method of class IRsend below
-    // size_t write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+    // size_t write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats);
     void stopTimer();
     void stop();
-    void disableIRIn(); // alias for stop
-    void end(); // alias for stop
+    void end() {
+        // the same functionality as stop() is sufficient :-)
+        stop();
+    }
 
     bool isIdle();
 
@@ -269,7 +246,7 @@ public:
      * Useful info and print functions
      */
     void printIRResultMinimal(Print *aSerial);
-    void printIRDuration(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks);
+    void printIRDuration(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultRawFormatted(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
     void printIRResultAsCVariables(Print *aSerial);
     uint8_t getMaximumMarkTicksFromRawData();
@@ -280,8 +257,6 @@ public:
     /*
      * Next 4 functions are also available as non member functions
      */
-    bool printIRResultShort(Print *aSerial, bool aPrintRepeatGap, bool aCheckForRecordGapsMicros)
-            __attribute__ ((deprecated ("Remove second parameter, it is not supported any more.")));
     bool printIRResultShort(Print *aSerial, bool aCheckForRecordGapsMicros = true);
     void printDistanceWidthTimingInfo(Print *aSerial, DistanceWidthTimingInfoStruct *aDistanceWidthTimingInfo);
     void printIRSendUsage(Print *aSerial);
@@ -294,27 +269,22 @@ public:
 
     void printIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true, bool aDoCompensate = true);
     void compensateAndPrintIRResultAsCArray(Print *aSerial, bool aOutputMicrosecondsInsteadOfTicks = true);
-    void compensateAndPrintIRResultAsPronto(Print *aSerial, uint16_t frequency = 38000U);
-
-    /*
-     * Store the data for further processing
-     */
-    void compensateAndStoreIRResultInArray(uint8_t *aArrayPtr);
-    size_t compensateAndStorePronto(String *aString, uint16_t frequency = 38000U);
+    void compensateAndPrintIRResultAsPronto(Print *aSerial, uint16_t aFrequencyHertz = 38000U);
+    // Store the data for further processing
+    void compensateAndStoreIRResultInArray(uint8_t *aDestinationArrayPtr, uint_fast16_t aLengthOfDestinationArray);
+    size_t compensateAndStorePronto(String *aString, uint16_t aFrequencyHertz = 38000U);
 
     /*
      * The main decoding functions used by the individual decoders
      */
-#if defined(USE_STRICT_DECODER)
-    bool
-#else
-    void
-#endif
-    decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
+    bool decodePulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, uint_fast8_t aNumberOfBits,
             IRRawlenType aStartOffset = 3);
 
-    void decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
+    bool decodePulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
             uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset = 3);
+
+    bool decodeStrictPulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
+            uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst);
 
     void decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMicros,
             bool aIsPulseWidthProtocol, bool aMSBfirst);
@@ -324,13 +294,6 @@ public:
 
     void decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
             uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, bool aMSBfirst);
-
-    void decodePulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
-            uint16_t aZeroMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst)
-                    __attribute__ ((deprecated ("Please use decodePulseDistanceWidthData() with 6 parameters.")));
-
-    bool decodeStrictPulseDistanceWidthData(uint_fast8_t aNumberOfBits, IRRawlenType aStartOffset, uint16_t aOneMarkMicros,
-            uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros, bool aMSBfirst);
 
 #if defined(DECODE_RC5) || defined(DECODE_MARANTZ) || defined(DECODE_RC6)
     void initBiphaselevel(uint_fast8_t aRCDecodeRawbuffOffset, uint16_t aBiphaseTimeUnit);
@@ -371,32 +334,10 @@ public:
     bool decodeShuzu();
 
     /*
-     * Old functions
-     */
-    bool decodeDenonOld(decode_results *aResults);
-    bool decodeJVCMSB(decode_results *aResults);
-    bool decodeLGMSB(decode_results *aResults);
-    bool decodeNECMSB(decode_results *aResults);
-    bool decodePanasonicMSB(decode_results *aResults);
-    bool decodeSonyMSB(decode_results *aResults);
-    bool decodeSAMSUNG(decode_results *aResults);
-    bool decodeHashOld(decode_results *aResults);
-
-    bool decode_old(decode_results *aResults);
-
-    bool decode(
-            decode_results *aResults)
-                    __attribute__ ((deprecated ("Please use IrReceiver.decode() without a parameter and IrReceiver.decodedIRData.<fieldname> .")));
-
-    // for backward compatibility. Now in IRFeedbackLED.hpp
-    void blink13(uint8_t aEnableLEDFeedback)
-            __attribute__ ((deprecated ("Please use setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback().")));
-
-    /*
      * Internal functions
      */
     void initDecodedIRData();
-    uint_fast8_t compare(uint16_t oldval, uint16_t newval);
+    uint_fast8_t compare(uint16_t aOldValue, uint16_t aNewValue);
     bool checkHeader(PulseDistanceWidthProtocolConstants *aProtocolConstants);
     bool checkHeader_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM);
     void checkForRepeatSpaceTicksAndSetFlag(uint16_t aMaximumRepeatSpaceTicks);
@@ -416,33 +357,18 @@ public:
     uint8_t repeatCount;        // Used e.g. for Denon decode for autorepeat decoding.
 };
 
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr, bool aPrintRepeatGap)
-        __attribute__ ((deprecated ("Remove last parameter, it is not supported any more.")));
-void printIRResultShort(Print *aSerial, IRData *aIRDataPtr)
-        __attribute__ ((deprecated ("Use member function or printIRDataShort() instead.")));
-;
 // A static function to be able to print send or copied received data.
 void printIRDataShort(Print *aSerial, IRData *aIRDataPtr);
 
 /*
  * Mark & Space matching functions
  */
-bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
 bool matchTicks(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks);
 bool matchMark(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
 bool matchSpace(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
-bool matchTicksWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
 bool matchTicksWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros, int16_t aCompensationMicrosForTicks);
 bool matchMarkWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
 bool matchSpaceWithGreaterRange(uint16_t aMeasuredTicks, uint16_t aMatchValueMicros);
-
-/*
- * Old function names
- */
-bool MATCH(uint16_t measured, uint16_t desired);
-bool MATCH_MARK(uint16_t measured_ticks, uint16_t desired_us);
-bool MATCH_SPACE(uint16_t measured_ticks, uint16_t desired_us);
-
 int getMarkExcessMicros();
 
 void printActiveIRProtocols(Print *aSerial);
@@ -452,24 +378,18 @@ void printActiveIRProtocols(Print *aSerial);
  ****************************************************/
 #define DISABLE_LED_FEEDBACK                false
 #define ENABLE_LED_FEEDBACK                 true
-//#define USE_DEFAULT_FEEDBACK_LED_PIN        0 // repeated definition for info
+//#define USE_DEFAULT_FEEDBACK_LED_PIN      0xFF // repeated definition for info
 void setLEDFeedback(bool aEnableLEDFeedback); // Direct replacement for blink13()
-void setLEDFeedbackPin(uint8_t aFeedbackLEDPin);
-void setFeedbackLED(bool aSwitchLedOn);
+void setLEDFeedbackPin(uint_fast8_t aFeedbackLEDPin);
+void writeFeedbackLED(bool aSwitchLedOn);
 void enableLEDFeedback();
-constexpr auto enableLEDFeedbackForReceive = enableLEDFeedback; // alias for enableLEDFeedback
+//constexpr auto enableLEDFeedbackForReceive = enableLEDFeedback; // alias for enableLEDFeedback
 void disableLEDFeedback();
-constexpr auto disableLEDFeedbackForReceive = disableLEDFeedback; // alias for enableLEDFeedback
-void enableLEDFeedbackForSend();
-void disableLEDFeedbackForSend();
+//constexpr auto disableLEDFeedbackForReceive = disableLEDFeedback; // alias for disableLEDFeedback
 
-void setBlinkPin(uint8_t aFeedbackLEDPin) __attribute__ ((deprecated ("Please use setLEDFeedback()."))); // deprecated
-
-/*
- * Pulse parms are ((X*50)-MARK_EXCESS_MICROS) for the Mark and ((X*50)+MARK_EXCESS_MICROS) for the Space.
- * First MARK is the one after the long gap
- * Pulse parameters in microseconds
- */
+/****************************************************
+ * Mark and spaces receiving tolerances
+ ****************************************************/
 #if !defined(TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT)
 #define TOLERANCE_FOR_DECODERS_MARK_OR_SPACE_MATCHING_PERCENT    25 // Relative tolerance (in percent) for matchTicks(), matchMark() and matchSpace() functions used for protocol decoding.
 #endif
@@ -521,21 +441,15 @@ public:
      */
 #if defined(IR_SEND_PIN)
     void begin();
-    // The default parameter allowed to specify IrSender.begin(7); without errors, if IR_SEND_PIN was defined. But the semantics is not the one the user expect.
-    void begin(uint_fast8_t aFeedbackLEDPin);
 #else
     IRsend(uint_fast8_t aSendPin);
     void begin(uint_fast8_t aSendPin);
     void setSendPin(uint_fast8_t aSendPin); // required if we use IRsend() as constructor
-#endif
     void begin(uint_fast8_t aSendPin, uint_fast8_t aFeedbackLEDPin); // aFeedbackLEDPin is by default USE_DEFAULT_FEEDBACK_LED_PIN
-    void begin(uint_fast8_t aSendPin, bool aEnableLEDFeedback, uint_fast8_t aFeedbackLEDPin)
-#  if !defined (DOXYGEN)
-            __attribute__ ((deprecated ("Use begin(aSendPin, aFeedbackLEDPin) instead.")));
-#  endif
+#endif
 
-    size_t write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
-    size_t write(decode_type_t aProtocol, uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+    size_t write(IRData *aIRSendData, int_fast8_t aNumberOfRepeats);
+    size_t write(decode_type_t aProtocol, uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
 
     void enableIROut(uint_fast8_t aFrequencyKHz);
 #if defined(SEND_PWM_BY_TIMER)
@@ -543,95 +457,94 @@ public:
 #endif
 
     /*
-     * Array functions
+     * Array functions. They do not support special repeat function, therefore aNumberOfRepeats is unsigned
      */
     void sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
             uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
-            IRDecodedRawDataType *aDecodedRawDataArray, uint16_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
-            int_fast8_t aNumberOfRepeats);
+            IRDecodedRawDataType *aDecodedRawDataArray, uint_fast16_t aNumberOfBitsToSend, uint8_t aFlags,
+            uint16_t aRepeatPeriodMillis, uint_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthFromPGMArray(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
             uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
-            IRDecodedRawDataType const *aDecodedRawDataPGMArray, uint16_t aNumberOfBits, uint8_t aFlags,
-            uint16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
+            IRDecodedRawDataType const *aDecodedRawDataPGMArray, uint_fast16_t aNumberOfBitsToSend, uint8_t aFlags,
+            uint16_t aRepeatPeriodMillis, uint_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthFromArray(PulseDistanceWidthProtocolConstants *aProtocolConstants,
-            IRDecodedRawDataType *aDecodedRawDataArray, uint16_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+            IRDecodedRawDataType *aDecodedRawDataArray, uint_fast16_t aNumberOfBitsToSend, uint_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthFromPGMArray(PulseDistanceWidthProtocolConstants *aProtocolConstants,
-            IRDecodedRawDataType const *aDecodedRawDataPGMArray, uint16_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+            IRDecodedRawDataType const *aDecodedRawDataPGMArray, uint_fast16_t aNumberOfBitsToSend, uint_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthFromArray_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
-            IRDecodedRawDataType *aDecodedRawDataArray, uint16_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+            IRDecodedRawDataType *aDecodedRawDataArray, uint_fast16_t aNumberOfBitsToSend, uint_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthFromPGMArray_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM,
-            IRDecodedRawDataType const *aDecodedRawDataPGMArray, uint16_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+            IRDecodedRawDataType const *aDecodedRawDataPGMArray, uint_fast16_t aNumberOfBitsToSend, uint_fast8_t aNumberOfRepeats);
 
     void sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, DistanceWidthTimingInfoStruct *aDistanceWidthTimingInfo,
-            IRDecodedRawDataType *aDecodedRawDataArray, uint16_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
-            int_fast8_t aNumberOfRepeats);
+            IRDecodedRawDataType *aDecodedRawDataArray, uint_fast16_t aNumberOfBitsToSend, uint8_t aFlags,
+            uint16_t aRepeatPeriodMillis, uint_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthFromArray_P(uint_fast8_t aFrequencyKHz,
             DistanceWidthTimingInfoStruct const *aDistanceWidthTimingInfoPGM, IRDecodedRawDataType *aDecodedRawDataArray,
-            uint16_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
+            uint_fast16_t aNumberOfBitsToSend, uint8_t aFlags, uint16_t aRepeatPeriodMillis, uint_fast8_t aNumberOfRepeats);
 
     void sendPulseDistanceWidth(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRDecodedRawDataType aData,
-            uint_fast8_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+            uint_fast8_t aNumberOfBitsToSend, int_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidth_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM, IRDecodedRawDataType aData,
-            uint_fast8_t aNumberOfBits, int_fast8_t aNumberOfRepeats);
+            uint_fast8_t aNumberOfBitsToSend, int_fast8_t aNumberOfRepeats);
     void sendPulseDistanceWidthData(PulseDistanceWidthProtocolConstants *aProtocolConstants, IRDecodedRawDataType aData,
-            uint_fast8_t aNumberOfBits);
+            uint_fast8_t aNumberOfBitsToSend);
     void sendPulseDistanceWidthData_P(PulseDistanceWidthProtocolConstants const *aProtocolConstantsPGM, IRDecodedRawDataType aData,
-            uint_fast8_t aNumberOfBits);
+            uint_fast8_t aNumberOfBitsToSend);
     void sendPulseDistanceWidth(uint_fast8_t aFrequencyKHz, uint16_t aHeaderMarkMicros, uint16_t aHeaderSpaceMicros,
             uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros, uint16_t aZeroSpaceMicros,
-            IRDecodedRawDataType aData, uint_fast8_t aNumberOfBits, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
+            IRDecodedRawDataType aData, uint_fast8_t aNumberOfBitsToSend, uint8_t aFlags, uint16_t aRepeatPeriodMillis,
             int_fast8_t aNumberOfRepeats, void (*aSpecialSendRepeatFunction)() = nullptr);
     void sendPulseDistanceWidthData(uint16_t aOneMarkMicros, uint16_t aOneSpaceMicros, uint16_t aZeroMarkMicros,
-            uint16_t aZeroSpaceMicros, IRDecodedRawDataType aData, uint_fast8_t aNumberOfBits, uint8_t aFlags);
-    void sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBits, bool aSendStartBit = true);
+            uint16_t aZeroSpaceMicros, IRDecodedRawDataType aData, uint_fast8_t aNumberOfBitsToSend, uint8_t aFlags);
+    void sendBiphaseData(uint16_t aBiphaseTimeUnit, uint32_t aData, uint_fast8_t aNumberOfBitsToSend, bool aSendStartBit = true);
 
     void mark(uint16_t aMarkMicros);
     static void space(uint16_t aSpaceMicros);
     void IRLedOff();
 
 // 8 Bit array
-    void sendRaw(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz);
-    void sendRaw_P(const uint8_t aPGMBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz);
-    void sendRaw(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz,
-            uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
-    void sendRaw_P(const uint8_t aPGMBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz,
-            uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
+    void sendRaw(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aFrequencyKHz);
+    void sendRaw_P(const uint8_t aPGMBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aFrequencyKHz);
+    void sendRaw(const uint8_t aBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aFrequencyKHz,
+            uint16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
+    void sendRaw_P(const uint8_t aPGMBufferWithTicks[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aFrequencyKHz,
+            uint16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
 
 // 16 Bit array
-    void sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz);
-    void sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz);
-    void sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz,
-            uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
-    void sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aIRFrequencyKilohertz,
-            uint_fast16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
+    void sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aFrequencyKHz);
+    void sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aFrequencyKHz);
+    void sendRaw(const uint16_t aBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aFrequencyKHz,
+            uint16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
+    void sendRaw_P(const uint16_t aPGMBufferWithMicroseconds[], uint_fast16_t aLengthOfBuffer, uint_fast8_t aFrequencyKHz,
+            uint16_t aRepeatPeriodMillis, int_fast8_t aNumberOfRepeats);
 
     /*
-     * New send functions
+     * Protocol specific send functions
      */
-    void sendBangOlufsen(uint16_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats = NO_REPEATS,
-            int8_t aNumberOfHeaderBits = 8);
-    void sendBangOlufsenDataLink(uint32_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats = NO_REPEATS,
-            int8_t aNumberOfHeaderBits = 8);
-    void sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBackToBack = false);
-    void sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bool aBackToBack = false,
+    void sendBangOlufsen(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t aNumberOfHeaderBits = 8);
+    void sendBangOlufsenDataLink(uint32_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats,
+            uint8_t aNumberOfHeaderBits = 8);
+    void sendBangOlufsenRaw(uint32_t aRawData, uint_fast8_t aNumberOfBitsToSend, bool aBackToBack = false);
+    void sendBangOlufsenRawDataLink(uint64_t aRawData, uint_fast8_t aNumberOfBitsToSend, bool aBackToBack = false,
             bool aUseDatalinkTiming = false);
-    void sendBoseWave(uint8_t aCommand, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+    void sendBoseWave(uint8_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendDenon(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t aSendSharpFrameMarker = 0);
-    void sendDenonRaw(uint16_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS)
-            __attribute__ ((deprecated ("Please use sendDenon(aAddress, aCommand, aNumberOfRepeats).")));
+
     void sendFAST(uint8_t aCommand, int_fast8_t aNumberOfRepeats);
+    void sendFAST16Bit(uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendJVC(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);
 
     void sendLGRepeat();
     uint32_t computeLGRawDataAndChecksum(uint8_t aAddress, uint16_t aCommand);
     void sendLG(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
-    void sendLGRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+    void sendLGRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats);
 
     void sendNECRepeat();
     uint32_t computeNECRawDataAndChecksum(uint16_t aAddress, uint16_t aCommand);
     void sendNEC(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendNEC2(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
-    void sendNECRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+    void sendNECRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats);
     // NEC variants
     void sendOnkyo(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendApple(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);
@@ -641,17 +554,17 @@ public:
     uint16_t computeOpenLASIRRawCommand(uint8_t aDeviceID, uint8_t aMode, uint8_t aData);
     void sendOpenLASIR(uint8_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendOpenLASIR(uint8_t aAddress, uint8_t aDeviceID, uint8_t aMode, uint8_t aData, int_fast8_t aNumberOfRepeats);
-    void sendOpenLASIRRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats = NO_REPEATS);
-#define OpenLASIR_GetMDeviceId(aCommand)    (aCommand & 0xFF)
-#define OpenLASIR_GetMode(aCommand)         ((aCommand >> 8) & 0x1F)
-#define OpenLASIR_GetData(aCommand)         (aCommand >> 13)
+    void sendOpenLASIRRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats);
+#define OpenLASIR_GetDeviceId(aCommand)    ((aCommand) & 0xFF)
+#define OpenLASIR_GetMode(aCommand)         (((aCommand) >> 8) & 0x1F)
+#define OpenLASIR_GetData(aCommand)         ((aCommand) >> 13)
 
-    void sendKaseikyo(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats, uint16_t aVendorCode); // LSB first
-    void sendPanasonic(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
-    void sendKaseikyo_Denon(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
-    void sendKaseikyo_Mitsubishi(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
-    void sendKaseikyo_Sharp(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
-    void sendKaseikyo_JVC(uint16_t aAddress, uint8_t aData, int_fast8_t aNumberOfRepeats); // LSB first
+    void sendKaseikyo(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aVendorCode); // LSB first
+    void sendPanasonic(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats); // LSB first
+    void sendKaseikyo_Denon(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats); // LSB first
+    void sendKaseikyo_Mitsubishi(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats); // LSB first
+    void sendKaseikyo_Sharp(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats); // LSB first
+    void sendKaseikyo_JVC(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats); // LSB first
 
     void setNextToggleBitValueForRC5AndRC6(uint8_t aRC5ToggleBitValue);
     void sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
@@ -660,84 +573,43 @@ public:
     void sendRC6(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle = true);
     void sendRC6A(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aCustomer,
             bool aEnableAutomaticToggle = true);
+    void sendRC6Raw(uint32_t aRawData, uint_fast8_t aNumberOfBitsToSend);
+    void sendRC6Raw(uint64_t aRawData, uint_fast8_t aNumberOfBitsToSend);
+
     void sendSamsungLGRepeat();
     void sendSamsung(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSamsung16BitAddressAnd8BitCommand(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSamsung16BitAddressAndCommand(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
-    void sendSamsung48(uint16_t aAddress, uint32_t aCommand, int_fast8_t aNumberOfRepeats);
+    void sendSamsung48(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSamsungLG(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats);
     void sendSharp(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats); // redirected to sendDenon
     void sendSharp2(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats); // redirected to sendDenon
-    void sendSony(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t numberOfBits = 12); // SIRCS_12_PROTOCOL
+    void sendSony(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint_fast8_t aNumberOfBitsToSend = 12); // SIRCS_12_PROTOCOL
 
-    void sendLegoPowerFunctions(uint8_t aChannel, uint8_t tCommand, uint8_t aMode, bool aDoSend5Times = true);
-    void sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times = true);
-    void sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times = true);
+    void sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, bool aDoSend5Times, uint8_t aMode = 0);
+    void sendLegoPowerFunctionsRaw(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times = true);
 
     void sendMagiQuest(uint32_t aWandId, uint16_t aMagnitude);
 
-    void sendPronto(const __FlashStringHelper *str, int_fast8_t aNumberOfRepeats = NO_REPEATS);
-    void sendPronto(const char *prontoHexString, int_fast8_t aNumberOfRepeats = NO_REPEATS);
-    void sendPronto(const uint16_t *data, uint16_t length, int_fast8_t aNumberOfRepeats = NO_REPEATS);
+    void sendPronto(const __FlashStringHelper *aProntoHexString, int_fast8_t aNumberOfRepeats);
+    void sendPronto(const char *aProntoHexString, int_fast8_t aNumberOfRepeats);
+    void sendPronto(const uint16_t *aData, uint16_t aLengthOfData, int_fast8_t aNumberOfRepeats);
 
 #if defined(__AVR__)
-    void sendPronto_PF(uint_farptr_t str, int_fast8_t aNumberOfRepeats = NO_REPEATS);
-    void sendPronto_P(const char *str, int_fast8_t aNumberOfRepeats);
+    void sendPronto_PF(uint_farptr_t aProntoHexString, int_fast8_t aNumberOfRepeats);
+    void sendPronto_P(const char *aProntoHexString, int_fast8_t aNumberOfRepeats);
 #endif
 
 // Template protocol :-)
     void sendShuzu(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats);
 
     /*
-     * OLD send functions
+     * OTHER send functions
      */
-    void sendDenon(unsigned long data,
-            int nbits)
-                    __attribute__ ((deprecated ("The function sendDenon(data, nbits) is deprecated and may not work as expected! Use sendDenonRaw(data, NumberOfRepeats) or better sendDenon(Address, Command, NumberOfRepeats).")));
-    void sendDish(uint16_t aData);
-    void sendJVC(unsigned long data, int nbits,
-            bool repeat)
-                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendJVC(aAddress, aCommand, aNumberOfRepeats)."))) {
-        sendJVCMSB(data, nbits, repeat);
-    }
-    void sendJVCMSB(unsigned long data, int nbits, bool repeat = false);
-
-    void sendLG(unsigned long data,
-            int nbits)
-                    __attribute__ ((deprecated ("The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats).")));
-
-    void sendNEC(uint32_t aRawData,
-            uint8_t nbits)
-                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendNECMSB() or sendNEC(aAddress, aCommand, aNumberOfRepeats)."))) {
-        sendNECMSB(aRawData, nbits);
-    }
-    void sendNECMSB(uint32_t data, uint8_t nbits, bool repeat = false);
-    void sendRC5(uint32_t data,
-            uint8_t nbits)
-                    __attribute__ ((deprecated ("Please use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead.")));
-    ;
-    void sendRC5ext(uint8_t addr, uint8_t cmd,
-            bool toggle)
-                    __attribute__ ((deprecated ("Please use sendRC5(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, bool aEnableAutomaticToggle) instead.")));
-    ;
-    void sendRC6Raw(uint32_t data, uint8_t nbits);
-    void sendRC6(uint32_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC6Raw().")));
-    void sendRC6Raw(uint64_t data, uint8_t nbits);
-    void sendRC6(uint64_t data, uint8_t nbits) __attribute__ ((deprecated ("Please use sendRC6Raw().")));
-
-    void sendSharpRaw(unsigned long data, int nbits);
-    void sendSharp(uint16_t address, uint16_t command);
-    void sendSAMSUNG(unsigned long data, int nbits);
-    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSamsung().")));
-    void sendSamsungMSB(unsigned long data, int nbits);
-    void sendSonyMSB(unsigned long data, int nbits);
-    void sendSony(unsigned long data,
-            int nbits)
-                    __attribute__ ((deprecated ("This old function sends MSB first! Please use sendSony(aAddress, aCommand, aNumberOfRepeats).")));
-
-    void sendWhynter(uint32_t aData, int_fast8_t aNumberOfRepeats);
-    void sendVelux(uint8_t aCommand, uint8_t aMotorNumber, uint8_t aMotorSet, uint16_t aSecurityCode, int_fast8_t aNumberOfRepeats);
-    void sendVelux(uint32_t aData, int_fast8_t aNumberOfRepeats);
+    void sendDish(uint16_t aRawData);
+    void sendWhynter(uint32_t aRawData, int_fast8_t aNumberOfRepeats);
+    void sendVelux(uint8_t aMotorNumber, uint8_t aMotorSet, uint8_t aCommand, uint16_t aSecurityCode, int_fast8_t aNumberOfRepeats);
+    void sendVelux(uint32_t aRawData, int_fast8_t aNumberOfRepeats);
 
 #if !defined(IR_SEND_PIN)
     uint8_t sendPin;
@@ -754,6 +626,9 @@ public:
  */
 extern IRsend IrSender;
 
+/*
+ * Special repeat functions
+ */
 void sendNECSpecialRepeat();
 void sendOpenLASIRSpecialRepeat();
 void sendLGSpecialRepeat();

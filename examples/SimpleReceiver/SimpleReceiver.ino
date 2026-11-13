@@ -59,9 +59,9 @@
 //#define DECODE_LEGO_PF      // ~ 300 bytes
 //#define DECODE_MAGIQUEST    // ~ 270 bytes
 //#define DECODE_MARANTZ      // RC5 + MARANTZ: ~ 425 bytes
-//#define DECODE_OPENLASIR    // Modified NEC with 8-bit validated address + 16-bit command. ~ 175 bytes
 //#define DECODE_WHYNTER      // ~ 90 bytes
 
+//#define DECODE_OPENLASIR    // Modified NEC with 8-bit validated address + 16-bit command. ~ 175 bytes. Disables DECODE_NEC and DECODE_ONKYO.
 //#define DECODE_BEO          // This protocol must always be enabled manually, i.e. it is NOT enabled if no protocol is defined. It prevents decoding of SONY! ~ 430 bytes
 
 //#define DEBUG               // Activate this for lots of lovely debug output from the decoders.
@@ -84,7 +84,7 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
-    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+    IrReceiver.begin(IR_RECEIVE_PIN, USE_DEFAULT_FEEDBACK_LED_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial); // Requires additional 318 bytes program memory

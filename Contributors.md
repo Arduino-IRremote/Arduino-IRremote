@@ -7,7 +7,7 @@ These are the active contributors of this project that you may contact if there 
 - [shirriff](https://github.com/shirriff): An amazing person who worked to create this awesome library and provide unending support
 - [Informatic](https://github.com/Informatic)
 - [fmeschia](https://github.com/fmeschia)
-- [PaulStoffregen](https://github.com/paulstroffregen)
+- [PaulStoffregen](https://github.com/PaulStoffregen)
 - [crash7](https://github.com/crash7)
 - [Neco777](https://github.com/neco777)
 - [Lauszus](https://github.com/lauszus)
@@ -21,14 +21,14 @@ These are the active contributors of this project that you may contact if there 
 - [marcmerlin](https://github.com/marcmerlin) (ESP32 port)
 - [MrBryonMiller](https://github.com/MrBryonMiller)
 - [bengtmartensson](https://github.com/bengtmartensson) providing support
-- [AnalysIR](https:/github.com/AnalysIR) providing support
+- [AnalysIR](https://github.com/AnalysIR) providing support
 - [eshicks4](https://github.com/eshicks4)
 - [Jim-2249](https://github.com/Jim-2249)
-- [pmalasp](https://github.com/pmalasp )
-- [ElectronicsArchiver}(https://github.com/ElectronicsArchiver) improving documentation
-- [Stephen Humphries](https://github.com/sjahu)Fix for: Prevent long delay caused by overflow when frame duration < repeat period #1028
+- [pmalasp](https://github.com/pmalasp)
+- [ElectronicsArchiver](https://github.com/ElectronicsArchiver) improving documentation
+- [Stephen Humphries](https://github.com/sjahu) Fix for: Prevent long delay caused by overflow when frame duration < repeat period #1028
 - [Daniel Wallner](https://github.com/danielwallner) Bang & Olufsen protocol.
-- [slott](https://stackoverflow.com/users/11680056/sklott) Seeduino print(unsigned long long...) support.
+- [sklott](https://stackoverflow.com/users/11680056/sklott) Seeduino print(unsigned long long...) support.
 - [Joe Ostrander](https://github.com/joeostrander) Added support for attiny1614.
 - [Buzzerb](https://github.com/Buzzerb) Added Extended NEC protocol to TinyIR and making it more consistent.
 - [akellai](https://github.com/akellai) Added ESP 3.0 support.

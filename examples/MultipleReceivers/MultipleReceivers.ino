@@ -36,7 +36,7 @@
 
 /*
  * Specify which protocol(s) should be used for decoding.
- * If no protocol is defined, all protocols (except Bang&Olufsen) are active.
+ * If no protocol is defined, all protocols, even the exotic ones (except Bang&Olufsen) are active.
  * This must be done before the #include <IRremote.hpp>
  */
 //#define DECODE_DENON        // Includes Sharp
@@ -75,7 +75,7 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
-    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // This sets the pin for the default / first instance and enables the global LED feedback
+    IrReceiver.begin(IR_RECEIVE_PIN, USE_DEFAULT_FEEDBACK_LED_PIN, ENABLE_LED_FEEDBACK); // This sets the pin for the default / first instance and enables the global LED feedback
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);

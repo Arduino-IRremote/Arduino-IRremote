@@ -48,8 +48,10 @@
 
 //#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 
-//#define NO_LED_SEND_FEEDBACK_CODE     // Disables the LED feedback code for receive.
+//#define NO_LED_SEND_FEEDBACK_CODE     // Disables the LED feedback code for send.
 //#define IR_FEEDBACK_LED_PIN     12    // Use this, to disable use of LED_BUILTIN definition for IR_FEEDBACK_LED_PIN
+#define USE_NO_SEND_PWM               // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
+
 #include "TinyIR.h" // Defines protocol timings
 
 #include "digitalWriteFast.h"
@@ -57,32 +59,72 @@
  * @{
  */
 
-#if !defined(IR_SEND_PIN)
-#warning "IR_SEND_PIN is not defined, so it is set to 3"
-#define IR_SEND_PIN    3
-#endif
 #if !defined(NO_LED_SEND_FEEDBACK_CODE)
 #define LED_SEND_FEEDBACK_CODE // Resolve the double negative
 #endif
 
-/*
- * Generate 38 kHz IR signal by bit banging and using delayMicroseconds() and micros()
+/**
+ * Custom delay function that circumvents Arduino's delayMicroseconds 16 bit limit
+ * and is (mostly) not extended by the duration of interrupt codes like the millis() interrupt.
+ * I.e. I measured 2400 microseconds for delayMicroseconds(2100)
  */
-void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
-    unsigned long tMicros = micros();
-    unsigned long tNextPeriodEnding = tMicros;
-#if defined(F_CPU)
-    unsigned long tEndMicros = tMicros + (112 / (F_CPU / MICROS_IN_ONE_SECOND)) + aMarkMicros; // To compensate for call duration - 112 is an empirical value
+void customDelayMicroseconds(unsigned long aMicroseconds) {
+#if defined(_IR_SEND_HPP)
+    IRsend::customDelayMicroseconds(aMicroseconds); // use the existing IRremote function
 #else
-    unsigned long tEndMicros = tMicros + aMarkMicros;
+#  if defined(ESP32) || defined(ESP8266)
+    // from https://github.com/crankyoldgit/IRremoteESP8266/blob/00b27cc7ea2e7ac1e48e91740723c805a38728e0/src/IRsend.cpp#L123
+    // Invoke a delay(), where possible, to avoid triggering the WDT.
+    // see https://github.com/Arduino-IRremote/Arduino-IRremote/issues/1114 for the reason of checking for > 16383)
+    // delayMicroseconds() is only accurate to 16383 us. Ref: https://www.arduino.cc/en/Reference/delayMicroseconds
+    if (aMicroseconds > 16383) {
+        delay(aMicroseconds / 1000UL);  // Delay for as many whole milliseconds as we can.
+        // Delay the remaining sub-millisecond.
+        delayMicroseconds(static_cast<uint16_t>(aMicroseconds % 1000UL));
+    } else {
+        delayMicroseconds(aMicroseconds);
+    }
+#  else
+
+#    if defined(__AVR__)
+    unsigned long start = micros() - (64 / clockCyclesPerMicrosecond()); // - (64 / clockCyclesPerMicrosecond()) for reduced resolution and additional overhead
+#    else
+    unsigned long start = micros();
+#    endif
+// overflow invariant comparison :-)
+    while (micros() - start < aMicroseconds) {
+    }
+#  endif
 #endif
+
+}
+/*
+ * Generate 38 kHz IR signal by bit banging and using customDelayMicroseconds() and micros()
+ */
+void sendMark(uint_fast8_t aSendPin, unsigned int aMarkMicros) {
+#if defined(F_CPU)
+    unsigned long tMarkDurationMicros = (112 / (F_CPU / MICROS_IN_ONE_SECOND)) + aMarkMicros; // To compensate for call duration - 112 is an empirical value
+#else
+    unsigned long tMarkDurationMicros = aMarkMicros;
+#endif
+#if defined(USE_NO_SEND_PWM)
+    /*
+     * Here we generate no carrier PWM, just simulate an active low receiver signal.
+     */
+    digitalWriteFast(aSendPin, LOW); // Active state is low here.
+    customDelayMicroseconds(tMarkDurationMicros);
+    digitalWriteFast(aSendPin, HIGH); // Set output to inactive high.
+#else
+    unsigned long tStartMicros = micros();
+    unsigned long tMicrosOfEndOfNextPWMPause = tStartMicros;
+
     do {
         /*
          * Generate pulse
          */
         noInterrupts(); // do not let interrupts extend the short on period
         digitalWriteFast(aSendPin, HIGH);
-        delayMicroseconds(8); // 8 us for a 30 % duty cycle for 38 kHz
+        customDelayMicroseconds(8); // 8 us for a 30 % duty cycle for 38 kHz
         digitalWriteFast(aSendPin, LOW);
         interrupts(); // Enable interrupts - to keep micros correct- for the longer off period 3.4 us until receive ISR is active (for 7 us + pop's)
 
@@ -90,17 +132,20 @@ void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
          * PWM pause timing and end check
          * Minimal pause duration is 4.3 us
          */
-        tNextPeriodEnding += 26; // 26.3 us period for 38 kHz; 26 us -> 38.48 kHz
+        tMicrosOfEndOfNextPWMPause += 26; // 26.3 us period for 38 kHz; 26 us -> 38.48 kHz
+        unsigned long tMicros;
         do {
             tMicros = micros(); // we have only 4 us resolution for AVR @16MHz
             /*
              * Exit the forever loop if aMarkMicros has reached
+             * Overflow invariant: unsigned difference is the elapsed time - 32 bytes program space
              */
-            if (tMicros >= tEndMicros) {
+            if (tMicros - tStartMicros >= tMarkDurationMicros) {
                 return;
             }
-        } while (tMicros < tNextPeriodEnding);
+        } while ((long) (tMicros - tMicrosOfEndOfNextPWMPause) < 0);
     } while (true);
+#endif
 }
 
 /*
@@ -110,10 +155,10 @@ void sendMark(uint8_t aSendPin, unsigned int aMarkMicros) {
  * @param aNumberOfRepeats  - Number of repeats send at a period of 110 ms.
  * @param aSendNEC2Repeats - Instead of sending the NEC special repeat code, send the original frame for repeat.
  */
-void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
+void sendOnkyo(uint_fast8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
-#if !defined(NO_LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
+#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
     pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
 #  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
     digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
@@ -129,7 +174,7 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
         sendMark(aSendPin, NEC_HEADER_MARK);
         if ((!aSendNEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
             // send the NEC special repeat
-            delayMicroseconds (NEC_REPEAT_HEADER_SPACE); // - 2250
+            customDelayMicroseconds (NEC_REPEAT_HEADER_SPACE); // - 2250
         } else {
             // send header
             delayMicroseconds (NEC_HEADER_SPACE);
@@ -140,9 +185,9 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
             for (uint_fast8_t i = 0; i < NEC_BITS; ++i) {
                 sendMark(aSendPin, NEC_BIT_MARK); // constant mark length
                 if (tData.ULong & 1) {
-                    delayMicroseconds (NEC_ONE_SPACE);
+                    customDelayMicroseconds (NEC_ONE_SPACE);
                 } else {
-                    delayMicroseconds (NEC_ZERO_SPACE);
+                    customDelayMicroseconds (NEC_ZERO_SPACE);
                 }
                 tData.ULong >>= 1; // shift command for next bit
             }
@@ -173,15 +218,13 @@ void sendONKYO(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast
 
 /*
  * Send NEC with 8 or 16 bit address or command depending on the values of aAddress and aCommand.
+ * To force sending of a 16 bit address, use: sendOnkyo().
  * @param aAddress  - If aAddress < 0x100 send 8 bit address and 8 bit inverted address, else send 16 bit address.
  * @param aCommand  - If aCommand < 0x100 send 8 bit command and 8 bit inverted command, else send 16 bit command.
  * @param aNumberOfRepeats  - Number of repeats send at a period of 110 ms.
  * @param aSendNEC2Repeats - Instead of sending the NEC special repeat code, send the original frame for repeat.
  */
-void sendNECMinimal(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats) {
-    sendNEC(aSendPin, aAddress, aCommand, aNumberOfRepeats); // sendNECMinimal() is deprecated
-}
-void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
+void sendNEC(uint_fast8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
     pinModeFast(aSendPin, OUTPUT);
 
 #if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
@@ -200,10 +243,10 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
         sendMark(aSendPin, NEC_HEADER_MARK);
         if ((!aSendNEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
             // send the NEC special repeat
-            delayMicroseconds (NEC_REPEAT_HEADER_SPACE); // - 2250
+            customDelayMicroseconds (NEC_REPEAT_HEADER_SPACE); // - 2250
         } else {
             // send header
-            delayMicroseconds (NEC_HEADER_SPACE);
+            customDelayMicroseconds (NEC_HEADER_SPACE);
             LongUnion tData;
             /*
              * The compiler is intelligent and removes the code for "(aAddress > 0xFF)" if we are called with an uint8_t address :-).
@@ -226,83 +269,9 @@ void sendNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_
                 sendMark(aSendPin, NEC_BIT_MARK); // constant mark length
 
                 if (tData.ULong & 1) {
-                    delayMicroseconds (NEC_ONE_SPACE);
+                    customDelayMicroseconds (NEC_ONE_SPACE);
                 } else {
-                    delayMicroseconds (NEC_ZERO_SPACE);
-                }
-                tData.ULong >>= 1; // shift command for next bit
-            }
-        }        // send stop bit
-        sendMark(aSendPin, NEC_BIT_MARK);
-
-        tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            /*
-             * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
-             */
-            auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
-            if (NEC_REPEAT_PERIOD / 1000 > tFrameDurationMillis) {
-                delay(NEC_REPEAT_PERIOD / 1000 - tFrameDurationMillis);
-            }
-        }
-    }
-#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
-    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
-#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
-#  else
-    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
-#  endif
-#endif
-}
-
-/*
- * Send Extended NEC with a forced 16 bit address and 8 or 16 bit command depending on the value of aCommand.
- * @param aAddress  - Send 16 bit address.
- * @param aCommand  - If aCommand < 0x100 send 8 bit command and 8 bit inverted command, else send 16 bit command.
- * @param aNumberOfRepeats  - Number of repeats send at a period of 110 ms.
- * @param aSendNEC2Repeats - Instead of sending the NEC special repeat code, send the original frame for repeat.
- */
-void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uint_fast8_t aNumberOfRepeats, bool aSendNEC2Repeats) {
-    pinModeFast(aSendPin, OUTPUT);
-
-#if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
-    pinModeFast(IR_FEEDBACK_LED_PIN, OUTPUT);
-#  if defined(FEEDBACK_LED_IS_ACTIVE_LOW)
-    digitalWriteFast(IR_FEEDBACK_LED_PIN, LOW);
-#  else
-    digitalWriteFast(IR_FEEDBACK_LED_PIN, HIGH);
-#  endif
-#endif
-
-    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
-    while (tNumberOfCommands > 0) {
-        unsigned long tStartOfFrameMillis = millis();
-
-        sendMark(aSendPin, NEC_HEADER_MARK);
-        if ((!aSendNEC2Repeats) && (tNumberOfCommands < aNumberOfRepeats + 1)) {
-            // send the NEC special repeat
-            delayMicroseconds (NEC_REPEAT_HEADER_SPACE); // - 2250
-        } else {
-            // send header
-            delayMicroseconds (NEC_HEADER_SPACE);
-            LongUnion tData;
-            tData.UWord.LowWord = aAddress;
-            if (aCommand > 0xFF) {
-                tData.UWord.HighWord = aCommand;
-            } else {
-                tData.UByte.MidHighByte = aCommand;
-                tData.UByte.HighByte = ~aCommand; // LSB first
-            }
-            // Send data
-            for (uint_fast8_t i = 0; i < NEC_BITS; ++i) {
-                sendMark(aSendPin, NEC_BIT_MARK); // constant mark length
-
-                if (tData.ULong & 1) {
-                    delayMicroseconds (NEC_ONE_SPACE);
-                } else {
-                    delayMicroseconds (NEC_ZERO_SPACE);
+                    customDelayMicroseconds (NEC_ZERO_SPACE);
                 }
                 tData.ULong >>= 1; // shift command for next bit
             }
@@ -334,14 +303,16 @@ void sendExtendedNEC(uint8_t aSendPin, uint16_t aAddress, uint16_t aCommand, uin
 /*
  * LSB first, send header, command, inverted command and stop bit
  */
-void sendFast8BitAndParity(uint8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
-    sendFAST(aSendPin, aCommand, aNumberOfRepeats);
+void sendFAST(uint_fast8_t aSendPin, uint8_t aCommand, uint_fast8_t aNumberOfRepeats) {
+    uint16_t tData = aCommand | (((uint16_t) ((uint8_t) (~aCommand)) << 8));
+    sendFAST16Bit(aSendPin, tData, aNumberOfRepeats);
 }
 
 /*
- * LSB first, send header, 16 bit command or 8 bit command, inverted command and stop bit
+ * LSB first, send header and command and stop bit
+ * @param aCommand 16 bit RAW command
  */
-void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats) {
+void sendFAST16Bit(uint_fast8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats) {
     pinModeFast(aSendPin, OUTPUT);
 
 #if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)
@@ -355,29 +326,20 @@ void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats
 
     uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
     while (tNumberOfCommands > 0) {
-        unsigned long tStartOfFrameMillis = millis();
+        auto tStartOfFrameMillis = millis();
 
         // send header
         sendMark(aSendPin, FAST_HEADER_MARK);
-        delayMicroseconds(FAST_HEADER_SPACE);
-        uint16_t tData;
-        /*
-         * The compiler is intelligent and removes the code for "(aCommand > 0xFF)" if we are called with an uint8_t command :-).
-         * Using an uint16_t command requires additional 56 bytes program memory.
-         */
-        if (aCommand > 0xFF) {
-            tData = aCommand;
-        } else {
-            tData = aCommand | (((uint8_t) (~aCommand)) << 8); // LSB first
-        }
+        customDelayMicroseconds(FAST_HEADER_SPACE);
+        uint16_t tData = aCommand;
         // Send data
         for (uint_fast8_t i = 0; i < FAST_BITS; ++i) {
             sendMark(aSendPin, FAST_BIT_MARK); // constant mark length
 
             if (tData & 1) {
-                delayMicroseconds(FAST_ONE_SPACE);
+                customDelayMicroseconds(FAST_ONE_SPACE);
             } else {
-                delayMicroseconds(FAST_ZERO_SPACE);
+                customDelayMicroseconds(FAST_ZERO_SPACE);
             }
             tData >>= 1; // shift command for next bit
         }
@@ -388,12 +350,11 @@ void sendFAST(uint8_t aSendPin, uint16_t aCommand, uint_fast8_t aNumberOfRepeats
         // skip last delay!
         if (tNumberOfCommands > 0) {
             /*
+             * Send repeated command in a fixed raster
              * Check and fallback for wrong RepeatPeriodMillis parameter. I.e the repeat period must be greater than each frame duration.
              */
-            auto tFrameDurationMillis = millis() - tStartOfFrameMillis;
-            if (FAST_REPEAT_PERIOD / 1000 > tFrameDurationMillis) {
-                delay(FAST_REPEAT_PERIOD / 1000 - tFrameDurationMillis);
-            }
+            uint16_t tFrameDurationMillis = millis() - tStartOfFrameMillis; // we know that values are smaller than 13000
+            delay((FAST_REPEAT_PERIOD / 1000) - tFrameDurationMillis);
         }
     }
 #if defined(LED_SEND_FEEDBACK_CODE) && defined(IR_FEEDBACK_LED_PIN)

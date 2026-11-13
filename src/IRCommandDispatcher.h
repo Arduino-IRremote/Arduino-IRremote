@@ -3,7 +3,8 @@
  *
  * Library to process IR commands by calling functions specified in a mapping array.
  *
- * To run this example you need to install the "IRremote" or "IRMP" library under "Tools -> Manage Libraries..." or "Ctrl+Shift+I"
+ * This code requires the "IRremote" or "IRMP" library.
+ * Install it under "Tools -> Manage Libraries..." or "Ctrl+Shift+I"
  *
  *  Copyright (C) 2019-2026  Armin Joachimsmeyer
  *
@@ -30,7 +31,7 @@
 
 #include <stdint.h>
 
-//#define DISPATCHER_IR_COMMAND_HAS_MORE_THAN_8_BIT // Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 5 bytes RAM + 1 byte RAM per mapping entry.
+//#define DISPATCHER_IR_COMMAND_HAS_MORE_THAN_8_BIT // Enables mapping and dispatching of IR commands consisting of more than 8 bits. Requires up to 160 bytes program memory and 5 bytes RAM + 1 byte RAM per mapping entry.
 //#define USE_DISPATCHER_COMMAND_STRINGS // Enables the printing of command strings. Requires additional 2 bytes RAM for each command mapping. Requires program memory for strings, but saves snprintf() code (1.5k) if INFO or DEBUG is activated, which has no effect if snprintf() is also used in other parts of your program / libraries.
 #if defined(USE_DISPATCHER_COMMAND_STRINGS)
 #define COMMAND_STRING(anyString)   anyString
@@ -64,11 +65,11 @@
  * Define as COMMAND_EMPTY a code which is not sent by the remote - otherwise please redefine it here
  */
 #if defined(DISPATCHER_IR_COMMAND_HAS_MORE_THAN_8_BIT)
-#define COMMAND_EMPTY       __UINT_FAST16_MAX__ // 0xFFFF code no command
-typedef uint_fast16_t IRCommandType;
+#define COMMAND_EMPTY       __UINT16_MAX__ // 0xFFFF code no command
+typedef uint16_t IRCommandType;
 #else
-typedef uint_fast8_t IRCommandType;
-#define COMMAND_EMPTY       __UINT_FAST8_MAX__ // 0xFF code no command
+typedef uint8_t IRCommandType;
+#define COMMAND_EMPTY       __UINT8_MAX__ // 0xFF code no command
 #endif
 
 // Basic mapping structure
@@ -94,7 +95,6 @@ public:
     void init();
     void printIRInfo(Print *aSerial);
 
-    bool checkAndRunNonBlockingCommands();
     bool checkAndRunSuspendedBlockingCommands();
     void setNextBlockingCommand(IRCommandType aBlockingCommandToRunNext);
     bool delayAndCheckForStop(uint16_t aDelayMillis);

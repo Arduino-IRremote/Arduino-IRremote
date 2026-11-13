@@ -33,19 +33,23 @@
 
 #include <Arduino.h>
 
-//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
+//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1800 bytes program memory and 56 bytes RAM.
 //#define EXCLUDE_EXOTIC_PROTOCOLS  // Saves around 240 bytes program memory if IrSender.write is used
 //#define USE_THRESHOLD_DECODER   // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Requires additional 24 bytes program memory.
 //#define USE_STRICT_DECODER      // Check for additional required characteristics of protocol timing. Requires 300 additional bytes program memory.
 //#define USE_ACTIVE_LOW_OUTPUT_FOR_SEND_PIN // Reverses the polarity at the send pin.
 //#define USE_OPEN_DRAIN_OUTPUT_FOR_SEND_PIN  // Use or simulate open drain output mode at send pin. Attention, active state of open drain is LOW, so connect the send LED between positive supply and send pin!
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
-//#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
 //#define USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM // Simulate an active high receiver signal instead of an active low signal.
-#define NO_LED_FEEDBACK_CODE          // Saves 270 bytes program memory
 //#define NO_LED_RECEIVE_FEEDBACK_CODE  // Saves 176 bytes program memory
 //#define NO_LED_SEND_FEEDBACK_CODE     // Saves 38 bytes program memory
 //#define USE_16_BIT_TIMING_BUFFER      // Use a 16-bit buffer to preserve values above 12750 us
+
+/********************************************************************************************
+ * USE_NO_SEND_PWM enables it to directly connect the IR_SEND_PIN to the IR_RECEIVE_PIN :-)
+ ********************************************************************************************/
+#define USE_NO_SEND_PWM           // Use no carrier PWM, just simulate an active low receiver signal. Overrides SEND_PWM_BY_TIMER definition
+#define NO_LED_FEEDBACK_CODE          // Saves 270 bytes program memory
 
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 
@@ -66,6 +70,9 @@
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 135.
 // 20 is taken as default if not otherwise specified / defined.
 //#define MARK_EXCESS_MICROS    40    // 40 inhibits the decoding of the short B&O marks of 250 us.
+#if defined(USE_NO_SEND_PWM)
+#define MARK_EXCESS_MICROS    0 // We assume a direct cable connection
+#endif
 
 //#define RECORD_GAP_MICROS 12000 // Default is 8000. Activate it for some LG air conditioner protocols.
 
@@ -104,15 +111,15 @@
 #endif
 
 #define DECODE_BOSEWAVE     // ~ 250 bytes
-#define DECODE_MAGIQUEST    // ~ 460 bytes
-#define DECODE_OPENLASIR    // ~ 330 bytes
+#define DECODE_MAGIQUEST    // ~ 784 bytes
 #define DECODE_FAST         // ~ 210 bytes
 
-//#define DECODE_WHYNTER
+//#define DECODE_OPENLASIR    // ~ 330 bytes
+//#define DECODE_WHYNTER      // ~ 100 bytes
 
 //#undef IR_SEND_PIN // enable this, if you need to set send pin programmatically using uint8_t tSendPin below
 
-#define SHOW_DISTANCE_WIDTH_DECODER_ERRORS  // Prints the reason which prevents data to be decoded as distance width data
+#define SHOW_DISTANCE_WIDTH_DECODER_ERRORS  // Prints the reason which prevents data to be decoded as distance width data. Requires 520 bytes program memory.
 #include <IRremote.hpp>
 
 #include "TinyIRSender.hpp"
@@ -158,6 +165,8 @@ PROGMEM // this crashes on ESP8266
         560/*0000 0x00*/, 560, 1690, 560, 1690, 560, 1690, 560, 560/*1110 Inverted 8 of command*/, 560, 1690, 560, 1690, 560, 1690,
         560, 1690/*1111 inverted 0 of command*/, 560 /*stop bit*/}; // Using exact NEC timing
 
+void waitForReceived();
+
 void setup() {
 #if defined(DEBUG_BUTTON_PIN)
     pinMode(DEBUG_BUTTON_PIN, INPUT_PULLUP);
@@ -178,7 +187,7 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
-    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+    IrReceiver.begin(IR_RECEIVE_PIN);
     IrReceiver.registerReceiveCompleteCallback(ReceiveCompleteCallbackHandler);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
@@ -255,14 +264,11 @@ void setup() {
 #  endif
 #endif
     delay(DELAY_AFTER_SEND);
-
 }
 
 void checkReceivedRawData(IRDecodedRawDataType aRawData) {
     // wait until signal has received
-    while (!sDataJustReceived) {
-    };
-    sDataJustReceived = false;
+    waitForReceived();
 
     if (IrReceiver.decode()) {
 // Print a short summary of received data
@@ -394,6 +400,7 @@ void waitForReceived() {
 }
 
 /*
+ * @param aSentCommand Command to check, if 0 print no "ERROR: Unknown protocol"
  * @return true if NO error, false if error
  */
 bool checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
@@ -428,8 +435,10 @@ bool checkReceive(uint16_t aSentAddress, uint16_t aSentCommand) {
         IrReceiver.resume(); // Early resume
 
         if (IrReceiver.decodedIRData.protocol == UNKNOWN) {
-            Serial.println(F("ERROR: Unknown protocol"));
-            tReturnValueIsSuccess = false;
+            if (aSentCommand != 0) {
+                Serial.println(F("ERROR: Unknown protocol"));
+                tReturnValueIsSuccess = false;
+            }
         } else {
             /*
              * Check address
@@ -599,10 +608,8 @@ void loop() {
                 500, 250, 250, 500 };
         Serial.println(F("Send arbitrary raw data with 1 repeat and exact timing (16 bit array format) with sendRaw()"));
         Serial.flush();
-        IrSender.sendRaw(rawIRTimings, sizeof(rawIRTimings) / sizeof(rawIRTimings[0]), NEC_KHZ, 80, 1); // Note the approach used to automatically calculate the size of the array.
-        waitForReceived();
-        IrReceiver.printIRResultRawFormatted(&Serial, true);
-        IrReceiver.resume();
+        IrSender.sendRaw(rawIRTimings, sizeof(rawIRTimings) / sizeof(rawIRTimings[0]), NEC_KHZ, 80, 0);
+        checkReceive(0, 0); // 0 -> no error message "ERROR: Unknown protocol"
         delay(DELAY_AFTER_SEND);
 
 #  if defined(DECODE_NEC)
@@ -628,7 +635,7 @@ void loop() {
                 F(
                         "Send NEC data with 8 bit address=0xFB04, command 0x08, 1 repeat and exact timing (16 bit array format) with sendRaw_P()"));
         Serial.flush();
-        IrSender.sendRaw_P(rawIRTimingsNEC, sizeof(rawIRTimingsNEC) / sizeof(rawIRTimingsNEC[0]), NEC_KHZ, 110, 1); // Note the approach used to automatically calculate the size of the array.
+        IrSender.sendRaw_P(rawIRTimingsNEC, sizeof(rawIRTimingsNEC) / sizeof(rawIRTimingsNEC[0]), NEC_KHZ, 110, 0);
         checkReceive(0xFB04 & 0xFF, 0x08);
         delay(DELAY_AFTER_SEND);
 
@@ -650,8 +657,6 @@ void loop() {
          */
         Serial.println(F("Send ONKYO with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first (0x40802CD3)"));
         Serial.flush();
-        IrSender.sendNECMSB(0x40802CD3, 32, false);
-        checkReceive(0x0102, 0x34);
         delay(DELAY_AFTER_SEND);
 #  endif // defined(DECODE_NEC)
 
@@ -891,7 +896,7 @@ void loop() {
 #  if defined(DECODE_FAST)
     Serial.println(F("Send FAST with TinyIRSender"));
     Serial.flush();
-    sendFAST(IR_SEND_PIN, sCommand, sRepeats);
+    sendFAST(IR_SEND_PIN, sCommand, sRepeats); // FAST pause between frames can be down to 13 ms, which is too small for our 16 ms set because of BEO handling
     checkReceive(0, sCommand);
     delay(DELAY_AFTER_SEND);
 #  endif
@@ -1068,8 +1073,12 @@ void loop() {
     delay(DELAY_AFTER_SEND);
 #endif
 
-#if defined(DECODE_OPENLASIR)
+#if defined(DECODE_NEC) || defined(DECODE_OPENLASIR)
+#  if defined(DECODE_OPENLASIR)
+    Serial.println(F("Send OpenLASIR mode fire and color orange"));
+#  else
     Serial.println(F("Send OpenLASIR mode fire and color orange, detected as ONKYO"));
+#  endif
     Serial.flush();
     IrSender.sendOpenLASIR(sAddress & 0xFF, sCommand, OPENLASIR_MODE_LASER_TAG_FIRE, OPENLASIR_COLOR_ORANGE, sRepeats);
     checkReceive(sAddress & 0xFF,
@@ -1080,8 +1089,8 @@ void loop() {
 #if defined(DECODE_LEGO_PF)
     Serial.println(F("Send Lego with 2 channel and with 4 command bits"));
     Serial.flush();
-    IrSender.sendLegoPowerFunctions(sAddress, sCommand, LEGO_MODE_COMBO, false);
-    checkReceive(sAddress & 0x0F, (sCommand | (LEGO_MODE_COMBO << LEGO_COMMAND_BITS)) & 0x1F);
+    IrSender.sendLegoPowerFunctions(sAddress, sCommand & 0x0F, false, LEGO_MODE_COMBO);
+    checkReceive(sAddress & 0x0F, ((sCommand & 0x0F) | (LEGO_MODE_COMBO << LEGO_COMMAND_BITS)) & 0x1F);
     delay(DELAY_AFTER_SEND);
 #endif
 
@@ -1172,7 +1181,7 @@ void loop() {
     Serial.print(F("Send "));
     Serial.println(getProtocolString(IRSendData.protocol));
     Serial.flush();
-    IrSender.write(&IRSendData, sRepeats);
+    IrSender.write(&IRSendData, sRepeats); // FAST pause between frames can be down to 13 ms, which is too small for our 16 ms set because of BEO handling
     checkReceive(0, IRSendData.command & 0xFF);
     delay(DELAY_AFTER_SEND);
 #endif

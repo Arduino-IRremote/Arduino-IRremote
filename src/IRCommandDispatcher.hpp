@@ -4,7 +4,7 @@
  * Library to process IR commands by calling functions specified in a mapping array.
  * Commands can be tagged as blocking or non blocking.
  *
- * To run this example you need to install the "IRremote" or "IRMP" library.
+ * This code requires the "IRremote" or "IRMP" library.
  * Install it under "Tools -> Manage Libraries..." or "Ctrl+Shift+I"
  *
  * The IR library calls a callback function, which executes a non blocking command directly in ISR (Interrupt Service Routine) context!
@@ -51,7 +51,7 @@
 //#define USE_IRREMOTE_LIBRARY // The IRremote library is used for decoding
 //#define USE_IRMP_LIBRARY     // The IRMP library is used for decoding
 #if !defined(USE_TINY_IR_RECEIVER) && !defined(USE_IRREMOTE_LIBRARY) && !defined(USE_IRMP_LIBRARY)
-#define USE_TINY_IR_RECEIVER // Set TiniIR as default library
+#define USE_TINY_IR_RECEIVER // Set TinyIR as default library
 #endif
 
 IRCommandDispatcher IRDispatcher;
@@ -86,18 +86,20 @@ void IRCommandDispatcher::init() {
 IRAM_ATTR
 #  endif
 void handleReceivedTinyIRData() {
-    IRDispatcher.IRReceivedData.address = TinyIRReceiverData.Address;
-    IRDispatcher.IRReceivedData.command = TinyIRReceiverData.Command;
-    IRDispatcher.IRReceivedData.isRepeat = TinyIRReceiverData.Flags & IRDATA_FLAGS_IS_REPEAT;
+#  if (TINY_RECEIVER_ADDRESS_BITS > 0)
+    IRDispatcher.IRReceivedData.address = TinyIRReceiverData.address;
+#  endif
+    IRDispatcher.IRReceivedData.command = TinyIRReceiverData.command;
+    IRDispatcher.IRReceivedData.isRepeat = TinyIRReceiverData.flags & IRDATA_FLAGS_IS_REPEAT;
     IRDispatcher.IRReceivedData.MillisOfLastCode = millis();
 
 #  if defined(LOCAL_INFO)
     printTinyIRReceiverResultMinimal(&Serial);
 #  endif
 
-#  if defined(IR_ADDRESS)
-    // if available, compare address. TinyIRReceiverData.Address saves 6 bytes
-    if (TinyIRReceiverData.Address != IR_ADDRESS) { // IR_ADDRESS is defined in *IRCommandMapping.h
+#  if defined(IR_ADDRESS) && (TINY_RECEIVER_ADDRESS_BITS > 0)
+    // if available, compare address. TinyIRReceiverData.address saves 6 bytes
+    if (TinyIRReceiverData.address != IR_ADDRESS) { // IR_ADDRESS is defined in *IRCommandMapping.h
         INFO_PRINT(F("Wrong address. Expected 0x"));
         INFO_PRINTLN(IR_ADDRESS, HEX);
     } else
@@ -132,7 +134,7 @@ void ReceiveCompleteCallbackHandler();
 
 void IRCommandDispatcher::init() {
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
-    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+    IrReceiver.begin(IR_RECEIVE_PIN, USE_DEFAULT_FEEDBACK_LED_PIN, ENABLE_LED_FEEDBACK);
     /*
      * Tell the ISR to call this function, when a complete frame has been received
      */
@@ -156,6 +158,10 @@ void ReceiveCompleteCallbackHandler() {
      * Fill IrReceiver.decodedIRData
      */
     IrReceiver.decode();
+    if(IrReceiver.decodedIRData.protocol == UNKNOWN){
+        IrReceiver.resume();
+        return;
+    }
 
     IRDispatcher.IRReceivedData.address = IrReceiver.decodedIRData.address;
     IRDispatcher.IRReceivedData.command = IrReceiver.decodedIRData.command;
@@ -163,14 +169,15 @@ void ReceiveCompleteCallbackHandler() {
     IRDispatcher.IRReceivedData.MillisOfLastCode = millis();
 
     // Interrupts are already enabled for SUPPORT_MULTIPLE_RECEIVER_INSTANCES
-#if !defined(SUPPORT_MULTIPLE_RECEIVER_INSTANCES)  && !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) // no Serial etc. possible in callback for RTOS based cores like ESP, even when interrupts are enabled
+#if !defined(SUPPORT_MULTIPLE_RECEIVER_INSTANCES) && !defined(ARDUINO_ARCH_MBED) && !defined(ESP32) // no Serial etc. possible in callback for RTOS based cores like ESP, even when interrupts are enabled
     interrupts(); // To enable tone(), delay() etc. for commands. Be careful with non-blocking and repeatable commands which lasts longer than the IR repeat duration.
-#  endif
+#endif
 
 #  if defined(LOCAL_INFO)
     IrReceiver.printIRResultMinimal(&Serial);
     Serial.println();
 #  endif
+
     /*
      * Enable receiving of the next frame.
      */
@@ -293,7 +300,13 @@ void IRCommandDispatcher::printIRInfo(Print *aSerial) {
  * Non blocking commands are executed immediately, blocking commands are executed if no other command is just running.
  * If another blocking command is currently running, the request to stop is set
  * and the command is stored for main loop to be later execute by checkAndRunSuspendedBlockingCommands().
- * This function sets flags justCalledRegularIRCommand, executingBlockingCommand, requestToStopReceived
+ * This function may set this member variables:
+ *  requestToStopReceived
+ *  justCalledBlockingCommand
+ *  currentBlockingCommandCalled
+ *  lastBlockingCommandCalled
+ *  BlockingCommandToRunNext
+ *
  * @param aCallBlockingCommandImmediately Run blocking command directly, if no other command is just running.
  *        Should be false if called by ISR in order not to block ISR. Is true when called from checkAndRunSuspendedBlockingCommands().
  */
@@ -435,7 +448,7 @@ bool IRCommandDispatcher::checkAndRunSuspendedBlockingCommands() {
         IRReceivedData.command = BlockingCommandToRunNext;
         BlockingCommandToRunNext = COMMAND_EMPTY;
         IRReceivedData.isRepeat = false;
-        requestToStopReceived = false; // Signal to main loop to stop the command currently executed
+        requestToStopReceived = false; // Clear the signal to main loop to stop the command currently executed
         checkAndCallCommand(true);
         return true;
     }

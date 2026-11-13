@@ -99,22 +99,16 @@ void loop() {
     Serial.flush();
     sendNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats);
 
-    // Send with Extended NEC
-    // Like NEC, but the address is forced 16 bits with no parity check
-    Serial.println(F("Send ExtendedNEC with 16 bit address and  8 bit command"));
-    Serial.flush();
-    sendExtendedNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats);
-
     // Send with ONKYO
     // Like NEC, but both the address and command are forced 16 bits with no parity check
     Serial.println(F("Send ONKYO with 16 bit address and command"));
     Serial.flush();
-    sendONKYO(IR_SEND_PIN, sAddress, sCommand, sRepeats);
+    sendOnkyo(IR_SEND_PIN, sAddress, sCommand, sRepeats);
 
     // Send with NEC2
     // Instead of sending the NEC special repeat code, sends the full original frame for repeats
     // Sending NEC2 is done by setting the optional bool NEC2Repeats argument to true (defaults to false)
-    // sendExtendedNEC and sendONKYO also support the NEC2Repeats argument for full frame repeats (not demonstrated here)
+    // sendOnkyo also support the NEC2Repeats argument for full frame repeats (not demonstrated here)
     Serial.println(F("Send NEC2 with 8 bit address and command and original frame repeats"));
     Serial.flush();
     sendNEC(IR_SEND_PIN, sAddress, sCommand, sRepeats, true);

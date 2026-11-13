@@ -152,41 +152,41 @@ void loop() {
         if (tSerialCommandCharacter == -1) {
             Serial.print(F("available() was true, but no character read")); // should not happen
         } else if (tSerialCommandCharacter == 48) {    // 0
-            IrSender.sendBoseWave(BOSE_CMD_ON_OFF);  // On/Off
+            IrSender.sendBoseWave(BOSE_CMD_ON_OFF, 0);  // On/Off
         } else if (tSerialCommandCharacter == 49) {    // 1
-            IrSender.sendBoseWave(BOSE_CMD_VOL_UP);  // Volume Up
+            IrSender.sendBoseWave(BOSE_CMD_VOL_UP, 0);  // Volume Up
         } else if (tSerialCommandCharacter == 50) {    // 2
-            IrSender.sendBoseWave(BOSE_CMD_VOL_DOWN);  // Volume Down
+            IrSender.sendBoseWave(BOSE_CMD_VOL_DOWN, 0);  // Volume Down
         } else if (tSerialCommandCharacter == 51) {    // 3
-            IrSender.sendBoseWave(BOSE_CMD_TUNE_UP);  // Tune Up
+            IrSender.sendBoseWave(BOSE_CMD_TUNE_UP, 0);  // Tune Up
         } else if (tSerialCommandCharacter == 52) {    // 4
-            IrSender.sendBoseWave(BOSE_CMD_TUNE_DOWN);  // Tune Down
+            IrSender.sendBoseWave(BOSE_CMD_TUNE_DOWN, 0);  // Tune Down
         } else if (tSerialCommandCharacter == 53) {    // 5
-            IrSender.sendBoseWave(BOSE_CMD_AM);  // AM
+            IrSender.sendBoseWave(BOSE_CMD_AM, 0);  // AM
         } else if (tSerialCommandCharacter == 54) {    // 6
-            IrSender.sendBoseWave(BOSE_CMD_FM);  // FM
+            IrSender.sendBoseWave(BOSE_CMD_FM, 0);  // FM
         } else if (tSerialCommandCharacter == 55) {    // 7
-            IrSender.sendBoseWave(BOSE_CMD_PRESET_1);  // Preset 1
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_1, 0);  // Preset 1
         } else if (tSerialCommandCharacter == 56) {    // 8
-            IrSender.sendBoseWave(BOSE_CMD_PRESET_2);  // Preset 2
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_2, 0);  // Preset 2
         } else if (tSerialCommandCharacter == 57) {    // 9
-            IrSender.sendBoseWave(BOSE_CMD_PRESET_3);  // Preset 3
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_3, 0);  // Preset 3
         } else if (tSerialCommandCharacter == 97) {    // a
-            IrSender.sendBoseWave(BOSE_CMD_PRESET_4);  // Preset 4
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_4, 0);  // Preset 4
         } else if (tSerialCommandCharacter == 98) {    // b
-            IrSender.sendBoseWave(BOSE_CMD_PRESET_5);  // Preset 5
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_5, 0);  // Preset 5
         } else if (tSerialCommandCharacter == 99) {    // c
-            IrSender.sendBoseWave(BOSE_CMD_PRESET_6);  // Preset 6
+            IrSender.sendBoseWave(BOSE_CMD_PRESET_6, 0);  // Preset 6
         } else if (tSerialCommandCharacter == 100) {   // d
-            IrSender.sendBoseWave(BOSE_CMD_MUTE);  // Mute
+            IrSender.sendBoseWave(BOSE_CMD_MUTE, 0);  // Mute
         } else if (tSerialCommandCharacter == 101) {   // e
-            IrSender.sendBoseWave(BOSE_CMD_PLAY_PAUSE);  // Pause
+            IrSender.sendBoseWave(BOSE_CMD_PLAY_PAUSE, 0);  // Pause
         } else if (tSerialCommandCharacter == 102) {   // f
-            IrSender.sendBoseWave(BOSE_CMD_STOP);  // Stop
+            IrSender.sendBoseWave(BOSE_CMD_STOP, 0);  // Stop
         } else if (tSerialCommandCharacter == 103) {   // g
-            IrSender.sendBoseWave(BOSE_CMD_AUX);  // Aux
+            IrSender.sendBoseWave(BOSE_CMD_AUX, 0);  // Aux
         } else if (tSerialCommandCharacter == 104) {   // h
-            IrSender.sendBoseWave(BOSE_CMD_SLEEP);  // Sleep
+            IrSender.sendBoseWave(BOSE_CMD_SLEEP, 0);  // Sleep
         } else {
             sPrintMenu = false;
         }

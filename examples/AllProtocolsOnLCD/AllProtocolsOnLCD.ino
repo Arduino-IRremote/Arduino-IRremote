@@ -56,10 +56,10 @@
 #if FLASHEND <= 0x1FFF  // For 8k flash or less, like ATtiny85. Exclude exotic protocols.
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #  if !defined(DIGISTUMPCORE) // ATTinyCore is bigger than Digispark core
-#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
+#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1800 bytes program memory and 56 bytes RAM.
 #  endif
 #endif
-//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
+//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1800 bytes program memory and 56 bytes RAM.
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
 //#define USE_THRESHOLD_DECODER   // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Requires additional 120 bytes program memory.
 
@@ -149,7 +149,7 @@ void setup() {
     Serial.println(F("Enabling IRin..."));
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
-    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+    IrReceiver.begin(IR_RECEIVE_PIN, USE_DEFAULT_FEEDBACK_LED_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);

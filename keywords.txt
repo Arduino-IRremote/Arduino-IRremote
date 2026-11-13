@@ -20,8 +20,6 @@ decodedIRData	KEYWORD1
 available	KEYWORD2
 begin	KEYWORD2
 decode	KEYWORD2
-disableIRIn	KEYWORD2
-enableIRIn	KEYWORD2
 isIdle	KEYWORD2
 printActiveIRProtocols	KEYWORD2
 printIRResultMinimal	KEYWORD2
@@ -80,10 +78,8 @@ sendOpenLASIR	KEYWORD2
 
 # IRFeedbackLED
 disableLEDFeedback	KEYWORD2
-disableLEDFeedbackForSend	KEYWORD2
 enableLEDFeedback	KEYWORD2
-enableLEDFeedbackForSend	KEYWORD2
-setFeedbackLED	KEYWORD2
+writeFeedbackLED	KEYWORD2
 setLEDFeedback	KEYWORD2
 
 # TinyIRReceiver
@@ -92,9 +88,9 @@ enablePCIInterruptForTinyReceiver	KEYWORD2
 initPCIInterruptForTinyReceiver	KEYWORD2
 isIRReceiverAttachedForTinyReceiver	KEYWORD2
 printTinyReceiverResultMinimal	KEYWORD2
-TinyReceiverDecode	KEYWORD2
+decodeTinyIRReceiver	KEYWORD2
 # TinyIRSender
-sendExtendedNEC	KEYWORD2
+sendFAST8BitAndParity	KEYWORD2
 sendFAST	KEYWORD2
 
 #######################################

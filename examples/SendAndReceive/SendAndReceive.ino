@@ -36,7 +36,7 @@
 #define DECODE_NEC          // Includes Apple and Onkyo
 #define DECODE_DISTANCE_WIDTH // In case NEC is not received correctly. Universal decoder for pulse distance width protocols
 
-//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
+//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1800 bytes program memory and 56 bytes RAM.
 //#define EXCLUDE_EXOTIC_PROTOCOLS // saves around 650 bytes program memory if all other protocols are active
 //#define RECORD_GAP_MICROS 12000   // Default is 8000. Activate it for some LG air conditioner protocols
 //#define SEND_PWM_BY_TIMER         // Disable carrier PWM generation in software and use (restricted) hardware PWM.
@@ -65,7 +65,7 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
-    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+    IrReceiver.begin(IR_RECEIVE_PIN, USE_DEFAULT_FEEDBACK_LED_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);

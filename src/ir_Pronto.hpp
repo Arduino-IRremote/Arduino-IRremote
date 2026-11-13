@@ -12,7 +12,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2025 Bengt Martensson, Armin Joachimsmeyer
+ * Copyright (c) 2020-2026 Bengt Martensson, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,7 +52,6 @@ static const uint16_t numbersInPreamble = 4U;
 static const uint16_t hexMask = 0xFU;
 static const uint32_t referenceFrequency = 4145146UL;
 static const uint16_t fallbackFrequency = 64767U; // To use with frequency = 0;
-static const uint32_t microsecondsInSeconds = 1000000UL;
 static const uint16_t PRONTO_DEFAULT_GAP = 45000;
 //! @endcond
 
@@ -63,14 +62,17 @@ static uint16_t toFrequencyKHz(uint16_t code) {
 /*
  * Parse the string given as Pronto Hex, and send it a number of times given as argument.
  * The first number denotes the type of the signal. 0000 denotes a raw IR signal with modulation,
- // The second number denotes a frequency code
+ * The second number denotes a frequency code
+ * @param aNumberOfRepeats  specifies how often the repeat sequence of the Pronto code is sent.
+ *      If the code has no repeat sequence (as with codes recorded by IRremote), the parameter is ignored and the intro is sent once.
+ *      Negative values also send the intro only.
  */
-void IRsend::sendPronto(const uint16_t *data, uint16_t length, int_fast8_t aNumberOfRepeats) {
-    uint16_t timebase = (microsecondsInSeconds * data[1] + referenceFrequency / 2) / referenceFrequency;
+void IRsend::sendPronto(const uint16_t *aData, uint16_t aLengthOfData, int_fast8_t aNumberOfRepeats) {
+    uint16_t timebase = (MICROS_IN_ONE_SECOND * aData[1] + referenceFrequency / 2) / referenceFrequency;
     uint16_t khz;
-    switch (data[0]) {
+    switch (aData[0]) {
     case learnedToken: // normal, "learned"
-        khz = toFrequencyKHz(data[1]);
+        khz = toFrequencyKHz(aData[1]);
         break;
     case learnedNonModulatedToken: // non-demodulated, "learned"
         khz = 0U;
@@ -78,15 +80,15 @@ void IRsend::sendPronto(const uint16_t *data, uint16_t length, int_fast8_t aNumb
     default:
         return; // There are other types, but they are not handled yet.
     }
-    uint16_t intros = 2 * data[2];
-    uint16_t repeats = 2 * data[3];
+    uint16_t intros = 2 * aData[2];
+    uint16_t repeats = 2 * aData[3];
 
     DEBUG_PRINT(F("sendPronto intros="));
     DEBUG_PRINT(intros);
     DEBUG_PRINT(F(" repeats="));
     DEBUG_PRINTLN(repeats);
 
-    if (numbersInPreamble + intros + repeats != length) { // inconsistent sizes
+    if (numbersInPreamble + intros + repeats != aLengthOfData) { // inconsistent sizes
         return;
     }
 
@@ -96,7 +98,7 @@ void IRsend::sendPronto(const uint16_t *data, uint16_t length, int_fast8_t aNumb
      */
     uint16_t durations[intros + repeats];
     for (uint16_t i = 0; i < intros + repeats; i++) {
-        uint32_t duration = ((uint32_t) data[i + numbersInPreamble]) * timebase;
+        uint32_t duration = ((uint32_t) aData[i + numbersInPreamble]) * timebase;
         durations[i] = (uint16_t)((duration <= UINT16_MAX) ? duration : UINT16_MAX);
     }
 
@@ -117,12 +119,12 @@ void IRsend::sendPronto(const uint16_t *data, uint16_t length, int_fast8_t aNumb
      * Now send the trailing space/gap of the intro and all the repeats
      */
     if (intros >= 2) {
-        delay(durations[intros - 1] / MICROS_IN_ONE_MILLI); // equivalent to space(durations[intros - 1]); but allow bigger values for the gap
+        delay(durations[intros - 1] / MICROS_IN_ONE_MILLISECOND); // equivalent to space(durations[intros - 1]); but allow bigger values for the gap
     }
     for (int i = 0; i < aNumberOfRepeats; i++) {
         sendRaw(durations + intros, repeats - 1, khz);
         if ((i + 1) < aNumberOfRepeats) { // skip last trailing space/gap, see above
-            delay(durations[intros + repeats - 1] / MICROS_IN_ONE_MILLI);
+            delay(durations[intros + repeats - 1] / MICROS_IN_ONE_MILLISECOND);
         }
     }
 }
@@ -144,10 +146,10 @@ void IRsend::sendPronto(const uint16_t *data, uint16_t length, int_fast8_t aNumb
  * @param str C type string (null terminated) containing a Pronto Hex representation.
  * @param aNumberOfRepeats Number of times to send the signal.
  */
-void IRsend::sendPronto(const char *str, int_fast8_t aNumberOfRepeats) {
-    size_t len = strlen(str) / (digitsInProntoNumber + 1) + 1;
+void IRsend::sendPronto(const char *aProntoHexString, int_fast8_t aNumberOfRepeats) {
+    size_t len = strlen(aProntoHexString) / (digitsInProntoNumber + 1) + 1;
     uint16_t data[len];
-    const char *p = str;
+    const char *p = aProntoHexString;
     char *endptr[1];
     for (uint16_t i = 0; i < len; i++) {
         long x = strtol(p, endptr, 16);
@@ -169,18 +171,18 @@ void IRsend::sendPronto(const char *str, int_fast8_t aNumberOfRepeats) {
  * @param aNumberOfRepeats Number of times to send the signal.
  */
 //far pointer (? for ATMega2560 etc.)
-void IRsend::sendPronto_PF(uint_farptr_t str, int_fast8_t aNumberOfRepeats) {
-    size_t len = strlen_PF(str);
+void IRsend::sendPronto_PF(uint_farptr_t aProntoHexString, int_fast8_t aNumberOfRepeats) {
+    size_t len = strlen_PF(aProntoHexString);
     char work[len + 1];
-    strcpy_PF(work, str); // We know that string including terminating character fits in work
+    strcpy_PF(work, aProntoHexString); // We know that string including terminating character fits in work
     sendPronto(work, aNumberOfRepeats);
 }
 
 //standard pointer
-void IRsend::sendPronto_P(const char *str, int_fast8_t aNumberOfRepeats) {
-    size_t len = strlen_P(str);
+void IRsend::sendPronto_P(const char *aProntoHexString, int_fast8_t aNumberOfRepeats) {
+    size_t len = strlen_P(aProntoHexString);
     char work[len + 1];
-    strcpy_P(work, str);
+    strcpy_P(work, aProntoHexString);
     sendPronto(work, aNumberOfRepeats);
 }
 #endif
@@ -188,23 +190,23 @@ void IRsend::sendPronto_P(const char *str, int_fast8_t aNumberOfRepeats) {
 /*
  * Copy flash data to ram buffer in stack
  */
-void IRsend::sendPronto(const __FlashStringHelper *str, int_fast8_t aNumberOfRepeats) {
-    size_t len = strlen_P(reinterpret_cast<const char*>(str));
+void IRsend::sendPronto(const __FlashStringHelper *aProntoHexString, int_fast8_t aNumberOfRepeats) {
+    size_t len = strlen_P(reinterpret_cast<const char*>(aProntoHexString));
     char work[len + 1];
-    strcpy_P(work, reinterpret_cast<const char*>(str));
+    strcpy_P(work, reinterpret_cast<const char*>(aProntoHexString));
     return sendPronto(work, aNumberOfRepeats);
 }
 
-static uint16_t effectiveFrequency(uint16_t frequency) {
-    return frequency > 0 ? frequency : fallbackFrequency;
+static uint16_t effectiveFrequency(uint16_t aFrequencyHertz) {
+    return aFrequencyHertz > 0 ? aFrequencyHertz : fallbackFrequency;
 }
 
-static uint16_t toTimebase(uint16_t frequency) {
-    return microsecondsInSeconds / effectiveFrequency(frequency);
+static uint16_t toTimebase(uint16_t aFrequencyHertz) {
+    return MICROS_IN_ONE_SECOND / effectiveFrequency(aFrequencyHertz);
 }
 
-static uint16_t toFrequencyCode(uint16_t frequency) {
-    return referenceFrequency / effectiveFrequency(frequency);
+static uint16_t toFrequencyCode(uint16_t aFrequencyHertz) {
+    return referenceFrequency / effectiveFrequency(aFrequencyHertz);
 }
 
 static char DigitToHex(uint8_t x) {
@@ -322,13 +324,13 @@ static size_t compensateAndDumpSequence(String *aString, const volatile IRRawbuf
  * Writes Pronto HEX to a String object.
  * Returns the amount of characters added to the string.(360 characters for a NEC code!)
  */
-size_t IRrecv::compensateAndStorePronto(String *aString, uint16_t frequency) {
+size_t IRrecv::compensateAndStorePronto(String *aString, uint16_t aFrequencyHertz) {
 
     size_t size = 0;
-    uint16_t timebase = toTimebase(frequency);
+    uint16_t timebase = toTimebase(aFrequencyHertz);
 
-    size += dumpNumberHex(aString, frequency > 0 ? learnedToken : learnedNonModulatedToken);
-    size += dumpNumberHex(aString, toFrequencyCode(frequency));
+    size += dumpNumberHex(aString, aFrequencyHertz > 0 ? learnedToken : learnedNonModulatedToken);
+    size += dumpNumberHex(aString, toFrequencyCode(aFrequencyHertz));
     size += dumpNumberHex(aString, (decodedIRData.rawlen + 1) / 2);
     size += dumpNumberHex(aString, 0);
     size += compensateAndDumpSequence(aString, &irparams.rawbuf[1], decodedIRData.rawlen - 1, timebase); // skip leading space

@@ -157,24 +157,31 @@
  * By default 16 bits are sent.
  * @param aNumberOfHeaderBits   default is 8, can be 24 at maximum
  */
-void IRsend::sendBangOlufsen(uint16_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats, int8_t aNumberOfHeaderBits) {
+void IRsend::sendBangOlufsen(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t aNumberOfHeaderBits) {
+    if (aNumberOfRepeats < 0) {
+        aNumberOfRepeats = 0; // No special repeat frame for raw data -> send one plain frame as repeat
+    }
     for (int_fast8_t i = 0; i < aNumberOfRepeats + 1; ++i) {
         // send 16 bits by default
-        sendBangOlufsenRaw((uint32_t(aHeader) << aNumberOfHeaderBits) | aData, aNumberOfHeaderBits + BEO_DATA_BITS, i != 0);
+        sendBangOlufsenRaw((uint32_t(aAddress) << aNumberOfHeaderBits) | aCommand, aNumberOfHeaderBits + BEO_DATA_BITS, i != 0);
     }
 }
 
-void IRsend::sendBangOlufsenDataLink(uint32_t aHeader, uint8_t aData, int_fast8_t aNumberOfRepeats, int8_t aNumberOfHeaderBits) {
+void IRsend::sendBangOlufsenDataLink(uint32_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats,
+        uint8_t aNumberOfHeaderBits) {
+    if (aNumberOfRepeats < 0) {
+        aNumberOfRepeats = 0; // No special repeat frame for raw data -> send one plain frame as repeat
+    }
     for (int_fast8_t i = 0; i < aNumberOfRepeats + 1; ++i) {
-        sendBangOlufsenRawDataLink((uint64_t(aHeader) << aNumberOfHeaderBits) | aData, aNumberOfHeaderBits + BEO_DATA_BITS, i != 0,
-                true);
+        sendBangOlufsenRawDataLink((uint64_t(aAddress) << aNumberOfHeaderBits) | aCommand, aNumberOfHeaderBits + BEO_DATA_BITS,
+                i != 0, true);
     }
 }
 
 /*
  * @param aBackToBack   If true send data back to back, which cannot be decoded if ENABLE_BEO_WITHOUT_FRAME_GAP is NOT defined
  */
-void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBackToBack) {
+void IRsend::sendBangOlufsenRaw(uint32_t aRawData, uint_fast8_t aNumberOfBitsToSend, bool aBackToBack) {
 #if defined(USE_NO_SEND_PWM) || defined(SEND_PWM_BY_TIMER) || BEO_KHZ == 38 // BEO_KHZ == 38 is for unit test which runs the B&O protocol with 38 kHz
 
     /*
@@ -204,15 +211,16 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
     space(BEO_ZERO_SPACE - BEO_BIT_MARK);
     bool tLastBitValueWasOne = false;
 
-    // Send 8 (default) to 24 bit header and 8 bit data.
-    uint32_t mask = 1UL << (aBits - 1);
-    for (; mask; mask >>= 1) {
-        if (tLastBitValueWasOne && !(aRawData & mask)) {
+    // Send 8 (default) to 24 bit header and 8 bit data MSB first.
+    aRawData <<= (32 - aNumberOfBitsToSend); // Left align data, so the next bit to send is always the MSB. Requires less program memory than using a mask.
+    for (uint_fast8_t i = 0; i < aNumberOfBitsToSend; i++) {
+        bool tBitIsOne = (int32_t) aRawData < 0;
+        if (tLastBitValueWasOne && !tBitIsOne) {
             // 1 to 0 transition
             mark(BEO_BIT_MARK);
             space(BEO_ZERO_SPACE - BEO_BIT_MARK);
             tLastBitValueWasOne = false;
-        } else if (!tLastBitValueWasOne && (aRawData & mask)) {
+        } else if (!tLastBitValueWasOne && tBitIsOne) {
             // 0 to 1 transition
             mark(BEO_BIT_MARK);
             space(BEO_ONE_SPACE - BEO_BIT_MARK);
@@ -222,6 +230,7 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
             mark(BEO_BIT_MARK);
             space(BEO_REPETITION_OF_PREVIOUS_BIT_SPACE - BEO_BIT_MARK);
         }
+        aRawData <<= 1;
     }
 
 // Stop
@@ -231,7 +240,7 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
 
 #else
     (void) aRawData;
-    (void) aBits;
+    (void) aNumberOfBitsToSend;
     (void) aBackToBack;
 #endif
 }
@@ -241,7 +250,8 @@ void IRsend::sendBangOlufsenRaw(uint32_t aRawData, int_fast8_t aBits, bool aBack
  * @param aBackToBack   If true send data back to back, which cannot be decoded if ENABLE_BEO_WITHOUT_FRAME_GAP is NOT defined
  * @param aUseDatalinkTiming    if false it does the same as sendBangOlufsenRaw()
  */
-void IRsend::sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bool aBackToBack, bool aUseDatalinkTiming) {
+void IRsend::sendBangOlufsenRawDataLink(uint64_t aRawData, uint_fast8_t aNumberOfBitsToSend, bool aBackToBack,
+        bool aUseDatalinkTiming) {
 #if defined(USE_NO_SEND_PWM) || BEO_KHZ == 38 // BEO_KHZ == 38 is for unit test which runs the B&O protocol with 38 kHz instead 0f 455 kHz
     uint16_t tSendBEOMarkLength = aUseDatalinkTiming ? BEO_DATALINK_BIT_MARK : BEO_BIT_MARK;
 
@@ -269,7 +279,7 @@ void IRsend::sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bo
     bool tLastBitValueWasOne = false;
 
 // Header / Data
-    uint32_t mask = 1UL << (aBits - 1);
+    uint32_t mask = 1UL << (aNumberOfBitsToSend - 1);
     for (; mask; mask >>= 1) {
         if (tLastBitValueWasOne && !(aRawData & mask)) {
             mark(tSendBEOMarkLength);
@@ -292,7 +302,7 @@ void IRsend::sendBangOlufsenRawDataLink(uint64_t aRawData, int_fast8_t aBits, bo
 
 #else
     (void) aRawData;
-    (void) aBits;
+    (void) aNumberOfBitsToSend;
     (void) aUseDatalinkTiming;
     (void) aBackToBack;
 #endif

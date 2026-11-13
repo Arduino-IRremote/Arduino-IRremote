@@ -26,8 +26,8 @@
  *          IrSender.mark(MarkMicros)
  *          IrSender.space(SpaceMicros);
  *
- * Or send it by filling a DecodedRawDataArray and with the sendPulseDistanceWidthFromArray() function as in SendDemo example line 175:
- * https://github.com/Arduino-IRremote/Arduino-IRremote/blob/d51b540cb2ddf1424888d2d9e6b62fe1ef46859d/examples/SendDemo/SendDemo.ino#L175
+ * Or send it by filling a DecodedRawDataArray and with the sendPulseDistanceWidthFromArray() function as in SendDemo example line 226:
+ * https://github.com/Arduino-IRremote/Arduino-IRremote/blob/d51b540cb2ddf1424888d2d9e6b62fe1ef46859d/examples/SendDemo/SendDemo.ino#L226
  * sendPulseDistanceWidthFromArray(uint_fast8_t aFrequencyKHz, unsigned int aHeaderMarkMicros,
  *         unsigned int aHeaderSpaceMicros, unsigned int aOneMarkMicros, unsigned int aOneSpaceMicros, unsigned int aZeroMarkMicros,
  *         unsigned int aZeroSpaceMicros, uint32_t *aDecodedRawDataArray, unsigned int aNumberOfBits, uint8_t aFlags,
@@ -74,7 +74,7 @@
 #define DISTANCE_WIDTH_MAXIMUM_REPEAT_DISTANCE_MICROS       100000 // 100 ms, bit it is just a guess
 #endif
 
-//#define SHOW_DISTANCE_WIDTH_DECODER_ERRORS // Prints errors which prevents data to be decoded as distance width data
+//#define SHOW_DISTANCE_WIDTH_DECODER_ERRORS // Prints errors which prevents data to be decoded as distance width data. Requires 520 bytes program memory.
 
 #if !defined(DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE)
 #  if (defined(RAMSIZE) && RAMSIZE <= 0x800) || (defined(RAMEND) && RAMEND <= 0x8FF)
@@ -153,8 +153,12 @@ void printDurations(uint8_t aArray[], uint8_t aMaxIndex) {
  * @return false if more than 2 distinct duration values found
  */
 bool aggregateArrayCounts(uint8_t aArray[], uint8_t aMaxIndex, uint8_t *aShortIndex, uint8_t *aLongIndex) {
-    uint8_t tSum = 0;
-    uint16_t tWeightedSum = 0;
+    uint16_t tSum = 0; // With receive buffer of 750 we have 375 timings
+#if (DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE <= 50)
+    uint16_t tWeightedSum = 0; // aMaxIndex is currently 50 => tWeightedSum <= 375 * 50
+#else
+    uint32_t tWeightedSum = 0;
+#endif
     uint8_t tGapCount = 0;
     for (uint_fast8_t i = 0; i <= aMaxIndex; i++) {
         uint8_t tCurrentDurations = aArray[i];
@@ -207,6 +211,8 @@ bool IRrecv::decodeDistanceWidth() {
     /*
      * Array for up to 49 ticks / 2500 us (or 199  ticks / 10 ms us if RAM > 2k)
      * tick array index 0 covers mark or space durations from 0 to 49 us, and index 49 from 2450 to 2499 us
+     * Theoretically it can overflow if receive buffer size is bigger than 512, but this is not very likely,
+     * because the durations in the real world are spread over 2 or more bins.
      */
     uint8_t tDurationArray[DISTANCE_WIDTH_DECODER_DURATION_ARRAY_SIZE];
 
@@ -317,10 +323,12 @@ bool IRrecv::decodeDistanceWidth() {
         return false;
     }
 
-#if RAW_BUFFER_LENGTH <= (512 -4)
+#if RAW_BUFFER_LENGTH <= (512 - 4)
     uint_fast8_t tNumberOfBits;
+    uint_fast8_t tNumberOfBitsForOneDecode;
 #else
     uint16_t tNumberOfBits;
+    uint16_t tNumberOfBitsForOneDecode;
 #endif
     tNumberOfBits = (decodedIRData.rawlen / 2) - 1;
     if (tSpaceTicksLong > 0) {
@@ -337,8 +345,8 @@ bool IRrecv::decodeDistanceWidth() {
      * Samsung32:   32,  90, 90,  11, 34, 11, 11
      * LG:          28, 180, 84,  10, 32, 10, 11
      * JVC:         16, 168, 84,  10, 32, 10, 10
-     * Kaseikyo:    48.  69, 35,  9, 26,  9,  9
-     * Sony:  12|15|20,  48, 12, 24,  12, 12, 12 // the only known pulse width protocol
+     * Kaseikyo:    48,  69, 35,  9, 26,  9,  9
+     * Sony:  12|15|20,  48, 12, 24,  12, 12, 12 // and the exotic Velux are the only known pulse width protocol
      * Disney monorail
      *   model:      7, 120, 10, 30, 30, 10, 10 // PulseDistanceWidth. Can be seen as direct conversion of a 7 bit serial timing at 250 baud with a 6 ms start bit.
      */
@@ -394,7 +402,7 @@ bool IRrecv::decodeDistanceWidth() {
     IRRawlenType tStartIndex = 3;  // skip leading start bit for decoding.
 
     for (uint_fast8_t i = 0; i <= tNumberOfAdditionalArrayValues; ++i) {
-        uint8_t tNumberOfBitsForOneDecode = tNumberOfBits;
+        tNumberOfBitsForOneDecode = tNumberOfBits;
         /*
          * Decode in 32/64 bit chunks. Only the last chunk can contain less than 32/64 bits
          */
@@ -409,7 +417,7 @@ bool IRrecv::decodeDistanceWidth() {
             decodedIRData.protocol = PULSE_DISTANCE; // NEC etc. + PULSE_DISTANCE_WIDTH
 #if defined(USE_THRESHOLD_DECODER)
             decodeWithThresholdPulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex,
-                    ((tSpaceMicrosLong + tSpaceMicrosShort) / 2) + MARK_EXCESS_MICROS, // MARK_EXCESS_MICROS is 0 here if not explicitly specified by user
+                    ((tSpaceMicrosLong + tSpaceMicrosShort) / 2),
 #else
             decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tSpaceMicrosLong,
 #endif
@@ -430,7 +438,7 @@ bool IRrecv::decodeDistanceWidth() {
             decodedIRData.protocol = PULSE_WIDTH; // Sony
 #if defined(USE_THRESHOLD_DECODER)
             decodeWithThresholdPulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex,
-                    ((tMarkMicrosLong+ tMarkMicrosShort) / 2) - MARK_EXCESS_MICROS, // MARK_EXCESS_MICROS is 0 here if not explicitly specified by user
+                    (tMarkMicrosLong+ tMarkMicrosShort) / 2,
 #else
             decodePulseDistanceWidthData(tNumberOfBitsForOneDecode, tStartIndex, tMarkMicrosLong,
 #endif

@@ -58,14 +58,14 @@
  */
 //#define USE_EXTENDED_NEC_PROTOCOL // Like NEC, but take the 16 bit address as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
 //#define USE_ONKYO_PROTOCOL    // Like NEC, but take the 16 bit address and command each as one 16 bit value and not as 8 bit normal and 8 bit inverted value.
-//#define USE_FAST_PROTOCOL     // Use FAST protocol instead of NEC / ONKYO.
+//#define USE_FAST_PROTOCOL    // Use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC / ONKYO.
 //#define ENABLE_NEC2_REPEATS // Instead of sending / receiving the NEC special repeat code, send / receive the original frame for repeat.
 /*
  * Set compile options to modify the generated code.
  */
 //#define DISABLE_PARITY_CHECKS // Disable parity checks. Saves 48 bytes of program memory.
 //#define USE_CALLBACK_FOR_TINY_RECEIVER  // Call the user provided function "void handleReceivedTinyIRData()" each time a frame or repeat is received.
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
+#include "PinDefinitionsAndMore.h" // Only for IR_RECEIVE_PIN.
 #include "TinyIRReceiver.hpp" // include the code
 
 void setup() {
@@ -99,14 +99,20 @@ void setup() {
 }
 
 void loop() {
-    if (TinyIRReceiverDecode()) {
+    if (decodeTinyIRReceiver()) {
         /*
          * The library has already copied the data used for this output
+         * !!! It might be overwritten (by interrupt) if the next frame arrived before we finish the processing!!!
+         * To avoid this, use:
+         * TinyIRReceiverDataStruct tMySavedData;
+         * if (decodeTinyIRReceiver(&tMySavedData)) {
+         *   printTinyIRReceiverResultMinimal(&Serial, &tMySavedData);
+         *   if (tMySavedData.flags ...
          */
         printTinyIRReceiverResultMinimal(&Serial);
 
 #if !defined(USE_EXTENDED_NEC_PROTOCOL) && !defined(USE_ONKYO_PROTOCOL)
-        if (TinyIRReceiverData.Flags == IRDATA_FLAGS_PARITY_FAILED) {
+        if (TinyIRReceiverData.flags == IRDATA_FLAGS_PARITY_FAILED) {
             Serial.println(F("Parity error, try USE_EXTENDED_NEC_PROTOCOL or USE_ONKYO_PROTOCOL"));
         }
 #endif
@@ -115,12 +121,12 @@ void loop() {
         /*
          * Check the received data and perform actions according to the received command
          */
-        if (TinyIRReceiverData.Flags == IRDATA_FLAGS_IS_REPEAT) {
+        if (TinyIRReceiverData.flags == IRDATA_FLAGS_IS_REPEAT) {
             Serial.println(F("Repeat received. Here you can repeat the same action as before."));
         } else {
-            if (TinyIRReceiverData.Command == 0x10) {
+            if (TinyIRReceiverData.command == 0x10) {
                 // do something
-            } else if (TinyIRReceiverData.Command == 0x11) {
+            } else if (TinyIRReceiverData.command == 0x11) {
                 // do something else
             }
         }
@@ -155,9 +161,9 @@ void handleReceivedTinyIRData() {
     // As an example, print very short output, since we are in an interrupt context and do not want to miss the next interrupts of the repeats coming soon
     printTinyIRReceiverResultMinimal(&Serial);
 #  endif
-    if (TinyIRReceiverData.Command == 0x10) {
+    if (TinyIRReceiverData.command == 0x10) {
         // do something SHORT here
-    } else if (TinyIRReceiverData.Command == 0x11) {
+    } else if (TinyIRReceiverData.command == 0x11) {
         // do something SHORT here too
     }
 }

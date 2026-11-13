@@ -28,15 +28,16 @@
 /*
  * Choose the library to be used for IR receiving
  */
-//#define USE_TINY_IR_RECEIVER // Recommended and default, but only for NEC protocol!!! If disabled and IRMP_INPUT_PIN is defined, the IRMP library is used for decoding
-//#define USE_IRREMOTE_LIBRARY // The IRremote library is used for decoding
+//#define USE_TINY_IR_RECEIVER // Recommended and default, but only for NEC, ONKYO and FAST protocol!!! If disabled and IRMP_INPUT_PIN is defined, the IRMP library is used for decoding
+//#define USE_FAST_PROTOCOL // For TinyReceiver use FAST protocol (no address and 16 bit data, interpreted as 8 bit command and 8 bit inverted command) instead of NEC / ONKYO.
+//#define USE_IRREMOTE_LIBRARY // The IRremote library is used for decoding. Has lower precedence than USE_TINY_IR_RECEIVER.
 //#define USE_IRMP_LIBRARY     // The IRMP library is used for decoding
 //#define DISPATCHER_IR_COMMAND_HAS_MORE_THAN_8_BIT // Enables mapping and dispatching of IR commands consisting of more than 8 bits. Saves up to 160 bytes program memory and 5 bytes RAM + 1 byte RAM per mapping entry.
 #define NO_LED_FEEDBACK_CODE   // We use LED_BUILTIN for command feedback and therefore cannot use is as IR receiving feedback
 #define INFO // To see some informative output of the IRCommandDispatcher library
 //#define DEBUG // To see some additional debug output of the IRCommandDispatcher library
 
-#include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
+#include "PinDefinitionsAndMore.h" // Only for IR_RECEIVE_PIN.
 
 #if defined(INFO) || defined(DEBUG)
 #define USE_DISPATCHER_COMMAND_STRINGS // Enables the printing of command strings. Requires additional 2 bytes RAM for each command mapping. Requires program memory for strings, but saves snprintf() code (1.5k) if INFO or DEBUG is activated, which has no effect if snprintf() is also used in other parts of your program / libraries.

@@ -64,9 +64,9 @@
 //#define DECODE_LEGO_PF      // ~ 300 bytes
 //#define DECODE_MAGIQUEST    // ~ 270 bytes
 //#define DECODE_MARANTZ      // RC5 + MARANTZ: ~ 425 bytes
-//#define DECODE_OPENLASIR    // Modified NEC with 8-bit validated address + 16-bit command. ~ 175 bytes
 //#define DECODE_WHYNTER      // ~ 90 bytes
 
+//#define DECODE_OPENLASIR    // Modified NEC with 8-bit validated address + 16-bit command. ~ 175 bytes. Disables DECODE_NEC and DECODE_ONKYO.
 //#define DECODE_ONKYO        // Decodes NEC and Apple as Onkyo - saves around 90 bytes of program memory, if activated
 //#define DECODE_BEO          // This protocol must always be enabled manually, i.e. it is NOT enabled if no protocol is defined. It prevents decoding of SONY! ~ 430 bytes
 #if FLASHEND >= 0x7FFF  // For 16k flash or more, like ATtiny1604. Code does not fit in program memory of ATtiny85 etc.
@@ -104,12 +104,12 @@
 #endif
 
 //#define NO_LED_FEEDBACK_CODE        // saves 92 bytes program memory
-//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
+//#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1800 bytes program memory and 56 bytes RAM.
 //#define EXCLUDE_EXOTIC_PROTOCOLS    // saves around 650 bytes program memory if all other protocols are active
 //#define USE_THRESHOLD_DECODER       // May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses. Requires additional 1 bytes program memory.
 //#define IR_REMOTE_DISABLE_RECEIVE_COMPLETE_CALLBACK // saves 32 bytes program memory
 //#define USE_16_BIT_TIMING_BUFFER    // Use a 16-bit buffer to preserve values above 12750 us
-#define SHOW_DISTANCE_WIDTH_DECODER_ERRORS  // Prints the reason which prevents data to be decoded as distance width data
+#define SHOW_DISTANCE_WIDTH_DECODER_ERRORS  // Prints the reason which prevents data to be decoded as distance width data. Requires 520 bytes program memory.
 
 // MARK_EXCESS_MICROS is subtracted from all marks and added to all spaces before decoding,
 // to compensate for the signal forming of different IR receiver modules. See also IRremote.hpp line 135.
@@ -169,7 +169,7 @@ void setup() {
     Serial.println(F("Enabling IRin..."));
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
-    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+    IrReceiver.begin(IR_RECEIVE_PIN, USE_DEFAULT_FEEDBACK_LED_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);

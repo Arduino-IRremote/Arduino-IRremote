@@ -6,7 +6,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2015-2025 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
+ * Copyright (c) 2015-2026 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,10 +36,10 @@
 #ifndef _IR_VERSION_HPP
 #define _IR_VERSION_HPP
 
-#define VERSION_IRREMOTE "4.7.1"
-#define VERSION_IRREMOTE_MAJOR 4
-#define VERSION_IRREMOTE_MINOR 7
-#define VERSION_IRREMOTE_PATCH 1
+#define VERSION_IRREMOTE "5.0.0"
+#define VERSION_IRREMOTE_MAJOR 5
+#define VERSION_IRREMOTE_MINOR 0
+#define VERSION_IRREMOTE_PATCH 0
 
 /*
  * Macro to convert 3 version parts into an integer

@@ -58,7 +58,7 @@
  Sum: 31100
  */
 /*
- * Sony is the only protocol using the pulse width encoding, which requires no stop bit
+ * Sony and the exotic Velux are the only protocols using the pulse width encoding, which requires no stop bit
  */
 // see https://www.sbprojects.net/knowledge/ir/sirc.php
 // https://www.mikrocontroller.net/articles/IRMP_-_english#SIRCS
@@ -84,12 +84,12 @@
 #define SONY_SPACE              SONY_UNIT
 
 #define SONY_DURATION_MIN       17400 // SONY_HEADER_MARK + SONY_SPACE + 12 * 2 * SONY_UNIT = 29 * SONY_UNIT
-#define SONY_DURATION_MAX       37200 // SONY_HEADER_MARK + SONY_SPACE + 20 * 3 * SONY_UNIT = 65 * SONY_UNIT
+#define SONY_DURATION_MAX       39000 // SONY_HEADER_MARK + SONY_SPACE + 20 * 3 * SONY_UNIT = 65 * SONY_UNIT
 #define SONY_REPEAT_PERIOD      45000 // Commands are repeated every 45 ms (measured from start to start) for as long as the key on the remote control is held down.
 #define SONY_MAXIMUM_REPEAT_DISTANCE    (SONY_REPEAT_PERIOD - SONY_DURATION_MIN) // 27,6 ms
 
 struct PulseDistanceWidthProtocolConstants const SonyProtocolConstants PROGMEM = { SONY, SONY_KHZ, SONY_HEADER_MARK, SONY_SPACE, SONY_ONE_MARK,
-SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_WIDTH, (SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
+SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_WIDTH, (SONY_REPEAT_PERIOD / MICROS_IN_ONE_MILLISECOND), nullptr };
 
 /************************************
  * Start of send and decode functions
@@ -98,10 +98,10 @@ SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULS
 /**
  * @param numberOfBits should be one of SIRCS_12_PROTOCOL, SIRCS_15_PROTOCOL, SIRCS_20_PROTOCOL. Not checked! 20 -> send 13 address bits
  */
-void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint8_t numberOfBits) {
+void IRsend::sendSony(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint_fast8_t aNumberOfBitsToSend) {
     uint32_t tData = (uint32_t) aAddress << 7 | (aCommand & 0x7F);
     // send 5, 8, 13 address bits LSB first
-    sendPulseDistanceWidth_P(&SonyProtocolConstants, tData, numberOfBits, aNumberOfRepeats);
+    sendPulseDistanceWidth_P(&SonyProtocolConstants, tData, aNumberOfBitsToSend, aNumberOfRepeats);
 }
 
 bool IRrecv::decodeSony() {
@@ -132,90 +132,6 @@ bool IRrecv::decodeSony() {
     checkForRepeatSpaceTicksAndSetFlag(SONY_MAXIMUM_REPEAT_DISTANCE / MICROS_PER_TICK);
 
     return true;
-}
-
-/*********************************************************************************
- * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
- *********************************************************************************/
-
-/*
- * Old version with MSB first data
- */
-#define SONY_DOUBLE_SPACE_USECS    500 // usually see 713 - not using ticks as get number wrap around
-bool IRrecv::decodeSonyMSB(decode_results *aResults) {
-    long data = 0;
-    uint8_t bits = 0;
-    unsigned int offset = 0;  // Dont skip first space, check its size
-
-    if (aResults->rawlen < (2 * SONY_BITS_MIN) + 2) {
-        return false;
-    }
-
-    // Some Sony's deliver repeats fast after first
-    // unfortunately can't spot difference from of repeat from two fast clicks
-    if (aResults->rawbuf[0] < (SONY_DOUBLE_SPACE_USECS / MICROS_PER_TICK)) {
-        DEBUG_PRINTLN(F("IR Gap found"));
-
-        aResults->bits = 0;
-        aResults->value = 0xFFFFFFFF;
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
-        decodedIRData.protocol = SONY;
-        return true;
-    }
-    offset++;
-
-    // Check header "mark"
-    if (!matchMark(aResults->rawbuf[offset], SONY_HEADER_MARK)) {
-        return false;
-    }
-    offset++;
-
-    // MSB first - Not compatible to standard, which says LSB first :-(
-    while (offset + 1 < aResults->rawlen) {
-
-        // First check for the constant space length, we do not have a space at the end of raw data
-        // we are lucky, since the start space is equal the data space.
-        if (!matchSpace(aResults->rawbuf[offset], SONY_SPACE)) {
-            return false;
-        }
-        offset++;
-
-        // bit value is determined by length of the mark
-        if (matchMark(aResults->rawbuf[offset], SONY_ONE_MARK)) {
-            data = (data << 1) | 1;
-        } else if (matchMark(aResults->rawbuf[offset], SONY_ZERO_MARK)) {
-            data = (data << 1) | 0;
-        } else {
-            return false;
-        }
-        offset++;
-        bits++;
-
-    }
-
-    aResults->bits = bits;
-    aResults->value = data;
-    aResults->decode_type = SONY;
-    decodedIRData.protocol = SONY;
-    return true;
-}
-
-/**
- * Old version with MSB first data
- */
-void IRsend::sendSonyMSB(unsigned long data, int nbits) {
-    // Set IR carrier frequency
-    enableIROut (SONY_KHZ);
-
-    // Header
-    mark(SONY_HEADER_MARK);
-    space(SONY_SPACE);
-
-    // Old version with MSB first Data
-    sendPulseDistanceWidthData(SONY_ONE_MARK, SONY_SPACE, SONY_ZERO_MARK, SONY_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
-}
-void IRsend::sendSony(unsigned long data, int nbits) {
-    sendSonyMSB(data, nbits);
 }
 
 /** @}*/

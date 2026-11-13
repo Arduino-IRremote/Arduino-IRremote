@@ -118,7 +118,7 @@
 
 struct PulseDistanceWidthProtocolConstants const KaseikyoProtocolConstants PROGMEM = {KASEIKYO, KASEIKYO_KHZ, KASEIKYO_HEADER_MARK,
     KASEIKYO_HEADER_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ONE_SPACE, KASEIKYO_BIT_MARK, KASEIKYO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE
-    , (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
+    , (KASEIKYO_REPEAT_PERIOD / MICROS_IN_ONE_MILLISECOND), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -128,6 +128,9 @@ struct PulseDistanceWidthProtocolConstants const KaseikyoProtocolConstants PROGM
  * Address can be interpreted as sub-device << 4 + 4 bit device
  */
 void IRsend::sendKaseikyo(uint16_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRepeats, uint16_t aVendorCode) {
+    if(aNumberOfRepeats < 0){
+        aNumberOfRepeats = 0; // Handle the signed aNumberOfRepeats convention here, because FromArray*() does not support it.
+    }
     // Set IR carrier frequency
     enableIROut (KASEIKYO_KHZ); // 37 kHz
 
@@ -232,7 +235,7 @@ bool IRrecv::decodeKaseikyo() {
     tVendorParity = (tVendorParity ^ (tVendorParity >> 4)) & 0xF;
 
     /*
-     * Decode next 32 bits, 8 VendorID parity parity + 12 address (device and subdevice) + 8 command + 8 parity
+     * Decode next 32 bits, 4 VendorID parity + 12 address (device and subdevice) + 8 command + 8 parity
      */
     decodePulseDistanceWidthData_P(&KaseikyoProtocolConstants,
     KASEIKYO_VENDOR_ID_PARITY_BITS + KASEIKYO_ADDRESS_BITS + KASEIKYO_COMMAND_BITS + KASEIKYO_PARITY_BITS,

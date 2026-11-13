@@ -10,7 +10,7 @@
  *  TSOP31238   Mark Excess 0 to +50
  *
  *
- *  Copyright (C) 2019-2020  Armin Joachimsmeyer
+ *  Copyright (C) 2019-2026  Armin Joachimsmeyer
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -32,8 +32,7 @@
 
 #include <Arduino.h>
 
-#define IR_RECEIVE_PIN    2
-//#define IR_RECEIVE_PIN    3
+#define IR_RECEIVE_PIN    3
 
 // Helper macro for getting a macro definition as string
 #if !defined(STR_HELPER) && !defined(STR)

@@ -220,18 +220,6 @@ void loop() {
         IrSender.sendNECRaw(0x03040102, sRepeats);
         delay(DELAY_AFTER_SEND);
 
-        /*
-         * With Send sendNECMSB() you can send your old 32 bit codes.
-         * To convert one into the other, you must reverse the byte positions and then reverse all positions of each byte.
-         * Use bitreverse32Bit().
-         * Example:
-         * 0xCB340102 byte reverse -> 0x020134CB bit reverse-> 40802CD3
-         */
-        Serial.println(F("Send ONKYO with 16 bit address 0x0102 and command 0x34 with old 32 bit format MSB first (0x40802CD3)"));
-        Serial.flush();
-        IrSender.sendNECMSB(0x40802CD3, 32, false);
-        delay(DELAY_AFTER_SEND);
-
         Serial.println(F("Send Panasonic 0xB, 0x10 as 48 bit PulseDistance PGM using ProtocolConstants 1=432|1296, 0=432|432"));
         Serial.flush();
 #  if __INT_WIDTH__ < 32
@@ -502,7 +490,7 @@ void loop() {
      */
     Serial.println(F("Send Lego with 2 channel and with 4 command bits"));
     Serial.flush();
-    IrSender.sendLegoPowerFunctions(sAddress, sCommand, LEGO_MODE_COMBO, true);
+    IrSender.sendLegoPowerFunctions(sAddress, sCommand & 0x0F, true, LEGO_MODE_COMBO);
     delay(DELAY_AFTER_SEND);
 
 #endif // FLASHEND
