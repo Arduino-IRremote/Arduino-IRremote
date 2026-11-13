@@ -127,7 +127,7 @@
 // use BOSEWAVE, we have no SHUZU code
 struct PulseDistanceWidthProtocolConstants const ShuzuProtocolConstants PROGMEM = {BOSEWAVE, 38, SHUZU_HEADER_MARK, SHUZU_HEADER_SPACE,
     SHUZU_BIT_MARK, SHUZU_ONE_SPACE, SHUZU_BIT_MARK, SHUZU_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST, (SHUZU_REPEAT_PERIOD
-            / MICROS_IN_ONE_MILLI), nullptr};
+            / MICROS_IN_ONE_MILLISECOND), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -169,7 +169,7 @@ bool IRrecv::decodeShuzu() {
     decodedIRData.protocol = BOSEWAVE; // we have no SHUZU code
 
     //Check for repeat
-    checkForRepeatSpaceAndSetFlag(SHUZU_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
+    checkForRepeatSpaceAndSetFlag(SHUZU_REPEAT_SPACE / MICROS_IN_ONE_MILLISECOND);
 
     return true;
 }

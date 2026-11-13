@@ -161,11 +161,10 @@ uint32_t IRsend::computeOpenLASIRRawDataAndChecksum(uint8_t aAddress, uint16_t a
 /**
  * Compute the raw 32-bit data for an OpenLASIR frame from 8-bit address, 8-bit DeviceID, 5-bit Mode and 3-bit Data.
  *
- * @param aAddress  8-bit address (Block ID). Only lower 8 bits are used.
  * @param aDeviceID     8-bit Device ID.
  * @param aMode         5-bit Mode.
  * @param aData         3-bit Data (color, etc.).
- * @return 32-bit raw data ready for transmission.
+ * @return 16-bit raw data ready for transmission.
  */
 uint16_t IRsend::computeOpenLASIRRawCommand(uint8_t aDeviceID, uint8_t aMode, uint8_t aData) {
     WordUnion tRawCommand;
@@ -246,7 +245,6 @@ bool IRrecv::decodeOpenLASIR() {
         return false;
     }
 
-#if !defined(DECODE_NEC) // This code is also contained in NEC sources and does also decode LASIR Repeats :-)
     // Check for repeat - here we have another header space length
     if (decodedIRData.rawlen == 4) {
         if (matchSpace(irparams.rawbuf[2], NEC_REPEAT_HEADER_SPACE) && matchMark(irparams.rawbuf[3], NEC_BIT_MARK)) {
@@ -258,7 +256,6 @@ bool IRrecv::decodeOpenLASIR() {
         }
         return false;
     }
-#endif
 
     // Check command header space
     if (!matchSpace(irparams.rawbuf[2], NEC_HEADER_SPACE)) {
@@ -284,10 +281,8 @@ bool IRrecv::decodeOpenLASIR() {
      * Disambiguation with standard NEC:
      * If the command also has a valid inverted pattern (upper 8 bits == ~lower 8 bits),
      * then this looks like a standard NEC frame, not OpenLASIR.
-     * By design, OpenLASIR uses 16-bit commands that should NOT have this property,
-     * so we let the NEC decoder handle these frames instead.
-     * (See OpenLASIR spec: "This is to prevent OpenLASIR packets from causing issues
-     *  with NEC devices except in very rare cases of collisions.")
+     * By design, OpenLASIR uses 16-bit commands that should NOT have this property.
+     * Such frames are rejected, because they are NEC frames.
      */
     if (tValue.UByte.MidHighByte == (uint8_t)(~tValue.UByte.HighByte)) {
         DEBUG_PRINTLN(F("OpenLASIR: Command has valid inverse - looks like standard NEC, skipping"));

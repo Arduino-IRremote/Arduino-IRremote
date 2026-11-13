@@ -1,5 +1,7 @@
 /*
- * SendRawDemo.cpp - demonstrates sending IR codes with sendRaw
+ * SendRawDemo.ino
+ *
+ * Demonstrates sending IR codes with sendRaw
  *
  * This example shows how to send a RAW signal using the IRremote library.
  * The example signal is actually a 32 bit NEC signal.
@@ -13,7 +15,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2024 Armin Joachimsmeyer
+ * Copyright (c) 2020-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

@@ -1,7 +1,7 @@
 /*
  * ADCUtils.h
  *
- *  Copyright (C) 2016-2022  Armin Joachimsmeyer
+ *  Copyright (C) 2016-2026  Armin Joachimsmeyer
  *
  *  This file is part of Arduino-Utils https://github.com/ArminJo/Arduino-Utils.
  *
@@ -16,7 +16,7 @@
  *  See the GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *  along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
  */
 
@@ -42,13 +42,19 @@
 #define ADC_PRESCALE64   6 // 52 microseconds per ADC conversion at 16 MHz
 #define ADC_PRESCALE128  7 // 104 microseconds per ADC conversion at 16 MHz --- Arduino default
 
-// Definitions for 0.1 ms conversion time
+// Definitions for 0.1 ms and 0.026 ms conversion time
 #if (F_CPU == 1000000)
-#define ADC_PRESCALE    ADC_PRESCALE8
+#define ADC_PRESCALE            ADC_PRESCALE8
+#define ADC_PRESCALE_26_MICROS  ADC_PRESCALE2
 #elif (F_CPU == 8000000)
-#define ADC_PRESCALE    ADC_PRESCALE64
+#define ADC_PRESCALE            ADC_PRESCALE64
+#define ADC_PRESCALE_26_MICROS  ADC_PRESCALE16
 #elif (F_CPU == 16000000)
-#define ADC_PRESCALE    ADC_PRESCALE128
+#define ADC_PRESCALE            ADC_PRESCALE128
+#define ADC_PRESCALE_26_MICROS  ADC_PRESCALE32
+#else
+#define ADC_PRESCALE            ADC_PRESCALE128
+#define ADC_PRESCALE_26_MICROS  ADC_PRESCALE32
 #endif
 
 /*
@@ -83,7 +89,7 @@
 #define MASK_FOR_ADC_CHANNELS (_BV(MUX0) | _BV(MUX1) | _BV(MUX2) | _BV(MUX3))
 #endif
 
-// Temperature channel definitions - 1 LSB / 1 degree Celsius
+// Temperature and other special channel definitions - Temperature value is 1 LSB / 1 degree Celsius
 #if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
 #define ADC_TEMPERATURE_CHANNEL_MUX 15
 #define ADC_1_1_VOLT_CHANNEL_MUX    12
@@ -98,33 +104,31 @@
 #define ADC_VCC_4TH_CHANNEL_MUX     13
 #define ADC_CHANNEL_MUX_MASK        0x1F
 
-#elif defined(__AVR_ATmega328P__)
+#elif defined(__AVR_ATmega328P__) || defined(__AVR_ATmega328PB__) || defined(__AVR_ATmega328__) || defined(__AVR_ATmega168__)
 #define ADC_TEMPERATURE_CHANNEL_MUX  8
 #define ADC_1_1_VOLT_CHANNEL_MUX    14
 #define ADC_GND_CHANNEL_MUX         15
 #define ADC_CHANNEL_MUX_MASK        0x0F
 
-#elif defined(__AVR_ATmega644P__)
-#define ADC_TEMPERATURE_CHANNEL_MUX  // not existent
-#define ADC_1_1_VOLT_CHANNEL_MUX    0x1E
-#define ADC_GND_CHANNEL_MUX         0x1F
-#define ADC_CHANNEL_MUX_MASK        0x0F
-
 #elif defined(__AVR_ATmega32U4__)
-#define ADC_TEMPERATURE_CHANNEL_MUX 0x27
-#define ADC_1_1_VOLT_CHANNEL_MUX    0x1E
-#define ADC_GND_CHANNEL_MUX         0x1F
-#define ADC_CHANNEL_MUX_MASK        0x3F
-
-#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644A__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644PA__)
+// ADC_TEMPERATURE_CHANNEL_MUX is intentionally NOT defined because handling is too complicated
 #define ADC_1_1_VOLT_CHANNEL_MUX    0x1E
 #define ADC_GND_CHANNEL_MUX         0x1F
 #define ADC_CHANNEL_MUX_MASK        0x1F
 
+#elif defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1284__) || defined(__AVR_ATmega1284P__) \
+    || defined(__AVR_ATmega644__) || defined(__AVR_ATmega644A__) || defined(__AVR_ATmega644P__) || defined(__AVR_ATmega644PA__)
+// These CPUs have no internal temperature sensor -> ADC_TEMPERATURE_CHANNEL_MUX is intentionally NOT defined
+#define ADC_1_1_VOLT_CHANNEL_MUX    0x1E
+#define ADC_GND_CHANNEL_MUX         0x1F
+#define ADC_CHANNEL_MUX_MASK        0x1F
+
+#  if !defined(INTERNAL)
 #define INTERNAL INTERNAL1V1
+#  endif
 
 #else
-#error "No temperature channel definitions specified for this AVR CPU"
+#error "No temperature and special channel definitions available for this AVR CPU"
 #endif
 
 /*
@@ -169,7 +173,7 @@
 // In contrast to e.g. powered by VIN, which results in almost perfect 5 volt supply
 #endif
 
-extern long sLastVCCCheckMillis;
+extern unsigned long sLastVCCCheckMillis;
 extern uint8_t sVCCTooLowCounter;
 
 uint16_t readADCChannel();
@@ -180,6 +184,8 @@ uint16_t waitAndReadADCChannelWithReference(uint8_t aADCChannelNumber, uint8_t a
 uint16_t waitAndReadADCChannelWithReferenceAndRestoreADMUXAndReference(uint8_t aADCChannelNumber, uint8_t aReference);
 uint16_t readADCChannelWithOversample(uint8_t aADCChannelNumber, uint8_t aOversampleExponent);
 void setADCChannelAndReferenceForNextConversion(uint8_t aADCChannelNumber, uint8_t aReference);
+uint16_t readADCChannelWithReferenceAndPrescalerAndOversample(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aPrescale,
+        uint8_t aOversampleExponent);
 uint16_t readADCChannelWithReferenceOversampleFast(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aOversampleExponent);
 uint32_t readADCChannelMultiSamples(uint8_t aPrescale, uint16_t aNumberOfSamples);
 uint16_t readADCChannelMultiSamplesWithReference(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aNumberOfSamples);
@@ -204,6 +210,7 @@ void readVCCVoltage(void);
 uint16_t getVCCVoltageMillivolt(void);
 void readVCCVoltageMillivolt(void);
 uint16_t getVCCVoltageReadingFor1_1VoltReference(void);
+void printVCCVoltageMillivolt(Print *aSerial, uint16_t aVCCVoltageMillivolt);
 uint16_t printVCCVoltageMillivolt(Print *aSerial);
 void readAndPrintVCCVoltageMillivolt(Print *aSerial);
 
@@ -236,6 +243,5 @@ uint16_t readADCChannelWithReferenceOversample(uint8_t aADCChannelNumber, uint8_
 
 uint16_t getVCCVoltageMillivoltSimple(void);
 float getVCCVoltage(void);
-float getCPUTemperature(void);
 
 #endif // _ADC_UTILS_H

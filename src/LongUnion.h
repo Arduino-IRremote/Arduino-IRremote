@@ -16,7 +16,7 @@
  *  See the GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *  along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
  */
 
@@ -45,8 +45,10 @@ union WordUnion {
     int8_t Bytes[2];
     uint16_t UWord;
     int16_t Word;
-    uint8_t *BytePointer;
-};
+#if __SIZEOF_POINTER__ == 2
+    uint8_t *BytePointer; // Only on 16 bit pointer platforms like AVR, otherwise the union would be enlarged
+#endif
+    };
 #endif // _WORD_UNION_H
 
 #ifndef _LONG_UNION_H
@@ -96,6 +98,9 @@ union LongUnion {
     float Float;
 };
 #endif // _LONG_UNION_H
+
+static_assert(sizeof(WordUnion) == 2, "WordUnion must be 2 bytes");
+static_assert(sizeof(LongUnion) == 4, "LongUnion must be 4 bytes");
 
 #ifndef _LONG_LONG_UNION_H
 #define _LONG_LONG_UNION_H

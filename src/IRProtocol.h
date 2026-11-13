@@ -35,7 +35,9 @@
 #include <stdint.h>
 
 /*
- * If activated, BANG_OLUFSEN, BOSEWAVE, MAGIQUEST, WHYNTER, FAST and LEGO_PF are excluded in decoding and in sending with IrSender.write
+ * If activated, BOSEWAVE, FAST, LEGO_PF, MAGIQUEST, MARANTZ and WHYNTER are excluded in decode()
+ * and BOSEWAVE, FAST, LEGO_PF, MAGIQUEST and OPENLASIR in sending with IrSender.write().
+ * MARANTZ, WHYNTER and OTHER (e.g. Velux) are not supported by IrSender.write().
  */
 //#define EXCLUDE_EXOTIC_PROTOCOLS
 /*
@@ -56,7 +58,7 @@
 || defined(DECODE_SONY) || defined(DECODE_RC5) || defined(DECODE_RC6) \
 || defined(DECODE_DISTANCE_WIDTH) || defined(DECODE_HASH) || defined(DECODE_BOSEWAVE) \
 || defined(DECODE_LEGO_PF) || defined(DECODE_MAGIQUEST) || defined(DECODE_WHYNTER) || defined(DECODE_MARANTZ) || defined(DECODE_FAST) \
-|| defined(DECODE_OPENLASIR)))
+|| defined(DECODE_OPENLASIR) || defined(DECODE_BEO) ))
 /*
  * If no protocol is explicitly enabled, we enable all protocols
  * In alphabetic order:
@@ -77,22 +79,27 @@
 #define DECODE_LEGO_PF      // ~ 300 bytes
 #define DECODE_MAGIQUEST    // ~ 270 bytes
 #define DECODE_MARANTZ      // RC5 + MARANTZ: ~ 425 bytes
-#define DECODE_OPENLASIR    // Modified NEC with 8-bit validated address + 16-bit command. ~ 175 bytes
 #define DECODE_WHYNTER      // ~ 90 bytes
 #    endif
 
 #    if !defined(EXCLUDE_UNIVERSAL_PROTOCOLS)
-#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols ~ 2275 bytes
+#define DECODE_DISTANCE_WIDTH // Universal decoder for pulse distance width protocols ~ 1800 bytes
 #define DECODE_HASH         // special decoder for all protocols ~ 250 bytes
 #    endif
 #  endif
 #endif // !defined(NO_DECODER)
 
-//#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly. It prevents decoding of SONY!
-
-#if defined(DECODE_NEC) && !(~(~DECODE_NEC + 0) == 0 && ~(~DECODE_NEC + 1) == 1)
-#warning "The macros DECODE_XXX no longer require a value. Decoding is now switched by defining / non defining the macro."
+//#define DECODE_OPENLASIR   // If enabled, DECODE_NEC and DECODE_ONKYO are disabled, because they use the same physical protocol
+#if defined(DECODE_OPENLASIR) && (defined(DECODE_NEC) || defined(DECODE_ONKYO))
+#warning DECODE_OPENLASIR is defined and excludes DECODE_NEC and DECODE_ONKYO -> disable DECODE_NEC and DECODE_ONKYO
+#  if defined(DECODE_NEC)
+#undef DECODE_NEC
+#  endif
+#  if defined(DECODE_ONKYO)
+#undef DECODE_ONKYO
+#  endif
 #endif
+//#define DECODE_BEO // Bang & Olufsen protocol always must be enabled explicitly. It prevents decoding of SONY!
 
 /**
  * An enum consisting of all supported formats.
@@ -131,7 +138,6 @@ struct DistanceWidthTimingInfoStruct {
 #define IRDATA_FLAGS_IS_AUTO_REPEAT     0x02 ///< The current repeat frame is a repeat, that is always sent after a regular frame and cannot be avoided. Only specified for protocols DENON, and LEGO.
 #define IRDATA_FLAGS_PARITY_FAILED      0x04 ///< The current (autorepeat) frame violated parity check.
 #define IRDATA_FLAGS_TOGGLE_BIT         0x08 ///< Is set if RC5 or RC6 toggle bit is set.
-#define IRDATA_TOGGLE_BIT_MASK          0x08 ///< deprecated -is set if RC5 or RC6 toggle bit is set.
 #define IRDATA_FLAGS_EXTRA_INFO         0x10 ///< There is extra info not contained in address and data (e.g. Kaseikyo unknown vendor ID, or in decodedRawDataArray).
 #define IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT 0x20 ///< Here we have a repeat of type NEC2 or SamsungLG
 #define IRDATA_FLAGS_WAS_OVERFLOW       0x40 ///< irparams.rawlen is set to 0 in this case to avoid endless OverflowFlag.
@@ -146,7 +152,7 @@ struct PulseDistanceWidthProtocolConstants {
     uint_fast8_t FrequencyKHz;
     DistanceWidthTimingInfoStruct DistanceWidthTimingInfo;
     uint8_t Flags;
-    unsigned int RepeatPeriodMillis; // Time between start of two frames. Thus independent from frame length.
+    unsigned int RepeatPeriodMillis; // Time between start of two frames. Thus independent from frame length. Used only for sending.
     void (*SpecialSendRepeatFunction)(); // using non member functions here saves up to 250 bytes for send demo
 //    void (IRsend::*SpecialSendRepeatFunction)();
 };
@@ -155,7 +161,7 @@ struct PulseDistanceWidthProtocolConstants {
  */
 #define PROTOCOL_IS_PULSE_DISTANCE      0x00
 #define PROTOCOL_IS_PULSE_DISTANCE_WIDTH 0x00 // Can often be decoded successfully as pulse distance
-#define PROTOCOL_IS_PULSE_WIDTH         0x10  // Currently only Sony protocol
+#define PROTOCOL_IS_PULSE_WIDTH         0x10  // Currently only Sony (and Velux) protocol
 #define PROTOCOL_IS_PULSE_WIDTH_MASK    PROTOCOL_IS_PULSE_WIDTH
 #define SUPPRESS_STOP_BIT               0x20 // Stop bit is otherwise sent for all pulse distance protocols, i.e. aOneSpaceMicros != aZeroSpaceMicros.
 #define PROTOCOL_IS_MSB_FIRST           IRDATA_FLAGS_IS_MSB_FIRST

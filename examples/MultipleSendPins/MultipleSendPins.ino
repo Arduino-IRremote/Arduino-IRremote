@@ -1,10 +1,10 @@
 /*
- * MultipleSendPins.cpp
+ * MultipleSendPins.ino
  *
  *  Demonstrates sending IR codes toggling between 2 different send pins.
  *  Based on SimpleSender.
  *
- *  Copyright (C) 2025  Armin Joachimsmeyer
+ *  Copyright (C) 2025-2026  Armin Joachimsmeyer
  *
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
  *
@@ -69,10 +69,11 @@ void loop() {
 //    Serial.println(F("Send 32 bit LSB 0xCB340102 with NECRaw()"));
 //    IrSender.sendNECRaw(0xCB340102, sRepeats);
     /*
-     * If you want to send an "old" MSB HEX value used by IRremote versions before 3.0 like e.g. 0x40802CD3 you must use sendNECMSB()
+     * If you want to send an "old" MSB HEX value used by IRremote versions before 3.0 like e.g. 0x40802CD3 you must use bitreverse32Bit()
      */
-//    Serial.println(F("Send old 32 bit MSB 0x40802CD3 with sendNECMSB()"));
-//    IrSender.sendNECMSB(0x40802CD3, 32, sRepeats);
+//    Serial.println(F("Send old 32 bit MSB 0x40802CD3 with bitreverse32Bit()"));
+//    IrSender.sendNECRaw(bitreverse32Bit(0x40802CD3), sRepeats);
+
     /*
      * Increment send values
      */

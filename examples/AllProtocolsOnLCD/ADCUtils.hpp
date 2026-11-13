@@ -8,7 +8,7 @@
  *
  *  This file is part of Arduino-Utils https://github.com/ArminJo/Arduino-Utils.
  *
- *  ArduinoUtils is free software: you can redistribute it and/or modify
+ *  Arduino-Utils is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
@@ -19,7 +19,7 @@
  *  See the GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *  along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
 #ifndef _ADC_UTILS_HPP
@@ -47,19 +47,6 @@
 #define ADC_INTERNAL_REFERENCE_MILLIVOLT    1100 // Change to value measured at the AREF pin.
 #endif
 
-// Union to speed up the combination of low and high bytes to a word
-// it is not optimal since the compiler still generates 2 unnecessary moves
-// but using  -- value = (high << 8) | low -- gives 5 unnecessary instructions
-union WordUnionForADCUtils {
-    struct {
-        uint8_t LowByte;
-        uint8_t HighByte;
-    } UByte;
-    uint16_t UWord;
-    int16_t Word;
-    uint8_t *BytePointer;
-};
-
 /*
  * Enable this to see information on each call.
  * Since there should be no library which uses Serial, it should only be enabled for development purposes.
@@ -82,7 +69,7 @@ float sVCCVoltage;
 uint16_t sVCCVoltageMillivolt; // Set by readVCCVoltageMillivoltSimple(), readVCCVoltageMillivolt()
 
 // for isVCCTooLowMultipleTimes()
-long sLastVCCCheckMillis;
+unsigned long sLastVCCCheckMillis;
 uint8_t sVCCTooLowCounter = 0;
 
 /*
@@ -90,8 +77,6 @@ uint8_t sVCCTooLowCounter = 0;
  * Use previous settings
  */
 uint16_t readADCChannel() {
-    WordUnionForADCUtils tUValue;
-
     // ADCSRB = 0; // Only active if ADATE is set to 1.
     // ADSC-StartConversion ADIF-Reset Interrupt Flag - NOT free running mode
     ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADIF) | ADC_PRESCALE);
@@ -99,38 +84,19 @@ uint16_t readADCChannel() {
     // wait for single conversion to finish
     loop_until_bit_is_clear(ADCSRA, ADSC);
 
-    // Get value
-    tUValue.UByte.LowByte = ADCL;
-    tUValue.UByte.HighByte = ADCH;
-    return tUValue.UWord;
-    //    return ADCL | (ADCH <<8); // needs 4 bytes more
+    return ADCW;
 }
 
 /*
  * Use new channel aADCChannelNumber, but do not wait for channel switching
  */
 uint16_t readADCChannel(uint8_t aADCChannelNumber) {
-    WordUnionForADCUtils tUValue;
-    ADMUX = aADCChannelNumber | (DEFAULT << SHIFT_VALUE_FOR_REFERENCE);
-
-    // ADCSRB = 0; // Only active if ADATE is set to 1.
-    // ADSC-StartConversion ADIF-Reset Interrupt Flag - NOT free running mode
-    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADIF) | ADC_PRESCALE);
-
-    // wait for single conversion to finish
-    loop_until_bit_is_clear(ADCSRA, ADSC);
-
-    // Get value
-    tUValue.UByte.LowByte = ADCL;
-    tUValue.UByte.HighByte = ADCH;
-    return tUValue.UWord;
-    //    return ADCL | (ADCH <<8); // needs 4 bytes more
+    return readADCChannelWithReference(aADCChannelNumber, DEFAULT);
 }
 /*
  * Conversion time is defined as 0.104 milliseconds by ADC_PRESCALE in ADCUtils.h.
  */
 uint16_t readADCChannelWithReference(uint8_t aADCChannelNumber, uint8_t aReference) {
-    WordUnionForADCUtils tUValue;
     ADMUX = aADCChannelNumber | (aReference << SHIFT_VALUE_FOR_REFERENCE);
 
     // ADCSRB = 0; // Only active if ADATE is set to 1.
@@ -140,27 +106,11 @@ uint16_t readADCChannelWithReference(uint8_t aADCChannelNumber, uint8_t aReferen
     // wait for single conversion to finish
     loop_until_bit_is_clear(ADCSRA, ADSC);
 
-    // Get value
-    tUValue.UByte.LowByte = ADCL;
-    tUValue.UByte.HighByte = ADCH;
-    return tUValue.UWord;
+    return ADCW;
 }
 
 uint16_t readADCChannelWithReferenceUsingInternalReference(uint8_t aADCChannelNumber) {
-    WordUnionForADCUtils tUValue;
-    ADMUX = aADCChannelNumber | (INTERNAL << SHIFT_VALUE_FOR_REFERENCE);
-
-    // ADCSRB = 0; // Only active if ADATE is set to 1.
-    // ADSC-StartConversion ADIF-Reset Interrupt Flag - NOT free running mode
-    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADIF) | ADC_PRESCALE);
-
-    // wait for single conversion to finish
-    loop_until_bit_is_clear(ADCSRA, ADSC);
-
-    // Get value
-    tUValue.UByte.LowByte = ADCL;
-    tUValue.UByte.HighByte = ADCH;
-    return tUValue.UWord;
+    return waitAndReadADCChannelWithReference(aADCChannelNumber, INTERNAL);
 }
 /*
  * Conversion time is defined as 0.104 milliseconds by ADC_PRESCALE in ADCUtils.h.
@@ -178,7 +128,8 @@ uint16_t waitAndReadADCChannelWithReference(uint8_t aADCChannelNumber, uint8_t a
 uint16_t waitAndReadADCChannelWithReferenceAndRestoreADMUXAndReference(uint8_t aADCChannelNumber, uint8_t aReference) {
     uint8_t tOldADMUX = checkAndWaitForReferenceAndChannelToSwitch(aADCChannelNumber, aReference);
     uint16_t tResult = readADCChannelWithReference(aADCChannelNumber, aReference);
-    checkAndWaitForReferenceAndChannelToSwitch(tOldADMUX & MASK_FOR_ADC_CHANNELS, tOldADMUX >> SHIFT_VALUE_FOR_REFERENCE);
+    checkAndWaitForReferenceAndChannelToSwitch(tOldADMUX & ADC_CHANNEL_MUX_MASK,
+            (tOldADMUX & MASK_FOR_ADC_REFERENCE) >> SHIFT_VALUE_FOR_REFERENCE);
     return tResult;
 }
 
@@ -245,24 +196,18 @@ uint8_t checkAndWaitForReferenceAndChannelToSwitch(uint8_t aADCChannelNumber, ui
     return tOldADMUX;
 }
 
-/*
- * Oversample and multiple samples only makes sense if you expect a noisy input signal
- * It does NOT increase the precision of the measurement, since the ADC has insignificant noise
- */
-uint16_t readADCChannelWithOversample(uint8_t aADCChannelNumber, uint8_t aOversampleExponent) {
-    return readADCChannelWithReferenceOversample(aADCChannelNumber, DEFAULT, aOversampleExponent);
-}
+uint16_t readADCChannelWithReferenceAndPrescalerAndOversample(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aPrescale,
+        uint8_t aOversampleExponent) {
+    if (aOversampleExponent > 6) {
+        aOversampleExponent = 6;
+    }
 
-/*
- * Conversion time is defined as 0.104 milliseconds by ADC_PRESCALE in ADCUtils.h.
- */
-uint16_t readADCChannelWithReferenceOversample(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aOversampleExponent) {
     uint16_t tSumValue = 0;
     ADMUX = aADCChannelNumber | (aReference << SHIFT_VALUE_FOR_REFERENCE);
 
     ADCSRB = 0; // Free running mode. Only active if ADATE is set to 1.
     // ADSC-StartConversion ADATE-AutoTriggerEnable ADIF-Reset Interrupt Flag
-    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIF) | ADC_PRESCALE);
+    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIF) | aPrescale);
 
     uint8_t tCount = _BV(aOversampleExponent);
     for (uint8_t i = 0; i < tCount; i++) {
@@ -274,8 +219,7 @@ uint16_t readADCChannelWithReferenceOversample(uint8_t aADCChannelNumber, uint8_
 
         ADCSRA |= _BV(ADIF); // clear bit to enable recognizing next conversion has finished
         // Add value
-        tSumValue += ADCL | (ADCH << 8); // using WordUnionForADCUtils does not save space here
-        // tSumValue += (ADCH << 8) | ADCL; // this does NOT work!
+        tSumValue += ADCW; // using WordUnionForADCUtils does not save space here
     }
     ADCSRA &= ~_BV(ADATE); // Disable auto-triggering (free running mode)
     // return rounded value
@@ -283,99 +227,31 @@ uint16_t readADCChannelWithReferenceOversample(uint8_t aADCChannelNumber, uint8_
 }
 
 /*
- * Use ADC_PRESCALE32 which gives 26 us conversion time and good linearity for 16 MHz Arduino
+ * Oversample and multiple samples only makes sense if you expect a noisy input signal
+ * It does NOT increase the precision of the measurement, since the ADC has insignificant noise
+ */
+uint16_t readADCChannelWithOversample(uint8_t aADCChannelNumber, uint8_t aOversampleExponent) {
+    return readADCChannelWithReferenceAndPrescalerAndOversample(aADCChannelNumber, DEFAULT, ADC_PRESCALE, aOversampleExponent);
+}
+
+/*
+ * Conversion time is defined as 0.104 milliseconds by ADC_PRESCALE in ADCUtils.h.
+ */
+uint16_t readADCChannelWithReferenceOversample(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aOversampleExponent) {
+    return readADCChannelWithReferenceAndPrescalerAndOversample(aADCChannelNumber, aReference, ADC_PRESCALE, aOversampleExponent);
+}
+/*
+ * Use ADC_PRESCALE_26_MICROS which gives 26 us conversion time and good linearity for 16 MHz Arduino
  */
 uint16_t readADCChannelWithReferenceOversampleFast(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aOversampleExponent) {
-    uint16_t tSumValue = 0;
-    ADMUX = aADCChannelNumber | (aReference << SHIFT_VALUE_FOR_REFERENCE);
-
-    ADCSRB = 0; // Free running mode. Only active if ADATE is set to 1.
-    // ADSC-StartConversion ADATE-AutoTriggerEnable ADIF-Reset Interrupt Flag
-    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIF) | ADC_PRESCALE32);
-
-    uint8_t tCount = _BV(aOversampleExponent);
-    for (uint8_t i = 0; i < tCount; i++) {
-        /*
-         * wait for free running conversion to finish.
-         * Do not wait for ADSC here, since ADSC is only low for 1 ADC Clock cycle on free running conversion.
-         */
-        loop_until_bit_is_set(ADCSRA, ADIF);
-
-        ADCSRA |= _BV(ADIF); // clear bit to enable recognizing next conversion has finished
-        // Add value
-        tSumValue += ADCL | (ADCH << 8); // using WordUnionForADCUtils does not save space here
-        // tSumValue += (ADCH << 8) | ADCL; // this does NOT work!
-    }
-    ADCSRA &= ~_BV(ADATE); // Disable auto-triggering (free running mode)
-    return ((tSumValue + (tCount >> 1)) >> aOversampleExponent);
-}
-
-/*
- * Returns sum of all sample values
- * Conversion time is defined as 0.104 milliseconds for 16 MHz Arduino by ADC_PRESCALE (=ADC_PRESCALE128) in ADCUtils.h.
- * @ param aNumberOfSamples If > 64 an overflow may occur.
- */
-uint16_t readADCChannelMultiSamplesWithReference(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aNumberOfSamples) {
-    uint16_t tSumValue = 0;
-    ADMUX = aADCChannelNumber | (aReference << SHIFT_VALUE_FOR_REFERENCE);
-
-    ADCSRB = 0; // Free running mode. Only active if ADATE is set to 1.
-    // ADSC-StartConversion ADATE-AutoTriggerEnable ADIF-Reset Interrupt Flag
-    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIF) | ADC_PRESCALE);
-
-    for (uint8_t i = 0; i < aNumberOfSamples; i++) {
-        /*
-         * wait for free running conversion to finish.
-         * Do not wait for ADSC here, since ADSC is only low for 1 ADC Clock cycle on free running conversion.
-         */
-        loop_until_bit_is_set(ADCSRA, ADIF);
-
-        ADCSRA |= _BV(ADIF); // clear bit to enable recognizing next conversion has finished
-        // Add value
-        tSumValue += ADCL | (ADCH << 8); // using WordUnionForADCUtils does not save space here
-        // tSumValue += (ADCH << 8) | ADCL; // this does NOT work!
-    }
-    ADCSRA &= ~_BV(ADATE); // Disable auto-triggering (free running mode)
-    return tSumValue;
-}
-
-/*
- * Returns sum of all sample values
- * Conversion time is defined as 0.104 milliseconds for 16 MHz Arduino for ADC_PRESCALE128 in ADCUtils.h.
- * @ param aPrescale can be one of ADC_PRESCALE2, ADC_PRESCALE4, 8, 16, 32, 64, 128.
- *                   ADC_PRESCALE32 is recommended for excellent linearity and fast readout of 26 microseconds
- * @ param aNumberOfSamples If > 16k an overflow may occur.
- */
-uint32_t readADCChannelMultiSamplesWithReferenceAndPrescaler(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aPrescale,
-        uint16_t aNumberOfSamples) {
-    uint32_t tSumValue = 0;
-    ADMUX = aADCChannelNumber | (aReference << SHIFT_VALUE_FOR_REFERENCE);
-
-    ADCSRB = 0; // Free running mode. Only active if ADATE is set to 1.
-    // ADSC-StartConversion ADATE-AutoTriggerEnable ADIF-Reset Interrupt Flag
-    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIF) | aPrescale);
-
-    for (uint16_t i = 0; i < aNumberOfSamples; i++) {
-        /*
-         * wait for free running conversion to finish.
-         * Do not wait for ADSC here, since ADSC is only low for 1 ADC Clock cycle on free running conversion.
-         */
-        loop_until_bit_is_set(ADCSRA, ADIF);
-
-        ADCSRA |= _BV(ADIF); // clear bit to enable recognizing next conversion has finished
-        // Add value
-        tSumValue += ADCL | (ADCH << 8); // using WordUnionForADCUtils does not save space here
-        // tSumValue += (ADCH << 8) | ADCL; // this does NOT work!
-    }
-    ADCSRA &= ~_BV(ADATE); // Disable auto-triggering (free running mode)
-    return tSumValue;
+    return readADCChannelWithReferenceAndPrescalerAndOversample(aADCChannelNumber, aReference, ADC_PRESCALE_26_MICROS,
+            aOversampleExponent);
 }
 
 /*
  * Returns sum of all sample values
  * Assumes, that channel and reference are still set to the right values
  * !!!We do NOT disable interrupts here!!!
- * @ param aNumberOfSamples If > 16k an overflow may occur.
  */
 uint32_t readADCChannelMultiSamples(uint8_t aPrescale, uint16_t aNumberOfSamples) {
     uint32_t tSumValue = 0;
@@ -393,14 +269,36 @@ uint32_t readADCChannelMultiSamples(uint8_t aPrescale, uint16_t aNumberOfSamples
 
         ADCSRA |= _BV(ADIF); // clear bit to enable recognizing next conversion has finished
         // Add value
-        tSumValue += ADCL | (ADCH << 8); // using WordUnionForADCUtils does not save space here
-        // tSumValue += (ADCH << 8) | ADCL; // this does NOT work!
+        tSumValue += ADCW; // using WordUnionForADCUtils does not save space here
     }
     ADCSRA &= ~_BV(ADATE); // Disable auto-triggering (free running mode)
     return tSumValue;
 }
+
 /*
- * use ADC_PRESCALE32 which gives 26 us conversion time and good linearity
+ * Returns sum of all sample values
+ * Conversion time is defined as 0.104 milliseconds for 16 MHz Arduino for ADC_PRESCALE128 in ADCUtils.h.
+ * @ param aPrescale can be one of ADC_PRESCALE2, ADC_PRESCALE4, 8, 16, 32, 64, 128.
+ *                   ADC_PRESCALE_26_MICROS is recommended for excellent linearity and fast readout of 26 microseconds
+ */
+uint32_t readADCChannelMultiSamplesWithReferenceAndPrescaler(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aPrescale,
+        uint16_t aNumberOfSamples) {
+    ADMUX = aADCChannelNumber | (aReference << SHIFT_VALUE_FOR_REFERENCE);
+    return readADCChannelMultiSamples(aPrescale, aNumberOfSamples);
+}
+
+/*
+ * Returns sum of all sample values
+ * Conversion time is defined as 0.104 milliseconds for 16 MHz Arduino by ADC_PRESCALE (=ADC_PRESCALE128) in ADCUtils.h.
+ * @ param aNumberOfSamples If > 64 an overflow may occur.
+ */
+uint16_t readADCChannelMultiSamplesWithReference(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aNumberOfSamples) {
+    ADMUX = aADCChannelNumber | (aReference << SHIFT_VALUE_FOR_REFERENCE);
+    return readADCChannelMultiSamples(ADC_PRESCALE, aNumberOfSamples);
+}
+
+/*
+ * use ADC_PRESCALE_26_MICROS which gives 26 us conversion time and good linearity
  * @return the maximum value of aNumberOfSamples samples.
  */
 uint16_t readADCChannelWithReferenceMax(uint8_t aADCChannelNumber, uint8_t aReference, uint16_t aNumberOfSamples) {
@@ -410,7 +308,7 @@ uint16_t readADCChannelWithReferenceMax(uint8_t aADCChannelNumber, uint8_t aRefe
 
     ADCSRB = 0; // Free running mode. Only active if ADATE is set to 1.
     // ADSC-StartConversion ADATE-AutoTriggerEnable ADIF-Reset Interrupt Flag
-    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIF) | ADC_PRESCALE32);
+    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADATE) | _BV(ADIF) | ADC_PRESCALE_26_MICROS);
 
     for (uint16_t i = 0; i < aNumberOfSamples; i++) {
         /*
@@ -421,7 +319,7 @@ uint16_t readADCChannelWithReferenceMax(uint8_t aADCChannelNumber, uint8_t aRefe
 
         ADCSRA |= _BV(ADIF); // clear bit to enable recognizing next conversion has finished
         // check value
-        tADCValue = ADCL | (ADCH << 8);
+        tADCValue = ADCW;
         if (tADCValue > tMaximum) {
             tMaximum = tADCValue;
         }
@@ -431,7 +329,7 @@ uint16_t readADCChannelWithReferenceMax(uint8_t aADCChannelNumber, uint8_t aRefe
 }
 
 /*
- * use ADC_PRESCALE32 which gives 26 us conversion time and good linearity
+ * ADC_PRESCALE_26_MICROS always gives 26 us conversion time and good linearity
  * @return the maximum value during aMicrosecondsToAquire measurement.
  */
 uint16_t readADCChannelWithReferenceMaxMicros(uint8_t aADCChannelNumber, uint8_t aReference, uint16_t aMicrosecondsToAquire) {
@@ -440,84 +338,39 @@ uint16_t readADCChannelWithReferenceMaxMicros(uint8_t aADCChannelNumber, uint8_t
 }
 
 /*
- * aMaxRetries = 255 -> try forever
- * @return (tMax + tMin) / 2
+ * Reads until the last 4 values differ by at most aAllowedDifference.
+ * aMaxRetries = number of additional reads after the first 4, 255 -> try forever
+ * @return (tMax + tMin) / 2 of the last 4 values
  */
 uint16_t readUntil4ConsecutiveValuesAreEqual(uint8_t aADCChannelNumber, uint8_t aReference, uint8_t aDelay,
         uint8_t aAllowedDifference, uint8_t aMaxRetries) {
-    int tValues[4]; // last value is in tValues[3]
-    int tMin;
-    int tMax;
+    uint16_t tValues[4];
+    uint16_t tMin, tMax;
+    uint_fast8_t tIndex = 0;
 
-    /*
-     * Initialize first 4 values before checking
-     */
-    tValues[0] = readADCChannelWithReference(aADCChannelNumber, aReference);
-    for (int i = 1; i < 4; ++i) {
+    while (true) {
+        tValues[tIndex & 0x03] = readADCChannelWithReference(aADCChannelNumber, aReference);
+        if (++tIndex >= 4) { // buffer is filled -> check
+            if (tIndex == 8) {
+                tIndex = 4; // keep index in range 4 to 7 to avoid overflow
+            }
+            tMin = tMax = tValues[0];
+            for (uint_fast8_t i = 1; i < 4; ++i) {
+                if (tValues[i] < tMin) {
+                    tMin = tValues[i];
+                }
+                if (tValues[i] > tMax) {
+                    tMax = tValues[i];
+                }
+            }
+            if ((tMax - tMin) <= aAllowedDifference || (aMaxRetries != 255 && aMaxRetries-- == 0)) {
+                break;
+            }
+        }
         if (aDelay != 0) {
-            delay(aDelay); // Minimum is only 3 delays!
+            delay(aDelay);
         }
-        tValues[i] = readADCChannelWithReference(aADCChannelNumber, aReference);
     }
-
-    do {
-        /*
-         * Get min and max of the last 4 values
-         */
-        tMin = READING_FOR_AREF;
-        tMax = 0;
-        for (uint_fast8_t i = 0; i < 4; ++i) {
-            if (tValues[i] < tMin) {
-                tMin = tValues[i];
-            }
-            if (tValues[i] > tMax) {
-                tMax = tValues[i];
-            }
-        }
-        /*
-         * check for terminating condition
-         */
-        if ((tMax - tMin) <= aAllowedDifference) {
-            break;
-        } else {
-            /*
-             * Get next value
-             */
-//            Serial.print("Difference=");
-//            Serial.println(tMax - tMin);
-            // Move values to front
-            for (int i = 0; i < 3; ++i) {
-                tValues[i] = tValues[i + 1];
-            }
-            // and wait before getting next value
-            if (aDelay != 0) {
-                delay(aDelay);
-            }
-            tValues[3] = readADCChannelWithReference(aADCChannelNumber, aReference);
-        }
-        if (aMaxRetries != 255) {
-            aMaxRetries--;
-        }
-    } while (aMaxRetries > 0);
-
-#if defined(LOCAL_DEBUG)
-    if(aMaxRetries == 0) {
-        Serial.print(F("No 4 equal values for difference "));
-        Serial.print(aAllowedDifference);
-        Serial.print(F(" found "));
-        Serial.print(tValues[0]);
-        Serial.print(' ');
-        Serial.print(tValues[1]);
-        Serial.print(' ');
-        Serial.print(tValues[2]);
-        Serial.print(' ');
-        Serial.println(tValues[3]);
-    } else {
-        Serial.print(aMaxRetries);
-        Serial.println(F(" retries left"));
-    }
-#endif
-
     return (tMax + tMin) / 2;
 }
 
@@ -533,7 +386,10 @@ uint16_t readUntil4ConsecutiveValuesAreEqual(uint8_t aADCChannelNumber, uint8_t 
 float getVCCVoltageSimple(void) {
     // use AVCC with (optional) external capacitor at AREF pin as reference
     float tVCC = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
-    return ((READING_FOR_AREF * 1.1 * 4) / tVCC);
+    return (READING_FOR_AREF * (ADC_INTERNAL_REFERENCE_MILLIVOLT / 1000.0) * 4) / tVCC;
+}
+void readVCCVoltageSimple(void) {
+    sVCCVoltage = getVCCVoltageSimple();
 }
 
 /*
@@ -544,7 +400,10 @@ float getVCCVoltageSimple(void) {
 uint16_t getVCCVoltageMillivoltSimple(void) {
     // use AVCC with external capacitor at AREF pin as reference
     uint16_t tVCC = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
-    return (((uint32_t)READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCC);
+    return (((uint32_t) READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCC);
+}
+void readVCCVoltageMillivoltSimple(void) {
+    sVCCVoltageMillivolt = getVCCVoltageMillivoltSimple();
 }
 
 /*
@@ -556,7 +415,7 @@ uint16_t getVCCVoltageReadingFor1_1VoltReference(void) {
     /*
      * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
      */
-    return (((uint32_t)READING_FOR_AREF * READING_FOR_AREF) / tVCC);
+    return (((uint32_t) READING_FOR_AREF * READING_FOR_AREF) / tVCC);
 }
 
 /*
@@ -564,6 +423,9 @@ uint16_t getVCCVoltageReadingFor1_1VoltReference(void) {
  */
 float getVCCVoltage(void) {
     return (getVCCVoltageMillivolt() / 1000.0);
+}
+void readVCCVoltage(void) {
+    sVCCVoltage = getVCCVoltage();
 }
 
 /*
@@ -580,67 +442,31 @@ uint16_t getVCCVoltageMillivolt(void) {
     /*
      * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
      */
-    return (((uint32_t)READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT) / tVCC);
+    return (((uint32_t) READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT) / tVCC);
+}
+void readVCCVoltageMillivolt(void) {
+    sVCCVoltageMillivolt = getVCCVoltageMillivolt();
 }
 
+void printVCCVoltageMillivolt(Print *aSerial, uint16_t aVCCVoltageMillivolt) {
+    aSerial->print(F("VCC="));
+    aSerial->print(aVCCVoltageMillivolt);
+    aSerial->println(F(" mV"));
+}
 /*
  * Does not set sVCCVoltageMillivolt
  */
 uint16_t printVCCVoltageMillivolt(Print *aSerial) {
-    aSerial->print(F("VCC="));
     uint16_t tVCCVoltageMillivolt = getVCCVoltageMillivolt();
-    aSerial->print(tVCCVoltageMillivolt);
-    aSerial->println(" mV");
+    printVCCVoltageMillivolt(aSerial, tVCCVoltageMillivolt);
     return tVCCVoltageMillivolt;
 }
-
+/*
+ * Sets sVCCVoltageMillivolt
+ */
 void readAndPrintVCCVoltageMillivolt(Print *aSerial) {
-    aSerial->print(F("VCC="));
     sVCCVoltageMillivolt = getVCCVoltageMillivolt();
-    aSerial->print(sVCCVoltageMillivolt);
-    aSerial->println(" mV");
-}
-/*
- * !!! Function without handling of switched reference and channel.!!!
- * Use it ONLY if you only call getVCCVoltageSimple() or getVCCVoltageMillivoltSimple() in your program.
- * !!! Resolution is only 20 millivolt !!!
- */
-void readVCCVoltageSimple(void) {
-    // use AVCC with (optional) external capacitor at AREF pin as reference
-    float tVCC = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
-    sVCCVoltage = (READING_FOR_AREF * (((float) ADC_INTERNAL_REFERENCE_MILLIVOLT) / 1000) * 4) / tVCC;
-}
-
-/*
- * !!! Function without handling of switched reference and channel.!!!
- * Use it ONLY if you only call getVCCVoltageSimple() or getVCCVoltageMillivoltSimple() in your program.
- * !!! Resolution is only 20 millivolt !!!
- */
-void readVCCVoltageMillivoltSimple(void) {
-    // use AVCC with external capacitor at AREF pin as reference
-    uint16_t tVCCVoltageMillivoltRaw = readADCChannelMultiSamplesWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT, 4);
-    sVCCVoltageMillivolt = ((uint32_t)READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT * 4) / tVCCVoltageMillivoltRaw;
-}
-
-/*
- * !!! Resolution is only 20 millivolt !!!
- */
-void readVCCVoltage(void) {
-    sVCCVoltage = getVCCVoltageMillivolt() / 1000.0;
-}
-
-/*
- * Read value of 1.1 volt internal channel using VCC (DEFAULT) as reference.
- * Handles reference and channel switching by introducing the appropriate delays.
- * !!! Resolution is only 20 millivolt !!!
- * Sets also the sVCCVoltageMillivolt variable.
- */
-void readVCCVoltageMillivolt(void) {
-    uint16_t tVCCVoltageMillivoltRaw = waitAndReadADCChannelWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT);
-    /*
-     * Do not switch back ADMUX to enable checkAndWaitForReferenceAndChannelToSwitch() to work correctly for the next measurement
-     */
-    sVCCVoltageMillivolt = ((uint32_t)READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT) / tVCCVoltageMillivoltRaw;
+    printVCCVoltageMillivolt(aSerial, sVCCVoltageMillivolt);
 }
 
 /*
@@ -681,18 +507,10 @@ bool isVCCUSBPowered() {
  * Return true if sVCCVoltageMillivolt is > 4.3 V and < 4.95 V
  */
 bool isVCCUSBPowered(Print *aSerial) {
-    readVCCVoltageMillivolt();
+    bool tReturnValue = isVCCUSBPowered();
     aSerial->print(F("USB powered is "));
-    bool tReturnValue;
-    if (VOLTAGE_USB_POWERED_LOWER_THRESHOLD_MILLIVOLT
-            < sVCCVoltageMillivolt&& sVCCVoltageMillivolt < VOLTAGE_USB_POWERED_UPPER_THRESHOLD_MILLIVOLT) {
-        tReturnValue = true;
-        aSerial->print(F("true "));
-    } else {
-        tReturnValue = false;
-        aSerial->print(F("false "));
-    }
-    printVCCVoltageMillivolt(aSerial);
+    aSerial->print(tReturnValue ? F("true ") : F("false "));
+    printVCCVoltageMillivolt(aSerial, sVCCVoltageMillivolt);
     return tReturnValue;
 }
 
@@ -712,7 +530,7 @@ bool isVCCUndervoltageMultipleTimes(Print *aSerial) {
     if (millis() - sLastVCCCheckMillis >= VCC_CHECK_PERIOD_MILLIS) {
         sLastVCCCheckMillis = millis();
 
-#  if defined(INFO)
+#  if defined(LOCAL_INFO)
         readAndPrintVCCVoltageMillivolt(aSerial);
 #  else
         readVCCVoltageMillivolt();
@@ -759,7 +577,7 @@ bool isVCCUndervoltageMultipleTimes(Print *aSerial) {
 }
 
 /*
- * Return true if VCC_EMERGENCY_UNDERVOLTAGE_THRESHOLD_MILLIVOLT (3 V) reached
+ * Return true if VCC_UNDERVOLTAGE_THRESHOLD_MILLIVOLT (3.4 V) reached
  */
 bool isVCCUndervoltage() {
     readVCCVoltageMillivolt();
@@ -799,17 +617,8 @@ bool isVCCOvervoltageSimple() {
 
 // Version not using readVCCVoltageMillivoltSimple()
 bool isVCCTooHighSimple() {
-    ADMUX = ADC_1_1_VOLT_CHANNEL_MUX | (DEFAULT << SHIFT_VALUE_FOR_REFERENCE);
-// ADCSRB = 0; // Only active if ADATE is set to 1.
-// ADSC-StartConversion ADIF-Reset Interrupt Flag - NOT free running mode
-    ADCSRA = (_BV(ADEN) | _BV(ADSC) | _BV(ADIF) | ADC_PRESCALE128); //  128 -> 104 microseconds per ADC conversion at 16 MHz --- Arduino default
-// wait for single conversion to finish
-    loop_until_bit_is_clear(ADCSRA, ADSC);
-
-// Get value
-    uint16_t tRawValue = ADCL | (ADCH << 8);
-
-    return tRawValue < 1126000 / VCC_OVERVOLTAGE_THRESHOLD_MILLIVOLT;
+    uint16_t tRawValue = readADCChannelWithReference(ADC_1_1_VOLT_CHANNEL_MUX, DEFAULT);
+    return tRawValue < ((uint32_t) READING_FOR_AREF * ADC_INTERNAL_REFERENCE_MILLIVOLT) / VCC_OVERVOLTAGE_THRESHOLD_MILLIVOLT;
 }
 
 /*
@@ -819,25 +628,22 @@ bool isVCCTooHighSimple() {
  * Use it ONLY if you only use INTERNAL reference (e.g. only call getTemperatureSimple()) in your program.
  */
 float getCPUTemperatureSimple(void) {
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-    return 0.0;
+#if !defined(ADC_TEMPERATURE_CHANNEL_MUX)
+    return 0.0; // No temperature sensor available on this CPU
 #else
     // use internal 1.1 volt as reference. 4 times oversample. Assume the signal has noise, but never verified :-(
-    uint16_t tTemperatureRaw = readADCChannelWithReferenceOversample(ADC_TEMPERATURE_CHANNEL_MUX, INTERNAL, 2);
+    int16_t tTemperatureRaw = (int16_t) readADCChannelWithReferenceOversample(ADC_TEMPERATURE_CHANNEL_MUX, INTERNAL, 2);
 #if defined(LOCAL_DEBUG)
     Serial.print(F("TempRaw="));
     Serial.println(tTemperatureRaw);
 #endif
 
 #if defined(__AVR_ATmega328PB__)
-    tTemperatureRaw -= 245;
-    return (float)tTemperatureRaw;
-#elif defined(__AVR_ATtiny85__)
-    tTemperatureRaw -= 273; // 273 and 1.1666 are values from the datasheet
-    return (float)tTemperatureRaw / 1.1666;
+    return (float)(tTemperatureRaw - 245);
+#elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+    return (tTemperatureRaw - 273) / 1.1666; // 273 and 1.1666 are values from the datasheet
 #else
-    tTemperatureRaw -= 317;
-    return (float) tTemperatureRaw / 1.22;
+    return (tTemperatureRaw - 317) / 1.22;
 #endif
 #endif
 }
@@ -849,8 +655,8 @@ float getTemperature(void) {
     return getCPUTemperature();
 }
 float getCPUTemperature(void) {
-#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-    return 0.0;
+#if !defined(ADC_TEMPERATURE_CHANNEL_MUX)
+    return 0.0; // No temperature sensor available on this CPU
 #else
     // use internal 1.1 volt as reference
     checkAndWaitForReferenceAndChannelToSwitch(ADC_TEMPERATURE_CHANNEL_MUX, INTERNAL);

@@ -1,5 +1,5 @@
 /*
- * SimpleSender.cpp
+ * SimpleSender.ino
  *
  *  Demonstrates sending IR codes in standard format with address and command
  *  An extended example for sending can be found as SendDemo.
@@ -73,10 +73,10 @@ void loop() {
 //    IrSender.sendNECRaw(0xCB340102, sRepeats);
 
     /*
-     * If you want to send an "old" MSB HEX value used by IRremote versions before 3.0 like e.g. 0x40802CD3 you must use sendNECMSB()
+     * If you want to send an "old" MSB HEX value used by IRremote versions before 3.0 like e.g. 0x40802CD3 you must use bitreverse32Bit()
      */
-//    Serial.println(F("Send old 32 bit MSB 0x40802CD3 with sendNECMSB()"));
-//    IrSender.sendNECMSB(0x40802CD3, 32, sRepeats);
+//    Serial.println(F("Send old 32 bit MSB 0x40802CD3 with bitreverse32Bit()"));
+//    IrSender.sendNECRaw(bitreverse32Bit(0x40802CD3), sRepeats);
 
     /*
      * Increment send values

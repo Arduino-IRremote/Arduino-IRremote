@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2017-2023 Kristian Lauszus, Armin Joachimsmeyer
+ * Copyright (c) 2017-2026 Kristian Lauszus, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -72,11 +72,11 @@
 #define JVC_ONE_SPACE         (3 * JVC_UNIT)  // 1578 - The length of a Bit:Space for 1's
 #define JVC_ZERO_SPACE        JVC_UNIT        // The length of a Bit:Space for 0's
 
-#define JVC_REPEAT_DISTANCE   (uint16_t)(45 * JVC_UNIT)  // 23625 - Commands are repeated with a distance of 23 ms for as long as the key on the remote control is held down.
+#define JVC_REPEAT_DISTANCE   (uint16_t)(45 * JVC_UNIT)  // 23670 - Commands are repeated with a distance of 23 ms for as long as the key on the remote control is held down.
 #define JVC_REPEAT_PERIOD     65000 // assume around 40 ms for a JVC frame. JVC IR Remotes: RM-SA911U, RM-SX463U have 45 ms period
 
 struct PulseDistanceWidthProtocolConstants const JVCProtocolConstants PROGMEM = {JVC, JVC_KHZ, JVC_HEADER_MARK, JVC_HEADER_SPACE, JVC_BIT_MARK,
-    JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
+    JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, (JVC_REPEAT_PERIOD / MICROS_IN_ONE_MILLISECOND), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -107,7 +107,7 @@ void IRsend::sendJVC(uint8_t aAddress, uint8_t aCommand, int_fast8_t aNumberOfRe
         // skip last delay!
         if (tNumberOfCommands > 0) {
             // send repeated command in a fixed raster
-            delay(JVC_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
+            delay(JVC_REPEAT_DISTANCE / MICROS_IN_ONE_MILLISECOND);
         }
     }
 }
@@ -130,7 +130,7 @@ bool IRrecv::decodeJVC() {
          * 34 -> check for repeat distance and check leading space and first and last mark length
          */
         if (lastDecodedProtocol == JVC
-                && decodedIRData.initialGapTicks < ((JVC_REPEAT_DISTANCE + (JVC_REPEAT_DISTANCE / 4) / MICROS_PER_TICK))
+                && decodedIRData.initialGapTicks < ((JVC_REPEAT_DISTANCE + (JVC_REPEAT_DISTANCE / 4)) / MICROS_PER_TICK)
                 && matchMark(irparams.rawbuf[1], JVC_BIT_MARK)
                 && matchMark(irparams.rawbuf[decodedIRData.rawlen - 1], JVC_BIT_MARK)) {
             /*
@@ -140,6 +140,8 @@ bool IRrecv::decodeJVC() {
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
             decodedIRData.protocol = JVC;
+        } else {
+            return false;
         }
     } else {
 
@@ -158,84 +160,6 @@ bool IRrecv::decodeJVC() {
     }
 
     return true;
-}
-
-/*********************************************************************************
- * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
- *********************************************************************************/
-bool IRrecv::decodeJVCMSB(decode_results *aResults) {
-    unsigned int offset = 1; // Skip first space
-
-    // Check for repeat
-    if ((aResults->rawlen - 1 == 33) && matchMark(aResults->rawbuf[offset], JVC_BIT_MARK)
-            && matchMark(aResults->rawbuf[aResults->rawlen - 1], JVC_BIT_MARK)) {
-        aResults->bits = 0;
-        aResults->value = 0xFFFFFFFF;
-        decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT;
-        decodedIRData.protocol = JVC;
-        return true;
-    }
-
-    // Initial mark
-    if (!matchMark(aResults->rawbuf[offset], JVC_HEADER_MARK)) {
-        return false;
-    }
-    offset++;
-
-    // Check we have enough data - +3 for start bit mark and space + stop bit mark
-    if (aResults->rawlen <= (2 * JVC_BITS) + 3) {
-        DEBUG_PRINT(F("Data length="));
-        DEBUG_PRINT(aResults->rawlen);
-        DEBUG_PRINTLN(F(" is too small. >= 36 is required."));
-        return false;
-    }
-
-    // Initial space
-    if (!matchSpace(aResults->rawbuf[offset], JVC_HEADER_SPACE)) {
-        return false;
-    }
-    offset++;
-
-    decodePulseDistanceWidthData(JVC_BITS, offset, JVC_BIT_MARK, JVC_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST);
-
-    // Stop bit
-    if (!matchMark(aResults->rawbuf[offset + (2 * JVC_BITS)], JVC_BIT_MARK)) {
-        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
-        return false;
-    }
-
-    // Success
-    aResults->value = decodedIRData.decodedRawData;
-    aResults->bits = JVC_BITS;
-    aResults->decode_type = JVC;
-    decodedIRData.protocol = JVC;
-
-    return true;
-}
-
-/**
- * With Send sendJVCMSB() you can send your old 32 bit codes.
- * To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte.
- * Use bitreverse32Bit().
- * Or write it as one binary string and reverse/mirror it.
- * Example:
- * 0xCB340102 byte reverse -> 02 01 34 CB bit reverse-> 40 80 2C D3.
- * 0xCB340102 is binary 11001011001101000000000100000010.
- * 0x40802CD3 is binary 01000000100000000010110011010011.
- * If you read the first binary sequence backwards (right to left), you get the second sequence.
- */
-void IRsend::sendJVCMSB(unsigned long data, int nbits, bool repeat) {
-    // Set IR carrier frequency
-    enableIROut (JVC_KHZ);
-
-    // Only send the Header if this is NOT a repeat command
-    if (!repeat) {
-        mark(JVC_HEADER_MARK);
-        space(JVC_HEADER_SPACE);
-    }
-
-    // Old version with MSB first Data
-    sendPulseDistanceWidthData(JVC_BIT_MARK, JVC_ONE_SPACE, JVC_BIT_MARK, JVC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
 }
 
 /** @}*/

@@ -69,19 +69,19 @@
  */
 // http://www.hifi-remote.com/wiki/index.php/NEC
 // https://www.sbprojects.net/knowledge/ir/nec.php
-// NEC: LSB first, <start bit><address:16> (or <address:8><inverted address:8>) <command:16><command:8><inverted command:8><stop bit>.
+// NEC: LSB first, <start bit><address:16> (or <address:8><inverted address:8>) <command:16>(or <command:8><inverted command:8>)<stop bit>.
 // ONKYO (sometimes called NECext): like NEC but force to 16 independent address and 16 bit command bits: <start bit><address:16><command:16><stop bit>
 // Standard NEC sends a special fixed repeat frame.
 // NEC2: like NEC, but for repeat, the same full frame is sent after the 110 ms. I have a DVD remote with NEC2.
 // NEC and NEC 2 only differ in the repeat frames, so the protocol can only be detected correctly after the first repeat.
 // PIONEER (not implemented) is NEC2 with 40 kHz
 //
-// For Apple see https://en.wikipedia.org/wiki/Apple_Remote - <start bit><0x87EE:16><device ID:8><command:7><parity><stop bit> - not implemented!
-// The parity is not implemented, so we get: <start bit><0x87EE:16><device ID:8><command:8><stop bit>
+// For Apple see https://en.wikipedia.org/wiki/Apple_Remote - <start bit><0x87EE:16><command:7><parity><device ID:8><stop bit> - not implemented!
+// The parity is not implemented, so we get: <start bit><0x87EE:16><command:8><device ID:8><stop bit>
 //
 // IRP notation:
-// IRP: NEC  {38.0k,564}<1,-1|1,-3>(16,-8,D:8,S:8,F:8,~F:8,1,^108m,(16,-4,1,^108m)*)  ==> "*" means send special repeat frames o ore more times
-// IRP: NEC2 {38.0k,564}<1,-1|1,-3>(16,-8,D:8,S:8,F:8,~F:8,1,^108m)+   ==> "+" means send frame 1 or more times (special repeat is missing here!)
+// IRP: NEC  {38.0k,564}<1,-1|1,-3>(16,-8,D:8,S:8,F:8,~F:8,1,^108m,(16,-4,1,^108m)*)  ==> "*" means send special repeat frames one or more times
+// IRP: NEC2 {38.0k,564}<1,-1|1,-3>(16,-8,D:8,S:8,F:8,~F:8,1,^108m)+   ==> "+" means send frame one or more times (special repeat is missing here!)
 // Interpretation of IRP notation:
 // {38.0k,564} ==> 38.0k -> Frequency , 564 -> unit in microseconds (we use 560), no "msb", so "lsb" is assumed
 // <1,-1|1,-3> ==> Zero is 1 unit mark and space | One is 1 unit mark and 3 units space
@@ -114,12 +114,12 @@
 #define APPLE_ADDRESS           0x87EE
 
 struct PulseDistanceWidthProtocolConstants const NECProtocolConstants PROGMEM = {NEC, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
-     NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI),
+     NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLISECOND),
      &sendNECSpecialRepeat};
 
 // Like NEC but repeats are full frames instead of special NEC repeats
 struct PulseDistanceWidthProtocolConstants const NEC2ProtocolConstants PROGMEM = {NEC2, NEC_KHZ, NEC_HEADER_MARK, NEC_HEADER_SPACE, NEC_BIT_MARK,
-    NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
+    NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, (NEC_REPEAT_PERIOD / MICROS_IN_ONE_MILLISECOND), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -152,7 +152,7 @@ void sendNECSpecialRepeat() {
  * If we get a command < 0x100, we send command and then ~command
  * If we get an address < 0x100, we send 8 bit address and then ~address
  * !!! Be aware, that this is flexible, but makes it impossible to send e.g. 0x0042 as 16 bit value!!!
- * To force send 16 bit address, use: sendOnkyo().
+ * To force sending of a 16 bit address, use: sendOnkyo().
  */
 uint32_t IRsend::computeNECRawDataAndChecksum(uint16_t aAddress, uint16_t aCommand) {
     LongUnion tRawData;
@@ -193,7 +193,7 @@ void IRsend::sendOnkyo(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumber
 /**
  * NEC2 Send frame !!! and repeat the frame for each requested repeat !!!
  * There is NO delay after the last sent repeat!
- * @param aNumberOfRepeats  If < 0 then nothing is sent.
+ * @param aNumberOfRepeats  If < 0 then one frame is sent as repeat.
  */
 void IRsend::sendNEC2(uint16_t aAddress, uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
     sendPulseDistanceWidth_P(&NEC2ProtocolConstants, computeNECRawDataAndChecksum(aAddress, aCommand), NEC_BITS, aNumberOfRepeats);
@@ -258,7 +258,7 @@ bool IRrecv::decodeNEC() {
             decodedIRData.flags = IRDATA_FLAGS_IS_REPEAT | IRDATA_FLAGS_IS_LSB_FIRST;
             decodedIRData.address = lastDecodedAddress;
             decodedIRData.command = lastDecodedCommand;
-            decodedIRData.protocol = lastDecodedProtocol; // Allow recognition of repeats of NEC, APPLE, ONKYO and OPENLASIR and maybe LG
+            decodedIRData.protocol = lastDecodedProtocol; // Allow recognition of repeats of NEC, APPLE, ONKYO and maybe LG
             return true;
         }
         return false;
@@ -323,89 +323,6 @@ bool IRrecv::decodeNEC() {
         decodedIRData.flags |= IRDATA_FLAGS_IS_PROTOCOL_WITH_DIFFERENT_REPEAT;
     }
     return true;
-}
-
-/*********************************************************************************
- * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
- *********************************************************************************/
-
-bool IRrecv::decodeNECMSB(decode_results *aResults) {
-    unsigned int offset = 1;  // Index in to results; Skip first space.
-
-// Check header "mark"
-    if (!matchMark(aResults->rawbuf[offset], NEC_HEADER_MARK)) {
-        return false;
-    }
-    offset++;
-
-// Check for repeat
-    if ((aResults->rawlen == 4) && matchSpace(aResults->rawbuf[offset], NEC_REPEAT_HEADER_SPACE)
-            && matchMark(aResults->rawbuf[offset + 1], NEC_BIT_MARK)) {
-        aResults->bits = 0;
-        aResults->value = 0xFFFFFFFF;
-        decodedIRData.flags |= IRDATA_FLAGS_IS_REPEAT;
-        decodedIRData.protocol = NEC;
-        return true;
-    }
-
-    // Check we have the right amount of data (32). +4 for initial gap, start bit mark and space + stop bit mark
-    if (aResults->rawlen != (2 * NEC_BITS) + 4) {
-        DEBUG_PRINT(F("NEC MSB: Data length="));
-        DEBUG_PRINT(aResults->rawlen);
-        DEBUG_PRINTLN(F(" is not 68"));
-        return false;
-    }
-
-// Check header "space"
-    if (!matchSpace(aResults->rawbuf[offset], NEC_HEADER_SPACE)) {
-        DEBUG_PRINTLN(F("NEC MSB: Header space length is wrong"));
-        return false;
-    }
-    offset++;
-
-    decodePulseDistanceWidthData(NEC_BITS, offset, NEC_BIT_MARK, NEC_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST);
-
-    // Stop bit
-    if (!matchMark(aResults->rawbuf[offset + (2 * NEC_BITS)], NEC_BIT_MARK)) {
-        DEBUG_PRINTLN(F("NEC MSB: Stop bit mark length is wrong"));
-        return false;
-    }
-
-// Success
-    aResults->value = decodedIRData.decodedRawData;
-    aResults->bits = NEC_BITS;
-    aResults->decode_type = NEC;
-    decodedIRData.protocol = NEC;
-
-    return true;
-}
-
-/**
- * With Send sendNECMSB() you can send your old 32 bit codes.
- * To convert one into the other, you must reverse the byte positions and then reverse all bit positions of each byte.
- * Use bitreverse32Bit().
- * Or write it as one binary string and reverse/mirror it.
- * Example:
- * 0xCB340102 byte reverse -> 02 01 34 CB bit reverse-> 40 80 2C D3.
- * 0xCB340102 is binary 11001011001101000000000100000010.
- * 0x40802CD3 is binary 01000000100000000010110011010011.
- * If you read the first binary sequence backwards (right to left), you get the second sequence.
- */
-void IRsend::sendNECMSB(uint32_t data, uint8_t nbits, bool repeat) {
-    // Set IR carrier frequency
-    enableIROut (NEC_KHZ);
-
-    if (data == 0xFFFFFFFF || repeat) {
-        sendNECRepeat();
-        return;
-    }
-
-    // Header
-    mark(NEC_HEADER_MARK);
-    space(NEC_HEADER_SPACE);
-
-    // Old version with MSB first Data + stop bit
-    sendPulseDistanceWidthData(NEC_BIT_MARK, NEC_ONE_SPACE, NEC_BIT_MARK, NEC_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
 }
 
 /** @}*/

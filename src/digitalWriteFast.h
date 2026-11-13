@@ -34,7 +34,7 @@ int NonConstantsUsedForDigitalReadFast( void )  __attribute__ (( error("Paramete
 # define BIT_CLEAR(value, bit)           ((value) &= ~(1UL << (bit)))
 #endif
 #if !defined(BIT_WRITE)
-# define BIT_WRITE(value, bit, bitvalue) (bitvalue ? BIT_SET(value, bit) : BIT_CLEAR(value, bit))
+# define BIT_WRITE(value, bit, bitvalue) ((bitvalue) ? BIT_SET(value, bit) : BIT_CLEAR(value, bit))
 #endif
 
 #include <Arduino.h> // declarations for the fallback to digitalWrite(), digitalRead() etc.
@@ -128,10 +128,10 @@ int NonConstantsUsedForDigitalReadFast( void )  __attribute__ (( error("Paramete
 (((P) <= 7) ? &PINB : (((P) >= 8 && (P) <= 15) ? &PIND : (((P) >= 16 && (P) <= 23) ? &PINC : (((P) >= 24 && (P) <= 31) ? &PINA : &PINE))))
 # if defined(SANGUINO_PINOUT)
 #define __digitalPinToBit(P) \
-(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (((P) >= 16 && (P) <= 23) ? (7 - ((P) - 24)) : (P) - 32))))
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (((P) >= 24 && (P) <= 31) ? (7 - ((P) - 24)) : (P) - 32))))
 # else //MightyCore Pinout
 #define __digitalPinToBit(P) \
-(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (((P) >= 16 && (P) <= 23) ? (P) - 24 : (P) - 32))))
+(((P) <= 7) ? (P) : (((P) >= 8 && (P) <= 15) ? (P) - 8 : (((P) >= 16 && (P) <= 23) ? (P) - 16 : (((P) >= 24 && (P) <= 31) ? (P) - 24 : (P) - 32))))
 # endif
 #elif defined(PORTA)
 #define __digitalPinToPortReg(P) \
@@ -247,7 +247,7 @@ int NonConstantsUsedForDigitalReadFast( void )  __attribute__ (( error("Paramete
 #define __digitalPinToPINReg(P) \
 (((P) == 2 || (P) == 7 ) ? &VPORTA.IN : ((P) == 5 || (P) == 9 || (P) == 10) ? &VPORTB.IN : ((P) == 4) ? &VPORTC.IN : (((P) >= 14 && (P) <= 17) || (P) == 20 || (P) == 21) ? &VPORTD.IN : ((P) == 8 || (P) == 11 || (P) == 12 || (P) == 13) ? &VPORTE.IN : &VPORTF.IN)
 #define __digitalPinToBit(P) \
-(((P) == 2 || (P) == 9 || (P) == 11 || (P) == 17) ? 0 : ((P) == 7 || (P) == 10 || (P) == 12 || (P) == 16) ? 1 : ((P) == 5 || (P) == 13 || (P) == 15 || (P) == 18) ? 2 : ((P) == 9 || (P) == 14 || (P) == 19) ? 3 : ((P) == 6 || (P) == 20) ? 4 : ((P) == 3 || (P) == 21) ? 5 :  6 )
+(((P) == 2 || (P) == 9 || (P) == 11 || (P) == 17) ? 0 : ((P) == 7 || (P) == 10 || (P) == 12 || (P) == 16) ? 1 : ((P) == 5 || (P) == 13 || (P) == 15 || (P) == 18) ? 2 : ((P) == 8 || (P) == 14 || (P) == 19) ? 3 : ((P) == 6 || (P) == 20) ? 4 : ((P) == 3 || (P) == 21) ? 5 :  6 )
 
 
 // TinyCore
@@ -257,20 +257,20 @@ int NonConstantsUsedForDigitalReadFast( void )  __attribute__ (( error("Paramete
 #define __digitalPinToPortReg(P) ((P) <= 5 ? &VPORTB.OUT : ((P) <= 9 ? &VPORTC.OUT : ((P) <= 16 ? &VPORTA.OUT : ((P) <= 18 ? &VPORTB.OUT : &VPORTC.OUT))))
 #define __digitalPinToDDRReg(P) ((P) <= 5 ? &VPORTB.DIR : ((P) <= 9 ? &VPORTC.DIR : ((P) <= 16 ? &VPORTA.DIR : ((P) <= 18 ? &VPORTB.DIR : &VPORTC.DIR))))
 #define __digitalPinToPINReg(P) ((P) <= 5 ? &VPORTB.IN : ((P) <= 9 ? &VPORTC.IN : ((P) <= 16 ? &VPORTA.IN : ((P) <= 18 ? &VPORTB.IN : &VPORTC.IN))))
-#define __digitalPinToBit(P) ( (P) <= 3 ? (3 - P) : ((P) <= 5 ? (P) : ((P) <= 9 ? (P - 6) : ((P) <= 16 ? ((P) - 9) : ((P) <= 18 ? ((P) - 11) : ((P) - 15))))) )
+#define __digitalPinToBit(P) ( (P) <= 3 ? (3 - (P)) : ((P) <= 5 ? (P) : ((P) <= 9 ? ((P) - 6) : ((P) <= 16 ? ((P) - 9) : ((P) <= 18 ? ((P) - 11) : ((P) - 15))))) )
 
 #elif defined(__AVR_ATtiny1614__)
 #define __digitalPinToPortReg(P) ((P) <= 3 ? &VPORTA.OUT : ((P) <= 7 ? &VPORTB.OUT : &VPORTA.OUT))
 #define __digitalPinToDDRReg(P) ((P) <= 3 ? &VPORTA.DIR : ((P) <= 7 ? &VPORTB.DIR : &VPORTA.DIR))
 #define __digitalPinToPINReg(P) ((P) <= 3 ? &VPORTA.IN : ((P) <= 7 ? &VPORTB.IN : &VPORTA.IN))
-#define __digitalPinToBit(P) ( (P) <= 3 ? (P + 4) : ((P) <= 7 ? (7 - P) : ((P) <= 10 ? (P - 7) : (P) - 11)) )
+#define __digitalPinToBit(P) ( (P) <= 3 ? ((P) + 4) : ((P) <= 7 ? (7 - (P)) : ((P) <= 10 ? ((P) - 7) : (P) - 11)) )
 
 #elif  defined(__AVR_ATtiny816__)
 // https://github.com/Arduino-IRremote/Arduino-IRremote/discussions/1029
 #define __digitalPinToPortReg(P) ((P) <= 3 ? &VPORTA.OUT : ((P) <= 9 ? &VPORTB.OUT : ((P) <= 13 ? &VPORTC.OUT : ((P) <= 17 ? &VPORTA.OUT : &VPORTC.OUT))))
 #define __digitalPinToDDRReg(P) ((P) <= 3 ? &VPORTA.DIR : ((P) <= 9 ? &VPORTB.DIR : ((P) <= 13 ? &VPORTC.DIR : ((P) <= 17 ? &VPORTA.DIR : &VPORTC.DIR))))
 #define __digitalPinToPINReg(P) ((P) <= 3 ? &VPORTA.IN : ((P) <= 9 ? &VPORTB.IN : ((P) <= 13 ? &VPORTC.IN : ((P) <= 17 ? &VPORTA.IN : &VPORTC.IN))))
-#define __digitalPinToBit(P) ( (P) <= 3 ? (P + 4) : ((P) <= 9 ? (9 - P) : ((P) <= 13 ? (P - 10) : ((P) <= 16 ? (P - 13) : ((P) - 17)))) )
+#define __digitalPinToBit(P) ( (P) <= 3 ? ((P) + 4) : ((P) <= 9 ? (9 - (P)) : ((P) <= 13 ? ((P) - 10) : ((P) <= 16 ? ((P) - 13) : ((P) - 17)))) )
 
 // --- ATtinyX5 ---
 #elif defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
@@ -353,7 +353,7 @@ do { \
 #define pinModeFast(P, V) \
 do { \
   if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
-    if (V == INPUT_PULLUP) {\
+    if ((V) == INPUT_PULLUP) {\
       BIT_CLEAR(*__digitalPinToDDRReg(P), __digitalPinToBit(P)); \
       BIT_SET(*__digitalPinToPortReg(P), __digitalPinToBit(P)); \
     } else { \
@@ -367,7 +367,7 @@ do { \
 #define pinModeFast(P, V) \
 do { \
   if (__builtin_constant_p(P) && __builtin_constant_p(V)) { \
-    if (V == INPUT_PULLUP) {\
+    if ((V) == INPUT_PULLUP) {\
       BIT_CLEAR(*__digitalPinToDDRReg(P), __digitalPinToBit(P)); \
       BIT_SET(*__digitalPinToPortReg(P), __digitalPinToBit(P)); \
     } else { \

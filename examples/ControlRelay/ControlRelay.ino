@@ -1,5 +1,5 @@
 /*
- * ControlRelay.cpp
+ * ControlRelay.ino
  *
  * Toggles an output pin at each command received
  * An IR detector/demodulator must be connected to the input RECV_PIN.
@@ -10,7 +10,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2009-2021 Ken Shirriff, Armin Joachimsmeyer
+ * Copyright (c) 2009-2026 Ken Shirriff, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@
 #include "PinDefinitionsAndMore.h" // Define macros for input and output pin etc. Sets FLASHEND and RAMSIZE and evaluates value of SEND_PWM_BY_TIMER.
 
 #if FLASHEND <= 0x1FFF || RAMSIZE <= 0x400 // For 8k flash or 512 bytes RAM or less, like ATtiny85, ATtiny167
-#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1000 bytes program memory.
+#define EXCLUDE_UNIVERSAL_PROTOCOLS // Saves up to 1800 bytes program memory and 56 bytes RAM.
 #define EXCLUDE_EXOTIC_PROTOCOLS
 #endif
 
@@ -62,7 +62,7 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
-    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+    IrReceiver.begin(IR_RECEIVE_PIN, USE_DEFAULT_FEEDBACK_LED_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive IR signals of protocols: "));
     printActiveIRProtocols(&Serial);

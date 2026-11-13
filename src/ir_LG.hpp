@@ -109,7 +109,7 @@
 //#define LG_REPEAT_DISTANCE      (LG_REPEAT_PERIOD - LG_AVERAGE_DURATION) // 52 ms
 
 struct PulseDistanceWidthProtocolConstants const LGProtocolConstants PROGMEM= {LG, LG_KHZ, LG_HEADER_MARK, LG_HEADER_SPACE, LG_BIT_MARK,
-    LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), &sendLGSpecialRepeat};
+    LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, (LG_REPEAT_PERIOD / MICROS_IN_ONE_MILLISECOND), &sendLGSpecialRepeat};
 
 /************************************
  * Start of send and decode functions
@@ -234,70 +234,6 @@ bool IRrecv::decodeLG() {
     decodedIRData.numberOfBits = LG_BITS;
 
     return true;
-}
-
-/*********************************************************************************
- * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
- *********************************************************************************/
-
-/**
- * Here you can put your raw data, even one with "wrong" checksum.
- * @param aRawData  The lowest 28 (LG_BITS) bit of this value are sent MSB first.
- * @param aNumberOfRepeats If < 0 then only a special repeat frame will be sent.
- */
-void IRsend::sendLGRaw(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth_P(&LGProtocolConstants, aRawData, LG_BITS, aNumberOfRepeats);
-}
-
-bool IRrecv::decodeLGMSB(decode_results *aResults) {
-    unsigned int offset = 1; // Skip first space
-
-// Check we have enough data (60) - +4 for initial gap, start bit mark and space + stop bit mark
-    if (aResults->rawlen != (2 * LG_BITS) + 4) {
-        return false;
-    }
-
-// Initial mark/space
-    if (!matchMark(aResults->rawbuf[offset], LG_HEADER_MARK)) {
-        return false;
-    }
-    offset++;
-
-    if (!matchSpace(aResults->rawbuf[offset], LG_HEADER_SPACE)) {
-        return false;
-    }
-    offset++;
-
-    decodePulseDistanceWidthData(LG_BITS, offset, LG_BIT_MARK, LG_ONE_SPACE, 0, PROTOCOL_IS_MSB_FIRST);
-
-// Stop bit
-    if (!matchMark(aResults->rawbuf[offset + (2 * LG_BITS)], LG_BIT_MARK)) {
-        DEBUG_PRINTLN(F("Stop bit mark length is wrong"));
-        return false;
-    }
-
-// Success
-    aResults->value = decodedIRData.decodedRawData;
-    aResults->bits = LG_BITS;
-    aResults->decode_type = LG;
-    decodedIRData.protocol = LG;
-    return true;
-}
-
-//+=============================================================================
-void IRsend::sendLG(unsigned long data, int nbits) {
-// Set IR carrier frequency
-    enableIROut (LG_KHZ);
-#if !(defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || defined(__AVR_ATtiny87__) || defined(__AVR_ATtiny167__))
-    DEBUG_PRINTLN(
-            F( "The function sendLG(data, nbits) is deprecated and may not work as expected! Use sendLGRaw(data, NumberOfRepeats) or better sendLG(Address, Command, NumberOfRepeats)."));
-#endif
-// Header
-    mark(LG_HEADER_MARK);
-    space(LG_HEADER_SPACE);
-
-// Data + stop bit
-    sendPulseDistanceWidthData(LG_BIT_MARK, LG_ONE_SPACE, LG_BIT_MARK, LG_ZERO_SPACE, data, nbits, PROTOCOL_IS_MSB_FIRST);
 }
 
 /** @}*/

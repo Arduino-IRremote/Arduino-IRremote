@@ -46,7 +46,7 @@
 
 struct PulseDistanceWidthProtocolConstants const BoseWaveProtocolConstants PROGMEM = {BOSEWAVE, BOSEWAVE_KHZ, BOSEWAVE_HEADER_MARK,
     BOSEWAVE_HEADER_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ONE_SPACE, BOSEWAVE_BIT_MARK, BOSEWAVE_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE
-    , (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr};
+    , (BOSEWAVE_REPEAT_PERIOD / MICROS_IN_ONE_MILLISECOND), nullptr};
 
 /************************************
  * Start of send and decode functions
@@ -54,8 +54,11 @@ struct PulseDistanceWidthProtocolConstants const BoseWaveProtocolConstants PROGM
 
 void IRsend::sendBoseWave(uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
 
+
     // send 8 command bits and then 8 inverted command bits LSB first
-    uint16_t tData = ((~aCommand) << 8) | aCommand;
+    // (uint8_t) (~aCommand) -> invert only the low byte. Without (uint16_t) the shifted operand is formally promoted to int.
+    // But (( (uint8_t) (~aCommand) << 8)) maybe formally incorrect, but leads to the same code :-)
+    uint16_t tData = aCommand | (((uint16_t) ((uint8_t) (~aCommand)) << 8)); // send 8 command bits and then 8 inverted command bits LSB first
     sendPulseDistanceWidth_P(&BoseWaveProtocolConstants, tData, BOSEWAVE_BITS, aNumberOfRepeats);
 }
 

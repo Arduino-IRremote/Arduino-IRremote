@@ -1,5 +1,5 @@
 /*
- * ReceiveAndSendHob2Hood.cpp
+ * ReceiveAndSendHob2Hood.ino
  *
  * Demonstrates receiving and sending of IR codes for AEG / Elektrolux Hob2Hood protocol
  *
@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2024 Armin Joachimsmeyer
+ * Copyright (c) 2024-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -86,7 +86,7 @@ void setup() {
     Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
 
     // Start the receiver and if not 3. parameter specified, take LED_BUILTIN pin from the internal boards definition as default feedback LED
-    IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+    IrReceiver.begin(IR_RECEIVE_PIN, USE_DEFAULT_FEEDBACK_LED_PIN, ENABLE_LED_FEEDBACK);
 
     Serial.print(F("Ready to receive Hob2Hood IR signals at pin " STR(IR_RECEIVE_PIN)));
     /*

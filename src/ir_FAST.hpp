@@ -63,34 +63,28 @@
  */
 struct PulseDistanceWidthProtocolConstants const FASTProtocolConstants PROGMEM = { FAST, FAST_KHZ, FAST_HEADER_MARK,
 FAST_HEADER_SPACE, FAST_BIT_MARK, FAST_ONE_SPACE, FAST_BIT_MARK, FAST_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST
-        | PROTOCOL_IS_PULSE_DISTANCE, (FAST_REPEAT_PERIOD / MICROS_IN_ONE_MILLI), nullptr };
+        | PROTOCOL_IS_PULSE_DISTANCE, (FAST_REPEAT_PERIOD / MICROS_IN_ONE_MILLISECOND), nullptr };
 
 /************************************
  * Start of send and decode functions
  ************************************/
 
-/**
- * The FAST protocol repeats by skipping the header mark and space -> this leads to a poor repeat detection for JVC protocol.
+/*
+ * LSB first, send header, command, inverted command and stop bit
  */
 void IRsend::sendFAST(uint8_t aCommand, int_fast8_t aNumberOfRepeats) {
+    uint16_t tData = aCommand | (((uint16_t)((uint8_t)(~aCommand)) << 8));
+    sendFAST16Bit(tData, aNumberOfRepeats);
+}
+
+/**
+ * The FAST protocol repeats by skipping the header mark and space -> this leads to a poor repeat detection for this protocol.
+ * @param aNumberOfRepeats  If < 0 then a regular frame will be sent as repeat frame.
+ */
+void IRsend::sendFAST16Bit(uint16_t aCommand, int_fast8_t aNumberOfRepeats) {
     // Set IR carrier frequency
     enableIROut(FAST_KHZ); // 38 kHz
-
-    uint_fast8_t tNumberOfCommands = aNumberOfRepeats + 1;
-    while (tNumberOfCommands > 0) {
-
-        mark(FAST_HEADER_MARK);
-        space(FAST_HEADER_SPACE);
-
-        sendPulseDistanceWidthData_P(&FASTProtocolConstants, aCommand | (((uint8_t)(~aCommand)) << 8), FAST_BITS);
-
-        tNumberOfCommands--;
-        // skip last delay!
-        if (tNumberOfCommands > 0) {
-            // send repeated command in a fixed raster
-            delay(FAST_REPEAT_DISTANCE / MICROS_IN_ONE_MILLI);
-        }
-    }
+    sendPulseDistanceWidth_P(&FASTProtocolConstants, aCommand, FAST_BITS, aNumberOfRepeats);
 }
 
 bool IRrecv::decodeFAST() {

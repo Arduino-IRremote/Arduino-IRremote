@@ -51,7 +51,7 @@ struct FeedbackLEDControlStruct FeedbackLEDControl; ///< The feedback LED contro
  *                        If FeedbackLEDPin == USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF and LED_BUILTIN defined, then use digitalWriteFast(LED_BUILTIN,..)
  *                        If FeedbackLEDPin == USE_DEFAULT_FEEDBACK_LED_PIN / 0xFF and no LED_BUILTIN defined, disable LED feedback
  */
-void setLEDFeedbackPin(uint8_t aFeedbackLEDPin) {
+void setLEDFeedbackPin(uint_fast8_t aFeedbackLEDPin) {
     FeedbackLEDControl.FeedbackLEDPin = aFeedbackLEDPin;
 
     // use fast macros here
@@ -93,7 +93,7 @@ void disableLEDFeedback() {
 #if defined(ESP32) || defined(ESP8266)
 IRAM_ATTR
 #endif
-void setFeedbackLED(bool aSwitchLedOn) {
+void writeFeedbackLED(bool aSwitchLedOn) {
     if (aSwitchLedOn) {
         // Turn user defined pin LED on
         if (FeedbackLEDControl.FeedbackLEDPin == USE_DEFAULT_FEEDBACK_LED_PIN) {
@@ -147,19 +147,6 @@ void setFeedbackLED(bool aSwitchLedOn) {
 #endif
         }
     }
-}
-
-/**
- * Old deprecated function name for setLEDFeedback() or enableLEDFeedback() / disableLEDFeedback()
- */
-void IRrecv::blink13(uint8_t aEnableLEDFeedback) {
-    setLEDFeedback(aEnableLEDFeedback);
-}
-/**
- * Old deprecated function name for setLEDFeedback()
- */
-void setBlinkPin(uint8_t aBlinkPin) {
-    setLEDFeedbackPin(aBlinkPin);
 }
 
 /** @}*/

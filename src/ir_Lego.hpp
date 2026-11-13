@@ -8,7 +8,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2023 Armin Joachimsmeyer
+ * Copyright (c) 2020-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,15 +54,16 @@
 // High bit of 6 cycles IR and 21 cycles of pause,
 // Start/stop of 6 cycles IR and 39 cycles of pause.
 //
-// If tm is the maximum message length (16ms) and Ch is the channel number, then
-// The delay before transmitting the first message is: (4 - Ch) * tm
-// The time from start to start for the next 2 messages is: 5 * tm
-// The time from start to start for the following messages is: (6 + 2 * Ch) * tm
+// If tm is the maximum message length (16ms) and Ch is the channel number (1 to 4), then
+// 1st  sent after a delay of (4 − Ch) * tm
+// 2nd, 3rd sent 5 * tm = 80 ms after the previous one
+// 4th, 5th sent (6 + 2·Ch) * tm after the previous one
+//
 // Supported Devices
 // LEGO Power Functions IR Receiver 8884
-// MSB first, 1 start bit + 4 bit channel, 4 bit mode + 4 bit command + 4 bit parity + 1 stop bit.
+// MSB first, 1 start bit + 4 bit channel, 4 bit mode + 4 bit command + 4 bit parity + 1 stop bit. See documentation Version 1.20 from 26.02.2010.
 /* Protocol=Lego Address=0x1, Command=0x16, Raw-Data=0x1169 ,16 bits, MSB first, Gap=1050600us, Duration=10000us
- Send with: IrSender.sendLego(0x1, 0x16, <numberOfRepeats>);
+ Send with: IrSender.sendLegoPowerFunctionsRaw(0x1, 0x16, <numberOfRepeats>);
  rawData[36]:
  -1050600
  + 250,- 950
@@ -90,9 +91,11 @@
 #define LEGO_ONE_THRESHOLD      408    // 15.5 cycles - not used, just for info
 
 #define LEGO_AVERAGE_DURATION   11000 // LEGO_HEADER_MARK + LEGO_HEADER_SPACE  + 16 * 600 + 158
-
-#define LEGO_AUTO_REPEAT_PERIOD_MIN 110000 // Every frame is auto repeated 5 times.
 #define LEGO_AUTO_REPEAT_PERIOD_MAX 230000 // space for channel 3
+
+#define LEGO_MESSAGE_LENGTH_MAX_MILLIS      16 // tm in LEGO specification
+#define LEGO_REPEAT_PERIOD_FIRST_MILLIS     (5 * LEGO_MESSAGE_LENGTH_MAX_MILLIS) // 80 ms, start to start of message 1 to 3
+
 
 #define LEGO_MODE_EXTENDED  0
 #define LEGO_MODE_COMBO     1
@@ -100,42 +103,70 @@
 
 // Cannot be constant, since we need to change RepeatPeriodMillis during sending
 struct PulseDistanceWidthProtocolConstants LegoProtocolConstants = { LEGO_PF, 38, LEGO_HEADER_MARK, LEGO_HEADER_SPACE,
-LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, PROTOCOL_IS_LSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE,
-        (LEGO_AUTO_REPEAT_PERIOD_MIN / MICROS_IN_ONE_MILLI), nullptr };
+LEGO_BIT_MARK, LEGO_ONE_SPACE, LEGO_BIT_MARK, LEGO_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE,
+        0, nullptr }; // RepeatPeriodMillis is set to 0 because it is overwritten on every call to sendLegoPowerFunctionsRaw()
 
 /************************************
  * Start of send and decode functions
  ************************************/
 /*
  * Here we process the structured data, and call the send raw data function
+ * if command is >= 0x10 then we assume mode in the upper nibble and do not use the mode parameter.
+ * This ensures compatibility with the received data and send usage printout.
+ * @param aDoSend5Times instead of int_fast8_t aNumberOfRepeats. We only support the standard 5 times repeating.
  * @param aMode one of LEGO_MODE_EXTENDED, LEGO_MODE_COMBO, LEGO_MODE_SINGLE
  */
-void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, uint8_t aMode, bool aDoSend5Times) {
+void IRsend::sendLegoPowerFunctions(uint8_t aChannel, uint8_t aCommand, bool aDoSend5Times, uint8_t aMode) {
     aChannel &= 0x0F; // allow toggle and escape bits too
+    if(aCommand >= 0x10) {
+        aMode = aCommand >> LEGO_COMMAND_BITS;
+    }
     aCommand &= 0x0F;
     aMode &= 0x0F;
     uint8_t tParity = 0xF ^ aChannel ^ aMode ^ aCommand;
     // send 4 bit channel, 4 bit mode, 4 bit command, 4 bit parity
     uint16_t tRawData = (((aChannel << LEGO_MODE_BITS) | aMode) << (LEGO_COMMAND_BITS + LEGO_PARITY_BITS))
             | (aCommand << LEGO_PARITY_BITS) | tParity;
-    sendLegoPowerFunctions(tRawData, aChannel, aDoSend5Times);
+    sendLegoPowerFunctionsRaw(tRawData, aChannel, aDoSend5Times);
 }
 
-void IRsend::sendLegoPowerFunctions(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
+
+/*
+ * Timing according to LEGO Power Functions RC Manual v1.20, without the initial delay of (4 - Ch) * tm:
+ * Message 1 to 3 with a start to start period of 5 * tm = 80 ms
+ * Message 4 and 5 with a start to start period of (6 + 2 * Ch) * tm = 128, 160, 192, 224 ms for Ch = 1 to 4
+ * @param aChannel 0 to 3 for channel 1 to 4
+ */
+void IRsend::sendLegoPowerFunctionsRaw(uint16_t aRawData, uint8_t aChannel, bool aDoSend5Times) {
 
     DEBUG_PRINT(F("sendLego aRawData=0x"));
     DEBUG_PRINTLN(aRawData, HEX);
 
-    aChannel &= 0x03; // we have 4 channels
-
-    uint_fast8_t tNumberOfRepeats = 0;
-    if (aDoSend5Times) {
-        tNumberOfRepeats = 4;
+    if (!aDoSend5Times) {
+        sendPulseDistanceWidth(&LegoProtocolConstants, aRawData, LEGO_BITS, NO_REPEATS);
+        return;
     }
-// required for repeat timing, see http://www.hackvandedam.nl/blog/?page_id=559
-    uint8_t tRepeatPeriod = (LEGO_AUTO_REPEAT_PERIOD_MIN / MICROS_IN_ONE_MILLI) + (aChannel * 40); // from 110 to 230
-    LegoProtocolConstants.RepeatPeriodMillis = tRepeatPeriod;
-    sendPulseDistanceWidth(&LegoProtocolConstants, aRawData, LEGO_BITS, tNumberOfRepeats);
+
+    aChannel &= 0x03; // 0 to 3 for channel 1 to 4
+
+    /*
+     * Message 1 to 3
+     */
+    unsigned long tStartMillis = millis();
+    LegoProtocolConstants.RepeatPeriodMillis = LEGO_REPEAT_PERIOD_FIRST_MILLIS;
+    sendPulseDistanceWidth(&LegoProtocolConstants, aRawData, LEGO_BITS, 2);
+
+    /*
+     * Message 4 and 5
+     */
+    uint8_t tRepeatPeriodMillis = (6 + 2 * (aChannel + 1)) * LEGO_MESSAGE_LENGTH_MAX_MILLIS; // 128 to 224
+    // Duration of message 3 is the total duration minus the two 80 ms periods before it
+    unsigned long tLastFrameDurationMillis = (millis() - tStartMillis) - (2 * LEGO_REPEAT_PERIOD_FIRST_MILLIS);
+    if (tRepeatPeriodMillis > tLastFrameDurationMillis) {
+        delay(tRepeatPeriodMillis - tLastFrameDurationMillis);
+    }
+    LegoProtocolConstants.RepeatPeriodMillis = tRepeatPeriodMillis;
+    sendPulseDistanceWidth(&LegoProtocolConstants, aRawData, LEGO_BITS, 1);
 }
 
 /*
@@ -211,14 +242,6 @@ bool IRrecv::decodeLegoPowerFunctions() {
     decodedIRData.protocol = LEGO_PF;
 
     return true;
-}
-
-/*********************************************************************************
- * Old deprecated functions, kept for backward compatibility to old 2.0 tutorials
- *********************************************************************************/
-
-void IRsend::sendLegoPowerFunctions(uint16_t aRawData, bool aDoSend5Times) {
-    sendLegoPowerFunctions(aRawData, (aRawData >> (LEGO_MODE_BITS + LEGO_COMMAND_BITS + LEGO_PARITY_BITS)) & 0x3, aDoSend5Times);
 }
 
 /** @}*/

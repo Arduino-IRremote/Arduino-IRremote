@@ -1,5 +1,5 @@
 /*
- *  ReceiverTimingAnalysis.cpp
+ *  ReceiverTimingAnalysis.ino
  *
  *  This program enables the pin change interrupt at pin 3 and waits for NEC (or other Pulse-Distance-Coding) IR Signal.
  *  It measures the pulse and pause times of the incoming signal and computes some statistics for it.
@@ -10,7 +10,7 @@
  *  TSOP31238   Mark Excess 0 to +50
  *
  *
- *  Copyright (C) 2019-2020  Armin Joachimsmeyer
+ *  Copyright (C) 2019-2026  Armin Joachimsmeyer
  *
  *  This file is part of IRMP https://github.com/IRMP-org/IRMP.
  *  This file is part of Arduino-IRremote https://github.com/Arduino-IRremote/Arduino-IRremote.
@@ -26,14 +26,13 @@
  *  See the GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *  along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
  *
  */
 
 #include <Arduino.h>
 
-#define IR_RECEIVE_PIN    2
-//#define IR_RECEIVE_PIN    3
+#define IR_RECEIVE_PIN    3
 
 // Helper macro for getting a macro definition as string
 #if !defined(STR_HELPER) && !defined(STR)

@@ -4,7 +4,7 @@
  *  Contains LCD related variables and functions
  *  Sets symbols USE_SERIAL_LCD or USE_PARALLEL_LCD and LCD_COLUMNS and LCD_ROWS
  *
- *  Copyright (C) 2024-2025  Armin Joachimsmeyer
+ *  Copyright (C) 2024-2026  Armin Joachimsmeyer
  *
  *  This file is part of Arduino-Utils https://github.com/ArminJo/Arduino-Utils.
  *
@@ -19,7 +19,7 @@
  *  See the GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+ *  along with this program. If not, see <https://www.gnu.org/licenses/gpl-3.0.html>.
  */
 
 #ifndef _LCD_PRINT_UTILS_HPP
@@ -61,8 +61,6 @@
 
 #define DEGREE_SIGN_STRING "\xDF"
 
-extern char sStringBuffer[];    // For rendering a LCD row with snprintf_P()
-
 #if defined(USE_PARALLEL_LCD)
 void LCDResetCursor(LiquidCrystal *aLCD);
 void LCDPrintSpaces(LiquidCrystal *aLCD, uint_fast8_t aNumberOfSpacesToPrint);
@@ -72,6 +70,7 @@ void LCDPrintAsFloatAs5CharacterString_2_3_Decimals(LiquidCrystal *aLCD, uint16_
 void LCDPrintFloatValueRightAligned(LiquidCrystal *aLCD, float aFloatValue, uint8_t aNumberOfCharactersToPrint,
         bool aNoLeadingSpaceForPositiveValues = false);
 void LCDUnitTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal *aLCD);
+void LCDCreateCustomCharPGM(LiquidCrystal *aLCD, uint_fast8_t aCharacterIndex, const uint8_t *CustomPatternMapPGM);
 void LCDShowSpecialCharacters(LiquidCrystal *aLCD);
 void LCDShowCustomCharacters(LiquidCrystal *aLCD);
 #else
@@ -82,7 +81,8 @@ size_t LCDPrintHex(LiquidCrystal_I2C *aLCD, uint16_t aHexByteValue);
 void LCDPrintAsFloatAs5CharacterString_2_3_Decimals(LiquidCrystal_I2C *aLCD, uint16_t aValueInMillivolts);
 void LCDPrintFloatValueRightAligned(LiquidCrystal_I2C *aLCD, float aFloatValue, uint8_t aNumberOfCharactersToPrint,
         bool aNoLeadingSpaceForPositiveValues = false);
-void LCDTestPrintFloatValueRightAligned(LiquidCrystal_I2C *aLCD);
+void LCDUnitTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal_I2C *aLCD);
+void LCDCreateCustomCharPGM(LiquidCrystal_I2C *aLCD, uint_fast8_t aCharacterIndex, const uint8_t *CustomPatternMapPGM);
 void LCDShowSpecialCharacters(LiquidCrystal_I2C *aLCD);
 void LCDShowCustomCharacters(LiquidCrystal_I2C *aLCD);
 #endif
@@ -131,7 +131,7 @@ size_t LCDPrintHex(LiquidCrystal_I2C *aLCD, uint16_t aHexByteValue)
         {
     aLCD->print(F("0x"));
     size_t tPrintSize = 2;
-    if (aHexByteValue < 0x10 || (aHexByteValue > 0x100 && aHexByteValue < 0x1000)) {
+    if (aHexByteValue < 0x10 || (aHexByteValue >= 0x100 && aHexByteValue < 0x1000)) {
         aLCD->print('0'); // leading 0
         tPrintSize++;
     }
@@ -155,7 +155,7 @@ void LCDPrintAsFloatAs5CharacterString_2_3_Decimals(LiquidCrystal_I2C *aLCD, uin
 }
 
 /*
- * @return 1 for values from 0 to 9, 2 for 10 to 99 up to 5 for >= 10,000
+ * @return 0 for 0, 1 for values from 1 to 9, 2 for 10 to 99 up to 5 for >= 10,000
  */
 uint8_t getNumberOfDecimalsFor16BitValues(uint16_t a16BitValue) {
     uint16_t tCompareValue = 1;
@@ -192,7 +192,7 @@ uint8_t getNumberOfDecimalsFor32BitValues(uint32_t a32BitValue) {
     return 10;
 }
 /*
- * !!! We internally use uint16_t, thus for bigger values (> 65,536 or < -65,536) we have an overflow.
+ * @param aFloatValue - !!! We internally use uint16_t, thus for bigger values (> 65,536 or < -65,536) we have an overflow!!!
  * @param aNoLeadingSpaceForPositiveValues - Normally each positive value has a leading space as placeholder for the minus sign.
  *   If we know, that values are always positive, this space can be omitted by aNoLeadingSpaceForPositiveValues == true.
  * @param aNumberOfCharactersToPrint - The characters to be used for the most negative value to show. !!! MUST BE < 8, This is NOT checked!!!
@@ -201,8 +201,6 @@ uint8_t getNumberOfDecimalsFor32BitValues(uint32_t a32BitValue) {
  *   Values below 1 and -1 are displayed as floats without 0 before decimal point " .9" and "-.9".
  *   If positive, there is a leading space, which improves readability if directly concatenated to another value.
  *     e.g. "71V1.189A" is not readable, "71V 1.18A" is as well as "71V-1.18A".
- *
- * Saves programming space if used more than 1 times for printing floats if used instead of myLCD.print(JKComputedData.BatteryVoltageFloat, 2);
  */
 #if defined(USE_PARALLEL_LCD)
 void LCDPrintFloatValueRightAligned(LiquidCrystal *aLCD, float aFloatValue, uint8_t aNumberOfCharactersToPrint,
@@ -232,7 +230,7 @@ void LCDPrintFloatValueRightAligned(LiquidCrystal_I2C *aLCD, float aFloatValue, 
         tNumberOfDecimalPlaces = 0;
     }
 
-    char tStringBuffer[9]; // For aNumberOfCharactersToPrint up to 8
+    char tStringBuffer[12]; // For aNumberOfCharactersToPrint up to 8
     uint8_t tStartIndex = 0;
     if (tNumberOfDecimals == 0 && tNumberOfDecimalPlaces > 0) {
         if (aFloatValue >= 0) {
@@ -248,10 +246,11 @@ void LCDPrintFloatValueRightAligned(LiquidCrystal_I2C *aLCD, float aFloatValue, 
 #if defined(__AVR__)
     dtostrf(aFloatValue, aNumberOfCharactersToPrint, tNumberOfDecimalPlaces, tStringBuffer);
 #else
-    snprintf(sStringBuffer, sizeof(tStringBuffer), "%f", aFloatValue);
+    snprintf(tStringBuffer, sizeof(tStringBuffer), "%*.*f", aNumberOfCharactersToPrint, tNumberOfDecimalPlaces, aFloatValue);
 #endif
     aLCD->print(&tStringBuffer[tStartIndex]);
 }
+
 /**
  * Unit test for LCDPrintFloatValueRightAligned()
  * @param aSerial
@@ -263,7 +262,7 @@ void LCDUnitTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal *aLCD)
 void LCDUnitTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal_I2C *aLCD)
 #endif
         {
-    aSerial->println(F("LCDTestPrintFloatValueRightAligned: 1."));
+    aSerial->println(F("LCDPrintFloatValueRightAligned: 1."));
 
     aLCD->clear();
     float tTestValue = 123.45;
@@ -299,7 +298,7 @@ void LCDUnitTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal_I2C *a
     // Result="-.1234-.123-.12-.1-0"
 
     delay(4000);
-    aSerial->println(F("LCDTestPrintFloatValueRightAligned: 2."));
+    aSerial->println(F("LCDPrintFloatValueRightAligned: 2."));
 
     aLCD->clear();
     tTestValue = 123.45;
@@ -336,7 +335,7 @@ void LCDUnitTestPrintFloatValueRightAligned(Print *aSerial, LiquidCrystal_I2C *a
     // Result=".12344.1234.123.12.1"
 
     delay(4000);
-    aSerial->println(F("LCDTestPrintFloatValueRightAligned: End"));
+    aSerial->println(F("LCDPrintFloatValueRightAligned: End"));
 }
 
 /*

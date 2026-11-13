@@ -8,6 +8,8 @@
  ************************************************************************************
  * MIT License
  *
+ * Copyright (c) 2020-2026 Armin Joachimsmeyer
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -34,6 +36,7 @@
 
 #ifndef _IR_OTHERS_HPP
 #define _IR_OTHERS_HPP
+#if !defined(EXCLUDE_EXOTIC_PROTOCOLS)
 //==============================================================================
 //                       DDDD   IIIII   SSSS  H   H
 //                        D  D    I    S      H   H
@@ -61,8 +64,8 @@
 struct PulseDistanceWidthProtocolConstants const DishProtocolConstants PROGMEM = {UNKNOWN, 56, DISH_HEADER_MARK, DISH_HEADER_SPACE,
     DISH_BIT_MARK, DISH_ONE_SPACE, DISH_BIT_MARK, DISH_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, 40, nullptr};
 
-void IRsend::sendDish(uint16_t aData) {
-    sendPulseDistanceWidth_P(&DishProtocolConstants, aData, DISH_BITS, 4);
+void IRsend::sendDish(uint16_t aRawData) {
+    sendPulseDistanceWidth_P(&DishProtocolConstants, aRawData, DISH_BITS, 4);
 }
 
 //==============================================================================
@@ -87,8 +90,8 @@ void IRsend::sendDish(uint16_t aData) {
 struct PulseDistanceWidthProtocolConstants const WhynterProtocolConstants PROGMEM = {WHYNTER, 38, WHYNTER_HEADER_MARK, WHYNTER_HEADER_SPACE,
     WHYNTER_BIT_MARK, WHYNTER_ONE_SPACE, WHYNTER_BIT_MARK, WHYNTER_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | PROTOCOL_IS_PULSE_DISTANCE, 110, nullptr};
 
-void IRsend::sendWhynter(uint32_t aData, int_fast8_t aNumberOfRepeats) {
-    sendPulseDistanceWidth_P(&WhynterProtocolConstants, aData, NEC_BITS, aNumberOfRepeats);
+void IRsend::sendWhynter(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
+    sendPulseDistanceWidth_P(&WhynterProtocolConstants, aRawData, NEC_BITS, aNumberOfRepeats);
 }
 
 bool IRrecv::decodeWhynter() {
@@ -173,12 +176,12 @@ struct PulseDistanceWidthProtocolConstants const VeluxProtocolConstants PROGMEM 
     VELUX_ONE_MARK, VELUX_ONE_SPACE, VELUX_ZERO_MARK, VELUX_ZERO_SPACE, PROTOCOL_IS_MSB_FIRST | PROTOCOL_IS_PULSE_WIDTH, 27, nullptr};
 
 /*
- * @param aCommand      VELUX_COMMAND_AUTO_UP or VELUX_COMMAND_AUTO_DOWN or VELUX_COMMAND_STOP
  * @param aMotorNumber  1, 2, 4 = Motor3, 7 = All
  * @param aMotorSet     0 = All, 1 to 10
+ * @param aCommand      VELUX_COMMAND_AUTO_UP or VELUX_COMMAND_AUTO_DOWN or VELUX_COMMAND_STOP
  * !!!NO parameter range check here!!!
  */
-void IRsend::sendVelux(uint8_t aCommand, uint8_t aMotorNumber, uint8_t aMotorSet, uint16_t aSecurityCode,
+void IRsend::sendVelux(uint8_t aMotorNumber, uint8_t aMotorSet, uint8_t aCommand, uint16_t aSecurityCode,
         int_fast8_t aNumberOfRepeats) {
     // Just in case...
     if (aMotorNumber == 3) {
@@ -212,14 +215,19 @@ void IRsend::sendVelux(uint8_t aCommand, uint8_t aMotorNumber, uint8_t aMotorSet
                     | tChecksum, aNumberOfRepeats);
 }
 
-void IRsend::sendVelux(uint32_t aData, int_fast8_t aNumberOfRepeats) {
+void IRsend::sendVelux(uint32_t aRawData, int_fast8_t aNumberOfRepeats) {
+    if(aNumberOfRepeats < 0){
+        aNumberOfRepeats = 0;
+    }
     do {
-        sendPulseDistanceWidth_P(&VeluxProtocolConstants, aData, VELUX_BITS, 0);
-        delay(VELUX_AUTOREPEAT_SPACE / MICROS_IN_ONE_MILLI);
-        sendPulseDistanceWidth_P(&VeluxProtocolConstants, aData, VELUX_BITS, 0);
-        delay(VELUX_REPEAT_SPACE / MICROS_IN_ONE_MILLI);
+        sendPulseDistanceWidth_P(&VeluxProtocolConstants, aRawData, VELUX_BITS, 0);
+        delay(VELUX_AUTOREPEAT_SPACE / MICROS_IN_ONE_MILLISECOND);
+        sendPulseDistanceWidth_P(&VeluxProtocolConstants, aRawData, VELUX_BITS, 0);
+        delay(VELUX_REPEAT_SPACE / MICROS_IN_ONE_MILLISECOND);
         aNumberOfRepeats--;
     } while (aNumberOfRepeats >= 0);
 }
+
+#endif // !defined(EXCLUDE_EXOTIC_PROTOCOLS)
 /** @}*/
 #endif // _IR_OTHERS_HPP

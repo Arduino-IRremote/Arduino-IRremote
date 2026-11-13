@@ -13,7 +13,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2015-2025 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
+ * Copyright (c) 2015-2026 Ken Shirriff http://www.righto.com, Rafi Khan, Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@
  * - SEND_PWM_BY_TIMER                  Disable carrier PWM generation in software and use (restricted) hardware PWM.
  * - USE_NO_SEND_PWM                    Use no carrier PWM, just simulate an **active low** receiver signal. Overrides SEND_PWM_BY_TIMER definition.
  * - USE_ACTIVE_HIGH_OUTPUT_FOR_NO_SEND_PWM  Simulate an **active high** receiver signal instead of an active low signal.
- * - EXCLUDE_EXOTIC_PROTOCOLS           If activated, BANG_OLUFSEN, BOSEWAVE, WHYNTER, FAST and LEGO_PF are excluded in decode() and in sending with IrSender.write().
+ * - EXCLUDE_EXOTIC_PROTOCOLS           If activated, BOSEWAVE, FAST, LEGO_PF, MAGIQUEST, MARANTZ and WHYNTER are excluded in decode() and BOSEWAVE, FAST, LEGO_PF, MAGIQUEST and OPENLASIR in sending with IrSender.write().
  * - EXCLUDE_UNIVERSAL_PROTOCOLS        If activated, the universal decoder for pulse distance protocols and decodeHash (special decoder for all protocols) are excluded in decode().
  * - DECODE_*                           Selection of individual protocols to be decoded. See below.
  * - USE_THRESHOLD_DECODER              May give slightly better results especially for jittering signals and protocols with short 1 pulses / pauses.
@@ -115,7 +115,7 @@
 /**
  * Minimum gap between IR transmissions, only used to detect the end of a frame.
  * Must be greater than any space of a protocol e.g. the NEC header space of 4500 us.
- * Must be smaller than any gap between a frame and a repeat frame; e.g. the retransmission gap for Sony is around 12 ms for Sony20 protocol.
+ * Must be smaller than any gap between a frame and a repeat frame; e.g. the retransmission gap for Sony is 12 ms for Sony20 protocol.
  * Bear in mind, that this is the delay between the end of the received frame
  * and the time at which the software detects the end of this frame and can start decoding!
  */
@@ -156,10 +156,19 @@
  *                     SENDING
  ****************************************************/
 /**
+ * Define to use no carrier PWM, just simulate an active low receiver signal.
+ */
+//#define USE_NO_SEND_PWM
+#if defined(SEND_PWM_BY_TIMER) && defined(USE_NO_SEND_PWM)
+#warning "SEND_PWM_BY_TIMER and USE_NO_SEND_PWM are both defined -> undefine SEND_PWM_BY_TIMER now!"
+#undef SEND_PWM_BY_TIMER // USE_NO_SEND_PWM overrides SEND_PWM_BY_TIMER
+#endif
+
+/**
  * Define to disable carrier PWM generation in software and use (restricted) hardware PWM.
  */
 //#define SEND_PWM_BY_TIMER // restricts send pin on many platforms to fixed pin numbers
-#if (defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED)
+#if ((defined(ESP32) || defined(ARDUINO_ARCH_RP2040) || defined(PARTICLE)) || defined(ARDUINO_ARCH_MBED)) && !defined(USE_NO_SEND_PWM)
 #  if defined(SEND_PWM_BY_TIMER)
 #pragma message("INFO: For ESP32, RP2040, mbed and particle boards SEND_PWM_BY_TIMER is enabled by default, since we have the resources and timing is more exact than the software generated one.")
 #  else
@@ -171,17 +180,9 @@
 #pragma message("INFO: Since SEND_PWM_BY_TIMER is defined, the current value of IR_SEND_PIN \"" STR(IR_SEND_PIN) "\" is discarded and will be replaced in IRTimer.hpp by the value determined by the timer used for PWM generation." )
 //#warning INFO: Since SEND_PWM_BY_TIMER is defined, the current value of IR_SEND_PIN is discarded and will be replaced in IRTimer.hpp by the value determined by the timer used for PWM generation
 #    endif
+#undef IR_SEND_PIN
 #define IR_SEND_PIN  ToBeOverwrittenLaterByPinNumberDeterminedByTimer // Must be set here to a dummy value, since it is evaluated at IRremoteInt.h, before the include of private/IRTimer.hpp
 #  endif
-#endif
-
-/**
- * Define to use no carrier PWM, just simulate an active low receiver signal.
- */
-//#define USE_NO_SEND_PWM
-#if defined(SEND_PWM_BY_TIMER) && defined(USE_NO_SEND_PWM)
-#warning "SEND_PWM_BY_TIMER and USE_NO_SEND_PWM are both defined -> undefine SEND_PWM_BY_TIMER now!"
-#undef SEND_PWM_BY_TIMER // USE_NO_SEND_PWM overrides SEND_PWM_BY_TIMER
 #endif
 
 /**
@@ -213,9 +214,12 @@
 #define IR_SEND_DUTY_CYCLE_PERCENT 30 // 30 saves power and is compatible to the old existing code
 #endif
 
-#define MILLIS_IN_ONE_SECOND 1000U // unused
-#define MICROS_IN_ONE_SECOND 1000000L
-#define MICROS_IN_ONE_MILLI 1000U
+#if !defined(MICROS_IN_ONE_MILLISECOND)
+#define MICROS_IN_ONE_MILLISECOND    1000U
+#endif
+#if !defined(MICROS_IN_ONE_SECOND)
+#define MICROS_IN_ONE_SECOND    1000000UL
+#endif
 
 #if defined(NO_LED_FEEDBACK_CODE)
 // convert to receive and send macros
@@ -267,7 +271,7 @@ void disableLEDFeedback() {}; // dummy function for examples
 #endif
 // Get absolute value of difference of two unsigned values
 #if !defined(uintDifferenceAbs)
-#define uintDifferenceAbs(a, b) ((a >= b) ? a - b : b - a)
+#define uintDifferenceAbs(a, b) (((a) >= (b)) ? (a) - (b) : (b) - (a))
 #endif
 #include "IRSend.hpp"
 
@@ -290,7 +294,7 @@ void disableLEDFeedback() {}; // dummy function for examples
 #include "ir_FAST.hpp"
 #include "ir_Others.hpp"
 #include "ir_Pronto.hpp" // pronto is an universal decoder and encoder
-#  if defined(DECODE_DISTANCE_WIDTH)     // universal decoder for pulse distance width protocols - requires up to 750 bytes additional program memory
+#  if defined(DECODE_DISTANCE_WIDTH)     // universal decoder for pulse distance width protocols - requires up to 1800 bytes additional program memory
 #include "ir_DistanceWidthProtocol.hpp"
 #  endif
 #endif // #if !defined(USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE)

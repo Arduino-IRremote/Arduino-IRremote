@@ -1,5 +1,5 @@
 /*
- * SendLGAirConditionerDemo.cpp
+ * SendLGAirConditionerDemo.ino
  *
  *  Sending LG air conditioner IR codes controlled by Serial input
  *  Based on he old IRremote source from https://github.com/chaeplin
@@ -9,7 +9,7 @@
  ************************************************************************************
  * MIT License
  *
- * Copyright (c) 2020-2022 Armin Joachimsmeyer
+ * Copyright (c) 2020-2026 Armin Joachimsmeyer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
